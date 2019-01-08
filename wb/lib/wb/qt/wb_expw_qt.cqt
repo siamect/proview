@@ -45,13 +45,12 @@
 #include <QMenuBar>
 #include <QVBoxLayout>
 
-WbExpWQt::WbExpWQt(void* expw_parent_ctx, QWidget* expw_parent_wid,
-    ldh_tSession expw_ldhses, const char* expw_name, int l_type, int l_editmode,
-    pwr_tStatus* status)
-    : WbExpW(
-          expw_parent_ctx, expw_ldhses, expw_name, l_type, l_editmode, status)
+WbExpWQt::WbExpWQt(void* expw_parent_ctx, ldh_tSession expw_ldhses,
+    const char* expw_name, int l_type, int l_editmode, pwr_tStatus* status)
+    : WbExpW(expw_parent_ctx, expw_ldhses, expw_name, l_type, l_editmode,
+        status)
 {
-  toplevel = new WbExpWQtWidget(this, expw_parent_wid);
+  toplevel = new WbExpWQtWidget(this);
   toplevel->setMinimumSize(1100, 600);
   toplevel->setWindowTitle(fl(expw_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -106,8 +105,7 @@ WbExpWQt::WbExpWQt(void* expw_parent_ctx, QWidget* expw_parent_wid,
   QVBoxLayout* form = new QVBoxLayout(toplevel);
 
   // Create expwnav
-  expwnav = new WbExpWNavQt(
-      this, toplevel, expw_ldhses, l_type, l_editmode, &nav_widget);
+  expwnav = new WbExpWNavQt(this, expw_ldhses, l_type, l_editmode, &nav_widget);
 
   form->setMenuBar(menu_bar);
   form->addWidget(tools);

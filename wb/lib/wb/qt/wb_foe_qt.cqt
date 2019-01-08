@@ -107,7 +107,7 @@ void WFoeQtWidget::activate_history()
 
   strcpy(title, "History ");
   strcat(title, wname);
-  CoLogWQt* logw = new CoLogWQt(this, this, title, 0, &sts);
+  CoLogWQt* logw = new CoLogWQt(foe, title, 0, &sts);
   logw->CoLogW::show(categories, wname);
 }
 
@@ -556,15 +556,14 @@ WAtt* WFoeQt::watt_new(void* a_parent_ctx, ldh_tSesContext a_ldhses,
     pwr_sAttrRef a_aref, int a_editmode, int a_advanced_user,
     int a_display_objectname)
 {
-  return new WAttQt(toplevel->parentWidget(), a_parent_ctx, a_ldhses, a_aref,
-      a_editmode, a_advanced_user, a_display_objectname);
+  return new WAttQt(a_parent_ctx, a_ldhses, a_aref, a_editmode, a_advanced_user,
+      a_display_objectname);
 }
 
 WAttText* WFoeQt::watttext_new(void* a_parent_ctx, ldh_tSesContext a_ldhses,
     pwr_sAttrRef a_aref, int a_editmode, pwr_tStatus* status)
 {
-  return new WAttTextQt(toplevel->parentWidget(), a_parent_ctx, a_ldhses,
-      a_aref, a_editmode, status);
+  return new WAttTextQt(a_parent_ctx, a_ldhses, a_aref, a_editmode, status);
 }
 
 // Destroys a foe instance.
@@ -603,7 +602,7 @@ WFoe* WFoeQt::subwindow_new(void* f_parent_ctx, char* f_name,
     int f_map_window, ldh_eAccess f_access, foe_eFuncAccess function_access,
     unsigned int f_options, pwr_tStatus* sts)
 {
-  WFoeQt* foe = new WFoeQt(f_parent_ctx, foe_window, f_name, plcprogram,
+  WFoeQt* foe = new WFoeQt(f_parent_ctx, f_name, plcprogram,
       ldhwbctx, ldhsesctx, nodeobject, windowindex, new_window, f_map_window,
       f_access, function_access, f_options, sts);
   if (ODD(*sts)) {
@@ -672,24 +671,22 @@ void WFoeQt::popupmsg(const char* new_label, void (*yes_procedure)(WFoe*),
   }
 }
 
-WFoeQt::WFoeQt(void* f_parent_ctx, QWidget* f_parent_wid, const char* f_name,
-    pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
-    vldh_t_node nodeobject, unsigned long windowindex, unsigned long new_window,
-    int f_map_window, ldh_eAccess f_access, foe_eFuncAccess function_access,
-    unsigned int f_options, pwr_tStatus* sts)
-    : WFoe(f_parent_ctx, f_name, plcprogram, ldhwbctx, ldhsesctx, nodeobject,
-          windowindex, new_window, f_map_window, f_access, function_access,
-          f_options, sts)
+WFoeQt::WFoeQt(void* f_parent_ctx, const char* f_name, pwr_tObjid plcprogram,
+    ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx, vldh_t_node nodeobject,
+    unsigned long windowindex, unsigned long new_window, int f_map_window,
+    ldh_eAccess f_access, foe_eFuncAccess function_access,
+    unsigned int f_options, pwr_tStatus* sts) : WFoe(f_parent_ctx, f_name,
+        plcprogram, ldhwbctx, ldhsesctx, nodeobject, windowindex, new_window,
+        f_map_window, f_access, function_access, f_options, sts)
 {
-  toplevel = new WFoeQtWidget(this, f_parent_wid);
+  toplevel = new WFoeQtWidget(this);
   *sts = new_local(plcprogram, ldhwbctx, ldhsesctx, nodeobject, windowindex,
       new_window, function_access);
 }
 
-WFoeQt::WFoeQt(void* f_parent_ctx, QWidget* f_parent_wid, const char* f_name,
-    pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
-    int f_map_window, ldh_eAccess f_access, unsigned int f_options,
-    pwr_tStatus* sts)
+WFoeQt::WFoeQt(void* f_parent_ctx, const char* f_name, pwr_tObjid plcprogram,
+    ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx, int f_map_window,
+    ldh_eAccess f_access, unsigned int f_options, pwr_tStatus* sts)
     : WFoe(f_parent_ctx, f_name, plcprogram, ldhwbctx, ldhsesctx, f_map_window,
           f_access, f_options, sts)
 {
@@ -715,7 +712,7 @@ WFoeQt::WFoeQt(void* f_parent_ctx, QWidget* f_parent_wid, const char* f_name,
   }
 
   strcpy(name, new_name);
-  toplevel = new WFoeQtWidget(this, f_parent_wid);
+  toplevel = new WFoeQtWidget(this);
   *sts = new_local(
       plcprogram, ldhwbctx, ldhsesctx, 0, 0, 0, foe_eFuncAccess_Edit);
 }
@@ -1037,16 +1034,16 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
 
   subpane = new QSplitter(Qt::Vertical);
   QHBoxLayout* palbox = new QHBoxLayout();
-  node_palctx = new PalQt(this, subpane, "Objects", ldhsession,
-      "PlcEditorPalette", &node_palette, &sts);
+  node_palctx = new PalQt(this, "Objects", ldhsession, "PlcEditorPalette",
+      &node_palette, &sts);
   node_palette_managed = 1;
   node_palctx->select_cb = pal_select_cb;
 
-  con_palctx = new PalQt(this, subpane, "Connections", ldhsession,
-      "PlcEditorConPalette", &con_palette, &sts);
+  con_palctx = new PalQt(this, "Connections", ldhsession, "PlcEditorConPalette",
+      &con_palette, &sts);
 
-  navctx = new NavQt(
-      this, subpane, "Plant", ldhsession, "NavigatorW1", &nav_palette, &sts);
+  navctx = new NavQt(this, "Plant", ldhsession, "NavigatorW1", &nav_palette,
+      &sts);
 
   add_expanding(palbox, node_palette);
   add_expanding(palbox, con_palette);
@@ -1055,7 +1052,7 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   add_expanding(subpane, palbox);
 
   pane = new QSplitter(Qt::Horizontal);
-  gre = new WGreQt(this, pane, "Name");
+  gre = new WGreQt(this, "Name");
 
   ((WGreQt*)gre)->new_navigator(subpane);
   subpane->addWidget(((WGreQt*)gre)->nav_widget);

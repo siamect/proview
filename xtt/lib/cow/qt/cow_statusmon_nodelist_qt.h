@@ -76,9 +76,9 @@ private:
 
 class NodelistQt : public Nodelist {
 public:
-  NodelistQt(void* nodelist_parent_ctx, QWidget* nodelist_parent_wid,
-      const char* nodelist_name, int nodelist_mode,
-      int nodelist_view_node_descr, int msgw_pop, pwr_tStatus* status);
+  NodelistQt(void* nodelist_parent_ctx, const char* nodelist_name,
+      int nodelist_mode, int nodelist_view_node_descr, int msgw_pop,
+      pwr_tStatus* status);
   ~NodelistQt();
 
   QWidget* nodelistnav_widget;
@@ -104,10 +104,7 @@ class NodelistQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  NodelistQtWidget(NodelistQt* parent_ctx, QWidget* parent)
-      : QWidget(), nodelist(parent_ctx)
-  {
-  }
+  NodelistQtWidget(NodelistQt* parent_ctx) : QWidget(), nodelist(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

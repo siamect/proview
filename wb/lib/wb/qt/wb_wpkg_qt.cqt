@@ -120,7 +120,7 @@ void WPkgQtWidget::activate_history()
   strcpy(categories[2], "");
 
   strcpy(title, "Distributor History");
-  CoLogWQt* logw = new CoLogWQt(this, this, title, 1, &sts);
+  CoLogWQt* logw = new CoLogWQt(pkg, title, 1, &sts);
   logw->CoLogW::show(categories, 0);
 }
 
@@ -170,12 +170,11 @@ void WPkgQtWidget::closeEvent(QCloseEvent* event)
   QWidget::closeEvent(event);
 }
 
-WPkgQt::WPkgQt(QWidget* wa_parent_wid, void* wa_parent_ctx)
-    : WPkg(wa_parent_ctx)
+WPkgQt::WPkgQt(void* wa_parent_ctx) : WPkg(wa_parent_ctx)
 {
   int sts;
 
-  toplevel = new WPkgQtWidget(this, wa_parent_wid);
+  toplevel = new WPkgQtWidget(this);
   toplevel->setMinimumSize(600, 600);
   toplevel->setWindowTitle(fl("Distributor"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -233,7 +232,7 @@ WPkgQt::WPkgQt(QWidget* wa_parent_wid, void* wa_parent_ctx)
   QVBoxLayout* vbox = new QVBoxLayout(toplevel);
 
   utility = ((WUtility*)parent_ctx)->utype;
-  wpkgnav = new WPkgNavQt(this, tools, "Packages", utility, &brow_widget, &sts);
+  wpkgnav = new WPkgNavQt(this, "Packages", utility, &brow_widget, &sts);
   ((WPkgNav*)wpkgnav)->message_cb = message_cb;
   ((WPkgNav*)wpkgnav)->set_clock_cursor_cb = set_clock_cursor_cb;
   ((WPkgNav*)wpkgnav)->reset_cursor_cb = reset_cursor_cb;

@@ -59,8 +59,8 @@ int wb_utl_qt::utl_foe_new(const char* name, pwr_tOid plcpgm,
 
   *foe = WFoe::get(plcpgm);
   if (!*foe) {
-    *foe = new WFoeQt(0, widget, name, plcpgm, ldhwbctx, ldhsesctx, map_window,
-        access, 0, &sts);
+    *foe = new WFoeQt(0, name, plcpgm, ldhwbctx, ldhsesctx, map_window, access,
+        0, &sts);
   }
   return sts;
 }
@@ -74,9 +74,8 @@ int wb_utl_qt::utl_foe_new_local(WFoe* foe, const char* name, pwr_tOid plcpgm,
 
   *return_foe = WFoe::get(plcpgm);
   if (!*return_foe) {
-    *return_foe = new WFoeQt(foe, ((WFoeQt*)foe)->foe_window, name, plcpgm,
-        ldhwbctx, ldhsesctx, nodeobject, windowindex, new_window, map_window,
-        access, function_access, 0, &sts);
+    *return_foe = new WFoeQt(foe, name, plcpgm, ldhwbctx, ldhsesctx, nodeobject,
+        windowindex, new_window, map_window, access, function_access, 0, &sts);
   }
   return sts;
 }

@@ -45,8 +45,8 @@ void CoXHelpNavQt::pop()
 {
 }
 
-CoXHelpNavQt::CoXHelpNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
-    char* xn_name, xhelp_eUtility xn_utility, QWidget** w, pwr_tStatus* status)
+CoXHelpNavQt::CoXHelpNavQt(void* xn_parent_ctx, char* xn_name,
+    xhelp_eUtility xn_utility, QWidget** w, pwr_tStatus* status)
     : CoXHelpNav(xn_parent_ctx, xn_name, xn_utility, status)
 {
   form_widget = scrolledbrowwidgetqt_new(

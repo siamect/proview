@@ -40,9 +40,8 @@
 
 #include "wb_wpkgnav_qt.h"
 
-WPkgNavQt::WPkgNavQt(void* wa_parent_ctx, QWidget* wa_parent_wid,
-    const char* wa_name, wb_eUtility wa_utility, QWidget** w,
-    pwr_tStatus* status)
+WPkgNavQt::WPkgNavQt(void* wa_parent_ctx, const char* wa_name,
+    wb_eUtility wa_utility, QWidget** w, pwr_tStatus* status)
     : WPkgNav(wa_parent_ctx, wa_name, wa_utility, status)
 {
   form_widget = scrolledbrowwidgetqt_new(init_brow_cb, this, &brow_widget);

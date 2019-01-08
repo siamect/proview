@@ -281,9 +281,7 @@ public slots:
 
 class DrawPs {
 public:
-  DrawPs(char* filename) : fp(filename), x(0), y(0)
-  {
-  }
+  DrawPs(char* filename) : fp(filename), x(0), y(0) {}
 
   ~DrawPs()
   {
@@ -301,9 +299,7 @@ public:
   {
     memset(color_vect, 0, sizeof(color_vect));
   }
-  ~GlowCustomColorsQt()
-  {
-  }
+  ~GlowCustomColorsQt() {}
 
   QColor
       color_vect[glow_eDrawType_CustomColor__ - glow_eDrawType_CustomColor1];

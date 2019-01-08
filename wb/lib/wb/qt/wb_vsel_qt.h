@@ -47,8 +47,8 @@ class WVselQtWidget;
 
 class WVselQt : public WVsel {
 public:
-  WVselQt(pwr_tStatus* status, void* wv_parent_ctx, QWidget* wv_parent_wid,
-      const char* wv_name, ldh_tWBContext wv_wbctx, char* volumename,
+  WVselQt(pwr_tStatus* status, void* wv_parent_ctx, const char* wv_name,
+      ldh_tWBContext wv_wbctx, char* volumename,
       int (*bc_success)(void*, pwr_tVolumeId*, int), void (*bc_cancel)(),
       int (*bc_time_to_exit)(void*), int show_volumes, wb_eType wv_wb_type);
 
@@ -63,10 +63,7 @@ class WVselQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WVselQtWidget(WVselQt* parent_ctx, QWidget* parent)
-      : QWidget(), sel(parent_ctx)
-  {
-  }
+  WVselQtWidget(WVselQt* parent_ctx) : QWidget(), sel(parent_ctx) {}
 
 public slots:
   // Backcall functions from uil

@@ -47,8 +47,8 @@ class WbExpWQtWidget;
 
 class WbExpWQt : public WbExpW {
 public:
-  WbExpWQt(void* l_parent_ctx, QWidget* l_parent_wid, ldh_tSession l_ldhses,
-      const char* l_name, int type, int l_editmode, pwr_tStatus* status);
+  WbExpWQt(void* l_parent_ctx, ldh_tSession l_ldhses, const char* l_name,
+      int type, int l_editmode, pwr_tStatus* status);
   ~WbExpWQt();
 
   QWidget* form;
@@ -66,10 +66,7 @@ class WbExpWQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WbExpWQtWidget(WbExpWQt* parent_ctx, QWidget* parent)
-      : QWidget(), expw(parent_ctx)
-  {
-  }
+  WbExpWQtWidget(WbExpWQt* parent_ctx) : QWidget(), expw(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

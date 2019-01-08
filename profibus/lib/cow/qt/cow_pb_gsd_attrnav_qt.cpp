@@ -43,9 +43,8 @@
 
 #include "cow_pb_gsd_attrnav_qt.h"
 
-GsdAttrNavQt::GsdAttrNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
-    const char* xn_name, pb_gsd* xn_gsd, int xn_edit_mode, QWidget** w,
-    pwr_tStatus* status)
+GsdAttrNavQt::GsdAttrNavQt(void* xn_parent_ctx, const char* xn_name,
+    pb_gsd* xn_gsd, int xn_edit_mode, QWidget** w, pwr_tStatus* status)
     : GsdAttrNav(xn_parent_ctx, xn_name, xn_gsd, xn_edit_mode, status)
 {
   form_widget = scrolledbrowwidgetqt_new(init_brow_cb, this, &brow_widget);

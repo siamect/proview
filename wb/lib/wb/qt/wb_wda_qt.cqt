@@ -461,16 +461,15 @@ void WdaQtWidget::closeEvent(QCloseEvent* event)
   QWidget::closeEvent(event);
 }
 
-WdaQt::WdaQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
-    ldh_tSesContext wa_ldhses, pwr_tObjid wa_objid, pwr_tClassId wa_classid,
-    const char* wa_attribute, int wa_editmode, int wa_advanced_user,
-    int wa_display_objectname)
+WdaQt::WdaQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
+    pwr_tObjid wa_objid, pwr_tClassId wa_classid, const char* wa_attribute,
+    int wa_editmode, int wa_advanced_user, int wa_display_objectname)
     : Wda(wa_parent_ctx, wa_ldhses, wa_objid, wa_classid, wa_attribute,
           wa_editmode, wa_advanced_user, wa_display_objectname)
 {
   int sts;
 
-  toplevel = new WdaQtWidget(this, wa_parent_wid);
+  toplevel = new WdaQtWidget(this);
   toplevel->setMinimumSize(700, 700);
   toplevel->setWindowTitle(fl("Spreadsheet Editor"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -513,7 +512,7 @@ WdaQt::WdaQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
   pane = new QSplitter(Qt::Vertical);
 
   utility = ((WUtility*)parent_ctx)->utype;
-  wdanav = new WdaNavQt(this, pane, "Plant", ldhses, objid, classid, attribute,
+  wdanav = new WdaNavQt(this, "Plant", ldhses, objid, classid, attribute,
       wa_editmode, wa_advanced_user, wa_display_objectname, utility,
       &brow_widget, &sts);
   wdanav->message_cb = &Wda::message_cb;

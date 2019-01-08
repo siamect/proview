@@ -62,11 +62,10 @@ void CLogQtWidget::closeEvent(QCloseEvent* event)
   QWidget::closeEvent(event);
 }
 
-CLogQt::CLogQt(void* clog_parent_ctx, QWidget* clog_parent_wid,
-    const char* clog_name, pwr_tStatus* status)
-    : CLog(clog_parent_ctx, clog_name, status), parent_wid(clog_parent_wid)
+CLogQt::CLogQt(void* clog_parent_ctx, const char* clog_name,
+    pwr_tStatus* status) : CLog(clog_parent_ctx, clog_name, status)
 {
-  toplevel = new CLogQtWidget(this, clog_parent_wid);
+  toplevel = new CLogQtWidget(this);
   toplevel->setMinimumSize(1000, 800);
   toplevel->setWindowTitle(translate_utf8(clog_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -107,7 +106,7 @@ CLogQt::CLogQt(void* clog_parent_ctx, QWidget* clog_parent_wid,
   addMenuItem(
       toplevel, help, "Help on &Selected Message", SLOT(activate_helpmsg()));
 
-  clognav = new CLogNavQt(this, toplevel, &clognav_widget);
+  clognav = new CLogNavQt(this, &clognav_widget);
 
   vbox->setMenuBar(menu_bar);
   add_expanding(vbox, clognav_widget);

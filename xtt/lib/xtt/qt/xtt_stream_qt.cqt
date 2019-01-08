@@ -333,20 +333,18 @@ void XttStreamQt::scroll_cb(void* data)
   stream->hidePtz();
 }
 
-XttStreamQt::XttStreamQt(QWidget* st_parent_wid, void* st_parent_ctx,
-    const char* name, const char* st_uri, int width, int height, int x, int y,
-    double scan_time, unsigned int st_options, int st_embedded,
-    pwr_tAttrRef* st_arp, pwr_tStatus* sts)
-    : XttStream(st_parent_ctx, name, st_uri, width, height, x, y, scan_time,
-          st_options, st_embedded, st_arp),
-      scroll_cnt(0), no_uri(0)
+XttStreamQt::XttStreamQt(void* st_parent_ctx, const char* name,
+    const char* st_uri, int width, int height, int x, int y, double scan_time,
+    unsigned int st_options, int st_embedded, pwr_tAttrRef* st_arp,
+    pwr_tStatus* sts) : XttStream(st_parent_ctx, name, st_uri, width, height,
+    x, y, scan_time, st_options, st_embedded, st_arp), scroll_cnt(0), no_uri(0)
 {
   if (width == 0 || height == 0) {
     width = 640;
     height = 480;
   }
 
-  toplevel = new XttStreamQtWidget(this, st_parent_wid);
+  toplevel = new XttStreamQtWidget(this);
 
   /* Create the elements */
   playbin2 = new Phonon::VideoPlayer(toplevel);

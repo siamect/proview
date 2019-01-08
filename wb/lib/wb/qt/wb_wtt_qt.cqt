@@ -731,21 +731,19 @@ void WttQt::set_prompt(const char* prompt)
 
 void WttQt::watt_new(pwr_tAttrRef aref)
 {
-  new WAttQt(
-      toplevel, this, ldhses, aref, editmode, wnavnode->gbl.advanced_user, 1);
+  new WAttQt(this, ldhses, aref, editmode, wnavnode->gbl.advanced_user, 1);
 }
 
 void WttQt::wda_new(pwr_tOid oid)
 {
-  new WdaQt(
-      toplevel, this, ldhses, oid, 0, "", editmode, wnav->gbl.advanced_user, 1);
+  new WdaQt(this, ldhses, oid, 0, "", editmode, wnav->gbl.advanced_user, 1);
 }
 
 Ge* WttQt::ge_new(char* graph_name)
 {
   unsigned int opt
       = wnavnode->gbl.enable_comment ? ge_mOption_EnableComment : 0;
-  return new GeQt(this, toplevel, ldhses, 0, opt, graph_name);
+  return new GeQt(this, ldhses, 0, opt, graph_name);
 }
 
 void WttQt::wcast_new(pwr_tAttrRef aref, pwr_tStatus* sts)
@@ -760,14 +758,14 @@ wb_build* WttQt::build_new()
 
 void WttQt::wpkg_new()
 {
-  wpkg = new WPkgQt(toplevel, this);
+  wpkg = new WPkgQt(this);
   wpkg->close_cb = Wtt::wpkg_quit_cb;
 }
 
 int WttQt::ute_new(char* title)
 {
   pwr_tStatus sts;
-  utedctx = new WUtedQt(this, toplevel, title, "Utilites",
+  utedctx = new WUtedQt(this, title, "Utilites",
       ldh_SessionToWB(ldhses), ldhses, editmode, uted_quit_cb, &sts);
   return sts;
 }
@@ -999,14 +997,14 @@ static void wtt_help_cb(void* ctx, const char* topic)
 void WttQtWidget::activate_rtmon()
 {
   pwr_tStatus sts;
-  RtMon* rtmon = new RtMonQt(this, this, "Runtime Monitor", 0, &sts);
+  RtMon* rtmon = new RtMonQt(this, "Runtime Monitor", 0, &sts);
   rtmon->help_cb = wtt_help_cb;
 }
 
 void WttQtWidget::activate_statusmon()
 {
   pwr_tStatus sts;
-  Nodelist* nl = new NodelistQt(this, this, "Supervision Center",
+  Nodelist* nl = new NodelistQt(this, "Supervision Center",
       nodelist_eMode_SystemStatus, 0, 0, &sts);
   nl->set_scantime(3);
   nl->help_cb = wtt_help_cb;
@@ -1061,7 +1059,7 @@ void WttQtWidget::activate_history()
 
   strcpy(title, "History Configurator ");
   strcat(title, vname);
-  CoLogWQt* logw = new CoLogWQt(wtt, parentWidget(), title, 0, &sts);
+  CoLogWQt* logw = new CoLogWQt(wtt, title, 0, &sts);
   logw->CoLogW::show(categories, vname);
 }
 
@@ -1713,11 +1711,10 @@ void WttQtWidget::closeEvent(QCloseEvent* event)
   event->ignore();
 }
 
-WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
-    const char* iconname, void* wt_wbctx, pwr_tVolumeId wt_volid,
-    ldh_tVolume wt_volctx, wnav_sStartMenu* root_menu, pwr_tStatus* status)
-    : Wtt(wt_parent_ctx, wt_name, iconname, wt_wbctx, wt_volid, wt_volctx,
-          root_menu, status),
+WttQt::WttQt(void* wt_parent_ctx, const char* wt_name, const char* iconname,
+    void* wt_wbctx, pwr_tVolumeId wt_volid, ldh_tVolume wt_volctx,
+    wnav_sStartMenu* root_menu, pwr_tStatus* status) : Wtt(wt_parent_ctx,
+        wt_name, iconname, wt_wbctx, wt_volid, wt_volctx, root_menu, status),
       boot_dia(0), options_form(0), set_focus_disabled(0), disfocus_timerid(0),
       avoid_deadlock(0), realized(0)
 {
@@ -1886,7 +1883,7 @@ WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
   }
 
   // Qt
-  toplevel = new WttQtWidget(this, wt_parent_wid);
+  toplevel = new WttQtWidget(this);
   toplevel->setMinimumSize(window_width, window_height);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -2133,8 +2130,8 @@ WttQt::WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
   palette_paned = new QSplitter(Qt::Horizontal);
   wnav_paned = new QSplitter(Qt::Horizontal);
 
-  Wtt::palette = new PalQt(this, palette_paned, "Objects", ldhses,
-      layout_palette, &palette_widget, &sts);
+  Wtt::palette = new PalQt(this, "Objects", ldhses, layout_palette,
+      &palette_widget, &sts);
   Wtt::palette->set_focus_cb = &Wtt::set_focus_cb;
   Wtt::palette->traverse_focus_cb = &Wtt::traverse_focus;
   Wtt::palette->create_popup_menu_cb = &Wtt::create_pal_popup_menu_cb;
@@ -2367,7 +2364,7 @@ void OptionsDialog::activate_options_cancel()
 }
 
 OptionsDialog::OptionsDialog(WttQt* parent_ctx, QWidget* parent)
-    : QDialog(), wtt(parent_ctx)
+    : QDialog(parent), wtt(parent_ctx)
 {
   setMinimumSize(650, 450);
   setWindowTitle(fl("Options"));

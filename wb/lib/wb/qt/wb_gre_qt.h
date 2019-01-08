@@ -52,7 +52,7 @@ public:
 
   QTimer* trace_timerid;
 
-  WGreQt(void* parent_ctx, QWidget* parent_wid, const char* name);
+  WGreQt(void* parent_ctx, const char* name);
   ~WGreQt();
 
   void trace_start();
@@ -70,9 +70,7 @@ class WGreQtTraceObject : public QObject {
   Q_OBJECT
 
 public:
-  WGreQtTraceObject(WGreQt* parent) : QObject(), wgre(parent)
-  {
-  }
+  WGreQtTraceObject(WGreQt* parent) : QObject(), wgre(parent) {}
 
 public slots:
   void trace_scan();

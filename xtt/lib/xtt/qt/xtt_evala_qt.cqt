@@ -50,12 +50,12 @@
 #include <QMenuBar>
 #include <QToolBar>
 
-EvAlaQt::EvAlaQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* ala_name,
-    pwr_tObjid ev_user, int ev_eventname_seg, int ev_width, int ev_height,
-    int ev_x, int ev_y, pwr_tObjid ev_view, unsigned int ev_options,
-    void* widget, pwr_tStatus* status)
+EvAlaQt::EvAlaQt(void* ev_parent_ctx, char* ala_name, pwr_tObjid ev_user,
+    int ev_eventname_seg, int ev_width, int ev_height, int ev_x, int ev_y,
+    pwr_tObjid ev_view, unsigned int ev_options, void* widget,
+    pwr_tStatus* status)
     : EvAla(ev_parent_ctx, ala_name, ev_user, ev_eventname_seg, ev_width,
-          ev_height, ev_x, ev_y, ev_view, ev_options, status)
+            ev_height, ev_x, ev_y, ev_view, ev_options, status)
 {
   pwr_tStatus sts;
   pwr_sClass_OpPlace* opp;
@@ -85,17 +85,13 @@ EvAlaQt::EvAlaQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* ala_name,
 
   // Ala Window
 
+  toplevel = new EvAlaQtWidget(this);
   if (!(options & ev_mAlaOptions_Embedded)) {
-    toplevel = new EvAlaQtWidget(this, ev_parent_wid);
     toplevel->setMinimumSize(ala_width, ala_height);
     toplevel->setWindowTitle(translate_utf8(ala_name));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
-    parent_wid_ala = toplevel;
-
-    CoWowQt::SetWindowIcon(parent_wid_ala);
-  } else {
-    parent_wid_ala = (QWidget*)widget;
+    CoWowQt::SetWindowIcon(toplevel);
   }
 
   // Menu
@@ -166,8 +162,8 @@ EvAlaQt::EvAlaQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* ala_name,
       toplevel, help, "Help Selected Event", SLOT(ala_activate_helpevent()));
 
   // Create ala evlist
-  ala = new EvListQt(this, parent_wid_ala, ev_eType_AlarmList, ala_size,
-      eventname_seg, &ala_widget, ala_init_cb);
+  ala = new EvListQt(this, ev_eType_AlarmList, ala_size, eventname_seg,
+      &ala_widget, ala_init_cb);
   ala->start_trace_cb = &ala_start_trace_cb;
   ala->display_in_xnav_cb = &ala_display_in_xnav_cb;
   ala->name_to_alias_cb = &ala_name_to_alias_cb;
@@ -217,18 +213,16 @@ EvAlaQt::EvAlaQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* ala_name,
   ala_vbox->addLayout(ala_toolsbox);
   add_expanding(ala_vbox, ala_widget);
 
-  if (!(options & ev_mAlaOptions_Embedded)) {
-    parent_wid_ala->setLayout(ala_vbox);
-  }
+  toplevel->setLayout(ala_vbox);
 
   ala_methodtoolbar->set_sensitive();
   ala_sup_methodtoolbar->set_sensitive();
 
   if (!(options & ev_mAlaOptions_Embedded)) {
-    parent_wid_ala->show();
+    toplevel->show();
     if (!(EvAla::x == 0 && EvAla::y == 0)) {
       // Set position
-      parent_wid_ala->move(EvAla::x, EvAla::y);
+      toplevel->move(EvAla::x, EvAla::y);
     }
   } else {
     ala_widget->setMinimumSize(ala_width, ala_height);
@@ -236,7 +230,7 @@ EvAlaQt::EvAlaQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* ala_name,
 
   ala_displayed = 1;
 
-  wow = new CoWowQt(parent_wid_ala);
+  wow = new CoWowQt(toplevel);
 
   *status = 1;
 }
@@ -254,14 +248,14 @@ EvAlaQt::~EvAlaQt()
 
 void EvAlaQt::map_ala()
 {
-  pop(parent_wid_ala);
+  pop(toplevel);
   ala_displayed = 1;
 }
 
 void EvAlaQt::unmap_ala()
 {
   if (ala_displayed) {
-    parent_wid_ala->setVisible(false);
+    toplevel->setVisible(false);
     ala_displayed = 0;
   }
 }
@@ -269,8 +263,13 @@ void EvAlaQt::unmap_ala()
 void EvAlaQt::set_title_ala(char* title)
 {
   if (!(options & ev_mAlaOptions_Embedded)) {
-    parent_wid_ala->setWindowTitle(fl(title));
+    toplevel->setWindowTitle(fl(title));
   }
+}
+
+QWidget* EvAlaQt::get_widget()
+{
+  return toplevel;
 }
 
 void EvAlaQtWidget::focusInEvent(QFocusEvent* event)

@@ -48,14 +48,13 @@ class EvEveQtWidget;
 
 class EvEveQt : public EvEve {
 public:
-  EvEveQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
-      pwr_tObjid ev_user, int ev_eventname_seg, int ev_width, int ev_height,
-      int ev_x, int ev_y, pwr_tObjid ev_view, unsigned int ev_options,
-      void* widget, pwr_tStatus* status);
+  EvEveQt(void* ev_parent_ctx, char* eve_name, pwr_tObjid ev_user,
+      int ev_eventname_seg, int ev_width, int ev_height, int ev_x, int ev_y,
+      pwr_tObjid ev_view, unsigned int ev_options, void* widget,
+      pwr_tStatus* status);
   ~EvEveQt();
 
   EvEveQtWidget* toplevel;
-  QWidget* parent_wid_ala;
   QWidget* eve_widget;
   QVBoxLayout* eve_vbox;
   pwr_tObjid alarm_views[25];
@@ -64,20 +63,14 @@ public:
   void unmap_ala();
   void set_title_ala(char* title);
 
-  QWidget* get_widget()
-  {
-    return parent_wid_ala;
-  }
+  QWidget* get_widget();
 };
 
 class EvEveQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  EvEveQtWidget(EvEveQt* parent_ctx, QWidget* parent)
-      : QWidget(), eve(parent_ctx)
-  {
-  }
+  EvEveQtWidget(EvEveQt* parent_ctx) : QWidget(), eve(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

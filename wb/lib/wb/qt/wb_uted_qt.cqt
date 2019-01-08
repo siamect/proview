@@ -143,14 +143,13 @@ void WUtedQt::update_title(int editmode)
   CoWowQt::update_title(toplevel, editmode);
 }
 
-WUtedQt::WUtedQt(void* wu_parent_ctx, QWidget* wu_parent_wid,
-    const char* wu_name, const char* wu_iconname, ldh_tWBContext wu_ldhwb,
-    ldh_tSesContext wu_ldhses, int wu_editmode, void (*wu_quit_cb)(void*),
-    pwr_tStatus* status)
+WUtedQt::WUtedQt(void* wu_parent_ctx, const char* wu_name,
+    const char* wu_iconname, ldh_tWBContext wu_ldhwb, ldh_tSesContext wu_ldhses,
+    int wu_editmode, void (*wu_quit_cb)(void*), pwr_tStatus* status)
     : WUted(wu_parent_ctx, wu_name, wu_iconname, wu_ldhwb, wu_ldhses,
           wu_editmode, wu_quit_cb, status)
 {
-  toplevel = new WUtedQtWidget(this, wu_parent_wid);
+  toplevel = new WUtedQtWidget(this);
   toplevel->setMinimumSize(800, 400);
   toplevel->setWindowTitle(fl("Wb Utilities"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

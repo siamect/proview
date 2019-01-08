@@ -41,9 +41,8 @@
 
 class WRevNavQt : public WRevNav {
 public:
-  WRevNavQt(void* wa_parent_ctx, QWidget* wa_parent_wid, ldh_tSession wb_ldhses,
-      const char* wa_name, wb_eUtility wa_utility, QWidget** w,
-      pwr_tStatus* status);
+  WRevNavQt(void* wa_parent_ctx, ldh_tSession wb_ldhses, const char* wa_name,
+      wb_eUtility wa_utility, QWidget** w, pwr_tStatus* status);
   ~WRevNavQt();
 
   QWidget* brow_widget;

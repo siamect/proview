@@ -49,7 +49,7 @@ class WPkgQtWidget;
 
 class WPkgQt : public WPkg {
 public:
-  WPkgQt(QWidget* wa_parent_wid, void* wa_parent_ctx);
+  WPkgQt(void* wa_parent_ctx);
   ~WPkgQt();
 
   QWidget* brow_widget;
@@ -71,9 +71,7 @@ class WPkgQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WPkgQtWidget(WPkgQt* parent_ctx, QWidget* parent) : QWidget(), pkg(parent_ctx)
-  {
-  }
+  WPkgQtWidget(WPkgQt* parent_ctx) : QWidget(), pkg(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

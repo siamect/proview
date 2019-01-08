@@ -65,8 +65,7 @@ class OpQtWidget;
 
 class OpQt : public Op {
 public:
-  OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
-      pwr_tStatus* status);
+  OpQt(void* op_parent_ctx, char* opplace, pwr_tStatus* status);
   ~OpQt();
 
   QLabel* alarmcnt_label;
@@ -127,10 +126,7 @@ class OpQtWidget : public QFrame {
   Q_OBJECT
 
 public:
-  OpQtWidget(OpQt* parent_ctx, QWidget* parent)
-      : QFrame(), op(parent_ctx)
-  {
-  }
+  OpQtWidget(OpQt* parent_ctx) : QFrame(), op(parent_ctx) {}
 
 protected:
   void closeEvent(QCloseEvent* event);

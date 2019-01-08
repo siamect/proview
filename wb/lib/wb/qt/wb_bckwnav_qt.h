@@ -45,9 +45,8 @@
 
 class WbBckWNavQt : public WbBckWNav {
 public:
-  WbBckWNavQt(void* bckw_parent_ctx, QWidget* bckw_parent_wid,
-      ldh_tSession bckw_ldhses, wb_bck_list* l_list, int l_editmode,
-      QWidget** w);
+  WbBckWNavQt(void* bckw_parent_ctx, ldh_tSession bckw_ldhses,
+      wb_bck_list* l_list, int l_editmode, QWidget** w);
   ~WbBckWNavQt();
 
   QWidget* brow_widget;

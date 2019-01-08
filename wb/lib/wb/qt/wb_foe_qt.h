@@ -55,7 +55,6 @@ public:
   QSplitter* pane;
   QSplitter* subpane;
   QWidget* caution;
-  QWidget* foe_window;
   QWidget* popupmenu;
   QAction* save;
   QAction* exit;
@@ -115,12 +114,11 @@ public:
   QAction* select_cp_nextdown;
   CoWowFocusTimerQt focustimer;
 
-  WFoeQt(void* f_parent_ctx, QWidget* f_parent_wid, const char* f_name,
-      pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
-      int f_map_window, ldh_eAccess f_access, unsigned int f_options,
-      pwr_tStatus* sts);
-  WFoeQt(void* f_parent_ctx, QWidget* f_parent_wid, const char* f_name,
-      pwr_tObjid plcprogram, ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
+  WFoeQt(void* f_parent_ctx, const char* f_name, pwr_tObjid plcprogram,
+      ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx, int f_map_window,
+      ldh_eAccess f_access, unsigned int f_options, pwr_tStatus* sts);
+  WFoeQt(void* f_parent_ctx, const char* f_name, pwr_tObjid plcprogram,
+      ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx,
       vldh_t_node nodeobject, unsigned long windowindex,
       unsigned long new_window, int f_map_window, ldh_eAccess f_access,
       foe_eFuncAccess function_access, unsigned int f_options,
@@ -161,9 +159,7 @@ class WFoeQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WFoeQtWidget(WFoeQt* parent_ctx, QWidget* parent) : QWidget(), foe(parent_ctx)
-  {
-  }
+  WFoeQtWidget(WFoeQt* parent_ctx) : QWidget(), foe(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

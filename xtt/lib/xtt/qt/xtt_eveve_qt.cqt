@@ -49,12 +49,12 @@
 
 #include <QMenuBar>
 
-EvEveQt::EvEveQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
-    pwr_tObjid ev_user, int ev_eventname_seg, int ev_width, int ev_height,
-    int ev_x, int ev_y, pwr_tObjid ev_view, unsigned int ev_options,
-    void* widget, pwr_tStatus* status)
+EvEveQt::EvEveQt(void* ev_parent_ctx, char* eve_name, pwr_tObjid ev_user,
+    int ev_eventname_seg, int ev_width, int ev_height, int ev_x, int ev_y,
+    pwr_tObjid ev_view, unsigned int ev_options, void* widget,
+    pwr_tStatus* status)
     : EvEve(ev_parent_ctx, eve_name, ev_user, ev_eventname_seg, ev_width,
-          ev_height, ev_x, ev_y, ev_view, ev_options, status)
+            ev_height, ev_x, ev_y, ev_view, ev_options, status)
 {
   pwr_tStatus sts;
   pwr_sClass_OpPlace* opp;
@@ -82,17 +82,13 @@ EvEveQt::EvEveQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
   eve_size = opp->MaxNoOfAlarms;
 
   // Eve Window
+  toplevel = new EvEveQtWidget(this);
   if (!(options & ev_mAlaOptions_Embedded)) {
-    toplevel = new EvEveQtWidget(this, ev_parent_wid);
     toplevel->setMinimumSize(eve_width, eve_height);
     toplevel->setWindowTitle(translate_utf8(eve_name));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
-    parent_wid_ala = toplevel;
-
-    CoWowQt::SetWindowIcon(parent_wid_ala);
-  } else {
-    parent_wid_ala = (QWidget*)widget;
+    CoWowQt::SetWindowIcon(toplevel);
   }
 
   eve_vbox = new QVBoxLayout();
@@ -157,8 +153,8 @@ EvEveQt::EvEveQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
       toplevel, help, "Help Selected Event", SLOT(eve_activate_helpevent()));
 
   // Create ala evlist
-  ala = new EvListQt(this, parent_wid_ala, ev_eType_EventList, eve_size,
-      eventname_seg, &eve_widget, eve_init_cb);
+  ala = new EvListQt(this, ev_eType_EventList, eve_size, eventname_seg,
+      &eve_widget, eve_init_cb);
   ala->start_trace_cb = &eve_start_trace_cb;
   ala->display_in_xnav_cb = &eve_display_in_xnav_cb;
   ala->name_to_alias_cb = &eve_name_to_alias_cb;
@@ -205,18 +201,16 @@ EvEveQt::EvEveQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
   eve_vbox->addLayout(eve_toolsbox);
   add_expanding(eve_vbox, eve_widget);
 
-  if (!(options & ev_mAlaOptions_Embedded)) {
-    parent_wid_ala->setLayout(eve_vbox);
-  }
+  toplevel->setLayout(eve_vbox);
 
   eve_methodtoolbar->set_sensitive();
   eve_sup_methodtoolbar->set_sensitive();
 
   if (!(options & ev_mAlaOptions_Embedded)) {
-    parent_wid_ala->show();
+    toplevel->show();
     if (!(EvEve::x == 0 && EvEve::y == 0)) {
       // Set position
-      parent_wid_ala->move(EvEve::x, EvEve::y);
+      toplevel->move(EvEve::x, EvEve::y);
     }
   } else {
     eve_widget->setMinimumSize(eve_width, eve_height);
@@ -224,7 +218,7 @@ EvEveQt::EvEveQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
 
   eve_displayed = 1;
 
-  wow = new CoWowQt(parent_wid_ala);
+  wow = new CoWowQt(toplevel);
 
   *status = 1;
 }
@@ -242,14 +236,14 @@ EvEveQt::~EvEveQt()
 
 void EvEveQt::map_ala()
 {
-  pop(parent_wid_ala);
+  pop(toplevel);
   eve_displayed = 1;
 }
 
 void EvEveQt::unmap_ala()
 {
   if (eve_displayed) {
-    parent_wid_ala->setVisible(false);
+    toplevel->setVisible(false);
     eve_displayed = 0;
   }
 }
@@ -257,8 +251,13 @@ void EvEveQt::unmap_ala()
 void EvEveQt::set_title_ala(char* title)
 {
   if (!(options & ev_mAlaOptions_Embedded)) {
-    parent_wid_ala->setWindowTitle(fl(title));
+    toplevel->setWindowTitle(fl(title));
   }
+}
+
+QWidget* EvEveQt::get_widget()
+{
+  return toplevel;
 }
 
 void EvEveQtWidget::focusInEvent(QFocusEvent* event)

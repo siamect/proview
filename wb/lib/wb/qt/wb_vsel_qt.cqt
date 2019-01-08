@@ -162,7 +162,6 @@ void WVselQtWidget::activate_showall(bool set)
 *
 * Type		Parameter	IOGF	Description
 * void 		*parent_ctx	I	Parent context adress
-* Widget	parent_wid	I	Parent Widget adress
 * char *	name		I	Name of the created object
 *
 * Description:
@@ -170,10 +169,9 @@ void WVselQtWidget::activate_showall(bool set)
 **************************************************************************/
 
 WVselQt::WVselQt(pwr_tStatus* status, void* wv_parent_ctx,
-    QWidget* wv_parent_wid, const char* wv_name, ldh_tWBContext wv_wbctx,
-    char* volumename, int (*bc_success)(void*, pwr_tVolumeId*, int),
-    void (*bc_cancel)(), int (*bc_time_to_exit)(void*), int show_volumes,
-    wb_eType wv_wb_type)
+    const char* wv_name, ldh_tWBContext wv_wbctx, char* volumename,
+    int (*bc_success)(void*, pwr_tVolumeId*, int), void (*bc_cancel)(),
+    int (*bc_time_to_exit)(void*), int show_volumes, wb_eType wv_wb_type)
     : WVsel(status, wv_parent_ctx, wv_name, wv_wbctx, volumename, bc_success,
           bc_cancel, bc_time_to_exit, show_volumes, wv_wb_type)
 {
@@ -244,7 +242,7 @@ WVselQt::WVselQt(pwr_tStatus* status, void* wv_parent_ctx,
   }
 
   // Create the window
-  toplevel = new WVselQtWidget(this, wv_parent_wid);
+  toplevel = new WVselQtWidget(this);
   toplevel->setMinimumSize(500, 400);
   toplevel->setWindowTitle(fl(name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

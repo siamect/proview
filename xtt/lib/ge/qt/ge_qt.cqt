@@ -78,9 +78,7 @@
 // This QFontDelegate is more or less a copy of the one in QFontComboBox.
 class QFontDelegate : public QAbstractItemDelegate {
 public:
-  explicit QFontDelegate(QObject* parent) : QAbstractItemDelegate(parent)
-  {
-  }
+  explicit QFontDelegate(QObject* parent) : QAbstractItemDelegate(parent) {}
   void paint(QPainter* painter, const QStyleOptionViewItem& option,
       const QModelIndex& index) const;
   QSize sizeHint(
@@ -150,8 +148,8 @@ void GeQt::subgraphs_new()
     subgraphs_widget->close();
   }
 
-  subgraphs = new SubGraphsQt(this, toplevel, "SubGraphs",
-      (void*)graph->grow->ctx, &subgraphs_widget, &sts);
+  subgraphs = new SubGraphsQt(this, "SubGraphs", (void*)graph->grow->ctx,
+      &subgraphs_widget, &sts);
   subgraphs->message_cb = &Ge::message_cb;
   subgraphs->close_cb = &Ge::subgraphs_close_cb;
 }
@@ -701,7 +699,7 @@ void GeQtWidget::activate_history()
 
   strcpy(title, "History ");
   strcat(title, name);
-  CoLogWQt* logw = new CoLogWQt(this, this, title, 0, &sts);
+  CoLogWQt* logw = new CoLogWQt(this, title, 0, &sts);
   logw->CoLogW::show(categories, name);
 }
 
@@ -1297,9 +1295,8 @@ GeQt::~GeQt()
   }
 }
 
-GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
-    ldh_tSesContext x_ldhses, int x_exit_when_close, unsigned int x_options,
-    char* graph_name)
+GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
+    unsigned int x_options, char* graph_name)
     : Ge(x_parent_ctx, x_ldhses, x_exit_when_close, x_options)
 {
   const int window_width = 980;
@@ -1324,7 +1321,7 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
     strcat(title, tmp_name);
   }
 
-  toplevel = new GeQtWidget(this, x_parent_widget);
+  toplevel = new GeQtWidget(this);
 
   toplevel->setMinimumSize(window_width, window_height);
   toplevel->setWindowTitle(fl(title));
@@ -1896,8 +1893,8 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   unsigned int opt
       = x_options & ge_mOption_IgnoreJournal ? graph_mOption_IgnoreJournal : 0;
 
-  graph = new GraphQt(this, toplevel, "GraphQt", &grow_widget, &sts,
-      "pwrp_pop:", graph_eMode_Development, 1, 0, 0, 0, 0, opt);
+  graph = new GraphQt(this, "GraphQt", &grow_widget, &sts, "pwrp_pop:",
+      graph_eMode_Development, 1, 0, 0, 0, 0, opt);
   graph->message_cb = &Ge::message_cb;
   graph->get_current_subgraph_cb = &Ge::subpalette_get_select;
   graph->get_current_colors_cb = &Ge::colorpalette_get_current;
@@ -1925,8 +1922,7 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
   QHBoxLayout* palbox = new QHBoxLayout();
 
   // SubGraphs palette
-  subpalette
-      = new SubPaletteQt(this, toplevel, "SubGraphs", &subpalette_widget, &sts);
+  subpalette = new SubPaletteQt(this, "SubGraphs", &subpalette_widget, &sts);
   subpalette->message_cb = &Ge::message_cb;
   subpalette->set_focus_cb = &Ge::set_focus_cb;
   subpalette->traverse_focus_cb = &Ge::traverse_focus;
@@ -1939,8 +1935,8 @@ GeQt::GeQt(void* x_parent_ctx, QWidget* x_parent_widget,
       Ge::init_colorpalette_cb, this, &colorpalette_widget);
 
   if (ldhses) {
-    plantctx = new NavQt(
-        this, toplevel, "Plant", ldhses, "NavigatorW1", &plant_widget, &sts);
+    plantctx = new NavQt(this, "Plant", ldhses, "NavigatorW1", &plant_widget,
+        &sts);
     ((NavQt*)plantctx)->get_plant_select_cb = Ge::get_plant_select_cb;
     ((NavQt*)plantctx)->set_focus_cb = Ge::set_focus_cb;
     ((NavQt*)plantctx)->traverse_focus_cb = Ge::traverse_focus;

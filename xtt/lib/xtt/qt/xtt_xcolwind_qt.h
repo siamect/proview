@@ -51,9 +51,8 @@ class XColWindQtWidget;
 
 class XColWindQt : public XColWind {
 public:
-  XColWindQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
-      pwr_sAttrRef* xa_objar, char* xa_title, int xa_advanced_user,
-      xcolwind_eType xa_type, int* xa_sts);
+  XColWindQt(void* xa_parent_ctx, pwr_sAttrRef* xa_objar, char* xa_title,
+      int xa_advanced_user, xcolwind_eType xa_type, int* xa_sts);
   ~XColWindQt();
 
   QWidget* brow_widget;
@@ -86,10 +85,7 @@ class XColWindQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  XColWindQtWidget(XColWindQt* parent_ctx, QWidget* parent)
-      : QWidget(), colwind(parent_ctx)
-  {
-  }
+  XColWindQtWidget(XColWindQt* parent_ctx) : QWidget(), colwind(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

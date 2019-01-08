@@ -46,9 +46,8 @@
 //! The navigation area of the attribute editor.
 class GsdmlAttrNavQt : public GsdmlAttrNav {
 public:
-  GsdmlAttrNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
-      const char* xn_name, pn_gsdml* xn_gsdml, int xn_edit_mode, QWidget** w,
-      pwr_tStatus* status);
+  GsdmlAttrNavQt(void* xn_parent_ctx, const char* xn_name, pn_gsdml* xn_gsdml,
+      int xn_edit_mode, QWidget** w, pwr_tStatus* status);
   ~GsdmlAttrNavQt();
   void set_inputfocus();
   void display_attr_help_text();

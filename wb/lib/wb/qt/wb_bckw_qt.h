@@ -47,9 +47,8 @@ class WbBckWQtWidget;
 
 class WbBckWQt : public WbBckW {
 public:
-  WbBckWQt(void* l_parent_ctx, QWidget* l_parent_wid, ldh_tSession l_ldhses,
-      const char* l_name, wb_bck_list* l_list, int l_editmode,
-      pwr_tStatus* status);
+  WbBckWQt(void* l_parent_ctx, ldh_tSession l_ldhses, const char* l_name,
+      wb_bck_list* l_list, int l_editmode, pwr_tStatus* status);
   ~WbBckWQt();
 
   QWidget* nav_widget;
@@ -69,10 +68,7 @@ class WbBckWQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WbBckWQtWidget(WbBckWQt* parent_ctx, QWidget* parent)
-      : QWidget(), bck(parent_ctx)
-  {
-  }
+  WbBckWQtWidget(WbBckWQt* parent_ctx) : QWidget(), bck(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

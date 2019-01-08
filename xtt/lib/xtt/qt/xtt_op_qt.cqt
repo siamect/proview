@@ -134,8 +134,7 @@ void ClickableFrame::mousePressEvent(QMouseEvent* event) {
     emit clicked();
 }
 
-OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
-    pwr_tStatus* status)
+OpQt::OpQt(void* op_parent_ctx, char* opplace, pwr_tStatus* status)
     : Op(op_parent_ctx, opplace, status), title_label(0), a_height(2),
       text_size(12)
 {
@@ -150,7 +149,7 @@ OpQt::OpQt(void* op_parent_ctx, QWidget* op_parent_wid, char* opplace,
   green_color = QColor("green");
   gray_color = QColor("gray");
 
-  toplevel = new OpQtWidget(this, op_parent_wid);
+  toplevel = new OpQtWidget(this);
   toplevel->setMinimumSize(1100, OP_HEIGHT_MIN + OP_HEIGHT_STATUSBAR);
   toplevel->setWindowFlags(Qt::CustomizeWindowHint);
 

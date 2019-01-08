@@ -194,9 +194,7 @@ public:
   }
 
   void move_input(
-      FlowCtx* ctx, void* data, int x, int y, flow_ePosition pos_type)
-  {
-  }
+      FlowCtx* ctx, void* data, int x, int y, flow_ePosition pos_type) {}
 
   void delete_secondary_ctx(FlowCtx* ctx);
   int create_secondary_ctx(FlowCtx* flow_ctx, void** secondary_flow_ctx,

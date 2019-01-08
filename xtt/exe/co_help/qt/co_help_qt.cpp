@@ -87,7 +87,7 @@ CoHelpQt::CoHelpQt(int argc, char* argv[], int* return_sts)
   fprintf(stderr, "\n");
 
   // Create help window
-  xhelp = new CoXHelpQt(0 /*toplevel*/, this, xhelp_eUtility_Xtt, &sts);
+  xhelp = new CoXHelpQt(this, xhelp_eUtility_Xtt, &sts);
   // xhelp->open_URL_cb = open_URL_cb;
   CoXHelp::set_default(xhelp);
   xhelp->close_cb = close_cb;

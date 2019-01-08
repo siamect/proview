@@ -45,8 +45,7 @@
 
 class CoLogWNavQt : public CoLogWNav {
 public:
-  CoLogWNavQt(void* ev_parent_ctx, QWidget* ev_parent_wid, int l_show_item,
-      QWidget** w);
+  CoLogWNavQt(void* ev_parent_ctx, int l_show_item, QWidget** w);
   ~CoLogWNavQt();
 
   QWidget* brow_widget;

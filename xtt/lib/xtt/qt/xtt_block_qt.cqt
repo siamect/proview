@@ -134,8 +134,8 @@ void BlockQtWidget::closeEvent(QCloseEvent* event)
   QWidget::closeEvent(event);
 }
 
-BlockQt::BlockQt(void* b_parent_ctx, QWidget* b_parent_wid, pwr_sAttrRef* b_oar,
-    char* name, unsigned int priv, pwr_tStatus* sts)
+BlockQt::BlockQt(void* b_parent_ctx, pwr_sAttrRef* b_oar, char* name,
+    unsigned int priv, pwr_tStatus* sts)
     : Block(b_parent_ctx, b_oar, name, priv, sts)
 {
   char title[400];
@@ -146,7 +146,7 @@ BlockQt::BlockQt(void* b_parent_ctx, QWidget* b_parent_wid, pwr_sAttrRef* b_oar,
     return;
   }
 
-  toplevel = new BlockQtWidget(this, b_parent_wid);
+  toplevel = new BlockQtWidget(this);
   strcpy(title, name);
   strcat(title, "    ");
   strcat(title, aname);
@@ -204,7 +204,7 @@ BlockQt::BlockQt(void* b_parent_ctx, QWidget* b_parent_wid, pwr_sAttrRef* b_oar,
     toggleNo->setEnabled(false);
   }
 
-  wow = new CoWowQt(b_parent_wid);
+  wow = new CoWowQt(toplevel);
 
   update();
 }

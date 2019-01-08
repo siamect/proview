@@ -45,14 +45,13 @@
 #include "xtt_otree_qt.h"
 #include "xtt_sevhist_qt.h"
 
-XttSevHistQt::XttSevHistQt(void* parent_ctx, QWidget* x_parent_wid,
-    const char* name, QWidget** w, pwr_tOid* xn_oidv, pwr_tOName* xn_anamev,
-    pwr_tOName* xn_onamev, bool* sevhistobjectv, sevcli_tCtx xn_scctx,
-    int xn_width, int xn_height, unsigned int xn_options, int xn_color_theme,
-    time_ePeriod xn_time_range, void* basewidget, int* sts)
+XttSevHistQt::XttSevHistQt(void* parent_ctx, const char* name, QWidget** w,
+    pwr_tOid* xn_oidv, pwr_tOName* xn_anamev, pwr_tOName* xn_onamev,
+    bool* sevhistobjectv, sevcli_tCtx xn_scctx, int xn_width, int xn_height,
+    unsigned int xn_options, int xn_color_theme, time_ePeriod xn_time_range,
+    void* basewidget, int* sts)
     : XttSevHist(parent_ctx, name, xn_oidv, xn_anamev, xn_onamev,
-          sevhistobjectv, xn_scctx, xn_color_theme, xn_time_range, sts),
-      parent_wid(x_parent_wid)
+        sevhistobjectv, xn_scctx, xn_color_theme, xn_time_range, sts)
 {
   char title[250];
   strncpy(title, name, sizeof(title));
@@ -63,7 +62,7 @@ XttSevHistQt::XttSevHistQt(void* parent_ctx, QWidget* x_parent_wid,
   }
   *sts = XNAV__SUCCESS;
 
-  curve = new GeCurveQt(this, parent_wid, title, NULL, gcd, 1, xn_width,
+  curve = new GeCurveQt(this, title, NULL, gcd, 1, xn_width,
       xn_height, xn_options, color_theme, basewidget);
   curve->close_cb = sevhist_close_cb;
   curve->help_cb = sevhist_help_cb;
@@ -87,17 +86,15 @@ XttSevHistQt::XttSevHistQt(void* parent_ctx, QWidget* x_parent_wid,
     *w = (QWidget*)curve->get_widget();
   }
 
-  wow = new CoWowQt(parent_wid);
+  wow = new CoWowQt(((GeCurveQt*)curve)->toplevel);
   timerid = wow->timer_new();
 
   timerid->add(1000, sevhist_scan, this);
 }
 
-XttSevHistQt::XttSevHistQt(void* parent_ctx, QWidget* x_parent_wid,
-    const char* name, QWidget** w, char* filename, int xn_color_theme,
-    void* basewidget, int* sts)
-    : XttSevHist(parent_ctx, name, filename, xn_color_theme, sts),
-      parent_wid(x_parent_wid)
+XttSevHistQt::XttSevHistQt(void* parent_ctx, const char* name, QWidget** w,
+    char* filename, int xn_color_theme, void* basewidget, int* sts)
+    : XttSevHist(parent_ctx, name, filename, xn_color_theme, sts)
 {
   char title[250];
   strncpy(title, name, sizeof(title));
@@ -108,13 +105,13 @@ XttSevHistQt::XttSevHistQt(void* parent_ctx, QWidget* x_parent_wid,
   }
   *sts = XNAV__SUCCESS;
 
-  curve = new GeCurveQt(
-      this, parent_wid, title, NULL, gcd, 1, 0, 0, 0, color_theme, basewidget);
+  curve = new GeCurveQt(this, title, NULL, gcd, 1, 0, 0, 0, color_theme,
+      basewidget);
   curve->close_cb = sevhist_close_cb;
   curve->help_cb = sevhist_help_cb;
   curve->enable(0);
 
-  wow = new CoWowQt(parent_wid);
+  wow = new CoWowQt(((GeCurveQt*)curve)->toplevel);
   timerid = wow->timer_new();
 
   timerid->add(1000, sevhist_scan, this);
@@ -143,6 +140,5 @@ XttOTree* XttSevHistQt::tree_new(const char* title, pwr_tAttrRef* itemlist,
     int itemcnt, unsigned int layout,
     pwr_tStatus (*action_cb)(void*, pwr_tAttrRef*))
 {
-  return new XttOTreeQt(
-      parent_wid, this, title, itemlist, itemcnt, layout, action_cb);
+  return new XttOTreeQt(this, title, itemlist, itemcnt, layout, action_cb);
 }

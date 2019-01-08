@@ -41,9 +41,8 @@
 
 #include "flow_browwidget_qt.h"
 
-TreeNavQt::TreeNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
-    pwr_tAttrRef* xn_itemlist, int xn_item_cnt, unsigned int xn_options,
-    pwr_tStatus (*xn_get_object_info)(
+TreeNavQt::TreeNavQt(void* xn_parent_ctx, pwr_tAttrRef* xn_itemlist,
+    int xn_item_cnt, unsigned int xn_options, pwr_tStatus (*xn_get_object_info)(
         void*, pwr_tAttrRef*, char*, int, char*, char*, int),
     pwr_tStatus (*xn_get_node_info)(void*, char*, char*, int), QWidget** w,
     pwr_tStatus* status)

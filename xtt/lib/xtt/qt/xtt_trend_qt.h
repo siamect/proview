@@ -43,16 +43,12 @@
 
 class XttTrendQt : public XttTrend {
 public:
-  XttTrendQt(void* xn_parent_ctx, QWidget* xn_parent_wid, char* xn_name,
-      QWidget** w, pwr_sAttrRef* objid, pwr_sAttrRef* plotgroup, int width,
-      int height, unsigned int options, int x_color_theme, void* basewidget,
-      int* sts);
+  XttTrendQt(void* xn_parent_ctx, char* xn_name, QWidget** w,
+      pwr_sAttrRef* objid, pwr_sAttrRef* plotgroup, int width, int height,
+      unsigned int options, int x_color_theme, void* basewidget, int* sts);
   XttOTree* tree_new(const char* title, pwr_tAttrRef* itemlist, int itemcnt,
       unsigned int layout, pwr_tStatus (*action_cb)(void*, pwr_tAttrRef*));
   ~XttTrendQt();
-
-private:
-  QWidget* parent_wid;
 };
 
 #endif

@@ -90,13 +90,11 @@ class WttQtWidget;
 
 class WttQt : public Wtt {
 public:
-  WttQt(void* wt_parent_ctx, QWidget* wt_parent_wid, const char* wt_name,
-      const char* iconname, ldh_tWBContext wt_wbctx, pwr_tVolumeId wt_volid,
-      ldh_tVolume wt_volctx, wnav_sStartMenu* root_menu, pwr_tStatus* status);
+  WttQt(void* wt_parent_ctx, const char* wt_name, const char* iconname,
+      ldh_tWBContext wt_wbctx, pwr_tVolumeId wt_volid, ldh_tVolume wt_volctx,
+      wnav_sStartMenu* root_menu, pwr_tStatus* status);
 
-  WttQt()
-  {
-  }
+  WttQt() {}
   ~WttQt();
 
   QWidget* wnav_brow_widget;
@@ -227,9 +225,7 @@ class WttQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WttQtWidget(WttQt* parent_ctx, QWidget* parent) : QWidget(), wtt(parent_ctx)
-  {
-  }
+  WttQtWidget(WttQt* parent_ctx) : QWidget(), wtt(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

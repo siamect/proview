@@ -118,10 +118,11 @@ int main(int argc, char* argv[])
   setlocale(LC_NUMERIC, "POSIX");
   setlocale(LC_TIME, "en_US");
 
-  xhelp = new CoXHelpQt(0, 0, xhelp_eUtility_Xtt, &sts);
+  xhelp = new CoXHelpQt(NULL, xhelp_eUtility_Xtt, &sts);
   CoXHelp::set_default(xhelp);
 
-  nl = new NodelistQt(0, 0, "Status Monitor", mode, view_descr, msgw_ePop_No, &sts);
+  nl = new NodelistQt(NULL, "Status Monitor", mode, view_descr, msgw_ePop_No,
+      &sts);
   nl->close_cb = statusmon_close;
   nl->set_scantime(3);
 

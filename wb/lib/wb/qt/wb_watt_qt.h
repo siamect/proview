@@ -51,9 +51,8 @@ class WAttQtWidget;
 
 class WAttQt : public WAtt {
 public:
-  WAttQt(QWidget* wa_parent_wid, void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
-      pwr_sAttrRef wa_aref, int wa_editmode, int wa_advanced_user,
-      int wa_display_objectname);
+  WAttQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses, pwr_sAttrRef wa_aref,
+      int wa_editmode, int wa_advanced_user, int wa_display_objectname);
   ~WAttQt();
   QWidget* brow_widget;
   QWidget* form_widget;
@@ -84,10 +83,7 @@ class WAttQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WAttQtWidget(WAttQt* parent_ctx, QWidget* parent)
-      : QWidget(), watt(parent_ctx)
-  {
-  }
+  WAttQtWidget(WAttQt* parent_ctx) : QWidget(), watt(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

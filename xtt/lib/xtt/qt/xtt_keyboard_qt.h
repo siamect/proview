@@ -65,9 +65,7 @@ private:
 class XttKeyboardQtWidget : public QDialog {
 public:
   XttKeyboardQtWidget(XttKeyboardQt* parent_ctx, QWidget* parent)
-      : QDialog(parent), kb(parent_ctx)
-  {
-  }
+      : QDialog(parent), kb(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

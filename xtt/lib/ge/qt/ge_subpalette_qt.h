@@ -50,8 +50,8 @@ class SubPaletteQtObject;
 
 class SubPaletteQt : public SubPalette {
 public:
-  SubPaletteQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
-      QWidget** w, pwr_tStatus* status);
+  SubPaletteQt(void* xn_parent_ctx, const char* xn_name, QWidget** w,
+      pwr_tStatus* status);
   ~SubPaletteQt();
 
   SubPaletteQtObject* object;
@@ -61,19 +61,13 @@ public:
 
   void set_inputfocus(int focus);
   void create_popup_menu(char* filename, int x, int y);
-
-private:
-  QWidget* parent_widget;
 };
 
 class SubPaletteQtObject : public QObject {
   Q_OBJECT
 
 public:
-  SubPaletteQtObject(SubPaletteQt* parent_ctx)
-      : QObject(), subpalette(parent_ctx)
-  {
-  }
+  SubPaletteQtObject(SubPaletteQt* parent_ctx) : QObject(), subpalette(parent_ctx) {}
 
 public slots:
   void activate_help();

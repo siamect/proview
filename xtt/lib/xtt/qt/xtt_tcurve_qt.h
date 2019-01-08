@@ -43,8 +43,8 @@
 
 class XttTCurveQt : public XttTCurve {
 public:
-  XttTCurveQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
-      QWidget** w, pwr_tAttrRef* xn_arefv, int xn_width, int xn_height,
+  XttTCurveQt(void* xn_parent_ctx, const char* xn_name, QWidget** w,
+      pwr_tAttrRef* xn_arefv, int xn_width, int xn_height,
       unsigned int xn_options, int xn_color_theme, void* basewidget, int* sts);
   ~XttTCurveQt();
 };

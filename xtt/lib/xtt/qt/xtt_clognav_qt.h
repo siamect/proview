@@ -45,7 +45,7 @@
 
 class CLogNavQt : public CLogNav {
 public:
-  CLogNavQt(void* ev_parent_ctx, QWidget* ev_parent_wid, QWidget** w);
+  CLogNavQt(void* ev_parent_ctx, QWidget** w);
   ~CLogNavQt();
 
   QWidget* brow_widget;

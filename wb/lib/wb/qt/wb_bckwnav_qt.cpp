@@ -42,8 +42,8 @@
 
 #include "wb_bckwnav_qt.h"
 
-WbBckWNavQt::WbBckWNavQt(void* l_parent_ctx, QWidget* l_parent_wid,
-    ldh_tSession l_ldhses, wb_bck_list* l_list, int l_editmode, QWidget** w)
+WbBckWNavQt::WbBckWNavQt(void* l_parent_ctx, ldh_tSession l_ldhses,
+    wb_bck_list* l_list, int l_editmode, QWidget** w)
     : WbBckWNav(l_parent_ctx, l_ldhses, l_list, l_editmode)
 {
   form_widget

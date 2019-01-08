@@ -79,8 +79,8 @@ public:
   CoWowEntryQt* recall_entry;
 
 public:
-  GeQt(void* parent_ctx, QWidget* parent_widget, ldh_tSesContext ldhses,
-      int exit_when_close, unsigned int options, char* graph_name);
+  GeQt(void* parent_ctx, ldh_tSesContext ldhses, int exit_when_close,
+        unsigned int options, char* graph_name);
   ~GeQt();
 
   virtual void set_title(char* title);
@@ -117,10 +117,7 @@ class GeQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  GeQtWidget(GeQt* parent_ctx, QWidget* parent)
-      : QWidget(), ge(parent_ctx)
-  {
-  }
+  GeQtWidget(GeQt* parent_ctx) : QWidget(), ge(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

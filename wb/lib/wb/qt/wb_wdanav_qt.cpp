@@ -42,14 +42,13 @@
 
 #include "wb_wdanav_qt.h"
 
-WdaNavQt::WdaNavQt(void* wa_parent_ctx, QWidget* wa_parent_wid,
-    const char* wa_name, ldh_tSesContext wa_ldhses, pwr_tObjid wa_objid,
-    pwr_tClassId wa_classid, char* wa_attribute, int wa_editmode,
-    int wa_advanced_user, int wa_display_objectname, wb_eUtility wa_utility,
-    QWidget** w, pwr_tStatus* status)
-    : WdaNav(wa_parent_ctx, wa_name, wa_ldhses, wa_objid, wa_classid,
-          wa_attribute, wa_editmode, wa_advanced_user, wa_display_objectname,
-          wa_utility, status)
+WdaNavQt::WdaNavQt(void* wa_parent_ctx, const char* wa_name,
+    ldh_tSesContext wa_ldhses, pwr_tObjid wa_objid, pwr_tClassId wa_classid,
+    char* wa_attribute, int wa_editmode, int wa_advanced_user,
+    int wa_display_objectname, wb_eUtility wa_utility, QWidget** w,
+    pwr_tStatus* status) : WdaNav(wa_parent_ctx, wa_name, wa_ldhses, wa_objid,
+        wa_classid, wa_attribute, wa_editmode, wa_advanced_user,
+        wa_display_objectname, wa_utility, status)
 {
   form_widget
       = scrolledbrowwidgetqt_new(WdaNav::init_brow_cb, this, &brow_widget);

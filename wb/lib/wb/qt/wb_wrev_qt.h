@@ -71,7 +71,7 @@ class WRevQtWidget;
 
 class WRevQt : public WRev {
 public:
-  WRevQt(QWidget* wa_parent_wid, void* wa_parent_ctx, ldh_tSession wb_ldhses);
+  WRevQt(void* wa_parent_ctx, ldh_tSession wb_ldhses);
   ~WRevQt();
 
   QWidget* brow_widget;
@@ -97,9 +97,7 @@ class WRevQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WRevQtWidget(WRevQt* parent_ctx, QWidget* parent) : QWidget(), rev(parent_ctx)
-  {
-  }
+  WRevQtWidget(WRevQt* parent_ctx) : QWidget(), rev(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

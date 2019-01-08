@@ -75,9 +75,7 @@ class XttMethodToolbarQtObject : public QObject {
 
 public:
   XttMethodToolbarQtObject(XttMethodToolbarQt* parent_ctx)
-      : QObject(), toolbar(parent_ctx)
-  {
-  }
+      : QObject(), toolbar(parent_ctx) {}
 
 public slots:
   void activate_button();

@@ -45,8 +45,8 @@
 
 class XttOTreeQt : public XttOTree {
 public:
-  XttOTreeQt(QWidget* parent_wid, void* xn_parent_ctx, const char* title,
-      pwr_tAttrRef* xn_itemlist, int xn_item_cnt, unsigned int xn_options,
+  XttOTreeQt(void* xn_parent_ctx, const char* title, pwr_tAttrRef* xn_itemlist,
+      int xn_item_cnt, unsigned int xn_options,
       pwr_tStatus (*action_cb)(void*, pwr_tAttrRef*));
   virtual ~XttOTreeQt();
 };

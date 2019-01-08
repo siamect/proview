@@ -40,9 +40,9 @@
 
 #include "wb_wrevnav_qt.h"
 
-WRevNavQt::WRevNavQt(void* wa_parent_ctx, QWidget* wa_parent_wid,
-    ldh_tSession wa_ldhses, const char* wa_name, wb_eUtility wa_utility,
-    QWidget** w, pwr_tStatus* status)
+WRevNavQt::WRevNavQt(void* wa_parent_ctx, ldh_tSession wa_ldhses,
+    const char* wa_name, wb_eUtility wa_utility, QWidget** w,
+    pwr_tStatus* status)
     : WRevNav(wa_parent_ctx, wa_ldhses, wa_name, wa_utility, status)
 {
   form_widget = scrolledbrowwidgetqt_new(init_brow_cb, this, &brow_widget);

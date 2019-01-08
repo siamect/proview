@@ -165,8 +165,8 @@ int AttrQt::reconfigure_attr()
   }
   reconfigure_attr_cb(parent_ctx, object, &itemlist, &item_cnt, &client_data);
 
-  attrnav = new AttrNavQt(
-      this, pane, type, "Plant", itemlist, item_cnt, &brow_widget, &sts);
+  attrnav = new AttrNavQt(this, type, "Plant", itemlist, item_cnt, &brow_widget,
+      &sts);
   if (pane->widget(0)) {
     pane->widget(0)->setParent(NULL);
   }
@@ -347,8 +347,8 @@ AttrQt::AttrQt(QWidget* a_parent_wid, void* a_parent_ctx, attr_eType a_type,
 
     pane = new QSplitter(Qt::Vertical);
 
-    attrnav = new AttrNavQt(
-        this, pane, type, "Plant", itemlist, item_cnt, &brow_widget, &sts);
+    attrnav = new AttrNavQt(this, type, "Plant", itemlist, item_cnt,
+        &brow_widget, &sts);
     attrnav->message_cb = &Attr::message;
     attrnav->change_value_cb = &Attr::change_value_c;
     attrnav->get_subgraph_info_cb = &Attr::get_subgraph_info_c;
@@ -417,8 +417,8 @@ AttrQt::AttrQt(QWidget* a_parent_wid, void* a_parent_ctx, attr_eType a_type,
       toplevel->setModal(true);
     }
   } else {
-    attrnav = new AttrNavQt(this, a_parent_wid, type, "Plant", itemlist,
-        item_cnt, &brow_widget, &sts);
+    attrnav = new AttrNavQt(this, type, "Plant", itemlist, item_cnt,
+        &brow_widget, &sts);
     attrnav->message_cb = &Attr::message;
     attrnav->change_value_cb = &Attr::change_value_c;
     attrnav->get_subgraph_info_cb = &Attr::get_subgraph_info_c;

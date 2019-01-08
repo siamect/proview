@@ -371,11 +371,10 @@ WAttQt::~WAttQt()
   delete wattnav;
 }
 
-WAttQt::WAttQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
-    ldh_tSesContext wa_ldhses, pwr_sAttrRef wa_aref, int wa_editmode,
-    int wa_advanced_user, int wa_display_objectname)
-    : WAtt(wa_parent_ctx, wa_ldhses, wa_aref, wa_editmode, wa_advanced_user,
-          wa_display_objectname)
+WAttQt::WAttQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
+    pwr_sAttrRef wa_aref, int wa_editmode, int wa_advanced_user,
+    int wa_display_objectname) : WAtt(wa_parent_ctx, wa_ldhses, wa_aref,
+        wa_editmode, wa_advanced_user, wa_display_objectname)
 {
   int sts;
   int size;
@@ -386,7 +385,7 @@ WAttQt::WAttQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
     return;
   }
 
-  toplevel = new WAttQtWidget(this, wa_parent_wid);
+  toplevel = new WAttQtWidget(this);
   toplevel->setMinimumSize(410, 570);
   toplevel->setWindowTitle(fl(namep));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -421,8 +420,8 @@ WAttQt::WAttQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
   }
   utility = ((WUtility*)parent_ctx)->utype;
 
-  wattnav = new WAttNavQt(this, wattnav_eType_Object, pane, "Plant", ldhses,
-      aref, wa_editmode, wa_advanced_user, wa_display_objectname, utility,
+  wattnav = new WAttNavQt(this, wattnav_eType_Object, "Plant", ldhses, aref,
+      wa_editmode, wa_advanced_user, wa_display_objectname, utility,
       &brow_widget, &sts);
   wattnav->message_cb = &WAtt::message_cb;
   wattnav->change_value_cb = &WAtt::change_value_cb;

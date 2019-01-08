@@ -48,10 +48,9 @@ class CowTreeQtWidget;
 
 class CowTreeQt : public CowTree {
 public:
-  CowTreeQt(QWidget* a_parent_wid, void* a_parent_ctx, const char* title,
-      pwr_tAttrRef* itemlist, int item_cnt, unsigned int options,
-      pwr_tStatus (*get_object_info)(
-          void*, pwr_tAttrRef*, char*, int, char*, char*, int),
+  CowTreeQt(void* a_parent_ctx, const char* title, pwr_tAttrRef* itemlist,
+      int item_cnt, unsigned int options, pwr_tStatus (*get_object_info)(void*,
+      pwr_tAttrRef*, char*, int, char*, char*, int),
       pwr_tStatus (*get_node_info)(void*, char*, char*, int),
       pwr_tStatus (*action)(void*, pwr_tAttrRef*));
   QWidget* brow_widget;
@@ -70,10 +69,7 @@ class CowTreeQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  CowTreeQtWidget(CowTreeQt* parent_ctx, QWidget* parent)
-      : QWidget(), tree(parent_ctx)
-  {
-  }
+  CowTreeQtWidget(CowTreeQt* parent_ctx) : QWidget(), tree(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

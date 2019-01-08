@@ -58,9 +58,7 @@ public:
   CoLoginQt(void* wl_parent_ctx, QWidget* wl_parent_wid, const char* wl_name,
       const char* wl_groupname, void (*wl_bc_success)(void*),
       void (*wl_bc_cancel)(void*), void* base_widget, pwr_tStatus* sts);
-  ~CoLoginQt()
-  {
-  }
+  ~CoLoginQt() {}
 
   pwr_tStatus get_values();
   void message(const char* new_label);
@@ -72,9 +70,7 @@ class CoLoginQtWidget : public QDialog {
 
 public:
   CoLoginQtWidget(CoLoginQt* parent_ctx, QWidget* parent)
-      : QDialog(parent), login(parent_ctx), del(true)
-  {
-  }
+      : QDialog(parent), login(parent_ctx), del(true) {}
 
 protected:
   void closeEvent(QCloseEvent* event);

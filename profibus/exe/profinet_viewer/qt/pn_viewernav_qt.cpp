@@ -44,7 +44,7 @@
 #include "pn_viewernav_qt.h"
 
 PnViewerNavQt::PnViewerNavQt(
-    void* l_parent_ctx, QWidget* l_parent_wid, viewer_eType l_type, QWidget** w)
+    void* l_parent_ctx, viewer_eType l_type, QWidget** w)
     : PnViewerNav(l_parent_ctx, l_type)
 {
   form_widget

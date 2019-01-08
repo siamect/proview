@@ -47,8 +47,7 @@ class MsgWindowQtWidget;
 
 class MsgWindowQt : public MsgWindow {
 public:
-  MsgWindowQt(void* msg_parent_ctx, QWidget* msg_parent_wid,
-      const char* msg_name, pwr_tStatus* status);
+  MsgWindowQt(void* msg_parent_ctx, const char* msg_name, pwr_tStatus* status);
 
   QWidget* nav_widget;
   CoWowFocusTimerQt focustimer;
@@ -66,10 +65,7 @@ class MsgWindowQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  MsgWindowQtWidget(MsgWindowQt* parent_ctx, QWidget* parent)
-      : QWidget(), msgwin(parent_ctx)
-  {
-  }
+  MsgWindowQtWidget(MsgWindowQt* parent_ctx) : QWidget(), msgwin(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

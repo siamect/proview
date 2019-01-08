@@ -48,11 +48,9 @@ class CLogQtWidget;
 
 class CLogQt : public CLog {
 public:
-  CLogQt(void* clog_parent_ctx, QWidget* clog_parent_wid, const char* clog_name,
-      pwr_tStatus* status);
+  CLogQt(void* clog_parent_ctx, const char* clog_name, pwr_tStatus* status);
   ~CLogQt();
 
-  QWidget* parent_wid;
   QWidget* clognav_widget;
 
   void pop();
@@ -71,10 +69,7 @@ class CLogQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  CLogQtWidget(CLogQt* parent_ctx, QWidget* parent)
-      : QWidget(), clog(parent_ctx)
-  {
-  }
+  CLogQtWidget(CLogQt* parent_ctx) : QWidget(), clog(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

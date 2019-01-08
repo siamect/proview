@@ -112,9 +112,8 @@ WCrrQt::~WCrrQt()
   delete xcrrnav;
 }
 
-WCrrQt::WCrrQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
-    ldh_tSesContext xa_ldhses, pwr_sAttrRef* xa_objar, int xa_advanced_user,
-    int* xa_sts)
+WCrrQt::WCrrQt(void* xa_parent_ctx, ldh_tSesContext xa_ldhses,
+    pwr_sAttrRef* xa_objar, int xa_advanced_user, int* xa_sts)
     : WCrr(xa_parent_ctx, xa_ldhses, xa_objar, xa_advanced_user, xa_sts)
 {
   int sts;
@@ -129,7 +128,7 @@ WCrrQt::WCrrQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
 
   strncpy(title, namep, sizeof(title));
 
-  toplevel = new WCrrQtWidget(this, xa_parent_wid);
+  toplevel = new WCrrQtWidget(this);
   toplevel->setMinimumSize(600, 420);
   toplevel->setWindowTitle(convert_utf8(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -158,9 +157,9 @@ WCrrQt::WCrrQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
   addMenuItem(toplevel, help, "&Overview", SLOT(activate_help()), "CTRL+H",
       "system-help");
 
-  xcrrnav = new WAttNavQt(this, wattnav_eType_CrossRef, toplevel, "Plant",
-      xa_ldhses, objar, 0, xa_advanced_user, 1, wb_eUtility_AttributeEditor,
-      &brow_widget, &sts);
+  xcrrnav = new WAttNavQt(this, wattnav_eType_CrossRef, "Plant", xa_ldhses,
+      objar, 0, xa_advanced_user, 1, wb_eUtility_AttributeEditor, &brow_widget,
+      &sts);
   // xcrrnav->popup_menu_cb = &xcrr_popup_menu_cb;
   // xcrrnav->start_trace_cb = &xcrr_start_trace_cb;
   // xcrrnav->close_cb = &xcrr_close_cb;

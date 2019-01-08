@@ -71,8 +71,7 @@ static pwr_tStatus ShowConfiguration(xmenu_sMenuCall* ip)
   if (EVEN(sts))
     return sts;
 
-  ctx->attr = new GsdmlAttrQt(
-      CoXHelpQt::get_widget(), ctx, 0, ctx->gsdml, 0, datafile, &sts);
+  ctx->attr = new GsdmlAttrQt(ctx, 0, ctx->gsdml, 0, datafile, &sts);
   if (sts == PB__CONFIGABORTED) {
     delete ctx->attr;
     return 1;

@@ -60,9 +60,9 @@ public:
   void set_size(int width, int height);
   void set_subwindow_release();
 
-  WGeQt(QWidget* parent_wid, void* parent_ctx, char* name, char* filename,
-      int scrollbar, int menu, int navigator, int width, int height, int x,
-      int y, char* object_name, int modal);
+  WGeQt(void* parent_ctx, char* name, char* filename, int scrollbar, int menu,
+      int navigator, int width, int height, int x, int y, char* object_name,
+      int modal);
   ~WGeQt();
 
   static void change_value_cb(void* ge_ctx, void* value_object, char* text);
@@ -77,9 +77,7 @@ class WGeQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WGeQtWidget(WGeQt* parent_ctx, QWidget* parent) : QWidget(), ge(parent_ctx)
-  {
-  }
+  WGeQtWidget(WGeQt* parent_ctx) : QWidget(), ge(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

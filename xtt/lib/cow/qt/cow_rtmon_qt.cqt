@@ -72,8 +72,8 @@ static QPushButton* addButton(
   return button;
 }
 
-RtMonQt::RtMonQt(void* rtmon_parent_ctx, QWidget* rtmon_parent_wid,
-    const char* rtmon_name, const char* rtmon_display, pwr_tStatus* status)
+RtMonQt::RtMonQt(void* rtmon_parent_ctx, const char* rtmon_name,
+    const char* rtmon_display, pwr_tStatus* status)
     : RtMon(rtmon_parent_ctx, rtmon_name, rtmon_display, status), timerid(0),
       old_status(9999)
 {
@@ -86,7 +86,7 @@ RtMonQt::RtMonQt(void* rtmon_parent_ctx, QWidget* rtmon_parent_wid,
   strcat(title, " ");
   strcat(title, rtmon_name);
 
-  toplevel = new RtMonQtWidget(this, rtmon_parent_wid);
+  toplevel = new RtMonQtWidget(this);
   toplevel->setMinimumHeight(340);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -120,7 +120,7 @@ RtMonQt::RtMonQt(void* rtmon_parent_ctx, QWidget* rtmon_parent_wid,
       toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
   QVBoxLayout* vbox = new QVBoxLayout();
-  nodelistnav = new NodelistNavQt(this, toplevel, 0, nodename,
+  nodelistnav = new NodelistNavQt(this, 0, nodename,
       nodelist_eMode_SystemStatus, 0, 0, &nodelistnav_widget);
 
   // Toolbar

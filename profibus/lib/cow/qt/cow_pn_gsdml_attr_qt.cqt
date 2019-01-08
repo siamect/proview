@@ -250,14 +250,13 @@ GsdmlAttrQt::~GsdmlAttrQt()
   delete attrnav;
 }
 
-GsdmlAttrQt::GsdmlAttrQt(QWidget* a_parent_wid, void* a_parent_ctx,
-    void* a_object, pn_gsdml* a_gsdml, int a_edit_mode,
-    const char* a_data_filename, pwr_tStatus* a_sts)
+GsdmlAttrQt::GsdmlAttrQt(void* a_parent_ctx, void* a_object, pn_gsdml* a_gsdml,
+    int a_edit_mode, const char* a_data_filename, pwr_tStatus* a_sts)
     : GsdmlAttr(a_parent_ctx, a_object, a_gsdml, a_edit_mode, a_data_filename)
 {
   int sts;
 
-  toplevel = new GsdmlAttrQtWidget(this, a_parent_wid);
+  toplevel = new GsdmlAttrQtWidget(this);
   toplevel->setMinimumSize(700, 700);
   toplevel->setWindowTitle(fl("profinetConfigurator"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -316,8 +315,8 @@ GsdmlAttrQt::GsdmlAttrQt(QWidget* a_parent_wid, void* a_parent_ctx,
       toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
   // Navigator
-  attrnav = new GsdmlAttrNavQt(
-      this, toplevel, "Plant", gsdml, edit_mode, &brow_widget, &sts);
+  attrnav = new GsdmlAttrNavQt(this, "Plant", gsdml, edit_mode, &brow_widget,
+      &sts);
   attrnav->message_cb = &GsdmlAttr::gsdmlattr_message;
   attrnav->change_value_cb = &GsdmlAttr::gsdmlattr_change_value_cb;
 

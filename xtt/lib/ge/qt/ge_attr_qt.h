@@ -85,9 +85,7 @@ class AttrQtWidget : public QDialog {
 
 public:
   AttrQtWidget(AttrQt* parent_ctx, QWidget* parent)
-      : QDialog(parent), attr(parent_ctx)
-  {
-  }
+      : QDialog(parent), attr(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

@@ -78,16 +78,14 @@ void CallbackWidget::focusInEvent(QFocusEvent* event)
   QDialog::focusInEvent(event);
 }
 
-EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
-    char* ala_name, char* blk_name, pwr_tObjid ev_user, int display_ala,
-    int display_eve, int display_blk, int display_return, int display_ack,
-    int ev_beep, pwr_tMask ev_pop_mask, int ev_eventname_seg,
-    pwr_tStatus* status)
+EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
+    pwr_tObjid ev_user, int display_ala, int display_eve, int display_blk,
+    int display_return, int display_ack, int ev_beep, pwr_tMask ev_pop_mask,
+    int ev_eventname_seg, pwr_tStatus* status)
     : Ev(ev_parent_ctx, eve_name, ala_name, blk_name, ev_user, display_ala,
           display_eve, display_blk, display_return, display_ack, ev_beep,
           ev_pop_mask, ev_eventname_seg, status),
-      parent_wid(ev_parent_wid), parent_wid_eve(0), parent_wid_ala(0),
-      parent_wid_blk(0)
+      parent_wid_eve(0), parent_wid_ala(0), parent_wid_blk(0)
 {
   pwr_tStatus sts;
   pwr_sClass_OpPlace* opp;
@@ -170,8 +168,8 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
         object, help, "Help Selected Event", SLOT(eve_activate_helpevent()));
 
     // Create eve evlist
-    eve = new EvListQt(parent_wid_eve, parent_wid_eve, ev_eType_EventList,
-        eve_size, eventname_seg, &eve_widget);
+    eve = new EvListQt(this, ev_eType_EventList, eve_size, eventname_seg,
+        &eve_widget);
     eve->start_trace_cb = &eve_start_trace_cb;
     eve->display_in_xnav_cb = &eve_display_in_xnav_cb;
     eve->name_to_alias_cb = &ev_name_to_alias_cb;
@@ -302,8 +300,8 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
         object, help, "Help Selected Event", SLOT(ala_activate_helpevent()));
 
     // Create ala evlist
-    ala = new EvListQt(parent_wid_ala, parent_wid_ala, ev_eType_AlarmList,
-        ala_size, eventname_seg, &ala_widget);
+    ala = new EvListQt(this, ev_eType_AlarmList, ala_size, eventname_seg,
+        &ala_widget);
     ala->start_trace_cb = &ala_start_trace_cb;
     ala->display_in_xnav_cb = &ala_display_in_xnav_cb;
     ala->name_to_alias_cb = &ev_name_to_alias_cb;
@@ -405,8 +403,8 @@ EvQt::EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
         "system-help");
 
     // Create blk evlist
-    blk = new EvListQt(parent_wid_blk, parent_wid_blk, ev_eType_BlockList,
-        blk_size, eventname_seg, &blk_widget);
+    blk = new EvListQt(this, ev_eType_BlockList, blk_size, eventname_seg,
+        &blk_widget);
     blk->start_trace_cb = &blk_start_trace_cb;
     blk->display_in_xnav_cb = &blk_display_in_xnav_cb;
     blk->name_to_alias_cb = &ev_name_to_alias_cb;
@@ -458,8 +456,8 @@ EvAla* EvQt::open_alarmlist_satellite(const char* title, pwr_tStatus* sts,
     return 0;
   }
 
-  sala[sala_cnt++] = new EvAlaQt(this, parent_wid, (char*)title, user,
-      eventname_seg, width, height, x, y, view, options, widget, sts);
+  sala[sala_cnt++] = new EvAlaQt(this, (char*)title, user, eventname_seg, width,
+      height, x, y, view, options, widget, sts);
   if (EVEN(*sts)) {
     return 0;
   }
@@ -487,8 +485,8 @@ EvEve* EvQt::open_eventlist_satellite(const char* title, pwr_tStatus* sts,
     return 0;
   }
 
-  seve[seve_cnt++] = new EvEveQt(this, parent_wid, (char*)title, user,
-      eventname_seg, width, height, x, y, view, options, widget, sts);
+  seve[seve_cnt++] = new EvEveQt(this, (char*)title, user, eventname_seg, width,
+      height, x, y, view, options, widget, sts);
   if (EVEN(*sts)) {
     return 0;
   }

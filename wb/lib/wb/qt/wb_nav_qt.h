@@ -49,9 +49,8 @@ class NavQtTraceObject;
 
 class NavQt : public Nav {
 public:
-  NavQt(void* parent_ctx, QWidget* parent_wid, const char* name,
-      ldh_tSesContext ldhses, const char* root_name, QWidget** w,
-      pwr_tStatus* status);
+  NavQt(void* parent_ctx, const char* name, ldh_tSesContext ldhses,
+      const char* root_name, QWidget** w, pwr_tStatus* status);
   ~NavQt();
 
   QWidget* brow_widget;
@@ -70,9 +69,7 @@ class NavQtTraceObject : public QObject {
   Q_OBJECT
 
 public:
-  NavQtTraceObject(NavQt* parent) : QObject(), nav(parent)
-  {
-  }
+  NavQtTraceObject(NavQt* parent) : QObject(), nav(parent) {}
 
 public slots:
   void sel_convert_cb();

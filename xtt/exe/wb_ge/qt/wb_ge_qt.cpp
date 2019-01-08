@@ -56,7 +56,6 @@
 /*  Fallback resources  */
 
 static QWidget* toplevel;
-static QWidget* mainwindow;
 
 static void usage()
 {
@@ -86,7 +85,7 @@ int main(int argc, char* argv[])
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
   // Create help window
-  CoXHelpQt* xhelp = new CoXHelpQt(mainwindow, 0, xhelp_eUtility_Wtt, &sts);
+  CoXHelpQt* xhelp = new CoXHelpQt(0, xhelp_eUtility_Wtt, &sts);
   CoXHelpQt::set_default(xhelp);
 
   debug_print("%s ", argv[0]);
@@ -109,7 +108,7 @@ int main(int argc, char* argv[])
       // Execute script
       pwr_tStatus sts;
 
-      gectx = new GeQt(NULL, toplevel, 0, 1, 0, NULL);
+      gectx = new GeQt(NULL, 0, 1, 0, NULL);
       sts = gectx->command(file);
       if (EVEN(sts)) {
         gectx->message(sts);
@@ -117,13 +116,13 @@ int main(int argc, char* argv[])
     } else {
       // Open graph
       strcpy(graph_name, file);
-      gectx = new GeQt(NULL, mainwindow, 0, 1, opt, graph_name);
+      gectx = new GeQt(NULL, 0, 1, opt, graph_name);
 
       sprintf(fname, "@%s.pwr_com", wnav_cInitFile);
       gectx->command(fname);
     }
   } else {
-    gectx = new GeQt(NULL, mainwindow, 0, 1, opt, NULL);
+    gectx = new GeQt(NULL, 0, 1, opt, NULL);
 
     sprintf(fname, "@%s.pwr_com", wnav_cInitFile);
     gectx->command(fname);
@@ -135,8 +134,7 @@ int main(int argc, char* argv[])
   new wb_log_qt(toplevel);
 
   // Create message window
-  MsgWindowQt* msg_window
-      = new MsgWindowQt(gectx, mainwindow, "Ge messages", &sts);
+  MsgWindowQt* msg_window = new MsgWindowQt(gectx, "Ge messages", &sts);
   msg_window->find_ge_cb = Ge::find_ge_cb;
   MsgWindow::set_default(msg_window);
 

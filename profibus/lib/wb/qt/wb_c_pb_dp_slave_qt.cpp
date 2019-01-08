@@ -57,8 +57,7 @@ static pwr_tStatus Configure(ldh_sMenuCall* ip)
     return sts;
   }
 
-  ctx->attr = new GsdAttrQt(
-      CoXHelpQt::get_widget(), ctx, 0, ctx->gsd, ctx->edit_mode);
+  ctx->attr = new GsdAttrQt(ctx, 0, ctx->gsd, ctx->edit_mode);
   ctx->attr->close_cb = pb_dp_slave_close_cb;
   ctx->attr->save_cb = pb_dp_slave_save_cb;
   ctx->attr->help_cb = pb_dp_slave_help_cb;

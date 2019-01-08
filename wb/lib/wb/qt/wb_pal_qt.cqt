@@ -46,9 +46,9 @@
 
 #include <qlocalsocket.h>
 
-PalQt::PalQt(void* pal_parent_ctx, QWidget* pal_parent_wid,
-    const char* pal_name, ldh_tSesContext pal_ldhses, const char* pal_root_name,
-    QWidget** w, pwr_tStatus* status)
+PalQt::PalQt(void* pal_parent_ctx, const char* pal_name,
+    ldh_tSesContext pal_ldhses, const char* pal_root_name, QWidget** w,
+    pwr_tStatus* status)
     : Pal(pal_parent_ctx, pal_name, pal_ldhses, pal_root_name, status)
 {
   trace_obj = new PalQtTraceObject(this);

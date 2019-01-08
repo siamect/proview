@@ -46,9 +46,8 @@
 #include <QTimer>
 
 NodelistNavQt::NodelistNavQt(void* nodelist_parent_ctx,
-    QWidget* nodelist_parent_wid, MsgWindow* nodelist_msg_window,
-    char* nodelist_nodename, int nodelist_mode, int nodelist_view_node_descr,
-    int nodelist_msgw_pop, QWidget** w)
+    MsgWindow* nodelist_msg_window, char* nodelist_nodename, int nodelist_mode,
+    int nodelist_view_node_descr, int nodelist_msgw_pop, QWidget** w)
     : NodelistNav(nodelist_parent_ctx, nodelist_msg_window, nodelist_nodename,
           nodelist_mode, nodelist_view_node_descr, nodelist_msgw_pop)
 {

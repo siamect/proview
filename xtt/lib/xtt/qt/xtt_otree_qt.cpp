@@ -41,14 +41,13 @@
 
 /* xtt_otree_qt.cpp -- Object tree viewer */
 
-XttOTreeQt::XttOTreeQt(QWidget* parent_wid, void* xn_parent_ctx,
-    const char* title, pwr_tAttrRef* xn_itemlist, int xn_item_cnt,
-    unsigned int xn_options, pwr_tStatus (*xn_action_cb)(void*, pwr_tAttrRef*))
-    : XttOTree(
-          xn_parent_ctx, xn_itemlist, xn_item_cnt, xn_options, xn_action_cb)
+XttOTreeQt::XttOTreeQt(void* xn_parent_ctx, const char* title,
+    pwr_tAttrRef* xn_itemlist, int xn_item_cnt, unsigned int xn_options,
+    pwr_tStatus (*xn_action_cb)(void*, pwr_tAttrRef*)) : XttOTree(xn_parent_ctx,
+        xn_itemlist, xn_item_cnt, xn_options, xn_action_cb)
 {
-  cowtree = new CowTreeQt(parent_wid, this, title, xn_itemlist, xn_item_cnt,
-      xn_options, &get_object_info, &get_node_info, &action);
+  cowtree = new CowTreeQt(this, title, xn_itemlist, xn_item_cnt, xn_options,
+      &get_object_info, &get_node_info, &action);
   cowtree->close_cb = close;
 }
 

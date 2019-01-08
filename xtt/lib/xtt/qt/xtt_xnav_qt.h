@@ -48,9 +48,9 @@ class XNavQtPopupObject;
 
 class XNavQt : public XNav {
 public:
-  XNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
-      QWidget** w, xnav_sStartMenu* root_menu, char* xn_opplace_name,
-      int xn_op_close_button, pwr_tStatus* status);
+  XNavQt(void* xn_parent_ctx, const char* xn_name, QWidget** w,
+      xnav_sStartMenu* root_menu, char* xn_opplace_name, int xn_op_close_button,
+      pwr_tStatus* status);
   ~XNavQt();
 
   void set_inputfocus();
@@ -130,7 +130,6 @@ public:
   QWidget* form_widget;
 
 private:
-  QWidget* parent_wid;
   XNavQtPopupObject* popup_obj;
 };
 
@@ -138,9 +137,7 @@ class XNavQtPopupObject : public QObject {
   Q_OBJECT
 
 public:
-  XNavQtPopupObject(XNavQt* parent) : QObject(), xnav(parent)
-  {
-  }
+  XNavQtPopupObject(XNavQt* parent) : QObject(), xnav(parent) {}
 
 public slots:
   void popup_button_cb();

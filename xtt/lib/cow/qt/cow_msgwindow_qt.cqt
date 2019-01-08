@@ -53,11 +53,10 @@ void MsgWindowQtWidget::closeEvent(QCloseEvent* event)
   event->ignore();
 }
 
-MsgWindowQt::MsgWindowQt(void* msg_parent_ctx, QWidget* msg_parent_wid,
-    const char* msg_name, pwr_tStatus* status)
-    : MsgWindow(msg_parent_ctx, msg_name, status)
+MsgWindowQt::MsgWindowQt(void* msg_parent_ctx, const char* msg_name,
+    pwr_tStatus* status) : MsgWindow(msg_parent_ctx, msg_name, status)
 {
-  toplevel = new MsgWindowQtWidget(this, msg_parent_wid);
+  toplevel = new MsgWindowQtWidget(this);
   toplevel->setMinimumSize(800, 600);
   toplevel->setWindowTitle(translate_utf8(msg_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -84,7 +83,7 @@ MsgWindowQt::MsgWindowQt(void* msg_parent_ctx, QWidget* msg_parent_wid,
 
   // Create msgnav
   QVBoxLayout* form = new QVBoxLayout();
-  msgnav = new MsgListQt(this, toplevel, &nav_widget);
+  msgnav = new MsgListQt(this, &nav_widget);
   msgnav->find_wnav_cb = MsgWindow::msgw_find_wnav_cb;
   msgnav->find_plc_cb = MsgWindow::msgw_find_plc_cb;
   msgnav->find_ge_cb = MsgWindow::msgw_find_ge_cb;

@@ -72,9 +72,9 @@ public:
   CoWowTimer* reconnect_timerid;
   int no_uri;
 
-  XttStreamQt(QWidget* parent_wid, void* parent_ctx, const char* name,
-      const char* uri, int width, int height, int x, int y, double scan_time,
-      unsigned int options, int embedded, pwr_tAttrRef* arp, pwr_tStatus* sts);
+  XttStreamQt(void* parent_ctx, const char* name, const char* uri, int width,
+      int height, int x, int y, double scan_time, unsigned int options,
+      int embedded, pwr_tAttrRef* arp, pwr_tStatus* sts);
   ~XttStreamQt();
 
   void pop();
@@ -99,10 +99,7 @@ class XttStreamQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  XttStreamQtWidget(XttStreamQt* parent_ctx, QWidget* parent)
-      : QWidget(parent), stream(parent_ctx)
-  {
-  }
+  XttStreamQtWidget(XttStreamQt* parent_ctx) : QWidget(), stream(parent_ctx) {}
 
 protected:
   void closeEvent(QCloseEvent* event);

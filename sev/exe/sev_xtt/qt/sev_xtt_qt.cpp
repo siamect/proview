@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
   setlocale(LC_NUMERIC, "POSIX");
   setlocale(LC_TIME, "en_US");
 
-  XttTblQt* tbl = new XttTblQt(0, 0, sevcli, items, itemcnt);
+  XttTblQt* tbl = new XttTblQt(NULL, sevcli, items, itemcnt);
   tbl->close_cb = tbl_close_cb;
 
   return app.exec();

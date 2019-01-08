@@ -47,8 +47,8 @@ class CoLogWQtWidget;
 
 class CoLogWQt : public CoLogW {
 public:
-  CoLogWQt(void* msg_parent_ctx, QWidget* msg_parent_wid, const char* msg_name,
-      int l_show_item, pwr_tStatus* status);
+  CoLogWQt(void* msg_parent_ctx, const char* msg_name, int l_show_item,
+      pwr_tStatus* status);
   ~CoLogWQt();
 
   QWidget* nav_widget;
@@ -64,10 +64,7 @@ class CoLogWQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  CoLogWQtWidget(CoLogWQt* parent_ctx, QWidget* parent)
-      : QWidget(), logw(parent_ctx)
-  {
-  }
+  CoLogWQtWidget(CoLogWQt* parent_ctx) : QWidget(), logw(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

@@ -55,8 +55,7 @@ public:
   QWidget* nav_shell;
   QWidget* nav_widget;
 
-  RtTraceQt(void* parent_ctx, QWidget* parent_wid, pwr_tObjid objid,
-      pwr_tStatus* status);
+  RtTraceQt(void* parent_ctx, pwr_tObjid objid, pwr_tStatus* status);
   ~RtTraceQt();
 
   void pop();
@@ -71,10 +70,7 @@ class RtTraceQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  RtTraceQtWidget(RtTraceQt* parent_ctx, QWidget* parent)
-      : QWidget(), rt(parent_ctx)
-  {
-  }
+  RtTraceQtWidget(RtTraceQt* parent_ctx) : QWidget(), rt(parent_ctx) {}
 
 protected:
   void closeEvent(QCloseEvent* event);

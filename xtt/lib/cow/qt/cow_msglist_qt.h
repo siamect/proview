@@ -45,7 +45,7 @@
 
 class MsgListQt : public MsgList {
 public:
-  MsgListQt(void* ev_parent_ctx, QWidget* ev_parent_wid, QWidget** w);
+  MsgListQt(void* ev_parent_ctx, QWidget** w);
   ~MsgListQt();
 
   QWidget* brow_widget;

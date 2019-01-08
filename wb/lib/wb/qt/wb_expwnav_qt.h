@@ -45,8 +45,8 @@
 
 class WbExpWNavQt : public WbExpWNav {
 public:
-  WbExpWNavQt(void* expw_parent_ctx, QWidget* expw_parent_wid,
-      ldh_tSession expw_ldhses, int l_type, int l_editmode, QWidget** w);
+  WbExpWNavQt(void* expw_parent_ctx, ldh_tSession expw_ldhses, int l_type,
+      int l_editmode, QWidget** w);
   ~WbExpWNavQt();
 
   QWidget* brow_widget;

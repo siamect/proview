@@ -43,9 +43,8 @@
 
 class EvListQt : public EvList {
 public:
-  EvListQt(void* ev_parent_ctx, QWidget* ev_parent_wid, ev_eType ev_type,
-      int ev_size, int ev_evenname_seg, QWidget** w,
-      void (*ev_init_cb)(void*) = 0);
+  EvListQt(void* ev_parent_ctx, ev_eType ev_type, int ev_size,
+      int ev_evenname_seg, QWidget** w, void (*ev_init_cb)(void*) = 0);
   ~EvListQt();
 
   QWidget* brow_widget;

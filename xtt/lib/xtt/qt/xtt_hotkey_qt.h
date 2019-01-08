@@ -71,9 +71,7 @@ public:
   std::vector<HotkeyAction> m_actions;
   std::vector<HotkeyKey> m_keys;
   XttHotkey(const char* filename);
-  ~XttHotkey()
-  {
-  }
+  ~XttHotkey() {}
   void register_action(
       const char* name, void (*action)(char*, void*), void* userdata);
   int read_file();
@@ -85,18 +83,12 @@ public:
 
 class XttHotkey {
 public:
-  XttHotkey(const char* filename)
-  {
-  }
+  XttHotkey(const char* filename) {}
 
-  ~XttHotkey()
-  {
-  }
+  ~XttHotkey() {}
 
   void register_action(
-      const char* name, void (*action)(char*, void*), void* userdata)
-  {
-  }
+      const char* name, void (*action)(char*, void*), void* userdata) {}
 
   static int event_handler(QEvent* xevent, QObject* obj)
   {

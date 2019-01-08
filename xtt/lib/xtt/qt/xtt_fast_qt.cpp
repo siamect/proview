@@ -48,9 +48,9 @@
 
 #include "xtt_fast_qt.h"
 
-XttFastQt::XttFastQt(void* parent_ctx, QWidget* parent_wid, char* name,
-    QWidget** w, pwr_sAttrRef* fast_arp, int width, int height,
-    unsigned int options, int xn_color_theme, void* basewidget, int* sts)
+XttFastQt::XttFastQt(void* parent_ctx, char* name, QWidget** w,
+    pwr_sAttrRef* fast_arp, int width, int height, unsigned int options,
+    int xn_color_theme, void* basewidget, int* sts)
     : XttFast(parent_ctx, name, fast_arp, xn_color_theme, sts)
 {
   if (EVEN(*sts)) {
@@ -66,20 +66,20 @@ XttFastQt::XttFastQt(void* parent_ctx, QWidget* parent_wid, char* name,
     gdh_AttrrefToName(fast_arp, title, sizeof(title), cdh_mNName);
   }
 
-  curve = new GeCurveQt(this, parent_wid, title, NULL, gcd, 0, width, height,
-      options, color_theme, basewidget);
+  curve = new GeCurveQt(this, title, NULL, gcd, 0, width, height, options,
+      color_theme, basewidget);
   curve->close_cb = fast_close_cb;
   curve->help_cb = fast_help_cb;
   curve->export_cb = fast_export_cb;
   setup();
 
-  wow = new CoWowQt(parent_wid);
+  wow = new CoWowQt(((GeCurveQt*)curve)->toplevel);
   timerid = wow->timer_new();
 
   timerid->add(1000, fast_scan, this);
 }
 
-XttFastQt::XttFastQt(void* parent_ctx, QWidget* parent_wid, const char* name,
+XttFastQt::XttFastQt(void* parent_ctx, const char* name,
     QWidget** w, char* filename, int xn_color_theme, void* basewidget, int* sts)
     : XttFast(parent_ctx, name, filename, xn_color_theme, sts)
 {
@@ -92,13 +92,13 @@ XttFastQt::XttFastQt(void* parent_ctx, QWidget* parent_wid, const char* name,
   }
   *sts = XNAV__SUCCESS;
 
-  curve = new GeCurveQt(
-      this, parent_wid, title, NULL, gcd, 1, 0, 0, 0, color_theme, basewidget);
+  curve = new GeCurveQt(this, title, NULL, gcd, 1, 0, 0, 0, color_theme,
+      basewidget);
   curve->close_cb = fast_close_cb;
   curve->help_cb = fast_help_cb;
   curve->enable(0);
 
-  wow = new CoWowQt(parent_wid);
+  wow = new CoWowQt(((GeCurveQt*)curve)->toplevel);
   timerid = wow->timer_new();
 
   // timerid->add( 1000, fast_scan, this);

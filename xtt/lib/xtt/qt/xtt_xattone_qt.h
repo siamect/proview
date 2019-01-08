@@ -50,8 +50,8 @@ class XAttOneQtWidget;
 
 class XAttOneQt : public XAttOne {
 public:
-  XAttOneQt(QWidget* xa_parent_wid, void* xa_parent_ctx, pwr_sAttrRef* xa_objar,
-      char* xa_title, unsigned int xa_priv, int* xa_sts);
+  XAttOneQt(void* xa_parent_ctx, pwr_sAttrRef* xa_objar, char* xa_title,
+      unsigned int xa_priv, int* xa_sts);
   ~XAttOneQt();
 
   QWidget* form_widget;
@@ -78,10 +78,7 @@ class XAttOneQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  XAttOneQtWidget(XAttOneQt* parent_ctx, QWidget* parent)
-      : QWidget(), attone(parent_ctx)
-  {
-  }
+  XAttOneQtWidget(XAttOneQt* parent_ctx) : QWidget(), attone(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

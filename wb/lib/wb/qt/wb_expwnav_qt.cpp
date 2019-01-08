@@ -42,8 +42,8 @@
 
 #include "wb_expwnav_qt.h"
 
-WbExpWNavQt::WbExpWNavQt(void* l_parent_ctx, QWidget* l_parent_wid,
-    ldh_tSession l_ldhses, int l_type, int l_editmode, QWidget** w)
+WbExpWNavQt::WbExpWNavQt(void* l_parent_ctx, ldh_tSession l_ldhses, int l_type,
+    int l_editmode, QWidget** w)
     : WbExpWNav(l_parent_ctx, l_ldhses, l_type, l_editmode)
 {
   form_widget

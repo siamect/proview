@@ -48,8 +48,8 @@ class BlockQtWidget;
 
 class BlockQt : public Block {
 public:
-  BlockQt(void* b_parent_ctx, QWidget* b_parent_wid, pwr_sAttrRef* b_oar,
-      char* name, unsigned int priv, pwr_tStatus* status);
+  BlockQt(void* b_parent_ctx, pwr_sAttrRef* b_oar, char* name,
+      unsigned int priv, pwr_tStatus* status);
   ~BlockQt();
   int execute();
   void update();
@@ -71,10 +71,7 @@ class BlockQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  BlockQtWidget(BlockQt* parent_ctx, QWidget* parent)
-      : QWidget(), block(parent_ctx)
-  {
-  }
+  BlockQtWidget(BlockQt* parent_ctx) : QWidget(), block(parent_ctx) {}
 
 protected:
   void closeEvent(QCloseEvent* event);

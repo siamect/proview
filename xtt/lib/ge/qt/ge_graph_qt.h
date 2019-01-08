@@ -50,7 +50,6 @@ public:
   //! Constructor
   /*!
     \param xn_parent_ctx	Parent context.
-    \param xn_parent_wid	Parent widget.
     \param xn_name		Name.
     \param w			Graph widget.
     \param status		Returned status.
@@ -66,8 +65,8 @@ public:
     \param xn_default_access	Default access. Can be used to override the
     access of the current user.
   */
-  GraphQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
-      QWidget** w, pwr_tStatus* status, const char* xn_default_path,
+  GraphQt(void* xn_parent_ctx, const char* xn_name, QWidget** w,
+      pwr_tStatus* status, const char* xn_default_path,
       graph_eMode graph_mode = graph_eMode_Development, int scrollbar = 1,
       int xn_gdh_init_done = 0, const char* xn_object_name = 0,
       int xn_use_default_access = 0, unsigned int xn_default_access = 0,
@@ -90,7 +89,6 @@ public:
   ~GraphQt();
 
 private:
-  QWidget* parent_wid;
   GraphQtTraceObject* trace_obj;
 };
 
@@ -98,9 +96,7 @@ class GraphQtTraceObject : public QObject {
   Q_OBJECT
 
 public:
-  GraphQtTraceObject(GraphQt* parent) : QObject(), graph(parent)
-  {
-  }
+  GraphQtTraceObject(GraphQt* parent) : QObject(), graph(parent) {}
 
 public slots:
   void trace_scan();

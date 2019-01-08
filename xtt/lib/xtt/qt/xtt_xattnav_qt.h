@@ -45,9 +45,9 @@
 
 class XAttNavQt : public XAttNav {
 public:
-  XAttNavQt(void* xa_parent_ctx, QWidget* xa_parent_wid, xattnav_eType xa_type,
-      const char* xa_name, pwr_sAttrRef* xa_objar, int xa_advanced_user,
-      void* xa_userdata, QWidget** w, pwr_tStatus* status);
+  XAttNavQt(void* xa_parent_ctx, xattnav_eType xa_type, const char* xa_name,
+      pwr_sAttrRef* xa_objar, int xa_advanced_user, void* xa_userdata,
+      QWidget** w, pwr_tStatus* status);
   ~XAttNavQt();
 
   QWidget* brow_widget;

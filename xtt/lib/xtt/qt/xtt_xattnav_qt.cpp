@@ -43,11 +43,11 @@
 
 #include "xtt_xattnav_qt.h"
 
-XAttNavQt::XAttNavQt(void* xa_parent_ctx, QWidget* xa_parent_wid,
-    xattnav_eType xa_type, const char* xa_name, pwr_sAttrRef* xa_objar,
-    int xa_advanced_user, void* xa_userdata, QWidget** w, pwr_tStatus* status)
+XAttNavQt::XAttNavQt(void* xa_parent_ctx, xattnav_eType xa_type,
+    const char* xa_name, pwr_sAttrRef* xa_objar, int xa_advanced_user,
+    void* xa_userdata, QWidget** w, pwr_tStatus* status)
     : XAttNav(xa_parent_ctx, xa_type, xa_name, xa_objar, xa_advanced_user,
-          xa_userdata, status)
+        xa_userdata, status)
 {
   form_widget = scrolledbrowwidgetqt_new(init_brow_cb, this, &brow_widget);
 

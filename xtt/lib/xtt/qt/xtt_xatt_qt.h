@@ -51,8 +51,8 @@ class XAttQtWidget;
 
 class XAttQt : public XAtt {
 public:
-  XAttQt(QWidget* xa_parent_wid, void* xa_parent_ctx, pwr_sAttrRef* xa_objar,
-      int xa_advanced_user, int* xa_sts);
+  XAttQt(void* xa_parent_ctx, pwr_sAttrRef* xa_objar, int xa_advanced_user,
+      int* xa_sts);
   ~XAttQt();
   QWidget* brow_widget;
   QWidget* form_widget;
@@ -81,10 +81,7 @@ class XAttQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  XAttQtWidget(XAttQt* parent_ctx, QWidget* parent)
-      : QWidget(), xatt(parent_ctx)
-  {
-  }
+  XAttQtWidget(XAttQt* parent_ctx) : QWidget(), xatt(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

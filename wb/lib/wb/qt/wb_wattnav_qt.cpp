@@ -45,10 +45,9 @@
 #include "wb_wattnav_qt.h"
 
 WAttNavQt::WAttNavQt(void* wa_parent_ctx, wattnav_eType wa_type,
-    QWidget* wa_parent_wid, const char* wa_name, ldh_tSesContext wa_ldhses,
-    pwr_sAttrRef wa_aref, int wa_editmode, int wa_advanced_user,
-    int wa_display_objectname, wb_eUtility wa_utility, QWidget** w,
-    pwr_tStatus* status)
+    const char* wa_name, ldh_tSesContext wa_ldhses, pwr_sAttrRef wa_aref,
+    int wa_editmode, int wa_advanced_user, int wa_display_objectname,
+    wb_eUtility wa_utility, QWidget** w, pwr_tStatus* status)
     : WAttNav(wa_parent_ctx, wa_type, wa_name, wa_ldhses, wa_aref, wa_editmode,
           wa_advanced_user, wa_display_objectname, wa_utility, status)
 {

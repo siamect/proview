@@ -71,8 +71,7 @@ class PnViewerQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  PnViewerQtWidget(PnViewerQt* parent_ctx)
-      : QWidget(), viewer(parent_ctx){}
+  PnViewerQtWidget(PnViewerQt* parent_ctx) : QWidget(), viewer(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

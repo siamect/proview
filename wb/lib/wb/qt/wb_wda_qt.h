@@ -52,9 +52,9 @@ class WdaQtWidget;
 
 class WdaQt : public Wda {
 public:
-  WdaQt(QWidget* wa_parent_wid, void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
-      pwr_tObjid wa_objid, pwr_tClassId wa_classid, const char* wa_attribute,
-      int wa_editmode, int wa_advanced_user, int wa_display_objectname);
+  WdaQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses, pwr_tObjid wa_objid,
+      pwr_tClassId wa_classid, const char* wa_attribute, int wa_editmode,
+      int wa_advanced_user, int wa_display_objectname);
   ~WdaQt();
   QWidget* brow_widget;
   QWidget* form_widget;
@@ -85,9 +85,7 @@ class WdaQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WdaQtWidget(WdaQt* parent_ctx, QWidget* parent) : QWidget(), wda(parent_ctx)
-  {
-  }
+  WdaQtWidget(WdaQt* parent_ctx) : QWidget(), wda(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

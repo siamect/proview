@@ -229,12 +229,11 @@ void XttGeQtWidget::closeEvent(QCloseEvent* event)
   QWidget::closeEvent(event);
 }
 
-XttGeQt::XttGeQt(QWidget* xg_parent_wid, void* xg_parent_ctx,
-    const char* xg_name, const char* xg_filename, int xg_scrollbar, int xg_menu,
-    int xg_navigator, int xg_width, int xg_height, int x, int y,
-    double scan_time, const char* object_name, int use_default_access,
-    unsigned int access, unsigned int options, void* basewidget,
-    double* borders, int color_theme,
+XttGeQt::XttGeQt(void* xg_parent_ctx, const char* xg_name,
+    const char* xg_filename, int xg_scrollbar, int xg_menu, int xg_navigator,
+    int xg_width, int xg_height, int x, int y, double scan_time,
+    const char* object_name, int use_default_access, unsigned int access,
+    unsigned int options, void* basewidget, double* borders, int color_theme,
     int (*xg_command_cb)(void*, char*, char*, void*),
     int (*xg_get_current_objects_cb)(void*, pwr_sAttrRef**, int**),
     int (*xg_is_authorized_cb)(void*, unsigned int),
@@ -282,9 +281,9 @@ XttGeQt::XttGeQt(QWidget* xg_parent_wid, void* xg_parent_ctx,
 
   QVBoxLayout* graph_form = new QVBoxLayout();
   this->graph_form = layout_to_widget(graph_form);
-  graph = new GraphQt(this, this->graph_form, "Plant", &grow_widget, &sts,
-      "pwrp_exe:", graph_eMode_Runtime, scrollbar, 1, object_name,
-      use_default_access, access, 0, color_theme, ge_keyboard_cb);
+  graph = new GraphQt(this, "Plant", &grow_widget, &sts, "pwrp_exe:",
+      graph_eMode_Runtime, scrollbar, 1, object_name, use_default_access,
+      access, 0, color_theme, ge_keyboard_cb);
   // graph->set_scantime( scan_time);
   graph->message_cb = &message_cb;
   graph->close_cb = &graph_close_cb;

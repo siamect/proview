@@ -41,7 +41,7 @@
 
 #include "flow_browwidget_qt.h"
 
-MsgListQt::MsgListQt(void* ev_parent_ctx, QWidget* ev_parent_wid, QWidget** w)
+MsgListQt::MsgListQt(void* ev_parent_ctx, QWidget** w)
     : MsgList(ev_parent_ctx)
 {
   form_widget

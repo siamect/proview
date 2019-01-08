@@ -47,9 +47,8 @@ class PalQtTraceObject;
 
 class PalQt : public Pal {
 public:
-  PalQt(void* parent_ctx, QWidget* parent_wid, const char* name,
-      ldh_tSesContext ldhses, const char* root_name, QWidget** w,
-      pwr_tStatus* status);
+  PalQt(void* parent_ctx, const char* name, ldh_tSesContext ldhses,
+      const char* root_name, QWidget** w, pwr_tStatus* status);
   ~PalQt();
 
   QWidget* brow_widget;
@@ -69,9 +68,7 @@ class PalQtTraceObject : public QObject {
   Q_OBJECT
 
 public:
-  PalQtTraceObject(PalQt* parent) : QObject(), pal(parent)
-  {
-  }
+  PalQtTraceObject(PalQt* parent) : QObject(), pal(parent) {}
 
 public slots:
   void sel_convert_cb();

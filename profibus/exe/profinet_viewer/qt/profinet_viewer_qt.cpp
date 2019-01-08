@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
   }
 
   // Create help window
-  CoXHelpQt* xhelp = new CoXHelpQt(viewer->toplevel, 0, xhelp_eUtility_Wtt, (int*)&sts);
+  CoXHelpQt* xhelp = new CoXHelpQt(NULL, xhelp_eUtility_Wtt, (int*)&sts);
   CoXHelpQt::set_default(xhelp);
 
   try {

@@ -48,9 +48,8 @@ class WAttTextQtWidget;
 
 class WAttTextQt : public WAttText {
 public:
-  WAttTextQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
-      ldh_tSesContext wa_ldhses, pwr_sAttrRef wa_aref, int wa_editmode,
-      pwr_tStatus* status);
+  WAttTextQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
+      pwr_sAttrRef wa_aref, int wa_editmode, pwr_tStatus* status);
   ~WAttTextQt();
   QLabel* msg_label;
   QTextEdit* textbuffer;
@@ -70,10 +69,7 @@ class WAttTextQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WAttTextQtWidget(WAttTextQt* parent_ctx, QWidget* parent)
-      : QWidget(), atxt(parent_ctx)
-  {
-  }
+  WAttTextQtWidget(WAttTextQt* parent_ctx) : QWidget(), atxt(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

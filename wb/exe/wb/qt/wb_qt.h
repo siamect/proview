@@ -44,7 +44,6 @@
 class WbQt : public Wb {
 public:
   QWidget* toplevel;
-  QWidget* mainwindow;
 
   WbQt(int argc, char* argv[]);
   ~WbQt() {}

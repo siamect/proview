@@ -47,8 +47,8 @@ class XCrrQtWidget;
 
 class XCrrQt : public XCrr {
 public:
-  XCrrQt(QWidget* xa_parent_wid, void* xa_parent_ctx, pwr_sAttrRef* xa_objar,
-      int xa_advanced_user, int* xa_sts);
+  XCrrQt(void* xa_parent_ctx, pwr_sAttrRef* xa_objar, int xa_advanced_user,
+      int* xa_sts);
   ~XCrrQt();
   QWidget* brow_widget;
   QWidget* form_widget;
@@ -65,10 +65,7 @@ class XCrrQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  XCrrQtWidget(XCrrQt* parent_ctx, QWidget* parent)
-      : QWidget(), xcrr(parent_ctx)
-  {
-  }
+  XCrrQtWidget(XCrrQt* parent_ctx) : QWidget(), xcrr(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

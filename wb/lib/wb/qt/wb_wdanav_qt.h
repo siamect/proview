@@ -41,11 +41,10 @@
 
 class WdaNavQt : public WdaNav {
 public:
-  WdaNavQt(void* wa_parent_ctx, QWidget* wa_parent_wid, const char* wa_name,
-      ldh_tSesContext wa_ldhses, pwr_tObjid wa_objid, pwr_tClassId wa_classid,
-      char* wa_attribute, int wa_editmode, int wa_advanced_user,
-      int wa_display_objectname, wb_eUtility wa_utility, QWidget** w,
-      pwr_tStatus* status);
+  WdaNavQt(void* wa_parent_ctx, const char* wa_name, ldh_tSesContext wa_ldhses,
+      pwr_tObjid wa_objid, pwr_tClassId wa_classid, char* wa_attribute,
+      int wa_editmode, int wa_advanced_user, int wa_display_objectname,
+      wb_eUtility wa_utility, QWidget** w, pwr_tStatus* status);
   ~WdaNavQt();
 
   QWidget* brow_widget;

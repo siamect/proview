@@ -42,8 +42,7 @@
 
 #include "xtt_clognav_qt.h"
 
-CLogNavQt::CLogNavQt(
-    void* clog_parent_ctx, QWidget* clog_parent_wid, QWidget** w)
+CLogNavQt::CLogNavQt(void* clog_parent_ctx, QWidget** w)
     : CLogNav(clog_parent_ctx)
 {
   form_widget = scrolledbrowwidgetqt_new(init_brow_cb, this, &brow_widget);

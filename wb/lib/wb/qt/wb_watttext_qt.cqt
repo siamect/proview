@@ -179,9 +179,8 @@ WAttTextQt::~WAttTextQt()
   }
 }
 
-WAttTextQt::WAttTextQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
-    ldh_tSesContext wa_ldhses, pwr_sAttrRef wa_aref, int wa_editmode,
-    pwr_tStatus* status)
+WAttTextQt::WAttTextQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
+    pwr_sAttrRef wa_aref, int wa_editmode, pwr_tStatus* status)
     : WAttText(wa_parent_ctx, wa_ldhses, wa_aref, wa_editmode, status), init(1)
 {
   int sts;
@@ -198,7 +197,7 @@ WAttTextQt::WAttTextQt(QWidget* wa_parent_wid, void* wa_parent_ctx,
     return;
   }
 
-  toplevel = new WAttTextQtWidget(this, wa_parent_wid);
+  toplevel = new WAttTextQtWidget(this);
   toplevel->setMinimumSize(800, 700);
   toplevel->setWindowTitle(fl(namep));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

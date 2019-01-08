@@ -51,8 +51,8 @@ class HistQtWidget;
 
 class HistQt : public Hist {
 public:
-  HistQt(void* hist_parent_ctx, QWidget* hist_parent_wid, char* hist_name,
-      pwr_tAttrRef* arp, pwr_tStatus* status);
+  HistQt(void* hist_parent_ctx, char* hist_name, pwr_tAttrRef* arp,
+      pwr_tStatus* status);
   ~HistQt();
 
   QWidget* form_hist;
@@ -98,10 +98,7 @@ class HistQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  HistQtWidget(HistQt* parent_ctx, QWidget* parent)
-      : QWidget(), hist(parent_ctx)
-  {
-  }
+  HistQtWidget(HistQt* parent_ctx) : QWidget(), hist(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);
@@ -136,11 +133,8 @@ private:
 
 class HistQt : public Hist {
 public:
-  HistQt(void* hist_parent_ctx, QWidget* hist_parent_wid, char* hist_name,
-      pwr_tAttrRef* arp, pwr_tStatus* status)
-      : Hist(hist_parent_ctx, hist_name, arp, status)
-  {
-  }
+  HistQt(void* hist_parent_ctx, char* hist_name, pwr_tAttrRef* arp,
+      pwr_tStatus* status) : Hist(hist_parent_ctx, hist_name, arp, status) {}
 };
 
 #endif

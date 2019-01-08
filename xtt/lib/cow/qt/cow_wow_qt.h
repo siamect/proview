@@ -124,9 +124,7 @@ class CoWowTimerQtObject : public QObject {
   Q_OBJECT
 
 public:
-  CoWowTimerQtObject(CoWowTimerQt* parent) : QObject(), wow_timer(parent)
-  {
-  }
+  CoWowTimerQtObject(CoWowTimerQt* parent) : QObject(), wow_timer(parent) {}
 
 public slots:
   void timer_cb();
@@ -236,9 +234,7 @@ class CoWowQtObject : public QObject {
   Q_OBJECT
 
 public:
-  CoWowQtObject(QWidget* parent) : QObject(), parent_wid(parent)
-  {
-  }
+  CoWowQtObject(QWidget* parent) : QObject(), parent_wid(parent) {}
   QWidget* parent_wid;
 
 public slots:

@@ -43,21 +43,17 @@
 
 class XttSevHistQt : public XttSevHist {
 public:
-  XttSevHistQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
-      QWidget** w, pwr_tOid* xn_oidv, pwr_tOName* xn_anamev,
-      pwr_tOName* xn_onamev, bool* sevhistobjectv, sevcli_tCtx xn_scctx,
-      int width, int height, unsigned int options, int xn_color_theme,
-      time_ePeriod xn_time_range, void* basewidget, int* sts);
-  XttSevHistQt(void* parent_ctx, QWidget* parent_wid, const char* name,
-      QWidget** w, char* filename, int xn_color_theme, void* basewidget,
-      int* sts);
+  XttSevHistQt(void* xn_parent_ctx, const char* xn_name, QWidget** w,
+      pwr_tOid* xn_oidv, pwr_tOName* xn_anamev, pwr_tOName* xn_onamev,
+      bool* sevhistobjectv, sevcli_tCtx xn_scctx, int width, int height,
+      unsigned int options, int xn_color_theme, time_ePeriod xn_time_range,
+      void* basewidget, int* sts);
+  XttSevHistQt(void* parent_ctx, const char* name, QWidget** w, char* filename,
+      int xn_color_theme, void* basewidget, int* sts);
   ~XttSevHistQt();
 
   XttOTree* tree_new(const char* title, pwr_tAttrRef* itemlist, int itemcnt,
       unsigned int layout, pwr_tStatus (*action_cb)(void*, pwr_tAttrRef*));
-
-private:
-  QWidget* parent_wid;
 };
 
 #endif

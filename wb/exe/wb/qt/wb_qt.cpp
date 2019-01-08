@@ -63,8 +63,8 @@ Wtt* WbQt::wtt_new(const char* name, const char* iconname,
     ldh_tWBContext ldhwbctx, pwr_tVolumeId volid, ldh_tVolume volctx,
     wnav_sStartMenu* root_menu, pwr_tStatus* status)
 {
-  return new WttQt(
-      0, toplevel, name, iconname, ldhwbctx, volid, volctx, root_menu, status);
+  return new WttQt(0, name, iconname, ldhwbctx, volid, volctx, root_menu,
+      status);
 }
 
 WVsel* WbQt::vsel_new(pwr_tStatus* status, const char* name,
@@ -72,7 +72,7 @@ WVsel* WbQt::vsel_new(pwr_tStatus* status, const char* name,
     int (*bc_success)(void*, pwr_tVolumeId*, int), void (*bc_cancel)(),
     int (*bc_time_to_exit)(void*), int show_volumes, wb_eType wb_type)
 {
-  return new WVselQt(status, NULL, mainwindow, name, ldhwbctx, volumename,
+  return new WVselQt(status, NULL, name, ldhwbctx, volumename,
       bc_success, bc_cancel, bc_time_to_exit, show_volumes, wb_type);
 }
 
@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
   return app.exec();
 }
 
-WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
+WbQt::WbQt(int argc, char* argv[])
 {
   pwr_tStatus sts;
   int login_display = 0;
@@ -210,14 +210,14 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
 
   // Create message window
   MsgWindowQt* msg_window
-      = new MsgWindowQt(0, mainwindow, "Workbench messages", &sts);
+      = new MsgWindowQt(0, "Workbench messages", &sts);
   msg_window->find_wnav_cb = Wb::find_wnav_cb;
   msg_window->find_plc_cb = Wb::find_plc_cb;
   MsgWindow::set_default(msg_window);
   MsgWindow::message('I', "Development environment started");
 
   // Create help window
-  CoXHelpQt* xhelp = new CoXHelpQt(mainwindow, 0, xhelp_eUtility_Wtt, &sts);
+  CoXHelpQt* xhelp = new CoXHelpQt(0, xhelp_eUtility_Wtt, &sts);
   CoXHelp::set_default(xhelp);
 
   sts = ldh_OpenWB(&wbctx, volumename_p, options);
@@ -303,7 +303,7 @@ WbQt::WbQt(int argc, char* argv[]) : mainwindow(0)
       exit(LOGIN__NOPRIV);
     }
   } else if (login_display) {
-    new CoLoginQt(NULL, mainwindow, "PwR Login", systemgroup,
+    new CoLoginQt(NULL, NULL, "PwR Login", systemgroup,
         &Wb::login_success, &Wb::login_cancel, 0, &sts);
   }
 

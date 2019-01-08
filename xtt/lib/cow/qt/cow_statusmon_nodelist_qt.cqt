@@ -59,15 +59,14 @@ void NodelistQtWidget::closeEvent(QCloseEvent* event)
   QWidget::closeEvent(event);
 }
 
-NodelistQt::NodelistQt(void* nodelist_parent_ctx, QWidget* nodelist_parent_wid,
-    const char* nodelist_name, int nodelist_mode, int nodelist_view_node_descr,
-    int msgw_pop, pwr_tStatus* status)
-    : Nodelist(nodelist_parent_ctx, nodelist_name, nodelist_mode,
-          nodelist_view_node_descr, status)
+NodelistQt::NodelistQt(void* nodelist_parent_ctx, const char* nodelist_name,
+    int nodelist_mode, int nodelist_view_node_descr, int msgw_pop,
+    pwr_tStatus* status) : Nodelist(nodelist_parent_ctx, nodelist_name,
+    nodelist_mode, nodelist_view_node_descr, status)
 {
   pwr_tStatus sts;
 
-  toplevel = new NodelistQtWidget(this, nodelist_parent_wid);
+  toplevel = new NodelistQtWidget(this);
   toplevel->setMinimumSize(850, 300);
   toplevel->setWindowTitle(fl(nodelist_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -147,13 +146,13 @@ NodelistQt::NodelistQt(void* nodelist_parent_ctx, QWidget* nodelist_parent_wid,
   addMenuItem(
       toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
-  msg_window = new MsgWindowQt(this, toplevel, "Status Events", &sts);
+  msg_window = new MsgWindowQt(this, "Status Events", &sts);
   msg_window->find_wnav_cb = find_node_cb;
   msg_window->msg('I', "Status Montitor started");
 
   QVBoxLayout* vbox = new QVBoxLayout();
-  nodelistnav = new NodelistNavQt(this, toplevel, msg_window, 0, mode,
-      view_node_descr, msgw_pop, &nodelistnav_widget);
+  nodelistnav = new NodelistNavQt(this, msg_window, 0, mode, view_node_descr,
+      msgw_pop, &nodelistnav_widget);
 
   // Toolbar
   QToolBar* tools = new QToolBar();

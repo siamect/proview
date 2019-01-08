@@ -50,8 +50,8 @@ class RtMonQtWidget;
 
 class RtMonQt : public RtMon {
 public:
-  RtMonQt(void* rtmon_parent_ctx, QWidget* rtmon_parent_wid,
-      const char* rtmon_name, const char* rtmon_display, pwr_tStatus* status);
+  RtMonQt(void* rtmon_parent_ctx, const char* rtmon_name,
+      const char* rtmon_display, pwr_tStatus* status);
   ~RtMonQt();
 
   QWidget* nodelistnav_widget;
@@ -83,10 +83,7 @@ class RtMonQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  RtMonQtWidget(RtMonQt* parent_ctx, QWidget* parent)
-      : QWidget(), rtmon(parent_ctx)
-  {
-  }
+  RtMonQtWidget(RtMonQt* parent_ctx) : QWidget(), rtmon(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

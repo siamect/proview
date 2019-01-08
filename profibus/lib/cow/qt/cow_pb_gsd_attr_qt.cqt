@@ -214,13 +214,12 @@ GsdAttrQt::~GsdAttrQt()
   delete attrnav;
 }
 
-GsdAttrQt::GsdAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
-    pb_gsd* a_gsd, int a_edit_mode)
-    : GsdAttr(a_parent_ctx, a_object, a_gsd, a_edit_mode)
+GsdAttrQt::GsdAttrQt(void* a_parent_ctx, void* a_object, pb_gsd* a_gsd,
+    int a_edit_mode) : GsdAttr(a_parent_ctx, a_object, a_gsd, a_edit_mode)
 {
   int sts;
 
-  toplevel = new GsdAttrQtWidget(this, a_parent_wid);
+  toplevel = new GsdAttrQtWidget(this);
   toplevel->setMinimumSize(500, 500);
   toplevel->setWindowTitle(fl("pbGsdEditor"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -264,8 +263,7 @@ GsdAttrQt::GsdAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
       toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
   // Navigator
-  attrnav = new GsdAttrNavQt(
-      this, toplevel, "Plant", gsd, edit_mode, &brow_widget, &sts);
+  attrnav = new GsdAttrNavQt(this, "Plant", gsd, edit_mode, &brow_widget, &sts);
   attrnav->message_cb = &GsdAttr::gsdattr_message;
   attrnav->change_value_cb = &GsdAttr::gsdattr_change_value_cb;
 

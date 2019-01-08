@@ -176,9 +176,8 @@ XttSevHist* XttTblQt::sevhist_new(pwr_tOid* oidv, pwr_tOName* anamev,
     pwr_tOName* onamev, bool* sevhistobjectv, pwr_tStatus* sts)
 {
   QWidget* w;
-  return new XttSevHistQt(this, toplevel, "Process History", &w, oidv, anamev,
-      onamev, sevhistobjectv, sevcli, 0, 0, 0, 0, time_ePeriod_LastHour, 0,
-      sts);
+  return new XttSevHistQt(this, "Process History", &w, oidv, anamev, onamev,
+      sevhistobjectv, sevcli, 0, 0, 0, 0, time_ePeriod_LastHour, 0, sts);
 }
 
 CoLogin* XttTblQt::login_new(const char* name, const char* groupname,
@@ -232,13 +231,12 @@ void XttTblQtWidget::valchanged_cmd_input()
   tbl->tblnav->set_inputfocus();
 }
 
-XttTblQt::XttTblQt(QWidget* a_parent_wid, void* a_parent_ctx,
-    sevcli_tCtx a_sevcli, sevcli_sHistItem* itemlist, int item_cnt)
-    : XttTbl(a_parent_ctx, a_sevcli)
+XttTblQt::XttTblQt(void* a_parent_ctx, sevcli_tCtx a_sevcli,
+    sevcli_sHistItem* itemlist, int item_cnt) : XttTbl(a_parent_ctx, a_sevcli)
 {
   int sts;
 
-  toplevel = new XttTblQtWidget(this, a_parent_wid);
+  toplevel = new XttTblQtWidget(this);
   toplevel->setMinimumSize(500, 700);
   toplevel->setWindowTitle(fl("SevXtt Navigator"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -311,7 +309,7 @@ XttTblQt::XttTblQt(QWidget* a_parent_wid, void* a_parent_ctx,
   statusbar->addWidget(cmd_prompt);
   add_expanding(statusbar, cmd_entry);
 
-  tblnav = new TblNavQt(this, toplevel, itemlist, item_cnt, &brow_widget, &sts);
+  tblnav = new TblNavQt(this, itemlist, item_cnt, &brow_widget, &sts);
   tblnav->message_cb = &XttTbl::message;
   tblnav->is_authorized_cb = &XttTbl::is_authorized;
   tblnav->command_cb = &XttTbl::command_cb;
@@ -329,7 +327,7 @@ XttTblQt::XttTblQt(QWidget* a_parent_wid, void* a_parent_ctx,
   cmd_entry->setVisible(false);
 
   // Create help window
-  CoXHelp* xhelp = new CoXHelpQt(toplevel, this, xhelp_eUtility_Xtt, &sts);
+  CoXHelp* xhelp = new CoXHelpQt(this, xhelp_eUtility_Xtt, &sts);
   CoXHelp::set_default(xhelp);
 
   wow = new CoWowQt(toplevel);

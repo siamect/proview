@@ -53,9 +53,7 @@ public:
       char* xn_title, char* xn_dir, char* xn_pattern, int xn_type,
       char* xn_target_attr, char* xn_trigger_attr, char* xn_filetype);
 
-  ~XttFileviewQt()
-  {
-  }
+  ~XttFileviewQt() {}
 
   QWidget* list;
   pwr_tFileName dir;
@@ -83,9 +81,7 @@ class XttFileviewQtWidget : public QFileDialog {
 
 public:
   XttFileviewQtWidget(XttFileviewQt* parent_ctx, QWidget* parent)
-      : QFileDialog(parent), fileview(parent_ctx)
-  {
-  }
+      : QFileDialog(parent), fileview(parent_ctx) {}
 
 protected:
   void closeEvent(QCloseEvent* event);

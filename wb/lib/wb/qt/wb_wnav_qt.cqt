@@ -214,13 +214,13 @@ Ge* WNavQt::ge_new(char* graph_name, int nojournal)
     options |= ge_mOption_IgnoreJournal;
   }
 
-  return new GeQt(NULL, form_widget, ldhses, 0, options, graph_name);
+  return new GeQt(NULL, ldhses, 0, options, graph_name);
 }
 
 WGe* WNavQt::wge_new(char* name, char* filename, char* object_name, int modal)
 {
-  return new WGeQt(parent_wid, this, name, filename, 0, 1, 1, 0, 0, 0, 0,
-      object_name, modal);
+  return new WGeQt(this, name, filename, 0, 1, 1, 0, 0, 0, 0, object_name,
+      modal);
 }
 
 wb_utl* WNavQt::utl_new()
@@ -230,7 +230,7 @@ wb_utl* WNavQt::utl_new()
 
 WRev* WNavQt::rev_new()
 {
-  return new WRevQt(parent_wid, this, ldhses);
+  return new WRevQt(this, ldhses);
 }
 
 void WNavQt::logw_new(char* item, wlog_eCategory* categories, int show_item)
@@ -259,7 +259,7 @@ void WNavQt::logw_new(char* item, wlog_eCategory* categories, int show_item)
     title[strlen(title) - 1] = 0;
   }
 
-  CoLogWQt* logw = new CoLogWQt(this, parent_wid, title, show_item, &sts);
+  CoLogWQt* logw = new CoLogWQt(this, title, show_item, &sts);
   if (categories) {
     logw->CoLogW::show(categories_str, item);
   } else {
@@ -385,8 +385,8 @@ int WNavQt::open_foe(const char* name, pwr_tOid plcpgm, void** foectx,
   if (foe) {
     foe->pop();
   } else {
-    foe = new WFoeQt((void*)this, parent_wid, name, plcpgm, wbctx, ldhses,
-        map_window, access, options, &sts);
+    foe = new WFoeQt((void*)this, name, plcpgm, wbctx, ldhses, map_window,
+        access, options, &sts);
     if (EVEN(sts)) {
       return sts;
     }
@@ -402,7 +402,7 @@ int WNavQt::open_foe(const char* name, pwr_tOid plcpgm, void** foectx,
 void WNavQt::wda_new(pwr_tOid oid, pwr_tCid cid, char* attribute, int edit_mode,
     int advuser, int display_objectname)
 {
-  new WdaQt(parent_wid, this, ldhses, oid, cid, attribute, edit_mode, advuser,
+  new WdaQt(this, ldhses, oid, cid, attribute, edit_mode, advuser,
       display_objectname);
 }
 
@@ -415,23 +415,23 @@ CoLogin* WNavQt::login_new(const char* name, const char* groupname,
 
 WCrr* WNavQt::wcrr_new(pwr_tAttrRef* aref, pwr_tStatus* status)
 {
-  return new WCrrQt(parent_wid, this, ldhses, aref, gbl.advanced_user, status);
+  return new WCrrQt(this, ldhses, aref, gbl.advanced_user, status);
 }
 
 WbBckW* WNavQt::bckw_new(char* name, wb_bck_list* list, pwr_tStatus* status)
 {
-  return new WbBckWQt(this, parent_wid, ldhses, name, list, editmode, status);
+  return new WbBckWQt(this, ldhses, name, list, editmode, status);
 }
 
 WbExpW* WNavQt::expw_new(char* name, int type, pwr_tStatus* status)
 {
-  return new WbExpWQt(this, parent_wid, ldhses, name, type, 1, status);
+  return new WbExpWQt(this, ldhses, name, type, 1, status);
 }
 
 WAttText* WNavQt::watttext_new(
     pwr_tAttrRef aref, int editmode, pwr_tStatus* status)
 {
-  return new WAttTextQt(parent_wid, this, ldhses, aref, editmode, status);
+  return new WAttTextQt(this, ldhses, aref, editmode, status);
 }
 
 void WNavQt::wge_subwindow_loop(WGe* wge)

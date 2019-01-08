@@ -68,8 +68,7 @@ void WRevQtWidget::activate_history()
   wb_log::category_to_string(wlog_eCategory_RevisionRestore, categories[1]);
   strcpy(categories[2], "");
 
-  CoLogWQt* logw
-      = new CoLogWQt(rev, parentWidget(), "Revision History", 1, &sts);
+  CoLogWQt* logw = new CoLogWQt(rev, "Revision History", 1, &sts);
   logw->CoLogW::show(categories, 0);
 }
 
@@ -161,13 +160,12 @@ WRevQt::~WRevQt()
   delete wrevnav;
 }
 
-WRevQt::WRevQt(
-    QWidget* wa_parent_wid, void* wa_parent_ctx, ldh_tSession wa_ldhses)
+WRevQt::WRevQt(void* wa_parent_ctx, ldh_tSession wa_ldhses)
     : WRev(wa_parent_ctx, wa_ldhses), india_widget(0)
 {
   int sts;
 
-  toplevel = new WRevQtWidget(this, wa_parent_wid);
+  toplevel = new WRevQtWidget(this);
   toplevel->setMinimumSize(700, 300);
   toplevel->setWindowTitle(fl("Revisions"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -217,8 +215,7 @@ WRevQt::WRevQt(
   QVBoxLayout* vbox = new QVBoxLayout(toplevel);
 
   utility = ((WUtility*)parent_ctx)->utype;
-  wrevnav = new WRevNavQt(
-      this, toplevel, ldhses, "Packages", utility, &brow_widget, &sts);
+  wrevnav = new WRevNavQt(this, ldhses, "Packages", utility, &brow_widget, &sts);
   ((WRevNav*)wrevnav)->message_cb = message_cb;
   ((WRevNav*)wrevnav)->set_clock_cursor_cb = set_clock_cursor_cb;
   ((WRevNav*)wrevnav)->reset_cursor_cb = reset_cursor_cb;

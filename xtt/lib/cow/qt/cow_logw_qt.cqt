@@ -44,11 +44,11 @@
 #include <QMenuBar>
 #include <QVBoxLayout>
 
-CoLogWQt::CoLogWQt(void* logw_parent_ctx, QWidget* logw_parent_wid,
-    const char* logw_name, int l_show_item, pwr_tStatus* status)
+CoLogWQt::CoLogWQt(void* logw_parent_ctx, const char* logw_name,
+    int l_show_item, pwr_tStatus* status)
     : CoLogW(logw_parent_ctx, logw_name, l_show_item, status)
 {
-  toplevel = new CoLogWQtWidget(this, logw_parent_wid);
+  toplevel = new CoLogWQtWidget(this);
   toplevel->setMinimumSize(800, 600);
   toplevel->setWindowTitle(fl(logw_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -76,7 +76,7 @@ CoLogWQt::CoLogWQt(void* logw_parent_ctx, QWidget* logw_parent_wid,
   QVBoxLayout* form = new QVBoxLayout(toplevel);
 
   // Create logwnav
-  logwnav = new CoLogWNavQt(this, toplevel, l_show_item, &nav_widget);
+  logwnav = new CoLogWNavQt(this, l_show_item, &nav_widget);
 
   form->setMenuBar(menu_bar);
   add_expanding(form, nav_widget);

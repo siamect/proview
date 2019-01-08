@@ -176,16 +176,15 @@ CoXHelpQt::~CoXHelpQt()
   delete xhelpnav;
 }
 
-CoXHelpQt::CoXHelpQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
-    xhelp_eUtility utility, int* xa_sts)
-    : CoXHelp(xa_parent_ctx, utility, xa_sts), parent_wid(xa_parent_wid)
+CoXHelpQt::CoXHelpQt(void* xa_parent_ctx, xhelp_eUtility utility, int* xa_sts)
+    : CoXHelp(xa_parent_ctx, utility, xa_sts)
 {
   int sts;
   char title[80];
 
   strcpy(title, Lng::translate("Help"));
 
-  toplevel = new CoXHelpQtWidget(this, xa_parent_wid);
+  toplevel = new CoXHelpQtWidget(this);
   toplevel->setMinimumSize(700, 600);
   toplevel->setWindowTitle(fl(title));
 
@@ -249,8 +248,7 @@ CoXHelpQt::CoXHelpQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
 
   QVBoxLayout* vbox = new QVBoxLayout();
 
-  xhelpnav
-      = new CoXHelpNavQt(this, toplevel, title, utility, &brow_widget, &sts);
+  xhelpnav = new CoXHelpNavQt(this, title, utility, &brow_widget, &sts);
   xhelpnav->open_URL_cb = CoXHelp::open_URL;
 
   vbox->setMenuBar(menu_bar);
@@ -262,4 +260,13 @@ CoXHelpQt::CoXHelpQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
   toplevel->hide();
 
   *xa_sts = 1;
+}
+
+QWidget* CoXHelpQt::get_widget()
+{
+  if (default_xhelp) {
+    return ((CoXHelpQt*)default_xhelp)->toplevel;
+  } else {
+    return 0;
+  }
 }

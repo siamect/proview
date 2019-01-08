@@ -61,8 +61,7 @@ public:
   static CoWowRecall value_recall;
   CoWowEntryQt* cmd_entry;
 
-  GsdAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
-      pb_gsd* a_gsd, int a_edit_mode);
+  GsdAttrQt(void* a_parent_ctx, void* a_object, pb_gsd* a_gsd, int a_edit_mode);
   ~GsdAttrQt();
 
   void message(char severity, const char* message);
@@ -77,10 +76,7 @@ class GsdAttrQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  GsdAttrQtWidget(GsdAttrQt* parent_ctx, QWidget* parent)
-      : QWidget(), attr(parent_ctx)
-  {
-  }
+  GsdAttrQtWidget(GsdAttrQt* parent_ctx) : QWidget(), attr(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

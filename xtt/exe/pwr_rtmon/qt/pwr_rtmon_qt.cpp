@@ -94,10 +94,10 @@ int main(int argc, char* argv[])
   setlocale(LC_TIME, "en_US");
 
   // Create help window
-  xhelp = new CoXHelpQt(0, 0, xhelp_eUtility_Xtt, &sts);
+  xhelp = new CoXHelpQt(NULL, xhelp_eUtility_Xtt, &sts);
   CoXHelp::set_default(xhelp);
 
-  rtmon = new RtMonQt(NULL, NULL, "Runtime Monitor", display, &sts);
+  rtmon = new RtMonQt(NULL, "Runtime Monitor", display, &sts);
   rtmon->help_cb = rtmon_help_cb;
   rtmon->close_cb = rtmon_close_cb;
 

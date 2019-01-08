@@ -49,13 +49,11 @@
 #include "xtt_otree_qt.h"
 #include "xtt_trend_qt.h"
 
-XttTrendQt::XttTrendQt(void* parent_ctx, QWidget* x_parent_wid, char* name,
-    QWidget** w, pwr_sAttrRef* trend_list, pwr_sAttrRef* plotgroup, int width,
-    int height, unsigned int x_options, int x_color_theme, void* basewidget,
-    int* sts)
+XttTrendQt::XttTrendQt(void* parent_ctx, char* name, QWidget** w,
+    pwr_sAttrRef* trend_list, pwr_sAttrRef* plotgroup, int width, int height,
+    unsigned int x_options, int x_color_theme, void* basewidget, int* sts)
     : XttTrend(parent_ctx, name, trend_list, plotgroup, x_options,
-          x_color_theme, sts),
-      parent_wid(x_parent_wid)
+        x_color_theme, sts)
 {
   if (EVEN(*sts)) {
     // Error from XttTrend constructor
@@ -63,8 +61,8 @@ XttTrendQt::XttTrendQt(void* parent_ctx, QWidget* x_parent_wid, char* name,
   }
   *sts = XNAV__SUCCESS;
 
-  curve = new GeCurveQt(this, parent_wid, name, NULL, gcd, 1, width, height,
-      options, color_theme, basewidget);
+  curve = new GeCurveQt(this, name, NULL, gcd, 1, width, height, options,
+      color_theme, basewidget);
   curve->close_cb = trend_close_cb;
   curve->help_cb = trend_help_cb;
   curve->snapshot_cb = trend_snapshot_cb;
@@ -82,7 +80,7 @@ XttTrendQt::XttTrendQt(void* parent_ctx, QWidget* x_parent_wid, char* name,
         curve_mEnable_Add | curve_mEnable_CurveType | curve_mEnable_FillCurve);
   }
 
-  wow = new CoWowQt(parent_wid);
+  wow = new CoWowQt(((GeCurveQt*)curve)->toplevel);
   timerid = wow->timer_new();
   timerid->add(1000, trend_scan, this);
 }
@@ -110,6 +108,5 @@ XttOTree* XttTrendQt::tree_new(const char* title, pwr_tAttrRef* itemlist,
     int itemcnt, unsigned int layout,
     pwr_tStatus (*action_cb)(void*, pwr_tAttrRef*))
 {
-  return new XttOTreeQt(
-      parent_wid, this, title, itemlist, itemcnt, layout, action_cb);
+  return new XttOTreeQt(this, title, itemlist, itemcnt, layout, action_cb);
 }

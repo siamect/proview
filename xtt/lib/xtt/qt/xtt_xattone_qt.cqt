@@ -248,8 +248,8 @@ void XAttOneQtWidget::closeEvent(QCloseEvent* event)
   QWidget::closeEvent(event);
 }
 
-XAttOneQt::XAttOneQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
-    pwr_sAttrRef* xa_aref, char* xa_title, unsigned int xa_priv, int* xa_sts)
+XAttOneQt::XAttOneQt(void* xa_parent_ctx, pwr_sAttrRef* xa_aref, char* xa_title,
+    unsigned int xa_priv, int* xa_sts)
     : XAttOne(xa_parent_ctx, xa_aref, xa_title, xa_priv, xa_sts)
 {
   pwr_tAName title;
@@ -259,7 +259,7 @@ XAttOneQt::XAttOneQt(QWidget* xa_parent_wid, void* xa_parent_ctx,
     return;
   }
 
-  toplevel = new XAttOneQtWidget(this, xa_parent_wid);
+  toplevel = new XAttOneQtWidget(this);
   toplevel->setMinimumWidth(500);
   toplevel->setWindowTitle(convert_utf8(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);

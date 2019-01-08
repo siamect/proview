@@ -45,9 +45,9 @@
 
 #include <QMenu>
 
-SubPaletteQt::SubPaletteQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
-    const char* xn_name, QWidget** w, pwr_tStatus* status)
-    : SubPalette(xn_parent_ctx, xn_name, status), parent_widget(xn_parent_wid)
+SubPaletteQt::SubPaletteQt(void* xn_parent_ctx, const char* xn_name,
+    QWidget** w, pwr_tStatus* status)
+    : SubPalette(xn_parent_ctx, xn_name, status)
 {
   object = new SubPaletteQtObject(this);
 
@@ -83,7 +83,7 @@ void SubPaletteQt::create_popup_menu(char* filename, int x, int y)
 
   CoWowQt::PopupPosition(form_widget, x, y, &wind_x, &wind_y);
 
-  QMenu* menu = new QMenu(parent_widget);
+  QMenu* menu = new QMenu();
   addMenuItem(object, menu, "Help", SLOT(activate_help()));
 
   menu->popup(QPoint(wind_x, wind_y));

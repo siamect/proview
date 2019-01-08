@@ -177,10 +177,9 @@ void WGeQtWidget::closeEvent(QCloseEvent* event)
   QWidget::closeEvent(event);
 }
 
-WGeQt::WGeQt(QWidget* wge_parent_wid, void* wge_parent_ctx, char* wge_name,
-    char* wge_filename, int wge_scrollbar, int wge_menu, int wge_navigator,
-    int wge_width, int wge_height, int x, int y, char* object_name,
-    int wge_modal = 0)
+WGeQt::WGeQt(void* wge_parent_ctx, char* wge_name, char* wge_filename,
+    int wge_scrollbar, int wge_menu, int wge_navigator, int wge_width,
+    int wge_height, int x, int y, char* object_name, int wge_modal = 0)
     : WGe(wge_parent_ctx, wge_name, wge_filename, wge_scrollbar, wge_menu,
           wge_navigator, wge_width, wge_height, x, y, object_name, wge_modal),
       value_dialog(0)
@@ -197,7 +196,7 @@ WGeQt::WGeQt(QWidget* wge_parent_wid, void* wge_parent_ctx, char* wge_name,
   str_StrncpyCutOff(title, name, sizeof(title), 1);
 
   // Qt
-  toplevel = new WGeQtWidget(this, wge_parent_wid);
+  toplevel = new WGeQtWidget(this);
   toplevel->setMinimumSize(window_width, window_height);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -209,7 +208,7 @@ WGeQt::WGeQt(QWidget* wge_parent_wid, void* wge_parent_ctx, char* wge_name,
   }
 
   QVBoxLayout* graph_form = new QVBoxLayout();
-  graph = new GraphQt(this, toplevel, "Plant", &grow_widget, &sts, "pwrp_exe:",
+  graph = new GraphQt(this, "Plant", &grow_widget, &sts, "pwrp_exe:",
       graph_eMode_Runtime, scrollbar, 1, object_name, 0, 0);
   graph->message_cb = &message;
   graph->close_cb = &graph_close_cb;

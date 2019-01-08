@@ -732,8 +732,8 @@ XttQt::XttQt(int argc, char* argv[], int* return_sts)
 
   statusbar->show();
 
-  xnav = new XNavQt(this, NULL, "Plant", &brow_widget,
-      (xnav_sStartMenu*)root_menu, opplace_str, op_close_button, &sts);
+  xnav = new XNavQt(this, "Plant", &brow_widget, (xnav_sStartMenu*)root_menu,
+      opplace_str, op_close_button, &sts);
   xnav->message_cb = &xtt_message_cb;
   xnav->close_cb = &close;
   xnav->map_cb = &map;
@@ -770,7 +770,7 @@ XttQt::XttQt(int argc, char* argv[], int* return_sts)
   cmd_entry->setVisible(false);
 
   // Create help window
-  CoXHelp* xhelp = new CoXHelpQt(toplevel, this, xhelp_eUtility_Xtt, &sts);
+  CoXHelp* xhelp = new CoXHelpQt(this, xhelp_eUtility_Xtt, &sts);
   xhelp->open_URL_cb = open_URL_cb;
   CoXHelp::set_default(xhelp);
 

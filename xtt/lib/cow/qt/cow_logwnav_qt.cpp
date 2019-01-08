@@ -41,8 +41,7 @@
 
 #include "flow_browwidget_qt.h"
 
-CoLogWNavQt::CoLogWNavQt(
-    void* l_parent_ctx, QWidget* l_parent_wid, int l_show_item, QWidget** w)
+CoLogWNavQt::CoLogWNavQt(void* l_parent_ctx, int l_show_item, QWidget** w)
     : CoLogWNav(l_parent_ctx, l_show_item)
 {
   form_widget

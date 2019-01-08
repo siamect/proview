@@ -87,9 +87,7 @@ class XttQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  XttQtWidget(XttQt* parent_ctx) : QWidget(), xtt(parent_ctx)
-  {
-  }
+  XttQtWidget(XttQt* parent_ctx) : QWidget(), xtt(parent_ctx) {}
   bool eventFilter(QObject* obj, QEvent* event);
 
 protected:

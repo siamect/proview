@@ -56,8 +56,7 @@ static pwr_tStatus ShowConfiguration(xmenu_sMenuCall* ip)
     return sts;
   }
 
-  ctx->attr
-      = new GsdAttrQt(CoXHelpQt::get_widget(), ctx, 0, ctx->gsd, edit_mode);
+  ctx->attr = new GsdAttrQt(ctx, 0, ctx->gsd, edit_mode);
   ctx->attr->close_cb = xtt_pb_dp_slave_close_cb;
   ctx->attr->save_cb = xtt_pb_dp_slave_save_cb;
   ctx->attr->help_cb = xtt_pb_dp_slave_help_cb;

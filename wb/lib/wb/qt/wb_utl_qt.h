@@ -45,13 +45,9 @@ class wb_utl_qt : public wb_utl {
 public:
   QWidget* widget;
 
-  wb_utl_qt(QWidget* w) : widget(w)
-  {
-  }
+  wb_utl_qt(QWidget* w) : widget(w) {}
 
-  ~wb_utl_qt()
-  {
-  }
+  ~wb_utl_qt() {}
 
   int create_mainwindow(int argc, char** argv);
   int destroy_mainwindow();

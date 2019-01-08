@@ -75,8 +75,8 @@ static pwr_tStatus Configure(ldh_sMenuCall* ip)
     return sts;
   }
 
-  ctx->attr = new GsdmlAttrQt(CoXHelpQt::get_widget(), ctx, 0, ctx->gsdml,
-      ctx->edit_mode, datafile, &sts);
+  ctx->attr = new GsdmlAttrQt(ctx, 0, ctx->gsdml, ctx->edit_mode, datafile,
+      &sts);
   if (sts == PB__CONFIGABORTED) {
     ((GsdmlAttrQt*)ctx->attr)->toplevel->close();
     return 1;

@@ -56,10 +56,9 @@ public:
   QCheckBox* present[UTED_QUALS];
   QAction* optmenubuttons[UTED_MAX_COMMANDS];
 
-  WUtedQt(void* wu_parent_ctx, QWidget* wu_parent_wid, const char* wu_name,
-      const char* wu_iconname, ldh_tWBContext wu_ldhwb,
-      ldh_tSesContext wu_ldhses, int wu_editmode, void (*wu_quit_cb)(void*),
-      pwr_tStatus* status);
+  WUtedQt(void* wu_parent_ctx, const char* wu_name, const char* wu_iconname,
+      ldh_tWBContext wu_ldhwb, ldh_tSesContext wu_ldhses, int wu_editmode,
+      void (*wu_quit_cb)(void*), pwr_tStatus* status);
   ~WUtedQt();
   void remove_command_window();
   void reset_qual();
@@ -85,10 +84,7 @@ class WUtedQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  WUtedQtWidget(WUtedQt* parent_ctx, QWidget* parent)
-      : QWidget(), uted(parent_ctx)
-  {
-  }
+  WUtedQtWidget(WUtedQt* parent_ctx) : QWidget(), uted(parent_ctx) {}
 
 protected:
   void closeEvent(QCloseEvent* event);

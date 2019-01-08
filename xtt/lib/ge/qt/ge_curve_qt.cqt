@@ -719,10 +719,9 @@ void GeCurveQtWidget::focusInEvent(QFocusEvent* event)
   QWidget::focusInEvent(event);
 }
 
-GeCurveQt::GeCurveQt(void* gc_parent_ctx, QWidget* parent_widget,
-    char* curve_name, char* filename, GeCurveData* curve_data, int pos_right,
-    int gc_width, int gc_height, unsigned int gc_options, int gc_color_theme,
-    void* basewidget)
+GeCurveQt::GeCurveQt(void* gc_parent_ctx, char* curve_name, char* filename,
+    GeCurveData* curve_data, int pos_right, int gc_width, int gc_height,
+    unsigned int gc_options, int gc_color_theme, void* basewidget)
     : GeCurve(gc_parent_ctx, curve_name, filename, curve_data, pos_right,
           gc_width, gc_height, gc_options, gc_color_theme),
       disable_timecombo_callback(0)

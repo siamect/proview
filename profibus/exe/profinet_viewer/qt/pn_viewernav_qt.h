@@ -43,8 +43,7 @@
 
 class PnViewerNavQt : public PnViewerNav {
 public:
-  PnViewerNavQt(void* v_parent_ctx, QWidget* v_parent_wid, viewer_eType v_type,
-      QWidget** w);
+  PnViewerNavQt(void* v_parent_ctx, viewer_eType v_type, QWidget** w);
   ~PnViewerNavQt();
 
   QWidget* brow_widget;

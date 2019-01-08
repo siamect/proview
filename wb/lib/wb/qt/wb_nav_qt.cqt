@@ -46,9 +46,9 @@
 
 #include <qlocalsocket.h>
 
-NavQt::NavQt(void* nav_parent_ctx, QWidget* nav_parent_wid,
-    const char* nav_name, ldh_tSesContext nav_ldhses, const char* nav_root_name,
-    QWidget** w, pwr_tStatus* status)
+NavQt::NavQt(void* nav_parent_ctx, const char* nav_name,
+    ldh_tSesContext nav_ldhses, const char* nav_root_name, QWidget** w,
+    pwr_tStatus* status)
     : Nav(nav_parent_ctx, nav_name, nav_ldhses, nav_root_name, status)
 {
   trace_obj = new NavQtTraceObject(this);

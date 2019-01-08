@@ -119,11 +119,10 @@ void XttMultiViewQtWidget::closeEvent(QCloseEvent* event)
   QWidget::closeEvent(event);
 }
 
-XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
-    const char* mv_name, pwr_tAttrRef* mv_aref, int mv_width, int mv_height,
-    int mv_x, int mv_y, unsigned int mv_options, void* basewidget,
-    int mv_color_theme, pwr_tStatus* sts,
-    int (*mv_command_cb)(void*, char*, char*, void*),
+XttMultiViewQt::XttMultiViewQt(void* mv_parent_ctx, const char* mv_name,
+    pwr_tAttrRef* mv_aref, int mv_width, int mv_height, int mv_x, int mv_y,
+    unsigned int mv_options, void* basewidget, int mv_color_theme,
+    pwr_tStatus* sts, int (*mv_command_cb)(void*, char*, char*, void*),
     int (*mv_get_current_objects_cb)(void*, pwr_sAttrRef**, int**),
     int (*mv_is_authorized_cb)(void*, unsigned int),
     void (*mv_keyboard_cb)(void*, void*, int, int))
@@ -153,7 +152,7 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
   }
 
   // Qt
-  toplevel = new XttMultiViewQtWidget(this, mv_parent_wid);
+  toplevel = new XttMultiViewQtWidget(this);
   toplevel->setMinimumSize(window_width, window_height);
   if (!(options & ge_mOptions_Embedded)) {
     toplevel->setWindowTitle(QString::fromLatin1(mv.Title));
@@ -272,11 +271,10 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
             bordersp = borders;
           }
 
-          XttGeQt* ge = new XttGeQt(toplevel, toplevel,
-              "No title", graph_name, scrollbar, menu, 0, w, h, mv_x, mv_y, 1.0,
-              objectname_p, 0, 0, ge_mOptions_Embedded, 0, bordersp,
-              color_theme, multiview_ge_command_cb,
-              multiview_ge_get_current_objects_cb,
+          XttGeQt* ge = new XttGeQt(this, "No title", graph_name, scrollbar,
+              menu, 0, w, h, mv_x, mv_y, 1.0, objectname_p, 0, 0,
+              ge_mOptions_Embedded, 0, bordersp, color_theme,
+              multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
               multiview_ge_is_authorized_cb, multiview_keyboard_cb);
           setDataAndTag(idx, type, ge);
 
@@ -309,10 +307,9 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
             break;
           }
 
-          XttMultiViewQt* mv = new XttMultiViewQt(toplevel, this,
-              "No title", &graph_aref, w, h, mv_x, mv_y, ge_mOptions_Embedded,
-              0, color_theme, &lsts, multiview_ge_command_cb,
-              multiview_ge_get_current_objects_cb,
+          XttMultiViewQt* mv = new XttMultiViewQt(this, "No title", &graph_aref,
+              w, h, mv_x, mv_y, ge_mOptions_Embedded, 0, color_theme, &lsts,
+              multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
               multiview_ge_is_authorized_cb, multiview_keyboard_cb);
           setDataAndTag(idx, type, mv);
           mv->close_cb = multiview_ge_close_cb;
@@ -348,16 +345,16 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
           XttTrendQt* trend;
           if (classid == pwr_cClass_PlotGroup) {
             arefv[0] = mv.Action[idx].Object[0];
-            trend = new XttTrendQt(this, toplevel,
-                (char*)"No title", &widget, 0, &(arefv[0]), w, h,
-                (unsigned int)curve_mOptions_Embedded, color_theme, 0, sts);
+            trend = new XttTrendQt(this, (char*)"No title", &widget, 0,
+                &(arefv[0]), w, h, (unsigned int)curve_mOptions_Embedded,
+                color_theme, 0, sts);
             setDataAndTag(idx, type, trend);
           } else if (classid == pwr_cClass_DsTrend || classid == pwr_cClass_DsTrendCurve) {
             arefv[0] = mv.Action[idx].Object[0];
             memset(&arefv[1], 0, sizeof(arefv[0]));
-            trend = new XttTrendQt(this, toplevel,
-                (char*)"No title", &widget, arefv, 0, w, h,
-                (unsigned int)curve_mOptions_Embedded, color_theme, 0, sts);
+            trend = new XttTrendQt(this, (char*)"No title", &widget, arefv, 0,
+                w, h, (unsigned int)curve_mOptions_Embedded, color_theme, 0,
+                sts);
             setDataAndTag(idx, type, trend);
           } else {
             break;
@@ -590,10 +587,10 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
           }
 
           QWidget* widget;
-          XttSevHistQt* sevhist = new XttSevHistQt(this, toplevel,
-              (char*)"No title", &widget, oidv, anamev, onamev, sevhistobjectv,
-              xnav->scctx, w, h, (unsigned int)curve_mOptions_Embedded,
-              color_theme, time_ePeriod_, 0, sts);
+          XttSevHistQt* sevhist = new XttSevHistQt(this, (char*)"No title",
+              &widget, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, w, h,
+              (unsigned int)curve_mOptions_Embedded, color_theme, time_ePeriod_,
+              0, sts);
           if (EVEN(*sts)) {
             QString s = "Unable to load history data\n";
             char str1[200];
@@ -663,9 +660,9 @@ XttMultiViewQt::XttMultiViewQt(QWidget* mv_parent_wid, void* mv_parent_ctx,
             options |= strm_mOptions_CgiParameterAuthentication;
           }
 
-          XttStreamQt* stream = new XttStreamQt(toplevel, this,
-              "No title", xttcamera.URL, mv.Action[idx].Width,
-              mv.Action[idx].Height, 0, 0, 0, options, 1, &aref, sts);
+          XttStreamQt* stream = new XttStreamQt(this, "No title", xttcamera.URL,
+              mv.Action[idx].Width, mv.Action[idx].Height, 0, 0, 0, options, 1,
+              &aref, sts);
           setDataAndTag(idx, type, stream);
 
           stream->close_cb = multiview_strm_close_cb;
@@ -866,10 +863,10 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
           switch (type) { // TODO: Add support for AlarmList, EventList and FastCurve
           case pwr_eMultiViewContentEnum_Graph:
           case pwr_eMultiViewContentEnum_ObjectGraph: {
-            XttGeQt* ge = new XttGeQt(toplevel, toplevel,
-                "No title", source, scrollbar, menu, 0, w, h, 0, 0, 1.0, object,
-                0, 0, ge_mOptions_Embedded, 0, borders, color_theme,
-                multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
+            XttGeQt* ge = new XttGeQt(this, "No title", source, scrollbar, menu,
+                0, w, h, 0, 0, 1.0, object, 0, 0, ge_mOptions_Embedded, 0,
+                borders, color_theme, multiview_ge_command_cb,
+                multiview_ge_get_current_objects_cb,
                 multiview_ge_is_authorized_cb, multiview_keyboard_cb);
 
             appl.remove(views[idx].data);
@@ -903,9 +900,9 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
               break;
             }
 
-            XttMultiViewQt* mv = new XttMultiViewQt(toplevel, this,
-                "No title", &source_aref, w, h, 0, 0, ge_mOptions_Embedded, 0,
-                color_theme, &sts, multiview_ge_command_cb,
+            XttMultiViewQt* mv = new XttMultiViewQt(this, "No title",
+                &source_aref, w, h, 0, 0, ge_mOptions_Embedded, 0, color_theme,
+                &sts, multiview_ge_command_cb,
                 multiview_ge_get_current_objects_cb,
                 multiview_ge_is_authorized_cb, multiview_keyboard_cb);
 
@@ -952,15 +949,15 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
             XttTrendQt* trend;
             if (classid == pwr_cClass_PlotGroup) {
               arefv[0] = object_aref;
-              trend = new XttTrendQt(this, toplevel,
-                  (char*)"No title", &comp_w, 0, &(arefv[0]), w, h,
-                  (unsigned int)curve_mOptions_Embedded, color_theme, 0, &lsts);
+              trend = new XttTrendQt(this, (char*)"No title", &comp_w, 0,
+                  &(arefv[0]), w, h, (unsigned int)curve_mOptions_Embedded,
+                  color_theme, 0, &lsts);
             } else if (classid == pwr_cClass_DsTrend || classid == pwr_cClass_DsTrendCurve) {
               arefv[0] = object_aref;
               memset(&arefv[1], 0, sizeof(arefv[0]));
-              trend = new XttTrendQt(this, toplevel,
-                  (char*)"No title", &comp_w, arefv, 0, w, h,
-                  (unsigned int)curve_mOptions_Embedded, color_theme, 0, &lsts);
+              trend = new XttTrendQt(this, (char*)"No title", &comp_w, arefv, 0,
+                  w, h, (unsigned int)curve_mOptions_Embedded, color_theme, 0,
+                  &lsts);
             } else {
               break;
             }
@@ -1173,10 +1170,9 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
             }
 
             QWidget* comp_w;
-            XttSevHistQt* sevhist = new XttSevHistQt(this, toplevel,
-                (char*)"No title", &comp_w, oidv, anamev, onamev,
-                sevhistobjectv, xnav->scctx, w, h,
-                (unsigned int)curve_mOptions_Embedded, color_theme,
+            XttSevHistQt* sevhist = new XttSevHistQt(this, (char*)"No title",
+                &comp_w, oidv, anamev, onamev, sevhistobjectv, xnav->scctx, w,
+                h, (unsigned int)curve_mOptions_Embedded, color_theme,
                 time_ePeriod_, 0, &lsts);
             if (EVEN(lsts)) {
               break;
@@ -1213,8 +1209,8 @@ int XttMultiViewQt::set_subwindow_source(const char* name, char* source,
             }
 
 
-            XttStreamQt* stream = new XttStreamQt(toplevel, this,
-                "No title", xttcamera.URL, w, h, 0, 0, 0, xttcamera.Options, 1,
+            XttStreamQt* stream = new XttStreamQt(this, "No title",
+                xttcamera.URL, w, h, 0, 0, 0, xttcamera.Options, 1,
                 &object_aref, &lsts);
 
             appl.remove(views[idx].data);

@@ -45,14 +45,12 @@ class CoXHelpQtWidget;
 
 class CoXHelpQt : public CoXHelp {
 public:
-  CoXHelpQt(QWidget* xa_parent_wid, void* xa_parent_ctx, xhelp_eUtility utility,
-      int* xa_sts);
+  CoXHelpQt(void* xa_parent_ctx, xhelp_eUtility utility, int* xa_sts);
   ~CoXHelpQt();
 
   CoXHelpQtWidget* toplevel;
   QWidget* brow_widget;
   QWidget* form_widget;
-  QWidget* parent_wid;
   CoWowFocusTimerQt focustimer;
 
   void set_dimension(int width, int height);
@@ -61,24 +59,14 @@ public:
   void open_input_dialog(const char* text, const char* title,
       const char* init_text, void (*ok_cb)(CoXHelp*, char*));
 
-  static QWidget* get_widget()
-  {
-    if (default_xhelp) {
-      return ((CoXHelpQt*)default_xhelp)->parent_wid;
-    } else {
-      return 0;
-    }
-  }
+  static QWidget* get_widget();
 };
 
 class CoXHelpQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  CoXHelpQtWidget(CoXHelpQt* parent_ctx, QWidget* parent)
-      : QWidget(), xhelp(parent_ctx)
-  {
-  }
+  CoXHelpQtWidget(CoXHelpQt* parent_ctx) : QWidget(), xhelp(parent_ctx) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

@@ -43,9 +43,7 @@ class PwrStyle : public QGtkStyle {
   Q_OBJECT
 
 public:
-  PwrStyle() : QGtkStyle()
-  {
-  }
+  PwrStyle() : QGtkStyle() {}
 
   int pixelMetric(PixelMetric which, const QStyleOption* option,
       const QWidget* widget = 0) const;

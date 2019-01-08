@@ -112,12 +112,11 @@ void SubGraphsQtWidget::subgraphs_activate_help()
 {
 }
 
-SubGraphsQt::SubGraphsQt(void* xn_parent_ctx, QWidget* xn_parent_wid,
-    const char* xn_name, void* xn_growctx, QWidget** w, pwr_tStatus* status)
-    : SubGraphs(xn_parent_ctx, xn_name, xn_growctx, status),
-      parent_wid(xn_parent_wid)
+SubGraphsQt::SubGraphsQt(void* xn_parent_ctx, const char* xn_name,
+    void* xn_growctx, QWidget** w, pwr_tStatus* status)
+    : SubGraphs(xn_parent_ctx, xn_name, xn_growctx, status)
 {
-  toplevel = new SubGraphsQtWidget(this, xn_parent_wid);
+  toplevel = new SubGraphsQtWidget(this);
   toplevel->setMinimumSize(300, 500);
   toplevel->setWindowTitle(fl(name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -179,7 +178,7 @@ void SubGraphsQt::trace_start()
   toplevel->trace_scan();
 }
 
-SubGraphsQtWidget::SubGraphsQtWidget(SubGraphsQt* parent_ctx, QWidget* parent)
+SubGraphsQtWidget::SubGraphsQtWidget(SubGraphsQt* parent_ctx)
     : QWidget(), subgraphs(parent_ctx)
 {
   trace_timerid = new QTimer(this);
@@ -196,6 +195,5 @@ void SubGraphsQtWidget::trace_scan()
 
 Attr* SubGraphsQt::new_attr(void* object, attr_sItem* items, int num)
 {
-  return new AttrQt(
-      parent_wid, this, attr_eType_Attributes, object, items, num);
+  return new AttrQt(toplevel, this, attr_eType_Attributes, object, items, num);
 }

@@ -49,8 +49,7 @@
 
 #include <QTimer>
 
-WGreQt::WGreQt(void* wg_parent_ctx, QWidget* wg_parent_wid, const char* name)
-    : WGre(wg_parent_ctx, 0)
+WGreQt::WGreQt(void* wg_parent_ctx, const char* name) : WGre(wg_parent_ctx, 0)
 {
   trace_obj = new WGreQtTraceObject(this);
   trace_timerid = new QTimer(trace_obj);

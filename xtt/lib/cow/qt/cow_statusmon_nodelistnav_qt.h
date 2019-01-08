@@ -49,10 +49,9 @@ class NodelistNavQtTraceObject;
 
 class NodelistNavQt : public NodelistNav {
 public:
-  NodelistNavQt(void* ev_parent_ctx, QWidget* nodelistnav_parent_wid,
-      MsgWindow* nodelistnav_msg_window, char* nodelistnav_msg_nodename,
-      int nodelistnav_mode, int nodelistnav_view_node_descr,
-      int nodelist_msgw_pop, QWidget** w);
+  NodelistNavQt(void* ev_parent_ctx, MsgWindow* nodelistnav_msg_window,
+      char* nodelistnav_msg_nodename, int nodelistnav_mode,
+      int nodelistnav_view_node_descr, int nodelist_msgw_pop, QWidget** w);
   ~NodelistNavQt();
 
   QWidget* brow_widget;

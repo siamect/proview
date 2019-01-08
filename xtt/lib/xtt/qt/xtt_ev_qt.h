@@ -48,14 +48,12 @@ class EvQtObject;
 
 class EvQt : public Ev {
 public:
-  EvQt(void* ev_parent_ctx, QWidget* ev_parent_wid, char* eve_name,
-      char* ala_name, char* blk_name, pwr_tObjid ev_user, int display_ala,
-      int display_eve, int display_blk, int display_return, int display_ack,
-      int ev_beep, pwr_tMask ev_pop_mask, int ev_eventname_seg,
-      pwr_tStatus* status);
+  EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
+      pwr_tObjid ev_user, int display_ala, int display_eve, int display_blk,
+      int display_return, int display_ack, int ev_beep, pwr_tMask ev_pop_mask,
+      int ev_eventname_seg, pwr_tStatus* status);
   ~EvQt();
 
-  QWidget* parent_wid;
   QDialog* parent_wid_eve;
   QDialog* parent_wid_ala;
   QDialog* parent_wid_blk;
@@ -89,9 +87,7 @@ class EvQtObject : public QObject {
   Q_OBJECT
 
 public:
-  EvQtObject(EvQt* parent_ctx) : QObject(), ev(parent_ctx)
-  {
-  }
+  EvQtObject(EvQt* parent_ctx) : QObject(), ev(parent_ctx) {}
 
 public slots:
   void eve_action_inputfocus();

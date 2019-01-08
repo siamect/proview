@@ -58,9 +58,9 @@ public:
   std::vector<View> views;
   CoWowFocusTimerQt focustimer;
 
-  XttMultiViewQt(QWidget* parent_wid, void* parent_ctx, const char* name,
-      pwr_tAttrRef* aref, int width, int height, int x, int y,
-      unsigned int options, void* basewidget, int color_theme, pwr_tStatus* sts,
+  XttMultiViewQt(void* parent_ctx, const char* name, pwr_tAttrRef* aref,
+      int width, int height, int x, int y, unsigned int options,
+      void* basewidget, int color_theme, pwr_tStatus* sts,
       int (*mv_command_cb)(void*, char*, char*, void*),
       int (*mv_get_current_objects_cb)(void*, pwr_sAttrRef**, int**),
       int (*mv_is_authorized_cb)(void*, unsigned int),
@@ -84,10 +84,7 @@ private:
 
 class XttMultiViewQtWidget : public QWidget {
 public:
-  XttMultiViewQtWidget(XttMultiViewQt* parent_ctx, QWidget* parent)
-      : QWidget(parent), multiview(parent_ctx)
-  {
-  }
+  XttMultiViewQtWidget(XttMultiViewQt* parent) : QWidget(), multiview(parent) {}
 
 protected:
   void focusInEvent(QFocusEvent* event);

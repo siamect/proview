@@ -43,10 +43,10 @@
 
 class WAttNavQt : public WAttNav {
 public:
-  WAttNavQt(void* wa_parent_ctx, wattnav_eType wa_type, QWidget* wa_parent_wid,
-      const char* wa_name, ldh_tSesContext wa_ldhses, pwr_sAttrRef wa_aref,
-      int wa_editmode, int wa_advanced_user, int wa_display_objectname,
-      wb_eUtility wa_utility, QWidget** w, pwr_tStatus* status);
+  WAttNavQt(void* wa_parent_ctx, wattnav_eType wa_type, const char* wa_name,
+      ldh_tSesContext wa_ldhses, pwr_sAttrRef wa_aref, int wa_editmode,
+      int wa_advanced_user, int wa_display_objectname, wb_eUtility wa_utility,
+      QWidget** w, pwr_tStatus* status);
   ~WAttNavQt();
 
   QWidget* brow_widget;

@@ -119,13 +119,12 @@ PnViewerQt::PnViewerQt(const char* v_name, const char* v_device,
   QLabel* header_left = new QLabel("Devices on Network");
   QLabel* header_right = new QLabel("Devices from Configuration");
 
-  viewernav
-      = new PnViewerNavQt(this, nav_right, viewer_eType_Network, &nav_widget);
+  viewernav = new PnViewerNavQt(this, viewer_eType_Network, &nav_widget);
   viewernav->change_value_cb = &change_value;
   viewernav->message_cb = &message_cb;
 
-  viewernavconf = new PnViewerNavQt(
-      this, nav_left, viewer_eType_Configuration, &navconf_widget);
+  viewernavconf = new PnViewerNavQt(this, viewer_eType_Configuration,
+      &navconf_widget);
   viewernavconf->change_value_cb = &change_value;
   viewernavconf->message_cb = &message_cb;
 

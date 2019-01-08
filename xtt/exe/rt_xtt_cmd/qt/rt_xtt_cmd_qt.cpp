@@ -57,7 +57,7 @@ XttCmdQt::XttCmdQt()
   pwr_tStatus sts;
   pwr_tOName opplace = "";
 
-  xnav = new XNavQt(this, NULL, "Plant", &brow_widget, (xnav_sStartMenu*)root_menu,
+  xnav = new XNavQt(this, "Plant", &brow_widget, (xnav_sStartMenu*)root_menu,
       opplace, 0, &sts);
 
   xnav->message_cb = &message_cb;
