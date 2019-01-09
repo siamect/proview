@@ -34,6 +34,9 @@
  * General Public License plus this exception.
  */
 
+#include "co_dcli.h"
+#include "co_string.h"
+
 #include "flow_browctx.h"
 #include "flow_frame.h"
 #include "flow_pixmap.h"
@@ -652,6 +655,98 @@ void brow_AllocAnnotPixmap(
     brow_tCtx ctx, flow_sPixmapData* pixmap_data, flow_sAnnotPixmap** pixmap)
 {
   flow_annot_pixmap_create(ctx, pixmap_data, pixmap);
+}
+
+struct PBM {
+  int width;
+  int height;
+  unsigned char *data;
+};
+
+static unsigned char reverse(unsigned char b) {
+   b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
+   b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
+   b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
+   return b;
+}
+
+static void loadPBM(const char *filename, PBM* img)
+{
+  FILE* f = fopen(filename, "r");
+  if (f == NULL) {
+    fprintf(stderr, "Error: Unable to open file %s\n\n", filename);
+    exit(1);
+  }
+
+  char format[4];
+  fscanf(f, "%s\n%d %d", format, &(img->width), &(img->height));
+  if (!streq(format, "P4")) {
+    printf("ERROR: %s is not a valid pbm file\n", filename);
+    exit(1);
+  }
+
+  // TODO: This loader cannot handle comments (lines starting with '#') yet.
+
+  while (fgetc(f) != '\n')
+    ;
+
+  int size = img->width * (img->height / 8 + 1);
+  img->data = new unsigned char[size];
+
+  for (int i = 0; i < size; i++) {
+    int c = fgetc(f);
+    if (c == EOF)
+      break;
+    img->data[i] = reverse(c);
+  }
+  fclose(f);
+}
+
+void brow_LoadPBM(brow_tCtx ctx, const char *filename, flow_sAnnotPixmap **dst)
+{
+  char fname[255];
+  strcpy(fname, "$pwr_exe/");
+  strcat(fname, filename);
+  strcat(fname, "12.pbm");
+  dcli_translate_filename(fname, fname);
+
+  struct PBM img;
+  loadPBM(fname, &img);
+
+  flow_sPixmapData pixmap_data;
+  for (int i = 0; i < 9; i++) {
+    pixmap_data[i].width = img.width;
+    pixmap_data[i].height = img.height;
+    pixmap_data[i].bits = img.data;
+  }
+  brow_AllocAnnotPixmap(ctx, &pixmap_data, dst);
+  delete[](img.data);
+}
+
+void brow_LoadPBMs(brow_tCtx ctx, const char *base_filename,
+    flow_sAnnotPixmap **dst)
+{
+  const char *sizes[] = {"8", "10", "12", "14", "16", "18", "20", "20", "24"};
+
+  struct PBM img;
+  flow_sPixmapData pixmap_data;
+  for (int i = 0; i < 9; i++) {
+    char fname[255];
+    strcpy(fname, "$pwr_exe/");
+    strcat(fname, base_filename);
+    strcat(fname, sizes[i]);
+    strcat(fname, ".pbm");
+    dcli_translate_filename(fname, fname);
+
+    loadPBM(fname, &img);
+    pixmap_data[i].width = img.width;
+    pixmap_data[i].height = img.height;
+    pixmap_data[i].bits = img.data;
+  }
+  brow_AllocAnnotPixmap(ctx, &pixmap_data, dst);
+  for (int i = 0; i < 9; i++) {
+    delete[](pixmap_data[i].bits);
+  }
 }
 
 void brow_FreeAnnotPixmap(brow_tCtx ctx, flow_sAnnotPixmap* pixmap)

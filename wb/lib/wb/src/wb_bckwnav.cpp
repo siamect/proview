@@ -34,20 +34,14 @@
  * General Public License plus this exception.
  */
 
-/* wb_logwnav.cpp -- Backupfile display window */
+/* wb_bckwnav.cpp -- Backupfile display window */
+
+#include "pwr_baseclasses.h"
 
 #include "co_string.h"
 #include "co_time.h"
 
-#include "xnav_bitmap_save12.h"
-#include "xnav_bitmap_build12.h"
-#include "xnav_bitmap_package12.h"
-#include "xnav_bitmap_copy12.h"
-#include "xnav_bitmap_export12.h"
-#include "xnav_bitmap_clone12.h"
-
 #include "wb_bckwnav.h"
-#include "pwr_baseclasses.h"
 #include "wb_ldh_msg.h"
 
 //
@@ -68,56 +62,12 @@ void WbBckWNavBrow::free_pixmaps()
 //
 void WbBckWNavBrow::allocate_pixmaps()
 {
-  flow_sPixmapData pixmap_data;
-  int i;
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_save12_width;
-    pixmap_data[i].height = xnav_bitmap_save12_height;
-    pixmap_data[i].bits = xnav_bitmap_save12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_save);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_build12_width;
-    pixmap_data[i].height = xnav_bitmap_build12_height;
-    pixmap_data[i].bits = xnav_bitmap_build12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_build);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_package12_width;
-    pixmap_data[i].height = xnav_bitmap_package12_height;
-    pixmap_data[i].bits = xnav_bitmap_package12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_package);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_copy12_width;
-    pixmap_data[i].height = xnav_bitmap_copy12_height;
-    pixmap_data[i].bits = xnav_bitmap_copy12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_copy);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_export12_width;
-    pixmap_data[i].height = xnav_bitmap_export12_height;
-    pixmap_data[i].bits = xnav_bitmap_export12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_export);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_clone12_width;
-    pixmap_data[i].height = xnav_bitmap_clone12_height;
-    pixmap_data[i].bits = xnav_bitmap_clone12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_clone);
+  brow_LoadPBM(ctx, "xnav_bitmap_save", &pixmap_save);
+  brow_LoadPBM(ctx, "xnav_bitmap_build", &pixmap_build);
+  brow_LoadPBM(ctx, "xnav_bitmap_package", &pixmap_package);
+  brow_LoadPBM(ctx, "xnav_bitmap_copy", &pixmap_copy);
+  brow_LoadPBM(ctx, "xnav_bitmap_export", &pixmap_export);
+  brow_LoadPBM(ctx, "xnav_bitmap_clone", &pixmap_clone);
 }
 
 //

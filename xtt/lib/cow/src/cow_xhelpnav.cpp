@@ -44,31 +44,6 @@
 
 #include "cow_xhelpnav.h"
 
-#include "xnav_bitmap_morehelp8.h"
-#include "xnav_bitmap_morehelp10.h"
-#include "xnav_bitmap_morehelp12.h"
-#include "xnav_bitmap_morehelp14.h"
-#include "xnav_bitmap_morehelp16.h"
-#include "xnav_bitmap_morehelp18.h"
-#include "xnav_bitmap_morehelp20.h"
-#include "xnav_bitmap_morehelp24.h"
-#include "xnav_bitmap_closehelp8.h"
-#include "xnav_bitmap_closehelp10.h"
-#include "xnav_bitmap_closehelp12.h"
-#include "xnav_bitmap_closehelp14.h"
-#include "xnav_bitmap_closehelp16.h"
-#include "xnav_bitmap_closehelp18.h"
-#include "xnav_bitmap_closehelp20.h"
-#include "xnav_bitmap_closehelp24.h"
-#include "xnav_bitmap_weblink8.h"
-#include "xnav_bitmap_weblink10.h"
-#include "xnav_bitmap_weblink12.h"
-#include "xnav_bitmap_weblink14.h"
-#include "xnav_bitmap_weblink16.h"
-#include "xnav_bitmap_weblink18.h"
-#include "xnav_bitmap_weblink20.h"
-#include "xnav_bitmap_weblink24.h"
-
 static int help_cmp_items(const void* node1, const void* node2);
 
 static void xhelpnav_open_URL(CoXHelpNav* xhelpnav, char* url)
@@ -92,101 +67,9 @@ void CoXHelpNavBrow::free_pixmaps()
 //
 void CoXHelpNavBrow::allocate_pixmaps()
 {
-  flow_sPixmapData pixmap_data;
-  int i;
-
-  i = 0;
-  pixmap_data[i].width = xnav_bitmap_morehelp8_width;
-  pixmap_data[i].height = xnav_bitmap_morehelp8_height;
-  pixmap_data[i++].bits = xnav_bitmap_morehelp8_bits;
-  pixmap_data[i].width = xnav_bitmap_morehelp10_width;
-  pixmap_data[i].height = xnav_bitmap_morehelp10_height;
-  pixmap_data[i++].bits = xnav_bitmap_morehelp10_bits;
-  pixmap_data[i].width = xnav_bitmap_morehelp12_width;
-  pixmap_data[i].height = xnav_bitmap_morehelp12_height;
-  pixmap_data[i++].bits = xnav_bitmap_morehelp12_bits;
-  pixmap_data[i].width = xnav_bitmap_morehelp14_width;
-  pixmap_data[i].height = xnav_bitmap_morehelp14_height;
-  pixmap_data[i++].bits = xnav_bitmap_morehelp14_bits;
-  pixmap_data[i].width = xnav_bitmap_morehelp16_width;
-  pixmap_data[i].height = xnav_bitmap_morehelp16_height;
-  pixmap_data[i++].bits = xnav_bitmap_morehelp16_bits;
-  pixmap_data[i].width = xnav_bitmap_morehelp18_width;
-  pixmap_data[i].height = xnav_bitmap_morehelp18_height;
-  pixmap_data[i++].bits = xnav_bitmap_morehelp18_bits;
-  pixmap_data[i].width = xnav_bitmap_morehelp20_width;
-  pixmap_data[i].height = xnav_bitmap_morehelp20_height;
-  pixmap_data[i++].bits = xnav_bitmap_morehelp20_bits;
-  pixmap_data[i].width = xnav_bitmap_morehelp20_width;
-  pixmap_data[i].height = xnav_bitmap_morehelp20_height;
-  pixmap_data[i++].bits = xnav_bitmap_morehelp20_bits;
-  pixmap_data[i].width = xnav_bitmap_morehelp24_width;
-  pixmap_data[i].height = xnav_bitmap_morehelp24_height;
-  pixmap_data[i++].bits = xnav_bitmap_morehelp24_bits;
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_morehelp);
-
-  i = 0;
-  pixmap_data[i].width = xnav_bitmap_closehelp8_width;
-  pixmap_data[i].height = xnav_bitmap_closehelp8_height;
-  pixmap_data[i++].bits = xnav_bitmap_closehelp8_bits;
-  pixmap_data[i].width = xnav_bitmap_closehelp10_width;
-  pixmap_data[i].height = xnav_bitmap_closehelp10_height;
-  pixmap_data[i++].bits = xnav_bitmap_closehelp10_bits;
-  pixmap_data[i].width = xnav_bitmap_closehelp12_width;
-  pixmap_data[i].height = xnav_bitmap_closehelp12_height;
-  pixmap_data[i++].bits = xnav_bitmap_closehelp12_bits;
-  pixmap_data[i].width = xnav_bitmap_closehelp14_width;
-  pixmap_data[i].height = xnav_bitmap_closehelp14_height;
-  pixmap_data[i++].bits = xnav_bitmap_closehelp14_bits;
-  pixmap_data[i].width = xnav_bitmap_closehelp16_width;
-  pixmap_data[i].height = xnav_bitmap_closehelp16_height;
-  pixmap_data[i++].bits = xnav_bitmap_closehelp16_bits;
-  pixmap_data[i].width = xnav_bitmap_closehelp18_width;
-  pixmap_data[i].height = xnav_bitmap_closehelp18_height;
-  pixmap_data[i++].bits = xnav_bitmap_closehelp18_bits;
-  pixmap_data[i].width = xnav_bitmap_closehelp20_width;
-  pixmap_data[i].height = xnav_bitmap_closehelp20_height;
-  pixmap_data[i++].bits = xnav_bitmap_closehelp20_bits;
-  pixmap_data[i].width = xnav_bitmap_closehelp20_width;
-  pixmap_data[i].height = xnav_bitmap_closehelp20_height;
-  pixmap_data[i++].bits = xnav_bitmap_closehelp20_bits;
-  pixmap_data[i].width = xnav_bitmap_closehelp24_width;
-  pixmap_data[i].height = xnav_bitmap_closehelp24_height;
-  pixmap_data[i++].bits = xnav_bitmap_closehelp24_bits;
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_closehelp);
-
-  i = 0;
-  pixmap_data[i].width = xnav_bitmap_weblink8_width;
-  pixmap_data[i].height = xnav_bitmap_weblink8_height;
-  pixmap_data[i++].bits = xnav_bitmap_weblink8_bits;
-  pixmap_data[i].width = xnav_bitmap_weblink10_width;
-  pixmap_data[i].height = xnav_bitmap_weblink10_height;
-  pixmap_data[i++].bits = xnav_bitmap_weblink10_bits;
-  pixmap_data[i].width = xnav_bitmap_weblink12_width;
-  pixmap_data[i].height = xnav_bitmap_weblink12_height;
-  pixmap_data[i++].bits = xnav_bitmap_weblink12_bits;
-  pixmap_data[i].width = xnav_bitmap_weblink14_width;
-  pixmap_data[i].height = xnav_bitmap_weblink14_height;
-  pixmap_data[i++].bits = xnav_bitmap_weblink14_bits;
-  pixmap_data[i].width = xnav_bitmap_weblink16_width;
-  pixmap_data[i].height = xnav_bitmap_weblink16_height;
-  pixmap_data[i++].bits = xnav_bitmap_weblink16_bits;
-  pixmap_data[i].width = xnav_bitmap_weblink18_width;
-  pixmap_data[i].height = xnav_bitmap_weblink18_height;
-  pixmap_data[i++].bits = xnav_bitmap_weblink18_bits;
-  pixmap_data[i].width = xnav_bitmap_weblink20_width;
-  pixmap_data[i].height = xnav_bitmap_weblink20_height;
-  pixmap_data[i++].bits = xnav_bitmap_weblink20_bits;
-  pixmap_data[i].width = xnav_bitmap_weblink20_width;
-  pixmap_data[i].height = xnav_bitmap_weblink20_height;
-  pixmap_data[i++].bits = xnav_bitmap_weblink20_bits;
-  pixmap_data[i].width = xnav_bitmap_weblink24_width;
-  pixmap_data[i].height = xnav_bitmap_weblink24_height;
-  pixmap_data[i++].bits = xnav_bitmap_weblink24_bits;
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_weblink);
+  brow_LoadPBMs(ctx, "xnav_bitmap_morehelp", &pixmap_morehelp);
+  brow_LoadPBMs(ctx, "xnav_bitmap_closehelp", &pixmap_closehelp);
+  brow_LoadPBMs(ctx, "xnav_bitmap_weblink", &pixmap_weblink);
 }
 
 //

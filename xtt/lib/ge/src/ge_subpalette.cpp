@@ -48,264 +48,6 @@
 #include "ge_dyn.h"
 #include "ge_subpalette.h"
 
-#include "xnav_bitmap_leaf12.h"
-#include "xnav_bitmap_map12.h"
-#include "xnav_bitmap_openmap12.h"
-#include "ge_bitmap_valve1.h"
-#include "ge_bitmap_valve2.h"
-#include "ge_bitmap_pump3.h"
-#include "ge_bitmap_valve4.h"
-#include "ge_bitmap_ind5.h"
-#include "ge_bitmap_ind6.h"
-#include "ge_bitmap_pushbutton7.h"
-#include "ge_bitmap_frame8.h"
-#include "ge_bitmap_crosscon9.h"
-#include "ge_bitmap_threewaycon10.h"
-#include "ge_bitmap_cornercon11.h"
-#include "ge_bitmap_arrow12.h"
-#include "ge_bitmap_checkvalve13.h"
-#include "ge_bitmap_tank14.h"
-#include "ge_bitmap_filter15.h"
-#include "ge_bitmap_pressureswitch16.h"
-#include "ge_bitmap_hydrpump17.h"
-#include "ge_bitmap_pressuregauge18.h"
-#include "ge_bitmap_releasevalve19.h"
-#include "ge_bitmap_releasevalve20.h"
-#include "ge_bitmap_frame21.h"
-#include "ge_bitmap_pincon22.h"
-#include "ge_bitmap_motor23.h"
-#include "ge_bitmap_speedswitch24.h"
-#include "ge_bitmap_trend25.h"
-#include "ge_bitmap_bar26.h"
-#include "ge_bitmap_axis27.h"
-#include "ge_bitmap_thermometer28.h"
-#include "ge_bitmap_window29.h"
-#include "ge_bitmap_table30.h"
-#include "ge_bitmap_optionsmenu31.h"
-#include "ge_bitmap_menubar32.h"
-#include "ge_bitmap_pulldownmenu33.h"
-#include "ge_bitmap_emergencystop34.h"
-#include "ge_bitmap_tabbedwindow35.h"
-#include "ge_bitmap_trafficlight36.h"
-#include "ge_bitmap_slider37.h"
-#include "ge_bitmap_sliderbg38.h"
-#include "ge_bitmap_padlock39.h"
-#include "ge_bitmap_needle40.h"
-#include "ge_bitmap_videocamera41.h"
-#include "ge_bitmap_terminal42.h"
-#include "ge_bitmap_rack43.h"
-#include "ge_bitmap_pc44.h"
-#include "ge_bitmap_pulpet45.h"
-#include "ge_bitmap_screw46.h"
-#include "ge_bitmap_ind47.h"
-#include "ge_bitmap_ind48.h"
-#include "ge_bitmap_value49.h"
-#include "ge_bitmap_value50.h"
-#include "ge_bitmap_value51.h"
-#include "ge_bitmap_value52.h"
-#include "ge_bitmap_valve53.h"
-#include "ge_bitmap_directvalve54.h"
-#include "ge_bitmap_mvalve55.h"
-#include "ge_bitmap_basevalve56.h"
-#include "ge_bitmap_actuator57.h"
-#include "ge_bitmap_handwheel58.h"
-#include "ge_bitmap_burner59.h"
-#include "ge_bitmap_contactor60.h"
-#include "ge_bitmap_contactor61.h"
-#include "ge_bitmap_controlswitch62.h"
-#include "ge_bitmap_fuse63.h"
-#include "ge_bitmap_fuse64.h"
-#include "ge_bitmap_motor65.h"
-#include "ge_bitmap_overloadrelay66.h"
-#include "ge_bitmap_rod67.h"
-#include "ge_bitmap_rodcoupling68.h"
-#include "ge_bitmap_fan69.h"
-#include "ge_bitmap_fan70.h"
-#include "ge_bitmap_fan71.h"
-#include "ge_bitmap_pump72.h"
-#include "ge_bitmap_pump73.h"
-#include "ge_bitmap_manswitch74.h"
-#include "ge_bitmap_manswitch75.h"
-#include "ge_bitmap_manswitch76.h"
-#include "ge_bitmap_frequencyconv77.h"
-#include "ge_bitmap_slider78.h"
-#include "ge_bitmap_smiley79.h"
-#include "ge_bitmap_sliderbg80.h"
-#include "ge_bitmap_slider81.h"
-#include "ge_bitmap_sliderbg82.h"
-#include "ge_bitmap_button83.h"
-#include "ge_bitmap_button84.h"
-#include "ge_bitmap_button85.h"
-#include "ge_bitmap_button86.h"
-#include "ge_bitmap_button87.h"
-#include "ge_bitmap_checkbox88.h"
-#include "ge_bitmap_radiobutton89.h"
-#include "ge_bitmap_radiobutton90.h"
-#include "ge_bitmap_checkbox91.h"
-#include "ge_bitmap_button92.h"
-#include "ge_bitmap_buttoninfo93.h"
-#include "ge_bitmap_buttonhelp94.h"
-#include "ge_bitmap_button95.h"
-#include "ge_bitmap_notebutton96.h"
-#include "ge_bitmap_pump97.h"
-#include "ge_bitmap_damper98.h"
-#include "ge_bitmap_3wayvalve99.h"
-#include "ge_bitmap_aircooler100.h"
-#include "ge_bitmap_airheater101.h"
-#include "ge_bitmap_elheater102.h"
-#include "ge_bitmap_3wayvalvecontrol103.h"
-#include "ge_bitmap_dampercontrol104.h"
-#include "ge_bitmap_4wayvalve105.h"
-#include "ge_bitmap_actuator106.h"
-#include "ge_bitmap_actuatordia107.h"
-#include "ge_bitmap_actuatorfailclose108.h"
-#include "ge_bitmap_actuatorfailopen109.h"
-#include "ge_bitmap_actuatormotor110.h"
-#include "ge_bitmap_actuatorsensing111.h"
-#include "ge_bitmap_actuatorspring112.h"
-#include "ge_bitmap_actuatorsolenoid113.h"
-#include "ge_bitmap_actuatorpiston114.h"
-#include "ge_bitmap_actuatorwithman115.h"
-#include "ge_bitmap_aircoolerheater116.h"
-#include "ge_bitmap_airfilter117.h"
-#include "ge_bitmap_airgrill118.h"
-#include "ge_bitmap_airpurgingdevice119.h"
-#include "ge_bitmap_auxiliaryunitman120.h"
-#include "ge_bitmap_drawoffpoint121.h"
-#include "ge_bitmap_gully122.h"
-#include "ge_bitmap_gullywithtrap123.h"
-#include "ge_bitmap_firedamper124.h"
-#include "ge_bitmap_heatingexchanger125.h"
-#include "ge_bitmap_heatingexchanger126.h"
-#include "ge_bitmap_humidifier127.h"
-#include "ge_bitmap_hydrant128.h"
-#include "ge_bitmap_noreturnvalve129.h"
-#include "ge_bitmap_pressuresource130.h"
-#include "ge_bitmap_pump131.h"
-#include "ge_bitmap_recorder132.h"
-#include "ge_bitmap_restrictionunit133.h"
-#include "ge_bitmap_safetyvalve134.h"
-#include "ge_bitmap_separator135.h"
-#include "ge_bitmap_shower136.h"
-#include "ge_bitmap_silencer137.h"
-#include "ge_bitmap_sprinklerhead138.h"
-#include "ge_bitmap_steamtrap139.h"
-#include "ge_bitmap_strainer140.h"
-#include "ge_bitmap_thermometer141.h"
-#include "ge_bitmap_transmitter142.h"
-#include "ge_bitmap_trap143.h"
-#include "ge_bitmap_vacuumbreaker144.h"
-#include "ge_bitmap_valve145.h"
-#include "ge_bitmap_valveel146.h"
-#include "ge_bitmap_valvepiston147.h"
-#include "ge_bitmap_valvesensing148.h"
-#include "ge_bitmap_valvesolenoid149.h"
-#include "ge_bitmap_aircooledcondenser150.h"
-#include "ge_bitmap_compressor151.h"
-#include "ge_bitmap_compressor2step152.h"
-#include "ge_bitmap_compressor2stepaggr153.h"
-#include "ge_bitmap_compressoraggr154.h"
-#include "ge_bitmap_coolingmediumtank155.h"
-#include "ge_bitmap_coolingtower156.h"
-#include "ge_bitmap_dryingfilter157.h"
-#include "ge_bitmap_evaporativecondenser158.h"
-#include "ge_bitmap_evaporator159.h"
-#include "ge_bitmap_fan160.h"
-#include "ge_bitmap_fancondenser161.h"
-#include "ge_bitmap_fluidcooledcondenser162.h"
-#include "ge_bitmap_sightglass163.h"
-#include "ge_bitmap_2waycontact164.h"
-#include "ge_bitmap_breakcontact165.h"
-#include "ge_bitmap_breakcontactdelayedclose166.h"
-#include "ge_bitmap_breakcontactdelayedopen167.h"
-#include "ge_bitmap_makecontactdelayedclose168.h"
-#include "ge_bitmap_makecontactdelayedopen169.h"
-#include "ge_bitmap_chassis170.h"
-#include "ge_bitmap_earth171.h"
-#include "ge_bitmap_equipotentiality172.h"
-#include "ge_bitmap_noiselessearth173.h"
-#include "ge_bitmap_protectiveearth174.h"
-#include "ge_bitmap_accumulator175.h"
-#include "ge_bitmap_capacitor176.h"
-#include "ge_bitmap_diode177.h"
-#include "ge_bitmap_led178.h"
-#include "ge_bitmap_resistor179.h"
-#include "ge_bitmap_triodthyristor180.h"
-#include "ge_bitmap_changeoverbreakcontact181.h"
-#include "ge_bitmap_makecontact182.h"
-#include "ge_bitmap_adder183.h"
-#include "ge_bitmap_and184.h"
-#include "ge_bitmap_controller185.h"
-#include "ge_bitmap_delay186.h"
-#include "ge_bitmap_division187.h"
-#include "ge_bitmap_exclusiveor188.h"
-#include "ge_bitmap_filter189.h"
-#include "ge_bitmap_max190.h"
-#include "ge_bitmap_min191.h"
-#include "ge_bitmap_multiplication192.h"
-#include "ge_bitmap_negator193.h"
-#include "ge_bitmap_or194.h"
-#include "ge_bitmap_pulse195.h"
-#include "ge_bitmap_rampdown196.h"
-#include "ge_bitmap_rampup197.h"
-#include "ge_bitmap_root198.h"
-#include "ge_bitmap_rs199.h"
-#include "ge_bitmap_circuitbreakerauto200.h"
-#include "ge_bitmap_fuse201.h"
-#include "ge_bitmap_fusedisconnector202.h"
-#include "ge_bitmap_fusesupplyside203.h"
-#include "ge_bitmap_fuseswitch204.h"
-#include "ge_bitmap_fuseswitchdisconnector205.h"
-#include "ge_bitmap_converter206.h"
-#include "ge_bitmap_converter_ac_ac207.h"
-#include "ge_bitmap_converter_ac_dc208.h"
-#include "ge_bitmap_converter_dc_ac209.h"
-#include "ge_bitmap_converter_dc_dc210.h"
-#include "ge_bitmap_machine211.h"
-#include "ge_bitmap_machineac212.h"
-#include "ge_bitmap_machinedc213.h"
-#include "ge_bitmap_bell214.h"
-#include "ge_bitmap_horn215.h"
-#include "ge_bitmap_lamp216.h"
-#include "ge_bitmap_siren217.h"
-#include "ge_bitmap_auxcontactthermal218.h"
-#include "ge_bitmap_breakcontactthermal219.h"
-#include "ge_bitmap_circuitbreaker220.h"
-#include "ge_bitmap_circuitbreakerrem221.h"
-#include "ge_bitmap_circuitbreakerremfuse222.h"
-#include "ge_bitmap_disconnector223.h"
-#include "ge_bitmap_emergencycontrolswitch224.h"
-#include "ge_bitmap_manswitchbreak225.h"
-#include "ge_bitmap_manswitchbreaknoret226.h"
-#include "ge_bitmap_manswitchmake227.h"
-#include "ge_bitmap_manswitchmakenoret228.h"
-#include "ge_bitmap_mlimitswitchbreak229.h"
-#include "ge_bitmap_mlimitswitchmake230.h"
-#include "ge_bitmap_photocell231.h"
-#include "ge_bitmap_proximityswitchbreak232.h"
-#include "ge_bitmap_proximityswitchmake233.h"
-#include "ge_bitmap_switchdisconnector234.h"
-#include "ge_bitmap_currenttransformer235.h"
-#include "ge_bitmap_currenttransformer236.h"
-#include "ge_bitmap_voltagetransformer237.h"
-#include "ge_bitmap_voltagetransformer238.h"
-#include "ge_bitmap_voltagetransformer2wnd239.h"
-#include "ge_bitmap_actuatorfailkeep240.h"
-#include "ge_bitmap_minicircuitbreaker241.h"
-#include "ge_bitmap_minicircuitbreaker242.h"
-#include "ge_bitmap_minicircuitbreaker243.h"
-#include "ge_bitmap_overloadrelay244.h"
-#include "ge_bitmap_damper245.h"
-#include "ge_bitmap_threewayvalve246.h"
-#include "ge_bitmap_elheater247.h"
-#include "ge_bitmap_limitswitch248.h"
-#include "ge_bitmap_camera249.h"
-#include "ge_bitmap_axisarc250.h"
-#include "ge_bitmap_methodtoolbar251.h"
-#include "ge_bitmap_pwrlogotype252.h"
-
-static char null_str[] = "";
-
 class LocalFile {
 public:
   pwr_tFileName name;
@@ -344,300 +86,265 @@ void SubPaletteBrow::free_pixmaps()
   }
 }
 
-//
-//  Create pixmaps for leaf, closed map and open map
-//
-
-#define ALLOC_PIXMAP(bitmap, idx)                                              \
-  for (i = 0; i < 9; i++) {                                                    \
-    pixmap_data[i].width = bitmap##_width;                                     \
-    pixmap_data[i].height = bitmap##_height;                                   \
-    pixmap_data[i].bits = (unsigned char*)bitmap##_bits;                       \
-  }                                                                            \
-  if (idx - 1 >= SUBP_PIXMAPS_SIZE)                                            \
-    return;                                                                    \
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmaps[idx - 1]);
-
 void SubPaletteBrow::allocate_pixmaps()
 {
-  flow_sPixmapData pixmap_data;
-  int i;
+  brow_LoadPBM(ctx, "xnav_bitmap_leaf", &pixmap_leaf);
+  brow_LoadPBM(ctx, "xnav_bitmap_map", &pixmap_map);
+  brow_LoadPBM(ctx, "xnav_bitmap_openmap", &pixmap_openmap);
 
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_leaf12_width;
-    pixmap_data[i].height = xnav_bitmap_leaf12_height;
-    pixmap_data[i].bits = xnav_bitmap_leaf12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_leaf);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_map12_width;
-    pixmap_data[i].height = xnav_bitmap_map12_height;
-    pixmap_data[i].bits = xnav_bitmap_map12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_map);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_openmap12_width;
-    pixmap_data[i].height = xnav_bitmap_openmap12_height;
-    pixmap_data[i].bits = xnav_bitmap_openmap12_bits;
-  }
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_openmap);
-
-  ALLOC_PIXMAP(ge_bitmap_valve1, 1);
-  ALLOC_PIXMAP(ge_bitmap_valve2, 2);
-  ALLOC_PIXMAP(ge_bitmap_pump3, 3);
-  ALLOC_PIXMAP(ge_bitmap_valve4, 4);
-  ALLOC_PIXMAP(ge_bitmap_ind5, 5);
-  ALLOC_PIXMAP(ge_bitmap_ind6, 6);
-  ALLOC_PIXMAP(ge_bitmap_pushbutton7, 7);
-  ALLOC_PIXMAP(ge_bitmap_frame8, 8);
-  ALLOC_PIXMAP(ge_bitmap_crosscon9, 9);
-  ALLOC_PIXMAP(ge_bitmap_threewaycon10, 10);
-  ALLOC_PIXMAP(ge_bitmap_cornercon11, 11);
-  ALLOC_PIXMAP(ge_bitmap_arrow12, 12);
-  ALLOC_PIXMAP(ge_bitmap_checkvalve13, 13);
-  ALLOC_PIXMAP(ge_bitmap_tank14, 14);
-  ALLOC_PIXMAP(ge_bitmap_filter15, 15);
-  ALLOC_PIXMAP(ge_bitmap_pressureswitch16, 16);
-  ALLOC_PIXMAP(ge_bitmap_hydrpump17, 17);
-  ALLOC_PIXMAP(ge_bitmap_pressuregauge18, 18);
-  ALLOC_PIXMAP(ge_bitmap_releasevalve19, 19);
-  ALLOC_PIXMAP(ge_bitmap_releasevalve20, 20);
-  ALLOC_PIXMAP(ge_bitmap_frame21, 21);
-  ALLOC_PIXMAP(ge_bitmap_pincon22, 22);
-  ALLOC_PIXMAP(ge_bitmap_motor23, 23);
-  ALLOC_PIXMAP(ge_bitmap_speedswitch24, 24);
-  ALLOC_PIXMAP(ge_bitmap_trend25, 25);
-  ALLOC_PIXMAP(ge_bitmap_bar26, 26);
-  ALLOC_PIXMAP(ge_bitmap_axis27, 27);
-  ALLOC_PIXMAP(ge_bitmap_thermometer28, 28);
-  ALLOC_PIXMAP(ge_bitmap_window29, 29);
-  ALLOC_PIXMAP(ge_bitmap_table30, 30);
-  ALLOC_PIXMAP(ge_bitmap_optionsmenu31, 31);
-  ALLOC_PIXMAP(ge_bitmap_menubar32, 32);
-  ALLOC_PIXMAP(ge_bitmap_pulldownmenu33, 33);
-  ALLOC_PIXMAP(ge_bitmap_emergencystop34, 34);
-  ALLOC_PIXMAP(ge_bitmap_tabbedwindow35, 35);
-  ALLOC_PIXMAP(ge_bitmap_trafficlight36, 36);
-  ALLOC_PIXMAP(ge_bitmap_slider37, 37);
-  ALLOC_PIXMAP(ge_bitmap_sliderbg38, 38);
-  ALLOC_PIXMAP(ge_bitmap_padlock39, 39);
-  ALLOC_PIXMAP(ge_bitmap_needle40, 40);
-  ALLOC_PIXMAP(ge_bitmap_videocamera41, 41);
-  ALLOC_PIXMAP(ge_bitmap_terminal42, 42);
-  ALLOC_PIXMAP(ge_bitmap_rack43, 43);
-  ALLOC_PIXMAP(ge_bitmap_pc44, 44);
-  ALLOC_PIXMAP(ge_bitmap_pulpet45, 45);
-  ALLOC_PIXMAP(ge_bitmap_screw46, 46);
-  ALLOC_PIXMAP(ge_bitmap_ind47, 47);
-  ALLOC_PIXMAP(ge_bitmap_ind48, 48);
-  ALLOC_PIXMAP(ge_bitmap_value49, 49);
-  ALLOC_PIXMAP(ge_bitmap_value50, 50);
-  ALLOC_PIXMAP(ge_bitmap_value51, 51);
-  ALLOC_PIXMAP(ge_bitmap_value52, 52);
-  ALLOC_PIXMAP(ge_bitmap_valve53, 53);
-  ALLOC_PIXMAP(ge_bitmap_directvalve54, 54);
-  ALLOC_PIXMAP(ge_bitmap_mvalve55, 55);
-  ALLOC_PIXMAP(ge_bitmap_basevalve56, 56);
-  ALLOC_PIXMAP(ge_bitmap_actuator57, 57);
-  ALLOC_PIXMAP(ge_bitmap_handwheel58, 58);
-  ALLOC_PIXMAP(ge_bitmap_burner59, 59);
-  ALLOC_PIXMAP(ge_bitmap_contactor60, 60);
-  ALLOC_PIXMAP(ge_bitmap_contactor61, 61);
-  ALLOC_PIXMAP(ge_bitmap_controlswitch62, 62);
-  ALLOC_PIXMAP(ge_bitmap_fuse63, 63);
-  ALLOC_PIXMAP(ge_bitmap_fuse64, 64);
-  ALLOC_PIXMAP(ge_bitmap_motor65, 65);
-  ALLOC_PIXMAP(ge_bitmap_overloadrelay66, 66);
-  ALLOC_PIXMAP(ge_bitmap_rod67, 67);
-  ALLOC_PIXMAP(ge_bitmap_rodcoupling68, 68);
-  ALLOC_PIXMAP(ge_bitmap_fan69, 69);
-  ALLOC_PIXMAP(ge_bitmap_fan70, 70);
-  ALLOC_PIXMAP(ge_bitmap_fan71, 71);
-  ALLOC_PIXMAP(ge_bitmap_pump72, 72);
-  ALLOC_PIXMAP(ge_bitmap_pump73, 73);
-  ALLOC_PIXMAP(ge_bitmap_manswitch74, 74);
-  ALLOC_PIXMAP(ge_bitmap_manswitch75, 75);
-  ALLOC_PIXMAP(ge_bitmap_manswitch76, 76);
-  ALLOC_PIXMAP(ge_bitmap_frequencyconv77, 77);
-  ALLOC_PIXMAP(ge_bitmap_slider78, 78);
-  ALLOC_PIXMAP(ge_bitmap_smiley79, 79);
-  ALLOC_PIXMAP(ge_bitmap_sliderbg80, 80);
-  ALLOC_PIXMAP(ge_bitmap_slider81, 81);
-  ALLOC_PIXMAP(ge_bitmap_sliderbg82, 82);
-  ALLOC_PIXMAP(ge_bitmap_button83, 83);
-  ALLOC_PIXMAP(ge_bitmap_button84, 84);
-  ALLOC_PIXMAP(ge_bitmap_button85, 85);
-  ALLOC_PIXMAP(ge_bitmap_button86, 86);
-  ALLOC_PIXMAP(ge_bitmap_button87, 87);
-  ALLOC_PIXMAP(ge_bitmap_checkbox88, 88);
-  ALLOC_PIXMAP(ge_bitmap_radiobutton89, 89);
-  ALLOC_PIXMAP(ge_bitmap_radiobutton90, 90);
-  ALLOC_PIXMAP(ge_bitmap_checkbox91, 91);
-  ALLOC_PIXMAP(ge_bitmap_button92, 92);
-  ALLOC_PIXMAP(ge_bitmap_buttoninfo93, 93);
-  ALLOC_PIXMAP(ge_bitmap_buttonhelp94, 94);
-  ALLOC_PIXMAP(ge_bitmap_button95, 95);
-  ALLOC_PIXMAP(ge_bitmap_notebutton96, 96);
-  ALLOC_PIXMAP(ge_bitmap_pump97, 97);
-  ALLOC_PIXMAP(ge_bitmap_damper98, 98);
-  ALLOC_PIXMAP(ge_bitmap_3wayvalve99, 99);
-  ALLOC_PIXMAP(ge_bitmap_aircooler100, 100);
-  ALLOC_PIXMAP(ge_bitmap_airheater101, 101);
-  ALLOC_PIXMAP(ge_bitmap_elheater102, 102);
-  ALLOC_PIXMAP(ge_bitmap_3wayvalvecontrol103, 103);
-  ALLOC_PIXMAP(ge_bitmap_dampercontrol104, 104);
-  ALLOC_PIXMAP(ge_bitmap_4wayvalve105, 105);
-  ALLOC_PIXMAP(ge_bitmap_actuator106, 106);
-  ALLOC_PIXMAP(ge_bitmap_actuatordia107, 107);
-  ALLOC_PIXMAP(ge_bitmap_actuatorfailclose108, 108);
-  ALLOC_PIXMAP(ge_bitmap_actuatorfailopen109, 109);
-  ALLOC_PIXMAP(ge_bitmap_actuatormotor110, 110);
-  ALLOC_PIXMAP(ge_bitmap_actuatorsensing111, 111);
-  ALLOC_PIXMAP(ge_bitmap_actuatorspring112, 112);
-  ALLOC_PIXMAP(ge_bitmap_actuatorsolenoid113, 113);
-  ALLOC_PIXMAP(ge_bitmap_actuatorpiston114, 114);
-  ALLOC_PIXMAP(ge_bitmap_actuatorwithman115, 115);
-  ALLOC_PIXMAP(ge_bitmap_aircoolerheater116, 116);
-  ALLOC_PIXMAP(ge_bitmap_airfilter117, 117);
-  ALLOC_PIXMAP(ge_bitmap_airgrill118, 118);
-  ALLOC_PIXMAP(ge_bitmap_airpurgingdevice119, 119);
-  ALLOC_PIXMAP(ge_bitmap_auxiliaryunitman120, 120);
-  ALLOC_PIXMAP(ge_bitmap_drawoffpoint121, 121);
-  ALLOC_PIXMAP(ge_bitmap_gully122, 122);
-  ALLOC_PIXMAP(ge_bitmap_gullywithtrap123, 123);
-  ALLOC_PIXMAP(ge_bitmap_firedamper124, 124);
-  ALLOC_PIXMAP(ge_bitmap_heatingexchanger125, 125);
-  ALLOC_PIXMAP(ge_bitmap_heatingexchanger126, 126);
-  ALLOC_PIXMAP(ge_bitmap_humidifier127, 127);
-  ALLOC_PIXMAP(ge_bitmap_hydrant128, 128);
-  ALLOC_PIXMAP(ge_bitmap_noreturnvalve129, 129);
-  ALLOC_PIXMAP(ge_bitmap_pressuresource130, 130);
-  ALLOC_PIXMAP(ge_bitmap_pump131, 131);
-  ALLOC_PIXMAP(ge_bitmap_recorder132, 132);
-  ALLOC_PIXMAP(ge_bitmap_restrictionunit133, 133);
-  ALLOC_PIXMAP(ge_bitmap_safetyvalve134, 134);
-  ALLOC_PIXMAP(ge_bitmap_separator135, 135);
-  ALLOC_PIXMAP(ge_bitmap_shower136, 136);
-  ALLOC_PIXMAP(ge_bitmap_silencer137, 137);
-  ALLOC_PIXMAP(ge_bitmap_sprinklerhead138, 138);
-  ALLOC_PIXMAP(ge_bitmap_steamtrap139, 139);
-  ALLOC_PIXMAP(ge_bitmap_strainer140, 140);
-  ALLOC_PIXMAP(ge_bitmap_thermometer141, 141);
-  ALLOC_PIXMAP(ge_bitmap_transmitter142, 142);
-  ALLOC_PIXMAP(ge_bitmap_trap143, 143);
-  ALLOC_PIXMAP(ge_bitmap_vacuumbreaker144, 144);
-  ALLOC_PIXMAP(ge_bitmap_valve145, 145);
-  ALLOC_PIXMAP(ge_bitmap_valveel146, 146);
-  ALLOC_PIXMAP(ge_bitmap_valvepiston147, 147);
-  ALLOC_PIXMAP(ge_bitmap_valvesensing148, 148);
-  ALLOC_PIXMAP(ge_bitmap_valvesolenoid149, 149);
-  ALLOC_PIXMAP(ge_bitmap_aircooledcondenser150, 150);
-  ALLOC_PIXMAP(ge_bitmap_compressor151, 151);
-  ALLOC_PIXMAP(ge_bitmap_compressor2step152, 152);
-  ALLOC_PIXMAP(ge_bitmap_compressor2stepaggr153, 153);
-  ALLOC_PIXMAP(ge_bitmap_compressoraggr154, 154);
-  ALLOC_PIXMAP(ge_bitmap_coolingmediumtank155, 155);
-  ALLOC_PIXMAP(ge_bitmap_coolingtower156, 156);
-  ALLOC_PIXMAP(ge_bitmap_dryingfilter157, 157);
-  ALLOC_PIXMAP(ge_bitmap_evaporativecondenser158, 158);
-  ALLOC_PIXMAP(ge_bitmap_evaporator159, 159);
-  ALLOC_PIXMAP(ge_bitmap_fan160, 160);
-  ALLOC_PIXMAP(ge_bitmap_fancondenser161, 161);
-  ALLOC_PIXMAP(ge_bitmap_fluidcooledcondenser162, 162);
-  ALLOC_PIXMAP(ge_bitmap_sightglass163, 163);
-  ALLOC_PIXMAP(ge_bitmap_2waycontact164, 164);
-  ALLOC_PIXMAP(ge_bitmap_breakcontact165, 165);
-  ALLOC_PIXMAP(ge_bitmap_breakcontactdelayedclose166, 166);
-  ALLOC_PIXMAP(ge_bitmap_breakcontactdelayedopen167, 167);
-  ALLOC_PIXMAP(ge_bitmap_makecontactdelayedclose168, 168);
-  ALLOC_PIXMAP(ge_bitmap_makecontactdelayedopen169, 169);
-  ALLOC_PIXMAP(ge_bitmap_chassis170, 170);
-  ALLOC_PIXMAP(ge_bitmap_earth171, 171);
-  ALLOC_PIXMAP(ge_bitmap_equipotentiality172, 172);
-  ALLOC_PIXMAP(ge_bitmap_noiselessearth173, 173);
-  ALLOC_PIXMAP(ge_bitmap_protectiveearth174, 174);
-  ALLOC_PIXMAP(ge_bitmap_accumulator175, 175);
-  ALLOC_PIXMAP(ge_bitmap_capacitor176, 176);
-  ALLOC_PIXMAP(ge_bitmap_diode177, 177);
-  ALLOC_PIXMAP(ge_bitmap_led178, 178);
-  ALLOC_PIXMAP(ge_bitmap_resistor179, 179);
-  ALLOC_PIXMAP(ge_bitmap_triodthyristor180, 180);
-  ALLOC_PIXMAP(ge_bitmap_changeoverbreakcontact181, 181);
-  ALLOC_PIXMAP(ge_bitmap_makecontact182, 182);
-  ALLOC_PIXMAP(ge_bitmap_adder183, 183);
-  ALLOC_PIXMAP(ge_bitmap_and184, 184);
-  ALLOC_PIXMAP(ge_bitmap_controller185, 185);
-  ALLOC_PIXMAP(ge_bitmap_delay186, 186);
-  ALLOC_PIXMAP(ge_bitmap_division187, 187);
-  ALLOC_PIXMAP(ge_bitmap_exclusiveor188, 188);
-  ALLOC_PIXMAP(ge_bitmap_filter189, 189);
-  ALLOC_PIXMAP(ge_bitmap_max190, 190);
-  ALLOC_PIXMAP(ge_bitmap_min191, 191);
-  ALLOC_PIXMAP(ge_bitmap_multiplication192, 192);
-  ALLOC_PIXMAP(ge_bitmap_negator193, 193);
-  ALLOC_PIXMAP(ge_bitmap_or194, 194);
-  ALLOC_PIXMAP(ge_bitmap_pulse195, 195);
-  ALLOC_PIXMAP(ge_bitmap_rampdown196, 196);
-  ALLOC_PIXMAP(ge_bitmap_rampup197, 197);
-  ALLOC_PIXMAP(ge_bitmap_root198, 198);
-  ALLOC_PIXMAP(ge_bitmap_rs199, 199);
-  ALLOC_PIXMAP(ge_bitmap_circuitbreakerauto200, 200);
-  ALLOC_PIXMAP(ge_bitmap_fuse201, 201);
-  ALLOC_PIXMAP(ge_bitmap_fusedisconnector202, 202);
-  ALLOC_PIXMAP(ge_bitmap_fusesupplyside203, 203);
-  ALLOC_PIXMAP(ge_bitmap_fuseswitch204, 204);
-  ALLOC_PIXMAP(ge_bitmap_fuseswitchdisconnector205, 205);
-  ALLOC_PIXMAP(ge_bitmap_converter206, 206);
-  ALLOC_PIXMAP(ge_bitmap_converter_ac_ac207, 207);
-  ALLOC_PIXMAP(ge_bitmap_converter_ac_dc208, 208);
-  ALLOC_PIXMAP(ge_bitmap_converter_dc_ac209, 209);
-  ALLOC_PIXMAP(ge_bitmap_converter_dc_dc210, 210);
-  ALLOC_PIXMAP(ge_bitmap_machine211, 211);
-  ALLOC_PIXMAP(ge_bitmap_machineac212, 212);
-  ALLOC_PIXMAP(ge_bitmap_machinedc213, 213);
-  ALLOC_PIXMAP(ge_bitmap_bell214, 214);
-  ALLOC_PIXMAP(ge_bitmap_horn215, 215);
-  ALLOC_PIXMAP(ge_bitmap_lamp216, 216);
-  ALLOC_PIXMAP(ge_bitmap_siren217, 217);
-  ALLOC_PIXMAP(ge_bitmap_auxcontactthermal218, 218);
-  ALLOC_PIXMAP(ge_bitmap_breakcontactthermal219, 219);
-  ALLOC_PIXMAP(ge_bitmap_circuitbreaker220, 220);
-  ALLOC_PIXMAP(ge_bitmap_circuitbreakerrem221, 221);
-  ALLOC_PIXMAP(ge_bitmap_circuitbreakerremfuse222, 222);
-  ALLOC_PIXMAP(ge_bitmap_disconnector223, 223);
-  ALLOC_PIXMAP(ge_bitmap_emergencycontrolswitch224, 224);
-  ALLOC_PIXMAP(ge_bitmap_manswitchbreak225, 225);
-  ALLOC_PIXMAP(ge_bitmap_manswitchbreaknoret226, 226);
-  ALLOC_PIXMAP(ge_bitmap_manswitchmake227, 227);
-  ALLOC_PIXMAP(ge_bitmap_manswitchmakenoret228, 228);
-  ALLOC_PIXMAP(ge_bitmap_mlimitswitchbreak229, 229);
-  ALLOC_PIXMAP(ge_bitmap_mlimitswitchmake230, 230);
-  ALLOC_PIXMAP(ge_bitmap_photocell231, 231);
-  ALLOC_PIXMAP(ge_bitmap_proximityswitchbreak232, 232);
-  ALLOC_PIXMAP(ge_bitmap_proximityswitchmake233, 233);
-  ALLOC_PIXMAP(ge_bitmap_switchdisconnector234, 234);
-  ALLOC_PIXMAP(ge_bitmap_currenttransformer235, 235);
-  ALLOC_PIXMAP(ge_bitmap_currenttransformer236, 236);
-  ALLOC_PIXMAP(ge_bitmap_voltagetransformer237, 237);
-  ALLOC_PIXMAP(ge_bitmap_voltagetransformer238, 238);
-  ALLOC_PIXMAP(ge_bitmap_voltagetransformer2wnd239, 239);
-  ALLOC_PIXMAP(ge_bitmap_actuatorfailkeep240, 240);
-  ALLOC_PIXMAP(ge_bitmap_minicircuitbreaker241, 241);
-  ALLOC_PIXMAP(ge_bitmap_minicircuitbreaker242, 242);
-  ALLOC_PIXMAP(ge_bitmap_minicircuitbreaker243, 243);
-  ALLOC_PIXMAP(ge_bitmap_overloadrelay244, 244);
-  ALLOC_PIXMAP(ge_bitmap_damper245, 245);
-  ALLOC_PIXMAP(ge_bitmap_threewayvalve246, 246);
-  ALLOC_PIXMAP(ge_bitmap_elheater247, 247);
-  ALLOC_PIXMAP(ge_bitmap_limitswitch248, 248);
-  ALLOC_PIXMAP(ge_bitmap_camera249, 249);
-  ALLOC_PIXMAP(ge_bitmap_axisarc250, 250);
-  ALLOC_PIXMAP(ge_bitmap_methodtoolbar251, 251);
-  ALLOC_PIXMAP(ge_bitmap_pwrlogotype252, 252);
+  int idx = 0;
+  brow_LoadPBM(ctx, "ge_bitmap_valve1", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_valve2", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_pump3", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_valve4", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_ind5", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_ind6", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_pushbutton7", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_frame8", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_crosscon9", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_threewaycon10", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_cornercon11", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_arrow", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_checkvalve13", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_tank14", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_filter15", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_pressureswitch16", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_hydrpump17", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_pressuregauge18", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_releasevalve19", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_releasevalve20", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_frame21", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_pincon22", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_motor23", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_speedswitch24", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_trend25", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_bar26", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_axis27", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_thermometer28", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_window29", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_table30", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_optionsmenu31", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_menubar32", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_pulldownmenu33", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_emergencystop34", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_tabbedwindow35", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_trafficlight36", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_slider37", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_sliderbg38", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_padlock39", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_needle40", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_videocamera41", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_terminal42", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_rack43", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_pc44", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_pulpet45", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_screw46", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_ind47", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_ind48", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_value49", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_value50", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_value51", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_value52", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_valve53", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_directvalve54", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_mvalve55", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_basevalve56", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_actuator57", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_handwheel58", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_burner59", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_contactor60", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_contactor61", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_controlswitch62", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_fuse63", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_fuse64", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_motor65", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_overloadrelay66", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_rod67", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_rodcoupling68", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_fan69", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_fan70", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_fan71", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_pump72", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_pump73", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_manswitch74", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_manswitch75", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_manswitch76", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_frequencyconv77", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_slider78", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_smiley79", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_sliderbg80", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_slider81", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_sliderbg82", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_button83", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_button84", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_button85", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_button86", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_button87", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_checkbox88", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_radiobutton89", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_radiobutton90", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_checkbox91", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_button92", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_buttoninfo93", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_buttonhelp94", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_button95", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_notebutton96", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_pump97", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_damper98", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_3wayvalve99", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_aircooler100", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_airheater101", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_elheater102", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_3wayvalvecontrol103", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_dampercontrol104", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_4wayvalve105", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_actuator106", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_actuatordia107", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_actuatorfailclose108", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_actuatorfailopen109", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_actuatormotor110", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_actuatorsensing111", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_actuatorspring1", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_actuatorsolenoid113", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_actuatorpiston114", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_actuatorwithman115", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_aircoolerheater116", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_airfilter117", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_airgrill118", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_airpurgingdevice119", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_auxiliaryunitman120", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_drawoffpoint121", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_gully122", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_gullywithtrap123", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_firedamper124", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_heatingexchanger125", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_heatingexchanger126", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_humidifier127", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_hydrant128", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_noreturnvalve129", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_pressuresource130", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_pump131", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_recorder132", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_restrictionunit133", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_safetyvalve134", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_separator135", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_shower136", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_silencer137", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_sprinklerhead138", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_steamtrap139", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_strainer140", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_thermometer141", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_transmitter142", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_trap143", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_vacuumbreaker144", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_valve145", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_valveel146", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_valvepiston147", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_valvesensing148", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_valvesolenoid149", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_aircooledcondenser150", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_compressor151", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_compressor2step152", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_compressor2stepaggr153", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_compressoraggr154", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_coolingmediumtank155", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_coolingtower156", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_dryingfilter157", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_evaporativecondenser158", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_evaporator159", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_fan160", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_fancondenser161", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_fluidcooledcondenser162", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_sightglass163", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_2waycontact164", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_breakcontact165", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_breakcontactdelayedclose166", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_breakcontactdelayedopen167", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_makecontactdelayedclose168", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_makecontactdelayedopen169", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_chassis170", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_earth171", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_equipotentiality172", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_noiselessearth173", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_protectiveearth174", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_accumulator175", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_capacitor176", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_diode177", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_led178", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_resistor179", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_triodthyristor180", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_changeoverbreakcontact181", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_makecontact182", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_adder183", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_and184", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_controller185", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_delay186", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_division187", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_exclusiveor188", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_filter189", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_max190", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_min191", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_multiplication192", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_negator193", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_or194", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_pulse195", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_rampdown196", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_rampup197", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_root198", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_rs199", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_circuitbreakerauto200", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_fuse201", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_fusedisconnector202", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_fusesupplyside203", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_fuseswitch204", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_fuseswitchdisconnector205", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_converter206", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_converter_ac_ac207", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_converter_ac_dc208", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_converter_dc_ac209", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_converter_dc_dc210", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_machine211", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_machineac2", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_machinedc213", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_bell214", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_horn215", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_lamp216", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_siren217", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_auxcontactthermal218", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_breakcontactthermal219", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_circuitbreaker220", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_circuitbreakerrem221", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_circuitbreakerremfuse222", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_disconnector223", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_emergencycontrolswitch224", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_manswitchbreak225", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_manswitchbreaknoret226", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_manswitchmake227", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_manswitchmakenoret228", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_mlimitswitchbreak229", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_mlimitswitchmake230", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_photocell231", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_proximityswitchbreak232", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_proximityswitchmake233", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_switchdisconnector234", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_currenttransformer235", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_currenttransformer236", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_voltagetransformer237", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_voltagetransformer238", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_voltagetransformer2wnd239", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_actuatorfailkeep240", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_minicircuitbreaker241", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_minicircuitbreaker242", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_minicircuitbreaker243", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_overloadrelay244", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_damper245", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_threewayvalve246", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_elheater247", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_limitswitch248", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_camera249", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_axisarc250", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_methodtoolbar251", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_pwrlogotype252", &pixmaps[idx++]);
 }
 
 //
@@ -710,6 +417,7 @@ static int subpalette_brow_cb(FlowCtx* ctx, flow_tEvent event)
   }
 
   brow_GetCtxUserData((BrowCtx*)ctx, (void**)&subpalette);
+  char null_str[] = "";
   subpalette->message(' ', null_str);
   switch (event->event) {
   case flow_eEvent_Key_PageDown: {

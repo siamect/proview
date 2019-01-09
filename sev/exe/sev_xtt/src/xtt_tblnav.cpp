@@ -48,12 +48,6 @@
 
 #include "xtt_tblnav.h"
 
-#include "xnav_bitmap_leaf12.h"
-#include "xnav_bitmap_map12.h"
-#include "xnav_bitmap_openmap12.h"
-#include "xnav_bitmap_attr12.h"
-#include "xnav_bitmap_attrarra12.h"
-
 /*
 #define TBLNAV__INPUT_SYNTAX 2
 #define TBLNAV__OBJNOTFOUND 4
@@ -88,48 +82,11 @@ void TblNavBrow::free_pixmaps()
 //
 void TblNavBrow::allocate_pixmaps()
 {
-  flow_sPixmapData pixmap_data;
-  int i;
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_leaf12_width;
-    pixmap_data[i].height = xnav_bitmap_leaf12_height;
-    pixmap_data[i].bits = xnav_bitmap_leaf12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_leaf);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_map12_width;
-    pixmap_data[i].height = xnav_bitmap_map12_height;
-    pixmap_data[i].bits = xnav_bitmap_map12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_map);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_openmap12_width;
-    pixmap_data[i].height = xnav_bitmap_openmap12_height;
-    pixmap_data[i].bits = xnav_bitmap_openmap12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_openmap);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_attr12_width;
-    pixmap_data[i].height = xnav_bitmap_attr12_height;
-    pixmap_data[i].bits = xnav_bitmap_attr12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_attr);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_attrarra12_width;
-    pixmap_data[i].height = xnav_bitmap_attrarra12_height;
-    pixmap_data[i].bits = xnav_bitmap_attrarra12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_attrarray);
+  brow_LoadPBM(ctx, "xnav_bitmap_leaf", &pixmap_leaf);
+  brow_LoadPBM(ctx, "xnav_bitmap_map", &pixmap_map);
+  brow_LoadPBM(ctx, "xnav_bitmap_openmap", &pixmap_openmap);
+  brow_LoadPBM(ctx, "xnav_bitmap_attr", &pixmap_attr);
+  brow_LoadPBM(ctx, "xnav_bitmap_attrarra", &pixmap_attrarray);
 }
 
 //

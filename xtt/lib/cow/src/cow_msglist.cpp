@@ -41,8 +41,6 @@
 #include "co_cdh.h"
 #include "co_time.h"
 
-#include "xnav_bitmap_morehelp12.h"
-
 #include "cow_msglist.h"
 
 //
@@ -58,16 +56,7 @@ void MsgListBrow::free_pixmaps()
 //
 void MsgListBrow::allocate_pixmaps()
 {
-  flow_sPixmapData pixmap_data;
-  int i;
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_morehelp12_width;
-    pixmap_data[i].height = xnav_bitmap_morehelp12_height;
-    pixmap_data[i].bits = xnav_bitmap_morehelp12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_morehelp);
+  brow_LoadPBM(ctx, "xnav_bitmap_morehelp", &pixmap_morehelp);
 }
 
 //

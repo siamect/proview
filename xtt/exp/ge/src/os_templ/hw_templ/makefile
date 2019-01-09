@@ -123,6 +123,3 @@ $(clean_web) : clean_%.pwgc : %.pwgc
 $(exe_dir)/pwr_css.css : ../../pwr_css.css
 	@ echo "copy $(source) $(target)"
 	@ cp $(source) $(target)
-
-
-

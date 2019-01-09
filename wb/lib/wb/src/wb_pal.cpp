@@ -48,83 +48,6 @@
 
 #include "wb_pal.h"
 
-#include "xnav_bitmap_leaf8.h"
-#include "xnav_bitmap_leaf10.h"
-#include "xnav_bitmap_leaf12.h"
-#include "xnav_bitmap_leaf14.h"
-#include "xnav_bitmap_leaf16.h"
-#include "xnav_bitmap_leaf18.h"
-#include "xnav_bitmap_leaf20.h"
-#include "xnav_bitmap_leaf24.h"
-#include "xnav_bitmap_map8.h"
-#include "xnav_bitmap_map10.h"
-#include "xnav_bitmap_map12.h"
-#include "xnav_bitmap_map14.h"
-#include "xnav_bitmap_map16.h"
-#include "xnav_bitmap_map18.h"
-#include "xnav_bitmap_map20.h"
-#include "xnav_bitmap_map24.h"
-#include "xnav_bitmap_openmap8.h"
-#include "xnav_bitmap_openmap10.h"
-#include "xnav_bitmap_openmap12.h"
-#include "xnav_bitmap_openmap14.h"
-#include "xnav_bitmap_openmap16.h"
-#include "xnav_bitmap_openmap18.h"
-#include "xnav_bitmap_openmap20.h"
-#include "xnav_bitmap_openmap24.h"
-#include "xnav_bitmap_ref8.h"
-#include "xnav_bitmap_ref10.h"
-#include "xnav_bitmap_ref12.h"
-#include "xnav_bitmap_ref14.h"
-#include "xnav_bitmap_ref16.h"
-#include "xnav_bitmap_ref18.h"
-#include "xnav_bitmap_ref20.h"
-#include "xnav_bitmap_ref24.h"
-#include "xnav_bitmap_crossref8.h"
-#include "xnav_bitmap_crossref10.h"
-#include "xnav_bitmap_crossref12.h"
-#include "xnav_bitmap_crossref14.h"
-#include "xnav_bitmap_crossref16.h"
-#include "xnav_bitmap_crossref18.h"
-#include "xnav_bitmap_crossref20.h"
-#include "xnav_bitmap_crossref24.h"
-#include "xnav_bitmap_aarithm12.h"
-#include "xnav_bitmap_arithm12.h"
-#include "xnav_bitmap_bodytext12.h"
-#include "xnav_bitmap_document12.h"
-#include "xnav_bitmap_frame12.h"
-#include "xnav_bitmap_get12.h"
-#include "xnav_bitmap_getp12.h"
-#include "xnav_bitmap_head12.h"
-#include "xnav_bitmap_initstep12.h"
-#include "xnav_bitmap_logic1_12.h"
-#include "xnav_bitmap_logic2_12.h"
-#include "xnav_bitmap_wait12.h"
-#include "xnav_bitmap_order12.h"
-#include "xnav_bitmap_orderact12.h"
-#include "xnav_bitmap_setcond12.h"
-#include "xnav_bitmap_ssbegin12.h"
-#include "xnav_bitmap_ssend12.h"
-#include "xnav_bitmap_step12.h"
-#include "xnav_bitmap_sto12.h"
-#include "xnav_bitmap_stop12.h"
-#include "xnav_bitmap_substep12.h"
-#include "xnav_bitmap_text12.h"
-#include "xnav_bitmap_title12.h"
-#include "xnav_bitmap_trans12.h"
-#include "xnav_bitmap_cell12.h"
-#include "xnav_bitmap_condigital12.h"
-#include "xnav_bitmap_conanalog12.h"
-#include "xnav_bitmap_confeedbackdigital12.h"
-#include "xnav_bitmap_confeedbackanalog12.h"
-#include "xnav_bitmap_conexecuteorder12.h"
-#include "xnav_bitmap_congrafcet12.h"
-#include "xnav_bitmap_stepconv12.h"
-#include "xnav_bitmap_stepdiv12.h"
-#include "xnav_bitmap_transconv12.h"
-#include "xnav_bitmap_transdiv12.h"
-#include "xnav_bitmap_warning12.h"
-
 //
 // Member functions for PalItem classes
 //
@@ -725,416 +648,58 @@ void Pal::free_pixmaps()
 
 void Pal::allocate_pixmaps()
 {
-  flow_sPixmapData pixmap_data;
-  int i;
-
-  i = 0;
-  pixmap_data[i].width = xnav_bitmap_leaf8_width;
-  pixmap_data[i].height = xnav_bitmap_leaf8_height;
-  pixmap_data[i++].bits = xnav_bitmap_leaf8_bits;
-  pixmap_data[i].width = xnav_bitmap_leaf10_width;
-  pixmap_data[i].height = xnav_bitmap_leaf10_height;
-  pixmap_data[i++].bits = xnav_bitmap_leaf10_bits;
-  pixmap_data[i].width = xnav_bitmap_leaf12_width;
-  pixmap_data[i].height = xnav_bitmap_leaf12_height;
-  pixmap_data[i++].bits = xnav_bitmap_leaf12_bits;
-  pixmap_data[i].width = xnav_bitmap_leaf14_width;
-  pixmap_data[i].height = xnav_bitmap_leaf14_height;
-  pixmap_data[i++].bits = xnav_bitmap_leaf14_bits;
-  pixmap_data[i].width = xnav_bitmap_leaf16_width;
-  pixmap_data[i].height = xnav_bitmap_leaf16_height;
-  pixmap_data[i++].bits = xnav_bitmap_leaf16_bits;
-  pixmap_data[i].width = xnav_bitmap_leaf18_width;
-  pixmap_data[i].height = xnav_bitmap_leaf18_height;
-  pixmap_data[i++].bits = xnav_bitmap_leaf18_bits;
-  pixmap_data[i].width = xnav_bitmap_leaf20_width;
-  pixmap_data[i].height = xnav_bitmap_leaf20_height;
-  pixmap_data[i++].bits = xnav_bitmap_leaf20_bits;
-  pixmap_data[i].width = xnav_bitmap_leaf20_width;
-  pixmap_data[i].height = xnav_bitmap_leaf20_height;
-  pixmap_data[i++].bits = xnav_bitmap_leaf20_bits;
-  pixmap_data[i].width = xnav_bitmap_leaf24_width;
-  pixmap_data[i].height = xnav_bitmap_leaf24_height;
-  pixmap_data[i++].bits = xnav_bitmap_leaf24_bits;
-
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_leaf);
-
-  i = 0;
-  pixmap_data[i].width = xnav_bitmap_map8_width;
-  pixmap_data[i].height = xnav_bitmap_map8_height;
-  pixmap_data[i++].bits = xnav_bitmap_map8_bits;
-  pixmap_data[i].width = xnav_bitmap_map10_width;
-  pixmap_data[i].height = xnav_bitmap_map10_height;
-  pixmap_data[i++].bits = xnav_bitmap_map10_bits;
-  pixmap_data[i].width = xnav_bitmap_map12_width;
-  pixmap_data[i].height = xnav_bitmap_map12_height;
-  pixmap_data[i++].bits = xnav_bitmap_map12_bits;
-  pixmap_data[i].width = xnav_bitmap_map14_width;
-  pixmap_data[i].height = xnav_bitmap_map14_height;
-  pixmap_data[i++].bits = xnav_bitmap_map14_bits;
-  pixmap_data[i].width = xnav_bitmap_map16_width;
-  pixmap_data[i].height = xnav_bitmap_map16_height;
-  pixmap_data[i++].bits = xnav_bitmap_map16_bits;
-  pixmap_data[i].width = xnav_bitmap_map18_width;
-  pixmap_data[i].height = xnav_bitmap_map18_height;
-  pixmap_data[i++].bits = xnav_bitmap_map18_bits;
-  pixmap_data[i].width = xnav_bitmap_map20_width;
-  pixmap_data[i].height = xnav_bitmap_map20_height;
-  pixmap_data[i++].bits = xnav_bitmap_map20_bits;
-  pixmap_data[i].width = xnav_bitmap_map20_width;
-  pixmap_data[i].height = xnav_bitmap_map20_height;
-  pixmap_data[i++].bits = xnav_bitmap_map20_bits;
-  pixmap_data[i].width = xnav_bitmap_map24_width;
-  pixmap_data[i].height = xnav_bitmap_map24_height;
-  pixmap_data[i++].bits = xnav_bitmap_map24_bits;
-
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_map);
-
-  i = 0;
-  pixmap_data[i].width = xnav_bitmap_openmap8_width;
-  pixmap_data[i].height = xnav_bitmap_openmap8_height;
-  pixmap_data[i++].bits = xnav_bitmap_openmap8_bits;
-  pixmap_data[i].width = xnav_bitmap_openmap10_width;
-  pixmap_data[i].height = xnav_bitmap_openmap10_height;
-  pixmap_data[i++].bits = xnav_bitmap_openmap10_bits;
-  pixmap_data[i].width = xnav_bitmap_openmap12_width;
-  pixmap_data[i].height = xnav_bitmap_openmap12_height;
-  pixmap_data[i++].bits = xnav_bitmap_openmap12_bits;
-  pixmap_data[i].width = xnav_bitmap_openmap14_width;
-  pixmap_data[i].height = xnav_bitmap_openmap14_height;
-  pixmap_data[i++].bits = xnav_bitmap_openmap14_bits;
-  pixmap_data[i].width = xnav_bitmap_openmap16_width;
-  pixmap_data[i].height = xnav_bitmap_openmap16_height;
-  pixmap_data[i++].bits = xnav_bitmap_openmap16_bits;
-  pixmap_data[i].width = xnav_bitmap_openmap18_width;
-  pixmap_data[i].height = xnav_bitmap_openmap18_height;
-  pixmap_data[i++].bits = xnav_bitmap_openmap18_bits;
-  pixmap_data[i].width = xnav_bitmap_openmap20_width;
-  pixmap_data[i].height = xnav_bitmap_openmap20_height;
-  pixmap_data[i++].bits = xnav_bitmap_openmap20_bits;
-  pixmap_data[i].width = xnav_bitmap_openmap20_width;
-  pixmap_data[i].height = xnav_bitmap_openmap20_height;
-  pixmap_data[i++].bits = xnav_bitmap_openmap20_bits;
-  pixmap_data[i].width = xnav_bitmap_openmap24_width;
-  pixmap_data[i].height = xnav_bitmap_openmap24_height;
-  pixmap_data[i++].bits = xnav_bitmap_openmap24_bits;
-
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_openmap);
-
-  i = 0;
-  pixmap_data[i].width = xnav_bitmap_ref8_width;
-  pixmap_data[i].height = xnav_bitmap_ref8_height;
-  pixmap_data[i++].bits = xnav_bitmap_ref8_bits;
-  pixmap_data[i].width = xnav_bitmap_ref10_width;
-  pixmap_data[i].height = xnav_bitmap_ref10_height;
-  pixmap_data[i++].bits = xnav_bitmap_ref10_bits;
-  pixmap_data[i].width = xnav_bitmap_ref12_width;
-  pixmap_data[i].height = xnav_bitmap_ref12_height;
-  pixmap_data[i++].bits = xnav_bitmap_ref12_bits;
-  pixmap_data[i].width = xnav_bitmap_ref14_width;
-  pixmap_data[i].height = xnav_bitmap_ref14_height;
-  pixmap_data[i++].bits = xnav_bitmap_ref14_bits;
-  pixmap_data[i].width = xnav_bitmap_ref16_width;
-  pixmap_data[i].height = xnav_bitmap_ref16_height;
-  pixmap_data[i++].bits = xnav_bitmap_ref16_bits;
-  pixmap_data[i].width = xnav_bitmap_ref18_width;
-  pixmap_data[i].height = xnav_bitmap_ref18_height;
-  pixmap_data[i++].bits = xnav_bitmap_ref18_bits;
-  pixmap_data[i].width = xnav_bitmap_ref20_width;
-  pixmap_data[i].height = xnav_bitmap_ref20_height;
-  pixmap_data[i++].bits = xnav_bitmap_ref20_bits;
-  pixmap_data[i].width = xnav_bitmap_ref20_width;
-  pixmap_data[i].height = xnav_bitmap_ref20_height;
-  pixmap_data[i++].bits = xnav_bitmap_ref20_bits;
-  pixmap_data[i].width = xnav_bitmap_ref24_width;
-  pixmap_data[i].height = xnav_bitmap_ref24_height;
-  pixmap_data[i++].bits = xnav_bitmap_ref24_bits;
-
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_ref);
-
-  i = 0;
-  pixmap_data[i].width = xnav_bitmap_crossref8_width;
-  pixmap_data[i].height = xnav_bitmap_crossref8_height;
-  pixmap_data[i++].bits = xnav_bitmap_crossref8_bits;
-  pixmap_data[i].width = xnav_bitmap_crossref10_width;
-  pixmap_data[i].height = xnav_bitmap_crossref10_height;
-  pixmap_data[i++].bits = xnav_bitmap_crossref10_bits;
-  pixmap_data[i].width = xnav_bitmap_crossref12_width;
-  pixmap_data[i].height = xnav_bitmap_crossref12_height;
-  pixmap_data[i++].bits = xnav_bitmap_crossref12_bits;
-  pixmap_data[i].width = xnav_bitmap_crossref14_width;
-  pixmap_data[i].height = xnav_bitmap_crossref14_height;
-  pixmap_data[i++].bits = xnav_bitmap_crossref14_bits;
-  pixmap_data[i].width = xnav_bitmap_crossref16_width;
-  pixmap_data[i].height = xnav_bitmap_crossref16_height;
-  pixmap_data[i++].bits = xnav_bitmap_crossref16_bits;
-  pixmap_data[i].width = xnav_bitmap_crossref18_width;
-  pixmap_data[i].height = xnav_bitmap_crossref18_height;
-  pixmap_data[i++].bits = xnav_bitmap_crossref18_bits;
-  pixmap_data[i].width = xnav_bitmap_crossref20_width;
-  pixmap_data[i].height = xnav_bitmap_crossref20_height;
-  pixmap_data[i++].bits = xnav_bitmap_crossref20_bits;
-  pixmap_data[i].width = xnav_bitmap_crossref20_width;
-  pixmap_data[i].height = xnav_bitmap_crossref20_height;
-  pixmap_data[i++].bits = xnav_bitmap_crossref20_bits;
-  pixmap_data[i].width = xnav_bitmap_crossref24_width;
-  pixmap_data[i].height = xnav_bitmap_crossref24_height;
-  pixmap_data[i++].bits = xnav_bitmap_crossref24_bits;
-
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_crossref);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_aarithm12_width;
-    pixmap_data[i].height = xnav_bitmap_aarithm12_height;
-    pixmap_data[i].bits = xnav_bitmap_aarithm12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_aarithm);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_arithm12_width;
-    pixmap_data[i].height = xnav_bitmap_arithm12_height;
-    pixmap_data[i].bits = xnav_bitmap_arithm12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_arithm);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_bodytext12_width;
-    pixmap_data[i].height = xnav_bitmap_bodytext12_height;
-    pixmap_data[i].bits = xnav_bitmap_bodytext12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_bodytext);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_frame12_width;
-    pixmap_data[i].height = xnav_bitmap_frame12_height;
-    pixmap_data[i].bits = xnav_bitmap_frame12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_frame);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_document12_width;
-    pixmap_data[i].height = xnav_bitmap_document12_height;
-    pixmap_data[i].bits = xnav_bitmap_document12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_document);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_get12_width;
-    pixmap_data[i].height = xnav_bitmap_get12_height;
-    pixmap_data[i].bits = xnav_bitmap_get12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_get);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_getp12_width;
-    pixmap_data[i].height = xnav_bitmap_getp12_height;
-    pixmap_data[i].bits = xnav_bitmap_getp12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_getp);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_head12_width;
-    pixmap_data[i].height = xnav_bitmap_head12_height;
-    pixmap_data[i].bits = xnav_bitmap_head12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_head);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_initstep12_width;
-    pixmap_data[i].height = xnav_bitmap_initstep12_height;
-    pixmap_data[i].bits = xnav_bitmap_initstep12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_initstep);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_logic1_12_width;
-    pixmap_data[i].height = xnav_bitmap_logic1_12_height;
-    pixmap_data[i].bits = xnav_bitmap_logic1_12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_logic1_);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_logic2_12_width;
-    pixmap_data[i].height = xnav_bitmap_logic2_12_height;
-    pixmap_data[i].bits = xnav_bitmap_logic2_12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_logic2_);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_wait12_width;
-    pixmap_data[i].height = xnav_bitmap_wait12_height;
-    pixmap_data[i].bits = xnav_bitmap_wait12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_wait);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_order12_width;
-    pixmap_data[i].height = xnav_bitmap_order12_height;
-    pixmap_data[i].bits = xnav_bitmap_order12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_order);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_orderact12_width;
-    pixmap_data[i].height = xnav_bitmap_orderact12_height;
-    pixmap_data[i].bits = xnav_bitmap_orderact12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_orderact);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_setcond12_width;
-    pixmap_data[i].height = xnav_bitmap_setcond12_height;
-    pixmap_data[i].bits = xnav_bitmap_setcond12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_setcond);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_ssbegin12_width;
-    pixmap_data[i].height = xnav_bitmap_ssbegin12_height;
-    pixmap_data[i].bits = xnav_bitmap_ssbegin12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_ssbegin);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_ssend12_width;
-    pixmap_data[i].height = xnav_bitmap_ssend12_height;
-    pixmap_data[i].bits = xnav_bitmap_ssend12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_ssend);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_step12_width;
-    pixmap_data[i].height = xnav_bitmap_step12_height;
-    pixmap_data[i].bits = xnav_bitmap_step12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_step);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_sto12_width;
-    pixmap_data[i].height = xnav_bitmap_sto12_height;
-    pixmap_data[i].bits = xnav_bitmap_sto12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_sto);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_stop12_width;
-    pixmap_data[i].height = xnav_bitmap_stop12_height;
-    pixmap_data[i].bits = xnav_bitmap_stop12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_stop);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_substep12_width;
-    pixmap_data[i].height = xnav_bitmap_substep12_height;
-    pixmap_data[i].bits = xnav_bitmap_substep12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_substep);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_text12_width;
-    pixmap_data[i].height = xnav_bitmap_text12_height;
-    pixmap_data[i].bits = xnav_bitmap_text12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_text);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_title12_width;
-    pixmap_data[i].height = xnav_bitmap_title12_height;
-    pixmap_data[i].bits = xnav_bitmap_title12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_title);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_trans12_width;
-    pixmap_data[i].height = xnav_bitmap_trans12_height;
-    pixmap_data[i].bits = xnav_bitmap_trans12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_trans);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_cell12_width;
-    pixmap_data[i].height = xnav_bitmap_cell12_height;
-    pixmap_data[i].bits = xnav_bitmap_cell12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_cell);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_condigital12_width;
-    pixmap_data[i].height = xnav_bitmap_condigital12_height;
-    pixmap_data[i].bits = xnav_bitmap_condigital12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_condigital);
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_conanalog12_width;
-    pixmap_data[i].height = xnav_bitmap_conanalog12_height;
-    pixmap_data[i].bits = xnav_bitmap_conanalog12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_conanalog);
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_confeedbackdigital12_width;
-    pixmap_data[i].height = xnav_bitmap_confeedbackdigital12_height;
-    pixmap_data[i].bits = xnav_bitmap_confeedbackdigital12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_confeedbackdigital);
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_confeedbackanalog12_width;
-    pixmap_data[i].height = xnav_bitmap_confeedbackanalog12_height;
-    pixmap_data[i].bits = xnav_bitmap_confeedbackanalog12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_confeedbackanalog);
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_conexecuteorder12_width;
-    pixmap_data[i].height = xnav_bitmap_conexecuteorder12_height;
-    pixmap_data[i].bits = xnav_bitmap_conexecuteorder12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_conexecuteorder);
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_congrafcet12_width;
-    pixmap_data[i].height = xnav_bitmap_congrafcet12_height;
-    pixmap_data[i].bits = xnav_bitmap_congrafcet12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_congrafcet);
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_stepconv12_width;
-    pixmap_data[i].height = xnav_bitmap_stepconv12_height;
-    pixmap_data[i].bits = xnav_bitmap_stepconv12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_stepconv);
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_stepdiv12_width;
-    pixmap_data[i].height = xnav_bitmap_stepdiv12_height;
-    pixmap_data[i].bits = xnav_bitmap_stepdiv12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_stepdiv);
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_transconv12_width;
-    pixmap_data[i].height = xnav_bitmap_transconv12_height;
-    pixmap_data[i].bits = xnav_bitmap_transconv12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_transconv);
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_transdiv12_width;
-    pixmap_data[i].height = xnav_bitmap_transdiv12_height;
-    pixmap_data[i].bits = xnav_bitmap_transdiv12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_transdiv);
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_warning12_width;
-    pixmap_data[i].height = xnav_bitmap_warning12_height;
-    pixmap_data[i].bits = xnav_bitmap_warning12_bits;
-  }
-  brow_AllocAnnotPixmap(brow_ctx, &pixmap_data, &pixmap_warning);
+  brow_LoadPBMs(brow_ctx, "xnav_bitmap_leaf", &pixmap_leaf);
+  brow_LoadPBMs(brow_ctx, "xnav_bitmap_map", &pixmap_map);
+  brow_LoadPBMs(brow_ctx, "xnav_bitmap_openmap", &pixmap_openmap);
+  brow_LoadPBMs(brow_ctx, "xnav_bitmap_ref", &pixmap_ref);
+  brow_LoadPBMs(brow_ctx, "xnav_bitmap_crossref", &pixmap_crossref);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_aarithm", &pixmap_aarithm);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_arithm", &pixmap_arithm);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_bodytext", &pixmap_bodytext);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_frame", &pixmap_frame);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_document", &pixmap_document);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_get", &pixmap_get);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_getp", &pixmap_getp);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_head", &pixmap_head);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_initstep", &pixmap_initstep);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_logic1_", &pixmap_logic1_);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_logic2_", &pixmap_logic2_);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_wait", &pixmap_wait);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_order", &pixmap_order);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_orderact", &pixmap_orderact);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_setcond", &pixmap_setcond);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_ssbegin", &pixmap_ssbegin);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_ssend", &pixmap_ssend);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_step", &pixmap_step);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_sto", &pixmap_sto);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_stop", &pixmap_stop);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_substep", &pixmap_substep);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_text", &pixmap_text);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_title", &pixmap_title);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_trans", &pixmap_trans);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_cell", &pixmap_cell);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_condigital", &pixmap_condigital);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_conanalog", &pixmap_conanalog);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_confeedbackdigital", &pixmap_confeedbackdigital);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_confeedbackanalog", &pixmap_confeedbackanalog);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_conexecuteorder", &pixmap_conexecuteorder);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_congrafcet", &pixmap_congrafcet);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_stepconv", &pixmap_stepconv);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_stepdiv", &pixmap_stepdiv);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_transconv", &pixmap_transconv);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_transdiv", &pixmap_transdiv);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_warning", &pixmap_warning);
 }
 
 //
 // Callbacks from brow
 //
-int Pal::brow_cb(FlowCtx* ctx, flow_tEvent event)
+int Pal::brow_cb(FlowCtx* brow_ctx, flow_tEvent event)
 {
   Pal* pal;
   PalItem* item;
 
-  brow_GetCtxUserData((BrowCtx*)ctx, (void**)&pal);
+  brow_GetCtxUserData((BrowCtx*)brow_ctx, (void**)&pal);
   switch (event->event) {
   case flow_eEvent_Key_PageDown: {
     brow_Page(pal->brow_ctx, 0.8);
@@ -1358,7 +923,7 @@ int Pal::brow_cb(FlowCtx* ctx, flow_tEvent event)
         doubleclick_event = (flow_tEvent)calloc(1, sizeof(*doubleclick_event));
         memcpy(doubleclick_event, event, sizeof(*doubleclick_event));
         doubleclick_event->event = flow_eEvent_MB1DoubleClick;
-        sts = Pal::brow_cb(ctx, doubleclick_event);
+        sts = Pal::brow_cb(brow_ctx, doubleclick_event);
         free((char*)doubleclick_event);
         return sts;
       }
@@ -1490,12 +1055,12 @@ void Pal::create_nodeclasses()
 int Pal::init_brow_cb(FlowCtx* fctx, void* client_data)
 {
   Pal* pal = (Pal*)client_data;
-  BrowCtx* ctx = (BrowCtx*)fctx;
+  BrowCtx* brow_ctx = (BrowCtx*)fctx;
   int sts;
   brow_sAttributes brow_attr;
   unsigned long mask;
 
-  pal->brow_ctx = ctx;
+  pal->brow_ctx = brow_ctx;
 
   mask = 0;
 
@@ -1507,35 +1072,35 @@ int Pal::init_brow_cb(FlowCtx* fctx, void* client_data)
   brow_SetCtxUserData(pal->brow_ctx, pal);
 
   brow_EnableEvent(
-      ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack, Pal::brow_cb);
+      brow_ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack, Pal::brow_cb);
   brow_EnableEvent(
-      ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, Pal::brow_cb);
+      brow_ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, Pal::brow_cb);
   brow_EnableEvent(
-      ctx, flow_eEvent_MB3Press, flow_eEventType_CallBack, Pal::brow_cb);
+      brow_ctx, flow_eEvent_MB3Press, flow_eEventType_CallBack, Pal::brow_cb);
   brow_EnableEvent(
-      ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, Pal::brow_cb);
+      brow_ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, Pal::brow_cb);
   brow_EnableEvent(
-      ctx, flow_eEvent_Key_Up, flow_eEventType_CallBack, Pal::brow_cb);
+      brow_ctx, flow_eEvent_Key_Up, flow_eEventType_CallBack, Pal::brow_cb);
   brow_EnableEvent(
-      ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack, Pal::brow_cb);
+      brow_ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack, Pal::brow_cb);
   brow_EnableEvent(
-      ctx, flow_eEvent_Key_Left, flow_eEventType_CallBack, Pal::brow_cb);
+      brow_ctx, flow_eEvent_Key_Left, flow_eEventType_CallBack, Pal::brow_cb);
   brow_EnableEvent(
-      ctx, flow_eEvent_Key_Right, flow_eEventType_CallBack, Pal::brow_cb);
+      brow_ctx, flow_eEvent_Key_Right, flow_eEventType_CallBack, Pal::brow_cb);
   brow_EnableEvent(
-      ctx, flow_eEvent_Key_Return, flow_eEventType_CallBack, Pal::brow_cb);
+      brow_ctx, flow_eEvent_Key_Return, flow_eEventType_CallBack, Pal::brow_cb);
   brow_EnableEvent(
-      ctx, flow_eEvent_Key_Tab, flow_eEventType_CallBack, Pal::brow_cb);
+      brow_ctx, flow_eEvent_Key_Tab, flow_eEventType_CallBack, Pal::brow_cb);
   brow_EnableEvent(
-      ctx, flow_eEvent_Map, flow_eEventType_CallBack, Pal::brow_cb);
+      brow_ctx, flow_eEvent_Map, flow_eEventType_CallBack, Pal::brow_cb);
   brow_EnableEvent(
-      ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, Pal::brow_cb);
+      brow_ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, Pal::brow_cb);
   brow_EnableEvent(
-      ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack, Pal::brow_cb);
+      brow_ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack, Pal::brow_cb);
   brow_EnableEvent(
-      ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, Pal::brow_cb);
+      brow_ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, Pal::brow_cb);
   brow_EnableEvent(
-      ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, Pal::brow_cb);
+      brow_ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, Pal::brow_cb);
 
   pal->create_nodeclasses();
 

@@ -51,10 +51,6 @@
 
 #include "xtt_clognav.h"
 
-#include "xnav_bitmap_leaf12.h"
-#include "xnav_bitmap_map12.h"
-#include "xnav_bitmap_openmap12.h"
-
 //
 //  Free pixmaps
 //
@@ -70,32 +66,9 @@ void CLogNavBrow::free_pixmaps()
 //
 void CLogNavBrow::allocate_pixmaps()
 {
-  flow_sPixmapData pixmap_data;
-  int i;
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_leaf12_width;
-    pixmap_data[i].height = xnav_bitmap_leaf12_height;
-    pixmap_data[i].bits = xnav_bitmap_leaf12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_leaf);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_map12_width;
-    pixmap_data[i].height = xnav_bitmap_map12_height;
-    pixmap_data[i].bits = xnav_bitmap_map12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_map);
-
-  for (i = 0; i < 9; i++) {
-    pixmap_data[i].width = xnav_bitmap_openmap12_width;
-    pixmap_data[i].height = xnav_bitmap_openmap12_height;
-    pixmap_data[i].bits = xnav_bitmap_openmap12_bits;
-  }
-
-  brow_AllocAnnotPixmap(ctx, &pixmap_data, &pixmap_openmap);
+  brow_LoadPBM(ctx, "xnav_bitmap_leaf", &pixmap_leaf);
+  brow_LoadPBM(ctx, "xnav_bitmap_map", &pixmap_map);
+  brow_LoadPBM(ctx, "xnav_bitmap_openmap", &pixmap_openmap);
 }
 
 //

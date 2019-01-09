@@ -220,6 +220,9 @@ void brow_RemoveAnnotPixmap(brow_tNode node, int number);
 void brow_AllocAnnotPixmap(
     brow_tCtx ctx, flow_sPixmapData* pixmap_data, flow_sAnnotPixmap** pixmap);
 void brow_FreeAnnotPixmap(brow_tCtx ctx, flow_sAnnotPixmap* pixmap);
+void brow_LoadPBM(brow_tCtx ctx, const char *filename, flow_sAnnotPixmap **dst);
+void brow_LoadPBMs(brow_tCtx ctx, const char *base_filename,
+    flow_sAnnotPixmap **dst);
 void brow_SetRadiobutton(brow_tNode node, int number, int value);
 void brow_GetRadiobutton(brow_tNode node, int number, int* value);
 void brow_SetOpen(brow_tNode node, int mask);
