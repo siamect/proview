@@ -39,7 +39,7 @@ function JopCrypt() {
       0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C,
       0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x34,
       0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C,
-      0x3D, 0x3E, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x3D, 0x3E, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00
     ];
 
   this.shifts2 =
@@ -67,7 +67,7 @@ function JopCrypt() {
         0x00080020, 0x00080030, 0x20080020, 0x20080030,
         0x00090020, 0x00090030, 0x20090020, 0x20090030,
         0x00080820, 0x00080830, 0x20080820, 0x20080830,
-        0x00090820, 0x00090830, 0x20090820, 0x20090830,
+        0x00090820, 0x00090830, 0x20090820, 0x20090830
       ],
       [
         /* for C bits (numbered as per FIPS 46) 7 8 10 11 12 13 */
@@ -86,7 +86,7 @@ function JopCrypt() {
         0x10000400, 0x12000400, 0x10002400, 0x12002400,
         0x10200400, 0x12200400, 0x10202400, 0x12202400,
         0x10000404, 0x12000404, 0x10002404, 0x12002404,
-        0x10200404, 0x12200404, 0x10202404, 0x12202404,
+        0x10200404, 0x12200404, 0x10202404, 0x12202404
       ],
       [
         /* for C bits (numbered as per FIPS 46) 14 15 16 17 19 20 */
@@ -105,7 +105,7 @@ function JopCrypt() {
         0x08000200, 0x08000201, 0x08040200, 0x08040201,
         0x09000200, 0x09000201, 0x09040200, 0x09040201,
         0x08000202, 0x08000203, 0x08040202, 0x08040203,
-        0x09000202, 0x09000203, 0x09040202, 0x09040203,
+        0x09000202, 0x09000203, 0x09040202, 0x09040203
       ],
       [
         /* for C bits (numbered as per FIPS 46) 21 23 24 26 27 28 */
@@ -124,7 +124,7 @@ function JopCrypt() {
         0x04020000, 0x04120000, 0x04020100, 0x04120100,
         0x04020008, 0x04120008, 0x04020108, 0x04120108,
         0x04021000, 0x04121000, 0x04021100, 0x04121100,
-        0x04021008, 0x04121008, 0x04021108, 0x04121108,
+        0x04021008, 0x04121008, 0x04021108, 0x04121108
       ],
       [
         /* for D bits (numbered as per FIPS 46) 1 2 3 4 5 6 */
@@ -143,7 +143,7 @@ function JopCrypt() {
         0x00101000, 0x10101000, 0x00111000, 0x10111000,
         0x00101004, 0x10101004, 0x00111004, 0x10111004,
         0x20101000, 0x30101000, 0x20111000, 0x30111000,
-        0x20101004, 0x30101004, 0x20111004, 0x30111004,
+        0x20101004, 0x30101004, 0x20111004, 0x30111004
       ],
       [
         /* for D bits (numbered as per FIPS 46) 8 9 11 12 13 14 */
@@ -162,7 +162,7 @@ function JopCrypt() {
         0x02000001, 0x0A000001, 0x02000009, 0x0A000009,
         0x02000401, 0x0A000401, 0x02000409, 0x0A000409,
         0x02020001, 0x0A020001, 0x02020009, 0x0A020009,
-        0x02020401, 0x0A020401, 0x02020409, 0x0A020409,
+        0x02020401, 0x0A020401, 0x02020409, 0x0A020409
       ],
       [
         /* for D bits (numbered as per FIPS 46) 16 17 18 19 20 21 */
@@ -181,7 +181,7 @@ function JopCrypt() {
         0x00200200, 0x00200300, 0x00280200, 0x00280300,
         0x01200200, 0x01200300, 0x01280200, 0x01280300,
         0x00200210, 0x00200310, 0x00280210, 0x00280310,
-        0x01200210, 0x01200310, 0x01280210, 0x01280310,
+        0x01200210, 0x01200310, 0x01280210, 0x01280310
       ],
       [
         /* for D bits (numbered as per FIPS 46) 22 23 24 25 27 28 */
@@ -200,8 +200,8 @@ function JopCrypt() {
         0x00000820, 0x04000820, 0x00040820, 0x04040820,
         0x00000822, 0x04000822, 0x00040822, 0x04040822,
         0x00002820, 0x04002820, 0x00042820, 0x04042820,
-        0x00002822, 0x04002822, 0x00042822, 0x04042822,
-      ],
+        0x00002822, 0x04002822, 0x00042822, 0x04042822
+      ]
     ];
 
   this.SPtrans =
@@ -223,7 +223,7 @@ function JopCrypt() {
         0x80820200, 0x00020200, 0x00820000, 0x80800200,
         0x00800000, 0x80000200, 0x80020000, 0x00000000,
         0x00020000, 0x00800000, 0x80800200, 0x00820200,
-        0x80000000, 0x80820000, 0x00000200, 0x80020200,
+        0x80000000, 0x80820000, 0x00000200, 0x80020200
       ],
       [
         /* nibble 1 */
@@ -242,7 +242,7 @@ function JopCrypt() {
         0x10042000, 0x00002000, 0x00000000, 0x10000004,
         0x00000004, 0x10042004, 0x00042000, 0x10040000,
         0x10040004, 0x00040000, 0x00002004, 0x10002000,
-        0x10002004, 0x00000004, 0x10040000, 0x00042000,
+        0x10002004, 0x00000004, 0x10040000, 0x00042000
       ],
       [
         /* nibble 2 */
@@ -261,7 +261,7 @@ function JopCrypt() {
         0x40010040, 0x41000000, 0x01000000, 0x41010040,
         0x00010000, 0x01000040, 0x41000040, 0x00010040,
         0x01000040, 0x00000000, 0x41010000, 0x40000040,
-        0x41000000, 0x40010040, 0x00000040, 0x01010000,
+        0x41000000, 0x40010040, 0x00000040, 0x01010000
       ],
       [
         /* nibble 3 */
@@ -280,7 +280,7 @@ function JopCrypt() {
         0x04000000, 0x04100402, 0x00100402, 0x00100000,
         0x04100402, 0x00000002, 0x04000400, 0x00100402,
         0x00100002, 0x00100400, 0x04100000, 0x04000402,
-        0x00000402, 0x04000000, 0x04000002, 0x04100400,
+        0x00000402, 0x04000000, 0x04000002, 0x04100400
       ],
       [
         /* nibble 4 */
@@ -299,7 +299,7 @@ function JopCrypt() {
         0x02000108, 0x00000100, 0x00000000, 0x02004108,
         0x02004008, 0x02004100, 0x00000108, 0x00004000,
         0x00004100, 0x02004008, 0x02000100, 0x00000108,
-        0x00000008, 0x00004108, 0x02004000, 0x02000008,
+        0x00000008, 0x00004108, 0x02004000, 0x02000008
       ],
       [
         /* nibble 5 */
@@ -318,7 +318,7 @@ function JopCrypt() {
         0x20080810, 0x00080800, 0x00080000, 0x20000810,
         0x20000010, 0x20080000, 0x00080810, 0x00000000,
         0x00000800, 0x20000010, 0x20000810, 0x20080800,
-        0x20080000, 0x00000810, 0x00000010, 0x20080010,
+        0x20080000, 0x00000810, 0x00000010, 0x20080010
       ],
       [
         /* nibble 6 */
@@ -337,7 +337,7 @@ function JopCrypt() {
         0x00000000, 0x00400081, 0x00400080, 0x00001080,
         0x00000081, 0x00001000, 0x00401081, 0x00400000,
         0x00401080, 0x00000001, 0x00001001, 0x00401081,
-        0x00400001, 0x00401080, 0x00401000, 0x00001001,
+        0x00400001, 0x00401080, 0x00401000, 0x00001001
       ],
       [
         /* nibble 7 */
@@ -376,7 +376,7 @@ function JopCrypt() {
     var value = Math.floor(b);
 
     return (value >= 0 ? value : value + 256);
-  }
+  };
 
   this.fourBytesToInt = function (b, offset) {
     var value;
@@ -384,17 +384,17 @@ function JopCrypt() {
     value = this.byteToUnsigned(b[offset++]);
     value |= (this.byteToUnsigned(b[offset++]) << 8);
     value |= (this.byteToUnsigned(b[offset++]) << 16);
-    value |= (this.byteToUnsigned(b[offset++]) << 24);
+    value |= (this.byteToUnsigned(b[offset]) << 24);
 
     return value;
-  }
+  };
 
   this.intToFourBytes = function (iValue, b, offset) {
     b[offset++] = ((iValue) & 0xff);
     b[offset++] = ((iValue >>> 8) & 0xff);
     b[offset++] = ((iValue >>> 16) & 0xff);
-    b[offset++] = ((iValue >>> 24) & 0xff);
-  }
+    b[offset] = ((iValue >>> 24) & 0xff);
+  };
 
   this.PERM_OP = function (a, b, n, m, results) {
     var t;
@@ -405,7 +405,7 @@ function JopCrypt() {
 
     results[0] = a;
     results[1] = b;
-  }
+  };
 
   this.HPERM_OP = function (a, n, m) {
     var t;
@@ -414,7 +414,7 @@ function JopCrypt() {
     a = a ^ t ^ (t >>> (16 - n));
 
     return (a);
-  }
+  };
 
   this.des_set_key = function (key) {
     var schedule = new Array(this.ITERATIONS * 2);
@@ -476,7 +476,7 @@ function JopCrypt() {
       schedule[j++] = s & 0xffffffff;
     }
     return schedule;
-  }
+  };
 
   this.D_ENCRYPT = function (L, R, S, E0, E1, s) {
     var t, u, v;
@@ -498,7 +498,7 @@ function JopCrypt() {
       this.SPtrans[6][(u >>> 24) & 0x3f];
 
     return L;
-  }
+  };
 
   this.body = function (schedule, Eswap0, Eswap1) {
     var left = 0;
@@ -545,11 +545,12 @@ function JopCrypt() {
     out[0] = left; out[1] = right;
 
     return (out);
-  }
+  };
 
   this.crypt = function (salt, original) {
-    while (salt.length < 2)
+    while (salt.length < 2) {
       salt += "A";
+    }
 
     var buffer;
     var charZero = salt.charAt(0) + '';
@@ -564,7 +565,7 @@ function JopCrypt() {
     var Eswap0 = this.con_salt[ccZ];
     var Eswap1 = this.con_salt[ccO] << 4;
 
-    var key = new Array(0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0);
+    var key = [0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0];
 
     for (var i = 0; i < key.length && i < original.length; i++) {
       var iChar = original.charCodeAt(i);
@@ -585,12 +586,13 @@ function JopCrypt() {
       for (var j = 0, c = 0; j < 6; j++) {
         c <<= 1;
 
-        if ((b[y] & u) != 0)
+        if ((b[y] & u) !== 0) {
           c |= 1;
+        }
 
         u >>>= 1;
 
-        if (u == 0) {
+        if (u === 0) {
           y++;
           u = 0x80;
         }
@@ -609,7 +611,7 @@ function PwrtStatus(sts) {
   this.sts = sts;
 
   this.evenSts = function () { return (sts % 2 === 0); };
-  this.oddSts = function () { return (sts % 2 == 1); };
+  this.oddSts = function () { return (sts % 2 === 1); };
   this.getSts = function () { return sts; };
 }
 
@@ -781,7 +783,7 @@ function CdhrNumber(value, sts) {
   this.sts = sts;
 
   this.evenSts = function () { return (sts % 2 === 0); };
-  this.oddSts = function () { return (sts % 2 == 1); };
+  this.oddSts = function () { return (sts % 2 === 1); };
   this.getSts = function () { return sts; };
 }
 
@@ -973,7 +975,7 @@ function Gdh() {
     };
 
     this.ws.onmessage = function (e) {
-      if (typeof e.data == "string") {
+      if (typeof e.data === "string") {
         console.log("String message received", e, e.data);
       } else {
         if (e.data instanceof ArrayBuffer) {
@@ -1069,7 +1071,7 @@ function Gdh() {
                 var esize = dv.getUint32(j);
                 j += 4;
                 var sub = this.gdh.sub[eid];
-                if (typeof sub == 'undefined')
+                if (typeof sub === 'undefined')
                   j += esize;
                 else {
                   var value;
@@ -1083,7 +1085,7 @@ function Gdh() {
                         value = dv.getFloat32(j);
                         j += 4;
                       } else {
-                        if (esize != sub.elements * 4)
+                        if (esize !== sub.elements * 4)
                           console.log("Subscription size error", esize, sub.elements, eid);
                         value = new Array(sub.elements);
                         for (var k = 0; k < sub.elements; k++) {
@@ -1122,7 +1124,7 @@ function Gdh() {
                   this.gdh.sub[eid].value = value;
                 }
               }
-              if (typeof this.gdh.pending[id] == 'undefined') {
+              if (typeof this.gdh.pending[id] === 'undefined') {
                 console.log("** GetObjectRefInfoAll received removed", id);
                 break;
               }
@@ -1490,10 +1492,9 @@ function Gdh() {
     if (!this.listSent) {
       return sub.refid;
     } else {
-      var size = 0;
       var len = 0;
 
-      size = 12 + sub.name.length;
+      var size = 12 + sub.name.length;
 
       var buf = new Uint8Array(size + 10);
       buf[0] = Msg.REF_OBJECT_INFO;
@@ -1533,10 +1534,9 @@ function Gdh() {
     if (this.debug) console.log("refObjectInfoReply", id, sts);
   };
   this.unrefObjectInfo = function (refid) {
-    var size = 0;
     var len = 0;
 
-    size = 4;
+    var size = 4;
 
     var buf = new Uint8Array(size + 10);
     buf[0] = Msg.UNREF_OBJECT_INFO;
@@ -1909,7 +1909,7 @@ function OpWindMenu() {
 
   this.init = function () {
     this.host = window.location.hostname;
-    if (this.host == "")
+    if (this.host === "")
       this.host = "localhost";
 
     this.gdh = new Gdh();
@@ -1918,8 +1918,8 @@ function OpWindMenu() {
   };
 
   this.is_authorized = function (access) {
-    return (this.priv & access) ? true : false;
-  }
+    return !!(this.priv & access);
+  };
 
   this.get_opplace = function () {
     var query = window.location.search.substring(1);
@@ -1963,7 +1963,7 @@ function OpWindMenu() {
       context.appendChild(document.createElement("hr"));
 
       document.getElementById("login_button").addEventListener("click", function (event) {
-        if (document.getElementById("login_frame").style.visibility == 'hidden') {
+        if (document.getElementById("login_frame").style.visibility === 'hidden') {
           document.getElementById("login_user").value = "";
           document.getElementById("login_passw").value = "";
           document.getElementById("login_frame").style.visibility = 'visible';
@@ -1977,7 +1977,7 @@ function OpWindMenu() {
       document.getElementById("apply_button").addEventListener("click", function (event) {
         var user = document.getElementById("login_user").value;
         var passwd = document.getElementById("login_passw").value;
-        if (user.trim() == "")
+        if (user.trim() === "")
           return;
         document.getElementById("login_frame").style.visibility = 'hidden';
         document.getElementById("login_frame").style.height = '0px';
@@ -2030,9 +2030,9 @@ function OpWindMenu() {
   };
 
   this.button_cb = function (text) {
-    if (self.info.enable_language && text == "Language") {
+    if (self.info.enable_language && text === "Language") {
       console.log("Language activated");
-    } else if (self.info.enable_alarmlist && text == "AlarmList") {
+    } else if (self.info.enable_alarmlist && text === "AlarmList") {
       console.log("AlarmList activated");
       if (!(self.is_authorized(Pwr.mAccess_RtRead | Pwr.mAccess_RtWrite |
         Pwr.mAccess_AllOperators |
@@ -2041,7 +2041,7 @@ function OpWindMenu() {
         window.alert("Not authorized for this operation");
       else
         window.alert("Not yet implemented");
-    } else if (self.info.enable_eventlog && text == "EventLog") {
+    } else if (self.info.enable_eventlog && text === "EventLog") {
       console.log("EventLog activated");
       if (!(self.is_authorized(Pwr.mAccess_RtRead | Pwr.mAccess_RtWrite |
         Pwr.mAccess_AllOperators |
@@ -2051,7 +2051,7 @@ function OpWindMenu() {
         window.alert("Not authorized for this operation");
       else
         window.alert("Not yet implemented");
-    } else if (self.info.enable_navigator && text == "Navigator") {
+    } else if (self.info.enable_navigator && text === "Navigator") {
       console.log("Navigator activated");
       if (!(self.is_authorized(Pwr.mAccess_RtNavigator |
         Pwr.mAccess_System | Pwr.mAccess_Maintenance |
@@ -2059,10 +2059,10 @@ function OpWindMenu() {
         window.alert("Not authorized for this operation");
       else
         window.open("xtt.html", "_blank");
-    } else if (!self.info.disable_help && text == "Help") {
+    } else if (!self.info.disable_help && text === "Help") {
       console.log("Help activated");
       window.open("xtt_help_index.html", "_blank");
-    } else if (!self.info.disable_proview && text == "ProviewR") {
+    } else if (!self.info.disable_proview && text === "ProviewR") {
       console.log("ProviewR activated");
       window.open("http://www.proview.se", "_blank");
     } else {
@@ -2073,11 +2073,11 @@ function OpWindMenu() {
         window.alert("Not authorized for this operation");
       else {
         for (var i = 0; i < self.info.buttons.length; i++) {
-          if (self.info.buttons[i].text == text) {
+          if (self.info.buttons[i].text === text) {
             console.log("Found", self.info.buttons[i].text);
             var name = self.info.buttons[i].name;
             var n = name.indexOf(".pwg");
-            if (n != -1)
+            if (n !== -1)
               name = name.substring(0, n);
             var url = "ge.html?graph=" + name;
             console.log("url", url);

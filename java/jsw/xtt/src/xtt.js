@@ -6,7 +6,7 @@ function PwrtStatus(sts) {
   this.sts = sts;
 
   this.evenSts = function () { return (sts % 2 === 0); };
-  this.oddSts = function () { return (sts % 2 == 1); };
+  this.oddSts = function () { return (sts % 2 === 1); };
   this.getSts = function () { return sts; };
 }
 
@@ -178,7 +178,7 @@ function CdhrNumber(value, sts) {
   this.sts = sts;
 
   this.evenSts = function () { return (sts % 2 === 0); };
-  this.oddSts = function () { return (sts % 2 == 1); };
+  this.oddSts = function () { return (sts % 2 === 1); };
   this.getSts = function () { return sts; };
 }
 
@@ -275,7 +275,7 @@ function Cli(cliTable) {
       var c = cmd.charAt(i);
       switch (state) {
         case CliC.STATE_INIT:
-          if (c == CliC.SPACE || c == CliC.TAB)
+          if (c === CliC.SPACE || c === CliC.TAB)
             break;
           else {
             state = CliC.STATE_VERB;
@@ -283,19 +283,19 @@ function Cli(cliTable) {
           }
           break;
         case CliC.STATE_SPACE:
-          if (c == CliC.SPACE || c == CliC.TAB)
+          if (c === CliC.SPACE || c === CliC.TAB)
             break;
-          if (c == '/') {
+          if (c === '/') {
             state = CliC.STATE_QUAL;
             start_pos = i;
-          } else if (c == '=') {
+          } else if (c === '=') {
             if (this.qualifierCount === 0) {
               state = CliC.STATE_ERROR;
               this.status = CliC.SYNTAX_ERROR;
               break;
             }
             state = CliC.STATE_EQUAL;
-          } else if (c == '"') {
+          } else if (c === '"') {
             state = CliC.STATE_QUOTE_VERB;
             break;
           } else {
@@ -304,8 +304,8 @@ function Cli(cliTable) {
           }
           break;
         case CliC.STATE_VERB:
-          if (c == CliC.SPACE || c == CliC.TAB) {
-            if (this.verbCount == CliC.VERB_VECT_SIZE) {
+          if (c === CliC.SPACE || c === CliC.TAB) {
+            if (this.verbCount === CliC.VERB_VECT_SIZE) {
               state = CliC.STATE_ERROR;
               break;
             }
@@ -314,8 +314,8 @@ function Cli(cliTable) {
             else
               this.verb[this.verbCount++] = cmd.substring(start_pos, i);
             state = CliC.STATE_SPACE;
-          } else if (c == '/') {
-            if (this.verbCount == CliC.VERB_VECT_SIZE) {
+          } else if (c === '/') {
+            if (this.verbCount === CliC.VERB_VECT_SIZE) {
               state = CliC.STATE_ERROR;
               break;
             }
@@ -325,8 +325,8 @@ function Cli(cliTable) {
           }
           break;
         case CliC.STATE_VERB_EXACT:
-          if (c == '"') {
-            if (this.verbCount == CliC.VERB_VECT_SIZE) {
+          if (c === '"') {
+            if (this.verbCount === CliC.VERB_VECT_SIZE) {
               state = CliC.STATE_ERROR;
               break;
             }
@@ -335,30 +335,30 @@ function Cli(cliTable) {
           }
           break;
         case CliC.STATE_QUAL:
-          if (c == CliC.SPACE || c == CliC.TAB) {
+          if (c === CliC.SPACE || c === CliC.TAB) {
             this.qualifier[this.qualifierCount++] = cmd.substring(start_pos, i).toUpperCase();
             state = CliC.STATE_SPACE;
-          } else if (c == '=') {
+          } else if (c === '=') {
             this.qualifier[this.qualifierCount++] = cmd.substring(start_pos, i).toUpperCase();
             state = CliC.STATE_EQUAL;
-          } else if (c == '/') {
+          } else if (c === '/') {
             this.qualifier[this.qualifierCount++] = cmd.substring(start_pos, i).toUpperCase();
             state = CliC.STATE_QUAL;
             start_pos = i;
           }
           break;
         case CliC.STATE_QUALVALUE:
-          if (c == CliC.SPACE || c == CliC.TAB) {
+          if (c === CliC.SPACE || c === CliC.TAB) {
             this.qualValue[this.qualifierCount - 1] = cmd.substring(start_pos, i);
             state = CliC.STATE_SPACE;
-          } else if (c == '/') {
+          } else if (c === '/') {
             this.qualValue[this.qualifierCount - 1] = cmd.substring(start_pos, i);
             state = CliC.STATE_QUAL;
             start_pos = i;
           }
           break;
         case CliC.STATE_QUALVALUE_EXACT:
-          if (c == '"') {
+          if (c === '"') {
             this.qualValue[this.qualifierCount - 1] = cmd.substring(start_pos, i);
             state = CliC.STATE_SPACE;
           }
@@ -372,9 +372,9 @@ function Cli(cliTable) {
           start_pos = i;
           break;
         case CliC.STATE_EQUAL:
-          if (c == CliC.SPACE || c == CliC.TAB)
+          if (c === CliC.SPACE || c === CliC.TAB)
             break;
-          if (c == '"') {
+          if (c === '"') {
             state = CliC.STATE_QUOTE_QUALVALUE;
           } else {
             state = CliC.STATE_QUALVALUE;
@@ -383,7 +383,7 @@ function Cli(cliTable) {
           break;
 
       }
-      if (state == CliC.STATE_ERROR)
+      if (state === CliC.STATE_ERROR)
         break;
     }
     switch (state) {
@@ -391,7 +391,7 @@ function Cli(cliTable) {
       case CliC.STATE_ERROR:
         return "";
       case CliC.STATE_VERB:
-        if (this.verbCount == CliC.VERB_VECT_SIZE) {
+        if (this.verbCount === CliC.VERB_VECT_SIZE) {
           state = CliC.STATE_ERROR;
           break;
         }
@@ -401,7 +401,7 @@ function Cli(cliTable) {
           this.verb[this.verbCount++] = cmd.substring(start_pos, i);
         break;
       case CliC.STATE_VERB_EXACT:
-        if (this.verbCount == CliC.VERB_VECT_SIZE) {
+        if (this.verbCount === CliC.VERB_VECT_SIZE) {
           state = CliC.STATE_ERROR;
           break;
         }
@@ -438,7 +438,7 @@ function Cli(cliTable) {
     for (i = 0; i < this.cliTable.length; i++) {
       if (this.verb[0].length > this.cliTable[i].command.length)
         continue;
-      if (this.verb[0] == (this.cliTable[i].command.substring(0, this.verb[0].length))) {
+      if (this.verb[0] === (this.cliTable[i].command.substring(0, this.verb[0].length))) {
         this.verb[0] = this.cliTable[i].command;
         found = true;
         break;
@@ -455,15 +455,15 @@ function Cli(cliTable) {
       for (i = 0; i < this.cliTable[this.cliTableIndex].qualifier.length; i++) {
         if (this.cliTable[this.cliTableIndex].qualifier[i] === null)
           break;
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg1"))
+        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg1"))
           this.configuredVerbs++;
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg2"))
+        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg2"))
           this.configuredVerbs++;
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg3"))
+        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg3"))
           this.configuredVerbs++;
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg4"))
+        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg4"))
           this.configuredVerbs++;
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg5"))
+        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg5"))
           this.configuredVerbs++;
       }
 
@@ -474,7 +474,7 @@ function Cli(cliTable) {
             break;
           if (this.qualifier[j].length > this.cliTable[this.cliTableIndex].qualifier[i].length)
             continue;
-          if (this.qualifier[j] == (this.cliTable[this.cliTableIndex].qualifier[i].substring(0, this.qualifier[j].length))) {
+          if (this.qualifier[j] === (this.cliTable[this.cliTableIndex].qualifier[i].substring(0, this.qualifier[j].length))) {
             this.cliQualifierIndex[j] = i;
             found = true;
             this.qualifier[j] = this.cliTable[this.cliTableIndex].qualifier[i];
@@ -498,28 +498,24 @@ function Cli(cliTable) {
    * @return Returns true if the qualifier is present.
    */
   this.qualifierFound = function (qual) {
-    if (qual == ("cli_arg1")) {
-      if (this.verbCount < 2 || this.configuredVerbs < 1)
-        return false;
-      return true;
+    if (qual === ("cli_arg1")) {
+      return !(this.verbCount < 2 || this.configuredVerbs < 1);
+
     }
-    if (qual == ("cli_arg2")) {
-      if (this.verbCount < 3 || this.configuredVerbs < 2)
-        return false;
-      return true;
+    if (qual === ("cli_arg2")) {
+      return !(this.verbCount < 3 || this.configuredVerbs < 2);
+
     }
-    if (qual == ("cli_arg3")) {
-      if (this.verbCount < 4 || this.configuredVerbs < 3)
-        return false;
-      return true;
+    if (qual === ("cli_arg3")) {
+      return !(this.verbCount < 4 || this.configuredVerbs < 3);
+
     }
-    if (qual == ("cli_arg4")) {
-      if (this.verbCount < 5 || this.configuredVerbs < 4)
-        return false;
-      return true;
+    if (qual === ("cli_arg4")) {
+      return !(this.verbCount < 5 || this.configuredVerbs < 4);
+
     }
     for (var i = 0; i < this.qualifierCount; i++) {
-      if (qual == (this.qualifier[i]))
+      if (qual === (this.qualifier[i]))
         return true;
     }
     return false;
@@ -531,27 +527,27 @@ function Cli(cliTable) {
    * @return Returns the value of the qualifier.
    */
   this.getQualValue = function (qual) {
-    if (qual == ("cli_arg1")) {
+    if (qual === ("cli_arg1")) {
       if (this.verbCount < 2 || this.configuredVerbs < 1)
         return "";
       return this.verb[1];
     }
-    if (qual == ("cli_arg2")) {
+    if (qual === ("cli_arg2")) {
       if (this.verbCount < 3 || this.configuredVerbs < 2)
         return "";
       return this.verb[2];
     }
-    if (qual == ("cli_arg3")) {
+    if (qual === ("cli_arg3")) {
       if (this.verbCount < 4 || this.configuredVerbs < 3)
         return this.verb[3];
     }
-    if (qual == ("cli_arg4")) {
+    if (qual === ("cli_arg4")) {
       if (this.verbCount < 5 || this.configuredVerbs < 4)
         return "";
       return this.verb[4];
     }
     for (var i = 0; i < this.qualifierCount; i++) {
-      if (qual == (this.qualifier[i])) {
+      if (qual === (this.qualifier[i])) {
         if (this.qualValue[i] === null)
           return "";
         else
@@ -751,7 +747,7 @@ function Gdh() {
     };
 
     this.ws.onmessage = function (e) {
-      if (typeof e.data == "string") {
+      if (typeof e.data === "string") {
         console.log("String message received", e, e.data);
       } else {
         if (e.data instanceof ArrayBuffer) {
@@ -847,7 +843,7 @@ function Gdh() {
                 var esize = dv.getUint32(j);
                 j += 4;
                 var sub = this.gdh.sub[eid];
-                if (typeof sub == 'undefined')
+                if (typeof sub === 'undefined')
                   j += esize;
                 else {
                   var value;
@@ -861,7 +857,7 @@ function Gdh() {
                         value = dv.getFloat32(j);
                         j += 4;
                       } else {
-                        if (esize != sub.elements * 4)
+                        if (esize !== sub.elements * 4)
                           console.log("Subscription size error", esize, sub.elements, eid);
                         value = new Array(sub.elements);
                         for (var k = 0; k < sub.elements; k++) {
@@ -900,7 +896,7 @@ function Gdh() {
                   this.gdh.sub[eid].value = value;
                 }
               }
-              if (typeof this.gdh.pending[id] == 'undefined') {
+              if (typeof this.gdh.pending[id] === 'undefined') {
                 console.log("** GetObjectRefInfoAll received removed", id);
                 break;
               }
@@ -1275,10 +1271,9 @@ function Gdh() {
     if (!this.listSent) {
       return sub.refid;
     } else {
-      var size = 0;
       var len = 0;
 
-      size = 12 + sub.name.length;
+      var size = 12 + sub.name.length;
 
       var buf = new Uint8Array(size + 10);
       buf[0] = Msg.REF_OBJECT_INFO;
@@ -1318,10 +1313,9 @@ function Gdh() {
     if (this.debug) console.log("refObjectInfoReply", id, sts);
   };
   this.unrefObjectInfo = function (refid) {
-    var size = 0;
     var len = 0;
 
-    size = 4;
+    var size = 4;
 
     var buf = new Uint8Array(size + 10);
     buf[0] = Msg.UNREF_OBJECT_INFO;
@@ -1773,7 +1767,7 @@ var Plow = {
   eEvent_ObjectDeleted: 10,
   RELATIVE_POSITION: 1,
   NEXT_RELATIVE_POSITION: 2
-}
+};
 function PlowNodeClass(ctx) {
   this.a = new PlowArray(ctx);
   this.ctx = ctx;
@@ -1783,7 +1777,7 @@ function PlowNodeClass(ctx) {
 
   this.draw = function (g, p, node, highlight) {
     this.a.draw(g, p, node, highlight);
-  }
+  };
 
   this.insert = function (elem) {
     this.a.add(elem);
@@ -1796,10 +1790,10 @@ function PlowArray(ctx) {
 
   this.add = function (elem) {
     this.a.push(elem);
-  }
+  };
   this.insertNode = function (elem, destination, code) {
     var idx = this.find(elem);
-    if (idx != -1)
+    if (idx !== -1)
       return;
 
     if (destination == null) {
@@ -1815,19 +1809,19 @@ function PlowArray(ctx) {
       }
     } else {
       var dest_idx = this.find(destination);
-      if (dest_idx == -1)
+      if (dest_idx === -1)
         return;
 
       switch (code) {
         case Plow.DEST_INTOFIRST:
-          if (dest_idx == this.a.length - 1)
+          if (dest_idx === this.a.length - 1)
             this.a.push(elem);
           else
             this.a.splice(dest_idx + 1, 0, elem);
           elem.level = destination.level + 1;
           break;
         case Plow.DEST_INTOLAST: {
-          if (dest_idx == this.a.length - 1)
+          if (dest_idx === this.a.length - 1)
             this.a.push(elem);
           else {
             idx = this.a.length;
@@ -1837,7 +1831,7 @@ function PlowArray(ctx) {
                 break;
               }
             }
-            if (idx == this.a.length)
+            if (idx === this.a.length)
               this.a.push(elem);
             else
               this.a.splice(idx, 0, elem);
@@ -1846,7 +1840,7 @@ function PlowArray(ctx) {
           break;
         }
         case Plow.DEST_AFTER: {
-          if (dest_idx == this.a.length - 1)
+          if (dest_idx === this.a.length - 1)
             this.a.push(elem);
           else {
             var i;
@@ -1867,31 +1861,31 @@ function PlowArray(ctx) {
           break;
       }
     }
-  }
+  };
 
   this.size = function () {
     return this.a.length;
-  }
+  };
   this.get = function (idx) {
     return this.a[idx];
-  }
+  };
   this.draw = function (g, p, node, highlight) {
     for (var i = 0; i < this.a.length; i++)
       this.a[i].draw(g, p, node, highlight);
-  }
+  };
   this.set_borders = function (node) {
     for (var i = 0; i < this.a.length; i++)
       this.a[i].set_borders(node);
-  }
+  };
   this.configure = function () {
     for (var i = 0; i < this.a.length; i++) {
       this.a[i].pos.x = this.a[i].level * 1.0;
-      this.a[i].pos.y = i * 1.0;
+      this.a[i].pos.y = i;
     }
-  }
+  };
   this.close_node = function (node) {
     var idx = this.find(node);
-    if (idx == -1)
+    if (idx === -1)
       return;
     var level = node.level;
     var i;
@@ -1900,19 +1894,19 @@ function PlowArray(ctx) {
         break;
     }
     var next_idx = i;
-    if (next_idx == idx + 1)
+    if (next_idx === idx + 1)
       return;
     for (i = idx + 1; i < next_idx; i++) {
       // Event backcall
-      if (ctx.select_object == this.a[idx + 1])
+      if (ctx.select_object === this.a[idx + 1])
         ctx.select_object = null;
       this.ctx.event_cb(Plow.eEvent_ObjectDeleted, this.a[idx + 1], 0, 0);
       this.a.splice(idx + 1, 1);
     }
-  }
+  };
   this.get_parent_object = function (node) {
     var idx = this.find(node);
-    if (idx == -1)
+    if (idx === -1)
       return null;
 
     for (var i = idx; i >= 0; i--) {
@@ -1920,62 +1914,62 @@ function PlowArray(ctx) {
         return this.a[i];
     }
     return null;
-  }
+  };
 
   this.get_first_child = function (node) {
     var idx = this.find(node);
-    if (idx == -1)
+    if (idx === -1)
       return null;
 
-    if (this.a.length == idx - 1)
+    if (this.a.length === idx - 1)
       return null;
 
     if (this.a[idx + 1].level > node.level)
       return this.a[idx + 1];
     return null;
-  }
+  };
 
   this.get_next_sibling = function (node) {
     var found = false;
     for (var i = 0; i < this.a.length; i++) {
-      if (this.a[i] == node) {
+      if (this.a[i] === node) {
         found = true;
         continue;
       }
       if (found) {
-        if (this.a[i].level == node.level)
+        if (this.a[i].level === node.level)
           return this.a[i];
         if (this.a[i].level < node.level)
           return null;
       }
     }
     return null;
-  }
+  };
 
   this.get_next_object = function (node) {
     for (var i = 0; i < this.a.length; i++) {
-      if (this.a[i] == node) {
-        if (i == this.a.length - 1)
+      if (this.a[i] === node) {
+        if (i === this.a.length - 1)
           return null;
         return this.a[i + 1];
       }
     }
     return null;
-  }
+  };
   this.get_previous_object = function (node) {
     for (var i = 0; i < this.a.length; i++) {
-      if (this.a[i] == node) {
-        if (i == 0)
+      if (this.a[i] === node) {
+        if (i === 0)
           return null;
         return this.a[i - 1];
       }
     }
     return null;
-  }
+  };
 
   this.find = function (elem) {
     for (var i = 0; i < this.a.length; i++) {
-      if (this.a[i] == elem)
+      if (this.a[i] === elem)
         return i;
     }
     return -1;
@@ -2014,15 +2008,15 @@ function PlowNode(ctx, nc, level) {
     if (number >= 10)
       return;
     this.annotv[number] = text;
-  }
+  };
   this.set_annotation_pixmap = function (number, pixmap) {
     if (number >= 10)
       return;
     this.pixmapv[number] = pixmap;
-  }
+  };
   this.draw_object = function () {
     this.draw(this.ctx.gdraw.gctx, null, null, false);
-  }
+  };
   this.draw = function (g, p, node, highlight) {
     var x = this.x_left * this.ctx.zoom_factor;
     var y = this.y_low * this.ctx.zoom_factor - 1;
@@ -2034,38 +2028,35 @@ function PlowNode(ctx, nc, level) {
     g.fillRect(x, y, width, height);
 
     this.nc.draw(g, this.pos, this, this.highlight);
-  }
+  };
 
   this.connect = function () {
-    if (this.trace_object == "" || this.trace_attribute == "")
+    if (this.trace_object === "" || this.trace_attribute === "")
       return;
 
     var n = this.trace_attribute.indexOf('#');
-    if (n != -1)
+    if (n !== -1)
       this.trace_attribute = this.trace_attribute.substring(0, n);
 
     var o = this.trace_object + "." + this.trace_attribute;
     this.p = ctx.gdh.refObjectInfo(o, this.trace_attr_type);
     console.log("connecting", o, this.p);
-  }
+  };
   this.scan = function () {
-    if (this.p == 0)
+    if (this.p === 0)
       return;
     var v1 = ctx.gdh.getRefObjectInfo(this.p);
     var evaluate = true;
     if (this.first_scan)
       this.first_scan = false;
-    else if (v1 == this.old_value)
+    else if (v1 === this.old_value)
       return;
 
-    if (v1)
-      this.highlight = true;
-    else
-      this.highlight = false;
+    this.highlight = !!v1;
 
     this.old_value = v1;
     this.draw_object();
-  }
+  };
 
   this.set_borders = function () {
     this.x_left = 1e37;
@@ -2073,7 +2064,7 @@ function PlowNode(ctx, nc, level) {
     this.y_low = 1e37;
     this.y_high = -1e37;
     nc.a.set_borders(this);
-  }
+  };
 
   this.event_handler = function (event, x, y) {
     if ((x - this.ctx.offset_x) / this.ctx.zoom_factor >= this.x_left &&
@@ -2084,7 +2075,7 @@ function PlowNode(ctx, nc, level) {
       return 1;
     }
     return 0;
-  }
+  };
 
   this.set_select = function (select) {
     if (select) {
@@ -2092,27 +2083,26 @@ function PlowNode(ctx, nc, level) {
       this.ctx.select_object = this;
     } else {
       this.select = false;
-      if (this.ctx.select_object == this)
+      if (this.ctx.select_object === this)
         this.ctx.select_object = null;
     }
-    if (select != this.select)
+    if (select !== this.select)
       this.draw_object();
-  }
+  };
   this.set_invert = function (invert) {
     this.invert = invert;
     this.draw_object();
-  }
+  };
   this.set_userdata = function (userdata) {
     this.userdata = userdata;
-  }
+  };
   this.get_userdata = function () {
     return this.userdata;
-  }
+  };
   this.in_icon = function (x, y) {
-    if (x >= this.x_left * this.ctx.zoom_factor &&
-      x <= (this.x_left + 1.75) * this.ctx.zoom_factor)
-      return true;
-    return false;
+    return x >= this.x_left * this.ctx.zoom_factor &&
+      x <= (this.x_left + 1.75) * this.ctx.zoom_factor;
+
   }
 }
 
@@ -2165,7 +2155,7 @@ function PlowAnnot(ctx, x, y, text_size, text_color, annot_type, number) {
     var x = (this.p.x + p0.x) * this.ctx.zoom_factor;
     var y = (this.p.y + p0.y) * this.ctx.zoom_factor - tsize / 4;
 
-    if ((this.annot_type & Plow.RELATIVE_POSITION) != 0) {
+    if ((this.annot_type & Plow.RELATIVE_POSITION) !== 0) {
       var rel_x = (p0.x + node.relative_position + this.RELATIVE_OFFSET) * this.ctx.zoom_factor;
       if (x < rel_x)
         x = rel_x;
@@ -2176,10 +2166,10 @@ function PlowAnnot(ctx, x, y, text_size, text_color, annot_type, number) {
       g.fillText(tokens[i], x, y);
       y += tsize * 1.4;
     }
-    if ((this.annot_type & Plow.NEXT_RELATIVE_POSITION) != 0 || (this.annot_type & Plow.RELATIVE_POSITION) != 0) {
+    if ((this.annot_type & Plow.NEXT_RELATIVE_POSITION) !== 0 || (this.annot_type & Plow.RELATIVE_POSITION) !== 0) {
       node.relative_position = (x + g.measureText(node.annotv[this.number]).width) / this.ctx.zoom_factor - p0.x;
     }
-  }
+  };
   this.set_borders = function (node) {
   }
 }
@@ -2217,7 +2207,7 @@ function PlowAnnotPixmap(ctx, x, y, number) {
         gctx.drawImage(img, x, y);
     }
 
-  }
+  };
   this.set_borders = function (node) {
   }
 }
@@ -2277,7 +2267,7 @@ function PlowRect(ctx, x, y, width, height, fill_color, border_color, fill, fix_
       }
       g.fillRect(x, y, width, height);
     }
-  }
+  };
   this.set_borders = function (node) {
     if (this.ll.x + node.pos.x < node.x_left)
       node.x_left = this.ll.x + node.pos.x;
@@ -2323,23 +2313,23 @@ function PlowCtx() {
     this.gdraw.gctx.fillStyle = "white";
     this.gdraw.gctx.fillRect(0, 0, this.gdraw.canvas.width, this.gdraw.canvas.height);
     this.a.draw(this.gdraw.gctx, null, null, false);
-  }
+  };
 
   this.connect = function () {
     for (var i = 0; i < this.a.size(); i++)
       this.a.get(i).connect();
-  }
+  };
   this.scan = function () {
     console.log("ctx scan", this.a.size());
     for (var i = 0; i < this.a.size(); i++)
       this.a.get(i).scan();
-  }
+  };
   this.set_nodraw = function () {
     this.nodraw++;
-  }
+  };
   this.reset_nodraw = function () {
     this.nodraw--;
-  }
+  };
 
   this.event_handler = function (event, x, y) {
     var sts = 0;
@@ -2349,11 +2339,11 @@ function PlowCtx() {
         for (var i = 0; i < this.a.size(); i++) {
           if (this.a.get(i) instanceof PlowNode) {
             sts = this.a.get(i).event_handler(event, x, y);
-            if (sts == 1)
+            if (sts === 1)
               break;
           }
         }
-        if (sts == 1) {
+        if (sts === 1) {
           this.event_cb(event, this.event_object, x, y);
           this.draw();
         }
@@ -2369,58 +2359,56 @@ function PlowCtx() {
         this.event_cb(event, null, 0, 0);
         break;
     }
-  }
+  };
 
   this.set_select = function (select) {
     for (var i = 0; i < this.a.size(); i++) {
       if (this.a.get(i) instanceof PlowNode)
         this.a.get(i).set_select(select);
     }
-  }
+  };
   this.set_invert = function (invert) {
     for (var i = 0; i < this.a.size(); i++) {
       if (this.a.get(i) instanceof PlowNode)
         this.a.get(i).set_invert(invert);
     }
-  }
+  };
 
   this.get_select = function () {
     return this.select_object;
-  }
+  };
   this.insert = function (n, dest) {
     this.a.add(n);
-  }
+  };
   this.insertNode = function (n, destination, destCode) {
     this.a.insertNode(n, destination, destCode);
-  }
+  };
   this.insert_nc = function (nc) {
     this.a_nc.add(nc);
-  }
+  };
   this.configure = function () {
     this.a.configure();
     this.a.set_borders();
 
-    var height = this.a.a.length * 1.0 * this.zoom_factor;
-    this.gdraw.canvas.height = height;
-  }
+    this.gdraw.canvas.height = this.a.a.length * this.zoom_factor;
+  };
   this.get_parent_object = function (o) {
     return this.a.get_parent_object(o);
-  }
+  };
   this.get_next_object = function (o) {
     return this.a.get_next_object(o);
-  }
+  };
   this.get_previous_object = function (o) {
     return this.a.get_previous_object(o);
-  }
+  };
   this.close_node = function (o) {
     this.a.close_node(o);
-  }
+  };
   this.is_visible = function (o) {
-    if ((o.y_high * this.zoom_factor <= window.pageYOffset + window.innerHeight - this.gdraw.offset_top) &&
-      (o.y_low * this.zoom_factor >= window.pageYOffset - this.gdraw.offset_top))
-      return true;
-    return false;
-  }
+    return (o.y_high * this.zoom_factor <= window.pageYOffset + window.innerHeight - this.gdraw.offset_top) &&
+      (o.y_low * this.zoom_factor >= window.pageYOffset - this.gdraw.offset_top);
+
+  };
   this.scroll = function (y, factor) {
     window.scrollTo(window.scrollX, y * this.zoom_factor - window.innerHeight * factor + this.gdraw.offset_top)
   }
@@ -2451,7 +2439,7 @@ function Xtt() {
 
     this.ctx.gdh = new Gdh();
     this.ctx.gdh.open_cb = this.gdh_init_cb;
-    this.ctx.gdh.init()
+    this.ctx.gdh.init();
 
     this.ctx.gdraw.canvas.addEventListener("click", function (event) {
       var y = event.pageY - self.ctx.gdraw.offset_top;
@@ -2462,30 +2450,30 @@ function Xtt() {
         xtt.ctx.event_handler(Plow.eEvent_MB1Click, x, y);
     });
     document.addEventListener("keydown", function (event) {
-      if (event.keyCode == 40) {
+      if (event.keyCode === 40) {
         self.ctx.event_handler(Plow.eEvent_Key_Down);
         event.preventDefault();
-      } else if (event.keyCode == 39) {
+      } else if (event.keyCode === 39) {
         if (event.shiftKey)
           self.ctx.event_handler(Plow.eEvent_Key_ShiftRight);
         else
           self.ctx.event_handler(Plow.eEvent_Key_Right);
         event.preventDefault();
-      } else if (event.keyCode == 37) {
+      } else if (event.keyCode === 37) {
         self.ctx.event_handler(Plow.eEvent_Key_Left);
         event.preventDefault();
-      } else if (event.keyCode == 38) {
+      } else if (event.keyCode === 38) {
         self.ctx.event_handler(Plow.eEvent_Key_Up);
         event.preventDefault();
-      } else if (event.keyCode == 82) {
+      } else if (event.keyCode === 82) {
         if (event.ctrlKey)
           self.ctx.event_handler(Plow.eEvent_Key_CtrlR);
         event.preventDefault();
-      } else if (event.keyCode == 76) {
+      } else if (event.keyCode === 76) {
         if (event.ctrlKey)
           self.ctx.event_handler(Plow.eEvent_Key_CtrlL);
         event.preventDefault();
-      } else if (event.keyCode == 71) {
+      } else if (event.keyCode === 71) {
         if (event.ctrlKey)
           self.ctx.event_handler(Plow.eEvent_Key_CtrlG);
         event.preventDefault();
@@ -2531,17 +2519,17 @@ function Xtt() {
     });
 
     window.addEventListener("storage", function (event) {
-      if (event.newValue == "")
+      if (event.newValue === "")
         return;
       localStorage.setItem("XttMethodNavigator", "");
       self.display_object(event.newValue);
     });
 
-  }
+  };
 
   this.is_authorized = function (access) {
-    return (this.priv & access) ? true : false;
-  }
+    return !!(this.priv & access);
+  };
 
   this.gdh_init_cb = function () {
     if (self.priv == null)
@@ -2552,7 +2540,7 @@ function Xtt() {
 
     self.ctx.gdh.listSent = true;
     self.trace_cyclic();
-  }
+  };
 
   this.login_cb = function (id, data, sts, result) {
     console.log("Login:", sts, result);
@@ -2576,14 +2564,14 @@ function Xtt() {
     self.ctx.configure();
 
     if (data.open_next != null) {
-      if (data.open_next.length == 0) {
+      if (data.open_next.length === 0) {
         self.ctx.reset_nodraw();
         return;
       }
       var child = self.ctx.a.get_first_child(data.node);
       while (child != null) {
-        if (child.userdata.name == data.open_next[0]) {
-          if (data.open_next.length == 1) {
+        if (child.userdata.name === data.open_next[0]) {
+          if (data.open_next.length === 1) {
             child.set_select(true);
             child.set_invert(true);
             if (!self.ctx.is_visible(child))
@@ -2601,16 +2589,16 @@ function Xtt() {
 
     self.ctx.reset_nodraw();
     self.ctx.draw();
-  }
+  };
 
   this.open_attributes_cb = function (id, node, sts, result) {
     self.ctx.set_nodraw();
     for (var i = 0; i < result.length; i++) {
       result[i].objid = node.userdata.objid;
       result[i].full_name = node.userdata.full_name + "." + result[i].name;
-      if ((result[i].flags & Pwr.mAdef_array) != 0)
+      if ((result[i].flags & Pwr.mAdef_array) !== 0)
         new XttItemAttrArray(self, result[i], node, Plow.DEST_INTOLAST);
-      else if ((result[i].flags & Pwr.mAdef_class) != 0)
+      else if ((result[i].flags & Pwr.mAdef_class) !== 0)
         new XttItemAttrObject(self, result[i], node, Plow.DEST_INTOLAST);
       else
         new XttItemAttr(self, result[i], node, Plow.DEST_INTOLAST);
@@ -2619,39 +2607,38 @@ function Xtt() {
     self.ctx.configure();
     self.ctx.reset_nodraw();
     self.ctx.draw();
-  }
+  };
 
   this.open_plc_cb = function (id, data, sts, result) {
-    if ((sts & 1) != 0) {
+    if ((sts & 1) !== 0) {
       data.location.href = "flow.html?vid=" + result.objid.vid + "&oix=" + result.objid.oix;
       data.document.title = "Trace " + result.fullname;
     } else
       data.document.write("Error status " + sts);
-  }
+  };
 
   this.open_objectgraph_cb = function (id, data, sts, result) {
-    if ((sts & 1) != 0) {
+    if ((sts & 1) !== 0) {
       var graphname = "pwr_c_" + result.classname.toLowerCase();
       data.location.href = "ge.html?graph=" + graphname + "&instance=" + result.fullname;
       data.document.title = graphname + " " + result.fullname;
     } else
       data.document.write("Error status " + sts);
-  }
+  };
 
   this.open_crr_cb = function (id, node, sts, crrdata) {
-    if ((sts & 1) == 0) {
+    if ((sts & 1) === 0) {
       return;
     }
     node.userdata.open_crossreferences(self, crrdata);
-  }
+  };
 
   this.open_helpclass_cb = function (id, data, sts, result) {
-    if ((sts & 1) != 0) {
-      var url = location.protocol + "//" + location.host + "/pwr_doc/en_us/orm/pwrb_" + result.classname.toLowerCase() + ".html";
-      data.location.href = url;
+    if ((sts & 1) !== 0) {
+      data.location.href = location.protocol + "//" + location.host + "/pwr_doc/en_us/orm/pwrb_" + result.classname.toLowerCase() + ".html";
     } else
       data.document.write("Error status " + sts);
-  }
+  };
 
   this.plow_event = function (event, object, x, y) {
     var item = null;
@@ -2763,7 +2750,7 @@ function Xtt() {
         } else if (o.userdata instanceof XttItemCrr) {
           var idx = o.userdata.name.lastIndexOf('-');
           var ostring = "";
-          if (idx != -1) {
+          if (idx !== -1) {
             ostring = "&obj=" + o.userdata.name.substring(idx + 1);
           }
           window.open("flow.html?vid=" + o.userdata.objid.vid + "&oix=" + o.userdata.objid.oix + ostring);
@@ -2780,7 +2767,7 @@ function Xtt() {
         break;
       }
     }
-  }
+  };
 
   this.createNodeClasses = function () {
     var r1 = new PlowRect(this.ctx, 0, 0, 50, 1.0, Plow.COLOR_WHITE, Plow.COLOR_WHITE, true, false);
@@ -2796,34 +2783,34 @@ function Xtt() {
     this.ncObject.insert(a12);
     this.ncObject.insert(p1);
     this.ctx.insert_nc(this.ncObject);
-  }
+  };
 
   this.methods_init = function () {
     localStorage.setItem("XttMethodNavigator", "");
-  }
+  };
 
   this.collapse = function () {
     this.ctx.set_nodraw();
     for (var i = 0; i < this.ctx.a.size(); i++) {
       var node = this.ctx.a.get(i);
-      if (node.level == 0)
+      if (node.level === 0)
         node.userdata.close(this);
     }
     this.ctx.reset_nodraw();
     this.ctx.draw();
-  }
+  };
 
   this.display_object = function (name) {
     var i = name.indexOf('.');
-    if (i != -1)
+    if (i !== -1)
       name = name.substring(0, i);
     var path = name.split('-');
     var idx = 0;
 
     this.collapse();
     for (var j = idx; j < this.ctx.a.size(); j++) {
-      if (this.ctx.a.get(j).userdata.name == path[0]) {
-        if (j == this.ctx.a.size() - 1) {
+      if (this.ctx.a.get(j).userdata.name === path[0]) {
+        if (j === this.ctx.a.size() - 1) {
           var node = this.ctx.a.get(j);
           node.set_select(true);
           node.set_invert(true);
@@ -2837,7 +2824,7 @@ function Xtt() {
         break;
       }
     }
-  }
+  };
 
   this.trace_cyclic = function () {
     self.ctx.gdh.getRefObjectInfoAll(self.trace_scan);
@@ -2886,7 +2873,7 @@ function XttItemObject(xtt, object_info, destination, destCode) {
     this.node.set_annotation_pixmap(0, Bitmaps.leaf);
 
   this.open_children = function (xtt, open_next) {
-    if (this.node.node_open != 0)
+    if (this.node.node_open !== 0)
       this.close(xtt);
     else if (!this.has_children)
       this.open_attributes(xtt);
@@ -2895,22 +2882,22 @@ function XttItemObject(xtt, object_info, destination, destCode) {
       this.node.node_open |= Plow.OPEN_CHILDREN;
       this.node.set_annotation_pixmap(0, Bitmaps.openmap);
     }
-  }
+  };
 
   this.open_attributes = function (xtt) {
-    if (this.node.node_open != 0)
+    if (this.node.node_open !== 0)
       this.close(xtt);
     else {
-      xtt.ctx.gdh.getAllClassAttributes(this.cid, this.objid, xtt.open_attributes_cb, this.node)
+      xtt.ctx.gdh.getAllClassAttributes(this.cid, this.objid, xtt.open_attributes_cb, this.node);
 
       this.node.node_open |= Plow.OPEN_ATTRIBUTES;
       xtt.ctx.configure();
       xtt.ctx.draw();
     }
-  }
+  };
 
   this.open_crossreferences = function (xtt, crrdata) {
-    if (this.node.node_open != 0)
+    if (this.node.node_open !== 0)
       this.close(xtt);
     else {
       for (var i = 0; i < crrdata.length; i++) {
@@ -2921,7 +2908,7 @@ function XttItemObject(xtt, object_info, destination, destCode) {
       xtt.ctx.configure();
       xtt.ctx.draw();
     }
-  }
+  };
 
   this.close = function (xtt) {
     if (this.node.node_open & Plow.OPEN_CHILDREN) {
@@ -3009,7 +2996,7 @@ function XttItemAttr(xtt, info, destination, destCode) {
   };
 
   this.open_attributes = function (xtt) {
-  }
+  };
 
   this.close = function (xtt) {
     var parent = xtt.ctx.get_parent_object(this.node);
@@ -3018,13 +3005,13 @@ function XttItemAttr(xtt, info, destination, destCode) {
       parent.set_select(true);
       parent.set_invert(true);
     }
-  }
+  };
 
   this.scan = function (xtt) {
     if (!this.refid)
       return;
     var value = xtt.ctx.gdh.getObjectRefInfo(this.refid);
-    if (this.firstScan || value != this.old_value) {
+    if (this.firstScan || value !== this.old_value) {
       var value_str;
 
       switch (this.type) {
@@ -3056,7 +3043,7 @@ function XttItemAttr(xtt, info, destination, destCode) {
       xtt.scan_update = true;
     }
     this.firstScan = false;
-  }
+  };
   this.scan_close = function (xtt) {
     xtt.ctx.gdh.unrefObjectInfo(this.refid);
   };
@@ -3078,7 +3065,7 @@ function XttItemAttrArray(xtt, info, destination, destCode) {
 
   this.open_children = function (xtt, open_next) {
     this.open_attributes(xtt);
-  }
+  };
 
   this.open_attributes = function (xtt) {
     var info = new AttributeInfo();
@@ -3088,18 +3075,18 @@ function XttItemAttrArray(xtt, info, destination, destCode) {
     info.flags = this.flags & ~Pwr.mAdef_array;
     info.size = this.size / this.elements;
     info.elements = 1;
-    info.name = ""
-    info.full_name = ""
-    info.classname = ""
+    info.name = "";
+    info.full_name = "";
+    info.classname = "";
 
     xtt.ctx.set_nodraw();
     for (var i = 0; i < this.elements; i++) {
       info.name = this.name + "[" + i + "]";
       info.full_name = this.full_name + "[" + i + "]";
       console.log("AttrArray", info.name, info.type);
-      if ((info.flags & Pwr.mAdef_array) != 0)
+      if ((info.flags & Pwr.mAdef_array) !== 0)
         new XttItemAttrArray(xtt, info, this.node, Plow.DEST_INTOLAST);
-      else if ((info.flags & Pwr.mAdef_class) != 0)
+      else if ((info.flags & Pwr.mAdef_class) !== 0)
         new XttItemAttrObject(xtt, info, this.node, Plow.DEST_INTOLAST);
       else
         new XttItemAttr(xtt, info, this.node, Plow.DEST_INTOLAST);
@@ -3145,17 +3132,17 @@ function XttItemAttrObject(xtt, info, destination, destCode) {
 
   this.open_children = function (xtt, open_next) {
     this.open_attributes(xtt);
-  }
+  };
 
   this.open_attributes = function (xtt) {
-    if (this.node.node_open != 0)
+    if (this.node.node_open !== 0)
       this.close(xtt);
     else {
-      xtt.ctx.gdh.getAllClassAttributes(this.cid, this.objid, xtt.open_attributes_cb, this.node)
+      xtt.ctx.gdh.getAllClassAttributes(this.cid, this.objid, xtt.open_attributes_cb, this.node);
 
       this.node.node_open |= Plow.OPEN_ATTRIBUTES;
     }
-  }
+  };
 
   this.close = function (xtt) {
     if (this.node.node_open & Plow.OPEN_ATTRIBUTES) {

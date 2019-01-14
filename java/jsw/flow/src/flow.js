@@ -6,7 +6,7 @@ function PwrtStatus(sts) {
   this.sts = sts;
 
   this.evenSts = function () { return (sts % 2 === 0); };
-  this.oddSts = function () { return (sts % 2 == 1); };
+  this.oddSts = function () { return (sts % 2 === 1); };
   this.getSts = function () { return sts; };
 }
 
@@ -363,7 +363,7 @@ function Gdh() {
     };
 
     this.ws.onmessage = function (e) {
-      if (typeof e.data == "string") {
+      if (typeof e.data === "string") {
         console.log("String message received", e, e.data);
       } else {
         if (e.data instanceof ArrayBuffer) {
@@ -459,7 +459,7 @@ function Gdh() {
                 var esize = dv.getUint32(j);
                 j += 4;
                 var sub = this.gdh.sub[eid];
-                if (typeof sub == 'undefined') {
+                if (typeof sub === 'undefined') {
                   j += esize;
                   console.log("sub undefined");
                 } else {
@@ -474,7 +474,7 @@ function Gdh() {
                         value = dv.getFloat32(j);
                         j += 4;
                       } else {
-                        if (esize != sub.elements * 4)
+                        if (esize !== sub.elements * 4)
                           console.log("Subscription size error", esize, sub.elements, eid);
                         value = new Array(sub.elements);
                         for (var k = 0; k < sub.elements; k++) {
@@ -513,7 +513,7 @@ function Gdh() {
                   this.gdh.sub[eid].value = value;
                 }
               }
-              if (typeof this.gdh.pending[id] == 'undefined') {
+              if (typeof this.gdh.pending[id] === 'undefined') {
                 console.log("** GetObjectRefInfoAll received removed", id);
                 break;
               }
@@ -888,10 +888,9 @@ function Gdh() {
     if (!this.listSent) {
       return sub.refid;
     } else {
-      var size = 0;
       var len = 0;
 
-      size = 12 + sub.name.length;
+      var size = 12 + sub.name.length;
 
       var buf = new Uint8Array(size + 10);
       buf[0] = Msg.REF_OBJECT_INFO;
@@ -931,10 +930,9 @@ function Gdh() {
     if (this.debug) console.log("refObjectInfoReply", id, sts);
   };
   this.unrefObjectInfo = function (refid) {
-    var size = 0;
     var len = 0;
 
-    size = 4;
+    var size = 4;
 
     var buf = new Uint8Array(size + 10);
     buf[0] = Msg.UNREF_OBJECT_INFO;
@@ -1499,7 +1497,7 @@ var Flow = {
   eSave_Arrow_p1: 1405,
   eSave_Arrow_p2: 1406,
   eSave_Triangle_rect_part: 2000
-}
+};
 
 function GDraw(ctx) {
   this.ctx = ctx;
@@ -1511,7 +1509,7 @@ function GDraw(ctx) {
 
   this.rect = function (x, y, width, height) {
     this.gctx.strokeRect(x, y, width, height);
-  }
+  };
   this.line = function (x1, y1, x2, y2) {
     this.gctx.beginPath();
     this.gctx.moveTo(x1, y1);
@@ -1526,13 +1524,13 @@ function FlowArray(ctx) {
 
   this.add = function (elem) {
     this.a.push(elem);
-  }
+  };
   this.size = function () {
     return this.a.length;
-  }
+  };
   this.get = function (idx) {
     return this.a[idx];
-  }
+  };
   this.open = function (lines, row) {
     var end = false;
     var i;
@@ -1626,14 +1624,14 @@ function FlowArray(ctx) {
   this.draw = function (g, p, node, highlight) {
     for (var i = 0; i < this.a.length; i++)
       this.a[i].draw(g, p, node, highlight);
-  }
+  };
 
   this.search_by_name = function (name) {
     var uname = name.toUpperCase();
     for (var i = 0; i < this.a.length; i++) {
       if (this.a[i] instanceof FlowNode) {
         console.log("Search", this.a[i].n_name, name);
-        if (this.a[i].n_name.toUpperCase() == uname)
+        if (this.a[i].n_name.toUpperCase() === uname)
           return this.a[i];
       }
     }
@@ -1649,7 +1647,7 @@ function FlowNodeClass(ctx) {
 
   this.draw = function (g, p, node, highlight) {
     this.a.draw(g, p, node, highlight);
-  }
+  };
 
   this.open = function (lines, row) {
     var end = false;
@@ -1682,7 +1680,7 @@ function FlowNodeClass(ctx) {
         break;
     }
     return i;
-  }
+  };
 
   this.event_handler = function (x, y) {
     return 0;
@@ -1840,7 +1838,7 @@ function FlowLine(ctx) {
         g.setLineDash([]);
         break;
     }
-  }
+  };
   this.open = function (lines, row) {
     var end = false;
     for (var i = row; i < lines.length; i++) {
@@ -1927,9 +1925,9 @@ function FlowRect(ctx) {
         break;
     }
     return i;
-  }
+  };
   this.draw = function (g, p, node, highlight) {
-    if ((this.display_level & this.ctx.display_level) == 0)
+    if ((this.display_level & this.ctx.display_level) === 0)
       return;
 
     var x = (this.ll.x + p.x) * this.ctx.zoom_factor;
@@ -1972,7 +1970,7 @@ function FlowArc(ctx) {
     var r = (this.ur.x - this.ll.x) / 2 * this.ctx.zoom_factor;
     var x = (this.ll.x + p.x) * this.ctx.zoom_factor + r;
     var y = (this.ll.y + p.y) * this.ctx.zoom_factor + r;
-    if (this.angel1 == 90 || this.angel1 == 270)
+    if (this.angel1 === 90 || this.angel1 === 270)
       var a1 = (this.angel1 + 90) / 180 * Math.PI;
     else
       var a1 = (this.angel1 - 90) / 180 * Math.PI;
@@ -1985,10 +1983,10 @@ function FlowArc(ctx) {
     if (highlight)
       g.strokeStyle = "red";
 
-    g.beginPath()
+    g.beginPath();
     g.arc(x, y, r, a1, a2, false);
     g.stroke();
-  }
+  };
   this.open = function (lines, row) {
     var end = false;
     for (var i = row; i < lines.length; i++) {
@@ -2065,7 +2063,7 @@ function FlowText(ctx) {
     if (highlight)
       g.fillStyle = "red";
     g.fillText(this.text, x, y);
-  }
+  };
   this.open = function (lines, row) {
     var end = false;
     for (var i = row; i < lines.length; i++) {
@@ -2136,13 +2134,13 @@ function FlowArrow(ctx) {
     }
     if (highlight)
       g.fillStyle = "red";
-    g.beginPath()
+    g.beginPath();
     g.moveTo(x1, y1);
     g.lineTo(x2, y2);
     g.lineTo(x3, y3);
     g.lineTo(x1, y1);
     g.fill();
-  }
+  };
 
   this.open = function (lines, row) {
     var end = false;
@@ -2204,10 +2202,10 @@ function FlowTriangle(ctx) {
       g.lineWidth = 1;
 
     var dtype = this.prototype.draw_type;
-    if (dtype == Flow.eDrawType_Inherit && node != null)
+    if (dtype === Flow.eDrawType_Inherit && node != null)
       dtype = node.fill_color;
 
-    if (this.prototype.fill == 1) {
+    if (this.prototype.fill === 1) {
       switch (dtype) {
         case Flow.eDrawType_LineRed:
           g.fillStyle = "red";
@@ -2237,7 +2235,7 @@ function FlowTriangle(ctx) {
       g.lineTo(x1, y2);
       g.stroke();
     }
-  }
+  };
   this.open = function (lines, row) {
     var end = false;
     for (var i = row; i < lines.length; i++) {
@@ -2273,7 +2271,7 @@ function FlowConPoint(ctx) {
   this.ctx = ctx;
 
   this.draw = function (g, p, node, highlight) {
-  }
+  };
   this.open = function (lines, row) {
     var end = false;
     for (var i = row; i < lines.length; i++) {
@@ -2328,7 +2326,7 @@ function FlowAnnot(ctx) {
       return;
     if (node.annotv[this.number] == null)
       return;
-    if ((this.display_level & this.ctx.display_level) == 0)
+    if ((this.display_level & this.ctx.display_level) === 0)
       return;
 
     var tsize = 0;
@@ -2367,7 +2365,7 @@ function FlowAnnot(ctx) {
       g.fillText(tokens[i], x, y);
       y += tsize * 1.4;
     }
-  }
+  };
   this.open = function (lines, row) {
     var end = false;
     for (var i = row; i < lines.length; i++) {
@@ -2443,7 +2441,7 @@ function FlowCon(ctx) {
     var p = new FlowPoint(ctx);
     p.x = 0;
     p.y = 0;
-    if (this.temporary_ref != 0 || this.cc.con_type == Flow.eConType_Reference)
+    if (this.temporary_ref !== 0 || this.cc.con_type === Flow.eConType_Reference)
       this.ref_a.draw(g, p, null, highlight);
     else {
       this.line_a.draw(g, p, null, highlight);
@@ -2451,7 +2449,7 @@ function FlowCon(ctx) {
       this.arrow_a.draw(g, p, null, highlight);
     }
     this.redraw = false;
-  }
+  };
   this.open = function (lines, row) {
     var end = false;
     for (var i = row; i < lines.length; i++) {
@@ -2571,9 +2569,9 @@ function FlowCon(ctx) {
         break;
     }
     return i;
-  }
+  };
   this.connect = function () {
-  }
+  };
   this.scan = function () {
   }
 }
@@ -2605,7 +2603,7 @@ function FlowNode(ctx) {
     if (!this.redraw)
       return;
 
-    if (this.nc.group != Flow.eNodeGroup_Document) {
+    if (this.nc.group !== Flow.eNodeGroup_Document) {
       var x = this.x_left * this.ctx.zoom_factor;
       var y = this.y_low * this.ctx.zoom_factor - 1;
       var width = (this.x_right - this.x_left) * this.ctx.zoom_factor;
@@ -2618,7 +2616,7 @@ function FlowNode(ctx) {
 
     this.nc.draw(g, this.pos, this, this.highlight);
     this.redraw = false;
-  }
+  };
   this.open = function (lines, row) {
     var end = false;
     for (var i = row; i < lines.length; i++) {
@@ -2701,7 +2699,7 @@ function FlowNode(ctx) {
                     break;
                   }
                   sb.push(c);
-                  if (k == lines[i].length - 1)
+                  if (k === lines[i].length - 1)
                     sb.push('\n');
                 }
                 if (end_found)
@@ -2743,16 +2741,16 @@ function FlowNode(ctx) {
     }
     console.log("Node", this.trace_attr_type, this.n_name);
     return i;
-  }
+  };
 
   this.connect = function () {
-    if (this.trace_object == "" || this.trace_attribute == "")
+    if (this.trace_object === "" || this.trace_attribute === "")
       return;
-    if (this.trace_attr_type == Flow.eTraceType_User)
+    if (this.trace_attr_type === Flow.eTraceType_User)
       return;
 
     var n = this.trace_attribute.indexOf('#');
-    if (n != -1)
+    if (n !== -1)
       this.trace_attribute = this.trace_attribute.substring(0, n);
 
     var o = this.trace_object + "." + this.trace_attribute;
@@ -2773,26 +2771,23 @@ function FlowNode(ctx) {
 
     this.p = this.ctx.gdh.refObjectInfo(o, pwr_type, 1);
     console.log("connecting", o, this.p);
-  }
+  };
   this.scan = function () {
-    if (this.p == 0)
+    if (this.p === 0)
       return;
 
     var v1 = this.ctx.gdh.getObjectRefInfo(this.p);
     var evaluate = true;
     if (this.first_scan)
       this.first_scan = false;
-    else if (v1 == this.old_value)
+    else if (v1 === this.old_value)
       return;
 
-    if (v1)
-      this.highlight = true;
-    else
-      this.highlight = false;
+    this.highlight = !!v1;
 
     this.old_value = v1;
     this.redraw = true;
-  }
+  };
 
   this.event_handler = function (x, y) {
     var zx = x / this.ctx.zoom_factor + ctx.x_left;
@@ -2811,10 +2806,10 @@ function FlowNode(ctx) {
       return 1;
     }
     return 0;
-  }
+  };
 
   this.set_select = function (select) {
-    if (select != this.select) {
+    if (select !== this.select) {
       this.select = select;
       this.redraw = true;
       if (this.select)
@@ -2846,7 +2841,7 @@ function FlowCtx() {
 
   this.draw = function () {
     this.a.draw(this.gdraw.gctx, null, null, false);
-  }
+  };
   this.open = function (lines, row) {
     var end = false;
     for (var i = row; i < lines.length; i++) {
@@ -2933,31 +2928,31 @@ function FlowCtx() {
     console.log("ctx connect", this.a.size());
     for (var i = 0; i < this.a.size(); i++)
       this.a.get(i).connect();
-  }
+  };
   this.scan = function () {
     for (var i = 0; i < this.a.size(); i++)
       this.a.get(i).scan();
-  }
+  };
 
   this.event_handler = function (x, y) {
     var sts = 0;
     for (var i = 0; i < this.a.size(); i++) {
       if (this.a.get(i) instanceof FlowNode) {
         sts = this.a.get(i).event_handler(x, y);
-        if (sts == 1)
+        if (sts === 1)
           break;
       }
     }
-    if (sts == 1)
+    if (sts === 1)
       this.draw();
-  }
+  };
 
   this.set_select = function (select) {
     for (var i = 0; i < this.a.size(); i++) {
       if (this.a.get(i) instanceof FlowNode)
         this.a.get(i).set_select(select);
     }
-  }
+  };
 
   this.search_object = function (name) {
     console.log("Searching for ", name);
@@ -2965,7 +2960,7 @@ function FlowCtx() {
     if (node != null)
       console.log("Found", name);
     return node;
-  }
+  };
   this.center_object = function (o) {
     console.log("center_object", o.pos.x * this.zoom_factor + this.offset_x, window.innerWidth, o.pos.x * this.zoom_factor + this.offset_x - window.innerWidth / 2);
     console.log("center_object", o.pos.y * this.zoom_factor + this.offset_y, window.innerHeight, o.pos.y * this.zoom_factor + this.offset_y - window.innerHeight / 2);
@@ -2998,7 +2993,7 @@ function FlowFrame() {
       req.read_cb(lines, 0);
     });
     req.send(null);
-  }
+  };
 
   this.read_func = function (lines, row) {
     console.log("this.ctx:", self.ctx);
@@ -3050,7 +3045,7 @@ function FlowFrame() {
         o.set_select(true);
       }
     }
-  }
+  };
 
   this.flow_open = function () {
     console.log("flow_open");
@@ -3058,24 +3053,24 @@ function FlowFrame() {
     self.ctx.connect();
     self.ctx.gdh.refObjectInfoList(self.ctx.gdh.refObjectInfoListReply);
     self.timer = setTimeout(self.flow_cyclic, 1000);
-  }
+  };
 
   this.flow_scan = function () {
     self.ctx.scan();
-  }
+  };
 
   this.flow_cyclic = function () {
     self.ctx.gdh.getRefObjectInfoAll(self.flow_scan);
     self.ctx.draw();
     self.timer = setTimeout(self.flow_cyclic, 1000);
-  }
+  };
 
   this.flow_close = function () {
     console.log("Close function", self.timer);
     clearTimeout(self.timer);
     for (var i in self.ctx.gdh.pending)
       delete self.ctx.gdh.pending[i];
-  }
+  };
 
   this.get_filename = function () {
     var query = window.location.search.substring(1);

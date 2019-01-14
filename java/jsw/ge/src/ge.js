@@ -14,7 +14,7 @@ function PwrtStatus(sts) {
   this.sts = sts;
 
   this.evenSts = function () { return (sts % 2 === 0); };
-  this.oddSts = function () { return (sts % 2 == 1); };
+  this.oddSts = function () { return (sts % 2 === 1); };
   this.getSts = function () { return sts; };
 }
 
@@ -186,13 +186,13 @@ function CdhrNumber(value, sts) {
   this.sts = sts;
 
   this.evenSts = function () { return (sts % 2 === 0); };
-  this.oddSts = function () { return (sts % 2 == 1); };
+  this.oddSts = function () { return (sts % 2 === 1); };
   this.getSts = function () { return sts; };
 }
 
 var CdhC = {
-  cUserVolMin: (0 + (0 << 24) + (1 << 16) + (1 << 8) + 1),
-  cUserVolMax: (0 + (0 << 24) + (254 << 16) + (254 << 8) + 254)
+  cUserVolMin: ((0 << 24) + (1 << 16) + (1 << 8) + 1),
+  cUserVolMax: ((0 << 24) + (254 << 16) + (254 << 8) + 254)
 };
 
 function UserdataCbReturn() {
@@ -274,7 +274,7 @@ function Cli(cliTable) {
       var c = cmd.charAt(i);
       switch (state) {
         case CliC.STATE_INIT:
-          if (c == CliC.SPACE || c == CliC.TAB)
+          if (c === CliC.SPACE || c === CliC.TAB)
             break;
           else {
             state = CliC.STATE_VERB;
@@ -282,19 +282,19 @@ function Cli(cliTable) {
           }
           break;
         case CliC.STATE_SPACE:
-          if (c == CliC.SPACE || c == CliC.TAB)
+          if (c === CliC.SPACE || c === CliC.TAB)
             break;
-          if (c == '/') {
+          if (c === '/') {
             state = CliC.STATE_QUAL;
             start_pos = i;
-          } else if (c == '=') {
+          } else if (c === '=') {
             if (this.qualifierCount === 0) {
               state = CliC.STATE_ERROR;
               this.status = CliC.SYNTAX_ERROR;
               break;
             }
             state = CliC.STATE_EQUAL;
-          } else if (c == '"') {
+          } else if (c === '"') {
             state = CliC.STATE_QUOTE_VERB;
             break;
           } else {
@@ -303,8 +303,8 @@ function Cli(cliTable) {
           }
           break;
         case CliC.STATE_VERB:
-          if (c == CliC.SPACE || c == CliC.TAB) {
-            if (this.verbCount == CliC.VERB_VECT_SIZE) {
+          if (c === CliC.SPACE || c === CliC.TAB) {
+            if (this.verbCount === CliC.VERB_VECT_SIZE) {
               state = CliC.STATE_ERROR;
               break;
             }
@@ -313,8 +313,8 @@ function Cli(cliTable) {
             else
               this.verb[this.verbCount++] = cmd.substring(start_pos, i);
             state = CliC.STATE_SPACE;
-          } else if (c == '/') {
-            if (this.verbCount == CliC.VERB_VECT_SIZE) {
+          } else if (c === '/') {
+            if (this.verbCount === CliC.VERB_VECT_SIZE) {
               state = CliC.STATE_ERROR;
               break;
             }
@@ -324,8 +324,8 @@ function Cli(cliTable) {
           }
           break;
         case CliC.STATE_VERB_EXACT:
-          if (c == '"') {
-            if (this.verbCount == CliC.VERB_VECT_SIZE) {
+          if (c === '"') {
+            if (this.verbCount === CliC.VERB_VECT_SIZE) {
               state = CliC.STATE_ERROR;
               break;
             }
@@ -334,30 +334,30 @@ function Cli(cliTable) {
           }
           break;
         case CliC.STATE_QUAL:
-          if (c == CliC.SPACE || c == CliC.TAB) {
+          if (c === CliC.SPACE || c === CliC.TAB) {
             this.qualifier[this.qualifierCount++] = cmd.substring(start_pos, i).toUpperCase();
             state = CliC.STATE_SPACE;
-          } else if (c == '=') {
+          } else if (c === '=') {
             this.qualifier[this.qualifierCount++] = cmd.substring(start_pos, i).toUpperCase();
             state = CliC.STATE_EQUAL;
-          } else if (c == '/') {
+          } else if (c === '/') {
             this.qualifier[this.qualifierCount++] = cmd.substring(start_pos, i).toUpperCase();
             state = CliC.STATE_QUAL;
             start_pos = i;
           }
           break;
         case CliC.STATE_QUALVALUE:
-          if (c == CliC.SPACE || c == CliC.TAB) {
+          if (c === CliC.SPACE || c === CliC.TAB) {
             this.qualValue[this.qualifierCount - 1] = cmd.substring(start_pos, i);
             state = CliC.STATE_SPACE;
-          } else if (c == '/') {
+          } else if (c === '/') {
             this.qualValue[this.qualifierCount - 1] = cmd.substring(start_pos, i);
             state = CliC.STATE_QUAL;
             start_pos = i;
           }
           break;
         case CliC.STATE_QUALVALUE_EXACT:
-          if (c == '"') {
+          if (c === '"') {
             this.qualValue[this.qualifierCount - 1] = cmd.substring(start_pos, i);
             state = CliC.STATE_SPACE;
           }
@@ -371,9 +371,9 @@ function Cli(cliTable) {
           start_pos = i;
           break;
         case CliC.STATE_EQUAL:
-          if (c == CliC.SPACE || c == CliC.TAB)
+          if (c === CliC.SPACE || c === CliC.TAB)
             break;
-          if (c == '"') {
+          if (c === '"') {
             state = CliC.STATE_QUOTE_QUALVALUE;
           } else {
             state = CliC.STATE_QUALVALUE;
@@ -382,7 +382,7 @@ function Cli(cliTable) {
           break;
 
       }
-      if (state == CliC.STATE_ERROR)
+      if (state === CliC.STATE_ERROR)
         break;
     }
     switch (state) {
@@ -390,7 +390,7 @@ function Cli(cliTable) {
       case CliC.STATE_ERROR:
         return "";
       case CliC.STATE_VERB:
-        if (this.verbCount == CliC.VERB_VECT_SIZE) {
+        if (this.verbCount === CliC.VERB_VECT_SIZE) {
           state = CliC.STATE_ERROR;
           break;
         }
@@ -400,7 +400,7 @@ function Cli(cliTable) {
           this.verb[this.verbCount++] = cmd.substring(start_pos, i);
         break;
       case CliC.STATE_VERB_EXACT:
-        if (this.verbCount == CliC.VERB_VECT_SIZE) {
+        if (this.verbCount === CliC.VERB_VECT_SIZE) {
           state = CliC.STATE_ERROR;
           break;
         }
@@ -437,7 +437,7 @@ function Cli(cliTable) {
     for (i = 0; i < this.cliTable.length; i++) {
       if (this.verb[0].length > this.cliTable[i].command.length)
         continue;
-      if (this.verb[0] == (this.cliTable[i].command.substring(0, this.verb[0].length))) {
+      if (this.verb[0] === (this.cliTable[i].command.substring(0, this.verb[0].length))) {
         this.verb[0] = this.cliTable[i].command;
         found = true;
         break;
@@ -454,15 +454,15 @@ function Cli(cliTable) {
       for (i = 0; i < this.cliTable[this.cliTableIndex].qualifier.length; i++) {
         if (this.cliTable[this.cliTableIndex].qualifier[i] === null)
           break;
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg1"))
+        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg1"))
           this.configuredVerbs++;
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg2"))
+        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg2"))
           this.configuredVerbs++;
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg3"))
+        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg3"))
           this.configuredVerbs++;
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg4"))
+        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg4"))
           this.configuredVerbs++;
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg5"))
+        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg5"))
           this.configuredVerbs++;
       }
 
@@ -473,7 +473,7 @@ function Cli(cliTable) {
             break;
           if (this.qualifier[j].length > this.cliTable[this.cliTableIndex].qualifier[i].length)
             continue;
-          if (this.qualifier[j] == (this.cliTable[this.cliTableIndex].qualifier[i].substring(0, this.qualifier[j].length))) {
+          if (this.qualifier[j] === (this.cliTable[this.cliTableIndex].qualifier[i].substring(0, this.qualifier[j].length))) {
             this.cliQualifierIndex[j] = i;
             found = true;
             this.qualifier[j] = this.cliTable[this.cliTableIndex].qualifier[i];
@@ -497,28 +497,24 @@ function Cli(cliTable) {
    * @return Returns true if the qualifier is present.
    */
   this.qualifierFound = function (qual) {
-    if (qual == ("cli_arg1")) {
-      if (this.verbCount < 2 || this.configuredVerbs < 1)
-        return false;
-      return true;
+    if (qual === ("cli_arg1")) {
+      return !(this.verbCount < 2 || this.configuredVerbs < 1);
+
     }
-    if (qual == ("cli_arg2")) {
-      if (this.verbCount < 3 || this.configuredVerbs < 2)
-        return false;
-      return true;
+    if (qual === ("cli_arg2")) {
+      return !(this.verbCount < 3 || this.configuredVerbs < 2);
+
     }
-    if (qual == ("cli_arg3")) {
-      if (this.verbCount < 4 || this.configuredVerbs < 3)
-        return false;
-      return true;
+    if (qual === ("cli_arg3")) {
+      return !(this.verbCount < 4 || this.configuredVerbs < 3);
+
     }
-    if (qual == ("cli_arg4")) {
-      if (this.verbCount < 5 || this.configuredVerbs < 4)
-        return false;
-      return true;
+    if (qual === ("cli_arg4")) {
+      return !(this.verbCount < 5 || this.configuredVerbs < 4);
+
     }
     for (var i = 0; i < this.qualifierCount; i++) {
-      if (qual == (this.qualifier[i]))
+      if (qual === (this.qualifier[i]))
         return true;
     }
     return false;
@@ -530,27 +526,27 @@ function Cli(cliTable) {
    * @return Returns the value of the qualifier.
    */
   this.getQualValue = function (qual) {
-    if (qual == ("cli_arg1")) {
+    if (qual === ("cli_arg1")) {
       if (this.verbCount < 2 || this.configuredVerbs < 1)
         return "";
       return this.verb[1];
     }
-    if (qual == ("cli_arg2")) {
+    if (qual === ("cli_arg2")) {
       if (this.verbCount < 3 || this.configuredVerbs < 2)
         return "";
       return this.verb[2];
     }
-    if (qual == ("cli_arg3")) {
+    if (qual === ("cli_arg3")) {
       if (this.verbCount < 4 || this.configuredVerbs < 3)
         return this.verb[3];
     }
-    if (qual == ("cli_arg4")) {
+    if (qual === ("cli_arg4")) {
       if (this.verbCount < 5 || this.configuredVerbs < 4)
         return "";
       return this.verb[4];
     }
     for (var i = 0; i < this.qualifierCount; i++) {
-      if (qual == (this.qualifier[i])) {
+      if (qual === (this.qualifier[i])) {
         if (this.qualValue[i] === null)
           return "";
         else
@@ -753,7 +749,7 @@ function Gdh() {
     };
 
     this.ws.onmessage = function (e) {
-      if (typeof e.data == "string") {
+      if (typeof e.data === "string") {
         console.log("String message received", e, e.data);
       } else {
         if (e.data instanceof ArrayBuffer) {
@@ -849,7 +845,7 @@ function Gdh() {
                 var esize = dv.getUint32(j);
                 j += 4;
                 var sub = this.gdh.sub[eid];
-                if (typeof sub == 'undefined')
+                if (typeof sub === 'undefined')
                   j += esize;
                 else {
                   var value;
@@ -863,7 +859,7 @@ function Gdh() {
                         value = dv.getFloat32(j);
                         j += 4;
                       } else {
-                        if (esize != sub.elements * 4)
+                        if (esize !== sub.elements * 4)
                           console.log("Subscription size error", esize, sub.elements, eid);
                         value = new Array(sub.elements);
                         for (var k = 0; k < sub.elements; k++) {
@@ -902,7 +898,7 @@ function Gdh() {
                   this.gdh.sub[eid].value = value;
                 }
               }
-              if (typeof this.gdh.pending[id] == 'undefined') {
+              if (typeof this.gdh.pending[id] === 'undefined') {
                 console.log("** GetObjectRefInfoAll received removed", id);
                 break;
               }
@@ -1279,10 +1275,9 @@ function Gdh() {
     if (!this.listSent) {
       return sub.refid;
     } else {
-      var size = 0;
       var len = 0;
 
-      size = 12 + sub.name.length;
+      var size = 12 + sub.name.length;
 
       var buf = new Uint8Array(size + 10);
       buf[0] = Msg.REF_OBJECT_INFO;
@@ -1322,10 +1317,9 @@ function Gdh() {
     if (this.debug) console.log("refObjectInfoReply", id, sts);
   };
   this.unrefObjectInfo = function (refid) {
-    var size = 0;
     var len = 0;
 
-    size = 4;
+    var size = 4;
 
     var buf = new Uint8Array(size + 10);
     buf[0] = Msg.UNREF_OBJECT_INFO;
@@ -3357,7 +3351,7 @@ function GlowRectangle() {
   this.y1;
   this.x2;
   this.y2;
-};
+}
 
 function GlowPointX() {
   this.x;
@@ -3526,7 +3520,7 @@ var GlowColor = {
       else
         drawtype = base_drawtype + incr;
     } else if (this.is_custom(dt)) {
-      if (shift == -1)
+      if (shift === -1)
         drawtype = (dt + 3);
       else if (shift < 0)
         drawtype = (dt + 2);
@@ -3556,17 +3550,17 @@ var GlowColor = {
 
     if (highlight !== 0 && highlight_disabled === 0) {
       drawtype = highlight_drawtype;
-    } else if (highlight !== 0 && highlight_disabled !== 0 && fill === 0 && local_drawtype ==
+    } else if (highlight !== 0 && highlight_disabled !== 0 && fill === 0 && local_drawtype ===
       Glow.eDrawType_Line) {
       drawtype = highlight_drawtype;
     } else {
-      if (node !== null && node.getColorTone() != Glow.eDrawTone_No) {
+      if (node !== null && node.getColorTone() !== Glow.eDrawTone_No) {
         var tone = node.getColorTone();
 
         if (local_drawtype > 30 && local_drawtype < 300) {
-          if (tone == Glow.eDrawTone_LightGrayHighSaturation)
+          if (tone === Glow.eDrawTone_LightGrayHighSaturation)
             drawtype = Glow.eDrawType_Color31; // GrayLow1
-          else if (tone == Glow.eDrawTone_DarkGrayHighSaturation)
+          else if (tone === Glow.eDrawTone_DarkGrayHighSaturation)
             drawtype = Glow.eDrawType_Color30; // DarkGrey
           else {
             if (tone >= Glow.eDrawTone_GrayHighSaturation &&
@@ -3591,13 +3585,13 @@ var GlowColor = {
           }
         } else
           drawtype = local_drawtype;
-      } else if (node !== null && fill == 1 && node.getFillDrawtype() != Glow.eDrawType_No) {
+      } else if (node !== null && fill === 1 && node.getFillDrawtype() !== Glow.eDrawType_No) {
         drawtype = node.getFillDrawtype();
-      } else if (node !== null && fill == 2 && node.getTextDrawtype() != Glow.eDrawType_No) {
+      } else if (node !== null && fill === 2 && node.getTextDrawtype() !== Glow.eDrawType_No) {
         drawtype = node.getTextDrawtype();
-      } else if (node !== null && fill == 3 && node.getBackgroundDrawtype() != Glow.eDrawType_No) {
+      } else if (node !== null && fill === 3 && node.getBackgroundDrawtype() !== Glow.eDrawType_No) {
         drawtype = node.getBackgroundDrawtype();
-      } else if (node !== null && fill === 0 && node.getDrawtype() != Glow.eDrawType_No) {
+      } else if (node !== null && fill === 0 && node.getDrawtype() !== Glow.eDrawType_No) {
         drawtype = node.getDrawtype();
       } else
         drawtype = local_drawtype;
@@ -3640,11 +3634,11 @@ var GlowColor = {
         if (drawtype >= 30 && drawtype < 300)
           drawtype = drawtype + 10 - 2 * (drawtype % 10) - 1;
         else if (this.is_custom(drawtype)) {
-          if ((drawtype - Glow.eDrawType_CustomColor1) % 4 == 1)
+          if ((drawtype - Glow.eDrawType_CustomColor1) % 4 === 1)
             drawtype = drawtype + 1;
-          else if ((drawtype - Glow.eDrawType_CustomColor1) % 4 == 2)
+          else if ((drawtype - Glow.eDrawType_CustomColor1) % 4 === 2)
             drawtype = drawtype - 1;
-          else if ((drawtype - Glow.eDrawType_CustomColor1) % 4 == 3)
+          else if ((drawtype - Glow.eDrawType_CustomColor1) % 4 === 3)
             drawtype = drawtype - 2;
         }
       }
@@ -3660,10 +3654,10 @@ var GlowColor = {
         else if (56 <= drawtype && drawtype <= 59)
           drawtype = (drawtype - 4);
         else if (this.is_custom(drawtype)) {
-          if (drawtype == Glow.eDrawType_CustomColor37)
+          if (drawtype === Glow.eDrawType_CustomColor37)
             // Button border color
             drawtype = Glow.eDrawType_CustomColor40;
-          if (drawtype == Glow.eDrawType_CustomColor38)
+          if (drawtype === Glow.eDrawType_CustomColor38)
             // Button text color
             drawtype = Glow.eDrawType_CustomColor39;
         }
@@ -3684,14 +3678,14 @@ var GlowColor = {
     var g = 0;
     var b = 0;
 
-    if (idx == 300)
+    if (idx === 300)
       idx = 31;
 
-    if (idx == 3) // White
+    if (idx === 3) // White
       r = g = b = 1.0;
-    else if (idx == 2) // Gray
+    else if (idx === 2) // Gray
       r = g = b = 0.75;
-    else if (idx == 1) { // Red
+    else if (idx === 1) { // Red
       r = 1.0;
       g = b = 0;
     } else if (idx === 0) // Black
@@ -3715,8 +3709,8 @@ var GlowColor = {
       j = Math.floor((idx - 60 - i * 30) / 10);
       k = 9 - (idx - 60 - i * 30 - j * 10);
 
-      if ((i === 0 && j == 2) ||
-        (i == 2 && j == 2 && k > 5)) {
+      if ((i === 0 && j === 2) ||
+        (i === 2 && j === 2 && k > 5)) {
         // Formula doesn't work for yellow...
         r = this.rgbtab[i * 10 + k].r;
         g = this.rgbtab[i * 10 + k].g;
@@ -3837,7 +3831,7 @@ function GlowCustomColors() {
   this.read_colorfile = function (ctx, name) {
     console.log("Read colorfile", name);
     ctx.appl.frame.readGrowWeb(name, this.read_cb);
-  }
+  };
 
   this.read_cb = function (lines, row) {
     console.log("Customcolor read_cb", row);
@@ -3855,7 +3849,7 @@ function GlowArray(ctx) {
   };
   this.remove = function (elem) {
     for (var i = 0; i < this.a.length; i++) {
-      if (this.a[i] == elem) {
+      if (this.a[i] === elem) {
         this.a.splice(i, 1);
         return 1;
       }
@@ -4190,7 +4184,7 @@ function GlowTransform() {
   this.rot = function () {
     if (arguments.length === 0)
       return this.rotation;
-    if (arguments.length == 1) {
+    if (arguments.length === 1) {
       var t = arguments[0];
       return t.rotation + this.rotation;
     }
@@ -4198,12 +4192,12 @@ function GlowTransform() {
 
   this.x = function () {
     var t, x1, y1;
-    if (arguments.length == 2) {
+    if (arguments.length === 2) {
       x1 = arguments[0];
       y1 = arguments[1];
       return x1 * this.a11 + y1 * this.a12 + this.a13;
     }
-    if (arguments.length == 3) {
+    if (arguments.length === 3) {
       t = arguments[0];
       x1 = arguments[1];
       y1 = arguments[2];
@@ -4216,12 +4210,12 @@ function GlowTransform() {
 
   this.y = function () {
     var t, x1, y1;
-    if (arguments.length == 2) {
+    if (arguments.length === 2) {
       x1 = arguments[0];
       y1 = arguments[1];
       return x1 * this.a21 + y1 * this.a22 + this.a23;
     }
-    if (arguments.length == 3) {
+    if (arguments.length === 3) {
       t = arguments[0];
       x1 = arguments[1];
       y1 = arguments[2];
@@ -4606,7 +4600,7 @@ function GlowNodeClass(ctx) {
     var i;
 
     for (i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() == Glow.eObjectType_GrowAnnot && this.a.get(i).getNumber() == num)
+      if (this.a.get(i).type() === Glow.eObjectType_GrowAnnot && this.a.get(i).getNumber() === num)
         return this.a.get(i).getTextExtent(t, node);
     }
     return null;
@@ -4908,13 +4902,13 @@ function GlowCon(ctx) {
   };
 
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0)
+    if (this.ctx.nodraw !== 0)
       return;
 
     var tmp;
     var i;
 
-    if (this.temporary_ref != 0 || this.cc.con_type == Glow.eConType_Reference) {
+    if (this.temporary_ref !== 0 || this.cc.con_type === Glow.eConType_Reference) {
       // ref_a.draw( w, &cc->zero, highlight, hot, NULL);
     } else {
       for (i = 0; i < this.l_num; i++)
@@ -4922,7 +4916,7 @@ function GlowCon(ctx) {
       for (i = 0; i < this.a_num; i++)
         this.arc_a.get(i).draw(highlight, hot);
       // arrow_a.draw( highlight, hot);
-      if ((this.shadow != 0 || this.border != 0) && this.cc.con_type == Glow.eConType_Routed && this.cc.corner == Glow.eCorner_Rounded) {
+      if ((this.shadow !== 0 || this.border !== 0) && this.cc.con_type === Glow.eConType_Routed && this.cc.corner === Glow.eCorner_Rounded) {
         for (i = 0; i < this.l_num; i++)
           this.line_a.get(i).draw_shadow(this.border, this.shadow, highlight, hot);
         for (i = 0; i < this.a_num; i++)
@@ -4930,7 +4924,7 @@ function GlowCon(ctx) {
       }
     }
   };
-  this.getName = function () { return "Con"; }
+  this.getName = function () { return "Con"; };
   this.event_handler = function (event, fx, fy) { return 0; };
 }
 
@@ -4989,7 +4983,7 @@ function GlowLine(ctx) {
   };
 
   this.draw = function (highlight, hot) {
-    if (this.ctx.nodraw != 0)
+    if (this.ctx.nodraw !== 0)
       return;
 
     var p1_x, p1_y, p2_x, p2_y;
@@ -4998,17 +4992,17 @@ function GlowLine(ctx) {
     p2_x = Math.floor(this.p2.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
     p2_y = Math.floor(this.p2.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
 
-    if (p1_x == p2_x && p1_y == p2_y)
+    if (p1_x === p2_x && p1_y === p2_y)
       return;
     var idx = Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor * this.line_width - 1);
     idx += hot;
     idx = Math.max(0, idx);
     idx = Math.min(idx, Glow.DRAW_TYPE_SIZE - 1);
     this.ctx.gdraw.line(p1_x, p1_y, p2_x, p2_y, this.draw_type, idx, highlight);
-  }
+  };
 
   this.draw_shadow = function (border, shadow, highlight, hot) {
-    if (this.ctx.nodraw != 0)
+    if (this.ctx.nodraw !== 0)
       return;
 
     var p1_x, p1_y, p2_x, p2_y;
@@ -5017,7 +5011,7 @@ function GlowLine(ctx) {
     p2_x = Math.floor(this.p2.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
     p2_y = Math.floor(this.p2.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
 
-    if (p1_x == p2_x && p1_y == p2_y)
+    if (p1_x === p2_x && p1_y === p2_y)
       return;
     var idx = Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor * this.line_width - 1);
     idx += hot;
@@ -5026,8 +5020,8 @@ function GlowLine(ctx) {
     var ish = 1;
     var offs = border;
 
-    if (shadow != 0 && idx > 2) {
-      if (p1_x == p2_x) {
+    if (shadow !== 0 && idx > 2) {
+      if (p1_x === p2_x) {
         // Vertical line
         this.ctx.gdraw.line(p1_x + idx / 2 - idx + offs,
           p1_y,
@@ -5053,8 +5047,8 @@ function GlowLine(ctx) {
           GlowColor.shift_drawtype(this.draw_type, 2, null), ish - 1, highlight);
       }
     }
-    if (border != 0) {
-      if (p1_x == p2_x) {
+    if (border !== 0) {
+      if (p1_x === p2_x) {
         // Vertical line
         this.ctx.gdraw.line(p1_x + idx / 2 - idx,
           p1_y,
@@ -5150,7 +5144,7 @@ function GlowArc(ctx) {
   };
 
   this.draw = function (highlight, hot) {
-    if (this.ctx.nodraw != 0)
+    if (this.ctx.nodraw !== 0)
       return;
 
     var ll_x, ll_y, ur_x, ur_y;
@@ -5159,17 +5153,17 @@ function GlowArc(ctx) {
     ur_x = Math.floor(this.ur.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
     ur_y = Math.floor(this.ur.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
 
-    if (ll_x == ur_x && ll_y == ur_y)
+    if (ll_x === ur_x && ll_y === ur_y)
       return;
     var idx = Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor * this.line_width - 1);
     idx += hot;
     idx = Math.max(0, idx);
     idx = Math.min(idx, Glow.DRAW_TYPE_SIZE - 1);
     this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, this.angle1, this.angle2, this.draw_type, idx, highlight);
-  }
+  };
 
   this.draw_shadow = function (border, shadow, highlight, hot) {
-    if (this.ctx.nodraw != 0)
+    if (this.ctx.nodraw !== 0)
       return;
 
     var ll_x, ll_y, ur_x, ur_y;
@@ -5184,8 +5178,8 @@ function GlowArc(ctx) {
     var ish = 1;
     var offs = border;
 
-    if (shadow != 0 && idx > 2) {
-      if (this.angle1 == 0) {
+    if (shadow !== 0 && idx > 2) {
+      if (this.angle1 === 0) {
         this.ctx.gdraw.arc(ll_x + idx / 2 - idx + offs,
           ll_y + idx / 2 - idx + offs,
           ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2, this.angle1 + 45, this.angle2 - 45,
@@ -5202,7 +5196,7 @@ function GlowArc(ctx) {
           ll_y + idx / 2 - offs,
           Math.max(0, ur_x - ll_x - idx + offs * 2), Math.max(0, ur_y - ll_y - idx + offs * 2), this.angle1, this.angle2 - 45,
           GlowColor.shift_drawtype(this.draw_type, -2, null), ish - 1, highlight);
-      } else if (this.angle1 == 90) {
+      } else if (this.angle1 === 90) {
         this.ctx.gdraw.arc(ll_x + idx / 2 - idx + offs,
           ll_y + idx / 2 - idx + offs,
           ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2, this.angle1, this.angle2,
@@ -5211,7 +5205,7 @@ function GlowArc(ctx) {
           ll_y + idx / 2 - offs,
           Math.max(0, ur_x - ll_x - idx + offs * 2), Math.max(0, ur_y - ll_y - idx + offs * 2), this.angle1, this.angle2,
           GlowColor.shift_drawtype(draw_type, 2, null), ish - 1, highlight);
-      } else if (this.angle1 == 180) {
+      } else if (this.angle1 === 180) {
         this.ctx.gdraw.arc(ll_x + idx / 2 - idx + offs,
           ll_y + idx / 2 - idx + offs,
           ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2, this.angle1 + 45, this.angle2 - 45,
@@ -5228,7 +5222,7 @@ function GlowArc(ctx) {
           ll_y + idx / 2 - offs,
           Math.max(0, ur_x - ll_x - idx + offs * 2), Math.max(0, ur_y - ll_y - idx + offs * 2), this.angle1, this.angle2 - 45,
           GlowColor.shift_drawtype(draw_type, 2, null), ish - 1, highlight);
-      } else if (this.angle1 == 270) {
+      } else if (this.angle1 === 270) {
         this.ctx.gdraw.arc(ll_x + idx / 2 - idx + offs,
           ll_y + idx / 2 - idx + offs,
           ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2, this.angle1, this.angle2,
@@ -5239,7 +5233,7 @@ function GlowArc(ctx) {
           GlowColor.shift_drawtype(draw_type, -2, null), ish - 1, highlight);
       }
     }
-    if (border != 0) {
+    if (border !== 0) {
       this.ctx.gdraw.arc(ll_x + idx / 2 - idx,
         ll_y + idx / 2 - idx,
         ur_x - ll_x + idx, ur_y - ll_y + idx, this.angle1, this.angle2,
@@ -5596,7 +5590,7 @@ function GrowNode(ctx) {
           break;
         case Glow.eSave_Node_nc:
           this.nc_name = tokens[1];
-          if (this.type() != Glow.eObjectType_GrowGroup) {
+          if (this.type() !== Glow.eObjectType_GrowGroup) {
             this.nc = ctx.get_nodeclass_from_name(this.nc_name);
             this.nc_root = this.nc;
             if (this.nc === null)
@@ -5698,7 +5692,7 @@ function GrowNode(ctx) {
     var rp = this.trf.reverse(fx, fy);
     var sts = this.nc.event_handler(event, rp.x, rp.y);
     if (sts !== 0) {
-      if (!(this.type() == Glow.eObjectType_GrowGroup && this.ctx.callback_object !== null))
+      if (!(this.type() === Glow.eObjectType_GrowGroup && this.ctx.callback_object !== null))
         this.ctx.register_callback_object(Glow.eObjectType_Node, this);
       return sts;
     }
@@ -5718,21 +5712,21 @@ function GrowNode(ctx) {
       node = this;
     if (colornode === null)
       colornode = this;
-    else if (colornode.fill_drawtype == Glow.eDrawType_No &&
-      colornode.color_tone == Glow.eDrawTone_No)
+    else if (colornode.fill_drawtype === Glow.eDrawType_No &&
+      colornode.color_tone === Glow.eDrawTone_No)
       colornode = this;
 
     if (node.invisible !== 0 || this.invisible !== 0)
       return;
 
-    if (this.annot_scrollingtext != -1)
+    if (this.annot_scrollingtext !== -1)
       this.ctx.gdraw.set_clip_rectangle(this.x_left * this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x,
         this.y_low * this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y,
         this.x_right * this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x,
         this.y_high * this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y);
 
     var trf_tot;
-    if (this.fill_level == 1) {
+    if (this.fill_level === 1) {
       if (t !== null) {
         trf_tot = t.multiply(this.trf);
 
@@ -5766,10 +5760,10 @@ function GrowNode(ctx) {
         case Glow.eDirection_Left:
           x_level = Math.floor((1 - fill_level) * (x2 - x1) + 0.5);
           clip_sts = this.ctx.gdraw.set_clip_rectangle(x1 - 1, y1 - 1, x1 + x_level, y2 + 1);
-          if (this.level_color_tone != Glow.eDrawTone_No) {
+          if (this.level_color_tone !== Glow.eDrawTone_No) {
             old_color_tone = this.color_tone;
             this.color_tone = this.level_color_tone;
-          } else if (this.level_fill_drawtype != Glow.eDrawType_No) {
+          } else if (this.level_fill_drawtype !== Glow.eDrawType_No) {
             old_fill_drawtype = this.fill_drawtype;
             this.fill_drawtype = this.level_fill_drawtype;
           }
@@ -5781,10 +5775,10 @@ function GrowNode(ctx) {
         case Glow.eDirection_Down:
           y_level = Math.floor((1 - this.fill_level) * (y2 - y1) + 0.5);
           clip_sts = this.ctx.gdraw.set_clip_rectangle(x1 - 1, y1 - 1, x2 + 1, y1 + y_level);
-          if (this.level_color_tone != Glow.eDrawTone_No) {
+          if (this.level_color_tone !== Glow.eDrawTone_No) {
             old_color_tone = this.color_tone;
             this.color_tone = this.level_color_tone;
-          } else if (this.level_fill_drawtype != Glow.eDrawType_No) {
+          } else if (this.level_fill_drawtype !== Glow.eDrawType_No) {
             old_fill_drawtype = this.fill_drawtype;
             this.fill_drawtype = this.level_fill_drawtype;
           }
@@ -5805,36 +5799,36 @@ function GrowNode(ctx) {
 
       switch (this.level_direction) {
         case Glow.eDirection_Right:
-          if (this.level_color_tone != Glow.eDrawTone_No) {
+          if (this.level_color_tone !== Glow.eDrawTone_No) {
             old_color_tone = this.color_tone;
             this.color_tone = this.level_color_tone;
-          } else if (this.level_fill_drawtype != Glow.eDrawType_No) {
+          } else if (this.level_fill_drawtype !== Glow.eDrawType_No) {
             old_fill_drawtype = this.fill_drawtype;
             this.fill_drawtype = this.level_fill_drawtype;
           }
           clip_sts = this.ctx.gdraw.set_clip_rectangle(x1 + x_level, y1 - 1, x2 + 1, y2 + 1);
           break;
         case Glow.eDirection_Left:
-          if (this.level_color_tone != Glow.eDrawTone_No)
+          if (this.level_color_tone !== Glow.eDrawTone_No)
             this.color_tone = old_color_tone;
-          else if (this.level_fill_drawtype != Glow.eDrawType_No)
+          else if (this.level_fill_drawtype !== Glow.eDrawType_No)
             this.fill_drawtype = old_fill_drawtype;
           clip_sts = this.ctx.gdraw.set_clip_rectangle(x1 + x_level, y1 - 1, x2 + 1, y2 + 1);
           break;
         case Glow.eDirection_Up:
-          if (this.level_color_tone != Glow.eDrawTone_No) {
+          if (this.level_color_tone !== Glow.eDrawTone_No) {
             old_color_tone = this.color_tone;
             this.color_tone = this.level_color_tone;
-          } else if (this.level_fill_drawtype != Glow.eDrawType_No) {
+          } else if (this.level_fill_drawtype !== Glow.eDrawType_No) {
             old_fill_drawtype = this.fill_drawtype;
             this.fill_drawtype = this.level_fill_drawtype;
           }
           clip_sts = this.ctx.gdraw.set_clip_rectangle(x1 - 1, y1 + y_level, x2 + 1, y2 + 1);
           break;
         case Glow.eDirection_Down:
-          if (this.level_color_tone != Glow.eDrawTone_No)
+          if (this.level_color_tone !== Glow.eDrawTone_No)
             this.color_tone = old_color_tone;
-          else if (this.level_fill_drawtype != Glow.eDrawType_No)
+          else if (this.level_fill_drawtype !== Glow.eDrawType_No)
             this.fill_drawtype = old_fill_drawtype;
           clip_sts = this.ctx.gdraw.set_clip_rectangle(x1 - 1, y1 + y_level, x2 + 1, y2 + 1);
           break;
@@ -5854,17 +5848,17 @@ function GrowNode(ctx) {
 
       switch (this.level_direction) {
         case Glow.eDirection_Right:
-          if (this.level_color_tone != Glow.eDrawTone_No)
+          if (this.level_color_tone !== Glow.eDrawTone_No)
             this.color_tone = old_color_tone;
-          else if (this.level_fill_drawtype != Glow.eDrawType_No)
+          else if (this.level_fill_drawtype !== Glow.eDrawType_No)
             this.fill_drawtype = old_fill_drawtype;
           break;
         case Glow.eDirection_Left:
           break;
         case Glow.eDirection_Up:
-          if (this.level_color_tone != Glow.eDrawTone_No)
+          if (this.level_color_tone !== Glow.eDrawTone_No)
             this.color_tone = old_color_tone;
-          else if (this.level_fill_drawtype != Glow.eDrawType_No)
+          else if (this.level_fill_drawtype !== Glow.eDrawType_No)
             this.fill_drawtype = old_fill_drawtype;
           break;
         case Glow.eDirection_Down:
@@ -5874,14 +5868,14 @@ function GrowNode(ctx) {
       }
     }
 
-    if (this.annot_scrollingtext != -1)
+    if (this.annot_scrollingtext !== -1)
       this.ctx.gdraw.reset_clip_rectangle();
   };
 
   this.set_position = function (x, y) {
     var old_x_left, old_x_right, old_y_low, old_y_high;
 
-    if (this.trf.a13 == this.trf.s_a13 + x && this.trf.a23 == this.trf.s_a23 + y)
+    if (this.trf.a13 === this.trf.s_a13 + x && this.trf.a23 === this.trf.s_a23 + y)
       return;
     old_x_left = this.x_left;
     old_x_right = this.x_right;
@@ -5956,7 +5950,7 @@ function GrowNode(ctx) {
   this.set_scale = function (scale_x, scale_y, x0, y0, type) {
     var old_x_left, old_x_right, old_y_low, old_y_high;
 
-    if (!((scale_x == -1 && scale_y == 1) || (scale_x == 1 && scale_y == -1))) {
+    if (!((scale_x === -1 && scale_y === 1) || (scale_x === 1 && scale_y === -1))) {
       if (scale_x < 0)
         scale_x = 0;
       if (scale_y < 0)
@@ -5992,7 +5986,6 @@ function GrowNode(ctx) {
         y0 = (this.y_low + this.y_high) / 2;
         break;
       default:
-        ;
     }
 
     old_x_left = this.x_left;
@@ -6079,11 +6072,9 @@ function GrowNode(ctx) {
 
   this.set_last_nodeclass = function () {
     var next;
-    for (next = this.nc_root;
-      next.next_nc !== null;
-      next = next.next_nc)
+    for (next = this.nc_root; next.next_nc !== null; next = next.next_nc)
       ;
-    if (next != this.nc)
+    if (next !== this.nc)
       this.set_nodeclass(next);
   };
 
@@ -6097,7 +6088,7 @@ function GrowNode(ctx) {
         return 0;
       next = next.next_nc;
     }
-    if (next != this.nc)
+    if (next !== this.nc)
       this.set_nodeclass(next);
     return 1;
   };
@@ -6111,7 +6102,7 @@ function GrowNode(ctx) {
   };
 
   this.set_root_nodeclass = function () {
-    if (this.nc_root != this.nc)
+    if (this.nc_root !== this.nc)
       this.set_nodeclass(this.nc_root);
   };
 
@@ -6228,9 +6219,9 @@ function GrowNode(ctx) {
     var base_nc = this.nc.get_base_nc();
     dyn_type = base_nc.dyn_type1;
 
-    if ((type & dyn_type) == 0)
+    if ((type & dyn_type) === 0)
       return 0;
-    if (this.nc.y0 == 0 && this.nc.y1 == 0)
+    if (this.nc.y0 === 0 && this.nc.y1 === 0)
       return 0;
 
     var x1, x2, y1, y2;
@@ -6438,9 +6429,9 @@ function GrowNode(ctx) {
     this.annotv[number] = annot;
   };
   this.setAnnotationTextOffset = function (num, x, y) {
-    if (this.annot_scrollingtext == -1)
+    if (this.annot_scrollingtext === -1)
       this.annot_scrollingtext = num;
-    if (num == this.annot_scrollingtext) {
+    if (num === this.annot_scrollingtext) {
       this.annot_offset_x = x;
       this.annot_offset_y = y;
     }
@@ -6454,7 +6445,7 @@ function GrowNode(ctx) {
     if (this.ctx.customcolors === null)
       return;
 
-    if (this.ctx.customcolors.colortheme_lightness != this.color_lightness)
+    if (this.ctx.customcolors.colortheme_lightness !== this.color_lightness)
       this.color_lightness = this.ctx.customcolors.colortheme_lightness;
   };
 }
@@ -6506,11 +6497,11 @@ function GrowGroup(ctx) {
     var group;
 
     for (var i = 0; i < this.nc.a.size(); i++) {
-      if (this.nc.a.get(i).type() == Glow.eObjectType_GrowGroup) {
+      if (this.nc.a.get(i).type() === Glow.eObjectType_GrowGroup) {
         group = nc.a.get(i).get_object_group(object);
         if (group != null)
           return group;
-      } else if (this.nc.a.get(i) == object) {
+      } else if (this.nc.a.get(i) === object) {
         return this;
       }
     }
@@ -6668,7 +6659,6 @@ function GrowToolbar(ctx) {
         case Glow.eSave_GrowToolbar_grownode_part:
           i = this.grownode_open(lines, i + 1);
           break;
-          break;
         case Glow.eSave_End:
           end = true;
           break;
@@ -6693,7 +6683,7 @@ function GrowToolbar(ctx) {
     switch (event.event) {
       case Glow.eEvent_CursorMotion:
         return 0;
-      default: ;
+      default:
     }
 
     rp = this.trf.reverse(fx, fy);
@@ -6701,14 +6691,14 @@ function GrowToolbar(ctx) {
     switch (event.event) {
       case Glow.eEvent_MB1Down:
         sts = this.nc_event_handler(event, rp.x, rp.y);
-        if (sts != 0) {
+        if (sts !== 0) {
           idx = sts - 1;
           this.nc.a.get(idx).setColorInverse(1);
         }
         break;
       case Glow.eEvent_MB1Up:
         sts = this.nc_event_handler(event, rp.x, rp.y);
-        if (sts != 0) {
+        if (sts !== 0) {
           idx = sts - 1;
           this.nc.a.get(idx).setColorInverse(0);
         }
@@ -6716,7 +6706,7 @@ function GrowToolbar(ctx) {
       case Glow.eEvent_MB1Click:
         sts = this.nc_event_handler(event, rp.x, rp.y);
         console.log("MB1 Click toolbar", sts);
-        if (sts != 0) {
+        if (sts !== 0) {
           idx = sts - 1;
           var lsts = this.get_mask_index(idx);
           if (lsts == null)
@@ -6733,7 +6723,7 @@ function GrowToolbar(ctx) {
         break;
       default:
         sts = this.nc.event_handler(event, rp.x, rp.y);
-        if (sts != 0) {
+        if (sts !== 0) {
           return sts;
         }
     }
@@ -6746,7 +6736,7 @@ function GrowToolbar(ctx) {
 
     for (i = 0; i < this.nc.a.size(); i++) {
       sts = this.nc.a.get(i).event_handler(event, x, y);
-      if (sts != 0) {
+      if (sts !== 0) {
         return i + 1;
       }
     }
@@ -6774,7 +6764,7 @@ function GrowToolbar(ctx) {
     this.tools1_mask = 0;
     mask = 1;
     for (var i = 0; i < tools1_cnt; i++) {
-      if ((mask & show_mask1) != 0) {
+      if ((mask & show_mask1) !== 0) {
         if (tools1[i] === "") {
           mask = mask << 1;
           continue;
@@ -6786,7 +6776,7 @@ function GrowToolbar(ctx) {
         if (nc1 === null) {
           var fname = subg_name + ".pwsg";
           sts = this.ctx.loadSubgraph(fname);
-          if ((sts & 1) != 0)
+          if ((sts & 1) !== 0)
             nc1 = this.ctx.get_nodeclass_from_name(subg_name);
         }
         if (nc1 !== null) {
@@ -6815,7 +6805,7 @@ function GrowToolbar(ctx) {
     this.tools2_mask = 0;
     mask = 1;
     for (var i = 0; i < tools2_cnt; i++) {
-      if ((mask & show_mask2) != 0) {
+      if ((mask & show_mask2) !== 0) {
         if (tools2[i] === "") {
           mask = mask << 1;
           continue;
@@ -6827,7 +6817,7 @@ function GrowToolbar(ctx) {
         if (nc1 === null) {
           var fname = subg_name + ".pwsg";
           sts = this.ctx.loadSubgraph(fname);
-          if ((sts & 1) != 0)
+          if ((sts & 1) !== 0)
             nc1 = this.ctx.get_nodeclass_from_name(subg_name);
         }
         if (nc1 !== null) {
@@ -6840,7 +6830,7 @@ function GrowToolbar(ctx) {
           // n1.disable_callback();
           this.nc.a.add(n1);
 
-          if ((mask & insensitive_mask2) != 0)
+          if ((mask & insensitive_mask2) !== 0)
             n1.setVisibility(Glow.eVis_Dimmed);
 
           var g = n1.measure();
@@ -6869,10 +6859,10 @@ function GrowToolbar(ctx) {
         mask = 1 << i;
       else
         mask = 1 << (i - 32);
-      if ((i < 32 && (this.tools1_mask & mask) != 0) ||
-        (i >= 32 && (this.tools2_mask & mask) != 0))
+      if ((i < 32 && (this.tools1_mask & mask) !== 0) ||
+        (i >= 32 && (this.tools2_mask & mask) !== 0))
         cnt++;
-      if (cnt == idx + 1) {
+      if (cnt === idx + 1) {
         mask_idx = i % 32;
         category = i / 32 + 1;
         var ret = new Array(2);
@@ -6887,7 +6877,7 @@ function GrowToolbar(ctx) {
   this.scale = function () {
     var scale;
 
-    if (this.ctx.mw.window_width == 0)
+    if (this.ctx.mw.window_width === 0)
       return;
 
     console.log("Toolbar.scale offset_x " + this.ctx.mw.offset_x + " wwidth " + this.ctx.mw.window_width);
@@ -7168,8 +7158,8 @@ function GrowRect(ctx) {
         highlight, colornode, 1, 0);
 
     var grad = this.gradient;
-    if (this.gradient == Glow.eGradient_No &&
-      (node !== null && node.gradient != Glow.eGradient_No) && this.disable_gradient === 0)
+    if (this.gradient === Glow.eGradient_No &&
+      (node !== null && node.gradient !== Glow.eGradient_No) && this.disable_gradient === 0)
       grad = node.gradient;
 
     if (display_shadow && ish !== 0) {
@@ -7179,7 +7169,7 @@ function GrowRect(ctx) {
 
       // Draw light shadow
       var drawtype_incr = this.shadow_contrast;
-      if (this.relief == Glow.eRelief_Down)
+      if (this.relief === Glow.eRelief_Down)
         drawtype_incr = -this.shadow_contrast;
 
       drawtype = GlowColor.shift_drawtype(fillcolor, -drawtype_incr + chot, colornode);
@@ -7221,7 +7211,7 @@ function GrowRect(ctx) {
     }
     if (this.fill !== 0) {
       if (display_shadow && ish !== 0) {
-        if (grad == Glow.eGradient_No || fillcolor == Glow.eDrawType_ColorRed) {
+        if (grad === Glow.eGradient_No || fillcolor === Glow.eDrawType_ColorRed) {
           if (chot !== 0)
             drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
           else
@@ -7236,7 +7226,7 @@ function GrowRect(ctx) {
           else
             rotationa = this.trf.rot();
 
-          if (this.bgcolor_gradient !== 0 && this.background_drawtype != Glow.eDrawType_No) {
+          if (this.bgcolor_gradient !== 0 && this.background_drawtype !== Glow.eDrawType_No) {
             fa2 = fillcolor;
             fa1 = GlowColor.get_drawtype(this.background_drawtype, Glow.eDrawType_FillHighlight,
               highlight, colornode, 1, 0);
@@ -7254,7 +7244,7 @@ function GrowRect(ctx) {
             fa0, fa1, fa2, this.ctx.gdraw.gradient_rotate(rotationa, grad));
         }
       } else {
-        if (grad == Glow.eGradient_No || fillcolor == Glow.eDrawType_ColorRed) {
+        if (grad === Glow.eGradient_No || fillcolor === Glow.eDrawType_ColorRed) {
           if (chot !== 0)
             drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
           else
@@ -7267,7 +7257,7 @@ function GrowRect(ctx) {
             rotationb = this.trf.rot(t);
           else
             rotationb = this.trf.rot();
-          if (this.bgcolor_gradient !== 0 && this.background_drawtype != Glow.eDrawType_No) {
+          if (this.bgcolor_gradient !== 0 && this.background_drawtype !== Glow.eDrawType_No) {
             fb2 = fillcolor;
             fb1 = GlowColor.get_drawtype(this.background_drawtype, Glow.eDrawType_FillHighlight,
               highlight, colornode, 1, 0);
@@ -7337,7 +7327,7 @@ function GrowRect(ctx) {
   this.set_scale = function (scale_x, scale_y, x0, y0, type) {
     var old_x_left, old_x_right, old_y_low, old_y_high;
 
-    if (this.trf.s_a11 != 0 && this.trf.s_a22 != 0 &&
+    if (this.trf.s_a11 !== 0 && this.trf.s_a22 !== 0 &&
       Math.abs(scale_x - this.trf.a11 / this.trf.s_a11) < Number.MIN_VALUE &&
       Math.abs(scale_y - this.trf.a22 / this.trf.s_a22) < Number.MIN_VALUE)
       return;
@@ -7366,7 +7356,6 @@ function GrowRect(ctx) {
         y0 = (this.y_low + this.y_high) / 2;
         break;
       default:
-        ;
     }
 
     old_x_left = this.x_left;
@@ -7400,7 +7389,6 @@ function GrowRect(ctx) {
         y0 = (this.y_low + this.y_high) / 2;
         break;
       default:
-        ;
     }
     this.ctx.draw(old_x_left * this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x - Glow.DRAW_MP,
       old_y_low * this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y - Glow.DRAW_MP,
@@ -7665,12 +7653,12 @@ function GrowRectRounded(ctx) {
         highlight, colornode, 1, 0);
 
       var grad = this.gradient;
-      if (this.gradient == Glow.eGradient_No &&
-        (node !== null && node.gradient != Glow.eGradient_No) && this.disable_gradient === 0)
+      if (this.gradient === Glow.eGradient_No &&
+        (node !== null && node.gradient !== Glow.eGradient_No) && this.disable_gradient === 0)
         grad = node.gradient;
 
       if (!display_shadow || ish === 0) {
-        if (grad == Glow.eGradient_No) {
+        if (grad === Glow.eGradient_No) {
           if (chot !== 0)
             drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
           else
@@ -7707,7 +7695,7 @@ function GrowRectRounded(ctx) {
         }
       } else {
         var drawtype_incr = this.shadow_contrast;
-        if (this.relief == Glow.eRelief_Down)
+        if (this.relief === Glow.eRelief_Down)
           drawtype_incr = -this.shadow_contrast;
 
         // Draw light shadow
@@ -7731,7 +7719,7 @@ function GrowRectRounded(ctx) {
         this.ctx.gdraw.fill_arc(ur_x - 2 * amount, ur_y - 2 * amount, 2 * amount, 2 * amount, 270, 90,
           drawtype);
 
-        if (grad == Glow.eGradient_No) {
+        if (grad === Glow.eGradient_No) {
           if (chot !== 0)
             drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
           else
@@ -7923,8 +7911,8 @@ function GrowLine(ctx) {
     if (this.ctx.nodraw !== 0)
       return;
 
-    if (hot != 9 &&
-      this.ctx.hot_indication != Glow.eHotIndication_LineWidth)
+    if (hot !== 9 &&
+      this.ctx.hot_indication !== Glow.eHotIndication_LineWidth)
       hot = 0;
 
     var drawtype;
@@ -7950,12 +7938,12 @@ function GrowLine(ctx) {
       x2 = Math.floor(this.trf.x(t, this.p2.x, this.p2.y) * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
       y2 = Math.floor(this.trf.y(t, this.p2.x, this.p2.y) * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
     }
-    if (x1 == x2 && y1 == y2)
+    if (x1 === x2 && y1 === y2)
       return;
     drawtype = GlowColor.get_drawtype(this.draw_type, Glow.eDrawType_LineHighlight,
       highlight, colornode, 0, 0);
 
-    if (this.line_type == Glow.eLineType_Solid)
+    if (this.line_type === Glow.eLineType_Solid)
       this.ctx.gdraw.line(x1, y1, x2, y2, drawtype, idx, 0);
     else
       this.ctx.gdraw.line_dashed(x1, y1, x2, y2, drawtype, idx, 0, this.line_type);
@@ -8183,12 +8171,12 @@ function GrowArc(ctx) {
     var idx;
     var chot = 0;
 
-    if (this.ctx.hot_indication == Glow.eHotIndication_No)
+    if (this.ctx.hot_indication === Glow.eHotIndication_No)
       hot = 0;
-    else if (this.ctx.hot_indication == Glow.eHotIndication_DarkColor) {
+    else if (this.ctx.hot_indication === Glow.eHotIndication_DarkColor) {
       chot = hot;
       hot = 0;
-    } else if (this.ctx.hot_indication == Glow.eHotIndication_LightColor) {
+    } else if (this.ctx.hot_indication === Glow.eHotIndication_LightColor) {
       chot = -hot;
       hot = 0;
     }
@@ -8261,12 +8249,12 @@ function GrowArc(ctx) {
           highlight, colornode, 1, 0);
 
       var grad = this.gradient;
-      if (this.gradient == Glow.eGradient_No &&
-        (node !== null && node.gradient != Glow.eGradient_No) && this.disable_gradient === 0)
+      if (this.gradient === Glow.eGradient_No &&
+        (node !== null && node.gradient !== Glow.eGradient_No) && this.disable_gradient === 0)
         grad = node.gradient;
 
-      if (!display_shadow || this.shadow_width === 0 || this.angle2 != 360) {
-        if (grad == Glow.eGradient_No || fillcolor == Glow.eDrawType_ColorRed) {
+      if (!display_shadow || this.shadow_width === 0 || this.angle2 !== 360) {
+        if (grad === Glow.eGradient_No || fillcolor === Glow.eDrawType_ColorRed) {
           if (chot !== 0)
             drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
           else
@@ -8288,10 +8276,10 @@ function GrowArc(ctx) {
       } else {
         var ish = Math.floor(this.shadow_width / 100 * Math.min(ur_x - ll_x, ur_y - ll_y) + 0.5);
         var drawtype_incr = this.shadow_contrast;
-        if (this.relief == Glow.eRelief_Down)
+        if (this.relief === Glow.eRelief_Down)
           drawtype_incr = -this.shadow_contrast;
 
-        if (grad == Glow.eGradient_No || fillcolor == Glow.eDrawType_ColorRed) {
+        if (grad === Glow.eGradient_No || fillcolor === Glow.eDrawType_ColorRed) {
           // Draw light shadow
           drawtype = GlowColor.shift_drawtype(fillcolor, -drawtype_incr + chot, colornode);
 
@@ -8511,7 +8499,7 @@ function GrowText(ctx) {
     var lfont;
     var ldraw_type;
 
-    if (node !== null && node.text_font != Glow.eFont_No) {
+    if (node !== null && node.text_font !== Glow.eFont_No) {
       lfont = node.text_font;
       ldraw_type = node.text_type;
     } else {
@@ -8529,13 +8517,13 @@ function GrowText(ctx) {
       y1 = Math.floor(this.trf.y(t, this.p.x, this.p.y) * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
       rot = Math.floor(this.trf.rot(t));
     }
-    if (this.adjustment == Glow.eAdjustment_Center)
+    if (this.adjustment === Glow.eAdjustment_Center)
       rot = rot < 0 ? rot % 360 + 360 : rot % 360;
     else
       rot = 0;
 
     if (this.text !== "") {
-      if (highl !== 0 || (hot !== 0 && node === null) || this.adjustment != Glow.eAdjustment_Left) {
+      if (highl !== 0 || (hot !== 0 && node === null) || this.adjustment !== Glow.eAdjustment_Left) {
         var dim = this.ctx.gdraw.getTextExtent(this.text, Math.max(0, idx), lfont, ldraw_type);
         z_width = dim.width;
         z_height = dim.height;
@@ -8743,12 +8731,12 @@ function GrowAnnot(ctx) {
     var lfont;
     var ldraw_type;
 
-    if (node !== null && node.annot_scrollingtext == this.number) {
+    if (node !== null && node.annot_scrollingtext === this.number) {
       offset_x = node.annot_offset_x;
       offset_y = node.annot_offset_y;
     }
 
-    if (node !== null && node.text_font != Glow.eFont_No) {
+    if (node !== null && node.text_font !== Glow.eFont_No) {
       lfont = node.text_font;
       ldraw_type = node.text_type;
     } else {
@@ -8780,8 +8768,8 @@ function GrowAnnot(ctx) {
           (node.annotv_inputmode[this.number] !== 0 &&
             node.input_selected !== 0)) ||
           (!(rot < 45 || rot >= 315)) ||
-          this.adjustment == Glow.eAdjustment_Right ||
-          this.adjustment == Glow.eAdjustment_Center) {
+          this.adjustment === Glow.eAdjustment_Right ||
+          this.adjustment === Glow.eAdjustment_Center) {
           var d = this.getTextExtent(t, node);
           width = d.width;
           height = d.height;
@@ -8808,7 +8796,7 @@ function GrowAnnot(ctx) {
           }
         } else {
           // Text is rotated, adjust the coordinates
-          if (this.adjustment == Glow.eAdjustment_Center) {
+          if (this.adjustment === Glow.eAdjustment_Center) {
             // Only center adjustment supports text rotation
             if (45 <= rot && rot < 135) {
               x1 += width / 2;
@@ -9139,12 +9127,12 @@ function GrowPolyline(ctx) {
 
     var chot = 0;
     if (hot !== 0) {
-      if (this.ctx.hot_indication == Glow.eHotIndication_No)
+      if (this.ctx.hot_indication === Glow.eHotIndication_No)
         hot = 0;
-      else if (this.ctx.hot_indication == Glow.eHotIndication_DarkColor) {
+      else if (this.ctx.hot_indication === Glow.eHotIndication_DarkColor) {
         chot = hot;
         hot = 0;
-      } else if (this.ctx.hot_indication == Glow.eHotIndication_LightColor) {
+      } else if (this.ctx.hot_indication === Glow.eHotIndication_LightColor) {
         chot = -hot;
         hot = 0;
       }
@@ -9179,8 +9167,8 @@ function GrowPolyline(ctx) {
     }
     if (this.fill !== 0) {
       var grad = this.gradient;
-      if (this.gradient == Glow.eGradient_No &&
-        (node !== null && node.gradient != Glow.eGradient_No) && this.disable_gradient === 0)
+      if (this.gradient === Glow.eGradient_No &&
+        (node !== null && node.gradient !== Glow.eGradient_No) && this.disable_gradient === 0)
         grad = node.gradient;
 
       if (this.fill_eq_border !== 0)
@@ -9196,7 +9184,7 @@ function GrowPolyline(ctx) {
         drawtype = GlowColor.shift_drawtype(drawtype, -this.shadow_contrast + chot,
           colornode);
       else if (this.fill_eq_bglight !== 0) {
-        if (colornode !== null && node.background_drawtype != Glow.eDrawType_No)
+        if (colornode !== null && node.background_drawtype !== Glow.eDrawType_No)
           drawtype = GlowColor.shift_drawtype(colornode.background_drawtype,
             -this.shadow_contrast + chot, colornode);
         else
@@ -9206,7 +9194,7 @@ function GrowPolyline(ctx) {
         drawtype = GlowColor.shift_drawtype(drawtype, this.shadow_contrast + chot,
           colornode);
       else if (this.fill_eq_bgshadow !== 0) {
-        if (colornode !== null && node.background_drawtype != Glow.eDrawType_No)
+        if (colornode !== null && node.background_drawtype !== Glow.eDrawType_No)
           drawtype = GlowColor.shift_drawtype(colornode.background_drawtype,
             this.shadow_contrast + chot, colornode);
         else
@@ -9215,7 +9203,7 @@ function GrowPolyline(ctx) {
       } else if (chot !== 0)
         drawtype = GlowColor.shift_drawtype(drawtype, chot, null);
 
-      if (grad == Glow.eGradient_No || drawtype == Glow.eDrawType_ColorRed)
+      if (grad === Glow.eGradient_No || drawtype === Glow.eDrawType_ColorRed)
         this.ctx.gdraw.fill_polyline(this.points, this.a_points.size(), drawtype, 0);
       else {
         var f1, f2;
@@ -9289,10 +9277,10 @@ function GrowPolyline(ctx) {
     var dark_drawtype;
 
     var p_num = this.a_points.size();
-    if (this.points[0].x == this.points[p_num - 1].x && this.points[0].y == this.points[p_num - 1].y)
+    if (this.points[0].x === this.points[p_num - 1].x && this.points[0].y === this.points[p_num - 1].y)
       p_num--;
 
-    if (this.points[0].x == this.points[this.a_points.size() - 1].x && this.points[0].y == this.points[this.a_points.size() - 1].y)
+    if (this.points[0].x === this.points[this.a_points.size() - 1].x && this.points[0].y === this.points[this.a_points.size() - 1].y)
       sp = new Array(p_num + 1);
     else
       sp = new Array(p_num);
@@ -9301,7 +9289,7 @@ function GrowPolyline(ctx) {
       highlight, colornode, 1, 0);
 
     var drawtype_incr = this.shadow_contrast;
-    if (this.relief == Glow.eRelief_Down)
+    if (this.relief === Glow.eRelief_Down)
       drawtype_incr = -this.shadow_contrast;
     light_drawtype = GlowColor.shift_drawtype(fillcolor, -drawtype_incr + chot,
       colornode);
@@ -9325,7 +9313,7 @@ function GrowPolyline(ctx) {
       }
       sx1 = this.points[i].x;
       sy1 = this.points[i].y;
-      if (i == p_num - 1) {
+      if (i === p_num - 1) {
         sx2 = this.points[0].x;
         sy2 = this.points[0].y;
       } else {
@@ -9334,7 +9322,7 @@ function GrowPolyline(ctx) {
       }
 
       pos12 = pos01;
-      if (i != -1) {
+      if (i !== -1) {
         if (Math.abs(sx0 - sx1) < Number.MIN_VALUE) {
           if (sx1 > sx2 && sy1 < sy0)
             pos12 = - pos01;
@@ -9397,13 +9385,13 @@ function GrowPolyline(ctx) {
           sp[i].y = Math.floor(k12 * x + m12 + 0.5);
         }
       }
-      if (pos12 == 1)
+      if (pos12 === 1)
         sp[i].drawtype = light_drawtype;
       else
         sp[i].drawtype = dark_drawtype;
       pos01 = pos12;
     }
-    if (this.points[0].x == this.points[this.a_points.size() - 1].x && this.points[0].y == this.points[this.a_points.size() - 1].y) {
+    if (this.points[0].x === this.points[this.a_points.size() - 1].x && this.points[0].y === this.points[this.a_points.size() - 1].y) {
       sp[p_num] = new GlowShadowInfo();
       sp[p_num].x = sp[0].x;
       sp[p_num].y = sp[0].y;
@@ -9420,12 +9408,12 @@ function GrowPolyline(ctx) {
     a1_old = 0;
     a0_old = 0;
 
-    if ((this.points[p_num - 1].x == this.points[0].x && this.points[p_num - 1].y == this.points[0].y))
+    if ((this.points[p_num - 1].x === this.points[0].x && this.points[p_num - 1].y === this.points[0].y))
       p_num--;
 
     for (var i = 0; i < p_num; i++) {
-      if (i == p_num - 1) {
-        if (this.points[0].x == this.points[i].x) {
+      if (i === p_num - 1) {
+        if (this.points[0].x === this.points[i].x) {
           a1 = 90;
           if (this.points[0].y < this.points[i].y)
             a1 += 180;
@@ -9434,7 +9422,7 @@ function GrowPolyline(ctx) {
         if (this.points[0].x < this.points[i].x)
           a1 += 180;
       } else {
-        if (this.points[i + 1].x == this.points[i].x) {
+        if (this.points[i + 1].x === this.points[i].x) {
           a1 = 90;
           if (this.points[i + 1].y < this.points[i].y)
             a1 += 180;
@@ -9455,7 +9443,7 @@ function GrowPolyline(ctx) {
         a_sum2 += 360 - a2;
 
       }
-      if (i == p_num - 1) {
+      if (i === p_num - 1) {
         a2 = a0_old - (a1 - 180);
         if (a2 < 0)
           a2 += 360;
@@ -9468,13 +9456,13 @@ function GrowPolyline(ctx) {
     }
     var dir;
     var last_point;
-    if (this.points[0].x == this.points[this.a_points.size() - 1].x && this.points[0].y == this.points[this.a_points.size() - 1].y)
+    if (this.points[0].x === this.points[this.a_points.size() - 1].x && this.points[0].y === this.points[this.a_points.size() - 1].y)
       last_point = this.points[this.a_points.size() - 2];
     else
       last_point = this.points[this.a_points.size() - 1];
 
     if (a_sum2 - a_sum1 < 0) {
-      if (this.points[0].x == last_point.x) {
+      if (this.points[0].x === last_point.x) {
         if (this.points[0].x < this.points[1].x)
           dir = 1;
         else
@@ -9484,7 +9472,7 @@ function GrowPolyline(ctx) {
       else
         dir = -1;
     } else {
-      if (this.points[0].x == last_point.x) {
+      if (this.points[0].x === last_point.x) {
         if (this.points[0].x < this.points[1].x)
           dir = 1;
         else
@@ -9837,7 +9825,7 @@ function GlowArc(ctx) {
     ur_x = Math.floor(this.ur.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
     ur_y = Math.floor(this.ur.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
 
-    if (ll_x == ur_x && ll_y == ur_y)
+    if (ll_x === ur_x && ll_y === ur_y)
       return;
     var idx = Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor * this.line_width - 1);
     idx += hot;
@@ -9880,7 +9868,7 @@ function GlowArc(ctx) {
           ll_y + idx / 2 - offs,
           Math.max(0, ur_x - ll_x - idx + offs * 2), Math.max(0, ur_y - ll_y - idx + offs * 2), this.angle1, this.angle2 - 45,
           GlowColor.shift_drawtype(this.draw_type, -2, null), ish - 1, highlight);
-      } else if (this.angle1 == 90) {
+      } else if (this.angle1 === 90) {
         this.ctx.gdraw.arc(ll_x + idx / 2 - idx + offs,
           ll_y + idx / 2 - idx + offs,
           ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2, this.angle1, this.angle2,
@@ -9889,7 +9877,7 @@ function GlowArc(ctx) {
           ll_y + idx / 2 - offs,
           Math.max(0, ur_x - ll_x - idx + offs * 2), Math.max(0, ur_y - ll_y - idx + offs * 2), this.angle1, this.angle2,
           GlowColor.shift_drawtype(this.draw_type, 2, null), ish - 1, highlight);
-      } else if (this.angle1 == 180) {
+      } else if (this.angle1 === 180) {
         this.ctx.gdraw.arc(ll_x + idx / 2 - idx + offs,
           ll_y + idx / 2 - idx + offs,
           ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2, this.angle1 + 45, this.angle2 - 45,
@@ -9906,7 +9894,7 @@ function GlowArc(ctx) {
           ll_y + idx / 2 - offs,
           Math.max(0, ur_x - ll_x - idx + offs * 2), Math.max(0, ur_y - ll_y - idx + offs * 2), this.angle1, this.angle2 - 45,
           GlowColor.shift_drawtype(this.draw_type, 2, null), ish - 1, highlight);
-      } else if (this.angle1 == 270) {
+      } else if (this.angle1 === 270) {
         this.ctx.gdraw.arc(ll_x + idx / 2 - idx + offs,
           ll_y + idx / 2 - idx + offs,
           ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2, this.angle1, this.angle2,
@@ -9955,7 +9943,7 @@ function GrowImage(ctx) {
   this.image.onLoad = function () {
     console.log("Loading image");
     self.draw();
-  }
+  };
 
   this.type = function () {
     return Glow.eObjectType_GrowImage;
@@ -10053,7 +10041,7 @@ function GrowImage(ctx) {
     switch (event.event) {
       case Glow.eEvent_CursorMotion:
         return 0;
-      default: ;
+      default:
     }
 
     rp = this.trf.reverse(fx, fy);
@@ -10071,7 +10059,7 @@ function GrowImage(ctx) {
   };
 
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0)
+    if (this.ctx.nodraw !== 0)
       return;
 
     var chot = 0;
@@ -10138,7 +10126,7 @@ function GrowImage(ctx) {
       g.ll_y = ll_y;
     if (ur_y > g.ur_y)
       g.ur_y = ur_y;
-  }
+  };
 
   this.get_node_borders = function () {
     var g = new GlowGeometry();
@@ -10149,7 +10137,7 @@ function GrowImage(ctx) {
     this.x_right = g.ur_x;
     this.y_low = g.ll_y;
     this.y_high = g.ur_y;
-  }
+  };
 
   this.set_scale = function (scale_x, scale_y,
     x0, y0, type) {
@@ -10184,7 +10172,6 @@ function GrowImage(ctx) {
         y0 = (this.y_low + this.y_high) / 2;
         break;
       default:
-        ;
     }
 
     old_x_left = this.x_left;
@@ -10218,7 +10205,6 @@ function GrowImage(ctx) {
         y0 = (y_low + y_high) / 2;
         break;
       default:
-        ;
     }
     this.ctx.draw(old_x_left * this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x - Glow.DRAW_MP,
       old_y_low * this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y - Glow.DRAW_MP,
@@ -10297,10 +10283,10 @@ function GrowConGlue(ctx) {
 
   this.draw = function () {
     this.tdraw(null, this.highlight, this.hot, null, null);
-  }
+  };
 
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0)
+    if (this.ctx.nodraw !== 0)
       return;
     var idx, idx_up, idx_down, idx_left, idx_right;
     var drawtype;
@@ -10360,12 +10346,12 @@ function GrowConGlue(ctx) {
     idx_right = Math.max(0, idx_right);
     idx_right = Math.min(idx_right, Glow.DRAW_TYPE_SIZE - 1);
 
-    if (lw_up != -1 && lw_down == -1 &&
-      lw_right == -1 && lw_left == -1) {
+    if (lw_up !== -1 && lw_down === -1 &&
+      lw_right === -1 && lw_left === -1) {
       // Up termination
       this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y, idx_up + 1, ur_y - m_y, drawtype);
-      if (this.shadow != 0 && idx_up > 2) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && idx_up > 2) {
+        if (this.border !== 0) {
           idx_up -= 2;
           m_y++;
         }
@@ -10376,22 +10362,22 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y, m_x - idx_up + idx_up / 2, ur_y, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y, m_x + idx_up / 2, m_y, shift_drawtype, 0, 0);
 
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_up += 2;
           m_y--;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y, m_x - idx_up + idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y, m_x + idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y, m_x + idx_up / 2, m_y, Glow.eDrawType_Line, 0, 0);
       }
-    } else if (lw_up == -1 && lw_down != -1 &&
-      lw_right == -1 && lw_left == -1) {
+    } else if (lw_up === -1 && lw_down !== -1 &&
+      lw_right === -1 && lw_left === -1) {
       // Down termination
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down + 1, m_y - ll_y, drawtype);
-      if (this.shadow != 0 && idx_down > 2) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && idx_down > 2) {
+        if (this.border !== 0) {
           idx_down -= 2;
           m_y--;
         }
@@ -10402,22 +10388,22 @@ function GrowConGlue(ctx) {
         shift_drawtype = GlowColor.shift_drawtype(this.draw_type, -2, null); // Light
         this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, ll_y, m_x - idx_down + idx_down / 2, m_y, shift_drawtype, 0, 0);
 
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_down += 2;
           m_y++;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, ll_y, m_x - idx_down + idx_down / 2, m_y, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, m_y, m_x + idx_down / 2, m_y, Glow.eDrawType_Line, 0, 0);
       }
-    } else if (lw_up == -1 && lw_down == -1 &&
-      lw_right != -1 && lw_left == -1) {
+    } else if (lw_up === -1 && lw_down === -1 &&
+      lw_right !== -1 && lw_left === -1) {
       // Right termination
       this.ctx.gdraw.fill_rect(m_x, m_y - idx_right + idx_right / 2, ur_x - m_x, idx_right + 1, drawtype);
-      if (this.shadow != 0 && idx_right > 2) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && idx_right > 2) {
+        if (this.border !== 0) {
           idx_right -= 2;
           m_x++;
         }
@@ -10428,22 +10414,22 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x, m_y - idx_right + idx_right / 2, ur_x, m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x, m_y - idx_right + idx_right / 2, m_x, m_y + idx_right / 2, shift_drawtype, 0, 0);
 
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_right += 2;
           m_x--;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(m_x, m_y - idx_right + idx_right / 2, ur_x, m_y - idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x, m_y + idx_right / 2, ur_x, m_y + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x, m_y - idx_right + idx_right / 2, m_x, m_y + idx_right / 2, Glow.eDrawType_Line, 0, 0);
       }
-    } else if (lw_up == -1 && lw_down == -1 &&
-      lw_right == -1 && lw_left != -1) {
+    } else if (lw_up === -1 && lw_down === -1 &&
+      lw_right === -1 && lw_left !== -1) {
       // Left termination
       this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x - ll_x, idx_left + 1, drawtype);
-      if (this.shadow != 0 && idx_left > 2) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && idx_left > 2) {
+        if (this.border !== 0) {
           idx_left -= 2;
           m_x--;
         }
@@ -10454,24 +10440,24 @@ function GrowConGlue(ctx) {
         shift_drawtype = GlowColor.shift_drawtype(this.draw_type, -2, null); // Light
         this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, m_x, m_y - idx_left + idx_left / 2, shift_drawtype, 0, 0);
 
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_left += 2;
           m_x++;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, m_x, m_y - idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x, m_y + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x, m_y - idx_left + idx_left / 2, m_x, m_y + idx_left / 2, Glow.eDrawType_Line, 0, 0);
       }
-    } else if (lw_up != -1 && lw_down != -1 &&
-      lw_right == -1 && lw_left == -1) {
+    } else if (lw_up !== -1 && lw_down !== -1 &&
+      lw_right === -1 && lw_left === -1) {
       // Vertical glue
       this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y, idx_up + 1, ur_y - m_y, drawtype);
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down + 1, m_y - ll_y, drawtype);
 
-      if (this.shadow != 0 && idx_down > 2) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && idx_down > 2) {
+        if (this.border !== 0) {
           idx_up -= 2;
           idx_down -= 2;
         }
@@ -10481,28 +10467,28 @@ function GrowConGlue(ctx) {
         shift_drawtype = GlowColor.shift_drawtype(this.draw_type, 2, null); // Dark
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y, m_x + idx_up / 2, ur_y, shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_up += 2;
           idx_down += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, ll_y, m_x - idx_down + idx_down / 2, m_y, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y, m_x - idx_up + idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y, m_x + idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
-        if (idx_down != idx_up) {
+        if (idx_down !== idx_up) {
           this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y, m_x - idx_down + idx_down / 2, m_y, Glow.eDrawType_Line, 0, 0);
           this.ctx.gdraw.line(m_x + idx_up / 2, m_y, m_x + idx_down / 2, m_y, Glow.eDrawType_Line, 0, 0);
         }
       }
-    } else if (lw_left != -1 && lw_right != -1 &&
-      lw_up == -1 && lw_down == -1) {
+    } else if (lw_left !== -1 && lw_right !== -1 &&
+      lw_up === -1 && lw_down === -1) {
       // Horizontal glue
       this.ctx.gdraw.fill_rect(m_x, m_y - idx_right + idx_right / 2, ur_x - m_x, idx_right + 1, drawtype);
       this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x - ll_x, idx_left + 1, drawtype);
-      if (this.shadow != 0 && (idx_left > 2 || idx_right > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_left > 2 || idx_right > 2)) {
+        if (this.border !== 0) {
           idx_left -= 2;
           idx_right -= 2;
         }
@@ -10512,28 +10498,28 @@ function GrowConGlue(ctx) {
         shift_drawtype = GlowColor.shift_drawtype(this.draw_type, 2, null); // Dark
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x, m_y + idx_left / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x, m_y + idx_right / 2, ur_x, m_y + idx_right / 2, shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_left += 2;
           idx_right += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, m_x, m_y - idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x, m_y + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x, m_y - idx_right + idx_right / 2, ur_x, m_y - idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x, m_y + idx_right / 2, ur_x, m_y + idx_right / 2, Glow.eDrawType_Line, 0, 0);
-        if (idx_left != idx_right) {
+        if (idx_left !== idx_right) {
           this.ctx.gdraw.line(m_x, m_y - idx_right + idx_right / 2, m_x, m_y - idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
           this.ctx.gdraw.line(m_x, m_y + idx_right / 2, m_x, m_y + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         }
       }
-    } else if (lw_left != -1 && lw_right == -1 &&
-      lw_up != -1 && lw_down == -1) {
+    } else if (lw_left !== -1 && lw_right === -1 &&
+      lw_up !== -1 && lw_down === -1) {
       // Left up corner
       this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y + idx_left / 2, idx_up + 1, ur_y - (m_y + idx_left / 2), drawtype);
       this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x + idx_up / 2 - ll_x + 1, idx_left + 1, drawtype);
-      if (this.shadow != 0 && (idx_left > 2 || idx_up > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_left > 2 || idx_up > 2)) {
+        if (this.border !== 0) {
           idx_left -= 2;
           idx_up -= 2;
         }
@@ -10543,24 +10529,24 @@ function GrowConGlue(ctx) {
         shift_drawtype = GlowColor.shift_drawtype(this.draw_type, 2, null); // Dark
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2, m_y + idx_left / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y - idx_left + idx_left / 2, m_x + idx_up / 2, ur_y, shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_left += 2;
           idx_up += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, m_x + idx_up / 2, m_y - idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2, m_y + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y + idx_left / 2, m_x - idx_up + idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y - idx_left + idx_left / 2, m_x + idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
       }
-    } else if (lw_left == -1 && lw_right != -1 &&
-      lw_up != -1 && lw_down == -1) {
+    } else if (lw_left === -1 && lw_right !== -1 &&
+      lw_up !== -1 && lw_down === -1) {
       // Right up corner
       this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y - idx_right + idx_right / 2, idx_up + 1, ur_y - (m_y - idx_right + idx_right / 2), drawtype);
       this.ctx.gdraw.fill_rect(m_x + idx_up / 2, m_y - idx_right + idx_right / 2, ur_x - (m_x + idx_up / 2), idx_right + 1, drawtype);
-      if (this.shadow != 0 && (idx_right > 2 || idx_up > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_right > 2 || idx_up > 2)) {
+        if (this.border !== 0) {
           idx_right -= 2;
           idx_up -= 2;
         }
@@ -10570,24 +10556,24 @@ function GrowConGlue(ctx) {
         shift_drawtype = GlowColor.shift_drawtype(this.draw_type, 2, null); // Dark
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, ur_x, m_y + idx_right / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, m_x + idx_up / 2, ur_y, shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_right += 2;
           idx_up += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y - idx_right + idx_right / 2, ur_x, m_y - idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, ur_x, m_y + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y - idx_right + idx_right / 2, m_x - idx_up + idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, m_x + idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
       }
-    } else if (lw_left == -1 && lw_right != -1 &&
-      lw_up == -1 && lw_down != -1) {
+    } else if (lw_left === -1 && lw_right !== -1 &&
+      lw_up === -1 && lw_down !== -1) {
       // Right down corner
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down + 1, m_y - idx_right + idx_right / 2 - ll_y, drawtype);
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, m_y - idx_right + idx_right / 2, ur_x - (m_x - idx_down + idx_down / 2), idx_right + 1, drawtype);
-      if (this.shadow != 0 && (idx_right > 2 || idx_down > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_right > 2 || idx_down > 2)) {
+        if (this.border !== 0) {
           idx_right -= 2;
           idx_down -= 2;
         }
@@ -10597,24 +10583,24 @@ function GrowConGlue(ctx) {
         shift_drawtype = GlowColor.shift_drawtype(this.draw_type, 2, null); // Dark
         this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, m_y + idx_right / 2, ur_x, m_y + idx_right / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_right += 2;
           idx_down += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, m_y + idx_right / 2, ur_x, m_y + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2, ur_x, m_y - idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, ll_y, m_x - idx_down + idx_down / 2, m_y + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y - idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
       }
-    } else if (lw_left != -1 && lw_right == -1 &&
-      lw_up == -1 && lw_down != -1) {
+    } else if (lw_left !== -1 && lw_right === -1 &&
+      lw_up === -1 && lw_down !== -1) {
       // Left down corner
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down + 1, m_y + idx_left / 2 - ll_y + 1, drawtype);
       this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x - idx_down + idx_down / 2 - ll_x, idx_left + 1, drawtype);
-      if (this.shadow != 0 && (idx_left > 2 || idx_down > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_left > 2 || idx_down > 2)) {
+        if (this.border !== 0) {
           idx_left -= 2;
           idx_down -= 2;
         }
@@ -10624,25 +10610,25 @@ function GrowConGlue(ctx) {
         shift_drawtype = GlowColor.shift_drawtype(this.draw_type, 2, null); // Dark
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x + idx_down / 2, m_y + idx_left / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y + idx_left / 2, shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_left += 2;
           idx_down += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x + idx_down / 2, m_y + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, ll_y, m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
       }
-    } else if (lw_left != -1 && lw_right != -1 &&
-      lw_up == -1 && lw_down != -1) {
+    } else if (lw_left !== -1 && lw_right !== -1 &&
+      lw_up === -1 && lw_down !== -1) {
       // Left right down threeway
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down + 1, m_y - ll_y + 1, drawtype);
       this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x + idx_down / 2 - ll_x, idx_left + 1, drawtype);
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, m_y - idx_right + idx_right / 2, ur_x - (m_x - idx_down + idx_down / 2), idx_right + 1, drawtype);
-      if (this.shadow != 0 && (idx_left > 2 || idx_right > 2 || idx_down > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_left > 2 || idx_right > 2 || idx_down > 2)) {
+        if (this.border !== 0) {
           idx_left -= 2;
           idx_right -= 2;
           idx_down -= 2;
@@ -10653,7 +10639,7 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2, ur_x, m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
         shift_drawtype = GlowColor.shift_drawtype(this.draw_type, 2, null); // Dark
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
-        if (idx_right == idx_left)
+        if (idx_right === idx_left)
           this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, ur_x, m_y + idx_left / 2, shift_drawtype, 0, 0);
         else if (idx_right > idx_left) {
           this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x - idx_down + idx_down / 2, m_y + idx_left / 2, shift_drawtype, 0, 0);
@@ -10662,18 +10648,18 @@ function GrowConGlue(ctx) {
           this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x + idx_down / 2, m_y + idx_left / 2, shift_drawtype, 0, 0);
           this.ctx.gdraw.line(m_x + idx_down / 2, m_y + idx_right / 2, ur_x, m_y + idx_right / 2, shift_drawtype, 0, 0);
         }
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_left += 2;
           idx_right += 2;
           idx_down += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, ll_y, m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2, ur_x, m_y - idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y - idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
-        if (idx_right == idx_left)
+        if (idx_right === idx_left)
           this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, ur_x, m_y + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         else if (idx_right > idx_left) {
           this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x - idx_down + idx_down / 2, m_y + idx_left / 2, Glow.eDrawType_Line, 0, 0);
@@ -10685,21 +10671,21 @@ function GrowConGlue(ctx) {
           this.ctx.gdraw.line(m_x + idx_down / 2, m_y + idx_right / 2, m_x + idx_down / 2, m_y + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         }
       }
-    } else if (lw_left != -1 && lw_right != -1 &&
-      lw_up != -1 && lw_down == -1) {
+    } else if (lw_left !== -1 && lw_right !== -1 &&
+      lw_up !== -1 && lw_down === -1) {
       // Left right up threeway
       this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y, idx_up + 1, ur_y - m_y, drawtype);
       this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x + idx_up / 2 - ll_x, idx_left + 1, drawtype);
       this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y - idx_right + idx_right / 2, ur_x - (m_x - idx_up + idx_up / 2), idx_right + 1, drawtype);
-      if (this.shadow != 0 && (idx_left > 2 || idx_right > 2 || idx_up > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_left > 2 || idx_right > 2 || idx_up > 2)) {
+        if (this.border !== 0) {
           idx_left -= 2;
           idx_right -= 2;
           idx_up -= 2;
         }
         shift_drawtype = GlowColor.shift_drawtype(this.draw_type, -2, null); // Light
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y + idx_left / 2, m_x - idx_up + idx_up / 2, ur_y, shift_drawtype, 0, 0);
-        if (idx_right == idx_left)
+        if (idx_right === idx_left)
           this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, ur_x, m_y - idx_left + idx_left / 2, shift_drawtype, 0, 0);
         else if (idx_right > idx_left) {
           this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, m_x - idx_up + idx_up / 2, m_y - idx_left + idx_left / 2, shift_drawtype, 0, 0);
@@ -10714,18 +10700,18 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2, m_y + idx_left / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, ur_x, m_y + idx_right / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, m_x + idx_up / 2, ur_y, shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_left += 2;
           idx_right += 2;
           idx_up += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2, m_y + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y + idx_left / 2, m_x - idx_up + idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, ur_x, m_y + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, m_x + idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
-        if (idx_right == idx_left)
+        if (idx_right === idx_left)
           this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, ur_x, m_y - idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         else if (idx_right > idx_left) {
           this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, m_x - idx_up + idx_up / 2, m_y - idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
@@ -10737,14 +10723,14 @@ function GrowConGlue(ctx) {
           this.ctx.gdraw.line(m_x + idx_up / 2, m_y - idx_right + idx_right / 2, m_x + idx_up / 2, m_y - idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         }
       }
-    } else if (lw_left != -1 && lw_right == -1 &&
-      lw_up != -1 && lw_down != -1) {
+    } else if (lw_left !== -1 && lw_right === -1 &&
+      lw_up !== -1 && lw_down !== -1) {
       // Left up down threeway
       this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x - ll_x, idx_left + 1, drawtype);
       this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y - idx_left + idx_left / 2, idx_up + 1, ur_y - (m_y - idx_left + idx_left / 2), drawtype);
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down + 1, m_y + idx_left / 2 - ll_y, drawtype);
-      if (this.shadow != 0 && (idx_left > 2 || idx_down > 2 || idx_up > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_left > 2 || idx_down > 2 || idx_up > 2)) {
+        if (this.border !== 0) {
           idx_left -= 2;
           idx_down -= 2;
           idx_up -= 2;
@@ -10756,7 +10742,7 @@ function GrowConGlue(ctx) {
         shift_drawtype = GlowColor.shift_drawtype(this.draw_type, 2, null); // Dark
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2, m_y + idx_left / 2, shift_drawtype, 0, 0);
 
-        if (idx_up == idx_down)
+        if (idx_up === idx_down)
           this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, ur_y, shift_drawtype, 0, 0);
         else if (idx_down > idx_up) {
           this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y + idx_left / 2, shift_drawtype, 0, 0);
@@ -10767,19 +10753,19 @@ function GrowConGlue(ctx) {
           this.ctx.gdraw.line(m_x + idx_up / 2, m_y - idx_left + idx_left / 2, m_x + idx_up / 2, ur_y, shift_drawtype, 0, 0);
           this.ctx.gdraw.line(m_x + idx_up / 2, m_y - idx_left + idx_left / 2, m_x + idx_down / 2, m_y - idx_left + idx_left / 2, shift_drawtype, 0, 0);
         }
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_left += 2;
           idx_down += 2;
           idx_up += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, ll_y, m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2, m_y + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y + idx_left / 2, m_x - idx_up + idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
 
-        if (idx_up == idx_down)
+        if (idx_up === idx_down)
           this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, ur_y, Glow.eDrawType_Line, 0, 0);
         else if (idx_down > idx_up) {
           this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y + idx_left / 2, Glow.eDrawType_Line, 0, 0);
@@ -10791,14 +10777,14 @@ function GrowConGlue(ctx) {
           this.ctx.gdraw.line(m_x + idx_up / 2, m_y - idx_left + idx_left / 2, m_x + idx_down / 2, m_y - idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         }
       }
-    } else if (lw_left == -1 && lw_right != -1 &&
-      lw_up != -1 && lw_down != -1) {
+    } else if (lw_left === -1 && lw_right !== -1 &&
+      lw_up !== -1 && lw_down !== -1) {
       // Right up down threeway
       this.ctx.gdraw.fill_rect(m_x, m_y - idx_right + idx_right / 2, ur_x - m_x, idx_right + 1, drawtype);
       this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y - idx_right + idx_right / 2, idx_up + 1, ur_y - (m_y - idx_right + idx_right / 2), drawtype);
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down + 1, m_y + idx_right / 2 - ll_y, drawtype);
-      if (this.shadow != 0 && (idx_right > 2 || idx_down > 2 || idx_up > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_right > 2 || idx_down > 2 || idx_up > 2)) {
+        if (this.border !== 0) {
           idx_right -= 2;
           idx_down -= 2;
           idx_up -= 2;
@@ -10806,7 +10792,7 @@ function GrowConGlue(ctx) {
         shift_drawtype = GlowColor.shift_drawtype(this.draw_type, -2, null); // Light
         this.ctx.gdraw.line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2, ur_x, m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
 
-        if (idx_up == idx_down)
+        if (idx_up === idx_down)
           this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, ll_y, m_x - idx_down + idx_down / 2, ur_y, shift_drawtype, 0, 0);
         else if (idx_down > idx_up) {
           this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, ll_y, m_x - idx_down + idx_down / 2, m_y + idx_right / 2, shift_drawtype, 0, 0);
@@ -10821,19 +10807,19 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, ur_x, m_y + idx_right / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, m_x + idx_up / 2, ur_y, shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_right += 2;
           idx_down += 2;
           idx_up += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2, ur_x, m_y - idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y - idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, ur_x, m_y + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, m_x + idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
 
-        if (idx_up == idx_down)
+        if (idx_up === idx_down)
           this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, ll_y, m_x - idx_down + idx_down / 2, ur_y, Glow.eDrawType_Line, 0, 0);
         else if (idx_down > idx_up) {
           this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, ll_y, m_x - idx_down + idx_down / 2, m_y + idx_right / 2, Glow.eDrawType_Line, 0, 0);
@@ -10845,15 +10831,15 @@ function GrowConGlue(ctx) {
           this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y - idx_right + idx_right / 2, m_x - idx_down + idx_down / 2, m_y - idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         }
       }
-    } else if (lw_left != -1 && lw_right != -1 &&
-      lw_up != -1 && lw_down != -1) {
+    } else if (lw_left !== -1 && lw_right !== -1 &&
+      lw_up !== -1 && lw_down !== -1) {
       // Right left up down fourway
       this.ctx.gdraw.fill_rect(m_x, m_y - idx_right + idx_right / 2, ur_x - m_x, idx_right + 1, drawtype);
       this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x - ll_x, idx_left + 1, drawtype);
       this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y, idx_up + 1, ur_y - m_y, drawtype);
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down + 1, m_y - ll_y, drawtype);
-      if (this.shadow != 0 && (idx_left > 2 || idx_right > 2 || idx_down > 2 || idx_up > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_left > 2 || idx_right > 2 || idx_down > 2 || idx_up > 2)) {
+        if (this.border !== 0) {
           idx_right -= 2;
           idx_left -= 2;
           idx_down -= 2;
@@ -10869,14 +10855,14 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2, m_y + idx_left / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, m_x + idx_up / 2, ur_y, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_right += 2;
           idx_left += 2;
           idx_down += 2;
           idx_up += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2, ur_x, m_y - idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y - idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, ur_x, m_y + idx_right / 2, Glow.eDrawType_Line, 0, 0);
@@ -10994,8 +10980,8 @@ function GrowBar(ctx) {
     var drawtype;
     var rotation;
     var grad = this.gradient;
-    if (this.gradient == Glow.eGradient_No &&
-      (node !== null && node.gradient != Glow.eGradient_No) && this.disable_gradient === 0)
+    if (this.gradient === Glow.eGradient_No &&
+      (node !== null && node.gradient !== Glow.eGradient_No) && this.disable_gradient === 0)
       grad = node.gradient;
 
     var bar_border_idx = Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
@@ -11033,7 +11019,7 @@ function GrowBar(ctx) {
       drawtype = GlowColor.get_drawtype(this.fill_drawtype, Glow.eDrawType_FillHighlight,
         highlight, colornode, 1, 0);
 
-      if (grad == Glow.eGradient_No)
+      if (grad === Glow.eGradient_No)
         this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype);
       else {
         var fa1, fa2;
@@ -11055,7 +11041,7 @@ function GrowBar(ctx) {
     drawtype = GlowColor.get_drawtype(this.draw_type, Glow.eDrawType_LineHighlight,
       highlight, colornode, 0, 0);
 
-    if (this.max_value != this.min_value) {
+    if (this.max_value !== this.min_value) {
       var x0, y0, width, height, l_x0, l_y0, l_x1, l_y1;
 
       if (t !== null)
@@ -11108,10 +11094,10 @@ function GrowBar(ctx) {
       }
 
       var dt = drawtype;
-      if (this.bar_drawtype != Glow.eDrawType_Inherit)
+      if (this.bar_drawtype !== Glow.eDrawType_Inherit)
         dt = this.bar_drawtype;
 
-      if (grad == Glow.eGradient_No)
+      if (grad === Glow.eGradient_No)
         this.ctx.gdraw.fill_rect(x0, y0, width, height, dt);
       else {
         var fb1, fb2;
@@ -11131,7 +11117,7 @@ function GrowBar(ctx) {
       }
 
       dt = drawtype;
-      if (this.bar_bordercolor != Glow.eDrawType_Inherit)
+      if (this.bar_bordercolor !== Glow.eDrawType_Inherit)
         dt = this.bar_bordercolor;
       this.ctx.gdraw.line(l_x0, l_y0, l_x1, l_y1, dt, bar_border_idx, 0);
     }
@@ -11353,13 +11339,13 @@ function GrowTrend(ctx) {
     ur_y = Math.max(y1, y2);
     if (this.fill !== 0) {
       var grad = this.gradient;
-      if (this.gradient == Glow.eGradient_No &&
-        (node !== null && node.gradient != Glow.eGradient_No) && this.disable_gradient === 0)
+      if (this.gradient === Glow.eGradient_No &&
+        (node !== null && node.gradient !== Glow.eGradient_No) && this.disable_gradient === 0)
         grad = node.gradient;
 
       drawtype = GlowColor.get_drawtype(this.fill_drawtype, Glow.eDrawType_FillHighlight,
         highlight, colornode, 1, 0);
-      if (grad == Glow.eGradient_No)
+      if (grad === Glow.eGradient_No)
         this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype);
       else {
         var f1, f2;
@@ -11452,7 +11438,7 @@ function GrowTrend(ctx) {
         xm1 = Math.floor(this.trf.x(t, this.x_mark1, this.ll.y) * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
       if (xm1 >= ll_x && xm1 <= ur_x) {
         drawtype = this.mark1_color;
-        if (drawtype == Glow.eDrawType_Inherit)
+        if (drawtype === Glow.eDrawType_Inherit)
           drawtype = Glow.eDrawType_ColorYellow;
         this.ctx.gdraw.line(xm1, ll_y, xm1, ur_y, drawtype, idx, 0);
       }
@@ -11465,7 +11451,7 @@ function GrowTrend(ctx) {
         xm2 = Math.floor(this.trf.x(t, this.x_mark2, this.ll.y) * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
       if (xm2 >= ll_x && xm2 <= ur_x) {
         drawtype = this.mark2_color;
-        if (drawtype == Glow.eDrawType_Inherit)
+        if (drawtype === Glow.eDrawType_Inherit)
           drawtype = Glow.eDrawType_ColorYellow;
         this.ctx.gdraw.line(xm2, ll_y, xm2, ur_y, drawtype, idx, 0);
       }
@@ -11478,7 +11464,7 @@ function GrowTrend(ctx) {
         ym1 = Math.floor(this.trf.y(t, this.ll.x, this.y_mark1) * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
       if (ym1 >= ll_y && ym1 <= ur_y) {
         drawtype = this.mark1_color;
-        if (drawtype == Glow.eDrawType_Inherit)
+        if (drawtype === Glow.eDrawType_Inherit)
           drawtype = Glow.eDrawType_ColorYellow;
         this.ctx.gdraw.line(ll_x, ym1, ur_x, ym1, drawtype, idx, 0);
       }
@@ -11491,7 +11477,7 @@ function GrowTrend(ctx) {
         ym2 = Math.floor(this.trf.y(t, this.ll.x, this.y_mark2) * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
       if (ym2 >= ll_y && ym2 <= ur_y) {
         drawtype = this.mark2_color;
-        if (drawtype == Glow.eDrawType_Inherit)
+        if (drawtype === Glow.eDrawType_Inherit)
           drawtype = Glow.eDrawType_ColorYellow;
         this.ctx.gdraw.line(ll_x, ym2, ur_x, ym2, drawtype, idx, 0);
       }
@@ -11503,7 +11489,7 @@ function GrowTrend(ctx) {
   };
 
   this.set_range = function (curve, min, max) {
-    if (!(curve === 0 || curve == 1))
+    if (!(curve === 0 || curve === 1))
       return;
     this.y_max_value[curve] = max;
     this.y_min_value[curve] = min;
@@ -11536,7 +11522,7 @@ function GrowTrend(ctx) {
         point_p.y = this.ur.y;
         if (i === 0)
           point_p.x = this.ur.x;
-        else if (i == points - 1)
+        else if (i === points - 1)
           point_p.x = this.ll.x;
         else
           point_p.x = this.ur.x - (i - 1) * (this.ur.x - this.ll.x) / (points - 3);
@@ -11547,12 +11533,12 @@ function GrowTrend(ctx) {
       if (this.curve[i] !== null)
         this.curve[i] = null;
 
-      if (this.curve_drawtype[i] != Glow.eDrawType_Inherit)
+      if (this.curve_drawtype[i] !== Glow.eDrawType_Inherit)
         dt = this.curve_drawtype[i];
       else
         dt = this.draw_type;
 
-      if (this.curve_fill_drawtype[i] != Glow.eDrawType_Inherit)
+      if (this.curve_fill_drawtype[i] !== Glow.eDrawType_Inherit)
         dt_fill = this.curve_fill_drawtype[i];
       else
         dt_fill = this.draw_type;
@@ -11570,7 +11556,7 @@ function GrowTrend(ctx) {
   };
 
   this.set_range_y = function (curve, min, max) {
-    if (!(curve === 0 || curve == 1))
+    if (!(curve === 0 || curve === 1))
       return;
 
     var mark;
@@ -11594,7 +11580,7 @@ function GrowTrend(ctx) {
     var curve_value = 0;
     if (idx >= this.curve_cnt)
       return;
-    if (this.y_max_value[idx] != this.y_min_value[idx])
+    if (this.y_max_value[idx] !== this.y_min_value[idx])
       curve_value = this.ur.y - (value - this.y_min_value[idx]) /
         (this.y_max_value[idx] - this.y_min_value[idx]) * (this.ur.y - this.ll.y);
 
@@ -11721,7 +11707,7 @@ function GrowXYCurve(ctx) {
     this.x_max_value[curve] = max;
     this.x_min_value[curve] = min;
     console.log("GrowXY x min/max", curve, this.x_min_value[curve], this.x_max_value[curve]);
-  }
+  };
 
   this.set_xy_range_y = function (curve, min, max) {
     if (curve > Glow.TREND_MAX_CURVES || curve < 0)
@@ -11776,44 +11762,44 @@ function GrowXYCurve(ctx) {
     console.log("min/max", this.x_min_value[j], this.x_max_value[j], this.y_min_value[j], this.y_max_value[j]);
     for (i = 0, idx = 0; i < cpoints; i++ , idx++) {
       point_p = pointarray[i] = new GlowPointX();
-      if (this.fill_curve == 0) {
+      if (this.fill_curve === 0) {
         idx = i;
-        if (this.y_max_value[j] != this.y_min_value[j])
+        if (this.y_max_value[j] !== this.y_min_value[j])
           point_p.y = this.ur.y - (y_data[idx] - this.y_min_value[j]) /
             (this.y_max_value[j] - this.y_min_value[j]) * (this.ur.y - this.ll.y);
 
         point_p.y = Math.max(this.ll.y, Math.min(point_p.y, this.ur.y));
 
-        if (this.x_max_value[j] != this.x_min_value[j])
+        if (this.x_max_value[j] !== this.x_min_value[j])
           point_p.x = this.ll.x + (x_data[idx] - this.x_min_value[j]) /
             (this.x_max_value[j] - this.x_min_value[j]) * (this.ur.x - this.ll.x);
 
         point_p.x = Math.max(this.ll.x, Math.min(point_p.x, this.ur.x));
 
       } else {
-        if (i == 0) {
-          if (this.x_max_value[j] != this.x_min_value[j])
+        if (i === 0) {
+          if (this.x_max_value[j] !== this.x_min_value[j])
             point_p.x = this.ll.x + (x_data[idx] - this.x_min_value[j]) /
               (this.x_max_value[j] - this.x_min_value[j]) * (this.ur.x - this.ll.x);
 
           point_p.x = Math.max(this.ll.x, Math.min(point_p.x, this.ur.x));
           point_p.y = this.ur.y;
           idx--;
-        } else if (i == cpoints - 1) {
-          if (this.x_max_value[j] != this.x_min_value[j])
+        } else if (i === cpoints - 1) {
+          if (this.x_max_value[j] !== this.x_min_value[j])
             point_p.x = this.ll.x + (x_data[idx - 1] - this.x_min_value[j]) /
               (this.x_max_value[j] - this.x_min_value[j]) * (this.ur.x - this.ll.x);
 
           point_p.x = Math.max(this.ll.x, Math.min(point_p.x, this.ur.x));
           point_p.y = this.ur.y;
         } else {
-          if (this.y_max_value[j] != this.y_min_value[j])
+          if (this.y_max_value[j] !== this.y_min_value[j])
             point_p.y = this.ur.y - (y_data[idx] - this.y_min_value[j]) /
               (this.y_max_value[j] - this.y_min_value[j]) * (this.ur.y - this.ll.y);
 
           point_p.y = Math.max(this.ll.y, Math.min(point_p.y, this.ur.y));
 
-          if (this.x_max_value[j] != this.x_min_value[j])
+          if (this.x_max_value[j] !== this.x_min_value[j])
             point_p.x = this.ll.x + (x_data[idx] - this.x_min_value[j]) /
               (this.x_max_value[j] - this.x_min_value[j]) * (this.ur.x - this.ll.x);
 
@@ -11826,12 +11812,12 @@ function GrowXYCurve(ctx) {
       console.log(cpoints, k, pointarray[k].x, pointarray[k].y);
     }
 
-    if (this.curve_drawtype[j] != Glow.eDrawType_Inherit)
+    if (this.curve_drawtype[j] !== Glow.eDrawType_Inherit)
       dt = this.curve_drawtype[j];
     else
       dt = this.draw_type;
 
-    if (this.curve_fill_drawtype[j] != Glow.eDrawType_Inherit)
+    if (this.curve_fill_drawtype[j] !== Glow.eDrawType_Inherit)
       dt_fill = this.curve_fill_drawtype[j];
     else
       dt_fill = this.draw_type;
@@ -11902,7 +11888,7 @@ function GrowMenu(ctx) {
   };
 
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0)
+    if (this.ctx.nodraw !== 0)
       return;
     console.log("GrowMenu draw", t);
     var idx;
@@ -11934,12 +11920,12 @@ function GrowMenu(ctx) {
         if (z_width > max_z_width)
           max_z_width = z_width;
         tot_z_height += Math.floor(1.6 * z_height);
-        if (this.info.item[i].type == Glow.eMenuItem_PulldownMenu)
+        if (this.info.item[i].type === Glow.eMenuItem_PulldownMenu)
           pulldown_found = 1;
         this.item_cnt++;
       }
     }
-    if (this.item_cnt == 0)
+    if (this.item_cnt === 0)
       return;
 
     var arrow_size = z_height * 4 / 5;
@@ -11977,7 +11963,7 @@ function GrowMenu(ctx) {
     for (i = 0; i < this.info.item.length; i++) {
       if (this.info.item[i].occupied) {
         y_text = ll_y + Math.floor(this.item_height * item_idx + z_height + 1);
-        if (i == this.current_item) {
+        if (i === this.current_item) {
           if (this.fill_drawtype % 10 < 7)
             drawtype = GlowColor.shift_drawtype(this.fill_drawtype, 2, null);
           else
@@ -11985,13 +11971,13 @@ function GrowMenu(ctx) {
           this.ctx.gdraw.fill_rect(ll_x, Math.floor(ll_y + item_idx * this.item_height), ur_x - ll_x,
             Math.floor(this.item_height), drawtype);
         }
-        if (this.info.item[i].type == Glow.eMenuItem_ButtonDisabled)
+        if (this.info.item[i].type === Glow.eMenuItem_ButtonDisabled)
           this.ctx.gdraw.text(x_text, y_text, this.info.item[i].text, this.text_drawtype,
             this.text_color_disabled, text_idx, highlight, 0, this.font, tsize, 0);
         else
           this.ctx.gdraw.text(x_text, y_text, this.info.item[i].text, this.text_drawtype,
             this.text_color, text_idx, highlight, 0, this.font, tsize, 0);
-        if (this.info.item[i].type == Glow.eMenuItem_PulldownMenu) {
+        if (this.info.item[i].type === Glow.eMenuItem_PulldownMenu) {
           // Draw arrow
           var p = new Array(4);
           for (var j = 0; j < 4; j++)
@@ -12010,7 +11996,7 @@ function GrowMenu(ctx) {
         item_idx++;
       }
     }
-    if (this.border != 0) {
+    if (this.border !== 0) {
       this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, this.draw_type, idx, 0);
     }
   };
@@ -12033,14 +12019,14 @@ function GrowMenu(ctx) {
         item = this.item_cnt - 1;
       if (item < 0)
         item = 0;
-      if (item != this.current_idx) {
+      if (item !== this.current_idx) {
         this.new_item = 1;
         this.old_item = this.current_item;
         this.current_idx = item;
         for (var i = 0, item_idx = 0; i < 32; i++) {
           if (!this.info.item[i].occupied)
             continue;
-          if (item_idx == item) {
+          if (item_idx === item) {
             this.current_item = i;
             break;
           }
@@ -12071,34 +12057,34 @@ function GrowMenu(ctx) {
       case Glow.eEvent_CursorMotion: {
         var redraw = 0;
         sts = this.local_event_handler(event, rp.x, rp.y);
-        if (sts != 0) {
+        if (sts !== 0) {
           this.ctx.hot_found = 1;
           redraw = 1;
         }
-        if (sts != 0 && this.hot == 0) {
+        if (sts !== 0 && this.hot === 0) {
           this.hot = 1;
           redraw = 1;
         }
-        if (sts == 0 && this.hot != 0) {
-          if (this.ctx.hot_found == 0)
+        if (sts === 0 && this.hot !== 0) {
+          if (this.ctx.hot_found === 0)
             this.hot = 0;
           redraw = 1;
         }
-        if (redraw != 0) {
+        if (redraw !== 0) {
           this.ctx.draw(this.x_left * this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x - Glow.DRAW_MP,
             this.y_low * this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y - Glow.DRAW_MP,
             this.x_right * this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x + Glow.DRAW_MP,
             this.y_high * this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y + Glow.DRAW_MP);
         }
-        if (this.old_item != this.current_item && this.old_item != -1) {
-          if (this.info.item[this.old_item].type == Glow.eMenuItem_PulldownMenu) {
+        if (this.old_item !== this.current_item && this.old_item !== -1) {
+          if (this.info.item[this.old_item].type === Glow.eMenuItem_PulldownMenu) {
             // Delete all child menu objects.
             // TODO ctx->delete_menu_child( this);
           }
         }
-        if (this.hot != 0 && this.new_item != 0) {
+        if (this.hot !== 0 && this.new_item !== 0) {
           console.log("GrowMenu new item,send MenuCreate");
-          if (this.info.item[this.current_item].type == Glow.eMenuItem_PulldownMenu)
+          if (this.info.item[this.current_item].type === Glow.eMenuItem_PulldownMenu)
             this.ctx.send_menu_callback(this, this.current_item, Glow.eEvent_MenuCreate,
               this.ur.x, this.ll.y + this.item_height / this.ctx.mw.zoom_factor_y * this.current_item);
         }
@@ -12107,12 +12093,12 @@ function GrowMenu(ctx) {
       case Glow.eEvent_MB1Click: {
         sts = this.local_event_handler(event, rp.x, rp.y);
         console.log("GrowMenu Click", sts, this.current_item);
-        if (sts != 0 && this.current_item != -1) {
+        if (sts !== 0 && this.current_item !== -1) {
           console.log("item.type", this.info.item[this.current_item].type);
-          if (this.info.item[this.current_item].type == Glow.eMenuItem_Button) {
+          if (this.info.item[this.current_item].type === Glow.eMenuItem_Button) {
             csts = this.ctx.send_menu_callback(this, this.current_item, Glow.eEvent_MenuActivated, fx, fy);
             console.log("GrowMenu click csts", csts, sts);
-            if (csts == Glow.GLOW__TERMINATED)
+            if (csts === Glow.GLOW__TERMINATED)
               return csts;
 
             // Send delete callback for the root menu of this node
@@ -12127,7 +12113,7 @@ function GrowMenu(ctx) {
       default:
         sts = this.local_event_handler(event, rp.x, rp.y);
     }
-    if (sts != 0)
+    if (sts !== 0)
       this.ctx.register_callback_object(Glow.eObjectType_Node, this);
     console.log("GrowMenu.event_handler return", sts);
     return sts;
@@ -12171,12 +12157,12 @@ function GrowScrollBar(ctx) {
     this.bar_color = bar_d_type;
     this.direction = dir;
     this.parent = parent;
-    if (nodraw != 0)
+    if (nodraw !== 0)
       this.draw(null, this.highlight, this.hot, null, null);
   };
 
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0)
+    if (this.ctx.nodraw !== 0)
       return;
 
     var idx;
@@ -12222,7 +12208,7 @@ function GrowScrollBar(ctx) {
       this.ctx.gdraw.line(ur_x - 1, ll_y + 1, ur_x - 1, ur_y - 1, shift_drawtype, 0, 0);
     }
 
-    if (this.max_value != this.min_value) {
+    if (this.max_value !== this.min_value) {
       switch (this.direction) {
         case Glow.eDir_Vertical:
           height = Math.floor(this.bar_length / (this.max_value - this.min_value)
@@ -12254,11 +12240,11 @@ function GrowScrollBar(ctx) {
     }
 
     this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, bdrawtype, idx, 0);
-  }
+  };
 
   this.set_value = function (value, length) {
     this.bar_value = value;
-    if (length != 0)
+    if (length !== 0)
       this.bar_length = length;
 
     if (this.bar_value < this.min_value)
@@ -12268,7 +12254,7 @@ function GrowScrollBar(ctx) {
 
     this.draw();
     return this.bar_value;
-  }
+  };
 
   this.event_handler = function (event, fx, fy) {
     var ll_x, ur_x, ll_y, ur_y;
@@ -12283,11 +12269,11 @@ function GrowScrollBar(ctx) {
         ll_y <= fy && fy <= ur_y))
       return 0;
 
-    if (event.event == Glow.eEvent_ButtonMotion &&
-      this.movement_active == 0)
+    if (event.event === Glow.eEvent_ButtonMotion &&
+      this.movement_active === 0)
       return 0;
 
-    if (this.min_value == this.max_value)
+    if (this.min_value === this.max_value)
       return 1;
 
     switch (event.event) {
@@ -12319,7 +12305,7 @@ function GrowScrollBar(ctx) {
         this.ctx.setSliderActive(false);
         break;
       case Glow.eEvent_ButtonMotion:
-        if (this.movement_active != 0) {
+        if (this.movement_active !== 0) {
           if (this.bar_length >= this.max_value - this.min_value)
             break;
           switch (this.direction) {
@@ -12342,7 +12328,7 @@ function GrowScrollBar(ctx) {
           }
         }
         break;
-      default: ;
+      default:
     }
     return 1;
   };
@@ -12451,7 +12437,7 @@ function GrowWindow(ctx) {
             this.owner = tokens[1];
           break;
         case Glow.eSave_GrowWindow_rect_part:
-          i = this.growrect_open(lines, i + 1);;
+          i = this.growrect_open(lines, i + 1);
           break;
         case Glow.eSave_GrowWindow_userdata_cb:
           if (this.ctx.appl != null) {
@@ -12471,14 +12457,14 @@ function GrowWindow(ctx) {
         break;
     }
 
-    if (this.file_name !== null && this.file_name != "")
+    if (this.file_name !== null && this.file_name !== "")
       this.new_ctx();
 
     return i;
   };
 
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0)
+    if (this.ctx.nodraw !== 0)
       return;
 
     var idx;
@@ -12565,10 +12551,10 @@ function GrowWindow(ctx) {
   };
 
   this.new_ctx = function () {
-    if (this.file_name == "_no_" || this.file_name === "")
+    if (this.file_name === "_no_" || this.file_name === "")
       return;
 
-    if (this.file_name.indexOf('.') == -1)
+    if (this.file_name.indexOf('.') === -1)
       this.file_name = this.file_name + ".pwg";
 
     if (this.windowCtx != null)
@@ -12597,11 +12583,11 @@ function GrowWindow(ctx) {
       self.windowCtx.mw.subwindow_scale * self.ctx.mw.zoom_factor_x;
 
     self.input_file_name = self.file_name;
-    if (self.windowCtx.background_color != Glow.eDrawType_Inherit) {
+    if (self.windowCtx.background_color !== Glow.eDrawType_Inherit) {
       self.fill_drawtype = self.original_fill_drawtype = self.windowCtx.background_color;
       self.fill = 1;
     }
-    if (self.windowCtx.x0 != self.windowCtx.x1 && self.windowCtx.y0 != self.windowCtx.y1) {
+    if (self.windowCtx.x0 !== self.windowCtx.x1 && self.windowCtx.y0 !== self.windowCtx.y1) {
       self.wctx_x0 = self.windowCtx.x0;
       self.wctx_x1 = self.windowCtx.x1;
       self.wctx_y0 = self.windowCtx.y0;
@@ -12709,13 +12695,13 @@ function GrowWindow(ctx) {
       v_sts = this.v_scrollbar.event_handler(event, fx, fy);
     if (this.h_scrollbar != null)
       h_sts = h_scrollbar.event_handler(event, fx, fy);
-    if (v_sts != 0 || h_sts != 0) {
+    if (v_sts !== 0 || h_sts !== 0) {
       return 1;
     }
 
     sts = this.growrect_event_handler(event, fx, fy);
 
-    if (this.ctx.callback_object == this) {
+    if (this.ctx.callback_object === this) {
       // Disable event callback for this object, let the window ctx handle it
       this.ctx.callback_object = null;
       thix.ctx.callback_object_type = Glow.eObjectType_NoObject;
@@ -12743,7 +12729,7 @@ function GrowWindow(ctx) {
       e.object = event.object;
       e.object_type = event.object_type;
       sts = this.windowCtx.event_handler(e, fx, fy);
-      if (sts == Glow.GLOW__TERMINATED)
+      if (sts === Glow.GLOW__TERMINATED)
         return sts;
 
       // this.windowCtx.redraw_callback = 0;
@@ -12829,17 +12815,17 @@ function GrowWindow(ctx) {
     } else
       this.h_value = this.wctx_x0 * this.windowCtx.mw.subwindow_scale;
 
-  }
+  };
 
   this.verticalScrollValueChanged = function (value) {
-    if (this.v_value != value) {
+    if (this.v_value !== value) {
       this.v_value = value;
       this.draw();
     }
   };
 
   this.horizontalScrollValueChanged = function (value) {
-    if (this.h_value != value) {
+    if (this.h_value !== value) {
       this.h_value = value;
       this.draw();
     }
@@ -12852,8 +12838,8 @@ function GrowWindow(ctx) {
 
     if (this.owner === null)
       this.owner = "";
-    if (this.input_file_name != this.file_name ||
-      this.windowCtx == null || this.windowCtx.owner != this.owner) {
+    if (this.input_file_name !== this.file_name ||
+      this.windowCtx == null || this.windowCtx.owner !== this.owner) {
       // New graph, create new context
       var ur_x = Math.floor(this.x_right * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
       var ll_x = Math.floor(this.x_left * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
@@ -12908,7 +12894,7 @@ function GrowWindow(ctx) {
     for (var i = 0; i < this.windowCtx.a.size(); i++) {
       console.log("background_object_limits", this.windowCtx.a.get(i).type());
       sts = this.windowCtx.a.get(i).get_background_object_limits(null, type, x, y, b);
-      if ((sts & 1) != 0)
+      if ((sts & 1) !== 0)
         break;
     }
     return sts;
@@ -13258,7 +13244,7 @@ function GrowFolder(ctx) {
   };
 
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0)
+    if (this.ctx.nodraw !== 0)
       return;
 
     var idx;
@@ -13310,15 +13296,15 @@ function GrowFolder(ctx) {
     for (var j = 0; j < 4; j++)
       p[j] = new GlowPointX();
     for (var i = this.folders - 1; i >= -1; i--) {
-      if (i == this.current_folder)
+      if (i === this.current_folder)
         // Draw this last
         continue;
 
-      if (i == -1)
+      if (i === -1)
         i = this.current_folder;
 
       x = ll_x + i * width;
-      if (i == 0)
+      if (i === 0)
         p[0].x = ll_x;
       else
         p[0].x = x - h / 4;
@@ -13327,19 +13313,19 @@ function GrowFolder(ctx) {
       p[1].y = ll_y;
       p[2].x = x + width - h / 4;
       p[2].y = ll_y;
-      if (i == this.folders - 1)
+      if (i === this.folders - 1)
         p[3].x = ur_x;
       else
         p[3].x = x + width + h / 4;
       p[3].y = ll_y + h;
 
-      if (i == this.current_folder)
+      if (i === this.current_folder)
         this.ctx.gdraw.fill_polyline(p, 4, this.color_selected, 0);
       else {
         this.ctx.gdraw.fill_polyline(p, 4, this.color_unselected, 0);
         if (this.shadow !== 0) {
           this.ctx.gdraw.line(p[0].x + 1, p[0].y, p[1].x + 1, p[1].y, drawtype_light, 0, 0);
-          if (i != 0) {
+          if (i !== 0) {
             var ps = new Array(4);
             for (var j = 0; j < 4; j++)
               ps[j] = new GlowPointX();
@@ -13358,8 +13344,8 @@ function GrowFolder(ctx) {
         }
       }
 
-      if (this.shadow != 0) {
-        if (i == this.current_folder) {
+      if (this.shadow !== 0) {
+        if (i === this.current_folder) {
           drawtype_light = GlowColor.shift_drawtype(this.color_selected, -2,
             colornode);
           this.ctx.gdraw.line(p[0].x + 1, p[0].y, p[1].x + 1, p[1].y, drawtype_light, 0, 0);
@@ -13373,7 +13359,7 @@ function GrowFolder(ctx) {
           this.folder_text[i], this.text_drawtype, this.text_color_drawtype,
           text_idx, highlight, 0, Glow.eFont_Helvetica, tsize, 0);
       }
-      if (i == this.current_folder)
+      if (i === this.current_folder)
         break;
     }
 
@@ -13385,7 +13371,7 @@ function GrowFolder(ctx) {
   this.event_handler = function (event, fx, fy) {
     var sts;
 
-    if (event.event == Glow.eEvent_MB1Click) {
+    if (event.event === Glow.eEvent_MB1Click) {
       if (this.x_left <= fx && fx <= this.x_right &&
         this.y_low <= fy && fy <= this.y_low + this.header_height) {
         var w = (this.x_right - this.x_left) / this.folders;
@@ -13682,7 +13668,7 @@ function GrowAxis(ctx) {
 
           if (text_idx >= 0 && max_z_width < ur_x - ll_x &&
             i % this.valuequotient === 0) {
-            if (i == this.lines - 1)
+            if (i === this.lines - 1)
               y_text = y;
             else if (i === 0)
               y_text = y + z_height - z_descent - 3;
@@ -13732,7 +13718,7 @@ function GrowAxis(ctx) {
           z_descent = z_height / 4;
 
           if (text_idx >= 0 && z_height < ur_y - ll_y) {
-            if (i == this.lines - 1)
+            if (i === this.lines - 1)
               x_text = x;
             else if (i === 0)
               x_text = x - z_width;
@@ -13785,7 +13771,7 @@ function GrowAxis(ctx) {
         if (draw_text &&
           text_idx >= 0 && max_z_width < ur_x - ll_x &&
           i % this.valuequotient === 0) {
-          if (i == this.lines - 1)
+          if (i === this.lines - 1)
             y_text = y + z_height - z_descent - 3;
           else if (i === 0)
             y_text = y;
@@ -13834,7 +13820,7 @@ function GrowAxis(ctx) {
           z_descent = z_height / 4;
 
           if (text_idx >= 0 && z_height - z_descent < ur_y - ll_y) {
-            if (i == this.lines - 1)
+            if (i === this.lines - 1)
               x_text = x - z_width;
             else if (i === 0)
               x_text = x;
@@ -13853,8 +13839,7 @@ function GrowAxis(ctx) {
   this.format_text = function (fmt, value) {
     if (Math.abs(value) < Number.MIN_VALUE)
       value = 0;
-    var sb = this.cFormat.format(value, sb);
-    return sb;
+    return this.cFormat.format(value, sb);
   };
 
   this.getUserData = function () {
@@ -14144,7 +14129,7 @@ function GrowAxisArc(ctx) {
       this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
         this.angle1 - rotation, this.angle2, drawtype, idx, 0);
 
-      if (this.lines == 1)
+      if (this.lines === 1)
         return;
 
       if (this.increment > 0)
@@ -14182,8 +14167,8 @@ function GrowAxisArc(ctx) {
           x2, y2, drawtype, idx, 0);
         if (draw_text) {
           if (text_idx >= 0 && i % this.valuequotient === 0 &&
-            !(this.angle2 == 360 &&
-              ((this.increment > 0 && i == this.lines - 1) || (this.increment < 0 && i === 0)))) {
+            !(this.angle2 === 360 &&
+              ((this.increment > 0 && i === this.lines - 1) || (this.increment < 0 && i === 0)))) {
             text = this.format_text(this.format, this.min_value + i * this.increment);
             d = this.ctx.gdraw.getTextExtent(text,
               Math.max(0, text_idx), Glow.eFont_Helvetica,
@@ -14194,9 +14179,9 @@ function GrowAxisArc(ctx) {
             if (max_z_width < z_width)
               max_z_width = z_width;
 
-            if (i == this.lines - 1 && this.angle1 === 0 && this.angle2 == 180) {
+            if (i === this.lines - 1 && this.angle1 === 0 && this.angle2 === 180) {
               xt = xt - z_width / 2;
-            } else if (i === 0 && this.angle1 === 0 && this.angle2 != 360) {
+            } else if (i === 0 && this.angle1 === 0 && this.angle2 !== 360) {
               xt = xt - z_width / 2;
             } else {
               yt = yt + (z_height - z_descent) / 2;
@@ -14215,8 +14200,7 @@ function GrowAxisArc(ctx) {
   this.format_text = function (fmt, value) {
     if (Math.abs(value) < Number.MIN_VALUE)
       value = 0;
-    var sb = this.cFormat.format(value, sb);
-    return sb;
+    return this.cFormat.format(value, sb);
   };
 
   this.getUserData = function () {
@@ -14368,10 +14352,10 @@ function GrowPie(ctx) {
           this.sectors = parseInt(tokens[1], 10);
           break;
         case Glow.eSave_GrowPie_max_value:
-          this.max_value = parseFloat(tokens[1]);;
+          this.max_value = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowPie_min_value:
-          this.min_value = parseFloat(tokens[1]);;
+          this.min_value = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowPie_sector_color1:
           this.sector_color[0] = parseInt(tokens[1], 10);
@@ -14410,40 +14394,40 @@ function GrowPie(ctx) {
           this.sector_color[11] = parseInt(tokens[1], 10);
           break;
         case Glow.eSave_GrowPie_sector_size1:
-          this.sector_size[0] = parseFloat(tokens[1]);;
+          this.sector_size[0] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowPie_sector_size2:
-          this.sector_size[1] = parseFloat(tokens[1]);;
+          this.sector_size[1] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowPie_sector_size3:
-          this.sector_size[2] = parseFloat(tokens[1]);;
+          this.sector_size[2] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowPie_sector_size4:
-          this.sector_size[3] = parseFloat(tokens[1]);;
+          this.sector_size[3] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowPie_sector_size5:
-          this.sector_size[4] = parseFloat(tokens[1]);;
+          this.sector_size[4] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowPie_sector_size6:
-          this.sector_size[5] = parseFloat(tokens[1]);;
+          this.sector_size[5] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowPie_sector_size7:
-          this.sector_size[6] = parseFloat(tokens[1]);;
+          this.sector_size[6] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowPie_sector_size8:
-          this.sector_size[7] = parseFloat(tokens[1]);;
+          this.sector_size[7] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowPie_sector_size9:
-          this.sector_size[8] = parseFloat(tokens[1]);;
+          this.sector_size[8] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowPie_sector_size10:
-          this.sector_size[9] = parseFloat(tokens[1]);;
+          this.sector_size[9] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowPie_sector_size11:
-          this.sector_size[10] = parseFloat(tokens[1]);;
+          this.sector_size[10] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowPie_sector_size12:
-          this.sector_size[11] = parseFloat(tokens[1]);;
+          this.sector_size[11] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowPie_userdata_cb:
           if (this.ctx.appl !== null) {
@@ -14474,12 +14458,12 @@ function GrowPie(ctx) {
     var idx;
     var chot = 0;
 
-    if (this.ctx.hot_indication == Glow.eHotIndication_No)
+    if (this.ctx.hot_indication === Glow.eHotIndication_No)
       hot = 0;
-    else if (this.ctx.hot_indication == Glow.eHotIndication_DarkColor) {
+    else if (this.ctx.hot_indication === Glow.eHotIndication_DarkColor) {
       chot = hot;
       hot = 0;
-    } else if (this.ctx.hot_indication == Glow.eHotIndication_LightColor) {
+    } else if (this.ctx.hot_indication === Glow.eHotIndication_LightColor) {
       chot = -hot;
       hot = 0;
     }
@@ -14518,8 +14502,8 @@ function GrowPie(ctx) {
 
     var display_shadow = ((node !== null && node.shadow !== 0) || this.shadow !== 0) && this.disable_shadow === 0;
     var grad = this.gradient;
-    if (this.gradient == Glow.eGradient_No &&
-      (node !== null && node.gradient != Glow.eGradient_No) && this.disable_gradient === 0)
+    if (this.gradient === Glow.eGradient_No &&
+      (node !== null && node.gradient !== Glow.eGradient_No) && this.disable_gradient === 0)
       grad = node.gradient;
 
     var a1 = this.angle1;
@@ -14529,7 +14513,7 @@ function GrowPie(ctx) {
     for (var i = 0; i < this.sectors + 1; i++) {
       var fillcolor;
 
-      if (i == this.sectors) {
+      if (i === this.sectors) {
         if (ia1 >= this.angle1 + this.angle2)
           break;
         ia2 = this.angle1 + this.angle2 - ia1;
@@ -14549,7 +14533,7 @@ function GrowPie(ctx) {
           highlight, colornode, 1, 0);
       }
 
-      if (grad == Glow.eGradient_No || fillcolor == Glow.eDrawType_ColorRed) {
+      if (grad === Glow.eGradient_No || fillcolor === Glow.eDrawType_ColorRed) {
         if (chot !== 0)
           drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
         else
@@ -14570,7 +14554,7 @@ function GrowPie(ctx) {
       } else {
         var ish = Math.floor(this.shadow_width / 100 * Math.min(ur_x - ll_x, ur_y - ll_y) + 0.5);
         var drawtype_incr = this.shadow_contrast;
-        if (this.relief == Glow.eRelief_Down)
+        if (this.relief === Glow.eRelief_Down)
           drawtype_incr = -this.shadow_contrast;
 
         var f1, f2;
@@ -14604,7 +14588,7 @@ function GrowPie(ctx) {
       this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
         this.angle1 - rot, this.angle2, drawtype, idx, 0);
     }
-  }
+  };
 
   this.set_conf = function (sector_num, min_val, max_val, color) {
     this.sectors = sector_num;
@@ -14613,7 +14597,7 @@ function GrowPie(ctx) {
     for (var i = 0; i < this.sectors; i++)
       this.sector_color[i] = color[i];
     this.draw();
-  }
+  };
 
   this.get_conf = function () {
     var info = new GlowPieInfo();
@@ -14621,13 +14605,13 @@ function GrowPie(ctx) {
     info.min_val = this.min_value;
     info.max_val = this.max_value;
     return info;
-  }
+  };
 
   this.set_values = function (values) {
     for (var i = 0; i < this.sectors; i++)
       this.sector_size[i] = values[i];
     this.draw();
-  }
+  };
 
   this.getUserData = function () {
     return userdata;
@@ -14686,10 +14670,10 @@ function GrowBarChart(ctx) {
           this.barsegments = parseInt(tokens[1], 10);
           break;
         case Glow.eSave_GrowBarChart_max_value:
-          this.max_value = parseFloat(tokens[1]);;
+          this.max_value = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowBarChart_min_value:
-          this.min_value = parseFloat(tokens[1]);;
+          this.min_value = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowBarChart_horizontal_lines:
           this.horizontal_lines = parseInt(tokens[1], 10);
@@ -14758,24 +14742,24 @@ function GrowBarChart(ctx) {
   };
 
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0)
+    if (this.ctx.nodraw !== 0)
       return;
 
     var drawtype;
     var idx;
     var chot = 0;
 
-    if (this.ctx.hot_indication == Glow.eHotIndication_No)
+    if (this.ctx.hot_indication === Glow.eHotIndication_No)
       hot = 0;
-    else if (this.ctx.hot_indication == Glow.eHotIndication_DarkColor) {
+    else if (this.ctx.hot_indication === Glow.eHotIndication_DarkColor) {
       chot = hot;
       hot = 0;
-    } else if (this.ctx.hot_indication == Glow.eHotIndication_LightColor) {
+    } else if (this.ctx.hot_indication === Glow.eHotIndication_LightColor) {
       chot = -hot;
       hot = 0;
     }
 
-    if (node != null && node.line_width != 0)
+    if (node != null && node.line_width !== 0)
       idx = Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
         node.line_width - 1);
     else
@@ -14805,8 +14789,8 @@ function GrowBarChart(ctx) {
     ur_y = Math.max(y1, y2);
 
     var grad = this.gradient;
-    if (this.gradient == Glow.eGradient_No &&
-      (node !== null && node.gradient != Glow.eGradient_No) && this.disable_gradient === 0)
+    if (this.gradient === Glow.eGradient_No &&
+      (node !== null && node.gradient !== Glow.eGradient_No) && this.disable_gradient === 0)
       grad = node.gradient;
 
     var skip;
@@ -14824,7 +14808,7 @@ function GrowBarChart(ctx) {
     for (var j = 0; j < this.bars; j++) {
       bar_ll_x = bar_ur_x;
 
-      if (j == this.bars - 1)
+      if (j === this.bars - 1)
         bar_ur_x = ur_x;
       else
         bar_ur_x = ll_x + Math.floor((j + 1) * width);
@@ -14832,14 +14816,14 @@ function GrowBarChart(ctx) {
       bar_ll_y = ur_y;
       f_bar_ll_y = ur_y;
       for (var i = 0; i < this.barsegments + 1; i++) {
-        if (typeof this.bar_values[i] == 'undefined')
-          continue
+        if (typeof this.bar_values[i] === 'undefined')
+          continue;
         var fillcolor = 0;
 
         skip = 0;
         bar_ur_y = bar_ll_y;
 
-        if (i == this.barsegments) {
+        if (i === this.barsegments) {
           if (bar_ll_y <= ll_y)
             skip = 1;
           else
@@ -14862,9 +14846,9 @@ function GrowBarChart(ctx) {
           }
         }
 
-        if (skip == 0) {
-          if (grad == Glow.eGradient_No || fillcolor == Glow.eDrawType_ColorRed || i == this.barsegments) {
-            if (chot != 0)
+        if (skip === 0) {
+          if (grad === Glow.eGradient_No || fillcolor === Glow.eDrawType_ColorRed || i === this.barsegments) {
+            if (chot !== 0)
               drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
             else
               drawtype = fillcolor;
@@ -14882,7 +14866,7 @@ function GrowBarChart(ctx) {
               bar_ur_y - bar_ll_y, fillcolor, f1, f2, grad);
           }
         }
-        if (this.border !== 0 && i == this.barsegments) {
+        if (this.border !== 0 && i === this.barsegments) {
           // Draw previous bar border
           if (j > 0) {
             drawtype = GlowColor.get_drawtype(this.draw_type, Glow.eDrawType_LineHighlight,
@@ -14902,7 +14886,7 @@ function GrowBarChart(ctx) {
             brect_width = bar_ur_x - bar_ll_x;
             brect_height = ur_y - ll_y;
           }
-          if (j == this.bars - 1) {
+          if (j === this.bars - 1) {
             // Draw last bar border
             drawtype = GlowColor.get_drawtype(this.draw_type, Glow.eDrawType_LineHighlight,
               highlight, colornode, 0, 0);
@@ -14934,7 +14918,7 @@ function GrowBarChart(ctx) {
         drawtype, idx, 0);
     }
 
-  }
+  };
 
   this.set_conf = function (bar_num, barsegment_num, min_val, max_val,
     vert_lines, horiz_lines, lcolor, color) {
@@ -15110,7 +15094,7 @@ function GrowTable(ctx) {
         case Glow.eSave_GrowTable:
           break;
         case Glow.eSave_GrowTable_scrollbar_width:
-          this.scrollbar_width = parseFloat(tokens[1]);;
+          this.scrollbar_width = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowTable_scrollbar_color:
           this.scrollbar_color = parseInt(tokens[1], 10);
@@ -15125,7 +15109,7 @@ function GrowTable(ctx) {
           this.horizontal_scrollbar = parseInt(tokens[1], 10);
           break;
         case Glow.eSave_GrowTable_window_scale:
-          this.window_scale = parseFloat(tokens[1]);;
+          this.window_scale = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowTable_rows:
           this.rows = parseInt(tokens[1], 10);
@@ -15161,10 +15145,10 @@ function GrowTable(ctx) {
           this.header_text_bold = parseInt(tokens[1], 10);
           break;
         case Glow.eSave_GrowTable_header_row_height:
-          this.header_row_height = parseFloat(tokens[1]);;
+          this.header_row_height = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowTable_row_height:
-          this.row_height = parseFloat(tokens[1]);;
+          this.row_height = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowTable_options:
           this.options = parseInt(tokens[1], 10);
@@ -15176,84 +15160,84 @@ function GrowTable(ctx) {
           this.font = parseInt(tokens[1], 10);
           break;
         case Glow.eSave_GrowTable_column_width1:
-          this.column_width[0] = parseFloat(tokens[1]);;
+          this.column_width[0] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowTable_header_text1:
           if (tokens.length > 1)
             this.header_text[0] = tokens[1];
           break;
         case Glow.eSave_GrowTable_column_width2:
-          this.column_width[1] = parseFloat(tokens[1]);;
+          this.column_width[1] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowTable_header_text2:
           if (tokens.length > 1)
             this.header_text[1] = tokens[1];
           break;
         case Glow.eSave_GrowTable_column_width3:
-          this.column_width[2] = parseFloat(tokens[1]);;
+          this.column_width[2] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowTable_header_text3:
           if (tokens.length > 1)
             this.header_text[2] = tokens[1];
           break;
         case Glow.eSave_GrowTable_column_width4:
-          this.column_width[3] = parseFloat(tokens[1]);;
+          this.column_width[3] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowTable_header_text4:
           if (tokens.length > 1)
             this.header_text[3] = tokens[1];
           break;
         case Glow.eSave_GrowTable_column_width5:
-          this.column_width[4] = parseFloat(tokens[1]);;
+          this.column_width[4] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowTable_header_text5:
           if (tokens.length > 1)
             this.header_text[4] = tokens[1];
           break;
         case Glow.eSave_GrowTable_column_width6:
-          this.column_width[5] = parseFloat(tokens[1]);;
+          this.column_width[5] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowTable_header_text6:
           if (tokens.length > 1)
             this.header_text[5] = tokens[1];
           break;
         case Glow.eSave_GrowTable_column_width7:
-          this.column_width[6] = parseFloat(tokens[1]);;
+          this.column_width[6] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowTable_header_text7:
           if (tokens.length > 1)
             this.header_text[6] = tokens[1];
           break;
         case Glow.eSave_GrowTable_column_width8:
-          this.column_width[7] = parseFloat(tokens[1]);;
+          this.column_width[7] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowTable_header_text8:
           if (tokens.length > 1)
             this.header_text[7] = tokens[1];
           break;
         case Glow.eSave_GrowTable_column_width9:
-          this.column_width[8] = parseFloat(tokens[1]);;
+          this.column_width[8] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowTable_header_text9:
           if (tokens.length > 1)
             this.header_text[8] = tokens[1];
           break;
         case Glow.eSave_GrowTable_column_width10:
-          this.column_width[9] = parseFloat(tokens[1]);;
+          this.column_width[9] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowTable_header_text10:
           if (tokens.length > 1)
             this.header_text[9] = tokens[1];
           break;
         case Glow.eSave_GrowTable_column_width11:
-          this.column_width[10] = parseFloat(tokens[1]);;
+          this.column_width[10] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowTable_header_text11:
           if (tokens.length > 1)
             this.header_text[10] = tokens[1];
           break;
         case Glow.eSave_GrowTable_column_width12:
-          this.column_width[11] = parseFloat(tokens[1]);;
+          this.column_width[11] = parseFloat(tokens[1]);
           break;
         case Glow.eSave_GrowTable_header_text12:
           if (tokens.length > 1)
@@ -15339,7 +15323,7 @@ function GrowTable(ctx) {
     else
       this.y_low_offs = 0;
 
-    if (this.header_column != 0)
+    if (this.header_column !== 0)
       this.x_left_offs = this.column_width[0];
     else
       this.x_left_offs = 0;
@@ -15367,7 +15351,7 @@ function GrowTable(ctx) {
       this.v_scrollbar.set_value(this.table_y0 * this.window_scale, this.y_high - (this.y_low + this.y_low_offs) - this.scrollbar_width * this.horizontal_scrollbar);
       this.v_scrollbar.set_shadow(this.shadow);
       this.v_value = this.table_y0 * this.window_scale;
-    } else if (this.vertical_scrollbar == 0 && this.v_scrollbar != null) {
+    } else if (this.vertical_scrollbar === 0 && this.v_scrollbar != null) {
       this.v_scrollbar = null;
       this.v_value = this.table_y0 * this.window_scale;
     } else if (this.v_scrollbar !== null) {
@@ -15416,7 +15400,7 @@ function GrowTable(ctx) {
     this.tdraw(null, 0, 0, null, null);
   };
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0)
+    if (this.ctx.nodraw !== 0)
       return;
 
     var idx;
@@ -15482,7 +15466,7 @@ function GrowTable(ctx) {
 
     dark_drawtype = GlowColor.shift_drawtype(this.fill_drawtype, 2, null);
     light_drawtype = GlowColor.shift_drawtype(this.fill_drawtype, -2, null);
-    if (this.select_drawtype == Glow.eDrawType_Inherit)
+    if (this.select_drawtype === Glow.eDrawType_Inherit)
       sel_drawtype = dark_drawtype;
     else
       sel_drawtype = this.select_drawtype;
@@ -15498,7 +15482,7 @@ function GrowTable(ctx) {
     var o_ur_y = Math.floor((dy2 - this.horizontal_scrollbar * this.scrollbar_width) * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
 
     var t_ll_x = o_ll_x - Math.floor(this.h_value * this.ctx.mw.zoom_factor_x);
-    var t_ll_y = o_ll_y - Math.floor(this.v_value * this.ctx.mw.zoom_factor_y);;
+    var t_ll_y = o_ll_y - Math.floor(this.v_value * this.ctx.mw.zoom_factor_y);
     var t_ur_x = t_ll_x + Math.floor(this.table_x1 * this.ctx.mw.zoom_factor_x);
     var t_ur_y = t_ll_y + Math.floor(this.table_y1 * this.ctx.mw.zoom_factor_y);
 
@@ -15509,7 +15493,7 @@ function GrowTable(ctx) {
     var header_w = 0;
     var text_offs = 10;
 
-    if (this.header_row != 0)
+    if (this.header_row !== 0)
       header_h = Math.floor(this.header_row_height * this.ctx.mw.zoom_factor_y);
     if (this.header_column !== 0)
       header_w = Math.floor(this.column_width[0] * this.ctx.mw.zoom_factor_x);
@@ -15526,9 +15510,9 @@ function GrowTable(ctx) {
         for (var i = this.header_column; i < this.columns + 1; i++) {
           if (x > ur_x)
             break;
-          if (i != this.header_column)
+          if (i !== this.header_column)
             this.ctx.gdraw.line(Math.floor(x) - 1, ll_y, Math.floor(x) - 1, ll_y + header_h, dark_drawtype, 0, 0);
-          if (i != this.columns)
+          if (i !== this.columns)
             this.ctx.gdraw.line(Math.floor(x) + 1, ll_y, Math.floor(x) + 1, ll_y + header_h, light_drawtype, 0, 0);
           x += this.column_width[i] * this.ctx.mw.zoom_factor_x;
         }
@@ -15602,9 +15586,9 @@ function GrowTable(ctx) {
           if (y > ur_y)
             break;
           if (y > ll_y) {
-            if (i != 0)
+            if (i !== 0)
               this.ctx.gdraw.line(ll_x, Math.floor(y) - 1, ll_x + header_w, Math.floor(y) - 1, dark_drawtype, 0, 0);
-            if (i != this.rows)
+            if (i !== this.rows)
               this.ctx.gdraw.line(ll_x, Math.floor(y) + 1, ll_x + header_w, Math.floor(y) + 1, light_drawtype, 0, 0);
           }
           y += this.row_height * this.ctx.mw.zoom_factor_y;
@@ -15626,8 +15610,8 @@ function GrowTable(ctx) {
           if (text_idx >= 0 && this.cell_value[offs] != null && this.cell_value[offs] !== "") {
             var text_x = Math.floor(x) + text_offs;
 
-            if (this.column_adjustment[0] == Glow.eAdjustment_Right ||
-              this.column_adjustment[0] == Glow.eAdjustment_Center) {
+            if (this.column_adjustment[0] === Glow.eAdjustment_Right ||
+              this.column_adjustment[0] === Glow.eAdjustment_Center) {
               var width, height, descent;
               var dim = this.ctx.gdraw.getTextExtent(this.cell_value[offs],
                 text_idx, this.font, this.text_drawtype);
@@ -15680,9 +15664,9 @@ function GrowTable(ctx) {
         if (x > ur_x)
           break;
         if (x > ll_x) {
-          if (i != this.header_column)
+          if (i !== this.header_column)
             this.ctx.gdraw.line(Math.floor(x) - 1, t_ll_y, Math.floor(x) - 1, t_ur_y, dark_drawtype, 0, 0);
-          if (i != this.columns)
+          if (i !== this.columns)
             this.ctx.gdraw.line(Math.floor(x) + 1, t_ll_y, Math.floor(x) + 1, t_ur_y, light_drawtype, 0, 0);
         }
         x += this.column_width[i] * this.ctx.mw.zoom_factor_x;
@@ -15692,9 +15676,9 @@ function GrowTable(ctx) {
         if (y > ur_y)
           break;
         if (y > ll_y) {
-          if (i != 0)
+          if (i !== 0)
             this.ctx.gdraw.line(t_ll_x, Math.floor(y - 1), t_ur_x, Math.floor(y) - 1, dark_drawtype, 0, 0);
-          if (i != this.rows)
+          if (i !== this.rows)
             this.ctx.gdraw.line(t_ll_x, Math.floor(y) + 1, t_ur_x, Math.floor(y) + 1, light_drawtype, 0, 0);
         }
         y += this.row_height * this.ctx.mw.zoom_factor_y;
@@ -15743,7 +15727,7 @@ function GrowTable(ctx) {
           }
           if ((this.options & this.mTableOptions_ZeroIfHeaderIs0) !== 0) {
             // Don't draw the row if the value in the first column is zero
-            if (this.cell_value[j] === null || this.cell_value[j] == "0")
+            if (this.cell_value[j] === null || this.cell_value[j] === "0")
               continue;
           }
 
@@ -15752,8 +15736,8 @@ function GrowTable(ctx) {
             if (text_idx >= 0 && this.cell_value[offs] !== null && this.cell_value[offs] !== "") {
               var text_x = Math.floor(x) + text_offs;
 
-              if (this.column_adjustment[i] == Glow.eAdjustment_Right ||
-                this.column_adjustment[i] == Glow.eAdjustment_Center) {
+              if (this.column_adjustment[i] === Glow.eAdjustment_Right ||
+                this.column_adjustment[i] === Glow.eAdjustment_Center) {
                 var width, height, descent;
                 var dim = this.ctx.gdraw.getTextExtent(this.cell_value[offs],
                   text_idx, this.font, this.text_drawtype);
@@ -15798,11 +15782,11 @@ function GrowTable(ctx) {
 
   this.getUserData = function () {
     return this.userdata;
-  }
+  };
 
   this.verticalScrollValueChanged = function (value) {
     console.log("v change", value);
-    if (this.v_value != value) {
+    if (this.v_value !== value) {
       this.v_value = value;
       this.draw();
     }
@@ -15810,11 +15794,11 @@ function GrowTable(ctx) {
 
   this.horizontalScrollValueChanged = function (value) {
     console.log("h changed", value);
-    if (this.h_value != value) {
+    if (this.h_value !== value) {
       this.h_value = value;
       this.draw();
     }
-  }
+  };
 
   this.event_handler = function (event, fx, fy) {
     var sts, v_sts, h_sts;
@@ -15824,12 +15808,12 @@ function GrowTable(ctx) {
       v_sts = this.v_scrollbar.event_handler(event, fx, fy);
     if (this.h_scrollbar !== null)
       h_sts = this.h_scrollbar.event_handler(event, fx, fy);
-    if (v_sts != 0 || h_sts != 0) {
+    if (v_sts !== 0 || h_sts !== 0) {
       return 1;
     }
 
     sts = this.growrect_event_handler(event, fx, fy);
-    if (event.event == Glow.eEvent_ButtonMotion)
+    if (event.event === Glow.eEvent_ButtonMotion)
       return 0;
 
     switch (event.event) {
@@ -15847,7 +15831,7 @@ function GrowTable(ctx) {
         var t_ll_y = o_ll_y - this.v_value;
 
         if (o_ll_y <= fy && fy <= o_ur_y) {
-          if (this.header_column != 0 &&
+          if (this.header_column !== 0 &&
             this.x_left <= fx && fx <= this.x_left + this.x_left_offs)
             column = 0;
           else if (o_ll_x <= fx && fx <= o_ur_x) {
@@ -15870,11 +15854,11 @@ function GrowTable(ctx) {
           }
         }
 
-        if (row != -1 && column != -1)
+        if (row !== -1 && column !== -1)
           this.ctx.send_table_callback(this, event.event, fx, fy, column, row);
         break;
       }
-      default: ;
+      default:
     }
 
     return sts;
@@ -15902,8 +15886,8 @@ function GrowTable(ctx) {
   };
 
   this.setSelectedCell = function (column, row) {
-    if (this.selected_cell_column == column &&
-      this.selected_cell_row == row)
+    if (this.selected_cell_column === column &&
+      this.selected_cell_row === row)
       return;
 
     if (column >= this.columns || row >= this.rows)
@@ -15918,7 +15902,7 @@ function GrowTable(ctx) {
     return this.selected_cell_row;
   };
   this.getSelectedCellColumn = function () {
-    if (this.selected_cell_row == -1)
+    if (this.selected_cell_row === -1)
       return -1;
     return this.selected_cell_column;
   };
@@ -16019,7 +16003,7 @@ function GlowDraw(ctx) {
     this.gctx.strokeStyle = this.getColor(gc_type);
     this.gctx.lineWidth = idx + 1;
     this.gctx.beginPath();
-    if (typeof this.gctx.ellipse == 'function')
+    if (typeof this.gctx.ellipse === 'function')
       this.gctx.ellipse(x + width / 2, y + height / 2, width / 2, height / 2, 0, -a1 * Math.PI / 180, -(a1 + a2) * Math.PI / 180, true);
     else
       this.gctx.arc(x + width / 2, y + height / 2, width / 2, -a1 * Math.PI / 180, -(a1 + a2) * Math.PI / 180, true);
@@ -16029,9 +16013,9 @@ function GlowDraw(ctx) {
   this.fill_arc = function (x, y, width, height, a1, a2, gc_type) {
     this.gctx.fillStyle = this.getColor(gc_type);
     this.gctx.beginPath();
-    if (a2 != 360)
+    if (a2 !== 360)
       this.gctx.moveTo(x + width / 2, y + height / 2);
-    if (typeof this.gctx.ellipse == 'function')
+    if (typeof this.gctx.ellipse === 'function')
       this.gctx.ellipse(x + width / 2, y + height / 2, width / 2, height / 2, 0, -a1 * Math.PI / 180, -(a1 + a2) * Math.PI / 180, true);
     else
       this.gctx.arc(x + width / 2, y + height / 2, width / 2, -a1 * Math.PI / 180, -(a1 + a2) * Math.PI / 180, true);
@@ -16149,9 +16133,9 @@ function GlowDraw(ctx) {
     this.setGradient(gradient, f1, f2, x, y, width, height);
 
     this.gctx.beginPath();
-    if (a2 != 360)
+    if (a2 !== 360)
       this.gctx.moveTo(x + width / 2, y + height / 2);
-    if (typeof this.gctx.ellipse == 'function')
+    if (typeof this.gctx.ellipse === 'function')
       this.gctx.ellipse(x + width / 2, y + height / 2, width / 2, height / 2, 0, -a1 * Math.PI / 180, -(a1 + a2) * Math.PI / 180, true);
     else
       this.gctx.arc(x + width / 2, y + height / 2, width / 2, -a1 * Math.PI / 180, -(a1 + a2) * Math.PI / 180, true);
@@ -16404,7 +16388,7 @@ function GlowDraw(ctx) {
   };
 
   this.reset_clip_rectangle = function () {
-    if (this.clipCount == 0) {
+    if (this.clipCount === 0) {
       console.log("Clip mismatch");
       return;
     }
@@ -16424,7 +16408,7 @@ function GlowDraw(ctx) {
   };
 
   this.get_clip_rectangle = function () {
-    if (this.clipCount == 0)
+    if (this.clipCount === 0)
       return null;
 
     var rect = new GlowRectangle();
@@ -16462,7 +16446,7 @@ function GlowDraw(ctx) {
   };
 
   this.get_customcolors = function () {
-    if (this.customcolors_cnt == 0)
+    if (this.customcolors_cnt === 0)
       return null;
     return this.customcolors[0];
   };
@@ -16553,9 +16537,9 @@ function GrowCtx(ctx) {
     var grow_loaded = false;
 
     for (var i = row; i < lines.length; i++) {
-      if (lines[i].length > 2 && lines[i].substring(0, 2) == "0!")
+      if (lines[i].length > 2 && lines[i].substring(0, 2) === "0!")
         continue;
-      if (lines[i].length > 1 && lines[i].substring(0, 1) == "!")
+      if (lines[i].length > 1 && lines[i].substring(0, 1) === "!")
         continue;
 
       var tokens = lines[i].split(' ');
@@ -16667,7 +16651,7 @@ function GrowCtx(ctx) {
 
     console.log("color_theme", this.color_theme, this.default_color_theme);
     if (this.color_theme !== null && this.color_theme !== "") {
-      if (this.color_theme == "$default") {
+      if (this.color_theme === "$default") {
         if (this.default_color_theme !== null) {
           this.customcolors.read_colorfile(this, this.default_color_theme);
           this.gdraw.push_customcolors(this.customcolors);
@@ -16682,9 +16666,9 @@ function GrowCtx(ctx) {
   this.open_comment = function (lines, row) {
     var i;
     for (i = row; i < lines.length; i++) {
-      if (!lines[i].substring(0, 1) == "!")
+      if (!lines[i].substring(0, 1) === "!")
         break;
-      if (lines[i].substring(0, 3) == "!*/")
+      if (lines[i].substring(0, 3) === "!*/")
         break;
     }
     return i;
@@ -16868,7 +16852,7 @@ function GrowCtx(ctx) {
 
   this.get_nodeclass_from_name = function (nc_name) {
     for (var i = 0; i < this.a_nc.size(); i++) {
-      if (nc_name == this.a_nc.get(i).nc_name)
+      if (nc_name === this.a_nc.get(i).nc_name)
         return this.a_nc.get(i);
     }
     return null;
@@ -16876,7 +16860,7 @@ function GrowCtx(ctx) {
 
   this.get_conclass_from_name = function (cc_name) {
     for (var i = 0; i < this.a_cc.size(); i++) {
-      if (cc_name == this.a_cc.get(i).cc_name)
+      if (cc_name === this.a_cc.get(i).cc_name)
         return this.a_cc.get(i);
     }
     return null;
@@ -16893,17 +16877,17 @@ function GrowCtx(ctx) {
 
     for (var i = this.a.size() - 1; i >= 0; i--) {
       sts = this.a.get(i).event_handler(e, e.x, e.y);
-      if (sts == Glow.GLOW__NO_PROPAGATE)
+      if (sts === Glow.GLOW__NO_PROPAGATE)
         break;
-      if (sts == Glow.GLOW__TERMINATED)
+      if (sts === Glow.GLOW__TERMINATED)
         return sts;
-      if (sts == 1)
+      if (sts === 1)
         break;
     }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
-        if (sts == 1 && this.callback_object !== null && this.callback_object.type() == Glow.eObjectType_GrowSlider) {
+        if (sts === 1 && this.callback_object !== null && this.callback_object.type() === Glow.eObjectType_GrowSlider) {
           console.log("GrowCtx slider move start event");
           this.sliderActive = true;
           this.sliderObject = this.callback_object;
@@ -16919,7 +16903,7 @@ function GrowCtx(ctx) {
 
           if (this.restriction_object !== null) {
             var g = this.restriction_object.measure();
-            if (this.move_restriction == Glow.eMoveRestriction_VerticalSlider)
+            if (this.move_restriction === Glow.eMoveRestriction_VerticalSlider)
               this.slider_cursor_offset = g.ll_y - e.y;
             else
               this.slider_cursor_offset = g.ll_x - e.x;
@@ -17048,7 +17032,7 @@ function GrowCtx(ctx) {
       default: break;
     }
 
-    if (sts == 1 && this.appl !== null) {
+    if (sts === 1 && this.appl !== null) {
       e.object = this.callback_object;
       e.object_type = this.callback_object_type;
       this.appl.event_handler(e);
@@ -17086,11 +17070,11 @@ function GrowCtx(ctx) {
     var i;
 
     for (i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() == Glow.eObjectType_Con)
+      if (this.a.get(i).type() === Glow.eObjectType_Con)
         this.a.get(i).draw();
     }
     for (i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() != Glow.eObjectType_Con)
+      if (this.a.get(i).type() !== Glow.eObjectType_Con)
         this.a.get(i).draw();
     }
   };
@@ -17103,12 +17087,12 @@ function GrowCtx(ctx) {
     this.gdraw.fill_rect(0, 0, this.gdraw.canvas.width, this.gdraw.canvas.height, this.background_color);
     // Draw connections
     for (i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() == Glow.eObjectType_Con)
+      if (this.a.get(i).type() === Glow.eObjectType_Con)
         this.a.get(i).draw();
     }
     // Draw nodes
     for (i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() != Glow.eObjectType_Con)
+      if (this.a.get(i).type() !== Glow.eObjectType_Con)
         this.a.get(i).draw();
     }
     drawing = false;
@@ -17118,31 +17102,31 @@ function GrowCtx(ctx) {
     var sts;
     this.nodraw++;
     for (var i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() == Glow.eObjectType_GrowNode ||
-        this.a.get(i).type() == Glow.eObjectType_GrowGroup ||
-        this.a.get(i).type() == Glow.eObjectType_GrowBar ||
-        this.a.get(i).type() == Glow.eObjectType_GrowTrend ||
-        this.a.get(i).type() == Glow.eObjectType_GrowTable ||
-        this.a.get(i).type() == Glow.eObjectType_GrowSlider ||
-        this.a.get(i).type() == Glow.eObjectType_GrowWindow ||
-        this.a.get(i).type() == Glow.eObjectType_GrowFolder ||
-        this.a.get(i).type() == Glow.eObjectType_GrowXYCurve ||
-        this.a.get(i).type() == Glow.eObjectType_GrowPie ||
-        this.a.get(i).type() == Glow.eObjectType_GrowBarChart ||
-        this.a.get(i).type() == Glow.eObjectType_GrowToolbar ||
-        this.a.get(i).type() == Glow.eObjectType_GrowAxis ||
-        this.a.get(i).type() == Glow.eObjectType_GrowAxisArc) {
+      if (this.a.get(i).type() === Glow.eObjectType_GrowNode ||
+        this.a.get(i).type() === Glow.eObjectType_GrowGroup ||
+        this.a.get(i).type() === Glow.eObjectType_GrowBar ||
+        this.a.get(i).type() === Glow.eObjectType_GrowTrend ||
+        this.a.get(i).type() === Glow.eObjectType_GrowTable ||
+        this.a.get(i).type() === Glow.eObjectType_GrowSlider ||
+        this.a.get(i).type() === Glow.eObjectType_GrowWindow ||
+        this.a.get(i).type() === Glow.eObjectType_GrowFolder ||
+        this.a.get(i).type() === Glow.eObjectType_GrowXYCurve ||
+        this.a.get(i).type() === Glow.eObjectType_GrowPie ||
+        this.a.get(i).type() === Glow.eObjectType_GrowBarChart ||
+        this.a.get(i).type() === Glow.eObjectType_GrowToolbar ||
+        this.a.get(i).type() === Glow.eObjectType_GrowAxis ||
+        this.a.get(i).type() === Glow.eObjectType_GrowAxisArc) {
         this.appl.traceConnect(this.a.get(i));
-        if (this.a.get(i).type() == Glow.eObjectType_GrowGroup) {
+        if (this.a.get(i).type() === Glow.eObjectType_GrowGroup) {
           for (var j = 0; j < this.a.get(i).nc.a.size(); j++) {
-            if (this.a.get(i).nc.a.get(j).type() == Glow.eObjectType_GrowNode ||
-              this.a.get(i).nc.a.get(j).type() == Glow.eObjectType_GrowGroup) {
+            if (this.a.get(i).nc.a.get(j).type() === Glow.eObjectType_GrowNode ||
+              this.a.get(i).nc.a.get(j).type() === Glow.eObjectType_GrowGroup) {
               this.appl.traceConnect(this.a.get(i).nc.a.get(j));
             }
           }
 
-        } else if (this.a.get(i).type() == Glow.eObjectType_GrowWindow ||
-          this.a.get(i).type() == Glow.eObjectType_GrowFolder) {
+        } else if (this.a.get(i).type() === Glow.eObjectType_GrowWindow ||
+          this.a.get(i).type() === Glow.eObjectType_GrowFolder) {
           this.a.get(i).traceConnect();
         }
       }
@@ -17155,29 +17139,29 @@ function GrowCtx(ctx) {
     var sts;
     this.trace_started = false;
     for (var i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() == Glow.eObjectType_GrowNode ||
-        this.a.get(i).type() == Glow.eObjectType_GrowGroup ||
-        this.a.get(i).type() == Glow.eObjectType_GrowBar ||
-        this.a.get(i).type() == Glow.eObjectType_GrowTrend ||
-        this.a.get(i).type() == Glow.eObjectType_GrowTable ||
-        this.a.get(i).type() == Glow.eObjectType_GrowSlider ||
-        this.a.get(i).type() == Glow.eObjectType_GrowWindow ||
-        this.a.get(i).type() == Glow.eObjectType_GrowFolder ||
-        this.a.get(i).type() == Glow.eObjectType_GrowXYCurve ||
-        this.a.get(i).type() == Glow.eObjectType_GrowPie ||
-        this.a.get(i).type() == Glow.eObjectType_GrowBarChart ||
-        this.a.get(i).type() == Glow.eObjectType_GrowAxis ||
-        this.a.get(i).type() == Glow.eObjectType_GrowAxisArc) {
+      if (this.a.get(i).type() === Glow.eObjectType_GrowNode ||
+        this.a.get(i).type() === Glow.eObjectType_GrowGroup ||
+        this.a.get(i).type() === Glow.eObjectType_GrowBar ||
+        this.a.get(i).type() === Glow.eObjectType_GrowTrend ||
+        this.a.get(i).type() === Glow.eObjectType_GrowTable ||
+        this.a.get(i).type() === Glow.eObjectType_GrowSlider ||
+        this.a.get(i).type() === Glow.eObjectType_GrowWindow ||
+        this.a.get(i).type() === Glow.eObjectType_GrowFolder ||
+        this.a.get(i).type() === Glow.eObjectType_GrowXYCurve ||
+        this.a.get(i).type() === Glow.eObjectType_GrowPie ||
+        this.a.get(i).type() === Glow.eObjectType_GrowBarChart ||
+        this.a.get(i).type() === Glow.eObjectType_GrowAxis ||
+        this.a.get(i).type() === Glow.eObjectType_GrowAxisArc) {
         this.appl.traceDisconnect(this.a.get(i));
-        if (this.a.get(i).type() == Glow.eObjectType_GrowGroup) {
+        if (this.a.get(i).type() === Glow.eObjectType_GrowGroup) {
           for (var j = 0; j < this.a.get(i).nc.a.size(); j++) {
-            if (this.a.get(i).nc.a.get(j).type() == Glow.eObjectType_GrowNode ||
-              this.a.get(i).nc.a.get(j).type() == Glow.eObjectType_GrowGroup) {
+            if (this.a.get(i).nc.a.get(j).type() === Glow.eObjectType_GrowNode ||
+              this.a.get(i).nc.a.get(j).type() === Glow.eObjectType_GrowGroup) {
               this.appl.traceDisconnect(this.a.get(i).nc.a.get(j));
             }
           }
-        } else if (this.a.get(i).type() == Glow.eObjectType_GrowWindow ||
-          this.a.get(i).type() == Glow.eObjectType_GrowFolder) {
+        } else if (this.a.get(i).type() === Glow.eObjectType_GrowWindow ||
+          this.a.get(i).type() === Glow.eObjectType_GrowFolder) {
           this.a.get(i).traceDisconnect();
         }
       }
@@ -17188,30 +17172,30 @@ function GrowCtx(ctx) {
     var sts;
 
     for (var i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() == Glow.eObjectType_GrowNode ||
-        this.a.get(i).type() == Glow.eObjectType_GrowGroup ||
-        this.a.get(i).type() == Glow.eObjectType_GrowBar ||
-        this.a.get(i).type() == Glow.eObjectType_GrowTrend ||
-        this.a.get(i).type() == Glow.eObjectType_GrowTable ||
-        this.a.get(i).type() == Glow.eObjectType_GrowSlider ||
-        this.a.get(i).type() == Glow.eObjectType_GrowWindow ||
-        this.a.get(i).type() == Glow.eObjectType_GrowFolder ||
-        this.a.get(i).type() == Glow.eObjectType_GrowXYCurve ||
-        this.a.get(i).type() == Glow.eObjectType_GrowPie ||
-        this.a.get(i).type() == Glow.eObjectType_GrowBarChart ||
-        this.a.get(i).type() == Glow.eObjectType_GrowAxis ||
-        this.a.get(i).type() == Glow.eObjectType_GrowAxisArc) {
+      if (this.a.get(i).type() === Glow.eObjectType_GrowNode ||
+        this.a.get(i).type() === Glow.eObjectType_GrowGroup ||
+        this.a.get(i).type() === Glow.eObjectType_GrowBar ||
+        this.a.get(i).type() === Glow.eObjectType_GrowTrend ||
+        this.a.get(i).type() === Glow.eObjectType_GrowTable ||
+        this.a.get(i).type() === Glow.eObjectType_GrowSlider ||
+        this.a.get(i).type() === Glow.eObjectType_GrowWindow ||
+        this.a.get(i).type() === Glow.eObjectType_GrowFolder ||
+        this.a.get(i).type() === Glow.eObjectType_GrowXYCurve ||
+        this.a.get(i).type() === Glow.eObjectType_GrowPie ||
+        this.a.get(i).type() === Glow.eObjectType_GrowBarChart ||
+        this.a.get(i).type() === Glow.eObjectType_GrowAxis ||
+        this.a.get(i).type() === Glow.eObjectType_GrowAxisArc) {
         this.appl.traceScan(this.a.get(i));
-        if (this.a.get(i).type() == Glow.eObjectType_GrowGroup) {
+        if (this.a.get(i).type() === Glow.eObjectType_GrowGroup) {
           for (var j = 0; j < this.a.get(i).nc.a.size(); j++) {
-            if (this.a.get(i).nc.a.get(j).type() == Glow.eObjectType_GrowNode ||
-              this.a.get(i).nc.a.get(j).type() == Glow.eObjectType_GrowGroup) {
+            if (this.a.get(i).nc.a.get(j).type() === Glow.eObjectType_GrowNode ||
+              this.a.get(i).nc.a.get(j).type() === Glow.eObjectType_GrowGroup) {
               this.appl.traceScan(this.a.get(i).nc.a.get(j));
             }
           }
 
-        } else if (this.a.get(i).type() == Glow.eObjectType_GrowWindow ||
-          this.a.get(i).type() == Glow.eObjectType_GrowFolder) {
+        } else if (this.a.get(i).type() === Glow.eObjectType_GrowWindow ||
+          this.a.get(i).type() === Glow.eObjectType_GrowFolder) {
           this.a.get(i).traceScan();
         }
       }
@@ -17220,12 +17204,12 @@ function GrowCtx(ctx) {
 
   this.traceStarted = function () {
     return this.trace_started;
-  }
+  };
 
   this.get_node_from_name = function (name) {
     for (var i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() == Glow.eObjectType_GrowNode) {
-        if (name == this.a.get(i).n_name)
+      if (this.a.get(i).type() === Glow.eObjectType_GrowNode) {
+        if (name === this.a.get(i).n_name)
           return this.a.get(i);
       }
     }
@@ -17237,7 +17221,7 @@ function GrowCtx(ctx) {
     var group;
 
     for (var i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() == Glow.eObjectType_GrowGroup) {
+      if (this.a.get(i).type() === Glow.eObjectType_GrowGroup) {
         group = this.a.get(i).get_object_group(object);
         if (group != null)
           return group;
@@ -17322,7 +17306,7 @@ function GrowCtx(ctx) {
 
     for (var i = 0; i < this.a.size(); i++) {
       sts = this.a.get(i).get_background_object_limits(null, type, x, y, b);
-      if ((sts & 1) != 0)
+      if ((sts & 1) !== 0)
         break;
     }
     b.sts = sts;
@@ -17339,7 +17323,7 @@ function GrowCtx(ctx) {
   this.findByName = function (name) {
     var uname = name.toUpperCase();
     for (var i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).n_name.toUpperCase() == uname)
+      if (this.a.get(i).n_name.toUpperCase() === uname)
         return this.a.get(i);
     }
     return null;
@@ -17347,7 +17331,7 @@ function GrowCtx(ctx) {
 
   this.setSubwindowSource = function (name, source, owner) {
     var e = this.findByName(name);
-    if (e == null || e.type() != Glow.eObjectType_GrowWindow) {
+    if (e == null || e.type() !== Glow.eObjectType_GrowWindow) {
       console.log("Window " + name + " not found " + e);
       return;
     }
@@ -17429,9 +17413,9 @@ function GrowFrame(appl) {
       var x = event.pageX;
       var button_motion = 0;
       if (event.buttons == null)
-        button_motion = (event.witch == 1);
+        button_motion = (event.witch === 1);
       else
-        button_motion = (event.buttons == 1);
+        button_motion = (event.buttons === 1);
       if (button_motion) {
         self.event_handler(x, y, Glow.eEvent_ButtonMotion);
       } else {
@@ -18317,14 +18301,14 @@ function Dyn(graph) {
   this.resetBgColor = false;
 
   this.getColor1 = function (object, color) {
-    if (color == Glow.eDrawType_Inherit) {
+    if (color === Glow.eDrawType_Inherit) {
       return object.getClassTraceColor1();
     }
     return color;
   };
 
   this.getColor2 = function (object, color) {
-    if (color == Glow.eDrawType_Inherit) {
+    if (color === Glow.eDrawType_Inherit) {
       return object.getClassTraceColor2();
     }
     return color;
@@ -18344,14 +18328,14 @@ function Dyn(graph) {
 
       for (var j = 0; j < this.elements.length; j++) {
         elem = this.elements[j];
-        if (elem.dyn_type1 == xelem.dyn_type1 &&
-          elem.dyn_type2 == xelem.dyn_type2 &&
-          elem.action_type1 == xelem.action_type1 &&
-          elem.action_type2 == xelem.action_type2) {
+        if (elem.dyn_type1 === xelem.dyn_type1 &&
+          elem.dyn_type2 === xelem.dyn_type2 &&
+          elem.action_type1 === xelem.action_type1 &&
+          elem.action_type2 === xelem.action_type2) {
           // Element exists in both, use element in x, i.e. remove current element
-          if (typeof elem.instance == 'undefined' ||
-            (typeof elem.instance != 'undefined' &&
-              elem.instance == xelem.instance)) {
+          if (typeof elem.instance === 'undefined' ||
+            (typeof elem.instance !== 'undefined' &&
+              elem.instance === xelem.instance)) {
             this.elements.splice(j, 1);
             break;
           }
@@ -18641,7 +18625,7 @@ function Dyn(graph) {
       this.total_action_type2 = this.action_type2;
     }
 
-    if (this.cycle == Glow.eCycle_Inherit)
+    if (this.cycle === Glow.eCycle_Inherit)
       this.cycle = object.getClassCycle();
 
     for (var i = 0; i < this.elements.length; i++) {
@@ -18674,8 +18658,8 @@ function Dyn(graph) {
     var sts;
     for (var i = 0; i < this.elements.length; i++) {
       sts = this.elements[i].action(object, event);
-      if (sts == DynC.DYN__NO_PROPAGATE || sts == Glow.GLOW__TERMINATED ||
-        sts == Glow.GLOW__SUBTERMINATED)
+      if (sts === DynC.DYN__NO_PROPAGATE || sts === Glow.GLOW__TERMINATED ||
+        sts === Glow.GLOW__SUBTERMINATED)
         return sts;
     }
     return 1;
@@ -18688,7 +18672,7 @@ function Dyn(graph) {
       this.total_action_type1 = this.action_type1;
       this.total_action_type2 = this.action_type2;
     } else {
-      if ((this.dyn_type1 & DynC.mDynType1_Inherit) != 0) {
+      if ((this.dyn_type1 & DynC.mDynType1_Inherit) !== 0) {
         var inherit_dyn_type1 = object.getClassDynType1();
         var inherit_dyn_type2 = object.getClassDynType2();
         this.total_dyn_type1 = this.dyn_type1 | inherit_dyn_type1;
@@ -18698,7 +18682,7 @@ function Dyn(graph) {
         this.total_dyn_type2 = this.dyn_type2;
       }
 
-      if ((this.action_type1 & DynC.mActionType1_Inherit) != 0) {
+      if ((this.action_type1 & DynC.mActionType1_Inherit) !== 0) {
         var inherit_action_type1 = object.getClassActionType1();
         var inherit_action_type2 = object.getClassActionType2();
         this.total_action_type1 = this.action_type1 | inherit_action_type1;
@@ -18716,7 +18700,7 @@ function Dyn(graph) {
     console.log("parseAttrName", name);
     if ((this.total_dyn_type1 & DynC.mDynType1_HostObject) !== 0) {
       var idx = name.indexOf("$hostobject");
-      if (idx != -1) {
+      if (idx !== -1) {
         var hostobject = this.getHostObject();
         var n = name.substring(0, idx) + hostobject + name.substring(idx + 11);
         return this.graph.parseAttrName(n);
@@ -18844,7 +18828,7 @@ function Dyn(graph) {
     var maxval = 0;
     if (e.minvalue_attr !== null) {
       var pname = e.dyn.parseAttrName(e.minvalue_attr);
-      if (pname !== null && pname.type == Pwr.eType_Float32) {
+      if (pname !== null && pname.type === Pwr.eType_Float32) {
         /** TODO
         CdhrFloat ret = e.dyn.graph.getGdh().getObjectInfoFloat( pname.name);
         if ( ret.evenSts()) {
@@ -18864,7 +18848,7 @@ function Dyn(graph) {
       if (pname === null || pname.name === "")
         maxval = e.max_value;
       else {
-        if (pname.type == Pwr.eType_Float32) {
+        if (pname.type === Pwr.eType_Float32) {
           /** TODO
           CdhrFloat ret = e.dyn.graph.getGdh().getObjectInfoFloat( pname.name);
           if ( ret.evenSts()) {
@@ -18965,7 +18949,7 @@ function Dyn(graph) {
         var inputValue;
         if (inputValueInt === 0)
           inputValue = false;
-        else if (inputValueInt == 1)
+        else if (inputValueInt === 1)
           inputValue = true;
         else
           break;
@@ -19052,8 +19036,7 @@ function DynDigLowColor(dyn) {
   this.a_typeid;
 
   this.connect = function (o) {
-    var object = o;
-    this.color = this.dyn.getColor1(object, this.color);
+    this.color = this.dyn.getColor1(o, this.color);
     if (this.color < 0 || this.color >= Glow.eDrawType__)
       return 0;
 
@@ -19088,7 +19071,7 @@ function DynDigLowColor(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -19102,7 +19085,7 @@ function DynDigLowColor(dyn) {
       value = !value;
 
     if (!this.firstScan) {
-      if (this.oldValue == value && !this.dyn.resetColor)
+      if (this.oldValue === value && !this.dyn.resetColor)
         return;
     } else
       this.firstScan = false;
@@ -19225,7 +19208,7 @@ function DynDigColor(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -19238,7 +19221,7 @@ function DynDigColor(dyn) {
       value = !value;
 
     if (!this.firstScan) {
-      if (this.oldValue == value && !this.dyn.resetColor) {
+      if (this.oldValue === value && !this.dyn.resetColor) {
         // No change since last time
         if (value)
           this.dyn.ignoreColor = true;
@@ -19373,7 +19356,7 @@ function DynDigWarning(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -19386,7 +19369,7 @@ function DynDigWarning(dyn) {
       value = !value;
 
     if (!this.firstScan) {
-      if (this.oldValue == value && !this.dyn.resetColor) {
+      if (this.oldValue === value && !this.dyn.resetColor) {
         // No change since last time
         if (value)
           this.dyn.ignoreColor = true;
@@ -19509,7 +19492,7 @@ function DynDigError(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database != GraphIfc.eDatabase_Local)
+    if (this.attrFound && this.database !== GraphIfc.eDatabase_Local)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -19522,7 +19505,7 @@ function DynDigError(dyn) {
       value = !value;
 
     if (!this.firstScan) {
-      if (this.oldValue == value && !this.dyn.resetColor) {
+      if (this.oldValue === value && !this.dyn.resetColor) {
         // No change since last time
         if (value)
           this.dyn.ignoreColor = true;
@@ -19647,7 +19630,7 @@ function DynDigFlash(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database != GraphIfc.eDatabase_Local)
+    if (this.attrFound && this.database !== GraphIfc.eDatabase_Local)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -19660,7 +19643,7 @@ function DynDigFlash(dyn) {
       value = !value;
 
     if (!this.firstScan) {
-      if (this.oldValue == value && !this.dyn.resetColor) {
+      if (this.oldValue === value && !this.dyn.resetColor) {
         // No change since last time
         if (!value)
           return;
@@ -19694,7 +19677,7 @@ function DynDigFlash(dyn) {
           object.setFillColor(this.color);
           this.dyn.ignoreColor = true;
         } else {
-          if (this.color2 == Glow.eDrawType_Inherit) {
+          if (this.color2 === Glow.eDrawType_Inherit) {
             object.resetFillColor();
             this.dyn.resetColor = true;
           } else {
@@ -19782,10 +19765,10 @@ function DynInvisible(dyn) {
   this.command;
 
   this.connect = function (object) {
-    if (this.attribute !== null && this.attribute.toLowerCase().substring(0, 5) == "$cmd(") {
+    if (this.attribute !== null && this.attribute.toLowerCase().substring(0, 5) === "$cmd(") {
       this.cmd = true;
       var idx = this.attribute.lastIndexOf(')');
-      if (idx != -1 && idx > 5)
+      if (idx !== -1 && idx > 5)
         this.command = this.attribute.substring(5, idx);
       else
         this.command = this.attribute.substring(5);
@@ -19821,7 +19804,7 @@ function DynInvisible(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database != GraphIfc.eDatabase_Local)
+    if (this.attrFound && this.database !== GraphIfc.eDatabase_Local)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -19845,14 +19828,14 @@ function DynInvisible(dyn) {
       return;
     var value = this.dyn.getDig(this.p, this.a_typeid, this.bitmask, this.database);
 
-    if (this.a_typeid == Pwr.eType_String)
+    if (this.a_typeid === Pwr.eType_String)
       value = !value;
 
     if (this.inverted)
       value = !value;
 
     if (!this.firstScan) {
-      if (this.oldValue == value && !this.dyn.resetColor) {
+      if (this.oldValue === value && !this.dyn.resetColor) {
         // No change since last time
         if (!value)
           return;
@@ -19977,7 +19960,7 @@ function DynDigTextColor(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -19990,7 +19973,7 @@ function DynDigTextColor(dyn) {
       value = !value;
 
     if (!this.firstScan) {
-      if (this.oldValue == value && !this.dyn.resetColor)
+      if (this.oldValue === value && !this.dyn.resetColor)
         return;
     } else
       this.firstScan = false;
@@ -20103,7 +20086,7 @@ function DynDigText(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database != GraphIfc.eDatabase_Local)
+    if (this.attrFound && this.database !== GraphIfc.eDatabase_Local)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -20116,7 +20099,7 @@ function DynDigText(dyn) {
       value = !value;
 
     if (!this.firstScan) {
-      if (this.oldValue == value)
+      if (this.oldValue === value)
         return;
     } else
       this.firstScan = false;
@@ -20227,7 +20210,7 @@ function DynDigBorder(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database != GraphIfc.eDatabase_Local)
+    if (this.attrFound && this.database !== GraphIfc.eDatabase_Local)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -20240,7 +20223,7 @@ function DynDigBorder(dyn) {
       value = !value;
 
     if (!this.firstScan) {
-      if (this.oldValue == value) {
+      if (this.oldValue === value) {
         // No change since last time
         return;
       }
@@ -20360,10 +20343,10 @@ function DynValue(dyn) {
 
     // Print format, of replace digit between . and f
     var s = format.indexOf('f');
-    if (s == -1)
+    if (s === -1)
       return "%." + decimals + "f";
     else {
-      if (s < 2 || format.charAt(s - 2) != '.')
+      if (s < 2 || format.charAt(s - 2) !== '.')
         return "%." + decimals + "f";
       else
         return format.substring(0, s - 1) + decimals + format.substring(s);
@@ -20374,7 +20357,7 @@ function DynValue(dyn) {
     if (this.format === null && this.decimals_attr === null)
       return 1;
 
-    if (typeof this.decimals_attr != 'undefined' && this.decimals_attr !== null && !(this.decimals_attr === "")) {
+    if (typeof this.decimals_attr !== 'undefined' && this.decimals_attr !== null && !(this.decimals_attr === "")) {
       this.format = this.read_decimals(this.dyn, this.decimals_attr, this.decimals_decr, this.format);
       console.log("read_decimals " + this.format);
     }
@@ -20412,7 +20395,7 @@ function DynValue(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database != GraphIfc.eDatabase_Local)
+    if (this.attrFound && this.database !== GraphIfc.eDatabase_Local)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -20434,10 +20417,10 @@ function DynValue(dyn) {
             break;
           default: break;
         }
-        if (typeof value0 == 'undefined')
+        if (typeof value0 === 'undefined')
           return;
 
-        if (value0 != this.oldValueF || this.firstScan) {
+        if (value0 !== this.oldValueF || this.firstScan) {
           if (this.cFormat !== null) {
             var sb = this.cFormat.format(value0);
             object.setAnnotation(annot_num, sb);
@@ -20464,7 +20447,7 @@ function DynValue(dyn) {
           default: break;
         }
 
-        if (value0 != this.oldValueI || this.firstScan) {
+        if (value0 !== this.oldValueI || this.firstScan) {
           if (this.cFormat !== null) {
             var sb = this.cFormat.format(value0);
             object.setAnnotation(annot_num, sb);
@@ -20486,7 +20469,7 @@ function DynValue(dyn) {
           default: break;
         }
 
-        if (value0 != this.oldValueB || this.firstScan) {
+        if (value0 !== this.oldValueB || this.firstScan) {
           if (this.cFormat !== null) {
             var sb = this.cFormat.format(value0);
             object.setAnnotation(annot_num, sb);
@@ -20511,9 +20494,9 @@ function DynValue(dyn) {
           default: break;
         }
 
-        if (this.firstScan || !(value0 == this.oldValueS)) {
+        if (this.firstScan || !(value0 === this.oldValueS)) {
           if (this.cFormat !== null) {
-            if (this.a_typeid == Pwr.eType_String) {
+            if (this.a_typeid === Pwr.eType_String) {
               var sb = this.cFormat.format(value0);
               object.setAnnotation(annot_num, sb);
             } else
@@ -20652,7 +20635,7 @@ function DynValueInput(dyn) {
     // Get the Value element
     this.value_element = null;
     for (var j = 0; j < this.dyn.elements.length; j++) {
-      if (this.dyn.elements[j].dyn_type1 == DynC.mDynType1_Value) {
+      if (this.dyn.elements[j].dyn_type1 === DynC.mDynType1_Value) {
         this.value_element = this.dyn.elements[j];
         this.a_typeid = this.value_element.a_typeid;
         break;
@@ -20779,7 +20762,7 @@ function DynAnalogColor(dyn) {
     // Find the main instance
     var mainInstance = null;
     for (var i = this.dyn.elements.length - 1; i >= 0; i--) {
-      if (this.dyn.elements[i].dyn_type1 == DynC.mDynType1_AnalogColor) {
+      if (this.dyn.elements[i].dyn_type1 === DynC.mDynType1_AnalogColor) {
         mainInstance = this.dyn.elements[i];
         break;
       }
@@ -20818,7 +20801,7 @@ function DynAnalogColor(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.isMainInstance && this.attrFound && this.database != GraphIfc.eDatabase_Local)
+    if (this.isMainInstance && this.attrFound && this.database !== GraphIfc.eDatabase_Local)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -20830,12 +20813,12 @@ function DynAnalogColor(dyn) {
     var set_color = false;
     var reset_color = false;
 
-    if (this.a_typeid == Pwr.eType_Float32) {
+    if (this.a_typeid === Pwr.eType_Float32) {
       var value = this.dyn.graph.getGdh().getObjectRefInfo(this.p);
       var i;
 
       if (!this.firstScan) {
-        if (!this.dyn.resetColor && value == this.oldValueF) {
+        if (!this.dyn.resetColor && value === this.oldValueF) {
           if (this.oldState)
             this.dyn.ignoreColor = true;
           return;
@@ -20857,15 +20840,15 @@ function DynAnalogColor(dyn) {
           state = (value >= this.limit);
           break;
         case DynC.eLimitType_Eq:
-          state = (value == this.limit);
+          state = (value === this.limit);
           break;
       }
       this.oldValueF = value;
-    } else if (this.a_typeid == Pwr.eType_Int32 || this.a_typeid == Pwr.eType_UInt32) {
+    } else if (this.a_typeid === Pwr.eType_Int32 || this.a_typeid === Pwr.eType_UInt32) {
       var value = this.dyn.graph.getGdh().getObjectRefInfo(this.p);
       var i;
       if (!this.firstScan) {
-        if (!this.dyn.resetColor && value == this.oldValueI) {
+        if (!this.dyn.resetColor && value === this.oldValueI) {
           if (this.oldState)
             this.dyn.ignoreColor = true;
           return;
@@ -20887,13 +20870,13 @@ function DynAnalogColor(dyn) {
           state = (value >= this.limit);
           break;
         case DynC.eLimitType_Eq:
-          state = (value == this.limit);
+          state = (value === this.limit);
           break;
       }
       this.oldValueI = value;
     }
 
-    if (state != this.oldState || this.dyn.resetColor || this.firstScan) {
+    if (state !== this.oldState || this.dyn.resetColor || this.firstScan) {
       if (state) {
         set_color = true;
         this.dyn.ignoreColor = true;
@@ -21065,7 +21048,7 @@ function DynRotate(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database != GraphIfc.eDatabase_Local)
+    if (this.attrFound && this.database !== GraphIfc.eDatabase_Local)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -21073,7 +21056,7 @@ function DynRotate(dyn) {
     if (!this.attrFound)
       return;
     var value0 = this.dyn.graph.getGdh().getObjectRefInfo(this.p);
-    if (value0 != this.oldValue || this.firstScan) {
+    if (value0 !== this.oldValue || this.firstScan) {
       object.setRotation(value0 * this.factor, this.x0, this.y0, this.rotation_point);
 
       this.dyn.repaintNow = true;
@@ -21308,13 +21291,13 @@ function DynMove(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.move_x_p != 0 && this.move_x_database == GraphIfc.eDatabase_Gdh)
+    if (this.move_x_p !== 0 && this.move_x_database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.move_x_p);
-    if (this.move_y_p != 0 && this.move_y_database == GraphIfc.eDatabase_Gdh)
+    if (this.move_y_p !== 0 && this.move_y_database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.move_y_p);
-    if (this.scale_x_p != 0 && this.scale_x_database == GraphIfc.eDatabase_Gdh)
+    if (this.scale_x_p !== 0 && this.scale_x_database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.scale_x_p);
-    if (this.scale_y_p != 0 && this.scale_y_database == GraphIfc.eDatabase_Gdh)
+    if (this.scale_y_p !== 0 && this.scale_y_database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.scale_y_p);
   };
 
@@ -21391,13 +21374,13 @@ function DynMove(dyn) {
 
     update = false;
     if (!this.firstScan) {
-      if (this.move_x_p !== null && move_x_value != this.move_x_old_value)
+      if (this.move_x_p !== null && move_x_value !== this.move_x_old_value)
         update = true;
-      else if (this.move_y_p !== null && move_y_value != this.move_y_old_value)
+      else if (this.move_y_p !== null && move_y_value !== this.move_y_old_value)
         update = true;
-      else if (this.scale_x_p !== null && scale_x_value != this.scale_x_old_value)
+      else if (this.scale_x_p !== null && scale_x_value !== this.scale_x_old_value)
         update = true;
-      else if (this.scale_y_p !== null && scale_y_value != this.scale_y_old_value)
+      else if (this.scale_y_p !== null && scale_y_value !== this.scale_y_old_value)
         update = true;
       if (!update)
         return;
@@ -21623,7 +21606,7 @@ function DynAnalogShift(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -21639,7 +21622,7 @@ function DynAnalogShift(dyn) {
         var i;
 
         if (!this.firstScan) {
-          if (value == this.oldValueF) {
+          if (value === this.oldValueF) {
             return;
           }
         } else
@@ -21655,7 +21638,7 @@ function DynAnalogShift(dyn) {
         var i;
 
         if (!this.firstScan) {
-          if (value == this.oldValueI) {
+          if (value === this.oldValueI) {
             return;
           }
         } else
@@ -21761,7 +21744,7 @@ function DynDigShift(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -21774,7 +21757,7 @@ function DynDigShift(dyn) {
       value = !value;
 
     if (!this.firstScan) {
-      if (this.oldValue == value)
+      if (this.oldValue === value)
         return;
     } else
       this.firstScan = false;
@@ -21949,11 +21932,11 @@ function DynDigFourShift(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound1 && this.database1 == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound1 && this.database1 === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p1);
-    if (this.attrFound2 && this.database2 == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound2 && this.database2 === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p2);
-    if (this.attrFound3 && this.database3 == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound3 && this.database3 === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p3);
   };
 
@@ -21972,7 +21955,7 @@ function DynDigFourShift(dyn) {
       value3 = !value3;
 
     if (!this.firstScan) {
-      if (this.oldValue1 == value1 && this.oldValue2 == value2 && this.oldValue3 == value3)
+      if (this.oldValue1 === value1 && this.oldValue2 === value2 && this.oldValue3 === value3)
         return;
     } else
       this.firstScan = false;
@@ -22066,7 +22049,7 @@ function DynScrollingText(dyn) {
     var pname = this.dyn.parseAttrName(this.attribute);
     if (pname === null || pname.name === "")
       return 1;
-    if (!(pname.type == Pwr.eType_String || pname.type == Pwr.eType_Text))
+    if (!(pname.type === Pwr.eType_String || pname.type === Pwr.eType_Text))
       return 1;
 
     switch (pname.database) {
@@ -22099,12 +22082,12 @@ function DynScrollingText(dyn) {
     this.database = pname.database;
     this.attrFound = true;
     return 1;
-  }
+  };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
-  }
+  };
 
   this.scan = function (object) {
     var d = object.getAnnotationTextExtent(1);
@@ -22135,7 +22118,7 @@ function DynScrollingText(dyn) {
       }
       case Glow.eDirection_Right: {
         this.offset += this.speed * this.dyn.graph.getAnimationScanTime();
-        if (this.bounce != 0) {
+        if (this.bounce !== 0) {
           if (d.width < this.osize) {
             if (this.offset > this.osize - d.width) {
               this.offset -= this.offset - (this.osize - d.width);
@@ -22156,7 +22139,7 @@ function DynScrollingText(dyn) {
       }
       case Glow.eDirection_Up: {
         this.offset += this.speed * this.dyn.graph.getAnimationScanTime();
-        if (this.bounce != 0) {
+        if (this.bounce !== 0) {
           if (this.offset > this.osize - d.height) {
             this.offset -= this.offset - (this.osize - d.height);
             this.direction = Glow.eDirection_Down;
@@ -22170,7 +22153,7 @@ function DynScrollingText(dyn) {
       }
       case Glow.eDirection_Down: {
         this.offset -= this.speed * this.dyn.graph.getAnimationScanTime();
-        if (this.bounce != 0) {
+        if (this.bounce !== 0) {
           if (this.offset < 0) {
             this.offset = -this.offset;
             this.direction = Glow.eDirection_Up;
@@ -22182,7 +22165,7 @@ function DynScrollingText(dyn) {
         object.setAnnotationTextOffset(1, 0, this.offset);
         break;
       }
-      default: ;
+      default:
     }
 
     var value0 = null;
@@ -22195,14 +22178,14 @@ function DynScrollingText(dyn) {
         break;
     }
 
-    if (this.firstScan || !(value0 == this.oldValue)) {
+    if (this.firstScan || !(value0 === this.oldValue)) {
       object.setAnnotation(1, value0);
       this.dyn.repaintNow = true;
       this.oldValue = value0;
     }
     if (this.firstScan)
       this.firstScan = false;
-  }
+  };
 
   this.open = function (lines, row) {
     var end = false;
@@ -22362,7 +22345,7 @@ function DynDigBackgroundColor(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -22375,7 +22358,7 @@ function DynDigBackgroundColor(dyn) {
       value = !value;
 
     if (!this.firstScan) {
-      if (this.oldValue == value && !this.dyn.resetColor) {
+      if (this.oldValue === value && !this.dyn.resetColor) {
         // No change since last time
         if (value)
           this.dyn.ignoreBgColor = true;
@@ -22393,7 +22376,7 @@ function DynDigBackgroundColor(dyn) {
     }
     this.dyn.repaintNow = true;
     this.oldValue = value;
-  }
+  };
 
   this.action = function (object, e) {
     return 1;
@@ -22494,7 +22477,7 @@ function DynDigSwap(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -22512,7 +22495,7 @@ function DynDigSwap(dyn) {
     if (this.inverted)
       value = !value;
 
-    if (this.oldValue == value) {
+    if (this.oldValue === value) {
       // No change since last time
       return;
     }
@@ -22616,14 +22599,14 @@ function DynAnimation(dyn) {
     this.database = pname.database;
     this.attrFound = true;
 
-    if (this.sequence == DynC.eAnimSequence_Inherit)
+    if (this.sequence === DynC.eAnimSequence_Inherit)
       this.sequence = object.get_nodeclass_dyn_attr1();
 
     return 1;
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -22642,15 +22625,15 @@ function DynAnimation(dyn) {
       this.animation_count = 0;
       this.animation_direction = 0;
       this.firstScan = false;
-      if (this.sequence == DynC.eAnimSequence_Dig) {
+      if (this.sequence === DynC.eAnimSequence_Dig) {
         if (value)
           object.set_last_nodeclass();
         this.oldValue = value;
       }
     }
 
-    if (this.sequence == DynC.eAnimSequence_Dig) {
-      if (this.oldValue != value) {
+    if (this.sequence === DynC.eAnimSequence_Dig) {
+      if (this.oldValue !== value) {
         // Start animation
         if (value) {
           this.animation_count = 0;
@@ -22666,11 +22649,11 @@ function DynAnimation(dyn) {
         this.animation_count++;
         if (this.animation_count >= max_count) {
           // Shift nodeclass
-          if (this.animation_direction == 1) {
+          if (this.animation_direction === 1) {
             // Shift forward
 
             sts = object.set_next_nodeclass();
-            if ((sts & 1) == 0) {
+            if ((sts & 1) === 0) {
               // End of animation
               this.animation_count = 0;
               this.animation_direction = 0;
@@ -22691,7 +22674,7 @@ function DynAnimation(dyn) {
       }
     } else {
       if (value) {
-        if (this.animation_direction == 0) {
+        if (this.animation_direction === 0) {
           // Animation has been stopped
           this.animation_count = 0;
           this.animation_direction = 1;
@@ -22701,12 +22684,12 @@ function DynAnimation(dyn) {
         this.animation_count++;
         if (this.animation_count >= max_count) {
           // Shift nodeclass
-          if (this.animation_direction == 1) {
+          if (this.animation_direction === 1) {
             // Shift forward
 
             sts = object.set_next_nodeclass();
-            if ((sts & 1) == 0) {
-              if (this.sequence == DynC.eAnimSequence_Cycle) {
+            if ((sts & 1) === 0) {
+              if (this.sequence === DynC.eAnimSequence_Cycle) {
                 // Start from the beginning again
                 object.set_nodeclass_by_index(1);
               } else {
@@ -22720,7 +22703,7 @@ function DynAnimation(dyn) {
             // Shift backward
 
             sts = object.set_previous_nodeclass();
-            if ((sts & 1) == 0) {
+            if ((sts & 1) === 0) {
               // Change direction
               this.animation_direction = 1;
               sts = object.set_next_nodeclass();
@@ -22729,7 +22712,7 @@ function DynAnimation(dyn) {
           }
         }
       } else {
-        if (this.animation_direction != 0) {
+        if (this.animation_direction !== 0) {
           // Stop and reset animation
           this.animation_direction = 0;
           object.set_first_nodeclass();
@@ -22737,7 +22720,7 @@ function DynAnimation(dyn) {
       }
     }
     this.oldValue = value;
-  }
+  };
 
   this.action = function (object, e) {
     return 1;
@@ -22891,13 +22874,13 @@ function DynBar(dyn) {
 
     this.min_value_p = 0;
     pname = this.dyn.parseAttrName(this.minvalue_attr);
-    if (pname !== null && !(pname.name === "") && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
+    if (pname !== null && !(pname.name === "") && pname.type === Pwr.eType_Float32 && pname.database === GraphIfc.eDatabase_Gdh) {
       this.min_value_p = this.dyn.graph.getGdh().refObjectInfo(pname.tname, pname.type, pname.elements);
     }
 
     this.max_value_p = 0;
     pname = this.dyn.parseAttrName(this.maxvalue_attr);
-    if (pname !== null && !(pname.name === "") && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
+    if (pname !== null && !(pname.name === "") && pname.type === Pwr.eType_Float32 && pname.database === GraphIfc.eDatabase_Gdh) {
       this.max_value_p = dyn.graph.getGdh().refObjectInfo(pname.tname, pname.type, pname.elements);
     }
 
@@ -22905,11 +22888,11 @@ function DynBar(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
-    if (this.min_value_p != 0)
+    if (this.min_value_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.min_value_p);
-    if (this.max_value_p != 0)
+    if (this.max_value_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.max_value_p);
   };
 
@@ -22921,8 +22904,8 @@ function DynBar(dyn) {
     if (this.max_value_p !== 0 && this.min_value_p !== 0) {
       minval = this.dyn.graph.getGdh().getObjectRefInfo(this.min_value_p);
       maxval = this.dyn.graph.getGdh().getObjectRefInfo(this.max_value_p);
-      if (minval != this.old_min_value ||
-        maxval != this.old_max_value) {
+      if (minval !== this.old_min_value ||
+        maxval !== this.old_max_value) {
         console.log("Bar set range min : " + minval + "   max : " + maxval);
         object.set_range(minval, maxval);
         this.old_min_value = minval;
@@ -22949,7 +22932,7 @@ function DynBar(dyn) {
       case Pwr.eType_UInt32: {
         var value = this.dyn.graph.getGdh().getObjectRefInfo(this.p);
         if (!this.firstScan) {
-          if (this.old_ivalue == value)
+          if (this.old_ivalue === value)
             // No change since last time
             return;
         } else
@@ -23128,25 +23111,25 @@ function DynTrend(dyn) {
 
     this.min_value1_p = 0;
     pname = this.dyn.parseAttrName(this.minvalue_attr1);
-    if (pname !== null && !(pname.name === "") && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
+    if (pname !== null && !(pname.name === "") && pname.type === Pwr.eType_Float32 && pname.database === GraphIfc.eDatabase_Gdh) {
       this.min_value1_p = dyn.graph.getGdh().refObjectInfo(pname.tname, pname.type, pname.elements);
     }
 
     this.max_value1_p = 0;
     pname = this.dyn.parseAttrName(this.maxvalue_attr1);
-    if (pname !== null && pname.name !== "" && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
+    if (pname !== null && pname.name !== "" && pname.type === Pwr.eType_Float32 && pname.database === GraphIfc.eDatabase_Gdh) {
       this.max_value1_p = dyn.graph.getGdh().refObjectInfo(pname.tname, pname.type, pname.elements);
     }
 
     this.min_value2_p = 0;
     pname = this.dyn.parseAttrName(this.minvalue_attr2);
-    if (pname !== null && pname.name !== "" && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
+    if (pname !== null && pname.name !== "" && pname.type === Pwr.eType_Float32 && pname.database === GraphIfc.eDatabase_Gdh) {
       this.min_value2_p = this.dyn.graph.getGdh().refObjectInfo(pname.tname, pname.type, pname.elements);
     }
 
     this.max_value2_p = 0;
     pname = this.dyn.parseAttrName(this.maxvalue_attr2);
-    if (pname != null && pname.name !== "" && pname.type == Pwr.eType_Float32 && pname.database == GraphIfc.eDatabase_Gdh) {
+    if (pname != null && pname.name !== "" && pname.type === Pwr.eType_Float32 && pname.database === GraphIfc.eDatabase_Gdh) {
       this.max_value2_p = this.dyn.graph.getGdh().refObjectInfo(pname.tname, pname.type, pname.elements);
     }
 
@@ -23186,14 +23169,14 @@ function DynTrend(dyn) {
           break;
       }
 
-      if (this.timerrange_p == 0) {
+      if (this.timerrange_p === 0) {
         console.log("Trend: " + this.timerange_attr);
         return 1;
       } else {
         this.timerange_database = pname.database;
-        if (pname.database == GraphIfc.eDatabase_Local) {
+        if (pname.database === GraphIfc.eDatabase_Local) {
           var timerange = this.dyn.graph.getLdb().getObjectRefInfo(this.timerange_p);
-          if (timerange == 0)
+          if (timerange === 0)
             this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name,
               this.scan_time * this.no_of_points);
         }
@@ -23217,37 +23200,37 @@ function DynTrend(dyn) {
     pname = this.dyn.parseAttrName(this.mark2_attr);
     if (pname !== null && pname.name !== "") {
       this.mark2_p = this.dyn.graph.getGdh().refObjectInfo(pname.tname, pname.type, pname.elements);
-      if (this.mark2_p == 0) {
+      if (this.mark2_p === 0) {
         console.log("Trend: " + this.mark2_attr);
         return 1;
       }
     }
 
-    if (this.mark1_color != Glow.eDrawType_Inherit || this.mark2_color != Glow.eDrawType_Inherit)
+    if (this.mark1_color !== Glow.eDrawType_Inherit || this.mark2_color !== Glow.eDrawType_Inherit)
       object.set_mark_color(this.mark1_color, this.mark2_color);
     return 1;
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database1 == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database1 === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p1);
-    if (this.p2 != 0 && this.database2 == GraphIfc.eDatabase_Gdh)
+    if (this.p2 !== 0 && this.database2 === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p2);
-    if (this.min_value1_p != 0)
+    if (this.min_value1_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.min_value1_p);
-    if (this.max_value1_p != 0)
+    if (this.max_value1_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.max_value1_p);
-    if (this.min_value2_p != 0)
+    if (this.min_value2_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.min_value2_p);
-    if (this.max_value2_p != 0)
+    if (this.max_value2_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.max_value2_p);
-    if (this.hold_p != 0 && this.hold_database == GraphIfc.eDatabase_Gdh)
+    if (this.hold_p !== 0 && this.hold_database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.hold_p);
-    if (this.timerange_p != 0 && this.timerange_database == GraphIfc.eDatabase_Gdh)
+    if (this.timerange_p !== 0 && this.timerange_database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.timerange_p);
-    if (this.mark1_p != 0)
+    if (this.mark1_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.mark1_p);
-    if (this.mark2_p != 0)
+    if (this.mark2_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.mark2_p);
   };
 
@@ -23269,7 +23252,7 @@ function DynTrend(dyn) {
         return;
     }
 
-    if (this.timerange_p != 0) {
+    if (this.timerange_p !== 0) {
       var timerangeval = 10;
       switch (this.timerange_database) {
         case GraphIfc.eDatabase_Gdh:
@@ -23287,7 +23270,7 @@ function DynTrend(dyn) {
         if (dt >= 0.001) {
           object.set_scan_time(dt);
           this.scan_time = dt;
-          if (this.cycle == Glow.eCycle_Slow) {
+          if (this.cycle === Glow.eCycle_Slow) {
             var current_graph_scan_time = this.dyn.graph.getScanTime();
             var current_graph_fast_scan_time = this.dyn.graph.getFastScanTime();
             var current_graph_animation_scan_time = this.dyn.graph.getAnimationScanTime();
@@ -23345,8 +23328,8 @@ function DynTrend(dyn) {
     if (this.max_value1_p !== 0 && this.min_value1_p !== 0) {
       minval = this.dyn.graph.getGdh().getObjectRefInfo(this.min_value1_p);
       maxval = this.dyn.graph.getGdh().getObjectRefInfo(this.max_value1_p);
-      if (minval != this.old_min_value1 ||
-        maxval != this.old_max_value1) {
+      if (minval !== this.old_min_value1 ||
+        maxval !== this.old_max_value1) {
         if (Math.abs(maxval - minval) > Number.MIN_VALUE)
           object.set_range_y(0, minval, maxval);
         this.old_min_value1 = minval;
@@ -23362,7 +23345,7 @@ function DynTrend(dyn) {
         this.old_mark1 = mark1val;
       }
     }
-    if (this.mark2_p != 0) {
+    if (this.mark2_p !== 0) {
       var mark2val;
       mark2val = this.dyn.graph.getGdh().getObjectRefInfo(this.mark2_p);
       if (this.firstScan || Math.abs(mark2val - this.old_mark2) > Number.MIN_VALUE) {
@@ -23374,12 +23357,12 @@ function DynTrend(dyn) {
     if (this.firstScan)
       this.firstScan = false;
 
-    if (this.cycle == Glow.eCycle_Slow)
+    if (this.cycle === Glow.eCycle_Slow)
       this.acc_time += this.dyn.graph.getScanTime();
     else
       this.acc_time += this.dyn.graph.getFastScanTime();
     if (this.acc_time + Number.MIN_VALUE >= this.scan_time) {
-      if (this.p1 != 0) {
+      if (this.p1 !== 0) {
         switch (this.a_typeid1) {
           case Pwr.eType_Boolean: {
             var value = this.dyn.graph.getGdh().getObjectRefInfo(this.p1);
@@ -23400,10 +23383,10 @@ function DynTrend(dyn) {
             object.add_value(value, 0);
             break;
           }
-          default: ;
+          default:
         }
       }
-      if (this.p2 != 0) {
+      if (this.p2 !== 0) {
         switch (this.a_typeid2) {
           case Pwr.eType_Boolean: {
             var value = this.dyn.graph.getGdh().getObjectRefInfo(this.p2);
@@ -23627,16 +23610,16 @@ function DynXY_Curve(dyn) {
             this.update_attr = tokens[1];
           break;
         case DynC.eSave_XY_Curve_y_min_value:
-          this.y_min_value = parseFloat(tokens[1]);;
+          this.y_min_value = parseFloat(tokens[1]);
           break;
         case DynC.eSave_XY_Curve_y_max_value:
-          this.y_max_value = parseFloat(tokens[1]);;
+          this.y_max_value = parseFloat(tokens[1]);
           break;
         case DynC.eSave_XY_Curve_x_min_value:
-          this.x_min_value = parseFloat(tokens[1]);;
+          this.x_min_value = parseFloat(tokens[1]);
           break;
         case DynC.eSave_XY_Curve_x_max_value:
-          this.x_max_value = parseFloat(tokens[1]);;
+          this.x_max_value = parseFloat(tokens[1]);
           break;
         case DynC.eSave_XY_Curve_datatype:
           this.datatype = parseInt(tokens[1], 10);
@@ -23701,7 +23684,7 @@ function DynXY_Curve(dyn) {
     var pname = this.dyn.parseAttrName(this.update_attr);
     if (pname !== null && pname.name !== "") {
       this.updateP = this.dyn.graph.getGdh().refObjectInfo(pname.tname, pname.type, pname.elements);
-      if (this.updateP == 0)
+      if (this.updateP === 0)
         console.log("XYCurve: " + pname.tname);
       else {
         this.updateAttrFound = true;
@@ -23806,16 +23789,16 @@ function DynXY_Curve(dyn) {
     // Get curve number
     this.curve_number = 0;
     var m = this.instance;
-    while (m != 0) {
+    while (m !== 0) {
       m = m >> 1;
       this.curve_number++;
     }
     console.log("Curve number " + this.curve_number + " color " + this.curve_color + " fillcolor " + this.fill_color);
     // Get number of curves
-    if (this.instance == DynC.mInstance_1) {
+    if (this.instance === DynC.mInstance_1) {
       m = this.instance_mask;
       var noofcurves = 0;
-      while (m != 0) {
+      while (m !== 0) {
         m = m >> 1;
         noofcurves++;
       }
@@ -23829,7 +23812,7 @@ function DynXY_Curve(dyn) {
     if (Math.abs(this.x_max_value - this.x_min_value) > Number.MIN_VALUE)
       object.set_xy_range_x(this.curve_number - 1, this.x_min_value, this.x_max_value);
     object.set_xy_curve_color(this.curve_number - 1, this.curve_color, this.fill_color);
-    if (this.mark1_color != Glow.eDrawType_Inherit || this.mark2_color != Glow.eDrawType_Inherit)
+    if (this.mark1_color !== Glow.eDrawType_Inherit || this.mark2_color !== Glow.eDrawType_Inherit)
       object.set_mark_color(this.mark1_color, this.mark2_color);
     return 1;
   };
@@ -23847,13 +23830,13 @@ function DynXY_Curve(dyn) {
       this.dyn.graph.getGdh().unrefObjectInfo(this.xMinvalueP);
     if (this.xMaxvalueAttrFound)
       this.dyn.graph.getGdh().unrefObjectInfo(this.xMaxvalueP);
-    if (this.x_mark1_p != 0)
+    if (this.x_mark1_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.x_mark1_p);
-    if (this.x_mark2_p != 0)
+    if (this.x_mark2_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.x_mark2_p);
-    if (this.y_mark1_p != 0)
+    if (this.y_mark1_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.y_mark1_p);
-    if (this.y_mark2_p != 0)
+    if (this.y_mark2_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.y_mark2_p);
   };
 
@@ -23880,7 +23863,7 @@ function DynXY_Curve(dyn) {
 
     if (this.noofpointsAttrFound) {
       var value = this.dyn.graph.getGdh().getObjectRefInfo(this.noofpointsP);
-      if (value != this.noofpointsOldValue) {
+      if (value !== this.noofpointsOldValue) {
         update = true;
         this.noofpoints = this.noOfPoints = value;
         this.noofpointsOldValue = value;
@@ -23889,7 +23872,7 @@ function DynXY_Curve(dyn) {
 
     if (this.yMinvalueAttrFound) {
       var value = this.dyn.graph.getGdh().getObjectRefInfo(this.yMinvalueP);
-      if (value != this.y_min_value) {
+      if (value !== this.y_min_value) {
         this.y_min_value = value;
         if (Math.abs(this.y_max_value - this.y_min_value) > Number.MIN_VALUE)
           object.set_xy_range_y(this.curve_number - 1, this.y_min_value, this.y_max_value);
@@ -23898,7 +23881,7 @@ function DynXY_Curve(dyn) {
     }
     if (this.yMaxvalueAttrFound) {
       var value = this.dyn.graph.getGdh().getObjectRefInfo(this.yMaxvalueP);
-      if (value != this.y_max_value) {
+      if (value !== this.y_max_value) {
         this.y_max_value = value;
         if (Math.abs(this.y_max_value - this.y_min_value) > Number.MIN_VALUE)
           object.set_xy_range_y(this.curve_number - 1, this.y_min_value, this.y_max_value);
@@ -23908,7 +23891,7 @@ function DynXY_Curve(dyn) {
 
     if (this.xMinvalueAttrFound) {
       var value = this.dyn.graph.getGdh().getObjectRefInfo(this.xMinvalueP);
-      if (value != this.x_min_value) {
+      if (value !== this.x_min_value) {
         this.x_min_value = value;
         if (Math.abs(x_max_value - this.x_min_value) > Number.MIN_VALUE)
           object.set_xy_range_x(this.curve_number - 1, this.x_min_value, this.x_max_value);
@@ -23917,7 +23900,7 @@ function DynXY_Curve(dyn) {
     }
     if (this.xMaxvalueAttrFound) {
       var value = this.dyn.graph.getGdh().getObjectRefInfo(this.xMaxvalueP);
-      if (value != this.x_max_value) {
+      if (value !== this.x_max_value) {
         this.x_max_value = value;
         if (Math.abs(x_max_value - this.x_min_value) > Number.MIN_VALUE)
           object.set_xy_range_x(this.curve_number - 1, this.x_min_value, this.x_max_value);
@@ -24148,8 +24131,7 @@ function DynXY_Curve(dyn) {
 
     self.object.set_xy_data(self.curveY, self.curveX, self.curve_number - 1, self.noOfPoints);
   };
-};
-
+}
 function DynPie(dyn) {
   this.dyn = dyn;
   this.dyn_type1 = DynC.mDynType1_Pie;
@@ -24284,7 +24266,7 @@ function DynPie(dyn) {
             return 1;
         }
       } else {
-        if (this.attr_type != pname.type)
+        if (this.attr_type !== pname.type)
           continue;
       }
 
@@ -24343,7 +24325,7 @@ function DynPie(dyn) {
           return;
 
         var dval = new Array(GrowPie.PIE_MAX_SECTORS);
-        if (this.fix_range != 0 || this.sectors == 1) {
+        if (this.fix_range !== 0 || this.sectors === 1) {
           for (var i = 0; i < this.sectors; i++)
             dval[i] = val[i];
         } else {
@@ -24366,7 +24348,7 @@ function DynPie(dyn) {
       case Pwr.eType_Int32: {
         break;
       }
-      default: ;
+      default:
     }
   };
 }
@@ -24489,14 +24471,14 @@ function DynBarChart(dyn) {
         continue;
 
       var pname = this.dyn.parseAttrName(this.attribute[i]);
-      if (pname == null || pname.name == "")
+      if (pname == null || pname.name === "")
         continue;
 
-      if (pname.elements == 0)
+      if (pname.elements === 0)
         continue;
 
       this.bars = Math.min(this.bars, pname.elements);
-      if (i == 0) {
+      if (i === 0) {
         this.attr_type = pname.type;
         switch (this.attr_type) {
           case Pwr.eType_Float32:
@@ -24509,7 +24491,7 @@ function DynBarChart(dyn) {
             return 1;
         }
       } else {
-        if (this.attr_type != pname.type)
+        if (this.attr_type !== pname.type)
           continue;
       }
 
@@ -24531,14 +24513,14 @@ function DynBarChart(dyn) {
       this.attrFound[i] = true;
     }
     return 1;
-  }
+  };
 
   this.disconnect = function () {
     for (var i = 0; i < this.barsegments; i++) {
       if (this.attrFound[i])
         this.dyn.graph.getGdh().unrefObjectInfo(this.p[i]);
     }
-  }
+  };
 
   this.action = function (object, e) {
     return 1;
@@ -24564,10 +24546,10 @@ function DynBarChart(dyn) {
                   break;
                 }
               }
-              if (update == 1)
+              if (update === 1)
                 break;
             }
-            if (update == 0)
+            if (update === 0)
               return;
           }
         } else
@@ -24586,7 +24568,7 @@ function DynBarChart(dyn) {
       case Pwr.eType_Int32: {
         break;
       }
-      default: ;
+      default:
     }
   };
 }
@@ -24827,12 +24809,12 @@ function DynTable(dyn) {
       if (pname === null || pname.name === "")
         continue;
 
-      if (pname.elements == 0)
+      if (pname.elements === 0)
         continue;
 
       this.db[i] = pname.database;
 
-      if (pname.tname.substring(0, 7) != "$header") {
+      if (pname.tname.substring(0, 7) !== "$header") {
         switch (this.db[i]) {
           case GraphIfc.eDatabase_Gdh:
             this.p[i] = this.dyn.graph.getGdh().refObjectInfo(pname.tname, pname.type, pname.elements);
@@ -24840,7 +24822,6 @@ function DynTable(dyn) {
               aname0 = pname.name;
             break;
           default:
-            ;
         }
         if (this.p[i] === 0)
           continue;
@@ -24918,14 +24899,14 @@ function DynTable(dyn) {
       if (pname === null || pname.name === "")
         continue;
 
-      if (pname.type != Pwr.eType_Boolean)
+      if (pname.type !== Pwr.eType_Boolean)
         continue;
 
       switch (pname.database) {
         case GraphIfc.eDatabase_Gdh:
           sel_p[i] = this.dyn.graph.getGdh().refObjectInfo(pname.tname, pname.type, pname.elements);
           if (sel_p[i] !== 0) {
-            if (ret.getElements() == 0)
+            if (ret.getElements() === 0)
               break;
             this.sel_elements[i] = pname.elements;
             if (this.sel_elements[i] > this.elements[i])
@@ -24933,7 +24914,6 @@ function DynTable(dyn) {
           }
           break;
         default:
-          ;
       }
 
     }
@@ -24945,12 +24925,12 @@ function DynTable(dyn) {
   this.disconnect = function () {
     for (var i = 0; i < this.columns; i++) {
       if (!this.headerRef[i]) {
-        if (this.p[i] != 0 && this.db[i] == GraphIfc.eDatabase_Gdh)
+        if (this.p[i] !== 0 && this.db[i] === GraphIfc.eDatabase_Gdh)
           this.dyn.graph.getGdh().unrefObjectInfo(this.p[i]);
         this.p[i] = 0;
       } else {
         for (var j = 0; j < this.elements[i]; j++) {
-          if (this.hp[i][j] != 0)
+          if (this.hp[i][j] !== 0)
             this.dyn.graph.getGdh().unrefObjectInfo(this.hp[i][j]);
         }
       }
@@ -24990,7 +24970,7 @@ function DynTable(dyn) {
   };
 
   this.scan = function (object) {
-    if (this.p[0] == 0)
+    if (this.p[0] === 0)
       return;
 
     for (var i = 0; i < this.columns; i++) {
@@ -25004,7 +24984,7 @@ function DynTable(dyn) {
             if (val === null)
               break;
             for (var j = 0; j < Math.min(this.elements[i], val.length); j++) {
-              if (this.oldValueF[i][j] != val[j] || this.firstScan) {
+              if (this.oldValueF[i][j] !== val[j] || this.firstScan) {
                 var sb = this.cFormat[i].format(val[j]);
                 object.setValue(sb, i, j);
                 this.oldValueF[i][j] = val[j];
@@ -25017,7 +24997,7 @@ function DynTable(dyn) {
             if (val === null)
               break;
             for (var j = 0; j < Math.min(this.elements[i], val.length); j++) {
-              if (this.firstScan || this.oldValueB[i][j] != val[j]) {
+              if (this.firstScan || this.oldValueB[i][j] !== val[j]) {
                 if (val[j])
                   object.setValue("1", i, j);
                 else
@@ -25037,7 +25017,7 @@ function DynTable(dyn) {
             if (val == null)
               break;
             for (var j = 0; j < Math.min(this.elements[i], val.length); j++) {
-              if (this.oldValueI[i][j] != val[j] || this.firstScan) {
+              if (this.oldValueI[i][j] !== val[j] || this.firstScan) {
                 var sb = cFormat[i].format(val[j]);
                 object.setValue(sb, i, j);
                 this.oldValueI[i][j] = val[j];
@@ -25054,15 +25034,15 @@ function DynTable(dyn) {
             if (val === null)
               break;
             for (var j = 0; j < Math.min(this.elements[i], val.length); j++) {
-              if (this.firstScan || oldValueS[i][j] != val[j]) {
+              if (this.firstScan || oldValueS[i][j] !== val[j]) {
                 switch (this.type_id[i]) {
                   case Pwr.eType_AttrRef:
                   case Pwr.eType_Objid: {
-                    if (this.format[i] == "%1o")
+                    if (this.format[i] === "%1o")
                       object.setValue(val[j], i, j);
                     else {
                       var idx = val[j].lastIndexOf('-');
-                      if (idx == -1)
+                      if (idx === -1)
                         object.setValue(val[j], i, j);
                       else
                         object.setValue(val[j].substring(idx + 1), i, j);
@@ -25084,7 +25064,7 @@ function DynTable(dyn) {
               break;
             for (var j = 0; j < Math.min(this.elements[i], val.length); j++) {
               var bitval = ((this.bitmask[i] & val[j]) !== 0);
-              if (this.oldValueB[i][j] != bitval || this.firstScan) {
+              if (this.oldValueB[i][j] !== bitval || this.firstScan) {
                 if (bitval)
                   object.setValue("1", i, j);
                 else
@@ -25099,13 +25079,13 @@ function DynTable(dyn) {
       } else {
         // $header reference
         for (var j = 0; j < this.elements[i]; j++) {
-          if (this.hp[i][j] == 0)
+          if (this.hp[i][j] === 0)
             continue;
 
           switch (this.type_id[i]) {
             case Pwr.eType_Float32: {
               var val = this.dyn.graph.getGdh().getObjectRefInfo(this.hp[i][j]);
-              if (this.oldValueF[i][j] != val || this.firstScan) {
+              if (this.oldValueF[i][j] !== val || this.firstScan) {
                 var sb = this.cFormat[i].format(val);
                 object.setValue(sb, i, j);
                 this.oldValueF[i][j] = val;
@@ -25114,7 +25094,7 @@ function DynTable(dyn) {
             }
             case Pwr.eType_Boolean: {
               var val = this.dyn.graph.getGdh().getObjectRefInfo(this.hp[i][j]);
-              if (this.firstScan || this.oldValueB[i][j] != val) {
+              if (this.firstScan || this.oldValueB[i][j] !== val) {
                 if (val)
                   object.setValue("1", i, j);
                 else
@@ -25131,7 +25111,7 @@ function DynTable(dyn) {
             case Pwr.eType_UInt16:
             case Pwr.eType_UInt8: {
               var val = this.dyn.graph.getGdh().getObjectRefInfo(this.hp[i][j]);
-              if (this.oldValueI[i][j] != val || this.firstScan) {
+              if (this.oldValueI[i][j] !== val || this.firstScan) {
                 var sb = cFormat[i].format(val);
                 object.setValue(sb, i, j);
                 this.oldValueI[i][j] = val;
@@ -25144,7 +25124,7 @@ function DynTable(dyn) {
             case Pwr.eType_Time:
             case Pwr.eType_DeltaTime: {
               var val = this.dyn.graph.getGdh().getObjectRefInfo(this.hp[i][j]);
-              if (this.firstScan || oldValueS[i][j] != val) {
+              if (this.firstScan || oldValueS[i][j] !== val) {
                 object.setValue(val, i, j);
                 this.oldValueS[i][j] = val;
               }
@@ -25154,7 +25134,7 @@ function DynTable(dyn) {
               var val = this.dyn.graph.getGdh().getObjectRefInfo(this.hp[i][j]);
 
               var bitval = ((this.bitmask[i] & val) !== 0);
-              if (this.oldValueB[i][j] != bitval || this.firstScan) {
+              if (this.oldValueB[i][j] !== bitval || this.firstScan) {
                 if (bitval)
                   object.setValue("1", i, j);
                 else
@@ -25200,7 +25180,7 @@ function DynTable(dyn) {
         var column, row;
         var value;
 
-        if (e.type != Glow.eEventType_Table)
+        if (e.type !== Glow.eEventType_Table)
           break;
 
         var event = e;
@@ -25216,7 +25196,7 @@ function DynTable(dyn) {
           this.dyn.graph.getGdh().setObjectInfoBoolean(aname, value);
         }
         if (this.sel_p[event.column] !== 0 &&
-          !(event.column == column && event.row == row)) {
+          !(event.column === column && event.row === row)) {
           // Set new selected, if not same as previous selected
           var pname = this.dyn.parseAttrName(this.sel_attribute[event.column]);
           if (pname === null || pname.name === "")
@@ -25282,7 +25262,7 @@ function DynStatusColor(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -25290,14 +25270,14 @@ function DynStatusColor(dyn) {
     if (!this.attrFound || this.dyn.ignoreColor)
       return;
 
-    if (this.database == GraphIfc.eDatabase_Gdh && this.a_typeid == Pwr.eType_NetStatus) {
+    if (this.database === GraphIfc.eDatabase_Gdh && this.a_typeid === Pwr.eType_NetStatus) {
       // TODO get subscription oldness
     }
 
     var value = this.dyn.graph.getGdh().getObjectRefInfo(this.p);
 
-    if (!this.firstScan && this.oldStatus != DynC.ePwrStatus_Fatal) {
-      if (this.oldValue == value && this.dyn.resetColor)
+    if (!this.firstScan && this.oldStatus !== DynC.ePwrStatus_Fatal) {
+      if (this.oldValue === value && this.dyn.resetColor)
         // No change since last time
         return;
     }
@@ -25325,7 +25305,7 @@ function DynStatusColor(dyn) {
           value = DynC.ePwrStatus_No;
       }
     }
-    if (!this.firstScan && this.oldStatus == value && this.oldStatus != DynC.ePwrStatus_Fatal)
+    if (!this.firstScan && this.oldStatus === value && this.oldStatus !== DynC.ePwrStatus_Fatal)
       return;
     else
       this.firstScan = false;
@@ -25529,7 +25509,7 @@ function DynAxis(dyn) {
     }
 
     if (this.minvalueAttrFound && this.maxvalueAttrFound) {
-      if (attr_type_min != attr_type_max)
+      if (attr_type_min !== attr_type_max)
         this.attr_type = 0;
       else
         this.attr_type = attr_type_max;
@@ -25550,7 +25530,6 @@ function DynAxis(dyn) {
       this.dyn.graph.getGdh().unrefObjectInfo(this.max_value_p);
       this.max_value_p = 0;
     }
-    return;
   };
 
   this.scan = function (o) {
@@ -25568,8 +25547,8 @@ function DynAxis(dyn) {
           max_value = this.dyn.graph.getGdh().getObjectRefInfo(this.max_value_p);
 
         if (!(this.firstScan ||
-          (this.maxvalueAttrFound && (max_value != this.old_max_value)) ||
-          (this.minvalueAttrFound && (min_value != this.old_min_value))))
+          (this.maxvalueAttrFound && (max_value !== this.old_max_value)) ||
+          (this.minvalueAttrFound && (min_value !== this.old_min_value))))
           return;
 
         if (this.firstScan)
@@ -25579,18 +25558,17 @@ function DynAxis(dyn) {
         if (this.maxvalueAttrFound)
           this.old_max_value = max_value;
 
-        if (max_value == min_value)
+        if (max_value === min_value)
           return;
 
-        if (o.type() == Glow.eObjectType_GrowAxis)
+        if (o.type() === Glow.eObjectType_GrowAxis)
           o.set_range(min_value, max_value, this.keep_settings);
-        else if (o.type() == Glow.eObjectType_GrowAxisArc)
+        else if (o.type() === Glow.eObjectType_GrowAxisArc)
           o.set_range(min_value, max_value, this.keep_settings);
         break;
       }
-      default: ;
+      default:
     }
-    return;
   };
 }
 
@@ -25611,9 +25589,9 @@ function DynTimeoutColor(dyn) {
     return 1;
   };
   this.disconnect = function () {
-  }
+  };
   this.scan = function (o) {
-  }
+  };
   this.action = function (object, e) {
     return 1;
   };
@@ -25635,7 +25613,7 @@ function DynTimeoutColor(dyn) {
         case DynC.eSave_TimeoutColor:
           break;
         case DynC.eSave_TimeoutColor_time:
-          this.time = Double.valueOf(tokens[1]);
+          this.time = parseFloat(tokens[1]);
           break;
         case DynC.eSave_TimeoutColor_color:
           this.color = parseInt(tokens[1], 10);
@@ -25673,9 +25651,9 @@ function DynHostObject(dyn) {
     return 1;
   };
   this.disconnect = function () {
-  }
+  };
   this.scan = function (o) {
-  }
+  };
   this.action = function (object, e) {
     return 1;
   };
@@ -25736,9 +25714,9 @@ function DynDigSound(dyn) {
     return 1;
   };
   this.disconnect = function () {
-  }
+  };
   this.scan = function (o) {
-  }
+  };
   this.action = function (object, e) {
     return 1;
   };
@@ -25859,7 +25837,7 @@ function DynFillLevel(dyn) {
     this.a_typeid = pname.type;
     this.attrFound = true;
 
-    if ((this.dyn.total_dyn_type1 & DynC.mDynType1_Tone) != 0) {
+    if ((this.dyn.total_dyn_type1 & DynC.mDynType1_Tone) !== 0) {
       if (this.color >= Glow.eDrawTone__)
         object.setLevelFillColor(this.color);
       else
@@ -25878,26 +25856,26 @@ function DynFillLevel(dyn) {
     console.log("FillLevel direction", this.direction);
 
     pname = this.dyn.parseAttrName(this.minvalue_attr);
-    if (pname !== null && pname.name !== "" && pname.type == Pwr.eType_Float32 && this.database == GraphIfc.eDatabase_Gdh) {
+    if (pname !== null && pname.name !== "" && pname.type === Pwr.eType_Float32 && this.database === GraphIfc.eDatabase_Gdh) {
       this.min_value_p = this.dyn.graph.getGdh().refObjectInfo(pname.tname, pname, type, pname.elements);
     }
 
     pname = this.dyn.parseAttrName(this.maxvalue_attr);
-    if (pname !== null && pname.name !== "" && pname.type == Pwr.eType_Float32 && this.database == GraphIfc.eDatabase_Gdh) {
+    if (pname !== null && pname.name !== "" && pname.type === Pwr.eType_Float32 && this.database === GraphIfc.eDatabase_Gdh) {
       this.max_value_p = dyn.graph.getGdh().refObjectInfo(pname.tname, pname.type, pname.elements);
     }
 
     return 1;
-  }
+  };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
-    if (this.min_value_p != 0)
+    if (this.min_value_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.min_value_p);
-    if (this.max_value_p != 0)
+    if (this.max_value_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.max_value_p);
-  }
+  };
 
   this.scan = function (object) {
     if (!this.attrFound)
@@ -25908,8 +25886,8 @@ function DynFillLevel(dyn) {
     if (this.max_value_p !== 0 && this.min_value_p !== 0) {
       minval = this.dyn.graph.getGdh().getObjectRefInfo(this.min_value_p);
       maxval = this.dyn.graph.getGdh().getObjectRefInfo(this.max_value_p);
-      if (minval != this.min_value ||
-        maxval != this.max_value) {
+      if (minval !== this.min_value ||
+        maxval !== this.max_value) {
         this.min_value = minval;
         this.max_value = maxval;
         this.firstScan = true;
@@ -25923,7 +25901,7 @@ function DynFillLevel(dyn) {
     } else
       this.firstScan = false;
 
-    if (this.max_value == this.min_value)
+    if (this.max_value === this.min_value)
       return;
 
     var value = 0;
@@ -25949,7 +25927,7 @@ function DynFillLevel(dyn) {
           value = ((pvalue - this.min_value) / (this.max_value - this.min_value) * (this.limit_max - this.limit_min)
             + (geom.ur_y - this.limit_max)) / (geom.ur_y - geom.ll_y);
           break;
-        default: ;
+        default:
       }
     }
     object.setFillLevel(value);
@@ -26252,7 +26230,7 @@ function DynToggleDig(dyn) {
         this.dyn.graph.setClickActive(0);
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0)
           break;
 
         var pname = this.dyn.parseAttrName(this.attribute);
@@ -26340,7 +26318,7 @@ function DynStoDig(dyn) {
         object.setColorInverse(1);
         this.dyn.repaintNow = true;
 
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0)
           break;
 
         var pname = this.dyn.parseAttrName(this.attribute);
@@ -26361,7 +26339,7 @@ function DynStoDig(dyn) {
         object.setColorInverse(0);
         this.dyn.repaintNow = true;
 
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0)
           break;
 
         var pname = this.dyn.parseAttrName(this.attribute);
@@ -26380,7 +26358,7 @@ function DynStoDig(dyn) {
       }
     }
     return 1;
-  }
+  };
 
   this.open = function (lines, row) {
     var end = false;
@@ -26451,7 +26429,7 @@ function DynCommand(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0)
           break;
 
         if (this.command == null)
@@ -26471,7 +26449,7 @@ function DynCommand(dyn) {
         break;
     }
     return 1;
-  }
+  };
 
   this.open = function (lines, row) {
     var end = false;
@@ -26541,7 +26519,7 @@ function DynScript(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0)
           break;
 
         if (this.script == null)
@@ -26551,7 +26529,7 @@ function DynScript(dyn) {
         break;
     }
     return 1;
-  }
+  };
 
   this.open = function (lines, row) {
     var end = false;
@@ -26578,8 +26556,8 @@ function DynScript(dyn) {
 
           idx = 0;
           while (line != null) {
-            while ((idx = line.indexOf('"', idx)) != -1) {
-              if (idx > 0 && (line.charAt(idx - 1) == '\\')) {
+            while ((idx = line.indexOf('"', idx)) !== -1) {
+              if (idx > 0 && (line.charAt(idx - 1) === '\\')) {
                 line = line.substring(0, idx - 1) + line.substring(idx);
               } else {
                 if (idx > 0)
@@ -26653,7 +26631,7 @@ function DynCommandDoubleClick(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1ClickDoubleClick:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0)
           break;
 
         if (this.command == null)
@@ -26665,7 +26643,7 @@ function DynCommandDoubleClick(dyn) {
         break;
     }
     return 1;
-  }
+  };
 
   this.open = function (lines, row) {
     var end = false;
@@ -26723,7 +26701,7 @@ function DynConfirm(dyn) {
   };
 
   this.action = function (object, e) {
-    if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) == 0)
+    if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) === 0)
       return 1;
 
     if (!this.dyn.graph.isAuthorized(this.dyn.access))
@@ -26736,12 +26714,12 @@ function DynConfirm(dyn) {
       case Glow.eEvent_ValueChanged:
 
         var skip = 0;
-        if (((this.on_set != 0 && this.on_reset == 0) || (this.on_reset != 0 && this.on_set == 0)) &&
-          (this.dyn.total_action_type1 & DynC.mActionType1_ToggleDig) != 0) {
+        if (((this.on_set !== 0 && this.on_reset === 0) || (this.on_reset !== 0 && this.on_set === 0)) &&
+          (this.dyn.total_action_type1 & DynC.mActionType1_ToggleDig) !== 0) {
           for (var j = 0; j < this.dyn.elements.length; j++) {
-            if (dyn.elements.get(j).action_type1 == DynC.mActionType1_ToggleDig) {
+            if (dyn.elements.get(j).action_type1 === DynC.mActionType1_ToggleDig) {
               var pname = this.dyn.parseAttrName(this.dyn.elements.get(j).attribute);
-              if (pname.name.substring(0, 1) == "&")
+              if (pname.name.substring(0, 1) === "&")
                 pname.name = this.dyn.graph.get_reference_name(pname.name);
 
               switch (pname.database) {
@@ -26749,7 +26727,7 @@ function DynConfirm(dyn) {
                   // TODO
                   var ret = this.dyn.graph.getGdh().getObjectInfoBoolean(pname.name);
                   if (ret.oddSts()) {
-                    if ((this.on_set != 0 && ret.value) || (this.on_reset != 0 && !ret.value))
+                    if ((this.on_set !== 0 && ret.value) || (this.on_reset !== 0 && !ret.value))
                       skip = 1;
                   } else
                     console.log("Confirm: " + ret.getSts());
@@ -26757,13 +26735,13 @@ function DynConfirm(dyn) {
                 case GraphIfc.eDatabase_Ccm:
                   // TODO
                   break;
-                default: ;
+                default:
               }
               break;
             }
           }
         }
-        if (skip != 0) {
+        if (skip !== 0) {
           this.dyn.confirmedAction(e.event, object);
           return 1;
         }
@@ -26852,7 +26830,7 @@ function DynIncrAnalog(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0)
           break;
 
         var pname = this.dyn.parseAttrName(this.attribute);
@@ -26886,7 +26864,7 @@ function DynIncrAnalog(dyn) {
     switch (typeId) {
       case Pwr.eType_Int32: {
         value += self.increment;
-        if (!(self.min_value == 0 && self.max_value == 0)) {
+        if (!(self.min_value === 0 && self.max_value === 0)) {
           if (value < self.min_value)
             value = Math.floor(self.min_value);
           if (value > self.max_value)
@@ -26900,7 +26878,7 @@ function DynIncrAnalog(dyn) {
       }
       default: {
         value += self.increment;
-        if (!(self.min_value == 0 && self.max_value == 0)) {
+        if (!(self.min_value === 0 && self.max_value === 0)) {
           if (value < self.min_value)
             value = self.min_value;
           if (value > self.max_value)
@@ -27008,7 +26986,7 @@ function DynRadioButton(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
   };
 
@@ -27020,7 +26998,7 @@ function DynRadioButton(dyn) {
       value = !value;
 
     if (!this.firstScan) {
-      if (this.oldValue == value)
+      if (this.oldValue === value)
         return;
     } else
       this.firstScan = false;
@@ -27060,16 +27038,16 @@ function DynRadioButton(dyn) {
 
         for (var i = 0; i < list.size(); i++) {
           var oe = list.get(i);
-          if (oe != e.object &&
-            oe.type() == Glow.eObjectType_GrowNode) {
+          if (oe !== e.object &&
+            oe.type() === Glow.eObjectType_GrowNode) {
             value = false;
             var gm_dyn = oe.getUserData();
 
             if ((gm_dyn.total_action_type1 & DynC.mActionType1_RadioButton) !== 0) {
               for (var j = 0; j < gm_dyn.elements.length; j++) {
-                if (gm_dyn.elements[j].action_type1 == DynC.mActionType1_RadioButton) {
+                if (gm_dyn.elements[j].action_type1 === DynC.mActionType1_RadioButton) {
                   var pname = this.dyn.parseAttrName(gm_dyn.elements[j].attribute);
-                  if (pname.name.substring(0, 1) == "&")
+                  if (pname.name.substring(0, 1) === "&")
                     pname.name = this.dyn.graph.get_reference_name(pname.name);
                   switch (pname.database) {
                     case GraphIfc.eDatabase_Gdh:
@@ -27078,7 +27056,7 @@ function DynRadioButton(dyn) {
                     case GraphIfc.eDatabase_Ccm:
                       // TODO
                       break;
-                    default: ;
+                    default:
                   }
                 }
               }
@@ -27087,7 +27065,7 @@ function DynRadioButton(dyn) {
         }
 
         var pname = this.dyn.parseAttrName(this.attribute);
-        if (pname.name.substring(0, 1) == "&")
+        if (pname.name.substring(0, 1) === "&")
           pname.name = this.dyn.graph.get_reference_name(pname.name);
 
         value = true;
@@ -27098,7 +27076,7 @@ function DynRadioButton(dyn) {
           case GraphIfc.eDatabase_Ccm:
             // TODO
             break;
-          default: ;
+          default:
         }
         break;
       }
@@ -27230,7 +27208,7 @@ function DynHelp(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0)
           break;
 
         var command;
@@ -27243,7 +27221,7 @@ function DynHelp(dyn) {
         break;
     }
     return 1;
-  }
+  };
 
   this.open = function (lines, row) {
     var end = false;
@@ -27325,14 +27303,14 @@ function DynOpenGraph(dyn) {
           // Open classgraph for popup menu object
           if ((this.dyn.total_action_type1 & DynC.mActionType1_PopupMenu) !== 0) {
             for (var i = 0; i < this.dyn.elements.length; i++) {
-              if (this.dyn.elements[i].action_type1 == DynC.mActionType1_PopupMenu) {
+              if (this.dyn.elements[i].action_type1 === DynC.mActionType1_PopupMenu) {
                 command = "open graph/class/instance=" + this.dyn.elements[i].ref_object;
                 break;
               }
             }
           } else if ((this.dyn.total_dyn_type1 & DynC.mDynType1_HostObject) !== 0) {
             for (var i = 0; i < this.dyn.elements.length; i++) {
-              if (this.dyn.elements.get(i).dyn_type1 == DynC.mDynType1_HostObject) {
+              if (this.dyn.elements.get(i).dyn_type1 === DynC.mDynType1_HostObject) {
                 command = "open graph/class/instance=" + this.dyn.elements[i].hostobject;
                 break;
               }
@@ -27344,7 +27322,7 @@ function DynOpenGraph(dyn) {
         break;
     }
     return 1;
-  }
+  };
 
   this.open = function (lines, row) {
     var end = false;
@@ -27414,7 +27392,7 @@ function DynOpenURL(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0)
           break;
 
         var command = "open url \"" + this.url + "\"";
@@ -27423,7 +27401,7 @@ function DynOpenURL(dyn) {
         break;
     }
     return 1;
-  }
+  };
 
   this.open = function (lines, row) {
     var end = false;
@@ -27562,14 +27540,14 @@ function DynCloseGraph(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0)
           break;
 
         this.dyn.graph.closeGraph();
         break;
     }
     return 1;
-  }
+  };
 
   this.open = function (lines, row) {
     var end = false;
@@ -27706,7 +27684,6 @@ function DynSlider(dyn) {
             object.move_to(info.min_position, g.ll_y);
             break;
           default:
-            ;
         }
       } else
         this.direction = info.direction;
@@ -27717,7 +27694,7 @@ function DynSlider(dyn) {
     this.max_value_p = 0;
     pname = this.dyn.parseAttrName(this.maxvalue_attr);
     console.log("Slider", this.maxvalue_attr, pname);
-    if (pname !== null && pname.name !== "" && pname.type == Pwr.eType_Float32) {
+    if (pname !== null && pname.name !== "" && pname.type === Pwr.eType_Float32) {
       switch (pname.database) {
         case GraphIfc.eDatabase_Gdh:
           this.max_value_p = this.dyn.graph.getGdh().refObjectInfo(pname.tname, pname.type, pname.elements);
@@ -27729,7 +27706,7 @@ function DynSlider(dyn) {
 
     this.min_value_p = 0;
     pname = this.dyn.parseAttrName(this.minvalue_attr);
-    if (pname !== null && pname.name !== "" && pname.type == Pwr.eType_Float32) {
+    if (pname !== null && pname.name !== "" && pname.type === Pwr.eType_Float32) {
       switch (pname.database) {
         case GraphIfc.eDatabase_Gdh:
           this.min_value_p = this.dyn.graph.getGdh().refObjectInfo(pname.tname, pname.type, pname.elements);
@@ -27741,7 +27718,7 @@ function DynSlider(dyn) {
 
     this.insensitive_p = 0;
     pname = this.dyn.parseAttrName(this.insensitive_attr);
-    if (pname !== null && pname.name !== "" && pname.type == Pwr.eType_Boolean) {
+    if (pname !== null && pname.name !== "" && pname.type === Pwr.eType_Boolean) {
       console.log("Slider insensitive " + pname.name + " type : " + pname.type);
 
       switch (pname.database) {
@@ -27760,18 +27737,18 @@ function DynSlider(dyn) {
       }
     }
     return 1;
-  }
+  };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
-    if (this.min_value_p != 0)
+    if (this.min_value_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.min_value_p);
-    if (this.max_value_p != 0)
+    if (this.max_value_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.max_value_p);
-    if (this.insensitive_p != 0 && this.insensitive_db == GraphIfc.eDatabase_Gdh)
+    if (this.insensitive_p !== 0 && this.insensitive_db === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.insensitive_p);
-  }
+  };
 
   this.scan = function (object) {
     if (!this.attrFound)
@@ -27795,7 +27772,7 @@ function DynSlider(dyn) {
       }
     }
 
-    if (typeof value == 'undefined')
+    if (typeof value === 'undefined')
       return;
 
     if (this.insensitive_p !== 0) {
@@ -27815,8 +27792,8 @@ function DynSlider(dyn) {
     if (this.max_value_p !== 0 && this.min_value_p !== 0) {
       this.max_value = this.dyn.graph.getGdh().getObjectRefInfo(this.max_value_p);
       this.min_value = this.dyn.graph.getGdh().getObjectRefInfo(this.min_value_p);
-      if (this.max_value != this.old_max_value ||
-        this.min_value != this.old_min_value) {
+      if (this.max_value !== this.old_max_value ||
+        this.min_value !== this.old_min_value) {
         if (Math.abs(this.max_value - this.min_value) > Number.MIN_VALUE)
           this.firstScan = true;
       }
@@ -27833,10 +27810,10 @@ function DynSlider(dyn) {
           break;
         case Pwr.eType_Int32:
         case Pwr.eType_Boolean:
-          if (ivalue == this.old_ivalue)
+          if (ivalue === this.old_ivalue)
             return;
           break;
-        default: ;
+        default:
       }
     } else
       this.firstScan = false;
@@ -27849,18 +27826,18 @@ function DynSlider(dyn) {
       case Pwr.eType_Boolean:
         this.old_ivalue = ivalue;
         break;
-      default: ;
+      default:
     }
 
     var info = object.get_info();
 
-    if (!(this.max_value_p !== 0 && this.min_value_p !== 0 && this.max_value != this.min_value)) {
+    if (!(this.max_value_p !== 0 && this.min_value_p !== 0 && this.max_value !== this.min_value)) {
       this.max_value = info.max_value;
       this.min_value = info.min_value;
     }
-    if (info.min_position != info.max_position) {
-      if (this.dyn.graph.getCurrentSlider() != object &&
-        this.max_value != this.min_value) {
+    if (info.min_position !== info.max_position) {
+      if (this.dyn.graph.getCurrentSlider() !== object &&
+        this.max_value !== this.min_value) {
         var pos_x, pos_y;
 
         switch (this.a_typeid) {
@@ -27929,10 +27906,10 @@ function DynSlider(dyn) {
               var sts = this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, 1);
               break;
             }
-            default: ;
+            default:
           }
         }
-        if (this.dyn.graph.getCurrentSlider() == object)
+        if (this.dyn.graph.getCurrentSlider() === object)
           this.dyn.graph.setCurrentSlider(null);
         break;
       }
@@ -27944,8 +27921,8 @@ function DynSlider(dyn) {
           break;
         }
         var info = object.get_info();
-        if (this.direction == Glow.eDirection_Right ||
-          this.direction == Glow.eDirection_Left)
+        if (this.direction === Glow.eDirection_Right ||
+          this.direction === Glow.eDirection_Left)
           this.dyn.graph.getCtx().setMoveRestrictions(Glow.eMoveRestriction_HorizontalSlider,
             info.max_position, info.min_position, e.object);
         else
@@ -27959,8 +27936,8 @@ function DynSlider(dyn) {
         var value;
 
         var info = object.get_info();
-        if (info.min_position != info.max_position) {
-          if (!(this.max_value_p !== 0 && this.min_value_p !== 0 && this.max_value != this.min_value)) {
+        if (info.min_position !== info.max_position) {
+          if (!(this.max_value_p !== 0 && this.min_value_p !== 0 && this.max_value !== this.min_value)) {
             this.max_value = info.max_value;
             this.min_value = info.min_value;
           }
@@ -27999,7 +27976,7 @@ function DynSlider(dyn) {
               sts = this.dyn.graph.getGdh().setObjectInfoFloat(pname.name, value);
               break;
             case Pwr.eType_Boolean: {
-              var bvalue = (value > 0.5 ? true : false);
+              var bvalue = (value > 0.5);
               sts = this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, bvalue);
               break;
             }
@@ -28012,10 +27989,10 @@ function DynSlider(dyn) {
         }
         break;
       }
-      default: ;
+      default:
     }
     return 1;
-  }
+  };
 
   this.open = function (lines, row) {
     var end = false;
@@ -28170,7 +28147,7 @@ function DynPulldownMenu(dyn) {
           console.log("PulldownMenu action");
           var b_mask = 1;
           for (var i = 0; i < 32; i++) {
-            if ((b_mask & this.button_mask) != 0) {
+            if ((b_mask & this.button_mask) !== 0) {
               info.item[i].occupied = true;
               info.item[i].text = this.items_text[i];
 
@@ -28187,20 +28164,20 @@ function DynPulldownMenu(dyn) {
                     var command;
 
                     for (var j = 0; j < this.dyn.elements.length; j++) {
-                      if (this.dyn.elements[j].dyn_type1 == DynC.mDynType1_Invisible) {
+                      if (this.dyn.elements[j].dyn_type1 === DynC.mDynType1_Invisible) {
                         invis_element = this.dyn.elements[j];
                       }
                     }
                     if (invis_element !== null) {
                       var pname = this.dyn.parseAttrName(invis_element.attribute);
                       if ((pname !== null) && pname.name !== "") {
-                        if (pname.name.substring(0, 5) == "$cmd(") {
+                        if (pname.name.substring(0, 5) === "$cmd(") {
                           var idx = pname.name.lastIndexOf(")");
-                          if (idx != -1) {
+                          if (idx !== -1) {
                             command = pname.name.substring(5, idx);
                             command = this.dyn.graph.getCommand(command);
                             sts = this.dyn.graph.command(command);
-                            if ((sts & 1) == 0)
+                            if ((sts & 1) === 0)
                               info.item[i].type = Glow.eMenuItem_ButtonDisabled;
                           }
                         }
@@ -28235,13 +28212,13 @@ function DynPulldownMenu(dyn) {
           var text_font = 0;
 
           sts = 0; // TODO sts = grow_GetObjectAnnotInfo( object, 1, &text_size, &text_drawtype, &text_color, &bg_color, &scale, &text_font);
-          if ((sts & 1) == 0) {
+          if ((sts & 1) === 0) {
             text_size = 3;
             text_drawtype = Glow.eDrawType_TextHelvetica;
             text_font = Glow.eFont_LucidaSans;
             text_color = Glow.eDrawType_Line;
             bg_color = Glow.eDrawType_LightGray;
-          } else if (bg_color == Glow.eDrawType_No || bg_color == Glow.eDrawType_Inherit)
+          } else if (bg_color === Glow.eDrawType_No || bg_color === Glow.eDrawType_Inherit)
             bg_color = Glow.eDrawType_LightGray;
 
           var g = object.measure();
@@ -28262,7 +28239,7 @@ function DynPulldownMenu(dyn) {
         console.log("MenuActivated event");
         if (this.menu_object == null)
           break;
-        if (e.object == this.menu_object) {
+        if (e.object === this.menu_object) {
           if (this.items_dyn[e.item] !== null) {
             var event = new GlowEvent();
             event.event = Glow.eEvent_MB1Click;
@@ -28280,17 +28257,17 @@ function DynPulldownMenu(dyn) {
       case Glow.eEvent_MenuDelete:
         if (this.menu_object == null)
           break;
-        if (e.object == null || e.object == this.menu_object) {
+        if (e.object == null || e.object === this.menu_object) {
           // Delete this menu
           this.dyn.graph.getCtx().remove(this.menu_object);
           this.menu_object = null;
         }
         break;
 
-      default: ;
+      default:
     }
     return 1;
-  }
+  };
 
   this.connect = function (object) {
   };
@@ -28681,9 +28658,9 @@ function DynOptionMenu(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.attrFound && this.database == GraphIfc.eDatabase_Gdh)
+    if (this.attrFound && this.database === GraphIfc.eDatabase_Gdh)
       this.dyn.graph.getGdh().unrefObjectInfo(this.p);
-    if (this.update_p != 0)
+    if (this.update_p !== 0)
       this.dyn.graph.getGdh().unrefObjectInfo(this.update_p);
   };
 
@@ -28692,14 +28669,14 @@ function DynOptionMenu(dyn) {
       return;
 
     var update_texts = false;
-    if (this.update_p != 0) {
+    if (this.update_p !== 0) {
       var value = this.dyn.getDig(this.p, this.update_a_typeid, this.update_bitmask, this.update_database);
 
       if (this.update_inverted)
         value = !value;
 
       if (!this.firstScan) {
-        if (this.update_oldValue != value)
+        if (this.update_oldValue !== value)
           update_texts = true;
       } else {
         update_texts = false;
@@ -28717,7 +28694,7 @@ function DynOptionMenu(dyn) {
         var i;
 
         if (!this.firstScan) {
-          if (value == this.oldValueF) {
+          if (value === this.oldValueF) {
             return;
           }
         } else
@@ -28734,7 +28711,7 @@ function DynOptionMenu(dyn) {
         var i;
 
         if (!this.firstScan) {
-          if (value == this.oldValueI) {
+          if (value === this.oldValueI) {
             return;
           }
         } else
@@ -28752,7 +28729,7 @@ function DynOptionMenu(dyn) {
     if (this.update_p === 0) {
       var found = false;
       for (var i = 0; i < 32; i++) {
-        if (this.items_enum[i] == enum_value) {
+        if (this.items_enum[i] === enum_value) {
           object.setAnnotation(1, this.items_text[i]);
           found = true;
           break;
@@ -28763,7 +28740,7 @@ function DynOptionMenu(dyn) {
     } else {
     }
 
-  }
+  };
 
   this.action = function (object, e) {
     if (!this.dyn.graph.isAuthorized(this.dyn.access))
@@ -28814,12 +28791,12 @@ function DynOptionMenu(dyn) {
           var text_font = Glow.eFont_Helvetica;
 
           sts = 0; //grow_GetObjectAnnotInfo( object, 1, &tsize, &text_drawtype, &text_color, &bg_color, &scale, &text_font);
-          if ((sts & 1) == 0) {
+          if ((sts & 1) === 0) {
             tsize = 2;
             text_drawtype = Glow.eDrawType_TextHelveticaBold;
             text_color = Glow.eDrawType_Line;
             bg_color = Glow.eDrawType_LightGray;
-          } else if (bg_color == Glow.eDrawType_No || bg_color == Glow.eDrawType_Inherit)
+          } else if (bg_color === Glow.eDrawType_No || bg_color === Glow.eDrawType_Inherit)
             bg_color = Glow.eDrawType_LightGray;
 
           var g = object.measure();
@@ -28836,7 +28813,7 @@ function DynOptionMenu(dyn) {
       case Glow.eEvent_MenuActivated:
         if (this.menu_object === null)
           break;
-        if (e.object == this.menu_object) {
+        if (e.object === this.menu_object) {
           // Set enum value to attribute
 
           var pname = this.dyn.parseAttrName(this.attribute);
@@ -28863,7 +28840,7 @@ function DynOptionMenu(dyn) {
                   sts = this.dyn.graph.getGdh().setObjectInfoInt(pname.name, value);
                   break;
                 }
-                default: ;
+                default:
               }
               break;
             case GraphIfc.eDatabase_Ccm: {
@@ -28873,7 +28850,7 @@ function DynOptionMenu(dyn) {
               */
               break;
             }
-            default: ;
+            default:
           }
 
           if (sts == null || sts.evenSts()) console.log("Option menu error: " + pname.name);
@@ -28882,17 +28859,17 @@ function DynOptionMenu(dyn) {
       case Glow.eEvent_MenuDelete:
         if (this.menu_object == null)
           break;
-        if (e.object === null || e.object == this.menu_object) {
+        if (e.object === null || e.object === this.menu_object) {
           // Delete this menu
           this.dyn.graph.getCtx().remove(this.menu_object);
           this.menu_object = null;
         }
         break;
-      default: ;
+      default:
     }
 
     return 1;
-  }
+  };
 
   this.open = function (lines, row) {
     var end = false;
@@ -29297,7 +29274,7 @@ function DynSetValue(dyn) {
       case Glow.eEvent_MB1Click: {
         var sts;
 
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0)
           break;
 
         var pname = this.dyn.parseAttrName(this.attribute);
@@ -29350,9 +29327,9 @@ function DynSetValue(dyn) {
           case Pwr.eType_Boolean: {
             var inputValueInt = parseInt(this.value.trim(), 10);
             var inputValue;
-            if (inputValueInt == 0)
+            if (inputValueInt === 0)
               inputValue = false;
-            else if (inputValueInt == 1)
+            else if (inputValueInt === 1)
               inputValue = true;
             else
               break;
@@ -29391,7 +29368,6 @@ function DynSetValue(dyn) {
             break;
           }
           default:
-            ;
         }
 
         break;
@@ -29475,7 +29451,7 @@ function DynMethodToolbar(dyn) {
     if (sts & 1) {
       self.xm_mask_flags = value;
 
-      if ((self.xm_mask_flags & Pwrb.mXttMethodsFlagsMask_IsConfigured) == 0) {
+      if ((self.xm_mask_flags & Pwrb.mXttMethodsFlagsMask_IsConfigured) === 0) {
         self.mask_configure = 1;
         self.mask_store = 1;
         self.connect5();
@@ -29512,13 +29488,13 @@ function DynMethodToolbar(dyn) {
     var cmd, command;
     var sts;
 
-    if (this.mask_configure != 0) {
+    if (this.mask_configure !== 0) {
       this.xm_mask_opmethods = 0;
       for (var i = 0; i < DynC.method_toolbar_op_cnt; i++) {
-        if (DynC.method_toolbar_op_methods[i] == "")
+        if (DynC.method_toolbar_op_methods[i] === "")
           continue;
-        if (DynC.method_toolbar_op_methods[i] == "Parent Object Graph") {
-          if (this.method_object.indexOf('.') != -1)
+        if (DynC.method_toolbar_op_methods[i] === "Parent Object Graph") {
+          if (this.method_object.indexOf('.') !== -1)
             this.xm_mask_opmethods |= 1 << i;
         } else {
           command = "check method/method=\"" + DynC.method_toolbar_op_methods[i] + "\"/object=" +
@@ -29526,7 +29502,7 @@ function DynMethodToolbar(dyn) {
 
           command = this.dyn.graph.getCommand(command);
           sts = this.dyn.graph.command(command);
-          if ((sts & 1) != 0)
+          if ((sts & 1) !== 0)
             this.xm_mask_opmethods |= 1 << i;
         }
       }
@@ -29539,7 +29515,7 @@ function DynMethodToolbar(dyn) {
 
         command = this.dyn.graph.getCommand(command);
         sts = this.dyn.graph.command(command);
-        if ((sts & 1) != 0)
+        if ((sts & 1) !== 0)
           this.xm_mask_mntmethods |= 1 << i;
       }
       this.xm_mask_flags |= Pwrb.mXttMethodsFlagsMask_IsConfigured;
@@ -29562,7 +29538,7 @@ function DynMethodToolbar(dyn) {
     if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtPlc | Pwr.mAccess_System))
       insensitive_mntmask |= Pwrb.mXttMntMethodsMask_OpenTrace;
 
-    if (this.toolbar_type == DynC.eMethodToolbarType_Simulate)
+    if (this.toolbar_type === DynC.eMethodToolbarType_Simulate)
       opmask = 0;
 
     this.o.configure(DynC.method_toolbar_op_subgraph, DynC.method_toolbar_mnt_subgraph,
@@ -29570,7 +29546,7 @@ function DynMethodToolbar(dyn) {
       insensitive_opmask, insensitive_mntmask);
 
     this.mask_store = 0; // Check call is not universal
-    if (this.mask_store != 0) {
+    if (this.mask_store !== 0) {
       var psts;
 
       parsed_name = this.pname_name + ".XttMethodsMask.OpMethods";
@@ -29612,8 +29588,8 @@ function DynMethodToolbar(dyn) {
 
         console.log("Toolbar action " + category + " " + idx);
 
-        if (category == 1) {
-          if (DynC.method_toolbar_op_methods[idx] == "Parent Object Graph")
+        if (category === 1) {
+          if (DynC.method_toolbar_op_methods[idx] === "Parent Object Graph")
             command = "open graph/class/parent/instance=" + this.method_object;
           else
             command = "call method/method=\"" + DynC.method_toolbar_op_methods[idx] +
@@ -29728,21 +29704,21 @@ function DynMethodPulldownMenu(dyn) {
       case Glow.eEvent_MenuActivated:
         if (this.menu_object == null)
           break;
-        if (e.object == this.menu_object) {
+        if (e.object === this.menu_object) {
           var sts;
           var command;
           var idx = 0;
           var found = 0;
 
           for (var i = 0; i < DynC.method_toolbar_op_cnt; i++) {
-            if (this.menu_type != DynC.eMethodsMenuType_Help && (DynC.method_toolbar_op_helpmask & (1 << i)) == 0)
+            if (this.menu_type !== DynC.eMethodsMenuType_Help && (DynC.method_toolbar_op_helpmask & (1 << i)) === 0)
               continue;
-            if (this.menu_type != DynC.eMethodsMenuType_Simulate)
+            if (this.menu_type !== DynC.eMethodsMenuType_Simulate)
               continue;
 
-            if ((this.opmask & (1 << i)) != 0)
+            if ((this.opmask & (1 << i)) !== 0)
               idx++;
-            if (e.item + 1 == idx) {
+            if (e.item + 1 === idx) {
               command = "call method/method=\"" + DynC.method_toolbar_op_methods[i] +
                 "\"/object=" + this.method_object;
               command = this.dyn.graph.getCommand(command);
@@ -29752,14 +29728,14 @@ function DynMethodPulldownMenu(dyn) {
             }
           }
 
-          if (found == 0) {
+          if (found === 0) {
             for (var i = 0; i < DynC.method_toolbar_mnt_cnt; i++) {
-              if (this.menu_type == DynC.eMethodsMenuType_Help && (DynC.method_toolbar_mnt_helpmask & (1 << i)) == 0)
+              if (this.menu_type === DynC.eMethodsMenuType_Help && (DynC.method_toolbar_mnt_helpmask & (1 << i)) === 0)
                 continue;
 
-              if ((this.mntmask & (1 << i)) != 0)
+              if ((this.mntmask & (1 << i)) !== 0)
                 idx++;
-              if (e.item + 1 == idx) {
+              if (e.item + 1 === idx) {
                 command = "call method/method=\"" + DynC.method_toolbar_mnt_methods[i] +
                   "\"/object=" + this.method_object;
                 command = this.dyn.graph.getCommand(command);
@@ -29774,14 +29750,14 @@ function DynMethodPulldownMenu(dyn) {
       case Glow.eEvent_MenuDelete:
         if (this.menu_object == null)
           break;
-        if (e.object == null || e.object == this.menu_object) {
+        if (e.object == null || e.object === this.menu_object) {
           // Delete this menu
           this.dyn.graph.getCtx().remove(this.menu_object);
           this.menu_object = null;
         }
         break;
 
-      default: ;
+      default:
     }
     return 1;
   };
@@ -29790,7 +29766,7 @@ function DynMethodPulldownMenu(dyn) {
     if (sts & 1) {
       self.xm_mask_flags = value;
 
-      if ((self.xm_mask_flags & Pwrb.mXttMethodsFlagsMask_IsConfigured) == 0) {
+      if ((self.xm_mask_flags & Pwrb.mXttMethodsFlagsMask_IsConfigured) === 0) {
         self.mask_configure = 1;
         self.mask_store = 1;
         self.action5();
@@ -29829,11 +29805,11 @@ function DynMethodPulldownMenu(dyn) {
     var command;
     var sts;
 
-    if (this.mask_configure != 0) {
+    if (this.mask_configure !== 0) {
       this.xm_mask_opmethods = 0;
       for (var i = 0; i < DynC.method_toolbar_op_cnt; i++) {
-        if (DynC.method_toolbar_op_methods[i] == "Parent Object Graph") {
-          if (this.method_object.indexOf('.') != -1)
+        if (DynC.method_toolbar_op_methods[i] === "Parent Object Graph") {
+          if (this.method_object.indexOf('.') !== -1)
             this.xm_mask_opmethods |= 1 << i;
         } else {
           command = "check method/method=\"" + DynC.method_toolbar_op_methods[i] + "\"/object=" +
@@ -29841,7 +29817,7 @@ function DynMethodPulldownMenu(dyn) {
 
           command = this.dyn.graph.getCommand(command);
           sts = this.dyn.graph.command(command);
-          if ((sts & 1) != 0)
+          if ((sts & 1) !== 0)
             this.xm_mask_opmethods |= 1 << i;
         }
       }
@@ -29852,7 +29828,7 @@ function DynMethodPulldownMenu(dyn) {
 
         command = dyn.graph.getCommand(command);
         var sts = dyn.graph.command(command);
-        if ((sts & 1) != 0)
+        if ((sts & 1) !== 0)
           this.xm_mask_mntmethods |= 1 << i;
       }
       this.xm_mask_flags |= Pwrb.mXttMethodsFlagsMask_IsConfigured;
@@ -29883,16 +29859,16 @@ function DynMethodPulldownMenu(dyn) {
       if (menu_idx >= 32)
         break;
 
-      if (this.menu_type == DynC.eMethodsMenuType_Help && (DynC.method_toolbar_op_helpmask & (1 << i)) == 0)
+      if (this.menu_type === DynC.eMethodsMenuType_Help && (DynC.method_toolbar_op_helpmask & (1 << i)) === 0)
         continue;
-      if (this.menu_type == DynC.eMethodsMenuType_Simulate)
+      if (this.menu_type === DynC.eMethodsMenuType_Simulate)
         continue;
 
-      if ((this.opmask & (1 << i)) != 0) {
+      if ((this.opmask & (1 << i)) !== 0) {
         info.item[menu_idx].type = Glow.eMenuItem_Button;
-        info.item[menu_idx].text = new String(DynC.method_toolbar_op_methods[i]);
+        info.item[menu_idx].text = String(DynC.method_toolbar_op_methods[i]);
         info.item[menu_idx].occupied = true;
-        if ((insensitive_opmask & (1 << i)) != 0)
+        if ((insensitive_opmask & (1 << i)) !== 0)
           info.item[menu_idx].type = Glow.eMenuItem_ButtonDisabled;
         menu_idx++;
       }
@@ -29901,14 +29877,14 @@ function DynMethodPulldownMenu(dyn) {
       if (menu_idx >= 32)
         break;
 
-      if (this.menu_type == DynC.eMethodsMenuType_Help && (DynC.method_toolbar_mnt_helpmask & (1 << i)) == 0)
+      if (this.menu_type === DynC.eMethodsMenuType_Help && (DynC.method_toolbar_mnt_helpmask & (1 << i)) === 0)
         continue;
 
-      if ((this.mntmask & (1 << i)) != 0) {
+      if ((this.mntmask & (1 << i)) !== 0) {
         info.item[menu_idx].type = Glow.eMenuItem_Button;
         info.item[menu_idx].text = DynC.method_toolbar_mnt_methods[i];
         info.item[menu_idx].occupied = true;
-        if ((insensitive_mntmask & (1 << i)) != 0)
+        if ((insensitive_mntmask & (1 << i)) !== 0)
           info.item[menu_idx].type = Glow.eMenuItem_ButtonDisabled;
         menu_idx++;
       }
@@ -29921,13 +29897,13 @@ function DynMethodPulldownMenu(dyn) {
     var text_font = 0;
 
     sts = 0; // TODO sts = grow_GetObjectAnnotInfo( object, 1, &text_size, &text_drawtype, &text_color, &bg_color, &scale, &text_font);
-    if ((sts & 1) == 0) {
+    if ((sts & 1) === 0) {
       text_size = 3;
       text_drawtype = Glow.eDrawType_TextHelvetica;
       text_font = Glow.eFont_LucidaSans;
       text_color = Glow.eDrawType_Line;
       bg_color = Glow.eDrawType_LightGray;
-    } else if (bg_color == Glow.eDrawType_No || bg_color == Glow.eDrawType_Inherit)
+    } else if (bg_color === Glow.eDrawType_No || bg_color === Glow.eDrawType_Inherit)
       bg_color = Glow.eDrawType_LightGray;
 
     var g = this.o.measure();
@@ -30099,7 +30075,7 @@ function Graph(appl) {
 
     switch (type) {
       case Glow.eUserdataCbType_Ctx:
-        if (lines[row] != "1") {
+        if (lines[row] !== "1") {
           ret.row = row - 1;
           ret.userdata = null;
         } else {
@@ -30131,15 +30107,15 @@ function Graph(appl) {
     var dyn;
     var o;
 
-    if (e.object_type != Glow.eObjectType_NoObject &&
+    if (e.object_type !== Glow.eObjectType_NoObject &&
       e.object !== null) {
       ctx_popped = this.ctxPop(e.object.ctx);
     }
 
     switch (e.event) {
       case Glow.eEvent_MB1Click:
-        if (e.object_type == Glow.eObjectType_NoObject ||
-          e.object.type() != Glow.eObjectType_GrowMenu) {
+        if (e.object_type === Glow.eObjectType_NoObject ||
+          e.object.type() !== Glow.eObjectType_GrowMenu) {
           // Close any open menu, if not click in menu
           var event = new GlowEventMenu();
           event.event = Glow.eEvent_MenuDelete;
@@ -30149,16 +30125,16 @@ function Graph(appl) {
           var list = this.ctx.get_object_list();
           for (var i = 0; i < list.size(); i++) {
             o = list.get(i);
-            if ((o.type() == Glow.eObjectType_GrowNode ||
-              o.type() == Glow.eObjectType_GrowGroup) &&
-              (e.object_type == Glow.eObjectType_NoObject ||
-                o != e.object)) {
+            if ((o.type() === Glow.eObjectType_GrowNode ||
+              o.type() === Glow.eObjectType_GrowGroup) &&
+              (e.object_type === Glow.eObjectType_NoObject ||
+                o !== e.object)) {
               dyn = o.getUserData();
               if (dyn !== null)
                 dyn.action(o, event);
               var old_size = list.size();
               list = this.ctx.get_object_list();
-              if (old_size != list.size())
+              if (old_size !== list.size())
                 // Something is deleted
                 break;
             }
@@ -30192,19 +30168,19 @@ function Graph(appl) {
 
         for (var i = 0; i < list.size(); i++) {
           o = list.get(i);
-          if (o.type() == Glow.eObjectType_GrowNode ||
-            o.type() == Glow.eObjectType_GrowGroup) {
+          if (o.type() === Glow.eObjectType_GrowNode ||
+            o.type() === Glow.eObjectType_GrowGroup) {
             dyn = o.getUserData();
             if (dyn !== null) {
               sts = dyn.action(o, e);
-              if (sts == Glow.GLOW__TERMINATED)
+              if (sts === Glow.GLOW__TERMINATED)
                 return;
 
               // Check if anything is deleted
               old_size = list.size();
               list = this.ctx.get_object_list();
               console.log("old_size", old_size, list.size());
-              if (old_size != list.size())
+              if (old_size !== list.size())
                 break;
             }
           }
@@ -30218,7 +30194,7 @@ function Graph(appl) {
   };
 
   this.ctxPop = function (nctx) {
-    if (this.ctx == nctx)
+    if (this.ctx === nctx)
       return false;
 
     if (this.ctxStackCnt >= 10) {
@@ -30259,51 +30235,51 @@ function Graph(appl) {
 
   this.stringToType = function (str) {
     var idx;
-    if ((idx = str.indexOf('#')) != -1)
+    if ((idx = str.indexOf('#')) !== -1)
       str = str.substring(0, idx);
-    if (str.toLowerCase() == "boolean")
+    if (str.toLowerCase() === "boolean")
       return Pwr.eType_Boolean;
-    if (str.toLowerCase() == "float32")
+    if (str.toLowerCase() === "float32")
       return Pwr.eType_Float32;
-    if (str.toLowerCase() == "float64")
+    if (str.toLowerCase() === "float64")
       return Pwr.eType_Float64;
-    if (str.toLowerCase() == "char")
+    if (str.toLowerCase() === "char")
       return Pwr.eType_Char;
-    if (str.toLowerCase() == "int8")
+    if (str.toLowerCase() === "int8")
       return Pwr.eType_Int8;
-    if (str.toLowerCase() == "int16")
+    if (str.toLowerCase() === "int16")
       return Pwr.eType_Int16;
-    if (str.toLowerCase() == "int32")
+    if (str.toLowerCase() === "int32")
       return Pwr.eType_Int32;
-    if (str.toLowerCase() == "int64")
+    if (str.toLowerCase() === "int64")
       return Pwr.eType_Int64;
-    if (str.toLowerCase() == "uint8")
+    if (str.toLowerCase() === "uint8")
       return Pwr.eType_UInt8;
-    if (str.toLowerCase() == "uint16")
+    if (str.toLowerCase() === "uint16")
       return Pwr.eType_UInt16;
-    if (str.toLowerCase() == "uint32")
+    if (str.toLowerCase() === "uint32")
       return Pwr.eType_UInt32;
-    if (str.toLowerCase() == "uint64")
+    if (str.toLowerCase() === "uint64")
       return Pwr.eType_UInt64;
-    if (str.toLowerCase() == "objid")
+    if (str.toLowerCase() === "objid")
       return Pwr.eType_Objid;
-    if (str.toLowerCase() == "time")
+    if (str.toLowerCase() === "time")
       return Pwr.eType_Time;
-    if (str.toLowerCase() == "deltatime")
+    if (str.toLowerCase() === "deltatime")
       return Pwr.eType_DeltaTime;
-    if (str.toLowerCase() == "attrref")
+    if (str.toLowerCase() === "attrref")
       return Pwr.eType_AttrRef;
-    if (str.toLowerCase() == "status")
+    if (str.toLowerCase() === "status")
       return Pwr.eType_Status;
-    if (str.toLowerCase() == "netstatus")
+    if (str.toLowerCase() === "netstatus")
       return Pwr.eType_NetStatus;
-    if (str.toLowerCase() == "enum")
+    if (str.toLowerCase() === "enum")
       return Pwr.eType_Enum;
-    if (str.toLowerCase() == "mask")
+    if (str.toLowerCase() === "mask")
       return Pwr.eType_Mask;
-    if (str.toLowerCase() == "bit")
+    if (str.toLowerCase() === "bit")
       return GraphIfc.eType_Bit;
-    if (str.length >= 6 && str.substring(0, 6).toLowerCase() == "string")
+    if (str.length >= 6 && str.substring(0, 6).toLowerCase() === "string")
       return Pwr.eType_String;
     return 0;
   };
@@ -30312,8 +30288,8 @@ function Graph(appl) {
     var idx1, idx2;
     var index;
 
-    if ((idx1 = str.indexOf('[')) != -1 &&
-      (idx2 = str.indexOf(']')) != -1 &&
+    if ((idx1 = str.indexOf('[')) !== -1 &&
+      (idx2 = str.indexOf(']')) !== -1 &&
       idx2 > idx1) {
       index = parseInt(str.substring(idx1 + 1, idx2), 10);
       if (isNaN(index)) {
@@ -30334,24 +30310,24 @@ function Graph(appl) {
 
     var str = name.trim();
 
-    if ((idx = str.indexOf("$local.")) != -1) {
-      if ((tidx = str.indexOf('#')) == -1)
+    if ((idx = str.indexOf("$local.")) !== -1) {
+      if ((tidx = str.indexOf('#')) === -1)
         pname.name = str.substring(idx + 1);
       else {
         pname.name = str.substring(idx + 7, tidx);
         var type = str.substring(tidx);
-        if (type == "##Float32")
+        if (type === "##Float32")
           pname.type = Pwr.eType_Float32;
-        else if (type == "##Float64")
+        else if (type === "##Float64")
           pname.type = Pwr.eType_Float64;
-        else if (type == "##Int32")
+        else if (type === "##Int32")
           pname.type = Pwr.eType_Int32;
-        else if (type == "##Boolean")
+        else if (type === "##Boolean")
           pname.type = Pwr.eType_Boolean;
         else
           pname.type = Pwr.eType_String;
       }
-      if (str.substring(0, 1) == "!") {
+      if (str.substring(0, 1) === "!") {
         str = str.substring(1);
         str = str.trim();
         pname.inverted = true;
@@ -30363,22 +30339,22 @@ function Graph(appl) {
       return pname;
     }
 
-    if ((idx = str.indexOf("$ccm.")) != -1) {
-      if ((tidx = str.indexOf('#')) == -1)
+    if ((idx = str.indexOf("$ccm.")) !== -1) {
+      if ((tidx = str.indexOf('#')) === -1)
         pname.name = str.substring(idx + 1);
       else {
         pname.name = str.substring(idx + 5, tidx);
         var type2 = str.substring(tidx);
-        if (type2 == "##Float32")
+        if (type2 === "##Float32")
           pname.type = Pwr.eType_Float32;
-        else if (type2 == "##Int32")
+        else if (type2 === "##Int32")
           pname.type = Pwr.eType_Int32;
-        else if (type2 == "##Boolean")
+        else if (type2 === "##Boolean")
           pname.type = Pwr.eType_Boolean;
         else
           pname.type = Pwr.eType_String;
       }
-      if (str.substring(0, 1) == "!") {
+      if (str.substring(0, 1) === "!") {
         str = str.substring(1);
         str = str.trim();
         pname.inverted = true;
@@ -30386,22 +30362,22 @@ function Graph(appl) {
         pname.inverted = false;
 
       pname.database = GraphIfc.eDatabase_Ccm;
-      pname.tname = new String(pname.name);
+      pname.tname = String(pname.name);
       return pname;
     }
 
-    if ((idx = str.indexOf("$object")) != -1) {
+    if ((idx = str.indexOf("$object")) !== -1) {
       if (this.appl !== null) {
         var oname = this.ctx.getOwner();
         str = str.substring(0, idx) + oname + str.substring(idx + 7);
       }
     }
 
-    pname.tname = new String(str);
+    pname.tname = String(str);
 
-    if ((idx = str.indexOf('[')) == -1) {
-      if ((eidx = str.lastIndexOf('#')) != -1 &&
-        str.charAt(eidx - 1) != '#') {
+    if ((idx = str.indexOf('[')) === -1) {
+      if ((eidx = str.lastIndexOf('#')) !== -1 &&
+        str.charAt(eidx - 1) !== '#') {
         pname.elements = parseInt(str.substring(eidx + 1), 10);
         if (isNaN(pname.elements))
           pname.elements = 1;
@@ -30413,8 +30389,8 @@ function Graph(appl) {
       pname.elements = 1;
     }
 
-    if ((tidx = str.indexOf("##")) != -1) {
-      if (str.toLowerCase().substring(tidx + 2, 3) == "bit") {
+    if ((tidx = str.indexOf("##")) !== -1) {
+      if (str.toLowerCase().substring(tidx + 2, 3) === "bit") {
         var typestr = str.substring(tidx + 2);
         var bit = this.stringToIndex(str);
         pname.bitmask = 1 << bit;
@@ -30426,7 +30402,7 @@ function Graph(appl) {
     } else
       pname.type = 0;
 
-    if (str.substring(0, 1) == "!") {
+    if (str.substring(0, 1) === "!") {
       str = str.substring(1);
       str = str.trim();
       pname.inverted = true;
@@ -30448,14 +30424,14 @@ function Graph(appl) {
     return this.gdh;
   };
   this.isAuthorized = function (access) {
-    return (this.priv & access) ? true : false;
+    return !!(this.priv & access);
     // return appl.isAuthorized( access);
   };
 
   this.traceConnect = function (object) {
     var ctx_popped = false;
 
-    if (object.ctx != this.ctx)
+    if (object.ctx !== this.ctx)
       ctx_popped = this.ctxPop(object.ctx);
 
     if (object.userdata == null) {
@@ -30465,12 +30441,12 @@ function Graph(appl) {
     }
 
     var dyn = object.userdata;
-    if (object.type() == Glow.eObjectType_GrowNode) {
+    if (object.type() === Glow.eObjectType_GrowNode) {
       var dyn_type1 = object.getClassDynType1();
 
-      if ((((dyn_type1 & DynC.mDynType1_HostObject) != 0 &&
-        (dyn.dyn_type1 & DynC.mDynType1_Inherit) != 0)) ||
-        (dyn.dyn_type1 & DynC.mDynType1_HostObject) != 0) {
+      if ((((dyn_type1 & DynC.mDynType1_HostObject) !== 0 &&
+        (dyn.dyn_type1 & DynC.mDynType1_Inherit) !== 0)) ||
+        (dyn.dyn_type1 & DynC.mDynType1_HostObject) !== 0) {
         var nodeclass_dyn = object.getClassUserData();
         dyn.setTotal(null);
         if (nodeclass_dyn != null) {
@@ -30479,9 +30455,9 @@ function Graph(appl) {
           dyn.merge(old_dyn);
           dyn.total_dyn_type1 |= DynC.mDynType1_HostObject;
           dyn.merge(nodeclass_dyn);
-          if (old_dyn.cycle != Glow.eCycle_Inherit)
+          if (old_dyn.cycle !== Glow.eCycle_Inherit)
             dyn.cycle = old_dyn.cycle;
-          if (!(old_dyn.action_type1 == DynC.mActionType1_Inherit && old_dyn.action_type2 == 0))
+          if (!(old_dyn.action_type1 === DynC.mActionType1_Inherit && old_dyn.action_type2 === 0))
             dyn.access = old_dyn.access;
           object.userdata = dyn;
           dyn.setTotal(object);
@@ -30548,7 +30524,7 @@ function Graph(appl) {
     var str = cmd;
     var idx;
 
-    while ((idx = str.indexOf("$object")) != -1) {
+    while ((idx = str.indexOf("$object")) !== -1) {
       if (appl != null) {
         var oname = this.ctx.getOwner();
         str = str.substring(0, idx) + oname + str.substring(idx + 7);
@@ -30609,7 +30585,7 @@ function GraphLocalDb() {
 
     var id = this.nameToId(owner, name);
     var sub;
-    if (id == -1) {
+    if (id === -1) {
       id = this.subscriptionCount;
       sub = new LocalSub(owner, name, typeId, id);
       sub.ref();
@@ -30642,7 +30618,7 @@ function GraphLocalDb() {
   this.getObjectInfo = function (owner, attributeName) {
     var name = this.getName(attributeName);
     var id = this.nameToId(owner, name);
-    if (id == -1)
+    if (id === -1)
       return new CdhrNumber(0, 2);
     return new CdhrNumber(this.subscriptions.elementAt(id).value, 1);
   };
@@ -30650,7 +30626,7 @@ function GraphLocalDb() {
   this.setObjectInfo = function (owner, attributeName, value) {
     var name = this.getName(attributeName);
     var id = this.nameToId(owner, name);
-    if (id == -1)
+    if (id === -1)
       return new PwrtStatus(2);
     this.subscriptions[id].value = value;
     return new PwrtStatus(1);
@@ -30659,7 +30635,7 @@ function GraphLocalDb() {
   this.toggleObjectInfo = function (owner, attributeName) {
     var name = this.getName(attributeName);
     var id = this.nameToId(owner, name);
-    if (id == -1)
+    if (id === -1)
       return new PwrtStatus(2);
     this.subscriptions[id].value =
       !this.subscriptions[id].value;
@@ -30669,17 +30645,17 @@ function GraphLocalDb() {
   this.nameToId = function (owner, name) {
     for (var i = 0; i < this.subscriptions.length; i++) {
       var sub = this.subscriptions[i];
-      if (sub !== null && owner == sub.owner && name.toUpperCase() === sub.name.toUpperCase())
+      if (sub !== null && owner === sub.owner && name.toUpperCase() === sub.name.toUpperCase())
         return i;
     }
     return -1;
   };
 
   this.getName = function (attrName) {
-    if (attrName.substring(0, 7) == "$local.")
+    if (attrName.substring(0, 7) === "$local.")
       attrName = attrName.substring(7);
     var idx1 = attrName.indexOf("##");
-    if (idx1 != -1)
+    if (idx1 !== -1)
       return attrName.substring(0, idx1);
     return attrName;
   };
@@ -30697,37 +30673,37 @@ function GraphLocalDb() {
       suffix = attrName.substring(idx1).toUpperCase();
     else
       suffix = attrName.substring(idx1, idx2).toUpperCase();
-    if (suffix == "BOOLEAN")
+    if (suffix === "BOOLEAN")
       return Pwr.eType_Boolean;
-    if (suffix == "FLOAT32")
+    if (suffix === "FLOAT32")
       return Pwr.eType_Float32;
-    if (suffix == "INT32")
+    if (suffix === "INT32")
       return Pwr.eType_Int32;
-    if (suffix == "UINT32")
+    if (suffix === "UINT32")
       return Pwr.eType_UInt32;
-    if (suffix == "INT16")
+    if (suffix === "INT16")
       return Pwr.eType_Int16;
-    if (suffix == "UINT16")
+    if (suffix === "UINT16")
       return Pwr.eType_UInt16;
-    if (suffix == "INT8")
+    if (suffix === "INT8")
       return Pwr.eType_Int8;
-    if (suffix == "UINT8")
+    if (suffix === "UINT8")
       return Pwr.eType_UInt8;
-    if (suffix == "CHAR")
+    if (suffix === "CHAR")
       return Pwr.eType_Char;
-    if (suffix == "FLOAT64")
+    if (suffix === "FLOAT64")
       return Pwr.eType_Float64;
-    if (suffix == "OBJID")
+    if (suffix === "OBJID")
       return Pwr.eType_Objid;
-    if (suffix == "STRING")
+    if (suffix === "STRING")
       return Pwr.eType_String;
-    if (suffix == "TIME")
+    if (suffix === "TIME")
       return Pwr.eType_Time;
-    if (suffix == "DELTATIME")
+    if (suffix === "DELTATIME")
       return Pwr.eType_DeltaTime;
-    if (suffix == "ATTRREF")
+    if (suffix === "ATTRREF")
       return Pwr.eType_AttrRef;
-    if (suffix.substring(0, 6) == "STRING")
+    if (suffix.substring(0, 6) === "STRING")
       return Pwr.eType_String;
     return 0;
   };
@@ -30769,7 +30745,7 @@ function Appl() {
       return 0;
     }
 
-    if (cmd.charAt(0) == '@') {
+    if (cmd.charAt(0) === '@') {
       // Execute a script TODO
       // new JopgCcm( this, gdh, cmd.substring(1),  null);
       return 1;
@@ -30779,7 +30755,7 @@ function Appl() {
     var command = cli.parse(cmd);
     if (cli.oddSts()) {
       console.log("Cli : " + command);
-      if (command == ("OPEN")) {
+      if (command === ("OPEN")) {
         if (cli.qualifierFound("cli_arg1")) {
           var jgraph = "JGRAPH";
           var graph = "GRAPH";
@@ -30788,11 +30764,11 @@ function Appl() {
           var fast = "FAST";
           var cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
           if (jgraph.length >= cli_arg1.length &&
-            jgraph.substring(0, cli_arg1.length) == cli_arg1) {
+            jgraph.substring(0, cli_arg1.length) === cli_arg1) {
             // Command is "OPEN JGRAPH"
             console.log("Command is not implemented, \"OPEN JGRAPH\"");
           } else if (graph.length >= cli_arg1.length &&
-            graph.substring(0, cli_arg1.length) == cli_arg1) {
+            graph.substring(0, cli_arg1.length) === cli_arg1) {
             // Command is "OPEN GRAPH"
             var graphName = null;
             var instanceValue = null;
@@ -30810,7 +30786,7 @@ function Appl() {
               var parent = cli.qualifierFound("/PARENT");
               if (parent) {
                 var idx = instanceValue.lastIndexOf('.');
-                if (idx != -1 && idx !== 0)
+                if (idx !== -1 && idx !== 0)
                   instanceValue = instanceValue.substring(0, idx);
                 console.log("open graph /parent: " + instanceValue);
               }
@@ -30826,51 +30802,51 @@ function Appl() {
               }
 
               graphName = cli.getQualValue("cli_arg2").toLowerCase();
-              if (graphName.charAt(".pwg") == -1)
+              if (graphName.endsWith(".pwg") === -1)
                 graphName = graphName + ".pwg";
 
               console.log("Cmd found: open graph", graphName, instanceValue);
             }
           } else if (url.length >= cli_arg1.length &&
-            url.substring(0, cli_arg1.length) == cli_arg1) {
+            url.substring(0, cli_arg1.length) === cli_arg1) {
             // Command is "OPEN URL"
             var newFrame = true;
             var frameName = null;
             var urlValue = cli.getQualValue("cli_arg2");
 
-            if (urlValue.substring(0, 5) == "pwrb_" ||
-              urlValue.substring(0, 5) == "pwrs_" ||
-              urlValue.substring(0, 5) == "nmps_" ||
-              urlValue.substring(0, 9) == "profibus_" ||
-              urlValue.substring(0, 8) == "otherio_" ||
-              urlValue.substring(0, 4) == "opc_" ||
-              urlValue.substring(0, 14) == "basecomponent_" ||
-              urlValue.substring(0, 4) == "abb_" ||
-              urlValue.substring(0, 8) == "siemens_" ||
-              urlValue.substring(0, 7) == "ssabox_")
+            if (urlValue.substring(0, 5) === "pwrb_" ||
+              urlValue.substring(0, 5) === "pwrs_" ||
+              urlValue.substring(0, 5) === "nmps_" ||
+              urlValue.substring(0, 9) === "profibus_" ||
+              urlValue.substring(0, 8) === "otherio_" ||
+              urlValue.substring(0, 4) === "opc_" ||
+              urlValue.substring(0, 14) === "basecomponent_" ||
+              urlValue.substring(0, 4) === "abb_" ||
+              urlValue.substring(0, 8) === "siemens_" ||
+              urlValue.substring(0, 7) === "ssabox_")
               // Object reference manual
               urlValue = "$pwr_doc/" + getLang() + "/orm/" + urlValue;
 
             console.log("open url " + urlValue);
             this.openURL(urlValue, null);
           } else if (trend.length >= cli_arg1.length &&
-            trend.substring(0, cli_arg1.length) == (cli_arg1)) {
+            trend.substring(0, cli_arg1.length) === (cli_arg1)) {
             // Command is "OPEN TREND"
             console.log("Cmd open trend");
           } else if (fast.length >= cli_arg1.length &&
-            fast.substring(0, cli_arg1.length) == (cli_arg1)) {
+            fast.substring(0, cli_arg1.length) === (cli_arg1)) {
             // Command is "OPEN FAST"
             console.log("Cmd open fast");
-          } else if (command == ("HELP")) {
+          } else if (command === ("HELP")) {
             console.log("Cmd help");
           }
         }
-      } else if (command == ("SET")) {
+      } else if (command === ("SET")) {
         if (cli.qualifierFound("cli_arg1")) {
           var cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
           var subwindow = "SUBWINDOW";
           if (subwindow.length >= cli_arg1.length &&
-            subwindow.substring(0, cli_arg1.length) == (cli_arg1)) {
+            subwindow.substring(0, cli_arg1.length) === (cli_arg1)) {
             // Command is "SET SUBWINDOW"
 
             var name;
@@ -30904,14 +30880,14 @@ function Appl() {
               return 0;
             }
 
-            if (source.indexOf('.') == -1)
+            if (source.indexOf('.') === -1)
               source = source + ".pwg";
 
             console.log("Cmd found: set subwindow", name, source, object);
             this.graph.setSubwindowSource(name, source, object);
           }
         }
-      } else if (command == ("HELP")) {
+      } else if (command === ("HELP")) {
         var fileName = "xtt_help_";
         var bookmarkValue = null;
 
@@ -30934,16 +30910,16 @@ function Appl() {
           if (cli.qualifierFound("cli_arg4"))
             fileName += "_" + cli.getQualValue("cli_arg4").toLowerCase();
 
-          if (fileName.substring(0, 5) == "pwrb_" ||
-            fileName.substring(0, 5) == "pwrs_" ||
-            fileName.substring(0, 5) == "nmps_" ||
-            fileName.substring(0, 9) == "profibus_" ||
-            fileName.substring(0, 8) == "otherio_" ||
-            fileName.substring(0, 4) == "opc_" ||
-            fileName.substring(0, 14) == "basecomponent_" ||
-            fileName.substring(0, 4) == "abb_" ||
-            fileName.substring(0, 8) == "siemens_" ||
-            fileName.substring(0, 7) == "ssabox_")
+          if (fileName.substring(0, 5) === "pwrb_" ||
+            fileName.substring(0, 5) === "pwrs_" ||
+            fileName.substring(0, 5) === "nmps_" ||
+            fileName.substring(0, 9) === "profibus_" ||
+            fileName.substring(0, 8) === "otherio_" ||
+            fileName.substring(0, 4) === "opc_" ||
+            fileName.substring(0, 14) === "basecomponent_" ||
+            fileName.substring(0, 4) === "abb_" ||
+            fileName.substring(0, 8) === "siemens_" ||
+            fileName.substring(0, 7) === "ssabox_")
             // Object reference manual
             fileName = "$pwr_doc/orm/" + fileName;
 
@@ -30955,13 +30931,13 @@ function Appl() {
           this.openURL(fileName, bookmarkValue);
         }
         local_cmd = true;
-      } else if (command == ("CHECK")) {
+      } else if (command === ("CHECK")) {
         if (cli.qualifierFound("cli_arg1")) {
           var methodstr = "METHOD";
           var isattributestr = "ISATTRIBUTE";
           var cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
           if (methodstr.length >= cli_arg1.length &&
-            methodstr.substring(0, cli_arg1.length) == (cli_arg1)) {
+            methodstr.substring(0, cli_arg1.length) === (cli_arg1)) {
             // Command is "CHECK METHOD"
             var method;
             var object;
@@ -30980,7 +30956,7 @@ function Appl() {
               return 0;
             }
           } else if (isattributestr.length >= cli_arg1.length &&
-            isattributestr.substring(0, cli_arg1.length) == (cli_arg1)) {
+            isattributestr.substring(0, cli_arg1.length) === (cli_arg1)) {
             // Command is "CHECK ISATTRIBUTE"
             var method;
             var object;
@@ -30992,12 +30968,12 @@ function Appl() {
               return 0;
             }
           }
-        } else if (command == ("CALL")) {
+        } else if (command === ("CALL")) {
           if (cli.qualifierFound("cli_arg1")) {
             var parameter = "METHOD";
             var cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
             if (parameter.length >= cli_arg1.length &&
-              parameter.substring(0, cli_arg1.length) == (cli_arg1)) {
+              parameter.substring(0, cli_arg1.length) === (cli_arg1)) {
               // Command is "CHECK METHOD"
               var method;
               var object;
@@ -31018,7 +30994,7 @@ function Appl() {
             }
 
           }
-        } else if (command == ("SET")) {
+        } else if (command === ("SET")) {
           return 1;
         }
       } else {
@@ -31034,14 +31010,14 @@ function Appl() {
   this.openURL = function (url, bookmark) {
     console.log("URL: ", url);
     window.open(url, "_blank");
-  }
+  };
   this.openConfirmDialog = function (dyn, text, object) {
     var res = confirm(text);
     if (res)
       dyn.confirmedAction(Glow.eEvent_MB1Click, object);
   };
   this.open_objectgraph_cb = function (id, data, sts, result) {
-    if ((sts & 1) != 0) {
+    if ((sts & 1) !== 0) {
       console.log("param1", result.param1);
       data.location.href = "ge.html?graph=" + result.param1 + "&instance=" + result.fullname;
       data.document.title = result.param1 + " " + result.fullname;
@@ -31082,7 +31058,7 @@ function GlowCFormat(key) {
         if (ph.keys) { // keyword argument
           arg = argv[cursor];
           for (k = 0; k < ph.keys.length; k++) {
-            if (arg == undefined) {
+            if (arg === undefined) {
               throw new Error(sprintf('[sprintf] Cannot access property "%s" of undefined value "%s"', ph.keys[k], ph.keys[k - 1]));
             }
             arg = arg[ph.keys[k]];
