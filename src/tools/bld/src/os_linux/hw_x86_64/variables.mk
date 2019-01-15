@@ -22,7 +22,7 @@ lis_dir	:= $(module_root)/lis
 kit_dir	:= $(module_root)/kit
 src_dir	:= $(module_root)/src
 load_dir := $(module_root)/load
-web_dir := $(module_root)/web
+web_dir	:= $(module_root)/web
 
 doc_dir	:= $(release_root)/exp/doc
 elib_dir := $(release_root)/exp/lib
@@ -94,6 +94,7 @@ rs_msg_eobjs 	:= $(eobj_dir)/pwr_msg_rs.o
 wb_msg_eobjs 	:= $(eobj_dir)/pwr_msg_wb.o $(eobj_dir)/pwr_msg_ge.o $(eobj_dir)/pwr_msg_flow.o
 
 linkcp = :
+pre_so =
 
 # Configuration
 #ifeq ($(pwre_conf_mysql),1)

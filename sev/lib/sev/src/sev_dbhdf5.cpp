@@ -4832,18 +4832,18 @@ int sev_dbhdf5::time_to_idx(hid_t dataset_id, hid_t memspace_id,
     idx = size - 1;
   get_time(dataset_id, memspace_id, dataspace_id, mtype, idx, &time);
   printf("%d Search time : %d %d\n", idx, stime, time);
-  if (abs(time - stime) <= resolution) {
+  if (ABS(time - stime) <= resolution) {
     *ridx = idx;
     return 1;
   }
-  if (prev_time && abs(time - prev_time) <= 1) {
-    if (abs(time - low_time) > abs(high_time - time))
+  if (prev_time && ABS(time - prev_time) <= 1) {
+    if (ABS(time - low_time) > ABS(high_time - time))
       idx = high_idx - (high_idx - low_idx) / 10;
     else
       idx = low_idx + (high_idx - low_idx) / 10;
     get_time(dataset_id, memspace_id, dataspace_id, mtype, idx, &time);
     printf("%d Search time : %d %d\n", idx, stime, time);
-    if (abs(time - stime) <= resolution) {
+    if (ABS(time - stime) <= resolution) {
       *ridx = idx;
       return 1;
     }
