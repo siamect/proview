@@ -126,14 +126,14 @@ log_done	=
 #cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux \
 `pkg-config --cflags gtk+-2.0` -DPREFIX=\"/usr/local\" -DSYSCONFDIR=\"/etc\" -DDATADIR=\"/usr/share\" -DLIBDIR=\"/usr/lib\" $(cmysql) $(cgtk) $(clibusb)
 csetos 		:= $(pwre_conf_cc_define)
-ifeq ($(flavour),qt)
-  cinc          := -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirqt) $(pwre_conf_incdirgtk) $(pwre_conf_incdirgst)
+ifeq ($(pwre_conf_qt),1)
+  cinc          := -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirqt)
 else
   cinc          := -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirgtk) $(pwre_conf_incdirgst)
 endif
 rm		:= rm
 cp		:= cp
-cpflags		:= 
+cpflags		:=
 arflags		:= r
 obj             := -c -o $(target)
 lex             := flex
@@ -177,7 +177,7 @@ endif
 #docbook-related, added by jonas_h 2006-04-nn
 
 #xsltproc := xsltproc
-#fop := fop 
+#fop := fop
 #above is a symlink from /usr/local/bin/fop -> /usr/local/fop-0.92beta/fop
 
 #xsltproc_args := --xinclude
@@ -198,11 +198,11 @@ endif
 map             = $(bld_dir)/$(tname)$(map_ext)
 mkdir		:= mkdir
 #   Set to /buildversion for frozen dbs versions
-wblflags	:= 
+wblflags	:=
 
 warnings := -Wall -Wextra -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-sign-compare -Wno-missing-field-initializers
 
-ifeq ($(pwre_btype),rls)			 
+ifeq ($(pwre_btype),rls)
   cflags	:= $(cross_compile) -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT -fPIC $(warnings)
   linkflags	:= $(cross_compile) -O3 -L$(lib_dir)
   elinkflags	:= $(cross_compile) -O3 -L$(lib_dir) -L$(elib_dir)
