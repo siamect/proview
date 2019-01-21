@@ -229,6 +229,30 @@ static gsdml_sTag taglist[] = {
     {"Language", gsdml_eTag_Language, gsdml_eType_, 0, 0, 1},
     {"Text", gsdml_eTag_Text, gsdml_eType_, 0, 0, 1},
     {"CertificationInfo", gsdml_eTag_CertificationInfo, gsdml_eType_, 0, 0, 1},
+    {"MenuList", gsdml_eTag_MenuList, gsdml_eType_, 0, 0, 1},
+    {"MenuItem", gsdml_eTag_MenuItem, gsdml_eType_, 0, 0, 1},
+    {"MenuRef", gsdml_eTag_MenuRef, gsdml_eType_, 0, 0, 1},
+    {"ParameterRef", gsdml_eTag_ParameterRef, gsdml_eType_, 0, 0, 1},
+    {"SystemRedundancy", gsdml_eTag_SystemRedundancy, gsdml_eType_, 0, 0, 1},
+    {"PROFIenergy", gsdml_eTag_PROFIenergy, gsdml_eType_, 0, 0, 1},
+    {"Signature", gsdml_eTag_Signature, gsdml_eType_, 0, 0, 0},
+    {"SignedInfo", gsdml_eTag_SignedInfo, gsdml_eType_, 0, 0, 0},
+    {"CanonicalizationMethod", gsdml_eTag_CanonicalizationMethod, gsdml_eType_, 0, 0, 0},
+    {"SignatureMethod", gsdml_eTag_SignatureMethod, gsdml_eType_, 0, 0, 0},
+    {"Reference", gsdml_eTag_Reference, gsdml_eType_, 0, 0, 0},
+    {"Transforms", gsdml_eTag_Transforms, gsdml_eType_, 0, 0, 0},
+    {"Transform", gsdml_eTag_Transform, gsdml_eType_, 0, 0, 0},
+    {"DigestMethod", gsdml_eTag_DigestMethod, gsdml_eType_, 0, 0, 0},
+    {"DigestValue", gsdml_eTag_DigestValue, gsdml_eType_, 0, 0, 0},
+    {"SignatureValue", gsdml_eTag_SignatureValue, gsdml_eType_, 0, 0, 0},
+    {"KeyInfo", gsdml_eTag_KeyInfo, gsdml_eType_, 0, 0, 0},
+    {"KeyValue", gsdml_eTag_KeyValue, gsdml_eType_, 0, 0, 0},
+    {"RSAKeyValue", gsdml_eTag_RSAKeyValue, gsdml_eType_, 0, 0, 0},
+    {"Modulus", gsdml_eTag_Modulus, gsdml_eType_, 0, 0, 0},
+    {"Exponent", gsdml_eTag_Exponent, gsdml_eType_, 0, 0, 0},
+    {"Object", gsdml_eTag_Object, gsdml_eType_, 0, 0, 0},
+    {"SignatureProperties", gsdml_eTag_SignatureProperties, gsdml_eType_, 0, 0, 0},
+    {"SignatureProperty", gsdml_eTag_SignatureProperty, gsdml_eType_, 0, 0, 0},
     {"", gsdml_eTag_, gsdml_eType_, 0, 0, 1}};
 
 static gsdml_sAttribute attrlist[] = {
@@ -361,6 +385,16 @@ static gsdml_sAttribute attrlist[] = {
     {"NumberOfDeviceAccessAR", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_,
      gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
      offsetof(gsdml_sDeviceAccessPointItem, NumberOfDeviceAccessAR), 0, "1"},
+    {"NumberOfSubmodules", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sDeviceAccessPointItem, NumberOfSubmodules), 0, "0"},
+    {"PrmBeginPrmEndSequenceSupported", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_,
+     gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
+     offsetof(gsdml_sDeviceAccessPointItem, PrmBeginPrmEndSequenceSupported), 0, "false"},
+    {"CIR_Supported", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_,
+     gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
+     offsetof(gsdml_sDeviceAccessPointItem, CIR_Supported), 0, "false"},
+
     //
     // ModuleInfo
     //
@@ -421,6 +455,18 @@ static gsdml_sAttribute attrlist[] = {
     {"MaxDataLength", gsdml_eTag_IOConfigData, gsdml_eTag_,
      gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
      offsetof(gsdml_sIOConfigData, MaxDataLength), 0, ""},
+    {"MaxApplicationInputLength", gsdml_eTag_IOConfigData, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sIOConfigData, MaxApplicationInputLength), 0, ""},
+    {"MaxApplicationOutputLength", gsdml_eTag_IOConfigData, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sIOConfigData, MaxApplicationOutputLength), 0, ""},
+    {"MaxApplicationDataLength", gsdml_eTag_IOConfigData, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sIOConfigData, MaxApplicationDataLength), 0, ""},
+    {"ApplicationLengthIncludesIOxS", gsdml_eTag_IOConfigData, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sIOConfigData, ApplicationLengthIncludesIOxS), 0, ""},
     //
     // ModuleItemRef
     //
@@ -851,6 +897,16 @@ static gsdml_sAttribute attrlist[] = {
      gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
      offsetof(gsdml_sInterfaceSubmoduleItem, DelayMeasurementSupported), 0,
      "false"},
+    {"PDEV_CombinedObjectSupported", gsdml_eTag_InterfaceSubmoduleItem,
+     gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
+     offsetof(gsdml_sInterfaceSubmoduleItem, PDEV_CombinedObjectSupported), 0,
+     "false"},
+    {"MaxFrameStartTime", gsdml_eTag_InterfaceSubmoduleItem, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sInterfaceSubmoduleItem, MaxFrameStartTime), 0, "0"},
+    {"MinNRT_Gap", gsdml_eTag_InterfaceSubmoduleItem, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sInterfaceSubmoduleItem, MinNRT_Gap), 0, "0"},
     //
     // DCP_FlashOnceSignalUnit
     //
@@ -866,6 +922,9 @@ static gsdml_sAttribute attrlist[] = {
     {"MaxNumberIR_FrameData", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
      gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
      offsetof(gsdml_sRT_Class3Properties, MaxNumberIR_FrameData), 0, ""},
+     {"MaxRangeIR_FrameID", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sRT_Class3Properties, MaxRangeIR_FrameID), 0, ""},
     // Added without spec
     {"StartupMode", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
      gsdml_eType_String, sizeof(gsdml_tString),
@@ -873,6 +932,36 @@ static gsdml_sAttribute attrlist[] = {
     {"ForwardingMode", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
      gsdml_eType_String, sizeof(gsdml_tString),
      offsetof(gsdml_sRT_Class3Properties, ForwardingMode), 0, ""},
+    {"MaxRedPeriodLength", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sRT_Class3Properties, MaxRedPeriodLength), 0, ""},
+    {"MinFSO", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sRT_Class3Properties, MinFSO), 0, ""},
+    {"MinRTC3_Gap", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sRT_Class3Properties, MinRTC3_Gap), 0, ""},
+    {"MinYellowTime", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sRT_Class3Properties, MinYellowTime), 0, ""},
+    {"YellowSafetyMargin", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sRT_Class3Properties, YellowSafetyMargin), 0, ""},
+    {"MaxBridgeDelayFFW", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sRT_Class3Properties, MaxBridgeDelayFFW), 0, ""},
+    {"MaxDFP_Feed", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sRT_Class3Properties, MaxDFP_Feed), 0, ""},
+    {"MaxDFP_Frames", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sRT_Class3Properties, MaxDFP_Frames), 0, ""},
+    {"AlignDFP_Subframes", gsdml_eTag_RT_Class3Properties,
+     gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
+     offsetof(gsdml_sRT_Class3Properties, AlignDFP_Subframes), 0, "false"},
+    {"FragmentationType", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
+     gsdml_eType_String, sizeof(gsdml_tString),
+     offsetof(gsdml_sRT_Class3Properties, FragmentationType), 0, ""},
     //
     // SynchronisationMode
     //
@@ -888,6 +977,9 @@ static gsdml_sAttribute attrlist[] = {
     {"SupportedSyncProtocols", gsdml_eTag_SynchronisationMode, gsdml_eTag_,
      gsdml_eType_TokenList, sizeof(gsdml_tTokenList),
      offsetof(gsdml_sSynchronisationMode, SupportedSyncProtocols), 0, ""},
+    {"PeerToPeerJitter", gsdml_eTag_SynchronisationMode, gsdml_eTag_,
+     gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sSynchronisationMode, PeerToPeerJitter), 0, "0"},
     //
     // ApplicationRelations (InterfaceSubmoduleItem)
     //
@@ -996,6 +1088,10 @@ static gsdml_sAttribute attrlist[] = {
     {"MaxMRP_Instances", gsdml_eTag_MediaRedundancy, gsdml_eTag_,
      gsdml_eType_Integer, sizeof(gsdml_tInteger),
      offsetof(gsdml_sMediaRedundancy, MaxMRP_Instances), 0, "1"},
+    {"AdditionalForwardingRulesSupported", gsdml_eTag_MediaRedundancy, gsdml_eTag_,
+     gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
+     offsetof(gsdml_sMediaRedundancy, AdditionalForwardingRulesSupported), 0,
+     "false"},
     //
     // PortSubmoduleItem
     //
@@ -1051,9 +1147,12 @@ static gsdml_sAttribute attrlist[] = {
     {"Writeable_IM_Records", gsdml_eTag_PortSubmoduleItem, gsdml_eTag_,
      gsdml_eType_ValueList, sizeof(gsdml_tValueList),
      offsetof(gsdml_sPortSubmoduleItem, Writeable_IM_Records), 0, "0"},
-
+    {"ShortPreamble100MBitSupported", gsdml_eTag_PortSubmoduleItem,
+     gsdml_eTag_, gsdml_eType_, sizeof(gsdml_tBoolean),
+     offsetof(gsdml_sPortSubmoduleItem, ShortPreamble100MBitSupported), 0,
+     "false"},
     //
-    // MAUTypeList
+    // MAUTypeList and MAUTypeItem
     //
     {"Value", gsdml_eTag_MAUTypeItem, gsdml_eTag_MAUTypeList,
      gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
@@ -1182,6 +1281,8 @@ static gsdml_sAttribute attrlist[] = {
      offsetof(gsdml_sUnitDiagTypeItem, UserStructureIdentifier), 0, ""},
     {"API", gsdml_eTag_UnitDiagTypeItem, gsdml_eTag_, gsdml_eType_Unsigned32,
      sizeof(gsdml_tUnsigned32), offsetof(gsdml_sUnitDiagTypeItem, API), 0, ""},
+    {"TextId", gsdml_eTag_Name, gsdml_eTag_UnitDiagTypeItem, gsdml_eType_RefIdT, sizeof(gsdml_tRefIdT),
+     offsetof(gsdml_sUnitDiagTypeItem, Name), 0, ""},
     //
     // GraphicItem
     //
@@ -1210,6 +1311,48 @@ static gsdml_sAttribute attrlist[] = {
     //
     {"xml:lang", gsdml_eTag_Language, gsdml_eTag_, gsdml_eType_Enum,
      sizeof(gsdml_tEnum), offsetof(gsdml_sLanguage, xml_lang), 0, ""},
+    // MenuItem
+    {"ID", gsdml_eTag_MenuItem, gsdml_eTag_MenuList, gsdml_eType_RefId, sizeof(gsdml_tRefId),
+     offsetof(gsdml_sMenuItem, ID), 0, ""},
+    {"TextId", gsdml_eTag_Name, gsdml_eTag_MenuItem, gsdml_eType_RefIdT, sizeof(gsdml_tRefIdT),
+     offsetof(gsdml_sMenuItem, Name), 0, ""},
+    // ParameterRef
+    {"ParameterTarget", gsdml_eTag_ParameterRef, gsdml_eTag_MenuItem, gsdml_eType_RefId, sizeof(gsdml_tRefId),
+     offsetof(gsdml_sParameterRef, ParameterTarget), 0, ""},
+    // MenuRef
+    {"MenuTarget", gsdml_eTag_MenuRef, gsdml_eTag_MenuItem, gsdml_eType_RefId, sizeof(gsdml_tRefId),
+     offsetof(gsdml_sParameterRef, ParameterTarget), 0, ""},
+    // SystemRedundancy
+    {"DeviceType", gsdml_eTag_SystemRedundancy, gsdml_eTag_DeviceAccessPointItem, gsdml_eType_String, sizeof(gsdml_tString),
+     offsetof(gsdml_sSystemRedundancy, DeviceType), 0, ""},
+    {"MaxSwitchOverTime", gsdml_eTag_SystemRedundancy, gsdml_eTag_DeviceAccessPointItem, gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sSystemRedundancy, MaxSwitchOverTime), 0, ""},
+    {"RT_InputOnBackupAR_Supported", gsdml_eTag_SystemRedundancy, gsdml_eTag_DeviceAccessPointItem, gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
+     offsetof(gsdml_sSystemRedundancy, RT_InputOnBackupAR_Supported), 0, ""},
+    {"NumberOfAR_Sets", gsdml_eTag_SystemRedundancy, gsdml_eTag_DeviceAccessPointItem, gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+     offsetof(gsdml_sSystemRedundancy, NumberOfAR_Sets), 0, ""},
+    {"DataInvalidOnBackupAR_Supported", gsdml_eTag_SystemRedundancy, gsdml_eTag_DeviceAccessPointItem, gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
+     offsetof(gsdml_sSystemRedundancy, DataInvalidOnBackupAR_Supported), 0, ""},
+    // PROFIenergy
+    {"ProfileVersion", gsdml_eTag_PROFIenergy, gsdml_eTag_VirtualSubmoduleItem, gsdml_eType_String, sizeof(gsdml_tString),
+     offsetof(gsdml_sPROFIenergy, ProfileVersion), 0, ""},
+    // Signature, ignored
+    {"Id", gsdml_eTag_Signature, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
+    // CanonicalizationMethod , ignored
+    {"Algorithm", gsdml_eTag_CanonicalizationMethod, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
+    // SignatureMethod, ignored
+    {"Algorithm", gsdml_eTag_SignatureMethod, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
+    // Reference, ignored
+    {"URI", gsdml_eTag_Reference, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
+    // Transform, ignored
+    {"Algorithm", gsdml_eTag_Transform, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
+    // DigestMethod, ignored
+    {"Algorithm", gsdml_eTag_DigestMethod, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
+    // SignatureProperty, ignored
+    {"Id", gsdml_eTag_SignatureProperty, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
+    {"Target", gsdml_eTag_SignatureProperty, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
+    // SignatureProperties, ignored
+    {"Id", gsdml_eTag_SignatureProperties, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
     //
     {"", gsdml_eTag_, gsdml_eTag_, gsdml_eType_, 0, 0, 0, ""}};
 
@@ -1858,7 +2001,7 @@ int pn_gsdml::tag(const char* name)
   sts = find_tag(name, &idx);
   if (!sts)
   {
-    error_message_line("Unknown tag");
+    error_message("Unknown tag %s", name);
     return 0;
   }
 
@@ -2179,116 +2322,39 @@ int pn_gsdml::datavalue_to_string(gsdml_eValueDataType datatype, void* value,
   case gsdml_eValueDataType_Integer16:
   {
     short v;
-#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-    if (byte_order == pwr_eByteOrderingEnum_LittleEndian)
-      memcpy(&v, value, sizeof(v));
-    else
-    {
-      unsigned char b[2];
-      b[1] = *(unsigned char*)value;
-      b[0] = *(((unsigned char*)value) + 1);
-      memcpy(&v, b, sizeof(v));
-    }
-#elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-    if (byte_order == pwr_eByteOrderingEnum_BigEndian)
-      memcpy(&v, value, sizeof(v));
-    else
-    {
-      unsigned char b[2];
-      b[1] = *(unsigned char*)value;
-      b[0] = *(((unsigned char*)value) + 1);
-      memcpy(&v, b, sizeof(v));
-    }
-#endif
+
+    memcpy(&v, value, sizeof(v));
+
     snprintf(str, strsize, "%hd", v);
+
     break;
   }
   case gsdml_eValueDataType_Unsigned16:
   {
     unsigned short v;
-#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-    if (byte_order == pwr_eByteOrderingEnum_LittleEndian)
-      memcpy(&v, value, sizeof(v));
-    else
-    {
-      unsigned char b[2];
-      b[1] = *(unsigned char*)value;
-      b[0] = *(((unsigned char*)value) + 1);
-      memcpy(&v, b, sizeof(v));
-    }
-#elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-    if (byte_order == pwr_eByteOrderingEnum_BigEndian)
-      memcpy(&v, value, sizeof(v));
-    else
-    {
-      unsigned char b[2];
-      b[1] = *(unsigned char*)value;
-      b[0] = *(((unsigned char*)value) + 1);
-      memcpy(&v, b, sizeof(v));
-    }
-#endif
+
+    memcpy(&v, value, sizeof(v));
+
     snprintf(str, strsize, "%hu", v);
+
     break;
   }
   case gsdml_eValueDataType_Integer32:
   {
     int v;
-#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-    if (byte_order == pwr_eByteOrderingEnum_LittleEndian)
-      memcpy(&v, value, sizeof(v));
-    else
-    {
-      unsigned char b[4];
-      b[3] = *(unsigned char*)value;
-      b[2] = *(((unsigned char*)value) + 1);
-      b[1] = *(((unsigned char*)value) + 2);
-      b[0] = *(((unsigned char*)value) + 3);
-      memcpy(&v, b, sizeof(v));
-    }
-#elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-    if (byte_order == pwr_eByteOrderingEnum_BigEndian)
-      memcpy(&v, &data[item[i].ref->Reference_Offset], sizeof(v));
-    else
-    {
-      unsigned char b[4];
-      b[3] = *(unsigned char*)value;
-      b[2] = *(((unsigned char*)value) + 1);
-      b[1] = *(((unsigned char*)value) + 2);
-      b[0] = *(((unsigned char*)value) + 3);
-      memcpy(&v, b, sizeof(v));
-    }
-#endif
+
+    memcpy(&v, value, sizeof(v));
+
     snprintf(str, strsize, "%d", v);
+
     break;
   }
   case gsdml_eValueDataType_Unsigned32:
   {
     unsigned int v;
-#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-    if (byte_order == pwr_eByteOrderingEnum_LittleEndian)
-      memcpy(&v, value, sizeof(v));
-    else
-    {
-      unsigned char b[4];
-      b[3] = *(unsigned char*)value;
-      b[2] = *(((unsigned char*)value) + 1);
-      b[1] = *(((unsigned char*)value) + 2);
-      b[0] = *(((unsigned char*)value) + 3);
-      memcpy(&v, b, sizeof(v));
-    }
-#elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-    if (byte_order == pwr_eByteOrderingEnum_BigEndian)
-      memcpy(&v, &data[item[i].ref->Reference_Offset], sizeof(v));
-    else
-    {
-      unsigned char b[4];
-      b[3] = *(unsigned char*)value;
-      b[2] = *(((unsigned char*)value) + 1);
-      b[1] = *(((unsigned char*)value) + 2);
-      b[0] = *(((unsigned char*)value) + 3);
-      memcpy(&v, b, sizeof(v));
-    }
-#endif
+
+    memcpy(&v, value, sizeof(v));
+
     snprintf(str, strsize, "%u", v);
     break;
   }
@@ -2299,37 +2365,9 @@ int pn_gsdml::datavalue_to_string(gsdml_eValueDataType datatype, void* value,
   {
     pwr_tInt64 v;
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-    if (byte_order == pwr_eByteOrderingEnum_LittleEndian)
-      memcpy(&v, value, sizeof(v));
-    else
-    {
-      unsigned char b[8];
-      b[7] = *(unsigned char*)value;
-      b[6] = *(((unsigned char*)value) + 1);
-      b[5] = *(((unsigned char*)value) + 2);
-      b[4] = *(((unsigned char*)value) + 3);
-      b[3] = *(((unsigned char*)value) + 4);
-      b[2] = *(((unsigned char*)value) + 5);
-      b[1] = *(((unsigned char*)value) + 6);
-      b[0] = *(((unsigned char*)value) + 7);
-      memcpy(&v, b, sizeof(v));
-    }
+    memcpy(&v, value, sizeof(v));
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-    if (byte_order == pwr_eByteOrderingEnum_BigEndian)
-      memcpy(&v, &data[item[i].ref->Reference_Offset], sizeof(v));
-    else
-    {
-      unsigned char b[8];
-      b[7] = *(unsigned char*)value;
-      b[6] = *(((unsigned char*)value) + 1);
-      b[5] = *(((unsigned char*)value) + 2);
-      b[4] = *(((unsigned char*)value) + 3);
-      b[3] = *(((unsigned char*)value) + 4);
-      b[2] = *(((unsigned char*)value) + 5);
-      b[1] = *(((unsigned char*)value) + 6);
-      b[0] = *(((unsigned char*)value) + 7);
-      memcpy(&v, b, sizeof(v));
-    }
+    memcpy(&v, &data[item[i].ref->Reference_Offset], sizeof(v));
 #endif
     snprintf(str, strsize, pwr_dFormatInt64, v);
     break;
@@ -2338,37 +2376,9 @@ int pn_gsdml::datavalue_to_string(gsdml_eValueDataType datatype, void* value,
   {
     pwr_tUInt64 v;
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-    if (byte_order == pwr_eByteOrderingEnum_LittleEndian)
-      memcpy(&v, value, sizeof(v));
-    else
-    {
-      unsigned char b[8];
-      b[7] = *(unsigned char*)value;
-      b[6] = *(((unsigned char*)value) + 1);
-      b[5] = *(((unsigned char*)value) + 2);
-      b[4] = *(((unsigned char*)value) + 3);
-      b[3] = *(((unsigned char*)value) + 4);
-      b[2] = *(((unsigned char*)value) + 5);
-      b[1] = *(((unsigned char*)value) + 6);
-      b[0] = *(((unsigned char*)value) + 7);
-      memcpy(&v, b, sizeof(v));
-    }
+    memcpy(&v, value, sizeof(v));
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-    if (byte_order == pwr_eByteOrderingEnum_BigEndian)
-      memcpy(&v, &data[item[i].ref->Reference_Offset], sizeof(v));
-    else
-    {
-      unsigned char b[8];
-      b[7] = *(unsigned char*)value;
-      b[6] = *(((unsigned char*)value) + 1);
-      b[5] = *(((unsigned char*)value) + 2);
-      b[4] = *(((unsigned char*)value) + 3);
-      b[3] = *(((unsigned char*)value) + 4);
-      b[2] = *(((unsigned char*)value) + 5);
-      b[1] = *(((unsigned char*)value) + 6);
-      b[0] = *(((unsigned char*)value) + 7);
-      memcpy(&v, b, sizeof(v));
-    }
+    memcpy(&v, &data[item[i].ref->Reference_Offset], sizeof(v));
 #endif
     snprintf(str, strsize, pwr_dFormatUInt64, v);
     break;
@@ -2415,18 +2425,20 @@ int pn_gsdml::datavalue_to_string(gsdml_eValueDataType datatype, void* value,
   return 1;
 }
 
-int pn_gsdml::string_to_datavalue(gsdml_eValueDataType datatype, void* value,
-                                  unsigned int size, const char* str)
+int pn_gsdml::string_to_datavalue(gsdml_eValueDataType datatype, void* value, void* value_reversed_endianess,
+  unsigned int size, const char* str)
 {
   switch (datatype)
   {
   case gsdml_eValueDataType_Integer8:
     if (sscanf(str, "%hhd", (char*)value) != 1)
       return PB__SYNTAX;
+    value_reversed_endianess = value;
     break;
   case gsdml_eValueDataType_Unsigned8:
     if (sscanf(str, "%hhu", (unsigned char*)value) != 1)
       return PB__SYNTAX;
+    value_reversed_endianess = value;
     break;
   case gsdml_eValueDataType_Integer16:
   {
@@ -2434,27 +2446,12 @@ int pn_gsdml::string_to_datavalue(gsdml_eValueDataType datatype, void* value,
     if (sscanf(str, "%hd", &v) != 1)
       return PB__SYNTAX;
 
-#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-    if (byte_order == pwr_eByteOrderingEnum_LittleEndian)
-      memcpy(value, &v, sizeof(v));
-    else
-    {
-      unsigned char b[2];
-      memcpy(b, &v, sizeof(b));
-      *(unsigned char*)value = b[1];
-      *(((unsigned char*)value) + 1) = b[0];
-    }
-#elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-    if (byte_order == pwr_eByteOrderingEnum_BigEndian)
-      memcpy(value, &v, sizeof(v));
-    else
-    {
-      unsigned char b[2];
-      memcpy(b, &v, sizeof(b));
-      *(unsigned char*)value = b[1];
-      *(((unsigned char*)value) + 1) = b[0];
-    }
-#endif
+    memcpy(value, &v, sizeof(v));
+
+    unsigned char b[2];
+    memcpy(b, &v, sizeof(b));
+    *(unsigned char*)value_reversed_endianess = b[1];
+    *(((unsigned char*)value_reversed_endianess) + 1) = b[0];
     break;
   }
   case gsdml_eValueDataType_Unsigned16:
@@ -2463,27 +2460,12 @@ int pn_gsdml::string_to_datavalue(gsdml_eValueDataType datatype, void* value,
     if (sscanf(str, "%hu", &v) != 1)
       return PB__SYNTAX;
 
-#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-    if (byte_order == pwr_eByteOrderingEnum_LittleEndian)
-      memcpy(value, &v, sizeof(v));
-    else
-    {
-      unsigned char b[2];
-      memcpy(b, &v, sizeof(b));
-      *(unsigned char*)value = b[1];
-      *(((unsigned char*)value) + 1) = b[0];
-    }
-#elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-    if (byte_order == pwr_eByteOrderingEnum_BigEndian)
-      memcpy(value, &v, sizeof(v));
-    else
-    {
-      unsigned char b[2];
-      memcpy(b, &v, sizeof(b));
-      *(unsigned char*)value = b[1];
-      *(((unsigned char*)value) + 1) = b[0];
-    }
-#endif
+    memcpy(value, &v, sizeof(v));
+
+    unsigned char b[2];
+    memcpy(b, &v, sizeof(b));
+    *(unsigned char*)value_reversed_endianess = b[1];
+    *(((unsigned char*)value_reversed_endianess) + 1) = b[0];
     break;
   }
   case gsdml_eValueDataType_Integer32:
@@ -2492,31 +2474,15 @@ int pn_gsdml::string_to_datavalue(gsdml_eValueDataType datatype, void* value,
     if (sscanf(str, "%d", &v) != 1)
       return PB__SYNTAX;
 
-#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-    if (byte_order == pwr_eByteOrderingEnum_LittleEndian)
-      memcpy(value, &v, sizeof(v));
-    else
-    {
-      unsigned char b[4];
-      memcpy(b, &v, sizeof(b));
-      *(unsigned char*)value = b[3];
-      *(((unsigned char*)value) + 1) = b[2];
-      *(((unsigned char*)value) + 2) = b[1];
-      *(((unsigned char*)value) + 3) = b[0];
-    }
-#elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-    if (byte_order == pwr_eByteOrderingEnum_BigEndian)
-      memcpy(value, &v, sizeof(v));
-    else
-    {
-      unsigned char b[4];
-      memcpy(b, &v, sizeof(b));
-      *(unsigned char*)value = b[3];
-      *(((unsigned char*)value) + 1) = b[2];
-      *(((unsigned char*)value) + 2) = b[1];
-      *(((unsigned char*)value) + 3) = b[0];
-    }
-#endif
+    memcpy(value, &v, sizeof(v));
+
+    unsigned char b[4];
+    memcpy(b, &v, sizeof(b));
+    *(unsigned char*)value_reversed_endianess = b[3];
+    *(((unsigned char*)value_reversed_endianess) + 1) = b[2];
+    *(((unsigned char*)value_reversed_endianess) + 2) = b[1];
+    *(((unsigned char*)value_reversed_endianess) + 3) = b[0];
+
     break;
   }
   case gsdml_eValueDataType_Unsigned32:
@@ -2525,76 +2491,51 @@ int pn_gsdml::string_to_datavalue(gsdml_eValueDataType datatype, void* value,
     if (sscanf(str, "%u", &v) != 1)
       return PB__SYNTAX;
 
-#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-    if (byte_order == pwr_eByteOrderingEnum_LittleEndian)
-      memcpy(value, &v, sizeof(v));
-    else
-    {
-      unsigned char b[4];
-      memcpy(b, &v, sizeof(b));
-      *(unsigned char*)value = b[3];
-      *(((unsigned char*)value) + 1) = b[2];
-      *(((unsigned char*)value) + 2) = b[1];
-      *(((unsigned char*)value) + 3) = b[0];
-    }
-#elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-    if (byte_order == pwr_eByteOrderingEnum_BigEndian)
-      memcpy(value, &v, sizeof(v));
-    else
-    {
-      unsigned char b[4];
-      memcpy(b, &v, sizeof(b));
-      *(unsigned char*)value = b[3];
-      *(((unsigned char*)value) + 1) = b[2];
-      *(((unsigned char*)value) + 2) = b[1];
-      *(((unsigned char*)value) + 3) = b[0];
-    }
-#endif
+    memcpy(value, &v, sizeof(v));
+
+    unsigned char b[4];
+    memcpy(b, &v, sizeof(b));
+    *(unsigned char*)value_reversed_endianess = b[3];
+    *(((unsigned char*)value_reversed_endianess) + 1) = b[2];
+    *(((unsigned char*)value_reversed_endianess) + 2) = b[1];
+    *(((unsigned char*)value_reversed_endianess) + 3) = b[0];
     break;
   }
   case gsdml_eValueDataType_Float32:
+  {
     if (sscanf(str, "%g", (float*)value) != 1)
       return PB__SYNTAX;
+
+    float* tmp = (float*)value;
+
+    unsigned char b[4];
+    memcpy(b, tmp, sizeof(b));
+    *(unsigned char*)value_reversed_endianess = b[3];
+    *(((unsigned char*)value_reversed_endianess) + 1) = b[2];
+    *(((unsigned char*)value_reversed_endianess) + 2) = b[1];
+    *(((unsigned char*)value_reversed_endianess) + 3) = b[0];
+
     break;
+  }
   case gsdml_eValueDataType_Integer64:
   {
     pwr_tInt64 v;
     if (sscanf(str, pwr_dFormatInt64, &v) != 1)
       return PB__SYNTAX;
 
-#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-    if (byte_order == pwr_eByteOrderingEnum_LittleEndian)
-      memcpy(value, &v, sizeof(v));
-    else
-    {
-      unsigned char b[8];
-      memcpy(b, &v, sizeof(b));
-      *(unsigned char*)value = b[7];
-      *(((unsigned char*)value) + 1) = b[6];
-      *(((unsigned char*)value) + 2) = b[5];
-      *(((unsigned char*)value) + 3) = b[4];
-      *(((unsigned char*)value) + 4) = b[3];
-      *(((unsigned char*)value) + 5) = b[2];
-      *(((unsigned char*)value) + 6) = b[1];
-      *(((unsigned char*)value) + 7) = b[0];
-    }
-#elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-    if (byte_order == pwr_eByteOrderingEnum_BigEndian)
-      memcpy(value, &v, sizeof(v));
-    else
-    {
-      unsigned char b[8];
-      memcpy(b, &v, sizeof(b));
-      *(unsigned char*)value = b[7];
-      *(((unsigned char*)value) + 1) = b[6];
-      *(((unsigned char*)value) + 2) = b[5];
-      *(((unsigned char*)value) + 3) = b[4];
-      *(((unsigned char*)value) + 4) = b[3];
-      *(((unsigned char*)value) + 5) = b[2];
-      *(((unsigned char*)value) + 6) = b[1];
-      *(((unsigned char*)value) + 7) = b[0];
-    }
-#endif
+    memcpy(value, &v, sizeof(v));
+
+    unsigned char b[8];
+    memcpy(b, &v, sizeof(b));
+    *(unsigned char*)value_reversed_endianess = b[7];
+    *(((unsigned char*)value_reversed_endianess) + 1) = b[6];
+    *(((unsigned char*)value_reversed_endianess) + 2) = b[5];
+    *(((unsigned char*)value_reversed_endianess) + 3) = b[4];
+    *(((unsigned char*)value_reversed_endianess) + 4) = b[3];
+    *(((unsigned char*)value_reversed_endianess) + 5) = b[2];
+    *(((unsigned char*)value_reversed_endianess) + 6) = b[1];
+    *(((unsigned char*)value_reversed_endianess) + 7) = b[0];
+
     break;
   }
   case gsdml_eValueDataType_Unsigned64:
@@ -2603,47 +2544,41 @@ int pn_gsdml::string_to_datavalue(gsdml_eValueDataType datatype, void* value,
     if (sscanf(str, pwr_dFormatUInt64, &v) != 1)
       return PB__SYNTAX;
 
-#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-    if (byte_order == pwr_eByteOrderingEnum_LittleEndian)
-      memcpy(value, &v, sizeof(v));
-    else
-    {
-      unsigned char b[8];
-      memcpy(b, &v, sizeof(b));
-      *(unsigned char*)value = b[7];
-      *(((unsigned char*)value) + 1) = b[6];
-      *(((unsigned char*)value) + 2) = b[5];
-      *(((unsigned char*)value) + 3) = b[4];
-      *(((unsigned char*)value) + 4) = b[3];
-      *(((unsigned char*)value) + 5) = b[2];
-      *(((unsigned char*)value) + 6) = b[1];
-      *(((unsigned char*)value) + 7) = b[0];
-    }
-#elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-    if (byte_order == pwr_eByteOrderingEnum_BigEndian)
-      memcpy(value, &v, sizeof(v));
-    else
-    {
-      unsigned char b[8];
-      memcpy(b, &v, sizeof(b));
-      *(unsigned char*)value = b[7];
-      *(((unsigned char*)value) + 1) = b[6];
-      *(((unsigned char*)value) + 2) = b[5];
-      *(((unsigned char*)value) + 3) = b[4];
-      *(((unsigned char*)value) + 4) = b[3];
-      *(((unsigned char*)value) + 5) = b[2];
-      *(((unsigned char*)value) + 6) = b[1];
-      *(((unsigned char*)value) + 7) = b[0];
-    }
-#endif
+    memcpy(value, &v, sizeof(v));
+
+    unsigned char b[8];
+    memcpy(b, &v, sizeof(b));
+    *(unsigned char*)value_reversed_endianess = b[7];
+    *(((unsigned char*)value_reversed_endianess) + 1) = b[6];
+    *(((unsigned char*)value_reversed_endianess) + 2) = b[5];
+    *(((unsigned char*)value_reversed_endianess) + 3) = b[4];
+    *(((unsigned char*)value_reversed_endianess) + 4) = b[3];
+    *(((unsigned char*)value_reversed_endianess) + 5) = b[2];
+    *(((unsigned char*)value_reversed_endianess) + 6) = b[1];
+    *(((unsigned char*)value_reversed_endianess) + 7) = b[0];
     break;
   }
   case gsdml_eValueDataType_Float64:
+  {
     if (sscanf(str, "%lg", (double*)value) != 1)
       return PB__SYNTAX;
+
+    unsigned char b[8];
+    memcpy(b, &value, sizeof(b));
+    *(unsigned char*)value_reversed_endianess = b[7];
+    *(((unsigned char*)value_reversed_endianess) + 1) = b[6];
+    *(((unsigned char*)value_reversed_endianess) + 2) = b[5];
+    *(((unsigned char*)value_reversed_endianess) + 3) = b[4];
+    *(((unsigned char*)value_reversed_endianess) + 4) = b[3];
+    *(((unsigned char*)value_reversed_endianess) + 5) = b[2];
+    *(((unsigned char*)value_reversed_endianess) + 6) = b[1];
+    *(((unsigned char*)value_reversed_endianess) + 7) = b[0];
+
     break;
+  }
   case gsdml_eValueDataType_VisibleString:
     strncpy((char*)value, str, size);
+    strncpy((char*)value_reversed_endianess, str, size);
     break;
   case gsdml_eValueDataType_OctetString:
   {
@@ -2652,6 +2587,13 @@ int pn_gsdml::string_to_datavalue(gsdml_eValueDataType datatype, void* value,
     {
       len = sscanf(&str[i * 5], "0x%2hhx",
                    (unsigned char*)((unsigned char*)value + i));
+      if (len != 1)
+        break;
+    }
+    for (unsigned int i = 0; i < size; i++)
+    {
+      len = sscanf(&str[i * 5], "0x%2hhx",
+                   (unsigned char*)((unsigned char*)value_reversed_endianess + i));
       if (len != 1)
         break;
     }
@@ -2883,6 +2825,8 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
       ((gsdml_VirtualSubmoduleItem*)p)->ModuleInfo = o;
     else if ((p = get_object_stack(gsdml_eTag_ModuleItem)))
       ((gsdml_ModuleItem*)p)->ModuleInfo = o;
+    else if ((p = get_object_stack(gsdml_eTag_PortSubmoduleItem)))
+      ((gsdml_PortSubmoduleItem*)p)->ModuleInfo = o;
     else
     {
       error_message_line("Misplaced ModuleInfo");
@@ -3026,6 +2970,24 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     else
     {
       error_message_line("Misplaced SubmoduleList");
+      return 0;
+    }
+
+    ro = o;
+    break;
+  }
+  case gsdml_eTag_SystemRedundancy:
+  {
+    gsdml_SystemRedundancy* o = new gsdml_SystemRedundancy(this);
+    current_body = &o->Body;
+    current_body_size = sizeof(gsdml_sSystemRedundancy);
+
+    void* p;
+    if ((p = get_object_stack(gsdml_eTag_DeviceAccessPointItem)))
+      ((gsdml_DeviceAccessPointItem*)p)->SystemRedundancy = o;
+    else
+    {
+      error_message_line("Misplaced SystemRedundancy");
       return 0;
     }
 
@@ -3226,6 +3188,72 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     ro = o;
     break;
   }
+  case gsdml_eTag_MenuList:
+  {
+    gsdml_MenuList* o = new gsdml_MenuList(this);
+
+    gsdml_ParameterRecordDataItem* parent = (gsdml_ParameterRecordDataItem*)get_object_stack(gsdml_eTag_ParameterRecordDataItem);
+    if (!parent)
+    {
+      error_message_line("Misplaced MenuList");
+      return 0;
+    }
+    o->parent_par_record_data_item = parent;
+    parent->MenuList = o;
+    ro = o;
+    break;
+  }
+  case gsdml_eTag_MenuItem:
+  {
+    gsdml_MenuItem* o = new gsdml_MenuItem(this);
+    current_body = &o->Body;
+    current_body_size = sizeof(gsdml_sMenuItem);
+
+    gsdml_MenuList* parent = (gsdml_MenuList*)get_object_stack(gsdml_eTag_MenuList);
+    if (!parent)
+    {
+      error_message_line("Misplaced MenuItem tag");
+      return 0;
+    }
+
+    parent->MenuItem.push_back(o);
+    ro = o;
+    break;
+  }
+  case gsdml_eTag_MenuRef:
+  {
+    gsdml_MenuRef* o = new gsdml_MenuRef(this);
+    current_body = &o->Body;
+    current_body_size = sizeof(gsdml_sMenuRef);
+
+    gsdml_MenuItem* parent = (gsdml_MenuItem*)get_object_stack(gsdml_eTag_MenuItem);
+    if (!parent)
+    {
+      error_message_line("Misplaced MenuRef tag");
+      return 0;
+    }
+
+    parent->MenuRef.push_back(o);
+    ro = o;
+    break;
+  }
+  case gsdml_eTag_ParameterRef:
+  {
+    gsdml_ParameterRef* o = new gsdml_ParameterRef(this);
+    current_body = &o->Body;
+    current_body_size = sizeof(gsdml_sParameterRef);
+
+    gsdml_MenuItem* parent = (gsdml_MenuItem*)get_object_stack(gsdml_eTag_MenuItem);
+    if (!parent)
+    {
+      error_message_line("Misplaced ParameterRef tag");
+      return 0;
+    }
+
+    parent->ParameterRef.push_back(o);
+    ro = o;
+    break;
+  }
   case gsdml_eTag_ParameterRecordDataItem:
   {
     gsdml_ParameterRecordDataItem* o = new gsdml_ParameterRecordDataItem(this);
@@ -3297,6 +3325,23 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     }
 
     p->GraphicItemRef.push_back(o);
+    ro = o;
+    break;
+  }
+  case gsdml_eTag_PROFIenergy:
+  {
+    gsdml_PROFIenergy* o = new gsdml_PROFIenergy(this);
+    current_body = &o->Body;
+    current_body_size = sizeof(gsdml_sPROFIenergy);
+
+    gsdml_VirtualSubmoduleItem* p = (gsdml_VirtualSubmoduleItem*)get_object_stack(gsdml_eTag_VirtualSubmoduleItem);
+    if (!p)
+    {
+      error_message_line("Misplaced PROFIenergy");
+      return 0;
+    }
+
+    p->PROFIenergy = o;
     ro = o;
     break;
   }
@@ -3551,6 +3596,38 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     ro = o;
     break;
   }
+  case gsdml_eTag_MAUTypeItem:
+  {
+    gsdml_MAUTypeItem* o = new gsdml_MAUTypeItem(this);
+    current_body = &o->Body;
+    current_body_size = sizeof(gsdml_sCertificationInfo);
+
+    void* p = get_object_stack(gsdml_eTag_MAUTypeList);
+    if (!p)
+    {
+      error_message_line("Misplaced MAUTypeItem");
+      return 0;
+    }
+    ((gsdml_MAUTypeList*)p)->MAUTypeItem.push_back(o);
+    ro = o;
+    break;
+    break;
+  }
+  case gsdml_eTag_MAUTypeList:
+  {
+    gsdml_MAUTypeList* o = new gsdml_MAUTypeList(this);
+
+    void* p = get_object_stack(gsdml_eTag_PortSubmoduleItem);
+    if (!p)
+    {
+      error_message_line("Misplaced MAUTypeList");
+      return 0;
+    }
+    ((gsdml_PortSubmoduleItem*)p)->MAUTypeList = o;
+    ro = o;
+    break;
+    break;
+  }
   case gsdml_eTag_PortSubmoduleItem:
   {
     gsdml_PortSubmoduleItem* o = new gsdml_PortSubmoduleItem(this);
@@ -3559,16 +3636,25 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     set_default_values(gsdml_eTag_PortSubmoduleItem, current_body,
                        current_body_size);
 
-    gsdml_SystemDefinedSubmoduleList* p =
-        (gsdml_SystemDefinedSubmoduleList*)get_object_stack(
-            gsdml_eTag_SystemDefinedSubmoduleList);
-    if (!p)
+    void* p =get_object_stack(gsdml_eTag_SystemDefinedSubmoduleList);
+    if (p)
     {
-      error_message_line("Misplaced PortSubmoduleItem");
-      return 0;
+      ((gsdml_SystemDefinedSubmoduleList*)p)->PortSubmoduleItem.push_back(o);
+    }
+    else
+    {
+      p = get_object_stack(gsdml_eTag_SubmoduleList);
+
+      // Still not correct?
+      if (!p)
+      {
+        error_message_line("Misplaced PortSubmoduleItem");
+        return 0;
+      }
+
+      ((gsdml_SubmoduleList*)p)->PortSubmoduleItem.push_back(o);
     }
 
-    p->PortSubmoduleItem.push_back(o);
     ro = o;
     break;
   }
@@ -4031,17 +4117,33 @@ void* pn_gsdml::find_module_ref(char* ref)
   return 0;
 }
 
-void* pn_gsdml::find_submodule_ref(char* ref)
+void* pn_gsdml::find_submodule_ref(char* ref, gsdml_eSubmoduleType* type)
 {
   if (!ApplicationProcess || !ApplicationProcess->SubmoduleList)
     return 0;
+
+  // Search for submodules
   for (unsigned int i = 0;
        i < ApplicationProcess->SubmoduleList->SubmoduleItem.size(); i++)
   {
-    if (strcmp(ApplicationProcess->SubmoduleList->SubmoduleItem[i]->Body.ID,
-               ref) == 0)
+    if (strcmp(ApplicationProcess->SubmoduleList->SubmoduleItem[i]->Body.ID, ref) == 0)
+    {
+      *type = gsdml_eSubmoduleType_SubmoduleItem;
       return (void*)ApplicationProcess->SubmoduleList->SubmoduleItem[i];
+    }
   }
+
+  //Search for port submodules
+  for (unsigned int i = 0;
+       i < ApplicationProcess->SubmoduleList->PortSubmoduleItem.size(); i++)
+  {
+    if (strcmp(ApplicationProcess->SubmoduleList->PortSubmoduleItem[i]->Body.ID, ref) == 0)
+    {
+      *type = gsdml_eSubmoduleType_PortSubmoduleItem;
+      return (void*)ApplicationProcess->SubmoduleList->PortSubmoduleItem[i];
+    }
+  }
+
   return 0;
 }
 
@@ -4069,6 +4171,30 @@ void* pn_gsdml::find_graphic_ref(char* ref)
     if (strcmp(ApplicationProcess->GraphicsList->GraphicItem[i]->Body.ID,
                ref) == 0)
       return (void*)ApplicationProcess->GraphicsList->GraphicItem[i];
+  }
+  return 0;
+}
+
+gsdml_Ref* pn_gsdml::find_ref_ref(char* ref, gsdml_ParameterRecordDataItem* search_domain)
+{
+  if (!search_domain)
+    return 0;
+  for (unsigned int i = 0; i < search_domain->Ref.size(); i++)
+  {
+    if (strcmp(search_domain->Ref[i]->Body.ID, ref) == 0)
+      return search_domain->Ref[i];
+  }
+  return 0;
+}
+
+gsdml_MenuItem* pn_gsdml::find_menuitem_ref(char* ref, gsdml_ParameterRecordDataItem* search_domain)
+{
+  if (!search_domain)
+    return 0;
+  for (unsigned int i = 0; i < search_domain->MenuList->MenuItem.size(); i++)
+  {
+    if (strcmp(search_domain->MenuList->MenuItem[i]->Body.ID, ref) == 0)
+      return search_domain->MenuList->MenuItem[i];
   }
   return 0;
 }
@@ -4190,7 +4316,76 @@ int pn_gsdml::ostring_to_data(unsigned char** data, const char* str, int size,
   return 1;
 }
 
-int pn_gsdml::set_par_record_default(unsigned char* data, int size,
+int pn_gsdml::populate_and_align_par_reversed_record_data(unsigned const char* read_data, unsigned char* reversed_data, gsdml_ParameterRecordDataItem* par_record)
+{
+  gsdml_eValueDataType type;
+  int sts;
+
+  for (std::vector<gsdml_Ref*>::iterator ref = par_record->Ref.begin(); ref != par_record->Ref.end(); ref++)
+  {
+    // Get the datatype and the offset within the data
+    sts = string_to_value_datatype((*ref)->Body.DataType, &type);
+    gsdml_tUnsigned32 offset = (*ref)->Body.ByteOffset;
+
+    switch (type)
+    {
+    case gsdml_eValueDataType_Integer8:
+    case gsdml_eValueDataType_Unsigned8:
+    case gsdml_eValueDataType_Bit:
+    case gsdml_eValueDataType_BitArea:
+      continue;
+      break;
+    case gsdml_eValueDataType_Integer16:
+    case gsdml_eValueDataType_Unsigned16:
+    {
+      char data_array[2];
+      memcpy(data_array, (read_data + offset), sizeof(data_array));
+      *(reversed_data + offset) = data_array[1];
+      *(reversed_data + offset + 1) = data_array[0];
+      break;
+    }
+    case gsdml_eValueDataType_Integer32:
+    case gsdml_eValueDataType_Unsigned32:
+    case gsdml_eValueDataType_Float32:
+    {
+      char data_array[4];
+      memcpy(data_array, (read_data + offset), sizeof(data_array));
+
+      *(reversed_data + offset) = data_array[3];
+      *(reversed_data + offset + 1) = data_array[2];
+      *(reversed_data + offset + 2) = data_array[1];
+      *(reversed_data + offset + 3) = data_array[0];
+      break;
+    }
+    case gsdml_eValueDataType_Integer64:
+    case gsdml_eValueDataType_Unsigned64:
+    case gsdml_eValueDataType_Float64:
+    {
+      char data_array[8];
+       memcpy(data_array, (read_data + offset), sizeof(data_array));
+      *(reversed_data + offset) = data_array[7];
+      *(reversed_data + offset + 1) = data_array[6];
+      *(reversed_data + offset + 2) = data_array[5];
+      *(reversed_data + offset + 3) = data_array[4];
+      *(reversed_data + offset + 4) = data_array[3];
+      *(reversed_data + offset + 5) = data_array[2];
+      *(reversed_data + offset + 6) = data_array[1];
+      *(reversed_data + offset + 7) = data_array[0];
+      break;
+    }
+    case gsdml_eValueDataType_OctetString:
+    case gsdml_eValueDataType_VisibleString:
+      // Should we do anything about these....
+      break;
+    default:
+      break;
+    }
+  }
+
+  return 1;
+}
+
+int pn_gsdml::set_par_record_default(unsigned char* data, unsigned char* data_reversed_endianess, int size,
                                      gsdml_ParameterRecordDataItem* par_record)
 {
   gsdml_eValueDataType type;
@@ -4247,9 +4442,15 @@ int pn_gsdml::set_par_record_default(unsigned char* data, int size,
 
       unsigned char mask = 1 << par_record->Ref[i]->Body.BitOffset;
       if (streq(par_record->Ref[i]->Body.DefaultValue, "0"))
+      {
         *(data + par_record->Ref[i]->Body.ByteOffset) &= ~mask;
+        *(data_reversed_endianess + par_record->Ref[i]->Body.ByteOffset) &= ~mask;
+      }
       else if (streq(par_record->Ref[i]->Body.DefaultValue, "1"))
+      {
         *(data + par_record->Ref[i]->Body.ByteOffset) |= mask;
+        *(data_reversed_endianess + par_record->Ref[i]->Body.ByteOffset) |= mask;
+      }
       break;
     }
     case gsdml_eValueDataType_BitArea:
@@ -4275,6 +4476,8 @@ int pn_gsdml::set_par_record_default(unsigned char* data, int size,
 
       *(data + par_record->Ref[i]->Body.ByteOffset) &= ~mask;
       *(data + par_record->Ref[i]->Body.ByteOffset) |= value;
+      *(data_reversed_endianess + par_record->Ref[i]->Body.ByteOffset) &= ~mask;
+      *(data_reversed_endianess + par_record->Ref[i]->Body.ByteOffset) |= value;
       break;
     }
     default:
@@ -4284,7 +4487,8 @@ int pn_gsdml::set_par_record_default(unsigned char* data, int size,
         return 0;
       }
 
-      string_to_datavalue(type, data + par_record->Ref[i]->Body.ByteOffset,
+      gsdml_tUnsigned32 offset = par_record->Ref[i]->Body.ByteOffset;
+      string_to_datavalue(type, data + offset, data_reversed_endianess + offset,
                           par_record->Ref[i]->Body.Length,
                           par_record->Ref[i]->Body.DefaultValue);
     }
@@ -4766,6 +4970,7 @@ gsdml_ParameterRecordDataItem::gsdml_ParameterRecordDataItem(pn_gsdml* g)
     : gsdml(g)
 {
   memset(&Body, 0, sizeof(Body));
+  MenuList = 0;
 }
 
 void gsdml_ParameterRecordDataItem::print(int ind)
@@ -4932,9 +5137,14 @@ void gsdml_IsochroneMode::print(int ind)
          Body.IsochroneModeRequired);
 }
 
+gsdml_PROFIenergy::gsdml_PROFIenergy(pn_gsdml* g) : gsdml(g)
+{
+  memset(&Body, 0, sizeof(Body));
+}
+
 gsdml_VirtualSubmoduleItem::gsdml_VirtualSubmoduleItem(pn_gsdml* g)
     : IOData(0), RecordDataList(0), ModuleInfo(0), Graphics(0),
-      IsochroneMode(0), gsdml(g)
+      IsochroneMode(0), PROFIenergy(0), gsdml(g)
 {
   memset(&Body, 0, sizeof(Body));
 }
@@ -5186,7 +5396,7 @@ void gsdml_InterfaceSubmoduleItem::print(int ind)
 }
 
 gsdml_PortSubmoduleItem::gsdml_PortSubmoduleItem(pn_gsdml* g)
-    : RecordDataList(0), gsdml(g)
+    : MAUTypeList(0), RecordDataList(0), ModuleInfo(0), gsdml(g)
 {
   memset(&Body, 0, sizeof(Body));
 }
@@ -5276,7 +5486,7 @@ gsdml_SubmoduleItemRef::gsdml_SubmoduleItemRef(pn_gsdml* g) : gsdml(g)
 void gsdml_SubmoduleItemRef::build()
 {
   Body.SubmoduleItemTarget.p =
-      gsdml->find_submodule_ref(Body.SubmoduleItemTarget.ref);
+      gsdml->find_submodule_ref(Body.SubmoduleItemTarget.ref, &submodule_type);
   if (!Body.SubmoduleItemTarget.p)
     gsdml->error_message("SubmoduleItemTarget not found: \"%s\"",
                          Body.SubmoduleItemTarget.ref);
@@ -5608,6 +5818,12 @@ void gsdml_UnitDiagTypeItem::print(int ind)
   printf("%s</UnitDiagTypeItem>\n", is);
 }
 
+void gsdml_UnitDiagTypeList::build()
+{
+  for (int i = 0; i < UnitDiagTypeItem.size(); i++)
+    UnitDiagTypeItem[i]->build();
+}
+
 void gsdml_UnitDiagTypeList::print(int ind)
 {
   char is[] = "                    ";
@@ -5851,6 +6067,82 @@ gsdml_IOData::~gsdml_IOData()
     delete Output;
 }
 
+gsdml_ParameterRef::gsdml_ParameterRef(pn_gsdml* g) : gsdml(g)
+{
+  memset(&Body, 0, sizeof(Body));
+}
+
+gsdml_ParameterRef::~gsdml_ParameterRef()
+{
+
+}
+
+void gsdml_ParameterRef::build(gsdml_ParameterRecordDataItem* parent_par_record_data_item)
+{
+  Body.ParameterTarget.p = (void*)gsdml->find_ref_ref(Body.ParameterTarget.ref, parent_par_record_data_item);
+  if (Body.ParameterTarget.p == noref)
+    gsdml->error_message("ParameterTarget not found: \"%s\"", Body.ParameterTarget.ref);
+}
+
+gsdml_MenuRef::gsdml_MenuRef(pn_gsdml* g) : gsdml(g)
+{
+
+}
+
+gsdml_MenuRef::~gsdml_MenuRef()
+{
+
+}
+
+void gsdml_MenuRef::build(gsdml_ParameterRecordDataItem* parent_par_record_data_item)
+{
+  Body.MenuTarget.p = (void*)gsdml->find_menuitem_ref(Body.MenuTarget.ref, parent_par_record_data_item);
+  if (Body.MenuTarget.p == noref)
+    gsdml->error_message("MenuTarget not found: \"%s\"", Body.MenuTarget.ref);
+}
+
+gsdml_MenuItem::gsdml_MenuItem(pn_gsdml* g) : gsdml(g)
+{
+
+}
+
+gsdml_MenuItem::~gsdml_MenuItem()
+{
+  for (unsigned int i = 0; i < MenuRef.size(); i++)
+    delete MenuRef[i];
+  for (unsigned int i = 0; i < ParameterRef.size(); i++)
+    delete ParameterRef[i];
+}
+
+void gsdml_MenuItem::build(gsdml_ParameterRecordDataItem* parent_par_record_data_item)
+{
+  Body.Name.p = gsdml->find_text_ref(Body.Name.ref);
+  if (Body.Name.p == noref)
+    gsdml->error_message("Name not found: \"%s\"", Body.Name.ref);
+
+  for (std::vector<gsdml_ParameterRef*>::iterator parameterRef = ParameterRef.begin(); parameterRef != ParameterRef.end(); parameterRef++)
+    (*parameterRef)->build(parent_par_record_data_item);
+  for (std::vector<gsdml_MenuRef*>::iterator menuRef = MenuRef.begin(); menuRef != MenuRef.end(); menuRef++)
+    (*menuRef)->build(parent_par_record_data_item);
+}
+
+gsdml_MenuList::gsdml_MenuList(pn_gsdml* g) : gsdml(g)
+{
+
+}
+
+gsdml_MenuList::~gsdml_MenuList()
+{
+  for (unsigned int i = 0; i < MenuItem.size(); i++)
+    delete MenuItem[i];
+}
+
+void gsdml_MenuList::build()
+{
+  for (std::vector<gsdml_MenuItem*>::iterator menuItem = MenuItem.begin(); menuItem != MenuItem.end(); menuItem++)
+    (*menuItem)->build(parent_par_record_data_item);
+}
+
 void gsdml_ParameterRecordDataItem::build()
 {
   Body.Name.p = gsdml->find_text_ref(Body.Name.ref);
@@ -5871,6 +6163,10 @@ void gsdml_ParameterRecordDataItem::build()
                              Ref[i]->Body.ValueItemTarget.ref);
     }
   }
+
+  //Build any MenuList tags if the exists
+  if (MenuList)
+    MenuList->build();
 }
 
 gsdml_ParameterRecordDataItem::~gsdml_ParameterRecordDataItem()
@@ -5879,6 +6175,7 @@ gsdml_ParameterRecordDataItem::~gsdml_ParameterRecordDataItem()
     delete Const[i];
   for (unsigned int i = 0; i < Ref.size(); i++)
     delete Ref[i];
+  delete MenuList;
 }
 
 void gsdml_RecordDataList::build()
@@ -5937,6 +6234,8 @@ gsdml_VirtualSubmoduleItem::~gsdml_VirtualSubmoduleItem()
     delete Graphics;
   if (IsochroneMode)
     delete IsochroneMode;
+  if (PROFIenergy)
+    delete PROFIenergy;
 }
 
 void gsdml_VirtualSubmoduleList::build()
@@ -5994,18 +6293,29 @@ gsdml_InterfaceSubmoduleItem::~gsdml_InterfaceSubmoduleItem()
 
 void gsdml_PortSubmoduleItem::build()
 {
-  Body.TextId.p = gsdml->find_text_ref(Body.TextId.ref);
-  if (Body.TextId.p == noref)
-    gsdml->error_message("TextId not found: \"%s\"", Body.TextId.ref);
+  // Apparently PortSubmoduleItem is allowed to be without TextId attribute when it's located under a SubmoduleList...
+  if (!streq(Body.TextId.ref, ""))
+  {
+    Body.TextId.p = gsdml->find_text_ref(Body.TextId.ref);
+    if (Body.TextId.p == noref)
+      gsdml->error_message("TextId not found: \"%s\"", Body.TextId.ref);
+  }
 
   if (RecordDataList)
     RecordDataList->build();
+
+  if (ModuleInfo)
+    ModuleInfo->build();
 }
 
 gsdml_PortSubmoduleItem::~gsdml_PortSubmoduleItem()
 {
   if (RecordDataList)
     delete RecordDataList;
+  if (MAUTypeList)
+    delete MAUTypeList;
+  if (ModuleInfo)
+    delete ModuleInfo;
 }
 
 void gsdml_SystemDefinedSubmoduleList::build()
@@ -6063,7 +6373,7 @@ gsdml_SlotGroups::~gsdml_SlotGroups()
 gsdml_DeviceAccessPointItem::gsdml_DeviceAccessPointItem(pn_gsdml* g)
     : ModuleInfo(0), SubslotList(0), IOConfigData(0), UseableModules(0),
       VirtualSubmoduleList(0), SystemDefinedSubmoduleList(0), Graphics(0),
-      ApplicationRelations(0), UseableSubmodules(0), SlotList(0), SlotGroups(0),
+      ApplicationRelations(0), UseableSubmodules(0), SlotList(0), SlotGroups(0), SystemRedundancy(0),
       gsdml(g)
 {
   memset(&Body, 0, sizeof(Body));
@@ -6113,6 +6423,8 @@ gsdml_DeviceAccessPointItem::~gsdml_DeviceAccessPointItem()
   if (SlotGroups)
     delete SlotGroups;
   delete Body.PhysicalSlots.list;
+  if (SystemRedundancy)
+    delete SystemRedundancy;
 }
 
 void gsdml_DeviceAccessPointList::build()
@@ -6180,12 +6492,18 @@ void gsdml_SubmoduleList::build()
 {
   for (unsigned int i = 0; i < SubmoduleItem.size(); i++)
     SubmoduleItem[i]->build();
+
+  for (unsigned int i = 0; i < PortSubmoduleItem.size(); i++)
+    PortSubmoduleItem[i]->build();
 }
 
 gsdml_SubmoduleList::~gsdml_SubmoduleList()
 {
   for (unsigned int i = 0; i < SubmoduleItem.size(); i++)
     delete SubmoduleItem[i];
+
+  for (unsigned int i = 0; i < PortSubmoduleItem.size(); i++)
+    delete PortSubmoduleItem[i];
 }
 
 gsdml_Assignments::~gsdml_Assignments()
@@ -6283,6 +6601,15 @@ void gsdml_ChannelDiagList::build()
     ChannelDiagItem[i]->build();
 }
 
+void gsdml_UnitDiagTypeItem::build()
+{
+  if (!streq(Body.Name.ref, "")) {
+    Body.Name.p = gsdml->find_text_ref(Body.Name.ref);
+    if (Body.Name.p == noref)
+      gsdml->error_message("Name not found: \"%s\"", Body.Name.ref);
+  }
+}
+
 gsdml_UnitDiagTypeItem::~gsdml_UnitDiagTypeItem()
 {
   for (unsigned int i = 0; i < Ref.size(); i++)
@@ -6311,6 +6638,17 @@ gsdml_Text::~gsdml_Text()
 {
   if (Body.Value)
     free(Body.Value);
+}
+
+gsdml_MAUTypeItem::gsdml_MAUTypeItem(pn_gsdml* g) : gsdml(g)
+{
+  memset(&Body, 0, sizeof(Body));
+}
+
+gsdml_MAUTypeList::~gsdml_MAUTypeList()
+{
+   for (unsigned int i = 0; i < MAUTypeItem.size(); i++)
+    delete MAUTypeItem[i];
 }
 
 gsdml_PrimaryLanguage::~gsdml_PrimaryLanguage()
@@ -6345,6 +6683,8 @@ void gsdml_ApplicationProcess::build()
     ValueList->build();
   if (ChannelDiagList)
     ChannelDiagList->build();
+  if (UnitDiagTypeList)
+    UnitDiagTypeList->build();
 }
 
 gsdml_ApplicationProcess::~gsdml_ApplicationProcess()
@@ -6391,6 +6731,11 @@ unsigned int gsdml_ValuelistIterator::begin()
     current_idx = 0;
   }
   return current_value;
+}
+
+gsdml_SystemRedundancy::gsdml_SystemRedundancy(pn_gsdml* g) : gsdml(g)
+{
+  memset(&Body, 0, sizeof(Body));
 }
 
 unsigned int gsdml_ValuelistIterator::next()
