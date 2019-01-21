@@ -52,12 +52,13 @@ static pwr_tStatus ShowConfiguration(xmenu_sMenuCall* ip)
   int edit_mode = 0;
 
   sts = xtt_pb_dp_slave_create_ctx(ip->Pointed, ip->EditorContext, &ctx);
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     return sts;
   }
 
-  ctx->attr
-      = new GsdAttrQt(CoXHelpQt::get_widget(), ctx, 0, ctx->gsd, edit_mode);
+  ctx->attr =
+      new GsdAttrQt(CoXHelpQt::get_widget(), ctx, 0, ctx->gsd, edit_mode);
   ctx->attr->close_cb = xtt_pb_dp_slave_close_cb;
   ctx->attr->save_cb = xtt_pb_dp_slave_save_cb;
   ctx->attr->help_cb = xtt_pb_dp_slave_help_cb;
@@ -69,5 +70,5 @@ static pwr_tStatus ShowConfiguration(xmenu_sMenuCall* ip)
   Every method to be exported to xtt should be registred here.
 \*----------------------------------------------------------------------------*/
 
-pwr_dExport pwr_BindXttMethods(Pb_DP_Slave)
-    = { pwr_BindXttMethod(ShowConfiguration), pwr_NullMethod };
+pwr_dExport pwr_BindXttMethods(Pb_DP_Slave) = {
+    pwr_BindXttMethod(ShowConfiguration), pwr_NullMethod};

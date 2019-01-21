@@ -49,7 +49,8 @@
 
 #include <QApplication>
 
-typedef struct {
+typedef struct
+{
   QWidget* toplevel;
   PnViewer* viewer;
 } tViewer;
@@ -61,7 +62,8 @@ static void usage()
 
 static void viewer_close(void* c)
 {
-  debug_print("Shutting down...\n"); exit(0);
+  debug_print("Shutting down...\n");
+  exit(0);
 }
 
 int main(int argc, char* argv[])
@@ -85,41 +87,57 @@ int main(int argc, char* argv[])
   ctx->toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
   // Create help window
-  CoXHelpQt* xhelp
-      = new CoXHelpQt(ctx->toplevel, 0, xhelp_eUtility_Wtt, (int*)&sts);
+  CoXHelpQt* xhelp =
+      new CoXHelpQt(ctx->toplevel, 0, xhelp_eUtility_Wtt, (int*)&sts);
   CoXHelpQt::set_default(xhelp);
 
-  for (i = 1; i < argc; i++) {
-    if (streq(argv[i], "-h")) {
+  for (i = 1; i < argc; i++)
+  {
+    if (streq(argv[i], "-h"))
+    {
       usage();
-      debug_print("Shutting down...\n"); exit(0);
-    } else if (streq(argv[i], "-l")) {
-      if (i + 1 >= argc) {
+      debug_print("Shutting down...\n");
+      exit(0);
+    }
+    else if (streq(argv[i], "-l"))
+    {
+      if (i + 1 >= argc)
+      {
         usage();
-        debug_print("Shutting down...\n"); exit(0);
+        debug_print("Shutting down...\n");
+        exit(0);
       }
       Lng::set(argv[i + 1]);
       i++;
-    } else if (str_StartsWith(argv[i], "eth")) {
+    }
+    else if (str_StartsWith(argv[i], "eth"))
+    {
       snprintf(dev_name, sizeof(dev_name), "%s", argv[i]);
     }
   }
 
   // Open window
-  try {
-    ctx->viewer
-        = new PnViewerQt(ctx, ctx->toplevel, "Profinet Viewer", dev_name, &sts);
+  try
+  {
+    ctx->viewer =
+        new PnViewerQt(ctx, ctx->toplevel, "Profinet Viewer", dev_name, &sts);
     ctx->viewer->close_cb = viewer_close;
-  } catch (co_error& e) {
+  }
+  catch (co_error& e)
+  {
     printf("** Exception: %s\n", e.what().c_str());
-    debug_print("Shutting down...\n"); exit(0);
+    debug_print("Shutting down...\n");
+    exit(0);
   }
 
   ctx->toplevel->show();
 
-  try {
+  try
+  {
     ctx->viewer->update_devices();
-  } catch (co_error& e) {
+  }
+  catch (co_error& e)
+  {
     printf("** Exception: %s\n", e.what().c_str());
   }
 
@@ -129,9 +147,6 @@ int main(int argc, char* argv[])
 #else
 #include <stdio.h>
 
-int main()
-{
-  printf("Softing PNAK not built with this Proview release\n");
-}
+int main() { printf("Softing PNAK not built with this Proview release\n"); }
 
 #endif

@@ -58,38 +58,38 @@ static gint delete_event(GtkWidget* w, GdkEvent* event, gpointer viewer)
   return TRUE;
 }
 
-static void destroy_event(GtkWidget* w, gpointer data)
-{
-}
+static void destroy_event(GtkWidget* w, gpointer data) {}
 
 PnViewerGtk::PnViewerGtk(void* v_parent_ctx, GtkWidget* v_parent_wid,
-    const char* v_name, const char* v_device, pwr_tStatus* status)
+                         const char* v_name, const char* v_device,
+                         pwr_tStatus* status)
     : PnViewer(v_parent_ctx, v_name, v_device, status), parent_wid(v_parent_wid)
 {
   const int window_width = 800;
   const int window_height = 600;
 
   toplevel = (GtkWidget*)g_object_new(GTK_TYPE_WINDOW, "default-height",
-      window_height, "default-width", window_width, "title", v_name, NULL);
+                                      window_height, "default-width",
+                                      window_width, "title", v_name, NULL);
 
   g_signal_connect(toplevel, "delete_event", G_CALLBACK(delete_event), this);
   g_signal_connect(toplevel, "destroy", G_CALLBACK(destroy_event), this);
   g_signal_connect(toplevel, "focus-in-event",
-      G_CALLBACK(PnViewerGtk::action_inputfocus), this);
+                   G_CALLBACK(PnViewerGtk::action_inputfocus), this);
 
   CoWowGtk::SetWindowIcon(toplevel);
 
-  GtkAccelGroup* accel_g
-      = (GtkAccelGroup*)g_object_new(GTK_TYPE_ACCEL_GROUP, NULL);
+  GtkAccelGroup* accel_g =
+      (GtkAccelGroup*)g_object_new(GTK_TYPE_ACCEL_GROUP, NULL);
   gtk_window_add_accel_group(GTK_WINDOW(toplevel), accel_g);
 
   GtkMenuBar* menu_bar = (GtkMenuBar*)g_object_new(GTK_TYPE_MENU_BAR, NULL);
 
   // File Entry
-  GtkWidget* file_close
-      = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLOSE, accel_g);
-  g_signal_connect(
-      file_close, "activate", G_CALLBACK(PnViewerGtk::activate_exit), this);
+  GtkWidget* file_close =
+      gtk_image_menu_item_new_from_stock(GTK_STOCK_CLOSE, accel_g);
+  g_signal_connect(file_close, "activate",
+                   G_CALLBACK(PnViewerGtk::activate_exit), this);
 
   GtkMenu* file_menu = (GtkMenu*)g_object_new(GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
@@ -100,24 +100,24 @@ PnViewerGtk::PnViewerGtk(void* v_parent_ctx, GtkWidget* v_parent_wid,
 
   // Functions Entry
   GtkWidget* functions_update = gtk_menu_item_new_with_mnemonic("_Update");
-  g_signal_connect(
-      functions_update, "activate", G_CALLBACK(activate_update), this);
+  g_signal_connect(functions_update, "activate", G_CALLBACK(activate_update),
+                   this);
 
   GtkWidget* functions_filter = gtk_menu_item_new_with_mnemonic("_Filter");
-  g_signal_connect(
-      functions_filter, "activate", G_CALLBACK(activate_filter), this);
+  g_signal_connect(functions_filter, "activate", G_CALLBACK(activate_filter),
+                   this);
 
-  GtkWidget* functions_setdevice
-      = gtk_menu_item_new_with_mnemonic("_Set Device Properties");
-  g_signal_connect(
-      functions_setdevice, "activate", G_CALLBACK(activate_setdevice), this);
+  GtkWidget* functions_setdevice =
+      gtk_menu_item_new_with_mnemonic("_Set Device Properties");
+  g_signal_connect(functions_setdevice, "activate",
+                   G_CALLBACK(activate_setdevice), this);
 
-  GtkWidget* functions_changevalue
-      = gtk_menu_item_new_with_mnemonic("_Change Value");
+  GtkWidget* functions_changevalue =
+      gtk_menu_item_new_with_mnemonic("_Change Value");
   g_signal_connect(functions_changevalue, "activate",
-      G_CALLBACK(activate_changevalue), this);
+                   G_CALLBACK(activate_changevalue), this);
   gtk_widget_add_accelerator(functions_changevalue, "activate", accel_g, 'q',
-      GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   GtkMenu* functions_menu = (GtkMenu*)g_object_new(GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_update);
@@ -127,28 +127,28 @@ PnViewerGtk::PnViewerGtk(void* v_parent_ctx, GtkWidget* v_parent_wid,
 
   GtkWidget* functions = gtk_menu_item_new_with_mnemonic("F_unctions");
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), functions);
-  gtk_menu_item_set_submenu(
-      GTK_MENU_ITEM(functions), GTK_WIDGET(functions_menu));
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions),
+                            GTK_WIDGET(functions_menu));
 
   // View menu
-  GtkWidget* view_zoom_in
-      = gtk_image_menu_item_new_from_stock(GTK_STOCK_ZOOM_IN, NULL);
+  GtkWidget* view_zoom_in =
+      gtk_image_menu_item_new_from_stock(GTK_STOCK_ZOOM_IN, NULL);
   g_signal_connect(view_zoom_in, "activate",
-      G_CALLBACK(PnViewerGtk::activate_zoom_in), this);
+                   G_CALLBACK(PnViewerGtk::activate_zoom_in), this);
   gtk_widget_add_accelerator(view_zoom_in, "activate", accel_g, 'i',
-      GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-  GtkWidget* view_zoom_out
-      = gtk_image_menu_item_new_from_stock(GTK_STOCK_ZOOM_OUT, NULL);
+  GtkWidget* view_zoom_out =
+      gtk_image_menu_item_new_from_stock(GTK_STOCK_ZOOM_OUT, NULL);
   g_signal_connect(view_zoom_out, "activate",
-      G_CALLBACK(PnViewerGtk::activate_zoom_out), this);
+                   G_CALLBACK(PnViewerGtk::activate_zoom_out), this);
   gtk_widget_add_accelerator(view_zoom_out, "activate", accel_g, 'o',
-      GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                             GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-  GtkWidget* view_zoom_reset
-      = gtk_image_menu_item_new_from_stock(GTK_STOCK_ZOOM_100, NULL);
+  GtkWidget* view_zoom_reset =
+      gtk_image_menu_item_new_from_stock(GTK_STOCK_ZOOM_100, NULL);
   g_signal_connect(view_zoom_reset, "activate",
-      G_CALLBACK(PnViewerGtk::activate_zoom_reset), this);
+                   G_CALLBACK(PnViewerGtk::activate_zoom_reset), this);
 
   GtkMenu* view_menu = (GtkMenu*)g_object_new(GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_in);
@@ -160,8 +160,8 @@ PnViewerGtk::PnViewerGtk(void* v_parent_ctx, GtkWidget* v_parent_wid,
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(view), GTK_WIDGET(view_menu));
 
   // Help menu
-  GtkWidget* help_help
-      = gtk_image_menu_item_new_from_stock(GTK_STOCK_HELP, NULL);
+  GtkWidget* help_help =
+      gtk_image_menu_item_new_from_stock(GTK_STOCK_HELP, NULL);
   g_signal_connect(help_help, "activate", G_CALLBACK(activate_help), this);
 
   GtkMenu* help_menu = (GtkMenu*)g_object_new(GTK_TYPE_MENU, NULL);
@@ -184,8 +184,8 @@ PnViewerGtk::PnViewerGtk(void* v_parent_ctx, GtkWidget* v_parent_wid,
   cmd_entry = new CoWowEntryGtk(value_recall);
   cmd_input = cmd_entry->widget();
   gtk_widget_set_size_request(cmd_input, -1, 25);
-  g_signal_connect(
-      cmd_input, "activate", G_CALLBACK(valchanged_cmd_input), this);
+  g_signal_connect(cmd_input, "activate", G_CALLBACK(valchanged_cmd_input),
+                   this);
 
   gtk_box_pack_start(GTK_BOX(statusbar), msg_label, FALSE, FALSE, 20);
   gtk_box_pack_start(GTK_BOX(statusbar), cmd_prompt, FALSE, FALSE, 20);
@@ -199,13 +199,13 @@ PnViewerGtk::PnViewerGtk(void* v_parent_ctx, GtkWidget* v_parent_wid,
   GtkWidget* header_left = gtk_label_new("Devices on Network");
   GtkWidget* header_right = gtk_label_new("Devices from Configuration");
 
-  viewernav
-      = new PnViewerNavGtk(this, nav_right, viewer_eType_Network, &nav_widget);
+  viewernav =
+      new PnViewerNavGtk(this, nav_right, viewer_eType_Network, &nav_widget);
   viewernav->change_value_cb = &change_value;
   viewernav->message_cb = &message_cb;
 
-  viewernavconf = new PnViewerNavGtk(
-      this, nav_left, viewer_eType_Configuration, &navconf_widget);
+  viewernavconf = new PnViewerNavGtk(this, nav_left, viewer_eType_Configuration,
+                                     &navconf_widget);
   viewernavconf->change_value_cb = &change_value;
   viewernavconf->message_cb = &message_cb;
 
@@ -245,8 +245,8 @@ PnViewerGtk::~PnViewerGtk()
 
 void PnViewerGtk::message(char severity, const char* msg)
 {
-  char* messageutf8
-      = g_convert(msg, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  char* messageutf8 =
+      g_convert(msg, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
   gtk_label_set_text(GTK_LABEL(msg_label), messageutf8);
   g_free(messageutf8);
 }
@@ -255,7 +255,8 @@ void PnViewerGtk::open_change_value()
 {
   int sts;
 
-  if (input_open) {
+  if (input_open)
+  {
     g_object_set(cmd_input, "visible", FALSE, NULL);
     set_prompt("");
     input_open = 0;
@@ -263,7 +264,8 @@ void PnViewerGtk::open_change_value()
   }
 
   sts = viewernav->check_attr_value();
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     if (sts == PB__ATTRNOEDIT)
       message('E', "Attribute is no edit");
     else
@@ -291,7 +293,8 @@ void PnViewerGtk::valchanged_cmd_input(GtkWidget* w, gpointer data)
   text = g_convert(textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
   g_free(textutf8);
 
-  if (viewer->input_open) {
+  if (viewer->input_open)
+  {
     sts = viewer->viewernav->set_attr_value(text);
     g_object_set(w, "visible", FALSE, NULL);
     viewer->set_prompt("");
@@ -302,12 +305,15 @@ void PnViewerGtk::valchanged_cmd_input(GtkWidget* w, gpointer data)
 
 void PnViewerGtk::set_prompt(const char* prompt)
 {
-  if (streq(prompt, "")) {
+  if (streq(prompt, ""))
+  {
     g_object_set(cmd_prompt, "visible", FALSE, NULL);
     g_object_set(msg_label, "visible", TRUE, NULL);
-  } else {
-    char* promptutf8
-        = g_convert(prompt, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  }
+  else
+  {
+    char* promptutf8 =
+        g_convert(prompt, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
 
     g_object_set(msg_label, "visible", FALSE, NULL);
     g_object_set(cmd_prompt, "visible", TRUE, "label", promptutf8, NULL);
@@ -315,12 +321,13 @@ void PnViewerGtk::set_prompt(const char* prompt)
   }
 }
 
-gboolean PnViewerGtk::action_inputfocus(
-    GtkWidget* w, GdkEvent* event, gpointer data)
+gboolean PnViewerGtk::action_inputfocus(GtkWidget* w, GdkEvent* event,
+                                        gpointer data)
 {
   PnViewerGtk* viewer = (PnViewerGtk*)data;
 
-  if (viewer) {
+  if (viewer)
+  {
     if (viewer->focustimer.disabled())
       return FALSE;
 

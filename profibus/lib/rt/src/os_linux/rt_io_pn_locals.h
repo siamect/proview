@@ -39,7 +39,8 @@
 
 /* rt_io_pn_locals.h -- Profinet io handling locals. */
 
-typedef struct _io_sPnRackLocal {
+typedef struct _io_sPnRackLocal
+{
   unsigned short bytes_of_input;
   unsigned short bytes_of_output;
   unsigned char* inputs;
@@ -49,7 +50,8 @@ typedef struct _io_sPnRackLocal {
   unsigned int start_cnt;
 } io_sPnRackLocal;
 
-typedef struct _io_sPnCardLocal {
+typedef struct _io_sPnCardLocal
+{
   unsigned int input_area_size;
   unsigned int output_area_size;
   unsigned char* input_area;

@@ -57,7 +57,8 @@ int main(int argc, char* argv[])
 
   pwr_tStatus sts;
 
-  if (argc < 2 || streq(argv[1], "-h")) {
+  if (argc < 2 || streq(argv[1], "-h"))
+  {
     printf("\nUsage: pn_get_deviceid \"file-pattern\" > "
            "profinet_deviceid.dat\n\n");
     exit(0);
@@ -66,7 +67,8 @@ int main(int argc, char* argv[])
   dcli_translate_filename(file_spec, argv[1]);
 
   sts = dcli_search_file(file_spec, found_file, DCLI_DIR_SEARCH_INIT);
-  while (ODD(sts)) {
+  while (ODD(sts))
+  {
     printf("# Processing file: %s\n", found_file);
     parse_file(found_file);
 
@@ -89,7 +91,8 @@ void parse_file(char* filename)
   dcli_translate_filename(fname, filename);
 
   fp.open(fname);
-  if (!fp) {
+  if (!fp)
+  {
     printf("# Unable to open file\n");
     exit(0);
   }
@@ -102,19 +105,26 @@ void parse_file(char* filename)
   int vendorid_found = 0;
   int infotextid_found = 0;
   int infotext_found = 0;
-  while (fp.getline(line, sizeof(line))) {
+  while (fp.getline(line, sizeof(line)))
+  {
     char* s;
 
-    if (!in_deviceid) {
+    if (!in_deviceid)
+    {
       if ((s = strstr(line, "<DeviceIdentity")))
         in_deviceid = 1;
     }
 
-    if (in_deviceid) {
-      if (!deviceid_found) {
-        if ((s = strstr(line, "DeviceID"))) {
-          for (s += 9; *s; s++) {
-            if (*s == '\"') {
+    if (in_deviceid)
+    {
+      if (!deviceid_found)
+      {
+        if ((s = strstr(line, "DeviceID")))
+        {
+          for (s += 9; *s; s++)
+          {
+            if (*s == '\"')
+            {
               sscanf(s + 3, "%x", &deviceid);
               deviceid_found = 1;
               break;
@@ -122,10 +132,14 @@ void parse_file(char* filename)
           }
         }
       }
-      if (!vendorid_found) {
-        if ((s = strstr(line, "VendorID"))) {
-          for (s += 9; *s; s++) {
-            if (*s == '\"') {
+      if (!vendorid_found)
+      {
+        if ((s = strstr(line, "VendorID")))
+        {
+          for (s += 9; *s; s++)
+          {
+            if (*s == '\"')
+            {
               sscanf(s + 3, "%x", &vendorid);
               vendorid_found = 1;
               break;
@@ -133,10 +147,14 @@ void parse_file(char* filename)
           }
         }
       }
-      if (!infotextid_found) {
-        if ((s = strstr(line, "<InfoText"))) {
-          for (s += 16; *s; s++) {
-            if (*s == '\"') {
+      if (!infotextid_found)
+      {
+        if ((s = strstr(line, "<InfoText")))
+        {
+          for (s += 16; *s; s++)
+          {
+            if (*s == '\"')
+            {
               strncpy(infotextid, s + 1, sizeof(infotextid));
               if ((s = strchr(infotextid, '\"')))
                 *s = 0;
@@ -146,7 +164,8 @@ void parse_file(char* filename)
           }
         }
       }
-      if (strstr(line, "</DeviceIdentity>")) {
+      if (strstr(line, "</DeviceIdentity>"))
+      {
         in_deviceid = 0;
 
         printf("%u %u\n", vendorid, deviceid);
@@ -161,16 +180,22 @@ void parse_file(char* filename)
       }
     }
 
-    if (!in_devicefunction) {
+    if (!in_devicefunction)
+    {
       if ((s = strstr(line, "<DeviceFunction")))
         in_devicefunction = 1;
     }
 
-    if (in_devicefunction) {
-      if (!family_found) {
-        if ((s = strstr(line, "ProductFamily"))) {
-          for (s += 14; *s; s++) {
-            if (*s == '\"') {
+    if (in_devicefunction)
+    {
+      if (!family_found)
+      {
+        if ((s = strstr(line, "ProductFamily")))
+        {
+          for (s += 14; *s; s++)
+          {
+            if (*s == '\"')
+            {
               strncpy(family, s + 1, sizeof(family));
               if ((s = strchr(family, '\"')))
                 *s = 0;
@@ -182,14 +207,19 @@ void parse_file(char* filename)
         }
       }
     }
-    if (infotextid_found && !infotext_found) {
+    if (infotextid_found && !infotext_found)
+    {
       if (strstr(line, "<Text") && strstr(line, infotextid))
         in_text = 1;
 
-      if (in_text) {
-        if ((s = strstr(line, "Value"))) {
-          for (s += 6; *s; s++) {
-            if (*s == '\"') {
+      if (in_text)
+      {
+        if ((s = strstr(line, "Value")))
+        {
+          for (s += 6; *s; s++)
+          {
+            if (*s == '\"')
+            {
               strncpy(infotext, s + 1, sizeof(infotext));
               if ((s = strchr(infotext, '\"')))
                 *s = 0;

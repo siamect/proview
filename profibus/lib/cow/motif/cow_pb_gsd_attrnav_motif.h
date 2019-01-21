@@ -44,10 +44,12 @@
 #endif
 
 //! The navigation area of the attribute editor.
-class GsdAttrNavMotif : public GsdAttrNav {
+class GsdAttrNavMotif : public GsdAttrNav
+{
 public:
   GsdAttrNavMotif(void* xn_parent_ctx, Widget xn_parent_wid, char* xn_name,
-      pb_gsd* xn_gsd, int xn_edit_mode, Widget* w, pwr_tStatus* status);
+                  pb_gsd* xn_gsd, int xn_edit_mode, Widget* w,
+                  pwr_tStatus* status);
   ~GsdAttrNavMotif();
   void set_inputfocus();
 

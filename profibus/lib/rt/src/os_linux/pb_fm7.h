@@ -157,13 +157,14 @@
 /****************************************************************************/
 
 #define DETAIL_LENGTH 16 /* length of abort detail                     */
-#define FEAT_SUPP_LEN 6 /* length of supported feature field          */
+#define FEAT_SUPP_LEN 6  /* length of supported feature field          */
 
 /****************************************************************************/
 /* Initiate Service                                                         */
 /****************************************************************************/
 
-typedef struct _T_FM7_INIT_REQ {
+typedef struct _T_FM7_INIT_REQ
+{
   USIGN8 snd_len_low; /* max FM7 PDU size to send with low priority    */
   USIGN8 rcv_len_low; /* max FM7 PDU size to receive with low priority */
   USIGN8 supported_services[FEAT_SUPP_LEN]; /* supported FM7 services */
@@ -173,7 +174,8 @@ typedef struct _T_FM7_INIT_REQ {
 typedef T_FM7_INIT_REQ T_FMA_INIT_REQ;
 #endif
 
-typedef struct _T_FM7_INIT_ERR_CNF {
+typedef struct _T_FM7_INIT_ERR_CNF
+{
   USIGN16 class_code; /* error code and class                           */
   USIGN8 snd_len_low; /* max FM7 PDU size to send with low priority    */
   USIGN8 rcv_len_low; /* max FM7 PDU size to receive with low priority */
@@ -188,11 +190,12 @@ typedef T_FM7_INIT_ERR_CNF T_FMA_INIT_ERR_CNF;
 /* Abort Service                                                            */
 /****************************************************************************/
 
-typedef struct _T_FM7_ABORT_REQ {
-  PB_BOOL local; /* local or remote detected             */
-  USIGN8 abort_id; /* identifier (USR,LLI_USR,LLI,FDL)     */
-  USIGN8 reason; /* abort reason code                    */
-  USIGN8 detail_length; /* length of detail information         */
+typedef struct _T_FM7_ABORT_REQ
+{
+  PB_BOOL local;                /* local or remote detected             */
+  USIGN8 abort_id;              /* identifier (USR,LLI_USR,LLI,FDL)     */
+  USIGN8 reason;                /* abort reason code                    */
+  USIGN8 detail_length;         /* length of detail information         */
   USIGN8 detail[DETAIL_LENGTH]; /* detail information about the reason  */
 } T_FM7_ABORT_REQ;
 
@@ -267,13 +270,14 @@ typedef T_FM7_ABORT_REQ T_FMA_ABORT_REQ;
 #define O_CONN 0x02
 
 /*--- CRL-Header -----------------------------------------------------------*/
-typedef struct _T_CRL_HDR {
-  INT16 nr_of_entries; /* number of CRL enries         */
-  USIGN8 poll_sap; /* poll list SAP                */
-  USIGN8 symbol_length; /* max symbol lenght in CRL     */
-  USIGN32 ass_abt_ci; /* ASS / ABT controll intervall */
+typedef struct _T_CRL_HDR
+{
+  INT16 nr_of_entries;           /* number of CRL enries         */
+  USIGN8 poll_sap;               /* poll list SAP                */
+  USIGN8 symbol_length;          /* max symbol lenght in CRL     */
+  USIGN32 ass_abt_ci;            /* ASS / ABT controll intervall */
   PB_BOOL vfd_pointer_supported; /* VFD pointer supported        */
-  USIGN8 dummy; /* alignment byte               */
+  USIGN8 dummy;                  /* alignment byte               */
 } T_CRL_HDR;
 
 #if (PB_VER < 500)
@@ -282,27 +286,28 @@ typedef T_CRL_HDR T_KBL_HDR;
 
 /*--- CRL-Static-Entry
  * -----------------------------------------------------------*/
-typedef struct _T_CRL_STATIC {
-  USIGN8 loc_lsap; /* local LSAP                        */
-  USIGN8 rem_add; /* remote address                    */
-  USIGN8 rem_segm; /* remote segment                    */
-  USIGN8 rem_lsap; /* remote LSAP                       */
-  USIGN8 conn_type; /* connection type                   */
-  USIGN8 lli_sap; /* LLI-SAP                           */
-  USIGN8 multiplier; /* multiplier in cyclic connections  */
-  USIGN8 conn_attr; /* connection attribute              */
-  USIGN8 max_scc; /* max. of send confirmed counter    */
-  USIGN8 max_rcc; /* max. of receive confirmed counter */
-  USIGN8 max_sac; /* max. of send acknowledged counter */
-  USIGN8 max_rac; /* max. of receive acknowledged ctr  */
-  USIGN32 ci; /* controll intervall                */
-  USIGN8 max_pdu_snd_high; /* max. length of FMS-PDU send high  */
-  USIGN8 max_pdu_snd_low; /* max. length of FMS-PDU send low   */
-  USIGN8 max_pdu_rcv_high; /* max. length of FMS-PDU rcv high   */
-  USIGN8 max_pdu_rcv_low; /* max. length of FMS-PDU rcv low    */
-  USIGN8 feature_supp[FEAT_SUPP_LEN]; /* FMS features supported            */
+typedef struct _T_CRL_STATIC
+{
+  USIGN8 loc_lsap;                       /* local LSAP                        */
+  USIGN8 rem_add;                        /* remote address                    */
+  USIGN8 rem_segm;                       /* remote segment                    */
+  USIGN8 rem_lsap;                       /* remote LSAP                       */
+  USIGN8 conn_type;                      /* connection type                   */
+  USIGN8 lli_sap;                        /* LLI-SAP                           */
+  USIGN8 multiplier;                     /* multiplier in cyclic connections  */
+  USIGN8 conn_attr;                      /* connection attribute              */
+  USIGN8 max_scc;                        /* max. of send confirmed counter    */
+  USIGN8 max_rcc;                        /* max. of receive confirmed counter */
+  USIGN8 max_sac;                        /* max. of send acknowledged counter */
+  USIGN8 max_rac;                        /* max. of receive acknowledged ctr  */
+  USIGN32 ci;                            /* controll intervall                */
+  USIGN8 max_pdu_snd_high;               /* max. length of FMS-PDU send high  */
+  USIGN8 max_pdu_snd_low;                /* max. length of FMS-PDU send low   */
+  USIGN8 max_pdu_rcv_high;               /* max. length of FMS-PDU rcv high   */
+  USIGN8 max_pdu_rcv_low;                /* max. length of FMS-PDU rcv low    */
+  USIGN8 feature_supp[FEAT_SUPP_LEN];    /* FMS features supported            */
   STRINGV symbol[MAX_CRL_SYMBOL_LENGTH]; /* symbolic name                     */
-  USIGN32 vfd_pointer; /* vfd number                        */
+  USIGN32 vfd_pointer;                   /* vfd number                        */
   USIGN8 extension[MAX_CRL_EXTENSION_LENGTH]; /* CRL-Extension                */
 } T_CRL_STATIC;
 
@@ -311,17 +316,18 @@ typedef T_CRL_STATIC T_KBL_STATIC;
 #endif
 
 /*--- CRL-Dynamic-Entry ----------------------------------------------------*/
-typedef struct _T_CRL_DYNAMIC {
-  USIGN8 rem_add; /* current remote address       */
-  USIGN8 rem_segm; /* current remote segment       */
-  USIGN8 rem_lsap; /* current remote LSAP          */
-  USIGN8 scc; /* send confirmed counter       */
-  USIGN8 rcc; /* receive confirmed counter    */
-  USIGN8 sac; /* send acknowledged counter    */
-  USIGN8 rac; /* receive acknowledged counter */
+typedef struct _T_CRL_DYNAMIC
+{
+  USIGN8 rem_add;             /* current remote address       */
+  USIGN8 rem_segm;            /* current remote segment       */
+  USIGN8 rem_lsap;            /* current remote LSAP          */
+  USIGN8 scc;                 /* send confirmed counter       */
+  USIGN8 rcc;                 /* receive confirmed counter    */
+  USIGN8 sac;                 /* send acknowledged counter    */
+  USIGN8 rac;                 /* receive acknowledged counter */
   PB_BOOL poll_entry_enabled; /* poll entry flag              */
-  USIGN8 master_role; /* current master role          */
-  USIGN8 dummy; /* alignment byte               */
+  USIGN8 master_role;         /* current master role          */
+  USIGN8 dummy;               /* alignment byte               */
 } T_CRL_DYNAMIC;
 
 #if (PB_VER < 500)
@@ -333,19 +339,21 @@ typedef T_CRL_DYNAMIC T_KBL_DYNAMIC;
 /****************************************************************************/
 
 /*--- Load-CRL-Service -----------------------------------------------------*/
-typedef struct _T_LOAD_CRL_REQ {
+typedef struct _T_LOAD_CRL_REQ
+{
   USIGN16 desired_cr; /* desired communication reference */
   union {
-    T_CRL_HDR crl_hdr; /* CRL-Header-Entry                */
+    T_CRL_HDR crl_hdr;       /* CRL-Header-Entry                */
     T_CRL_STATIC crl_static; /* CRL-Static-Entry                */
   } id;
 } T_LOAD_CRL_REQ;
 
 #if (PB_VER < 500)
-typedef struct _T_LOAD_KBL_REQ {
+typedef struct _T_LOAD_KBL_REQ
+{
   USIGN16 desired_cr; /* desired communication reference */
   union {
-    T_KBL_HDR kbl_hdr; /* CRL-Header-Entry                */
+    T_KBL_HDR kbl_hdr;       /* CRL-Header-Entry                */
     T_KBL_STATIC kbl_static; /* CRL-Static-Entry                */
   } id;
 } T_LOAD_KBL_REQ;
@@ -446,7 +454,8 @@ typedef struct _T_LOAD_KBL_REQ {
 /* --- DTU Receiver ------------------------------------------------------- */
 #define CONLS_SERVER 0
 
-typedef struct _T_READ_CRL_REQ {
+typedef struct _T_READ_CRL_REQ
+{
   USIGN16 desired_cr; /* desired communication reference  */
 } T_READ_CRL_REQ;
 
@@ -455,37 +464,41 @@ typedef T_READ_CRL_REQ T_READ_KBL_REQ;
 #endif
 
 /*--- CRL-Entry Data-Type --------------------------------------------------*/
-typedef struct _T_CRL_ENTRY {
-  T_CRL_STATIC crl_static; /* CRL-Static-Entry         */
+typedef struct _T_CRL_ENTRY
+{
+  T_CRL_STATIC crl_static;   /* CRL-Static-Entry         */
   T_CRL_DYNAMIC crl_dynamic; /* CRL-Dynamic-Entry        */
-  USIGN8 dummy; /* alignment                */
-  USIGN8 crl_status_len; /* length of CRL-Status     */
+  USIGN8 dummy;              /* alignment                */
+  USIGN8 crl_status_len;     /* length of CRL-Status     */
   /* USIGN8         crl_status[crl_status_len];      CRL-Status               */
 } T_CRL_ENTRY;
 
 #if (PB_VER < 500)
-typedef struct _T_KBL_ENTRY {
-  T_KBL_STATIC kbl_static; /* CRL-Static-Entry         */
+typedef struct _T_KBL_ENTRY
+{
+  T_KBL_STATIC kbl_static;   /* CRL-Static-Entry         */
   T_KBL_DYNAMIC kbl_dynamic; /* CRL-Dynamic-Entry        */
-  USIGN8 dummy; /* alignment                */
-  USIGN8 kbl_status_len; /* length of CRL-Status     */
+  USIGN8 dummy;              /* alignment                */
+  USIGN8 kbl_status_len;     /* length of CRL-Status     */
   /* USIGN8         kbl_status[crl_status_len];      CRL-Status               */
 } T_KBL_ENTRY;
 #endif
 
-typedef struct _T_READ_CRL_CNF {
+typedef struct _T_READ_CRL_CNF
+{
   USIGN16 desired_cr; /* desired communication reference */
   union {
-    T_CRL_HDR crl_hdr; /* CRL-header                      */
+    T_CRL_HDR crl_hdr;     /* CRL-header                      */
     T_CRL_ENTRY crl_entry; /* CRL-Entry                       */
   } id;
 } T_READ_CRL_CNF;
 
 #if (PB_VER < 500)
-typedef struct _T_READ_KBL_CNF {
+typedef struct _T_READ_KBL_CNF
+{
   USIGN16 desired_cr; /* desired communication reference */
   union {
-    T_KBL_HDR kbl_hdr; /* CRL-header                      */
+    T_KBL_HDR kbl_hdr;     /* CRL-header                      */
     T_KBL_ENTRY kbl_entry; /* CRL-Entry                       */
   } id;
 } T_READ_KBL_CNF;
@@ -548,46 +561,48 @@ typedef struct _T_READ_KBL_CNF {
 #define C_NOT_IN_RING_DESIRED NOT_IN_RING_DESIRED
 #endif
 
-typedef struct _T_SET_BUSPARAMETER_REQ {
-  USIGN8 loc_add; /* local station                 */
-  USIGN8 loc_segm; /* local segment                 */
-  USIGN8 baud_rate; /* baud rate                     */
-  USIGN8 medium_red; /* medium redundancy             */
-  USIGN16 tsl; /* slot time                     */
-  USIGN16 min_tsdr; /* min. station delay time resp. */
-  USIGN16 max_tsdr; /* max. station delay time resp. */
-  USIGN8 tqui; /* quiet time                    */
-  USIGN8 tset; /* setup time                    */
-  USIGN32 ttr; /* target token rotation time    */
-  USIGN8 g; /* gap update factor             */
+typedef struct _T_SET_BUSPARAMETER_REQ
+{
+  USIGN8 loc_add;          /* local station                 */
+  USIGN8 loc_segm;         /* local segment                 */
+  USIGN8 baud_rate;        /* baud rate                     */
+  USIGN8 medium_red;       /* medium redundancy             */
+  USIGN16 tsl;             /* slot time                     */
+  USIGN16 min_tsdr;        /* min. station delay time resp. */
+  USIGN16 max_tsdr;        /* max. station delay time resp. */
+  USIGN8 tqui;             /* quiet time                    */
+  USIGN8 tset;             /* setup time                    */
+  USIGN32 ttr;             /* target token rotation time    */
+  USIGN8 g;                /* gap update factor             */
   PB_BOOL in_ring_desired; /* active or passive station     */
-  USIGN8 hsa; /* highest station address       */
-  USIGN8 max_retry_limit; /* max. retry limit              */
-  USIGN16 reserved; /* not used                      */
-  USIGN8 ident[202]; /* for internal use              */
+  USIGN8 hsa;              /* highest station address       */
+  USIGN8 max_retry_limit;  /* max. retry limit              */
+  USIGN16 reserved;        /* not used                      */
+  USIGN8 ident[202];       /* for internal use              */
 } T_SET_BUSPARAMETER_REQ;
 
 /****************************************************************************/
 /* Read-Busparameter Service (only local)                                   */
 /****************************************************************************/
 
-typedef struct _T_READ_BUSPARAMETER_CNF {
-  USIGN8 loc_add; /* local station                 */
-  USIGN8 loc_segm; /* local segment                 */
-  USIGN8 baud_rate; /* baud rate                     */
-  USIGN8 medium_red; /* medium redundancy             */
-  USIGN16 tsl; /* slot time                     */
-  USIGN16 min_tsdr; /* min. station delay time resp. */
-  USIGN16 max_tsdr; /* max. station delay time resp. */
-  USIGN8 tqui; /* quiet time                    */
-  USIGN8 tset; /* setup time                    */
-  USIGN32 ttr; /* target token rotation time    */
-  USIGN8 g; /* gap update factor             */
+typedef struct _T_READ_BUSPARAMETER_CNF
+{
+  USIGN8 loc_add;          /* local station                 */
+  USIGN8 loc_segm;         /* local segment                 */
+  USIGN8 baud_rate;        /* baud rate                     */
+  USIGN8 medium_red;       /* medium redundancy             */
+  USIGN16 tsl;             /* slot time                     */
+  USIGN16 min_tsdr;        /* min. station delay time resp. */
+  USIGN16 max_tsdr;        /* max. station delay time resp. */
+  USIGN8 tqui;             /* quiet time                    */
+  USIGN8 tset;             /* setup time                    */
+  USIGN32 ttr;             /* target token rotation time    */
+  USIGN8 g;                /* gap update factor             */
   PB_BOOL in_ring_desired; /* active or passive station     */
-  USIGN8 hsa; /* highest station address       */
-  USIGN8 max_retry_limit; /* max. retry limit              */
-  USIGN16 reserved; /* not used                      */
-  USIGN8 ident[202]; /* FDL-Ident-String              */
+  USIGN8 hsa;              /* highest station address       */
+  USIGN8 max_retry_limit;  /* max. retry limit              */
+  USIGN16 reserved;        /* not used                      */
+  USIGN8 ident[202];       /* FDL-Ident-String              */
 } T_READ_BUSPARAMETER_CNF;
 
 /****************************************************************************/
@@ -625,16 +640,18 @@ typedef struct _T_READ_BUSPARAMETER_CNF {
 /****************************************************************************/
 
 #if (PB_VER < 500)
-typedef struct _T_STATISTICS_BLOCK {
+typedef struct _T_STATISTICS_BLOCK
+{
   USIGN32 frame_send_count; /* frame sent counter               */
-  USIGN32 sd_count; /* valid start delimiter counter    */
-  USIGN16 retry_count; /* retry frame sent counter         */
-  USIGN16 sd_error_count; /* invalid start delimiter counter  */
+  USIGN32 sd_count;         /* valid start delimiter counter    */
+  USIGN16 retry_count;      /* retry frame sent counter         */
+  USIGN16 sd_error_count;   /* invalid start delimiter counter  */
 } T_STATISTICS_BLOCK;
 #endif
 
-typedef struct _T_SET_VALUE_REQ {
-  USIGN8 id; /* value identifier    */
+typedef struct _T_SET_VALUE_REQ
+{
+  USIGN8 id;     /* value identifier    */
   USIGN8 length; /* # of values in byte */
   /* USIGN8   value[length];                              list of values      */
 } T_SET_VALUE_REQ;
@@ -643,21 +660,24 @@ typedef struct _T_SET_VALUE_REQ {
 /* Read-Value Service  (Local and Remote)                                   */
 /****************************************************************************/
 #if (PB_VER < 500)
-typedef struct _T_READ_STATISTIC_CTR_CNF {
+typedef struct _T_READ_STATISTIC_CTR_CNF
+{
   USIGN32 frame_send_count; /* frame sent counter               */
-  USIGN32 sd_count; /* valid start delimiter counter    */
-  USIGN16 retry_count; /* retry frame sent counter         */
-  USIGN16 sd_error_count; /* invalid start delimiter counter  */
+  USIGN32 sd_count;         /* valid start delimiter counter    */
+  USIGN16 retry_count;      /* retry frame sent counter         */
+  USIGN16 sd_error_count;   /* invalid start delimiter counter  */
 } T_READ_STATISTIC_CTR_CNF;
 #endif
 
-typedef struct _T_READ_VALUE_REQ {
-  USIGN8 id; /* value identifier   */
+typedef struct _T_READ_VALUE_REQ
+{
+  USIGN8 id;    /* value identifier   */
   USIGN8 dummy; /* alignment          */
 } T_READ_VALUE_REQ;
 
-typedef struct _T_READ_VALUE_CNF {
-  USIGN8 id; /* value identifier    */
+typedef struct _T_READ_VALUE_CNF
+{
+  USIGN8 id;     /* value identifier    */
   USIGN8 length; /* # of values in byte */
   /* USIGN8   value[length];                              list of values      */
 } T_READ_VALUE_CNF;
@@ -678,84 +698,88 @@ typedef struct _T_READ_VALUE_CNF {
 #define ID_PHY 5
 #endif
 
-typedef struct _T_IDENT_REQ {
+typedef struct _T_IDENT_REQ
+{
   USIGN8 instance_id; /* instance identifier         */
-  USIGN8 dummy; /* alignment byte              */
+  USIGN8 dummy;       /* alignment byte              */
 } T_IDENT_REQ;
 
 #if (PB_VER >= 500)
-typedef struct _T_CHARACTERISTICS {
-  USIGN8 profile_number[2]; /* profile number              */
-  USIGN8 functions_supp[3]; /* functions supported         */
-  USIGN8 dummy1; /* alignment byte              */
-  USIGN8 max_pdu_len; /* max. PDU length             */
-  USIGN8 dummy2; /* alignment byte              */
-  USIGN8 fms_features_supp[6]; /* FMS features supported      */
-  USIGN8 fm7_services_supp[6]; /* FM7 features supported      */
-  USIGN8 max_sap_value; /* max. LSAP number            */
-  USIGN8 max_no_of_saps; /* max. number of LSAPs        */
-  USIGN16 max_comref; /* max communication reference */
-  USIGN16 max_crl_len; /* max count of CRL-Entries    */
-  USIGN32 total_len_of_pdu; /* total length of PDUs        */
-  USIGN16 no_of_parallel_serv; /* number of parallel serv.    */
-  USIGN16 max_od_index; /* max. OD-Index               */
-  USIGN16 max_od_entries; /* max. OD-Entries             */
-  USIGN8 max_vfd; /* max. VFDs                   */
-  USIGN8 max_las_entries; /* max. no. of LAS entries     */
-  USIGN8 min_tsdr; /* min. station delay time     */
-  USIGN8 trdy; /* ready time                  */
-  USIGN8 tsdi; /* station delay initiatior    */
-  USIGN8 max_tsdr; /* station delay responder     */
-  USIGN8 tset; /* setup time                  */
-  USIGN8 tqui; /* quiet time                  */
-  USIGN8 supported_data_types[4]; /* supported data types        */
+typedef struct _T_CHARACTERISTICS
+{
+  USIGN8 profile_number[2];          /* profile number              */
+  USIGN8 functions_supp[3];          /* functions supported         */
+  USIGN8 dummy1;                     /* alignment byte              */
+  USIGN8 max_pdu_len;                /* max. PDU length             */
+  USIGN8 dummy2;                     /* alignment byte              */
+  USIGN8 fms_features_supp[6];       /* FMS features supported      */
+  USIGN8 fm7_services_supp[6];       /* FM7 features supported      */
+  USIGN8 max_sap_value;              /* max. LSAP number            */
+  USIGN8 max_no_of_saps;             /* max. number of LSAPs        */
+  USIGN16 max_comref;                /* max communication reference */
+  USIGN16 max_crl_len;               /* max count of CRL-Entries    */
+  USIGN32 total_len_of_pdu;          /* total length of PDUs        */
+  USIGN16 no_of_parallel_serv;       /* number of parallel serv.    */
+  USIGN16 max_od_index;              /* max. OD-Index               */
+  USIGN16 max_od_entries;            /* max. OD-Entries             */
+  USIGN8 max_vfd;                    /* max. VFDs                   */
+  USIGN8 max_las_entries;            /* max. no. of LAS entries     */
+  USIGN8 min_tsdr;                   /* min. station delay time     */
+  USIGN8 trdy;                       /* ready time                  */
+  USIGN8 tsdi;                       /* station delay initiatior    */
+  USIGN8 max_tsdr;                   /* station delay responder     */
+  USIGN8 tset;                       /* setup time                  */
+  USIGN8 tqui;                       /* quiet time                  */
+  USIGN8 supported_data_types[4];    /* supported data types        */
   USIGN8 supported_access_rights[3]; /* supported access rights     */
-  USIGN8 supported_var_types; /* supported variable types    */
-  USIGN8 special_functions[2]; /* special functions           */
-  USIGN8 max_od_symbol_length; /* max length of symbol in OD  */
-  USIGN8 max_crl_symbol_length; /* max length of symbol in CRL */
+  USIGN8 supported_var_types;        /* supported variable types    */
+  USIGN8 special_functions[2];       /* special functions           */
+  USIGN8 max_od_symbol_length;       /* max length of symbol in OD  */
+  USIGN8 max_crl_symbol_length;      /* max length of symbol in CRL */
 } T_CHARACTERISTICS;
 #else
-typedef struct _T_CHARACTERISTICS {
-  USIGN8 profile_number[2]; /* profile number              */
-  USIGN8 functions_supp[3]; /* functions supported         */
-  USIGN8 dummy1; /* alignment byte              */
-  USIGN8 max_pdu_len; /* max. PDU length             */
-  USIGN8 dummy2; /* alignment byte              */
-  USIGN8 fms_features_supp[6]; /* FMS features supported      */
-  USIGN8 fma7_services_supp[6]; /* FM7 features supported      */
-  USIGN8 max_sap_value; /* max. LSAP number            */
-  USIGN8 max_no_of_saps; /* max. number of LSAPs        */
-  USIGN16 max_comref; /* max communication reference */
-  USIGN16 max_kbl_len; /* max count of CRL-Entries    */
-  USIGN32 total_len_of_pdu; /* total length of PDUs        */
-  USIGN16 no_of_parallel_serv; /* number of parallel serv.    */
-  USIGN16 max_ov_index; /* max. OD-Index               */
-  USIGN16 max_ov_entries; /* max. OD-Entries             */
-  USIGN8 max_vfd; /* max. VFDs                   */
-  USIGN8 max_las_entries; /* max. no. of LAS entries     */
-  USIGN8 min_tsdr; /* min. station delay time     */
-  USIGN8 trdy; /* ready time                  */
-  USIGN8 tsdi; /* station delay initiatior    */
-  USIGN8 max_tsdr; /* station delay responder     */
-  USIGN8 tset; /* setup time                  */
-  USIGN8 tqui; /* quiet time                  */
-  USIGN8 supported_data_types[4]; /* supported data types        */
+typedef struct _T_CHARACTERISTICS
+{
+  USIGN8 profile_number[2];          /* profile number              */
+  USIGN8 functions_supp[3];          /* functions supported         */
+  USIGN8 dummy1;                     /* alignment byte              */
+  USIGN8 max_pdu_len;                /* max. PDU length             */
+  USIGN8 dummy2;                     /* alignment byte              */
+  USIGN8 fms_features_supp[6];       /* FMS features supported      */
+  USIGN8 fma7_services_supp[6];      /* FM7 features supported      */
+  USIGN8 max_sap_value;              /* max. LSAP number            */
+  USIGN8 max_no_of_saps;             /* max. number of LSAPs        */
+  USIGN16 max_comref;                /* max communication reference */
+  USIGN16 max_kbl_len;               /* max count of CRL-Entries    */
+  USIGN32 total_len_of_pdu;          /* total length of PDUs        */
+  USIGN16 no_of_parallel_serv;       /* number of parallel serv.    */
+  USIGN16 max_ov_index;              /* max. OD-Index               */
+  USIGN16 max_ov_entries;            /* max. OD-Entries             */
+  USIGN8 max_vfd;                    /* max. VFDs                   */
+  USIGN8 max_las_entries;            /* max. no. of LAS entries     */
+  USIGN8 min_tsdr;                   /* min. station delay time     */
+  USIGN8 trdy;                       /* ready time                  */
+  USIGN8 tsdi;                       /* station delay initiatior    */
+  USIGN8 max_tsdr;                   /* station delay responder     */
+  USIGN8 tset;                       /* setup time                  */
+  USIGN8 tqui;                       /* quiet time                  */
+  USIGN8 supported_data_types[4];    /* supported data types        */
   USIGN8 supported_access_rights[3]; /* supported access rights     */
-  USIGN8 supported_var_types; /* supported variable types    */
-  USIGN8 special_functions[2]; /* special functions           */
-  USIGN8 max_ov_symbol_length; /* max length of symbol in OD  */
-  USIGN8 max_kbl_symbol_length; /* max length of symbol in CRL */
+  USIGN8 supported_var_types;        /* supported variable types    */
+  USIGN8 special_functions[2];       /* special functions           */
+  USIGN8 max_ov_symbol_length;       /* max length of symbol in OD  */
+  USIGN8 max_kbl_symbol_length;      /* max length of symbol in CRL */
 } T_CHARACTERISTICS;
 #endif
 
-typedef struct _T_IDENT_CNF {
-  USIGN8 instance_id; /* instance ident  */
-  USIGN8 dummy; /* alignment       */
-  STRINGV vendor_name[MAX_IDENT_STRING_LENGTH]; /* vendor name     */
+typedef struct _T_IDENT_CNF
+{
+  USIGN8 instance_id;                               /* instance ident  */
+  USIGN8 dummy;                                     /* alignment       */
+  STRINGV vendor_name[MAX_IDENT_STRING_LENGTH];     /* vendor name     */
   STRINGV controller_type[MAX_IDENT_STRING_LENGTH]; /* controller type */
-  STRINGV hw_release[MAX_IDENT_STRING_LENGTH]; /* HW release      */
-  STRINGV sw_release[MAX_IDENT_STRING_LENGTH]; /* SW release      */
+  STRINGV hw_release[MAX_IDENT_STRING_LENGTH];      /* HW release      */
+  STRINGV sw_release[MAX_IDENT_STRING_LENGTH];      /* SW release      */
   T_CHARACTERISTICS characteristics;
 } T_IDENT_CNF;
 
@@ -763,31 +787,35 @@ typedef struct _T_IDENT_CNF {
 /* LSAP-Status Service  (Local and Remote)                                  */
 /****************************************************************************/
 
-typedef struct _T_LSAP_STATUS_REQ {
-  USIGN8 lsap; /* desired LSAP               */
+typedef struct _T_LSAP_STATUS_REQ
+{
+  USIGN8 lsap;  /* desired LSAP               */
   USIGN8 dummy; /* alignment byte             */
 } T_LSAP_STATUS_REQ;
 
-typedef struct _T_LSAP_STATUS_CNF {
-  USIGN8 access; /* station address or all     */
+typedef struct _T_LSAP_STATUS_CNF
+{
+  USIGN8 access;         /* station address or all     */
   USIGN8 addr_extension; /* segment number             */
-  USIGN8 sda; /* SDA                        */
-  USIGN8 sdn; /* SDN                        */
-  USIGN8 srd; /* SRD                        */
-  USIGN8 csrd; /* CSRD                       */
+  USIGN8 sda;            /* SDA                        */
+  USIGN8 sdn;            /* SDN                        */
+  USIGN8 srd;            /* SRD                        */
+  USIGN8 csrd;           /* CSRD                       */
 } T_LSAP_STATUS_CNF;
 
 /****************************************************************************/
 /* Get-Live-List Service  (Local and Remote)                                */
 /****************************************************************************/
 
-typedef struct _T_LIVE_LIST {
+typedef struct _T_LIVE_LIST
+{
   USIGN8 station; /* station number              */
-  USIGN8 status; /* current station of station  */
+  USIGN8 status;  /* current station of station  */
 } T_LIVE_LIST;
 
-typedef struct _T_GET_LIVE_LIST_CNF {
-  USIGN8 dummy; /* alignment                   */
+typedef struct _T_GET_LIVE_LIST_CNF
+{
+  USIGN8 dummy;          /* alignment                   */
   USIGN8 no_of_elements; /* # of live list elements     */
   /* T_LIVE_LIST live_list[no_of_elements];       list of live list elements  */
 } T_GET_LIVE_LIST_CNF;
@@ -802,12 +830,13 @@ typedef struct _T_GET_LIVE_LIST_CNF {
 /* NOTE: instance identifier see IDENT service ---------------------------- */
 /*       reason-codes and additional details are defined in PB_ERR.H    --- */
 
-typedef struct _T_FM7_EVENT_IND {
-  USIGN16 comm_ref; /* communication reference   */
+typedef struct _T_FM7_EVENT_IND
+{
+  USIGN16 comm_ref;   /* communication reference   */
   USIGN8 instance_id; /* LLI, FDL, PHY             */
-  USIGN8 reason; /* reason code               */
-  USIGN8 add_detail; /* additional detail         */
-  USIGN8 dummy; /* alignment                 */
+  USIGN8 reason;      /* reason code               */
+  USIGN8 add_detail;  /* additional detail         */
+  USIGN8 dummy;       /* alignment                 */
 } T_FM7_EVENT_IND;
 
 #if (PB_VER < 500)
@@ -823,7 +852,8 @@ typedef T_FM7_EVENT_IND T_FMA7_EVENT_IND;
 /* Set-Configuration Service (only local)                                    */
 /*****************************************************************************/
 
-typedef struct T_SET_CONFIGURATION_REQ {
+typedef struct T_SET_CONFIGURATION_REQ
+{
   USIGN16 max_nr_of_fal_msg_buffers; /* max # of Layer7-Message-Buffers
                                         (all CR)   */
   USIGN16 max_nr_of_fdl_msg_buffers; /* max # of Layer2-Message-Buffers
@@ -836,7 +866,7 @@ typedef struct T_SET_CONFIGURATION_REQ {
   max_nr_of_sap_buffers; /* max # of SAP-Buffers                 (all CR) */
   USIGN16 max_nr_of_poll_list_entries; /* max # of Poll-List-Entries
                                           (all CR)   */
-  USIGN16 max_data_buffer_size; /* max size of FMS-/FMA7-PDU-Buffer */
+  USIGN16 max_data_buffer_size;        /* max size of FMS-/FMA7-PDU-Buffer */
 } T_SET_CONFIGURATION_REQ;
 #endif
 

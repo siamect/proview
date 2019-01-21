@@ -71,13 +71,14 @@
 // Create the navigator widget
 //
 GsdAttrNavMotif::GsdAttrNavMotif(void* xn_parent_ctx, Widget xn_parent_wid,
-    char* xn_name, pb_gsd* xn_gsd, int xn_edit_mode, Widget* w,
-    pwr_tStatus* status)
+                                 char* xn_name, pb_gsd* xn_gsd,
+                                 int xn_edit_mode, Widget* w,
+                                 pwr_tStatus* status)
     : GsdAttrNav(xn_parent_ctx, xn_name, xn_gsd, xn_edit_mode, status),
       parent_wid(xn_parent_wid)
 {
-  form_widget = ScrolledBrowCreate(
-      parent_wid, name, NULL, 0, init_brow_cb, this, (Widget*)&brow_widget);
+  form_widget = ScrolledBrowCreate(parent_wid, name, NULL, 0, init_brow_cb,
+                                   this, (Widget*)&brow_widget);
   XtManageChild(form_widget);
 
   // Create the root item

@@ -47,10 +47,11 @@
 
 class PnViewerQtWidget;
 
-class PnViewerQt : public PnViewer {
+class PnViewerQt : public PnViewer
+{
 public:
   PnViewerQt(void* v_parent_ctx, QWidget* v_parent_wid, const char* v_name,
-      const char* v_device, pwr_tStatus* status);
+             const char* v_device, pwr_tStatus* status);
 
   QWidget* nav_widget;
   QWidget* navconf_widget;
@@ -67,12 +68,15 @@ public:
   PnViewerQtWidget* toplevel;
 };
 
-class PnViewerQtWidget : public QWidget {
+class PnViewerQtWidget : public QWidget
+{
   Q_OBJECT
 
 public:
   PnViewerQtWidget(PnViewerQt* parent_ctx, QWidget* parent)
-      : QWidget(), viewer(parent_ctx){}
+      : QWidget(), viewer(parent_ctx)
+  {
+  }
 
 protected:
   void focusInEvent(QFocusEvent* event);

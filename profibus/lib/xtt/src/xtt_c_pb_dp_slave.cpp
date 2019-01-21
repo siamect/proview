@@ -68,10 +68,7 @@ void xtt_pb_dp_slave_close_cb(void* sctx)
   free((char*)ctx);
 }
 
-int xtt_pb_dp_slave_save_cb(void* sctx)
-{
-  return 1;
-}
+int xtt_pb_dp_slave_save_cb(void* sctx) { return 1; }
 
 static pwr_tStatus xtt_pb_dp_slave_load_modules(xtt_slave_sCtx* ctx)
 {
@@ -84,17 +81,20 @@ static pwr_tStatus xtt_pb_dp_slave_load_modules(xtt_slave_sCtx* ctx)
   pwr_tAttrRef maref, aaref;
 
   for (sts = gdh_GetChild(ctx->aref.Objid, &oid); ODD(sts);
-       sts = gdh_GetNextSibling(oid, &oid)) {
+       sts = gdh_GetNextSibling(oid, &oid))
+  {
     // Check that this is a module
     sts = gdh_GetObjectClass(oid, &cid);
     if (EVEN(sts))
       return sts;
 
     found = 0;
-    for (int i = 0;; i++) {
+    for (int i = 0;; i++)
+    {
       if (ctx->gsd->module_classlist[i].cid == 0)
         break;
-      if (ctx->gsd->module_classlist[i].cid == cid) {
+      if (ctx->gsd->module_classlist[i].cid == cid)
+      {
         found = 1;
         break;
       }
@@ -165,13 +165,14 @@ static pwr_tStatus xtt_pb_dp_slave_load_modules(xtt_slave_sCtx* ctx)
   if (EVEN(sts))
     return sts;
 
-  sts = gdh_GetObjectInfoAttrref(
-      &aaref, &prm_user_data_len, sizeof(prm_user_data_len));
+  sts = gdh_GetObjectInfoAttrref(&aaref, &prm_user_data_len,
+                                 sizeof(prm_user_data_len));
   if (EVEN(sts))
     return sts;
 
   len = prm_user_data_len;
-  if (len != 0) {
+  if (len != 0)
+  {
     sts = ctx->gsd->unpack_ext_user_prm_data((char*)prm_user_data, len);
     if (EVEN(sts))
       return sts;
@@ -179,8 +180,8 @@ static pwr_tStatus xtt_pb_dp_slave_load_modules(xtt_slave_sCtx* ctx)
   return 1;
 }
 
-pwr_tStatus xtt_pb_dp_slave_create_ctx(
-    pwr_tAttrRef aref, void* editor_ctx, xtt_slave_sCtx** ctxp)
+pwr_tStatus xtt_pb_dp_slave_create_ctx(pwr_tAttrRef aref, void* editor_ctx,
+                                       xtt_slave_sCtx** ctxp)
 {
   pwr_tAName name;
   pwr_tString80 gsdfile;
@@ -204,7 +205,8 @@ pwr_tStatus xtt_pb_dp_slave_create_ctx(
   sts = gdh_GetObjectInfoAttrref(&aaref, gsdfile, sizeof(gsdfile));
   if (EVEN(sts))
     return sts;
-  if (streq(gsdfile, "")) {
+  if (streq(gsdfile, ""))
+  {
     return PB__GSDATTR;
   }
 
@@ -214,7 +216,8 @@ pwr_tStatus xtt_pb_dp_slave_create_ctx(
   // Count modules
   module_cnt = 0;
   for (sts = gdh_GetChild(aref.Objid, &oid); ODD(sts);
-       sts = gdh_GetNextSibling(oid, &oid)) {
+       sts = gdh_GetNextSibling(oid, &oid))
+  {
     module_cnt++;
   }
 
@@ -224,20 +227,23 @@ pwr_tStatus xtt_pb_dp_slave_create_ctx(
 
   ctx->mc[0].cid = pwr_cClass_Pb_Module;
   sts = gdh_ObjidToName(cdh_ClassIdToObjid(ctx->mc[0].cid), ctx->mc[0].name,
-      sizeof(ctx->mc[0].name), cdh_mName_object);
+                        sizeof(ctx->mc[0].name), cdh_mName_object);
   if (EVEN(sts))
     return sts;
   mc_cnt++;
 
   for (sts = gdh_GetChild(aref.Objid, &oid); ODD(sts);
-       sts = gdh_GetNextSibling(oid, &oid)) {
+       sts = gdh_GetNextSibling(oid, &oid))
+  {
     sts = gdh_GetObjectClass(oid, &cid);
     if (EVEN(sts))
       return sts;
 
     found = 0;
-    for (int i = 0; i < mc_cnt; i++) {
-      if (ctx->mc[i].cid == cid) {
+    for (int i = 0; i < mc_cnt; i++)
+    {
+      if (ctx->mc[i].cid == cid)
+      {
         found = 1;
         break;
       }
@@ -247,16 +253,18 @@ pwr_tStatus xtt_pb_dp_slave_create_ctx(
 
     ctx->mc[mc_cnt].cid = cid;
     sts = gdh_ObjidToName(cdh_ClassIdToObjid(cid), ctx->mc[mc_cnt].name,
-        sizeof(ctx->mc[0].name), cdh_mName_object);
+                          sizeof(ctx->mc[0].name), cdh_mName_object);
     if (EVEN(sts))
       return sts;
     mc_cnt++;
   }
 
-  if (strchr(gsdfile, '/') == 0) {
+  if (strchr(gsdfile, '/') == 0)
+  {
     strcpy(fname, "$pwrp_exe/");
     strcat(fname, gsdfile);
-  } else
+  }
+  else
     strcpy(fname, gsdfile);
 
   ctx->gsd = new pb_gsd();

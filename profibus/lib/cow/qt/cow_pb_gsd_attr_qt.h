@@ -47,7 +47,8 @@
 
 class GsdAttrQtWidget;
 
-class GsdAttrQt : public GsdAttr {
+class GsdAttrQt : public GsdAttr
+{
 public:
   QWidget* brow_widget;
   QWidget* form_widget;
@@ -61,7 +62,7 @@ public:
   CoWowFocusTimerQt focustimer;
 
   GsdAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
-      pb_gsd* a_gsd, int a_edit_mode);
+            pb_gsd* a_gsd, int a_edit_mode);
 
   void message(char severity, const char* message);
   void set_prompt(const char* prompt);
@@ -71,7 +72,8 @@ private:
   GsdAttrQtWidget* toplevel;
 };
 
-class GsdAttrQtWidget : public QWidget {
+class GsdAttrQtWidget : public QWidget
+{
   Q_OBJECT
 
 public:
@@ -100,7 +102,7 @@ public slots:
   void activate_cmd_apply();
   void activate_cmd_ca();
 
-  void valchanged_cmd_input(){}
+  void valchanged_cmd_input() {}
 
 private:
   GsdAttrQt* attr;

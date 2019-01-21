@@ -82,7 +82,10 @@ typedef unsigned int gsdml_tUnsigned32;
 typedef unsigned short gsdml_tUnsigned16hex;
 typedef unsigned int gsdml_tUnsigned32hex;
 typedef unsigned int gsdml_tBoolean;
-typedef char gsdml_tSignedOrFloatValueList[4096]; //Allowed values can be pretty large. >3000 characters is not uncommon...
+typedef char gsdml_tSignedOrFloatValueList[4096]; // Allowed values can be
+                                                  // pretty large. >3000
+                                                  // characters is not
+                                                  // uncommon...
 
 typedef enum {
   gsdml_eType_,
@@ -249,24 +252,24 @@ typedef enum {
   gsdml_eTag_MenuRef,
   gsdml_eTag_SystemRedundancy,
   gsdml_eTag_PROFIenergy,
-  gsdml_eTag_Signature, //Ignored
-  gsdml_eTag_SignedInfo, //Ignored
-  gsdml_eTag_CanonicalizationMethod, //Ignored
-  gsdml_eTag_SignatureMethod, //Ignored
-  gsdml_eTag_Reference, //Ignored
-  gsdml_eTag_Transforms, //Ignored
-  gsdml_eTag_Transform, //Ignored
-  gsdml_eTag_DigestMethod, //Ignored
-  gsdml_eTag_DigestValue, //Ignored
-  gsdml_eTag_SignatureValue, //Ignored
-  gsdml_eTag_KeyInfo, //Ignored
-  gsdml_eTag_KeyValue, //Ignored
-  gsdml_eTag_RSAKeyValue, //Ignored
-  gsdml_eTag_Modulus, //Ignored
-  gsdml_eTag_Exponent, //Ignored
-  gsdml_eTag_Object, //Ignored
-  gsdml_eTag_SignatureProperties, //Ignored
-  gsdml_eTag_SignatureProperty, //Ignored
+  gsdml_eTag_Signature,              // Ignored
+  gsdml_eTag_SignedInfo,             // Ignored
+  gsdml_eTag_CanonicalizationMethod, // Ignored
+  gsdml_eTag_SignatureMethod,        // Ignored
+  gsdml_eTag_Reference,              // Ignored
+  gsdml_eTag_Transforms,             // Ignored
+  gsdml_eTag_Transform,              // Ignored
+  gsdml_eTag_DigestMethod,           // Ignored
+  gsdml_eTag_DigestValue,            // Ignored
+  gsdml_eTag_SignatureValue,         // Ignored
+  gsdml_eTag_KeyInfo,                // Ignored
+  gsdml_eTag_KeyValue,               // Ignored
+  gsdml_eTag_RSAKeyValue,            // Ignored
+  gsdml_eTag_Modulus,                // Ignored
+  gsdml_eTag_Exponent,               // Ignored
+  gsdml_eTag_Object,                 // Ignored
+  gsdml_eTag_SignatureProperties,    // Ignored
+  gsdml_eTag_SignatureProperty,      // Ignored
   gsdml_eTag__
 } gsdml_eTag;
 
@@ -1321,7 +1324,7 @@ public:
   gsdml_SystemRedundancy(pn_gsdml* g);
   gsdml_sSystemRedundancy Body;
   pn_gsdml* gsdml;
-  ~gsdml_SystemRedundancy() {};
+  ~gsdml_SystemRedundancy(){};
 };
 
 typedef struct
@@ -1808,14 +1811,18 @@ public:
   static int string_to_value_datatype(char* str, gsdml_eValueDataType* type);
   int datavalue_to_string(gsdml_eValueDataType datatype, void* value,
                           unsigned int size, char* str, unsigned int strsize);
-  int string_to_datavalue(gsdml_eValueDataType datatype, void* value, void* value_reversed_endianess,
-                          unsigned int size, const char* str);
+  int string_to_datavalue(gsdml_eValueDataType datatype, void* value,
+                          void* value_reversed_endianess, unsigned int size,
+                          const char* str);
   int get_datavalue_length(gsdml_eValueDataType datatype, int strlength,
                            unsigned int* len);
   void set_classes(gsdml_sModuleClass* mclist) { module_classlist = mclist; }
-  int set_par_record_default(unsigned char* data, unsigned char* data_reversed_endianess, int size,
+  int set_par_record_default(unsigned char* data,
+                             unsigned char* data_reversed_endianess, int size,
                              gsdml_ParameterRecordDataItem* par_record);
-  int populate_and_align_par_reversed_record_data(unsigned char const* read_data, unsigned char* reversed_data, gsdml_ParameterRecordDataItem* par_record);
+  int populate_and_align_par_reversed_record_data(
+      unsigned char const* read_data, unsigned char* reversed_data,
+      gsdml_ParameterRecordDataItem* par_record);
 
   bool next_token();
   bool is_space(const char c);
@@ -1835,12 +1842,14 @@ public:
   void* object_factory(gsdml_eTag id);
   void* find_value_ref(char* ref);
   void* find_module_ref(char* ref);
-  void* find_submodule_ref(char* ref, gsdml_eSubmoduleType *type);
+  void* find_submodule_ref(char* ref, gsdml_eSubmoduleType* type);
   void* find_category_ref(char* ref);
   void* find_text_ref(char* ref);
   void* find_graphic_ref(char* ref);
-  gsdml_Ref* find_ref_ref(char* ref, gsdml_ParameterRecordDataItem* search_domain);
-  gsdml_MenuItem* find_menuitem_ref(char* ref, gsdml_ParameterRecordDataItem* search_domain);
+  gsdml_Ref* find_ref_ref(char* ref,
+                          gsdml_ParameterRecordDataItem* search_domain);
+  gsdml_MenuItem*
+  find_menuitem_ref(char* ref, gsdml_ParameterRecordDataItem* search_domain);
   void gsdml_print();
   void build();
 };

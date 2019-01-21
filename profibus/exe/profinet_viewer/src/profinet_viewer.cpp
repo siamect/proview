@@ -44,10 +44,7 @@
 
 #include "co_string.h"
 
-static void usage()
-{
-  printf("\nUsage: profinet_viewer\n");
-}
+static void usage() { printf("\nUsage: profinet_viewer\n"); }
 
 int main(int argc, char* argv[])
 {
@@ -56,10 +53,14 @@ int main(int argc, char* argv[])
   char wmg[80];
   pwr_tFileName file;
 
-  if (argc > 1) {
-    for (i = 1; i < argc; i++) {
-      if (streq(argv[i], "-f")) {
-        if (i + 1 >= argc) {
+  if (argc > 1)
+  {
+    for (i = 1; i < argc; i++)
+    {
+      if (streq(argv[i], "-f"))
+      {
+        if (i + 1 >= argc)
+        {
           usage();
           exit(0);
         }

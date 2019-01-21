@@ -49,7 +49,8 @@
 
 class GsdmlAttrQtWidget;
 
-class GsdmlAttrQt : public GsdmlAttr {
+class GsdmlAttrQt : public GsdmlAttr
+{
 public:
   GsdmlAttrQtWidget* toplevel;
   QWidget* brow_widget;
@@ -66,8 +67,8 @@ public:
   CoWowEntryQt* cmd_entry;
 
   GsdmlAttrQt(QWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
-      pn_gsdml* a_gsdml, int a_edit_mode, const char* a_data_filename,
-      pwr_tStatus* a_sts);
+              pn_gsdml* a_gsdml, int a_edit_mode, const char* a_data_filename,
+              pwr_tStatus* a_sts);
 
   void message(char severity, const char* message);
   void attr_help_text(const char* help_text);
@@ -75,7 +76,8 @@ public:
   void change_value();
 };
 
-class GsdmlAttrQtWidget : public QWidget {
+class GsdmlAttrQtWidget : public QWidget
+{
   Q_OBJECT
 
 public:
@@ -110,7 +112,7 @@ public slots:
   void activate_cmd_apply();
   void activate_cmd_ca();
 
-  void valchanged_cmd_entry(){}
+  void valchanged_cmd_entry() {}
 
 private:
   GsdmlAttrQt* attr;

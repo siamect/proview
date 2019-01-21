@@ -41,10 +41,11 @@
 
 #include "../src/pn_viewernav.h"
 
-class PnViewerNavQt : public PnViewerNav {
+class PnViewerNavQt : public PnViewerNav
+{
 public:
   PnViewerNavQt(void* v_parent_ctx, QWidget* v_parent_wid, viewer_eType v_type,
-      QWidget** w);
+                QWidget** w);
   ~PnViewerNavQt();
 
   QWidget* brow_widget;

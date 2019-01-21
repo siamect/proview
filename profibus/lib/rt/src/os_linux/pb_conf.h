@@ -152,32 +152,32 @@ typedef unsigned long DWORD;
 
 /* -- constants of internal sizes of byte arrays --------------------------- */
 
-#define VFD_STRING_LENGTH 32 /* max length of the VFD string */
+#define VFD_STRING_LENGTH 32   /* max length of the VFD string */
 #define IDENT_STRING_LENGTH 32 /* max length of the Ident string */
 
-#define ACCESS_NAME_LENGTH 32 /* max length for name adressing */
-#define OBJECT_NAME_LENGTH 32 /* max length of object name */
-#define EXTENSION_LENGTH 32 /* max length of object extension */
+#define ACCESS_NAME_LENGTH 32        /* max length for name adressing */
+#define OBJECT_NAME_LENGTH 32        /* max length of object name */
+#define EXTENSION_LENGTH 32          /* max length of object extension */
 #define EXECUTION_ARGUMENT_LENGTH 32 /* max length of exec. argument */
-#define ERROR_DESCR_LENGTH 32 /* max length of error descript.*/
-#define CRL_SYMBOL_LENGTH 32 /* max length of crl symbol name */
-#define CRL_EXTENSION_LENGTH 2 /* max length of crl extension */
+#define ERROR_DESCR_LENGTH 32        /* max length of error descript.*/
+#define CRL_SYMBOL_LENGTH 32         /* max length of crl symbol name */
+#define CRL_EXTENSION_LENGTH 2       /* max length of crl extension */
 
 #if (PB_VER < 500)
 #define KBL_SYMBOL_LENGTH CRL_SYMBOL_LENGTH
 #define KBL_EXTENSION_LENGTH CRL_EXTENSION_LENGTH
 #endif
 
-#define MAX_FMS_PDU_LENGTH 241 /* max size of the FMS/FM7-PDU-Buffer */
-#define MAX_VAR_LIST_ELEMENTS 50 /* max count of variable list elements */
-#define MAX_DOM_LIST_ELEMENTS 50 /* max count of domain list elements */
+#define MAX_FMS_PDU_LENGTH 241     /* max size of the FMS/FM7-PDU-Buffer */
+#define MAX_VAR_LIST_ELEMENTS 50   /* max count of variable list elements */
+#define MAX_DOM_LIST_ELEMENTS 50   /* max count of domain list elements */
 #define MAX_VAR_RECORD_ELEMENTS 10 /* max count of record elements */
 
 #define MAX_COMREF 64 /* max supported communication references */
-#define MAX_VFD 5 /* max supported VFDs */
+#define MAX_VFD 5     /* max supported VFDs */
 
 #if (PB_VER < 500)
-#define MAX_KBL_LEN MAX_COMREF /* max entries in CRL */
+#define MAX_KBL_LEN MAX_COMREF  /* max entries in CRL */
 #define MAX_PARA_LOC_SERVICES 5 /* max parallel local FMS-Services*/
 #endif
 

@@ -237,7 +237,8 @@ static gsdml_sTag taglist[] = {
     {"PROFIenergy", gsdml_eTag_PROFIenergy, gsdml_eType_, 0, 0, 1},
     {"Signature", gsdml_eTag_Signature, gsdml_eType_, 0, 0, 0},
     {"SignedInfo", gsdml_eTag_SignedInfo, gsdml_eType_, 0, 0, 0},
-    {"CanonicalizationMethod", gsdml_eTag_CanonicalizationMethod, gsdml_eType_, 0, 0, 0},
+    {"CanonicalizationMethod", gsdml_eTag_CanonicalizationMethod, gsdml_eType_,
+     0, 0, 0},
     {"SignatureMethod", gsdml_eTag_SignatureMethod, gsdml_eType_, 0, 0, 0},
     {"Reference", gsdml_eTag_Reference, gsdml_eType_, 0, 0, 0},
     {"Transforms", gsdml_eTag_Transforms, gsdml_eType_, 0, 0, 0},
@@ -251,7 +252,8 @@ static gsdml_sTag taglist[] = {
     {"Modulus", gsdml_eTag_Modulus, gsdml_eType_, 0, 0, 0},
     {"Exponent", gsdml_eTag_Exponent, gsdml_eType_, 0, 0, 0},
     {"Object", gsdml_eTag_Object, gsdml_eType_, 0, 0, 0},
-    {"SignatureProperties", gsdml_eTag_SignatureProperties, gsdml_eType_, 0, 0, 0},
+    {"SignatureProperties", gsdml_eTag_SignatureProperties, gsdml_eType_, 0, 0,
+     0},
     {"SignatureProperty", gsdml_eTag_SignatureProperty, gsdml_eType_, 0, 0, 0},
     {"", gsdml_eTag_, gsdml_eType_, 0, 0, 1}};
 
@@ -388,9 +390,10 @@ static gsdml_sAttribute attrlist[] = {
     {"NumberOfSubmodules", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_,
      gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
      offsetof(gsdml_sDeviceAccessPointItem, NumberOfSubmodules), 0, "0"},
-    {"PrmBeginPrmEndSequenceSupported", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_,
-     gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
-     offsetof(gsdml_sDeviceAccessPointItem, PrmBeginPrmEndSequenceSupported), 0, "false"},
+    {"PrmBeginPrmEndSequenceSupported", gsdml_eTag_DeviceAccessPointItem,
+     gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
+     offsetof(gsdml_sDeviceAccessPointItem, PrmBeginPrmEndSequenceSupported), 0,
+     "false"},
     {"CIR_Supported", gsdml_eTag_DeviceAccessPointItem, gsdml_eTag_,
      gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
      offsetof(gsdml_sDeviceAccessPointItem, CIR_Supported), 0, "false"},
@@ -922,7 +925,7 @@ static gsdml_sAttribute attrlist[] = {
     {"MaxNumberIR_FrameData", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
      gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
      offsetof(gsdml_sRT_Class3Properties, MaxNumberIR_FrameData), 0, ""},
-     {"MaxRangeIR_FrameID", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
+    {"MaxRangeIR_FrameID", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
      gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
      offsetof(gsdml_sRT_Class3Properties, MaxRangeIR_FrameID), 0, ""},
     // Added without spec
@@ -956,8 +959,8 @@ static gsdml_sAttribute attrlist[] = {
     {"MaxDFP_Frames", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
      gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
      offsetof(gsdml_sRT_Class3Properties, MaxDFP_Frames), 0, ""},
-    {"AlignDFP_Subframes", gsdml_eTag_RT_Class3Properties,
-     gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
+    {"AlignDFP_Subframes", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
+     gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
      offsetof(gsdml_sRT_Class3Properties, AlignDFP_Subframes), 0, "false"},
     {"FragmentationType", gsdml_eTag_RT_Class3Properties, gsdml_eTag_,
      gsdml_eType_String, sizeof(gsdml_tString),
@@ -1088,8 +1091,8 @@ static gsdml_sAttribute attrlist[] = {
     {"MaxMRP_Instances", gsdml_eTag_MediaRedundancy, gsdml_eTag_,
      gsdml_eType_Integer, sizeof(gsdml_tInteger),
      offsetof(gsdml_sMediaRedundancy, MaxMRP_Instances), 0, "1"},
-    {"AdditionalForwardingRulesSupported", gsdml_eTag_MediaRedundancy, gsdml_eTag_,
-     gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
+    {"AdditionalForwardingRulesSupported", gsdml_eTag_MediaRedundancy,
+     gsdml_eTag_, gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
      offsetof(gsdml_sMediaRedundancy, AdditionalForwardingRulesSupported), 0,
      "false"},
     //
@@ -1147,8 +1150,8 @@ static gsdml_sAttribute attrlist[] = {
     {"Writeable_IM_Records", gsdml_eTag_PortSubmoduleItem, gsdml_eTag_,
      gsdml_eType_ValueList, sizeof(gsdml_tValueList),
      offsetof(gsdml_sPortSubmoduleItem, Writeable_IM_Records), 0, "0"},
-    {"ShortPreamble100MBitSupported", gsdml_eTag_PortSubmoduleItem,
-     gsdml_eTag_, gsdml_eType_, sizeof(gsdml_tBoolean),
+    {"ShortPreamble100MBitSupported", gsdml_eTag_PortSubmoduleItem, gsdml_eTag_,
+     gsdml_eType_, sizeof(gsdml_tBoolean),
      offsetof(gsdml_sPortSubmoduleItem, ShortPreamble100MBitSupported), 0,
      "false"},
     //
@@ -1281,8 +1284,8 @@ static gsdml_sAttribute attrlist[] = {
      offsetof(gsdml_sUnitDiagTypeItem, UserStructureIdentifier), 0, ""},
     {"API", gsdml_eTag_UnitDiagTypeItem, gsdml_eTag_, gsdml_eType_Unsigned32,
      sizeof(gsdml_tUnsigned32), offsetof(gsdml_sUnitDiagTypeItem, API), 0, ""},
-    {"TextId", gsdml_eTag_Name, gsdml_eTag_UnitDiagTypeItem, gsdml_eType_RefIdT, sizeof(gsdml_tRefIdT),
-     offsetof(gsdml_sUnitDiagTypeItem, Name), 0, ""},
+    {"TextId", gsdml_eTag_Name, gsdml_eTag_UnitDiagTypeItem, gsdml_eType_RefIdT,
+     sizeof(gsdml_tRefIdT), offsetof(gsdml_sUnitDiagTypeItem, Name), 0, ""},
     //
     // GraphicItem
     //
@@ -1312,47 +1315,66 @@ static gsdml_sAttribute attrlist[] = {
     {"xml:lang", gsdml_eTag_Language, gsdml_eTag_, gsdml_eType_Enum,
      sizeof(gsdml_tEnum), offsetof(gsdml_sLanguage, xml_lang), 0, ""},
     // MenuItem
-    {"ID", gsdml_eTag_MenuItem, gsdml_eTag_MenuList, gsdml_eType_RefId, sizeof(gsdml_tRefId),
-     offsetof(gsdml_sMenuItem, ID), 0, ""},
-    {"TextId", gsdml_eTag_Name, gsdml_eTag_MenuItem, gsdml_eType_RefIdT, sizeof(gsdml_tRefIdT),
-     offsetof(gsdml_sMenuItem, Name), 0, ""},
+    {"ID", gsdml_eTag_MenuItem, gsdml_eTag_MenuList, gsdml_eType_RefId,
+     sizeof(gsdml_tRefId), offsetof(gsdml_sMenuItem, ID), 0, ""},
+    {"TextId", gsdml_eTag_Name, gsdml_eTag_MenuItem, gsdml_eType_RefIdT,
+     sizeof(gsdml_tRefIdT), offsetof(gsdml_sMenuItem, Name), 0, ""},
     // ParameterRef
-    {"ParameterTarget", gsdml_eTag_ParameterRef, gsdml_eTag_MenuItem, gsdml_eType_RefId, sizeof(gsdml_tRefId),
+    {"ParameterTarget", gsdml_eTag_ParameterRef, gsdml_eTag_MenuItem,
+     gsdml_eType_RefId, sizeof(gsdml_tRefId),
      offsetof(gsdml_sParameterRef, ParameterTarget), 0, ""},
     // MenuRef
-    {"MenuTarget", gsdml_eTag_MenuRef, gsdml_eTag_MenuItem, gsdml_eType_RefId, sizeof(gsdml_tRefId),
-     offsetof(gsdml_sParameterRef, ParameterTarget), 0, ""},
+    {"MenuTarget", gsdml_eTag_MenuRef, gsdml_eTag_MenuItem, gsdml_eType_RefId,
+     sizeof(gsdml_tRefId), offsetof(gsdml_sParameterRef, ParameterTarget), 0,
+     ""},
     // SystemRedundancy
-    {"DeviceType", gsdml_eTag_SystemRedundancy, gsdml_eTag_DeviceAccessPointItem, gsdml_eType_String, sizeof(gsdml_tString),
-     offsetof(gsdml_sSystemRedundancy, DeviceType), 0, ""},
-    {"MaxSwitchOverTime", gsdml_eTag_SystemRedundancy, gsdml_eTag_DeviceAccessPointItem, gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+    {"DeviceType", gsdml_eTag_SystemRedundancy,
+     gsdml_eTag_DeviceAccessPointItem, gsdml_eType_String,
+     sizeof(gsdml_tString), offsetof(gsdml_sSystemRedundancy, DeviceType), 0,
+     ""},
+    {"MaxSwitchOverTime", gsdml_eTag_SystemRedundancy,
+     gsdml_eTag_DeviceAccessPointItem, gsdml_eType_Unsigned16,
+     sizeof(gsdml_tUnsigned16),
      offsetof(gsdml_sSystemRedundancy, MaxSwitchOverTime), 0, ""},
-    {"RT_InputOnBackupAR_Supported", gsdml_eTag_SystemRedundancy, gsdml_eTag_DeviceAccessPointItem, gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
+    {"RT_InputOnBackupAR_Supported", gsdml_eTag_SystemRedundancy,
+     gsdml_eTag_DeviceAccessPointItem, gsdml_eType_Boolean,
+     sizeof(gsdml_tBoolean),
      offsetof(gsdml_sSystemRedundancy, RT_InputOnBackupAR_Supported), 0, ""},
-    {"NumberOfAR_Sets", gsdml_eTag_SystemRedundancy, gsdml_eTag_DeviceAccessPointItem, gsdml_eType_Unsigned16, sizeof(gsdml_tUnsigned16),
+    {"NumberOfAR_Sets", gsdml_eTag_SystemRedundancy,
+     gsdml_eTag_DeviceAccessPointItem, gsdml_eType_Unsigned16,
+     sizeof(gsdml_tUnsigned16),
      offsetof(gsdml_sSystemRedundancy, NumberOfAR_Sets), 0, ""},
-    {"DataInvalidOnBackupAR_Supported", gsdml_eTag_SystemRedundancy, gsdml_eTag_DeviceAccessPointItem, gsdml_eType_Boolean, sizeof(gsdml_tBoolean),
+    {"DataInvalidOnBackupAR_Supported", gsdml_eTag_SystemRedundancy,
+     gsdml_eTag_DeviceAccessPointItem, gsdml_eType_Boolean,
+     sizeof(gsdml_tBoolean),
      offsetof(gsdml_sSystemRedundancy, DataInvalidOnBackupAR_Supported), 0, ""},
     // PROFIenergy
-    {"ProfileVersion", gsdml_eTag_PROFIenergy, gsdml_eTag_VirtualSubmoduleItem, gsdml_eType_String, sizeof(gsdml_tString),
+    {"ProfileVersion", gsdml_eTag_PROFIenergy, gsdml_eTag_VirtualSubmoduleItem,
+     gsdml_eType_String, sizeof(gsdml_tString),
      offsetof(gsdml_sPROFIenergy, ProfileVersion), 0, ""},
     // Signature, ignored
     {"Id", gsdml_eTag_Signature, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
     // CanonicalizationMethod , ignored
-    {"Algorithm", gsdml_eTag_CanonicalizationMethod, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
+    {"Algorithm", gsdml_eTag_CanonicalizationMethod, gsdml_eTag_, gsdml_eType_,
+     0, 0, 1, ""},
     // SignatureMethod, ignored
-    {"Algorithm", gsdml_eTag_SignatureMethod, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
+    {"Algorithm", gsdml_eTag_SignatureMethod, gsdml_eTag_, gsdml_eType_, 0, 0,
+     1, ""},
     // Reference, ignored
     {"URI", gsdml_eTag_Reference, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
     // Transform, ignored
     {"Algorithm", gsdml_eTag_Transform, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
     // DigestMethod, ignored
-    {"Algorithm", gsdml_eTag_DigestMethod, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
+    {"Algorithm", gsdml_eTag_DigestMethod, gsdml_eTag_, gsdml_eType_, 0, 0, 1,
+     ""},
     // SignatureProperty, ignored
-    {"Id", gsdml_eTag_SignatureProperty, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
-    {"Target", gsdml_eTag_SignatureProperty, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
+    {"Id", gsdml_eTag_SignatureProperty, gsdml_eTag_, gsdml_eType_, 0, 0, 1,
+     ""},
+    {"Target", gsdml_eTag_SignatureProperty, gsdml_eTag_, gsdml_eType_, 0, 0, 1,
+     ""},
     // SignatureProperties, ignored
-    {"Id", gsdml_eTag_SignatureProperties, gsdml_eTag_, gsdml_eType_, 0, 0, 1, ""},
+    {"Id", gsdml_eTag_SignatureProperties, gsdml_eTag_, gsdml_eType_, 0, 0, 1,
+     ""},
     //
     {"", gsdml_eTag_, gsdml_eTag_, gsdml_eType_, 0, 0, 0, ""}};
 
@@ -2110,8 +2132,10 @@ int pn_gsdml::tag_attribute(const char* name, const char* value)
 
 int pn_gsdml::find_tag(const char* name, int* idx)
 {
-  for (unsigned int i = 0; i < sizeof(taglist) / sizeof(taglist[0]); i++) {
-    if (streq(taglist[i].name, name)) {
+  for (unsigned int i = 0; i < sizeof(taglist) / sizeof(taglist[0]); i++)
+  {
+    if (streq(taglist[i].name, name))
+    {
       *idx = i;
       return 1;
     }
@@ -2135,10 +2159,12 @@ int pn_gsdml::find_tag(gsdml_eTag id, int* idx)
 int pn_gsdml::find_tag_attribute(const char* name, gsdml_eTag id,
                                  gsdml_eTag pid, int* idx)
 {
-  for (unsigned int i = 0; i < sizeof(attrlist) / sizeof(attrlist[0]); i++) {
-    if (streq(attrlist[i].name, name)
-        && (attrlist[i].id == gsdml_eTag_ || attrlist[i].id == id)
-        && (attrlist[i].pid == gsdml_eTag_ || pid == attrlist[i].pid)) {
+  for (unsigned int i = 0; i < sizeof(attrlist) / sizeof(attrlist[0]); i++)
+  {
+    if (streq(attrlist[i].name, name) &&
+        (attrlist[i].id == gsdml_eTag_ || attrlist[i].id == id) &&
+        (attrlist[i].pid == gsdml_eTag_ || pid == attrlist[i].pid))
+    {
       *idx = i;
       return 1;
     }
@@ -2425,8 +2451,9 @@ int pn_gsdml::datavalue_to_string(gsdml_eValueDataType datatype, void* value,
   return 1;
 }
 
-int pn_gsdml::string_to_datavalue(gsdml_eValueDataType datatype, void* value, void* value_reversed_endianess,
-  unsigned int size, const char* str)
+int pn_gsdml::string_to_datavalue(gsdml_eValueDataType datatype, void* value,
+                                  void* value_reversed_endianess,
+                                  unsigned int size, const char* str)
 {
   switch (datatype)
   {
@@ -2592,8 +2619,9 @@ int pn_gsdml::string_to_datavalue(gsdml_eValueDataType datatype, void* value, vo
     }
     for (unsigned int i = 0; i < size; i++)
     {
-      len = sscanf(&str[i * 5], "0x%2hhx",
-                   (unsigned char*)((unsigned char*)value_reversed_endianess + i));
+      len = sscanf(
+          &str[i * 5], "0x%2hhx",
+          (unsigned char*)((unsigned char*)value_reversed_endianess + i));
       if (len != 1)
         break;
     }
@@ -2660,8 +2688,10 @@ int pn_gsdml::get_datavalue_length(gsdml_eValueDataType datatype, int strlength,
 
 int pn_gsdml::set_default_values(gsdml_eTag id, void* data, unsigned int size)
 {
-  for (unsigned int i = 0; i < sizeof(attrlist) / sizeof(attrlist[0]); i++) {
-    if (attrlist[i].id == id && !streq(attrlist[i].default_value, "")) {
+  for (unsigned int i = 0; i < sizeof(attrlist) / sizeof(attrlist[0]); i++)
+  {
+    if (attrlist[i].id == id && !streq(attrlist[i].default_value, ""))
+    {
 
       if (attrlist[i].offset + attrlist[i].size > size)
         continue;
@@ -3192,7 +3222,9 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
   {
     gsdml_MenuList* o = new gsdml_MenuList(this);
 
-    gsdml_ParameterRecordDataItem* parent = (gsdml_ParameterRecordDataItem*)get_object_stack(gsdml_eTag_ParameterRecordDataItem);
+    gsdml_ParameterRecordDataItem* parent =
+        (gsdml_ParameterRecordDataItem*)get_object_stack(
+            gsdml_eTag_ParameterRecordDataItem);
     if (!parent)
     {
       error_message_line("Misplaced MenuList");
@@ -3209,7 +3241,8 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     current_body = &o->Body;
     current_body_size = sizeof(gsdml_sMenuItem);
 
-    gsdml_MenuList* parent = (gsdml_MenuList*)get_object_stack(gsdml_eTag_MenuList);
+    gsdml_MenuList* parent =
+        (gsdml_MenuList*)get_object_stack(gsdml_eTag_MenuList);
     if (!parent)
     {
       error_message_line("Misplaced MenuItem tag");
@@ -3226,7 +3259,8 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     current_body = &o->Body;
     current_body_size = sizeof(gsdml_sMenuRef);
 
-    gsdml_MenuItem* parent = (gsdml_MenuItem*)get_object_stack(gsdml_eTag_MenuItem);
+    gsdml_MenuItem* parent =
+        (gsdml_MenuItem*)get_object_stack(gsdml_eTag_MenuItem);
     if (!parent)
     {
       error_message_line("Misplaced MenuRef tag");
@@ -3243,7 +3277,8 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     current_body = &o->Body;
     current_body_size = sizeof(gsdml_sParameterRef);
 
-    gsdml_MenuItem* parent = (gsdml_MenuItem*)get_object_stack(gsdml_eTag_MenuItem);
+    gsdml_MenuItem* parent =
+        (gsdml_MenuItem*)get_object_stack(gsdml_eTag_MenuItem);
     if (!parent)
     {
       error_message_line("Misplaced ParameterRef tag");
@@ -3334,7 +3369,9 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     current_body = &o->Body;
     current_body_size = sizeof(gsdml_sPROFIenergy);
 
-    gsdml_VirtualSubmoduleItem* p = (gsdml_VirtualSubmoduleItem*)get_object_stack(gsdml_eTag_VirtualSubmoduleItem);
+    gsdml_VirtualSubmoduleItem* p =
+        (gsdml_VirtualSubmoduleItem*)get_object_stack(
+            gsdml_eTag_VirtualSubmoduleItem);
     if (!p)
     {
       error_message_line("Misplaced PROFIenergy");
@@ -3636,7 +3673,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     set_default_values(gsdml_eTag_PortSubmoduleItem, current_body,
                        current_body_size);
 
-    void* p =get_object_stack(gsdml_eTag_SystemDefinedSubmoduleList);
+    void* p = get_object_stack(gsdml_eTag_SystemDefinedSubmoduleList);
     if (p)
     {
       ((gsdml_SystemDefinedSubmoduleList*)p)->PortSubmoduleItem.push_back(o);
@@ -4096,7 +4133,9 @@ void* pn_gsdml::find_value_ref(char* ref)
 {
   if (!ApplicationProcess || !ApplicationProcess->ValueList)
     return 0;
-  for (unsigned int i = 0; i < ApplicationProcess->ValueList->ValueItem.size(); i++) {
+  for (unsigned int i = 0; i < ApplicationProcess->ValueList->ValueItem.size();
+       i++)
+  {
     if (streq(ApplicationProcess->ValueList->ValueItem[i]->Body.ID, ref))
       return (void*)ApplicationProcess->ValueList->ValueItem[i];
   }
@@ -4126,18 +4165,20 @@ void* pn_gsdml::find_submodule_ref(char* ref, gsdml_eSubmoduleType* type)
   for (unsigned int i = 0;
        i < ApplicationProcess->SubmoduleList->SubmoduleItem.size(); i++)
   {
-    if (strcmp(ApplicationProcess->SubmoduleList->SubmoduleItem[i]->Body.ID, ref) == 0)
+    if (strcmp(ApplicationProcess->SubmoduleList->SubmoduleItem[i]->Body.ID,
+               ref) == 0)
     {
       *type = gsdml_eSubmoduleType_SubmoduleItem;
       return (void*)ApplicationProcess->SubmoduleList->SubmoduleItem[i];
     }
   }
 
-  //Search for port submodules
+  // Search for port submodules
   for (unsigned int i = 0;
        i < ApplicationProcess->SubmoduleList->PortSubmoduleItem.size(); i++)
   {
-    if (strcmp(ApplicationProcess->SubmoduleList->PortSubmoduleItem[i]->Body.ID, ref) == 0)
+    if (strcmp(ApplicationProcess->SubmoduleList->PortSubmoduleItem[i]->Body.ID,
+               ref) == 0)
     {
       *type = gsdml_eSubmoduleType_PortSubmoduleItem;
       return (void*)ApplicationProcess->SubmoduleList->PortSubmoduleItem[i];
@@ -4175,7 +4216,8 @@ void* pn_gsdml::find_graphic_ref(char* ref)
   return 0;
 }
 
-gsdml_Ref* pn_gsdml::find_ref_ref(char* ref, gsdml_ParameterRecordDataItem* search_domain)
+gsdml_Ref* pn_gsdml::find_ref_ref(char* ref,
+                                  gsdml_ParameterRecordDataItem* search_domain)
 {
   if (!search_domain)
     return 0;
@@ -4187,7 +4229,9 @@ gsdml_Ref* pn_gsdml::find_ref_ref(char* ref, gsdml_ParameterRecordDataItem* sear
   return 0;
 }
 
-gsdml_MenuItem* pn_gsdml::find_menuitem_ref(char* ref, gsdml_ParameterRecordDataItem* search_domain)
+gsdml_MenuItem*
+pn_gsdml::find_menuitem_ref(char* ref,
+                            gsdml_ParameterRecordDataItem* search_domain)
 {
   if (!search_domain)
     return 0;
@@ -4205,7 +4249,8 @@ void* pn_gsdml::find_text_ref(char* ref)
     return noref;
 
   int lang_idx = -1;
-  if (!streq(current_lang, "")) {
+  if (!streq(current_lang, ""))
+  {
 
     for (unsigned int i = 0;
          i < ApplicationProcess->ExternalTextList->Language.size(); i++)
@@ -4316,12 +4361,15 @@ int pn_gsdml::ostring_to_data(unsigned char** data, const char* str, int size,
   return 1;
 }
 
-int pn_gsdml::populate_and_align_par_reversed_record_data(unsigned const char* read_data, unsigned char* reversed_data, gsdml_ParameterRecordDataItem* par_record)
+int pn_gsdml::populate_and_align_par_reversed_record_data(
+    unsigned const char* read_data, unsigned char* reversed_data,
+    gsdml_ParameterRecordDataItem* par_record)
 {
   gsdml_eValueDataType type;
   int sts;
 
-  for (std::vector<gsdml_Ref*>::iterator ref = par_record->Ref.begin(); ref != par_record->Ref.end(); ref++)
+  for (std::vector<gsdml_Ref*>::iterator ref = par_record->Ref.begin();
+       ref != par_record->Ref.end(); ref++)
   {
     // Get the datatype and the offset within the data
     sts = string_to_value_datatype((*ref)->Body.DataType, &type);
@@ -4362,7 +4410,7 @@ int pn_gsdml::populate_and_align_par_reversed_record_data(unsigned const char* r
     case gsdml_eValueDataType_Float64:
     {
       char data_array[8];
-       memcpy(data_array, (read_data + offset), sizeof(data_array));
+      memcpy(data_array, (read_data + offset), sizeof(data_array));
       *(reversed_data + offset) = data_array[7];
       *(reversed_data + offset + 1) = data_array[6];
       *(reversed_data + offset + 2) = data_array[5];
@@ -4385,14 +4433,17 @@ int pn_gsdml::populate_and_align_par_reversed_record_data(unsigned const char* r
   return 1;
 }
 
-int pn_gsdml::set_par_record_default(unsigned char* data, unsigned char* data_reversed_endianess, int size,
+int pn_gsdml::set_par_record_default(unsigned char* data,
+                                     unsigned char* data_reversed_endianess,
+                                     int size,
                                      gsdml_ParameterRecordDataItem* par_record)
 {
   gsdml_eValueDataType type;
   int sts;
   int datasize;
 
-  for (unsigned int i = 0; i < par_record->Ref.size(); i++) {
+  for (unsigned int i = 0; i < par_record->Ref.size(); i++)
+  {
     if (streq(par_record->Ref[i]->Body.DefaultValue, ""))
       continue;
 
@@ -4444,12 +4495,14 @@ int pn_gsdml::set_par_record_default(unsigned char* data, unsigned char* data_re
       if (streq(par_record->Ref[i]->Body.DefaultValue, "0"))
       {
         *(data + par_record->Ref[i]->Body.ByteOffset) &= ~mask;
-        *(data_reversed_endianess + par_record->Ref[i]->Body.ByteOffset) &= ~mask;
+        *(data_reversed_endianess + par_record->Ref[i]->Body.ByteOffset) &=
+            ~mask;
       }
       else if (streq(par_record->Ref[i]->Body.DefaultValue, "1"))
       {
         *(data + par_record->Ref[i]->Body.ByteOffset) |= mask;
-        *(data_reversed_endianess + par_record->Ref[i]->Body.ByteOffset) |= mask;
+        *(data_reversed_endianess + par_record->Ref[i]->Body.ByteOffset) |=
+            mask;
       }
       break;
     }
@@ -4668,25 +4721,29 @@ gsdml_ModuleInfo::gsdml_ModuleInfo(pn_gsdml* g) : gsdml(g)
 
 void gsdml_ModuleInfo::build()
 {
-  if (!streq(Body.Name.ref, "")) {
+  if (!streq(Body.Name.ref, ""))
+  {
     Body.Name.p = gsdml->find_text_ref(Body.Name.ref);
     if (Body.Name.p == noref)
       gsdml->error_message("Name not found: \"%s\"", Body.Name.ref);
   }
 
-  if (!streq(Body.InfoText.ref, "")) {
+  if (!streq(Body.InfoText.ref, ""))
+  {
     Body.InfoText.p = gsdml->find_text_ref(Body.InfoText.ref);
     if (Body.InfoText.p == noref)
       gsdml->error_message("InfoText not found: \"%s\"", Body.InfoText.ref);
   }
 
-  if (!streq(Body.CategoryRef.ref, "")) {
+  if (!streq(Body.CategoryRef.ref, ""))
+  {
     Body.CategoryRef.p = gsdml->find_category_ref(Body.CategoryRef.ref);
     if (!Body.CategoryRef.p)
       gsdml->error_message("CategoryRef not found: \"%s\"",
                            Body.CategoryRef.ref);
   }
-  if (!streq(Body.SubCategory1Ref.ref, "")) {
+  if (!streq(Body.SubCategory1Ref.ref, ""))
+  {
     Body.SubCategory1Ref.p = gsdml->find_category_ref(Body.SubCategory1Ref.ref);
     if (!Body.SubCategory1Ref.p)
       gsdml->error_message("SubCategory1Ref not found: \"%s\"",
@@ -5686,7 +5743,8 @@ void gsdml_Assign::print(int ind)
 
 void gsdml_Assign::build()
 {
-  if (!streq(Body.TextId.ref, "")) {
+  if (!streq(Body.TextId.ref, ""))
+  {
 
     Body.TextId.p = gsdml->find_text_ref(Body.TextId.ref);
     if (Body.TextId.p == noref)
@@ -5978,9 +6036,10 @@ void pn_gsdml::gsdml_print()
 void gsdml_SubslotList::build()
 {
   for (unsigned int i = 0; i < SubslotItem.size(); i++)
-    if (!streq(SubslotItem[i]->Body.TextId.ref, "")) {
-      SubslotItem[i]->Body.TextId.p
-          = gsdml->find_text_ref(SubslotItem[i]->Body.TextId.ref);
+    if (!streq(SubslotItem[i]->Body.TextId.ref, ""))
+    {
+      SubslotItem[i]->Body.TextId.p =
+          gsdml->find_text_ref(SubslotItem[i]->Body.TextId.ref);
       if (SubslotItem[i]->Body.TextId.p == noref)
         gsdml->error_message("TextId not found: \"%s\"",
                              SubslotItem[i]->Body.TextId.ref);
@@ -6001,7 +6060,8 @@ gsdml_UseableModules::~gsdml_UseableModules()
 
 void gsdml_BitDataItem::build()
 {
-  if (!streq(Body.TextId.ref, "")) {
+  if (!streq(Body.TextId.ref, ""))
+  {
 
     Body.TextId.p = gsdml->find_text_ref(Body.TextId.ref);
     if (Body.TextId.p == noref)
@@ -6011,7 +6071,8 @@ void gsdml_BitDataItem::build()
 
 void gsdml_DataItem::build()
 {
-  if (!streq(Body.TextId.ref, "")) {
+  if (!streq(Body.TextId.ref, ""))
+  {
     Body.TextId.p = gsdml->find_text_ref(Body.TextId.ref);
     if (Body.TextId.p == noref)
       gsdml->error_message("TextId not found: \"%s\"", Body.TextId.ref);
@@ -6072,39 +6133,32 @@ gsdml_ParameterRef::gsdml_ParameterRef(pn_gsdml* g) : gsdml(g)
   memset(&Body, 0, sizeof(Body));
 }
 
-gsdml_ParameterRef::~gsdml_ParameterRef()
-{
+gsdml_ParameterRef::~gsdml_ParameterRef() {}
 
-}
-
-void gsdml_ParameterRef::build(gsdml_ParameterRecordDataItem* parent_par_record_data_item)
+void gsdml_ParameterRef::build(
+    gsdml_ParameterRecordDataItem* parent_par_record_data_item)
 {
-  Body.ParameterTarget.p = (void*)gsdml->find_ref_ref(Body.ParameterTarget.ref, parent_par_record_data_item);
+  Body.ParameterTarget.p = (void*)gsdml->find_ref_ref(
+      Body.ParameterTarget.ref, parent_par_record_data_item);
   if (Body.ParameterTarget.p == noref)
-    gsdml->error_message("ParameterTarget not found: \"%s\"", Body.ParameterTarget.ref);
+    gsdml->error_message("ParameterTarget not found: \"%s\"",
+                         Body.ParameterTarget.ref);
 }
 
-gsdml_MenuRef::gsdml_MenuRef(pn_gsdml* g) : gsdml(g)
+gsdml_MenuRef::gsdml_MenuRef(pn_gsdml* g) : gsdml(g) {}
+
+gsdml_MenuRef::~gsdml_MenuRef() {}
+
+void gsdml_MenuRef::build(
+    gsdml_ParameterRecordDataItem* parent_par_record_data_item)
 {
-
-}
-
-gsdml_MenuRef::~gsdml_MenuRef()
-{
-
-}
-
-void gsdml_MenuRef::build(gsdml_ParameterRecordDataItem* parent_par_record_data_item)
-{
-  Body.MenuTarget.p = (void*)gsdml->find_menuitem_ref(Body.MenuTarget.ref, parent_par_record_data_item);
+  Body.MenuTarget.p = (void*)gsdml->find_menuitem_ref(
+      Body.MenuTarget.ref, parent_par_record_data_item);
   if (Body.MenuTarget.p == noref)
     gsdml->error_message("MenuTarget not found: \"%s\"", Body.MenuTarget.ref);
 }
 
-gsdml_MenuItem::gsdml_MenuItem(pn_gsdml* g) : gsdml(g)
-{
-
-}
+gsdml_MenuItem::gsdml_MenuItem(pn_gsdml* g) : gsdml(g) {}
 
 gsdml_MenuItem::~gsdml_MenuItem()
 {
@@ -6114,22 +6168,23 @@ gsdml_MenuItem::~gsdml_MenuItem()
     delete ParameterRef[i];
 }
 
-void gsdml_MenuItem::build(gsdml_ParameterRecordDataItem* parent_par_record_data_item)
+void gsdml_MenuItem::build(
+    gsdml_ParameterRecordDataItem* parent_par_record_data_item)
 {
   Body.Name.p = gsdml->find_text_ref(Body.Name.ref);
   if (Body.Name.p == noref)
     gsdml->error_message("Name not found: \"%s\"", Body.Name.ref);
 
-  for (std::vector<gsdml_ParameterRef*>::iterator parameterRef = ParameterRef.begin(); parameterRef != ParameterRef.end(); parameterRef++)
+  for (std::vector<gsdml_ParameterRef*>::iterator parameterRef =
+           ParameterRef.begin();
+       parameterRef != ParameterRef.end(); parameterRef++)
     (*parameterRef)->build(parent_par_record_data_item);
-  for (std::vector<gsdml_MenuRef*>::iterator menuRef = MenuRef.begin(); menuRef != MenuRef.end(); menuRef++)
+  for (std::vector<gsdml_MenuRef*>::iterator menuRef = MenuRef.begin();
+       menuRef != MenuRef.end(); menuRef++)
     (*menuRef)->build(parent_par_record_data_item);
 }
 
-gsdml_MenuList::gsdml_MenuList(pn_gsdml* g) : gsdml(g)
-{
-
-}
+gsdml_MenuList::gsdml_MenuList(pn_gsdml* g) : gsdml(g) {}
 
 gsdml_MenuList::~gsdml_MenuList()
 {
@@ -6139,7 +6194,8 @@ gsdml_MenuList::~gsdml_MenuList()
 
 void gsdml_MenuList::build()
 {
-  for (std::vector<gsdml_MenuItem*>::iterator menuItem = MenuItem.begin(); menuItem != MenuItem.end(); menuItem++)
+  for (std::vector<gsdml_MenuItem*>::iterator menuItem = MenuItem.begin();
+       menuItem != MenuItem.end(); menuItem++)
     (*menuItem)->build(parent_par_record_data_item);
 }
 
@@ -6154,9 +6210,10 @@ void gsdml_ParameterRecordDataItem::build()
     Ref[i]->Body.TextId.p = gsdml->find_text_ref(Ref[i]->Body.TextId.ref);
     if (Ref[i]->Body.TextId.p == noref)
       gsdml->error_message("TextId not found: \"%s\"", Ref[i]->Body.TextId.ref);
-    if (!streq(Ref[i]->Body.ValueItemTarget.ref, "")) {
-      Ref[i]->Body.ValueItemTarget.p
-          = gsdml->find_value_ref(Ref[i]->Body.ValueItemTarget.ref);
+    if (!streq(Ref[i]->Body.ValueItemTarget.ref, ""))
+    {
+      Ref[i]->Body.ValueItemTarget.p =
+          gsdml->find_value_ref(Ref[i]->Body.ValueItemTarget.ref);
 
       if (!Ref[i]->Body.ValueItemTarget.p)
         gsdml->error_message("ValueItemTarget not found: \"%s\"",
@@ -6164,7 +6221,7 @@ void gsdml_ParameterRecordDataItem::build()
     }
   }
 
-  //Build any MenuList tags if the exists
+  // Build any MenuList tags if the exists
   if (MenuList)
     MenuList->build();
 }
@@ -6293,7 +6350,8 @@ gsdml_InterfaceSubmoduleItem::~gsdml_InterfaceSubmoduleItem()
 
 void gsdml_PortSubmoduleItem::build()
 {
-  // Apparently PortSubmoduleItem is allowed to be without TextId attribute when it's located under a SubmoduleList...
+  // Apparently PortSubmoduleItem is allowed to be without TextId attribute when
+  // it's located under a SubmoduleList...
   if (!streq(Body.TextId.ref, ""))
   {
     Body.TextId.p = gsdml->find_text_ref(Body.TextId.ref);
@@ -6347,10 +6405,12 @@ gsdml_UseableSubmodules::~gsdml_UseableSubmodules()
 
 void gsdml_SlotList::build()
 {
-  for (unsigned int i = 0; i < SlotItem.size(); i++) {
-    if (!streq(SlotItem[i]->Body.TextId.ref, "")) {
-      SlotItem[i]->Body.TextId.p
-          = gsdml->find_text_ref(SlotItem[i]->Body.TextId.ref);
+  for (unsigned int i = 0; i < SlotItem.size(); i++)
+  {
+    if (!streq(SlotItem[i]->Body.TextId.ref, ""))
+    {
+      SlotItem[i]->Body.TextId.p =
+          gsdml->find_text_ref(SlotItem[i]->Body.TextId.ref);
       if (SlotItem[i]->Body.TextId.p == noref)
         gsdml->error_message("TextId not found: \"%s\"",
                              SlotItem[i]->Body.TextId.ref);
@@ -6373,8 +6433,8 @@ gsdml_SlotGroups::~gsdml_SlotGroups()
 gsdml_DeviceAccessPointItem::gsdml_DeviceAccessPointItem(pn_gsdml* g)
     : ModuleInfo(0), SubslotList(0), IOConfigData(0), UseableModules(0),
       VirtualSubmoduleList(0), SystemDefinedSubmoduleList(0), Graphics(0),
-      ApplicationRelations(0), UseableSubmodules(0), SlotList(0), SlotGroups(0), SystemRedundancy(0),
-      gsdml(g)
+      ApplicationRelations(0), UseableSubmodules(0), SlotList(0), SlotGroups(0),
+      SystemRedundancy(0), gsdml(g)
 {
   memset(&Body, 0, sizeof(Body));
 }
@@ -6524,7 +6584,8 @@ void gsdml_ValueItem::build()
     for (unsigned int i = 0; i < Assignments->Assign.size(); i++)
       Assignments->Assign[i]->build();
   }
-  if (!streq(Body.Help.ref, "")) {
+  if (!streq(Body.Help.ref, ""))
+  {
 
     Body.Help.p = gsdml->find_text_ref(Body.Help.ref);
     if (Body.Help.p == noref)
@@ -6576,13 +6637,15 @@ gsdml_ChannelDiagItem::~gsdml_ChannelDiagItem()
 
 void gsdml_ChannelDiagItem::build()
 {
-  if (!streq(Body.Name.ref, "")) {
+  if (!streq(Body.Name.ref, ""))
+  {
 
     Body.Name.p = gsdml->find_text_ref(Body.Name.ref);
     if (Body.Name.p == noref)
       gsdml->error_message("Name not found: \"%s\"", Body.Name.ref);
   }
-  if (!streq(Body.Help.ref, "")) {
+  if (!streq(Body.Help.ref, ""))
+  {
     Body.Help.p = gsdml->find_text_ref(Body.Help.ref);
     if (Body.Help.p == noref)
       gsdml->error_message("Help not found: \"%s\"", Body.Help.ref);
@@ -6603,7 +6666,8 @@ void gsdml_ChannelDiagList::build()
 
 void gsdml_UnitDiagTypeItem::build()
 {
-  if (!streq(Body.Name.ref, "")) {
+  if (!streq(Body.Name.ref, ""))
+  {
     Body.Name.p = gsdml->find_text_ref(Body.Name.ref);
     if (Body.Name.p == noref)
       gsdml->error_message("Name not found: \"%s\"", Body.Name.ref);
@@ -6647,7 +6711,7 @@ gsdml_MAUTypeItem::gsdml_MAUTypeItem(pn_gsdml* g) : gsdml(g)
 
 gsdml_MAUTypeList::~gsdml_MAUTypeList()
 {
-   for (unsigned int i = 0; i < MAUTypeItem.size(); i++)
+  for (unsigned int i = 0; i < MAUTypeItem.size(); i++)
     delete MAUTypeItem[i];
 }
 
@@ -6709,7 +6773,8 @@ gsdml_ApplicationProcess::~gsdml_ApplicationProcess()
 
 void gsdml_DeviceIdentity::build()
 {
-  if (!streq(Body.InfoText.ref, "")) {
+  if (!streq(Body.InfoText.ref, ""))
+  {
     Body.InfoText.p = gsdml->find_text_ref(Body.InfoText.ref);
     if (Body.InfoText.p == noref)
       gsdml->error_message("InfoText not found: \"%s\"", Body.InfoText.ref);
