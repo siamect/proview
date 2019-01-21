@@ -46,12 +46,13 @@
 class GsdmlDataRecord {
 public:
   GsdmlDataRecord()
-      : record_idx(0), data(0), data_length(0), index(0), transfer_sequence(0)
+      : record_idx(0), data(0), data_reversed_endianess(0), data_length(0), index(0), transfer_sequence(0)
   {
   }
 
   unsigned int record_idx;
   unsigned char* data;
+  unsigned char* data_reversed_endianess;
   unsigned int data_length;
   unsigned short index;
   unsigned short transfer_sequence;
@@ -63,7 +64,7 @@ public:
   }
   GsdmlDataRecord(const GsdmlDataRecord& x);
 
-  int print(std::ofstream& fp);
+  int print(std::ofstream& fp, bool reverse_endianess);
 };
 
 class GsdmlIOCRData {
@@ -113,7 +114,7 @@ public:
       data_record.push_back(new GsdmlDataRecord(*x.data_record[i]));
     }
   }
-  int print(std::ofstream& fp);
+  int print(std::ofstream& fp, bool reverse_endianess);
 };
 
 class GsdmlSlotData {
@@ -153,7 +154,7 @@ public:
       subslot_data.push_back(new GsdmlSubslotData(*x.subslot_data[i]));
     }
   }
-  int print(std::ofstream& fp);
+  int print(std::ofstream& fp, bool reverse_endianess);
 };
 
 class GsdmlChannelDiag {
@@ -169,7 +170,7 @@ public:
 class GsdmlDeviceData {
 public:
   GsdmlDeviceData()
-      : device_num(0), vendor_id(0), device_id(0), byte_order(0), instance(0)
+      : device_num(0), vendor_id(0), device_id(0), byte_order(0), read_data_is_native_ordered(1), instance(0)
   {
     device_name[0] = 0;
     ip_address[0] = 0;
@@ -189,6 +190,7 @@ public:
   unsigned short device_id;
   char version[20];
   int byte_order;
+  int read_data_is_native_ordered;
   unsigned short instance;
   pwr_tFileName gsdmlfile;
   std::vector<GsdmlSlotData*> slot_data;

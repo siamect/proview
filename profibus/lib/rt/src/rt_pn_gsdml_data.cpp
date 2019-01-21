@@ -44,6 +44,8 @@
 #include "rt_pb_msg.h"
 #include "rt_pn_gsdml_data.h"
 
+#include "pwr_baseclasses.h"
+
 typedef enum {
   gsdmldata_eTag_,
   gsdmldata_eTag_PnDevice,
@@ -83,11 +85,14 @@ GsdmlDataRecord::GsdmlDataRecord(const GsdmlDataRecord& x)
   }
 }
 
-int GsdmlDataRecord::print(std::ofstream& fp)
+int GsdmlDataRecord::print(std::ofstream& fp, bool reverse_endianess)
 {
   char str[1024];
 
+  unsigned char* data = (reverse_endianess ? this->data_reversed_endianess : this->data);
+
   co_xml_parser::data_to_ostring(data, data_length, str, sizeof(str));
+
 
   fp << "      <DataRecord Index=\"" << index << "\"\n"
      << "         TransferSequence=\"" << transfer_sequence << "\"\n"
@@ -97,7 +102,7 @@ int GsdmlDataRecord::print(std::ofstream& fp)
   return 1;
 }
 
-int GsdmlSubslotData::print(std::ofstream& fp)
+int GsdmlSubslotData::print(std::ofstream& fp, bool reverse_endianess)
 {
   fp << "    <Subslot SubslotNumber=\"" << subslot_number << "\"\n"
      << "       SubmoduleEnumNumber=\"" << submodule_enum_number << "\"\n"
@@ -107,14 +112,14 @@ int GsdmlSubslotData::print(std::ofstream& fp)
      << "       IOOutputLength=\"" << io_output_length << "\" >\n";
 
   for (unsigned int i = 0; i < data_record.size(); i++) {
-    data_record[i]->print(fp);
+    data_record[i]->print(fp, reverse_endianess);
   }
 
   fp << "    </Subslot>\n";
   return 1;
 }
 
-int GsdmlSlotData::print(std::ofstream& fp)
+int GsdmlSlotData::print(std::ofstream& fp, bool reverse_endianess)
 {
   fp << "  <Slot ModuleEnumNumber=\"" << module_enum_number << "\"\n"
      << "        ModuleIdentNumber=\"" << module_ident_number << "\"\n"
@@ -123,7 +128,7 @@ int GsdmlSlotData::print(std::ofstream& fp)
      << "        SlotNumber=\"" << slot_number << "\" >\n";
 
   for (unsigned int i = 0; i < subslot_data.size(); i++) {
-    subslot_data[i]->print(fp);
+    subslot_data[i]->print(fp, reverse_endianess);
   }
 
   fp << "  </Slot>\n";
@@ -147,6 +152,7 @@ int GsdmlDeviceData::print(const char* filename)
   pwr_tFileName fname;
   std::ofstream fp;
   char* gsdmlfile_p;
+  bool reverse_endianess = false;
 
   // Print name of gsdmlfile, not path
   if ((gsdmlfile_p = strrchr(gsdmlfile, '/')))
@@ -172,8 +178,30 @@ int GsdmlDeviceData::print(const char* filename)
      << "    SubnetMask=\"" << subnet_mask << "\"\n"
      << "    MAC_Address=\"" << mac_address << "\" />\n";
 
+  //Save in accordance to the chosen endianess
+#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
+  if (byte_order == pwr_eByteOrderingEnum_LittleEndian)
+  {
+    reverse_endianess = false;
+  }
+  else
+  {
+    // We use the data saved as the reversed endianess
+    reverse_endianess = true;
+  }
+#elif (pwr_dHost_byteOrder == pwr_dBigEndian)
+  if (byte_order == pwr_eByteOrderingEnum_LittleEndian)
+  {
+      reverse_endianess = true;
+  }
+  else
+  {
+    reverse_endianess = false;
+  }
+#endif
+
   for (unsigned int i = 0; i < slot_data.size(); i++) {
-    slot_data[i]->print(fp);
+    slot_data[i]->print(fp, reverse_endianess);
   }
   for (unsigned int i = 0; i < iocr_data.size(); i++) {
     iocr_data[i]->print(fp);

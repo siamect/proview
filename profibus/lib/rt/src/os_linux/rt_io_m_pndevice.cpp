@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 SSAB Oxelösund AB.
+ * Copyright (C) 2010 SSAB Oxelï¿½sund AB.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -123,6 +123,11 @@ static pwr_tStatus IoRackInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
           }
           chanp->offset = input_counter;
           chanp->mask = 1 << chan_di->Number;
+          // TODO Check with the PROFINET specification what to do with boolean values greater than 8 bit integers.
+          // The data coming from an et200sp 16 DI module represented as unsigned16 and the channel value of a
+          // AI modules channel represented as integer16 are sent with different byte order. Maybe booleans can be
+          // considered Little Endian...
+          // More TODO: Check host endianess aswell and take action accordingly
           if (chan_di->Representation == pwr_eDataRepEnum_Bit16
               && op->ByteOrdering == pwr_eByteOrderingEnum_BigEndian)
             chanp->mask = swap16(chanp->mask);
@@ -132,8 +137,7 @@ static pwr_tStatus IoRackInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
           if (chan_di->Number == 0)
             latent_input_count
                 = GetChanSize((pwr_eDataRepEnum)chan_di->Representation);
-          //	      printf("Di channel found in %s, Number %d, Offset %d\n",
-          // cardp->Name, chan_di->Number, chanp->offset);
+          	      //printf("Di channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_di->Number, chanp->offset);
           break;
 
         case pwr_cClass_ChanAi:
@@ -187,8 +191,7 @@ static pwr_tStatus IoRackInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
           if (chan_do->Number == 0)
             latent_output_count
                 = GetChanSize((pwr_eDataRepEnum)chan_do->Representation);
-          //	      printf("Do channel found in %s, Number %d, Offset %d\n",
-          // cardp->Name, chan_do->Number, chanp->offset);
+          	      //printf("Do channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_do->Number, chanp->offset);
           break;
 
         case pwr_cClass_ChanAo:
