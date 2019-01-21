@@ -64,6 +64,7 @@ typedef enum {
   attrnav_eItemType_PnParValue,
   attrnav_eItemType_PnParEnum,
   attrnav_eItemType_PnParEnumBit,
+  attrnav_eItemType_PnParEnumValue,
   attrnav_eItemType_PnModuleClass,
   attrnav_eItemType_PnIOData,
   attrnav_eItemType_PnInput,
@@ -509,7 +510,7 @@ class ItemPnParValue : public ItemPn {
 public:
   ItemPnParValue(GsdmlAttrNav* attrnav, const char* item_name,
       gsdml_Ref* item_value_ref, gsdml_eValueDataType item_datatype,
-      unsigned char* item_data, brow_tNode dest, flow_eDest dest_code);
+      unsigned char* item_data, unsigned char* item_data_reversed_endianess, brow_tNode dest, flow_eDest dest_code);
   virtual ~ItemPnParValue()
   {
   }
@@ -517,6 +518,7 @@ public:
   gsdml_Ref* value_ref;
   gsdml_eValueDataType datatype;
   unsigned char* data;
+  unsigned char* data_reversed_endianess;
   unsigned int byte_offset;
   unsigned int size;
   int first_scan;
@@ -541,7 +543,7 @@ class ItemPnParEnum : public ItemPn {
 public:
   ItemPnParEnum(GsdmlAttrNav* attrnav, const char* item_name,
       gsdml_Ref* item_value_ref, gsdml_eValueDataType item_datatype,
-      unsigned char* item_data, brow_tNode dest, flow_eDest dest_code);
+      unsigned char* item_data, unsigned char* item_data_reversed_endianess, brow_tNode dest, flow_eDest dest_code);
   virtual ~ItemPnParEnum()
   {
   }
@@ -549,6 +551,7 @@ public:
   gsdml_Ref* value_ref;
   gsdml_eValueDataType datatype;
   unsigned char* data;
+  unsigned char* data_reversed_endianess;
   unsigned int byte_offset;
   unsigned int bit_offset;
   unsigned int bit_length;
@@ -566,7 +569,7 @@ public:
 class ItemPnParEnumBit : public ItemPn {
 public:
   ItemPnParEnumBit(GsdmlAttrNav* attrnav, const char* item_name,
-      gsdml_eValueDataType item_datatype, unsigned char* item_data,
+      gsdml_eValueDataType item_datatype, unsigned char* item_data, unsigned char* item_data_reversed_endianess,
       unsigned int item_byte_offset, unsigned int item_value,
       unsigned int item_mask, int item_noedit, brow_tNode dest,
       flow_eDest dest_code);
@@ -577,6 +580,33 @@ public:
   gsdml_Assign* assign;
   gsdml_eValueDataType datatype;
   unsigned char* data;
+  unsigned char* data_reversed_endianess;
+  unsigned int byte_offset;
+  unsigned int value;
+  unsigned int mask;
+  int first_scan;
+  unsigned int old_value;
+  int noedit;
+
+  int scan(GsdmlAttrNav* attrnav, void* p);
+  void update(GsdmlAttrNav* attrnav);
+};
+
+class ItemPnParEnumValue : public ItemPn {
+public:
+  ItemPnParEnumValue(GsdmlAttrNav* attrnav, const char* item_name,
+      gsdml_eValueDataType item_datatype, unsigned char* item_data, unsigned char* item_data_reversed_endianess,
+      unsigned int item_byte_offset, unsigned int item_value,
+      unsigned int item_mask, int item_noedit, brow_tNode dest,
+      flow_eDest dest_code);
+  virtual ~ItemPnParEnumValue()
+  {
+  }
+
+  gsdml_Assign* assign;
+  gsdml_eValueDataType datatype;
+  unsigned char* data;
+  unsigned char* data_reversed_endianess;
   unsigned int byte_offset;
   unsigned int value;
   unsigned int mask;

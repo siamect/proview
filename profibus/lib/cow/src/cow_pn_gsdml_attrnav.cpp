@@ -102,6 +102,8 @@
 #include "xnav_bitmap_attrenum20.h"
 #include "xnav_bitmap_attrenum24.h"
 
+#include "pwr_baseclasses.h"
+
 #define ATTRNAV__INPUT_SYNTAX 2
 //#define ATTRNAV__OBJNOTFOUND 4
 #define ATTRNAV__STRINGTOLONG 6
@@ -903,6 +905,7 @@ int GsdmlAttrNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
       break;
     }
     case attrnav_eItemType_PnParEnumBit:
+    case attrnav_eItemType_PnParEnumValue:
       if (!attrnav->edit_mode) {
         attrnav->message('E', "Not in edit mode");
         break;
@@ -953,6 +956,7 @@ int GsdmlAttrNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
         }
         break;
       case attrnav_eItemType_PnParEnumBit:
+      case attrnav_eItemType_PnParEnumValue:
         item->update(attrnav);
         break;
       default:;
@@ -1194,6 +1198,7 @@ int GsdmlAttrNav::trace_connect_bc(
     break;
   case attrnav_eItemType_PnParEnum:
   case attrnav_eItemType_PnParEnumBit:
+  case attrnav_eItemType_PnParEnumValue:
   case attrnav_eItemType_PnParValue:
     *p = (void*)1;
     break;
@@ -1815,6 +1820,28 @@ int GsdmlAttrNav::open(const char* filename)
   time_ratio = dev_data.iocr_data[0]->reduction_ratio;
   send_clock = dev_data.iocr_data[0]->send_clock_factor;
   phase = dev_data.iocr_data[0]->phase;
+
+// Check if the data read uses native byte ordering or not
+#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
+  if (gsdml->byte_order == pwr_eByteOrderingEnum_LittleEndian)
+  {
+    dev_data.read_data_is_native_ordered = 1;
+  }
+  else
+  {
+    dev_data.read_data_is_native_ordered = 0;
+  }
+#elif (pwr_dHost_byteOrder == pwr_dBigEndian)
+  if (gsdml->byte_order == pwr_eByteOrderingEnum_LittleEndian)
+  {
+      dev_data.read_data_is_native_ordered = 0;
+  }
+  else
+  {
+    dev_data.read_data_is_native_ordered = 1;
+  }
+#endif
+
   if (device_num > 0) {
     if (device_num > gsdml->ApplicationProcess->DeviceAccessPointList
                          ->DeviceAccessPointItem.size()) {
@@ -3846,15 +3873,15 @@ ItemPnParRecord::ItemPnParRecord(GsdmlAttrNav* attrnav, const char* item_name,
 
   brow_SetAnnotation(node, 0, name, strlen(name));
 
+  // If we currently have no data we allocate memory and set it to the constants given by the gsdml file
   if (!datarecord->data) {
     datarecord->data = (unsigned char*)calloc(1, par_record->Body.Length);
+    datarecord->data_reversed_endianess = (unsigned char*)calloc(1, par_record->Body.Length);
     datarecord->data_length = par_record->Body.Length;
     datarecord->index = par_record->Body.Index;
     datarecord->transfer_sequence = par_record->Body.TransferSequence;
 
-    attrnav->gsdml->set_par_record_default(
-        datarecord->data, par_record->Body.Length, par_record);
-
+    // Read all constants
     for (unsigned int i = 0; i < par_record->Const.size(); i++) {
       void* const_data;
       int len;
@@ -3865,7 +3892,25 @@ ItemPnParRecord::ItemPnParRecord(GsdmlAttrNav* attrnav, const char* item_name,
       if (len > (int)(par_record->Body.Length - con->Body.ByteOffset))
         len = par_record->Body.Length - con->Body.ByteOffset;
       memcpy((char*)datarecord->data + con->Body.ByteOffset, const_data, len);
+      memcpy((char*)datarecord->data_reversed_endianess + con->Body.ByteOffset, const_data, len);
       free(const_data);
+    }
+
+    // And now, set the default values since the default values overwrite the constant data and some of the defaults are "non changeable/invisible"...
+    attrnav->gsdml->set_par_record_default(datarecord->data, datarecord->data_reversed_endianess, par_record->Body.Length, par_record);
+  }
+  else
+  {
+    // We have data already, at this state (first time we open this node) reversed_endianess should not have any allocated memory
+    if (!datarecord->data_reversed_endianess)
+    {
+      datarecord->data_reversed_endianess = (unsigned char*)calloc(1, par_record->Body.Length);
+    memcpy(datarecord->data_reversed_endianess, datarecord->data, par_record->Body.Length);
+    // Depending on if the data read is native to the host or not we byte swap either one of the data containers...
+    if (attrnav->dev_data.read_data_is_native_ordered)
+      attrnav->gsdml->populate_and_align_par_reversed_record_data(datarecord->data, datarecord->data_reversed_endianess, par_record);
+    else
+      attrnav->gsdml->populate_and_align_par_reversed_record_data(datarecord->data_reversed_endianess, datarecord->data, par_record);
     }
   }
 }
@@ -3904,20 +3949,17 @@ int ItemPnParRecord::open_children(GsdmlAttrNav* attrnav, double x, double y)
       case gsdml_eValueDataType_Bit:
       case gsdml_eValueDataType_BitArea:
         new ItemPnParEnum(attrnav, "", par_record->Ref[i], datatype,
-            datarecord->data, node, flow_eDest_IntoLast);
+            datarecord->data, datarecord->data_reversed_endianess, node, flow_eDest_IntoLast);
         break;
       case gsdml_eValueDataType_Integer8:
       case gsdml_eValueDataType_Unsigned8:
-        if (streq(par_record->Ref[i]->Body.ValueItemTarget.ref, ""))
+      default:
+        if (streq(par_record->Ref[i]->Body.ValueItemTarget.ref, "") || (par_record->Ref[i]->Body.ValueItemTarget.p && !((gsdml_ValueItem*)par_record->Ref[i]->Body.ValueItemTarget.p)->Assignments))
           new ItemPnParValue(attrnav, "", par_record->Ref[i], datatype,
-              datarecord->data, node, flow_eDest_IntoLast);
+              datarecord->data, datarecord->data_reversed_endianess, node, flow_eDest_IntoLast);
         else
           new ItemPnParEnum(attrnav, "", par_record->Ref[i], datatype,
-              datarecord->data, node, flow_eDest_IntoLast);
-        break;
-      default:
-        new ItemPnParValue(attrnav, "", par_record->Ref[i], datatype,
-            datarecord->data, node, flow_eDest_IntoLast);
+              datarecord->data, datarecord->data_reversed_endianess, node, flow_eDest_IntoLast);
       }
     }
     brow_SetOpen(node, attrnav_mOpen_Children);
@@ -3930,8 +3972,8 @@ int ItemPnParRecord::open_children(GsdmlAttrNav* attrnav, double x, double y)
 
 ItemPnParValue::ItemPnParValue(GsdmlAttrNav* attrnav, const char* item_name,
     gsdml_Ref* item_value_ref, gsdml_eValueDataType item_datatype,
-    unsigned char* item_data, brow_tNode dest, flow_eDest dest_code)
-    : value_ref(item_value_ref), datatype(item_datatype), data(item_data),
+    unsigned char* item_data, unsigned char* item_data_reversed_endianess, brow_tNode dest, flow_eDest dest_code)
+    : value_ref(item_value_ref), datatype(item_datatype), data(item_data), data_reversed_endianess(item_data_reversed_endianess),
       first_scan(1), noedit(1)
 {
   type = attrnav_eItemType_PnParValue;
@@ -4006,8 +4048,9 @@ void ItemPnParValue::value_changed(GsdmlAttrNav* attrnav, const char* value_str)
   int sts;
 
   unsigned char* buf = (unsigned char*)calloc(1, size);
+  unsigned char* buf_reversed_endianess = (unsigned char*)calloc(1, size);
 
-  sts = attrnav->gsdml->string_to_datavalue(datatype, buf, size, value_str);
+  sts = attrnav->gsdml->string_to_datavalue(datatype, buf, buf_reversed_endianess, size, value_str);
   if (sts == PB__NYI) {
     attrnav->message('E', "Not yet implemented");
     return;
@@ -4168,16 +4211,18 @@ void ItemPnParValue::value_changed(GsdmlAttrNav* attrnav, const char* value_str)
   }
 
   memcpy(&data[byte_offset], buf, size);
+  memcpy(&data_reversed_endianess[byte_offset], buf_reversed_endianess, size);
 
   free(buf);
+  free(buf_reversed_endianess);
   attrnav->set_modified(1);
 }
 
 ItemPnParEnum::ItemPnParEnum(GsdmlAttrNav* attrnav, const char* item_name,
     gsdml_Ref* item_value_ref, gsdml_eValueDataType item_datatype,
-    unsigned char* item_data, brow_tNode dest, flow_eDest dest_code)
-    : value_ref(item_value_ref), datatype(item_datatype), data(item_data),
-      mask(0), old_value(0), first_scan(1), noedit(1)
+    unsigned char* item_data, unsigned char* item_data_reversed_endianess, brow_tNode dest, flow_eDest dest_code)
+    : value_ref(item_value_ref), datatype(item_datatype), data(item_data), data_reversed_endianess(item_data_reversed_endianess),
+    mask(0), old_value(0), first_scan(1), noedit(1)
 {
   type = attrnav_eItemType_PnParEnum;
   strncpy(name, (char*)value_ref->Body.TextId.p, sizeof(name));
@@ -4193,6 +4238,10 @@ ItemPnParEnum::ItemPnParEnum(GsdmlAttrNav* attrnav, const char* item_name,
   case gsdml_eValueDataType_Integer8:
   case gsdml_eValueDataType_Unsigned8:
     bit_length = 8;
+    break;
+  case gsdml_eValueDataType_Integer16:
+  case gsdml_eValueDataType_Unsigned16:
+    bit_length = 16;
     break;
   default:;
   }
@@ -4293,8 +4342,17 @@ int ItemPnParEnum::open_children(GsdmlAttrNav* attrnav, double x, double y)
     brow_SetNodraw(attrnav->brow->ctx);
 
     for (unsigned int i = 0; i < values.size(); i++) {
-      new ItemPnParEnumBit(attrnav, values[i].text, datatype, data, byte_offset,
+
+      if (datatype == gsdml_eValueDataType_Unsigned16)
+      {
+        new ItemPnParEnumValue(attrnav, values[i].text, datatype, data, data_reversed_endianess, byte_offset,
           values[i].value, mask, noedit, node, flow_eDest_IntoLast);
+      }
+      else
+      {
+        new ItemPnParEnumBit(attrnav, values[i].text, datatype, data, data_reversed_endianess, byte_offset,
+          values[i].value, mask, noedit, node, flow_eDest_IntoLast);
+      }
     }
 
     brow_SetOpen(node, attrnav_mOpen_Children);
@@ -4305,12 +4363,106 @@ int ItemPnParEnum::open_children(GsdmlAttrNav* attrnav, double x, double y)
   return 1;
 }
 
-ItemPnParEnumBit::ItemPnParEnumBit(GsdmlAttrNav* attrnav, const char* item_name,
-    gsdml_eValueDataType item_datatype, unsigned char* item_data,
+ItemPnParEnumValue::ItemPnParEnumValue(GsdmlAttrNav* attrnav, const char* item_name,
+    gsdml_eValueDataType item_datatype, unsigned char* item_data, unsigned char* item_data_reversed_endianess,
     unsigned int item_byte_offset, unsigned int item_value,
     unsigned int item_mask, int item_noedit, brow_tNode dest,
     flow_eDest dest_code)
-    : datatype(item_datatype), data(item_data), byte_offset(item_byte_offset),
+    : datatype(item_datatype), data(item_data), data_reversed_endianess(item_data_reversed_endianess), byte_offset(item_byte_offset),
+      value(item_value), mask(item_mask), first_scan(1), old_value(0),
+      noedit(item_noedit)
+{
+  type = attrnav_eItemType_PnParEnumValue;
+  strncpy(name, (char*)item_name, sizeof(name));
+
+  brow_CreateNode(attrnav->brow->ctx, item_name, attrnav->brow->nc_enum, dest,
+      dest_code, (void*)this, 1, &node);
+  brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_attr);
+
+  brow_SetAnnotation(node, 0, name, strlen(name));
+  brow_SetTraceAttr(node, name, "", flow_eTraceType_User);
+}
+
+int ItemPnParEnumValue::scan(GsdmlAttrNav* attrnav, void* p)
+{
+  if (!first_scan) {
+    if ((*(unsigned int*)&data[byte_offset] & mask) == old_value)
+      // No change since last time
+      return 1;
+  } else
+    first_scan = 0;
+
+  unsigned int current_value = *(unsigned int*)&data[byte_offset] & mask;
+  if (current_value == value)
+    brow_SetRadiobutton(node, 0, 1);
+  else
+    brow_SetRadiobutton(node, 0, 0);
+
+  old_value = current_value;
+  return 1;
+}
+
+void ItemPnParEnumValue::update(GsdmlAttrNav* attrnav)
+{
+  if (noedit) {
+    attrnav->message('E', "Parameter is not changeable");
+    return;
+  }
+  *(unsigned int*)&data[byte_offset] = value;
+
+  // Change the reversed data aswell since this value can be of arbitrary size
+  switch (datatype)
+  {
+    case gsdml_eValueDataType_Unsigned16:
+    case gsdml_eValueDataType_Integer16:
+    {
+      union {
+        char b[2];
+        short data;
+      } val;
+      memcpy(val.b, &value, 2);
+      char tmpb = val.b[1];
+      val.b[1] = val.b[0];
+      val.b[0] = tmpb;
+
+      *(unsigned int*)&data_reversed_endianess[byte_offset] = val.data;
+      break;
+    }
+    // Don't know if the standard has enumerations greater than 16bits...
+    case gsdml_eValueDataType_Unsigned32:
+    case gsdml_eValueDataType_Integer32:
+    {
+      union {
+        char b[4];
+        int data;
+      } val;
+      memcpy(val.b, &value, 4);
+      char tmpb = val.b[0];
+      val.b[0] = val.b[3];
+      val.b[1] = val.b[2];
+      val.b[2] = val.b[1];
+      val.b[3] = tmpb;
+
+      *(unsigned int*)&data_reversed_endianess[byte_offset] = val.data;
+      break;
+    }
+    default:
+    {
+      //Just write the same data...
+      *(unsigned int*)&data_reversed_endianess[byte_offset] = value;
+      break;
+    }
+  }
+
+  attrnav->set_modified(1);
+}
+
+ItemPnParEnumBit::ItemPnParEnumBit(GsdmlAttrNav* attrnav, const char* item_name,
+    gsdml_eValueDataType item_datatype, unsigned char* item_data, unsigned char* item_data_reversed_endianess,
+    unsigned int item_byte_offset, unsigned int item_value,
+    unsigned int item_mask, int item_noedit, brow_tNode dest,
+    flow_eDest dest_code)
+    : datatype(item_datatype), data(item_data), data_reversed_endianess(item_data_reversed_endianess), byte_offset(item_byte_offset),
       value(item_value), mask(item_mask), first_scan(1), old_value(0),
       noedit(item_noedit)
 {
@@ -4352,6 +4504,10 @@ void ItemPnParEnumBit::update(GsdmlAttrNav* attrnav)
   }
   *(unsigned int*)&data[byte_offset] &= ~mask;
   *(unsigned int*)&data[byte_offset] |= value;
+
+  *(unsigned int*)&data_reversed_endianess[byte_offset] &= ~mask;
+  *(unsigned int*)&data_reversed_endianess[byte_offset] |= value;
+
   attrnav->set_modified(1);
 }
 
