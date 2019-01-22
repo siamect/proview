@@ -42,6 +42,8 @@
 
 class wb_name;
 
+#pragma pack(push)
+#pragma pack(4)
 typedef struct {
   pwr_tOid oid; /**< object identifier */
   pwr_tCid cid; /**< class identifier */
@@ -60,6 +62,7 @@ typedef struct {
     pwr_tUInt32 size;
   } body[2]; /**< bodies */
 } db_sObject;
+#pragma pack(pop)
 
 class wb_db_txn;
 class wb_db_ohead;
