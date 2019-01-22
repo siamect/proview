@@ -53,7 +53,7 @@ char* id_to_string(pwr_tOid oid)
 
   memcpy(&vid, &oid.vid, sizeof(vid));
   sprintf(str, "%3.3u_%3.3u_%3.3u_%3.3u_%8.8x", vid[3], vid[2], vid[1], vid[0],
-      oid.oix);
+          oid.oix);
   return str;
 }
 
@@ -64,15 +64,16 @@ static pwr_tStatus ShowConfiguration(xmenu_sMenuCall* ip)
   xtt_pndevice_sCtx* ctx;
   pwr_tFileName datafile;
 
-  sprintf(
-      datafile, "$pwrp_load/pwr_pn_%s.xml", id_to_string(ip->Pointed.Objid));
+  sprintf(datafile, "$pwrp_load/pwr_pn_%s.xml",
+          id_to_string(ip->Pointed.Objid));
 
   sts = xtt_pndevice_create_ctx(ip->Pointed, ip->EditorContext, &ctx);
   if (EVEN(sts))
     return sts;
 
   ctx->attr = new GsdmlAttrQt(ctx, 0, ctx->gsdml, 0, datafile, &sts);
-  if (sts == PB__CONFIGABORTED) {
+  if (sts == PB__CONFIGABORTED)
+  {
     delete ctx->attr;
     return 1;
   }
@@ -83,8 +84,10 @@ static pwr_tStatus ShowConfiguration(xmenu_sMenuCall* ip)
   if (ODD(sts))
     sts = pndevice_init(ctx);
 #endif
-  if (EVEN(sts)) {
-    ctx->attr->wow->DisplayError("Configuration load error",
+  if (EVEN(sts))
+  {
+    ctx->attr->wow->DisplayError(
+        "Configuration load error",
         "Configuration load error\nCheck configuration data");
   }
 
@@ -95,5 +98,5 @@ static pwr_tStatus ShowConfiguration(xmenu_sMenuCall* ip)
   Every method to be exported to xtt should be registred here.
 \*----------------------------------------------------------------------------*/
 
-pwr_dExport pwr_BindXttMethods(PnDevice)
-    = { pwr_BindXttMethod(ShowConfiguration), pwr_NullMethod };
+pwr_dExport pwr_BindXttMethods(PnDevice) = {
+    pwr_BindXttMethod(ShowConfiguration), pwr_NullMethod};

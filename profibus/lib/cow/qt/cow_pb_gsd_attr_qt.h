@@ -47,7 +47,8 @@
 
 class GsdAttrQtWidget;
 
-class GsdAttrQt : public GsdAttr {
+class GsdAttrQt : public GsdAttr
+{
 public:
   QWidget* brow_widget;
   QWidget* form_widget;
@@ -72,7 +73,8 @@ private:
   GsdAttrQtWidget* toplevel;
 };
 
-class GsdAttrQtWidget : public QWidget {
+class GsdAttrQtWidget : public QWidget
+{
   Q_OBJECT
 
 public:
@@ -97,7 +99,7 @@ public slots:
   void activate_cmd_ok();
   void activate_cmd_apply();
 
-  void valchanged_cmd_input(){}
+  void valchanged_cmd_input() {}
 
 private:
   GsdAttrQt* attr;

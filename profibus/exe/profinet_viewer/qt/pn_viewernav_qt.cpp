@@ -43,12 +43,12 @@
 
 #include "pn_viewernav_qt.h"
 
-PnViewerNavQt::PnViewerNavQt(
-    void* l_parent_ctx, viewer_eType l_type, QWidget** w)
+PnViewerNavQt::PnViewerNavQt(void* l_parent_ctx, viewer_eType l_type,
+                             QWidget** w)
     : PnViewerNav(l_parent_ctx, l_type)
 {
-  form_widget
-      = scrolledbrowwidgetqt_new(PnViewerNav::init_brow_cb, this, &brow_widget);
+  form_widget =
+      scrolledbrowwidgetqt_new(PnViewerNav::init_brow_cb, this, &brow_widget);
 
   // Create the root item
   *w = form_widget;
@@ -60,9 +60,6 @@ PnViewerNavQt::~PnViewerNavQt()
   form_widget->close();
 }
 
-void PnViewerNavQt::set_input_focus()
-{
-  brow_widget->setFocus();
-}
+void PnViewerNavQt::set_input_focus() { brow_widget->setFocus(); }
 
 #endif

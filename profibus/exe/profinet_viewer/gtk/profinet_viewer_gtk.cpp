@@ -49,7 +49,8 @@
 
 #include "pn_viewer_gtk.h"
 
-typedef struct {
+typedef struct
+{
   GtkWidget* toplevel;
   PnViewer* viewer;
 } tViewer;
@@ -80,35 +81,46 @@ int main(int argc, char* argv[])
   setlocale(LC_TIME, "en_US");
 
   ctx->toplevel = (GtkWidget*)g_object_new(GTK_TYPE_WINDOW, "default-height",
-      100, "default-width", 100, "title", "Profinet Viewer", NULL);
+                                           100, "default-width", 100, "title",
+                                           "Profinet Viewer", NULL);
 
   // Create help window
-  CoXHelpGtk* xhelp
-      = new CoXHelpGtk(ctx->toplevel, 0, xhelp_eUtility_Wtt, (int*)&sts);
+  CoXHelpGtk* xhelp =
+      new CoXHelpGtk(ctx->toplevel, 0, xhelp_eUtility_Wtt, (int*)&sts);
   CoXHelpGtk::set_default(xhelp);
 
-  for (i = 1; i < argc; i++) {
-    if (streq(argv[i], "-h")) {
+  for (i = 1; i < argc; i++)
+  {
+    if (streq(argv[i], "-h"))
+    {
       usage();
       exit(0);
-    } else if (streq(argv[i], "-l")) {
-      if (i + 1 >= argc) {
+    }
+    else if (streq(argv[i], "-l"))
+    {
+      if (i + 1 >= argc)
+      {
         usage();
         exit(0);
       }
       Lng::set(argv[i + 1]);
       i++;
-    } else if (str_StartsWith(argv[i], "eth")) {
+    }
+    else if (str_StartsWith(argv[i], "eth"))
+    {
       snprintf(dev_name, sizeof(dev_name), "%s", argv[i]);
     }
   }
 
   // Open window
-  try {
-    ctx->viewer = new PnViewerGtk(
-        ctx, ctx->toplevel, "Profinet Viewer", dev_name, &sts);
+  try
+  {
+    ctx->viewer =
+        new PnViewerGtk(ctx, ctx->toplevel, "Profinet Viewer", dev_name, &sts);
     ctx->viewer->close_cb = viewer_close;
-  } catch (co_error& e) {
+  }
+  catch (co_error& e)
+  {
     printf("** Exception: %s\n", e.what().c_str());
     exit(0);
   }
@@ -117,9 +129,12 @@ int main(int argc, char* argv[])
 
   g_object_set(ctx->toplevel, "visible", FALSE, NULL);
 
-  try {
+  try
+  {
     ctx->viewer->update_devices();
-  } catch (co_error& e) {
+  }
+  catch (co_error& e)
+  {
     printf("** Exception: %s\n", e.what().c_str());
   }
 
@@ -130,8 +145,5 @@ int main(int argc, char* argv[])
 #else
 #include <stdio.h>
 
-int main()
-{
-  printf("Softing PNAK not built with this Proview release\n");
-}
+int main() { printf("Softing PNAK not built with this Proview release\n"); }
 #endif

@@ -82,7 +82,10 @@ typedef unsigned int gsdml_tUnsigned32;
 typedef unsigned short gsdml_tUnsigned16hex;
 typedef unsigned int gsdml_tUnsigned32hex;
 typedef unsigned int gsdml_tBoolean;
-typedef char gsdml_tSignedOrFloatValueList[160];
+typedef char gsdml_tSignedOrFloatValueList[4096]; // Allowed values can be
+                                                  // pretty large. >3000
+                                                  // characters is not
+                                                  // uncommon...
 
 typedef enum {
   gsdml_eType_,
@@ -107,6 +110,12 @@ typedef enum {
   gsdml_eType_Enum,
   gsdml_eType__
 } gsdml_eType;
+
+typedef enum {
+  gsdml_eSubmoduleType_,
+  gsdml_eSubmoduleType_PortSubmoduleItem,
+  gsdml_eSubmoduleType_SubmoduleItem,
+} gsdml_eSubmoduleType;
 
 typedef enum {
   gsdml_eValueDataType_,
@@ -241,6 +250,26 @@ typedef enum {
   gsdml_eTag_MenuList,
   gsdml_eTag_MenuItem,
   gsdml_eTag_MenuRef,
+  gsdml_eTag_SystemRedundancy,
+  gsdml_eTag_PROFIenergy,
+  gsdml_eTag_Signature,              // Ignored
+  gsdml_eTag_SignedInfo,             // Ignored
+  gsdml_eTag_CanonicalizationMethod, // Ignored
+  gsdml_eTag_SignatureMethod,        // Ignored
+  gsdml_eTag_Reference,              // Ignored
+  gsdml_eTag_Transforms,             // Ignored
+  gsdml_eTag_Transform,              // Ignored
+  gsdml_eTag_DigestMethod,           // Ignored
+  gsdml_eTag_DigestValue,            // Ignored
+  gsdml_eTag_SignatureValue,         // Ignored
+  gsdml_eTag_KeyInfo,                // Ignored
+  gsdml_eTag_KeyValue,               // Ignored
+  gsdml_eTag_RSAKeyValue,            // Ignored
+  gsdml_eTag_Modulus,                // Ignored
+  gsdml_eTag_Exponent,               // Ignored
+  gsdml_eTag_Object,                 // Ignored
+  gsdml_eTag_SignatureProperties,    // Ignored
+  gsdml_eTag_SignatureProperty,      // Ignored
   gsdml_eTag__
 } gsdml_eTag;
 
@@ -455,6 +484,23 @@ typedef struct
   gsdml_tBoolean AdjustSupported;
 } gsdml_sMAUTypeItem;
 
+class gsdml_MAUTypeItem
+{
+public:
+  gsdml_MAUTypeItem(pn_gsdml* g);
+  gsdml_sMAUTypeItem Body;
+  pn_gsdml* gsdml;
+};
+
+class gsdml_MAUTypeList
+{
+public:
+  gsdml_MAUTypeList(pn_gsdml* g) : gsdml(g) {}
+  ~gsdml_MAUTypeList();
+  std::vector<gsdml_MAUTypeItem*> MAUTypeItem;
+  pn_gsdml* gsdml;
+};
+
 typedef struct
 {
   gsdml_tString ConformanceClass;
@@ -501,6 +547,10 @@ typedef struct
   gsdml_tUnsigned16 MaxInputLength;
   gsdml_tUnsigned16 MaxOutputLength;
   gsdml_tUnsigned16 MaxDataLength;
+  gsdml_tUnsigned16 MaxApplicationInputLength;
+  gsdml_tUnsigned16 MaxApplicationOutputLength;
+  gsdml_tUnsigned16 MaxApplicationDataLength;
+  gsdml_tUnsigned16 ApplicationLengthIncludesIOxS;
 } gsdml_sIOConfigData;
 
 class gsdml_IOConfigData
@@ -675,6 +725,68 @@ public:
 
 typedef struct
 {
+  gsdml_tRefIdT ParameterTarget;
+} gsdml_sParameterRef;
+
+typedef struct
+{
+  gsdml_tRefId MenuTarget;
+} gsdml_sMenuRef;
+
+typedef struct
+{
+  gsdml_tId ID;
+  gsdml_tRefIdT Name;
+} gsdml_sMenuItem;
+
+// Forward declare this since they have circular dependencies...
+class gsdml_ParameterRecordDataItem;
+
+class gsdml_ParameterRef
+{
+public:
+  gsdml_ParameterRef(pn_gsdml* g);
+  gsdml_sParameterRef Body;
+  pn_gsdml* gsdml;
+  ~gsdml_ParameterRef();
+  void build(gsdml_ParameterRecordDataItem*);
+};
+
+class gsdml_MenuRef
+{
+public:
+  gsdml_MenuRef(pn_gsdml* g);
+  gsdml_sMenuRef Body;
+  pn_gsdml* gsdml;
+  ~gsdml_MenuRef();
+  void build(gsdml_ParameterRecordDataItem*);
+};
+
+class gsdml_MenuItem
+{
+public:
+  gsdml_MenuItem(pn_gsdml* g);
+  gsdml_sMenuItem Body;
+  pn_gsdml* gsdml;
+  ~gsdml_MenuItem();
+  std::vector<gsdml_MenuRef*> MenuRef;
+  std::vector<gsdml_ParameterRef*> ParameterRef;
+  void build(gsdml_ParameterRecordDataItem*);
+};
+
+class gsdml_MenuList
+{
+public:
+  gsdml_MenuList(pn_gsdml* g);
+  gsdml_ParameterRecordDataItem* parent_par_record_data_item;
+  pn_gsdml* gsdml;
+  ~gsdml_MenuList();
+  std::vector<gsdml_MenuItem*> MenuItem;
+  void build();
+};
+
+typedef struct
+{
   gsdml_tUnsigned16 Index;
   gsdml_tUnsigned32 Length;
   gsdml_tUnsigned16 TransferSequence;
@@ -688,6 +800,7 @@ public:
   gsdml_sParameterRecordDataItem Body;
   std::vector<gsdml_Const*> Const;
   std::vector<gsdml_Ref*> Ref;
+  gsdml_MenuList* MenuList;
   pn_gsdml* gsdml;
   ~gsdml_ParameterRecordDataItem();
   void build();
@@ -810,6 +923,19 @@ public:
 
 typedef struct
 {
+  gsdml_tString ProfileVersion;
+} gsdml_sPROFIenergy;
+
+class gsdml_PROFIenergy
+{
+public:
+  gsdml_PROFIenergy(pn_gsdml* g);
+  gsdml_sPROFIenergy Body;
+  pn_gsdml* gsdml;
+};
+
+typedef struct
+{
   gsdml_tId ID;
   gsdml_tUnsigned32hex SubmoduleIdentNumber;
   gsdml_tUnsigned32 API;
@@ -831,6 +957,7 @@ public:
   gsdml_ModuleInfo* ModuleInfo;
   gsdml_Graphics* Graphics;
   gsdml_IsochroneMode* IsochroneMode;
+  gsdml_PROFIenergy* PROFIenergy;
   pn_gsdml* gsdml;
   ~gsdml_VirtualSubmoduleItem();
   void build();
@@ -876,8 +1003,19 @@ typedef struct
 {
   gsdml_tUnsigned16 MaxBridgeDelay;
   gsdml_tUnsigned16 MaxNumberIR_FrameData;
+  gsdml_tUnsigned16 MaxRangeIR_FrameID;
   gsdml_tString StartupMode;
   gsdml_tString ForwardingMode;
+  gsdml_tUnsigned16 MaxRedPeriodLength;
+  gsdml_tUnsigned16 MinFSO;
+  gsdml_tUnsigned16 MinRTC3_Gap;
+  gsdml_tUnsigned16 MinYellowTime;
+  gsdml_tUnsigned16 YellowSafetyMargin;
+  gsdml_tUnsigned16 MaxBridgeDelayFFW;
+  gsdml_tUnsigned16 MaxDFP_Feed;
+  gsdml_tUnsigned16 MaxDFP_Frames;
+  gsdml_tBoolean AlignDFP_Subframes;
+  gsdml_tString FragmentationType;
 } gsdml_sRT_Class3Properties;
 
 class gsdml_RT_Class3Properties
@@ -895,6 +1033,7 @@ typedef struct
   gsdml_tUnsigned16 MaxLocalJitter;
   gsdml_tUnsigned16 T_PLL_MAX;
   gsdml_tTokenList SupportedSyncProtocols;
+  gsdml_tUnsigned16 PeerToPeerJitter;
 } gsdml_sSynchronisationMode;
 
 class gsdml_SynchronisationMode
@@ -970,6 +1109,7 @@ typedef struct
   gsdml_tBoolean AdditionalProtocolsSupported;
   gsdml_tBoolean MRPD_Supported;
   gsdml_tInteger MaxMRP_Instances;
+  gsdml_tBoolean AdditionalForwardingRulesSupported;
 } gsdml_sMediaRedundancy;
 
 class gsdml_MediaRedundancy
@@ -998,6 +1138,9 @@ typedef struct
   gsdml_tBoolean PTP_BoundarySupported;
   gsdml_tBoolean DCP_BoundarySupported;
   gsdml_tBoolean DelayMeasurementSupported;
+  gsdml_tBoolean PDEV_CombinedObjectSupported;
+  gsdml_tUnsigned16 MaxFrameStartTime;
+  gsdml_tUnsigned16 MinNRT_Gap;
 } gsdml_sInterfaceSubmoduleItem;
 
 class gsdml_InterfaceSubmoduleItem
@@ -1036,6 +1179,7 @@ typedef struct
   gsdml_tBoolean CheckMAUTypeSupported;
   gsdml_tBoolean CheckMAUTypeDifferenceSupported;
   gsdml_tValueList Writeable_IM_Records;
+  gsdml_tBoolean ShortPreamble100MBitSupported;
 } gsdml_sPortSubmoduleItem;
 
 class gsdml_PortSubmoduleItem
@@ -1043,7 +1187,9 @@ class gsdml_PortSubmoduleItem
 public:
   gsdml_PortSubmoduleItem(pn_gsdml* g);
   gsdml_sPortSubmoduleItem Body;
+  gsdml_MAUTypeList* MAUTypeList;
   gsdml_RecordDataList* RecordDataList;
+  gsdml_ModuleInfo* ModuleInfo;
   pn_gsdml* gsdml;
   ~gsdml_PortSubmoduleItem();
   void build();
@@ -1094,6 +1240,7 @@ class gsdml_SubmoduleItemRef
 public:
   gsdml_SubmoduleItemRef(pn_gsdml* g);
   gsdml_sSubmoduleItemRef Body;
+  gsdml_eSubmoduleType submodule_type;
   pn_gsdml* gsdml;
   void build();
   void print(int ind);
@@ -1164,6 +1311,24 @@ public:
 
 typedef struct
 {
+  gsdml_tString DeviceType;
+  gsdml_tUnsigned16 MaxSwitchOverTime;
+  gsdml_tBoolean RT_InputOnBackupAR_Supported;
+  gsdml_tUnsigned16 NumberOfAR_Sets;
+  gsdml_tBoolean DataInvalidOnBackupAR_Supported;
+} gsdml_sSystemRedundancy;
+
+class gsdml_SystemRedundancy
+{
+public:
+  gsdml_SystemRedundancy(pn_gsdml* g);
+  gsdml_sSystemRedundancy Body;
+  pn_gsdml* gsdml;
+  ~gsdml_SystemRedundancy(){};
+};
+
+typedef struct
+{
   gsdml_tId ID;
   gsdml_tValueList PhysicalSlots;
   gsdml_tUnsigned32hex ModuleIdentNumber;
@@ -1192,6 +1357,9 @@ typedef struct
   gsdml_tUnsigned32 ResetToFactoryModes;
   gsdml_tBoolean SharedInputSupported;
   gsdml_tUnsigned16 NumberOfDeviceAccessAR;
+  gsdml_tUnsigned16 NumberOfSubmodules;
+  gsdml_tBoolean PrmBeginPrmEndSequenceSupported;
+  gsdml_tBoolean CIR_Supported;
 } gsdml_sDeviceAccessPointItem;
 
 class gsdml_DeviceAccessPointItem
@@ -1211,6 +1379,7 @@ public:
   gsdml_UseableSubmodules* UseableSubmodules;
   gsdml_SlotList* SlotList;
   gsdml_SlotGroups* SlotGroups;
+  gsdml_SystemRedundancy* SystemRedundancy;
   pn_gsdml* gsdml;
   ~gsdml_DeviceAccessPointItem();
   void build();
@@ -1269,6 +1438,7 @@ class gsdml_SubmoduleList
 public:
   gsdml_SubmoduleList(pn_gsdml* g) : gsdml(g) {}
   std::vector<gsdml_VirtualSubmoduleItem*> SubmoduleItem;
+  std::vector<gsdml_PortSubmoduleItem*> PortSubmoduleItem;
   pn_gsdml* gsdml;
   ~gsdml_SubmoduleList();
   void build();
@@ -1422,6 +1592,7 @@ typedef struct
 {
   gsdml_tUnsigned16 UserStructureIdentifier;
   gsdml_tUnsigned32 API;
+  gsdml_tRefIdT Name;
 } gsdml_sUnitDiagTypeItem;
 
 class gsdml_UnitDiagTypeItem
@@ -1432,6 +1603,7 @@ public:
   std::vector<gsdml_Ref*> Ref;
   pn_gsdml* gsdml;
   ~gsdml_UnitDiagTypeItem();
+  void build();
   void print(int ind);
 };
 
@@ -1442,6 +1614,7 @@ public:
   std::vector<gsdml_UnitDiagTypeItem*> UnitDiagTypeItem;
   pn_gsdml* gsdml;
   ~gsdml_UnitDiagTypeList();
+  void build();
   void print(int ind);
 };
 
@@ -1574,38 +1747,6 @@ public:
   void print(int ind);
 };
 
-typedef struct
-{
-  gsdml_tRefId ParameterTarget;
-} gsdml_sParameterRef;
-
-typedef struct
-{
-  gsdml_tRefId MenuTarget;
-} gsdml_sMenuRef;
-
-class gsdml_ParameterRef
-{
-public:
-  gsdml_ParameterRef(pn_gsdml* g);
-  gsdml_sParameterRef Body;
-  pn_gsdml* gsdml;
-  ~gsdml_ParameterRef();
-  void build();
-  void print(int ind);
-};
-
-class gsdml_MenuRef
-{
-public:
-  gsdml_MenuRef(pn_gsdml* g);
-  gsdml_sMenuRef Body;
-  pn_gsdml* gsdml;
-  ~gsdml_MenuRef();
-  void build();
-  void print(int ind);
-};
-
 class pn_gsdml
 {
 public:
@@ -1671,12 +1812,17 @@ public:
   int datavalue_to_string(gsdml_eValueDataType datatype, void* value,
                           unsigned int size, char* str, unsigned int strsize);
   int string_to_datavalue(gsdml_eValueDataType datatype, void* value,
-                          unsigned int size, const char* str);
+                          void* value_reversed_endianess, unsigned int size,
+                          const char* str);
   int get_datavalue_length(gsdml_eValueDataType datatype, int strlength,
                            unsigned int* len);
   void set_classes(gsdml_sModuleClass* mclist) { module_classlist = mclist; }
-  int set_par_record_default(unsigned char* data, int size,
+  int set_par_record_default(unsigned char* data,
+                             unsigned char* data_reversed_endianess, int size,
                              gsdml_ParameterRecordDataItem* par_record);
+  int populate_and_align_par_reversed_record_data(
+      unsigned char const* read_data, unsigned char* reversed_data,
+      gsdml_ParameterRecordDataItem* par_record);
 
   bool next_token();
   bool is_space(const char c);
@@ -1696,10 +1842,14 @@ public:
   void* object_factory(gsdml_eTag id);
   void* find_value_ref(char* ref);
   void* find_module_ref(char* ref);
-  void* find_submodule_ref(char* ref);
+  void* find_submodule_ref(char* ref, gsdml_eSubmoduleType* type);
   void* find_category_ref(char* ref);
   void* find_text_ref(char* ref);
   void* find_graphic_ref(char* ref);
+  gsdml_Ref* find_ref_ref(char* ref,
+                          gsdml_ParameterRecordDataItem* search_domain);
+  gsdml_MenuItem*
+  find_menuitem_ref(char* ref, gsdml_ParameterRecordDataItem* search_domain);
   void gsdml_print();
   void build();
 };

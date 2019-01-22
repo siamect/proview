@@ -65,17 +65,21 @@ static char null_str[] = "";
 // Convert attribute string to value
 //
 int GsdAttrNav::attr_string_to_value(int type_id, const char* value_str,
-    void* buffer_ptr, int buff_size, int attr_size)
+                                     void* buffer_ptr, int buff_size,
+                                     int attr_size)
 {
-  switch (type_id) {
-  case pwr_eType_Boolean: {
+  switch (type_id)
+  {
+  case pwr_eType_Boolean:
+  {
     if (sscanf(value_str, "%d", (pwr_tBoolean*)buffer_ptr) != 1)
       return ATTRNAV__INPUT_SYNTAX;
     if (*(pwr_tBoolean*)buffer_ptr > 1)
       return ATTRNAV__INPUT_SYNTAX;
     break;
   }
-  case pwr_eType_Float32: {
+  case pwr_eType_Float32:
+  {
     pwr_tFloat32 f;
     if (sscanf(value_str, "%f", &f) != 1)
       return ATTRNAV__INPUT_SYNTAX;
@@ -83,17 +87,20 @@ int GsdAttrNav::attr_string_to_value(int type_id, const char* value_str,
 
     break;
   }
-  case pwr_eType_Int32: {
+  case pwr_eType_Int32:
+  {
     if (sscanf(value_str, "%d", (int*)buffer_ptr) != 1)
       return ATTRNAV__INPUT_SYNTAX;
     break;
   }
-  case pwr_eType_UInt32: {
+  case pwr_eType_UInt32:
+  {
     if (sscanf(value_str, "%u", (int*)buffer_ptr) != 1)
       return ATTRNAV__INPUT_SYNTAX;
     break;
   }
-  case pwr_eType_String: {
+  case pwr_eType_String:
+  {
     if ((int)strlen(value_str) >= attr_size)
       return ATTRNAV__STRINGTOLONG;
     strncpy((char*)buffer_ptr, value_str, MIN(attr_size, buff_size));
@@ -106,44 +113,51 @@ int GsdAttrNav::attr_string_to_value(int type_id, const char* value_str,
 //
 // Convert attribute value to string
 //
-void GsdAttrNav::attrvalue_to_string(
-    int type_id, void* value_ptr, char* str, int size, int* len, char* format)
+void GsdAttrNav::attrvalue_to_string(int type_id, void* value_ptr, char* str,
+                                     int size, int* len, char* format)
 {
-  if (value_ptr == 0) {
+  if (value_ptr == 0)
+  {
     strcpy(str, "UNDEFINED");
     return;
   }
 
-  switch (type_id) {
-  case pwr_eType_Boolean: {
+  switch (type_id)
+  {
+  case pwr_eType_Boolean:
+  {
     if (!format)
       *len = sprintf(str, "%d", *(pwr_tBoolean*)value_ptr);
     else
       *len = sprintf(str, format, *(pwr_tBoolean*)value_ptr);
     break;
   }
-  case pwr_eType_Float32: {
+  case pwr_eType_Float32:
+  {
     if (!format)
       *len = sprintf(str, "%f", *(float*)value_ptr);
     else
       *len = sprintf(str, format, *(float*)value_ptr);
     break;
   }
-  case pwr_eType_UInt32: {
+  case pwr_eType_UInt32:
+  {
     if (!format)
       *len = sprintf(str, "%u", *(int*)value_ptr);
     else
       *len = sprintf(str, format, *(int*)value_ptr);
     break;
   }
-  case pwr_eType_Int32: {
+  case pwr_eType_Int32:
+  {
     if (!format)
       *len = sprintf(str, "%d", *(int*)value_ptr);
     else
       *len = sprintf(str, format, *(int*)value_ptr);
     break;
   }
-  case pwr_eType_String: {
+  case pwr_eType_String:
+  {
     strncpy(str, (char*)value_ptr, size);
     str[size - 1] = 0;
     *len = strlen(str);
@@ -187,7 +201,7 @@ void GsdAttrNavBrow::allocate_pixmaps()
 // Create the navigator widget
 //
 GsdAttrNav::GsdAttrNav(void* xn_parent_ctx, const char* xn_name, pb_gsd* xn_gsd,
-    int xn_edit_mode, pwr_tStatus* status)
+                       int xn_edit_mode, pwr_tStatus* status)
     : parent_ctx(xn_parent_ctx), gsd(xn_gsd), edit_mode(xn_edit_mode),
       trace_started(0), message_cb(0), change_value_cb(0)
 {
@@ -200,14 +214,9 @@ GsdAttrNav::GsdAttrNav(void* xn_parent_ctx, const char* xn_name, pb_gsd* xn_gsd,
 //
 //  Delete a nav context
 //
-GsdAttrNav::~GsdAttrNav()
-{
-}
+GsdAttrNav::~GsdAttrNav() {}
 
-GsdAttrNavBrow::~GsdAttrNavBrow()
-{
-  free_pixmaps();
-}
+GsdAttrNavBrow::~GsdAttrNavBrow() { free_pixmaps(); }
 
 //
 //  Get current zoom factor
@@ -220,18 +229,12 @@ void GsdAttrNav::get_zoom(double* zoom_factor)
 //
 //  Zoom
 //
-void GsdAttrNav::zoom(double zoom_factor)
-{
-  brow_Zoom(brow->ctx, zoom_factor);
-}
+void GsdAttrNav::zoom(double zoom_factor) { brow_Zoom(brow->ctx, zoom_factor); }
 
 //
 //  Return to base zoom factor
 //
-void GsdAttrNav::unzoom()
-{
-  brow_UnZoom(brow->ctx);
-}
+void GsdAttrNav::unzoom() { brow_UnZoom(brow->ctx); }
 
 // Get selected item
 int GsdAttrNav::get_select(ItemPb** item)
@@ -269,21 +272,26 @@ int GsdAttrNav::set_attr_value(const char* value_str)
   brow_GetUserData(node_list[0], (void**)&base_item);
   free(node_list);
 
-  switch (base_item->type) {
-  case attrnav_eItemType_PbBase: {
+  switch (base_item->type)
+  {
+  case attrnav_eItemType_PbBase:
+  {
     ItemPbBase* item = (ItemPbBase*)base_item;
 
-    sts = attr_string_to_value(
-        item->type_id, value_str, buffer, sizeof(buffer), item->size);
+    sts = attr_string_to_value(item->type_id, value_str, buffer, sizeof(buffer),
+                               item->size);
     if (EVEN(sts))
       return sts;
 
-    if (!feq(item->max_limit, 0.0) || !feq(item->min_limit, 0.0)) {
-      switch (item->type_id) {
+    if (!feq(item->max_limit, 0.0) || !feq(item->min_limit, 0.0))
+    {
+      switch (item->type_id)
+      {
       case pwr_eType_Int32:
       case pwr_eType_UInt32:
-        if (*(int*)&buffer < item->min_limit
-            || *(int*)&buffer > item->max_limit) {
+        if (*(int*)&buffer < item->min_limit ||
+            *(int*)&buffer > item->max_limit)
+        {
           message('E', "Min or maxvalue exceeded");
           return 0;
         }
@@ -318,16 +326,19 @@ int GsdAttrNav::check_attr_value(char** value)
   brow_GetUserData(node_list[0], (void**)&base_item);
   free(node_list);
 
-  switch (base_item->type) {
-  case attrnav_eItemType_PbBase: {
+  switch (base_item->type)
+  {
+  case attrnav_eItemType_PbBase:
+  {
     ItemPbBase* item = (ItemPbBase*)base_item;
 
-    if (item->noedit) {
+    if (item->noedit)
+    {
       *value = 0;
       return PB__ATTRNOEDIT;
     }
-    attrvalue_to_string(
-        item->type_id, item->value_p, buf, sizeof(buf), &len, NULL);
+    attrvalue_to_string(item->type_id, item->value_p, buf, sizeof(buf), &len,
+                        NULL);
     *value = buf;
     return PB__SUCCESS;
   }
@@ -346,7 +357,8 @@ int GsdAttrNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
   GsdAttrNav* attrnav;
   ItemPb* item;
 
-  if (event->event == flow_eEvent_ObjectDeleted) {
+  if (event->event == flow_eEvent_ObjectDeleted)
+  {
     brow_GetUserData(event->object.object, (void**)&item);
     delete item;
     return 1;
@@ -354,27 +366,36 @@ int GsdAttrNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
 
   brow_GetCtxUserData((BrowCtx*)ctx, (void**)&attrnav);
   attrnav->message(' ', null_str);
-  switch (event->event) {
-  case flow_eEvent_Key_Up: {
+  switch (event->event)
+  {
+  case flow_eEvent_Key_Up:
+  {
     brow_tNode* node_list;
     int node_count;
     brow_tObject object;
     int sts;
 
     brow_GetSelectedNodes(attrnav->brow->ctx, &node_list, &node_count);
-    if (!node_count) {
+    if (!node_count)
+    {
       sts = brow_GetLastVisible(attrnav->brow->ctx, &object);
       if (EVEN(sts))
         return 1;
-    } else {
-      if (!brow_IsVisible(
-              attrnav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+    }
+    else
+    {
+      if (!brow_IsVisible(attrnav->brow->ctx, node_list[0],
+                          flow_eVisible_Partial))
+      {
         sts = brow_GetLastVisible(attrnav->brow->ctx, &object);
         if (EVEN(sts))
           return 1;
-      } else {
+      }
+      else
+      {
         sts = brow_GetPrevious(attrnav->brow->ctx, node_list[0], &object);
-        if (EVEN(sts)) {
+        if (EVEN(sts))
+        {
           if (node_count)
             free(node_list);
           return 1;
@@ -390,26 +411,34 @@ int GsdAttrNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
       free(node_list);
     break;
   }
-  case flow_eEvent_Key_Down: {
+  case flow_eEvent_Key_Down:
+  {
     brow_tNode* node_list;
     int node_count;
     brow_tObject object;
     int sts;
 
     brow_GetSelectedNodes(attrnav->brow->ctx, &node_list, &node_count);
-    if (!node_count) {
+    if (!node_count)
+    {
       sts = brow_GetFirstVisible(attrnav->brow->ctx, &object);
       if (EVEN(sts))
         return 1;
-    } else {
-      if (!brow_IsVisible(
-              attrnav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+    }
+    else
+    {
+      if (!brow_IsVisible(attrnav->brow->ctx, node_list[0],
+                          flow_eVisible_Partial))
+      {
         sts = brow_GetFirstVisible(attrnav->brow->ctx, &object);
         if (EVEN(sts))
           return 1;
-      } else {
+      }
+      else
+      {
         sts = brow_GetNext(attrnav->brow->ctx, node_list[0], &object);
-        if (EVEN(sts)) {
+        if (EVEN(sts))
+        {
           if (node_count)
             free(node_list);
           return 1;
@@ -433,10 +462,12 @@ int GsdAttrNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
     double ll_x, ll_y, ur_x, ur_y;
     int sts;
 
-    switch (event->object.object_type) {
+    switch (event->object.object_type)
+    {
     case flow_eObjectType_Node:
       brow_MeasureNode(event->object.object, &ll_x, &ll_y, &ur_x, &ur_y);
-      if (event->object.x < ll_x + 1.0) {
+      if (event->object.x < ll_x + 1.0)
+      {
         // Simulate doubleclick
         flow_tEvent doubleclick_event;
 
@@ -448,9 +479,12 @@ int GsdAttrNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
         return sts;
       }
 
-      if (brow_FindSelectedObject(attrnav->brow->ctx, event->object.object)) {
+      if (brow_FindSelectedObject(attrnav->brow->ctx, event->object.object))
+      {
         brow_SelectClear(attrnav->brow->ctx);
-      } else {
+      }
+      else
+      {
         brow_SelectClear(attrnav->brow->ctx);
         brow_SetInverse(event->object.object, 1);
         brow_SelectInsert(attrnav->brow->ctx, event->object.object);
@@ -460,24 +494,30 @@ int GsdAttrNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
       brow_SelectClear(attrnav->brow->ctx);
     }
     break;
-  case flow_eEvent_MB2Click: {
+  case flow_eEvent_MB2Click:
+  {
     // Select
     brow_tNode* node_list;
     int node_count;
     int sts;
 
-    if (!attrnav->edit_mode) {
+    if (!attrnav->edit_mode)
+    {
       attrnav->message('E', "Not in edit mode");
       break;
     }
 
-    switch (event->object.object_type) {
+    switch (event->object.object_type)
+    {
     case flow_eObjectType_Node:
       brow_GetSelectedNodes(attrnav->brow->ctx, &node_list, &node_count);
-      if (!node_count) {
+      if (!node_count)
+      {
         attrnav->message('E', "Select a module");
         break;
-      } else if (node_count > 1) {
+      }
+      else if (node_count > 1)
+      {
         attrnav->message('E', "Select one module");
         free(node_list);
         break;
@@ -487,19 +527,22 @@ int GsdAttrNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
       brow_GetUserData(node_list[0], (void**)&item_src);
       brow_GetUserData(event->object.object, (void**)&item_dest);
 
-      if (item_src->type != attrnav_eItemType_PbModule) {
+      if (item_src->type != attrnav_eItemType_PbModule)
+      {
         attrnav->message('E', "Unable to move this object");
         free(node_list);
         break;
       }
-      if (item_dest->type != attrnav_eItemType_PbModule) {
+      if (item_dest->type != attrnav_eItemType_PbModule)
+      {
         attrnav->message('E', "Invalid destination");
         free(node_list);
         break;
       }
 
       sts = attrnav->gsd->move_module_conf(item_src->mconf, item_dest->mconf);
-      if (ODD(sts)) {
+      if (ODD(sts))
+      {
         brow_SelectClear(attrnav->brow->ctx);
         brow_SetInverse(event->object.object, 1);
         brow_SelectInsert(attrnav->brow->ctx, event->object.object);
@@ -512,7 +555,8 @@ int GsdAttrNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
     }
     break;
   }
-  case flow_eEvent_Key_Left: {
+  case flow_eEvent_Key_Left:
+  {
     brow_tNode* node_list;
     int node_count;
     brow_tObject object;
@@ -525,10 +569,12 @@ int GsdAttrNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
     if (brow_IsOpen(node_list[0]))
       // Close this node
       object = node_list[0];
-    else {
+    else
+    {
       // Close parent
       sts = brow_GetParent(attrnav->brow->ctx, node_list[0], &object);
-      if (EVEN(sts)) {
+      if (EVEN(sts))
+      {
         free(node_list);
         return 1;
       }
@@ -544,7 +590,8 @@ int GsdAttrNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
     free(node_list);
     break;
   }
-  case flow_eEvent_Key_Right: {
+  case flow_eEvent_Key_Right:
+  {
     brow_tNode* node_list;
     int node_count;
 
@@ -553,7 +600,8 @@ int GsdAttrNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
       return 1;
 
     brow_GetUserData(node_list[0], (void**)&item);
-    switch (item->type) {
+    switch (item->type)
+    {
     case attrnav_eItemType_PbBase:
     case attrnav_eItemType_PbEnum:
       if (((ItemPbBase*)item)->parent)
@@ -564,28 +612,33 @@ int GsdAttrNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
     case attrnav_eItemType_PbEnumByteOrder:
       item->open_children(attrnav, 0, 0);
       break;
-    case attrnav_eItemType_PbEnumValue: {
+    case attrnav_eItemType_PbEnumValue:
+    {
       int value;
-      if (!attrnav->edit_mode) {
+      if (!attrnav->edit_mode)
+      {
         attrnav->message('E', "Not in edit mode");
         break;
       }
 
       brow_GetRadiobutton(node_list[0], 0, &value);
-      if (!value) {
+      if (!value)
+      {
         brow_SetRadiobutton(node_list[0], 0, 1);
-        *(int*)((ItemPbEnumValue*)item)->value_p
-            = ((ItemPbEnumValue*)item)->num;
+        *(int*)((ItemPbEnumValue*)item)->value_p =
+            ((ItemPbEnumValue*)item)->num;
         attrnav->gsd->set_modified(1);
       }
       break;
     default:
       item->open_children(attrnav, 0, 0);
-    } break;
+    }
+    break;
     }
   }
   case flow_eEvent_MB1DoubleClick:
-    switch (event->object.object_type) {
+    switch (event->object.object_type)
+    {
     case flow_eObjectType_Node:
       brow_GetUserData(event->object.object, (void**)&item);
       item->open_children(attrnav, event->object.x, event->object.y);
@@ -595,21 +648,27 @@ int GsdAttrNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
     break;
   case flow_eEvent_MB1DoubleClickCtrl:
     break;
-  case flow_eEvent_Radiobutton: {
-    if (!attrnav->edit_mode) {
+  case flow_eEvent_Radiobutton:
+  {
+    if (!attrnav->edit_mode)
+    {
       attrnav->message('E', "Not in edit mode");
       break;
     }
-    switch (event->object.object_type) {
+    switch (event->object.object_type)
+    {
     case flow_eObjectType_Node:
       brow_GetUserData(event->object.object, (void**)&item);
-      switch (item->type) {
+      switch (item->type)
+      {
       case attrnav_eItemType_PbEnumValue:
-        if (!event->radiobutton.value) {
+        if (!event->radiobutton.value)
+        {
           brow_SetRadiobutton(event->radiobutton.object,
-              event->radiobutton.number, !event->radiobutton.value);
-          *(int*)((ItemPbEnumValue*)item)->value_p
-              = ((ItemPbEnumValue*)item)->num;
+                              event->radiobutton.number,
+                              !event->radiobutton.value);
+          *(int*)((ItemPbEnumValue*)item)->value_p =
+              ((ItemPbEnumValue*)item)->num;
           attrnav->gsd->set_modified(1);
         }
         break;
@@ -621,19 +680,23 @@ int GsdAttrNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
 
     break;
   }
-  case flow_eEvent_Key_PageDown: {
+  case flow_eEvent_Key_PageDown:
+  {
     brow_Page(attrnav->brow->ctx, 0.8);
     break;
   }
-  case flow_eEvent_Key_PageUp: {
+  case flow_eEvent_Key_PageUp:
+  {
     brow_Page(attrnav->brow->ctx, -0.8);
     break;
   }
-  case flow_eEvent_ScrollDown: {
+  case flow_eEvent_ScrollDown:
+  {
     brow_Page(attrnav->brow->ctx, 0.1);
     break;
   }
-  case flow_eEvent_ScrollUp: {
+  case flow_eEvent_ScrollUp:
+  {
     brow_Page(attrnav->brow->ctx, -0.1);
     break;
   }
@@ -647,7 +710,8 @@ void GsdAttrNav::trace_scan(void* data)
   GsdAttrNav* attrnav = (GsdAttrNav*)data;
   int time = 200;
 
-  if (attrnav->trace_started) {
+  if (attrnav->trace_started)
+  {
     brow_TraceScan(attrnav->brow->ctx);
 
     attrnav->trace_timerid->add(time, trace_scan, attrnav);
@@ -669,25 +733,29 @@ int GsdAttrNav::trace_scan_bc(brow_tObject object, void* p)
 
   brow_GetUserData(object, (void**)&base_item);
 
-  switch (base_item->type) {
-  case attrnav_eItemType_PbBase: {
+  switch (base_item->type)
+  {
+  case attrnav_eItemType_PbBase:
+  {
     ItemPbBase* item;
 
     item = (ItemPbBase*)base_item;
     if (item->size == 0)
       break;
 
-    if (!item->first_scan) {
-      if (item->size > (int)sizeof(item->old_value)
-          && item->type_id == glow_eType_String
-          && strlen((char*)p) < sizeof(item->old_value)
-          && streq((char*)p, item->old_value))
+    if (!item->first_scan)
+    {
+      if (item->size > (int)sizeof(item->old_value) &&
+          item->type_id == glow_eType_String &&
+          strlen((char*)p) < sizeof(item->old_value) &&
+          streq((char*)p, item->old_value))
         // No change since last time
         return 1;
       else if (memcmp(item->old_value, p, item->size) == 0)
         // No change since last time
         return 1;
-    } else
+    }
+    else
       item->first_scan = 0;
 
     attrvalue_to_string(item->type_id, p, buf, sizeof(buf), &len, NULL);
@@ -695,16 +763,19 @@ int GsdAttrNav::trace_scan_bc(brow_tObject object, void* p)
     memcpy(item->old_value, p, MIN(item->size, (int)sizeof(item->old_value)));
     break;
   }
-  case attrnav_eItemType_PbEnum: {
+  case attrnav_eItemType_PbEnum:
+  {
     ItemPbEnum* item;
 
     item = (ItemPbEnum*)base_item;
 
-    if (!item->first_scan) {
+    if (!item->first_scan)
+    {
       if (item->old_value == *(int*)p)
         // No change since last time
         return 1;
-    } else
+    }
+    else
       item->first_scan = 0;
 
     brow_GetCtxUserData(brow_GetCtx(object), (void**)&attrnav);
@@ -714,16 +785,19 @@ int GsdAttrNav::trace_scan_bc(brow_tObject object, void* p)
     item->old_value = *(int*)p;
     break;
   }
-  case attrnav_eItemType_PbEnumByteOrder: {
+  case attrnav_eItemType_PbEnumByteOrder:
+  {
     ItemPbEnumByteOrder* item;
 
     item = (ItemPbEnumByteOrder*)base_item;
 
-    if (!item->first_scan) {
+    if (!item->first_scan)
+    {
       if (item->old_value == *(int*)p)
         // No change since last time
         return 1;
-    } else
+    }
+    else
       item->first_scan = 0;
 
     brow_GetCtxUserData(brow_GetCtx(object), (void**)&attrnav);
@@ -737,14 +811,16 @@ int GsdAttrNav::trace_scan_bc(brow_tObject object, void* p)
     item->old_value = *(int*)p;
     break;
   }
-  case attrnav_eItemType_PbModuleType: {
+  case attrnav_eItemType_PbModuleType:
+  {
     ItemPbModuleType* item;
     int sts;
     gsd_sModule* mp = 0;
 
     item = (ItemPbModuleType*)base_item;
 
-    if (!item->first_scan) {
+    if (!item->first_scan)
+    {
       if (item->old_value == *(int*)p)
         // No change since last time
         return 1;
@@ -754,9 +830,11 @@ int GsdAttrNav::trace_scan_bc(brow_tObject object, void* p)
 
     if (*(int*)p == 0)
       strcpy(buf, "No");
-    else {
+    else
+    {
       int idx = 1;
-      for (mp = attrnav->gsd->modulelist; mp; mp = mp->next) {
+      for (mp = attrnav->gsd->modulelist; mp; mp = mp->next)
+      {
         if (idx++ == *(int*)p)
           break;
       }
@@ -768,7 +846,8 @@ int GsdAttrNav::trace_scan_bc(brow_tObject object, void* p)
     brow_SetAnnotation(object, 1, buf, strlen(buf));
     item->old_value = *(int*)p;
 
-    if (!item->first_scan) {
+    if (!item->first_scan)
+    {
       ItemPbModuleData* prm_item;
 
       attrnav->gsd->configure_module(item->mconf);
@@ -780,17 +859,21 @@ int GsdAttrNav::trace_scan_bc(brow_tObject object, void* p)
       prm_item->update(attrnav);
 
       // Set default class
-      if (mp) {
+      if (mp)
+      {
         pwr_tObjName mclass;
         pwr_tCid* datap;
         pwr_tCid mcid = 0;
 
-        sts = attrnav->search_class(
-            pb_cModuleClassFile, attrnav->modelname, mp->Mod_Name, mclass);
-        if (ODD(sts)) {
-          for (int i = 0; attrnav->gsd->module_classlist[i].cid; i++) {
-            if (str_NoCaseStrcmp(mclass, attrnav->gsd->module_classlist[i].name)
-                == 0) {
+        sts = attrnav->search_class(pb_cModuleClassFile, attrnav->modelname,
+                                    mp->Mod_Name, mclass);
+        if (ODD(sts))
+        {
+          for (int i = 0; attrnav->gsd->module_classlist[i].cid; i++)
+          {
+            if (str_NoCaseStrcmp(mclass,
+                                 attrnav->gsd->module_classlist[i].name) == 0)
+            {
               mcid = attrnav->gsd->module_classlist[i].cid;
               break;
             }
@@ -799,25 +882,30 @@ int GsdAttrNav::trace_scan_bc(brow_tObject object, void* p)
 
         brow_tObject cobject;
         sts = brow_GetNextSibling(attrnav->brow->ctx, odata, &cobject);
-        if (ODD(sts)) {
+        if (ODD(sts))
+        {
           ItemPb* item;
 
           brow_GetUserData(cobject, (void**)&item);
-          if (item->type == attrnav_eItemType_PbModuleClass) {
+          if (item->type == attrnav_eItemType_PbModuleClass)
+          {
             brow_GetTraceData(cobject, (void**)&datap);
             *datap = mcid;
           }
         }
       }
-    } else
+    }
+    else
       item->first_scan = 0;
 
     break;
   }
-  case attrnav_eItemType_PbModuleClass: {
+  case attrnav_eItemType_PbModuleClass:
+  {
     ItemPbModuleClass* item = (ItemPbModuleClass*)base_item;
 
-    if (!item->first_scan) {
+    if (!item->first_scan)
+    {
       if (item->old_value == *(int*)p)
         // No change since last time
         return 1;
@@ -826,11 +914,14 @@ int GsdAttrNav::trace_scan_bc(brow_tObject object, void* p)
 
     if (*(int*)p == 0)
       strcpy(buf, "No");
-    else {
+    else
+    {
       int found = 0;
       int i;
-      for (i = 0; attrnav->gsd->module_classlist[i].cid; i++) {
-        if (attrnav->gsd->module_classlist[i].cid == *(pwr_tCid*)p) {
+      for (i = 0; attrnav->gsd->module_classlist[i].cid; i++)
+      {
+        if (attrnav->gsd->module_classlist[i].cid == *(pwr_tCid*)p)
+        {
           found = 1;
           break;
         }
@@ -848,7 +939,8 @@ int GsdAttrNav::trace_scan_bc(brow_tObject object, void* p)
 
     break;
   }
-  case attrnav_eItemType_PbModule: {
+  case attrnav_eItemType_PbModule:
+  {
     ItemPbModule* item = (ItemPbModule*)base_item;
 
     brow_GetCtxUserData(brow_GetCtx(object), (void**)&attrnav);
@@ -857,12 +949,14 @@ int GsdAttrNav::trace_scan_bc(brow_tObject object, void* p)
       strcpy(buf, "");
     else
       strcpy(buf, item->mconf->module->Mod_Name);
-    if (!streq(buf, item->old_type)) {
+    if (!streq(buf, item->old_type))
+    {
       brow_SetAnnotation(object, 2, buf, strlen(buf));
       strcpy(item->old_type, buf);
     }
 
-    if (!item->first_scan) {
+    if (!item->first_scan)
+    {
       if (streq(item->old_value, (char*)p))
         // No change since last time
         return 1;
@@ -876,15 +970,18 @@ int GsdAttrNav::trace_scan_bc(brow_tObject object, void* p)
       item->first_scan = 0;
     break;
   }
-  case attrnav_eItemType_PbEnumValue: {
+  case attrnav_eItemType_PbEnumValue:
+  {
     ItemPbEnumValue* item;
 
     item = (ItemPbEnumValue*)base_item;
-    if (!item->first_scan) {
+    if (!item->first_scan)
+    {
       if (item->old_value == *(int*)p)
         // No change since last time
         return 1;
-    } else
+    }
+    else
       item->first_scan = 0;
 
     if (*(int*)p == item->num)
@@ -900,8 +997,8 @@ int GsdAttrNav::trace_scan_bc(brow_tObject object, void* p)
   return 1;
 }
 
-int GsdAttrNav::trace_connect_bc(
-    brow_tObject object, char* name, char* attr, flow_eTraceType type, void** p)
+int GsdAttrNav::trace_connect_bc(brow_tObject object, char* name, char* attr,
+                                 flow_eTraceType type, void** p)
 {
   ItemPb* base_item;
 
@@ -911,10 +1008,12 @@ int GsdAttrNav::trace_connect_bc(
     return 1;
 
   brow_GetUserData(object, (void**)&base_item);
-  switch (base_item->type) {
+  switch (base_item->type)
+  {
   case attrnav_eItemType_PbBase:
   case attrnav_eItemType_PbEnum:
-  case attrnav_eItemType_PbEnumByteOrder: {
+  case attrnav_eItemType_PbEnumByteOrder:
+  {
     ItemPbBase* item = (ItemPbBase*)base_item;
     if (item->size == 0)
       break;
@@ -922,25 +1021,29 @@ int GsdAttrNav::trace_connect_bc(
     *p = item->value_p;
     break;
   }
-  case attrnav_eItemType_PbModuleType: {
+  case attrnav_eItemType_PbModuleType:
+  {
     ItemPbModuleType* item = (ItemPbModuleType*)base_item;
 
     *p = &item->mconf->idx;
     break;
   }
-  case attrnav_eItemType_PbModule: {
+  case attrnav_eItemType_PbModule:
+  {
     ItemPbModule* item = (ItemPbModule*)base_item;
 
     *p = &item->mconf->name;
     break;
   }
-  case attrnav_eItemType_PbModuleClass: {
+  case attrnav_eItemType_PbModuleClass:
+  {
     ItemPbModuleClass* item = (ItemPbModuleClass*)base_item;
 
     *p = &item->mconf->cid;
     break;
   }
-  case attrnav_eItemType_PbEnumValue: {
+  case attrnav_eItemType_PbEnumValue:
+  {
     ItemPbEnumValue* item = (ItemPbEnumValue*)base_item;
 
     *p = item->value_p;
@@ -956,7 +1059,8 @@ int GsdAttrNav::trace_disconnect_bc(brow_tObject object)
   ItemPb* base_item;
 
   brow_GetUserData(object, (void**)&base_item);
-  switch (base_item->type) {
+  switch (base_item->type)
+  {
   default:;
   }
   return 1;
@@ -971,41 +1075,41 @@ void GsdAttrNavBrow::create_nodeclasses()
 
   // Create common-class
 
-  brow_CreateNodeClass(
-      ctx, "NavigatorDefault", flow_eNodeGroup_Common, &nc_object);
+  brow_CreateNodeClass(ctx, "NavigatorDefault", flow_eNodeGroup_Common,
+                       &nc_object);
   brow_AddAnnotPixmap(nc_object, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap(nc_object, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot(nc_object, 2, 0.6, 0, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 0);
+                flow_eAnnotType_OneLine, 0);
   brow_AddAnnot(nc_object, 7, 0.6, 1, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 1);
+                flow_eAnnotType_OneLine, 1);
   brow_AddAnnot(nc_object, 12, 0.6, 2, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 1);
+                flow_eAnnotType_OneLine, 1);
   brow_AddFrame(nc_object, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create attribute nodeclass
 
-  brow_CreateNodeClass(
-      ctx, "NavigatorGsdAttr", flow_eNodeGroup_Common, &nc_attr);
+  brow_CreateNodeClass(ctx, "NavigatorGsdAttr", flow_eNodeGroup_Common,
+                       &nc_attr);
   brow_AddAnnotPixmap(nc_attr, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot(nc_attr, 2, 0.6, 0, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 0);
+                flow_eAnnotType_OneLine, 0);
   brow_AddAnnot(nc_attr, 12, 0.6, 1, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 1);
+                flow_eAnnotType_OneLine, 1);
   brow_AddFrame(nc_attr, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create multiline attribute nodeclass
 
   brow_CreateNodeClass(ctx, "NavigatorGsdAttrMultiLine", flow_eNodeGroup_Common,
-      &nc_attr_multiline);
-  brow_AddAnnotPixmap(
-      nc_attr_multiline, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
+                       &nc_attr_multiline);
+  brow_AddAnnotPixmap(nc_attr_multiline, 0, 0.2, 0.1, flow_eDrawType_Line, 2,
+                      0);
   brow_AddAnnot(nc_attr_multiline, 2, 0.6, 0, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 0);
+                flow_eAnnotType_OneLine, 0);
   brow_AddAnnot(nc_attr_multiline, 8, 0.6, 1, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_MultiLine, 1);
-  brow_AddFrame(
-      nc_attr_multiline, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
+                flow_eAnnotType_MultiLine, 1);
+  brow_AddFrame(nc_attr_multiline, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1,
+                1);
 
   // Create attribute nodeclass
 
@@ -1013,80 +1117,77 @@ void GsdAttrNavBrow::create_nodeclasses()
   brow_AddRadiobutton(nc_enum, 15, 0.1, 0.7, 0.7, 0, flow_eDrawType_Line, 1);
   brow_AddAnnotPixmap(nc_enum, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot(nc_enum, 2, 0.6, 0, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 0);
+                flow_eAnnotType_OneLine, 0);
   brow_AddFrame(nc_enum, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create table nodeclass
 
-  brow_CreateNodeClass(
-      ctx, "NavigatorTable", flow_eNodeGroup_Common, &nc_table);
+  brow_CreateNodeClass(ctx, "NavigatorTable", flow_eNodeGroup_Common,
+                       &nc_table);
   brow_AddAnnotPixmap(nc_table, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap(nc_table, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot(nc_table, 2, 0.6, 0, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 0);
+                flow_eAnnotType_OneLine, 0);
   brow_AddAnnot(nc_table, 8, 0.6, 1, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 1);
+                flow_eAnnotType_OneLine, 1);
   brow_AddAnnot(nc_table, 12, 0.6, 2, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 1);
+                flow_eAnnotType_OneLine, 1);
   brow_AddAnnot(nc_table, 16, 0.6, 3, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 1);
+                flow_eAnnotType_OneLine, 1);
   brow_AddAnnot(nc_table, 20, 0.6, 4, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 1);
+                flow_eAnnotType_OneLine, 1);
   brow_AddAnnot(nc_table, 24, 0.6, 5, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 1);
+                flow_eAnnotType_OneLine, 1);
   brow_AddAnnot(nc_table, 28, 0.6, 6, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 1);
+                flow_eAnnotType_OneLine, 1);
   brow_AddAnnot(nc_table, 32, 0.6, 7, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 1);
+                flow_eAnnotType_OneLine, 1);
   brow_AddAnnot(nc_table, 35, 0.6, 8, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 1);
+                flow_eAnnotType_OneLine, 1);
   brow_AddAnnot(nc_table, 38, 0.6, 9, flow_eDrawType_TextHelvetica, 2,
-      flow_eAnnotType_OneLine, 1);
+                flow_eAnnotType_OneLine, 1);
   brow_AddFrame(nc_table, 0, 0, 20, 0.83, flow_eDrawType_LineGray, -1, 1);
 
   // Create Header
 
-  brow_CreateNodeClass(
-      ctx, "NavigatorHead", flow_eNodeGroup_Common, &nc_header);
+  brow_CreateNodeClass(ctx, "NavigatorHead", flow_eNodeGroup_Common,
+                       &nc_header);
   brow_AddAnnotPixmap(nc_header, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot(nc_header, 2, 0.6, 0, flow_eDrawType_TextHelveticaBold, 2,
-      flow_eAnnotType_OneLine, 0);
+                flow_eAnnotType_OneLine, 0);
   brow_AddAnnot(nc_header, 8, 0.6, 1, flow_eDrawType_TextHelveticaBold, 2,
-      flow_eAnnotType_OneLine, 1);
+                flow_eAnnotType_OneLine, 1);
   brow_AddFrame(nc_header, 0, 0, 20, 0.83, flow_eDrawType_LineGray, 2, 1);
 
   // Create TableHeader
 
-  brow_CreateNodeClass(
-      ctx, "NavigatorTableHead", flow_eNodeGroup_Common, &nc_table_header);
+  brow_CreateNodeClass(ctx, "NavigatorTableHead", flow_eNodeGroup_Common,
+                       &nc_table_header);
   brow_AddAnnotPixmap(nc_table_header, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot(nc_table_header, 2, 0.6, 0, flow_eDrawType_TextHelveticaBold, 2,
-      flow_eAnnotType_OneLine, 0);
+                flow_eAnnotType_OneLine, 0);
   brow_AddAnnot(nc_table_header, 8, 0.6, 1, flow_eDrawType_TextHelveticaBold, 2,
-      flow_eAnnotType_OneLine, 0);
+                flow_eAnnotType_OneLine, 0);
   brow_AddAnnot(nc_table_header, 12, 0.6, 2, flow_eDrawType_TextHelveticaBold,
-      2, flow_eAnnotType_OneLine, 0);
+                2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot(nc_table_header, 16, 0.6, 3, flow_eDrawType_TextHelveticaBold,
-      2, flow_eAnnotType_OneLine, 0);
+                2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot(nc_table_header, 20, 0.6, 4, flow_eDrawType_TextHelveticaBold,
-      2, flow_eAnnotType_OneLine, 0);
+                2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot(nc_table_header, 24, 0.6, 5, flow_eDrawType_TextHelveticaBold,
-      2, flow_eAnnotType_OneLine, 0);
+                2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot(nc_table_header, 28, 0.6, 6, flow_eDrawType_TextHelveticaBold,
-      2, flow_eAnnotType_OneLine, 0);
+                2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot(nc_table_header, 32, 0.6, 7, flow_eDrawType_TextHelveticaBold,
-      2, flow_eAnnotType_OneLine, 0);
+                2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot(nc_table_header, 35, 0.6, 8, flow_eDrawType_TextHelveticaBold,
-      2, flow_eAnnotType_OneLine, 0);
+                2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot(nc_table_header, 38, 0.6, 9, flow_eDrawType_TextHelveticaBold,
-      2, flow_eAnnotType_OneLine, 0);
+                2, flow_eAnnotType_OneLine, 0);
   brow_AddFrame(nc_table_header, 0, 0, 20, 0.83, flow_eDrawType_LineGray, 2, 1);
 }
 
-void GsdAttrNav::print(char* filename)
-{
-  brow_Print(brow->ctx, filename);
-}
+void GsdAttrNav::print(char* filename) { brow_Print(brow->ctx, filename); }
 
 int GsdAttrNav::object_attr()
 {
@@ -1099,12 +1200,15 @@ int GsdAttrNav::object_attr()
   brow_SetNodraw(brow->ctx);
 
   for (keyp = gsd->keywordlist, datap = gsd->datalist; keyp->type != gsd_End;
-       keyp++, datap++) {
-    if (datap->found) {
-      if (!(streq(keyp->name, "Vendor_Name")
-              || streq(keyp->name, "Model_Name")))
+       keyp++, datap++)
+  {
+    if (datap->found)
+    {
+      if (!(streq(keyp->name, "Vendor_Name") ||
+            streq(keyp->name, "Model_Name")))
         continue;
-      switch (keyp->type) {
+      switch (keyp->type)
+      {
       case gsd_ProfibusDP:
       case gsd_Boolean:
       case gsd_Unsigned8:
@@ -1137,7 +1241,7 @@ int GsdAttrNav::object_attr()
       }
       if (size != 0)
         new ItemPbBase(this, keyp->name, "LocalGsdAttr", type, size, 0, 0, p, 1,
-            0, NULL, flow_eDest_IntoLast);
+                       0, NULL, flow_eDest_IntoLast);
       if (streq(keyp->name, "Model_Name"))
         strcpy(modelname, (char*)p);
     }
@@ -1145,18 +1249,20 @@ int GsdAttrNav::object_attr()
 
   p = (void*)&gsd->address;
   new ItemPbBase(this, "Address", "LocalGsdAttr", pwr_eType_Int32,
-      sizeof(pwr_tInt32), 0, 0, p, 0, 0, NULL, flow_eDest_IntoLast);
+                 sizeof(pwr_tInt32), 0, 0, p, 0, 0, NULL, flow_eDest_IntoLast);
 
   p = (void*)&gsd->byte_order;
   new ItemPbEnumByteOrder(this, "ByteOrdering", "LocalGsdAttr", pwr_eType_Int32,
-      sizeof(pwr_tInt32), 0, 0, p, 0, NULL, flow_eDest_IntoLast);
+                          sizeof(pwr_tInt32), 0, 0, p, 0, NULL,
+                          flow_eDest_IntoLast);
 
   new ItemPbMoreData(this, "SlaveGsdData", NULL, flow_eDest_IntoLast);
   new ItemPbPrmData(this, "UserPrmData", NULL, flow_eDest_IntoLast);
 
-  for (int i = 0; i < gsd->module_conf_cnt; i++) {
-    new ItemPbModule(
-        this, "Module", &gsd->module_conf[i], NULL, flow_eDest_IntoLast);
+  for (int i = 0; i < gsd->module_conf_cnt; i++)
+  {
+    new ItemPbModule(this, "Module", &gsd->module_conf[i], NULL,
+                     flow_eDest_IntoLast);
   }
   brow_ResetNodraw(brow->ctx);
   brow_Redraw(brow->ctx, 0);
@@ -1177,38 +1283,38 @@ void GsdAttrNavBrow::brow_setup()
   brow_SetAttributes(ctx, &brow_attr, mask);
   brow_SetCtxUserData(ctx, attrnav);
 
-  brow_EnableEvent(
-      ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, GsdAttrNav::brow_cb);
-  brow_EnableEvent(
-      ctx, flow_eEvent_MB2Click, flow_eEventType_CallBack, GsdAttrNav::brow_cb);
+  brow_EnableEvent(ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack,
+                   GsdAttrNav::brow_cb);
+  brow_EnableEvent(ctx, flow_eEvent_MB2Click, flow_eEventType_CallBack,
+                   GsdAttrNav::brow_cb);
   brow_EnableEvent(ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack,
-      GsdAttrNav::brow_cb);
+                   GsdAttrNav::brow_cb);
   brow_EnableEvent(ctx, flow_eEvent_MB1DoubleClickCtrl,
-      flow_eEventType_CallBack, GsdAttrNav::brow_cb);
+                   flow_eEventType_CallBack, GsdAttrNav::brow_cb);
   brow_EnableEvent(ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack,
-      GsdAttrNav::brow_cb);
+                   GsdAttrNav::brow_cb);
   brow_EnableEvent(ctx, flow_eEvent_ObjectDeleted, flow_eEventType_CallBack,
-      GsdAttrNav::brow_cb);
-  brow_EnableEvent(
-      ctx, flow_eEvent_Key_Up, flow_eEventType_CallBack, GsdAttrNav::brow_cb);
-  brow_EnableEvent(
-      ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack, GsdAttrNav::brow_cb);
+                   GsdAttrNav::brow_cb);
+  brow_EnableEvent(ctx, flow_eEvent_Key_Up, flow_eEventType_CallBack,
+                   GsdAttrNav::brow_cb);
+  brow_EnableEvent(ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack,
+                   GsdAttrNav::brow_cb);
   brow_EnableEvent(ctx, flow_eEvent_Key_Right, flow_eEventType_CallBack,
-      GsdAttrNav::brow_cb);
-  brow_EnableEvent(
-      ctx, flow_eEvent_Key_Left, flow_eEventType_CallBack, GsdAttrNav::brow_cb);
-  brow_EnableEvent(
-      ctx, flow_eEvent_Key_PF3, flow_eEventType_CallBack, GsdAttrNav::brow_cb);
+                   GsdAttrNav::brow_cb);
+  brow_EnableEvent(ctx, flow_eEvent_Key_Left, flow_eEventType_CallBack,
+                   GsdAttrNav::brow_cb);
+  brow_EnableEvent(ctx, flow_eEvent_Key_PF3, flow_eEventType_CallBack,
+                   GsdAttrNav::brow_cb);
   brow_EnableEvent(ctx, flow_eEvent_Radiobutton, flow_eEventType_CallBack,
-      GsdAttrNav::brow_cb);
+                   GsdAttrNav::brow_cb);
   brow_EnableEvent(ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack,
-      GsdAttrNav::brow_cb);
+                   GsdAttrNav::brow_cb);
   brow_EnableEvent(ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack,
-      GsdAttrNav::brow_cb);
-  brow_EnableEvent(
-      ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, GsdAttrNav::brow_cb);
+                   GsdAttrNav::brow_cb);
+  brow_EnableEvent(ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack,
+                   GsdAttrNav::brow_cb);
   brow_EnableEvent(ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack,
-      GsdAttrNav::brow_cb);
+                   GsdAttrNav::brow_cb);
 }
 
 //
@@ -1229,8 +1335,8 @@ int GsdAttrNav::init_brow_cb(FlowCtx* fctx, void* client_data)
   // Create the root item
   attrnav->object_attr();
 
-  sts = brow_TraceInit(
-      ctx, trace_connect_bc, trace_disconnect_bc, trace_scan_bc);
+  sts =
+      brow_TraceInit(ctx, trace_connect_bc, trace_disconnect_bc, trace_scan_bc);
   attrnav->trace_started = 1;
 
   trace_scan(attrnav);
@@ -1238,8 +1344,8 @@ int GsdAttrNav::init_brow_cb(FlowCtx* fctx, void* client_data)
   return 1;
 }
 
-int GsdAttrNav::search_class(
-    const char* filename, const char* model, const char* module, char* mclass)
+int GsdAttrNav::search_class(const char* filename, const char* model,
+                             const char* module, char* mclass)
 {
   char line[200];
   char itemv[2][200];
@@ -1260,12 +1366,13 @@ int GsdAttrNav::search_class(
   if (!fp)
     return 0;
 
-  while (fp.getline(line, sizeof(line))) {
+  while (fp.getline(line, sizeof(line)))
+  {
     if (line[0] == '#')
       continue;
 
     num = dcli_parse(line, " 	", "", (char*)itemv,
-        sizeof(itemv) / sizeof(itemv[0]), sizeof(itemv[0]), 0);
+                     sizeof(itemv) / sizeof(itemv[0]), sizeof(itemv[0]), 0);
     if (num < 1)
       continue;
 
@@ -1273,7 +1380,8 @@ int GsdAttrNav::search_class(
     if (num >= 2)
       str_trim(itemv[1], itemv[1]);
 
-    if (str_NoCaseStrcmp(itemv[0], "Model") == 0) {
+    if (str_NoCaseStrcmp(itemv[0], "Model") == 0)
+    {
       if (num < 2)
         continue;
 
@@ -1284,12 +1392,14 @@ int GsdAttrNav::search_class(
         in_model = 1;
     }
 
-    if (in_model) {
+    if (in_model)
+    {
       if (streq(itemv[0], "{"))
         in_par = 1;
     }
 
-    if (in_par) {
+    if (in_par)
+    {
       if (num < 2)
         continue;
 
@@ -1299,7 +1409,8 @@ int GsdAttrNav::search_class(
       if (streq(itemv[1], "-") || streq(itemv[1], ""))
         continue;
 
-      if (str_NoCaseStrcmp(itemv[0], lmodule) == 0) {
+      if (str_NoCaseStrcmp(itemv[0], lmodule) == 0)
+      {
         strncpy(mclass, itemv[1], sizeof(pwr_tObjName));
         fp.close();
         return 1;
@@ -1311,23 +1422,18 @@ int GsdAttrNav::search_class(
   return 0;
 }
 
-ItemPb::ItemPb() : parent(0)
-{
-}
+ItemPb::ItemPb() : parent(0) {}
 
-ItemPb::~ItemPb()
-{
-}
+ItemPb::~ItemPb() {}
 
-int ItemPb::open_children(GsdAttrNav* attrnav, double x, double y)
-{
-  return 1;
-}
+int ItemPb::open_children(GsdAttrNav* attrnav, double x, double y) { return 1; }
 
 ItemPbBase::ItemPbBase(GsdAttrNav* attrnav, const char* item_name,
-    const char* attr, int attr_type, int attr_size, double attr_min_limit,
-    double attr_max_limit, void* attr_value_p, int attr_noedit,
-    gsd_sPrmText* attr_enumtext, brow_tNode dest, flow_eDest dest_code)
+                       const char* attr, int attr_type, int attr_size,
+                       double attr_min_limit, double attr_max_limit,
+                       void* attr_value_p, int attr_noedit,
+                       gsd_sPrmText* attr_enumtext, brow_tNode dest,
+                       flow_eDest dest_code)
     : value_p(attr_value_p), first_scan(1), type_id(attr_type), size(attr_size),
       min_limit(attr_min_limit), max_limit(attr_max_limit), noedit(attr_noedit),
       enumtext(attr_enumtext), subgraph(0)
@@ -1340,7 +1446,7 @@ ItemPbBase::ItemPbBase(GsdAttrNav* attrnav, const char* item_name,
   if (enumtext)
     parent = 1;
   brow_CreateNode(attrnav->brow->ctx, item_name, attrnav->brow->nc_attr, dest,
-      dest_code, (void*)this, 1, &node);
+                  dest_code, (void*)this, 1, &node);
 
   if (parent)
     brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_attrenum);
@@ -1351,24 +1457,22 @@ ItemPbBase::ItemPbBase(GsdAttrNav* attrnav, const char* item_name,
   brow_SetTraceAttr(node, attr, "", flow_eTraceType_User);
 }
 
-ItemPbBase::~ItemPbBase()
-{
-}
+ItemPbBase::~ItemPbBase() {}
 
 ItemPbEnum::ItemPbEnum(GsdAttrNav* attrnav, const char* item_name,
-    const char* attr, int attr_type, int attr_size, double attr_min_limit,
-    double attr_max_limit, void* attr_value_p, int attr_noedit,
-    gsd_sPrmText* attr_enumtext, brow_tNode dest, flow_eDest dest_code)
+                       const char* attr, int attr_type, int attr_size,
+                       double attr_min_limit, double attr_max_limit,
+                       void* attr_value_p, int attr_noedit,
+                       gsd_sPrmText* attr_enumtext, brow_tNode dest,
+                       flow_eDest dest_code)
     : ItemPbBase(attrnav, item_name, attr, attr_type, attr_size, attr_min_limit,
-          attr_max_limit, attr_value_p, attr_noedit, attr_enumtext, dest,
-          dest_code)
+                 attr_max_limit, attr_value_p, attr_noedit, attr_enumtext, dest,
+                 dest_code)
 {
   type = attrnav_eItemType_PbEnum;
 }
 
-ItemPbEnum::~ItemPbEnum()
-{
-}
+ItemPbEnum::~ItemPbEnum() {}
 
 int ItemPbEnum::open_children(GsdAttrNav* attrnav, double x, double y)
 {
@@ -1376,7 +1480,8 @@ int ItemPbEnum::open_children(GsdAttrNav* attrnav, double x, double y)
 
   brow_GetNodePosition(node, &node_x, &node_y);
 
-  if (brow_IsOpen(node)) {
+  if (brow_IsOpen(node))
+  {
     // Close
     brow_SetNodraw(attrnav->brow->ctx);
     brow_CloseNode(attrnav->brow->ctx, node);
@@ -1387,14 +1492,18 @@ int ItemPbEnum::open_children(GsdAttrNav* attrnav, double x, double y)
     brow_ResetOpen(node, attrnav_mOpen_All);
     brow_ResetNodraw(attrnav->brow->ctx);
     brow_Redraw(attrnav->brow->ctx, node_y);
-  } else if (parent && !noedit && enumtext) {
+  }
+  else if (parent && !noedit && enumtext)
+  {
     int found;
 
     found = 0;
     brow_SetNodraw(attrnav->brow->ctx);
-    for (gsd_sText* tp = enumtext->text_list; tp; tp = tp->next) {
+    for (gsd_sText* tp = enumtext->text_list; tp; tp = tp->next)
+    {
       new ItemPbEnumValue(attrnav, tp->Text, tp->Prm_Data_Value,
-          pwr_eType_UInt32, this->value_p, node, flow_eDest_IntoLast);
+                          pwr_eType_UInt32, this->value_p, node,
+                          flow_eDest_IntoLast);
     }
     brow_SetOpen(node, attrnav_mOpen_Children);
     brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_openmap);
@@ -1410,14 +1519,17 @@ int ItemPb::close(GsdAttrNav* attrnav, double x, double y)
 
   brow_GetNodePosition(node, &node_x, &node_y);
 
-  if (brow_IsOpen(node)) {
+  if (brow_IsOpen(node))
+  {
     // Close
     brow_SetNodraw(attrnav->brow->ctx);
     brow_CloseNode(attrnav->brow->ctx, node);
     if (brow_IsOpen(node) & attrnav_mOpen_Attributes)
       brow_RemoveAnnotPixmap(node, 1);
-    if (brow_IsOpen(node) & attrnav_mOpen_Children) {
-      switch (type) {
+    if (brow_IsOpen(node) & attrnav_mOpen_Children)
+    {
+      switch (type)
+      {
       case attrnav_eItemType_PbEnum:
       case attrnav_eItemType_PbModuleType:
       case attrnav_eItemType_PbModuleClass:
@@ -1438,8 +1550,9 @@ int ItemPb::close(GsdAttrNav* attrnav, double x, double y)
 }
 
 ItemPbEnumValue::ItemPbEnumValue(GsdAttrNav* attrnav, const char* item_name,
-    int item_num, int item_type_id, void* attr_value_p, brow_tNode dest,
-    flow_eDest dest_code)
+                                 int item_num, int item_type_id,
+                                 void* attr_value_p, brow_tNode dest,
+                                 flow_eDest dest_code)
     : num(item_num), type_id(item_type_id), value_p(attr_value_p), first_scan(1)
 {
   type = attrnav_eItemType_PbEnumValue;
@@ -1447,7 +1560,7 @@ ItemPbEnumValue::ItemPbEnumValue(GsdAttrNav* attrnav, const char* item_name,
   strcpy(name, item_name);
 
   brow_CreateNode(attrnav->brow->ctx, item_name, attrnav->brow->nc_enum, dest,
-      dest_code, (void*)this, 1, &node);
+                  dest_code, (void*)this, 1, &node);
 
   brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_attr);
   brow_SetAnnotation(node, 0, item_name, strlen(item_name));
@@ -1458,12 +1571,11 @@ ItemPbEnumValue::ItemPbEnumValue(GsdAttrNav* attrnav, const char* item_name,
   brow_SetTraceAttr(node, name, "", flow_eTraceType_User);
 }
 
-ItemPbEnumValue::~ItemPbEnumValue()
-{
-}
+ItemPbEnumValue::~ItemPbEnumValue() {}
 
 ItemPbModule::ItemPbModule(GsdAttrNav* attrnav, const char* item_name,
-    gsd_sModuleConf* item_mconf, brow_tNode dest, flow_eDest dest_code)
+                           gsd_sModuleConf* item_mconf, brow_tNode dest,
+                           flow_eDest dest_code)
     : mconf(item_mconf), first_scan(1)
 {
   type = attrnav_eItemType_PbModule;
@@ -1472,7 +1584,7 @@ ItemPbModule::ItemPbModule(GsdAttrNav* attrnav, const char* item_name,
   parent = 1;
 
   brow_CreateNode(attrnav->brow->ctx, item_name, attrnav->brow->nc_object, dest,
-      dest_code, (void*)this, 1, &node);
+                  dest_code, (void*)this, 1, &node);
 
   brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_map);
 
@@ -1486,7 +1598,8 @@ int ItemPbModule::open_children(GsdAttrNav* attrnav, double x, double y)
 
   brow_GetNodePosition(node, &node_x, &node_y);
 
-  if (brow_IsOpen(node)) {
+  if (brow_IsOpen(node))
+  {
     // Close
     brow_SetNodraw(attrnav->brow->ctx);
     brow_CloseNode(attrnav->brow->ctx, node);
@@ -1497,16 +1610,19 @@ int ItemPbModule::open_children(GsdAttrNav* attrnav, double x, double y)
     brow_ResetOpen(node, attrnav_mOpen_All);
     brow_ResetNodraw(attrnav->brow->ctx);
     brow_Redraw(attrnav->brow->ctx, node_y);
-  } else {
+  }
+  else
+  {
     brow_SetNodraw(attrnav->brow->ctx);
 
     new ItemPbBase(attrnav, "ObjectName", "LocalGsdAttr", pwr_eType_String, 32,
-        0, 0, mconf->name, 0, 0, node, flow_eDest_IntoLast);
+                   0, 0, mconf->name, 0, 0, node, flow_eDest_IntoLast);
 
     new ItemPbModuleType(attrnav, "Type", mconf, node, flow_eDest_IntoLast);
-    new ItemPbModuleData(
-        attrnav, "UserPrmData", mconf, node, flow_eDest_IntoLast);
-    if (attrnav->gsd->module_classlist) {
+    new ItemPbModuleData(attrnav, "UserPrmData", mconf, node,
+                         flow_eDest_IntoLast);
+    if (attrnav->gsd->module_classlist)
+    {
       new ItemPbModuleClass(attrnav, "Class", mconf, node, flow_eDest_IntoLast);
     }
     brow_SetOpen(node, attrnav_mOpen_Children);
@@ -1518,7 +1634,8 @@ int ItemPbModule::open_children(GsdAttrNav* attrnav, double x, double y)
 }
 
 ItemPbModuleType::ItemPbModuleType(GsdAttrNav* attrnav, const char* item_name,
-    gsd_sModuleConf* item_mconf, brow_tNode dest, flow_eDest dest_code)
+                                   gsd_sModuleConf* item_mconf, brow_tNode dest,
+                                   flow_eDest dest_code)
     : mconf(item_mconf), first_scan(1)
 {
   type = attrnav_eItemType_PbModuleType;
@@ -1526,7 +1643,7 @@ ItemPbModuleType::ItemPbModuleType(GsdAttrNav* attrnav, const char* item_name,
   strcpy(name, item_name);
 
   brow_CreateNode(attrnav->brow->ctx, item_name, attrnav->brow->nc_attr, dest,
-      dest_code, (void*)this, 1, &node);
+                  dest_code, (void*)this, 1, &node);
 
   brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_attrenum);
 
@@ -1540,7 +1657,8 @@ int ItemPbModuleType::open_children(GsdAttrNav* attrnav, double x, double y)
 
   brow_GetNodePosition(node, &node_x, &node_y);
 
-  if (brow_IsOpen(node)) {
+  if (brow_IsOpen(node))
+  {
     // Close
     brow_SetNodraw(attrnav->brow->ctx);
     brow_CloseNode(attrnav->brow->ctx, node);
@@ -1551,16 +1669,19 @@ int ItemPbModuleType::open_children(GsdAttrNav* attrnav, double x, double y)
     brow_ResetOpen(node, attrnav_mOpen_All);
     brow_ResetNodraw(attrnav->brow->ctx);
     brow_Redraw(attrnav->brow->ctx, node_y);
-  } else {
+  }
+  else
+  {
     brow_SetNodraw(attrnav->brow->ctx);
 
     int idx = 0;
     new ItemPbEnumValue(attrnav, "No", idx++, pwr_eType_UInt32,
-        &this->mconf->idx, node, flow_eDest_IntoLast);
+                        &this->mconf->idx, node, flow_eDest_IntoLast);
 
-    for (gsd_sModule* mp = attrnav->gsd->modulelist; mp; mp = mp->next) {
+    for (gsd_sModule* mp = attrnav->gsd->modulelist; mp; mp = mp->next)
+    {
       new ItemPbEnumValue(attrnav, mp->Mod_Name, idx++, pwr_eType_UInt32,
-          &this->mconf->idx, node, flow_eDest_IntoLast);
+                          &this->mconf->idx, node, flow_eDest_IntoLast);
     }
 
     brow_SetOpen(node, attrnav_mOpen_Children);
@@ -1572,7 +1693,8 @@ int ItemPbModuleType::open_children(GsdAttrNav* attrnav, double x, double y)
 }
 
 ItemPbModuleData::ItemPbModuleData(GsdAttrNav* attrnav, const char* item_name,
-    gsd_sModuleConf* item_mconf, brow_tNode dest, flow_eDest dest_code)
+                                   gsd_sModuleConf* item_mconf, brow_tNode dest,
+                                   flow_eDest dest_code)
     : mconf(item_mconf)
 {
   type = attrnav_eItemType_PbModuleData;
@@ -1580,7 +1702,7 @@ ItemPbModuleData::ItemPbModuleData(GsdAttrNav* attrnav, const char* item_name,
   strcpy(name, item_name);
 
   brow_CreateNode(attrnav->brow->ctx, item_name, attrnav->brow->nc_attr, dest,
-      dest_code, (void*)this, 1, &node);
+                  dest_code, (void*)this, 1, &node);
 
   if (parent)
     brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_map);
@@ -1595,7 +1717,8 @@ void ItemPbModuleData::update(GsdAttrNav* attrnav)
   parent = (mconf->prm_dataitems_cnt > 0);
 
   // If open close
-  if (brow_IsOpen(node)) {
+  if (brow_IsOpen(node))
+  {
     brow_SetNodraw(attrnav->brow->ctx);
     brow_CloseNode(attrnav->brow->ctx, node);
     if (parent)
@@ -1605,7 +1728,9 @@ void ItemPbModuleData::update(GsdAttrNav* attrnav)
     brow_ResetOpen(node, attrnav_mOpen_All);
     brow_ResetNodraw(attrnav->brow->ctx);
     brow_Redraw(attrnav->brow->ctx, 0);
-  } else {
+  }
+  else
+  {
     if (parent)
       brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_map);
     else
@@ -1619,7 +1744,8 @@ int ItemPbModuleData::open_children(GsdAttrNav* attrnav, double x, double y)
 
   brow_GetNodePosition(node, &node_x, &node_y);
 
-  if (brow_IsOpen(node)) {
+  if (brow_IsOpen(node))
+  {
     // Close
     brow_SetNodraw(attrnav->brow->ctx);
     brow_CloseNode(attrnav->brow->ctx, node);
@@ -1630,17 +1756,22 @@ int ItemPbModuleData::open_children(GsdAttrNav* attrnav, double x, double y)
     brow_ResetOpen(node, attrnav_mOpen_All);
     brow_ResetNodraw(attrnav->brow->ctx);
     brow_Redraw(attrnav->brow->ctx, node_y);
-  } else {
+  }
+  else
+  {
     brow_SetNodraw(attrnav->brow->ctx);
 
-    if (mconf->module) {
+    if (mconf->module)
+    {
       unsigned int type;
       int size;
       void* p;
 
-      for (int i = 0; i < mconf->prm_dataitems_cnt; i++) {
+      for (int i = 0; i < mconf->prm_dataitems_cnt; i++)
+      {
         p = &mconf->prm_dataitems[i].value;
-        switch (mconf->prm_dataitems[i].ref->prm_data->data_type) {
+        switch (mconf->prm_dataitems[i].ref->prm_data->data_type)
+        {
         case gsd_Signed32:
         case gsd_Signed16:
         case gsd_Signed8:
@@ -1652,14 +1783,16 @@ int ItemPbModuleData::open_children(GsdAttrNav* attrnav, double x, double y)
         size = sizeof(pwr_tUInt32);
 
         if (!mconf->prm_dataitems[i].ref->prm_data->prmtext)
-          new ItemPbBase(attrnav,
+          new ItemPbBase(
+              attrnav,
               mconf->prm_dataitems[i].ref->prm_data->Ext_User_Prm_Data_Name,
               "LocalGsdAttr", type, size,
               mconf->prm_dataitems[i].ref->prm_data->Min_Value,
               mconf->prm_dataitems[i].ref->prm_data->Max_Value, p, 0, 0, node,
               flow_eDest_IntoLast);
         else
-          new ItemPbEnum(attrnav,
+          new ItemPbEnum(
+              attrnav,
               mconf->prm_dataitems[i].ref->prm_data->Ext_User_Prm_Data_Name,
               "LocalGsdAttr", type, size, 0, 0, p, 0,
               mconf->prm_dataitems[i].ref->prm_data->prmtext, node,
@@ -1675,7 +1808,8 @@ int ItemPbModuleData::open_children(GsdAttrNav* attrnav, double x, double y)
 }
 
 ItemPbModuleClass::ItemPbModuleClass(GsdAttrNav* attrnav, const char* item_name,
-    gsd_sModuleConf* item_mconf, brow_tNode dest, flow_eDest dest_code)
+                                     gsd_sModuleConf* item_mconf,
+                                     brow_tNode dest, flow_eDest dest_code)
     : mconf(item_mconf), first_scan(1)
 {
   type = attrnav_eItemType_PbModuleClass;
@@ -1683,7 +1817,7 @@ ItemPbModuleClass::ItemPbModuleClass(GsdAttrNav* attrnav, const char* item_name,
   strcpy(name, item_name);
 
   brow_CreateNode(attrnav->brow->ctx, item_name, attrnav->brow->nc_attr, dest,
-      dest_code, (void*)this, 1, &node);
+                  dest_code, (void*)this, 1, &node);
 
   brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_attrenum);
 
@@ -1697,7 +1831,8 @@ int ItemPbModuleClass::open_children(GsdAttrNav* attrnav, double x, double y)
 
   brow_GetNodePosition(node, &node_x, &node_y);
 
-  if (brow_IsOpen(node)) {
+  if (brow_IsOpen(node))
+  {
     // Close
     brow_SetNodraw(attrnav->brow->ctx);
     brow_CloseNode(attrnav->brow->ctx, node);
@@ -1708,13 +1843,17 @@ int ItemPbModuleClass::open_children(GsdAttrNav* attrnav, double x, double y)
     brow_ResetOpen(node, attrnav_mOpen_All);
     brow_ResetNodraw(attrnav->brow->ctx);
     brow_Redraw(attrnav->brow->ctx, node_y);
-  } else {
+  }
+  else
+  {
     brow_SetNodraw(attrnav->brow->ctx);
 
-    for (int i = 0; attrnav->gsd->module_classlist[i].cid; i++) {
+    for (int i = 0; attrnav->gsd->module_classlist[i].cid; i++)
+    {
       new ItemPbEnumValue(attrnav, attrnav->gsd->module_classlist[i].name,
-          attrnav->gsd->module_classlist[i].cid, pwr_eType_UInt32,
-          &this->mconf->cid, node, flow_eDest_IntoLast);
+                          attrnav->gsd->module_classlist[i].cid,
+                          pwr_eType_UInt32, &this->mconf->cid, node,
+                          flow_eDest_IntoLast);
     }
 
     brow_SetOpen(node, attrnav_mOpen_Children);
@@ -1726,7 +1865,7 @@ int ItemPbModuleClass::open_children(GsdAttrNav* attrnav, double x, double y)
 }
 
 ItemPbPrmData::ItemPbPrmData(GsdAttrNav* attrnav, const char* item_name,
-    brow_tNode dest, flow_eDest dest_code)
+                             brow_tNode dest, flow_eDest dest_code)
 {
   type = attrnav_eItemType_PbPrmData;
   parent = (attrnav->gsd->prm_dataitems_cnt > 0);
@@ -1734,7 +1873,7 @@ ItemPbPrmData::ItemPbPrmData(GsdAttrNav* attrnav, const char* item_name,
   strcpy(name, item_name);
 
   brow_CreateNode(attrnav->brow->ctx, item_name, attrnav->brow->nc_attr, dest,
-      dest_code, (void*)this, 1, &node);
+                  dest_code, (void*)this, 1, &node);
 
   if (parent)
     brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_map);
@@ -1752,7 +1891,8 @@ int ItemPbPrmData::open_children(GsdAttrNav* attrnav, double x, double y)
 
   brow_GetNodePosition(node, &node_x, &node_y);
 
-  if (brow_IsOpen(node)) {
+  if (brow_IsOpen(node))
+  {
     // Close
     brow_SetNodraw(attrnav->brow->ctx);
     brow_CloseNode(attrnav->brow->ctx, node);
@@ -1763,27 +1903,32 @@ int ItemPbPrmData::open_children(GsdAttrNav* attrnav, double x, double y)
     brow_ResetOpen(node, attrnav_mOpen_All);
     brow_ResetNodraw(attrnav->brow->ctx);
     brow_Redraw(attrnav->brow->ctx, node_y);
-  } else {
+  }
+  else
+  {
     brow_SetNodraw(attrnav->brow->ctx);
 
-    for (int i = 0; i < attrnav->gsd->prm_dataitems_cnt; i++) {
+    for (int i = 0; i < attrnav->gsd->prm_dataitems_cnt; i++)
+    {
       p = &attrnav->gsd->prm_dataitems[i].value;
       type = pwr_eType_UInt32;
       size = sizeof(pwr_tUInt32);
 
       if (!attrnav->gsd->prm_dataitems[i].ref->prm_data->prmtext)
-        new ItemPbBase(attrnav, attrnav->gsd->prm_dataitems[i]
-                                    .ref->prm_data->Ext_User_Prm_Data_Name,
-            "LocalGsdAttr", type, size,
-            attrnav->gsd->prm_dataitems[i].ref->prm_data->Min_Value,
-            attrnav->gsd->prm_dataitems[i].ref->prm_data->Max_Value, p, 0, 0,
-            node, flow_eDest_IntoLast);
+        new ItemPbBase(attrnav,
+                       attrnav->gsd->prm_dataitems[i]
+                           .ref->prm_data->Ext_User_Prm_Data_Name,
+                       "LocalGsdAttr", type, size,
+                       attrnav->gsd->prm_dataitems[i].ref->prm_data->Min_Value,
+                       attrnav->gsd->prm_dataitems[i].ref->prm_data->Max_Value,
+                       p, 0, 0, node, flow_eDest_IntoLast);
       else
-        new ItemPbEnum(attrnav, attrnav->gsd->prm_dataitems[i]
-                                    .ref->prm_data->Ext_User_Prm_Data_Name,
-            "LocalGsdAttr", type, size, 0, 0, p, 0,
-            attrnav->gsd->prm_dataitems[i].ref->prm_data->prmtext, node,
-            flow_eDest_IntoLast);
+        new ItemPbEnum(attrnav,
+                       attrnav->gsd->prm_dataitems[i]
+                           .ref->prm_data->Ext_User_Prm_Data_Name,
+                       "LocalGsdAttr", type, size, 0, 0, p, 0,
+                       attrnav->gsd->prm_dataitems[i].ref->prm_data->prmtext,
+                       node, flow_eDest_IntoLast);
     }
 
     brow_SetOpen(node, attrnav_mOpen_Children);
@@ -1795,7 +1940,7 @@ int ItemPbPrmData::open_children(GsdAttrNav* attrnav, double x, double y)
 }
 
 ItemPbMoreData::ItemPbMoreData(GsdAttrNav* attrnav, const char* item_name,
-    brow_tNode dest, flow_eDest dest_code)
+                               brow_tNode dest, flow_eDest dest_code)
 {
   type = attrnav_eItemType_PbMoreData;
   parent = 1;
@@ -1803,7 +1948,7 @@ ItemPbMoreData::ItemPbMoreData(GsdAttrNav* attrnav, const char* item_name,
   strcpy(name, item_name);
 
   brow_CreateNode(attrnav->brow->ctx, item_name, attrnav->brow->nc_attr, dest,
-      dest_code, (void*)this, 1, &node);
+                  dest_code, (void*)this, 1, &node);
 
   brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_map);
   brow_SetAnnotation(node, 0, item_name, strlen(item_name));
@@ -1820,7 +1965,8 @@ int ItemPbMoreData::open_children(GsdAttrNav* attrnav, double x, double y)
 
   brow_GetNodePosition(node, &node_x, &node_y);
 
-  if (brow_IsOpen(node)) {
+  if (brow_IsOpen(node))
+  {
     // Close
     brow_SetNodraw(attrnav->brow->ctx);
     brow_CloseNode(attrnav->brow->ctx, node);
@@ -1831,16 +1977,20 @@ int ItemPbMoreData::open_children(GsdAttrNav* attrnav, double x, double y)
     brow_ResetOpen(node, attrnav_mOpen_All);
     brow_ResetNodraw(attrnav->brow->ctx);
     brow_Redraw(attrnav->brow->ctx, node_y);
-  } else {
+  }
+  else
+  {
     brow_SetNodraw(attrnav->brow->ctx);
 
     for (keyp = attrnav->gsd->keywordlist, datap = attrnav->gsd->datalist;
-         keyp->type != gsd_End; keyp++, datap++) {
-      if (streq(keyp->name, "Vendor_Name")
-          || streq(keyp->name, "Model_Name"))
+         keyp->type != gsd_End; keyp++, datap++)
+    {
+      if (streq(keyp->name, "Vendor_Name") || streq(keyp->name, "Model_Name"))
         continue;
-      if (datap->found) {
-        switch (keyp->type) {
+      if (datap->found)
+      {
+        switch (keyp->type)
+        {
         case gsd_ProfibusDP:
         case gsd_Boolean:
         case gsd_Unsigned8:
@@ -1873,7 +2023,7 @@ int ItemPbMoreData::open_children(GsdAttrNav* attrnav, double x, double y)
         }
         if (size != 0)
           new ItemPbBase(attrnav, keyp->name, "LocalGsdAttr", type, size, 0, 0,
-              p, 1, 0, node, flow_eDest_IntoLast);
+                         p, 1, 0, node, flow_eDest_IntoLast);
       }
     }
     brow_SetOpen(node, attrnav_mOpen_Children);
@@ -1884,12 +2034,12 @@ int ItemPbMoreData::open_children(GsdAttrNav* attrnav, double x, double y)
   return 1;
 }
 
-ItemPbEnumByteOrder::ItemPbEnumByteOrder(GsdAttrNav* attrnav,
-    const char* item_name, const char* attr, int attr_type, int attr_size,
-    double attr_min_limit, double attr_max_limit, void* attr_value_p,
-    int attr_noedit, brow_tNode dest, flow_eDest dest_code)
+ItemPbEnumByteOrder::ItemPbEnumByteOrder(
+    GsdAttrNav* attrnav, const char* item_name, const char* attr, int attr_type,
+    int attr_size, double attr_min_limit, double attr_max_limit,
+    void* attr_value_p, int attr_noedit, brow_tNode dest, flow_eDest dest_code)
     : ItemPbBase(attrnav, item_name, attr, attr_type, attr_size, attr_min_limit,
-          attr_max_limit, attr_value_p, attr_noedit, 0, dest, dest_code)
+                 attr_max_limit, attr_value_p, attr_noedit, 0, dest, dest_code)
 {
   type = attrnav_eItemType_PbEnumByteOrder;
   brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_attrenum);
@@ -1901,7 +2051,8 @@ int ItemPbEnumByteOrder::open_children(GsdAttrNav* attrnav, double x, double y)
 
   brow_GetNodePosition(node, &node_x, &node_y);
 
-  if (brow_IsOpen(node)) {
+  if (brow_IsOpen(node))
+  {
     // Close
     brow_SetNodraw(attrnav->brow->ctx);
     brow_CloseNode(attrnav->brow->ctx, node);
@@ -1912,15 +2063,17 @@ int ItemPbEnumByteOrder::open_children(GsdAttrNav* attrnav, double x, double y)
     brow_ResetOpen(node, attrnav_mOpen_All);
     brow_ResetNodraw(attrnav->brow->ctx);
     brow_Redraw(attrnav->brow->ctx, node_y);
-  } else if (!noedit) {
+  }
+  else if (!noedit)
+  {
     int found;
 
     found = 0;
     brow_SetNodraw(attrnav->brow->ctx);
     new ItemPbEnumValue(attrnav, "LittleEndian", 0, pwr_eType_UInt32,
-        this->value_p, node, flow_eDest_IntoLast);
+                        this->value_p, node, flow_eDest_IntoLast);
     new ItemPbEnumValue(attrnav, "BigEndian", 1, pwr_eType_UInt32,
-        this->value_p, node, flow_eDest_IntoLast);
+                        this->value_p, node, flow_eDest_IntoLast);
     brow_SetOpen(node, attrnav_mOpen_Children);
     brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_openmap);
     brow_ResetNodraw(attrnav->brow->ctx);

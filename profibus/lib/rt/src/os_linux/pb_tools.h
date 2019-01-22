@@ -79,8 +79,8 @@ extern "C" {
 
 /*----- function prototypes to get default busparameters -------------------*/
 #ifdef __PB_DP__
-FUNCTION extern PB_BOOL CALL_CONV pbt_get_dp_def_bus_param(IN USIGN8 BaudRate,
-    IN USIGN8 StationAddr, IN USIGN16 Mode,
+FUNCTION extern PB_BOOL CALL_CONV pbt_get_dp_def_bus_param(
+    IN USIGN8 BaudRate, IN USIGN8 StationAddr, IN USIGN16 Mode,
     OUT T_DP_BUS_PARA_SET FAR* pBusParameters)
 
     /*----------------------------------------------------------------------------
@@ -158,9 +158,9 @@ FUNCTION extern PB_BOOL CALL_CONV pbt_get_fdlif_def_bus_param(
 #endif
 
 #ifdef __PB_FMB__
-FUNCTION extern PB_BOOL CALL_CONV pbt_get_fmb_def_bus_param(IN USIGN8 BaudRate,
-    IN USIGN8 StationAddr, IN PB_BOOL InRingDesired, IN USIGN16 Mode,
-    OUT T_FMB_SET_BUSPARAMETER_REQ FAR* pBusParameters)
+FUNCTION extern PB_BOOL CALL_CONV pbt_get_fmb_def_bus_param(
+    IN USIGN8 BaudRate, IN USIGN8 StationAddr, IN PB_BOOL InRingDesired,
+    IN USIGN16 Mode, OUT T_FMB_SET_BUSPARAMETER_REQ FAR* pBusParameters)
 
     /*----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
@@ -200,8 +200,9 @@ FUNCTION extern VOID CALL_CONV ccrl_resrces_init(IN T_CRL_HDR FAR* pCrlHdr)
     ----------------------------------------------------------------------------*/
     ;
 
-FUNCTION extern USIGN16 CALL_CONV ccrl_resrces_add_entry(IN USIGN16 Cr,
-    IN T_CRL_STATIC FAR* pCrlStatic, OUT T_FMB_CONFIG_CRL FAR* pCrlConfig)
+FUNCTION extern USIGN16 CALL_CONV
+ccrl_resrces_add_entry(IN USIGN16 Cr, IN T_CRL_STATIC FAR* pCrlStatic,
+                       OUT T_FMB_CONFIG_CRL FAR* pCrlConfig)
 
     /*------------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION

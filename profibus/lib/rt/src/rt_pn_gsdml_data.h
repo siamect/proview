@@ -43,15 +43,18 @@
 
 #include "co_xml_parser.h"
 
-class GsdmlDataRecord {
+class GsdmlDataRecord
+{
 public:
   GsdmlDataRecord()
-      : record_idx(0), data(0), data_length(0), index(0), transfer_sequence(0)
+      : record_idx(0), data(0), data_reversed_endianess(0), data_length(0),
+        index(0), transfer_sequence(0)
   {
   }
 
   unsigned int record_idx;
   unsigned char* data;
+  unsigned char* data_reversed_endianess;
   unsigned int data_length;
   unsigned short index;
   unsigned short transfer_sequence;
@@ -63,10 +66,11 @@ public:
   }
   GsdmlDataRecord(const GsdmlDataRecord& x);
 
-  int print(std::ofstream& fp);
+  int print(std::ofstream& fp, bool reverse_endianess);
 };
 
-class GsdmlIOCRData {
+class GsdmlIOCRData
+{
 public:
   GsdmlIOCRData()
       : type(0), properties(0), send_clock_factor(0), phase(0), api(0)
@@ -83,7 +87,8 @@ public:
   int print(std::ofstream& fp);
 };
 
-class GsdmlSubslotData {
+class GsdmlSubslotData
+{
 public:
   GsdmlSubslotData()
       : subslot_number(0), subslot_idx(0), submodule_enum_number(0),
@@ -109,14 +114,16 @@ public:
   GsdmlSubslotData(const GsdmlSubslotData& x)
       : subslot_number(x.subslot_number), subslot_idx(x.subslot_idx)
   {
-    for (unsigned int i = 0; i < x.data_record.size(); i++) {
+    for (unsigned int i = 0; i < x.data_record.size(); i++)
+    {
       data_record.push_back(new GsdmlDataRecord(*x.data_record[i]));
     }
   }
-  int print(std::ofstream& fp);
+  int print(std::ofstream& fp, bool reverse_endianess);
 };
 
-class GsdmlSlotData {
+class GsdmlSlotData
+{
 public:
   GsdmlSlotData()
       : module_enum_number(0), module_class(0), module_oid(pwr_cNOid),
@@ -149,14 +156,16 @@ public:
         module_oid(pwr_cNObjid), slot_number(x.slot_number),
         slot_idx(x.slot_idx)
   {
-    for (unsigned int i = 0; i < x.subslot_data.size(); i++) {
+    for (unsigned int i = 0; i < x.subslot_data.size(); i++)
+    {
       subslot_data.push_back(new GsdmlSubslotData(*x.subslot_data[i]));
     }
   }
-  int print(std::ofstream& fp);
+  int print(std::ofstream& fp, bool reverse_endianess);
 };
 
-class GsdmlChannelDiag {
+class GsdmlChannelDiag
+{
 public:
   GsdmlChannelDiag();
   unsigned short error_type;
@@ -166,10 +175,12 @@ public:
   int print(std::ofstream& fp);
 };
 
-class GsdmlDeviceData {
+class GsdmlDeviceData
+{
 public:
   GsdmlDeviceData()
-      : device_num(0), vendor_id(0), device_id(0), byte_order(0), instance(0)
+      : device_num(0), vendor_id(0), device_id(0), byte_order(0),
+        read_data_is_native_ordered(1), instance(0)
   {
     device_name[0] = 0;
     ip_address[0] = 0;
@@ -189,6 +200,7 @@ public:
   unsigned short device_id;
   char version[20];
   int byte_order;
+  int read_data_is_native_ordered;
   unsigned short instance;
   pwr_tFileName gsdmlfile;
   std::vector<GsdmlSlotData*> slot_data;
@@ -196,10 +208,7 @@ public:
   static GsdmlSlotData* paste_slotdata;
   std::vector<GsdmlChannelDiag*> channel_diag;
 
-  ~GsdmlDeviceData()
-  {
-    device_reset();
-  }
+  ~GsdmlDeviceData() { device_reset(); }
   void device_reset()
   {
     for (unsigned int i = 0; i < slot_data.size(); i++)
@@ -224,11 +233,10 @@ public:
   int get_value(const char* attr, char* buf, int bufsize);
 };
 
-class GsdmlDataReader : public co_xml_interpreter {
+class GsdmlDataReader : public co_xml_interpreter
+{
 public:
-  GsdmlDataReader(GsdmlDeviceData* d) : data(d), new_filename(0)
-  {
-  }
+  GsdmlDataReader(GsdmlDeviceData* d) : data(d), new_filename(0) {}
   int tag(const char* name);
   int metatag(const char* name);
   int tag_end(const char* name);

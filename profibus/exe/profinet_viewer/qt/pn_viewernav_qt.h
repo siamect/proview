@@ -41,7 +41,8 @@
 
 #include "../src/pn_viewernav.h"
 
-class PnViewerNavQt : public PnViewerNav {
+class PnViewerNavQt : public PnViewerNav
+{
 public:
   PnViewerNavQt(void* v_parent_ctx, viewer_eType v_type, QWidget** w);
   ~PnViewerNavQt();

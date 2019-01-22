@@ -83,7 +83,8 @@ typedef enum {
   gsd_End
 } gsd_eType;
 
-typedef struct {
+typedef struct
+{
   char name[50];
   char group[50];
   int option;
@@ -91,19 +92,22 @@ typedef struct {
   unsigned int value_default;
 } gsd_sKeyword;
 
-typedef struct {
+typedef struct
+{
   char name[32];
   pwr_tCid cid;
 } gsd_sModuleClass;
 
-typedef struct {
+typedef struct
+{
   unsigned int value;
   void* data;
   int found;
   int len;
 } gsd_sData;
 
-typedef struct sArea {
+typedef struct sArea
+{
   char Area_Name[33];
   int Related_CFG_Identifier;
   int IO_Direction;
@@ -116,25 +120,29 @@ typedef struct sArea {
   struct sArea* next;
 } gsd_sArea;
 
-typedef struct {
+typedef struct
+{
   int Const_Offset;
   unsigned char Const_Prm_Data[237];
   int len;
 } gsd_sExtUserPrmDataConst;
 
-typedef struct sText {
+typedef struct sText
+{
   int Prm_Data_Value;
   char Text[33];
   struct sText* next;
 } gsd_sText;
 
-typedef struct sPrmText {
+typedef struct sPrmText
+{
   int Reference_Number;
   gsd_sText* text_list;
   struct sPrmText* next;
 } gsd_sPrmText;
 
-typedef struct sExtUserPrmData {
+typedef struct sExtUserPrmData
+{
   int Reference_Number;
   char Ext_User_Prm_Data_Name[33];
   char Data_Type_Name[33];
@@ -154,19 +162,22 @@ typedef struct sExtUserPrmData {
   struct sExtUserPrmData* next;
 } gsd_sExtUserPrmData;
 
-typedef struct sExtUserPrmDataRef {
+typedef struct sExtUserPrmDataRef
+{
   int Reference_Offset;
   int Reference_Number;
   gsd_sExtUserPrmData* prm_data;
   sExtUserPrmDataRef* next;
 } gsd_sExtUserPrmDataRef;
 
-typedef struct {
+typedef struct
+{
   gsd_sExtUserPrmDataRef* ref;
   int value;
 } gsd_sPrmDataItem;
 
-typedef struct sModule {
+typedef struct sModule
+{
   char Mod_Name[33];
   unsigned char* Config;
   int config_size;
@@ -180,7 +191,8 @@ typedef struct sModule {
   struct sModule* next;
 } gsd_sModule;
 
-typedef struct {
+typedef struct
+{
   int idx;
   gsd_sModule* module;
   char name[80];
@@ -191,7 +203,8 @@ typedef struct {
   unsigned char prm_data[237];
 } gsd_sModuleConf;
 
-class pb_gsd {
+class pb_gsd
+{
 public:
   pb_gsd();
   ~pb_gsd();
@@ -236,17 +249,15 @@ public:
   int prm_len(gsd_sPrmDataItem* item, int item_size);
   int prm_items_set_default_data(gsd_sPrmDataItem* item, int item_size);
   int prm_items_to_data(gsd_sPrmDataItem* item, int item_size,
-      unsigned char* data, int data_size);
+                        unsigned char* data, int data_size);
   int prm_data_to_items(gsd_sPrmDataItem* item, int item_size,
-      unsigned char* data, int data_size, int set_default = 0);
-  void set_classes(gsd_sModuleClass* mclist)
-  {
-    module_classlist = mclist;
-  }
+                        unsigned char* data, int data_size,
+                        int set_default = 0);
+  void set_classes(gsd_sModuleClass* mclist) { module_classlist = mclist; }
   int get_svalue(const char* key, char* value, int size);
   int get_ivalue(const char* key, int* value);
-  int add_module_conf(
-      pwr_tCid cid, pwr_tOid oid, char* name, char* module_name);
+  int add_module_conf(pwr_tCid cid, pwr_tOid oid, char* name,
+                      char* module_name);
   int move_module_conf(gsd_sModuleConf* src, gsd_sModuleConf* dest);
   int copy_module_conf(gsd_sModuleConf* m);
   int cut_module_conf(gsd_sModuleConf* m);
@@ -257,14 +268,8 @@ public:
   void pack_ext_user_prm_data(char* data, int* len);
   void compress(char* line);
   int syntax_check(int* idx);
-  void set_modified(int mod)
-  {
-    modified = mod;
-  }
-  int is_modified()
-  {
-    return modified;
-  }
+  void set_modified(int mod) { modified = mod; }
+  int is_modified() { return modified; }
 };
 
 #endif

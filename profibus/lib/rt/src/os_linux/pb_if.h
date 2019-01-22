@@ -98,26 +98,26 @@
 #define DEVICE_BASIC_MANAGEMENT 8
 
 /* --- contants for IRQ values -------------------------------- */
-#define REQ_IRQ 0xF0 /* IND/CON IRQ is received */
-#define ACK_IRQ 0x0F /* acknowledge REQ/RES */
+#define REQ_IRQ 0xF0             /* IND/CON IRQ is received */
+#define ACK_IRQ 0x0F             /* acknowledge REQ/RES */
 #define DP_SLAVE_IO_REQ_IRQ 0xE0 /* MASTER: DP-SLAVE-IO IND/REQ */
 #define DP_SLAVE_IO_ACK_IRQ 0x0E /* MASTER: DP-SLAVE-IO acknowldege IND/REQ */
 #define DP_DATA_STOP_REQ_IRQ                                                   \
-  0xD0 /* MASTER: data transfer stop REQ received                              \
-          */
-#define DP_DATA_STOP_ACK_IRQ 0x0D /* MASTER: data transfer stop Acknowldege */
-#define TRC_REQ_IRQ 0xC0 /* TRACE REQ is received */
-#define TRC_ACK_IRQ 0x0C /* TRACE acknowledge */
-#define EXCEPTION_REQ_IRQ 0xB0 /* Exception Request */
-#define EXCEPTION_ACK_IRQ 0x0B /* Exception Acknowledge */
-#define DPS_SLAVE_INP_REQ_IRQ 0xA0 /* SLAVE: DP-SLAVE-INPUT request */
-#define DPS_SLAVE_INP_ACK_IRQ 0x0A /* SLAVE: DP-SLAVE-INPUT Acknowldege */
+  0xD0                              /* MASTER: data transfer stop REQ received \
+                                       */
+#define DP_DATA_STOP_ACK_IRQ 0x0D   /* MASTER: data transfer stop Acknowldege */
+#define TRC_REQ_IRQ 0xC0            /* TRACE REQ is received */
+#define TRC_ACK_IRQ 0x0C            /* TRACE acknowledge */
+#define EXCEPTION_REQ_IRQ 0xB0      /* Exception Request */
+#define EXCEPTION_ACK_IRQ 0x0B      /* Exception Acknowledge */
+#define DPS_SLAVE_INP_REQ_IRQ 0xA0  /* SLAVE: DP-SLAVE-INPUT request */
+#define DPS_SLAVE_INP_ACK_IRQ 0x0A  /* SLAVE: DP-SLAVE-INPUT Acknowldege */
 #define DPS_SLAVE_OUTP_REQ_IRQ 0x90 /* SLAVE: DP-SLAVE-OUTPUT request */
 #define DPS_SLAVE_OUTP_ACK_IRQ 0x09 /* SLAVE: DP-SLAVE-OUTPUT Acknowldege */
 
 /* --- contants to receive an indication or confirmation
  * ------------------------ */
-#define CON_IND_RECEIVED 0x0001 /* ind. or con. has been received */
+#define CON_IND_RECEIVED 0x0001    /* ind. or con. has been received */
 #define NO_CON_IND_RECEIVED 0x0000 /* nothing has been received */
 
 /* --- values > CON_IND_RECEIVED are error returns (see pb_err.h)
@@ -136,7 +136,7 @@
 
 /* --- service priority
  * --------------------------------------------------------- */
-#define LOW 0x00 /* high priority */
+#define LOW 0x00  /* high priority */
 #define HIGH 0x01 /* low priority */
 
 /* --- service primitives
@@ -149,27 +149,27 @@
 
 /* --- layer identifiers
  * -------------------------------------------------------- */
-#define USR 0x00 /* identifier USER */
-#define FMS 0x01 /* identifier FMS */
-#define LLI 0x02 /* identifier LLI */
-#define FDL 0x03 /* identifier FDL */
-#define FM7 0x04 /* identifier FM7 */
-#define FMB 0x05 /* identifier FMB */
-#define FMS_USR 0x06 /* identifier FMS-USER */
-#define FM7_USR 0x07 /* identifier FM7-USER */
-#define FMB_USR 0x08 /* identifier FMB-USER */
-#define DPS 0x09 /* identifier DPS */
-#define DPS_USR 0x0A /* identifier DPS-USER */
-#define DP 0x0B /* identifier DP */
-#define DP_USR 0x0C /* identifier DP-USER */
-#define FDLIF 0x0D /* identifier FDLIF */
+#define USR 0x00       /* identifier USER */
+#define FMS 0x01       /* identifier FMS */
+#define LLI 0x02       /* identifier LLI */
+#define FDL 0x03       /* identifier FDL */
+#define FM7 0x04       /* identifier FM7 */
+#define FMB 0x05       /* identifier FMB */
+#define FMS_USR 0x06   /* identifier FMS-USER */
+#define FM7_USR 0x07   /* identifier FM7-USER */
+#define FMB_USR 0x08   /* identifier FMB-USER */
+#define DPS 0x09       /* identifier DPS */
+#define DPS_USR 0x0A   /* identifier DPS-USER */
+#define DP 0x0B        /* identifier DP */
+#define DP_USR 0x0C    /* identifier DP-USER */
+#define FDLIF 0x0D     /* identifier FDLIF */
 #define FDLIF_USR 0x0E /* identifier FDLIF-USER */
 
 #define PAPI 0xF0 /* identifier Application-Layer-IF */
 
 #if (PB_VER < 500)
-#define FMA7 FM7 /* identifier FMA7 */
-#define FMA2 FMB /* identifier FMA2 */
+#define FMA7 FM7         /* identifier FMA7 */
+#define FMA2 FMB         /* identifier FMA2 */
 #define FMA7_USR FM7_USR /* identifier FMA7-USER */
 #endif
 
@@ -186,7 +186,7 @@
 /* --- DP-MASTER
  * ---------------------------------------------------------------- */
 #define ID_DP_SLAVE_IO_IMAGE 0x80 /* MASTER: image for slave io datas */
-#define ID_DP_STATUS_IMAGE 0x81 /* MASTER: image for status datas */
+#define ID_DP_STATUS_IMAGE 0x81   /* MASTER: image for status datas */
 #define ID_DP_SLAVE_IO_CONFIG_IMAGE                                            \
   0x82 /* MASTER: DPRAM layout of slave io                                     \
           */
@@ -203,10 +203,10 @@
 
 /* --- 0xF0 - 0xFF reserved for diagonsis
  * -------------------------------------- */
-#define ID_EXCEPTION_IMAGE 0xF0 /* image for exeption datas */
-#define ID_FW_VERS_IMAGE 0xF1 /* image for firmware version */
+#define ID_EXCEPTION_IMAGE 0xF0      /* image for exeption datas */
+#define ID_FW_VERS_IMAGE 0xF1        /* image for firmware version */
 #define ID_SERIAL_DEVICE_NUMBER 0xF2 /* image for serial device number  */
-#define ID_TRACE_IMAGE 0xF3 /* image for TRACE datas */
+#define ID_TRACE_IMAGE 0xF3          /* image for TRACE datas */
 
 /* --- idebtifier for end of data description list
  * ------------------------------ */
@@ -216,11 +216,12 @@
 /* PROFI SERVICE DESCRIPTION BLOCK */
 /**********************************************************************************/
 
-typedef struct _T_PROFI_DEVICE_HANDLE {
-  HANDLE hServiceReadDevice; // Handle for Service device
-  HANDLE hServiceWriteDevice; // Handle for Service device
-  HANDLE hDpDataDevice; // Handle for DP-Data device
-  HANDLE hDpsInputDataDevice; // Handle for DP-Slave Input-Data device
+typedef struct _T_PROFI_DEVICE_HANDLE
+{
+  HANDLE hServiceReadDevice;   // Handle for Service device
+  HANDLE hServiceWriteDevice;  // Handle for Service device
+  HANDLE hDpDataDevice;        // Handle for DP-Data device
+  HANDLE hDpsInputDataDevice;  // Handle for DP-Slave Input-Data device
   HANDLE hDpsOutputDataDevice; // Handle for DP-Slave Output-Data device
   USIGN8 CurrentBoardNumber;
 } T_PROFI_DEVICE_HANDLE;
@@ -229,37 +230,39 @@ typedef struct _T_PROFI_DEVICE_HANDLE {
 /* PROFI SERVICE DESCRIPTION BLOCK */
 /**********************************************************************************/
 
-typedef struct _T_PROFI_SERVICE_DESCR {
+typedef struct _T_PROFI_SERVICE_DESCR
+{
   USIGN16 comm_ref; /* communication reference */
-  USIGN8 layer; /* layer identifier */
-  USIGN8 service; /* service identifier */
+  USIGN8 layer;     /* layer identifier */
+  USIGN8 service;   /* service identifier */
   USIGN8 primitive; /* service primitive */
-  INT8 invoke_id; /* invoke id */
-  INT16 result; /* service result (POS or NEG) */
+  INT8 invoke_id;   /* invoke id */
+  INT16 result;     /* service result (POS or NEG) */
 } T_PROFI_SERVICE_DESCR;
 
 #ifdef WIN16
 /**********************************************************************************/
 /* PROFI INITIALIZATION DATA STRUCTURE */
 /**********************************************************************************/
-typedef struct _T_PROFI_INIT {
-  USIGN32 dpr_address; /* DPR address */
-  INT16 io_port_address; /* IO port address */
-  PB_BOOL load_firmware; /* PB_TRUE  for PROFI-IF
-                            PB_FALSE for PROFIboard,PROFIcard and PROFI104 */
-  USIGN8 time_out; /* time out interval in seconds */
-  CSTRING* loader_file; /* loader file (PROFI-IF only) */
+typedef struct _T_PROFI_INIT
+{
+  USIGN32 dpr_address;    /* DPR address */
+  INT16 io_port_address;  /* IO port address */
+  PB_BOOL load_firmware;  /* PB_TRUE  for PROFI-IF
+                             PB_FALSE for PROFIboard,PROFIcard and PROFI104 */
+  USIGN8 time_out;        /* time out interval in seconds */
+  CSTRING* loader_file;   /* loader file (PROFI-IF only) */
   CSTRING* firmware_file; /* firmware file (PROFI-IF only */
-  USIGN8 host_type; /* for internal use */
-  USIGN8 irq_vector; /* IRQ line to host */
+  USIGN8 host_type;       /* for internal use */
+  USIGN8 irq_vector;      /* IRQ line to host */
   USIGN8 dpr_access_mode; /* DPR access mode (8/16 Bit ...) */
-  USIGN8 address_mode; /* host address mode */
-  USIGN8 poll_int_mode; /* host POLL / IRQ mode */
-  USIGN8 cntrl_type; /* for internal use */
-  USIGN8 token_drive; /* indicates the token drive (only PROFI-IF)*/
-  USIGN8 reserved_1; /* reserved */
-  USIGN16 reserved_2; /* reserved */
-  USIGN16 reserved_3; /* reserved */
+  USIGN8 address_mode;    /* host address mode */
+  USIGN8 poll_int_mode;   /* host POLL / IRQ mode */
+  USIGN8 cntrl_type;      /* for internal use */
+  USIGN8 token_drive;     /* indicates the token drive (only PROFI-IF)*/
+  USIGN8 reserved_1;      /* reserved */
+  USIGN16 reserved_2;     /* reserved */
+  USIGN16 reserved_3;     /* reserved */
 } T_PROFI_INIT;
 
 /* --- macro to set T_PROFI_INIT data structure with default values ------------
@@ -317,7 +320,9 @@ FUNCTION extern INT16 CALL_CONV profi_set_default(
     ;
 
 FUNCTION extern INT16 CALL_CONV profi_init(OUT T_PROFI_DEVICE_HANDLE* hDevice,
-    IN USIGN8 Board, IN USIGN32 ReadTimeout, IN USIGN32 WriteTimeout)
+                                           IN USIGN8 Board,
+                                           IN USIGN32 ReadTimeout,
+                                           IN USIGN32 WriteTimeout)
     /*----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
 
@@ -345,8 +350,9 @@ FUNCTION extern INT16 CALL_CONV profi_init(OUT T_PROFI_DEVICE_HANDLE* hDevice,
     ;
 #endif
 
-FUNCTION extern INT16 CALL_CONV init_profibus(
-    IN USIGN32 DprAdress, IN USIGN16 IoPortAdress, IN PB_BOOL Dummy)
+FUNCTION extern INT16 CALL_CONV init_profibus(IN USIGN32 DprAdress,
+                                              IN USIGN16 IoPortAdress,
+                                              IN PB_BOOL Dummy)
 
     /*----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
@@ -455,9 +461,9 @@ FUNCTION extern INT16 CALL_CONV profi_rcv_con_ind(
     ----------------------------------------------------------------------------*/
     ;
 
-FUNCTION extern INT16 CALL_CONV profi_set_data(
-    IN T_PROFI_DEVICE_HANDLE* hDevice, IN USIGN8 DataId, IN USIGN16 Offset,
-    IN USIGN16 DataLength, IN VOID* pData)
+FUNCTION extern INT16 CALL_CONV
+profi_set_data(IN T_PROFI_DEVICE_HANDLE* hDevice, IN USIGN8 DataId,
+               IN USIGN16 Offset, IN USIGN16 DataLength, IN VOID* pData)
 
     /*-----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
@@ -485,9 +491,9 @@ FUNCTION extern INT16 CALL_CONV profi_set_data(
     -----------------------------------------------------------------------------*/
     ;
 
-FUNCTION extern INT16 CALL_CONV profi_get_data(
-    IN T_PROFI_DEVICE_HANDLE* hDevice, IN USIGN8 DataId, IN USIGN16 Offset,
-    INOUT USIGN16* pDataLength, OUT VOID* pData)
+FUNCTION extern INT16 CALL_CONV
+profi_get_data(IN T_PROFI_DEVICE_HANDLE* hDevice, IN USIGN8 DataId,
+               IN USIGN16 Offset, INOUT USIGN16* pDataLength, OUT VOID* pData)
 
     /*-----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
@@ -515,9 +521,9 @@ FUNCTION extern INT16 CALL_CONV profi_get_data(
     -----------------------------------------------------------------------------*/
     ;
 
-FUNCTION extern INT16 CALL_CONV profi_set_dps_input_data(
-    IN T_PROFI_DEVICE_HANDLE* hDevice, IN USIGN8* pData, IN USIGN8 DataLength,
-    OUT USIGN8* pState)
+FUNCTION extern INT16 CALL_CONV
+profi_set_dps_input_data(IN T_PROFI_DEVICE_HANDLE* hDevice, IN USIGN8* pData,
+                         IN USIGN8 DataLength, OUT USIGN8* pState)
 
     /*-----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
@@ -539,9 +545,9 @@ FUNCTION extern INT16 CALL_CONV profi_set_dps_input_data(
     -----------------------------------------------------------------------------*/
     ;
 
-FUNCTION extern INT16 CALL_CONV profi_get_dps_input_data(
-    IN T_PROFI_DEVICE_HANDLE* hDevice, OUT USIGN8* pData,
-    INOUT USIGN8* pDataLength, OUT USIGN8* pState)
+FUNCTION extern INT16 CALL_CONV
+profi_get_dps_input_data(IN T_PROFI_DEVICE_HANDLE* hDevice, OUT USIGN8* pData,
+                         INOUT USIGN8* pDataLength, OUT USIGN8* pState)
 
     /*-----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
@@ -560,9 +566,9 @@ FUNCTION extern INT16 CALL_CONV profi_get_dps_input_data(
     -----------------------------------------------------------------------------*/
     ;
 
-FUNCTION extern INT16 CALL_CONV profi_get_dps_output_data(
-    IN T_PROFI_DEVICE_HANDLE* hDevice, OUT USIGN8* pData,
-    INOUT USIGN8* pDataLength, OUT USIGN8* pState)
+FUNCTION extern INT16 CALL_CONV
+profi_get_dps_output_data(IN T_PROFI_DEVICE_HANDLE* hDevice, OUT USIGN8* pData,
+                          INOUT USIGN8* pDataLength, OUT USIGN8* pState)
 
     /*-----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
@@ -583,9 +589,9 @@ FUNCTION extern INT16 CALL_CONV profi_get_dps_output_data(
     -----------------------------------------------------------------------------*/
     ;
 
-FUNCTION extern INT16 CALL_CONV profi_get_versions(
-    IN T_PROFI_DEVICE_HANDLE* hDevice, OUT CSTRING* pPapiVersion,
-    OUT CSTRING* pFirmwareVersion)
+FUNCTION extern INT16 CALL_CONV
+profi_get_versions(IN T_PROFI_DEVICE_HANDLE* hDevice, OUT CSTRING* pPapiVersion,
+                   OUT CSTRING* pFirmwareVersion)
     /*----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
 
@@ -686,7 +692,9 @@ FUNCTION extern HANDLE CALL_CONV profi_open_basic_management(
     ;
 
 FUNCTION extern HANDLE CALL_CONV profi_open(IN HANDLE hBasicMgmtDevice,
-    IN INT32 DeviceType, IN USIGN32 Index, IN INT32 DesiredAccess)
+                                            IN INT32 DeviceType,
+                                            IN USIGN32 Index,
+                                            IN INT32 DesiredAccess)
     /*----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
 
@@ -737,9 +745,9 @@ FUNCTION extern BOOL CALL_CONV profi_close(IN HANDLE hDevice)
     -----------------------------------------------------------------------------*/
     ;
 
-FUNCTION extern INT16 CALL_CONV profi_read_service(IN HANDLE hDevice,
-    OUT T_PROFI_SERVICE_DESCR* pSdb, OUT VOID* pData,
-    INOUT USIGN16* pDataLength)
+FUNCTION extern INT16 CALL_CONV
+profi_read_service(IN HANDLE hDevice, OUT T_PROFI_SERVICE_DESCR* pSdb,
+                   OUT VOID* pData, INOUT USIGN16* pDataLength)
     /*----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
 
@@ -840,8 +848,9 @@ FUNCTION extern INT16 CALL_CONV profi_read_multi(
     -----------------------------------------------------------------------------*/
     ;
 
-FUNCTION extern INT16 CALL_CONV profi_read_data(
-    IN HANDLE hDevice, OUT VOID* pData, OUT USIGN16* pDataLength)
+FUNCTION extern INT16 CALL_CONV profi_read_data(IN HANDLE hDevice,
+                                                OUT VOID* pData,
+                                                OUT USIGN16* pDataLength)
     /*----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
 
@@ -867,8 +876,9 @@ FUNCTION extern INT16 CALL_CONV profi_read_data(
     -----------------------------------------------------------------------------*/
     ;
 
-FUNCTION extern INT16 CALL_CONV profi_write_data(
-    IN HANDLE hDevice, IN VOID* pData, IN USIGN16 DataLength)
+FUNCTION extern INT16 CALL_CONV profi_write_data(IN HANDLE hDevice,
+                                                 IN VOID* pData,
+                                                 IN USIGN16 DataLength)
     /*----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
 
@@ -894,7 +904,9 @@ FUNCTION extern INT16 CALL_CONV profi_write_data(
     ;
 
 FUNCTION extern INT16 CALL_CONV profi_read_dps_data(IN HANDLE hDevice,
-    OUT USIGN8* pData, INOUT USIGN8* pDataLength, OUT USIGN8* pState)
+                                                    OUT USIGN8* pData,
+                                                    INOUT USIGN8* pDataLength,
+                                                    OUT USIGN8* pState)
     /*----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
 
@@ -922,7 +934,9 @@ FUNCTION extern INT16 CALL_CONV profi_read_dps_data(IN HANDLE hDevice,
     ;
 
 FUNCTION extern INT16 CALL_CONV profi_write_dps_data(IN HANDLE hDevice,
-    IN USIGN8* pData, IN USIGN8 DataLength, OUT USIGN8* pState)
+                                                     IN USIGN8* pData,
+                                                     IN USIGN8 DataLength,
+                                                     OUT USIGN8* pState)
 
     /*-----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
@@ -944,8 +958,9 @@ FUNCTION extern INT16 CALL_CONV profi_write_dps_data(IN HANDLE hDevice,
     -----------------------------------------------------------------------------*/
     ;
 
-FUNCTION extern BOOL CALL_CONV profi_get_cntrl_info(IN USIGN8 Board,
-    OUT char* pFirmwareVersion, OUT USIGN32* pSerialDeviceNumber)
+FUNCTION extern BOOL CALL_CONV
+profi_get_cntrl_info(IN USIGN8 Board, OUT char* pFirmwareVersion,
+                     OUT USIGN32* pSerialDeviceNumber)
     /*----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
 
@@ -967,8 +982,9 @@ FUNCTION extern BOOL CALL_CONV profi_get_cntrl_info(IN USIGN8 Board,
     -----------------------------------------------------------------------------*/
     ;
 
-FUNCTION extern BOOL CALL_CONV profi_set_timeout(
-    IN HANDLE hBasicMgmtDevice, IN USIGN32 ReadTimeout, IN USIGN32 WriteTimeout)
+FUNCTION extern BOOL CALL_CONV profi_set_timeout(IN HANDLE hBasicMgmtDevice,
+                                                 IN USIGN32 ReadTimeout,
+                                                 IN USIGN32 WriteTimeout)
     /*----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
 
@@ -990,7 +1006,8 @@ FUNCTION extern BOOL CALL_CONV profi_set_timeout(
     ;
 
 FUNCTION extern BOOL CALL_CONV profi_get_timeout(IN HANDLE hBasicMgmtDevice,
-    OUT USIGN32* pReadTimeout, OUT USIGN32* pWriteTimeout)
+                                                 OUT USIGN32* pReadTimeout,
+                                                 OUT USIGN32* pWriteTimeout)
     /*----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
 
@@ -1011,8 +1028,8 @@ FUNCTION extern BOOL CALL_CONV profi_get_timeout(IN HANDLE hBasicMgmtDevice,
     -----------------------------------------------------------------------------*/
     ;
 
-FUNCTION extern BOOL CALL_CONV profi_set_queue_size(
-    IN HANDLE hBasicMgmtDevice, IN USIGN32 QueueSize)
+FUNCTION extern BOOL CALL_CONV profi_set_queue_size(IN HANDLE hBasicMgmtDevice,
+                                                    IN USIGN32 QueueSize)
     /*----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
 
@@ -1029,8 +1046,8 @@ FUNCTION extern BOOL CALL_CONV profi_set_queue_size(
     -----------------------------------------------------------------------------*/
     ;
 
-FUNCTION extern BOOL CALL_CONV profi_get_queue_size(
-    IN HANDLE hBasicMgmtDevice, OUT USIGN32* pQueueSize)
+FUNCTION extern BOOL CALL_CONV profi_get_queue_size(IN HANDLE hBasicMgmtDevice,
+                                                    OUT USIGN32* pQueueSize)
     /*----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
 
@@ -1047,8 +1064,8 @@ FUNCTION extern BOOL CALL_CONV profi_get_queue_size(
     -----------------------------------------------------------------------------*/
     ;
 
-FUNCTION extern BOOL CALL_CONV profi_get_overrun_count(
-    IN HANDLE hBasicMgmtDevice, OUT USIGN32* pOverrunCount)
+FUNCTION extern BOOL CALL_CONV
+profi_get_overrun_count(IN HANDLE hBasicMgmtDevice, OUT USIGN32* pOverrunCount)
     /*----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
 

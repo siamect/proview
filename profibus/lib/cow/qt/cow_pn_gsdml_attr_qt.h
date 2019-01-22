@@ -49,7 +49,8 @@
 
 class GsdmlAttrQtWidget;
 
-class GsdmlAttrQt : public GsdmlAttr {
+class GsdmlAttrQt : public GsdmlAttr
+{
 public:
   GsdmlAttrQtWidget* toplevel;
   QWidget* brow_widget;
@@ -75,7 +76,8 @@ public:
   void change_value();
 };
 
-class GsdmlAttrQtWidget : public QWidget {
+class GsdmlAttrQtWidget : public QWidget
+{
   Q_OBJECT
 
 public:
@@ -106,7 +108,7 @@ public slots:
   void activate_cmd_ok();
   void activate_cmd_apply();
 
-  void valchanged_cmd_entry(){}
+  void valchanged_cmd_entry() {}
 
 private:
   GsdmlAttrQt* attr;

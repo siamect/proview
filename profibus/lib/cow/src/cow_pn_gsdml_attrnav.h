@@ -64,6 +64,7 @@ typedef enum {
   attrnav_eItemType_PnParValue,
   attrnav_eItemType_PnParEnum,
   attrnav_eItemType_PnParEnumBit,
+  attrnav_eItemType_PnParEnumValue,
   attrnav_eItemType_PnModuleClass,
   attrnav_eItemType_PnIOData,
   attrnav_eItemType_PnInput,
@@ -85,11 +86,10 @@ typedef enum {
 class ItemPn;
 
 //! Class for handling of brow.
-class GsdmlAttrNavBrow {
+class GsdmlAttrNavBrow
+{
 public:
-  GsdmlAttrNavBrow(BrowCtx* brow_ctx, void* xn) : ctx(brow_ctx), attrnav(xn)
-  {
-  }
+  GsdmlAttrNavBrow(BrowCtx* brow_ctx, void* xn) : ctx(brow_ctx), attrnav(xn) {}
   ~GsdmlAttrNavBrow();
 
   BrowCtx* ctx;
@@ -119,7 +119,8 @@ class CoWow;
 class CoWowTimer;
 
 //! The navigation area of the attribute editor.
-class GsdmlAttrNav {
+class GsdmlAttrNav
+{
 public:
   void* parent_ctx;
   pn_gsdml* gsdml;
@@ -146,15 +147,11 @@ public:
   attr_eOrderModuleType order_moduletype;
 
   GsdmlAttrNav(void* xn_parent_ctx, const char* xn_name, pn_gsdml* xn_gsd,
-      int xn_edit_mode, pwr_tStatus* status);
+               int xn_edit_mode, pwr_tStatus* status);
   virtual ~GsdmlAttrNav();
 
-  virtual void display_attr_help_text()
-  {
-  }
-  virtual void set_inputfocus()
-  {
-  }
+  virtual void display_attr_help_text() {}
+  virtual void set_inputfocus() {}
 
   void start_trace(pwr_tObjid Objid, char* object_str);
   int set_attr_value(const char* value_str);
@@ -168,25 +165,16 @@ public:
   void zoom(double zoom_factor);
   void unzoom();
   void get_zoom(double* zoom_factor);
-  void set_modified(int value)
-  {
-    modified = value;
-  }
-  int is_modified()
-  {
-    return modified;
-  }
+  void set_modified(int value) { modified = value; }
+  int is_modified() { return modified; }
   int save(const char* filename);
   int open(const char* filename);
   void collapse();
   void expand_all();
   void redraw();
-  void set_viewio(int set)
-  {
-    viewio = set;
-  }
+  void set_viewio(int set) { viewio = set; }
   int search_class(const char* filename, const char* model, const char* module,
-      char* mclass);
+                   char* mclass);
   void set_order_moduletype(attr_eOrderModuleType type)
   {
     order_moduletype = type;
@@ -195,13 +183,14 @@ public:
   static void trace_scan(void* data);
   static int trace_scan_bc(brow_tObject object, void* p);
   static int trace_connect_bc(brow_tObject object, char* name, char* attr,
-      flow_eTraceType type, void** p);
+                              flow_eTraceType type, void** p);
   static int trace_disconnect_bc(brow_tObject object);
   static int init_brow_cb(FlowCtx* fctx, void* client_data);
   static int attr_string_to_value(int type_id, const char* value_str,
-      void* buffer_ptr, int buff_size, int attr_size);
+                                  void* buffer_ptr, int buff_size,
+                                  int attr_size);
   static void attrvalue_to_string(int type_id, void* value_ptr, char* str,
-      int size, int* len, char* format);
+                                  int size, int* len, char* format);
   static int brow_cb(FlowCtx* ctx, flow_tEvent event);
   static void device_changed_ok(void* ctx, void* data);
   static void device_changed_cancel(void* ctx, void* data);
@@ -209,48 +198,37 @@ public:
   static void device_update_change(void* ctx);
 };
 
-class ItemPn {
+class ItemPn
+{
 public:
-  ItemPn() : parent(0), info_text(0)
-  {
-  }
-  ItemPn(const char* info_text) : parent(0), info_text(info_text)
-  {
-  }
+  ItemPn() : parent(0), info_text(0) {}
+  ItemPn(const char* info_text) : parent(0), info_text(info_text) {}
   attrnav_eItemType type;
   brow_tNode node;
   char name[120];
   int parent;
   const char* info_text;
 
-  virtual ~ItemPn()
-  {
-  }
+  virtual ~ItemPn() {}
 
   virtual int open_children(GsdmlAttrNav* attrnav, double x, double y)
   {
     return 1;
   }
   virtual int close(GsdmlAttrNav* attrnav, double x, double y);
-  virtual int scan(GsdmlAttrNav* attrnav, void* p)
-  {
-    return 1;
-  }
-  virtual void update(GsdmlAttrNav* attrnav)
-  {
-  }
-  virtual void value_changed(GsdmlAttrNav* attrnav, const char* value_str)
-  {
-  }
+  virtual int scan(GsdmlAttrNav* attrnav, void* p) { return 1; }
+  virtual void update(GsdmlAttrNav* attrnav) {}
+  virtual void value_changed(GsdmlAttrNav* attrnav, const char* value_str) {}
 };
 
 //! Item for a normal attribute.
-class ItemPnBase : public ItemPn {
+class ItemPnBase : public ItemPn
+{
 public:
   ItemPnBase(GsdmlAttrNav* attrnav, const char* item_name, const char* attr,
-      int attr_type, int attr_size, double attr_min_limit,
-      double attr_max_limit, void* attr_value_p, int attr_noedit,
-      brow_tNode dest, flow_eDest dest_code);
+             int attr_type, int attr_size, double attr_min_limit,
+             double attr_max_limit, void* attr_value_p, int attr_noedit,
+             brow_tNode dest, flow_eDest dest_code);
   void* value_p;
   char old_value[80];
   int first_scan;
@@ -266,11 +244,12 @@ public:
 };
 
 //! Item for an enum attribute.
-class ItemPnEnumValue : public ItemPn {
+class ItemPnEnumValue : public ItemPn
+{
 public:
   ItemPnEnumValue(GsdmlAttrNav* attrnav, const char* item_name, int item_num,
-      int item_type_id, void* attr_value_p, brow_tNode dest,
-      flow_eDest dest_code, const char* info_text = 0);
+                  int item_type_id, void* attr_value_p, brow_tNode dest,
+                  flow_eDest dest_code, const char* info_text = 0);
   int num;
   int type_id;
   void* value_p;
@@ -281,12 +260,13 @@ public:
 };
 
 //! Item for an enum attribute.
-class ItemPnEnumValueMType : public ItemPn {
+class ItemPnEnumValueMType : public ItemPn
+{
 public:
   ItemPnEnumValueMType(GsdmlAttrNav* attrnav, const char* item_name,
-      const char* item_number, int item_num, int item_type_id,
-      void* attr_value_p, brow_tNode dest, flow_eDest dest_code,
-      const char* info_text = 0);
+                       const char* item_number, int item_num, int item_type_id,
+                       void* attr_value_p, brow_tNode dest,
+                       flow_eDest dest_code, const char* info_text = 0);
   int num;
   int type_id;
   void* value_p;
@@ -298,13 +278,12 @@ public:
 };
 
 //! Item for a device.
-class ItemPnDevice : public ItemPn {
+class ItemPnDevice : public ItemPn
+{
 public:
   ItemPnDevice(GsdmlAttrNav* attrnav, const char* item_name, brow_tNode dest,
-      flow_eDest dest_code);
-  virtual ~ItemPnDevice()
-  {
-  }
+               flow_eDest dest_code);
+  virtual ~ItemPnDevice() {}
 
   int old_value;
   int first_scan;
@@ -314,13 +293,13 @@ public:
 };
 
 //! Item for a slot.
-class ItemPnSlot : public ItemPn {
+class ItemPnSlot : public ItemPn
+{
 public:
   ItemPnSlot(GsdmlAttrNav* attrnav, const char* item_name,
-      GsdmlSlotData* item_slotdata, brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnSlot()
-  {
-  }
+             GsdmlSlotData* item_slotdata, brow_tNode dest,
+             flow_eDest dest_code);
+  virtual ~ItemPnSlot() {}
 
   GsdmlSlotData* slotdata;
   int old_value;
@@ -331,15 +310,14 @@ public:
 };
 
 //! Item for a subslot.
-class ItemPnSubslot : public ItemPn {
+class ItemPnSubslot : public ItemPn
+{
 public:
   ItemPnSubslot(GsdmlAttrNav* attrnav, const char* item_name,
-      GsdmlSubslotData* item_subslotdata,
-      gsdml_VirtualSubmoduleItem* item_virtualsubmodule, int item_slot_idx,
-      brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnSubslot()
-  {
-  }
+                GsdmlSubslotData* item_subslotdata,
+                gsdml_VirtualSubmoduleItem* item_virtualsubmodule,
+                int item_slot_idx, brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPnSubslot() {}
 
   GsdmlSubslotData* subslotdata;
   gsdml_VirtualSubmoduleItem* virtualsubmodule;
@@ -349,15 +327,15 @@ public:
 };
 
 //! Item for a physical subslot.
-class ItemPnSubslotPhys : public ItemPn {
+class ItemPnSubslotPhys : public ItemPn
+{
 public:
   ItemPnSubslotPhys(GsdmlAttrNav* attrnav, const char* item_name,
-      GsdmlSubslotData* item_subslotdata,
-      gsdml_VirtualSubmoduleItem* item_virtualsubmodule, int item_slot_idx,
-      gsdml_UseableSubmodules* item_us, brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnSubslotPhys()
-  {
-  }
+                    GsdmlSubslotData* item_subslotdata,
+                    gsdml_VirtualSubmoduleItem* item_virtualsubmodule,
+                    int item_slot_idx, gsdml_UseableSubmodules* item_us,
+                    brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPnSubslotPhys() {}
 
   GsdmlSubslotData* subslotdata;
   gsdml_VirtualSubmoduleItem* virtualsubmodule;
@@ -368,51 +346,49 @@ public:
 };
 
 //! Item for the DeviceAccessPoint, slot 0
-class ItemPnDAP : public ItemPn {
+class ItemPnDAP : public ItemPn
+{
 public:
   ItemPnDAP(GsdmlAttrNav* attrnav, const char* item_name,
-      GsdmlSlotData* item_slotdata, brow_tNode dest, flow_eDest dest_code);
+            GsdmlSlotData* item_slotdata, brow_tNode dest,
+            flow_eDest dest_code);
   GsdmlSlotData* slotdata;
-  virtual ~ItemPnDAP()
-  {
-  }
+  virtual ~ItemPnDAP() {}
 
   virtual int open_children(GsdmlAttrNav* attrnav, double x, double y);
 };
 
 //! Item for Network settings
-class ItemPnNetwork : public ItemPn {
+class ItemPnNetwork : public ItemPn
+{
 public:
   ItemPnNetwork(GsdmlAttrNav* attrnav, const char* item_name, brow_tNode dest,
-      flow_eDest dest_code);
-  virtual ~ItemPnNetwork()
-  {
-  }
+                flow_eDest dest_code);
+  virtual ~ItemPnNetwork() {}
 
   virtual int open_children(GsdmlAttrNav* attrnav, double x, double y);
 };
 
 //! Item for Network settings
-class ItemPnDeviceInfo : public ItemPn {
+class ItemPnDeviceInfo : public ItemPn
+{
 public:
   ItemPnDeviceInfo(GsdmlAttrNav* attrnav, const char* item_name,
-      brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnDeviceInfo()
-  {
-  }
+                   brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPnDeviceInfo() {}
 
   virtual int open_children(GsdmlAttrNav* attrnav, double x, double y);
 };
 
 //! Item for an InterfaceSubmoduleItem
-class ItemPnInterfaceSubmodule : public ItemPn {
+class ItemPnInterfaceSubmodule : public ItemPn
+{
 public:
   ItemPnInterfaceSubmodule(GsdmlAttrNav* attrnav, const char* item_name,
-      gsdml_InterfaceSubmoduleItem* item_ii, GsdmlSubslotData* item_subslotdata,
-      brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnInterfaceSubmodule()
-  {
-  }
+                           gsdml_InterfaceSubmoduleItem* item_ii,
+                           GsdmlSubslotData* item_subslotdata, brow_tNode dest,
+                           flow_eDest dest_code);
+  virtual ~ItemPnInterfaceSubmodule() {}
 
   gsdml_InterfaceSubmoduleItem* ii;
   GsdmlSubslotData* subslotdata;
@@ -420,14 +396,14 @@ public:
 };
 
 //! Item for a PortSubmoduleItem
-class ItemPnPortSubmodule : public ItemPn {
+class ItemPnPortSubmodule : public ItemPn
+{
 public:
   ItemPnPortSubmodule(GsdmlAttrNav* attrnav, const char* item_name,
-      gsdml_PortSubmoduleItem* item_pi, GsdmlSubslotData* item_subslotdata,
-      brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnPortSubmodule()
-  {
-  }
+                      gsdml_PortSubmoduleItem* item_pi,
+                      GsdmlSubslotData* item_subslotdata, brow_tNode dest,
+                      flow_eDest dest_code);
+  virtual ~ItemPnPortSubmodule() {}
 
   gsdml_PortSubmoduleItem* pi;
   GsdmlSubslotData* subslotdata;
@@ -435,13 +411,13 @@ public:
 };
 
 //! Item for a moduleinfo.
-class ItemPnModuleInfo : public ItemPn {
+class ItemPnModuleInfo : public ItemPn
+{
 public:
   ItemPnModuleInfo(GsdmlAttrNav* attrnav, const char* item_name,
-      gsdml_ModuleInfo* item_info, brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnModuleInfo()
-  {
-  }
+                   gsdml_ModuleInfo* item_info, brow_tNode dest,
+                   flow_eDest dest_code);
+  virtual ~ItemPnModuleInfo() {}
 
   gsdml_ModuleInfo* info;
 
@@ -449,14 +425,13 @@ public:
 };
 
 //! Item for module type selection.
-class ItemPnModuleType : public ItemPn {
+class ItemPnModuleType : public ItemPn
+{
 public:
   ItemPnModuleType(GsdmlAttrNav* attrnav, const char* item_name,
-      int item_slot_number, int item_slot_idx, brow_tNode dest,
-      flow_eDest dest_code);
-  virtual ~ItemPnModuleType()
-  {
-  }
+                   int item_slot_number, int item_slot_idx, brow_tNode dest,
+                   flow_eDest dest_code);
+  virtual ~ItemPnModuleType() {}
 
   int slot_number;
   int slot_idx;
@@ -468,14 +443,14 @@ public:
 };
 
 //! Item for module type selection.
-class ItemPnSubmoduleType : public ItemPn {
+class ItemPnSubmoduleType : public ItemPn
+{
 public:
   ItemPnSubmoduleType(GsdmlAttrNav* attrnav, const char* item_name,
-      int item_subslot_number, int item_slot_idx, int item_subslot_idx,
-      gsdml_UseableSubmodules* item_us, brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnSubmoduleType()
-  {
-  }
+                      int item_subslot_number, int item_slot_idx,
+                      int item_subslot_idx, gsdml_UseableSubmodules* item_us,
+                      brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPnSubmoduleType() {}
 
   int subslot_number;
   int slot_idx;
@@ -489,14 +464,14 @@ public:
 };
 
 //! Item for module type selection.
-class ItemPnParRecord : public ItemPn {
+class ItemPnParRecord : public ItemPn
+{
 public:
   ItemPnParRecord(GsdmlAttrNav* attrnav, const char* item_name,
-      gsdml_ParameterRecordDataItem* item_par_record,
-      GsdmlDataRecord* item_datarecord, brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnParRecord()
-  {
-  }
+                  gsdml_ParameterRecordDataItem* item_par_record,
+                  GsdmlDataRecord* item_datarecord, brow_tNode dest,
+                  flow_eDest dest_code);
+  virtual ~ItemPnParRecord() {}
 
   gsdml_ParameterRecordDataItem* par_record;
   GsdmlDataRecord* datarecord;
@@ -505,18 +480,20 @@ public:
 };
 
 //! Item for module type selection.
-class ItemPnParValue : public ItemPn {
+class ItemPnParValue : public ItemPn
+{
 public:
   ItemPnParValue(GsdmlAttrNav* attrnav, const char* item_name,
-      gsdml_Ref* item_value_ref, gsdml_eValueDataType item_datatype,
-      unsigned char* item_data, brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnParValue()
-  {
-  }
+                 gsdml_Ref* item_value_ref, gsdml_eValueDataType item_datatype,
+                 unsigned char* item_data,
+                 unsigned char* item_data_reversed_endianess, brow_tNode dest,
+                 flow_eDest dest_code);
+  virtual ~ItemPnParValue() {}
 
   gsdml_Ref* value_ref;
   gsdml_eValueDataType datatype;
   unsigned char* data;
+  unsigned char* data_reversed_endianess;
   unsigned int byte_offset;
   unsigned int size;
   int first_scan;
@@ -527,28 +504,29 @@ public:
   void value_changed(GsdmlAttrNav* attrnav, const char* value_str);
 };
 
-class ParEnumValue {
+class ParEnumValue
+{
 public:
-  ParEnumValue()
-  {
-  }
+  ParEnumValue() {}
   unsigned int value;
   char text[160];
 };
 
 //! Item for module type selection.
-class ItemPnParEnum : public ItemPn {
+class ItemPnParEnum : public ItemPn
+{
 public:
   ItemPnParEnum(GsdmlAttrNav* attrnav, const char* item_name,
-      gsdml_Ref* item_value_ref, gsdml_eValueDataType item_datatype,
-      unsigned char* item_data, brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnParEnum()
-  {
-  }
+                gsdml_Ref* item_value_ref, gsdml_eValueDataType item_datatype,
+                unsigned char* item_data,
+                unsigned char* item_data_reversed_endianess, brow_tNode dest,
+                flow_eDest dest_code);
+  virtual ~ItemPnParEnum() {}
 
   gsdml_Ref* value_ref;
   gsdml_eValueDataType datatype;
   unsigned char* data;
+  unsigned char* data_reversed_endianess;
   unsigned int byte_offset;
   unsigned int bit_offset;
   unsigned int bit_length;
@@ -563,20 +541,48 @@ public:
 };
 
 //! Item for module type selection.
-class ItemPnParEnumBit : public ItemPn {
+class ItemPnParEnumBit : public ItemPn
+{
 public:
   ItemPnParEnumBit(GsdmlAttrNav* attrnav, const char* item_name,
-      gsdml_eValueDataType item_datatype, unsigned char* item_data,
-      unsigned int item_byte_offset, unsigned int item_value,
-      unsigned int item_mask, int item_noedit, brow_tNode dest,
-      flow_eDest dest_code);
-  virtual ~ItemPnParEnumBit()
-  {
-  }
+                   gsdml_eValueDataType item_datatype, unsigned char* item_data,
+                   unsigned char* item_data_reversed_endianess,
+                   unsigned int item_byte_offset, unsigned int item_value,
+                   unsigned int item_mask, int item_noedit, brow_tNode dest,
+                   flow_eDest dest_code);
+  virtual ~ItemPnParEnumBit() {}
 
   gsdml_Assign* assign;
   gsdml_eValueDataType datatype;
   unsigned char* data;
+  unsigned char* data_reversed_endianess;
+  unsigned int byte_offset;
+  unsigned int value;
+  unsigned int mask;
+  int first_scan;
+  unsigned int old_value;
+  int noedit;
+
+  int scan(GsdmlAttrNav* attrnav, void* p);
+  void update(GsdmlAttrNav* attrnav);
+};
+
+class ItemPnParEnumValue : public ItemPn
+{
+public:
+  ItemPnParEnumValue(GsdmlAttrNav* attrnav, const char* item_name,
+                     gsdml_eValueDataType item_datatype,
+                     unsigned char* item_data,
+                     unsigned char* item_data_reversed_endianess,
+                     unsigned int item_byte_offset, unsigned int item_value,
+                     unsigned int item_mask, int item_noedit, brow_tNode dest,
+                     flow_eDest dest_code);
+  virtual ~ItemPnParEnumValue() {}
+
+  gsdml_Assign* assign;
+  gsdml_eValueDataType datatype;
+  unsigned char* data;
+  unsigned char* data_reversed_endianess;
   unsigned int byte_offset;
   unsigned int value;
   unsigned int mask;
@@ -589,14 +595,13 @@ public:
 };
 
 //! Item for a IOData.
-class ItemPnIOData : public ItemPn {
+class ItemPnIOData : public ItemPn
+{
 public:
   ItemPnIOData(GsdmlAttrNav* attrnav, const char* item_name,
-      gsdml_IOData* item_iodata, int item_subslot_idx, int item_slot_idx,
-      brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnIOData()
-  {
-  }
+               gsdml_IOData* item_iodata, int item_subslot_idx,
+               int item_slot_idx, brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPnIOData() {}
 
   gsdml_IOData* iodata;
   int subslot_idx;
@@ -606,13 +611,12 @@ public:
 };
 
 //! Item for a Input.
-class ItemPnInput : public ItemPn {
+class ItemPnInput : public ItemPn
+{
 public:
   ItemPnInput(GsdmlAttrNav* attrnav, const char* item_name,
-      gsdml_Input* item_input, brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnInput()
-  {
-  }
+              gsdml_Input* item_input, brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPnInput() {}
 
   gsdml_Input* input;
 
@@ -620,13 +624,13 @@ public:
 };
 
 //! Item for a Output.
-class ItemPnOutput : public ItemPn {
+class ItemPnOutput : public ItemPn
+{
 public:
   ItemPnOutput(GsdmlAttrNav* attrnav, const char* item_name,
-      gsdml_Output* item_output, brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnOutput()
-  {
-  }
+               gsdml_Output* item_output, brow_tNode dest,
+               flow_eDest dest_code);
+  virtual ~ItemPnOutput() {}
 
   gsdml_Output* output;
 
@@ -634,13 +638,13 @@ public:
 };
 
 //! Item for a DataItem.
-class ItemPnDataItem : public ItemPn {
+class ItemPnDataItem : public ItemPn
+{
 public:
   ItemPnDataItem(GsdmlAttrNav* attrnav, const char* item_name,
-      gsdml_DataItem* item_dataitem, brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnDataItem()
-  {
-  }
+                 gsdml_DataItem* item_dataitem, brow_tNode dest,
+                 flow_eDest dest_code);
+  virtual ~ItemPnDataItem() {}
 
   gsdml_DataItem* dataitem;
 
@@ -648,14 +652,13 @@ public:
 };
 
 //! Item for a BitDataItem.
-class ItemPnBitDataItem : public ItemPn {
+class ItemPnBitDataItem : public ItemPn
+{
 public:
   ItemPnBitDataItem(GsdmlAttrNav* attrnav, const char* item_name,
-      gsdml_BitDataItem* item_bitdataitem, brow_tNode dest,
-      flow_eDest dest_code);
-  virtual ~ItemPnBitDataItem()
-  {
-  }
+                    gsdml_BitDataItem* item_bitdataitem, brow_tNode dest,
+                    flow_eDest dest_code);
+  virtual ~ItemPnBitDataItem() {}
 
   gsdml_BitDataItem* bitdataitem;
 
@@ -663,13 +666,13 @@ public:
 };
 
 //! Item for module class selection.
-class ItemPnModuleClass : public ItemPn {
+class ItemPnModuleClass : public ItemPn
+{
 public:
   ItemPnModuleClass(GsdmlAttrNav* attrnav, const char* item_name,
-      GsdmlSlotData* item_slotdata, brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnModuleClass()
-  {
-  }
+                    GsdmlSlotData* item_slotdata, brow_tNode dest,
+                    flow_eDest dest_code);
+  virtual ~ItemPnModuleClass() {}
 
   GsdmlSlotData* slotdata;
   int old_value;
@@ -680,14 +683,14 @@ public:
 };
 
 //! Item for slave byte order.
-class ItemPnEnumByteOrder : public ItemPnBase {
+class ItemPnEnumByteOrder : public ItemPnBase
+{
 public:
   ItemPnEnumByteOrder(GsdmlAttrNav* attrnav, const char* item_name,
-      const char* attr, int attr_type, int attr_size, void* attr_value_p,
-      int attr_noedit, brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnEnumByteOrder()
-  {
-  }
+                      const char* attr, int attr_type, int attr_size,
+                      void* attr_value_p, int attr_noedit, brow_tNode dest,
+                      flow_eDest dest_code);
+  virtual ~ItemPnEnumByteOrder() {}
 
   int old_value;
 
@@ -696,14 +699,14 @@ public:
 };
 
 //! Item for time ratio.
-class ItemPnEnumTimeRatio : public ItemPn {
+class ItemPnEnumTimeRatio : public ItemPn
+{
 public:
   ItemPnEnumTimeRatio(GsdmlAttrNav* attrnav, const char* item_name,
-      gsdml_InterfaceSubmoduleItem* item_interfacesubmodule, void* attr_value_p,
-      brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnEnumTimeRatio()
-  {
-  }
+                      gsdml_InterfaceSubmoduleItem* item_interfacesubmodule,
+                      void* attr_value_p, brow_tNode dest,
+                      flow_eDest dest_code);
+  virtual ~ItemPnEnumTimeRatio() {}
 
   gsdml_InterfaceSubmoduleItem* interfacesubmodule;
   void* value_p;
@@ -716,14 +719,14 @@ public:
 };
 
 //! Item for send clock.
-class ItemPnEnumSendClock : public ItemPn {
+class ItemPnEnumSendClock : public ItemPn
+{
 public:
   ItemPnEnumSendClock(GsdmlAttrNav* attrnav, const char* item_name,
-      gsdml_InterfaceSubmoduleItem* item_interfacesubmodule, void* attr_value_p,
-      brow_tNode dest, flow_eDest dest_code);
-  virtual ~ItemPnEnumSendClock()
-  {
-  }
+                      gsdml_InterfaceSubmoduleItem* item_interfacesubmodule,
+                      void* attr_value_p, brow_tNode dest,
+                      flow_eDest dest_code);
+  virtual ~ItemPnEnumSendClock() {}
 
   gsdml_InterfaceSubmoduleItem* interfacesubmodule;
   void* value_p;

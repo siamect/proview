@@ -56,8 +56,9 @@
 // Create the navigator widget
 //
 GsdAttrNavGtk::GsdAttrNavGtk(void* xn_parent_ctx, GtkWidget* xn_parent_wid,
-    const char* xn_name, pb_gsd* xn_gsd, int xn_edit_mode, GtkWidget** w,
-    pwr_tStatus* status)
+                             const char* xn_name, pb_gsd* xn_gsd,
+                             int xn_edit_mode, GtkWidget** w,
+                             pwr_tStatus* status)
     : GsdAttrNav(xn_parent_ctx, xn_name, xn_gsd, xn_edit_mode, status),
       parent_wid(xn_parent_wid)
 {
@@ -82,7 +83,4 @@ GsdAttrNavGtk::~GsdAttrNavGtk()
   gtk_widget_destroy(form_widget);
 }
 
-void GsdAttrNavGtk::set_inputfocus()
-{
-  gtk_widget_grab_focus(brow_widget);
-}
+void GsdAttrNavGtk::set_inputfocus() { gtk_widget_grab_focus(brow_widget); }

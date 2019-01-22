@@ -445,9 +445,25 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES* ServiceReqRes,
       break;
   }
 
-  // printf("Number of modules for this slave: %d\n", num_modules);
-
-  //  num_modules = dev_data->slot_data.size();
+  // Ignore Interface subslots as they break the device configuration
+  for (ii = 0; ii < num_modules; ii++)
+  {
+    for (std::vector<GsdmlSubslotData*>::iterator it =
+             dev_data->slot_data[ii]->subslot_data.begin();
+         it != dev_data->slot_data[ii]->subslot_data.end();)
+    {
+      // The interface submodule is always 32768 according to the standard
+      if ((*it)->subslot_number == 32768)
+      {
+        delete *it;
+        it = dev_data->slot_data[ii]->subslot_data.erase(it);
+      }
+      else
+      {
+        it++;
+      }
+    }
+  }
 
   /* Calculate num apis */
 
@@ -512,8 +528,8 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES* ServiceReqRes,
     }
   }
 
-  //printf("Number of submodules for this slave: %d\n", num_submodules);
-  //printf("Data record size for slave: %d\n", data_record_length);
+  // printf("Number of submodules for this slave: %d\n", num_submodules);
+  // printf("Data record size for slave: %d\n", data_record_length);
 
   length = sizeof(T_PN_SERVICE_DOWNLOAD_REQ) + num_iocrs * sizeof(T_PN_IOCR) +
            num_apis * sizeof(T_PN_API) + num_modules * sizeof(T_PN_MODULE) +
@@ -1682,7 +1698,7 @@ int handle_service_con(io_sAgentLocal* local, io_sAgent* ap)
         switch (pSdb->Service)
         {
         case PN_SERVICE_DOWNLOAD_EXTENDED:
-          // printf("EXTENDED DOWNLOAD!\n");
+        // printf("EXTENDED DOWNLOAD!\n");
         case PN_SERVICE_DOWNLOAD:
         {
           // printf("unpack_download_con\n");
@@ -1697,7 +1713,7 @@ int handle_service_con(io_sAgentLocal* local, io_sAgent* ap)
         }
 
         case PN_SERVICE_WRITE_MULTIPLE:
-          // printf("WRITE MULTIPLE!\n");
+        // printf("WRITE MULTIPLE!\n");
         case PN_SERVICE_WRITE:
         {
           // printf("unpack_write_con\n");
@@ -1779,7 +1795,7 @@ int wait_service_con(io_sAgentLocal* local, io_sAgent* ap)
   int sts;
 
   wait_object = PNAK_WAIT_OBJECT_SERVICE_CON;
-  //wait_object = PNAK_WAIT_OBJECTS_SERVICE;
+  // wait_object = PNAK_WAIT_OBJECTS_SERVICE;
 
   sts = pnak_wait_for_multiple_objects(0, &wait_object, PNAK_INFINITE_TIMEOUT);
 
@@ -2280,8 +2296,9 @@ void* handle_events(void* ptr)
   {
     // wait_object = PNAK_WAIT_OBJECTS_EVENT_IND | PNAK_WAIT_OBJECTS_OTHER
     //     | PNAK_WAIT_OBJECT_SERVICE_CON;
-    wait_object =
-        PNAK_WAIT_OBJECTS_ALL & ~(PNAK_WAIT_OBJECT_PROVIDER_DATA_UPDATED | PNAK_WAIT_OBJECT_CONSUMER_DATA_CHANGED);
+    wait_object = PNAK_WAIT_OBJECTS_ALL &
+                  ~(PNAK_WAIT_OBJECT_PROVIDER_DATA_UPDATED |
+                    PNAK_WAIT_OBJECT_CONSUMER_DATA_CHANGED);
 
     //    pthread_mutex_lock(&local->mutex);
 

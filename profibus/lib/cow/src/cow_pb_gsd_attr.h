@@ -41,7 +41,8 @@
 
 #include "cow_pb_gsd.h"
 
-typedef struct {
+typedef struct
+{
   void* value;
   char name[80];
   int type;
@@ -56,7 +57,8 @@ typedef struct {
 class GsdAttrNav;
 class CoWow;
 
-class GsdAttr {
+class GsdAttr
+{
 public:
   void* parent_ctx;
   char name[80];
@@ -77,15 +79,9 @@ public:
   GsdAttr(void* a_parent_ctx, void* a_object, pb_gsd* a_gsd, int a_edit_mode);
   virtual ~GsdAttr();
 
-  virtual void message(char severity, const char* message)
-  {
-  }
-  virtual void set_prompt(const char* prompt)
-  {
-  }
-  virtual void change_value()
-  {
-  }
+  virtual void message(char severity, const char* message) {}
+  virtual void set_prompt(const char* prompt) {}
+  virtual void change_value() {}
 
   void activate_exit();
   void activate_help();

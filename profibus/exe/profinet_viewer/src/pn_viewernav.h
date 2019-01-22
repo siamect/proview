@@ -45,7 +45,8 @@
 
 #include "flow_browapi.h"
 
-class PnDevice {
+class PnDevice
+{
 public:
   PnDevice();
   unsigned char ipaddress[4];
@@ -70,10 +71,13 @@ typedef enum {
   viewitem_eItemType_DeviceAttr
 } viewitem_eItemType;
 
-class PnViewerNavBrow {
+class PnViewerNavBrow
+{
 public:
   PnViewerNavBrow(BrowCtx* brow_ctx, void* lvnav)
-      : ctx(brow_ctx), viewernav(lvnav){}
+      : ctx(brow_ctx), viewernav(lvnav)
+  {
+  }
   ~PnViewerNavBrow();
 
   BrowCtx* ctx;
@@ -91,7 +95,8 @@ public:
   void brow_setup();
 };
 
-class PnViewerNav {
+class PnViewerNav
+{
 public:
   PnViewerNav(void* l_parent_ctx, viewer_eType l_type);
   virtual ~PnViewerNav();
@@ -102,9 +107,7 @@ public:
   void (*change_value_cb)(void*);
   void (*message_cb)(void*, int, const char*);
 
-  virtual void set_input_focus()
-  {
-  }
+  virtual void set_input_focus() {}
 
   void message(int severity, const char* msg);
   void zoom(double zoom_factor);
@@ -115,20 +118,21 @@ public:
   int get_selected_device(ItemDevice** device);
   void vendorid_to_str(unsigned int vendorid, char* vendorid_str, int size);
   void get_device_info(unsigned int vendorid, unsigned int deviceid, char* info,
-      int info_size, char* family, int family_size);
+                       int info_size, char* family, int family_size);
 
   static int init_brow_cb(FlowCtx* fctx, void* client_data);
   static int brow_cb(FlowCtx* ctx, flow_tEvent event);
 };
 
-class ItemDevice {
+class ItemDevice
+{
 public:
   ItemDevice(PnViewerNav* viewernav, const char* item_name,
-      unsigned char* item_ipaddress, unsigned char* item_macaddress,
-      char* item_devname, int vendorid, int deviceid, brow_tNode dest,
-      flow_eDest dest_code);
+             unsigned char* item_ipaddress, unsigned char* item_macaddress,
+             char* item_devname, int vendorid, int deviceid, brow_tNode dest,
+             flow_eDest dest_code);
   virtual ~ItemDevice();
-  
+
   viewitem_eItemType type;
   PnViewerNav* viewernav;
   brow_tNode node;
@@ -148,11 +152,12 @@ public:
   void close(PnViewerNav* viewernav);
 };
 
-class ItemDeviceAttr {
+class ItemDeviceAttr
+{
 public:
   ItemDeviceAttr(PnViewerNav* viewernav, const char* item_name,
-      pwr_eType item_attr_type, void* item_p, brow_tNode dest,
-      flow_eDest dest_code);
+                 pwr_eType item_attr_type, void* item_p, brow_tNode dest,
+                 flow_eDest dest_code);
   virtual ~ItemDeviceAttr();
 
   viewitem_eItemType type;

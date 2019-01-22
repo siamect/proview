@@ -98,20 +98,23 @@ void GsdAttrMotif::change_value()
   Widget text_w;
   char* value;
 
-  if (input_open) {
+  if (input_open)
+  {
     XtUnmanageChild(cmd_input);
     set_prompt("");
     input_open = 0;
     return;
   }
 
-  if (!edit_mode) {
+  if (!edit_mode)
+  {
     message('E', "Not in edit mode");
     return;
   }
 
   sts = ((GsdAttrNav*)attrnav)->check_attr_value(&value);
-  if (EVEN(sts)) {
+  if (EVEN(sts))
+  {
     if (sts == PB__NOATTRSEL)
       message('E', "No attribute is selected");
     else
@@ -125,11 +128,14 @@ void GsdAttrMotif::change_value()
   message(' ', "");
   flow_SetInputFocus(text_w);
 
-  if (value) {
+  if (value)
+  {
     XmTextSetString(text_w, value);
     XmTextSetInsertionPosition(text_w, strlen(value));
     XmTextSetSelection(text_w, 0, strlen(value), CurrentTime);
-  } else {
+  }
+  else
+  {
     XmTextSetString(cmd_input, (char*)"");
   }
   set_prompt("value >");
@@ -139,85 +145,86 @@ void GsdAttrMotif::change_value()
 //
 //  Callbackfunctions from menu entries
 //
-void GsdAttrMotif::activate_change_value(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::activate_change_value(Widget w, GsdAttr* attr,
+                                         XmAnyCallbackStruct* data)
 {
   attr->change_value();
 }
 
-void GsdAttrMotif::activate_exit(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::activate_exit(Widget w, GsdAttr* attr,
+                                 XmAnyCallbackStruct* data)
 {
   attr->activate_exit();
 }
 
-void GsdAttrMotif::activate_help(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::activate_help(Widget w, GsdAttr* attr,
+                                 XmAnyCallbackStruct* data)
 {
   attr->activate_help();
 }
 
-void GsdAttrMotif::activate_copy(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::activate_copy(Widget w, GsdAttr* attr,
+                                 XmAnyCallbackStruct* data)
 {
   attr->activate_copy();
 }
 
-void GsdAttrMotif::activate_cut(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::activate_cut(Widget w, GsdAttr* attr,
+                                XmAnyCallbackStruct* data)
 {
   attr->activate_cut();
 }
 
-void GsdAttrMotif::activate_paste(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::activate_paste(Widget w, GsdAttr* attr,
+                                  XmAnyCallbackStruct* data)
 {
   attr->activate_paste();
 }
 
-void GsdAttrMotif::activate_zoom_in(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::activate_zoom_in(Widget w, GsdAttr* attr,
+                                    XmAnyCallbackStruct* data)
 {
   attr->activate_zoom_in();
 }
 
-void GsdAttrMotif::activate_zoom_out(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::activate_zoom_out(Widget w, GsdAttr* attr,
+                                     XmAnyCallbackStruct* data)
 {
   attr->activate_zoom_out();
 }
 
-void GsdAttrMotif::activate_zoom_reset(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::activate_zoom_reset(Widget w, GsdAttr* attr,
+                                       XmAnyCallbackStruct* data)
 {
   attr->activate_zoom_reset();
 }
 
-void GsdAttrMotif::activate_print(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::activate_print(Widget w, GsdAttr* attr,
+                                  XmAnyCallbackStruct* data)
 {
   attr->activate_print();
 }
 
-void GsdAttrMotif::activate_cmd_ok(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::activate_cmd_ok(Widget w, GsdAttr* attr,
+                                   XmAnyCallbackStruct* data)
 {
   attr->activate_cmd_ok();
 }
 
-void GsdAttrMotif::activate_cmd_ca(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::activate_cmd_ca(Widget w, GsdAttr* attr,
+                                   XmAnyCallbackStruct* data)
 {
   attr->activate_cmd_ca();
 }
 
-void GsdAttrMotif::create_menubutton(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::create_menubutton(Widget w, GsdAttr* attr,
+                                     XmAnyCallbackStruct* data)
 {
   int key;
 
   XtVaGetValues(w, XmNuserData, &key, NULL);
-  switch (key) {
+  switch (key)
+  {
   case 1:
     ((GsdAttrMotif*)attr)->menubutton_copy = w;
     break;
@@ -233,28 +240,28 @@ void GsdAttrMotif::create_menubutton(
   default:;
   }
 }
-void GsdAttrMotif::create_msg_label(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::create_msg_label(Widget w, GsdAttr* attr,
+                                    XmAnyCallbackStruct* data)
 {
   ((GsdAttrMotif*)attr)->msg_label = w;
 }
-void GsdAttrMotif::create_cmd_prompt(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::create_cmd_prompt(Widget w, GsdAttr* attr,
+                                     XmAnyCallbackStruct* data)
 {
   ((GsdAttrMotif*)attr)->cmd_prompt = w;
 }
-void GsdAttrMotif::create_cmd_ok(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::create_cmd_ok(Widget w, GsdAttr* attr,
+                                 XmAnyCallbackStruct* data)
 {
   ((GsdAttrMotif*)attr)->cmd_ok = w;
 }
-void GsdAttrMotif::create_cmd_ca(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::create_cmd_ca(Widget w, GsdAttr* attr,
+                                 XmAnyCallbackStruct* data)
 {
   ((GsdAttrMotif*)attr)->cmd_cancel = w;
 }
-void GsdAttrMotif::create_cmd_input(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::create_cmd_input(Widget w, GsdAttr* attr,
+                                    XmAnyCallbackStruct* data)
 {
   Arg args[2];
 
@@ -264,8 +271,8 @@ void GsdAttrMotif::create_cmd_input(
   mrm_TextInit(w, (XtActionProc)valchanged_cmd_input, mrm_eUtility_GsdAttr);
   ((GsdAttrMotif*)attr)->cmd_input = w;
 }
-void GsdAttrMotif::create_attrnav_form(
-    Widget w, GsdAttr* attr, XmAnyCallbackStruct* data)
+void GsdAttrMotif::create_attrnav_form(Widget w, GsdAttr* attr,
+                                       XmAnyCallbackStruct* data)
 {
   ((GsdAttrMotif*)attr)->attrnav_form = w;
 }
@@ -296,13 +303,15 @@ void GsdAttrMotif::valchanged_cmd_input(Widget w, XEvent* event)
   XtSetArg(args[0], XmNuserData, &attr);
   XtGetValues(w, args, 1);
 
-  sts = mrm_TextInput(w, event, (char*)attr->value_recall,
-      sizeof(attr->value_recall[0]),
+  sts = mrm_TextInput(
+      w, event, (char*)attr->value_recall, sizeof(attr->value_recall[0]),
       sizeof(attr->value_recall) / sizeof(attr->value_recall[0]),
       &attr->value_current_recall);
-  if (sts) {
+  if (sts)
+  {
     text = XmTextGetString(w);
-    if (attr->input_open) {
+    if (attr->input_open)
+    {
       sts = ((GsdAttrNav*)attr->attrnav)->set_attr_value(text);
       XtUnmanageChild(w);
       attr->set_prompt("");
@@ -320,10 +329,10 @@ GsdAttrMotif::~GsdAttrMotif()
 }
 
 GsdAttrMotif::GsdAttrMotif(Widget a_parent_wid, void* a_parent_ctx,
-    void* a_object, pb_gsd* a_gsd, int a_edit_mode)
+                           void* a_object, pb_gsd* a_gsd, int a_edit_mode)
     : GsdAttr(a_parent_ctx, a_object, a_gsd, a_edit_mode)
 {
-  char uid_filename[120] = { "pwr_exe:pb_gsd_attr.uid" };
+  char uid_filename[120] = {"pwr_exe:pb_gsd_attr.uid"};
   char* uid_filename_p = uid_filename;
   Arg args[20];
   pwr_tStatus sts;
@@ -336,29 +345,30 @@ GsdAttrMotif::GsdAttrMotif(Widget a_parent_wid, void* a_parent_ctx,
   static char translations[] = "<FocusIn>: gsdattr_inputfocus()\n";
   static XtTranslations compiled_translations = NULL;
 
-  static XtActionsRec actions[]
-      = { { (char*)"gsdattr_inputfocus", (XtActionProc)action_inputfocus } };
+  static XtActionsRec actions[] = {
+      {(char*)"gsdattr_inputfocus", (XtActionProc)action_inputfocus}};
 
-  static MrmRegisterArg reglist[] = { { (char*)"gsdattr_ctx", 0 },
-    { (char*)"gsdattr_activate_exit", (caddr_t)activate_exit },
-    { (char*)"gsdattr_activate_print", (caddr_t)activate_print },
-    { (char*)"gsdattr_activate_copy", (caddr_t)activate_copy },
-    { (char*)"gsdattr_activate_cut", (caddr_t)activate_cut },
-    { (char*)"gsdattr_activate_paste", (caddr_t)activate_paste },
-    { (char*)"gsdattr_activate_zoom_in", (caddr_t)activate_zoom_in },
-    { (char*)"gsdattr_activate_zoom_out", (caddr_t)activate_zoom_out },
-    { (char*)"gsdattr_activate_zoom_reset", (caddr_t)activate_zoom_reset },
-    { (char*)"gsdattr_activate_change_value", (caddr_t)activate_change_value },
-    { (char*)"gsdattr_activate_help", (caddr_t)activate_help },
-    { (char*)"gsdattr_create_msg_label", (caddr_t)create_msg_label },
-    { (char*)"gsdattr_create_menubutton", (caddr_t)create_menubutton },
-    { (char*)"gsdattr_create_cmd_prompt", (caddr_t)create_cmd_prompt },
-    { (char*)"gsdattr_create_cmd_input", (caddr_t)create_cmd_input },
-    { (char*)"gsdattr_create_attrnav_form", (caddr_t)create_attrnav_form },
-    { (char*)"gsdattr_create_cmd_ok", (caddr_t)create_cmd_ok },
-    { (char*)"gsdattr_activate_cmd_ok", (caddr_t)activate_cmd_ok },
-    { (char*)"gsdattr_create_cmd_ca", (caddr_t)create_cmd_ca },
-    { (char*)"gsdattr_activate_cmd_ca", (caddr_t)activate_cmd_ca } };
+  static MrmRegisterArg reglist[] = {
+      {(char*)"gsdattr_ctx", 0},
+      {(char*)"gsdattr_activate_exit", (caddr_t)activate_exit},
+      {(char*)"gsdattr_activate_print", (caddr_t)activate_print},
+      {(char*)"gsdattr_activate_copy", (caddr_t)activate_copy},
+      {(char*)"gsdattr_activate_cut", (caddr_t)activate_cut},
+      {(char*)"gsdattr_activate_paste", (caddr_t)activate_paste},
+      {(char*)"gsdattr_activate_zoom_in", (caddr_t)activate_zoom_in},
+      {(char*)"gsdattr_activate_zoom_out", (caddr_t)activate_zoom_out},
+      {(char*)"gsdattr_activate_zoom_reset", (caddr_t)activate_zoom_reset},
+      {(char*)"gsdattr_activate_change_value", (caddr_t)activate_change_value},
+      {(char*)"gsdattr_activate_help", (caddr_t)activate_help},
+      {(char*)"gsdattr_create_msg_label", (caddr_t)create_msg_label},
+      {(char*)"gsdattr_create_menubutton", (caddr_t)create_menubutton},
+      {(char*)"gsdattr_create_cmd_prompt", (caddr_t)create_cmd_prompt},
+      {(char*)"gsdattr_create_cmd_input", (caddr_t)create_cmd_input},
+      {(char*)"gsdattr_create_attrnav_form", (caddr_t)create_attrnav_form},
+      {(char*)"gsdattr_create_cmd_ok", (caddr_t)create_cmd_ok},
+      {(char*)"gsdattr_activate_cmd_ok", (caddr_t)activate_cmd_ok},
+      {(char*)"gsdattr_create_cmd_ca", (caddr_t)create_cmd_ca},
+      {(char*)"gsdattr_activate_cmd_ca", (caddr_t)activate_cmd_ca}};
 
   static int reglist_num = (sizeof reglist / sizeof reglist[0]);
 
@@ -380,19 +390,19 @@ GsdAttrMotif::GsdAttrMotif(Widget a_parent_wid, void* a_parent_ctx,
 
   MrmRegisterNames(reglist, reglist_num);
 
-  parent_wid = XtCreatePopupShell(
-      "pbGsdEditor", topLevelShellWidgetClass, a_parent_wid, args, 0);
+  parent_wid = XtCreatePopupShell("pbGsdEditor", topLevelShellWidgetClass,
+                                  a_parent_wid, args, 0);
 
   sts = MrmFetchWidgetOverride(s_DRMh, (char*)"gsd_attr_window", parent_wid,
-      name, args, 1, &toplevel, &dclass);
+                               name, args, 1, &toplevel, &dclass);
   if (sts != MrmSUCCESS)
     printf("can't fetch %s\n", name);
 
   MrmCloseHierarchy(s_DRMh);
 
   if (compiled_translations == NULL)
-    XtAppAddActions(
-        XtWidgetToApplicationContext(toplevel), actions, XtNumber(actions));
+    XtAppAddActions(XtWidgetToApplicationContext(toplevel), actions,
+                    XtNumber(actions));
 
   if (compiled_translations == NULL)
     compiled_translations = XtParseTranslationTable(translations);
@@ -413,14 +423,15 @@ GsdAttrMotif::GsdAttrMotif(Widget a_parent_wid, void* a_parent_ctx,
   XtManageChild(toplevel);
   XtUnmanageChild(cmd_input);
 
-  attrnav = new GsdAttrNavMotif(
-      this, attrnav_form, (char*)"Plant", gsd, edit_mode, &brow_widget, &sts);
+  attrnav = new GsdAttrNavMotif(this, attrnav_form, (char*)"Plant", gsd,
+                                edit_mode, &brow_widget, &sts);
   ((GsdAttrNav*)attrnav)->message_cb = &GsdAttr::gsdattr_message;
   ((GsdAttrNav*)attrnav)->change_value_cb = &GsdAttr::gsdattr_change_value_cb;
 
   XtPopup(parent_wid, XtGrabNone);
 
-  if (!edit_mode) {
+  if (!edit_mode)
+  {
     i = 0;
     XtSetArg(args[i], XmNsensitive, 0);
     i++;

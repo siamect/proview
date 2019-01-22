@@ -47,42 +47,42 @@
 
 #define PN_MAX_MANU_SPEC_DIAGS 200
 
-void pack_set_ip_settings_req(
-    T_PNAK_SERVICE_REQ_RES* ServiceReqRes, PnDeviceInfo* dev_info);
+void pack_set_ip_settings_req(T_PNAK_SERVICE_REQ_RES* ServiceReqRes,
+                              PnDeviceInfo* dev_info);
 
-void pack_set_device_name_req(
-    T_PNAK_SERVICE_REQ_RES* ServiceReqRes, PnDeviceInfo* dev_info);
+void pack_set_device_name_req(T_PNAK_SERVICE_REQ_RES* ServiceReqRes,
+                              PnDeviceInfo* dev_info);
 
 void pack_set_identification_req(T_PNAK_SERVICE_REQ_RES* ServiceReqRes);
 
-void pack_get_device_state_req(
-    T_PNAK_SERVICE_REQ_RES* ServiceReqRes, unsigned short device_ref);
+void pack_get_device_state_req(T_PNAK_SERVICE_REQ_RES* ServiceReqRes,
+                               unsigned short device_ref);
 
 void pack_write_req(T_PNAK_SERVICE_REQ_RES* ServiceReqRes,
-    unsigned short device_ref, pwr_sClass_PnWriteReq* wr_req);
+                    unsigned short device_ref, pwr_sClass_PnWriteReq* wr_req);
 
 void pack_get_los_req(T_PNAK_SERVICE_REQ_RES* ServiceReqRes);
 
-void pack_get_alarm_req(
-    T_PNAK_SERVICE_REQ_RES* ServiceReqRes, unsigned short ref);
+void pack_get_alarm_req(T_PNAK_SERVICE_REQ_RES* ServiceReqRes,
+                        unsigned short ref);
 
 void pack_alarm_ack_req(T_PNAK_SERVICE_REQ_RES* ServiceReqRes,
-    unsigned short ref, unsigned short prio);
+                        unsigned short ref, unsigned short prio);
 
 void pack_download_req(T_PNAK_SERVICE_REQ_RES* ServiceReqRes,
-    GsdmlDeviceData* dev_data, unsigned short device_ref);
+                       GsdmlDeviceData* dev_data, unsigned short device_ref);
 
 int unpack_write_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal* local);
 
 int unpack_get_los_con(T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal* local);
 
-int unpack_get_alarm_con(
-    T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal* local, io_sAgent* ap);
-int unpack_get_device_state_con(
-    T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal* local, io_sAgent* ap);
+int unpack_get_alarm_con(T_PNAK_SERVICE_DESCRIPTION* pSdb,
+                         io_sAgentLocal* local, io_sAgent* ap);
+int unpack_get_device_state_con(T_PNAK_SERVICE_DESCRIPTION* pSdb,
+                                io_sAgentLocal* local, io_sAgent* ap);
 
-int unpack_download_con(
-    T_PNAK_SERVICE_DESCRIPTION* pSdb, io_sAgentLocal* local);
+int unpack_download_con(T_PNAK_SERVICE_DESCRIPTION* pSdb,
+                        io_sAgentLocal* local);
 
 int handle_service_con(io_sAgentLocal* local, io_sAgent* ap);
 
