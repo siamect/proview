@@ -98,7 +98,7 @@ public:
   static void activate_save(GtkWidget* w, gpointer data);
   static void activate_show_events(GtkWidget* w, gpointer data);
   static void activate_pop_events(GtkWidget* w, gpointer data);
-  static void activate_gui_motif(GtkWidget* w, gpointer data);
+  static void activate_gui_qt(GtkWidget* w, gpointer data);
   static void activate_gui_gtk(GtkWidget* w, gpointer data);
   static void activate_mode_systemstatus(GtkWidget* w, gpointer data);
   static void activate_mode_userstatus1(GtkWidget* w, gpointer data);

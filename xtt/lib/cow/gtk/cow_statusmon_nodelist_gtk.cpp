@@ -172,22 +172,22 @@ NodelistGtk::NodelistGtk(void* nodelist_parent_ctx,
 
   // Submenu Remote GUI
   GSList* rg_group = NULL;
+  GtkWidget* view_gui_qt
+      = gtk_radio_menu_item_new_with_mnemonic(rg_group, "_QT");
+  rg_group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(view_gui_qt));
+  g_signal_connect(
+      view_gui_qt, "activate", G_CALLBACK(activate_gui_qt), this);
+
   GtkWidget* view_gui_gtk
       = gtk_radio_menu_item_new_with_mnemonic(rg_group, "_GTK");
   rg_group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(view_gui_gtk));
   g_signal_connect(
       view_gui_gtk, "activate", G_CALLBACK(activate_gui_gtk), this);
 
-  GtkWidget* view_gui_motif
-      = gtk_radio_menu_item_new_with_mnemonic(rg_group, "_Motif");
-  rg_group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(view_gui_motif));
-  g_signal_connect(
-      view_gui_motif, "activate", G_CALLBACK(activate_gui_motif), this);
-
   GtkWidget* view_gui = gtk_menu_item_new_with_mnemonic("_Remote GUI");
   GtkMenu* view_gui_menu = (GtkMenu*)g_object_new(GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_gui_menu), view_gui_qt);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_gui_menu), view_gui_gtk);
-  gtk_menu_shell_append(GTK_MENU_SHELL(view_gui_menu), view_gui_motif);
 
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(view_gui), GTK_WIDGET(view_gui_menu));
 
@@ -533,13 +533,13 @@ void NodelistGtk::activate_pop_events(GtkWidget* w, gpointer data)
   nodelist->nodelistnav->set_msgw_pop(set);
 }
 
-void NodelistGtk::activate_gui_motif(GtkWidget* w, gpointer data)
+void NodelistGtk::activate_gui_qt(GtkWidget* w, gpointer data)
 {
   Nodelist* nodelist = (Nodelist*)data;
   int set = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(w)) ? 1 : 0;
 
   if (set)
-    strcpy(nodelist->remote_gui, "motif");
+    strcpy(nodelist->remote_gui, "qt");
   else
     strcpy(nodelist->remote_gui, "");
 }

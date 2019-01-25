@@ -120,7 +120,6 @@ public slots:
   void activate_save();
   void activate_show_events();
   void activate_pop_events();
-  void activate_gui_motif();
   void activate_gui_gtk();
   void activate_gui_qt();
   void activate_mode();

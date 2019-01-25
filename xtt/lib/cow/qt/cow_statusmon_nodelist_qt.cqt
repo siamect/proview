@@ -109,8 +109,6 @@ NodelistQt::NodelistQt(void* nodelist_parent_ctx, const char* nodelist_name,
       toplevel, view_gui, "&QT", SLOT(activate_gui_qt()), rg_group);
   addMenuRadioItem(
       toplevel, view_gui, "&GTK", SLOT(activate_gui_gtk()), rg_group);
-  addMenuRadioItem(
-      toplevel, view_gui, "&Motif", SLOT(activate_gui_motif()), rg_group);
 
   // Submenu Mode
   QMenu* view_mode = view->addMenu(fl("&Mode"));
@@ -264,11 +262,6 @@ void NodelistQtWidget::activate_show_events()
 void NodelistQtWidget::activate_pop_events()
 {
   nodelist->nodelistnav->set_msgw_pop(1);
-}
-
-void NodelistQtWidget::activate_gui_motif()
-{
-  strcpy(nodelist->remote_gui, "motif");
 }
 
 void NodelistQtWidget::activate_gui_gtk()

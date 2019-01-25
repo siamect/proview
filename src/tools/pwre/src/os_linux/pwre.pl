@@ -89,7 +89,7 @@ foreach $key (sort keys (%verbs)) {
       $amb = 0;
       $found = 1;
       ($verb, $usage)  =  split(/:/, $verbs{$key});
-      last; 
+      last;
     }
 
     push(@ambs, $key);
@@ -137,7 +137,7 @@ sub add ()
   if ($varstr ne "") {
     printf("++ Environment %s already exists\n", $_[0]);
   } else {
-    get_vars(@_);  
+    get_vars(@_);
     update_db();
   }
   untie(%envdb)|| die "++ can't untie $dbname!";
@@ -230,7 +230,7 @@ sub build () # args: branch, subbranch, flavour, phase
     $ENV{"PWRE_ARGS"} = $_;
   }
   printf("\n--\n");
-  
+
   _build($branch, $subbranch, $flavour, @_);
 
 }
@@ -350,7 +350,7 @@ sub ebuild # args: pass flavour
   }
   printf( "\n");
   close FILE;
- 
+
   my $pass = $_[0];
   my $flavour = $_[1];
 
@@ -381,7 +381,7 @@ sub ebuild # args: pass flavour
     _build("lib", "co", $flavour, "all");
     _build("exe", "co*", "src", "all");
     _build("exe", "*", "src", "copy");
-    _build("exp", "stdsoap2", "src", "copy");  
+    _build("exp", "stdsoap2", "src", "copy");
     _build("lib", "rt", "src", "all");
     _build("lib", "statussrv", "src", "all");
     _build("lib", "msg_dummy", "src", "init");
@@ -633,7 +633,7 @@ sub import ()
     _module("remote");
     merge();
   }
-  
+
 }
 
 #
@@ -733,7 +733,7 @@ sub clean_exe_all ()
   _build("exe","*","src","clean_exe");
   _module("rt");
 
-}  
+}
 
 
 #
@@ -830,14 +830,14 @@ sub build_all_wbl ()
   _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("rt");
-}  
+}
 
 sub method_build ()
 {
 
   my $flavour;
   my $program;
-  if ( $_[0] eq "motif" || $_[0] eq "gtk" || $_[0] eq "qt" ) {
+  if ( $_[0] eq "gtk" || $_[0] eq "qt" ) {
     $flavour = $_[0];
   }
   else {
@@ -961,9 +961,7 @@ sub build_module ()
     $lib = 1;
     $exe = 1;
   }
-  if ( $_[0] eq "motif" || $_[1] eq "motif" || $_[2] eq "motif" || $_[3] eq "motif") {
-    $flavour = "motif";
-  } elsif ( $_[0] eq "qt" || $_[1] eq "qt" || $_[2] eq "qt" || $_[3] eq "qt") {
+  if ( $_[0] eq "qt" || $_[1] eq "qt" || $_[2] eq "qt" || $_[3] eq "qt") {
     $flavour = "qt";
   } else {
     $flavour = "gtk";
@@ -1155,7 +1153,7 @@ sub build_module ()
 #
 # copy()
 #
-sub copy () 
+sub copy ()
 {
   if (!defined($ENV{"pwre_env"})) {
     print("++ Environment is not initialized!\n");
@@ -1171,20 +1169,20 @@ sub copy ()
   printf("-- Copy file from Import root\n");
   printf("-- Import root: %s\n", $vmsinc);
   printf("--\n");
-  
+
   if ( $_[0] eq "doc" ) {
-    my($cmd) = "cp -r " . $vmsinc . "/exp/doc/* " . $docroot; 
+    my($cmd) = "cp -r " . $vmsinc . "/exp/doc/* " . $docroot;
     system("$cmd");
   }
   elsif ( $_[0] eq "dbs" ) {
-    my($cmd) = "$bindir/import_dbs.sh " . $vmsinc . " " . $exproot; 
+    my($cmd) = "$bindir/import_dbs.sh " . $vmsinc . " " . $exproot;
     system("$cmd");
   }
   else {
     if ($hw eq "x86" && $real_hw eq "x86_64") {
       $ENV{"cross_compile"} = "-m32";
     }
-    my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0]; 
+    my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0];
     system("$cmd");
 
     my $flavour = $_[1];
@@ -1193,7 +1191,7 @@ sub copy ()
       $flavour = "gtk";
     }
 
-    my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0] . "_" . $flavour; 
+    my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0] . "_" . $flavour;
     system("$cmd");
   }
 }
@@ -1269,7 +1267,7 @@ sub dele ()
   tie(%envdb, "DB_File", $dbname, O_CREAT|O_RDWR, 0644) || die "++ can't tie $dbname!";
 
   $label = $_[0];
-  
+
   if (defined($envdb{$label})) {
     print("-- Delete environment \"$label\" [n]? ");
     my($tmp);
@@ -1391,7 +1389,7 @@ sub show ()
 #
 # tags()
 #
-sub tags () 
+sub tags ()
 {
   if (!defined($ENV{"pwre_env"})) {
     print("++ Environment is not initialized!\n");
@@ -1432,7 +1430,7 @@ sub _build () # args: branch, subbranch, flavour, phase
   }
 
   my($grepstr) = $ENV{"pwre_target"};
-  
+
   my($globstr) = $ENV{"pwre_sroot"} . "/$branch";
   my(@dirs1) = glob($globstr);
   my($dir1);
@@ -1445,17 +1443,17 @@ sub _build () # args: branch, subbranch, flavour, phase
 
   foreach $dir1 (@dirs1) {
 
-#    $globstr = "$dir1" . "/$subbranch/$flavour/os_$os/hw_$hw"; 
+#    $globstr = "$dir1" . "/$subbranch/$flavour/os_$os/hw_$hw";
 #    if ( ! -e $globstr ) {
-#      $globstr = "$dir1" . "/$subbranch/$flavour/os_$os/.hw_$hw"; 
+#      $globstr = "$dir1" . "/$subbranch/$flavour/os_$os/.hw_$hw";
 #      if ( ! -e $globstr ) {
-#	$globstr = "$dir1" . "/$subbranch/$flavour/.os_$os/.hw_$hw"; 
+#	$globstr = "$dir1" . "/$subbranch/$flavour/.os_$os/.hw_$hw";
 #      }
 #    }
-    $globstr1 = "$dir1" . "/$subbranch/$flavour/os_$os/hw_$hw"; 
-    $globstr2 = "$dir1" . "/$subbranch/$flavour/os_$os/.hw_$hw"; 
-    $globstr3 = "$dir1" . "/$subbranch/$flavour/.os_$os/.hw_$hw"; 
-    
+    $globstr1 = "$dir1" . "/$subbranch/$flavour/os_$os/hw_$hw";
+    $globstr2 = "$dir1" . "/$subbranch/$flavour/os_$os/.hw_$hw";
+    $globstr3 = "$dir1" . "/$subbranch/$flavour/.os_$os/.hw_$hw";
+
     @dirs2 = (glob($globstr1),glob($globstr2),glob($globstr3));
 
     foreach $dir2 (@dirs2) {
@@ -1479,14 +1477,14 @@ sub _build () # args: branch, subbranch, flavour, phase
           }
         }
       }
-    }  
+    }
   }
 }
 
 #
 # merge()
 #
-sub merge () 
+sub merge ()
 {
   if (!defined($ENV{"pwre_env"})) {
     print("++ Environment is not initialized!\n");
@@ -1535,7 +1533,7 @@ sub _exists ()
   tie(%envdb, "DB_File", $dbname, O_CREAT|O_RDWR, 0644) || die "++ can't tie $dbname!";
 
   $label = $_[0];
-  
+
   if (defined($envdb{$label})) {
     $ret = 0;
   }
@@ -1601,7 +1599,7 @@ sub _module()
 
 #
 # Misc. subroutines
-# 
+#
 sub create_base()
 {
   my($newdir) = $_[0];
@@ -1644,7 +1642,7 @@ sub create_dir()
     } else {
       printf("++\n++ Cannot mkdir %s, reason: %s\n", $dir, $!);
       exit 1;
-    }   
+    }
   }
 }
 
@@ -1702,7 +1700,7 @@ sub get_var()
     $tmp = $_[1];
   }
   return $tmp;
-  
+
 }
 
 sub read_vars ()
@@ -1873,5 +1871,3 @@ sub usage_tags ()
   printf("++\n");
   printf("++ tags                          : Creates a CRiSP tag-file named ~/pwre/tags\n");
 }
-
-

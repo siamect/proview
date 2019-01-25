@@ -59,8 +59,8 @@ int main(int argc, char* argv[])
 
   dcli_execute_flavour(argv);
 
-  const char* flavours[] = { "qt", "gtk", "motif" };
-  for (int i = 0; i < 3; i++) {
+  const char* flavours[] = { "qt", "gtk" };
+  for (int i = 0; i < 2; i++) {
     strcpy(file, "$pwr_eexe/wb_cmd_");
     strcat(file, flavours[i]);
     dcli_translate_filename(file, file);

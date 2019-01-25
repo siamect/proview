@@ -73,7 +73,7 @@ class PnViewerQtWidget : public QWidget
   Q_OBJECT
 
 public:
-  PnViewerQtWidget(PnViewerQt* parent_ctx, QWidget* parent)
+  PnViewerQtWidget(PnViewerQt* parent_ctx)
       : QWidget(), viewer(parent_ctx)
   {
   }

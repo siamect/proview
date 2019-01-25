@@ -58,8 +58,8 @@ fi
 if [ "$file" != "" ]; then
   # Merge only this file
   merge_dir_func $toroot $fromroot $file
-  
-else  
+
+else
   # Copy exe, load, obj and inc
   merge_dir_func $toroot/exe $fromroot/exe
   merge_dir_func $toroot/exe/sv_se $fromroot/exe/sv_se
@@ -78,7 +78,7 @@ else
   for lib in $libraries; do
 
     arname=${lib##/*/}
-    if [ $arname = "libpwr_rt.a" ] || [ $arname = "libpwr_cow.a" ] || [ $arname = "libpwr_cow_motif.a" ] || [ $arname = "libpwr_cow_gtk.a" ] || [ $arname = "libpwr_cow_qt.a" ] || [ $arname = "libpwr_wb.a" ] || [ $arname = "libpwr_wb_motif.a" ] || [ $arname = "libpwr_wb_gtk.a" ] || [ $arname = "libpwr_wb_qt.a" ] || [ $arname = "libpwr_xtt.a" ] || [ $arname = "libpwr_xtt_motif.a" ] || [ $arname = "libpwr_xtt_gtk.a" ] || [ $arname = "libpwr_xtt_qt.a" ]; then
+    if [ $arname = "libpwr_rt.a" ] || [ $arname = "libpwr_cow.a" ] || [ $arname = "libpwr_cow_gtk.a" ] || [ $arname = "libpwr_cow_qt.a" ] || [ $arname = "libpwr_wb.a" ] || [ $arname = "libpwr_wb_gtk.a" ] || [ $arname = "libpwr_wb_qt.a" ] || [ $arname = "libpwr_xtt.a" ] || [ $arname = "libpwr_xtt_gtk.a" ] || [ $arname = "libpwr_xtt_qt.a" ]; then
       if [ $ver -eq 1 ]; then
 	  echo "Merge $lib"
       fi
@@ -87,7 +87,7 @@ else
       ar -roUc $toroot/lib/$arname $modules
       rm $modules
     else
-      if [ $ver -eq 1 ]; then 
+      if [ $ver -eq 1 ]; then
         echo "Copy $lib"
       fi
       cp $lib $toroot/lib/
@@ -119,6 +119,3 @@ else
     $co_merge xtt_base $pwr_einc/xtt_\*.meth $pwr_elib/libpwr_xtt.a
   fi
 fi
-
-
-

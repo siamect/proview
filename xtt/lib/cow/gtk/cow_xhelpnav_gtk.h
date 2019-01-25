@@ -34,10 +34,10 @@
  * General Public License plus this exception.
  */
 
-#ifndef cow_xhelpnav_motif_h
-#define cow_xhelpnav_motif_h
+#ifndef cow_xhelpnav_gtk_h
+#define cow_xhelpnav_gtk_h
 
-/* cow_xhelpnav_motif.h -- Helptext navigator */
+/* cow_xhelpnav_gtk.h -- Helptext navigator */
 
 #include <gtk/gtk.h>
 

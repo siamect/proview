@@ -107,8 +107,8 @@ pwre_config_check_tool()
 # Arguments
 # 1: archive name
 # 2: define name (PWRE_CONF_$2 will be defined)
-# 3: special archives for gtk and motif (lib, gtk, motif)
-# 4: variable to insert archive in (rt, wb, gtk, motif)
+# 3: special archives for gtk (lib, gtk)
+# 4: variable to insert archive in (rt, wb, gtk)
 # 5: if 1, add -DPWRE_CONF_$2 to cc command.
 # 6: search list for archive.
 # Examples
@@ -159,8 +159,6 @@ pwre_config_check_lib()
                 lib=${file##/*/lib}
                 if test $4 == "gtk"; then
                     conf_libgtk=$conf_libgtk" -l${lib%.*}"
-		elif test $4 == "motif"; then
-                    conf_libmotif=$conf_libmotif" -l${lib%.*}"
 		elif test $4 == "qt"; then
                     conf_libqt=$conf_libqt" -l${lib%.*}"
 		elif test $4 == "wb"; then
@@ -194,8 +192,6 @@ pwre_config_check_lib()
 	    elif test $3 == "gst"; then
                 conf_libgst=$conf_libgst" \\\`pkg-config --libs gstreamer-video-1.0 gstreamer-1.0\\\`"
                 conf_incdirgst=$conf_incdirgst" \\\`pkg-config --cflags gstreamer-video-1.0 gstreamer-1.0\\\`"
-	    elif test $3 == "motif"; then
-                conf_libmotif=$conf_libmotif" -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp -lSM -lICE"
             else
                 echo "Unknown type"
             fi
@@ -284,7 +280,6 @@ conf_libwmq=""
 conf_libpnak=""
 conf_libgtk=""
 conf_libqt=""
-conf_libmotif=""
 conf_libgst=""
 conf_libdir=""
 conf_incdirgtk=""
@@ -451,11 +446,9 @@ if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
     echo "export pwre_conf_libpwrxtt=\"-lpwr_xtt -lpwr_ge -lpwr_cow -lpwr_flow -lpwr_glow\"" >> $cfile
     echo "export pwre_conf_libpwrxttgtk=\" -lpwr_xtt_gtk -lpwr_ge_gtk -lpwr_cow_gtk -lpwr_flow_gtk -lpwr_glow_gtk\"" >> $cfile
     echo "export pwre_conf_libpwrxttqt=\" -lpwr_xtt_qt -lpwr_ge_qt -lpwr_cow_qt -lpwr_flow_qt -lpwr_glow_qt\"" >> $cfile
-    echo "export pwre_conf_libpwrxttmotif=\" -lpwr_xtt_motif -lpwr_ge_motif -lpwr_cow_motif -lpwr_flow_motif -lpwr_glow_motif\"" >> $cfile
     echo "export pwre_conf_libpwrwb=\"-lpwr_wb\"" >> $cfile
     echo "export pwre_conf_libpwrwbgtk=\"-lpwr_wb_gtk\"" >> $cfile
     echo "export pwre_conf_libpwrwbqt=\"-lpwr_wb_qt\"" >> $cfile
-    echo "export pwre_conf_libpwrwbmotif=\"-lpwr_wb_motif\"" >> $cfile
     echo "export pwre_conf_libpwropc=\"-lpwr_opc\"" >> $cfile
     echo "export pwre_conf_libpwrremote=\"-lpwr_remote\"" >> $cfile
     echo "export pwre_conf_libpwrnmps=\"-lpwr_nmps\"" >> $cfile
@@ -468,7 +461,6 @@ if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
     echo "export pwre_conf_libpnak=\"$conf_libpnak\"" >> $cfile
     echo "export pwre_conf_libgtk=\"$conf_libgtk\"" >> $cfile
     echo "export pwre_conf_libqt=\"$conf_libqt\"" >> $cfile
-    echo "export pwre_conf_libmotif=\"$conf_libmotif\"" >> $cfile
     echo "export pwre_conf_libgst=\"$conf_libgtk\"" >> $cfile
     echo "export pwre_conf_libdir=\"$conf_libdir\"" >> $cfile
     echo "export pwre_conf_incdir=\"$conf_incdir\"" >> $cfile
@@ -516,7 +508,6 @@ else
     echo "Optional :"
     pwre_config_check_include jni   JNI   1 "$jdk/include/jni.h"
     pwre_config_check_include jni   JNI   0 "$jdk/include/linux/jni_md.h"
-    pwre_config_check_lib motif     MRM      motif motif 0 "/usr/lib/libMrm.so"
     pwre_config_check_lib mysql     MYSQL    lib lib 1 "/usr/lib/libmysqlclient.so:/usr/lib/mysql/libmysqlclient.so:/usr/lib/$hwpl-linux-$gnu/libmysqlclient.so"
     pwre_config_check_include sqlite3 SQLITE3   1 "/usr/include/sqlite3.h"
     pwre_config_check_lib libsqlite3   LIBSQLITE3  lib lib 0 "/usr/lib/libsqlite3.so:/usr/lib/$hwpl-linux-$gnu/libsqlite3.so"
@@ -576,11 +567,9 @@ else
     echo "export pwre_conf_libpwrxtt=\"-lpwr_xtt -lpwr_ge -lpwr_cow -lpwr_flow -lpwr_glow\"" >> $cfile
     echo "export pwre_conf_libpwrxttgtk=\" -lpwr_xtt_gtk -lpwr_ge_gtk -lpwr_cow_gtk -lpwr_flow_gtk -lpwr_glow_gtk\"" >> $cfile
     echo "export pwre_conf_libpwrxttqt=\" -lpwr_xtt_qt -lpwr_ge_qt -lpwr_cow_qt -lpwr_flow_qt -lpwr_glow_qt\"" >> $cfile
-    echo "export pwre_conf_libpwrxttmotif=\" -lpwr_xtt_motif -lpwr_ge_motif -lpwr_cow_motif -lpwr_flow_motif -lpwr_glow_motif\"" >> $cfile
     echo "export pwre_conf_libpwrwb=\"-lpwr_wb\"" >> $cfile
     echo "export pwre_conf_libpwrwbgtk=\"-lpwr_wb_gtk\"" >> $cfile
     echo "export pwre_conf_libpwrwbqt=\"-lpwr_wb_qt\"" >> $cfile
-    echo "export pwre_conf_libpwrwbmotif=\"-lpwr_wb_motif\"" >> $cfile
     echo "export pwre_conf_libpwropc=\"-lpwr_opc\"" >> $cfile
     echo "export pwre_conf_libpwrremote=\"-lpwr_remote\"" >> $cfile
     echo "export pwre_conf_libpwrnmps=\"-lpwr_nmps\"" >> $cfile
@@ -594,7 +583,6 @@ else
     echo "export pwre_conf_libgtk=\"$conf_libgtk\"" >> $cfile
     echo "export pwre_conf_libqt=\"$conf_libqt\"" >> $cfile
     echo "export pwre_conf_libgst=\"$conf_libgst\"" >> $cfile
-    echo "export pwre_conf_libmotif=\"$conf_libmotif\"" >> $cfile
     echo "export pwre_conf_libdir=\"$conf_libdir\"" >> $cfile
     echo "export pwre_conf_incdir=\"$conf_incdir\"" >> $cfile
     echo "export pwre_conf_incdirgtk=\"$conf_incdirgtk\"" >> $cfile

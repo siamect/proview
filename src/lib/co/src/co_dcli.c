@@ -991,8 +991,6 @@ void dcli_execute_flavour_if_exists(char* argv[], const char* flavour)
 
 void dcli_execute_flavour(char* argv[])
 {
-  const char* flavours[] = { "qt", "gtk", "motif" };
-  for (int i = 0; i < 3; i++) {
-    dcli_execute_flavour_if_exists(argv, flavours[i]);
-  }
+  dcli_execute_flavour_if_exists(argv, "qt");
+  dcli_execute_flavour_if_exists(argv, "gtk");
 }
