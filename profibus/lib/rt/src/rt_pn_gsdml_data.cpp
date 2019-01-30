@@ -62,8 +62,8 @@ GsdmlSlotData* GsdmlDeviceData::paste_slotdata = 0;
 
 GsdmlChannelDiag::GsdmlChannelDiag() : error_type(0)
 {
-  strcpy(name, "");
-  strcpy(help, "");
+  memset(name, 0, sizeof(name));
+  memset(help, 0, sizeof(help));
 }
 
 int GsdmlChannelDiag::print(std::ofstream& fp)
@@ -89,9 +89,18 @@ GsdmlDataRecord::GsdmlDataRecord(const GsdmlDataRecord& x)
 int GsdmlDataRecord::print(std::ofstream& fp, bool reverse_endianess)
 {
   char str[1024];
+  unsigned char* data;
 
-  unsigned char* data =
-      (reverse_endianess ? this->data_reversed_endianess : this->data);
+  // If we have allocated memory for reversed endianess we come from the pn configurator otherwise we use the data as is.
+  // The method SetIoDeviceData for instance reads the raw data and then recreates the pn configuration file.
+  if (data_reversed_endianess)
+  {
+    data = (reverse_endianess ? this->data_reversed_endianess : this->data);
+  }
+  else
+  {
+    data = this->data;
+  }
 
   co_xml_parser::data_to_ostring(data, data_length, str, sizeof(str));
 

@@ -1389,6 +1389,7 @@ pn_gsdml::pn_gsdml()
       DeviceFunction(0), ApplicationProcess(0)
 {
   strcpy(gsdmlfile, "");
+  set_language("");
 }
 
 pn_gsdml::~pn_gsdml()
@@ -2782,6 +2783,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced DeviceAccessPointList");
+      delete o;
       return 0;
     }
     p->DeviceAccessPointList = o;
@@ -2802,6 +2804,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced DeviceAccessPointItem");
+      delete o;
       return 0;
     }
 
@@ -2817,6 +2820,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced ModuleList");
+      delete o;
       return 0;
     }
     p->ModuleList = o;
@@ -2835,6 +2839,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced ModuleItem");
+      delete o;
       return 0;
     }
 
@@ -2860,6 +2865,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     else
     {
       error_message_line("Misplaced ModuleInfo");
+      delete o;
       return 0;
     }
 
@@ -2878,6 +2884,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     else
     {
       error_message_line("Misplaced CertificationInfo");
+      delete o;
       return 0;
     }
 
@@ -2896,6 +2903,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     else
     {
       error_message_line("Misplaced SubslotList");
+      delete o;
       return 0;
     }
 
@@ -2913,6 +2921,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced SubslotItem");
+      delete o;
       return 0;
     }
     p->SubslotItem.push_back(o);
@@ -2931,6 +2940,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced IOConfigData");
+      delete o;
       return 0;
     }
 
@@ -2948,6 +2958,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced IOConfigData");
+      delete o;
       return 0;
     }
 
@@ -2966,6 +2977,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced ModuleItemRef");
+      delete o;
       return 0;
     }
     p->ModuleItemRef.push_back(o);
@@ -2984,6 +2996,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     else
     {
       error_message_line("Misplaced VirtualSubmoduleList");
+      delete o;
       return 0;
     }
 
@@ -3000,6 +3013,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     else
     {
       error_message_line("Misplaced SubmoduleList");
+      delete o;
       return 0;
     }
 
@@ -3018,6 +3032,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     else
     {
       error_message_line("Misplaced SystemRedundancy");
+      delete o;
       return 0;
     }
 
@@ -3038,6 +3053,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     else
     {
       error_message_line("Misplaced VirtualSubmoduleItem");
+      delete o;
       return 0;
     }
 
@@ -3056,6 +3072,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced IOData");
+      delete o;
       return 0;
     }
 
@@ -3073,6 +3090,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced Input");
+      delete o;
       return 0;
     }
 
@@ -3090,6 +3108,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced Output");
+      delete o;
       return 0;
     }
 
@@ -3117,6 +3136,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
         else
         {
           error_message_line("Misplaced DataItem");
+          delete o;
           return 0;
         }
       }
@@ -3134,6 +3154,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
       if (!p)
       {
         error_message_line("Misplaced DataItem");
+        delete o;
         return 0;
       }
 
@@ -3153,6 +3174,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced BitDataItem");
+      delete o;
       return 0;
     }
 
@@ -3172,6 +3194,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced Const");
+      delete o;
       return 0;
     }
 
@@ -3194,6 +3217,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     else
     {
       error_message_line("Misplaced Ref");
+      delete o;
       return 0;
     }
 
@@ -3212,6 +3236,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     else
     {
       error_message_line("Misplaced RecordDataList");
+      delete o;
       return 0;
     }
 
@@ -3228,6 +3253,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!parent)
     {
       error_message_line("Misplaced MenuList");
+      delete o;
       return 0;
     }
     o->parent_par_record_data_item = parent;
@@ -3246,6 +3272,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!parent)
     {
       error_message_line("Misplaced MenuItem tag");
+      delete o;
       return 0;
     }
 
@@ -3264,6 +3291,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!parent)
     {
       error_message_line("Misplaced MenuRef tag");
+      delete o;
       return 0;
     }
 
@@ -3282,6 +3310,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!parent)
     {
       error_message_line("Misplaced ParameterRef tag");
+      delete o;
       return 0;
     }
 
@@ -3300,6 +3329,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced ParameterRecordItem");
+      delete o;
       return 0;
     }
 
@@ -3319,6 +3349,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced F_ParameterRecordItem");
+      delete o;
       return 0;
     }
 
@@ -3340,6 +3371,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     else
     {
       error_message_line("Misplaced Graphics");
+      delete o;
       return 0;
     }
 
@@ -3356,6 +3388,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced GraphicItemRef");
+      delete o;
       return 0;
     }
 
@@ -3375,6 +3408,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced PROFIenergy");
+      delete o;
       return 0;
     }
 
@@ -3394,6 +3428,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced IsochroneMode");
+      delete o;
       return 0;
     }
 
@@ -3414,6 +3449,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     else
     {
       error_message_line("Misplaced SystemDefinedSubmoduleList");
+      delete o;
       return 0;
     }
 
@@ -3434,6 +3470,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced InterfaceSubmoduleItem");
+      delete o;
       return 0;
     }
 
@@ -3451,6 +3488,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced General");
+      delete o;
       return 0;
     }
 
@@ -3468,6 +3506,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced DCP_FlashOnceSignalUnit");
+      delete o;
       return 0;
     }
 
@@ -3487,6 +3526,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced RT_Class3Properties");
+      delete o;
       return 0;
     }
 
@@ -3506,6 +3546,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced SynchronisationMode");
+      delete o;
       return 0;
     }
 
@@ -3530,6 +3571,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
       if (!p)
       {
         error_message_line("Misplaced ApplicationRelations");
+        delete o;
         return 0;
       }
 
@@ -3550,6 +3592,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
       if (!p)
       {
         error_message_line("Misplaced ApplicationRelations");
+        delete o;
         return 0;
       }
 
@@ -3570,6 +3613,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced MediaRedundancy");
+      delete o;
       return 0;
     }
 
@@ -3592,6 +3636,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
       if (!p)
       {
         error_message_line("Misplaced TimingProperties");
+        delete o;
         return 0;
       }
 
@@ -3605,6 +3650,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
       if (!p)
       {
         error_message_line("Misplaced TimingProperties");
+        delete o;
         return 0;
       }
 
@@ -3626,6 +3672,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced RT_Class3TimingProperties");
+      delete o;
       return 0;
     }
 
@@ -3643,6 +3690,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced MAUTypeItem");
+      delete o;
       return 0;
     }
     ((gsdml_MAUTypeList*)p)->MAUTypeItem.push_back(o);
@@ -3658,6 +3706,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced MAUTypeList");
+      delete o;
       return 0;
     }
     ((gsdml_PortSubmoduleItem*)p)->MAUTypeList = o;
@@ -3686,6 +3735,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
       if (!p)
       {
         error_message_line("Misplaced PortSubmoduleItem");
+        delete o;
         return 0;
       }
 
@@ -3707,6 +3757,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     else
     {
       error_message_line("Misplaced UseableSubmodules");
+      delete o;
       return 0;
     }
 
@@ -3724,6 +3775,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced SubmoduleItemRef");
+      delete o;
       return 0;
     }
 
@@ -3741,6 +3793,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced SlotList");
+      delete o;
       return 0;
     }
 
@@ -3758,6 +3811,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced SlotItem");
+      delete o;
       return 0;
     }
 
@@ -3775,6 +3829,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced SlotGroups");
+      delete o;
       return 0;
     }
 
@@ -3793,6 +3848,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced SlotGroup");
+      delete o;
       return 0;
     }
 
@@ -3809,6 +3865,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced ValueList");
+      delete o;
       return 0;
     }
 
@@ -3827,6 +3884,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced ValueItem");
+      delete o;
       return 0;
     }
 
@@ -3843,6 +3901,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced Assignments");
+      delete o;
       return 0;
     }
 
@@ -3861,6 +3920,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced Assign");
+      delete o;
       return 0;
     }
 
@@ -3877,6 +3937,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced ChannelDiagList");
+      delete o;
       return 0;
     }
 
@@ -3895,6 +3956,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced ChannelDiagItem");
+      delete o;
       return 0;
     }
 
@@ -3911,6 +3973,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced ExtChannelDiagList");
+      delete o;
       return 0;
     }
 
@@ -3929,6 +3992,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced ExtChannelDiagItem");
+      delete o;
       return 0;
     }
 
@@ -3945,6 +4009,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced ExtChannelAddValue");
+      delete o;
       return 0;
     }
 
@@ -3961,6 +4026,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced UnitDiagTypeList");
+      delete o;
       return 0;
     }
 
@@ -3979,6 +4045,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced UnitDiagTypeItem");
+      delete o;
       return 0;
     }
 
@@ -3995,6 +4062,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced GraphicsList");
+      delete o;
       return 0;
     }
 
@@ -4013,6 +4081,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced GraphicItem");
+      delete o;
       return 0;
     }
 
@@ -4029,6 +4098,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced CategoryList");
+      delete o;
       return 0;
     }
 
@@ -4047,6 +4117,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced CategoryItem");
+      delete o;
       return 0;
     }
 
@@ -4063,6 +4134,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced ExternalTextList");
+      delete o;
       return 0;
     }
 
@@ -4079,6 +4151,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced PrimaryLanguage");
+      delete o;
       return 0;
     }
 
@@ -4097,6 +4170,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     if (!p)
     {
       error_message_line("Misplaced Language");
+      delete o;
       return 0;
     }
 
@@ -4118,6 +4192,7 @@ void* pn_gsdml::object_factory(gsdml_eTag id)
     else
     {
       error_message_line("Misplaced Text");
+      delete o;
       return 0;
     }
 
@@ -6388,6 +6463,8 @@ gsdml_SystemDefinedSubmoduleList::~gsdml_SystemDefinedSubmoduleList()
 {
   for (unsigned int i = 0; i < PortSubmoduleItem.size(); i++)
     delete PortSubmoduleItem[i];
+  if (InterfaceSubmoduleItem)
+    delete InterfaceSubmoduleItem;
 }
 
 gsdml_DeviceAccessPointItem_ApplicationRelations::
@@ -6431,7 +6508,7 @@ gsdml_SlotGroups::~gsdml_SlotGroups()
 }
 
 gsdml_DeviceAccessPointItem::gsdml_DeviceAccessPointItem(pn_gsdml* g)
-    : ModuleInfo(0), SubslotList(0), IOConfigData(0), UseableModules(0),
+    : ModuleInfo(0), CertificationInfo(0), SubslotList(0), IOConfigData(0), UseableModules(0),
       VirtualSubmoduleList(0), SystemDefinedSubmoduleList(0), Graphics(0),
       ApplicationRelations(0), UseableSubmodules(0), SlotList(0), SlotGroups(0),
       SystemRedundancy(0), gsdml(g)
@@ -6464,6 +6541,8 @@ gsdml_DeviceAccessPointItem::~gsdml_DeviceAccessPointItem()
 {
   if (ModuleInfo)
     delete ModuleInfo;
+  if (CertificationInfo)
+    delete CertificationInfo;
   if (SubslotList)
     delete SubslotList;
   if (IOConfigData)
@@ -6472,6 +6551,8 @@ gsdml_DeviceAccessPointItem::~gsdml_DeviceAccessPointItem()
     delete UseableModules;
   if (VirtualSubmoduleList)
     delete VirtualSubmoduleList;
+  if (SystemDefinedSubmoduleList)
+    delete SystemDefinedSubmoduleList;
   if (Graphics)
     delete Graphics;
   if (ApplicationRelations)
@@ -6485,6 +6566,7 @@ gsdml_DeviceAccessPointItem::~gsdml_DeviceAccessPointItem()
   delete Body.PhysicalSlots.list;
   if (SystemRedundancy)
     delete SystemRedundancy;
+
 }
 
 void gsdml_DeviceAccessPointList::build()
@@ -6755,6 +6837,8 @@ gsdml_ApplicationProcess::~gsdml_ApplicationProcess()
 {
   if (DeviceAccessPointList)
     delete DeviceAccessPointList;
+  if (ModuleList)
+    delete ModuleList;
   if (SubmoduleList)
     delete SubmoduleList;
   if (ValueList)

@@ -1471,13 +1471,21 @@ int GsdmlAttrNav::save(const char* filename)
           (char*)gsdml->ApplicationProcess->ChannelDiagList->ChannelDiagItem[i]
               ->Body.Name.p,
           sizeof(cd->name));
+      //Make sure we null terminate these in case our buffer is too small to accomodate the entire diag name string.
+      cd->name[sizeof(cd->name) - 1] = '\0';
+
       if (gsdml->ApplicationProcess->ChannelDiagList->ChannelDiagItem[i]
               ->Body.Help.p)
-        strncpy(cd->help,
-                (char*)gsdml->ApplicationProcess->ChannelDiagList
-                    ->ChannelDiagItem[i]
-                    ->Body.Help.p,
-                sizeof(cd->help));
+      {
+          strncpy(cd->help,
+            (char*)gsdml->ApplicationProcess->ChannelDiagList
+              ->ChannelDiagItem[i]
+              ->Body.Help.p,
+              sizeof(cd->help));
+          //Make sure we null terminate these in case our buffer is too small to accomodate the entire help string.
+          cd->help[sizeof(cd->help) - 1] = '\0';
+      }
+
       dev_data.channel_diag.push_back(cd);
     }
   }

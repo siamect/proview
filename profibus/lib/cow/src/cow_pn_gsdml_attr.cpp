@@ -282,7 +282,10 @@ void GsdmlAttr::activate_cmd_ca()
   }
 }
 
-GsdmlAttr::~GsdmlAttr() {}
+GsdmlAttr::~GsdmlAttr() {
+  if (wow)
+    delete wow;
+}
 
 GsdmlAttr::GsdmlAttr(void* a_parent_ctx, void* a_object, pn_gsdml* a_gsdml,
                      int a_edit_mode, const char* a_data_filename)
