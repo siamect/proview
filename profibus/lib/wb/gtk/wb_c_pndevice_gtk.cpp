@@ -229,7 +229,10 @@ static pwr_tStatus GetIoDeviceData(pwr_tAttrRef Object, const char* Attr,
   GsdmlDeviceData* data = new GsdmlDeviceData();
   sts = data->read(datafile);
   if (EVEN(sts))
+  {
+    delete data;
     return sts;
+  }
 
   sts = data->get_value(Attr, Buf, BufSize);
 
@@ -250,7 +253,10 @@ static pwr_tStatus SetIoDeviceData(pwr_tAttrRef Object, const char* Attr,
   GsdmlDeviceData* data = new GsdmlDeviceData();
   sts = data->read(datafile);
   if (EVEN(sts))
+  {
+    delete data;
     return sts;
+  }
 
   sts = data->modify_value(Attr, Value);
   if (ODD(sts))

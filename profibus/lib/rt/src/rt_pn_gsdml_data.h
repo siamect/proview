@@ -63,6 +63,8 @@ public:
   {
     if (data)
       free(data);
+    if (data_reversed_endianess)
+      free(data_reversed_endianess);
   }
   GsdmlDataRecord(const GsdmlDataRecord& x);
 
@@ -170,7 +172,7 @@ public:
   GsdmlChannelDiag();
   unsigned short error_type;
   char name[200];
-  char help[256];
+  char help[4096]; // We need a large buffer for most of the help text in the diagnostics...
 
   int print(std::ofstream& fp);
 };
@@ -208,7 +210,10 @@ public:
   static GsdmlSlotData* paste_slotdata;
   std::vector<GsdmlChannelDiag*> channel_diag;
 
-  ~GsdmlDeviceData() { device_reset(); }
+  ~GsdmlDeviceData() {
+    device_reset();
+    channel_diag_reset();
+  }
   void device_reset()
   {
     for (unsigned int i = 0; i < slot_data.size(); i++)
