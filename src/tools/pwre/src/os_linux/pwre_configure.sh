@@ -420,6 +420,7 @@ if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
 
     pwre_config_check_include jni   JNI   1 $jdk/include/jni.h
     pwre_config_check_include jni   JNI   0 $jdk/include/linux/jni_md.h
+    pwre_config_check_include pydev   PYDEV   1 "/usr/include/python2.7/Python.h"
 
     rm $pwre_sroot/tools/exe/tools_cmsg2c/src/.os_linux/.hw_arm/makefile
     rm $pwre_sroot/tools/exe/tools_msg2cmsg/src/.os_linux/.hw_arm/makefile
@@ -539,6 +540,7 @@ else
     pwre_config_check_include powerlinkuser EPLU 0 "$epl/Examples/X86/Generic/powerlink_user_lib/EplCfg.h"
     pwre_config_check_include rsvg  RSVG  1 "/usr/include/librsvg-2/librsvg/rsvg.h:/usr/include/librsvg-2.0/librsvg/rsvg.h"
     pwre_config_check_tool android ANDROID "/usr/local/android-sdk-linux/tools/android"
+    pwre_config_check_include pydev   PYDEV   1 "/usr/include/python2.7/Python.h"
 
 
     export pwre_conf_alsa=1

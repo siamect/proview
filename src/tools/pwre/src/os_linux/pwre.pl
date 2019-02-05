@@ -1076,6 +1076,7 @@ sub build_module ()
       _build("doc", "dox", "src", "all");
       _build("wbl", "pwrs", "src", "exe");
       _build("wbl", "pwrb", "src", "exe");
+      _build("exp", "pwrrt", "src", "exe");
     }
   }
   elsif ( $module eq "java") {
@@ -1145,6 +1146,7 @@ sub build_module ()
       _build("exe", "*", $flavour, "all");
       _build("doc", "dsh", "src", "copy");
       _build("doc", "orm", "src", "copy");
+      _build("exp", "pwrwb", "src", "exe");
     }
   }
 }
