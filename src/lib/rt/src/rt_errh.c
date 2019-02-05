@@ -113,7 +113,7 @@ static unsigned int do_div(int*, unsigned int);
 static int skip_atoi(const char**);
 static char* number(char*, int, int, int, int, int);
 
-void errh_Interactive()
+void errh_Interactive(void)
 {
   interactive = 1;
 }
@@ -164,7 +164,7 @@ void errh_SetStatus(pwr_tStatus sts)
  * @brief Get application index for the process.
  *    \return  Application index.
  */
-errh_eAnix errh_Anix()
+errh_eAnix errh_Anix(void)
 {
   return errh_anix;
 }

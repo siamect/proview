@@ -834,7 +834,7 @@ struct pwr_s_Value {
 struct pwr_s_DbCallBack {
   pwr_tString80 MethodName pwr_dAlignLW;
   pwr_tString40 MethodArguments[5] pwr_dAlignW;
-  pwr_tStatus (*Method)() pwr_dAlignLW; /* Address to method. */
+  pwr_tStatus (*Method)(void) pwr_dAlignLW; /* Address to method. */
   pwr_tUInt32 Flags pwr_dAlignW;
 };
 
@@ -851,7 +851,7 @@ struct pwr_s_MenuCascade {
   pwr_tString40 ButtonName pwr_dAlignLW;
   pwr_tString80 FilterName pwr_dAlignW;
   pwr_tString40 FilterArguments[5] pwr_dAlignW;
-  pwr_tBoolean (*Filter)() pwr_dAlignLW; /* Address to method
+  pwr_tBoolean (*Filter)(void) pwr_dAlignLW; /* Address to method
                                              visibility function.  */
 };
 
@@ -861,8 +861,8 @@ struct pwr_s_MenuButton {
   pwr_tString80 MethodArguments[5] pwr_dAlignW;
   pwr_tString80 FilterName pwr_dAlignW;
   pwr_tString80 FilterArguments[5] pwr_dAlignW;
-  pwr_tStatus (*Method)() pwr_dAlignLW; /* Address to method.  */
-  pwr_tBoolean (*Filter)() pwr_dAlignLW; /* Address to method
+  pwr_tStatus (*Method)(void) pwr_dAlignLW; /* Address to method.  */
+  pwr_tBoolean (*Filter)(void) pwr_dAlignLW; /* Address to method
                                             visibility function.  */
   pwr_tUInt32 Flags pwr_dAlignW;
 };
@@ -872,7 +872,7 @@ struct pwr_s_MenuRef {
   pwr_tString40 RefAttribute pwr_dAlignW;
   pwr_tString80 FilterName pwr_dAlignW;
   pwr_tString40 FilterArguments[5] pwr_dAlignW;
-  pwr_tBoolean (*Filter)() pwr_dAlignLW; /* Address to method
+  pwr_tBoolean (*Filter)(void) pwr_dAlignLW; /* Address to method
                                             visibility function.  */
 };
 

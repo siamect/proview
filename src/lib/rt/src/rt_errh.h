@@ -217,7 +217,7 @@ typedef struct {
 
 pwr_tStatus errh_Init(const char* programName, errh_eAnix anix);
 void errh_SetStatus(pwr_tStatus sts);
-void errh_Interactive();
+void errh_Interactive(void);
 char* errh_GetMsg(const pwr_tStatus sts, char* buf, int bufSize);
 char* errh_GetText(const pwr_tStatus sts, char* buf, int bufSize);
 char* errh_Log(char* buff, char severity, const char* msg, ...);
@@ -236,7 +236,7 @@ void* errh_ErrArgAF(char* s);
 void* errh_ErrArgL(int val);
 void errh_CErrLog(pwr_tStatus sts, ...);
 char* errh_Message(char* string, char severity, char* msg, ...);
-errh_eAnix errh_Anix();
+errh_eAnix errh_Anix(void);
 void errh_SetAnix(errh_eAnix anix);
 void errh_SetName(char* name);
 errh_eSeverity errh_Severity(pwr_tStatus);

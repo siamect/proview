@@ -201,7 +201,7 @@ pwr_tStatus gdh_DLRefObjectInfoAttrref(
 
 pwr_tStatus gdh_DLUnrefObjectInfo(pwr_tDlid directLinkId);
 
-void gdh_DLUnrefObjectInfoAll();
+void gdh_DLUnrefObjectInfoAll(void);
 
 pwr_tStatus gdh_FReadObject(char* filename, pwr_tAttrRef* arp);
 
@@ -321,7 +321,7 @@ pwr_tStatus gdh_NameToObjid(const char* objectName, pwr_tObjid* objid);
 
 pwr_tStatus gdh_NameToPointer(const char* objectName, void** objectData);
 
-pwr_tStatus gdh_NethandlerRunning();
+pwr_tStatus gdh_NethandlerRunning(void);
 
 pwr_tStatus gdh_ObjidToName(
     pwr_tObjid oid, char* namebuf, pwr_tUInt32 size, pwr_tBitMask nametype);
@@ -368,13 +368,13 @@ pwr_tStatus gdh_SetSubscriptionDefaults(
 
 pwr_tStatus gdh_SubUnrefObjectInfo(pwr_tSubid subid);
 
-void gdh_SubUnrefObjectInfoAll();
+void gdh_SubUnrefObjectInfoAll(void);
 
 pwr_tStatus gdh_SubUnrefObjectInfoList(unsigned int nEntry, pwr_tSubid* subid);
 
 pwr_tStatus gdh_UnrefObjectInfo(pwr_tSubid subid);
 
-pwr_tStatus gdh_UnrefObjectInfoAll();
+pwr_tStatus gdh_UnrefObjectInfoAll(void);
 
 pwr_tStatus gdh_VolumeIdToName(pwr_tVid vid, char* name, int size);
 
@@ -401,9 +401,9 @@ pwr_tStatus gdh_IsMountClean(pwr_tObjid object, pwr_tBoolean* isMountClean);
  * Exclusive mode
  */
 
-void gdh_ExclusiveModeOn();
+void gdh_ExclusiveModeOn(void);
 
-void gdh_ExclusiveModeOff();
+void gdh_ExclusiveModeOff(void);
 
 pwr_tStatus gdh_GetTrueObjectBodyDef(
     pwr_tCid cid, gdh_sAttrDef** bodydef, int* rows);

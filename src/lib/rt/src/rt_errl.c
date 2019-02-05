@@ -176,7 +176,7 @@ void errl_Init(const char* termName,
 
   return;
 }
-void errl_Unlink()
+void errl_Unlink(void)
 {
 #if !defined(OS_MACOS) && !defined(OS_FREEBSD) && !defined(OS_OPENBSD) 
   char name[64];

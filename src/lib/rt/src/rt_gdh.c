@@ -613,7 +613,7 @@ pwr_tStatus gdh_DLUnrefObjectInfo(
  * @brief Removes all direct links set up by this process.
  */
 
-void gdh_DLUnrefObjectInfoAll()
+void gdh_DLUnrefObjectInfoAll(void)
 {
   gdh_ScopeLock
   {
@@ -2206,7 +2206,7 @@ pwr_tStatus gdh_NameToPointer(const char* name, /**< The name of the object. */
  *@return pwr_tStatus
  */
 
-pwr_tStatus gdh_NethandlerRunning()
+pwr_tStatus gdh_NethandlerRunning(void)
 {
   pwr_tStatus sts = GDH__SUCCESS;
 
@@ -2974,7 +2974,7 @@ pwr_tStatus gdh_SubUnrefObjectInfo(
  *
  */
 
-void gdh_SubUnrefObjectInfoAll()
+void gdh_SubUnrefObjectInfoAll(void)
 {
   gdh_ScopeLock
   {
@@ -3415,7 +3415,7 @@ pwr_tStatus gdh_UnrefObjectInfo(
  * @see gdh_DLUnrefObjectInfoAll, gdhSubUnrefObjectInfoAll
  * @return pwr_tStatus
  */
-pwr_tStatus gdh_UnrefObjectInfoAll()
+pwr_tStatus gdh_UnrefObjectInfoAll(void)
 {
   gdh_DLUnrefObjectInfoAll();
   gdh_SubUnrefObjectInfoAll();
