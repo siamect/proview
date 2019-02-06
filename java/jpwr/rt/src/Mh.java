@@ -81,7 +81,7 @@ public class Mh
   public static final int mh_eEventPrio_D = 64;
   public static final int mh_eEventPrio_  = 63;
   
-    public static final int mh_eEvent__		= 0;    
+  public static final int mh_eEvent__		= 0;    
   public static final int mh_eEvent_Ack		= 1;
   public static final int mh_eEvent_Block	= 2;
   public static final int mh_eEvent_Cancel	= 3;
@@ -251,13 +251,12 @@ public class Mh
 				  String targetId_birthTime, 
 				  int targetId_idx, 
 				  int eventType, 
-				  PwrtObjid object)
+				  PwrtAttrRef object,
+				  PwrtAttrRef supObject,
+				  String moreText)
   {
-    //System.out.println("Larm " + timeString + " " + messString + " " + nameString + " flags " + flags + " prio " + prio + " sts " +
-    //status +  " nix " + eventId_nix + " birttime " + eventId_birthTime + " idx " + eventId_idx +
-    //" typ " + eventType);
     //hantera det mottagna meddelandet
-    //System.out.println("messReceived " + eventType);
+    System.out.println("messReceived " + eventType);
     MhrEvent evItem =  new MhrEvent(messString, 
                                     nameString,
                                     timeString, 
@@ -266,7 +265,7 @@ public class Mh
 				    status, 
 				    eventId_nix, eventId_birthTime, eventId_idx, 
 				    targetId_nix, targetId_birthTime, targetId_idx, 
-				    eventType, object);
+				    eventType, object, supObject, moreText);
     lastMhrEvent = evItem;
     newAlarmArrived = true;
     

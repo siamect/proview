@@ -1784,6 +1784,9 @@ static void  gdh_TranslateSuffixToClassData (
   *PwrType = pwr_eType_Float32;
   *PwrSize = 4;
 
+  if (!str_NoCaseStrncmp("BIT", SuffixPtr, 3))
+    *(SuffixPtr + 3) = 0;
+
   for (Index = 0, Found = FALSE; Index < XlationTblLen; Index++)
     if (!str_NoCaseStrcmp(XlationTbl[Index].TypeStr,SuffixPtr))
     {
@@ -1798,6 +1801,7 @@ static void  gdh_TranslateSuffixToClassData (
     *PwrSize = atoi(SuffixPtr + 6);
     *PwrType = pwr_eType_String;
   }
+
 
   if ( Ptr != NULL && *NoOfElements > 1)
   {

@@ -49,6 +49,7 @@ public class MhData
   public int maxNrOfEvents;
   public Vector<MhrEvent> alarmVec;
   public Vector<MhrEvent> eventVec;
+  public int lastSyncIdx = 0;
 
 
   public MhData(int maxNrOfAlarms, int maxNrOfEvents)
@@ -119,6 +120,8 @@ public class MhData
       case Mh.mh_eEvent_UserAlarm3:
       case Mh.mh_eEvent_UserAlarm4:
         // Add to alarm list
+	lastSyncIdx++;
+	ev.syncIdx = lastSyncIdx;
         this.addMessToVectorInSortedOrder(alarmVec, ev);
         // Add copy to event list
         this.addMessToVectorInSortedOrder(eventVec, ev.getCopy());
@@ -146,9 +149,20 @@ public class MhData
         if((ev.eventFlags & Mh.mh_mEventFlags_Return) != 0)
         {
           // Add copy to event list
+	  lastSyncIdx++;
+	  ev.syncIdx = lastSyncIdx;
 	  this.addMessToVectorInSortedOrder(eventVec, ev.getCopy());
         }
         break;
+      case Mh.mh_eEvent_Block:
+      case Mh.mh_eEvent_Reblock:
+      case Mh.mh_eEvent_Cancel:
+      case Mh.mh_eEvent_Unblock:
+        // Add copy to event list
+	lastSyncIdx++;
+	ev.syncIdx = lastSyncIdx;
+	this.addMessToVectorInSortedOrder(eventVec, ev.getCopy());
+	break;
       case Mh.mh_eEvent_Ack:
         for(int i = 0; i < alarmVec.size(); i++)
         {
@@ -169,6 +183,8 @@ public class MhData
         if((ev.eventFlags & Mh.mh_mEventFlags_Ack) != 0)
         {
           // Add copy to event list
+	  lastSyncIdx++;
+	  ev.syncIdx = lastSyncIdx;
           this.addMessToVectorInSortedOrder(eventVec, ev.getCopy());
         }
         break;
@@ -177,6 +193,8 @@ public class MhData
         // Add to alarm list
         if((ev.eventFlags & Mh.mh_mEventFlags_InfoWindow) != 0)
         {
+	  lastSyncIdx++;
+	  ev.syncIdx = lastSyncIdx;
 	  this.addMessToVectorInSortedOrder(alarmVec, ev);
 	}
         // Add copy to event list

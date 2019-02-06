@@ -58,6 +58,7 @@ import javax.swing.*;
 */
 public class GdhWebSocketServer
 {
+  public final static int graph_eType_Bit = (1 << 15) + 1;
   public final static int SET_OBJECT_INFO_BOOLEAN = 1;
   public final static int SET_OBJECT_INFO_FLOAT = 2;
   public final static int SET_OBJECT_INFO_INT = 3;
@@ -123,10 +124,15 @@ public class GdhWebSocketServer
   public final static int GET_OBJECT = 63;
   public final static int GET_OPWIND_MENU = 64;
   public final static int GET_OBJECT_FROM_NAME = 65;
+  public final static int MH_SYNC = 66;
+  public final static int MH_ACK = 67;
+  public final static int GET_OBJECT_FROM_AREF = 68;
 
   public final static int GET_OP_SELF = 1;
   public final static int GET_OP_METHOD_PLC = 2;
   public final static int GET_OP_METHOD_OBJECTGRAPH = 3;
+  public final static int GET_OP_METHOD_GRAPH = 4;
+  public final static int GET_OP_METHOD_HELPCLASS = 5;
 
 
   public final static int PORT = 4448;
@@ -143,13 +149,18 @@ public class GdhWebSocketServer
   static int totalThreadCount = 0;
   Gdh gdh;
   Errh errh;
+  Mh mh;
+  MhData mhData;
   int maxConnections;
   String currentConnectionsStr;
-  static boolean ignoreHandler = false;
+  boolean[] connectionOccupied;
+  int maxAlarms;
+  int maxEvents;
+  PwrtObjid handlerOid = null;
   static boolean log = false;
   static boolean logRefInfoAll = false;
   static boolean logStatistics = false;
-  static boolean debug = true;
+  static boolean debug = false;
 
   static int lastIndexReffed = 0;
 
@@ -170,10 +181,7 @@ public class GdhWebSocketServer
   public static void main(String[] args) {
       System.out.println( "java.library.path = " + System.getProperty("java.library.path"));
       for( int i = 0; i < args.length; i++) {
-	  if( args[i].equals("-i")) {
-	      ignoreHandler = true;
-	  }
-	  else if ( args[i].equals("-l")) {
+	  if ( args[i].equals("-l")) {
 	      log = true;
 	  }
 	  else if ( args[i].equals("-logRefInfoAll")) {
@@ -208,10 +216,6 @@ public class GdhWebSocketServer
      @return    The handlerObject value
   */
   private int getHandlerObject() {
-      if ( ignoreHandler) {
-	  maxConnections = 50;
-	  return 1;
-      }
       CdhrObjid cdhrObjid;
       CdhrString cdhrString;
       CdhrInt cdhrInt;
@@ -220,21 +224,44 @@ public class GdhWebSocketServer
       if(cdhrObjid.evenSts()) {
 	  errh.info("No WebSocketServer is configured, WebSocketServer terminating");
 	  return cdhrObjid.getSts();
-    }
-    cdhrString = gdh.objidToName(cdhrObjid.objid, Cdh.mName_volumeStrict);
-    if( cdhrString.evenSts())
-      return cdhrString.getSts();
+      }
+      handlerOid = cdhrObjid.objid;
+
+      cdhrString = gdh.objidToName(handlerOid, Cdh.mName_volumeStrict);
+      if( cdhrString.evenSts())
+	  return cdhrString.getSts();
     
-    String attr = cdhrString.str + ".MaxConnections";
-    cdhrInt = gdh.getObjectInfoInt(attr);
-    if(cdhrInt.evenSts())
-      return cdhrInt.getSts();
+      String attr = cdhrString.str + ".MaxConnections";
+      cdhrInt = gdh.getObjectInfoInt(attr);
+      if(cdhrInt.evenSts())
+	  return cdhrInt.getSts();
     
-    maxConnections = cdhrInt.value;
-    currentConnectionsStr = cdhrString.str + ".CurrentConnections";
-    setCurrentConnections(threadCount);
-    errh.info("WebSocketServer started, MaxConnections: " + maxConnections);
-    return 1;
+      maxConnections = cdhrInt.value;
+
+      attr = cdhrString.str + ".MaxNoOfAlarms";
+      cdhrInt = gdh.getObjectInfoInt(attr);
+      if(cdhrInt.evenSts())
+	  return cdhrInt.getSts();
+    
+      maxAlarms = cdhrInt.value;
+      if (maxAlarms <= 0) 
+	  maxAlarms = 100;
+      
+      attr = cdhrString.str + ".MaxNoOfEvents";
+      cdhrInt = gdh.getObjectInfoInt(attr);
+      if(cdhrInt.evenSts())
+	  return cdhrInt.getSts();
+      
+      maxEvents = cdhrInt.value;
+      if( maxEvents <= 0) 
+	  maxEvents = 200;
+
+      connectionOccupied = new boolean[maxConnections];
+      currentConnectionsStr = cdhrString.str + ".CurrentConnections";
+      setCurrentConnections(threadCount);
+      errh.info("WebSocketServer started, MaxConnections: " + maxConnections);
+      System.out.println("MaxConnections: " + maxConnections);
+      return 1;
   }
 
 
@@ -246,8 +273,7 @@ public class GdhWebSocketServer
   private void setCurrentConnections(int connections) {
     PwrtStatus sts;
 
-    if(!ignoreHandler)
-      sts = gdh.setObjectInfo(currentConnectionsStr, connections);
+    sts = gdh.setObjectInfo(currentConnectionsStr, connections);
   }
 
 
@@ -280,11 +306,24 @@ public class GdhWebSocketServer
       System.exit(0);
     }
 
+    mh = new Mh((Object)null, maxAlarms, maxEvents);
+    mhData = new MhData(maxAlarms, maxEvents);
+
+    PwrtStatus stsM = mh.outunitConnect(handlerOid);
+    if(stsM.evenSts())
+    {
+      System.out.println("Fel vid outunitConnect");
+      errh.setStatus( Errh.PWR__SRVTERM);
+      return;
+    }
+
+    MhSendThread mhSendThread = new MhSendThread(mh);
+
     errh.setStatus( Errh.PWR__SRUN);
     Qcom qcom = new Qcom();
     QcomrCreateQ qque = qcom.createIniEventQ("WebSocketServer");
     if( qque.evenSts()) {
-      errh.fatal("WebSocketServer couldn create EventQue");
+      errh.fatal("WebSocketServer couldn't create EventQue");
       return;
     }
 
@@ -315,14 +354,25 @@ public class GdhWebSocketServer
         errh.error("Accept failed.");
         continue;
       }
-      if(threadCount <= maxConnections) {
+      // Find free slot
+      int threadNumber = -1;
+      for ( int i = 0; i < maxConnections; i++) {
+	  if ( !connectionOccupied[i]) {
+	      threadNumber = i;
+	      connectionOccupied[i] = true;
+	      break;
+	  }
+      }
+      if ( threadNumber >= 0) {
         // Create a new thread
+	System.out.println("New thread " + threadNumber);
         threadCount++;
         totalThreadCount++;
         setCurrentConnections(threadCount);
-        GdhThread gdhThread = new GdhThread(cliSocket, totalThreadCount, maxConnections);
+        GdhThread gdhThread = new GdhThread(cliSocket, threadNumber, maxConnections);
       }
       else {
+	System.out.println("Max number of threads exceeded");	  
         errh.warning("Connection dismissed, max number of connections exceeded");
         try {
           cliSocket.close();
@@ -334,6 +384,38 @@ public class GdhWebSocketServer
     }
   }
 
+
+  private class MhSendThread extends Thread {
+    Mh mh;
+    boolean keepRunning = true;
+    public MhSendThread(Mh mh) {
+      this.mh = mh;
+      start();
+    }
+
+    public void run() {
+	PwrtStatus stsM = new PwrtStatus(0);
+
+	while (this.keepRunning) {
+	    try {
+		if (mh.hasNewMessArrived()) {
+		    MhrEvent newMess = mh.getNewMess();
+		    synchronized(mhData) {
+			mhData.insertNewMess(newMess);
+		    }
+		    System.out.println("New mh message " + newMess.syncIdx + " " + newMess.eventId.idx + " " + newMess.eventText);
+		}	     	  
+		stsM = mh.outunitReceive();
+		
+		Thread.sleep(1);
+	    }
+	    catch(Exception e) {
+		if(log)
+		    System.out.println("Exception i run mhSendThread " + e.toString());
+	    }
+	}
+    }
+  }      
 
   private class GdhThread extends Thread {
     Socket clientSocket;
@@ -362,7 +444,6 @@ public class GdhWebSocketServer
 
     class SendSub extends TimerTask {
 	public void run() {
-	    System.out.println( "SendSub");
 	    int id = 5678;
 	    int sts = 123;
 	    int size = 0;
@@ -414,7 +495,8 @@ public class GdhWebSocketServer
 		    bb.putInt( j, 1);
 		    j += 4;
 		    boolean value = gdh.getObjectRefInfoBoolean(sub.id);
-		    System.out.println( i + " Value: " + value + " Type " + sub.typeId + " " + (15+size) + " " + j);
+		    if ( debug)
+		      System.out.println( i + " Value: " + value + " Type " + sub.typeId + " " + (15+size) + " " + j);
 		    bb.put( j, value ? (byte)1 : (byte)0);
 		    j += 1;
 		    break;
@@ -461,7 +543,6 @@ public class GdhWebSocketServer
 	  Matcher get = Pattern.compile("^GET").matcher(data);
 
 	  if ( get.find()) {
-	      System.out.println("Match GET");
 	      Matcher match = Pattern.compile("Sec-WebSocket-Key: (.*)").matcher(data);
 	      match.find();
 	      byte[] response = ("HTTP/1.1 101 Switching Protocols\r\n"
@@ -475,7 +556,6 @@ public class GdhWebSocketServer
 									       .getBytes("UTF-8")))
 				 + "\r\n\r\n")
 		  .getBytes("UTF-8");
-	      System.out.println("Sending " + response);
 	      out.write(response, 0, response.length);
 	      
 	      in = new BufferedInputStream(instream);
@@ -483,6 +563,7 @@ public class GdhWebSocketServer
       }
       catch(IOException e) {
 	  errh.error("DataStream failed");
+	  connectionOccupied[threadNumber] = false;
 	  threadCount--;
 	  setCurrentConnections(threadCount);
 	  return;
@@ -507,13 +588,11 @@ public class GdhWebSocketServer
 	      if ( size < 0)
 		  continue;		      
 
-	      //System.out.println( "Received: " + c1 + " " + c2 + " " + size);
 	      int[] key =  new int[4];		
 	      key[0] = in.read();
 	      key[1] = in.read();
 	      key[2] = in.read();
 	      key[3] = in.read();
-	      //System.out.println( "Key : " + key[0] + " " + key[1] + " " + key[2] + " " + key[3]);
 
 	      switch ( opcode) {
 	      case 1:
@@ -532,9 +611,13 @@ public class GdhWebSocketServer
 		      value[i] = (byte)(c ^ key[i & 0x3]);
 		  }
 		  int reason = ((value[1] & 0xFF) << 0) + ((value[0] & 0xFF) << 8);
-		  System.out.println( "Opcode 8, Connection closed, reason: " + reason);
+		  System.out.println( "Thread " + threadNumber + " closed, Opcode 8, reason: " + reason);
 		  if ( timer != null)
 		      timer.cancel();
+
+		  connectionOccupied[threadNumber] = false;
+		  threadCount--;
+		  setCurrentConnections(threadCount);
 		  return;
 	      default:
 		  System.out.println( "Unknown opcode: " + opcode);
@@ -548,8 +631,6 @@ public class GdhWebSocketServer
 
 	      int id = ((value[2] & 0xFF) << 0) + ((value[3] & 0xFF) << 8) + ((value[4] & 0xFF) << 16) + ((value[5] & 0xFF) << 24);
 	  
-	      //System.out.println( "id: " + id);
-
 	      switch ( value[0]) {
 	      case GET_OBJECT_INFO_BOOLEAN:
 		  try {
@@ -727,9 +808,7 @@ public class GdhWebSocketServer
 		      i += 4;
 		      int nameSize = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
 		      i += 2;
-		      System.out.println( "val: " + val + "nameSize: " + nameSize);
 		      String attrName = new String( value, i, nameSize); 
-		      System.out.println( "attrName : " + attrName);
 
 		      PwrtStatus ret = gdh.setObjectInfo( attrName, bvalue);
 		      int sts = ret.getSts();
@@ -764,9 +843,7 @@ public class GdhWebSocketServer
 		      i += 4;
 		      int nameSize = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
 		      i += 2;
-		      System.out.println( "val: " + ivalue + "nameSize: " + nameSize);
 		      String attrName = new String( value, i, nameSize); 
-		      System.out.println( "attrName : " + attrName);
 
 		      PwrtStatus ret = gdh.setObjectInfo( attrName, ivalue);
 		      int sts = ret.getSts();
@@ -801,9 +878,7 @@ public class GdhWebSocketServer
  		      i += 4;
 		      int nameSize = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
 		      i += 2;
-		      System.out.println( "val: " + fvalue + " nameSize: " + nameSize);
 		      String attrName = new String( value, i, nameSize); 
-		      System.out.println( "attrName : " + attrName);
 
 		      PwrtStatus ret = gdh.setObjectInfo( attrName, fvalue);
 		      int sts = ret.getSts();
@@ -842,9 +917,7 @@ public class GdhWebSocketServer
 
 		      int nameSize = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
 		      i += 2;
-		      System.out.println( "val: " + val + "nameSize: " + nameSize);
 		      String attrName = new String( value, i, nameSize); 
-		      System.out.println( "attrName : " + attrName);
 
 		      PwrtStatus ret = gdh.setObjectInfo( attrName, val);
 		      int sts = ret.getSts();
@@ -878,7 +951,6 @@ public class GdhWebSocketServer
 		      int nameSize = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
 		      i += 2;
 		      String attrName = new String( value, i, nameSize); 
-		      System.out.println( "attrName : " + attrName);
 
 		      PwrtStatus ret = gdh.toggleObjectInfo( attrName);
 		      int sts = ret.getSts();
@@ -908,6 +980,7 @@ public class GdhWebSocketServer
 		  break;
 	      case REF_OBJECT_INFO:
 		  try {
+		      int sts;
 		      int i = 6;
 		      int refId = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
 		      i += 4;
@@ -915,23 +988,24 @@ public class GdhWebSocketServer
 		      i += 4;
 		      int nameSize = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
 		      i += 4;
-		      System.out.println( "nameSize: " + nameSize);
 		      String attrName = new String( value, i, nameSize); 
-		      System.out.println( "attrName : " + attrName + " " + threadNumber + " " + refId);
-		      Sub ret = this.refObjectInfo(attrName, threadNumber, refId, elements);
-		      System.out.println( "ret.sts " + ret.getSts() + " sub.subscriptionsIndex " + ret.subscriptionsIndex);
-		      if ( ret.oddSts())
-			  thSub.add(ret);
+		      attrName = checkAttrName( attrName);
+		      if ( attrName != null) {
+			  Sub ret = this.refObjectInfo(attrName, threadNumber, refId, elements);
+			  if ( ret.oddSts())
+			      thSub.add(ret);
 
-		      int sts = ret.getSts();
-		      // if ( debug)
-		      System.out.println( "refObjectInfo: " + id + " refId " + refId  + " subidx " + ret.subscriptionsIndex + " " + attrName + " sts: " + ret.getSts() + " type " + ret.typeId);
+			  sts = ret.getSts();
+			  if ( debug)
+			    System.out.println( "refObjectInfo: " + id + " refId " + refId  + " subidx " + ret.subscriptionsIndex + " " + attrName + " sts: " + ret.getSts() + " type " + ret.typeId);
+		      }
 		      i += nameSize;
 
 		      for ( int k = 0; k < thSub.size(); k++) {
 			  if ( thSub.elementAt(k) == null)
 			      continue;
-			  System.out.println( "thSub rcv " + k + " subidx " + ((Sub)thSub.elementAt(k)).subscriptionsIndex + " thSub " + thSub.elementAt(k));
+			  if ( debug)
+			    System.out.println( "thSub rcv " + k + " subidx " + ((Sub)thSub.elementAt(k)).subscriptionsIndex + " thSub " + thSub.elementAt(k));
 		      }
 			  
 		      sts = 111;
@@ -980,7 +1054,6 @@ public class GdhWebSocketServer
 		      if ( !found)
 			  break;
 
-		      System.out.println("UnrefObjectInfo: " + subId + " refId: " + tsub.refid.rix);
 		      PwrtStatus rsts = this.unrefObjectInfo( tsub.subId, threadNumber);
 		      thSub.set( idx, null);
 
@@ -1011,6 +1084,7 @@ public class GdhWebSocketServer
 		  break;
 	      case REF_OBJECT_INFO_LIST:
 		  try {
+		      int sts;
 		      int i = 6;
 		      int subSize = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
 		      i += 4;
@@ -1021,23 +1095,24 @@ public class GdhWebSocketServer
 			  i += 4;
 			  int nameSize = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
 			  i += 4;
-			  System.out.println( "nameSize: " + nameSize);
 			  String attrName = new String( value, i, nameSize); 
-			  System.out.println( "attrName : " + attrName + " " + threadNumber + " " + refId);
-			  Sub ret = this.refObjectInfo(attrName, threadNumber, refId, elements);
-			  System.out.println( "ret.sts " + ret.getSts() + " sub.subscriptionsIndex " + ret.subscriptionsIndex);
-			  thSub.add(ret);
-			  System.out.println( " sub " + ret.subscriptionsIndex + " thSub " + ((Sub)thSub.elementAt(j)).subscriptionsIndex + " sub " + ret + " thSub " + thSub.elementAt(j));
+			  attrName = checkAttrName( attrName);
+			  if ( attrName != null) {
+			      Sub ret = this.refObjectInfo(attrName, threadNumber, refId, elements);
+			      thSub.add(ret);
 
-			  int sts = ret.getSts();
-			  // if ( debug)
-			  System.out.println( "refObjectInfoList: " + id + " refId " + refId  + " subidx " + ret.subscriptionsIndex + " " + attrName + " sts: " + ret.getSts() + " type " + ret.typeId);
+			      sts = ret.getSts();
+			      if ( debug)
+			        System.out.println( "refObjectInfoList: " + id + " refId " + refId  + " subidx " + ret.subscriptionsIndex + " " + attrName + " sts: " + ret.getSts() + " type " + ret.typeId);
+			  }
+
 			  i += nameSize;
 		      }
-		      for ( int k = 0; k < thSub.size(); k++)
+		      if ( debug)
+		        for ( int k = 0; k < thSub.size(); k++)
 			  System.out.println( "thSub rcv " + k + " subidx " + ((Sub)thSub.elementAt(k)).subscriptionsIndex + " thSub " + thSub.elementAt(k));
 			  
-		      int sts = 111;
+		      sts = 111;
 		      byte[] msg = new byte[11];
 		      msg[0] = (byte)130;
 		      msg[1] = 9;
@@ -1073,11 +1148,14 @@ public class GdhWebSocketServer
 			  continue;
 		      switch( asub.typeId) {
 		      case Pwr.eType_Boolean:
-			  refsize += 8 + 1;
+			  if ( asub.elements <= 1)
+			      refsize += 8 + 1;
+			  else
+			      refsize += 8 + asub.elements * 1;
 			  cnt++;
 			  break;
 		      case Pwr.eType_Float32:
-			  if ( asub.elements < 1)
+			  if ( asub.elements <= 1)
 			      refsize += 8 + 4;
 			  else
 			      refsize += 8 + asub.elements * 4;
@@ -1090,9 +1168,14 @@ public class GdhWebSocketServer
 		      case Pwr.eType_UInt16:
 		      case Pwr.eType_UInt32:
 		      case Pwr.eType_Status:
+		      case Pwr.eType_NetStatus:
 		      case Pwr.eType_Mask:
 		      case Pwr.eType_Enum:
-			  refsize += 8 + 4;
+		      case graph_eType_Bit:
+			  if ( asub.elements <= 1)
+			      refsize += 8 + 4;
+			  else
+			      refsize += 8 + asub.elements * 4;
 			  cnt++;
 			  break;
 		      case Pwr.eType_String:
@@ -1100,15 +1183,27 @@ public class GdhWebSocketServer
 		      case Pwr.eType_DeltaTime:
 		      case Pwr.eType_AttrRef:
 		      case Pwr.eType_Objid:
-			  refsize += 8 + 2;
-			  String svalue = gdh.getObjectRefInfoString(asub.id, asub.typeId);
-			  refsize += svalue.length();
+			  if ( asub.elements <= 1) {
+			      refsize += 8 + 2;
+			      String svalue = gdh.getObjectRefInfoString(asub.id, asub.typeId);
+			      refsize += svalue.length();
+			  }
+			  else {
+			      refsize += 8;
+			      String[] svalue = gdh.getObjectRefInfoStringArray(asub.id, asub.typeId, 
+									 asub.size, asub.elements);
+			      for ( int l = 0; l < asub.elements; l++) {
+				  if ( l < svalue.length)
+				      refsize += 2 + svalue[l].length();
+				  else
+				      refsize += 2;
+			      }
+			  }
 			  cnt++;
 			  break;
 		      default:
 			  continue;
 		      }
-		      System.out.println("GetAll " + cnt + " " + refsize);
 		  }
 	    
 
@@ -1153,18 +1248,33 @@ public class GdhWebSocketServer
 		  j += 4;
 		  for ( int i = 0; i < thSub.size(); i++) {
 		      Sub asub = (Sub)thSub.elementAt(i); 
-		      if ( asub == null)
+		      if ( asub == null ||  asub.subscriptionsIndex == -1)
 			  continue;
 		      switch( asub.typeId) {
 		      case Pwr.eType_Boolean:
 			  bb.putInt( j, asub.subscriptionsIndex);
 			  j += 4;
-			  bb.putInt( j, 1);
-			  j += 4;
-			  boolean bvalue = gdh.getObjectRefInfoBoolean(asub.id);
-			  bb.put( j, bvalue ? (byte)1 : (byte)0);
-			  j += 1;
-			  System.out.println( i + " Idx " + asub.subscriptionsIndex + " Value: " + bvalue + " Type " + asub.typeId + " " + (refsize) + " " + (j-jstart));
+			  if ( asub.elements <= 1) {
+			      bb.putInt( j, 1);
+			      j += 4;
+			      boolean bvalue = gdh.getObjectRefInfoBoolean(asub.id);
+			      bb.put( j, bvalue ? (byte)1 : (byte)0);
+			      j += 1;
+			      if ( debug)
+			        System.out.println( i + " Idx " + asub.subscriptionsIndex + " Value: " + bvalue + " Type " + asub.typeId + " " + (refsize) + " " + (j-jstart));
+			  }
+			  else {
+			      bb.putInt( j, asub.elements);
+			      j += 4;
+			      boolean[] bvalue = gdh.getObjectRefInfoBooleanArray(asub.id, asub.elements);
+			      for ( int k = 0; k < asub.elements; k++) {
+				  if ( k < bvalue.length)
+				      bb.put( j, bvalue[k] ? (byte)1 : (byte)0);
+				  else
+				      bb.put( j, (byte)0);
+				  j += 1;
+			      }
+			  }
 			  break;
 		      case Pwr.eType_Float32:
 			  bb.putInt( j, asub.subscriptionsIndex);
@@ -1172,10 +1282,10 @@ public class GdhWebSocketServer
 			  if ( asub.elements <= 1) {
 			      bb.putInt( j, 4);
 			      j += 4;
-			      float fvalue = gdh.getObjectRefInfoFloat(asub.id);
-			      bb.putFloat( j, fvalue);
+			      float fvalue = gdh.getObjectRefInfoFloat(asub.id);			      			      bb.putFloat( j, fvalue);
 			      j += 4;
-			      System.out.println( i + " Idx " + asub.subscriptionsIndex + " Value: " + fvalue + " Type " + asub.typeId + " " + (refsize) + " " + (j-jstart));
+			      if ( debug)
+			        System.out.println( i + " Idx " + asub.subscriptionsIndex + " Value: " + fvalue + " Type " + asub.typeId + " " + (refsize) + " " + (j-jstart));
 			  }
 			  else {
 			      bb.putInt( j, asub.elements * 4);
@@ -1188,7 +1298,8 @@ public class GdhWebSocketServer
 				      bb.putFloat( j, 0F);
 				  j += 4;
 			      }
-			      System.out.println( i + " Idx " + asub.subscriptionsIndex + " Value: " + fvalue[0] + " Type " + asub.typeId + " " + asub.elements + " " + (refsize) + " " + (j-jstart));
+			      if ( debug)
+			        System.out.println( i + " Idx " + asub.subscriptionsIndex + " Value: " + fvalue[0] + " Type " + asub.typeId + " " + asub.elements + " " + (refsize) + " " + (j-jstart));
 			  }
 			  break;
 		      case Pwr.eType_Int8:
@@ -1198,17 +1309,33 @@ public class GdhWebSocketServer
 		      case Pwr.eType_UInt16:
 		      case Pwr.eType_UInt32:
 		      case Pwr.eType_Status:
+		      case Pwr.eType_NetStatus:
 		      case Pwr.eType_Mask:
 		      case Pwr.eType_Enum:
+		      case graph_eType_Bit:
 			  bb.putInt( j, asub.subscriptionsIndex);
 			  j += 4;
-			  bb.putInt( j, 4);
-			  j += 4;
-			  System.out.println( "getObjectRefInfoInt " + asub.id);
-			  int ivalue = gdh.getObjectRefInfoInt(asub.id);
-			  bb.putInt( j, ivalue);
-			  j += 4;
-			  System.out.println( i + " Idx " + asub.subscriptionsIndex + " Value: " + ivalue + " Type " + asub.typeId + " " + (refsize) + " " + (j-jstart));
+			  if ( asub.elements <= 1) {
+			      bb.putInt( j, 4);
+			      j += 4;
+			      int ivalue = gdh.getObjectRefInfoInt(asub.id);
+			      bb.putInt( j, ivalue);
+			      j += 4;
+			      if ( debug)
+			        System.out.println( i + " Idx " + asub.subscriptionsIndex + " Value: " + ivalue + " Type " + asub.typeId + " " + (refsize) + " " + (j-jstart));
+			  }
+			  else {
+			      bb.putInt( j, 4 * asub.elements);
+			      j += 4;
+			      int[] ivalue = gdh.getObjectRefInfoIntArray(asub.id, asub.elements);
+			      for ( int k = 0; k < asub.elements; k++) {
+				  if ( k < ivalue.length)
+				      bb.putInt( j, ivalue[i]);
+				  else
+				      bb.putInt( j, 0);
+				  j += 4;
+			      }
+			  }
 			  break;
 		      case Pwr.eType_String:
 		      case Pwr.eType_Time:
@@ -1217,15 +1344,45 @@ public class GdhWebSocketServer
 		      case Pwr.eType_Objid:
 			  bb.putInt( j, asub.subscriptionsIndex);
 			  j += 4;
-			  String svalue = gdh.getObjectRefInfoString(asub.id, asub.typeId);
-			  bb.putInt( j, 2 + svalue.length());
-			  j += 4;
-			  bb.putShort( j, (short)svalue.length());
-			  j += 2;
-			  for ( int k = 0; k < svalue.length(); k++) {
-			      bb.put( j++, (byte)svalue.charAt(k));
+			  if ( asub.elements <= 1) {
+			      String svalue = gdh.getObjectRefInfoString(asub.id, asub.typeId);
+			      bb.putInt( j, 2 + svalue.length());
+			      j += 4;
+			      bb.putShort( j, (short)svalue.length());
+			      j += 2;
+			      for ( int k = 0; k < svalue.length(); k++) {
+				  bb.put( j++, (byte)svalue.charAt(k));
+			      }
+			      if ( debug)
+			        System.out.println( i + " Idx " + asub.subscriptionsIndex + " Value: " + svalue + " Type " + asub.typeId + " " + (refsize) + " " + (j-jstart));
+
 			  }
-			  System.out.println( i + " Idx " + asub.subscriptionsIndex + " Value: " + svalue + " Type " + asub.typeId + " " + (refsize) + " " + (j-jstart));
+			  else {
+			      String[] svalue = gdh.getObjectRefInfoStringArray(asub.id, asub.typeId, 
+									 asub.size, asub.elements);
+			      int len = 0;
+			      for ( int l = 0; l < asub.elements; l++) {
+				  if ( l < svalue.length)
+				      len += 2 + svalue[l].length();
+				  else
+				      len += 2;
+			      }
+			      bb.putInt( j, len);
+			      j += 4;
+			      for ( int l = 0; l < asub.elements; l++) {
+				  if ( l < svalue.length) {
+				      bb.putShort( j, (short)svalue[l].length());
+				      j += 2;
+				      for ( int k = 0; k < svalue[l].length(); k++) {
+					  bb.put( j++, (byte)svalue[l].charAt(k));
+				      }
+				  }
+				  else {
+				      bb.putShort( j, (short)0);
+				      len += 2;
+				  }
+			      }
+			  }
 			  break;
 		      default:
 			  System.out.println( "***" + i + " Idx " + asub.subscriptionsIndex + " Type " + asub.typeId + " " + (refsize) + " " + (j-jstart));
@@ -1391,7 +1548,7 @@ public class GdhWebSocketServer
 		      i += 4;
 		      objid.oix = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
 		      i += 4;
-		      System.out.println("GetAllClassAttr " + classid + " " + objid.vid + " " + objid.oix);
+
 		      Vector<CdhrObjAttr> v = gdh.getAllClassAttributes(classid, objid);
 		      for ( int j = 0; j < v.size(); j++) {
 			  CdhrObjAttr ve = v.get(j);
@@ -1476,11 +1633,16 @@ public class GdhWebSocketServer
 		  break;
 	      }
 	      case GET_OBJECT:
+	      case GET_OBJECT_FROM_AREF:
 	      case GET_OBJECT_FROM_NAME: {
 		  try {
 		      int sts = 1;
+		      boolean isAref = true;
 		      PwrtObjid objid = new PwrtObjid( 0, 0);
 		      PwrtObjid retobjid = new PwrtObjid( 0, 0);
+		      PwrtAttrRef aref = null;
+		      PwrtAttrRef retaref = null;
+		      String param1 = "";
 		      int i = 6;
 		      int op = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
 		      i += 2;
@@ -1489,6 +1651,25 @@ public class GdhWebSocketServer
 			  i += 4;
 			  objid.oix = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
 			  i += 4;
+			  isAref = false;
+			  System.out.println("GetObject1 " + sts);
+		      }
+		      else if ( value[0] == GET_OBJECT_FROM_AREF) {
+			  objid.vid = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
+			  i += 4;
+			  objid.oix = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
+			  i += 4;
+			  aref = new PwrtAttrRef(objid);
+			  aref.offset = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
+			  i += 4;
+			  aref.body = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
+			  i += 4;
+			  aref.size = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
+			  i += 4;
+			  aref.flags = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
+			  i += 4;
+			  isAref = true;
+			  System.out.println("GetObject1 " + sts);
 		      }
 		      else {
 			  int nameSize = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
@@ -1496,14 +1677,15 @@ public class GdhWebSocketServer
 			  String objName = new String( value, i, nameSize); 
 			  i += nameSize;
 
-			  CdhrObjid oret = gdh.nameToObjid(objName);
-			  if ( oret.evenSts())
-			      sts = oret.getSts();
+			  CdhrAttrRef aret = gdh.nameToAttrRef(objName);
+			  if ( aret.evenSts())
+			      sts = aret.getSts();
 			  else {
-			      objid = oret.objid;
+			      aref = aret.aref;
+			      objid = aret.aref.objid;
 			  }
 		      }
-		      System.out.println( "GET_OBJECT " + op +": " + objid.vid + " " + objid.oix);
+		      System.out.println("GetObject2 " + sts);
 		      if ( (sts & 1) != 0) {
 			  switch ( op) {
 			  case GET_OP_METHOD_PLC: {
@@ -1514,27 +1696,88 @@ public class GdhWebSocketServer
 				  break;
 			      }
 			      if ( cdhrClassId.classId == Pwrb.cClass_plc) {
-				  CdhrObjid cdhrObjid = (CdhrObjid)gdh.getChild(objid);
+				  CdhrObjid cdhrObjid = gdh.getChild(objid);
 				  if ( cdhrObjid.evenSts()) {
 				      sts = cdhrObjid.getSts();
 				      System.out.println("sts2 " + sts);
 				      break;
 				  }
 				  retobjid = cdhrObjid.objid;
+				  isAref = false;
 			      }
+			      else if ( cdhrClassId.classId == Pwrb.cClass_windowplc ||
+					cdhrClassId.classId == Pwrb.cClass_windowcond ||
+					cdhrClassId.classId == Pwrb.cClass_windoworderact ||
+					cdhrClassId.classId == Pwrb.cClass_windowsubstep) {
+				  retobjid = objid;
+				  isAref = false;
+			      }
+			      else {
+				  // Check if parent is a plc window
+				  CdhrObjid cdhrObjid = gdh.getParent(objid);
+				  if ( cdhrObjid.evenSts()) {
+				      sts = cdhrObjid.getSts();
+				      break;
+				  }
+
+				  cdhrClassId = gdh.getObjectClass( cdhrObjid.objid);
+				  if ( cdhrClassId.evenSts()) {
+				      sts = cdhrClassId.getSts();
+				      break;
+				  }
+
+				  if ( cdhrClassId.classId == Pwrb.cClass_windowplc ||
+				       cdhrClassId.classId == Pwrb.cClass_windowcond ||
+				       cdhrClassId.classId == Pwrb.cClass_windoworderact ||
+				       cdhrClassId.classId == Pwrb.cClass_windowsubstep) {
+				      retobjid = cdhrObjid.objid;
+				      isAref = false;
+				      param1 = gdh.objidToName( objid, Cdh.mName_object).str;
+				  }
+				  else {
+				      // Check if any PlcConnect
+				      String name;
+				      if ( isAref)					  
+					  name = gdh.attrRefToName( aref, Cdh.mName_pathStrict).str;
+				      else
+					  name = gdh.objidToName( objid, Cdh.mName_pathStrict).str;
+				      name += ".PlcConnect";
+				      CdhrString cstr = gdh.getObjectInfoString(name);
+				      if ( cstr.evenSts()) {
+					  sts = cstr.getSts();
+					  break;
+				      }
+				      cdhrObjid = gdh.nameToObjid(cstr.str);
+				      if ( cdhrObjid.evenSts()) {
+					  sts = cdhrObjid.getSts();
+					  break;
+				      }
+
+				      param1 = gdh.objidToName( cdhrObjid.objid, Cdh.mName_object).str;
+
+
+				      cdhrObjid = gdh.getParent(cdhrObjid.objid);
+				      if ( cdhrObjid.evenSts()) {
+					  sts = cdhrObjid.getSts();
+					  break;
+				      }
+
+				      retobjid = cdhrObjid.objid;
+				      isAref = false;
+				  }
+			      }
+			      break;
+			  }
+			  default:
+			      if ( isAref)
+				  retaref = aref;
 			      else {
 				  retobjid.vid = objid.vid;
 				  retobjid.oix = objid.oix;
 			      }
 			      break;
 			  }
-			  default:
-			      retobjid.vid = objid.vid;
-			      retobjid.oix = objid.oix;
-			      break;
-			  }
 		      }
-		      System.out.println("sts3 " + sts);
 
 		      String name = null;
 		      String fullName = null;
@@ -1542,40 +1785,65 @@ public class GdhWebSocketServer
 		      String className = null;
 		      CdhrObjid cdhrObjId;
 		      int cid = 0;
-		      CdhrClassId cdhrClassId;
 		      boolean hasChildren = false;
-		      String param1 = "";
 
+		      System.out.println("GetObject3 " + sts);
 		      if ( (sts & 1) != 0) {
-			  cdhrClassId = gdh.getObjectClass(retobjid);
-			  if(cdhrClassId.oddSts()) {
-			      cid = cdhrClassId.classId;
-			      CdhrObjid classObj = gdh.classIdToObjid(cdhrClassId.classId);
-			      if (classObj.oddSts()) {
-				  className = gdh.objidToName( classObj.objid, Cdh.mName_object).str;
-				  fullName = gdh.objidToName( retobjid, Cdh.mName_pathStrict).str;
-				  name = gdh.objidToName( retobjid, Cdh.mName_object).str;
-				  CdhrString ret = gdh.getObjectInfoString(fullName + ".Description");
-				  if (ret.oddSts())
-				      description = ret.str;
-				  else
-				      description = "";
-				  if (gdh.getChild(retobjid).oddSts()) {
-				      hasChildren = true;
+			  if ( isAref) {
+			      CdhrTypeId cdhrTypeId = gdh.getAttrRefTid(aref);
+			      if(cdhrTypeId.oddSts()) {
+				  cid = cdhrTypeId.typeId;
+				  CdhrObjid classObj = gdh.classIdToObjid(cid);
+				  if (classObj.oddSts()) {
+				      className = gdh.objidToName( classObj.objid, Cdh.mName_object).str;
+				      fullName = gdh.attrRefToName( retaref, Cdh.mName_pathStrict).str;
+				      name = gdh.attrRefToName( retaref, Cdh.mName_object).str;
+				      CdhrString ret = gdh.getObjectInfoString(fullName + ".Description");
+				      if (ret.oddSts())
+					  description = ret.str;
+				      else
+					  description = "";
+				      if (gdh.getChild(retaref.objid).oddSts()) {
+					  hasChildren = true;
+				      }
 				  }
+				  else
+				      sts = classObj.getSts();
 			      }
 			      else
-				  sts = classObj.getSts();
+				  sts = cdhrTypeId.getSts();
 			  }
-			  else
-			      sts = cdhrClassId.getSts();
-
-			  System.out.println( "sts: " + sts + " name " + fullName + " class " + className + " descr " + description);
+			  else {
+			      CdhrClassId cdhrClassId = gdh.getObjectClass(retobjid);
+			      if(cdhrClassId.oddSts()) {
+				  cid = cdhrClassId.classId;
+				  CdhrObjid classObj = gdh.classIdToObjid(cdhrClassId.classId);
+				  if (classObj.oddSts()) {
+				      className = gdh.objidToName( classObj.objid, Cdh.mName_object).str;
+				      fullName = gdh.objidToName( retobjid, Cdh.mName_pathStrict).str;
+				      name = gdh.objidToName( retobjid, Cdh.mName_object).str;
+				      CdhrString ret = gdh.getObjectInfoString(fullName + ".Description");
+				      if (ret.oddSts())
+					  description = ret.str;
+				      else
+					  description = "";
+				      if (gdh.getChild(retobjid).oddSts()) {
+					  hasChildren = true;
+				      }
+				  }
+				  else {
+				      sts = classObj.getSts();
+				      System.out.println("GetObject4 " + sts);
+				  }
+			      }
+			      else {
+				  sts = cdhrClassId.getSts();
+				  System.out.println("GetObject5 " + sts);
+			      }
+			  }
 
 			  if ( op == GET_OP_METHOD_OBJECTGRAPH && (sts & 1) != 0) {
 			      String suffix = "";
-			      cdhrClassId = gdh.getObjectClass( retobjid);
-			      cid = cdhrClassId.classId;
 			      String path = System.getenv("pwrp_web") + "/";
 			      String pwgname;
 			      while ( true) {
@@ -1610,7 +1878,6 @@ public class GdhWebSocketServer
 				      pwgname = sret.str.toLowerCase() + suffix;
 				  
 				  File file = new File( path + pwgname + ".pwg");
-				  System.out.println("Check file " + path + pwgname + ".pwg");
 				  if ( file.exists()) {
 				      param1 = pwgname;
 				      break;
@@ -1625,7 +1892,91 @@ public class GdhWebSocketServer
 				  cid = rcid.classId;				  
 			      }
 			  }
+			  else if ( op == GET_OP_METHOD_GRAPH && (sts & 1) != 0) {
+			      String attr = fullName + ".DefGraph";
+			      PwrtObjid oid = objid;
+			      while ( true) {
+				  System.out.println("Method graph test " + attr);
+				  CdhrString xttgraph = gdh.getObjectInfoString( attr);
+				  if ( xttgraph.oddSts() && !xttgraph.str.equals("")) {
+				      
+				      attr = xttgraph.str + ".Action";
+				      CdhrString actionRet = gdh.getObjectInfoString( attr);
+				      if ( actionRet.evenSts()) return;
+
+				      param1 = actionRet.str;
+				      
+				      String instance = null;
+				      attr = xttgraph.str + ".Object[0]";
+				      CdhrString instanceRet = gdh.getObjectInfoString( attr);
+				      if ( instanceRet.oddSts() && !instanceRet.str.equals("")) {
+					  // Instance found
+					  instance = instanceRet.str;      
+					  fullName = instance;					  
+					  retobjid.vid = 0;
+					  retobjid.oix = 0;
+					  name = "";
+					  className = "";
+					  description = "";					  
+					  hasChildren = false;
+				      }
+				      else {
+					  // No instance
+					  retobjid.vid = 0;
+					  retobjid.oix = 0;
+					  name = "";
+					  fullName = "";
+					  className = "";
+					  description = "";					  
+					  hasChildren = false;
+				      }
+				      break;
+				  }
+
+				  CdhrObjid cdhrObjid = gdh.getParent(oid);
+				  if ( cdhrObjid.evenSts()) {
+				      sts = cdhrObjid.getSts();
+				      break;
+
+				  }				  
+				  oid = cdhrObjid.objid;
+
+				  CdhrString sret = gdh.objidToName( cdhrObjid.objid, Cdh.mName_pathStrict);
+				  System.out.println("Parent sts " + sret.getSts());
+				  if ( sret.evenSts()) {
+				      sts = sret.getSts();
+				      break;				      
+				  }
+				  System.out.println("Parent " + sret.str);
+				  attr = sret.str + ".DefGraph";
+			      }
+			  }
+			  else if ( op == GET_OP_METHOD_HELPCLASS && (sts & 1) != 0) {
+			      CdhrObjid cdhrObjid = gdh.classIdToObjid(cid);
+			      if ( cdhrObjid.evenSts()) {
+				  sts = cdhrObjid.getSts();
+				  break;
+			      }			      
+
+			      CdhrString sret = gdh.objidToName( cdhrObjid.objid, Cdh.mName_volume);
+			      String volname = sret.str.substring(0, sret.str.length()-1);
+
+			      sret = gdh.objidToName( cdhrObjid.objid, Cdh.mName_object);
+			      String classname = sret.str;
+			      if ( classname.substring(0,1).equals("$"))
+				  classname = classname.substring(1);
+			      System.out.println("Help class " + volname + " " + classname);
+
+			      if ( cdhrObjid.objid.vid < Cdh.cUserClassVolMin)
+				  param1 = "/pwr_doc/en_us/orm/" + volname.toLowerCase() + "_" + classname.toLowerCase() + ".html";
+			      else
+				  param1 = "/pwrp_web/" + volname.toLowerCase() + "_" + classname.toLowerCase() + ".html";
+			      System.out.println("File " + param1);
+			  }
 		      }
+		      else
+			  System.out.println("Get object " + sts);
+
 		      int j;
 		      int refsize = 0;
 		      if ( (sts & 1) != 0) {
@@ -1707,9 +2058,10 @@ public class GdhWebSocketServer
 		      }
 		      out.write( msg);
 		      out.flush();
+		      System.out.println("GetObject " + fullName);
 		  }
 		  catch ( IOException e) {
-		      System.out.println("getAllClassAttributes: IO exception");
+		      System.out.println("getObject: IO exception");
 		  }
 		  break;
 	      }
@@ -1744,7 +2096,6 @@ public class GdhWebSocketServer
 			  refsize = 0;
 		      }
 		      else {		      
-			  System.out.println( "crr " + cdhrString.str);
 			  
 			  switch ( cid) {
 			  case Pwrb.cClass_Di:
@@ -1777,7 +2128,6 @@ public class GdhWebSocketServer
 			      ctype = new int[crrlen];
 
 			      for ( i = 0; i < crrlen; i++) {
-				  System.out.println("Token : " + tokens[i]);
 				  String[] subtokens = tokens[i].substring(1).split("\\s+");
 				  name[i] = subtokens[0];
 				  className[i] = subtokens[1];
@@ -1792,11 +2142,11 @@ public class GdhWebSocketServer
 				  if ( className[i].equals( "XttGraph"))
 				      oret = gdh.nameToObjid(name[i]);
 				  else {
-				      System.out.println("Cossref : " + name[i]);
 				      int idx = name[i].lastIndexOf('-');
 				      if ( idx != -1) {
 					  oret = gdh.nameToObjid(name[i].substring(0,idx));
-					  System.out.println("pwrent " + name[i].substring(0,idx) + " " + oret.objid.vid + " " + oret.objid.oix);
+					  if ( debug)
+					      System.out.println("pwrent " + name[i].substring(0,idx) + " " + oret.objid.vid + " " + oret.objid.oix);
 				      }
 				      else
 					  oret = gdh.nameToObjid(name[i]);
@@ -1806,7 +2156,6 @@ public class GdhWebSocketServer
 				  else {
 				      oid[i] = new PwrtObjid(0,0);
 				  }
-				  System.out.println("oid " + oid[i].vid + " " + oid[i].oix);
 			      }
 
 			      refsize = 2; // Number of elements
@@ -1905,7 +2254,6 @@ public class GdhWebSocketServer
 		      CdhrObjid oret;
 
 		      Vector<WebButton> v = new Vector<WebButton>();
-		      System.out.println("OpPlace \"" + opPlace + "\"");
 		      if ( opPlace.isEmpty()) {
 			  // Get first
 			  oret = gdh.getClassList( Pwrb.cClass_OpPlaceWeb);
@@ -1992,12 +2340,10 @@ public class GdhWebSocketServer
 				      break;
 				  }
 
-				  System.out.println("Child " + childName + " " + button.text + " " + button.name + " " + button.url);
 			      }
 			      cdhrObjId = gdh.getNextSibling(cdhrObjId.objid);
 			  }
 		      }
-		      System.out.println( "GetOpwindMenu " + v.size());
 			  
 		      int j;
 		      int refsize = 0;
@@ -2026,7 +2372,6 @@ public class GdhWebSocketServer
 			      refsize += ve.url.length();
 			  }
 		      }
-		      System.out.println("OpwinMenu refsize " + refsize);
 		      byte[] msg;
 		      if ( refsize + 11 < 125) {
 			  msg = new byte[13 + refsize + 1]; // One extra byte needed for ByteBuffer ??
@@ -2103,7 +2448,6 @@ public class GdhWebSocketServer
 				  bb.put( j, (byte)ve.url.charAt(k));
 				  j++;
 			      }
-			      System.out.println("Button " + ve.type + " " + ve.text.length() + " " + ve.name.length() + " " + ve.url.length() );
 			  }
 		      }
 		      out.write( msg);
@@ -2170,6 +2514,267 @@ public class GdhWebSocketServer
 		  }
 
 		  break;
+	      case GET_MSG: {
+		  try {
+		      int i = 6;
+		      int status = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
+		      i += 4;
+
+ 		      int j;
+		      int refsize;
+		      CdhrString ret = gdh.getMsgText(status);
+		      int sts = ret.getSts();
+		      if ( ret.oddSts())
+			  refsize = 2 + ret.str.length();
+		      else
+			  refsize = 0;
+
+		      byte[] msg;
+		      if ( refsize + 13 < 125) {
+			  msg = new byte[15 + refsize + 1]; // One extra byte needed for ByteBuffer ??
+			  msg[0] = (byte)130;
+			  msg[1] = (byte)(13 + refsize + 1);
+			  j = 2;
+		      }
+		      else {
+			  msg = new byte[17 + refsize + 1];
+			  msg[0] = (byte)130;
+			  msg[1] = (byte)126;
+			  msg[2] = (byte)(((13 + refsize + 1) >> 8) & 0xFF);
+			  msg[3] = (byte)((13 + refsize + 1) & 0xFF);
+			  j = 4;
+		      }	
+		      msg[j++] = GET_MSG;
+		      msg[j++] = (byte)(id >> 24);
+		      msg[j++] = (byte)((id >> 16) & 0xFF);
+		      msg[j++] = (byte)((id >> 8) & 0xFF);
+		      msg[j++] = (byte)(id & 0xFF);
+		      msg[j++] = (byte)(sts >> 24);
+		      msg[j++] = (byte)((sts >> 16) & 0xFF);
+		      msg[j++] = (byte)((sts >> 8) & 0xFF);
+		      msg[j++] = (byte)(sts & 0xFF);
+		  
+		      if ( ret.oddSts()) {
+			  ByteBuffer bb = ByteBuffer.wrap( msg);
+		  
+			  bb.putShort( j, (short)ret.str.length());
+			  j += 2;
+			  for ( int k = 0; k < ret.str.length(); k++) {
+			      bb.put( j++, (byte)ret.str.charAt(k));
+			  }
+		      }
+		      out.write( msg);
+		      out.flush();
+		  }
+		  catch(IOException e) {
+		      System.out.println("getMsg: IO exception");
+		  }
+		  break;
+	      }		  
+	      case MH_SYNC: {
+		  try {
+		      int i = 6;
+		      int syncIdx = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
+		      i += 4;
+
+		      int sts = 1;
+		      Vector<MhrEvent> v = new Vector<MhrEvent>();
+		      
+		      int j;
+		      for  ( j = 0; j < mhData.eventVec.size(); j++) {
+			  if ( mhData.eventVec.get(j).syncIdx == syncIdx)
+			      break;
+		      }
+		      for ( j--; j >= 0; j--)
+			  v.add( mhData.eventVec.get(j));
+
+
+		      int refsize = 0;
+		      for ( j = v.size() - 1; j >= 0; j--) {
+			  MhrEvent e = v.get(j);
+			  System.out.println("Sync: " + j + " " + e.syncIdx + " " + e.eventText);
+			  refsize += 2; // eventTime length
+			  refsize += e.eventTime.length(); // eventTime
+			  refsize += 2; // eventText length
+			  refsize += e.eventText.length(); // eventText
+			  refsize += 2; // eventName length
+			  refsize += e.eventName.length(); // eventName
+			  refsize += 4; // eventFlags
+			  refsize += 4; // eventStatus
+			  refsize += 4; // eventPrio
+			  refsize += 4; // eventId.nix
+			  refsize += 4; // eventId.idx
+			  refsize += 2; // eventId.birthTime length
+			  refsize += e.eventId.birthTime.length(); // eventId.birthTime
+			  refsize += 4; // targetId.nix
+			  refsize += 4; // targetId.idx
+			  refsize += 2; // targetId.birthTime length
+			  refsize += e.targetId.birthTime.length(); // targetId.birthTime
+			  refsize += 4; // eventType
+			  refsize += 4; // object.objid.vid
+			  refsize += 4; // object.objid.oix
+			  refsize += 4; // object.offset
+			  refsize += 4; // object.body
+			  refsize += 4; // object.size
+			  refsize += 4; // object.flags
+			  refsize += 4; // supObject.objid.vid
+			  refsize += 4; // supObject.objid.oix
+			  refsize += 4; // supObject.offset
+			  refsize += 4; // supObject.body
+			  refsize += 4; // supObject.size
+			  refsize += 4; // supObject.flags
+			  refsize += 2; // eventMoreText length
+			  refsize += e.eventMoreText.length(); // eventMoreText
+			  refsize += 4; // syncIdx
+		      }
+
+		      byte[] msg;
+		      if ( refsize + 13 < 125) {
+			  msg = new byte[15 + refsize + 1]; // One extra byte needed for ByteBuffer ??
+			  msg[0] = (byte)130;
+			  msg[1] = (byte)(13 + refsize + 1);
+			  j = 2;
+		      }
+		      else {
+			  msg = new byte[17 + refsize + 1];
+			  msg[0] = (byte)130;
+			  msg[1] = (byte)126;
+			  msg[2] = (byte)(((13 + refsize + 1) >> 8) & 0xFF);
+			  msg[3] = (byte)((13 + refsize + 1) & 0xFF);
+			  j = 4;
+		      }	
+		      msg[j++] = MH_SYNC;
+		      msg[j++] = (byte)(id >> 24);
+		      msg[j++] = (byte)((id >> 16) & 0xFF);
+		      msg[j++] = (byte)((id >> 8) & 0xFF);
+		      msg[j++] = (byte)(id & 0xFF);
+		      msg[j++] = (byte)(sts >> 24);
+		      msg[j++] = (byte)((sts >> 16) & 0xFF);
+		      msg[j++] = (byte)((sts >> 8) & 0xFF);
+		      msg[j++] = (byte)(sts & 0xFF);
+		  
+		      ByteBuffer bb = ByteBuffer.wrap( msg);
+		  
+		      bb.putInt( j, v.size());
+		      j += 4;
+		      for ( i = v.size() - 1; i >= 0; i--) {
+			  MhrEvent e = v.get(i);			  
+			  bb.putShort( j, (short)e.eventTime.length());
+			  System.out.println("event " + e.syncIdx + " " + e.eventType + " " + e.eventPrio);
+			  j += 2;
+			  for ( int k = 0; k < e.eventTime.length(); k++)
+			      bb.put( j++, (byte)e.eventTime.charAt(k));
+			  bb.putShort( j, (short)e.eventText.length());
+			  j += 2;
+			  for ( int k = 0; k < e.eventText.length(); k++)
+			      bb.put( j++, (byte)e.eventText.charAt(k));
+			  bb.putShort( j, (short)e.eventName.length());
+			  j += 2;
+			  for ( int k = 0; k < e.eventName.length(); k++)
+			      bb.put( j++, (byte)e.eventName.charAt(k));
+			  bb.putInt( j, e.eventFlags);
+			  j += 4;
+			  bb.putInt( j, e.eventStatus);
+			  j += 4;
+			  bb.putInt( j, e.eventPrio);
+			  j += 4;
+			  bb.putInt( j, e.eventId.nix);
+			  j += 4;
+			  bb.putInt( j, e.eventId.idx);
+			  j += 4;
+			  bb.putShort( j, (short)e.eventId.birthTime.length());
+			  j += 2;
+			  for ( int k = 0; k < e.eventId.birthTime.length(); k++)
+			      bb.put( j++, (byte)e.eventId.birthTime.charAt(k));
+			  bb.putInt( j, e.targetId.nix);
+			  j += 4;
+			  bb.putInt( j, e.targetId.idx);
+			  j += 4;
+			  bb.putShort( j, (short)e.targetId.birthTime.length());
+			  j += 2;
+			  for ( int k = 0; k < e.targetId.birthTime.length(); k++)
+			      bb.put( j++, (byte)e.targetId.birthTime.charAt(k));
+			  bb.putInt( j, e.eventType);
+			  j += 4;
+ 			  bb.putInt( j, e.object.objid.vid);
+			  j += 4;
+			  bb.putInt( j, e.object.objid.oix);
+			  j += 4;
+ 			  bb.putInt( j, e.object.offset);
+			  j += 4;
+			  bb.putInt( j, e.object.body);
+			  j += 4;
+ 			  bb.putInt( j, e.object.size);
+			  j += 4;
+			  bb.putInt( j, e.object.flags);
+			  j += 4;
+ 			  bb.putInt( j, e.supObject.objid.vid);
+			  j += 4;
+			  bb.putInt( j, e.supObject.objid.oix);
+			  j += 4;
+ 			  bb.putInt( j, e.supObject.offset);
+			  j += 4;
+			  bb.putInt( j, e.supObject.body);
+			  j += 4;
+ 			  bb.putInt( j, e.supObject.size);
+			  j += 4;
+			  bb.putInt( j, e.supObject.flags);
+			  j += 4;
+			  bb.putShort( j, (short)e.eventMoreText.length());
+			  j += 2;
+			  for ( int k = 0; k < e.eventMoreText.length(); k++)
+			      bb.put( j++, (byte)e.eventMoreText.charAt(k));
+			  bb.putInt( j, e.syncIdx);
+			  j += 4;
+		      }
+		      out.write( msg);
+		      out.flush();
+		  }
+		  catch(IOException e) {
+		      System.out.println("mhSync: IO exception");
+		  }
+		  break;
+	      }		  
+	      case MH_ACK: {
+		  try {
+		      MhrsEventId eid = new MhrsEventId(0,null,0);
+
+		      int i = 6;
+		      eid.nix = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
+		      i += 4;
+		      eid.idx = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
+		      i += 4;
+		      int len = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
+		      i += 2;
+		      eid.birthTime = new String( value, i, len); 
+		      i += len;
+
+		      System.out.println("Ack: " + eid.nix + " " + eid.idx);
+		      PwrtStatus psts = mh.outunitAck(eid);
+		      int sts = psts.getSts();
+
+		      byte[] msg;
+		      msg = new byte[11]; // One extra byte needed for ByteBuffer ??
+		      msg[0] = (byte)130;
+		      msg[1] = (byte)(9);
+		      msg[2] = MH_ACK;
+		      msg[3] = (byte)(id >> 24);
+		      msg[4] = (byte)((id >> 16) & 0xFF);
+		      msg[5] = (byte)((id >> 8) & 0xFF);
+		      msg[6] = (byte)(id & 0xFF);
+		      msg[7] = (byte)(sts >> 24);
+		      msg[8] = (byte)((sts >> 16) & 0xFF);
+		      msg[9] = (byte)((sts >> 8) & 0xFF);
+		      msg[10] = (byte)(sts & 0xFF);
+
+		      out.write( msg);
+		      out.flush();
+		  }
+		  catch(IOException e) {
+		      System.out.println("mhAck: IO exception");
+		  }
+		  break;
+	      }
 	      default:
 		  System.out.println("Unknown function code received: " + value[0]);
 	      }
@@ -2211,7 +2816,6 @@ public class GdhWebSocketServer
       }
 
       GdhrRefObjectInfo ret = gdh.refObjectInfo(attrName);
-      System.out.println("gdh.refObjectInfo " + attrName + " type " + ret.typeId);
       if(ret.oddSts())
       {
         sub = new SubElement(maxConnections, threadNumber);
@@ -2341,6 +2945,74 @@ public class GdhWebSocketServer
       return (ArrayList)subscriptions.clone();
     }
 
+    public synchronized String checkAttrName( String name)
+    {
+	String str = name.trim();
+	int idx;
+
+	// Replace $node
+	for ( int i = 0; i < 4; i++) {
+	    if ( (idx = str.indexOf("$node")) != -1) {
+		CdhrObjid cdhro = gdh.getNodeObject(0);		    
+		String nname = gdh.objidToName(cdhro.objid, Cdh.mName_pathStrict).str;
+		str = str.substring(0, idx) + nname + str.substring(idx+5);
+	    }
+	    else
+		break;
+	}
+	
+	// Translate reference variable
+	for ( int i = 0; i < 4; i++) {
+	    if ( (idx = str.indexOf("&(")) != -1) {
+		String iname = str.substring(idx+2);
+		int idx2 = iname.indexOf(')');
+		if ( idx2 != -1) {
+		    String rest = iname.substring( idx2 + 1);
+		    iname = iname.substring( 0, idx2);
+
+		    CdhrString ret = gdh.getObjectInfoString( iname);
+		    if ( ret.evenSts() || ret.str.equals(""))
+			return null;
+		    
+		    str = str.substring( 0, idx) + ret.str + rest;
+		}
+		else
+		    break;
+	    }
+	    else
+		break;
+	}
+    
+      
+	for ( int i = 0; i < 4; i++) {
+	    // Remove attribute before
+	    if ( (idx = str.indexOf(".<")) != -1) {
+		String rest = str.substring( idx + 2);
+		int idx2 = str.lastIndexOf( '.', idx - 2);
+		if ( idx2 != -1)
+		    str = str.substring( 0, idx2) + rest;
+		else
+		    break;
+	    }
+	    else
+		break;
+	}
+
+	for ( int i = 0; i < 4; i++) {
+	    // Remove segment name before
+	    if ( (idx = str.indexOf("-<")) != -1) {
+		String rest = str.substring( idx + 2);
+		int idx2 = str.lastIndexOf( '-', idx - 2);
+		if ( idx2 != -1)
+		    str = str.substring( 0, idx2) + rest;
+		else
+		    break;
+	    }
+	    else
+		break;
+	}
+	return str;
+    }
   }
 }
 

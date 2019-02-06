@@ -52,7 +52,10 @@ public class MhrEvent implements Serializable
   public MhrsEventId eventId;
   public MhrsEventId targetId;
   public int eventType;
-  public PwrtObjid object;
+  public PwrtAttrRef object;
+  public PwrtAttrRef supObject;
+  public String eventMoreText;
+  public int syncIdx;
 
   public MhrEvent(String eventText, 
                   String eventName, 
@@ -67,7 +70,9 @@ public class MhrEvent implements Serializable
 		  String targetId_birthTime, 
 		  int targetId_idx,
 		  int eventType,
-		  PwrtObjid object)
+		  PwrtAttrRef object,
+		  PwrtAttrRef supObject,
+		  String eventMoreText)
   {
     this.eventText = eventText;
     this.eventName = eventName;
@@ -79,23 +84,29 @@ public class MhrEvent implements Serializable
     this.targetId = new MhrsEventId(targetId_nix, targetId_birthTime, targetId_idx);
     this.eventType = eventType;
     this.object = object;
+    this.supObject = supObject;
+    this.eventMoreText = eventMoreText;
   }
   public MhrEvent getCopy()
   {
-    return new MhrEvent(eventText, 
-                        eventName, 
-		        eventTime, 
-		        eventFlags, 
-		        eventPrio, 
-		        eventStatus, 
-		        eventId.nix, 
-		        eventId.birthTime, 
-		        eventId.idx,
-		        targetId.nix, 
-		        targetId.birthTime, 
-		        targetId.idx,
-		        eventType,
-		        object);
+    MhrEvent ev = new MhrEvent(eventText, 
+			       eventName, 
+			       eventTime, 
+			       eventFlags, 
+			       eventPrio, 
+			       eventStatus, 
+			       eventId.nix, 
+			       eventId.birthTime, 
+			       eventId.idx,
+			       targetId.nix, 
+			       targetId.birthTime, 
+			       targetId.idx,
+			       eventType,
+			       object,
+			       supObject,
+			       eventMoreText);
+    ev.syncIdx = syncIdx;
+    return ev;
   }
   public String toString()
   {

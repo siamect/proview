@@ -295,6 +295,12 @@ pwr_tStatus mh_OutunitConnect(
       l.pSelEventType = &((pwr_sClass_WebHandler*)p)->EventSelectType;
       l.SelectListIsUpdated = NULL;
       break;
+    case pwr_cClass_WebSocketServer:
+      type = mh_eOutunitType_Operator;
+      l.pSelL = (void*)&((pwr_sClass_WebSocketServer*)p)->EventSelectList[0];
+      l.pSelEventType = &((pwr_sClass_WebSocketServer*)p)->EventSelectType;
+      l.SelectListIsUpdated = NULL;
+      break;
     case pwr_cClass_RttConfig:
       type = mh_eOutunitType_Operator;
       l.pSelL = (void*)&((pwr_sClass_RttConfig*)p)->EventSelectList[0];

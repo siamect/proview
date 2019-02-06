@@ -53,8 +53,11 @@
 pwr_tStatus ev_mh_ack_bc( mh_sAck *MsgP);
 pwr_tStatus ev_mh_return_bc( mh_sReturn *MsgP);
 pwr_tStatus ev_mh_alarm_bc( mh_sMessage *MsgP);
+pwr_tStatus ev_mh_block_bc( mh_sBlock *MsgP);
+pwr_tStatus ev_mh_cancel_bc( mh_sReturn *MsgP);
 pwr_tStatus ev_mh_info_bc( mh_sMessage *MsgP);
 pwr_tStatus ev_mh_clear_alarmlist_bc( pwr_tNodeIndex nix);
+pwr_tStatus ev_mh_clear_blocklist_bc( pwr_tNodeIndex nix);
 
 jclass Mh_id;
 jmethodID Mh_messReceived_id;
@@ -73,7 +76,7 @@ JNIEXPORT void JNICALL Java_jpwr_rt_Mh_initIDs
   }
   //hämta pekare till staticmetoden messReceived
   Mh_messReceived_id = (*env)->GetStaticMethodID( env, Mh_id, "messReceived",                              
-  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIIILjava/lang/String;IILjava/lang/String;IILjpwr/rt/PwrtObjid;)V");
+  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIIILjava/lang/String;IILjava/lang/String;IILjpwr/rt/PwrtAttrRef;Ljpwr/rt/PwrtAttrRef;Ljava/lang/String;)V");
   sts = (*env)->GetJavaVM(env, &jvm);
   if(sts)
   {
@@ -226,10 +229,10 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Mh_outunitConnect
 		mh_mOutunitFlags_ReadWait,
 		ev_mh_ack_bc,
 		ev_mh_alarm_bc,
-		NULL,
-		NULL,
+		ev_mh_block_bc,
+		ev_mh_return_bc,
 		ev_mh_clear_alarmlist_bc,
-		NULL,
+		ev_mh_clear_blocklist_bc,
 		ev_mh_info_bc,
 		ev_mh_return_bc,
 		NULL
@@ -309,35 +312,40 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Mh_outunitReceive
 }
 
 
-/*från xtt_ev.cpp*/
 pwr_tStatus ev_mh_ack_bc( mh_sAck *MsgP)
 {
   JNIEnv *env;
   jclass PwrtObjid_id;
   jmethodID PwrtObjid_cid;
-  jobject objid_obj = NULL;
+  jobject objid_obj = NULL;  
+  jobject supobjid_obj = NULL;  
+  jclass PwrtAttrRef_id;
+  jmethodID PwrtAttrRef_cid;
+  jobject attrref_obj = NULL;  
+  jobject supattrref_obj = NULL;  
   jstring jevText;
   jstring jevName;
   jstring jevTime;
   jstring jevBirthTime;
-
-
+  jstring jevMoreText;
   jint jevFlags;
   jint jevPrio;
   jint jevStatus;
   jint jevNix;
   jint jevIdx;
-
-  jstring jevTargetBirthTime;
-  jint jevTargetNix;
-  jint jevTargetIdx;
-  char targetBirthTime_str[40];
-  
   jint jevType;
   jint oix, vid;
+  jint body, offset, size, flags;
+
+  jstring jevTargetBirthTime;
+  jint jevTargetNix = (jint) 0;
+  jint jevTargetIdx = (jint) 0;
+
+
   char time_str[40];
+  
   char birthTime_str[40];
-  pwr_tObjid objid = MsgP->SupObject.Objid;
+  char targetBirthTime_str[40];
   
   pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
   pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
@@ -347,50 +355,70 @@ pwr_tStatus ev_mh_ack_bc( mh_sAck *MsgP)
   (*jvm)->AttachCurrentThread(jvm,(void **)&env,NULL);
   if(env == NULL) printf("env är null");
   
-  
-  
   PwrtObjid_id = (*env)->FindClass( env, "jpwr/rt/PwrtObjid");
   PwrtObjid_cid = (*env)->GetMethodID( env, PwrtObjid_id,
     	"<init>", "(II)V");
 
-  oix = (jint) objid.oix;
-  vid = (jint) objid.vid;
+  PwrtAttrRef_id = (*env)->FindClass( env, "jpwr/rt/PwrtAttrRef");
+  PwrtAttrRef_cid = (*env)->GetMethodID( env, PwrtAttrRef_id,
+    	"<init>", "(Ljpwr/rt/PwrtObjid;IIII)V");
+
+  oix = (jint) MsgP->Object.Objid.oix;
+  vid = (jint) MsgP->Object.Objid.vid;
   objid_obj = (*env)->NewObject( env, PwrtObjid_id, PwrtObjid_cid, 
     	oix, vid);
 
-  
-  
+  body = (jint) MsgP->Object.Body;
+  offset = (jint) MsgP->Object.Offset;
+  size = (jint) MsgP->Object.Size;
+  flags = (jint) MsgP->Object.Flags.m;
+  attrref_obj = (*env)->NewObject( env, PwrtAttrRef_id, PwrtAttrRef_cid,
+				   objid_obj, body, offset, size, flags);
+
+  oix = (jint) MsgP->SupObject.Objid.oix;
+  vid = (jint) MsgP->SupObject.Objid.vid;
+  supobjid_obj = (*env)->NewObject( env, PwrtObjid_id, PwrtObjid_cid, 
+    	oix, vid);
+
+  body = (jint) MsgP->SupObject.Body;
+  offset = (jint) MsgP->SupObject.Offset;
+  size = (jint) MsgP->SupObject.Size;
+  flags = (jint) MsgP->SupObject.Flags.m;
+  supattrref_obj = (*env)->NewObject( env, PwrtAttrRef_id, PwrtAttrRef_cid,
+				   supobjid_obj, body, offset, size, flags);
+
+
   time_AtoAscii( &time, time_eFormat_ComprDateAndTime, time_str, sizeof(time_str));
   time_AtoAscii( &birthTime, time_eFormat_ComprDateAndTime, birthTime_str, sizeof(birthTime_str));
   time_AtoAscii( &targetBirthTime, time_eFormat_ComprDateAndTime, targetBirthTime_str, sizeof(targetBirthTime_str));
   
-  //gör om till Java-strängar
-  jevText = (*env)->NewStringUTF( env, " "); //eventText används inte vid ack
+  // Convert to java strings
+  jevText = (*env)->NewStringUTF( env, ""); // Not used in ack
   jevName = (*env)->NewStringUTF( env, MsgP->EventName);
   jevTime = (*env)->NewStringUTF( env, time_str);
   jevBirthTime = (*env)->NewStringUTF( env, birthTime_str);
   jevTargetBirthTime = (*env)->NewStringUTF( env, targetBirthTime_str);
-    
-  //gör om till Java-int
+  jevMoreText = (*env)->NewStringUTF( env, ""); // Not used in ack
+
+  
+  // Convert to java int
   jevFlags = (jint)MsgP->Info.EventFlags;
   jevPrio = (jint)MsgP->Info.EventPrio;
-  jevStatus = (jint)1; //finns ej i mh_sAck och används ej heller  
+  jevStatus = (jint)1;  // Not used in ack
   jevNix = (jint)MsgP->Info.Id.Nix;
   jevIdx = (jint)MsgP->Info.Id.Idx;
-
+  jevType = (jint)MsgP->Info.EventType;
   jevTargetNix = (jint)MsgP->TargetId.Nix;
   jevTargetIdx = (jint)MsgP->TargetId.Idx;
 
-  jevType = (jint)MsgP->Info.EventType;
-  //anropa callback metoden i Mh-klassen
+  // Call the callback method in the Mh class
   (*env)->CallStaticVoidMethod( env, Mh_id, Mh_messReceived_id, jevText, jevName,
                                 jevTime, jevFlags, jevPrio, jevStatus, jevNix, jevBirthTime, jevIdx,
 				jevTargetNix, jevTargetBirthTime, jevTargetIdx,
-				jevType, objid_obj);
-  //important:check if an exception was raised 
-  if ((*env)->ExceptionCheck(env))
-  {
-    printf("exception i ack\n");
+				jevType, attrref_obj, supattrref_obj, jevMoreText);
+  // Important, check if an exception was raised 
+  if ((*env)->ExceptionCheck(env)) {
+    printf("Exception in ack_bc\n");
     return 1;
   }
   
@@ -402,11 +430,17 @@ pwr_tStatus ev_mh_return_bc( mh_sReturn *MsgP)
   JNIEnv *env;
   jclass PwrtObjid_id;
   jmethodID PwrtObjid_cid;
-  jobject objid_obj = NULL;
+  jobject objid_obj = NULL;  
+  jobject supobjid_obj = NULL;  
+  jclass PwrtAttrRef_id;
+  jmethodID PwrtAttrRef_cid;
+  jobject attrref_obj = NULL;  
+  jobject supattrref_obj = NULL;  
   jstring jevText;
   jstring jevName;
   jstring jevTime;
   jstring jevBirthTime;
+  jstring jevMoreText;
   jint jevFlags;
   jint jevPrio;
   jint jevStatus;
@@ -414,18 +448,18 @@ pwr_tStatus ev_mh_return_bc( mh_sReturn *MsgP)
   jint jevIdx;
   jint jevType;
   jint oix, vid;
+  jint body, offset, size, flags;
 
   jstring jevTargetBirthTime;
   jint jevTargetNix;
   jint jevTargetIdx;
 
-  char targetBirthTime_str[40];
 
   char time_str[40];
   
   char birthTime_str[40];
+  char targetBirthTime_str[40];
   
-  pwr_tObjid objid = MsgP->Object.Objid;
   pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
   pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
   pwr_tTime targetBirthTime = net_NetTimeToTime( &MsgP->TargetId.BirthTime);
@@ -438,45 +472,65 @@ pwr_tStatus ev_mh_return_bc( mh_sReturn *MsgP)
   PwrtObjid_cid = (*env)->GetMethodID( env, PwrtObjid_id,
     	"<init>", "(II)V");
 
-  oix = (jint) objid.oix;
-  vid = (jint) objid.vid;
+  PwrtAttrRef_id = (*env)->FindClass( env, "jpwr/rt/PwrtAttrRef");
+  PwrtAttrRef_cid = (*env)->GetMethodID( env, PwrtAttrRef_id,
+    	"<init>", "(Ljpwr/rt/PwrtObjid;IIII)V");
+
+  oix = (jint) MsgP->Object.Objid.oix;
+  vid = (jint) MsgP->Object.Objid.vid;
   objid_obj = (*env)->NewObject( env, PwrtObjid_id, PwrtObjid_cid, 
     	oix, vid);
 
-  
+  body = (jint) MsgP->Object.Body;
+  offset = (jint) MsgP->Object.Offset;
+  size = (jint) MsgP->Object.Size;
+  flags = (jint) MsgP->Object.Flags.m;
+  attrref_obj = (*env)->NewObject( env, PwrtAttrRef_id, PwrtAttrRef_cid,
+				   objid_obj, body, offset, size, flags);
+
+  oix = (jint) MsgP->SupObject.Objid.oix;
+  vid = (jint) MsgP->SupObject.Objid.vid;
+  supobjid_obj = (*env)->NewObject( env, PwrtObjid_id, PwrtObjid_cid, 
+    	oix, vid);
+
+  body = (jint) MsgP->SupObject.Body;
+  offset = (jint) MsgP->SupObject.Offset;
+  size = (jint) MsgP->SupObject.Size;
+  flags = (jint) MsgP->SupObject.Flags.m;
+  supattrref_obj = (*env)->NewObject( env, PwrtAttrRef_id, PwrtAttrRef_cid,
+				   supobjid_obj, body, offset, size, flags);
+
+
   time_AtoAscii( &time, time_eFormat_ComprDateAndTime, time_str, sizeof(time_str));
   time_AtoAscii( &birthTime, time_eFormat_ComprDateAndTime, birthTime_str, sizeof(birthTime_str));
   time_AtoAscii( &targetBirthTime, time_eFormat_ComprDateAndTime, targetBirthTime_str, sizeof(targetBirthTime_str));
   
-  //gör om till Java-strängar
+  // Convert to java strings
   jevText = (*env)->NewStringUTF( env, MsgP->EventText);
   jevName = (*env)->NewStringUTF( env, MsgP->EventName);
   jevTime = (*env)->NewStringUTF( env, time_str);
   jevBirthTime = (*env)->NewStringUTF( env, birthTime_str);
   jevTargetBirthTime = (*env)->NewStringUTF( env, targetBirthTime_str);
+  jevMoreText = (*env)->NewStringUTF( env, "");
 
-  
-  //gör om till Java-int
+  // Convert to java int
   jevFlags = (jint)MsgP->Info.EventFlags;
   jevPrio = (jint)MsgP->Info.EventPrio;
-  jevStatus = (jint)1;//mh_sReturn har ingen status
+  jevStatus = (jint)1; // Not used in return
   jevNix = (jint)MsgP->Info.Id.Nix;
   jevIdx = (jint)MsgP->Info.Id.Idx;
-
+  jevType = (jint)MsgP->Info.EventType;
   jevTargetNix = (jint)MsgP->TargetId.Nix;
   jevTargetIdx = (jint)MsgP->TargetId.Idx;
 
-
-  jevType = (jint)MsgP->Info.EventType;
-  //anropa callback metoden i Mh-klassen
+  // Call the callback method in the Mh class
   (*env)->CallStaticVoidMethod( env, Mh_id, Mh_messReceived_id, jevText, jevName,
                                 jevTime, jevFlags, jevPrio, jevStatus, jevNix, jevBirthTime, jevIdx,
 				jevTargetNix, jevTargetBirthTime, jevTargetIdx,
-				jevType, objid_obj);
-  //important:check if an exception was raised 
-  if ((*env)->ExceptionCheck(env))
-  {
-    printf("exception i return\n");
+				jevType, attrref_obj, supattrref_obj, jevMoreText);
+  // Important, check if an exception was raised 
+  if ((*env)->ExceptionCheck(env)) {
+    printf("Exception in return_bc\n");
     return 1;
   }
   
@@ -488,11 +542,17 @@ pwr_tStatus ev_mh_alarm_bc( mh_sMessage *MsgP)
   JNIEnv *env;
   jclass PwrtObjid_id;
   jmethodID PwrtObjid_cid;
-  jobject objid_obj = NULL;
+  jobject objid_obj = NULL;  
+  jobject supobjid_obj = NULL;  
+  jclass PwrtAttrRef_id;
+  jmethodID PwrtAttrRef_cid;
+  jobject attrref_obj = NULL;  
+  jobject supattrref_obj = NULL;  
   jstring jevText;
   jstring jevName;
   jstring jevTime;
   jstring jevBirthTime;
+  jstring jevMoreText;
   jint jevFlags;
   jint jevPrio;
   jint jevStatus;
@@ -500,17 +560,17 @@ pwr_tStatus ev_mh_alarm_bc( mh_sMessage *MsgP)
   jint jevIdx;
   jint jevType;
   jint oix, vid;
+  jint body, offset, size, flags;
 
   jstring jevTargetBirthTime;
-  jint jevTargetNix = (jint) 0;
-  jint jevTargetIdx = (jint) 0;
+  jint jevTargetNix;
+  jint jevTargetIdx;
 
 
   char time_str[40];
   
   char birthTime_str[40];
   
-  pwr_tObjid objid = MsgP->Object.Objid;
   pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
   pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
   
@@ -522,40 +582,175 @@ pwr_tStatus ev_mh_alarm_bc( mh_sMessage *MsgP)
   PwrtObjid_cid = (*env)->GetMethodID( env, PwrtObjid_id,
     	"<init>", "(II)V");
 
-  oix = (jint) objid.oix;
-  vid = (jint) objid.vid;
+  PwrtAttrRef_id = (*env)->FindClass( env, "jpwr/rt/PwrtAttrRef");
+  PwrtAttrRef_cid = (*env)->GetMethodID( env, PwrtAttrRef_id,
+    	"<init>", "(Ljpwr/rt/PwrtObjid;IIII)V");
+
+  oix = (jint) MsgP->Object.Objid.oix;
+  vid = (jint) MsgP->Object.Objid.vid;
   objid_obj = (*env)->NewObject( env, PwrtObjid_id, PwrtObjid_cid, 
     	oix, vid);
 
-  
+  body = (jint) MsgP->Object.Body;
+  offset = (jint) MsgP->Object.Offset;
+  size = (jint) MsgP->Object.Size;
+  flags = (jint) MsgP->Object.Flags.m;
+  attrref_obj = (*env)->NewObject( env, PwrtAttrRef_id, PwrtAttrRef_cid,
+				   objid_obj, body, offset, size, flags);
+
+  oix = (jint) MsgP->SupObject.Objid.oix;
+  vid = (jint) MsgP->SupObject.Objid.vid;
+  supobjid_obj = (*env)->NewObject( env, PwrtObjid_id, PwrtObjid_cid, 
+    	oix, vid);
+
+  body = (jint) MsgP->SupObject.Body;
+  offset = (jint) MsgP->SupObject.Offset;
+  size = (jint) MsgP->SupObject.Size;
+  flags = (jint) MsgP->SupObject.Flags.m;
+  supattrref_obj = (*env)->NewObject( env, PwrtAttrRef_id, PwrtAttrRef_cid,
+				   supobjid_obj, body, offset, size, flags);
+
+
   time_AtoAscii( &time, time_eFormat_ComprDateAndTime, time_str, sizeof(time_str));
   time_AtoAscii( &birthTime, time_eFormat_ComprDateAndTime, birthTime_str, sizeof(birthTime_str));
   
-  //gör om till Java-strängar
+  // Convert to java strings
   jevText = (*env)->NewStringUTF( env, MsgP->EventText);
   jevName = (*env)->NewStringUTF( env, MsgP->EventName);
   jevTime = (*env)->NewStringUTF( env, time_str);
   jevBirthTime = (*env)->NewStringUTF( env, birthTime_str);
-
-  jevTargetBirthTime = (*env)->NewStringUTF( env, " ");
+  jevTargetBirthTime = (*env)->NewStringUTF( env, "");
+  jevMoreText = (*env)->NewStringUTF( env, MsgP->EventMoreText);
 
   
-  //gör om till Java-int
+  // Convert to java int
   jevFlags = (jint)MsgP->Info.EventFlags;
   jevPrio = (jint)MsgP->Info.EventPrio;
   jevStatus = (jint)MsgP->Status;
   jevNix = (jint)MsgP->Info.Id.Nix;
   jevIdx = (jint)MsgP->Info.Id.Idx;
   jevType = (jint)MsgP->Info.EventType;
-  //anropa callback metoden i Mh-klassen
+  jevTargetNix = (jint)0;
+  jevTargetIdx = (jint)0;
+
+  // Call the callback method in the Mh class
   (*env)->CallStaticVoidMethod( env, Mh_id, Mh_messReceived_id, jevText, jevName,
                                 jevTime, jevFlags, jevPrio, jevStatus, jevNix, jevBirthTime, jevIdx,
 				jevTargetNix, jevTargetBirthTime, jevTargetIdx,
-				jevType, objid_obj);
-  //important:check if an exception was raised 
-  if ((*env)->ExceptionCheck(env))
-  {
-    printf("exception i alarm\n");
+				jevType, attrref_obj, supattrref_obj, jevMoreText);
+  // Important, check if an exception was raised 
+  if ((*env)->ExceptionCheck(env)) {
+    printf("Exception in alarm_bc\n");
+    return 1;
+  }
+  
+  return 1;
+}
+
+pwr_tStatus ev_mh_block_bc( mh_sBlock *MsgP)
+{
+  JNIEnv *env;
+  jclass PwrtObjid_id;
+  jmethodID PwrtObjid_cid;
+  jobject objid_obj = NULL;  
+  jobject supobjid_obj = NULL;  
+  jclass PwrtAttrRef_id;
+  jmethodID PwrtAttrRef_cid;
+  jobject attrref_obj = NULL;  
+  jobject supattrref_obj = NULL;  
+  jstring jevText;
+  jstring jevName;
+  jstring jevTime;
+  jstring jevBirthTime;
+  jstring jevMoreText;
+  jint jevFlags;
+  jint jevPrio;
+  jint jevStatus;
+  jint jevNix;
+  jint jevIdx;
+  jint jevType;
+  jint oix, vid;
+  jint body, offset, size, flags;
+
+  jstring jevTargetBirthTime;
+  jint jevTargetNix;
+  jint jevTargetIdx;
+
+
+  char time_str[40];
+  
+  char birthTime_str[40];
+  
+  pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
+  pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
+  
+  //hämta enviormentpekaren
+  (*jvm)->AttachCurrentThread(jvm,(void **)&env,NULL);
+  if(env == NULL) printf("env är null");
+  
+  PwrtObjid_id = (*env)->FindClass( env, "jpwr/rt/PwrtObjid");
+  PwrtObjid_cid = (*env)->GetMethodID( env, PwrtObjid_id,
+    	"<init>", "(II)V");
+
+  PwrtAttrRef_id = (*env)->FindClass( env, "jpwr/rt/PwrtAttrRef");
+  PwrtAttrRef_cid = (*env)->GetMethodID( env, PwrtAttrRef_id,
+    	"<init>", "(Ljpwr/rt/PwrtObjid;IIII)V");
+
+  oix = (jint) MsgP->Object.Objid.oix;
+  vid = (jint) MsgP->Object.Objid.vid;
+  objid_obj = (*env)->NewObject( env, PwrtObjid_id, PwrtObjid_cid, 
+    	oix, vid);
+
+  body = (jint) MsgP->Object.Body;
+  offset = (jint) MsgP->Object.Offset;
+  size = (jint) MsgP->Object.Size;
+  flags = (jint) MsgP->Object.Flags.m;
+  attrref_obj = (*env)->NewObject( env, PwrtAttrRef_id, PwrtAttrRef_cid,
+				   objid_obj, body, offset, size, flags);
+
+  oix = (jint) MsgP->SupObject.Objid.oix;
+  vid = (jint) MsgP->SupObject.Objid.vid;
+  supobjid_obj = (*env)->NewObject( env, PwrtObjid_id, PwrtObjid_cid, 
+    	oix, vid);
+
+  body = (jint) MsgP->SupObject.Body;
+  offset = (jint) MsgP->SupObject.Offset;
+  size = (jint) MsgP->SupObject.Size;
+  flags = (jint) MsgP->SupObject.Flags.m;
+  supattrref_obj = (*env)->NewObject( env, PwrtAttrRef_id, PwrtAttrRef_cid,
+				   supobjid_obj, body, offset, size, flags);
+
+
+  time_AtoAscii( &time, time_eFormat_ComprDateAndTime, time_str, sizeof(time_str));
+  time_AtoAscii( &birthTime, time_eFormat_ComprDateAndTime, birthTime_str, sizeof(birthTime_str));
+  
+  // Convert to java strings
+  jevText = (*env)->NewStringUTF( env, "");
+  jevName = (*env)->NewStringUTF( env, MsgP->EventName);
+  jevTime = (*env)->NewStringUTF( env, time_str);
+  jevBirthTime = (*env)->NewStringUTF( env, birthTime_str);
+  jevTargetBirthTime = (*env)->NewStringUTF( env, "");
+  jevMoreText = (*env)->NewStringUTF( env, "");
+
+  
+  // Convert to java int
+  jevFlags = (jint)MsgP->Info.EventFlags;
+  jevPrio = (jint)MsgP->Info.EventPrio;
+  jevStatus = (jint)MsgP->Status;
+  jevNix = (jint)MsgP->Info.Id.Nix;
+  jevIdx = (jint)MsgP->Info.Id.Idx;
+  jevType = (jint)MsgP->Info.EventType;
+  jevTargetNix = (jint)0;
+  jevTargetIdx = (jint)0;
+
+  // Call the callback method in the Mh class
+  (*env)->CallStaticVoidMethod( env, Mh_id, Mh_messReceived_id, jevText, jevName,
+                                jevTime, jevFlags, jevPrio, jevStatus, jevNix, jevBirthTime, jevIdx,
+				jevTargetNix, jevTargetBirthTime, jevTargetIdx,
+				jevType, attrref_obj, supattrref_obj, jevMoreText);
+  // Important, check if an exception was raised 
+  if ((*env)->ExceptionCheck(env)) {
+    printf("Exception in alarm_bc\n");
     return 1;
   }
   
@@ -567,11 +762,17 @@ pwr_tStatus ev_mh_info_bc( mh_sMessage *MsgP)
   JNIEnv *env;
   jclass PwrtObjid_id;
   jmethodID PwrtObjid_cid;
-  jobject objid_obj = NULL;
+  jobject objid_obj = NULL;  
+  jobject supobjid_obj = NULL;  
+  jclass PwrtAttrRef_id;
+  jmethodID PwrtAttrRef_cid;
+  jobject attrref_obj = NULL;  
+  jobject supattrref_obj = NULL;  
   jstring jevText;
   jstring jevName;
   jstring jevTime;
   jstring jevBirthTime;
+  jstring jevMoreText;
   jint jevFlags;
   jint jevPrio;
   jint jevStatus;
@@ -579,16 +780,17 @@ pwr_tStatus ev_mh_info_bc( mh_sMessage *MsgP)
   jint jevIdx;
   jint jevType;
   jint oix, vid;
+  jint body, offset, size, flags;
 
   jstring jevTargetBirthTime;
-  jint jevTargetNix = (jint) 0;
-  jint jevTargetIdx = (jint) 0;
+  jint jevTargetNix;
+  jint jevTargetIdx;
+
 
   char time_str[40];
   
   char birthTime_str[40];
   
-  pwr_tObjid objid = MsgP->Object.Objid;
   pwr_tTime time = net_NetTimeToTime( &MsgP->Info.EventTime);
   pwr_tTime birthTime = net_NetTimeToTime( &MsgP->Info.Id.BirthTime);
   
@@ -600,39 +802,65 @@ pwr_tStatus ev_mh_info_bc( mh_sMessage *MsgP)
   PwrtObjid_cid = (*env)->GetMethodID( env, PwrtObjid_id,
     	"<init>", "(II)V");
 
-  oix = (jint) objid.oix;
-  vid = (jint) objid.vid;
+  PwrtAttrRef_id = (*env)->FindClass( env, "jpwr/rt/PwrtAttrRef");
+  PwrtAttrRef_cid = (*env)->GetMethodID( env, PwrtAttrRef_id,
+    	"<init>", "(Ljpwr/rt/PwrtObjid;IIII)V");
+
+  oix = (jint) MsgP->Object.Objid.oix;
+  vid = (jint) MsgP->Object.Objid.vid;
   objid_obj = (*env)->NewObject( env, PwrtObjid_id, PwrtObjid_cid, 
     	oix, vid);
 
-  
+  body = (jint) MsgP->Object.Body;
+  offset = (jint) MsgP->Object.Offset;
+  size = (jint) MsgP->Object.Size;
+  flags = (jint) MsgP->Object.Flags.m;
+  attrref_obj = (*env)->NewObject( env, PwrtAttrRef_id, PwrtAttrRef_cid,
+				   objid_obj, body, offset, size, flags);
+
+  oix = (jint) MsgP->SupObject.Objid.oix;
+  vid = (jint) MsgP->SupObject.Objid.vid;
+  supobjid_obj = (*env)->NewObject( env, PwrtObjid_id, PwrtObjid_cid, 
+    	oix, vid);
+
+  body = (jint) MsgP->SupObject.Body;
+  offset = (jint) MsgP->SupObject.Offset;
+  size = (jint) MsgP->SupObject.Size;
+  flags = (jint) MsgP->SupObject.Flags.m;
+  supattrref_obj = (*env)->NewObject( env, PwrtAttrRef_id, PwrtAttrRef_cid,
+				   supobjid_obj, body, offset, size, flags);
+
+
   time_AtoAscii( &time, time_eFormat_ComprDateAndTime, time_str, sizeof(time_str));
   time_AtoAscii( &birthTime, time_eFormat_ComprDateAndTime, birthTime_str, sizeof(birthTime_str));
   
-  //gör om till Java-strängar
+  // Convert to java strings
   jevText = (*env)->NewStringUTF( env, MsgP->EventText);
   jevName = (*env)->NewStringUTF( env, MsgP->EventName);
   jevTime = (*env)->NewStringUTF( env, time_str);
   jevBirthTime = (*env)->NewStringUTF( env, birthTime_str);
+  jevTargetBirthTime = (*env)->NewStringUTF( env, "");
+  jevMoreText = (*env)->NewStringUTF( env, MsgP->EventMoreText);
 
-  jevTargetBirthTime = (*env)->NewStringUTF( env, " ");
   
-  //gör om till Java-int
+  // Convert to java int
   jevFlags = (jint)MsgP->Info.EventFlags;
   jevPrio = (jint)MsgP->Info.EventPrio;
   jevStatus = (jint)MsgP->Status;
   jevNix = (jint)MsgP->Info.Id.Nix;
   jevIdx = (jint)MsgP->Info.Id.Idx;
   jevType = (jint)MsgP->Info.EventType;
-  //anropa callback metoden i Mh-klassen
+  jevTargetNix = (jint)0;
+  jevTargetIdx = (jint)0;
+
+  // Call the callback method in the Mh class
   (*env)->CallStaticVoidMethod( env, Mh_id, Mh_messReceived_id, jevText, jevName,
                                 jevTime, jevFlags, jevPrio, jevStatus, jevNix, jevBirthTime, jevIdx,
 				jevTargetNix, jevTargetBirthTime, jevTargetIdx,
-				jevType, objid_obj);
-  //important:check if an exception was raised 
-  if ((*env)->ExceptionCheck(env))
-  {
-    printf("exception i info\n");
+				jevType, attrref_obj, supattrref_obj, jevMoreText);
+  // Important, check if an exception was raised 
+  if ((*env)->ExceptionCheck(env)) {
+    printf("Exception in alarm_bc\n");
     return 1;
   }
   
@@ -663,6 +891,11 @@ pwr_tStatus ev_mh_clear_alarmlist_bc( pwr_tNodeIndex nix)
     printf("exception i clear alarmlist\n");
   }  
 
+  return 1;
+}
+
+pwr_tStatus ev_mh_clear_blocklist_bc( pwr_tNodeIndex nix) {
+  // TODO
   return 1;
 }
 
