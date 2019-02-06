@@ -1,5 +1,5 @@
 0! DefaultWidth 337
-0! DefaultHeight 281
+0! DefaultHeight 282
 199
 !/**
 ! TempSwitch
@@ -42,7 +42,7 @@
 111 0.5
 116 0
 117 0
-118 111
+118 145
 119 119
 120 0
 121 Claes context
