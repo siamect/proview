@@ -78,7 +78,7 @@ WVsel* WbQt::vsel_new(pwr_tStatus* status, const char* name,
 
 int main(int argc, char* argv[])
 {
-  setDebug(1);
+  log_setLevel(LOG_TRACE);
   if (argc >= 2 && streq(argv[1], "-m")) {
     wb_erep::printMethods();
     exit(0);
@@ -126,7 +126,7 @@ WbQt::WbQt(int argc, char* argv[])
   strcpy(volumename, "directory");
   sw_projectvolume = 1;
   arg_cnt = 0;
-  debug_print("%s ", argv[0]);
+  log_debug("%s ", argv[0]);
   for (i = 1; i < argc; i++) {
     fprintf(stderr, "%s ", argv[i]);
     if (argv[i][0] == '-') {

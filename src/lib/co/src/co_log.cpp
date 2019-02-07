@@ -34,47 +34,84 @@
  * General Public License plus this exception.
  */
 
-#include "co_debug.h"
+#include "co_log.h"
 
 #include <stdarg.h>
 #include <string.h>
 #include <time.h>
 
-static int DEBUG = 0;
+static int LEVEL = 0;
+static FILE* FP = NULL;
+static int QUIET = 0;
 
-void setDebug(int debug)
+void log_setLevel(int level)
 {
-  DEBUG = debug;
+  LEVEL = level;
 }
+
+void log_setFile(FILE* fp)
+{
+  FP = fp;
+}
+
+void log_setQuiet(int quiet)
+{
+  QUIET = quiet;
+}
+
+static const char *level_names[] = {
+  "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"
+};
+
+static const char *level_colors[] = {
+  "\x1b[94m", "\x1b[36m", "\x1b[32m", "\x1b[33m", "\x1b[31m", "\x1b[35m"
+};
 
 void print_time(FILE* stream, int fulldate)
 {
-  time_t t;
-  struct tm* tm;
   char Date[11], Time[11];
-  time(&t);
-  tm = localtime(&t);
+  time_t t = time(NULL);
+  struct tm* lt = localtime(&t);
   if (fulldate) {
-    strftime(Date, 11, "%Y-%m-%d", tm);
+    strftime(Date, 11, "%Y-%m-%d", lt);
     fprintf(stream, "%s ", Date);
   }
-  strftime(Time, 11, "%H:%M:%S", tm);
+  strftime(Time, 11, "%H:%M:%S", lt);
   fprintf(stream, "%s", Time);
 }
 
-void dbg_print(const char* file, int line, const char* fmt, ...)
+void log_print(int level, const char* file, int line, const char* fmt, ...)
 {
-  if (DEBUG) {
+  if (level < LEVEL) {
+    return;
+  }
+
+  if (!QUIET) {
     // 1. print timestamp
     print_time(stderr);
     // 2. print filename only, without path
     const char* file2 = strrchr(file, '/');
     file2 = file2 ? (file2 + 1) : file;
-    fprintf(stderr, " %s:%d: ", file2, line);
+    fprintf(stderr, " %s%-5s\x1b[0m %s:%d: ",
+            level_colors[level], level_names[level], file2, line);
     // 3. print the actual debug message
     va_list args;
     va_start(args, fmt);
     vfprintf(stderr, fmt, args);
+    va_end(args);
+  }
+
+  if (FP) {
+    // 1. print timestamp
+    print_time(FP);
+    // 2. print filename only, without path
+    const char* file2 = strrchr(file, '/');
+    file2 = file2 ? (file2 + 1) : file;
+    fprintf(FP, " %-5s %s:%d: ", level_names[level], file2, line);
+    // 3. print the actual debug message
+    va_list args;
+    va_start(args, fmt);
+    vfprintf(FP, fmt, args);
     va_end(args);
   }
 }

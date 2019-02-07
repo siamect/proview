@@ -43,7 +43,7 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_dcli_msg.h"
-#include "co_debug.h"
+#include "co_log.h"
 #include "co_string.h"
 
 typedef enum {
@@ -175,7 +175,7 @@ int dcli_replace_env(const char* str, char* newstr)
       if ((value = getenv(lower_symbol)) == NULL) {
         /* It was no symbol */
         if (str_StartsWith(str, "$pwr")) {
-          debug_print("Warning! Could not resolve environment variable $%s\n", lower_symbol);
+          log_debug("Warning! Could not resolve environment variable $%s\n", lower_symbol);
         }
         *t = *s;
         t++;
@@ -207,7 +207,7 @@ int dcli_replace_env(const char* str, char* newstr)
     if ((value = getenv(lower_symbol)) == NULL) {
       /* It was no symbol */
       if (str_StartsWith(str, "$pwr")) {
-        debug_print("Warning! Could not resolve environment variable $%s\n", lower_symbol);
+        log_debug("Warning! Could not resolve environment variable $%s\n", lower_symbol);
       }
       *t = 0;
     } else {

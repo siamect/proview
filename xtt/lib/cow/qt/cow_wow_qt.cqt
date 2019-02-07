@@ -434,7 +434,7 @@ void CoWowQtObject::DisplayLicense()
 
 int CoWowQt::GetSelection(char* str, int size, const char* atom)
 {
-  debug_print("GetSelection str=%s, size=%d, arom=%s\n", str, size, atom);
+  log_debug("GetSelection str=%s, size=%d, arom=%s\n", str, size, atom);
   static wow_sSelection data;
 
   data.received = 0;

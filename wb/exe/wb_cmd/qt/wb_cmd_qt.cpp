@@ -40,7 +40,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "co_debug.h"
+#include "co_log.h"
 
 #include "cow_style_qt.h"
 
@@ -79,7 +79,7 @@ CmdQt::CmdQt(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-  setDebug(1);
+  log_setLevel(LOG_TRACE);
   QApplication app(argc, argv);
   QApplication::setStyle(new PwrStyle());
   new CmdQt(argc, argv);

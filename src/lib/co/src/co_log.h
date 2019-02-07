@@ -36,16 +36,26 @@
 
 // TODO: The functionality of this file overlaps that of rt_errh.
 
-#ifndef CO_DEBUG
-#define CO_DEBUG
+#ifndef CO_LOG_H
+#define CO_LOG_H
 
+#include <stdarg.h>
 #include <stdio.h>
 
-void setDebug(int debug);
+enum { LOG_TRACE, LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR, LOG_FATAL };
+
+void log_setLevel(int level);
+void log_setQuiet(int quiet);
+void log_setFile(FILE* fp);
 
 void print_time(FILE* stream, int fulldate = 0);
-void dbg_print(const char* file, int line, const char* fmt, ...);
+void log_print(int level, const char* file, int line, const char* fmt, ...);
 
-#define debug_print(fmt, args...) dbg_print(__FILE__, __LINE__, fmt, ##args);
+#define log_trace(...) log_print(LOG_TRACE, __FILE__, __LINE__, __VA_ARGS__);
+#define log_debug(...) log_print(LOG_DEBUG, __FILE__, __LINE__, __VA_ARGS__);
+#define log_info(...)  log_print(LOG_INFO, __FILE__, __LINE__, __VA_ARGS__);
+#define log_warn(...)  log_print(LOG_WARN, __FILE__, __LINE__, __VA_ARGS__);
+#define log_error(...) log_print(LOG_ERROR, __FILE__, __LINE__, __VA_ARGS__);
+#define log_fatal(...) log_print(LOG_FATAL, __FILE__, __LINE__, __VA_ARGS__);
 
 #endif

@@ -436,16 +436,16 @@ WAttText* WNavQt::watttext_new(
 
 void WNavQt::wge_subwindow_loop(WGe* wge)
 {
-  debug_print(" before wge_subwindow_loop\n");
+  log_debug(" before wge_subwindow_loop\n");
   QApplication::exec();
-  debug_print(" after wge_subwindow_loop\n");
+  log_debug(" after wge_subwindow_loop\n");
 }
 
 void WNavQt::wge_modal_loop(WGe* wge)
 {
-  debug_print(" before wge_modal_loop\n");
+  log_debug(" before wge_modal_loop\n");
   QApplication::exec();
-  debug_print(" after wge_modal_loop\n");
+  log_debug(" after wge_modal_loop\n");
 }
 
 void WNavQt::message_dialog(char* title, char* text)

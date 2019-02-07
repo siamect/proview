@@ -71,13 +71,13 @@ static void statusmon_close(void* ctx)
 
 int main(int argc, char* argv[])
 {
-  setDebug(1);
+  log_setLevel(LOG_TRACE);
   int sts;
   int mode = nodelist_eMode_SystemStatus;
   int view_descr = 0;
   char language[20] = "";
 
-  debug_print("%s ", argv[0]);
+  log_debug("%s ", argv[0]);
   for (int i = 1; i < argc; i++) {
     fprintf(stderr, "%s ", argv[i]);
     if (streq(argv[i], "-h")) {
