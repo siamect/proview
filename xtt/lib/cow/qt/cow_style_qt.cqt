@@ -34,13 +34,27 @@
  * General Public License plus this exception.
  */
 
+#include "co_dcli.h"
+
 #include "cow_style_qt.h"
 
+#include <QApplication>
 #include <QDialogButtonBox>
+#include <QFile>
+#include <QTextStream>
 
-int PwrStyle::pixelMetric(
-    PixelMetric which, const QStyleOption* option, const QWidget* widget) const
-{
+PwrStyle::PwrStyle() : QGtkStyle() {
+  loadPalette("$HOME/.pwr_style");
+}
+
+PwrStyle::~PwrStyle() {
+  if (pal) {
+    delete pal;
+  }
+}
+
+int PwrStyle::pixelMetric(PixelMetric which, const QStyleOption* option,
+    const QWidget* widget) const {
   switch (which) {
   case PM_LayoutLeftMargin:
   case PM_LayoutTopMargin:
@@ -57,11 +71,82 @@ int PwrStyle::pixelMetric(
 }
 
 int PwrStyle::styleHint(StyleHint hint, const QStyleOption* option,
-    const QWidget* widget, QStyleHintReturn* returnData) const
-{
+    const QWidget* widget, QStyleHintReturn* returnData) const {
   if (hint == SH_DialogButtonLayout) {
     return QDialogButtonBox::WinLayout;
   }
 
   return QGtkStyle::styleHint(hint, option, widget, returnData);
+}
+
+void PwrStyle::loadPalette(const char* path) {
+  char fname[200];
+  dcli_translate_filename(fname, path);
+  QFile f(fname);
+  if (!f.open(QFile::ReadOnly | QFile::Text)) {
+    return;
+  }
+  pal = new QPalette();
+  QTextStream in(&f);
+  QStringList lines = in.readAll().split('\n', QString::SkipEmptyParts);
+  for (int i = 0; i < lines.size(); i++) {
+    QStringList line = lines[i].split(' ', QString::SkipEmptyParts);
+    if (line.size() < 4) {
+      fprintf(stderr, "Error parsing line %d in file %s\n", (i+1), fname);
+      continue;
+    }
+    QPalette::ColorRole role = QPalette::ColorRole(atoi(qPrintable(line[0])));
+    pal->setBrush(QPalette::ColorGroup(0), role, QColor(line[1]));
+    pal->setBrush(QPalette::ColorGroup(1), role, QColor(line[2]));
+    pal->setBrush(QPalette::ColorGroup(2), role, QColor(line[3]));
+  }
+  QApplication::setPalette(*pal);
+}
+
+void PwrStyle::drawPrimitive(PrimitiveElement element,
+    const QStyleOption *option, QPainter *painter, const QWidget *widget) const {
+  if (pal) {
+    if (element == PE_PanelButtonCommand) {
+      QWindowsStyle::drawPrimitive(element, option, painter, widget);
+      return;
+    }
+    QCleanlooksStyle::drawPrimitive(element, option, painter, widget);
+  } else {
+    QGtkStyle::drawPrimitive(element, option, painter, widget);
+  }
+}
+
+void PwrStyle::drawControl(ControlElement control, const QStyleOption *option,
+    QPainter *painter, const QWidget *widget) const {
+  if (pal) {
+    QCleanlooksStyle::drawControl(control, option, painter, widget);
+  } else {
+    QGtkStyle::drawControl(control, option, painter, widget);
+  }
+}
+
+void PwrStyle::drawComplexControl(ComplexControl control,
+    const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget)
+    const {
+  if (pal) {
+    QCleanlooksStyle::drawComplexControl(control, option, painter, widget);
+  } else {
+    QGtkStyle::drawComplexControl(control, option, painter, widget);
+  }
+}
+
+void PwrStyle::polish(QApplication *app) {
+  if (pal) {
+    QCleanlooksStyle::polish(app);
+  } else {
+    QGtkStyle::polish(app);
+  }
+}
+
+void PwrStyle::unpolish(QApplication *app) {
+  if (pal) {
+    QCleanlooksStyle::unpolish(app);
+  } else {
+    QGtkStyle::unpolish(app);
+  }
 }

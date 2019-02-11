@@ -39,6 +39,8 @@
 #ifndef CO_UNIQUE_PTR
 #define CO_UNIQUE_PTR
 
+#include <stddef.h>
+
 // std::unique_ptr for single objects -> free memory with 'delete'
 template<typename T>
 class unique_ptr {
