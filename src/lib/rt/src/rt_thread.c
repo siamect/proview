@@ -35,6 +35,7 @@
  */
 
 #include <errno.h>
+#include <float.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -248,11 +249,11 @@ pwr_tStatus thread_SetDeadline(pwr_sClass_PlcThread* o)
           o->Description, attr.sched_period / (1000 * 1000),
           attr.sched_runtime / (1000 * 1000));
     }
-    /*if (o->Deadline) {
+    if (o->Deadline > FLT_EPSILON) {
       attr.sched_deadline = toNs(o->Deadline);
-    } else {*/
-    attr.sched_deadline = toNs(o->ScanTime);
-    //}
+    } else {
+      attr.sched_deadline = toNs(o->ScanTime);
+    }
 
     int ret = sched_setattr(tid, &attr, 0);
     if (ret != 0) {

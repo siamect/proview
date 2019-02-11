@@ -38,6 +38,7 @@
    Run a PLC thread.  */
 
 #include <errno.h>
+#include <float.h>
 #include <pwd.h>
 #include <string.h>
 #include <unistd.h>
@@ -313,8 +314,8 @@ void plc_thread(plc_sThread* tp)
 
   tp->init(1, tp);
 
-  if (tp->PlcThread->Prio < 0) {
-    thread_SetDeadline(tp->PlcThread);
+  if (tp->PlcThread->Deadline > FLT_EPSILON) {
+    sts = thread_SetDeadline(tp->PlcThread);
   } else {
     sts = thread_SetPrio(&tp->tid, tp->prio);
   }
