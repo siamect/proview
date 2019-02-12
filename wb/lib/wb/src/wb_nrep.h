@@ -88,7 +88,7 @@ private:
   bool m_hasSuper;
   bool m_shadowed;
 
-  void parse() throw(wb_error);
+  void parse();
   char* objectName(const char* n, char* res = 0);
   char* segmentName(const char* n, int idx = 0, char* res = 0);
   char* attributeName(const char* n, int idx = 0, char* res = 0);
@@ -101,7 +101,7 @@ public:
   wb_nrep* ref();
 
   wb_nrep();
-  wb_nrep(const char* n) throw(wb_error);
+  wb_nrep(const char* n);
   wb_nrep(const wb_nrep& n);
   ~wb_nrep();
 
