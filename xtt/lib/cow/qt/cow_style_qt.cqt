@@ -86,19 +86,23 @@ void PwrStyle::loadPalette(const char* path) {
   if (!f.open(QFile::ReadOnly | QFile::Text)) {
     return;
   }
-  pal = new QPalette();
+  pal = new QPalette(standardPalette());
   QTextStream in(&f);
   QStringList lines = in.readAll().split('\n', QString::SkipEmptyParts);
   for (int i = 0; i < lines.size(); i++) {
     QStringList line = lines[i].split(' ', QString::SkipEmptyParts);
-    if (line.size() < 4) {
+    if (line.size() < 2) {
       fprintf(stderr, "Error parsing line %d in file %s\n", (i+1), fname);
       continue;
     }
     QPalette::ColorRole role = QPalette::ColorRole(atoi(qPrintable(line[0])));
     pal->setBrush(QPalette::ColorGroup(0), role, QColor(line[1]));
-    pal->setBrush(QPalette::ColorGroup(1), role, QColor(line[2]));
-    pal->setBrush(QPalette::ColorGroup(2), role, QColor(line[3]));
+    pal->setBrush(QPalette::ColorGroup(2), role, QColor(line[1]));
+    if (line.size() > 2 && QColor(line[2]).isValid()) {
+      pal->setBrush(QPalette::ColorGroup(1), role, QColor(line[2]));
+    } else {
+      pal->setBrush(QPalette::ColorGroup(1), role, QColor(line[1]));
+    }
   }
   QApplication::setPalette(*pal);
 }
