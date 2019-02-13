@@ -217,7 +217,6 @@ pwr_tStatus exp_plcpgm(ldh_tSesContext ldhses, char* plcpgm_str, char* output)
   pwr_tString80 hiername;
   pwr_tString80 plcpgm_name;
   pwr_tString80 parent_name;
-  pwr_tString80 cmd;
   pwr_tObjid* resobjdid_ptr;
   pwr_tFloat32* scantime_ptr;
 
@@ -307,6 +306,7 @@ pwr_tStatus exp_plcpgm(ldh_tSesContext ldhses, char* plcpgm_str, char* output)
   fclose(file);
 
   /* A system call to allow the user to do something */
+  char cmd[100];
   sprintf(cmd, "PWR_EXPORT PLCPGM %s", filename);
   system(cmd);
   return FOE__SUCCESS;
@@ -342,7 +342,6 @@ pwr_tStatus exp_window(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
   int j;
   char filename[80];
   pwr_tString80 hiername;
-  pwr_tString80 cmd;
   pwr_tString80 class_name;
   pwr_tString80 parent_name;
   pwr_tString80 plcpgm_name;
@@ -439,6 +438,7 @@ pwr_tStatus exp_window(ldh_tWBContext ldhwb, ldh_tSesContext ldhses,
   fclose(genctx.file);
 
   /* A system call to allow the user to do something */
+  char cmd[100];
   sprintf(cmd, "PWR_EXPORT WINDOW %s", filename);
   system(cmd);
 

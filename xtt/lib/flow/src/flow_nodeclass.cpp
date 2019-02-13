@@ -189,19 +189,15 @@ int FlowNodeClass::get_conpoint(
   return FLOW__NOCONPOINT;
 }
 
-int FlowNodeClass::get_conpoint_trace_attr(
-    int num, char* trace_attr, flow_eTraceType* type)
+FlowTraceAttr FlowNodeClass::get_conpoint_trace_attr(int num)
 {
-  int i, inverted;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_ConPoint
         && ((FlowConPoint*)a.a[i])->number == num) {
-      a.a[i]->get_trace_attr(NULL, trace_attr, type, &inverted);
-      return FLOW__SUCCESS;
+      return a.a[i]->get_trace_attr();
     }
   }
-  return FLOW__NOCONPOINT;
+  return FlowTraceAttr();
 }
 
 int FlowNodeClass::event_handler(

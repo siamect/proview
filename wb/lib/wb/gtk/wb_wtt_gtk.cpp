@@ -2076,7 +2076,7 @@ WttGtk::WttGtk(void* wt_parent_ctx, GtkWidget* wt_parent_wid,
   int window_height = 800;
   // int    	palette_width = 220;
   pwr_tStatus sts;
-  char title[80];
+  char title[260];
   char volname[80];
   pwr_tClassId volclass = 0;
   int size;

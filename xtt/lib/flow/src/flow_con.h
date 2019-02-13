@@ -233,8 +233,7 @@ public:
   }
   void set_trace_attr(const char* object, const char* attribute,
       flow_eTraceType type, int inverted);
-  void get_trace_attr(
-      char* object, char* attribute, flow_eTraceType* type, int* inverted);
+  FlowTraceAttr get_trace_attr();
   void trace_scan();
   int trace_init();
   void trace_close();

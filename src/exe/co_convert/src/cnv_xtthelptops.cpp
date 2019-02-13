@@ -89,7 +89,7 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
   char link[80];
   if (alink)
     strcpy(link, alink);
-  
+
   if (option & ps_mOption_printDisable && item_type != navh_eItemType_Option)
     return NULL;
 
@@ -264,7 +264,7 @@ void* CnvXtthelpToPs::insert(navh_eItemType item_type, const char* text1,
     }
     if (!streq(link, "") && !conf_pass) {
       pwr_tFileName fname;
-      char str[200];
+      char str[300];
       int page;
 
       if (str_StartsWith(link, "$web:")) {

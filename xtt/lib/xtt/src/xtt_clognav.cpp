@@ -406,8 +406,7 @@ void CLogNav::read(int* pos_list, int pos_cnt)
         continue;
     } else {
       // Unzip the file
-      char cmd[300];
-
+      char cmd[5 + sizeof(file_list[i].name) + 3 + sizeof(tmpfile) + 1];
       sprintf(cmd, "zcat %s > %s", file_list[i].name, tmpfile);
       system(cmd);
       strcpy(filename, tmpfile);

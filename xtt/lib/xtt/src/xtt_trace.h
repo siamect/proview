@@ -119,8 +119,7 @@ public:
   void activate_helpplclist();
 
 protected:
-  void get_trace_attr(flow_tObject object, char* object_str, char* attr_str,
-      flow_eTraceType* type, int* inverted, unsigned int* options);
+  FlowTraceAttr get_trace_attr(flow_tObject object, unsigned int* options);
   int get_objid(flow_tObject node, pwr_tObjid* objid);
   int get_attrref(flow_tObject node, pwr_tAttrRef* aref);
   int get_selected_node(flow_tObject* node);

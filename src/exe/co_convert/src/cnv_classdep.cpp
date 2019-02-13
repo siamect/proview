@@ -147,7 +147,7 @@ void CnvClassDep::print(int idx, int level)
 
 void CnvClassDep::print_html_classtable(int idx)
 {
-  pwr_tFileName fname;
+  char fname[512];
   int parentlist[100];
   int parent_cnt = 0;
   char href[200];

@@ -389,7 +389,7 @@ pwr_tStatus gdh_ClassAttrrefToAttr(
   if (ap != NULL) {
     if (ap->adef && ap->adef->Info.Elements > 1
         && ap->size < ap->adef->Info.Size) {
-      pwr_tOName aname;
+      char aname[256];
 
       sprintf(aname, "%s[%d]", ap->name, ap->idx);
       strncpy(name, aname, size);
@@ -5248,7 +5248,7 @@ pwr_tStatus gdh_GetLocalClassList(int cidcnt, pwr_tCid* cid, int attrobjects,
   return GDH__SUCCESS;
 }
 
-pwr_tStatus gdh_CheckLocalObject(pwr_tOid oid) 
+pwr_tStatus gdh_CheckLocalObject(pwr_tOid oid)
 {
   pwr_tStatus sts;
   gdb_sObject *op;
@@ -5496,4 +5496,3 @@ pwr_tStatus gdh_SetObjectInfoStr(char* name, /**< Attribute name */
   lck_Unlock(lck_eLock_Str);
   return sts;
 }
-

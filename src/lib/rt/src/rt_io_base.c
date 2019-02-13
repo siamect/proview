@@ -2839,7 +2839,6 @@ static pwr_tStatus io_init_card(
               int rows;
               int csize;
               int i;
-              pwr_tAName ioname;
 
               sts = gdh_GetObjectBodyDef(cp->Class, &bd, &rows, pwr_cNObjid);
               if (EVEN(sts))
@@ -2939,6 +2938,7 @@ static pwr_tStatus io_init_card(
                       default:
                         continue;
                       }
+                      char ioname[512];
                       sprintf(ioname, "%s.%s", cname, bd[i].attrName);
                       offset = bd[i].attr->Param.Info.Offset;
                       sts = io_handle_channels(

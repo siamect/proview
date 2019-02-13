@@ -204,12 +204,12 @@ warnings := -Wall -Wextra -Wno-unused-parameter -Wno-unused-but-set-parameter -W
 
 ifeq ($(pwre_btype),rls)
   cflags	:= $(cross_compile) -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT -fPIC $(warnings)
-  linkflags	:= $(cross_compile) -O3 -L$(lib_dir)
-  elinkflags	:= $(cross_compile) -O3 -L$(lib_dir) -L$(elib_dir)
+  linkflags	:= $(cross_compile) -O3 -lstdc++ -L$(lib_dir)
+  elinkflags	:= $(cross_compile) -O3 -lstdc++ -L$(lib_dir) -L$(elib_dir)
 else
   cflags	:= $(cross_compile) -c -g -D_GNU_SOURCE -D_REENTRANT -fPIC $(warnings)
-  linkflags	:= $(cross_compile) -g -L$(lib_dir)
-  elinkflags	:= $(cross_compile) -g -L$(lib_dir) -L$(elib_dir)
+  linkflags	:= $(cross_compile) -g -lstdc++ -L$(lib_dir)
+  elinkflags	:= $(cross_compile) -g -lstdc++ -L$(lib_dir) -L$(elib_dir)
 endif
 
 explinkflags	:= $(cross_compile) -g -L$(elib_dir)

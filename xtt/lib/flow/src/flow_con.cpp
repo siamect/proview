@@ -3506,13 +3506,14 @@ void FlowCon::set_trace_attr(const char* object, const char* attribute,
   trace_attr_type = type;
 }
 
-void FlowCon::get_trace_attr(
-    char* object, char* attribute, flow_eTraceType* type, int* inverted)
+FlowTraceAttr FlowCon::get_trace_attr()
 {
-  strncpy(object, trace_object, sizeof(trace_object));
-  strncpy(attribute, trace_attribute, sizeof(trace_attribute));
-  *type = trace_attr_type;
-  *inverted = 0;
+  FlowTraceAttr attr;
+  strncpy(attr.object, trace_object, sizeof(attr.object));
+  strncpy(attr.attribute, trace_attribute, sizeof(attr.attribute));
+  attr.type = trace_attr_type;
+  attr.inverted = 0;
+  return attr;
 }
 
 void FlowCon::trace_scan()

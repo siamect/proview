@@ -1721,7 +1721,7 @@ WttQt::WttQt(void* wt_parent_ctx, const char* wt_name, const char* iconname,
   int window_width = 900;
   int window_height = 800;
   pwr_tStatus sts;
-  char title[80];
+  char title[260];
   char volname[80];
   pwr_tClassId volclass = 0;
   int size;

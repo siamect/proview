@@ -636,7 +636,7 @@ pwr_tStatus wb_session::getMenu(ldh_sMenuCall* ip)
   pwr_tStatus sts = 0;
   ldh_sMenuItem* Item = (ldh_sMenuItem*)&ldh_lMenuItem;
   pwr_tUInt32 i;
-  pwr_tObjName MenuFolder;
+  char MenuFolder[40];
   pwr_tString80 Menu;
   pwr_tBoolean isSame = FALSE;
   pwr_tClassId Class;
@@ -687,7 +687,7 @@ pwr_tStatus wb_session::getMenu(ldh_sMenuCall* ip)
     break;
   }
   case ldh_eMenuSet_ObjectAttr: {
-    pwr_tObjName OMenuFolder;
+    char OMenuFolder[40];
 
     sprintf(OMenuFolder, "%sP%cs%c%c",
         ldh_lUtility[((wb_session*)ip->PointedSession)->utility()].Name, 'x',

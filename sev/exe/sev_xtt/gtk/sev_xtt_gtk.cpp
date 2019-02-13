@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 
   sts = qcom_Init(&sts, &aid, "sev_xtt");
   if (EVEN(sts))
-    co_error(sts);
+    throw co_error(sts);
 
   sevcli_init(&sts, &sevcli);
   if (EVEN(sts)) {

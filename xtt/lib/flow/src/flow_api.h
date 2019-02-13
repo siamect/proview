@@ -224,8 +224,7 @@ void flow_SetCtxUserVersion(flow_tCtx ctx, unsigned int user_version);
 flow_tCtx flow_GetCtx(flow_tObject object);
 void flow_SetTraceAttr(flow_tObject object, char* trace_object,
     char* trace_attribute, flow_eTraceType trace_attr_type, int inverted);
-void flow_GetTraceAttr(flow_tObject object, char* trace_object,
-    char* trace_attribute, flow_eTraceType* trace_attr_type, int* inverted);
+FlowTraceAttr flow_GetTraceAttr(flow_tObject object);
 int flow_TraceInit(flow_tCtx ctx, int (*trace_connect_func)(flow_tObject, char*,
                                       char*, flow_eTraceType, void**),
     int (*trace_disconnect_func)(flow_tObject),
@@ -265,8 +264,7 @@ void flow_ResetNodraw(flow_tCtx ctx);
 void flow_Redraw(flow_tCtx ctx);
 int flow_FindByName(flow_tCtx ctx, char* name, flow_tObject* object);
 int flow_FindByNameNoCase(flow_tCtx ctx, char* name, flow_tObject* object);
-int flow_GetConPointTraceAttr(
-    flow_tObject object, int num, char* trace_attr, flow_eTraceType* type);
+FlowTraceAttr flow_GetConPointTraceAttr(flow_tObject object, int num);
 int flow_GetConPoint(
     flow_tObject object, int num, double* x, double* y, flow_eDirection* dir);
 void flow_SetClickSensitivity(flow_tCtx ctx, int value);

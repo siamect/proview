@@ -145,7 +145,7 @@ int CnvWblToH::class_exec()
 {
   // Open class struct file
   pwr_tFileName struct_filename;
-  pwr_tFileName fname;
+  char fname[512];
   char volume_name_low[40];
 
   strcpy(volume_name_low, CnvCtx::low(ctx->rw->volume_name));

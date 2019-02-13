@@ -2111,7 +2111,7 @@ int pn_gsdml::tag_attribute(const char* name, const char* value)
   sts = find_tag_attribute(name, get_tag_stack(), get_tag_stack(1), &idx);
   if (!sts)
   {
-    char msg[200];
+    char msg[300];
     sprintf(msg, "Undefined tag attribute %s (%s)", name, current_tag);
     error_message_line(msg);
     return 0;

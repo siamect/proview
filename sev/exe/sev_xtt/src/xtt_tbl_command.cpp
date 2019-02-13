@@ -218,9 +218,9 @@ static int xtttbl_help_func(void* client_data, void* client_flag)
 static void xtttbl_login_success_bc(void* ctx)
 {
   XttTbl* xtttbl = (XttTbl*)ctx;
-  char msg[80];
 
   CoLogin::get_login_info(0, 0, xtttbl->user, (unsigned long*)&xtttbl->priv, 0);
+  char msg[5 + sizeof(xtttbl->user) + 10 +1];
   sprintf(msg, "User %s logged in", xtttbl->user);
   xtttbl->cologin = 0;
   xtttbl->message('I', msg);
@@ -250,7 +250,6 @@ static int xtttbl_login_func(void* client_data, void* client_flag)
   char arg2_str[80];
   char systemgroup[80];
   unsigned int priv;
-  char msg[80];
 
   // sts = gdh_GetObjectInfo ( "pwrNode-System.SystemGroup", &systemgroup,
   //		sizeof(systemgroup));
@@ -277,6 +276,7 @@ static int xtttbl_login_func(void* client_data, void* client_flag)
   else {
     strcpy(xtttbl->user, arg1_str);
     xtttbl->priv = priv;
+    char msg[5 + sizeof(arg1_str) + 10 +1];
     sprintf(msg, "User %s logged in", arg1_str);
     xtttbl->message('I', msg);
   }
@@ -286,7 +286,7 @@ static int xtttbl_login_func(void* client_data, void* client_flag)
 static int xtttbl_logout_func(void* client_data, void* client_flag)
 {
   XttTbl* xtttbl = (XttTbl*)client_data;
-  char msg[80];
+  char msg[100];
 
   if (streq(xtttbl->base_user, "")) {
     sprintf(msg, "User %s logged out", xtttbl->user);
@@ -431,7 +431,7 @@ static int xtttbl_show_func(void* client_data, void* client_flag)
   arg1_sts = dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if (str_StartsWith(arg1_str, "USER")) {
-    char msg[120];
+    char msg[170];
     char priv_str[80];
 
     if (streq(xtttbl->user, "")) {
@@ -463,8 +463,8 @@ int XttTbl::command(char* input_str)
     /* Read command file */
     sts = readcmdfile(&command[1]);
     if (sts == DCLI__NOFILE) {
-      char tmp[200];
-      snprintf(tmp, 200, "Unable to open file \"%s\"", &command[1]);
+      char tmp[1030];
+      snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", &command[1]);
       message('E', tmp);
       return DCLI__SUCCESS;
     } else if (EVEN(sts))
@@ -486,8 +486,8 @@ int XttTbl::command(char* input_str)
         /* Read command file */
         sts = readcmdfile(&symbol_value[1]);
         if (sts == DCLI__NOFILE) {
-          char tmp[200];
-          snprintf(tmp, 200, "Unable to open file \"%s\"", &symbol_value[1]);
+          char tmp[230];
+          snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", &symbol_value[1]);
           message('E', tmp);
           return DCLI__SUCCESS;
         } else if (EVEN(sts))

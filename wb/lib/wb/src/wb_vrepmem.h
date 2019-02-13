@@ -385,8 +385,9 @@ public:
   void loadWbl(const char* filename, pwr_tStatus* sts, bool reload = false);
   void freeObject(mem_object* mem);
   void clear();
-  bool classeditorCheck(ldh_eDest dest_code, mem_object* dest, pwr_tCid cid,
-      pwr_tOix* oix, char* name, pwr_tStatus* sts, bool import_paste);
+  bool classeditorCheck(
+      ldh_eDest dest_code, mem_object* dest, pwr_tCid cid, pwr_tOix* oix,
+      char* name, int name_size, pwr_tStatus* sts, bool import_paste);
   bool classeditorCheckMove(mem_object* memo, ldh_eDest dest_code,
       mem_object* dest, pwr_tStatus* sts);
   void classeditorCommit();

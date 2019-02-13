@@ -497,14 +497,9 @@ void brow_SetTraceAttr(brow_tObject object, const char* trace_object,
       ->set_trace_attr(trace_object, trace_attribute, trace_attr_type, 0);
 }
 
-void brow_GetTraceAttr(brow_tObject object, char* trace_object,
-    char* trace_attribute, flow_eTraceType* trace_attr_type)
+FlowTraceAttr brow_GetTraceAttr(brow_tObject object)
 {
-  int inverted;
-
-  ((FlowArrayElem*)object)
-      ->get_trace_attr(
-          trace_object, trace_attribute, trace_attr_type, &inverted);
+  return ((FlowArrayElem*)object)->get_trace_attr();
 }
 
 void brow_SetTraceData(brow_tObject object, void* trace_data)

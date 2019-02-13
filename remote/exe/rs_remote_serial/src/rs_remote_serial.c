@@ -262,25 +262,25 @@ static unsigned int Receive()
 int main(int argc, char* argv[])
 {
   unsigned int sts; /* Status from function calls etc. */
-  unsigned char id[32];
-  unsigned char pname[32];
+  char id[32];
+  char pname[45];
   remtrans_item* remtrans;
   int i;
 
   /* Read arg number 2, should be id for this instance */
 
   if (argc >= 2)
-    strncpy((char*)id, argv[1], sizeof(id));
+    strncpy(id, argv[1], sizeof(id));
   else
-    strcpy((char*)id, "0");
+    strcpy(id, "0");
 
   /* Build process name with id */
 
-  sprintf((char*)pname, "rs_remser_%s", id);
+  sprintf(pname, "rs_remser_%s", id);
 
   /* Init of errh */
 
-  errh_Init((char*)pname, errh_eAnix_remote);
+  errh_Init(pname, errh_eAnix_remote);
   errh_SetStatus(PWR__SRVSTARTUP);
 
   /* Set debug mode if arg number 4 is "debug" (started manually) */
@@ -296,7 +296,7 @@ int main(int argc, char* argv[])
 
   /* Init of gdh */
 
-  sts = gdh_Init((char*)pname);
+  sts = gdh_Init(pname);
   if (EVEN(sts)) {
     errh_Error("gdh_Init, %m", sts);
     errh_SetStatus(PWR__SRVTERM);

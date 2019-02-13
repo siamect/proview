@@ -647,7 +647,7 @@ int WItemPkgInfoHier::open_children(
   pwr_tString80* plclist;
   int plccount;
   char version[40];
-  pwr_tCmd cmd;
+  char cmd[420];
   pwr_tStatus sts;
 
   if (brow_IsOpen(node)) {
@@ -717,12 +717,12 @@ WItemPkgFileHier::WItemPkgFileHier(WNavBrow* brow, const char* item_name,
 int WItemPkgFileHier::open_children(
     WNavBrow* brow, double x, double y, int display_mode)
 {
-  char cmd[200];
+  char cmd[350];
   char tmpfile[200];
   char line[200];
   char line_item[6][80];
   int num;
-  char timestr[32];
+  char timestr[170];
   pwr_tTime time;
   int file_cnt = 0;
   WItemPkgFile* item;

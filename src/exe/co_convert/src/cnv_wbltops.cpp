@@ -190,7 +190,7 @@ int CnvWblToPs::class_exec()
   for (i = 0; i < ctx->rw->doc_clink_cnt; i++) {
     if (!conf_pass) {
       int page;
-      char str[200];
+      char str[210];
       char text[200];
 
       if (str_StartsWith(ctx->rw->doc_clink_ref[i], "pwrb_"))
@@ -228,7 +228,7 @@ int CnvWblToPs::class_exec()
 
 int CnvWblToPs::body_exec()
 {
-  char text[80];
+  char text[256];
 
   tops->y -= 10;
   tops->print_horizontal_line();
@@ -252,7 +252,7 @@ int CnvWblToPs::attribute_exec()
 {
   int i;
   char* s;
-  char txt[200];
+  char txt[256];
   char text[200];
   int page;
   int lng_sts = 1;
@@ -392,7 +392,7 @@ int CnvWblToPs::typedef_exec()
   for (i = 0; i < ctx->rw->doc_clink_cnt; i++) {
     if (!conf_pass) {
       int page;
-      char str[200];
+      char str[256];
       char text[200];
 
       if (str_StartsWith(ctx->rw->doc_clink_ref[i], "pwrb_"))

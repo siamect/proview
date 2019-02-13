@@ -563,8 +563,8 @@ void Graph::open(char* filename)
     get_filename(filename, fname);
     sts = grow_Open(grow->ctx, fname);
     if (EVEN(sts)) {
-      char tmp[200];
-      snprintf(tmp, 200, "Unable to open file \"%s\"", fname);
+      char tmp[512];
+      snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", fname);
       message('E', tmp);
     }
   }

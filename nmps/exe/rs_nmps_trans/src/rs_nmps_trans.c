@@ -556,17 +556,15 @@ static void nmpstrans_request_timeout(
     trans_ctx transctx, char* key, int userdata)
 {
   nmpstrans_t_req_list* req_ptr;
-  char alarm_text[80];
-  char alarm_name[80];
   int sts;
 
   req_ptr = transctx->reqlist + userdata;
 
   /* Send an alarm, alarmtext idx 0, timeout */
   if (req_ptr->req->AlarmText[0][0] != 0) {
+    char alarm_text[sizeof(req_ptr->req->AlarmText[0]) + 1 + sizeof(key) + 1];
     sprintf(alarm_text, "%s %s", req_ptr->req->AlarmText[0], key);
-    strcpy(alarm_name, "NMpsTrans");
-    sts = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+    sts = nmpstrans_alarm_send(alarm_text, "NMpsTrans", 'B');
   }
 
   /* Set error flag in request object */
@@ -590,17 +588,15 @@ static void nmpstrans_datasend_timeout(
     trans_ctx transctx, char* key, int userdata)
 {
   nmpstrans_t_snd_list* snd_ptr;
-  char alarm_text[80];
-  char alarm_name[80];
   int sts;
 
   snd_ptr = transctx->sndlist + userdata;
 
   /* Send an alarm, alarmtext idx 0, timeout */
   if (snd_ptr->snd->AlarmText[0][0] != 0) {
+    char alarm_text[sizeof(snd_ptr->snd->AlarmText[0]) + 1 + sizeof(key) + 1];
     sprintf(alarm_text, "%s %s", snd_ptr->snd->AlarmText[0], key);
-    strcpy(alarm_name, "NMpsTrans");
-    sts = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+    sts = nmpstrans_alarm_send(alarm_text, "NMpsTrans", 'B');
   }
 
   /* Set error flag in datasend object */
@@ -751,7 +747,7 @@ static int nmpstrans_send_datasend(trans_ctx transctx, int position,
     s++;
 
   /* Translate to integer */
-  strncpy(s, key, sizeof(key));
+  strncpy(s, key, sizeof(name));
 
   data_ptr += snd_ptr->rtdb_offset;
 
@@ -844,8 +840,6 @@ static int nmpstrans_req_receive_data(trans_ctx transctx,
   char key[40];
   void* msg;
   pwr_tObjid objid;
-  char alarm_text[80];
-  char alarm_name[80];
   int data_valid;
   int i;
   int return_status_ok;
@@ -879,9 +873,9 @@ static int nmpstrans_req_receive_data(trans_ctx transctx,
       for (i = 0; i < 10; i++) {
         if (req_ptr->req->ReturnStatus[i] != 0
             && sts == req_ptr->req->ReturnStatus[i]) {
+          char alarm_text[sizeof(req_ptr->req->ReturnStatusText[i]) + 1 + sizeof(key) + 1];
           sprintf(alarm_text, "%s %s", req_ptr->req->ReturnStatusText[i], key);
-          strcpy(alarm_name, "NMpsTrans");
-          sts2 = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+          sts2 = nmpstrans_alarm_send(alarm_text, "NMpsTrans", 'B');
           break;
         }
       }
@@ -919,9 +913,9 @@ static int nmpstrans_req_receive_data(trans_ctx transctx,
           /* Object already exists */
           /* Send an alarm, alarmtext idx 4, object already exists */
           if (req_ptr->req->AlarmText[4][0] != 0) {
+            char alarm_text[sizeof(req_ptr->req->AlarmText[4]) + 1 + sizeof(key) + 1];
             sprintf(alarm_text, "%s %s", req_ptr->req->AlarmText[4], key);
-            strcpy(alarm_name, "NMpsTrans");
-            sts2 = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+            sts2 = nmpstrans_alarm_send(alarm_text, "NMpsTrans", 'B');
           }
           req_ptr->req->ErrorDetected = 1;
 
@@ -974,8 +968,6 @@ static int nmpstrans_rcv_receive_data(trans_ctx transctx,
   char key[40];
   void* msg;
   pwr_tObjid objid;
-  char alarm_text[80];
-  char alarm_name[80];
   int data_valid;
 
   if (rcv_ptr->rcv_remtrans_type == NMPS_TRANSTYPE_REM)
@@ -1025,9 +1017,9 @@ static int nmpstrans_rcv_receive_data(trans_ctx transctx,
         /* Object already exists */
         /* Send an alarm, alarmtext idx 4, object already exists */
         if (rcv_ptr->rcv->AlarmText[4][0] != 0) {
+          char alarm_text[sizeof(rcv_ptr->rcv->AlarmText[4]) + 1 + sizeof(key) + 1];
           sprintf(alarm_text, "%s %s", rcv_ptr->rcv->AlarmText[4], key);
-          strcpy(alarm_name, "NMpsTrans");
-          sts2 = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+          sts2 = nmpstrans_alarm_send(alarm_text, "NMpsTrans", 'B');
         }
         rcv_ptr->rcv->ErrorDetected = 1;
 
@@ -1150,8 +1142,6 @@ static int nmpstrans_req_accept_detected(
   void* objectp;
   pwr_tStatus sts, sts2;
   pwr_tObjid objid;
-  char alarm_text[80];
-  char alarm_name[80];
 
   /* Are we waiting for an accept */
   if (!req_ptr->wait_for_accept)
@@ -1165,9 +1155,7 @@ static int nmpstrans_req_accept_detected(
 
         /* Send an alarm, alarmtext idx 1, cell full */
         if (req_ptr->req->AlarmText[1][0] != 0) {
-          strcpy(alarm_text, req_ptr->req->AlarmText[1]);
-          strcpy(alarm_name, "NMpsTrans");
-          sts = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+          sts = nmpstrans_alarm_send(req_ptr->req->AlarmText[1], "NMpsTrans", 'B');
         }
         req_ptr->req->ErrorDetected = 1;
       }
@@ -1188,10 +1176,10 @@ static int nmpstrans_req_accept_detected(
     /* Object already exists */
     /* Send an alarm, alarmtext idx 4, object already exists */
     if (req_ptr->req->AlarmText[4][0] != 0) {
+      char alarm_text[sizeof(req_ptr->req->AlarmText[4]) + 1 + sizeof(req_ptr->display_object_key) + 1];
       sprintf(alarm_text, "%s %s", req_ptr->req->AlarmText[4],
           req_ptr->display_object_key);
-      strcpy(alarm_name, "NMpsTrans");
-      sts2 = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+      sts2 = nmpstrans_alarm_send(alarm_text, "NMpsTrans", 'B');
     }
     req_ptr->req->ErrorDetected = 1;
 
@@ -1239,8 +1227,6 @@ static int nmpstrans_rcv_accept_detected(
   void* objectp;
   pwr_tStatus sts, sts2;
   pwr_tObjid objid;
-  char alarm_text[80];
-  char alarm_name[80];
 
   /* Are we waiting for an accept */
   if (!rcv_ptr->wait_for_accept)
@@ -1254,9 +1240,7 @@ static int nmpstrans_rcv_accept_detected(
 
         /* Send an alarm, alarmtext idx 1, cell full */
         if (rcv_ptr->rcv->AlarmText[1][0] != 0) {
-          strcpy(alarm_text, rcv_ptr->rcv->AlarmText[1]);
-          strcpy(alarm_name, "NMpsTrans");
-          sts = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+          sts = nmpstrans_alarm_send(rcv_ptr->rcv->AlarmText[1], "NMpsTrans", 'B');
         }
         rcv_ptr->rcv->ErrorDetected = 1;
       }
@@ -1277,10 +1261,10 @@ static int nmpstrans_rcv_accept_detected(
     /* Object already exists */
     /* Send an alarm, alarmtext idx 4, object already exists */
     if (rcv_ptr->rcv->AlarmText[4][0] != 0) {
+      char alarm_text[sizeof(rcv_ptr->rcv->AlarmText[4]) + 1 + sizeof(rcv_ptr->display_object_key) + 1];
       sprintf(alarm_text, "%s %s", rcv_ptr->rcv->AlarmText[4],
           rcv_ptr->display_object_key);
-      strcpy(alarm_name, "NMpsTrans");
-      sts2 = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+      sts2 = nmpstrans_alarm_send(alarm_text, "NMpsTrans", 'B');
     }
     rcv_ptr->rcv->ErrorDetected = 1;
 
@@ -1558,7 +1542,7 @@ static pwr_tStatus nmpstrans_reqlist_add(trans_ctx transctx, pwr_tObjid objid,
     reqlist_ptr->old_key = reqlist_ptr->req->Key;
   else
     strncpy(reqlist_ptr->old_key_str, reqlist_ptr->req->KeyStr,
-        sizeof(reqlist_ptr->req->KeyStr));
+        sizeof(reqlist_ptr->old_key_str));
 
   (*reqlist_count)++;
   return NMPS__SUCCESS;
@@ -2125,8 +2109,6 @@ static pwr_tStatus nmpstrans_trans_handler(trans_ctx transctx)
   int i;
   int trigg_change;
   int trigg_detect;
-  char alarm_text[80];
-  char alarm_name[80];
   char key[40];
   int reset_trigg;
   int keep_key;
@@ -2196,9 +2178,9 @@ static pwr_tStatus nmpstrans_trans_handler(trans_ctx transctx)
         if (!valid_key || EVEN(sts)) {
           /* Checksum is not ok */
           if (req_ptr->req->AlarmText[1][0] != 0) {
+            char alarm_text[sizeof("Checksum error") + 1 + sizeof(key) + 1];
             sprintf(alarm_text, "%s %s", "Checksum error", key);
-            strcpy(alarm_name, "NMpsTrans");
-            sts = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+            sts = nmpstrans_alarm_send(alarm_text, "NMpsTrans", 'B');
           }
           keep_key = 1;
           reset_trigg = 1;
@@ -2211,9 +2193,9 @@ static pwr_tStatus nmpstrans_trans_handler(trans_ctx transctx)
           && req_ptr->cell_ptr->CellFull) {
         /* Send an alarm, alarmtext idx 1, cell full */
         if (req_ptr->req->AlarmText[1][0] != 0) {
+          char alarm_text[sizeof(req_ptr->req->AlarmText[1]) + 1 + sizeof(key) + 1];
           sprintf(alarm_text, "%s %s", req_ptr->req->AlarmText[1], key);
-          strcpy(alarm_name, "NMpsTrans");
-          sts = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+          sts = nmpstrans_alarm_send(alarm_text, "NMpsTrans", 'B');
         }
         req_ptr->req->ErrorDetected = 1;
         reset_trigg = 1;
@@ -2269,9 +2251,7 @@ static pwr_tStatus nmpstrans_trans_handler(trans_ctx transctx)
         /* Nothing to wait for */
         /* Send an alarm, alarmtext idx 2, No accept wait status */
         if (req_ptr->req->AlarmText[2][0] != 0) {
-          strcpy(alarm_text, req_ptr->req->AlarmText[2]);
-          strcpy(alarm_name, "NMpsTrans");
-          sts = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+          sts = nmpstrans_alarm_send(req_ptr->req->AlarmText[2], "NMpsTrans", 'B');
         }
       }
       req_ptr->req->AcceptDetected = 0;
@@ -2291,9 +2271,7 @@ static pwr_tStatus nmpstrans_trans_handler(trans_ctx transctx)
 
         /* Send an alarm, alarmtext idx 1, cell full */
         if (req_ptr->req->AlarmText[1][0] != 0) {
-          strcpy(alarm_text, req_ptr->req->AlarmText[1]);
-          strcpy(alarm_name, "NMpsTrans");
-          sts = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+          sts = nmpstrans_alarm_send(req_ptr->req->AlarmText[1], "NMpsTrans", 'B');
         }
         req_ptr->req->ErrorDetected = 1;
       } else
@@ -2303,9 +2281,7 @@ static pwr_tStatus nmpstrans_trans_handler(trans_ctx transctx)
     if (req_ptr->fatal_error) {
       /* Send an alarm, alarmtext idx 3, fatal error */
       if (req_ptr->req->AlarmText[3][0] != 0) {
-        strcpy(alarm_text, req_ptr->req->AlarmText[3]);
-        strcpy(alarm_name, "NMpsTrans");
-        sts = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+        sts = nmpstrans_alarm_send(req_ptr->req->AlarmText[3], "NMpsTrans", 'B');
       }
       req_ptr->req->ErrorDetected = 1;
       req_ptr->fatal_error = 0;
@@ -2322,9 +2298,7 @@ static pwr_tStatus nmpstrans_trans_handler(trans_ctx transctx)
         /* Nothing to wait for */
         /* Send an alarm, alarmtext idx 2, No accept wait status */
         if (rcv_ptr->rcv->AlarmText[2][0] != 0) {
-          strcpy(alarm_text, rcv_ptr->rcv->AlarmText[2]);
-          strcpy(alarm_name, "NMpsTrans");
-          sts = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+          sts = nmpstrans_alarm_send(rcv_ptr->rcv->AlarmText[2], "NMpsTrans", 'B');
         }
       }
       rcv_ptr->rcv->AcceptDetected = 0;
@@ -2344,9 +2318,7 @@ static pwr_tStatus nmpstrans_trans_handler(trans_ctx transctx)
 
         /* Send an alarm, alarmtext idx 1, cell full */
         if (rcv_ptr->rcv->AlarmText[1][0] != 0) {
-          strcpy(alarm_text, rcv_ptr->rcv->AlarmText[1]);
-          strcpy(alarm_name, "NMpsTrans");
-          sts = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+          sts = nmpstrans_alarm_send(rcv_ptr->rcv->AlarmText[1], "NMpsTrans", 'B');
         }
         rcv_ptr->rcv->ErrorDetected = 1;
       } else
@@ -2356,9 +2328,7 @@ static pwr_tStatus nmpstrans_trans_handler(trans_ctx transctx)
     if (rcv_ptr->fatal_error) {
       /* Send an alarm, alarmtext idx 3, fatal error */
       if (rcv_ptr->rcv->AlarmText[3][0] != 0) {
-        strcpy(alarm_text, rcv_ptr->rcv->AlarmText[3]);
-        strcpy(alarm_name, "NMpsTrans");
-        sts = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+        sts = nmpstrans_alarm_send(rcv_ptr->rcv->AlarmText[3], "NMpsTrans", 'B');
       }
       rcv_ptr->rcv->ErrorDetected = 1;
       rcv_ptr->fatal_error = 0;
@@ -2378,9 +2348,7 @@ static pwr_tStatus nmpstrans_trans_handler(trans_ctx transctx)
       } else if (sts == NMPS__SNDNODATA) {
         /* Send an alarm, alarmtext idx 1, no data to send */
         if (snd_ptr->snd->AlarmText[1][0] != 0) {
-          strcpy(alarm_text, snd_ptr->snd->AlarmText[1]);
-          strcpy(alarm_name, "NMpsTrans");
-          sts = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+          sts = nmpstrans_alarm_send(snd_ptr->snd->AlarmText[1], "NMpsTrans", 'B');
         }
         snd_ptr->snd->ErrorDetected = 1;
         snd_ptr->snd->TriggDetected = 0;
@@ -2394,9 +2362,7 @@ static pwr_tStatus nmpstrans_trans_handler(trans_ctx transctx)
     if (snd_ptr->fatal_error) {
       /* Send an alarm, alarmtext idx 3, fatal error */
       if (snd_ptr->snd->AlarmText[3][0] != 0) {
-        strcpy(alarm_text, snd_ptr->snd->AlarmText[3]);
-        strcpy(alarm_name, "NMpsTrans");
-        sts = nmpstrans_alarm_send(alarm_text, alarm_name, 'B');
+        sts = nmpstrans_alarm_send(snd_ptr->snd->AlarmText[3], "NMpsTrans", 'B');
       }
       snd_ptr->snd->ErrorDetected = 1;
       snd_ptr->fatal_error = 0;

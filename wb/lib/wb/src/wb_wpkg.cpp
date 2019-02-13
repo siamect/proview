@@ -133,7 +133,7 @@ void WPkg::activate_distribute()
     } else if (typeid(*itemlist[0]) == typeid(WItemPkgPackage)) {
       set_clock_cursor();
       wb_pkg::copyPackage(((WItemPkgPackage*)itemlist[0])->packagename);
-      char msg[80];
+      char msg[27 + sizeof(((WItemPkgPackage*)itemlist[0])->packagename) + 1];
       sprintf(msg, "Distribution successful of %s",
           ((WItemPkgPackage*)itemlist[0])->packagename);
       message('I', msg);

@@ -91,7 +91,7 @@ static pwr_tStatus CopyProject(ldh_sMenuCall* ip)
   pwr_tCid cid;
   pwr_tOid oid;
   pwr_sClass_ProjectReg* body;
-  char description[120];
+  char description[140];
 
   sts = ldh_ObjidToName(ip->PointedSession, ip->Pointed.Objid, ldh_eName_Object,
       oname, sizeof(oname), &size);

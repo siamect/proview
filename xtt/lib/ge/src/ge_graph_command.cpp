@@ -1651,7 +1651,7 @@ static int graph_export_func(void* client_data, void* client_flag)
       char framename[80];
       char appletname[80];
       char systemname[80];
-      char cmd[200];
+      char cmd[320];
 
       strcpy(framename, name);
       if ((s = strrchr(framename, '.')))

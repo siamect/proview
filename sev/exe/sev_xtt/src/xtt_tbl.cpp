@@ -212,7 +212,7 @@ void XttTbl::activate_delete_item()
   // sevcli_sHistItem *hi;
   ItemBase* item;
   TblNav_sevhistobject* hi;
-  char msg[300];
+  char msg[860];
 
   if (!tblnav->get_select(&item)) {
     message('E', "Select an storage item");

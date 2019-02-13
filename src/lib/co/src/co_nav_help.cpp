@@ -699,7 +699,7 @@ static FILE* navhelp_open_file(
 
   // Replace symbol for language
   if (str_StartsWith(filestr, "$pwr_lang/")) {
-    pwr_tFileName lng_filestr;
+    char lng_filestr[512];
 
     sprintf(
         lng_filestr, "$pwr_exe/%s/%s", Lng::get_language_str(), &filestr[10]);

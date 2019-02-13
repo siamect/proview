@@ -3844,7 +3844,6 @@ void GlowExportJBean::window(double x1, double y1, double x2, double y2,
   char var_name[40];
   char class_name[] = "JScrollPane";
   char class_fname[80];
-  char var_fname[80];
   char* s;
 
   strcpy(var_name, class_name);
@@ -3865,6 +3864,7 @@ void GlowExportJBean::window(double x1, double y1, double x2, double y2,
   }
   if ((s = strchr(class_fname, '.')))
     *s = 0;
+  char var_fname[sizeof(class_fname) + sizeof(node_cnt) + 1];
   sprintf(var_fname, "%s%d", class_fname, node_cnt);
   class_fname[0] = _toupper(class_fname[0]);
 
@@ -3910,7 +3910,6 @@ void GlowExportJBean::folder(double x1, double y1, double x2, double y2,
   char var_name[40];
   char class_name[] = "JTabbedPane";
   char class_fname[80];
-  char var_fname[80];
   char* s;
   char* own;
 
@@ -3947,6 +3946,7 @@ void GlowExportJBean::folder(double x1, double y1, double x2, double y2,
       }
       if ((s = strchr(class_fname, '.')))
         *s = 0;
+      char var_fname[105];
       sprintf(var_fname, "%s%d_%d", class_fname, node_cnt, i);
       class_fname[0] = _toupper(class_fname[0]);
 

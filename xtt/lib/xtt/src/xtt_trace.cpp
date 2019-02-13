@@ -56,29 +56,31 @@
 
 #define GOEN_F_GRID 0.05
 
-void RtTrace::get_trace_attr(flow_tObject object, char* object_str,
-    char* attr_str, flow_eTraceType* type, int* inverted, unsigned int* options)
+FlowTraceAttr RtTrace::get_trace_attr(flow_tObject object, unsigned int* options)
 {
-  pwr_tOName name;
   char* s;
+  char name[200];
 
-  flow_GetTraceAttr(object, name, attr_str, type, inverted);
+  FlowTraceAttr attr = flow_GetTraceAttr(object);
+  strcpy(name, attr.object);
   if (m_has_host) {
     /* Replace "$host" with hostname */
     if (str_StartsWith(name, "$host")) {
-      strcpy(object_str, m_hostname);
-      strcat(object_str, &name[5]);
+      strcpy(attr.object, m_hostname);
+      strcat(attr.object, &name[5]);
     } else
-      strcpy(object_str, name);
+      strcpy(attr.object, name);
   } else
-    strcpy(object_str, name);
+    strcpy(attr.object, name);
 
   // Get options in attr_str after #
-  if ((s = strchr(attr_str, '#'))) {
+  if ((s = strchr(attr.attribute, '#'))) {
     *s = 0;
     sscanf(s + 1, "%u", options);
   } else
     *options = 0;
+
+  return attr;
 }
 
 void RtTrace::get_save_filename(pwr_tObjid window_objid, char* filename)
@@ -264,23 +266,17 @@ int RtTrace::connect_bc(
 
 int RtTrace::disconnect_bc(flow_tObject object)
 {
-  pwr_tSubid* subid_p;
-  int sts;
-  flow_tTraceObj name;
-  flow_tTraceAttr attr;
-  flow_eTraceType type;
-  int inverted;
-
   if (flow_GetObjectType(object) == flow_eObjectType_Node) {
-    flow_GetTraceAttr(object, name, attr, &type, &inverted);
-    if (type != flow_eTraceType_Boolean
+    FlowTraceAttr attr = flow_GetTraceAttr(object);
+    if (attr.type != flow_eTraceType_Boolean
         && flow_GetNodeGroup(object) != flow_eNodeGroup_Trace)
       return 1;
 
-    if (!(streq(name, "") || streq(attr, ""))) {
+    if (!(streq(attr.object, "") || streq(attr.attribute, ""))) {
+      pwr_tSubid* subid_p;
       flow_GetUserData(object, (void**)&subid_p);
       if (subid_p) {
-        sts = gdh_UnrefObjectInfo(*subid_p);
+        gdh_UnrefObjectInfo(*subid_p);
         free((char*)subid_p);
       }
     }
@@ -290,10 +286,6 @@ int RtTrace::disconnect_bc(flow_tObject object)
 
 int RtTrace::scan_bc(flow_tObject object, void* trace_p)
 {
-  flow_tTraceObj trace_object;
-  flow_tTraceAttr trace_attribute;
-  flow_eTraceType trace_attr_type;
-  int trace_inverted;
   int highlight;
   int on;
   char txt[80];
@@ -303,13 +295,12 @@ int RtTrace::scan_bc(flow_tObject object, void* trace_p)
   int dimmed;
 
   if (flow_GetObjectType(object) == flow_eObjectType_Node) {
-    flow_GetTraceAttr(object, trace_object, trace_attribute, &trace_attr_type,
-        &trace_inverted);
+    FlowTraceAttr attr = flow_GetTraceAttr(object);
     flow_GetHighlight(object, &highlight);
 
-    switch (trace_attr_type) {
+    switch (attr.type) {
     case flow_eTraceType_Boolean:
-      on = trace_inverted ? *(unsigned int*)trace_p == 0
+      on = attr.inverted ? *(unsigned int*)trace_p == 0
                           : *(unsigned int*)trace_p != 0;
       if (highlight != on)
         flow_SetHighlight(object, on);
@@ -330,7 +321,7 @@ int RtTrace::scan_bc(flow_tObject object, void* trace_p)
       break;
     }
 
-    if (!(streq(trace_object, "") || streq(trace_attribute, ""))) {
+    if (!(streq(attr.object, "") || streq(attr.attribute, ""))) {
       flow_GetUserData(object, (void**)&subid_p);
       if (subid_p) {
         sts = gdh_GetSubscriptionOldness(*subid_p, &old, 0, 0);
@@ -382,7 +373,7 @@ void RtTrace::activate_print()
   int j;
   int i = 0;
   char filename[200];
-  char cmd[200];
+  char cmd[230];
 
   /* Get selected object */
   flow_GetObjectList(ctx, &list, &cnt);
@@ -412,7 +403,7 @@ void RtTrace::activate_printselect()
   flow_tNode n;
   char filename[200];
   int i = 0;
-  char cmd[200];
+  char cmd[230];
 
   /* Get selected object */
   flow_GetSelectList(ctx, &list, &cnt);
@@ -743,14 +734,8 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
       return 1;
 
     if (tractx->trace_started) {
-      flow_tTraceObj object_str;
-      flow_tTraceAttr attr_str;
-      flow_tTraceAttr con_attr_str;
-      flow_eTraceType trace_type;
-      int inverted;
       flow_tNode n1;
       flow_tCon c1;
-      int sts;
       flow_eDirection direction;
       double x, y;
 
@@ -758,7 +743,7 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
       sprintf(name, "Trace%d", idx++);
 
       /* Connect only output points */
-      sts = flow_GetConPoint(event->con_create.source_object,
+      int sts = flow_GetConPoint(event->con_create.source_object,
           event->con_create.source_conpoint, &x, &y, &direction);
       if (EVEN(sts))
         return 1;
@@ -773,22 +758,21 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
       }
 
       /* Find the trace attributes */
-      flow_GetTraceAttr(event->con_create.source_object, object_str, attr_str,
-          &trace_type, &inverted);
+      FlowTraceAttr attr = flow_GetTraceAttr(event->con_create.source_object);
 
       /* Get attribute from connection point */
-      sts = flow_GetConPointTraceAttr(event->con_create.source_object,
-          event->con_create.source_conpoint, con_attr_str, &trace_type);
+      FlowTraceAttr con = flow_GetConPointTraceAttr(event->con_create.source_object,
+          event->con_create.source_conpoint);
       /* If "$object", use object trace attribute */
-      if (!streq(con_attr_str, "$object"))
-        strcpy(attr_str, con_attr_str);
+      if (!streq(con.attribute, "$object"))
+        strcpy(attr.attribute, con.attribute);
 
-      if (streq(attr_str, ""))
+      if (streq(attr.attribute, ""))
         return 1;
 
       flow_CreateNode(ctx, name, tractx->trace_analyse_nc, event->object.x,
           event->object.y, NULL, &n1);
-      flow_SetTraceAttr(n1, object_str, attr_str, trace_type, 0);
+      flow_SetTraceAttr(n1, attr.object, attr.attribute, attr.type, 0);
 
       flow_CreateCon(ctx, name, tractx->trace_con_cc,
           event->con_create.source_object, n1,
@@ -979,30 +963,25 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
     flow_Scroll(ctx, 0, 0.05);
     break;
   case flow_eEvent_TipText: {
-    flow_tTraceObj object_str;
-    flow_tTraceAttr attr_str;
-    flow_eTraceType trace_type;
     pwr_tAName aname;
     pwr_tAName name;
     char tiptext[512] = "";
     pwr_tStatus sts;
-    int inverted;
     char* s;
     bool is_plcmain = false;
     bool is_plcfo = false;
     unsigned int options;
 
-    tractx->get_trace_attr(event->object.object, object_str, attr_str,
-        &trace_type, &inverted, &options);
+    FlowTraceAttr attr = tractx->get_trace_attr(event->object.object, &options);
 
     if (tractx->m_has_host) {
-      if (str_StartsWith(object_str, "$host")) {
+      if (str_StartsWith(attr.object, "$host")) {
         /* Replace "$host" with hostname */
         strcpy(name, tractx->m_hostname);
-        strcat(name, &object_str[5]);
-      } else if (str_StartsWith(object_str, "$PlcFo:")) {
+        strcat(name, &attr.object[5]);
+      } else if (str_StartsWith(attr.object, "$PlcFo:")) {
         /* Replace "$PlcFo:" with fo name */
-        s = strchr(object_str, '.');
+        s = strchr(attr.object, '.');
         if (!s)
           strcpy(name, tractx->m_hostname);
         else {
@@ -1010,9 +989,9 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
           strcat(name, s);
         }
         is_plcfo = true;
-      } else if (str_StartsWith(object_str, "$PlcMain:")) {
+      } else if (str_StartsWith(attr.object, "$PlcMain:")) {
         /* Replace "$PlcMain:" with plcconnect name */
-        s = strchr(object_str, '.');
+        s = strchr(attr.object, '.');
         if (!s)
           strcpy(name, tractx->m_plcconnect);
         else {
@@ -1021,9 +1000,9 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
         }
         is_plcmain = true;
       } else
-        strcpy(name, object_str);
+        strcpy(name, attr.object);
     } else
-      strcpy(name, object_str);
+      strcpy(name, attr.object);
 
     if (!streq(name, "")) {
       strcpy(aname, name);
@@ -1056,9 +1035,9 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
         else
           s = name;
         strncat(tiptext, s, sizeof(tiptext) - strlen(tiptext) - 1);
-        if (!streq(attr_str, "")) {
+        if (!streq(attr.attribute, "")) {
           strcat(tiptext, ".");
-          strncat(tiptext, attr_str, sizeof(tiptext) - strlen(tiptext) - 1);
+          strncat(tiptext, attr.attribute, sizeof(tiptext) - strlen(tiptext) - 1);
         }
       } else if (is_plcmain) {
         if (!streq(tiptext, ""))
@@ -1068,9 +1047,9 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
         else
           s = name;
         strncat(tiptext, s, sizeof(tiptext) - strlen(tiptext) - 1);
-        if (!streq(attr_str, "")) {
+        if (!streq(attr.attribute, "")) {
           strcat(tiptext, ".");
-          strncat(tiptext, attr_str, sizeof(tiptext) - strlen(tiptext) - 1);
+          strncat(tiptext, attr.attribute, sizeof(tiptext) - strlen(tiptext) - 1);
         }
 
         // Write channel for signals
@@ -1153,14 +1132,10 @@ int RtTrace::get_objid(flow_tObject node, pwr_tObjid* oid)
 {
   pwr_tOName name;
   pwr_tOName object_name;
-  int sts;
-  flow_tTraceAttr attr_str;
-  flow_eTraceType trace_type;
-  int inverted;
   unsigned int options;
 
   /* Try flow node name */
-  sts = gdh_ObjidToName(objid, name, sizeof(name), cdh_mNName);
+  int sts = gdh_ObjidToName(objid, name, sizeof(name), cdh_mNName);
   if (EVEN(sts))
     return 1;
 
@@ -1171,10 +1146,9 @@ int RtTrace::get_objid(flow_tObject node, pwr_tObjid* oid)
   sts = gdh_NameToObjid(name, oid);
   if (EVEN(sts)) {
     /* Try trace object */
-    get_trace_attr(
-        node, object_name, attr_str, &trace_type, &inverted, &options);
+    FlowTraceAttr attr = get_trace_attr(node, &options);
 
-    sts = gdh_NameToObjid(object_name, oid);
+    sts = gdh_NameToObjid(attr.object, oid);
     if (EVEN(sts))
       return sts;
   }
@@ -1183,10 +1157,6 @@ int RtTrace::get_objid(flow_tObject node, pwr_tObjid* oid)
 
 int RtTrace::get_attrref(flow_tObject node, pwr_tAttrRef* aref)
 {
-  flow_tTraceObj object_str;
-  flow_tTraceAttr attr_str;
-  flow_eTraceType trace_type;
-  int inverted;
   pwr_sAttrRef attrref;
   int sts;
   pwr_tAName name;
@@ -1196,25 +1166,25 @@ int RtTrace::get_attrref(flow_tObject node, pwr_tAttrRef* aref)
   if (flow_GetNodeGroup(node) == flow_eNodeGroup_Trace)
     return 0;
 
-  get_trace_attr(node, object_str, attr_str, &trace_type, &inverted, &options);
+  FlowTraceAttr attr = get_trace_attr(node, &options);
 
   if (m_has_host) {
-    if (str_StartsWith(object_str, "$host")) {
+    if (str_StartsWith(attr.object, "$host")) {
       /* Replace "$host" with hostname */
       strcpy(name, m_hostname);
-      strcat(name, &object_str[5]);
-    } else if (str_StartsWith(object_str, "$PlcFo:")) {
+      strcat(name, &attr.object[5]);
+    } else if (str_StartsWith(attr.object, "$PlcFo:")) {
       /* Replace "$PlcFo:" with fo name */
-      s = strchr(object_str, '.');
+      s = strchr(attr.object, '.');
       if (!s)
         strcpy(name, m_hostname);
       else {
         strcpy(name, m_hostname);
         strcat(name, s);
       }
-    } else if (str_StartsWith(object_str, "$PlcMain:")) {
+    } else if (str_StartsWith(attr.object, "$PlcMain:")) {
       /* Replace "$PlcMain:" with plcconnect name */
-      s = strchr(object_str, '.');
+      s = strchr(attr.object, '.');
       if (!s)
         strcpy(name, m_plcconnect);
       else {
@@ -1222,14 +1192,14 @@ int RtTrace::get_attrref(flow_tObject node, pwr_tAttrRef* aref)
         strcat(name, s);
       }
     } else
-      strcpy(name, object_str);
+      strcpy(name, attr.object);
   } else
-    strcpy(name, object_str);
+    strcpy(name, attr.object);
 
   if (options & trace_mAttrOptions_MenuAttr) {
-    if (!streq(attr_str, "")) {
+    if (!streq(attr.attribute, "")) {
       strcat(name, ".");
-      strcat(name, attr_str);
+      strcat(name, attr.attribute);
 
       sts = gdh_NameToAttrref(pwr_cNObjid, name, &attrref);
       if (EVEN(sts))
@@ -1403,15 +1373,6 @@ int RtTrace::trace_stop()
 
 void RtTrace::changevalue(flow_tNode fnode)
 {
-  pwr_tStatus sts;
-  char name[200];
-  pwr_tBoolean value;
-  flow_tTraceObj object_str;
-  flow_tTraceAttr attr_str;
-  flow_eTraceType trace_type;
-  int inverted;
-  unsigned int options;
-
   if (is_authorized_cb) {
     if (!(is_authorized_cb)(
             parent_ctx, pwr_mAccess_RtWrite | pwr_mAccess_System))
@@ -1428,14 +1389,15 @@ void RtTrace::changevalue(flow_tNode fnode)
     return;
   } else {
     /* Toggle the value, start to get the current value */
-    get_trace_attr(
-        fnode, object_str, attr_str, &trace_type, &inverted, &options);
-    strcpy(name, object_str);
+    unsigned int options;
+    FlowTraceAttr attr = get_trace_attr(fnode, &options);
+    char name[200];
+    strcpy(name, attr.object);
     strcat(name, ".");
-    strcat(name, attr_str);
-    switch (trace_type) {
-    case flow_eTraceType_Boolean:
-      sts = gdh_GetObjectInfo(name, &value, sizeof(value));
+    strcat(name, attr.attribute);
+    if (attr.type == flow_eTraceType_Boolean) {
+      pwr_tBoolean value;
+      int sts = gdh_GetObjectInfo(name, &value, sizeof(value));
       if (EVEN(sts)) {
         return;
       }
@@ -1446,12 +1408,7 @@ void RtTrace::changevalue(flow_tNode fnode)
       else
         value = 0;
 
-      sts = gdh_SetObjectInfo(name, &value, sizeof(value));
-      if (EVEN(sts)) {
-        return;
-      }
-      break;
-    default:;
+      gdh_SetObjectInfo(name, &value, sizeof(value));
     }
   }
 }

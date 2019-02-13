@@ -115,7 +115,7 @@ static pwr_tStatus CopyDevice(ldh_sMenuCall* ip)
   pwr_tAttrRef aref[2];
   pwr_tFileName datafile_src, datafile_dest;
   pwr_tFileName found_file;
-  pwr_tCmd cmd;
+  char cmd[520];
 
   // Check if data file exist
   sprintf(datafile_src, "$pwrp_load/pwr_pn_%s.xml",

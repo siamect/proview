@@ -360,7 +360,8 @@ pwr_tStatus wb_revision::create(int all, char* name, char* descr)
 
 pwr_tStatus wb_revision::restore(char* name)
 {
-  pwr_tFileName db_dir, fname;
+  pwr_tFileName db_dir;
+  char fname[280];
   int sts;
   pwr_tTime t;
   pwr_tCmd cmd;
@@ -538,7 +539,8 @@ pwr_tStatus wb_revision::restore(char* name)
 
 pwr_tStatus wb_revision::build_all()
 {
-  pwr_tFileName db_dir, fname;
+  pwr_tFileName db_dir;
+  char fname[280];
   int sts;
   pwr_tTime t;
   pwr_tCmd cmd;
@@ -1014,7 +1016,6 @@ bool wb_version_manager_git::git_found()
 void wb_version_manager_git::init()
 {
   pwr_tFileName fname;
-  pwr_tCmd cmd;
   pwr_tTime t;
   bool new_git = false;
 
@@ -1026,8 +1027,7 @@ void wb_version_manager_git::init()
   if (EVEN(dcli_file_time(m_git_dir, &t))) {
     // No git repository found, init git
 
-    strcpy(cmd, "git init $pwrp_root/src");
-    system(cmd);
+    system("git init $pwrp_root/src");
     new_git = true;
   }
   dcli_translate_filename(fname, "$pwrp_root/src/.gitignore");
@@ -1073,6 +1073,7 @@ db/rt_eventlog_info.txt"
   }
 
   if (new_git) {
+    char cmd[570];
     snprintf(cmd, sizeof(cmd), "git --git-dir=%s --work-tree=%s add .",
         m_git_dir, m_work_tree);
     system(cmd);
@@ -1088,7 +1089,7 @@ db/rt_eventlog_info.txt"
 int wb_version_manager_git::store_revision(
     char* name, char* descr, bool new_branch)
 {
-  pwr_tCmd cmd;
+  char cmd[560];
   int sts;
 
   // Commit all changes
@@ -1131,7 +1132,7 @@ int wb_version_manager_git::store_revision(
 int wb_version_manager_git::restore_revision(
     char* name, char* branch, int checkout_master, int checkout_branch)
 {
-  pwr_tCmd cmd;
+  char cmd[560];
   int sts;
 
   if (checkout_master) {
@@ -1161,7 +1162,7 @@ int wb_version_manager_git::restore_revision(
 
 int wb_version_manager_git::get_current(char* name)
 {
-  pwr_tCmd cmd;
+  char cmd[840];
   int sts;
   pwr_tFileName fname = "$pwrp_tmp/current_tag.dat";
   char line[80];
@@ -1196,7 +1197,7 @@ int wb_version_manager_git::get_current(char* name)
 
 int wb_version_manager_git::check(std::vector<wb_rev_item>& v)
 {
-  pwr_tCmd cmd;
+  char cmd[810];
   int sts;
   pwr_tFileName fname = "$pwrp_tmp/git_tags.dat";
   char line[80];
@@ -1249,7 +1250,7 @@ int wb_version_manager_git::check(std::vector<wb_rev_item>& v)
 
 int wb_version_manager_git::check_add(char* filename)
 {
-  pwr_tCmd cmd;
+  char cmd[850];
   pwr_tFileName fname;
   int sts;
 

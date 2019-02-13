@@ -1048,7 +1048,7 @@ void TblNav::create_objectlist(
         sizeof(object.description));
     object.modtime = histItemPtr->modtime;
     object.oid = histItemPtr->oid;
-    strncpy(object.oname, histItemPtr->oname, sizeof(histItemPtr->oname));
+    strncpy(object.oname, histItemPtr->oname, sizeof(object.oname));
     object.options = histItemPtr->options;
     object.scantime = histItemPtr->scantime;
     object.storagetime = histItemPtr->storagetime;

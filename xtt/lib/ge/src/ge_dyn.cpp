@@ -2378,7 +2378,7 @@ void GeDyn::syntax_check_attribute(grow_tObject object, const char* text,
 
     sts = graph->check_ldh_object(refname, &a_type);
     if (EVEN(sts)) {
-      char msg[300];
+      char msg[420];
       sprintf(msg, "%s \"%s\" not found", text, refname);
       graph->syntax_msg('W', object, msg);
       (*warning_cnt)++;
@@ -2438,7 +2438,7 @@ void GeDyn::syntax_check_attribute(grow_tObject object, const char* text,
     if (!streq(parsed_name, "")) {
       sts = graph->check_ldh_object(parsed_name, &a_type);
       if (EVEN(sts)) {
-        char msg[300];
+        char msg[420];
         sprintf(msg, "%s \"%s\" not found", text, parsed_name);
         graph->syntax_msg('W', object, msg);
         (*warning_cnt)++;
@@ -2455,7 +2455,7 @@ void GeDyn::syntax_check_attribute(grow_tObject object, const char* text,
               eq2 = 1;
           }
           if (!(eq1 && eq2)) {
-            char msg[300];
+            char msg[430];
             sprintf(msg, "%s type is not correct \"%s\"", text, parsed_name);
             graph->syntax_msg('E', object, msg);
             (*error_cnt)++;
@@ -9746,9 +9746,9 @@ int GeBar::scan(grow_tObject object)
   if (!p)
     return 1;
 
-  if (max_value_p || min_value_p) {    
+  if (max_value_p || min_value_p) {
     bool update = false;
-			
+
     pwr_tFloat32 maxval;
     pwr_tFloat32 minval;
     if (max_value_p) {
@@ -10294,9 +10294,9 @@ int GeTrend::scan(grow_tObject object)
   if (trend_hold)
     return 1;
 
-  if (max_value1_p || min_value1_p) {    
+  if (max_value1_p || min_value1_p) {
     bool update = false;
-			
+
     pwr_tFloat32 maxval;
     pwr_tFloat32 minval;
     if (max_value1_p) {
@@ -10326,9 +10326,9 @@ int GeTrend::scan(grow_tObject object)
     }
   }
 
-  if (max_value2_p || min_value2_p) {    
+  if (max_value2_p || min_value2_p) {
     bool update = false;
-			
+
     pwr_tFloat32 maxval;
     pwr_tFloat32 minval;
     if (max_value2_p) {
@@ -11498,7 +11498,7 @@ int GeXY_Curve::syntax_check(
     grow_tObject object, int* error_cnt, int* warning_cnt)
 {
   char name[40];
-  char atext[40];
+  char atext[60];
 
   if (instance == 1)
     strcpy(name, "XY_Curve");
@@ -12163,7 +12163,7 @@ int GeTable::scan(grow_tObject object)
     return 1;
 
   int i, j, offs;
-  char buf[120];
+  char buf[256];
   int len;
 
   grow_SetDeferedRedraw(dyn->graph->grow->ctx);
@@ -14378,13 +14378,13 @@ void GeHostObject::set_attribute(
 {
   (*cnt)--;
   if (*cnt == 0) {
-    char msg[200];
     char* s;
 
     strncpy(hostobject, attr_name, sizeof(hostobject));
     if ((s = strrchr(hostobject, '.')))
       *s = 0;
 
+    char msg[20 + sizeof(hostobject) + 1];
     snprintf(msg, sizeof(msg), "HostObject.Object = %s", hostobject);
     msg[sizeof(msg) - 1] = 0;
     dyn->graph->message('I', msg);
@@ -14500,7 +14500,7 @@ int GeHostObject::syntax_check(
   }
   sts = dyn->graph->check_ldh_object(hostobject, &a_type);
   if (EVEN(sts)) {
-    char msg[300];
+    char msg[440];
     sprintf(msg, "HostObject.Object \"%s\" not found", hostobject);
     dyn->graph->syntax_msg('W', object, msg);
     (*warning_cnt)++;
@@ -14803,7 +14803,7 @@ int GeDigSound::syntax_check(
   } else {
     sts = dyn->graph->check_ldh_object(soundobject, &a_type);
     if (EVEN(sts)) {
-      char msg[300];
+      char msg[440];
       sprintf(msg, "DigSound.SoundObject \"%s\" not found", soundobject);
       dyn->graph->syntax_msg('W', object, msg);
       (*warning_cnt)++;
@@ -16034,12 +16034,13 @@ void GePopupMenu::set_attribute(
 {
   (*cnt)--;
   if (*cnt == 0) {
-    char msg[200];
     char* s;
 
     strncpy(ref_object, attr_name, sizeof(ref_object));
     if ((s = strchr(ref_object, '.')))
       *s = 0;
+
+    char msg[28 + sizeof(ref_object) + 1];
     snprintf(msg, sizeof(msg), "PopupMenu.ReferenceObject = %s", ref_object);
     msg[sizeof(msg) - 1] = 0;
     dyn->graph->message('I', msg);
@@ -16289,13 +16290,13 @@ int GePopupMenu::syntax_check(
 
       sts = dyn->graph->check_ldh_object(&ref_object[1], &a_type);
       if (EVEN(sts)) {
-        char msg[300];
+        char msg[440];
         sprintf(msg, "PopupMenu.ReferenceObject \"%s\" not found", ref_object);
         dyn->graph->syntax_msg('W', object, msg);
         (*warning_cnt)++;
       } else if (!(a_type == pwr_eType_Objid || a_type == pwr_eType_AttrRef
                      || a_type == pwr_eType_DataRef)) {
-        char msg[300];
+        char msg[440];
         sprintf(msg, "PopupMenu.ReferenceObject \"%s\" type error", ref_object);
         dyn->graph->syntax_msg('W', object, msg);
         (*warning_cnt)++;
@@ -16309,7 +16310,7 @@ int GePopupMenu::syntax_check(
 
       sts = dyn->graph->check_ldh_object(parsed_name, &a_type);
       if (EVEN(sts)) {
-        char msg[300];
+        char msg[440];
         sprintf(msg, "PopupMenu.ReferenceObject \"%s\" not found", ref_object);
         dyn->graph->syntax_msg('W', object, msg);
         (*warning_cnt)++;
@@ -18733,7 +18734,7 @@ int GeOpenGraph::action(grow_tObject object, glow_tEvent event)
       break;
 
     if (dyn->graph->command_cb) {
-      char command[400];
+      char command[430];
       char cmd[400] = "";
 
       if (!streq(graph_object, ""))
@@ -18935,8 +18936,7 @@ int GeOpenURL::action(grow_tObject object, glow_tEvent event)
 int GeOpenURL::export_java(
     grow_tObject object, std::ofstream& fp, bool first, char* var_name)
 {
-  char command[200];
-
+  char command[220];
   sprintf(command, "open url \"%s\"", url);
 
   if (first)
@@ -20152,12 +20152,13 @@ void GeFastCurve::set_attribute(
 {
   (*cnt)--;
   if (*cnt == 0) {
-    char msg[200];
     char* s;
 
     strncpy(fast_object, attr_name, sizeof(fast_object));
     if ((s = strchr(fast_object, '.')))
       *s = 0;
+
+    char msg[23 + sizeof(fast_object) +1];
     snprintf(msg, sizeof(msg), "FastCurve.FastObject = %s", fast_object);
     msg[sizeof(msg) - 1] = 0;
     dyn->graph->message('I', msg);
@@ -20547,7 +20548,7 @@ int GeFastCurve::syntax_check(
   } else {
     sts = dyn->graph->check_ldh_object(fast_object, &a_type);
     if (EVEN(sts)) {
-      char msg[300];
+      char msg[440];
       sprintf(msg, "FastCurve.FastObject \"%s\" not found", fast_object);
       dyn->graph->syntax_msg('W', object, msg);
       (*warning_cnt)++;
@@ -23019,7 +23020,8 @@ int GeMethodToolbar::action(grow_tObject object, glow_tEvent event)
   case glow_eEvent_Key_Return:
   case glow_eEvent_MB1Click: {
     int sts;
-    pwr_tCmd cmd, command;
+    pwr_tCmd cmd;
+    char command[512];
 
     if (event->toolbar.category == 1) {
       sprintf(command, "call method/function=\"%s\"/object=%s",
@@ -23057,7 +23059,7 @@ int GeMethodToolbar::syntax_check(
   } else {
     sts = dyn->graph->check_ldh_object(method_object, &a_type);
     if (EVEN(sts)) {
-      char msg[300];
+      char msg[440];
       sprintf(msg, "MethodToolbar.Object \"%s\" not found", method_object);
       dyn->graph->syntax_msg('W', object, msg);
       (*warning_cnt)++;
@@ -23384,7 +23386,8 @@ int GeMethodPulldownMenu::action(grow_tObject object, glow_tEvent event)
       break;
 
     int sts;
-    pwr_tCmd cmd, command;
+    pwr_tCmd cmd;
+    char command[512];
     int idx = 0;
     int found = 0;
 
@@ -23480,7 +23483,7 @@ int GeMethodPulldownMenu::syntax_check(
   } else {
     sts = dyn->graph->check_ldh_object(method_object, &a_type);
     if (EVEN(sts)) {
-      char msg[300];
+      char msg[440];
       sprintf(msg, "MethodPulldownMenu.Object \"%s\" not found", method_object);
       dyn->graph->syntax_msg('W', object, msg);
       (*warning_cnt)++;

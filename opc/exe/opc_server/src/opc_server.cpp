@@ -1684,7 +1684,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap* soap,
   } else {
     // Return attributes and children
     pwr_tOName pname;
-    pwr_tOName itemname;
+    char itemname[220];
     pwr_tObjName aname;
     gdh_sAttrDef* bd;
     int rows;

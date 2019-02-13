@@ -231,7 +231,7 @@ int sev_dbms_env::open(const char *v_host, const char *v_user, const char *v_pas
   socket(v_socket);
 
   m_con = mysql_init(NULL);
-    
+
   MYSQL *con = mysql_real_connect(m_con, host(), user(), passwd(), dbName(), port(), socket(), 0);
   if (con == 0) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
@@ -240,7 +240,7 @@ int sev_dbms_env::open(const char *v_host, const char *v_user, const char *v_pas
   }
 
   char sql[255];
-      
+
   sprintf(sql, "use %s", dbName());
   int rc = mysql_query(m_con, sql);
   if (rc) {
@@ -250,7 +250,7 @@ int sev_dbms_env::open(const char *v_host, const char *v_user, const char *v_pas
     return rc;
   } else {
     printf("database open %s\n", sql);
-  }  
+  }
 
   return 0;
 }
@@ -400,7 +400,7 @@ int sev_dbms_env::updateDBToSevVersion2(void)
   createSevVersion2Tables();
 
   int rc;
-  char query[300];
+  char query[530];
 
   sprintf(query, "select id,tablename,vid,oix from items order by id");
 
@@ -942,7 +942,7 @@ int sev_dbms::delete_table(pwr_tStatus* sts, char* tablename)
 int sev_dbms::create_event_table(
     pwr_tStatus* sts, char* tablename, pwr_tMask options)
 {
-  char query[400];
+  char query[540];
   char timeformatstr[80];
   char jumpstr[80];
   char idtypestr[20];
@@ -1221,7 +1221,7 @@ int sev_dbms::write_value(pwr_tStatus* sts, int item_idx, int attr_idx,
     return store_objectvalue(sts, thread, item_idx, attr_idx, time, buf,
         m_items[item_idx].old_value, size);
   }
-  char query[400];
+  char query[1150];
   char bufstr[512];
   char timstr[40];
   int update_time_only = 0;
@@ -1714,7 +1714,7 @@ int sev_dbms::get_id_range(pwr_tStatus* sts, void* thread, sev_item* item,
     pwr_tMask options, unsigned int* first, unsigned int* last)
 {
   int rows;
-  char query[100];
+  char query[300];
   MYSQL* con;
 
   if (thread)
@@ -1807,7 +1807,7 @@ int sev_dbms::get_time_range(pwr_tStatus* sts, sev_item* item,
     pwr_tMask options, pwr_tTime* first, pwr_tTime* last)
 {
   int rows = 0;
-  char query[100];
+  char query[320];
 
   if (first) {
     if (options & pwr_mSevOptionsMask_HighTimeResolution)
@@ -1943,7 +1943,7 @@ int sev_dbms::get_values(pwr_tStatus* sts, void* thread, pwr_tOid oid,
     return 0;
   }
 
-  char query[400];
+  char query[700];
   char starttimstr[40];
   char endtimstr[40];
   int total_rows;
@@ -2468,7 +2468,7 @@ int sev_dbms::get_values(pwr_tStatus* sts, void* thread, pwr_tOid oid,
 int sev_dbms::store_event(
     pwr_tStatus* sts, void* thread, int item_idx, sev_event* ep)
 {
-  char query[400];
+  char query[800];
   char timstr[40];
   char eventtext[100];
   int rc;
@@ -4000,7 +4000,7 @@ int sev_dbms::get_objectvalues(pwr_tStatus* sts, void* thread, sev_item* item,
     unsigned int size, pwr_tTime* starttime, pwr_tTime* endtime, int maxsize,
     pwr_tTime** tbuf, void** vbuf, unsigned int* bsize)
 {
-  char query[200];
+  char query[300];
   std::string queryStr;
   char starttimstr[40];
   char endtimstr[40];

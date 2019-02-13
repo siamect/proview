@@ -114,7 +114,7 @@ int XttVideoMgmAimetis::check_session()
 
 int XttVideoMgmAimetis::authorize(char* user, char* password)
 {
-  pwr_tCmd cmd;
+  char cmd[430];
   pwr_tFileName fname;
   int sts;
 
@@ -161,7 +161,7 @@ int XttVideoMgmAimetis::authorize(char* user, char* password)
 
 int XttVideoMgmAimetis::get_panels()
 {
-  pwr_tCmd cmd;
+  char cmd[460];
   pwr_tFileName fname;
   int sts;
 
@@ -267,7 +267,7 @@ int XttVideoMgmAimetis::get_panels()
 
 int XttVideoMgmAimetis::get_cameras()
 {
-  pwr_tCmd cmd;
+  char cmd[460];
   pwr_tFileName fname;
   int sts;
 
@@ -355,7 +355,7 @@ int XttVideoMgmAimetis::get_cameras()
 
 int XttVideoMgmAimetis::get_camera_image(int idx, const char* jpgfile)
 {
-  pwr_tCmd cmd;
+  char cmd[540];
   pwr_tFileName fname;
   char* decoding_table;
   static char encoding_table[] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
@@ -458,7 +458,7 @@ int XttVideoMgmAimetis::get_camera_image(int idx, const char* jpgfile)
 int XttVideoMgmAimetis::assign_camera(
     int panel_idx, int cell_idx, int camera_idx)
 {
-  char cmd[400];
+  char cmd[640];
   pwr_tFileName fname;
 
   check_session();
@@ -507,7 +507,7 @@ int XttVideoMgmAimetis::assign_camera(
 
 int XttVideoMgmAimetis::set_camera_fullscreen(int camera_idx)
 {
-  char cmd[400];
+  char cmd[550];
   pwr_tFileName fname;
 
   if (m_op->CurrentPanel == -1) {
@@ -564,7 +564,7 @@ int XttVideoMgmAimetis::set_camera_fullscreen(int camera_idx)
 
 int XttVideoMgmAimetis::display_panel(int panel_idx)
 {
-  char cmd[400];
+  char cmd[550];
   pwr_tFileName fname;
 
   if (panel_idx < 0 || panel_idx >= (int)m_panel.size())
@@ -736,7 +736,7 @@ int XttVideoMgmAimetis::create_panel(char* name)
 
 int XttVideoMgmAimetis::delete_panel(char* name)
 {
-  char cmd[400];
+  char cmd[550];
   pwr_tFileName fname;
   int pix = -1;
 

@@ -1239,7 +1239,7 @@ int WItemObjectName::open_children(double x, double y)
             item_eType_ObjectName, 0, 32, 0, (char*)"", oname, 0, 0, idx++,
             node, flow_eDest_IntoLast);
       }
-    } catch (wb_error e) {
+    } catch (wb_error& e) {
       brow_ResetNodraw(brow->ctx);
       brow_Redraw(brow->ctx, node_y);
       return WNAV__NOCHILDREN;
@@ -1865,7 +1865,7 @@ int WItemAttr::open_children(double x, double y)
             }
           }
         }
-      } catch (wb_error e) {
+      } catch (wb_error& e) {
         brow_ResetNodraw(brow->ctx);
         brow_Redraw(brow->ctx, node_y);
         return WNAV__NOCHILDREN;
@@ -3480,7 +3480,7 @@ int WItemAttrArrayElem::open_children(double x, double y)
             }
           }
         }
-      } catch (wb_error e) {
+      } catch (wb_error& e) {
         brow_ResetNodraw(brow->ctx);
         brow_Redraw(brow->ctx, node_y);
         return WNAV__NOCHILDREN;

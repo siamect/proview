@@ -1138,7 +1138,7 @@ void ccm_free_list(ccm_sOperand* list)
 int ccm_create_list(ccm_tFileCtx filectx, char* line, ccm_sOperand** list)
 {
   ccm_tRowCtx rowctx;
-  char msg[80];
+  char msg[120];
   int sts;
 
   rowctx = calloc(1, sizeof(*rowctx));

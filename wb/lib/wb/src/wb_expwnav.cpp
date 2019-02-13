@@ -956,7 +956,7 @@ pwr_tStatus WbExpWNav::exp()
 {
   int sts;
   ItemExp* item;
-  pwr_tCmd cmd;
+  char cmd[660];
   brow_tNode node;
   int rval;
 
@@ -974,7 +974,7 @@ pwr_tStatus WbExpWNav::exp()
         printf("%s\n", cmd);
         sts = system(cmd);
         if (sts != 0) {
-          char msg[250];
+          char msg[690];
           snprintf(
               msg, sizeof(msg), "Export error %d, %s", WEXITSTATUS(sts), cmd);
           MsgWindow::message('E', msg, msgw_ePop_Default);
@@ -1017,7 +1017,7 @@ pwr_tStatus WbExpWNav::exp()
             }
           }
           if (sts != 0) {
-            char msg[250];
+            char msg[690];
             snprintf(
                 msg, sizeof(msg), "Build error %d, %s", WEXITSTATUS(sts), cmd);
             MsgWindow::message('E', msg, msgw_ePop_Default);
@@ -1041,7 +1041,7 @@ pwr_tStatus WbExpWNav::exp()
         printf("%s\n", cmd);
         sts = system(cmd);
         if (sts != 0) {
-          char msg[250];
+          char msg[690];
           snprintf(
               msg, sizeof(msg), "Build error %d, %s", WEXITSTATUS(sts), cmd);
           MsgWindow::message('E', msg, msgw_ePop_Default);
@@ -1055,7 +1055,7 @@ pwr_tStatus WbExpWNav::exp()
         printf("%s\n", cmd);
         sts = system(cmd);
         if (sts != 0) {
-          char msg[250];
+          char msg[690];
           snprintf(
               msg, sizeof(msg), "Build error %d, %s", WEXITSTATUS(sts), cmd);
           MsgWindow::message('E', msg, msgw_ePop_Default);

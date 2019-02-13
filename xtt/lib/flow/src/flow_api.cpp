@@ -564,12 +564,9 @@ void flow_SetTraceAttr(flow_tObject object, char* trace_object,
           trace_object, trace_attribute, trace_attr_type, inverted);
 }
 
-void flow_GetTraceAttr(flow_tObject object, char* trace_object,
-    char* trace_attribute, flow_eTraceType* trace_attr_type, int* inverted)
+FlowTraceAttr flow_GetTraceAttr(flow_tObject object)
 {
-  ((FlowArrayElem*)object)
-      ->get_trace_attr(
-          trace_object, trace_attribute, trace_attr_type, inverted);
+  return ((FlowArrayElem*)object)->get_trace_attr();
 }
 
 int flow_TraceInit(flow_tCtx ctx,
@@ -777,10 +774,9 @@ int flow_FindByNameNoCase(flow_tCtx ctx, char* name, flow_tObject* object)
   return ctx->find_by_name_no_case(name, (FlowArrayElem**)object);
 }
 
-int flow_GetConPointTraceAttr(
-    flow_tObject object, int num, char* trace_attr, flow_eTraceType* type)
+FlowTraceAttr flow_GetConPointTraceAttr(flow_tObject object, int num)
 {
-  return ((FlowNode*)object)->get_conpoint_trace_attr(num, trace_attr, type);
+  return ((FlowNode*)object)->get_conpoint_trace_attr(num);
 }
 
 int flow_GetConPoint(

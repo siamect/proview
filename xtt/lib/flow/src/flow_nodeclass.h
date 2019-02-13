@@ -94,7 +94,7 @@ public:
   void close_annotation_input(void* node, int num);
   int get_annotation_input(void* node, int num, char** text);
   void move_widgets(void* node, int x, int y);
-  int get_conpoint_trace_attr(int num, char* trace_attr, flow_eTraceType* type);
+  FlowTraceAttr get_conpoint_trace_attr(int num);
   void set_no_con_obstacle(int no_obstacle)
   {
     no_con_obstacle = no_obstacle;

@@ -133,14 +133,12 @@ void remove_node_ok(void* ctx, void* data)
 void Nodelist::activate_remove_node()
 {
   static char node_name[80];
-  char msg[100];
-  int sts;
-
-  sts = nodelistnav->get_selected_node(node_name);
+  int sts = nodelistnav->get_selected_node(node_name);
   if (EVEN(sts)) {
     nodelistnav->wow->DisplayError("Remove Node", "Select a node");
     return;
   }
+  char msg[27 + sizeof(node_name) + 1];
   sprintf(msg, "Do you want to remove node %s", node_name);
 
   nodelistnav->wow->DisplayQuestion(

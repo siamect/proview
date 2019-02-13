@@ -199,7 +199,7 @@ void GsdAttr::activate_cmd_ok()
 {
   int sts;
   int idx;
-  char msg[80];
+  char msg[130];
 
   if (save_cb)
   {
@@ -241,7 +241,7 @@ void GsdAttr::activate_cmd_apply()
 {
   int sts;
   int idx;
-  char msg[80];
+  char msg[130];
 
   if (save_cb)
   {

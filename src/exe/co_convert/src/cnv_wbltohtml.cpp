@@ -370,10 +370,10 @@ int CnvWblToHtml::close()
     fp_js_group[i].close();
   }
 
-  char cmd[600];
-  snprintf(cmd, sizeof(cmd), "if [ -e %s/../../orm_menu.js ]; then cat "
-                             "%s/*.jsf %s/../../orm_menu.js > %s/menu.js; fi",
-      ctx->dir, ctx->dir, ctx->dir, ctx->dir);
+  const char* cmd1 = "if [ -e %s/../../orm_menu.js ]; then cat "
+                     "%s/*.jsf %s/../../orm_menu.js > %s/menu.js; fi";
+  char cmd[sizeof(cmd1) + (sizeof(ctx->dir) - 2) * 4];
+  snprintf(cmd, sizeof(cmd), cmd1, ctx->dir, ctx->dir, ctx->dir, ctx->dir);
   system(cmd);
 
   ctx->print_depend();
@@ -788,7 +788,7 @@ int CnvWblToHtml::attribute_exec()
 {
   int i;
   char txt[200];
-  char typeref_href[80];
+  char typeref_href[90];
   char attrtype_href[80];
   int lng_sts = 1;
 
@@ -1053,7 +1053,7 @@ int CnvWblToHtml::typedef_exec()
   char low_volume_name[80];
   char low_class_name[80];
   char txt[200];
-  char code_aref[200];
+  char code_aref[350];
   int lng_sts = 1;
 
   if (Lng::current() != lng_eLanguage_en_US)

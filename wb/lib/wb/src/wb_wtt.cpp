@@ -1311,7 +1311,7 @@ void Wtt::activate_configure()
 
 void Wtt::activate_utilities()
 {
-  char title[80];
+  char title[190];
   int sts;
   ldh_sVolumeInfo info;
   char volname[80];
@@ -1889,7 +1889,7 @@ void Wtt::activate_openclasseditor()
   char fname[200];
   int size;
   pwr_eClassVolumeDatabaseEnum* dbenum;
-  pwr_tCmd cmd;
+  char cmd[430];
 
   if (!ldhses) {
     message('E', "No volume is attached");

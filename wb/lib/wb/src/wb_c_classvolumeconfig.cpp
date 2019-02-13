@@ -56,7 +56,7 @@ static pwr_tStatus EditClassVolume(ldh_sMenuCall* ip)
   int sts;
   char name[120];
   char fname[200];
-  char cmd[200];
+  char cmd[510];
   pwr_eClassVolumeDatabaseEnum* dbenum;
 
   sts = ldh_ObjidToName(ip->PointedSession, ip->Pointed.Objid, ldh_eName_Object,

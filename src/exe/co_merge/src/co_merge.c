@@ -103,7 +103,6 @@ int main(int argc, char* argv[])
   int mtabcnt = 0;
   int i;
   int idx;
-  pwr_tCmd cmd;
   pwr_tFileName incdir;
   pwr_tFileName cfile;
   pwr_tFileName ofile;
@@ -116,24 +115,19 @@ int main(int argc, char* argv[])
   int in_if = 0;
 #if defined OS_LINUX
   char os[] = "OS_LINUX";
-  char dos[] = "-DOS_LINUX";
-  char cflags[] = "";
 #elif defined OS_MACOS
   char os[] = "OS_MACOS";
-  char dos[] = "-DOS_MACOS";
-  char cflags[] = "";
 #elif defined OS_FREEBSD
   char os[] = "OS_FREEBSD";
-  char dos[] = "-DOS_FREEBSD";
-  char cflags[] = "";
 #elif defined OS_OPENBSD
   char os[] = "OS_OPENBSD";
-  char dos[] = "-DOS_OPENBSD";
-  char cflags[] = "";
 #elif defined OS_CYGWIN
   char os[] = "OS_CYGWIN";
-  char dos[] = "-DOS_CYGWIN";
+#endif
+#if defined OS_CYGWIN
   char cflags[] = "-I/usr/include/tirpc";
+#else
+  char cflags[] = "";
 #endif
   if (argc < 4) {
     usage();
@@ -289,14 +283,15 @@ int main(int argc, char* argv[])
   }
 
   dcli_translate_filename(incdir, "$pwr_einc");
+  char cmd[1050];
   switch (mtype) {
   case merge_eMtype_WbBase:
-    snprintf(cmd, sizeof(cmd), "%s -c %s %s -I%s %s -o %s %s", pwre_cxx,
-        getenvsafe("cross_compile"), cflags, incdir, dos, ofile, cfile);
+    snprintf(cmd, sizeof(cmd), "%s -c %s %s -I%s -D%s -o %s %s", pwre_cxx,
+        getenvsafe("cross_compile"), cflags, incdir, os, ofile, cfile);
     break;
   default:
-    snprintf(cmd, sizeof(cmd), "%s -c %s %s -I%s %s -o %s %s", pwre_cc,
-        getenvsafe("cross_compile"), cflags, incdir, dos, ofile, cfile);
+    snprintf(cmd, sizeof(cmd), "%s -c %s %s -I%s -D%s -o %s %s", pwre_cc,
+        getenvsafe("cross_compile"), cflags, incdir, os, ofile, cfile);
   }
   if (arg_verbose)
     printf("co_merge: %s\n", cmd);

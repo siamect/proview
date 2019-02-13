@@ -638,7 +638,7 @@ void wb_print_wbl::printBody(
       if (cdh_tidIsCid(bd[i].Par->Param.TypeRef)) {
         if (bd[i].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
           for (unsigned int j = 0; j < bd[i].Par->Param.Info.Elements; j++) {
-            pwr_tOName aname;
+            char aname[220];
             sprintf(aname, "%s[%d]", bd[i].ParName, j);
             printClass(vol, &bd[i], &body[bd[i].Par->Param.Info.Offset]
                     + bd[i].Par->Param.Info.Size
@@ -821,7 +821,7 @@ void wb_print_wbl::printClass(wb_volume& vol, ldh_sParDef* par_bd, char* body,
     case pwr_eClass_Output:
     case pwr_eClass_Param:
       if (cdh_tidIsCid(bd[i].Par->Param.TypeRef)) {
-        pwr_tOName aname;
+        char aname[210];
         if (bd[i].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
           for (unsigned int j = 0; j < bd[i].Par->Param.Info.Elements; j++) {
             sprintf(aname, "%s.%s[%d]", par_path, bd[i].ParName, j);
@@ -873,7 +873,7 @@ void wb_print_wbl::printClass(wb_volume& vol, ldh_sParDef* par_bd, char* body,
                    bd[i].Par->Param.Info.Size, bd[i].Par->Param.Info.Type)
                 != 0) {
           if (bd[i].Par->Param.Info.Type == pwr_eType_Text) {
-            pwr_tOName aname;
+            char aname[210];
             sprintf(aname, "%s.%s", par_path, bd[i].ParName);
             printText(vol, aname, &body[bd[i].Par->Param.Info.Offset],
                 bd[i].Par->Param.Info.Size);

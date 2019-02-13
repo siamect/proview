@@ -518,7 +518,7 @@ void wb_erep::loadCommonMeta(pwr_tStatus* status)
       try {
         vrep->load();
         addDbs(&sts, vrep);
-        char buff[256];
+        char buff[270];
         if (cdh_isClassVolumeClass(vrep->cid()))
           sprintf(buff, "Global class volume \"%s\" loaded from \"%s\"",
               vrep->dbsenv()->vp->name, vname);
@@ -782,7 +782,7 @@ void wb_erep::loadMeta(pwr_tStatus* status, char* db)
           int open_loadfile = m_options & ldh_mWbOption_OpenDbs ? 1 : 0;
 
           if (wb_dblock::is_locked(vname, uname) && !open_loadfile) {
-            char msg[120];
+            char msg[190];
 
             sprintf(
                 msg, "Database %s is locked by user %s", vol_array[0], uname);
@@ -1378,7 +1378,7 @@ void wb_erep::checkVolume(pwr_tStatus* sts, pwr_tVid vid,
     if (carray[i].m_vid == vcheck.m_vid) {
       found = true;
       if (carray[i].m_time.tv_sec != vcheck.m_time.tv_sec) {
-        char msg[200];
+        char msg[280];
         sprintf(msg, "Version mismatch volume %s in %s and %s", vcheck.m_vname,
             vcheck.m_filename, carray[i].m_filename);
         MsgWindow::message('E', msg, msgw_ePop_No);
@@ -1414,7 +1414,7 @@ void wb_erep::checkVolume(pwr_tStatus* sts, pwr_tVid vid,
     for (int j = 0; j < (int)carray.size(); j++) {
       if (carray[j].m_vid == volref[i].vid) {
         if (carray[j].m_time.tv_sec != volref[i].version.tv_sec) {
-          char msg[200];
+          char msg[280];
           sprintf(msg, "Version mismatch volume %s in %s and %s",
               volref[i].name, vcheck.m_filename, carray[j].m_filename);
           MsgWindow::message('E', msg, msgw_ePop_No);

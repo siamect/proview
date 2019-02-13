@@ -865,13 +865,14 @@ void FlowNode::set_trace_attr(const char* object, const char* attribute,
         (void*)this, trace_object, trace_attribute, trace_attr_type, &trace_p);
 }
 
-void FlowNode::get_trace_attr(
-    char* object, char* attribute, flow_eTraceType* type, int* inverted)
+FlowTraceAttr FlowNode::get_trace_attr()
 {
-  strncpy(object, trace_object, sizeof(trace_object));
-  strncpy(attribute, trace_attribute, sizeof(trace_attribute));
-  *type = trace_attr_type;
-  *inverted = trace_inverted;
+  FlowTraceAttr attr;
+  strncpy(attr.object, trace_object, sizeof(attr.object));
+  strncpy(attr.attribute, trace_attribute, sizeof(attr.attribute));
+  attr.type = trace_attr_type;
+  attr.inverted = trace_inverted;
+  return attr;
 }
 
 void FlowNode::trace_scan()
