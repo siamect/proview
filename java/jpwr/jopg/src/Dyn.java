@@ -8508,17 +8508,17 @@ public class Dyn {
 		double[] dval = new double[GrowPie.PIE_MAX_SECTORS];
 		if ( fix_range != 0|| sectors == 1) {
 		    for ( int i = 0; i < sectors; i++)
-			dval[i] = val[i];
+			dval[i] = val[i] - min_value;
 		}
 		else {
 		    double sum = 0;
 		    for ( int i = 0; i < sectors; i++)
-			sum += val[i];
+			sum += val[i] - min_value;
 		    for ( int i = 0; i < sectors; i++) {
 			if ( Math.abs( sum) < Double.MIN_VALUE)
 			    dval[i] = 0;
 			else
-			    dval[i] = val[i] / sum * (max_value - min_value);
+			    dval[i] = (val[i] - min_value) / sum * (max_value - min_value);
 		    }
 		}
 		

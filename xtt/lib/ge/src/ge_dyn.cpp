@@ -13330,16 +13330,16 @@ int GePie::scan(grow_tObject object)
     double dval[PIE_MAX_SECTORS];
     if (fix_range || sectors == 1) {
       for (i = 0; i < sectors; i++)
-        dval[i] = val[i];
+        dval[i] = val[i] - min_value;
     } else {
       double sum = 0;
       for (i = 0; i < sectors; i++)
-        sum += val[i];
+        sum += val[i] - min_value;
       for (i = 0; i < sectors; i++) {
         if (fabs(sum) < DBL_EPSILON)
           dval[i] = 0;
         else
-          dval[i] = val[i] / sum * (max_value - min_value);
+          dval[i] = (val[i] - min_value) / sum * (max_value - min_value);
       }
     }
 

@@ -24397,17 +24397,18 @@ function DynPie( dyn) {
 	var dval = new Array(GrowPie.PIE_MAX_SECTORS);
 	if ( this.fix_range != 0 || this.sectors == 1) {
 	  for ( var i = 0; i < this.sectors; i++)
-	    dval[i] = val[i];
+	    dval[i] = val[i] - this.min_value;
 	}
 	else {
 	  var sum = 0;
 	  for ( var i = 0; i < this.sectors; i++)
-	    sum += val[i];
+	    sum += val[i] - this.min_value;
 	  for ( var i = 0; i < this.sectors; i++) {
 	    if ( Math.abs( sum) < Number.MIN_VALUE)
 	      dval[i] = 0;
 	    else
-	      dval[i] = val[i] / sum * (this.max_value - this.min_value);
+	      dval[i] = (val[i] - this.min_value) / sum * 
+		(this.max_value - this.min_value);
 	  }
 	}
 		
