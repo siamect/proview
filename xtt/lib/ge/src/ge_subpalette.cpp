@@ -204,7 +204,7 @@ void SubPaletteBrow::allocate_pixmaps()
   brow_LoadPBM(ctx, "ge_bitmap_actuatorfailopen109", &pixmaps[idx++]);
   brow_LoadPBM(ctx, "ge_bitmap_actuatormotor110", &pixmaps[idx++]);
   brow_LoadPBM(ctx, "ge_bitmap_actuatorsensing111", &pixmaps[idx++]);
-  brow_LoadPBM(ctx, "ge_bitmap_actuatorspring1", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_actuatorspring112", &pixmaps[idx++]);
   brow_LoadPBM(ctx, "ge_bitmap_actuatorsolenoid113", &pixmaps[idx++]);
   brow_LoadPBM(ctx, "ge_bitmap_actuatorpiston114", &pixmaps[idx++]);
   brow_LoadPBM(ctx, "ge_bitmap_actuatorwithman115", &pixmaps[idx++]);
@@ -304,7 +304,7 @@ void SubPaletteBrow::allocate_pixmaps()
   brow_LoadPBM(ctx, "ge_bitmap_converter_dc_ac209", &pixmaps[idx++]);
   brow_LoadPBM(ctx, "ge_bitmap_converter_dc_dc210", &pixmaps[idx++]);
   brow_LoadPBM(ctx, "ge_bitmap_machine211", &pixmaps[idx++]);
-  brow_LoadPBM(ctx, "ge_bitmap_machineac2", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_machineac212", &pixmaps[idx++]);
   brow_LoadPBM(ctx, "ge_bitmap_machinedc213", &pixmaps[idx++]);
   brow_LoadPBM(ctx, "ge_bitmap_bell214", &pixmaps[idx++]);
   brow_LoadPBM(ctx, "ge_bitmap_horn215", &pixmaps[idx++]);

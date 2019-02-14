@@ -702,7 +702,10 @@ void brow_LoadPBM(brow_tCtx ctx, const char *filename, flow_sAnnotPixmap **dst)
   char fname[255];
   strcpy(fname, "$pwr_exe/");
   strcat(fname, filename);
-  strcat(fname, "12.pbm");
+  if (!isdigit(filename[strlen(filename) - 1])) {
+    strcat(fname, "12");
+  }
+  strcat(fname, ".pbm");
   dcli_translate_filename(fname, fname);
 
   struct PBM img;
