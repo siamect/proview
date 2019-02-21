@@ -976,7 +976,7 @@ main(int argc, char* argv[])
     printf("-- File %s created\n	Endindex $ClassDef %d, %d changes\n",
         filename, classdef_idx, idx_count);
   } else
-    printf("-- No changes in file\n", filename);
+    printf("-- No changes in file '%s'\n", filename);
 
   idxfile = fopen("classdef_idx.dat", "r+");
   if (!idxfile) {

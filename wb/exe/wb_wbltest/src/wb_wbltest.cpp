@@ -34,6 +34,8 @@
  * General Public License plus this exception.
  */
 
+#include <string.h>
+
 #include "co_time.h"
 
 #include "wb_env.h"
