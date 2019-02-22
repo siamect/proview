@@ -10,7 +10,6 @@ endif
 
 .SUFFIXES:
 
-
 .PHONY : all init copy lib exe clean realclean \
          $(clean_ge)
 
@@ -33,22 +32,22 @@ dirs : $(bld_dir)$(dir_ext)
 $(bld_dir)$(dir_ext) :
 	@ $(mkdir) -p $(mkdirflags) $(basename $@)
 
-$(bld_dir)/pwrrt.spec : ../../../pwrrt/pwrrt.spec
+$(bld_dir)/pwrrt.spec : ../pwrrt/pwrrt.spec
 	@ echo "build $(target)"
-	@ ../../../pwrrt/build.sh
+	@ ../pwrrt/build.sh
 	@ cp $(source) $(target)
 
-$(bld_dir)/pwr.spec : ../../../pwr/pwr.spec
+$(bld_dir)/pwr.spec : ../pwr/pwr.spec
 	@ echo "build $(target)"
-	@ ../../../pwr/build.sh
+	@ ../pwr/build.sh
 	@ cp $(source) $(target)
 
-$(bld_dir)/pwrdemo.spec : ../../../pwrdemo/pwrdemo.spec
+$(bld_dir)/pwrdemo.spec : ../pwrdemo/pwrdemo.spec
 	@ echo "build $(target)"
-	@ ../../../pwrdemo/build.sh
+	@ ../pwrdemo/build.sh
 	@ cp $(source) $(target)
 
-$(bld_dir)/pwrsev.spec : ../../../pwrsev/pwrsev.spec
+$(bld_dir)/pwrsev.spec : ../pwrsev/pwrsev.spec
 	@ echo "build $(target)"
-	@ ../../../pwrsev/build.sh
+	@ ../pwrsev/build.sh
 	@ cp $(source) $(target)

@@ -1,3 +1,0 @@
-#!/bin/bash
-source /etc/pwrp_profile
-$pwr_exe/rt_xtt -u $USER -a &

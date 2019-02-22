@@ -10,7 +10,6 @@ endif
 
 .SUFFIXES:
 
-
 .PHONY : all init copy lib exe clean realclean \
          $(clean_ge)
 
@@ -34,27 +33,27 @@ dirs : $(bld_dir)$(dir_ext)
 $(bld_dir)$(dir_ext) :
 	@ $(mkdir) -p $(mkdirflags) $(basename $@)
 
-$(bld_dir)/control_pwrrt : ../../../pwrrt/control
+$(bld_dir)/control_pwrrt : ../pwrrt/control
 	@ echo "build $(target)"
-	@ ../../../pwrrt/build.sh
+	@ ../pwrrt/build.sh
 	@ cp $(source) $(target)
 
-$(bld_dir)/control_pwr : ../../../pwr/control
+$(bld_dir)/control_pwr : ../pwr/control
 	@ echo "build $(target)"
-	@ ../../../pwr/build.sh
+	@ ../pwr/build.sh
 	@ cp $(source) $(target)
 
-$(bld_dir)/control_pwrdemo : ../../../pwrdemo/control
+$(bld_dir)/control_pwrdemo : ../pwrdemo/control
 	@ echo "build $(target)"
-	@ ../../../pwrdemo/build.sh
+	@ ../pwrdemo/build.sh
 	@ cp $(source) $(target)
 
-$(bld_dir)/control_pwrsev : ../../../pwrsev/control
+$(bld_dir)/control_pwrsev : ../pwrsev/control
 	@ echo "build $(target)"
-	@ ../../../pwrsev/build.sh
+	@ ../pwrsev/build.sh
 	@ cp $(source) $(target)
 
-$(bld_dir)/control_pwrrpi : ../../../pwrrpi/control
+$(bld_dir)/control_pwrrpi : ../pwrrpi/control
 	@ echo "build $(target)"
-	@ ../../../pwrrpi/build.sh
+	@ ../pwrrpi/build.sh
 	@ cp $(source) $(target)

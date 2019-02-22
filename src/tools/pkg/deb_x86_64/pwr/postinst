@@ -120,9 +120,3 @@ if [ ! -e /usr/local/pwrp ]; then
   chgrp pwrp /usr/local/pwrp
   chmod g+w /usr/local/pwrp
 fi
-
-
-
-
-
-

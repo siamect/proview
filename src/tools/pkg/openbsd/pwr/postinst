@@ -1,7 +1,6 @@
 #!/usr/local/bin/bash
 set -e
 
-
 if [ ! -e /usr/local/bin/bash ]; then
   echo "** Error, bash not installed"
   exit
@@ -134,9 +133,3 @@ if [ ! -e /usr/local/pwrp ]; then
   chgrp pwrp /usr/local/pwrp
   chmod g+w /usr/local/pwrp
 fi
-
-
-
-
-
-

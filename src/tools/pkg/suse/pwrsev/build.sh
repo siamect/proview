@@ -11,7 +11,6 @@ if [ -e $pwr_inc/pwr_version.h ]; then
   ver=${ver:2:2}
 fi
 
-
 # Generate version help file
 {
   if [ ! -e $pwre_sroot/tools/pkg/suse/pwrsev/pwrsev.spec ]; then
@@ -26,7 +25,7 @@ fi
   {
     let printout=0
     while read line; do
-      if [ "${line:0:6}" = "Name: " ]; then 
+      if [ "${line:0:6}" = "Name: " ]; then
         package=${line#Name: }
       fi
       if [ "${line:0:9}" = "Version: " ]; then
@@ -54,12 +53,12 @@ fi
         echo "Copyright © 2005-${d:0:4} SSAB EMEA AB"
         echo ""
         echo "This program is free software; you can redistribute it and/or"
-        echo "modify it under the terms of the GNU General Public License as" 
+        echo "modify it under the terms of the GNU General Public License as"
         echo "published by the Free Software Foundation, either version 2 of"
         echo "the License, or (at your option) any later version."
         echo ""
-        echo "This program is distributed in the hope that it will be useful" 
-        echo "but WITHOUT ANY WARRANTY; without even the implied warranty of" 
+        echo "This program is distributed in the hope that it will be useful"
+        echo "but WITHOUT ANY WARRANTY; without even the implied warranty of"
         echo "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
         echo "For more details, see the"
         echo "GNU General Public License. <weblink> http://www.proview.se/gpllicense.html"
@@ -105,7 +104,6 @@ fi
 
 pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwrsev
 pkgsrc=$pwre_sroot/tools/pkg/suse/pwrsev
-
 
 # Create directories
 echo "-- Create package tree"
@@ -184,15 +182,3 @@ echo "-- Building package"
 
 mv $pkgroot/rpm/RPMS/i386/*.rpm $pwre_broot/$pwre_target/bld/pkg/.
 rm -r $pkgroot
-
-
-
-
-
-
-
-
-
-
-
-

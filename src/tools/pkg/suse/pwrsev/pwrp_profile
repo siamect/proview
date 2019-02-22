@@ -58,8 +58,3 @@ alias boot="/usr/bin/sudo /sbin/reboot"
 if [ -e $pwrp_exe/profile ]; then
   source $pwrp_exe/profile
 fi
-
-
-
-
-

@@ -66,7 +66,7 @@ pwra_set_func()
       echo "Unable to find project '$2'"
       return
     fi
-    
+
     baseroot=`eval cat $pwra_db/pwr_projectlist.dat | grep "[[:<:]]"$basename"[[:>:]]" | grep "^"%base"[[:>:]]" | awk '{print $3}'`
     if [ -z $baseroot ]; then
       echo "Unable to find base '$2'"
@@ -83,7 +83,7 @@ pwra_set_func()
       fi
       source $baseroot/$os/$hw/exp/exe/pwrp_env.sh set baseroot $baseroot
       source $baseroot/$os/$hw/exp/exe/pwrp_env.sh set project $project
-      export PS1='\u@\h/$pwrp_projectname/-.\W> '    
+      export PS1='\u@\h/$pwrp_projectname/-.\W> '
     fi
     return
   fi
@@ -94,8 +94,7 @@ pwra_set_func()
   fi
   source $pwr_exe/pwrp_env.sh set $1 $2 $3
 
-}  
-
+}
 
 pwra_help_func()
 {
@@ -112,7 +111,6 @@ set baseroot 'root'	- Setup environment to proview base distribution
 EOF
 
 }
-
 
 pwra_parse ()
 {
@@ -131,7 +129,7 @@ pwra_parse ()
     if [ $machine != "x86_64" ]; then
       machine="x86"
     fi
-    os="os_linux"  
+    os="os_linux"
     hw="hw_"$machine
   fi
 

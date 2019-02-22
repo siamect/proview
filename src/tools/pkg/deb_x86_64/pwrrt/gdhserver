@@ -7,7 +7,6 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/jdk
 
 . /etc/pwrp_profile
 
-
 gdh_start()
 {
   export LD_LIBRARY_PATH=$pwr_exe
@@ -17,7 +16,7 @@ gdh_start()
   sleep 2
   sudo -u pwrp $pwr_exe/rt_webmonmh.sh &
   #su pwrp <java jpwr.rt.GdhServer &
-  
+
   #sudo -u pwrp java jpwr.rt.GdhServer &
 }
 
@@ -30,13 +29,13 @@ case "$1"
   in
     start)
 	echo "Startar GDH server..."
-	
+
 	#if [ 'test -x ps aux | grep plc | grep -v grep' ]
 	#  then
 	#    echo "PWR kör, stoppar det först.."
 	#    pwr_stop
 	#  fi
-	gdh_start    
+	gdh_start
 	echo "Klar."
       ;;
     stop)
@@ -62,6 +61,3 @@ case "$1"
   esac
 
 exit 0
-
-
-

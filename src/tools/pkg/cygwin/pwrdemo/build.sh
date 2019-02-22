@@ -74,15 +74,3 @@ cp $pkgsrc/postinst $pkgroot/etc/pwrdemo$ver
 tar -czf ../$packagename *
 
 rm -r $pkgroot
-
-
-
-
-
-
-
-
-
-
-
-

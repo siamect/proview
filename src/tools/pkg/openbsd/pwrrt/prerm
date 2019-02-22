@@ -1,7 +1,6 @@
 #!/bin/sh
 set -e
 
-
 # Automatically added by dh_installdocs
 if [ \( "$1" = "upgrade" -o "$1" = "remove" \) -a -L /usr/doc/pwrtest ]; then
         rm -f /usr/doc/pwrtest
@@ -16,7 +15,7 @@ echo -n "Do you wan't to remove project and users (y/n) [n] "
 read remove_all
 
 if [ "$remove_all" = "y" ]; then
-  
+
   # Check that any user that is to be remoted isn't logged in
   set +e
   user_found=0

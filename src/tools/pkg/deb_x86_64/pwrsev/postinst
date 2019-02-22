@@ -50,7 +50,6 @@ else
 fi
 
 
-
 if getent passwd pwrp > /dev/null; then
   echo "-- user pwrp already exist"
 else
@@ -216,7 +215,7 @@ if [ ! -e $proot ]; then
 
   chown -R pwrp $proot
   chgrp -R pwrp $proot
-  
+
 fi
 
 if [ ! -e $aroot/db ]; then
@@ -261,14 +260,3 @@ if [ $changes -ne 0 ]; then
   echo "***********************************************************"
   echo ""
 fi
-
-
-
-
-
-
-
-
-
-
-

@@ -63,7 +63,6 @@ tar -xf $tarfile
 rm $tarfile
 cd $currentdir
 
-
 # Copy adm files to cnf
 #echo "pwrp set base V${ver:0:1}.${ver:1:1}" >> $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/pwr_setup.sh
 
@@ -76,15 +75,3 @@ else
 fi
 
 rm -r $pkgroot
-
-
-
-
-
-
-
-
-
-
-
-
