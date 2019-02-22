@@ -226,6 +226,9 @@ void GlowArray::copy_from(const GlowArray& array)
       GrowPie* n = new GrowPie(*(GrowPie*)array.a[i]);
       n->highlight = 0;
       n->hot = 0;
+      if (n->ctx->userdata_copy_callback)
+        (n->ctx->userdata_copy_callback)(n, ((GrowBarChart*)array.a[i])->user_data,
+            &n->user_data, glow_eUserdataCbType_Node);
       insert(n);
       break;
     }
@@ -233,6 +236,9 @@ void GlowArray::copy_from(const GlowArray& array)
       GrowBarChart* n = new GrowBarChart(*(GrowBarChart*)array.a[i]);
       n->highlight = 0;
       n->hot = 0;
+      if (n->ctx->userdata_copy_callback)
+        (n->ctx->userdata_copy_callback)(n, ((GrowBarChart*)array.a[i])->user_data,
+            &n->user_data, glow_eUserdataCbType_Node);
       insert(n);
       break;
     }
