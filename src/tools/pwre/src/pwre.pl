@@ -60,15 +60,13 @@ $desc	= $user. "'s environment";
 @vars;
 $varstr;
 
-
 if (($dbname = $ENV{"pwre_env_db"}) eq "") {
   $dbname = $ENV{"HOME"} . "/pwre/pwre";
 }
-$os = substr( $ENV{"pwre_os"}, 3, 100);
-$hw = substr( $ENV{"pwre_hw"}, 3, 100);
+$os = substr($ENV{"pwre_os"}, 3, 100);
+$hw = substr($ENV{"pwre_hw"}, 3, 100);
 $configfile = $ENV{"pwre_broot"} . "/pwre_" . $hw . "_" . $os . ".cnf";
 $parallel = $ENV{"PWRE_CONF_PARALLEL"};
-
 
 $arg1 = $ARGV[0];
 shift;
@@ -76,8 +74,6 @@ shift;
 if ($arg1 eq "") {
   help();
 }
-
-
 
 $amb = 0;
 $found = 0;
@@ -110,11 +106,9 @@ if ($amb == 1) {
   }
   print("\n");
   exit 1;
-
 } elsif ($found == 1) {
   &$verb(@ARGV);
   exit 0;
-
 } else {
   help();
   exit 1;
@@ -123,13 +117,11 @@ if ($amb == 1) {
 #
 # Verb subroutines
 
-
 #
 # add()
 #
-sub add ()
+sub add()
 {
-
   use DB_File;
   tie(%envdb, "DB_File", $dbname, O_CREAT|O_RDWR, 0644) || die "++ can't tie $dbname!";
   $label = $_[0];
@@ -156,22 +148,20 @@ sub configure()
   if ($hw eq "x86" && $real_hw eq "x86_64") {
     $ENV{"cross_compile"} = "-m32";
   }
-  my $fname = $ENV{"pwre_bin"} . "/pwre_configure.sh"." ".$_[0]." ".$_[1]." ".$_[2];
-  system( $fname);
+  system($ENV{"pwre_bin"} . "/pwre_configure.sh"." ".$_[0]." ".$_[1]." ".$_[2]);
 }
 
 #
 # build()
 #
-sub build () # args: branch, subbranch, flavour, phase
+sub build() # args: branch, subbranch, flavour, phase
 {
-
   if (!defined($ENV{"pwre_env"})) {
     print("++ Environment is not initialized!\n");
     exit 1;
   }
 
-  if ( ! -e $configfile ) {
+  if (! -e $configfile ) {
     print("++ Environment is not configured!\n");
     exit 1;
   }
@@ -181,17 +171,17 @@ sub build () # args: branch, subbranch, flavour, phase
 
   read_vars();
 
-  if ( $_[0] eq "-v") {
+  if ($_[0] eq "-v") {
     $ver = 1;
     shift(@_);
   }
 
-  if ( $_[0] eq "all") {
+  if ($_[0] eq "all") {
     build_all_modules();
     return;
   }
 
-  if ( $_[0] eq "module" || $_[0] eq "") {
+  if ($_[0] eq "module" || $_[0] eq "") {
     build_module();
     return;
   }
@@ -211,10 +201,9 @@ sub build () # args: branch, subbranch, flavour, phase
   shift(@_);
   shift(@_);
 
-  if ( $_[0] eq "") {
+  if ($_[0] eq "") {
     $flavour = "src";
-  }
-  else {
+  } else {
     $flavour = $_[0];
     shift(@_);
   }
@@ -232,11 +221,10 @@ sub build () # args: branch, subbranch, flavour, phase
   printf("\n--\n");
 
   _build($branch, $subbranch, $flavour, @_);
-
 }
 
 #
-# build_kernel ()
+# build_kernel()
 #
 sub build_kernel # args: flavour
 {
@@ -306,55 +294,23 @@ sub ebuild # args: pass flavour
   my $fname = $ENV{"pwre_bin"} . "/ebuild.dat";
   open FILE, $fname or die $!;
 
-  my $build_bcomp = 0;
-  my $build_java = 0;
-  my $build_remote = 0;
-  my $build_nmps = 0;
-  my $build_sev = 0;
-  my $build_opc = 0;
-  my $build_profibus = 0;
-  my $build_otherio = 0;
-  my $build_simul = 0;
-  my $build_misc = 0;
-  my $build_ssabox = 0;
-  my $build_tlog = 0;
-  my $build_othermanu = 0;
-  my $build_abb = 0;
-  my $build_siemens = 0;
-  my $build_klocknermoeller = 0;
-  my $build_inor = 0;
-  my $build_telemecanique = 0;
+  my %to_build = ();
 
-  printf( "-- Building modules\n");
-  while ( <FILE>) {
-
-    my @value = split( ' ', $_);
-    if ( $value[0] eq "bcomp" && $value[1] eq "1" ) { $build_bcomp = 1; printf( "--   bcomp\n");}
-    elsif ( $value[0] eq "remote" && $value[1] eq "1" ) { $build_remote = 1; printf( "--   remote\n");}
-    elsif ( $value[0] eq "java" && $value[1] eq "1" ) { $build_java = 1; printf( "--   java\n");}
-    elsif ( $value[0] eq "nmps" && $value[1] eq "1" ) { $build_nmps = 1; printf( "--   nmps\n");}
-    elsif ( $value[0] eq "sev" && $value[1] eq "1" ) { $build_sev = 1; printf( "--   sev\n");}
-    elsif ( $value[0] eq "opc" && $value[1] eq "1" ) { $build_opc = 1; printf( "--   opc\n");}
-    elsif ( $value[0] eq "profibus" && $value[1] eq "1" ) { $build_profibus = 1; printf( "--   profibus\n");}
-    elsif ( $value[0] eq "otherio" && $value[1] eq "1" ) { $build_otherio = 1; printf( "--   otherio\n");}
-    elsif ( $value[0] eq "simul" && $value[1] eq "1" )  { $build_simul = 1; printf( "--   simul\n");}
-    elsif ( $value[0] eq "misc" && $value[1] eq "1" )  { $build_misc = 1; printf( "--   misc\n");}
-    elsif ( $value[0] eq "ssabox" && $value[1] eq "1" ) { $build_ssabox = 1; printf( "--   ssabox\n");}
-    elsif ( $value[0] eq "tlog" && $value[1] eq "1" ) { $build_tlog = 1; printf( "--   tlog\n");}
-    elsif ( $value[0] eq "othermanu" && $value[1] eq "1" ) { $build_othermanu = 1; printf( "--   othermanu\n");}
-    elsif ( $value[0] eq "abb" && $value[1] eq "1" ) { $build_abb = 1; printf( "--   abb\n");}
-    elsif ( $value[0] eq "siemens" && $value[1] eq "1" ) { $build_siemens = 1; printf( "--   siemens\n");}
-    elsif ( $value[0] eq "klocknermoeller" && $value[1] eq "1" ) { $build_klocknermoeller = 1; printf( "--   klocknermoeller\n");}
-    elsif ( $value[0] eq "inor" && $value[1] eq "1" )  { $build_inor = 1; printf( "--   inor \n");}
-    elsif ( $value[0] eq "telemecanique" && $value[1] eq "1" )  { $build_telemecanique = 1; printf( "--   telemecanique\n");}
+  printf("-- Building modules\n");
+  while (<FILE>) {
+    my @value = split(' ', $_);
+    if ($value[1] eq "1") {
+      $to_build{$value[0]} = 1;
+      printf("--   " . $value[0] . "\n");
+    }
   }
-  printf( "\n");
+  printf("\n");
   close FILE;
 
   my $pass = $_[0];
   my $flavour = $_[1];
 
-  if ( $pass eq "rt" ) {
+  if ($pass eq "rt" ) {
     _module("rt");
     _build("exp", "inc", "src", "all");
     _build("exp", "com", "src", "all");
@@ -405,108 +361,107 @@ sub ebuild # args: pass flavour
     _build("exe", "rt*", "src", "all");
     _build("exe", "co*", $flavour, "all");
     _build("exe", "pwr_user", "src", "all");
-    if ( $build_nmps == 1) {
+    if ($to_build{"nmps"}) {
       merge();
       _module("nmps");
       _build("lib", "nmps", "src", "all");
       merge();
     }
-    if ( $build_bcomp == 1) {
+    if ($to_build{"bcomp"}) {
       _module("profibus");
       merge();
       _module("bcomp");
       _build("lib", "rt", "src", "all");
       merge();
     }
-    if ( $build_simul == 1) {
+    if ($to_build{"simul"}) {
       _module("simul");
       _build("lib", "simul", "src", "all");
       merge();
     }
-    if ( $build_misc == 1) {
+    if ($to_build{"misc"}) {
       _module("misc");
       _build("lib", "misc", "src", "all");
       merge();
     }
-    if ( $build_ssabox == 1) {
+    if ($to_build{"ssabox"}) {
       _module("ssabox");
       _build("lib", "rt", "src", "all");
       _build("lib", "ssabox", "src", "all");
       merge();
     }
-    if ( $build_otherio == 1) {
+    if ($to_build{"otherio"}) {
       _module("otherio");
       _build("lib", "rt", "src", "all");
       merge();
     }
-    if ( $build_profibus == 1) {
+    if ($to_build{"profibus"}) {
       _module("profibus");
       _build("lib", "rt", "src", "all");
       _build("lib","pnak_dummy","src","init lib");
       merge();
     }
-    if ( $build_remote == 1) {
+    if ($to_build{"remote"}) {
       _module("remote");
       _build("lib", "remote", "src", "all");
       _build("exe", "*", "src", "all");
       merge();
     }
-    if ( $build_opc == 1) {
+    if ($to_build{"opc"}) {
       _module("opc");
       _build("lib", "opc", "src", "all");
       _build("exe", "*", "src", "all");
       merge();
     }
-    if ( $build_tlog == 1) {
+    if ($to_build{"tlog"}) {
       _module("tlog");
       _build("lib", "tlog", "src", "all");
       merge();
     }
-    if ( $build_java == 1) {
+    if ($to_build{"java"}) {
       _module("java");
       _build("exe", "jpwr_rt_gdh", "src", "all");
       merge();
     }
-    if ( $build_sev == 1) {
+    if ($to_build{"sev"}) {
       _module("sev");
       _build("lib", "sev", "src", "all");
       _build("exe", "sev_server", "src", "all");
       merge();
     }
-    if ( $build_abb == 1) {
+    if ($to_build{"abb"}) {
       _module("abb");
       merge();
     }
-    if ( $build_siemens == 1) {
+    if ($to_build{"siemens"}) {
       _module("siemens");
       merge();
     }
-    if ( $build_othermanu == 1) {
+    if ($to_build{"othermanu"}) {
       _module("othermanu");
       merge();
     }
-    if ( $build_inor == 1) {
+    if ($to_build{"inor"}) {
       _module("inor");
       merge();
     }
-    if ( $build_klocknermoeller == 1) {
+    if ($to_build{"klocknermoeller"}) {
       _module("klocknermoeller");
       merge();
     }
-    if ( $build_telemecanique == 1) {
+    if ($to_build{"telemecanique"}) {
       _module("telemecanique");
       merge();
     }
-    if ( $build_simul == 1) {
+    if ($to_build{"simul"}) {
       _module("simul");
       merge();
     }
-    if ( $build_misc == 1) {
+    if ($to_build{"misc"}) {
       _module("misc");
       merge();
     }
-  }
-  elsif ( $pass eq "op" ) {
+  } elsif ($pass eq "op" ) {
     _module("xtt");
     _build("lib", "*", "src", "init copy");
     _build("lib", "*", $flavour, "copy");
@@ -526,12 +481,12 @@ sub ebuild # args: pass flavour
     _build("exe", "co*", $flavour, "all");
     _build("exe", "pwr*", $flavour, "all");
     merge();
-    if ( $build_bcomp == 1) {
+    if ($to_build{"bcomp"}) {
       _module("bcomp");
       _build("mmi", "*", "src", "copy");
       merge();
     }
-    if ( $build_profibus == 1) {
+    if ($to_build{"profibus"}) {
       _module("profibus");
       _build("mmi", "*", "src", "copy");
       _build("lib", "cow", "src", "init copy lib");
@@ -540,83 +495,82 @@ sub ebuild # args: pass flavour
       _build("lib", "xtt", $flavour, "init copy lib");
       merge();
     }
-    if ( $build_opc == 1) {
+    if ($to_build{"opc"}) {
       _module("opc");
       _build("mmi", "*", "src", "copy");
       merge();
     }
-    if ( $build_otherio == 1) {
+    if ($to_build{"otherio"}) {
       _module("otherio");
       _build("mmi", "*", "src", "copy");
       merge();
     }
-    if ( $build_sev == 1) {
+    if ($to_build{"sev"}) {
       _module("sev");
       _build("exe", "sev_xtt", "src", "all");
       _build("exe", "sev_xtt", $flavour, "all");
       merge();
     }
-    if ( $build_othermanu == 1) {
+    if ($to_build{"othermanu"}) {
       _module("othermanu");
       _build("mmi", "*", "src", "copy");
       merge();
     }
-    if ( $build_abb == 1) {
+    if ($to_build{"abb"}) {
       _module("abb");
       _build("mmi", "*", "src", "copy");
       merge();
     }
-    if ( $build_inor == 1) {
+    if ($to_build{"inor"}) {
       _module("inor");
       _build("mmi", "*", "src", "copy");
       merge();
     }
-    if ( $build_siemens == 1) {
+    if ($to_build{"siemens"}) {
       _module("siemens");
       _build("mmi", "*", "src", "copy");
       merge();
     }
-    if ( $build_klocknermoeller == 1) {
+    if ($to_build{"klocknermoeller"}) {
       _module("klocknermoeller");
       _build("mmi", "*", "src", "copy");
       merge();
     }
-    if ( $build_simul == 1) {
+    if ($to_build{"simul"}) {
       _module("simul");
       _build("mmi", "*", "src", "copy");
       merge();
     }
-    if ( $build_misc == 1) {
+    if ($to_build{"misc"}) {
       _module("misc");
       _build("mmi", "*", "src", "copy");
       merge();
     }
-    if ( $build_ssabox == 1) {
+    if ($to_build{"ssabox"}) {
       _module("ssabox");
       _build("mmi", "*", "src", "copy");
       merge();
     }
-    if ( $build_telemecanique == 1) {
+    if ($to_build{"telemecanique"}) {
       _module("telemecanique");
       _build("mmi", "*", "src", "copy");
       merge();
     }
-    method_build( "rt_io_comm", $flavour);
-    method_build( "rt_xtt", $flavour);
+    method_build("rt_io_comm", $flavour);
+    method_build("rt_xtt", $flavour);
   }
 }
 
 #
 # import()
 #
-sub import ()
+sub import()
 {
   my $flavour = $_[1];
 
   my($vmsinc) = $ENV{"pwre_vmsinc"};
-  if ( $vmsinc ne "" ) {
-
-    copy( $_[0], $flavour);
+  if ($vmsinc ne "" ) {
+    copy($_[0], $flavour);
 
     _module("rt");
     merge();
@@ -633,75 +587,74 @@ sub import ()
     _module("remote");
     merge();
   }
-
 }
 
 #
 # build_all_modules()
 #
-sub build_all_modules ()
+sub build_all_modules()
 {
   my $flavour = $_[0];
 
-  build_kernel( $flavour);
+  build_kernel($flavour);
   _module("nmps");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
   _module("tlog");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
   _module("remote");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
   _module("profibus");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
   _module("bcomp");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
-  if ( $ENV{"PWRE_CONF_JNI"} eq "1") {
+  if ($ENV{"PWRE_CONF_JNI"} eq "1") {
     _module("java");
-    build_module( $flavour);
+    build_module($flavour);
     merge();
   }
   _module("opc");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
   _module("simul");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
   _module("misc");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
   _module("ssabox");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
   _module("otherio");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
   _module("othermanu");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
   _module("sev");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
   _module("abb");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
   _module("siemens");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
   _module("inor");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
   _module("klocknermoeller");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
   _module("telemecanique");
-  build_module( $flavour);
+  build_module($flavour);
   merge();
 
-  method_build( $flavour);
+  method_build($flavour);
 
   build_documentation();
 }
@@ -715,7 +668,7 @@ sub build_documentation()
 #
 # clean_exe_all()
 #
-sub clean_exe_all ()
+sub clean_exe_all()
 {
   _module("xtt");
   _build("exe","*","src","clean_exe");
@@ -732,18 +685,16 @@ sub clean_exe_all ()
   _module("remote");
   _build("exe","*","src","clean_exe");
   _module("rt");
-
 }
-
 
 #
 # build_all_wbl()
 #
-sub build_all_wbl ()
+sub build_all_wbl()
 {
   _module("rt");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "pwrs", "src", "lib");
   _build("wbl", "pwrb", "src", "lib");
   _build("wbl", "wb", "src", "lib");
@@ -751,108 +702,106 @@ sub build_all_wbl ()
   merge();
   _module("nmps");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "nmps", "src", "lib");
   merge();
   _module("tlog");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "tlog", "src", "lib");
   merge();
   _module("profibus");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("opc");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("remote");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "remote", "src", "lib");
   merge();
   _module("bcomp");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "bcomp", "src", "lib");
   merge();
   _module("otherio");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("simul");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "simul", "src", "lib");
   merge();
   _module("misc");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "misc", "src", "lib");
   merge();
   _module("ssabox");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("abb");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("siemens");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("telemecanique");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("inor");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("klocknermoeller");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("othermanu");
   my($load_dir) = $ENV{"pwr_load"};
-  system( "rm $load_dir/*.dbs");
+  system("rm $load_dir/*.dbs");
   _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("rt");
 }
 
-sub method_build ()
+sub method_build()
 {
-
   my $flavour;
   my $program;
-  if ( $_[0] eq "motif" || $_[0] eq "gtk" || $_[0] eq "qt" ) {
+  if ($_[0] eq "motif" || $_[0] eq "gtk" || $_[0] eq "qt" ) {
     $flavour = $_[0];
-  }
-  else {
+  } else {
     $program = $_[0];
     $flavour = $_[1];
   }
 
   if (!defined($program)) {
     printf("-- Relink method dependent programs %s\n", $flavour);
-    method_build( "rt_io_comm");
-    method_build( "wb", $flavour);
-    method_build( "rt_xtt", $flavour);
+    method_build("rt_io_comm");
+    method_build("wb", $flavour);
+    method_build("rt_xtt", $flavour);
     return;
   }
-  if ( $_[0] eq "rt_io_comm" ) {
+  if ($_[0] eq "rt_io_comm" ) {
     printf("-- Method build %s\n", $program);
     _module("rt");
     $ENV{"export_type"} = "exp";
@@ -861,10 +810,10 @@ sub method_build ()
     _build("exe", "rt_io_comm", "src", "all");
     merge();
   }
-  if ( $flavour eq "") {
+  if ($flavour eq "") {
     $flavour = "gtk";
   }
-  if ( $_[0] eq "wb" ) {
+  if ($_[0] eq "wb" ) {
     printf("-- Method build %s %s\n", $program, $flavour);
 
     _module("wb");
@@ -875,7 +824,7 @@ sub method_build ()
     _build("exe", "wb", "src", "all");
      merge();
   }
-  if ( $_[0] eq "rt_xtt" ) {
+  if ($_[0] eq "rt_xtt" ) {
     printf("-- Method build %s %s\n",  $program, $flavour);
 
     _module("xtt");
@@ -888,9 +837,9 @@ sub method_build ()
   }
 }
 
-sub create_all_modules ()
+sub create_all_modules()
 {
-  if ( ! -e $configfile ) {
+  if (! -e $configfile ) {
     configure();
   }
 
@@ -941,29 +890,29 @@ sub create_all_modules ()
 #
 # build_module()
 #
-sub build_module ()
+sub build_module()
 {
   $copy = 0;
   $lib = 0;
   $exe = 0;
 
-  if ( $_[0] eq "copy" || $_[1] eq "copy" || $_[2] eq "copy") {
+  if ($_[0] eq "copy" || $_[1] eq "copy" || $_[2] eq "copy") {
     $copy = 1;
   }
-  if ( $_[0] eq "lib" || $_[1] eq "lib" || $_[2] eq "lib") {
+  if ($_[0] eq "lib" || $_[1] eq "lib" || $_[2] eq "lib") {
     $lib = 1;
   }
-  if ( $_[0] eq "exe" || $_[1] eq "exe" || $_[2] eq "exe") {
+  if ($_[0] eq "exe" || $_[1] eq "exe" || $_[2] eq "exe") {
     $exe = 1;
   }
-  if ( $copy == 0 && $lib == 0 && $exe == 0) {
+  if ($copy == 0 && $lib == 0 && $exe == 0) {
     $copy = 1;
     $lib = 1;
     $exe = 1;
   }
-  if ( $_[0] eq "motif" || $_[1] eq "motif" || $_[2] eq "motif" || $_[3] eq "motif") {
+  if ($_[0] eq "motif" || $_[1] eq "motif" || $_[2] eq "motif" || $_[3] eq "motif") {
     $flavour = "motif";
-  } elsif ( $_[0] eq "qt" || $_[1] eq "qt" || $_[2] eq "qt" || $_[3] eq "qt") {
+  } elsif ($_[0] eq "qt" || $_[1] eq "qt" || $_[2] eq "qt" || $_[3] eq "qt") {
     $flavour = "qt";
   } else {
     $flavour = "gtk";
@@ -981,14 +930,14 @@ sub build_module ()
   my($bcompclasses) = $einc . "/pwr_basecomponentsclasses.h";
   my($otherioclasses) = $einc . "/pwr_otherioclasses.h";
 
-  if ( $ver == 1) {
+  if ($ver == 1) {
     printf("\n");
   }
   printf("-- Build module %s\n", $module);
   #show();
 
-  if ( $module eq "rt") {
-    if ( $copy == 1) {
+  if ($module eq "rt") {
+    if ($copy == 1) {
       _build("exp", "inc", "src", "all");
       _build("exp", "com", "src", "all");
       _build("tools/exe", "*", "src", "all");
@@ -1016,32 +965,32 @@ sub build_module ()
       _build("exp", "stdsoap2", "src", "copy");
     }
 
-    if ( $lib == 1) {
-      if ( ! -e $nmpsclasses ) {
+    if ($lib == 1) {
+      if (! -e $nmpsclasses ) {
         _module("nmps");
         _build("wbl", "nmps", "src", "init");
         _build("wbl", "nmps", "src", "copy");
         merge("inc/pwr_nmpsclasses.h");
       }
-      if ( ! -e $remoteclasses ) {
+      if (! -e $remoteclasses ) {
         _module("remote");
         _build("wbl", "remote", "src", "init");
         _build("wbl", "remote", "src", "copy");
         merge("inc/pwr_remoteclasses.h");
       }
-      if ( ! -e $profibusclasses ) {
+      if (! -e $profibusclasses ) {
         _module("profibus");
         _build("wbl", "mcomp", "src", "init");
         _build("wbl", "mcomp", "src", "copy");
         merge("inc/pwr_profibusclasses.h");
       }
-      if ( ! -e $bcompclasses ) {
+      if (! -e $bcompclasses ) {
         _module("bcomp");
         _build("wbl", "bcomp", "src", "init");
         _build("wbl", "bcomp", "src", "copy");
         merge("inc/pwr_basecomponentclasses.h");
       }
-      if ( ! -e $otherioclasses ) {
+      if (! -e $otherioclasses ) {
         _module("otherio");
         _build("wbl", "mcomp", "src", "init");
         _build("wbl", "mcomp", "src", "copy");
@@ -1055,7 +1004,7 @@ sub build_module ()
       _build("lib", "statussrv", "src", "all");
       _build("exp", "stdsoap2", "src", "all");
     }
-    if ( $exe == 1) {
+    if ($exe == 1) {
       _build("exe", "wb_rtt", "src", "all");
       _build("lib", "dtt", "src", "all");
       _build("exe", "rt*", "src", "all");
@@ -1078,23 +1027,21 @@ sub build_module ()
       _build("wbl", "pwrs", "src", "exe");
       _build("wbl", "pwrb", "src", "exe");
     }
-  }
-  elsif ( $module eq "java") {
-    if ( $copy == 1) {
+  } elsif ($module eq "java") {
+    if ($copy == 1) {
       _build("jsw", "*", "src", "all");
     }
-    if ( $lib == 1) {
+    if ($lib == 1) {
       _build("jpwr", "rt", "src", "all");
       _build("jpwr", "jopg", "src", "all");
       _build("jpwr", "jop", "src", "all");
       _build("jpwr", "rt_client", "src", "all");
     }
-    if ( $exe == 1) {
+    if ($exe == 1) {
       _build("exe", "jpwr_rt_gdh", "src", "all");
     }
-  }
-  elsif ( $module eq "profibus") {
-    if ( $copy == 1) {
+  } elsif ($module eq "profibus") {
+    if ($copy == 1) {
       _build("wbl", "*", "src", "init");
       _build("wbl", "*", "src", "copy");
       _build("lib", "*", "src", "init");
@@ -1106,23 +1053,22 @@ sub build_module ()
       _build("mmi", "*", $flavour, "copy");
       _build("exe", "*", "src", "copy");
     }
-    if ( $lib == 1) {
+    if ($lib == 1) {
       _build("lib", "*", "src", "lib");
       _build("lib", "*", $flavour, "lib");
       _build("exp", "*", "src", "lib");
     }
-    if ( $exe == 1) {
+    if ($exe == 1) {
       _build("wbl", "*", "src", "lib");
       _build("wbl", "*", "src", "exe");
-      if ( $lib == 1) {
+      if ($lib == 1) {
 	merge();
       }
       _build("exe", "*", "src", "all");
       _build("exe", "*", $flavour, "all");
     }
-  }
-  else {
-    if ( $copy == 1) {
+  } else {
+    if ($copy == 1) {
       _build("wbl", "*", "src", "init");
       _build("wbl", "*", "src", "copy");
       _build("lib", "*", "src", "init");
@@ -1134,12 +1080,12 @@ sub build_module ()
       _build("mmi", "*", $flavour, "copy");
       _build("exe", "*", "src", "copy");
     }
-    if ( $lib == 1) {
+    if ($lib == 1) {
       _build("lib", "*", "src", "lib");
       _build("lib", "*", $flavour, "lib");
       _build("exp", "*", "src", "lib");
     }
-    if ( $exe == 1) {
+    if ($exe == 1) {
       _build("wbl", "*", "src", "lib");
       _build("wbl", "*", "src", "exe");
       _build("exe", "*", "src", "all");
@@ -1150,11 +1096,10 @@ sub build_module ()
   }
 }
 
-
 #
 # copy()
 #
-sub copy ()
+sub copy()
 {
   if (!defined($ENV{"pwre_env"})) {
     print("++ Environment is not initialized!\n");
@@ -1171,41 +1116,33 @@ sub copy ()
   printf("-- Import root: %s\n", $vmsinc);
   printf("--\n");
 
-  if ( $_[0] eq "doc" ) {
-    my($cmd) = "cp -r " . $vmsinc . "/exp/doc/* " . $docroot;
-    system("$cmd");
-  }
-  elsif ( $_[0] eq "dbs" ) {
-    my($cmd) = "$bindir/import_dbs.sh " . $vmsinc . " " . $exproot;
-    system("$cmd");
-  }
-  else {
+  if ($_[0] eq "doc" ) {
+    system("cp -r " . $vmsinc . "/exp/doc/* " . $docroot);
+  } elsif ($_[0] eq "dbs" ) {
+    system("$bindir/import_dbs.sh " . $vmsinc . " " . $exproot);
+  } else {
     if ($hw eq "x86" && $real_hw eq "x86_64") {
       $ENV{"cross_compile"} = "-m32";
     }
-    my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0];
-    system("$cmd");
+    system("make -f $bindir/import_files.mk" . " " . $_[0]);
 
     my $flavour = $_[1];
-
-    if ( $flavour eq "") {
+    if ($flavour eq "") {
       $flavour = "gtk";
     }
 
-    my($cmd) = "make -f $bindir/import_files.mk" . " " . $_[0] . "_" . $flavour;
-    system("$cmd");
+    system("make -f $bindir/import_files.mk" . " " . $_[0] . "_" . $flavour);
   }
 }
 
-
 sub create()
 {
-  if ( $_[0] eq "all" || $_[0] eq "") {
+  if ($_[0] eq "all" || $_[0] eq "") {
     create_all_modules();
     return;
   }
 
-  if ( $_[0] eq "module" || $_[0] eq "") {
+  if ($_[0] eq "module" || $_[0] eq "") {
     create_module();
     return;
   }
@@ -1222,7 +1159,6 @@ sub create_module()
   my($root) = $ENV{"pwre_broot"};
   my($module) = $ENV{"pwre_bmodule"};
 
-
  if (!defined($root)) {
     printf("++\n++ No build root is defined\n");
     exit 1;
@@ -1236,7 +1172,7 @@ sub create_module()
   $root .= "/" . $ENV{"pwre_hw"};
   create_dir($root);
 
-  printf( "-- Creating build tree %s/%s\n", $root, $module);
+  printf("-- Creating build tree %s/%s\n", $root, $module);
 
   $newdir = $root . "/bld";
   create_dir($newdir);
@@ -1261,9 +1197,8 @@ sub create_module()
 #
 # dele()
 #
-sub dele ()
+sub dele()
 {
-
   use DB_File;
   tie(%envdb, "DB_File", $dbname, O_CREAT|O_RDWR, 0644) || die "++ can't tie $dbname!";
 
@@ -1289,7 +1224,7 @@ sub dele ()
 #
 # help
 #
-sub help ()
+sub help()
 {
   my($key);
 
@@ -1301,6 +1236,7 @@ sub help ()
   foreach $key (sort keys (%verbs)) {
     ($verb, $usage)  =  split(/:/, $verbs{$key});
     if (!($verb =~ /^_/)) {
+      printf("++\n");
       &$usage();
     }
   }
@@ -1309,11 +1245,10 @@ sub help ()
   exit 1;
 }
 
-
 #
 # list()
 #
-sub list ()
+sub list()
 {
   my($env);
   printf("Using Database:%s\n",$dbname);
@@ -1331,14 +1266,12 @@ sub list ()
   print("--\n");
 
   untie(%envdb)|| die "++ can't untie $dbname!";
-
 }
-
 
 #
 # modify()
 #
-sub modify ()
+sub modify()
 {
   use DB_File;
   tie(%envdb, "DB_File", $dbname, O_CREAT|O_RDWR, 0644) || die "++ can't tie $dbname!";
@@ -1354,13 +1287,11 @@ sub modify ()
   untie(%envdb)|| die "++ can't untie $dbname!";
 }
 
-
 #
 # show
 #
-sub show ()
+sub show()
 {
-
   if ($_[0] ne "") {
     $label = $_[0];
   } else {
@@ -1376,7 +1307,6 @@ sub show ()
 
   read_vars();
   if ($varstr ne "") {
-
     print("--\n");
     printf("-- Environment    : %s\n", $label);
     show_vars();
@@ -1390,7 +1320,7 @@ sub show ()
 #
 # tags()
 #
-sub tags ()
+sub tags()
 {
   if (!defined($ENV{"pwre_env"})) {
     print("++ Environment is not initialized!\n");
@@ -1400,16 +1330,13 @@ sub tags ()
   printf("--\n");
   printf("-- Creating a CRiSP tag-file named ~/pwre/tags\n");
   system("pwr_tags") && exit;
-
 }
-
 
 #
 # _build()
 #
-sub _build () # args: branch, subbranch, flavour, phase
+sub _build() # args: branch, subbranch, flavour, phase
 {
-
   my($branch) = $_[0];
   if (!defined($branch)) {
     usage_build();
@@ -1426,8 +1353,8 @@ sub _build () # args: branch, subbranch, flavour, phase
   shift(@_);
   shift(@_);
 
-  if ( $ver == 1) {
-    printf( "--   Build %s %s %s\n", $branch, $subbranch, $flavor);
+  if ($ver == 1) {
+    printf("--   Build %s %s %s\n", $branch, $subbranch, $flavor);
   }
 
   my($grepstr) = $ENV{"pwre_target"};
@@ -1445,6 +1372,9 @@ sub _build () # args: branch, subbranch, flavour, phase
     $ENV{"cross_compile"} = "-m32";
   }
 
+  chomp(my $cpu_count = `grep -c -P '^processor' /proc/cpuinfo`);
+  $cpu_count = $cpu_count * 2;
+
   foreach $dir1 (@dirs1) {
     $globstr1 = "$dir1" . "/$subbranch/$flavour";
     @dirs2 = glob($globstr1);
@@ -1461,11 +1391,11 @@ sub _build () # args: branch, subbranch, flavour, phase
         $makefile = $ENV{"pwre_croot"} . "/src/tools/bld/src/generic_makefile";
       }
 
-      if (($parallel eq "1" && $branch eq "lib" && $subbranch ne "dtt") || $branch eq "wbl") {
+      if ($parallel eq "1" && (($branch eq "lib" && $subbranch ne "dtt") || $branch eq "wbl")) {
         # All libraries and wbl files can be compiled in parallel
-        system("make --debug=n -f $makefile -j8 -l8 @_") && exit 1;
+        system("make -f $makefile -j$cpu_count -l$cpu_count @_") && exit 1;
       } else {
-        system("make --debug=n -f $makefile @_") && exit 1;
+        system("make -f $makefile @_") && exit 1;
       }
     }
   }
@@ -1474,14 +1404,14 @@ sub _build () # args: branch, subbranch, flavour, phase
 #
 # merge()
 #
-sub merge ()
+sub merge()
 {
   if (!defined($ENV{"pwre_env"})) {
     print("++ Environment is not initialized!\n");
     exit 1;
   }
 
-  if ( $_[0] eq "-v") {
+  if ($_[0] eq "-v") {
     $ver = 1;
     shift(@_);
   }
@@ -1503,20 +1433,18 @@ sub merge ()
   my($mroot) = $eroot;
   $mroot .= "/" . $ENV{"pwre_module"};
   $eroot .= "/exp";
-  if ( $ver == 1) {
+  if ($ver == 1) {
     printf("\n");
     printf("-- Merge %s %s\n", $module, $file);
   }
 
-  my($cmd) = $ENV{pwre_bin} . "/pwre_merge.sh " . $ver . " " . $mroot . " " . $eroot . " " . $file;
-  system("$cmd");
+  system($ENV{pwre_bin} . "/pwre_merge.sh " . $ver . " " . $mroot . " " . $eroot . " " . $file);
 }
-
 
 #
 # _exists()
 #
-sub _exists ()
+sub _exists()
 {
   my($ret) = 1;
   use DB_File;
@@ -1535,9 +1463,8 @@ sub _exists ()
 #
 # _print()
 #
-sub _print ()
+sub _print()
 {
-
   use DB_File;
   tie(%envdb, "DB_File", $dbname, O_CREAT|O_RDWR, 0644) || die "++ can't tie $dbname!";
 
@@ -1559,8 +1486,8 @@ sub _print ()
 
 sub _module()
 {
-  if ( $ver == 1) {
-    printf( "-- Set module %s\n", $_[0]);
+  if ($ver == 1) {
+    printf("-- Set module %s\n", $_[0]);
   }
 
   my($modu) = $_[0];
@@ -1571,11 +1498,10 @@ sub _module()
 
   $ENV{"pwre_module"} = $modu;
   $ENV{"pwre_bmodule"} = $modu;
-  if ( $modu eq "rt") {
+  if ($modu eq "rt") {
 #    $ENV{"pwre_bmodule"} = "exp";
     $ENV{"pwre_sroot"} = $sroot . "/src";
-  }
-  else {
+  } else {
     $ENV{"pwre_sroot"} = $sroot . "/" . $modu;
   }
   $ENV{"pwr_exe"} = $broot . "/" . $ENV{"pwre_bmodule"} . "/exe";
@@ -1636,8 +1562,7 @@ sub create_dir()
   }
 }
 
-
-sub get_vars ()
+sub get_vars()
 {
   if ($_[1] eq "") {
     $sroot = 	get_var(" Source root [%s]? ", $sroot);
@@ -1676,9 +1601,7 @@ sub get_vars ()
   }
 
   $varstr = join(";", ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc));
-
 }
-
 
 sub get_var()
 {
@@ -1690,25 +1613,22 @@ sub get_var()
     $tmp = $_[1];
   }
   return $tmp;
-
 }
 
-sub read_vars ()
+sub read_vars()
 {
   $varstr = $envdb{$label};
   ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc)  =  split(/;/, $varstr);
   @vars = ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc);
 }
 
-
-sub show_vars ()
+sub show_vars()
 {
-
   my($module) = $ENV{"pwre_module"};
 
   printf("-- Module.........: %s\n", $module);
   printf("-- Source root....: %s\n", $sroot);
-  if ( $vmsinc ne "") {
+  if ($vmsinc ne "") {
     printf("-- Import root....: %s\n", $vmsinc);
   }
   printf("-- Build root.....: %s\n", $broot);
@@ -1718,146 +1638,122 @@ sub show_vars ()
   printf("-- Description....: %s\n", $desc);
 }
 
-sub update_db ()
+sub update_db()
 {
   $envdb{$label} = $varstr;
 }
 
-sub usage_add ()
+sub usage_add()
 {
-  printf("++\n");
   printf("++ add env                       : Adds an environment to the database\n");
 }
 
-sub usage_configure ()
+sub usage_configure()
 {
-  printf("++\n");
   printf("++ configure                     : Configures an environment\n");
 }
 
-sub usage_build ()
+sub usage_build()
 {
-  printf("++\n");
   printf("++ build 'branch' 'subbranch' ['flavour']['phase']: Build, eg. pwre build exe rt* src all\n");
 }
 
-sub usage_build_module ()
+sub usage_build_module()
 {
-  printf("++\n");
   printf("++ build_module                     : Builds all in current module\n");
 }
 
-sub usage_build_kernel ()
+sub usage_build_kernel()
 {
-  printf("++\n");
   printf("++ build_kernel                  : Builds all in kernel modules (kernel, xtt, wb)\n");
 }
 
-sub usage_build_all_modules ()
+sub usage_build_all_modules()
 {
-  printf("++\n");
   printf("++ build_all_modules             : Builds all in all modules\n");
 }
 
-sub usage_build_all_wbl ()
+sub usage_build_all_wbl()
 {
-  printf("++\n");
   printf("++ build_all_wbl                 : Builds wbl in all modules\n");
 }
 
-sub usage_ebuild ()
+sub usage_ebuild()
 {
-  printf("++\n");
   printf("++ ebuild 'block' 'flavour'       : Builds rt or op block\n");
 }
 
-sub usage_clean_exe_all ()
+sub usage_clean_exe_all()
 {
-  printf("++\n");
   printf("++ clean_exe_all                 : Cleans all exe in all modules\n");
 }
 
-sub usage_method_build ()
+sub usage_method_build()
 {
-  printf("++\n");
   printf("++ method_build                  : Rebuild method dependent programs\n");
 }
 
-sub usage_create_all_modules ()
+sub usage_create_all_modules()
 {
-  printf("++\n");
   printf("++ create_all_modules            : Create build trees for all modules\n");
 }
 
-sub usage_copy ()
+sub usage_copy()
 {
-  printf("++\n");
   printf("++ copy                          : Copy Proview include files from the VMS host\n");
 }
 
-sub usage_create ()
+sub usage_create()
 {
-  printf("++\n");
   printf("++ create                        : Creates the build directory tree\n");
 }
 
-sub usage_dele ()
+sub usage_dele()
 {
-  printf("++\n");
   printf("++ delete 'env'                  : Deletes an environment from the database\n");
 }
 
-sub usage_help ()
+sub usage_help()
 {
-  printf("++\n");
   printf("++ help                          : Lists all command verbs\n");
 }
 
-sub usage_list ()
+sub usage_list()
 {
-  printf("++\n");
   printf("++ list                          : Lists all environments in the database\n");
 }
 
-sub usage_init ()
+sub usage_init()
 {
-  printf("++\n");
   printf("++ init 'env'                    : Inits an environment\n");
 }
 
-sub usage_import ()
+sub usage_import()
 {
-  printf("++\n");
   printf("++ import 'block' ['flavour']    : Import files from import root, block dbs, rt, op, java, doc\n");
 }
 
-sub usage_module ()
+sub usage_module()
 {
-  printf("++\n");
   printf("++ module 'module'               : Set module\n");
 }
 
-sub usage_merge ()
+sub usage_merge()
 {
-  printf("++\n");
   printf("++ merge                         : Merge module base to exp base\n");
 }
 
-sub usage_modify ()
+sub usage_modify()
 {
-  printf("++\n");
   printf("++ modify 'env'                  : Modfies an existing environment\n");
 }
 
-
-sub usage_show ()
+sub usage_show()
 {
-  printf("++\n");
   printf("++ show [env]                    : Shows current or given environment\n");
 }
 
-sub usage_tags ()
+sub usage_tags()
 {
-  printf("++\n");
   printf("++ tags                          : Creates a CRiSP tag-file named ~/pwre/tags\n");
 }
