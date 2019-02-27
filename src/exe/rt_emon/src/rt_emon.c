@@ -2184,10 +2184,7 @@ static void getHandlerObject()
     }
     created = TRUE;
   }
-  aref.Objid = l.emonObject;
-  aref.Offset = 0;
-  aref.Size = sizeof(pwr_sClass_MessageHandler);
-  aref.Flags.m = 0;
+  aref = cdh_ObjidToAref(l.emonObject);
   sts = gdh_DLRefObjectInfoAttrref(&aref, (pwr_tAddress*)&l.emon, &dlid);
   if (EVEN(sts)) {
     errh_Fatal("Couldn't get direct link to message handler object\n%m", sts);

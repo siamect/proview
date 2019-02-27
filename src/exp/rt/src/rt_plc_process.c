@@ -616,15 +616,17 @@ static void create_thread(plc_sThread* tp, plc_sProctbl* ptp, plc_sProcess* pp)
 {
   pwr_tStatus sts;
   long int phase;
+  pwr_tOid oid;
 
   if (!pp->is_core)
-    tp->aref.Objid = ptp->thread;
-  else {
-    sts = gdh_GetClassList(pwr_cClass_PlcThread, &tp->aref.Objid);
+    tp->aref = cdh_ObjidToAref(ptp->thread);
+  else {    
+    sts = gdh_GetClassList(pwr_cClass_PlcThread, &oid);
     if (EVEN(sts)) {
       errh_Error("Can't find PlcThread object, %m", sts);
       return;
     }
+    tp->aref = cdh_ObjidToAref(oid);
     ptp->thread = tp->aref.Objid;
   }
   tp->init = ptp->init;

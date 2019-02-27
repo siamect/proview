@@ -67,10 +67,7 @@ void NMpsCell_init_time(pwr_sClass_NMpsCell* object)
   /* Get new object pointers at restart av plc program */
   data_index = (plc_t_DataInfo*)&object->Data1P;
   for (i = 1; i <= object->LastIndex; i++) {
-    attrref.Objid = data_index->DataP.Aref.Objid;
-    attrref.Offset = 0;
-    attrref.Size = 4;
-    attrref.Flags.b.Indirect = 0;
+    attrref = data_index->DataP.Aref;
     sts = gdh_DLRefObjectInfoAttrref(
         &attrref, (pwr_tAddress*)&data_index->DataP, &data_index->Data_Dlid);
     data_index++;
@@ -231,10 +228,7 @@ void NMpsCell_exec(plc_sThread* tp, pwr_sClass_NMpsCell* object)
 	if ( !data_index)
 	  break;
 
-        extern_attrref.Objid = object->ExternObjId;
-        extern_attrref.Offset = 0;
-        extern_attrref.Size = 4;
-        extern_attrref.Flags.b.Indirect = 0;
+        extern_attrref = cdh_ObjidToAref(object->ExternObjId);
         object->ExternStatus = gdh_DLRefObjectInfoAttrref(
             &extern_attrref, (pwr_tAddress*)&data_pointer, &data_dlid);
       }
@@ -261,7 +255,7 @@ void NMpsCell_exec(plc_sThread* tp, pwr_sClass_NMpsCell* object)
 #endif
         }
         data_index->DataP.Ptr = (pwr_tFloat32*)data_pointer;
-        data_index->DataP.Aref.Objid = object->ExternObjId;
+        data_index->DataP.Aref = cdh_ObjidToAref(object->ExternObjId);
         data_index->Data_Front = 1;
         data_index->Data_Back = 1;
         data_index->Data_Dlid = data_dlid;
@@ -444,7 +438,7 @@ void NMpsCell_exec(plc_sThread* tp, pwr_sClass_NMpsCell* object)
 #endif
       }
       object->Data1P.Ptr = object->InPointer;
-      object->Data1P.Aref.Objid = object->InObjId;
+      object->Data1P.Aref = cdh_ObjidToAref(object->InObjId);
       object->Data1_Front = 1;
       object->Data1_Back = 0;
       object->InFlag = 0;
@@ -490,7 +484,7 @@ void NMpsCell_exec(plc_sThread* tp, pwr_sClass_NMpsCell* object)
 #endif
       }
       object->Data1P.Ptr = object->InPointer;
-      object->Data1P.Aref.Objid = object->InObjId;
+      object->Data1P.Aref = cdh_ObjidToAref(object->InObjId);
       object->Data1_Front = 1;
       object->Data1_Back = 1;
       object->Data1_Dlid = object->InDlid;
@@ -513,7 +507,7 @@ void NMpsCell_exec(plc_sThread* tp, pwr_sClass_NMpsCell* object)
       data_last = (plc_t_DataInfo*)&object->Data1P;
       data_last += object->LastIndex;
       data_last->DataP.Ptr = object->InPointer;
-      data_last->DataP.Aref.Objid = object->InObjId;
+      data_last->DataP.Aref = cdh_ObjidToAref(object->InObjId);
       data_last->Data_Front = 0;
       data_last->Data_Back = 1;
       data_last->Data_Dlid = object->InDlid;
@@ -534,7 +528,7 @@ void NMpsCell_exec(plc_sThread* tp, pwr_sClass_NMpsCell* object)
       data_last = (plc_t_DataInfo*)&object->Data1P;
       data_last += object->LastIndex;
       data_last->DataP.Ptr = object->InPointer;
-      data_last->DataP.Aref.Objid = object->InObjId;
+      data_last->DataP.Aref = cdh_ObjidToAref(object->InObjId);
       data_last->Data_Front = 1;
       data_last->Data_Back = 1;
       data_last->Data_Dlid = object->InDlid;
@@ -808,10 +802,7 @@ void NMpsStoreCell_exec(plc_sThread* tp, pwr_sClass_NMpsStoreCell* object)
 	if ( !data_index)
 	  break;
 
-        extern_attrref.Objid = object->ExternObjId;
-        extern_attrref.Offset = 0;
-        extern_attrref.Size = 4;
-        extern_attrref.Flags.b.Indirect = 0;
+        extern_attrref = cdh_ObjidToAref(object->ExternObjId);
         object->ExternStatus = gdh_DLRefObjectInfoAttrref(
             &extern_attrref, (pwr_tAddress*)&data_pointer, &data_dlid);
       }
@@ -838,7 +829,7 @@ void NMpsStoreCell_exec(plc_sThread* tp, pwr_sClass_NMpsStoreCell* object)
 #endif
         }
         data_index->DataP.Ptr = (pwr_tVoid*)data_pointer;
-        data_index->DataP.Aref.Objid = object->ExternObjId;
+        data_index->DataP.Aref = cdh_ObjidToAref(object->ExternObjId);
         data_index->Data_Front = 1;
         data_index->Data_Back = 1;
         data_index->Data_Dlid = data_dlid;
@@ -1162,7 +1153,7 @@ void NMpsStoreCell_exec(plc_sThread* tp, pwr_sClass_NMpsStoreCell* object)
 #endif
       }
       object->Data1P.Ptr = object->InPointer;
-      object->Data1P.Aref.Objid = object->InObjId;
+      object->Data1P.Aref = cdh_ObjidToAref(object->InObjId);
       object->Data1_Front = 1;
       object->Data1_Back = 0;
       object->Data1_Select = 0;
@@ -1207,7 +1198,7 @@ void NMpsStoreCell_exec(plc_sThread* tp, pwr_sClass_NMpsStoreCell* object)
 #endif
       }
       object->Data1P.Ptr = object->InPointer;
-      object->Data1P.Aref.Objid = object->InObjId;
+      object->Data1P.Aref = cdh_ObjidToAref(object->InObjId);
       object->Data1_Front = 1;
       object->Data1_Back = 1;
       object->Data1_Select = 0;
@@ -1229,7 +1220,7 @@ void NMpsStoreCell_exec(plc_sThread* tp, pwr_sClass_NMpsStoreCell* object)
       data_last = (plc_t_DataInfo*)&object->Data1P;
       data_last += object->LastIndex;
       data_last->DataP.Ptr = object->InPointer;
-      data_last->DataP.Aref.Objid = object->InObjId;
+      data_last->DataP.Aref = cdh_ObjidToAref(object->InObjId);
       data_last->Data_Front = 0;
       data_last->Data_Back = 1;
       data_last->Data_Dlid = object->InDlid;
@@ -1247,7 +1238,7 @@ void NMpsStoreCell_exec(plc_sThread* tp, pwr_sClass_NMpsStoreCell* object)
       data_last = (plc_t_DataInfo*)&object->Data1P;
       data_last += object->LastIndex;
       data_last->DataP.Ptr = object->InPointer;
-      data_last->DataP.Aref.Objid = object->InObjId;
+      data_last->DataP.Aref = cdh_ObjidToAref(object->InObjId);
       data_last->Data_Front = 1;
       data_last->Data_Back = 1;
       data_last->Data_Dlid = object->InDlid;
@@ -2656,7 +2647,7 @@ void NMpsMirrorCell_init(object) pwr_sClass_NMpsMirrorCell* object;
   data_index = (plc_t_DataInfoMirCell*)&object->Data1P;
   memset(&attrref, 0, sizeof(attrref));
   for (i = 0; i < object->LastIndex; i++) {
-    attrref.Objid = data_index->DataP.Aref.Objid;
+    attrref = data_index->DataP.Aref;
     sts = gdh_DLRefObjectInfoAttrref(
         &attrref, (pwr_tAddress*)&data_index->DataP, &data_index->Data_Dlid);
     data_index++;
@@ -2690,7 +2681,7 @@ void NMpsMirrorCell_exec(plc_sThread* tp, pwr_sClass_NMpsMirrorCell* object)
   memset(&attrref, 0, sizeof(attrref));
   for (i = 0; i < object->TempLastIndex; i++) {
     if (data_index->DataP.Ptr == 0) {
-      attrref.Objid = data_index->DataP.Aref.Objid;
+      attrref = data_index->DataP.Aref;
       sts = gdh_DLRefObjectInfoAttrref(
           &attrref, (pwr_tAddress*)&data_index->DataP, &data_index->Data_Dlid);
     }

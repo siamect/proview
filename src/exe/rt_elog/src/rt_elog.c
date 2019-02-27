@@ -178,11 +178,7 @@ void Init()
   sts = gdh_GetClassList(pwr_cClass_MessageHandler, &MHObjId);
   If_Error_Log_Exit(sts, "Couldn't find message handler object");
 
-  AttrRef.Objid = MHObjId;
-  AttrRef.Body = 0;
-  AttrRef.Offset = 0;
-  AttrRef.Size = sizeof(pwr_sClass_MessageHandler);
-  AttrRef.Flags.m = 0;
+  AttrRef = cdh_ObjidToAref(MHObjId);
 
   sts = gdh_DLRefObjectInfoAttrref(&AttrRef, (pwr_tAddress*)&MH, &DLId);
   If_Error_Log_Exit(sts, "Couldn't get direct link to message handler object");

@@ -705,8 +705,7 @@ static pwr_tStatus nmpsmir_data_db_create(mir_ctx mirctx,
 
     if (local) {
       /* Get a direct link to the original object */
-      memset(&attrref, 0, sizeof(attrref));
-      attrref.Objid = objid;
+      attrref = cdh_ObjidToAref(objid);
       sts = gdh_DLRefObjectInfoAttrref(&attrref,
           (pwr_tAddress*)&(*datalist_ptr)->orig_data_ptr,
           &(*datalist_ptr)->orig_data_subid);
@@ -749,8 +748,7 @@ static pwr_tStatus nmpsmir_data_db_create(mir_ctx mirctx,
     }
 
     /* Get a direct link to the new object */
-    memset(&attrref, 0, sizeof(attrref));
-    attrref.Objid = (*datalist_ptr)->data_objid;
+    attrref = cdh_ObjidToAref((*datalist_ptr)->data_objid);
     sts = gdh_DLRefObjectInfoAttrref(&attrref,
         (pwr_tAddress*)&(*datalist_ptr)->data_ptr,
         &(*datalist_ptr)->data_subid);
@@ -1028,8 +1026,7 @@ static pwr_tStatus nmpsmir_cellmirlist_add(mir_ctx mirctx, pwr_tObjid objid,
   cellmirlist_ptr->initialized = 1;
 
   /* Direct link to the cell */
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = objid;
+  attrref = cdh_ObjidToAref(objid);
   sts = gdh_DLRefObjectInfoAttrref(
       &attrref, (pwr_tAddress*)&cellmirlist_ptr->cell, &cellmirlist_ptr->subid);
   if (EVEN(sts))
@@ -1053,8 +1050,7 @@ static pwr_tStatus nmpsmir_cellmirlist_add(mir_ctx mirctx, pwr_tObjid objid,
       return NMPS__COLLECTCLASS;
     }
 
-    memset(&attrref, 0, sizeof(attrref));
-    attrref.Objid = cellmirlist_ptr->collect_cell;
+    attrref = cdh_ObjidToAref(cellmirlist_ptr->collect_cell);
     sts = gdh_DLRefObjectInfoAttrref(&attrref,
         (pwr_tAddress*)&cellmirlist_ptr->collect_cell_ptr,
         &cellmirlist_ptr->collect_cell_dlid);
@@ -1150,8 +1146,7 @@ static pwr_tStatus nmpsmir_convconfiglist_add(pwr_tObjid objid,
   convconfiglist_ptr->objid = objid;
 
   /* Direct link to the cell */
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = objid;
+  attrref = cdh_ObjidToAref(objid);
   sts = gdh_DLRefObjectInfoAttrref(&attrref,
       (pwr_tAddress*)&convconfiglist_ptr->convconfig,
       &convconfiglist_ptr->subid);
@@ -1214,8 +1209,7 @@ static pwr_tStatus nmps_cellmir_init(mir_ctx mirctx)
     return NMPS__MIRRORCONFIG;
 
   /* Direct link to the cell */
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = objid;
+  attrref = cdh_ObjidToAref(objid);
   sts = gdh_DLRefObjectInfoAttrref(
       &attrref, (pwr_tAddress*)&mirctx->mirrorconfig, &mirctx->mirrorconf_dlid);
   if (EVEN(sts))

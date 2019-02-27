@@ -1425,8 +1425,7 @@ static pwr_tStatus nmpstrans_reqlist_add(trans_ctx transctx, pwr_tObjid objid,
   reqlist_ptr->objid = objid;
 
   /* Direct link to the request object */
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = objid;
+  attrref = cdh_ObjidToAref(objid);
   sts = gdh_DLRefObjectInfoAttrref(
       &attrref, (pwr_tAddress*)&reqlist_ptr->req, &reqlist_ptr->subid);
   if (EVEN(sts))
@@ -1439,8 +1438,7 @@ static pwr_tStatus nmpstrans_reqlist_add(trans_ctx transctx, pwr_tObjid objid,
     if (EVEN(sts))
       return NMPS__REQDISPLAYOBJECT;
 
-    memset(&attrref, 0, sizeof(attrref));
-    attrref.Objid = reqlist_ptr->req->DisplayObject;
+    attrref = cdh_ObjidToAref(reqlist_ptr->req->DisplayObject);
     sts = gdh_DLRefObjectInfoAttrref(&attrref,
         (pwr_tAddress*)&reqlist_ptr->display_object_ptr,
         &reqlist_ptr->display_object_subid);
@@ -1449,8 +1447,7 @@ static pwr_tStatus nmpstrans_reqlist_add(trans_ctx transctx, pwr_tObjid objid,
   }
 
   /* Direct link to the SendRemTrans object */
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = reqlist_ptr->req->SendRemTrans;
+  attrref = cdh_ObjidToAref(reqlist_ptr->req->SendRemTrans);
 
   sts = gdh_GetObjectClass(attrref.Objid, &class);
   if (EVEN(sts))
@@ -1476,8 +1473,7 @@ static pwr_tStatus nmpstrans_reqlist_add(trans_ctx transctx, pwr_tObjid objid,
   sts = gdh_GetChild(reqlist_ptr->req->SendRemTrans, &buff_objid);
   if (EVEN(sts))
     return NMPS__REQSENDREMTRANSBUF;
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = buff_objid;
+  attrref = cdh_ObjidToAref(buff_objid);
   sts = gdh_DLRefObjectInfoAttrref(&attrref,
       (pwr_tAddress*)&reqlist_ptr->send_remtransbuff_ptr,
       &reqlist_ptr->send_remtransbuff_subid);
@@ -1485,8 +1481,7 @@ static pwr_tStatus nmpstrans_reqlist_add(trans_ctx transctx, pwr_tObjid objid,
     LogAndReturn(NMPS__REQSENDREMTRANSBUF, sts);
 
   /* Direct link to the RcvRemTrans object */
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = reqlist_ptr->req->RcvRemTrans;
+  attrref = cdh_ObjidToAref(reqlist_ptr->req->RcvRemTrans);
 
   sts = gdh_GetObjectClass(attrref.Objid, &class);
   if (EVEN(sts))
@@ -1512,8 +1507,7 @@ static pwr_tStatus nmpstrans_reqlist_add(trans_ctx transctx, pwr_tObjid objid,
   sts = gdh_GetChild(reqlist_ptr->req->RcvRemTrans, &buff_objid);
   if (EVEN(sts))
     return NMPS__REQRCVREMTRANSBUF;
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = buff_objid;
+  attrref = cdh_ObjidToAref(buff_objid);
   sts = gdh_DLRefObjectInfoAttrref(&attrref,
       (pwr_tAddress*)&reqlist_ptr->rcv_remtransbuff_ptr,
       &reqlist_ptr->rcv_remtransbuff_subid);
@@ -1522,8 +1516,7 @@ static pwr_tStatus nmpstrans_reqlist_add(trans_ctx transctx, pwr_tObjid objid,
 
   if (reqlist_ptr->req->Function & NMPS_REQUESTFUNC_CELLINSERT) {
     /* Direct link to the Cell object */
-    memset(&attrref, 0, sizeof(attrref));
-    attrref.Objid = reqlist_ptr->req->CellObject;
+    attrref = cdh_ObjidToAref(reqlist_ptr->req->CellObject);
     sts = gdh_DLRefObjectInfoAttrref(&attrref,
         (pwr_tAddress*)&reqlist_ptr->cell_ptr, &reqlist_ptr->cell_subid);
     if (EVEN(sts))
@@ -1647,8 +1640,7 @@ static pwr_tStatus nmpstrans_rcvlist_add(trans_ctx transctx, pwr_tObjid objid,
   rcvlist_ptr->objid = objid;
 
   /* Direct link to the DataRcv object */
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = objid;
+  attrref = cdh_ObjidToAref(objid);
   sts = gdh_DLRefObjectInfoAttrref(
       &attrref, (pwr_tAddress*)&rcvlist_ptr->rcv, &rcvlist_ptr->subid);
   if (EVEN(sts))
@@ -1661,8 +1653,7 @@ static pwr_tStatus nmpstrans_rcvlist_add(trans_ctx transctx, pwr_tObjid objid,
     if (EVEN(sts))
       return NMPS__RCVDISPLAYOBJECT;
 
-    memset(&attrref, 0, sizeof(attrref));
-    attrref.Objid = rcvlist_ptr->rcv->DisplayObject;
+    attrref = cdh_ObjidToAref(rcvlist_ptr->rcv->DisplayObject);
     sts = gdh_DLRefObjectInfoAttrref(&attrref,
         (pwr_tAddress*)&rcvlist_ptr->display_object_ptr,
         &rcvlist_ptr->display_object_subid);
@@ -1672,8 +1663,7 @@ static pwr_tStatus nmpstrans_rcvlist_add(trans_ctx transctx, pwr_tObjid objid,
 
   if (rcvlist_ptr->rcv->Function & NMPS_DATARCVFUNC_ACK) {
     /* Direct link to the SendRemTrans object */
-    memset(&attrref, 0, sizeof(attrref));
-    attrref.Objid = rcvlist_ptr->rcv->SendRemTrans;
+    attrref = cdh_ObjidToAref(rcvlist_ptr->rcv->SendRemTrans);
 
     sts = gdh_GetObjectClass(attrref.Objid, &class);
     if (EVEN(sts))
@@ -1699,8 +1689,7 @@ static pwr_tStatus nmpstrans_rcvlist_add(trans_ctx transctx, pwr_tObjid objid,
     sts = gdh_GetChild(rcvlist_ptr->rcv->SendRemTrans, &buff_objid);
     if (EVEN(sts))
       return NMPS__RCVSENDREMTRANSBUF;
-    memset(&attrref, 0, sizeof(attrref));
-    attrref.Objid = buff_objid;
+    attrref = cdh_ObjidToAref(buff_objid);
     sts = gdh_DLRefObjectInfoAttrref(&attrref,
         (pwr_tAddress*)&rcvlist_ptr->send_remtransbuff_ptr,
         &rcvlist_ptr->send_remtransbuff_subid);
@@ -1709,8 +1698,7 @@ static pwr_tStatus nmpstrans_rcvlist_add(trans_ctx transctx, pwr_tObjid objid,
   }
 
   /* Direct link to the RcvRemTrans object */
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = rcvlist_ptr->rcv->RcvRemTrans;
+  attrref = cdh_ObjidToAref(rcvlist_ptr->rcv->RcvRemTrans);
 
   sts = gdh_GetObjectClass(attrref.Objid, &class);
   if (EVEN(sts))
@@ -1736,8 +1724,7 @@ static pwr_tStatus nmpstrans_rcvlist_add(trans_ctx transctx, pwr_tObjid objid,
   sts = gdh_GetChild(rcvlist_ptr->rcv->RcvRemTrans, &buff_objid);
   if (EVEN(sts))
     return NMPS__RCVRCVREMTRANSBUF;
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = buff_objid;
+  attrref = cdh_ObjidToAref(buff_objid);
   sts = gdh_DLRefObjectInfoAttrref(&attrref,
       (pwr_tAddress*)&rcvlist_ptr->rcv_remtransbuff_ptr,
       &rcvlist_ptr->rcv_remtransbuff_subid);
@@ -1746,8 +1733,7 @@ static pwr_tStatus nmpstrans_rcvlist_add(trans_ctx transctx, pwr_tObjid objid,
 
   if (rcvlist_ptr->rcv->Function & NMPS_DATARCVFUNC_CELLINSERT) {
     /* Direct link to the Cell object */
-    memset(&attrref, 0, sizeof(attrref));
-    attrref.Objid = rcvlist_ptr->rcv->CellObject;
+    attrref = cdh_ObjidToAref(rcvlist_ptr->rcv->CellObject);
     sts = gdh_DLRefObjectInfoAttrref(&attrref,
         (pwr_tAddress*)&rcvlist_ptr->cell_ptr, &rcvlist_ptr->cell_subid);
     if (EVEN(sts))
@@ -1862,16 +1848,14 @@ static pwr_tStatus nmpstrans_sndlist_add(trans_ctx transctx, pwr_tObjid objid,
   sndlist_ptr->objid = objid;
 
   /* Direct link to the DataSend object */
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = objid;
+  attrref = cdh_ObjidToAref(objid);
   sts = gdh_DLRefObjectInfoAttrref(
       &attrref, (pwr_tAddress*)&sndlist_ptr->snd, &sndlist_ptr->subid);
   if (EVEN(sts))
     LogAndReturn(NMPS__BCKCELL, sts);
 
   /* Direct link to the SendRemTrans object */
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = sndlist_ptr->snd->SendRemTrans;
+  attrref = cdh_ObjidToAref(sndlist_ptr->snd->SendRemTrans);
 
   sts = gdh_GetObjectClass(attrref.Objid, &class);
   if (EVEN(sts))
@@ -1897,8 +1881,7 @@ static pwr_tStatus nmpstrans_sndlist_add(trans_ctx transctx, pwr_tObjid objid,
   sts = gdh_GetChild(sndlist_ptr->snd->SendRemTrans, &buff_objid);
   if (EVEN(sts))
     return NMPS__SNDSENDREMTRANSBUF;
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = buff_objid;
+  attrref = cdh_ObjidToAref(buff_objid);
   sts = gdh_DLRefObjectInfoAttrref(&attrref,
       (pwr_tAddress*)&sndlist_ptr->send_remtransbuff_ptr,
       &sndlist_ptr->send_remtransbuff_subid);
@@ -1907,8 +1890,7 @@ static pwr_tStatus nmpstrans_sndlist_add(trans_ctx transctx, pwr_tObjid objid,
 
   if (sndlist_ptr->snd->Function & NMPS_DATASENDFUNC_ACK) {
     /* Direct link to the RcvRemTrans object */
-    memset(&attrref, 0, sizeof(attrref));
-    attrref.Objid = sndlist_ptr->snd->RcvRemTrans;
+    attrref = cdh_ObjidToAref(sndlist_ptr->snd->RcvRemTrans);
 
     sts = gdh_GetObjectClass(attrref.Objid, &class);
     if (EVEN(sts))
@@ -1934,8 +1916,7 @@ static pwr_tStatus nmpstrans_sndlist_add(trans_ctx transctx, pwr_tObjid objid,
     sts = gdh_GetChild(sndlist_ptr->snd->RcvRemTrans, &buff_objid);
     if (EVEN(sts))
       return NMPS__SNDRCVREMTRANSBUF;
-    memset(&attrref, 0, sizeof(attrref));
-    attrref.Objid = buff_objid;
+    attrref = cdh_ObjidToAref(buff_objid);
     sts = gdh_DLRefObjectInfoAttrref(&attrref,
         (pwr_tAddress*)&sndlist_ptr->rcv_remtransbuff_ptr,
         &sndlist_ptr->rcv_remtransbuff_subid);
@@ -1988,8 +1969,7 @@ static pwr_tStatus nmps_get_transconfig(trans_ctx transctx)
     return NMPS__TRANSCONFIG;
 
   /* Direct link to the cell */
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = objid;
+  attrref = cdh_ObjidToAref(objid);
   sts = gdh_DLRefObjectInfoAttrref(&attrref,
       (pwr_tAddress*)&transctx->transconfig, &transctx->transconfig_dlid);
   if (EVEN(sts))

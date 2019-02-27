@@ -2528,7 +2528,7 @@ static pwr_tStatus io_init_card(
           if (agent_type == io_eType_Agent)
             cp->AgentControlled = 1;
           memset(&attrref, 0, sizeof(attrref));
-          attrref.Objid = objid;
+          attrref = cdh_ObjidToAref(objid);
           sts = gdh_DLRefObjectInfoAttrref(&attrref, (void*)&cp->op, &cp->Dlid);
           if (EVEN(sts))
             return sts;
@@ -2556,7 +2556,7 @@ static pwr_tStatus io_init_card(
             sts = gdh_GetChild(objid, &chan);
             while (ODD(sts)) {
               memset(&attrref, 0, sizeof(attrref));
-              attrref.Objid = chan;
+              attrref = cdh_ObjidToAref(chan);
               sts = gdh_DLRefObjectInfoAttrref(
                   &attrref, (void*)&chan_op, &chandlid);
               if (EVEN(sts))
@@ -3061,7 +3061,7 @@ static pwr_tStatus io_init_rack(
       if (agent_type == io_eType_Agent)
         rp->AgentControlled = 1;
       memset(&attrref, 0, sizeof(attrref));
-      attrref.Objid = objid;
+      attrref = cdh_ObjidToAref(objid);
       sts = gdh_DLRefObjectInfoAttrref(&attrref, &rp->op, &rp->Dlid);
       if (EVEN(sts))
         return sts;
@@ -3186,7 +3186,7 @@ static pwr_tStatus io_init_agent(
             ap->Swap = AgentSwap;
           }
           memset(&attrref, 0, sizeof(attrref));
-          attrref.Objid = objid;
+          attrref = cdh_ObjidToAref(objid);
           sts = gdh_DLRefObjectInfoAttrref(&attrref, &ap->op, &ap->Dlid);
           if (EVEN(sts))
             return sts;

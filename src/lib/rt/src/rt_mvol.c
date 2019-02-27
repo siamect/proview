@@ -465,7 +465,7 @@ mvol_sAttribute* mvol_ArefToAttribute(
   else
     parsize = param->Info.Size / param->Info.Elements;
 
-  if (arp->Size > parsize || arp->Size == 0) {
+  if ((arp->Size > parsize && arp->Flags.b.Object) || arp->Size == 0) {
     /* If this is the first attribute, then match whole object
        otherwise say the attribute is ok!  */
 
@@ -474,7 +474,7 @@ mvol_sAttribute* mvol_ArefToAttribute(
       ap->adef = NULL;
       strcpy(ap->name, "");
     }
-  } else if (param->Info.Elements > 1 || acp->attr[i].flags.b.dynamic) {
+  } else if ((param->Info.Elements > 1 && arp->Size < param->Info.Size) || acp->attr[i].flags.b.dynamic) {
     /* Calculate index.  */
 
     ap->idx = idx;

@@ -114,8 +114,7 @@ static pwr_tStatus nmpsappl_data_db_create(nmpsappl_t_data_list** data_list,
   gdh_tDlid subid;
 
   /* Get a direct link to the original object */
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = objid;
+  attrref = cdh_ObjidToAref(objid);
   sts = gdh_DLRefObjectInfoAttrref(&attrref, &object_ptr, &subid);
   if (EVEN(sts))
     return sts;
@@ -205,7 +204,7 @@ static pwr_tStatus nmpsappl_cell_init(char* cell_name, pwr_tObjid* orig_objid,
 
   /* It might already have been stored */
   memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = cell_objid;
+  attrref = cdh_ObjidToAref(cell_objid);
 
   sts = gdh_GetObjectClass(attrref.Objid, orig_class);
   if (EVEN(sts))

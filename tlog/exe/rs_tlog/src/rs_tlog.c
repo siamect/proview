@@ -1192,8 +1192,7 @@ static pwr_tUInt32 tlog_objectlist_add(
 
         strcpy( objectlist_ptr->name, namebuf);
 
-	memset( &attrref, 0, sizeof( attrref));
-	attrref.Objid = object_objid;
+	attrref = cdh_ObjidToAref(object_objid);
 	sts = gdh_DLRefObjectInfoAttrref ( &attrref,
 		(pwr_tAddress *) &objectlist_ptr->object_ptr,
 		&objectlist_ptr->subid);
@@ -1353,8 +1352,7 @@ static pwr_tUInt32 tlog_getconfigobject( pwr_sClass_TLogConfigure **TLogConf,
 	  if ( EVEN(sts)) return sts;
 	  if ( class == pwr_cClass_TLogConfigure)
 	  {
-	    memset( &attrref, 0, sizeof( attrref));
-	    attrref.Objid = Objid;
+	    attrref = cdh_ObjidToAref(Objid);
 	    sts = gdh_DLRefObjectInfoAttrref ( &attrref,
 				(pwr_tAddress *) TLogConf, &subid);
             if ( EVEN(sts)) return sts;

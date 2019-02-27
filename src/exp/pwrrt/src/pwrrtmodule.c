@@ -1589,13 +1589,8 @@ Aref_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
   ArefObject *self;
 
   self = (ArefObject *)type->tp_alloc(type, 0);
-  if (self != NULL) {
-    self->aref.Objid = pwr_cNOid;
-    self->aref.Body = 0;
-    self->aref.Offset = 0;
-    self->aref.Size = 0;
-    self->aref.Flags.m = 0;
-  }
+  if (self != NULL)
+    self->aref = pwr_cNAttrRef;
 
   return (PyObject *)self;
 }

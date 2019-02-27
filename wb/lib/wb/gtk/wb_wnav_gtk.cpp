@@ -365,8 +365,7 @@ void WNavGtk::sel_convert_cb(GtkWidget* w, GtkSelectionData* selection_data,
       break;
     }
     case wnav_eItemType_Object:
-      memset(&attrref, 0, sizeof(attrref));
-      attrref.Objid = item->objid;
+      attrref = cdh_ObjidToAref(item->objid);
       sts = (wnav->format_selection_cb)(
           wnav->parent_ctx, attrref, &buffp, 0, 0, format);
       if (sts) {

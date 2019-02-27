@@ -448,8 +448,7 @@ static pwr_tStatus nmpsbck_data_db_create(
     LogAndReturn(NMPS__BCKDATA, sts);
 
   /* Get a direct link to the object */
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = objid;
+  attrref = cdh_ObjidToAref(objid);
   sts = gdh_DLRefObjectInfoAttrref(
       &attrref, (pwr_tAddress*)&data_ptr, &data_subid);
   if (EVEN(sts))
@@ -682,8 +681,7 @@ static pwr_tStatus nmpsbck_cellist_add(bck_ctx bckctx, pwr_tObjid objid,
   cellist_ptr->class = class;
 
   /* Direct link to the cell */
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = objid;
+  attrref = cdh_ObjidToAref(objid);
   sts = gdh_DLRefObjectInfoAttrref(
       &attrref, (pwr_tAddress*)&cellist_ptr->cell, &cellist_ptr->subid);
   if (EVEN(sts))
@@ -740,8 +738,7 @@ static pwr_tStatus nmps_get_bckconfig(bck_ctx bckctx)
     return NMPS__BCKCONFIG;
 
   /* Direct link to the cell */
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = objid;
+  attrref = cdh_ObjidToAref(objid);
   sts = gdh_DLRefObjectInfoAttrref(
       &attrref, (pwr_tAddress*)&bckctx->bckconfig, &bckctx->bckconfig_dlid);
   if (EVEN(sts))

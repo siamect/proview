@@ -3546,15 +3546,16 @@ static void gcg_print_rtdbref(gcg_ctx gcgctx, pwr_tObjid objdid, char prefix,
   /* Print direct link command */
   if (reftype == 0) {
     IF_PR fprintf(gcgctx->files[GCGM1_RTDBREF_FILE],
-        "{ (void **)&%c%s, {{%u,%u},0,0,0, {0}}, %uUL,  sizeof(*%c%s), %ld, "
+        "{ (void **)&%c%s, {{%u,%u},0,0,0, {%u}}, %uUL,  sizeof(*%c%s), %ld, "
         "0},\n",
-        prefix, vldh_IdToStr(0, objdid), objdid.oix, objdid.vid, cid, prefix,
+        prefix, vldh_IdToStr(0, objdid), objdid.oix, objdid.vid, pwr_mAttrRef_Object,
+	cid, prefix,
         vldh_IdToStr(1, objdid), reftype);
   } else {
     IF_PR fprintf(gcgctx->files[GCGM1_RTDBREF2_FILE],
-        "{ (void **)&%c%s, {{%u,%u},0,0,0,{0}}, %uUL, sizeof(*%c%s), %ld, "
+        "{ (void **)&%c%s, {{%u,%u},0,0,0,{%u}}, %uUL, sizeof(*%c%s), %ld, "
         "0},\n",
-        prefix, vldh_IdToStr(0, objdid), objdid.oix, objdid.vid, cid, prefix,
+	prefix, vldh_IdToStr(0, objdid), objdid.oix, objdid.vid, pwr_mAttrRef_Object, cid, prefix,
         vldh_IdToStr(1, objdid), reftype);
   }
 }

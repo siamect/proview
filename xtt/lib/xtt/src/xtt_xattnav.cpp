@@ -373,8 +373,7 @@ int XAttNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
       case xnav_eItemType_Crossref: {
         ItemCrossref* itemc = (ItemCrossref*)item;
 
-        memset(&attrref, 0, sizeof(attrref));
-        attrref.Objid = itemc->objid;
+        attrref = cdh_ObjidToAref(itemc->objid);
         (xattnav->popup_menu_cb)(xattnav->parent_ctx, attrref,
             (unsigned long)xmenu_eItemType_Crossref,
             (unsigned long)xmenu_mUtility_AttrEditor, itemc->ref_name, x, y);

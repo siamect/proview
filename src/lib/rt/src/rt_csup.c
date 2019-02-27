@@ -67,7 +67,7 @@ lst_sEntry* csup_Init(pwr_tStatus* status, pwr_tObjid tid, float scanTime)
   for (*sts = gdh_GetClassList(pwr_cClass_CycleSup, &cid); ODD(*sts);
        *sts = gdh_GetNextObject(cid, &cid)) {
     cp = calloc(1, sizeof(*cp));
-    cp->aref.Objid = cid;
+    cp->aref = cdh_ObjidToAref(cid);
     *sts = gdh_DLRefObjectInfoAttrref(&cp->aref, (void**)&cp->o, &cp->dlid);
     if (EVEN(*sts))
       goto error;

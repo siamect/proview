@@ -254,7 +254,6 @@ static sNode* init_node(pwr_tObjid oid, sNode* np, pwr_tBoolean new_sub)
   pwr_sClass_NodeLinkSup* o = NULL;
   gdh_tDlid dlid = pwr_cNDlid;
   pwr_tBoolean is_alias = 0;
-  cdh_uTypeId tid;
 
   sts = gdh_IsAlias(oid, &is_alias);
   if (is_alias)
@@ -262,13 +261,7 @@ static sNode* init_node(pwr_tObjid oid, sNode* np, pwr_tBoolean new_sub)
 
   /* Allocate and initiate NodeLink control block */
   if (np == NULL) {
-    tid.pwr = pwr_cClass_NodeLinkSup;
-    tid.c.bix = 1;
-    aref.Objid = oid;
-    aref.Offset = 0;
-    aref.Size = sizeof(pwr_sClass_NodeLinkSup);
-    aref.Body = tid.pwr;
-    aref.Flags.m = 0;
+    aref = cdh_ObjidToAref(oid);
     sts = gdh_DLRefObjectInfoAttrref(&aref, (pwr_tAddress*)&o, &dlid);
     if (EVEN(sts)) {
       errh_Error("Couldn't get direct link to NodeLink object, %m", sts);
@@ -297,9 +290,6 @@ static sNode* init_node(pwr_tObjid oid, sNode* np, pwr_tBoolean new_sub)
     dt = MAX(1, (int)(o->SubscriptionInterval * 1000));
     tmo = MAX(2 * dt / 100, 100); /* 10 s */
     sts = gdh_SetSubscriptionDefaults(dt, tmo);
-
-    tid.pwr = pwr_eClass_Node;
-    tid.c.bix = 1;
 
     aref.Objid = o->Node;
     sts = gdh_ClassAttrToAttrref(pwr_eClass_Node, ".SystemStatus", &aref);

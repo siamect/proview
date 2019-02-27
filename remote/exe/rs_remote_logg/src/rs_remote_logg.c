@@ -61,6 +61,7 @@
 #include "pwr_remoteclasses.h"
 #include "co_time.h"
 #include "co_dcli.h"
+#include "co_cdh.h"
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"
@@ -206,7 +207,7 @@ static pwr_tStatus logg_loggconflist_add(logg_ctx loggctx, pwr_tObjid objid,
 
   /* Direct link to the cell */
   memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = objid;
+  attrref = cdh_ObjidToAref(objid);
   sts = gdh_DLRefObjectInfoAttrref(&attrref,
       (pwr_tAddress*)&loggconflist_ptr->loggconf, &loggconflist_ptr->subid);
   if (EVEN(sts))

@@ -102,8 +102,7 @@ int XNav::show_plcthreads()
 
   sts = gdh_GetClassList(pwr_cClass_PlcThread, &objid);
   while (ODD(sts)) {
-    memset(&attrref, 0, sizeof(attrref));
-    attrref.Objid = objid;
+    attrref = cdh_ObjidToAref(objid);
     sts = gdh_DLRefObjectInfoAttrref(
         &attrref, (pwr_tAddress*)&object_ptr, &subid);
     if (EVEN(sts))
@@ -1907,8 +1906,7 @@ int XNav::show_remtrans(pwr_tObjid remnode_objid)
       return sts;
 
     if (cid == pwr_cClass_RemTrans) {
-      memset(&attrref, 0, sizeof(attrref));
-      attrref.Objid = objid;
+      attrref = cdh_ObjidToAref(objid);
       sts = gdh_DLRefObjectInfoAttrref(
           &attrref, (pwr_tAddress*)&object_ptr, &subid);
       if (EVEN(sts))

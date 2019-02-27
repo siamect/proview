@@ -3071,10 +3071,10 @@ static int rttsys_objectlist_add(pwr_tObjid object_objid, pwr_tClassId class,
     sts = gdh_ClassAttrToAttrref(class, attrstr, &attrref);
     if (EVEN(sts))
       return sts;
+    attrref.Objid = object_objid;
   } else
-    memset(&attrref, 0, sizeof(attrref));
+    attrref = cdh_ObjidToAref(object_objid);
 
-  attrref.Objid = object_objid;
   sts = gdh_DLRefObjectInfoAttrref(&attrref,
       (pwr_tAddress*)&objectlist_ptr->value_ptr, &objectlist_ptr->subid);
   if (EVEN(sts))
@@ -4593,8 +4593,7 @@ static int rttsys_cellist_add(pwr_tObjid object_objid, pwr_tClassId class,
 
   strcpy(objectlist_ptr->name, namebuf);
 
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = object_objid;
+  attrref = cdh_ObjidToAref(object_objid);
   sts = gdh_DLRefObjectInfoAttrref(&attrref,
       (pwr_tAddress*)&objectlist_ptr->value_ptr, &objectlist_ptr->subid);
   if (EVEN(sts))
@@ -5114,8 +5113,7 @@ static int rttsys_dichanlist_add(pwr_tObjid chan_objid,
   if (strlen(chanlist_ptr->channame) > 10)
     rtt_cut_segments(chanlist_ptr->channame, namebuf, 1);
 
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = chan_objid;
+  attrref = cdh_ObjidToAref(chan_objid);
   if (local) {
     /* Get a direct link to channel object */
     sts = gdh_DLRefObjectInfoAttrref(&attrref,
@@ -5643,8 +5641,7 @@ static int rttsys_dochanlist_add(pwr_tObjid chan_objid,
   if (strlen(chanlist_ptr->channame) > 10)
     rtt_cut_segments(chanlist_ptr->channame, namebuf, 1);
 
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = chan_objid;
+  attrref = cdh_ObjidToAref(chan_objid);
   if (local) {
     /* Get a direct link to channel object */
     sts = gdh_DLRefObjectInfoAttrref(&attrref,
@@ -6152,8 +6149,7 @@ static int rttsys_aichanlist_add(pwr_tObjid chan_objid,
   if (strlen(chanlist_ptr->channame) > 10)
     rtt_cut_segments(chanlist_ptr->channame, namebuf, 1);
 
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = chan_objid;
+  attrref = cdh_ObjidToAref(chan_objid);
   if (local) {
     /* Get a direct link to channel object */
     sts = gdh_DLRefObjectInfoAttrref(&attrref,
@@ -6652,8 +6648,7 @@ static int rttsys_aochanlist_add(pwr_tObjid chan_objid,
   if (strlen(chanlist_ptr->channame) > 10)
     rtt_cut_segments(chanlist_ptr->channame, namebuf, 1);
 
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = chan_objid;
+  attrref = cdh_ObjidToAref(chan_objid);
   if (local) {
     /* Get a direct link to channel object */
     sts = gdh_DLRefObjectInfoAttrref(&attrref,
@@ -7185,8 +7180,7 @@ static int rttsys_cochanlist_add(pwr_tObjid chan_objid,
   if (strlen(chanlist_ptr->channame) > 10)
     rtt_cut_segments(chanlist_ptr->channame, namebuf, 1);
 
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = chan_objid;
+  attrref = cdh_ObjidToAref(chan_objid);
   if (local) {
     /* Get a direct link to channel object */
     sts = gdh_DLRefObjectInfoAttrref(&attrref,
@@ -7631,8 +7625,7 @@ static int rttsys_devicelist_add(pwr_tObjid device_objid,
   /* Last two segment only */
   rtt_cut_segments(devicelist_ptr->devicename, namebuf, 2);
 
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = device_objid;
+  attrref = cdh_ObjidToAref(device_objid);
   local = 1; /* Only local object implemented so far */
   if (local) {
     /* Get a direct link to device object */
@@ -7949,8 +7942,7 @@ static int rttsys_remnodelist_add(pwr_tObjid remnode_objid,
   /* Last two segment only */
   rtt_cut_segments(remnodelist_ptr->remnodename, namebuf, 2);
 
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = remnode_objid;
+  attrref = cdh_ObjidToAref(remnode_objid);
   local = 1; /* Only local object implemented so far */
   if (local) {
     /* Get a direct link to remnode object */
@@ -8524,8 +8516,7 @@ static int rttsys_remtranslist_add(pwr_tObjid remtrans_objid,
   /* Last one segment only */
   rtt_cut_segments(remtranslist_ptr->remtransname, namebuf, 1);
 
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = remtrans_objid;
+  attrref = cdh_ObjidToAref(remtrans_objid);
   local = 1; /* Only local object implemented so far */
   if (local) {
     /* Get a direct link to remtrans object */
@@ -8895,8 +8886,7 @@ static int rttsys_runningtimelist_add(pwr_tObjid runningtime_objid,
   /* Last one segment only */
   rtt_cut_segments(runningtimelist_ptr->runningtimename, namebuf, 1);
 
-  memset(&attrref, 0, sizeof(attrref));
-  attrref.Objid = runningtime_objid;
+  attrref = cdh_ObjidToAref(runningtime_objid);
   local = 1; /* Only local object implemented so far */
   if (local) {
     /* Get a direct link to runningtime object */
