@@ -1,8 +1,8 @@
 Volume Simul $ClassVolume 0.0.0.8 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X37"
-    Attr NextCix = "_X17"
-    Attr NextTix[0] = "_X6"
+    Attr NextOix = "_X62"
+    Attr NextCix = "_X26"
+    Attr NextTix[0] = "_X7"
   EndBody
   Object Type $TypeHier 3 28-FEB-2016 17:05:51.66
     Object Sim_GenType $TypeDef 1 23-MAY-2016 16:31:35.02
@@ -36,6 +36,46 @@ Volume Simul $ClassVolume 0.0.0.8
           Attr Text = "None"
           Attr PgmName = "None"
           Attr Value = 8
+        EndBody
+      EndObject
+    EndObject
+    Object Sim_SignalGeneratorType $TypeDef 6 06-FEB-2019 15:14:22.59
+      Body SysBody 06-FEB-2019 15:09:17.18
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object Straight $Value 38 06-FEB-2019 15:09:17.18
+        Body SysBody 06-FEB-2019 15:09:17.18
+          Attr Text = "Straight"
+          Attr PgmName = "Straight"
+        EndBody
+      EndObject
+      Object Sine $Value 39 06-FEB-2019 15:09:17.18
+        Body SysBody 06-FEB-2019 15:09:17.18
+          Attr Text = "Sine"
+          Attr PgmName = "Sine"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object HalfSine $Value 40 06-FEB-2019 15:09:17.18
+        Body SysBody 06-FEB-2019 15:09:17.18
+          Attr Text = "HalfSine"
+          Attr PgmName = "HalfSine"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object Square $Value 41 06-FEB-2019 15:09:17.18
+        Body SysBody 06-FEB-2019 15:09:17.18
+          Attr Text = "Square"
+          Attr PgmName = "Square"
+          Attr Value = 3
+        EndBody
+      EndObject
+      Object SawTooth $Value 42 06-FEB-2019 15:09:17.18
+        Body SysBody 06-FEB-2019 15:09:17.18
+          Attr Text = "SawTooth"
+          Attr PgmName = "SawTooth"
+          Attr Value = 4
         EndBody
       EndObject
     EndObject
@@ -1115,23 +1155,23 @@ Volume Simul $ClassVolume 0.0.0.8
     !  @Version 1.0
     !  @Summary Interface Simulink model.
     !  Interface to Simulink model.
-    !
+    ! 
     !  @image orm_simulink_fo.png
     !  
     !  A simulink model can be exported to c-code, and the Sim_Simulink class
     !  makes it possible to call this model from a function object.
     !  Defined input and output signals for the model can be connected
     !  to inputs and outputs in the function object.
-    !
+    ! 
     !  Enter the model name in the attribute ModelName. Also enter the 
     !  input signal names for corresponding input pins in AInName and DInName,
     !  and the output signal names for the corresponding output pins in 
     !  OutAName and OutDName.
-    !
+    ! 
     !  The step function for the model is called every scan of the plc thread.
     !  The scan time of the thread should be adapted to the scantime of the model
     !  or vv.
-    !
+    ! 
     !  When generating c code for the model, the files 'modelname'.c and 
     !  'modelname'.h is created. 'modelname'.h together with rtwtypes.h should
     !  be copied to $pwrp_inc, and 'modelname.c' should be compiled and built 
@@ -1142,6 +1182,7 @@ Volume Simul $ClassVolume 0.0.0.8
     !*/
     Object Sim_Simulink $ClassDef 16 18-NOV-2016 10:44:32.21
       Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
         Attr Method = 6
         Attr Flags = 16
         Attr PopEditor = 2
@@ -1451,7 +1492,7 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr Class = "pwrs:Class-$PlcNode"
           EndBody
         EndObject
-        !/**	
+        !/**
         ! Simulink model name.
         !*/
         Object ModelName $Intern 2 18-NOV-2016 10:43:32.00
@@ -1460,7 +1501,7 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$String32"
           EndBody
         EndObject
-        !/**	
+        !/**
         ! Simulink input signal names for A1 - A8.
         ! Defines the connection between an analog input of
         ! the function object (A1 - A8) and a simulink input signal.
@@ -1475,7 +1516,7 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$String32"
           EndBody
         EndObject
-        !/**	
+        !/**
         ! Simulink input signal names for d1 - d8.
         ! Defines the connection between a digial input of
         ! the function object (d1 - d8) and a simulink input signal.
@@ -1490,7 +1531,7 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$String32"
           EndBody
         EndObject
-        !/**	
+        !/**
         ! Simulink output signal names for OA1 - OA8.
         ! Defines the connection between an analog output of
         ! the function object (OA1 - OA8) and a simulink output signal.
@@ -1505,7 +1546,7 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$String32"
           EndBody
         EndObject
-        !/**	
+        !/**
         ! Simulink input signal names for OD1 - OD8.
         ! Defines the connection between a digital output of
         ! the function object (od1 - od8) and a simulink output signal.
@@ -1522,6 +1563,647 @@ Volume Simul $ClassVolume 0.0.0.8
         EndObject
       EndObject
       Object Template Sim_Simulink 2151907328 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Sim_SignalGenerator $ClassDef 18 06-FEB-2019 15:12:05.50
+      Body SysBody 06-FEB-2019 15:11:38.90
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-FEB-2019 15:11:38.90
+        Body SysBody 06-FEB-2019 15:11:38.90
+          Attr StructName = "Sim_SignalGenerator"
+          Attr NextAix = "_X41"
+        EndBody
+        Object Description $Attribute 21 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object ActualValue $Attribute 22 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "ActualValue"
+            Attr Size = 4
+            Attr Flags = 1044
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Type $Attribute 23 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:14:39.36
+            Attr PgmName = "Type"
+            Attr Size = 4
+            Attr TypeRef = "Simul:Type-Sim_SignalGeneratorType"
+          EndBody
+        EndObject
+        Object Amplitude $Attribute 24 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Amplitude"
+            Attr Size = 4
+            Attr Flags = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Period $Attribute 25 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Period"
+            Attr Size = 4
+            Attr Flags = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Bias $Attribute 26 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Bias"
+            Attr Size = 4
+            Attr Flags = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Noise $Attribute 27 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Noise"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object PulseWidth $Attribute 28 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "PulseWidth"
+            Attr Size = 4
+            Attr Flags = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object FilterTime $Attribute 29 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "FilterTime"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ActualValueMin $Attribute 30 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "ActualValueMin"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ActualValueMax $Attribute 31 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "ActualValueMax"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object AmplitudeMin $Attribute 32 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "AmplitudeMin"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object AmplitudeMax $Attribute 33 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "AmplitudeMax"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object PeriodMin $Attribute 34 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "PeriodMin"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object PeriodMax $Attribute 35 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "PeriodMax"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object BiasMin $Attribute 36 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "BiasMin"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object BiasMax $Attribute 37 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "BiasMax"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Accum $Attribute 38 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Accum"
+            Attr Size = 4
+            Attr Flags = 1044
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object BiasConnected $Attribute 39 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "BiasConnected"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PlcConnect $Attribute 40 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "PlcConnect"
+            Attr Size = 24
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Sim_SignalGenerator 2152431616 01-JAN-1970 01:00:00.00
+        Body RtBody 06-FEB-2019 15:18:41.93
+          Attr Amplitude = 1.000000e+02
+          Attr Period = 1.000000e+00
+          Attr PulseWidth = 5.000000e+01
+          Attr AmplitudeMax = 1.000000e+02
+          Attr PeriodMax = 1.000000e+01
+          Attr BiasMax = 1.000000e+02
+        EndBody
+      EndObject
+    EndObject
+    Object Sim_SignalGeneratorFo $ClassDef 19 06-FEB-2019 15:12:12.66
+      Body SysBody 06-FEB-2019 15:11:38.90
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-FEB-2019 15:11:38.90
+        Body SysBody 06-FEB-2019 15:11:38.90
+          Attr StructName = "Sim_SignalGeneratorFo"
+          Attr NextAix = "_X11"
+        EndBody
+        Object Bias $Input 6 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Bias"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Bias"
+          EndBody
+        EndObject
+        Object ScanTime $Intern 7 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "ScanTime"
+            Attr Flags = 8456193
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object PlcConnect $Intern 8 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "PlcConnect"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object PlcConnectP $Intern 9 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "PlcConnectP"
+            Attr Flags = 67585
+            Attr TypeRef = "pwrs:Type-$Void"
+          EndBody
+        EndObject
+        Object ActualValue $Output 10 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "ActualValue"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 06-FEB-2019 15:11:38.90
+        Body SysBody 06-FEB-2019 15:11:38.90
+          Attr StructName = "Sim_SignalGeneratorFo"
+          Attr NextAix = "_X3"
+        EndBody
+        Object PlcNode $Buffer 2 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 44 06-FEB-2019 15:11:38.90
+        Body SysBody 06-FEB-2019 15:11:38.90
+          Attr object_type = 11
+          Attr parameters[0] = 1
+          Attr parameters[1] = 3
+          Attr parameters[2] = 1
+          Attr parameters[3] = 0
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 0
+          Attr default_mask[1] = 1
+          Attr segname_annotation = 1
+          Attr compmethod = 35
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 10
+          Attr executeordermethod = 2
+          Attr objname = "SignalGenerator"
+          Attr graphname = "SignalGenerator"
+          Attr debugpar = "ActualValue"
+        EndBody
+      EndObject
+      Object RtXtt $RtMenu 45 06-FEB-2019 15:11:38.90
+        Object PlcConnect $MenuRef 46 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr ButtonName = "PlcConnect"
+            Attr RefAttribute = "PlcConnect"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Sim_SignalGeneratorFo 2152693760 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Sim_CylinderTank $ClassDef 20 06-FEB-2019 15:12:18.65
+      Body SysBody 06-FEB-2019 15:11:38.90
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-FEB-2019 15:11:38.90
+        Body SysBody 06-FEB-2019 15:11:38.90
+          Attr StructName = "Sim_CylinderTank"
+          Attr NextAix = "_X21"
+        EndBody
+        Object Description $Attribute 11 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Radius $Attribute 12 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Radius"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Height $Attribute 13 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Height"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxLevel $Attribute 14 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "MaxLevel"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MinLevel $Attribute 15 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "MinLevel"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Level $Attribute 16 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Level"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Volume $Attribute 17 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Volume"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object InFlow $Attribute 18 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "InFlow"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object OutFlow $Attribute 19 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "OutFlow"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object PlcConnect $Attribute 20 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "PlcConnect"
+            Attr Size = 24
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Sim_CylinderTank 2152955904 01-JAN-1970 01:00:00.00
+        Body RtBody 06-FEB-2019 15:19:14.05
+          Attr Radius = 5.000000e-01
+          Attr Height = 2.000000e+00
+          Attr MaxLevel = 1.800000e+00
+        EndBody
+      EndObject
+    EndObject
+    Object Sim_CylinderTankFo $ClassDef 21 06-FEB-2019 15:12:28.98
+      Body SysBody 06-FEB-2019 15:11:38.90
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-FEB-2019 15:11:38.90
+        Body SysBody 06-FEB-2019 15:11:38.90
+          Attr StructName = "Sim_CylinderTankFo"
+          Attr NextAix = "_X15"
+        EndBody
+        Object InFlow $Input 8 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "InFlow"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "InFlow"
+          EndBody
+        EndObject
+        Object OutFlow $Input 9 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "OutFlow"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "OutFlow"
+          EndBody
+        EndObject
+        Object ScanTime $Intern 10 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "ScanTime"
+            Attr Flags = 65537
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object PlcConnect $Intern 11 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "PlcConnect"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object PlcConnectP $Intern 12 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "PlcConnectP"
+            Attr Flags = 67585
+            Attr TypeRef = "pwrs:Type-$Char"
+          EndBody
+        EndObject
+        Object Level $Output 13 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Level"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Level"
+          EndBody
+        EndObject
+        Object Volume $Output 14 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Volume"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Volume"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 06-FEB-2019 15:11:38.90
+        Body SysBody 06-FEB-2019 15:11:38.90
+          Attr StructName = "Sim_CylinderTankFo"
+          Attr NextAix = "_X3"
+        EndBody
+        Object PlcNode $Buffer 2 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 49 06-FEB-2019 15:11:38.90
+        Body SysBody 06-FEB-2019 15:11:38.90
+          Attr object_type = 11
+          Attr parameters[0] = 2
+          Attr parameters[1] = 3
+          Attr parameters[2] = 2
+          Attr parameters[3] = 0
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 3
+          Attr default_mask[1] = 1
+          Attr segname_annotation = 1
+          Attr compmethod = 35
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 10
+          Attr executeordermethod = 2
+          Attr objname = "CylinderTank"
+          Attr graphname = "CylinderTank"
+        EndBody
+      EndObject
+      Object RtXtt $RtMenu 50 06-FEB-2019 15:11:38.90
+        Object PlcConnect $MenuRef 51 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr ButtonName = "PlcConnect"
+            Attr RefAttribute = "PlcConnect"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Sim_CylinderTankFo 2153218048 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Sim_Furnace $ClassDef 22 06-FEB-2019 15:12:37.23
+      Body SysBody 06-FEB-2019 15:11:38.90
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-FEB-2019 15:11:38.90
+        Body SysBody 06-FEB-2019 15:11:38.90
+          Attr StructName = "Sim_Furnace"
+          Attr NextAix = "_X17"
+        EndBody
+        Object Power $Attribute 9 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Power"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Temperature $Attribute 10 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Temperature"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MinTemperature $Attribute 11 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "MinTemperature"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxTemperature $Attribute 12 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "MaxTemperature"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object EnvTemperature $Attribute 13 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "EnvTemperature"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ThermalCapacity $Attribute 14 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "ThermalCapacity"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ThermalResistance $Attribute 15 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "ThermalResistance"
+            Attr Size = 4
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object PlcConnect $Attribute 16 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "PlcConnect"
+            Attr Size = 24
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Sim_Furnace 2153480192 01-JAN-1970 01:00:00.00
+        Body RtBody 06-FEB-2019 15:20:12.75
+          Attr MaxTemperature = 1.000000e+02
+          Attr EnvTemperature = 2.000000e+01
+          Attr ThermalCapacity = 2.000000e+03
+          Attr ThermalResistance = 1.000000e+01
+        EndBody
+      EndObject
+    EndObject
+    Object Sim_FurnaceFo $ClassDef 23 06-FEB-2019 15:12:45.89
+      Body SysBody 06-FEB-2019 15:11:38.90
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-FEB-2019 15:11:38.90
+        Body SysBody 06-FEB-2019 15:11:38.90
+          Attr StructName = "Sim_FurnaceFo"
+          Attr NextAix = "_X12"
+        EndBody
+        Object Power $Input 7 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Power"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Power"
+          EndBody
+        EndObject
+        Object ScanTime $Intern 8 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "ScanTime"
+            Attr Flags = 67585
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object PlcConnect $Intern 9 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "PlcConnect"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object PlcConnectP $Intern 10 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "PlcConnectP"
+            Attr Flags = 67585
+            Attr TypeRef = "pwrs:Type-$Char"
+          EndBody
+        EndObject
+        Object Temperature $Output 11 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr PgmName = "Temperature"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "Temp"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 06-FEB-2019 15:11:38.90
+        Body SysBody 06-FEB-2019 15:11:38.90
+          Attr StructName = "Sim_FurnaceFo"
+          Attr NextAix = "_X3"
+        EndBody
+        Object PlcNode $Buffer 2 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 54 06-FEB-2019 15:11:38.90
+        Body SysBody 06-FEB-2019 15:11:38.90
+          Attr object_type = 11
+          Attr parameters[0] = 1
+          Attr parameters[1] = 3
+          Attr parameters[2] = 1
+          Attr parameters[3] = 0
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 1
+          Attr default_mask[1] = 1
+          Attr segname_annotation = 1
+          Attr compmethod = 35
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 10
+          Attr executeordermethod = 2
+          Attr objname = "Sim_FurnaceFo"
+          Attr graphname = "Sim_FurnaceFo"
+        EndBody
+      EndObject
+      Object RtXtt $RtMenu 55 06-FEB-2019 15:11:38.90
+        Object PlcConnect $MenuRef 56 06-FEB-2019 15:11:38.90
+          Body SysBody 06-FEB-2019 15:11:38.90
+            Attr ButtonName = "PlcConnect"
+            Attr RefAttribute = "PlcConnect"
+            Attr FilterArguments[0] = "Sim_Furnace"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Sim_FurnaceFo 2153742336 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
         EndBody
         Body DevBody 01-JAN-1970 01:00:00.00

@@ -51,5 +51,11 @@ void Sim_SouTOoFilter_exec(
 void Sim_Delay_exec(plc_sThread* tp, pwr_sClass_Sim_Delay* plc_obj);
 void Sim_SlewRateLimiter_exec(
     plc_sThread* tp, pwr_sClass_Sim_SlewRateLimiter* plc_obj);
+void Sim_SignalGeneratorFo_init(pwr_sClass_Sim_SignalGeneratorFo* o);
+void Sim_SignalGeneratorFo_exec(plc_sThread* tp, pwr_sClass_Sim_SignalGeneratorFo* o);
+void Sim_CylinderTankFo_init(pwr_sClass_Sim_CylinderTankFo* o);
+void Sim_CylinderTankFo_exec(plc_sThread* tp, pwr_sClass_Sim_CylinderTankFo* o);
+void Sim_FurnaceFo_init(pwr_sClass_Sim_FurnaceFo* o);
+void Sim_FurnaceFo_exec(plc_sThread* tp, pwr_sClass_Sim_FurnaceFo* o);
 
 #endif
