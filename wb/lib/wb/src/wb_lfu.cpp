@@ -1231,7 +1231,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
               if (wblfile == 0) {
                 wblfile = fopen(fname, "w");
                 if (wblfile == 0) {
-                  char msg[200];
+                  char msg[240];
                   sprintf(msg, "Error, unable to create file %s, ", fname);
                   MsgWindow::message('E', msg, msgw_ePop_Default);
                   break;
@@ -1264,7 +1264,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
     dcli_translate_filename(filename, pwr_cNameFilePath);
     fpath = fopen(filename, "w");
     if (!fpath) {
-      char msg[200];
+      char msg[230];
       sprintf(msg, "Unable to open path file %s\n", filename);
       MsgWindow::message('E', msg, msgw_ePop_Default);
       syntax_error = 1;
@@ -1276,7 +1276,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   dcli_translate_filename(fname, pwr_cNameBootList);
   file = fopen(fname, "w");
   if (file == 0) {
-    char tmp[200];
+    char tmp[240];
     sprintf(tmp, "** Error, Unable to open file \"%s\"", fname);
     MsgWindow::message('E', tmp, msgw_ePop_Default);
     return LFU__NOFILE;
@@ -1963,7 +1963,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
     for (int i = 0; i < (int)nodevect.size(); i++) {
       for (int j = i + 1; j < (int)nodevect.size(); j++) {
         if (nodevect[i].vid == nodevect[j].vid) {
-          char msg[200];
+          char msg[450];
           pwr_tOName oname1, oname2;
           sts = ldh_ObjidToName(ldhses, nodevect[i].oid, ldh_eName_Hierarchy,
               oname1, sizeof(oname1), &size);
@@ -1982,7 +1982,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
         if (!streq(nodevect[i].address, "0.0.0.0")
             && !streq(nodevect[i].address, "127.0.0.1")
             && streq(nodevect[i].address, nodevect[j].address)) {
-          char msg[200];
+          char msg[450];
           pwr_tOName oname1, oname2;
           sts = ldh_ObjidToName(ldhses, nodevect[i].oid, ldh_eName_Hierarchy,
               oname1, sizeof(oname1), &size);
@@ -2036,7 +2036,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
           dcli_translate_filename(fname, filename);
           fp = fopen(fname, "w");
           if (!fp) {
-            char tmp[200];
+            char tmp[240];
             sprintf(tmp, "Error, Unable to open file \"%s\"\n", fname);
             MsgWindow::message('E', tmp, msgw_ePop_Default);
             return LFU__NOFILE;
@@ -2265,7 +2265,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
           dcli_translate_filename(fname, filename);
           fp = fopen(fname, "w");
           if (fp == 0) {
-            char tmp[200];
+            char tmp[240];
             sprintf(tmp, "Error, Unable to open file \"%s\"\n", fname);
             MsgWindow::message('E', tmp, msgw_ePop_Default);
             return LFU__NOFILE;
@@ -2291,7 +2291,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   dcli_translate_filename(fname, pwr_cNameDistribute);
   file = fopen(fname, "w");
   if (file == 0) {
-    char tmp[200];
+    char tmp[240];
     sprintf(tmp, "Error, Unable to open file \"%s\"\n", fname);
     MsgWindow::message('E', tmp, msgw_ePop_Default);
     return LFU__NOFILE;
@@ -2671,7 +2671,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
                 dcli_translate_filename(fname, fname);
                 optfile = fopen(fname, "w");
                 if (optfile == 0) {
-                  char tmp[200];
+                  char tmp[240];
                   sprintf(tmp, "Error, Unable to open file \"%s\"\n", fname);
                   MsgWindow::message('E', tmp, msgw_ePop_Default);
                   return LFU__NOFILE;
@@ -2692,7 +2692,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
                   dcli_translate_filename(fname, fname);
                   optfile = fopen(fname, "w");
                   if (optfile == 0) {
-                    char tmp[200];
+                    char tmp[240];
                     sprintf(tmp, "Error, Unable to open file \"%s\"\n", fname);
                     MsgWindow::message('E', tmp, msgw_ePop_Default);
                     return LFU__NOFILE;
@@ -3488,7 +3488,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
         dcli_translate_filename(fname, fname);
         fp = fopen(fname, "w");
         if (!fp) {
-          char tmp[200];
+          char tmp[240];
           sprintf(tmp, "Error, Unable to open file \"%s\"\n", fname);
           MsgWindow::message('E', tmp, msgw_ePop_Default);
           return LFU__NOFILE;
@@ -4225,7 +4225,7 @@ pwr_tStatus lfu_check_appl_file(
 pwr_tStatus lfu_check_opt_file(
     ldh_tSesContext ldhses, char* nodename, int bus_number, pwr_mOpSys opsys)
 {
-  pwr_tFileName fname;
+  char fname[280];
   pwr_tTime t;
   pwr_tFileName dir;
   pwr_tObjName name;

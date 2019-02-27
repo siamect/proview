@@ -64,7 +64,7 @@ static void usage()
 
 int main(int argc, char* argv[])
 {
-  setDebug(1);
+  log_setLevel(LOG_TRACE);
   int i;
   pwr_tFileName file;
   char graph_name[80];
@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
   CoXHelpQt* xhelp = new CoXHelpQt(0, xhelp_eUtility_Wtt, &sts);
   CoXHelpQt::set_default(xhelp);
 
-  debug_print("%s ", argv[0]);
+  log_debug("%s ", argv[0]);
   if (argc > 1) {
     for (i = 1; i < argc; i++) {
       fprintf(stderr, "%s ", argv[i]);

@@ -75,7 +75,7 @@ typedef struct {
   char error_file[120];
 } * t_ctx;
 
-static char dcli_message[180];
+static char dcli_message[280];
 static int dcli_message_set = 0;
 
 /*___Local function prototypes_______________________________________________*/

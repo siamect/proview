@@ -74,6 +74,14 @@ SObject pwrb:Class
 	EndBody
       EndObject
       !/**
+      !  Deadline for the plc thread.
+      !*/
+      Object Deadline $Attribute 37
+	Body SysBody
+	  Attr TypeRef = "pwrs:Type-$Float32"
+	EndBody
+      EndObject
+      !/**
       !  Plc thread options.
       !  Specification of the action when the execution time exceeds
       !  the scantime. 

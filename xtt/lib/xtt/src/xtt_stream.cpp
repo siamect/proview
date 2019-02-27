@@ -577,7 +577,7 @@ void XttCameraControlVapix::area_zoom(int x, int y, int width, int height,
 // Get current pan, tilt and zoom.
 int XttCameraControlVapix::get_position(double* pan, double* tilt, double* zoom)
 {
-  pwr_tCmd cmd;
+  char cmd[630];
   pwr_tFileName fname = "/tmp/campos.txt";
   FILE* fp;
   char line[100];

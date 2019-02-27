@@ -204,7 +204,7 @@ static pwr_tStatus HistEventFilter(xmenu_sMenuCall* ip)
 static pwr_tStatus OpenTrace(xmenu_sMenuCall* ip)
 {
   pwr_tAName name;
-  pwr_tCmd cmd;
+  char cmd[630];
   int sts;
   pwr_tOid parent;
   pwr_tOid oid;
@@ -348,7 +348,7 @@ static pwr_tStatus OpenTraceFilter(xmenu_sMenuCall* ip)
 static pwr_tStatus OpenTrend(xmenu_sMenuCall* ip)
 {
   pwr_tAName name;
-  char cmd[800];
+  char cmd[830];
   int sts;
   pwr_tObjid child;
   pwr_tClassId classid;
@@ -669,7 +669,7 @@ static pwr_tStatus CameraFilter(xmenu_sMenuCall* ip)
 static pwr_tStatus OpenHistory(xmenu_sMenuCall* ip)
 {
   pwr_tAName name;
-  char cmd[800];
+  char cmd[830];
   int sts;
   pwr_tOid oid, child;
   pwr_tClassId classid;
@@ -832,7 +832,7 @@ static pwr_tStatus OpenHistoryFilter(xmenu_sMenuCall* ip)
 static pwr_tStatus OpenFast(xmenu_sMenuCall* ip)
 {
   pwr_tAName name;
-  char cmd[800];
+  char cmd[830];
   int sts;
   pwr_tObjid child;
   pwr_tClassId classid;
@@ -1010,7 +1010,7 @@ static pwr_tStatus OpenObjectGraph(xmenu_sMenuCall* ip)
 {
   int sts;
   pwr_tAName name;
-  char cmd[800];
+  char cmd[830];
   pwr_sAttrRef aref;
   pwr_sAttrRef* objar;
 
@@ -1084,7 +1084,7 @@ static pwr_tStatus OpenParentObjectGraph(xmenu_sMenuCall* ip)
 {
   int sts;
   pwr_tAName name;
-  char cmd[800];
+  char cmd[830];
   pwr_sAttrRef aref;
   pwr_sAttrRef* objar;
   pwr_tAttrRef pobjar;
@@ -1693,7 +1693,7 @@ static pwr_tStatus Note(xmenu_sMenuCall* ip)
 {
   int sts;
   pwr_tAName name;
-  char cmd[420];
+  char cmd[430];
   pwr_sAttrRef* objar;
 
   if (!ip->ItemList
@@ -1847,7 +1847,7 @@ static pwr_tStatus Simulate(xmenu_sMenuCall* ip)
   pwr_tAName name;
   pwr_sAttrRef simconnect;
   pwr_sAttrRef aref;
-  char cmd[800];
+  char cmd[830];
   pwr_sAttrRef* objar;
 
   if (!ip->ItemList
@@ -2036,7 +2036,7 @@ static pwr_tStatus OpenTypeGraph(xmenu_sMenuCall* ip)
 {
   int sts;
   pwr_tAName name;
-  char cmd[800];
+  char cmd[1080];
   pwr_tTypeId attr_type;
   pwr_tUInt32 attr_size;
   pwr_tUInt32 attr_offset;

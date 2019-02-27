@@ -158,7 +158,7 @@ void XttFileviewGtk::list_ok_cb(GtkWidget* w, gpointer data)
       }
     }
     if (file_exist) {
-      char msg[200];
+      char msg[sizeof(input_text) + 1 + sizeof(Lng::translate("already exists")) + 1 + 1];
 
       strcpy(fileview->selected_file, input_text);
       sprintf(msg, "%s %s\n", input_text, Lng::translate("already exists"));

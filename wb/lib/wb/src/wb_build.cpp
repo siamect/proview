@@ -133,7 +133,7 @@ void wb_build::classlist(pwr_tCid cid)
 
 void wb_build::all(int no_export, int no_classvolumes, int no_flowfiles)
 {
-  pwr_tFileName fname;
+  char fname[280];
   int rebuild = 1;
   char currentnode[80];
   pwr_tFileName db_dir = "$pwrp_db";
@@ -499,20 +499,22 @@ void wb_build::cnf(char* nodename, void* volumelist, int volumecnt)
 {
   lfu_t_volumelist* vlist = (lfu_t_volumelist*)volumelist;
   pwr_tStatus sumsts = PWRB__NOBUILT;
-  pwr_tFileName src_fname, dest_fname;
+  char src_fname[280];
+  char dest_fname[280];
   std::vector<build_dir> users_dirv;
   build_dir node_dir;
-  pwr_tFileName src_dir, dest_dir, found_src_dir, found_dest_dir;
+  pwr_tFileName found_src_dir, found_dest_dir;
+  char src_dir[260];
+  char dest_dir[260];
   pwr_tStatus src_sts, dest_sts;
   int status;
   int bussid = 0;
-  int found;
   char node[80];
 
-  found = 0;
+  bool found = false;
   for (int i = 0; i < volumecnt; i++) {
     if (str_NoCaseStrcmp(nodename, vlist[i].p1) == 0) {
-      found = 1;
+      found = true;
       strncpy(node, vlist[i].p2, sizeof(node));
       status = sscanf(vlist[i].p3, "%d", &bussid);
       if (status != 1) {
@@ -1049,7 +1051,7 @@ void wb_build::plcpgm(pwr_tOid oid)
 void wb_build::xttgraph(pwr_tOid oid)
 {
   pwr_tFileName src_fname, dest_fname;
-  pwr_tCmd cmd;
+  char cmd[520];
   pwr_tString80 action;
   pwr_tString80 name;
   pwr_tTime dest_time, src_time;
@@ -1187,9 +1189,9 @@ void wb_build::webgraph(pwr_tOid oid)
 {
   pwr_tFileName dest_fname;
   pwr_tFileName src_fname;
-  pwr_tCmd cmd;
+  char cmd[520];
   pwr_tString80 java_name;
-  pwr_tString80 name;
+  char name[280];
   pwr_tTime dest_time, src_time;
   int check_hierarchy = cdh_ObjidIsNotNull(m_hierarchy);
   int hierarchy_found = 0;
@@ -1389,7 +1391,7 @@ void wb_build::appgraph(pwr_tOid oid)
 {
   pwr_tFileName dest_fname;
   pwr_tFileName src_fname;
-  pwr_tCmd cmd;
+  char cmd[520];
   pwr_tString80 graph_name;
   pwr_tString80 name;
   pwr_tTime dest_time, src_time;
@@ -1544,7 +1546,7 @@ void wb_build::opplaceweb(pwr_tOid oid)
     if (evenSts())
       return;
 
-    char msg[200];
+    char msg[300];
     sprintf(msg, "Build:    OpPlaceWeb Webpage generated %s", fname);
     MsgWindow::message('I', msg, msgw_ePop_No, oid);
   }
@@ -1797,7 +1799,7 @@ void wb_build::webbrowserconfig(pwr_tOid oid)
     // Write the file
     fp = fopen(fname, "w");
     if (!fp) {
-      char tmp[200];
+      char tmp[300];
       sprintf(tmp, "Build:    Unable to open file \"%s\"", fname);
       MsgWindow::message('E', tmp, msgw_ePop_No, oid);
       return;
@@ -1812,7 +1814,7 @@ void wb_build::webbrowserconfig(pwr_tOid oid)
 void wb_build::classdef(pwr_tOid oid)
 {
   pwr_tFileName src_fname, dest_fname;
-  pwr_tCmd cmd;
+  char cmd[520];
   pwr_tString80 action;
   pwr_tString80 name;
   pwr_tTime dest_time, src_time;
@@ -1881,7 +1883,7 @@ void wb_build::directories(char* dir, bld_ePass pass)
   pwr_tFileName found_file;
   int num;
   int sts;
-  pwr_tCmd cmd;
+  char cmd[800];
   pwr_tMask current_options = 0;
 
   dcli_translate_filename(fname, pwr_cNameDistribute);
@@ -2076,7 +2078,7 @@ void wb_build::export_import_files(int type, bld_ePass pass)
   pwr_tFileName found_file;
   int num;
   int sts;
-  pwr_tCmd cmd;
+  char cmd[550];
   char tag[20];
   pwr_tMask current_options = 0;
 
@@ -2196,8 +2198,7 @@ void wb_build::update_file(char* dest, char* src)
     dcli_translate_filename(dest_fname, dest);
     m_sts = dcli_file_time(dest_fname, &dest_time);
     if (opt.force || evenSts() || src_time.tv_sec > dest_time.tv_sec) {
-      pwr_tCmd cmd;
-
+      char cmd[520];
       sprintf(cmd, "cp %s %s", src_fname, dest_fname);
       system(cmd);
       sprintf(cmd, "Build:    Copy %s -> %s", src, dest);

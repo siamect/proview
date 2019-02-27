@@ -357,7 +357,6 @@ void print_subsrv()
   subsrv_tData* data;
   int i;
   pwr_tFileName fname = "/tmp/subsrv.txt";
-  char msg[200];
 
   fp = fopen(fname, "w");
   if (!fp)
@@ -406,6 +405,7 @@ void print_subsrv()
   free(data);
   fclose(fp);
 
+  char msg[25 + sizeof(fname) + 1];
   sprintf(msg, "Subscriptions printed to %s", fname);
   rtt_message('I', msg);
 }

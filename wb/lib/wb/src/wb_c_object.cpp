@@ -317,7 +317,7 @@ static void DeleteObjectNoCb(void* Ctx, void* CallbackData)
 static pwr_tStatus DeleteObject(ldh_sMenuCall* ip)
 {
   pwr_tStatus sts;
-  char msg[128];
+  char msg[150];
   pwr_tString80 name;
   int size;
   ldh_sMenuCall* mc;
@@ -1103,7 +1103,6 @@ static pwr_tStatus History(ldh_sMenuCall* ip)
   char item[300];
   int size;
   pwr_sMenuButton mb;
-  pwr_tCmd cmd;
   char categories[80];
   int showitem = 0;
   pwr_tCid cid;
@@ -1186,6 +1185,7 @@ static pwr_tStatus History(ldh_sMenuCall* ip)
     }
   }
 
+  char cmd[420];
   snprintf(cmd, sizeof(cmd), "open history/item=\"%s\"/categories=\"%s\"", item,
       categories);
   if (showitem)
@@ -1288,7 +1288,7 @@ static pwr_tStatus ConnectAttribute(ldh_sMenuCall* ip)
         ip->PointedSession, &PattrRef, &ip->Selected[0], sizeof(pwr_tAttrRef));
 
   if (ip->message_cb) {
-    char msg[200];
+    char msg[300];
 
     if (ODD(sts)) {
       pwr_tOName name;

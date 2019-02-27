@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
   int sts;
   char dev_name[20] = "eth1";
 
-  setDebug(1);
+  log_setLevel(LOG_TRACE);
 
   QApplication app(argc, argv);
   QApplication::setStyle(new PwrStyle());

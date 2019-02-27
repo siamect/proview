@@ -223,8 +223,7 @@ public:
   }
   void set_trace_attr(const char* object, const char* attribute,
       flow_eTraceType type, int inverted);
-  void get_trace_attr(
-      char* object, char* attribute, flow_eTraceType* type, int* inverted);
+  FlowTraceAttr get_trace_attr();
   void set_trace_data(void* data)
   {
     trace_p = data;
@@ -283,9 +282,9 @@ public:
   int get_annotation_input(int num, char** text);
   void set_radiobutton(int num, int value, int nodraw);
   void get_radiobutton(int num, int* value);
-  int get_conpoint_trace_attr(int num, char* trace_attr, flow_eTraceType* type)
+  FlowTraceAttr get_conpoint_trace_attr(int num)
   {
-    return nc->get_conpoint_trace_attr(num, trace_attr, type);
+    return nc->get_conpoint_trace_attr(num);
   }
   void set_fillcolor(flow_eDrawType color);
   void conpoint_select(int num);

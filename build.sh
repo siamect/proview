@@ -47,7 +47,7 @@ else
 fi
 
 # Setup pwre
-export pwre_bin=$root/src/tools/pwre/src/os_linux
+export pwre_bin=$root/src/tools/pwre/src
 export pwre_env_db=$root/pwre_db
 source $pwre_bin/pwre_function
 

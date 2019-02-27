@@ -49,7 +49,6 @@ int main(int argc, char* argv[])
 {
   char filename[256];
   char destination[256];
-  char cmd[200];
   char *s, *t;
   int i;
   int sts;
@@ -135,6 +134,7 @@ int main(int argc, char* argv[])
   if ((t = strstr(s, "beaninfo.java")))
     strcpy(t, "BeanInfo.java");
 
+  char cmd[9 + sizeof(destination) + 1 + sizeof(filename) + 1];
   if (streq(destination, ""))
     snprintf(cmd, sizeof(cmd), "javac %s", filename);
   else

@@ -357,7 +357,7 @@ int sev_dbsqlite::delete_table(pwr_tStatus* sts, char* tablename)
 int sev_dbsqlite::create_event_table(
     pwr_tStatus* sts, char* tablename, pwr_tMask options)
 {
-  char query[400];
+  char query[530];
   char* errmsg;
   char timeformatstr[80];
   char jumpstr[80];
@@ -608,7 +608,7 @@ int sev_dbsqlite::store_value(pwr_tStatus* sts, void* thread, int item_idx,
     return store_objectvalue(
         sts, item_idx, attr_idx, time, buf, m_items[item_idx].old_value, size);
   }
-  char query[400];
+  char query[1150];
   char* errmsg;
   char bufstr[512];
   char timstr[40];
@@ -1098,7 +1098,7 @@ int sev_dbsqlite::get_values(pwr_tStatus* sts, void* thread, pwr_tOid oid,
     return 0;
   }
 
-  char query[200];
+  char query[6400];
   char starttimstr[40];
   char endtimstr[40];
   int total_rows;
@@ -1513,7 +1513,7 @@ int sev_dbsqlite::get_values(pwr_tStatus* sts, void* thread, pwr_tOid oid,
 int sev_dbsqlite::store_event(
     pwr_tStatus* sts, void* thread, int item_idx, sev_event* ep)
 {
-  char query[400];
+  char query[800];
   char* errmsg;
   char timstr[40];
 
@@ -2851,7 +2851,7 @@ int sev_dbsqlite::get_objectvalues(pwr_tStatus* sts, void* thread,
     sev_item* item, unsigned int size, pwr_tTime* starttime, pwr_tTime* endtime,
     int maxsize, pwr_tTime** tbuf, void** vbuf, unsigned int* bsize)
 {
-  char query[200];
+  char query[300];
   std::string queryStr;
   char starttimstr[40];
   char endtimstr[40];

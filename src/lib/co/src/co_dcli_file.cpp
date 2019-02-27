@@ -43,7 +43,7 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_dcli_msg.h"
-#include "co_debug.h"
+#include "co_log.h"
 #include "co_string.h"
 
 typedef enum {
@@ -175,7 +175,7 @@ int dcli_replace_env(const char* str, char* newstr)
       if ((value = getenv(lower_symbol)) == NULL) {
         /* It was no symbol */
         if (str_StartsWith(str, "$pwr")) {
-          debug_print("Warning! Could not resolve environment variable $%s\n", lower_symbol);
+          log_debug("Warning! Could not resolve environment variable $%s\n", lower_symbol);
         }
         *t = *s;
         t++;
@@ -207,7 +207,7 @@ int dcli_replace_env(const char* str, char* newstr)
     if ((value = getenv(lower_symbol)) == NULL) {
       /* It was no symbol */
       if (str_StartsWith(str, "$pwr")) {
-        debug_print("Warning! Could not resolve environment variable $%s\n", lower_symbol);
+        log_debug("Warning! Could not resolve environment variable $%s\n", lower_symbol);
       }
       *t = 0;
     } else {
@@ -356,22 +356,20 @@ void dcli_save_file_versions(char* fname)
 {
   pwr_tFileName newname;
   pwr_tFileName oldname;
-  char cmd[400];
-  int i;
-  pwr_tTime t;
-  int sts;
 
-  for (i = 9; i >= 0; i--) {
+  for (int i = 9; i >= 0; i--) {
     snprintf(newname, sizeof(newname), "%s.%d", fname, i + 1);
     if (i == 0)
       strncpy(oldname, fname, sizeof(oldname));
     else
       snprintf(oldname, sizeof(oldname), "%s.%d", fname, i);
 
-    sts = dcli_file_time(oldname, &t);
+    pwr_tTime t;
+    int sts = dcli_file_time(oldname, &t);
     if (EVEN(sts))
       continue;
 
+    char cmd[6 + sizeof(oldname) + 1 + sizeof(newname) + 1];
     snprintf(cmd, sizeof(cmd), "mv -f %s %s", oldname, newname);
     // printf( "%s -> %s\n", oldname, newname);
     system(cmd);

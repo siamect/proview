@@ -5949,7 +5949,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr PgmName = "FirmwareVersion"
             Attr Size = 40
             Attr Flags = 1024
-            Attr TypeRef = "pwrs:Type-$String40"
+            Attr TypeRef = "pwrs:Type-$String132"
           EndBody
         EndObject
       EndObject

@@ -162,7 +162,7 @@ static pwr_tStatus Connect(ldh_sMenuCall* ip)
           &ip->Selected[0].Objid, sizeof(pwr_tObjid));
   }
   if (ip->message_cb) {
-    char msg[200];
+    char msg[300];
 
     if (ODD(sts)) {
       pwr_tOName name;

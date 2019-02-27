@@ -657,7 +657,7 @@ static int gcg_cc(unsigned long filetype, const char* p1, const char* p2,
       else
         pop = msgw_ePop_No;
       if (line[j][0] == '/' && (s = strstr(line[j], "/common/tmp/"))) {
-        strncpy(s + 2, "$pwrp_tmp", 9);
+        strncpy(s + 2, "$pwrp_tmp", 10);
         msgw_message(0, s + 2, pop);
       } else
         msgw_message(0, line[j], pop);
@@ -4486,7 +4486,7 @@ pwr_tStatus gcg_read_volume_plclist(pwr_tVolumeId volid,
 {
   FILE* file;
   pwr_tFileName filenames;
-  pwr_tFileName fullfilename;
+  char fullfilename[280];
   char type[20];
   int line_count = 0;
   char line[256];
@@ -4605,7 +4605,7 @@ int gcg_comp_rtnode(char* nodename, pwr_mOpSys os, pwr_tUInt32 bus,
   int i, j, k, l, sts;
   pwr_tFileName fullfilename;
   FILE* files[2];
-  char module_name[80];
+  char module_name[120];
   pwr_tFileName plcfilename;
   unsigned long plc_count;
   gcg_t_plclist* plclist = NULL;
@@ -4943,7 +4943,7 @@ int gcg_comp_volume(ldh_tSesContext ldhses)
 {
   int i, sts, size;
   pwr_tFileName filenames;
-  pwr_tFileName fullfilename;
+  char fullfilename[280];
   FILE* file;
   unsigned long plc_count;
   gcg_t_plclist* plclist;
@@ -5112,7 +5112,7 @@ int gcg_comp_m0(vldh_t_plc plc, unsigned long codetype,
   pwr_tObjid* ldhwindlist;
   int i, sts, size;
   pwr_tFileName filenames[GCG_MAXFILES];
-  pwr_tFileName fullfilename;
+  char fullfilename[340];
   gcg_t_files files;
   char module_name[80];
   pwr_mOpSys operating_system;
@@ -12980,7 +12980,7 @@ int gcg_comp_m58(gcg_ctx gcgctx, vldh_t_node node)
   } else {
     // Check if new structfile
     char* s;
-    char fname[200];
+    char fname[230];
     struct stat info;
     pwr_tTime* compile_time;
 

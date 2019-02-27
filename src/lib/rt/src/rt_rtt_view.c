@@ -359,7 +359,7 @@ int rtt_view(
   int page_size = 21;
   int row_change;
   int redraw = 1;
-  char str[100];
+  char str[150];
   char title[80];
   FILE* infile = NULL;
   char last_char;

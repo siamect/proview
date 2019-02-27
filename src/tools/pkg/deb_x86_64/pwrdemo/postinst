@@ -74,11 +74,3 @@ if [ -e /home/pwrp/Desktop ]; then
   chown pwrp:pwrp /home/pwrp/Desktop/proviewdemo$ver.desktop
   chmod a+x /home/pwrp/Desktop/proviewdemo$ver.desktop
 fi
-
-
-
-
-
-
-
-

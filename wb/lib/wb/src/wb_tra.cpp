@@ -912,23 +912,18 @@ static int trace_disconnect_bc(flow_tObject object)
 {
   pwr_tSubid* subid_p;
   vldh_t_node vnode;
-  int sts;
-  flow_tTraceObj name;
-  flow_tTraceAttr attr;
-  flow_eTraceType type;
-  int inverted;
 
   printf("DisConnecting something...\n");
   if (flow_GetObjectType(object) == flow_eObjectType_Node) {
     if (flow_GetNodeGroup(object) == flow_eNodeGroup_Trace) {
       flow_GetUserData(object, (void**)&subid_p);
-      sts = gdh_UnrefObjectInfo(*subid_p);
+      gdh_UnrefObjectInfo(*subid_p);
       free((char*)subid_p);
     } else {
-      flow_GetTraceAttr(object, name, attr, &type, &inverted);
-      if (!(streq(name, "") || streq(attr, ""))) {
+      FlowTraceAttr attr = flow_GetTraceAttr(object);
+      if (!(streq(attr.object, "") || streq(attr.attribute, ""))) {
         flow_GetUserData(object, (void**)&vnode);
-        sts = gdh_UnrefObjectInfo(vnode->hn.trace_subid);
+        gdh_UnrefObjectInfo(vnode->hn.trace_subid);
       }
     }
   }
@@ -1266,10 +1261,6 @@ static void trace_changevalue(WGre* gre, flow_tNode fnode)
   pwr_tStatus sts;
   char name[200];
   pwr_tBoolean value;
-  flow_tTraceObj object_str;
-  flow_tTraceAttr attr_str;
-  flow_eTraceType trace_type;
-  int inverted;
 
   foe = (WFoe*)gre->parent_ctx;
   ldhses = (gre->wind)->hw.ldhses;
@@ -1286,11 +1277,11 @@ static void trace_changevalue(WGre* gre, flow_tNode fnode)
     return;
   } else {
     /* Toggle the value, start to get the current value */
-    flow_GetTraceAttr(fnode, object_str, attr_str, &trace_type, &inverted);
-    strcpy(name, object_str);
+    FlowTraceAttr attr = flow_GetTraceAttr(fnode);
+    strcpy(name, attr.object);
     strcat(name, ".");
-    strcat(name, attr_str);
-    switch (trace_type) {
+    strcat(name, attr.attribute);
+    switch (attr.type) {
     case flow_eTraceType_Boolean:
       sts = gdh_GetObjectInfo(name, &value, sizeof(value));
       if (EVEN(sts)) {
@@ -1331,24 +1322,16 @@ static void trace_changevalue(WGre* gre, flow_tNode fnode)
 
 static pwr_tStatus trace_aanalyse_set_value(WFoe* foe, char* valuestr)
 {
-  ldh_tSesContext ldhses;
   pwr_tStatus sts;
   char name[200];
   pwr_tBoolean boolean_value;
   pwr_tFloat32 float_value;
-  flow_tTraceObj object_str;
-  flow_tTraceAttr attr_str;
-  flow_eTraceType trace_type;
-  int inverted;
 
-  ldhses = ((foe->gre)->wind)->hw.ldhses;
-
-  flow_GetTraceAttr(
-      foe->gre->trace_changenode, object_str, attr_str, &trace_type, &inverted);
-  strcpy(name, object_str);
+  FlowTraceAttr attr = flow_GetTraceAttr(foe->gre->trace_changenode);
+  strcpy(name, attr.object);
   strcat(name, ".");
-  strcat(name, attr_str);
-  switch (trace_type) {
+  strcat(name, attr.attribute);
+  switch (attr.type) {
   case flow_eTraceType_Boolean:
     /* Convert to Boolean */
     if (sscanf(valuestr, "%d", &boolean_value) != 1) {

@@ -180,8 +180,7 @@ void brow_SetCtxUserData(brow_tCtx ctx, void* user_data);
 brow_tCtx brow_GetCtx(brow_tObject object);
 void brow_SetTraceAttr(brow_tObject object, const char* trace_object,
     const char* trace_attribute, flow_eTraceType trace_attr_type);
-void brow_GetTraceAttr(brow_tObject object, char* trace_object,
-    char* trace_attribute, flow_eTraceType* trace_attr_type);
+FlowTraceAttr brow_GetTraceAttr(brow_tObject object);
 void brow_SetTraceData(brow_tObject object, void* trace_data);
 void brow_GetTraceData(brow_tObject object, void** trace_data);
 int brow_TraceInit(brow_tCtx ctx, int (*trace_connect_func)(brow_tObject, char*,

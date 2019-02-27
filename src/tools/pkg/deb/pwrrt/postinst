@@ -243,7 +243,7 @@ if [ ! -e $proot ]; then
   chown -R pwrp $proot
   chgrp -R pwrp $proot
   chmod g+w $proot/common/log
-  
+
 fi
 
 if [ ! -e $aroot/db ]; then
@@ -307,7 +307,6 @@ EOF
 EOF
   fi
 
-
   if ! egrep -q "Alias[ ]+/pwr_doc/" /etc/apache2/apache2.conf; then
     cat >> /etc/apache2/apache2.conf <<-EOF
 
@@ -355,9 +354,9 @@ BEGIN {
           inserver = 0;
           done = 1;
         }
-        else 
+        else
           printf( "%s\n", $0);
-      } 
+      }
       else
         printf( "%s\n", $0);
     }
@@ -384,7 +383,6 @@ fi
 if [ -e /lib/udev/devices/pbus2 ]; then
   chown pwrp:pwrp /lib/udev/devices/pbus2
 fi
-
 
 changes=0
 if [ $new_user -eq 1 ]; then
@@ -421,14 +419,3 @@ if [ $changes -ne 0 ]; then
   echo "***********************************************************"
   echo ""
 fi
-
-
-
-
-
-
-
-
-
-
-

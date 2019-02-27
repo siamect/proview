@@ -419,7 +419,7 @@ static int show_func(menu_ctx ctx, int* flag)
   } else if (str_NoCaseStrncmp(arg1_str, "SYMBOL", strlen(arg1_str)) == 0) {
     /* Command is "SHOW SYMBOL" */
     char arg2_str[80];
-    char message_str[80];
+    char message_str[170];
     char value[80];
 
     if (ODD(rtt_get_qualifier("/ALL", value))) {
@@ -441,7 +441,7 @@ static int show_func(menu_ctx ctx, int* flag)
     }
   } else if (str_NoCaseStrncmp(arg1_str, "TIME", strlen(arg1_str)) == 0) {
     /* Command is "SHOW TIME" */
-    char message_str[80];
+    char message_str[90];
 
     rtt_update_time();
     sprintf(message_str, "Time is %s", rtt_time);
@@ -451,7 +451,7 @@ static int show_func(menu_ctx ctx, int* flag)
     /* Command is "SHOW CLOCK" */
   } else if (str_NoCaseStrncmp(arg1_str, "DEFAULT", strlen(arg1_str)) == 0) {
     /* Command is "SHOW DEFAULT" */
-    char message_str[80];
+    char message_str[100];
 
     sprintf(message_str, "Default directory: %s", rtt_default_directory);
     rtt_message('I', message_str);
@@ -628,7 +628,7 @@ static int show_func(menu_ctx ctx, int* flag)
     /* Command is "SHOW OBJID" */
     pwr_tOName name_str;
     pwr_tObjid objid;
-    char msg[160];
+    char msg[256];
 
     IF_NOGDH_RETURN;
     if (ODD(rtt_get_qualifier("/NAME", name_str))) {
@@ -2424,7 +2424,7 @@ static int rtt_set_func(menu_ctx ctx, int* flag)
       return RTT__HOLDCOMMAND;
     }
   } else if (str_NoCaseStrncmp(arg1_str, "TIME", strlen(arg1_str)) == 0) {
-    char text[80];
+    char text[100];
     pwr_tTime time;
     char timstr[64];
 
@@ -7379,7 +7379,7 @@ static int rtt_store(menu_ctx ctx, char* filename, int collect)
 {
   rtt_t_menu_upd* menu_ptr;
   char filename_str[120];
-  char msg[120];
+  char msg[140];
   FILE* outfile;
   int first;
 

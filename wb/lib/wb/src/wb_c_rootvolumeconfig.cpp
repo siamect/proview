@@ -52,7 +52,7 @@ static pwr_tStatus OpenDb(ldh_sMenuCall* ip)
   int sts;
   char volume_name[80];
   pwr_tFileName filename;
-  pwr_tCmd cmd;
+  char cmd[430];
 
   sts = ldh_ObjidToName(ip->PointedSession, ip->Pointed.Objid, ldh_eName_Object,
       volume_name, sizeof(volume_name), &size);

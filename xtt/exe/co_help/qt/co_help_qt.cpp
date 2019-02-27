@@ -56,7 +56,7 @@ void close_cb(void* ctx, void* xhelp)
 
 int main(int argc, char* argv[])
 {
-  setDebug(1);
+  log_setLevel(LOG_TRACE);
   int sts;
 
   QApplication app(argc, argv);
@@ -80,7 +80,7 @@ CoHelpQt::CoHelpQt(int argc, char* argv[], int* return_sts)
 {
   pwr_tStatus sts;
 
-  debug_print("%s ", argv[0]);
+  log_debug("%s ", argv[0]);
   for (int i = 1; i < argc; i++) {
     fprintf(stderr, "%s ", argv[i]);
   }

@@ -662,8 +662,8 @@ void Pal::allocate_pixmaps()
   brow_LoadPBM(brow_ctx, "xnav_bitmap_getp", &pixmap_getp);
   brow_LoadPBM(brow_ctx, "xnav_bitmap_head", &pixmap_head);
   brow_LoadPBM(brow_ctx, "xnav_bitmap_initstep", &pixmap_initstep);
-  brow_LoadPBM(brow_ctx, "xnav_bitmap_logic1", &pixmap_logic1_);
-  brow_LoadPBM(brow_ctx, "xnav_bitmap_logic2", &pixmap_logic2_);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_logic112", &pixmap_logic1_);
+  brow_LoadPBM(brow_ctx, "xnav_bitmap_logic212", &pixmap_logic2_);
   brow_LoadPBM(brow_ctx, "xnav_bitmap_wait", &pixmap_wait);
   brow_LoadPBM(brow_ctx, "xnav_bitmap_order", &pixmap_order);
   brow_LoadPBM(brow_ctx, "xnav_bitmap_orderact", &pixmap_orderact);

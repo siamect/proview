@@ -52,7 +52,7 @@ static pwr_tStatus InvertOn(xmenu_sMenuCall* ip)
 {
   pwr_tAName name;
   pwr_tStatus sts;
-  pwr_tCmd cmd;
+  char cmd[430];
 
   sts = gdh_AttrrefToName(&ip->Pointed, name, sizeof(name), cdh_mNName);
   if (EVEN(sts))
@@ -69,7 +69,7 @@ static pwr_tStatus InvertOff(xmenu_sMenuCall* ip)
 {
   pwr_tAName name;
   pwr_tStatus sts;
-  pwr_tCmd cmd;
+  char cmd[430];
 
   sts = gdh_AttrrefToName(&ip->Pointed, name, sizeof(name), cdh_mNName);
   if (EVEN(sts))
@@ -87,7 +87,7 @@ static pwr_tStatus TestOn(xmenu_sMenuCall* ip)
 {
   pwr_tAName name;
   pwr_tStatus sts;
-  pwr_tCmd cmd;
+  char cmd[430];
 
   sts = gdh_AttrrefToName(&ip->Pointed, name, sizeof(name), cdh_mNName);
   if (EVEN(sts))
@@ -104,7 +104,7 @@ static pwr_tStatus TestOff(xmenu_sMenuCall* ip)
 {
   pwr_tAName name;
   pwr_tStatus sts;
-  pwr_tCmd cmd;
+  char cmd[430];
 
   sts = gdh_AttrrefToName(&ip->Pointed, name, sizeof(name), cdh_mNName);
   if (EVEN(sts))
@@ -122,7 +122,7 @@ static pwr_tStatus TestValueTrue(xmenu_sMenuCall* ip)
 {
   pwr_tAName name;
   pwr_tStatus sts;
-  pwr_tCmd cmd;
+  char cmd[430];
 
   sts = gdh_AttrrefToName(&ip->Pointed, name, sizeof(name), cdh_mNName);
   if (EVEN(sts))
@@ -139,7 +139,7 @@ static pwr_tStatus TestValueFalse(xmenu_sMenuCall* ip)
 {
   pwr_tAName name;
   pwr_tStatus sts;
-  pwr_tCmd cmd;
+  char cmd[430];
 
   sts = gdh_AttrrefToName(&ip->Pointed, name, sizeof(name), cdh_mNName);
   if (EVEN(sts))

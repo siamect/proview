@@ -42,6 +42,13 @@
 
 #include "flow.h"
 
+typedef struct {
+    char object[200];
+    char attribute[200];
+    flow_eTraceType type;
+    int inverted;
+} FlowTraceAttr;
+
 class FlowArrayElem {
 public:
   virtual void zoom();
@@ -102,8 +109,7 @@ public:
   virtual void trace_close();
   virtual void set_trace_attr(const char* object, const char* attribute,
       flow_eTraceType type, int inverted);
-  virtual void get_trace_attr(
-      char* object, char* attribute, flow_eTraceType* type, int* inverted);
+  virtual FlowTraceAttr get_trace_attr();
   virtual void* get_ctx();
   virtual void configure(void* previous);
   virtual void move_widgets(int x, int y);

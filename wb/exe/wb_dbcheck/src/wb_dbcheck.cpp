@@ -34,6 +34,7 @@
  * General Public License plus this exception.
  */
 
+#include "co_string.h"
 #include "co_time.h"
 #include "co_tree.h"
 
@@ -200,7 +201,7 @@ static void printname(pwr_tOid poid, pwr_tObjName name, pwr_tOid oid)
   count_name++;
 
   if (cdh_ObjidIsNull(poid) || poid.oix == 0) {
-    printf("N [%10.10d.%10.10d] %d:%s\n", oid.vid, oid.oix, strlen(name), name);
+    printf("N [%10.10d.%10.10d] %zd:%s\n", oid.vid, oid.oix, strlen(name), name);
   }
 
   oep = (sOentry*)tree_Find(&sts, oid_th, &oid);

@@ -289,7 +289,7 @@ int XNav::GetObjectMenu(xmenu_sMenuCall* ip, pwr_tCid classid,
   int sts;
   pwr_tObjid child;
   pwr_tObjid menu_objid;
-  char menu[80];
+  char menu[210];
   pwr_tOName classname;
   pwr_sAttrRef currentar = pwr_cNAttrRef;
   pwr_tCid supercid;

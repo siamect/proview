@@ -263,8 +263,8 @@ int rtt_crr_signal(char* filename, char* signalname)
   }
 
   if (file == 0) {
-    char tmp[200];
-    snprintf(tmp, 200, "Unable to open file \"%s\"", filestr);
+    char tmp[300];
+    snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filestr);
     rtt_message('E', tmp);
     return RTT__NOPICTURE;
   }
@@ -419,8 +419,8 @@ int rtt_crr_object(char* filename, char* objectname)
   }
 
   if (file == 0) {
-    char tmp[200];
-    snprintf(tmp, 200, "Unable to open file \"%s\"", filestr);
+    char tmp[300];
+    snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filestr);
     rtt_message('E', tmp);
     return RTT__NOPICTURE;
   }

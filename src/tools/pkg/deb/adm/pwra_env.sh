@@ -102,7 +102,6 @@ pwra_set_func()
 
 }
 
-
 pwra_help_func()
 {
 
@@ -118,7 +117,6 @@ set baseroot 'root'	- Setup environment to proview base distribution
 EOF
 
 }
-
 
 pwra_parse ()
 {

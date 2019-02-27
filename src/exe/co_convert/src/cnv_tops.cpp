@@ -364,7 +364,7 @@ void CnvToPs::close()
     fp[ps_eFile_Body].close();
   }
 
-  char cmd[256];
+  char cmd[4 + sizeof(filename[ps_eFile_Body]) + 4 + sizeof(filename[ps_eFile_Info]) + 1];
   // Concatenate files
   sprintf(
       cmd, "cat %s >> %s", filename[ps_eFile_Body], filename[ps_eFile_Info]);

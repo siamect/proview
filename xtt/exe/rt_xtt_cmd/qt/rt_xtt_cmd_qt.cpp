@@ -73,7 +73,7 @@ static int timeout_func()
 
 int main(int argc, char* argv[])
 {
-  setDebug(1);
+  log_setLevel(LOG_TRACE);
   pwr_tStatus sts;
   int i;
   char str[256];
@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
   /* If arguments, treat them as a command and then exit */
   // Open directory volume as default
 
-  debug_print("%s ", argv[0]);
+  log_debug("%s ", argv[0]);
   str[0] = 0;
   for (i = 1; i < argc; i++) {
     fprintf(stderr, "%s ", argv[i]);

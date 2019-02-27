@@ -82,7 +82,7 @@ wb_merep::wb_merep(const char* dirName, wb_erep* erep, wb_vrep* vrep)
   char* pos;
   int ipos;
   int ilen;
-  char fileName[255];
+  char fileName[260];
 
   dirp = opendir(dirName);
 
@@ -111,7 +111,7 @@ wb_merep::wb_merep(const char* dirName, wb_erep* erep, wb_vrep* vrep)
                   erep, this, fileName, vp->name, vp->vid, vp->cid);
               vrep->load();
               addDbs(&sts, (wb_mvrep*)vrep);
-              char buff[256];
+              char buff[350];
               sprintf(buff, "Local class volume \"%s\" loaded from \"%s\", in "
                             "data base %s",
                   vp->name, fileName, dirName);

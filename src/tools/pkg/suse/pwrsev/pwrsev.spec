@@ -7,7 +7,6 @@
 #   See www.rpm.org.
 #
 
-
 Name: pwrsev
 Summary: Proview/R storage environment
 Version: 4.6.1
@@ -28,7 +27,6 @@ For more information please see www.proview.se.
 
 %install
 
-
 # Generate version help file
 {
   echo "<topic> version"
@@ -45,12 +43,12 @@ For more information please see www.proview.se.
   echo "Copyright © 2004-${d:0:4} SSAB Oxelösund AB"
   echo ""
   echo "This program is free software; you can redistribute it and/or"
-  echo "modify it under the terms of the GNU General Public License as" 
+  echo "modify it under the terms of the GNU General Public License as"
   echo "published by the Free Software Foundation, either version 2 of"
   echo "the License, or (at your option) any later version."
   echo ""
-  echo "This program is distributed in the hope that it will be useful" 
-  echo "but WITHOUT ANY WARRANTY; without even the implied warranty of" 
+  echo "This program is distributed in the hope that it will be useful"
+  echo "but WITHOUT ANY WARRANTY; without even the implied warranty of"
   echo "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
   echo "For more details, see the"
   echo "GNU General Public License. <weblink> http://www.proview.se/gpllicense.html"
@@ -189,7 +187,6 @@ if getent passwd b55 > /dev/null; then
   fi
 fi
 
-
 #echo "Change owner of files to pwrp"
 chown -R pwrp /usr/pwrsev
 chgrp -R pwrp /usr/pwrsev
@@ -216,7 +213,7 @@ fi
 
 # Create startup link
 
-if [ -e /etc/init.d/rc2.d ]; then 
+if [ -e /etc/init.d/rc2.d ]; then
   set +e
   checklink=`eval ls /etc/init.d/rc2.d/S90pwrsev 2>/dev/null`
   set -e
@@ -299,7 +296,6 @@ if [ $changes -ne 0 ]; then
   echo ""
 fi
 
-
 %preun
 
 set -e
@@ -314,7 +310,7 @@ aroot="/usr/pwrp/adm"
 
 remove_all="n"
 if [ "$remove_all" = "y" ]; then
-  
+
   # Check that any user that is to be removed isn't logged in
   set +e
   user_found=0

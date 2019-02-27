@@ -115,7 +115,7 @@ static pwr_tStatus CopyDevice(ldh_sMenuCall* ip)
   pwr_tAttrRef aref[2];
   pwr_tFileName datafile_src, datafile_dest;
   pwr_tFileName found_file;
-  pwr_tCmd cmd;
+  char cmd[520];
 
   // Check if data file exist
   sprintf(datafile_src, "$pwrp_load/pwr_pn_%s.xml",
@@ -228,15 +228,14 @@ static pwr_tStatus GetIoDeviceData(pwr_tAttrRef Object, const char* Attr,
 
   GsdmlDeviceData* data = new GsdmlDeviceData();
   sts = data->read(datafile);
-  if (EVEN(sts))
-  {
+  if (EVEN(sts)) {
+    delete data;
     return sts;
   }
 
   sts = data->get_value(Attr, Buf, BufSize);
 
   delete data;
-
   return sts;
 }
 
@@ -251,19 +250,17 @@ static pwr_tStatus SetIoDeviceData(pwr_tAttrRef Object, const char* Attr,
 
   GsdmlDeviceData* data = new GsdmlDeviceData();
   sts = data->read(datafile);
-  if (EVEN(sts))
-  {
+  if (EVEN(sts)) {
+    delete data;
     return sts;
   }
 
   sts = data->modify_value(Attr, Value);
-  if (ODD(sts))
-  {
+  if (ODD(sts)) {
     data->print(datafile);
   }
 
   delete data;
-
   return sts;
 }
 

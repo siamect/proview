@@ -63,7 +63,7 @@
 
 void Ge::set_title()
 {
-  char title[80];
+  char title[110];
   char name[80];
   char* s;
   int page;
@@ -975,7 +975,7 @@ void Ge::activate_group()
   int sts;
   grow_tObject object;
   char last_group[80];
-  char msg[80];
+  char msg[140];
 
   sts = graph->group_select(&object, last_group);
   if (sts == GLOW__NOSELECT)

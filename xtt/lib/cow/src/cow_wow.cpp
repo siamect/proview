@@ -215,7 +215,8 @@ void* CoWow::CreateFileList(const char* title, const char* dir,
     void(cancel_cb)(void*), void* ctx, int show_apply_button)
 {
   int sts;
-  pwr_tFileName file_spec, found_file, stype, item;
+  pwr_tFileName found_file, stype, item;
+  char file_spec[260];
   char* s;
   char* texts;
   int i, cnt;

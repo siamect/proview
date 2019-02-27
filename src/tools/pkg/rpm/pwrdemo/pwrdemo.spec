@@ -7,7 +7,6 @@
 #   See www.rpm.org.
 #
 
-
 Name:		pwrdemo48
 Summary: 	Proview/R demo project
 Version:        4.8.4
@@ -119,11 +118,10 @@ fi
 
 set -e
 #echo "Here in prerm..."
- 
+
 if [ -e /usr/pwrp/pwrdemo%{ver} ]; then
  rm -r /usr/pwrp/pwrdemo%{ver}
 fi
-
 
 #%postun
 
@@ -131,6 +129,6 @@ fi
 * Thu Mar 01 2012 Claes Sjofors <claes.sjofors@proview.se> 4.8.4-1
 * Thu Dec 20 2012 Claes Sjofors <claes.sjofors@proview.se> 4.8.3-1
 * Sun Jun 12 2011 Claes Sjofors <claes.sjofors@proview.se> 4.8.2-1
-* Mon Jan 24 2011 Claes Sjofors <claes.sjofors@proview.se> 4.8.1-1 
+* Mon Jan 24 2011 Claes Sjofors <claes.sjofors@proview.se> 4.8.1-1
 * Sun Nov 28 2010 Claes Sjofors <claes.sjofors@proview.se> 4.8.0-1
   - Base release

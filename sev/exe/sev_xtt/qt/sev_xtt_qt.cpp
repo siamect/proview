@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
   unsigned int itemcnt;
   char servername[40] = "";
 
-  setDebug(1);
+  log_setLevel(LOG_TRACE);
 
   // Get options
   for (int i = 1; i < argc; i++) {
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
 
   sts = qcom_Init(&sts, &aid, "sev_xtt");
   if (EVEN(sts)) {
-    co_error(sts);
+    throw co_error(sts);
   }
 
   sevcli_init(&sts, &sevcli);

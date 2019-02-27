@@ -25,7 +25,7 @@ fi
   {
     let printout=0
     while read line; do
-      if [ "${line:0:9}" = "Package: " ]; then 
+      if [ "${line:0:9}" = "Package: " ]; then
         package=${line#Package: }
       fi
       if [ "${line:0:9}" = "Version: " ]; then
@@ -47,12 +47,12 @@ fi
         echo "Copyright © 2005-${d:0:4} SSAB EMEA AB"
         echo ""
         echo "This program is free software; you can redistribute it and/or"
-        echo "modify it under the terms of the GNU General Public License as" 
+        echo "modify it under the terms of the GNU General Public License as"
         echo "published by the Free Software Foundation, either version 2 of"
         echo "the License, or (at your option) any later version."
         echo ""
-        echo "This program is distributed in the hope that it will be useful" 
-        echo "but WITHOUT ANY WARRANTY; without even the implied warranty of" 
+        echo "This program is distributed in the hope that it will be useful"
+        echo "but WITHOUT ANY WARRANTY; without even the implied warranty of"
         echo "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
         echo "For more details, see the"
         echo "GNU General Public License. <weblink> http://www.proview.se/gpllicense.html"
@@ -96,7 +96,6 @@ fi
 
 pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwrrt
 pkgsrc=$pwre_sroot/tools/pkg/deb/pwrrt
-
 
 # Create directories
 echo "-- Create package tree"
@@ -189,4 +188,3 @@ else
 fi
 
 rm -r $pkgroot
-

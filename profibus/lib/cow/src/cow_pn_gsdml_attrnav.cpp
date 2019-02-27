@@ -2130,7 +2130,7 @@ int ItemPnDevice::open_children(GsdmlAttrNav* attrnav, double x, double y)
       gsdml_DeviceAccessPointItem* item =
           attrnav->gsdml->ApplicationProcess->DeviceAccessPointList
               ->DeviceAccessPointItem[i];
-      char name[80];
+      char name[sizeof((char*)item->ModuleInfo->Body.Name.p) + 2 + sizeof(item->ModuleInfo->Body.OrderNumber) + 1 + 1];
       snprintf(name, sizeof(name), "%s (%s)",
                (char*)item->ModuleInfo->Body.Name.p,
                item->ModuleInfo->Body.OrderNumber);

@@ -262,9 +262,9 @@ void FlowArrayElem::set_trace_attr(const char* object, const char* attribute,
 {
 }
 
-void FlowArrayElem::get_trace_attr(
-    char* object, char* attribute, flow_eTraceType* type, int* inverted)
+FlowTraceAttr FlowArrayElem::get_trace_attr()
 {
+  return FlowTraceAttr();
 }
 
 void* FlowArrayElem::get_ctx()

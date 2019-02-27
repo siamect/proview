@@ -37,7 +37,7 @@
 #ifndef QT_HELPERS_H
 #define QT_HELPERS_H
 
-#include "co_debug.h"
+#include "co_log.h"
 
 #include <QAction>
 #include <QComboBox>

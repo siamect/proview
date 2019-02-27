@@ -593,7 +593,6 @@ static int wnav_noedit_func(void* client_data, void* client_flag)
 static void wnav_login_success_bc(void* ctx)
 {
   WNav* wnav = (WNav*)ctx;
-  char msg[80];
 
   CoLogin::get_login_info(0, 0, wnav->user, (unsigned long*)&wnav->priv, 0);
   if (wnav->admin_login) {
@@ -601,6 +600,7 @@ static void wnav_login_success_bc(void* ctx)
     wnav->priv = pwr_mPrv_Administrator;
     CoLogin::insert_login_info("", "", wnav->user, wnav->priv, 0);
   }
+  char msg[5 + sizeof(wnav->user) + 10 + 1];
   sprintf(msg, "User %s logged in", wnav->user);
   wnav->message('I', msg);
 }
@@ -619,7 +619,7 @@ static int wnav_login_func(void* client_data, void* client_flag)
   char systemname[80];
   char systemgroup[80];
   unsigned int priv;
-  char msg[80];
+  char msg[100];
   int administrator;
 
   administrator = ODD(dcli_get_qualifier("/ADMINISTRATOR", 0, 0));
@@ -695,7 +695,7 @@ static int wnav_login_func(void* client_data, void* client_flag)
 static int wnav_logout_func(void* client_data, void* client_flag)
 {
   WNav* wnav = (WNav*)client_data;
-  char msg[80];
+  char msg[100];
 
   if (streq(wnav->base_user, "")) {
     sprintf(msg, "User %s logged out", wnav->user);
@@ -1454,8 +1454,7 @@ static int wnav_show_func(void* client_data, void* client_flag)
     return 1;
   } else if (str_NoCaseStrncmp(arg1_str, "DEFAULT", strlen(arg1_str)) == 0) {
     /* Command is "SHOW DEFAULT" */
-    char message_str[80];
-
+    char message_str[19 + sizeof(wnav->gbl.default_directory) + 1];
     sprintf(message_str, "Default directory: %s", wnav->gbl.default_directory);
     wnav->message('I', message_str);
     return WNAV__SUCCESS;
@@ -2236,7 +2235,7 @@ static int wnav_generate_func(void* client_data, void* client_flag)
     if (EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     else {
-      char msg[200];
+      char msg[29 + sizeof(filestr) + 1];
       sprintf(msg, "History html file generated, %s", filestr);
       wnav->message('I', msg);
     }
@@ -3194,7 +3193,7 @@ static int wnav_open_func(void* client_data, void* client_flag)
   } else if (str_NoCaseStrncmp(arg1_str, "DATABASE", strlen(arg1_str)) == 0) {
     char volumestr[80];
     pwr_tFileName filename;
-    pwr_tCmd cmd;
+    char cmd[430];
     int sts;
 
     if (EVEN(dcli_get_qualifier("/VOLUME", volumestr, sizeof(volumestr)))) {
@@ -5723,8 +5722,8 @@ int WNav::command(char* input_str)
     strcpy(filename, &command[1]);
     sts = readcmdfile(filename);
     if (sts == DCLI__NOFILE) {
-      char tmp[200];
-      snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+      char tmp[280];
+      snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename);
       message('E', tmp);
       return DCLI__SUCCESS;
     } else if (EVEN(sts))
@@ -5741,8 +5740,8 @@ int WNav::command(char* input_str)
         /* Read command file */
         sts = readcmdfile(&symbol_value[1]);
         if (sts == DCLI__NOFILE) {
-          char tmp[200];
-          snprintf(tmp, 200, "Unable to open file \"%s\"", &symbol_value[1]);
+          char tmp[230];
+          snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", &symbol_value[1]);
           message('E', tmp);
           return DCLI__SUCCESS;
         } else if (EVEN(sts))

@@ -77,7 +77,7 @@ void XttMethodToolbarGtk::activate_button(GtkWidget* w, gpointer data)
   int is_attr;
   pwr_sAttrRef aref;
   pwr_tAName aname;
-  pwr_tCmd cmd;
+  char cmd[512];
   xmenu_eItemType menu_type;
 
   if (mt->get_select_cb)

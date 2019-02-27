@@ -40,7 +40,7 @@ create_killer()
     echo "#!/bin/bash" > $killer
     echo "source /etc/pwrp_profile" >> $killer
     echo "umask 002" >> $killer
-    
+
     echo "`ps ax | grep "rt_" | awk '{ print "kill -9 "$1}'`" >> $killer
     echo "`ps ax | grep "rs_" | awk '{ print "kill -9 "$1}'`" >> $killer
     echo "`ps ax | grep "ra_" | awk '{ print "kill -9 "$1}'`" >> $killer
@@ -60,8 +60,8 @@ create_killer()
       stored_ifs=$IFS
       IFS=' ,'
       while read appid appname appload apprun appfile appprio appdebug apparg; do
-        if [ -n "$appid" ] && [ "${appid:0:1}" != "#" ]; then      
-          if [ $appid != "pwr_neth" ] && 
+        if [ -n "$appid" ] && [ "${appid:0:1}" != "#" ]; then
+          if [ $appid != "pwr_neth" ] &&
              [ $appid != "pwr_qmon" ] &&
              [ $appid != "pwr_nacp" ] &&
              [ $appid != "pwr_io" ] &&
@@ -105,7 +105,6 @@ create_killer()
     fi
 }
 
-
 pwr_start()
 {
   create_wrapper
@@ -129,8 +128,8 @@ pwr_stop()
     if [ -e $pwrp_exe/pwrp_stop.sh ]; then
       sudo -u pwrp source $pwrp_exe/pwrp_stop.sh
     fi
-  fi 
-  while [ "`ps aux | grep -v grep | grep rt_`" != "" ] ; do sleep 1; done  
+  fi
+  while [ "`ps aux | grep -v grep | grep rt_`" != "" ] ; do sleep 1; done
 }
 
 pwr_reload()
@@ -149,14 +148,14 @@ pwr_kill()
     $killer
   else
     sudo -u pwrp $killer
-  fi 
+  fi
 }
 
 case "$1"
   in
     start)
 	echo "Start Proview Runtime Environment."
-	pwr_start    
+	pwr_start
 	echo "Done."
       ;;
     stop)

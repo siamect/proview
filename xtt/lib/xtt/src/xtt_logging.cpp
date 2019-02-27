@@ -438,7 +438,6 @@ int XttLogging::store(char* filename)
   int i;
   pwr_tFileName filename_str;
   FILE* outfile;
-  char msg[120];
   int found_parameter;
 
   found_parameter = 0;
@@ -455,8 +454,8 @@ int XttLogging::store(char* filename)
 
   outfile = fopen(filename_str, "w");
   if (outfile == 0) {
-    char tmp[200];
-    snprintf(tmp, 200, "Unable to open file \"%s\"", filename_str);
+    char tmp[280];
+    snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename_str);
     message('E', tmp);
     return XNAV__HOLDCOMMAND;
   }
@@ -509,6 +508,7 @@ int XttLogging::store(char* filename)
   dcli_fgetname(outfile, filename_str, filename_str);
   fclose(outfile);
 
+  char msg[sizeof(filename_str) + 8 + 1];
   sprintf(msg, "%s created", filename_str);
   message('I', msg);
   return XNAV__SUCCESS;
@@ -620,8 +620,8 @@ int XttLogging::start()
   if (logg_filename[0] != 0) {
     logg_file = fopen(logg_filename, "w");
     if (logg_file == 0) {
-      char tmp[200];
-      snprintf(tmp, 200, "Unable to open file \"%s\"", logg_filename);
+      char tmp[280];
+      snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", logg_filename);
       message('E', tmp);
       return XNAV__HOLDCOMMAND;
     }

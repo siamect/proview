@@ -85,8 +85,8 @@ void Wda::file_selected_cb(void* ctx, void* data, char* text)
   dcli_translate_filename(filename, filename);
   sts = wda->wdanav->print_textfile(filename);
   if (EVEN(sts)) {
-    char tmp[200];
-    snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+    char tmp[280];
+    snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename);
     wda->message('E', tmp);
   } else {
     char msg[300];

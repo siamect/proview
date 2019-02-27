@@ -3,7 +3,6 @@
 # Startscript för PWR av Ulf Ljungdahl
 #
 
-
 #test -x /sbin/ipchains || exit 0
 #test -x /sbin/ipchains-restore || exit 0
 #test -x /sbin/ipchains-save || exit 0
@@ -11,7 +10,6 @@
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 . /etc/pwrp_profile
-
 
 save ()
   {
@@ -25,7 +23,7 @@ save ()
 pwr_start()
 {
   $pwr_exe/rt_ini &
-  sleep 5 
+  sleep 5
   /usr/sbin/setrtprio `ps ax | grep "plc" | grep -v "grep" | awk '{ print $1}'`
 }
 
@@ -66,7 +64,7 @@ pwr_stop()
   fi
 
   rm /tmp/pwr*$PWR_BUS_ID
-  
+
   #rm -f /tmp/pwr*
   #id=`ipcs -s | grep $user | awk '{print $2}'`
   #id1=`echo $id | awk '{print $1}'`
@@ -88,26 +86,26 @@ case "$1"
   in
     start)
 	echo "Startar PWR..."
-	
+
 	#if [ 'test -x ps aux | grep plc | grep -v grep' ]
 	#  then
 	#    echo "PWR kör, stoppar det först.."
 	#    pwr_stop
 	#  fi
-	pwr_start    
+	pwr_start
 	echo "Klar."
       ;;
     stop)
 	echo "Stoppar PWR..."
 	pwr_stop
-	
+
  #     if [ "${SAVEONCE}" != "yes" ]
  #       then
 #	  save
 #          echo -n "ipchains-save"
 #	else
 #	  echo -n "Clearing IP chains:"
-#	fi   	   
+#	fi
 	echo "Klar"
       ;;
     restart)

@@ -1101,7 +1101,7 @@ int WdaNav::import_textfile(char* filename)
   pwr_tOName attr;
   int found;
   int status = WDA__SUCCESS;
-  char msg[400];
+  char msg[450];
 
   brow_GetObjectList(brow->ctx, &object_list, &object_cnt);
 

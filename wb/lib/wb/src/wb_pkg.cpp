@@ -99,7 +99,7 @@ wb_pkg::wb_pkg(char* nodelist, bool distribute, bool config_only, bool check,
 
 void wb_pkg::readConfig()
 {
-  char fname[200];
+  char fname[260];
   char line[200];
   char line_item[7][80];
   int num;
@@ -429,7 +429,7 @@ void pkg_node::checkNode()
     sts = lfu_GetVolume(
         fname, vol_name, &vol_vid, &vol_cid, &vol_time, &vol_dvversion);
     if (EVEN(sts)) {
-      char msg[200];
+      char msg[280];
       sprintf(msg, "Loadfile not found: %s", fname);
       MsgWindow::message('E', msg, msgw_ePop_No);
       m_errors++;
@@ -505,7 +505,7 @@ void pkg_node::checkVolume(char* filename)
     for (int j = 0; j < (int)m_volumelist.size(); j++) {
       if (m_volumelist[j].m_vid == (volref + i)->vid) {
         if (m_volumelist[j].m_time.tv_sec != (volref + i)->version.tv_sec) {
-          char msg[200];
+          char msg[320];
           sprintf(msg, "Version mismatch volume %s in %s and %s",
               (volref + i)->name, filename, m_volumelist[j].m_filename);
           MsgWindow::message('E', msg, msgw_ePop_No);
@@ -760,7 +760,7 @@ void pkg_node::fetchFiles(bool distribute)
   ofv.close();
 
   // Create a script that copies files to build directory
-  char pkg_name[80];
+  char pkg_name[110];
   sprintf(pkg_name, pwr_cNamePkg, m_name, version);
 
   sprintf(pack_fname, "$pwrp_tmp/pkg_pack_%s.sh", m_name);
@@ -893,7 +893,7 @@ void pkg_node::fetchFiles(bool distribute)
   ofd.close();
 
   // Execute the pack file
-  char cmd[200];
+  char cmd[2 + sizeof(pack_fname) + 1];
   sprintf(cmd, ". %s", pack_fname);
   system(cmd);
 
@@ -951,7 +951,7 @@ void pkg_node::copyPackage(char* pkg_name)
     of.close();
 
     // Execute the pack file
-    char cmd[200];
+    char cmd[2 + sizeof(pack_fname) + 1];
     sprintf(cmd, ". %s", pack_fname);
     system(cmd);
 
@@ -1074,7 +1074,7 @@ void pkg_pattern::fetchFiles()
     dcli_search_file(m_source, found_file, DCLI_DIR_SEARCH_END);
   }
   if (m_filelist.size() == 0 && m_severity != 'S') {
-    char msg[200];
+    char msg[15 + sizeof(m_source) + 1];
     sprintf(msg, "No file found: %s", m_source);
     MsgWindow::message(m_severity, msg, msgw_ePop_No);
 

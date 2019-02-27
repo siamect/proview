@@ -42,7 +42,6 @@ Menu DefaultWindowMenu
 	Close		_C	Alt<Key>F4	f.kill
 }
 
-
 !!
 !! Default Key Bindings
 !!
@@ -72,7 +71,7 @@ Buttons DefaultButtonBindings
 	<Btn3Down>	icon|frame	f.post_wmenu
 	<Btn3Down>	root		f.menu	DefaultRootMenu
 }
- 
+
 !!
 !! These are some example bindings that you might use if your
 !! keyboardFocusPolicy is "explicit".  Note that to use these, you'll

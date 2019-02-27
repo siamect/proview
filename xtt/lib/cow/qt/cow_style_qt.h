@@ -43,12 +43,28 @@ class PwrStyle : public QGtkStyle {
   Q_OBJECT
 
 public:
-  PwrStyle() : QGtkStyle() {}
+  PwrStyle();
+  ~PwrStyle();
 
   int pixelMetric(PixelMetric which, const QStyleOption* option,
       const QWidget* widget = 0) const;
   int styleHint(StyleHint hint, const QStyleOption* option,
       const QWidget* widget, QStyleHintReturn* returnData = 0) const;
+
+  void loadPalette(const char* path);
+
+  void drawPrimitive(PrimitiveElement element, const QStyleOption *option,
+                       QPainter *painter, const QWidget *widget) const;
+  void drawControl(ControlElement control, const QStyleOption *option,
+                   QPainter *painter, const QWidget *widget) const;
+  void drawComplexControl(ComplexControl control,
+                          const QStyleOptionComplex *option, QPainter *painter,
+                          const QWidget *widget) const;
+  void polish(QApplication *app);
+  void unpolish(QApplication *app);
+
+private:
+  QPalette *pal = NULL;
 };
 
 #endif

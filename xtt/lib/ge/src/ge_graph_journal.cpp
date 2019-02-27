@@ -38,7 +38,7 @@
 
 #include "co_cdh.h"
 #include "co_dcli.h"
-#include "co_debug.h"
+#include "co_log.h"
 #include "co_string.h"
 #include "co_time.h"
 
@@ -220,7 +220,7 @@ int GraphJournal::store(journal_eAction action, grow_tObject o)
       && !((action == journal_eAction_PostPropertiesObject
                || action == journal_eAction_PostPropertiesSelect)
              && o == lock_object)) {
-    debug_print("Unfinished action, forced close\n");
+    log_debug("Unfinished action, forced close\n");
     // Close prevoius action
     poslist[current_idx].redo_pos = fp.tellp();
     fp << journal_cTag_Redo << " " << journal_eAction_No << " " << status << " "
@@ -230,7 +230,7 @@ int GraphJournal::store(journal_eAction action, grow_tObject o)
     status = journal_eStatus_Stored;
     lock_object = 0;
 
-    debug_print("Store(F)x: %3d  list: %3zd undo: %10d redo: %10d\n",
+    log_debug("Store(F)x: %3d  list: %3zd undo: %10d redo: %10d\n",
           current_idx - 1, poslist.size() - 1,
           (int)poslist[poslist.size() - 1].undo_pos,
           (int)poslist[poslist.size() - 1].redo_pos);
@@ -239,7 +239,7 @@ int GraphJournal::store(journal_eAction action, grow_tObject o)
           || (status == journal_eStatus_AnteProperties && lock_object != o))
       && (action == journal_eAction_PostPropertiesObject
              || action == journal_eAction_PostPropertiesSelect)) {
-    debug_print("Interrupted action, reopening\n");
+    log_debug("Interrupted action, reopening\n");
     // Open prevoius action
     JournalPos up;
 
@@ -253,7 +253,7 @@ int GraphJournal::store(journal_eAction action, grow_tObject o)
     }
 
     while ((int)poslist.size() > current_idx) {
-      debug_print("Remove %zd\n", poslist.size() - 1);
+      log_debug("Remove %zd\n", poslist.size() - 1);
       poslist.pop_back();
     }
 
@@ -286,7 +286,7 @@ int GraphJournal::store(journal_eAction action, grow_tObject o)
     }
 
     while ((int)poslist.size() > current_idx) {
-      debug_print("Remove %zd\n", poslist.size() - 1);
+      log_debug("Remove %zd\n", poslist.size() - 1);
       poslist.pop_back();
     }
 
@@ -390,7 +390,7 @@ int GraphJournal::store(journal_eAction action, grow_tObject o)
 
     current_idx++;
 
-    debug_print("Store idx: %3d  list: %3zd undo: %10d redo: %10d\n",
+    log_debug("Store idx: %3d  list: %3zd undo: %10d redo: %10d\n",
           current_idx - 1, poslist.size() - 1,
           (int)poslist[poslist.size() - 1].undo_pos,
           (int)poslist[poslist.size() - 1].redo_pos);
@@ -414,7 +414,7 @@ int GraphJournal::store(journal_eAction action, grow_tObject o)
   }
 
   while ((int)poslist.size() > current_idx) {
-    debug_print("Remov idx: %3d  list: %3zd undo: %10d redo: %10d\n", 0,
+    log_debug("Remov idx: %3d  list: %3zd undo: %10d redo: %10d\n", 0,
           poslist.size() - 1, (int)poslist[poslist.size() - 1].undo_pos,
           (int)poslist[poslist.size() - 1].redo_pos);
     poslist.pop_back();
@@ -479,7 +479,7 @@ int GraphJournal::store(journal_eAction action, grow_tObject o)
   poslist.push_back(up);
   current_idx++;
 
-  debug_print("Store idx: %3d  list: %3zd undo: %10d redo: %10d\n",
+  log_debug("Store idx: %3d  list: %3zd undo: %10d redo: %10d\n",
         current_idx - 1, poslist.size() - 1,
         (int)poslist[poslist.size() - 1].undo_pos,
         (int)poslist[poslist.size() - 1].redo_pos);
@@ -497,7 +497,7 @@ int GraphJournal::undo()
   if (current_idx == 0)
     return 0;
 
-  debug_print("Undo  idx: %3d  list: %3zd undo: %10d redo: %10d\n",
+  log_debug("Undo  idx: %3d  list: %3zd undo: %10d redo: %10d\n",
         current_idx - 1, poslist.size() - 1,
         (int)poslist[current_idx - 1].undo_pos,
         (int)poslist[current_idx - 1].redo_pos);
@@ -574,7 +574,7 @@ int GraphJournal::redo()
   if (current_idx >= (int)poslist.size())
     return 0;
 
-  debug_print("Redo  idx: %3d  list: %3zd undo: %10d redo: %10d\n", current_idx,
+  log_debug("Redo  idx: %3d  list: %3zd undo: %10d redo: %10d\n", current_idx,
         poslist.size() - 1, (int)poslist[current_idx].undo_pos,
         (int)poslist[current_idx].redo_pos);
 
@@ -651,7 +651,7 @@ int GraphJournal::undo_delete_select()
   grow_tObject prev;
   int sts;
 
-  debug_print("undo_delete_select\n");
+  log_debug("undo_delete_select\n");
 
   grow_SetNodraw(graph->grow->ctx);
 
@@ -694,7 +694,7 @@ int GraphJournal::store_undo_delete_select()
   int sts;
   char name[80];
 
-  debug_print("store_undo_delete_select\n");
+  log_debug("store_undo_delete_select\n");
 
   grow_GetSelectList(graph->grow->ctx, &sel_list, &sel_count);
   for (int i = sel_count - 1; i >= 0; i--) {
@@ -719,7 +719,7 @@ int GraphJournal::store_redo_delete_select()
   grow_tObject* sel_list;
   int sel_count;
 
-  debug_print("store_redo_delete_select\n");
+  log_debug("store_redo_delete_select\n");
 
   grow_GetSelectList(graph->grow->ctx, &sel_list, &sel_count);
   for (int i = 0; i < sel_count; i++) {
@@ -741,7 +741,7 @@ int GraphJournal::redo_delete_select()
   char line[100];
   int tag;
 
-  debug_print("redo_delete_select\n");
+  log_debug("redo_delete_select\n");
 
   grow_SetNodraw(graph->grow->ctx);
 
@@ -770,7 +770,7 @@ int GraphJournal::undo_delete_object()
 {
   grow_tObject o;
 
-  debug_print("undo_delete_select\n");
+  log_debug("undo_delete_select\n");
 
   grow_ObjectRead(graph->grow->ctx, (std::ifstream&)fp, &o);
   grow_Redraw(graph->grow->ctx);
@@ -779,7 +779,7 @@ int GraphJournal::undo_delete_object()
 
 int GraphJournal::store_undo_delete_object(grow_tObject o)
 {
-  debug_print("store_undo_delete_object\n");
+  log_debug("store_undo_delete_object\n");
 
   grow_ObjectSave(o, (std::ofstream&)fp, glow_eSaveMode_Edit);
   return GE__SUCCESS;
@@ -789,7 +789,7 @@ int GraphJournal::store_redo_delete_object(grow_tObject o)
 {
   char name[80];
 
-  debug_print("store_redo_delete_object\n");
+  log_debug("store_redo_delete_object\n");
 
   grow_GetObjectName(o, name, sizeof(name), glow_eName_Object);
 
@@ -803,7 +803,7 @@ int GraphJournal::redo_delete_object()
   grow_tObject o;
   int sts;
 
-  debug_print("redo_delete_object\n");
+  log_debug("redo_delete_object\n");
 
   fp.getline(name, sizeof(name));
 
@@ -820,7 +820,7 @@ int GraphJournal::undo_create_object()
   grow_tObject o;
   int sts;
 
-  debug_print("undo_create_object\n");
+  log_debug("undo_create_object\n");
 
   fp.getline(name, sizeof(name));
 
@@ -835,7 +835,7 @@ int GraphJournal::store_undo_create_object(grow_tObject o)
 {
   char name[80];
 
-  debug_print("store_undo_create_object\n");
+  log_debug("store_undo_create_object\n");
 
   grow_GetObjectName(o, name, sizeof(name), glow_eName_Object);
 
@@ -847,7 +847,7 @@ int GraphJournal::redo_create_object()
 {
   grow_tObject o;
 
-  debug_print("redo_create_object\n");
+  log_debug("redo_create_object\n");
 
   grow_ObjectRead(graph->grow->ctx, (std::ifstream&)fp, &o);
   if (!o)
@@ -860,7 +860,7 @@ int GraphJournal::redo_create_object()
 
 int GraphJournal::store_redo_create_object(grow_tObject o)
 {
-  debug_print("store_redo_create_object\n");
+  log_debug("store_redo_create_object\n");
 
   grow_ObjectSave(o, (std::ofstream&)fp, glow_eSaveMode_Edit);
   return GE__SUCCESS;
@@ -874,7 +874,7 @@ int GraphJournal::undo_properties_select()
   char name[80];
   int sts;
 
-  debug_print("undo_properties_select\n");
+  log_debug("undo_properties_select\n");
 
   fp.getline(line, sizeof(line));
   sscanf(line, "%d", &tag);
@@ -903,7 +903,7 @@ int GraphJournal::store_properties_select()
   int sel_count;
   char name[80];
 
-  debug_print("store_properties_select\n");
+  log_debug("store_properties_select\n");
 
   grow_GetSelectList(graph->grow->ctx, &sel_list, &sel_count);
   for (int i = 0; i < sel_count; i++) {
@@ -925,7 +925,7 @@ int GraphJournal::undo_properties_object()
   char name[80];
   int sts;
 
-  debug_print("undo_properties_object\n");
+  log_debug("undo_properties_object\n");
 
   fp.getline(line, sizeof(line));
   sscanf(line, "%d", &tag);
@@ -956,7 +956,7 @@ int GraphJournal::store_properties_object(grow_tObject o)
 {
   char name[80];
 
-  debug_print("store_properties_object\n");
+  log_debug("store_properties_object\n");
 
   grow_GetObjectName(o, name, sizeof(name), glow_eName_Object);
 
@@ -975,7 +975,7 @@ int GraphJournal::undo_group_select()
   int tag;
   int sts;
 
-  debug_print("undo_group_select\n");
+  log_debug("undo_group_select\n");
 
   fp.getline(line, sizeof(line));
   sscanf(line, "%d", &tag);
@@ -1001,7 +1001,7 @@ int GraphJournal::store_undo_group_select(grow_tObject o)
 {
   char name[80];
 
-  debug_print("store_undo_group_select\n");
+  log_debug("store_undo_group_select\n");
 
   grow_GetObjectName(o, name, sizeof(name), glow_eName_Object);
 
@@ -1017,7 +1017,7 @@ int GraphJournal::store_redo_group_select()
   grow_tObject* sel_list;
   int sel_count;
 
-  debug_print("store_redo_group_select\n");
+  log_debug("store_redo_group_select\n");
 
   grow_GetSelectList(graph->grow->ctx, &sel_list, &sel_count);
   for (int i = 0; i < sel_count; i++) {
@@ -1043,7 +1043,7 @@ int GraphJournal::redo_group_select()
   grow_tObject group;
   GeDyn* data;
 
-  debug_print("redo_group_select\n");
+  log_debug("redo_group_select\n");
 
   grow_SelectClear(graph->grow->ctx);
 
@@ -1168,7 +1168,7 @@ int GraphJournal::store_undo_ungroup_select()
   grow_tObject* member_list;
   int member_count;
 
-  debug_print("store_undo_ungroup_select\n");
+  log_debug("store_undo_ungroup_select\n");
 
   grow_GetSelectList(graph->grow->ctx, &sel_list, &sel_count);
   for (int i = 0; i < sel_count; i++) {
@@ -1200,7 +1200,7 @@ int GraphJournal::store_redo_ungroup_select()
   grow_tObject* sel_list;
   int sel_count;
 
-  debug_print("store_redo_ungroup_select\n");
+  log_debug("store_redo_ungroup_select\n");
 
   grow_GetSelectList(graph->grow->ctx, &sel_list, &sel_count);
   for (int i = 0; i < sel_count; i++) {
@@ -1224,7 +1224,7 @@ int GraphJournal::redo_ungroup_select()
   int tag;
   int sts;
 
-  debug_print("redo_ungroup_select\n");
+  log_debug("redo_ungroup_select\n");
 
   fp.getline(line, sizeof(line));
   sscanf(line, "%d", &tag);
@@ -1252,7 +1252,7 @@ int GraphJournal::undo_paste()
   char line[100];
   int tag;
 
-  debug_print("undo_paste\n");
+  log_debug("undo_paste\n");
 
   grow_SetNodraw(graph->grow->ctx);
   fp.getline(line, sizeof(line));
@@ -1282,7 +1282,7 @@ int GraphJournal::store_undo_paste()
   grow_tObject* move_list;
   int move_count;
 
-  debug_print("store_undo_paste\n");
+  log_debug("store_undo_paste\n");
 
   grow_GetMoveList(graph->grow->ctx, &move_list, &move_count);
   for (int i = 0; i < move_count; i++) {
@@ -1303,7 +1303,7 @@ int GraphJournal::redo_paste()
   char line[100];
   int tag;
 
-  debug_print("redo_paste\n");
+  log_debug("redo_paste\n");
 
   fp.getline(line, sizeof(line));
   sscanf(line, "%d", &tag);
@@ -1326,7 +1326,7 @@ int GraphJournal::redo_paste()
 
 int GraphJournal::store_redo_paste()
 {
-  debug_print("store_redo_paste\n");
+  log_debug("store_redo_paste\n");
 
   grow_SetNodraw(graph->grow->ctx);
   for (int i = 0; i < (int)pastelist.size(); i++) {
@@ -1351,7 +1351,7 @@ int GraphJournal::undo_pop_select()
   int tag;
   int sts;
 
-  debug_print("undo_pop_select\n");
+  log_debug("undo_pop_select\n");
 
   grow_SetNodraw(graph->grow->ctx);
 
@@ -1392,7 +1392,7 @@ int GraphJournal::store_undo_pop_select()
   grow_tObject next;
   int sts;
 
-  debug_print("store_undo_pop_select\n");
+  log_debug("store_undo_pop_select\n");
 
   grow_GetSelectList(graph->grow->ctx, &sel_list, &sel_count);
   for (int i = sel_count - 1; i >= 0; i--) {
@@ -1418,7 +1418,7 @@ int GraphJournal::store_redo_pop_select()
   grow_tObject* sel_list;
   int sel_count;
 
-  debug_print("store_redo_pop_select\n");
+  log_debug("store_redo_pop_select\n");
 
   grow_GetSelectList(graph->grow->ctx, &sel_list, &sel_count);
   for (int i = 0; i < sel_count; i++) {
@@ -1439,7 +1439,7 @@ int GraphJournal::redo_pop_select()
   char line[100];
   int tag;
 
-  debug_print("redo_pop_select\n");
+  log_debug("redo_pop_select\n");
 
   grow_SetNodraw(graph->grow->ctx);
   grow_SelectClear(graph->grow->ctx);
@@ -1477,7 +1477,7 @@ int GraphJournal::undo_push_select()
   int tag;
   int sts;
 
-  debug_print("undo_push_select\n");
+  log_debug("undo_push_select\n");
 
   grow_SetNodraw(graph->grow->ctx);
 
@@ -1518,7 +1518,7 @@ int GraphJournal::store_undo_push_select()
   grow_tObject next;
   int sts;
 
-  debug_print("store_undo_push_select\n");
+  log_debug("store_undo_push_select\n");
 
   grow_GetSelectList(graph->grow->ctx, &sel_list, &sel_count);
   for (int i = sel_count - 1; i >= 0; i--) {
@@ -1544,7 +1544,7 @@ int GraphJournal::store_redo_push_select()
   grow_tObject* sel_list;
   int sel_count;
 
-  debug_print("store_redo_push_select\n");
+  log_debug("store_redo_push_select\n");
 
   grow_GetSelectList(graph->grow->ctx, &sel_list, &sel_count);
   for (int i = 0; i < sel_count; i++) {
@@ -1565,7 +1565,7 @@ int GraphJournal::redo_push_select()
   char line[100];
   int tag;
 
-  debug_print("redo_push_select\n");
+  log_debug("redo_push_select\n");
 
   grow_SetNodraw(graph->grow->ctx);
   grow_SelectClear(graph->grow->ctx);
@@ -1602,7 +1602,7 @@ int GraphJournal::undo_rename()
   int tag;
   int sts;
 
-  debug_print("undo_rename\n");
+  log_debug("undo_rename\n");
 
   fp.getline(name_new, sizeof(name_new));
   fp.getline(name_old, sizeof(name_old));
@@ -1624,7 +1624,7 @@ int GraphJournal::store_undo_rename(grow_tObject o)
 {
   char name[80];
 
-  debug_print("store_undo_rename\n");
+  log_debug("store_undo_rename\n");
 
   grow_GetObjectName(o, name, sizeof(name), glow_eName_Object);
 
@@ -1639,7 +1639,7 @@ int GraphJournal::store_redo_rename(grow_tObject o)
 {
   char name[80];
 
-  debug_print("store_redo_rename\n");
+  log_debug("store_redo_rename\n");
 
   grow_GetObjectName(o, name, sizeof(name), glow_eName_Object);
 
@@ -1659,7 +1659,7 @@ int GraphJournal::redo_rename()
   int tag;
   int sts;
 
-  debug_print("redo_rename\n");
+  log_debug("redo_rename\n");
 
   fp.getline(name_new, sizeof(name_new));
   fp.getline(name_old, sizeof(name_old));

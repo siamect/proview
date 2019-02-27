@@ -208,8 +208,8 @@ unsigned int qcom_send(remnode_item* remnode, pwr_sClass_RemTrans* remtrans,
 int main(int argc, char* argv[])
 {
   remtrans_item* remtrans;
-  unsigned char id[32];
-  unsigned char pname[32];
+  char id[32];
+  char pname[45];
   pwr_tStatus sts;
   int i;
   float time_since_scan = 0.0;
@@ -223,23 +223,23 @@ int main(int argc, char* argv[])
    * number */
 
   if (argc >= 2)
-    strncpy((char*)id, argv[1], sizeof(id));
+    strncpy(id, argv[1], sizeof(id));
   else
-    strcpy((char*)id, "0");
+    strcpy(id, "0");
 
   /* Build process name with id */
 
-  sprintf((char*)pname, "rs_remqcom_%s", id);
+  sprintf(pname, "rs_remqcom_%s", id);
 
   /* Init of errh */
 
-  errh_Init((char*)pname, errh_eAnix_remote);
+  errh_Init(pname, errh_eAnix_remote);
   errh_SetStatus(PWR__SRVSTARTUP);
 
   /* Init of gdh */
   if (debug)
     printf("Before gdh_init\n");
-  sts = gdh_Init((char*)pname);
+  sts = gdh_Init(pname);
   if (EVEN(sts)) {
     errh_Fatal("gdh_Init, %m", sts);
     errh_SetStatus(PWR__SRVTERM);

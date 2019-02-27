@@ -1881,7 +1881,7 @@ int rt_sevhistmon::mainloop()
         try {
           init_objects();
           connect();
-        } catch (co_error e) {
+        } catch (co_error& e) {
           errh_Error("SevHistMonitor terminating, %m", e.sts());
           exit(0);
         }
@@ -1908,7 +1908,7 @@ int main()
   try {
     client.init();
     client.connect();
-  } catch (co_error e) {
+  } catch (co_error& e) {
     errh_Error("SevHistMonitor terminating, %m", e.sts());
     exit(0);
   }

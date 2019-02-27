@@ -634,7 +634,6 @@ int rtt_logging_store_entry(int entry, char* filename)
   int i;
   pwr_tFileName filename_str;
   FILE* outfile;
-  char message[120];
   int found_parameter;
 
   /* Check the entry */
@@ -663,8 +662,8 @@ int rtt_logging_store_entry(int entry, char* filename)
 
   outfile = fopen(filename_str, "w");
   if (outfile == 0) {
-    char tmp[200];
-    snprintf(tmp, 200, "Unable to open file \"%s\"", filename_str);
+    char tmp[300];
+    snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename_str);
     rtt_message('E', tmp);
     return RTT__HOLDCOMMAND;
   }
@@ -707,6 +706,7 @@ int rtt_logging_store_entry(int entry, char* filename)
   rtt_fgetname(outfile, filename_str, filename_str);
   fclose(outfile);
 
+  char message[sizeof(filename_str) + 8 + 1];
   sprintf(message, "%s created", filename_str);
   rtt_message('I', message);
   return RTT__NOPICTURE;
@@ -730,15 +730,14 @@ int rtt_logging_store_all(char* filename)
   int i, j;
   pwr_tFileName filename_str;
   FILE* outfile;
-  char message[120];
   int entry;
 
   rtt_get_defaultfilename(filename, filename_str, ".rtt_com");
 
   outfile = fopen(filename_str, "w");
   if (outfile == 0) {
-    char tmp[200];
-    snprintf(tmp, 200, "Unable to open file \"%s\"", filename_str);
+    char tmp[300];
+    snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename_str);
     rtt_message('E', tmp);
     return RTT__HOLDCOMMAND;
   }
@@ -785,6 +784,7 @@ int rtt_logging_store_all(char* filename)
   rtt_fgetname(outfile, filename_str, filename_str);
   fclose(outfile);
 
+  char message[sizeof(filename_str) + 8 + 1];
   sprintf(message, "%s created", filename_str);
   rtt_message('I', message);
   return RTT__NOPICTURE;

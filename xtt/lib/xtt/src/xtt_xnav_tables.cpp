@@ -1423,7 +1423,7 @@ int XNav::show_attr_channels(pwr_tAttrRef* mod_aref, void* cardp,
   pwr_tTypeId attrtype;
   unsigned int attrsize, attroffs, attrelem;
   pwr_tSubid subid;
-  pwr_tOName object_name;
+  char object_name[450];
   pwr_tAName attr_name;
   pwr_sAttrRef attrref;
   pwr_sAttrRef signal_aref;

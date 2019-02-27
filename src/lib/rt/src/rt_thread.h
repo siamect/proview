@@ -38,6 +38,7 @@
 #define rt_thread_h
 
 #include "pwr.h"
+#include "pwr_baseclasses.h"
 
 #include <pthread.h>
 
@@ -73,6 +74,7 @@ pwr_tStatus thread_Cancel(thread_s*);
 pwr_tStatus thread_Create(thread_s*, char*, void* (*routine)(), void*);
 pwr_tStatus thread_Wait(pwr_tDeltaTime*);
 pwr_tStatus thread_SetPrio(thread_s*, int);
+pwr_tStatus thread_SetDeadline(pwr_sClass_PlcThread* o);
 pwr_tStatus thread_Join(thread_s*, pwr_tStatus*);
 pwr_tStatus thread_Signal(thread_s*, int);
 pwr_tBoolean thread_SigTimedWait(thread_s*, int, pwr_tDeltaTime*);

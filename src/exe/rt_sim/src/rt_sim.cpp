@@ -586,7 +586,7 @@ void rt_sim::store_nmps()
     sts = gdh_GetClassList(pwr_cClass_NMpsBackupConfig, &oid);
     if (ODD(sts)) {
       pwr_sClass_NMpsBackupConfig* bckp;
-      pwr_tCmd cmd;
+      char cmd[700];
       pwr_tFileName fname;
       char* s;
 
@@ -1080,7 +1080,7 @@ void rt_sim::open()
     aref = cdh_ObjidToAref(oid);
     sts = gdh_ArefANameToAref(&aref, "ThreadObject", &taref);
     if (EVEN(sts))
-      co_error(sts);
+      throw co_error(sts);
 
     sts = gdh_GetObjectInfoAttrref(&taref, &thread_oid, sizeof(thread_oid));
     if (EVEN(sts)) {

@@ -1216,7 +1216,6 @@ void gccm_free_list(s_operand* list)
 int gccm_create_list(gccm_t_file_ctx filectx, char* line, s_operand** list)
 {
   t_row_ctx rowctx;
-  char msg[80];
   int sts;
 
   rowctx = calloc(1, sizeof(*rowctx));
@@ -1754,6 +1753,7 @@ int gccm_create_list(gccm_t_file_ctx filectx, char* line, s_operand** list)
       break;
   }
   if (rowctx->state == K_STATE_ERROR) {
+    char msg[120];
     sprintf(msg, "%s, line %d pos %d \"", rowctx->msg, filectx->current_row,
         rowctx->pos - 1);
     strncat(msg, rowctx->line, sizeof(msg) - strlen(msg) - 1);

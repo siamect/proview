@@ -3900,9 +3900,9 @@ ApplListElem::ApplListElem(applist_eType al_type, void* al_ctx,
 
 void ApplListElem::log_new()
 {
+  char cmd[512];
   switch (type) {
   case applist_eType_Graph: {
-    pwr_tCmd cmd;
     if (streq(instance, ""))
       sprintf(cmd, "open graph \"%s\"", name);
     else
@@ -3911,7 +3911,6 @@ void ApplListElem::log_new()
     break;
   }
   case applist_eType_MultiView: {
-    pwr_tCmd cmd;
     pwr_tStatus sts;
     pwr_tAName aname;
 
@@ -3925,7 +3924,6 @@ void ApplListElem::log_new()
     break;
   }
   case applist_eType_Trend: {
-    pwr_tCmd cmd;
     pwr_tStatus sts;
     pwr_tAName aname;
 
@@ -3939,7 +3937,6 @@ void ApplListElem::log_new()
     break;
   }
   case applist_eType_Trace: {
-    pwr_tCmd cmd;
     pwr_tStatus sts;
     pwr_tAName aname;
 
@@ -3960,9 +3957,9 @@ void ApplListElem::log_new()
 
 void ApplListElem::log_delete()
 {
+  char cmd[512];
   switch (type) {
   case applist_eType_Graph: {
-    pwr_tCmd cmd;
     if (streq(instance, ""))
       sprintf(cmd, "close graph \"%s\"", name);
     else
@@ -3971,7 +3968,6 @@ void ApplListElem::log_delete()
     break;
   }
   case applist_eType_MultiView: {
-    pwr_tCmd cmd;
     pwr_tStatus sts;
     pwr_tAName aname;
 
@@ -3985,7 +3981,6 @@ void ApplListElem::log_delete()
     break;
   }
   case applist_eType_Trend: {
-    pwr_tCmd cmd;
     pwr_tStatus sts;
     pwr_tAName aname;
 
@@ -3999,7 +3994,6 @@ void ApplListElem::log_delete()
     break;
   }
   case applist_eType_Trace: {
-    pwr_tCmd cmd;
     pwr_tStatus sts;
     pwr_tAName aname;
 

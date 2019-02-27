@@ -25,7 +25,7 @@ cp /usr/pwr$ver/$pwre_target/exp/cnf/user/pwrstart ~/
 chmod a+x ~/pwrstart
 cp /usr/pwr$ver/$pwre_target/exp/cnf/user/Proview.lnk $USERPROFILE/Desktop
 cp /usr/pwr$ver/$pwre_target/exp/cnf/user/proview_icon.ico $USERPROFILE/Download
-  
+
 #chmod u+s /usr/pwr$ver/$pwre_target/exp/exe/rt_ini
 #chmod u+s /usr/pwr$ver/$pwre_target/exp/exe/rt_rtt
 #chmod u+s /usr/pwr$ver/$pwre_target/exp/exe/rt_xtt
@@ -87,9 +87,3 @@ if [ ! -e /usr/local/pwrp ]; then
 #  chgrp pwrp /usr/local/pwrp
 #  chmod g+w /usr/local/pwrp
 fi
-
-
-
-
-
-

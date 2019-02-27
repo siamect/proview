@@ -124,7 +124,7 @@ int GeMethods::get_xm_mask(pwr_tAttrRef* arp, char* name,
 {
   pwr_tAName aname, xm_name;
   pwr_tStatus sts;
-  pwr_tCmd command;
+  char command[510];
   int mask_configure = 0;
 
   *configured = 0;

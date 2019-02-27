@@ -71,11 +71,11 @@ static void rtmon_close_cb(void* ctx)
 
 int main(int argc, char* argv[])
 {
-  setDebug(1);
+  log_setLevel(LOG_TRACE);
   int sts;
   char display[80] = "";
 
-  debug_print("%s ", argv[0]);
+  log_debug("%s ", argv[0]);
   for (int i = 1; i < argc; i++) {
     fprintf(stderr, "%s ", argv[i]);
     if (streq(argv[i], "-h")) {

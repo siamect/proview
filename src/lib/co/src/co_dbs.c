@@ -467,7 +467,7 @@ dbs_sMenv* dbs_Map(pwr_tStatus* sts, const char* filename)
   mep->vrp = vrp;
   mep->nVolRef = nVolRef;
   mep->base = base;
-  strncpy(mep->tfname, tfname, sizeof(tfname));
+  strncpy(mep->tfname, tfname, sizeof(mep->tfname));
   vep = mep->venv;
 
   vep->mp = mep;

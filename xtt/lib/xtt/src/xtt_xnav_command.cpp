@@ -545,7 +545,7 @@ static int xnav_login_func(void* client_data, void* client_flag)
 static int xnav_logout_func(void* client_data, void* client_flag)
 {
   XNav* xnav = (XNav*)client_data;
-  char msg[120];
+  char msg[200];
 
   int window = ODD(dcli_get_qualifier("/MESSAGEWINDOW", 0, 0));
 
@@ -1268,7 +1268,7 @@ static int xnav_show_func(void* client_data, void* client_flag)
 
   if (str_NoCaseStrncmp(arg1_str, "VERSION", strlen(arg1_str)) == 0) {
     // Command is "SHOW VERSION"
-    char message_str[80];
+    char message_str[100];
 
     strcpy(message_str, "Xtt version ");
     strcat(message_str, xtt_version);
@@ -1444,7 +1444,7 @@ static int xnav_show_func(void* client_data, void* client_flag)
     return sts;
   } else if (str_NoCaseStrncmp(arg1_str, "TIME", strlen(arg1_str)) == 0) {
     /* Command is "SHOW TIME" */
-    char message_str[80];
+    char message_str[100];
 
     xnav->update_time();
     sprintf(message_str, "Time is %s", xnav->gbl.time);
@@ -1452,7 +1452,7 @@ static int xnav_show_func(void* client_data, void* client_flag)
     return XNAV__SUCCESS;
   } else if (str_NoCaseStrncmp(arg1_str, "DEFAULT", strlen(arg1_str)) == 0) {
     /* Command is "SHOW DEFAULT" */
-    char message_str[80];
+    char message_str[100];
 
     sprintf(message_str, "Default directory: %s", xnav->gbl.default_directory);
     xnav->message('I', message_str);
@@ -1661,7 +1661,7 @@ static int xnav_show_func(void* client_data, void* client_flag)
     /* Command is "SHOW OBJID" */
     pwr_tOName name_str;
     pwr_tObjid objid;
-    char msg[200];
+    char msg[220];
 
     IF_NOGDH_RETURN;
     if (ODD(dcli_get_qualifier("/NAME", name_str, sizeof(name_str)))) {
@@ -4793,7 +4793,7 @@ static int xnav_open_func(void* client_data, void* client_flag)
       }
     }
   } else if (str_NoCaseStrncmp(arg1_str, "PLOTGROUP", strlen(arg1_str)) == 0) {
-    pwr_tCmd cmd;
+    char cmd[430];
     pwr_tAName name_str;
     char* name_ptr;
     pwr_tAName title_str;
@@ -6414,7 +6414,7 @@ static int xnav_crossref_func(void* client_data, void* client_flag)
   int brief;
   int window;
   int case_sens;
-  char title[420];
+  char title[430];
 
   IF_NOGDH_RETURN;
 
@@ -7785,8 +7785,8 @@ int XNav::command(char* input_str)
     /* Read command file */
     sts = readcmdfile(&command[1], 0);
     if (sts == DCLI__NOFILE) {
-      char tmp[200];
-      snprintf(tmp, 200, "Unable to open file \"%s\"", &command[1]);
+      char tmp[1030];
+      snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", &command[1]);
       message('E', tmp);
       return DCLI__SUCCESS;
     } else if (EVEN(sts))
@@ -7811,8 +7811,8 @@ int XNav::command(char* input_str)
         /* Read command file */
         sts = readcmdfile(&symbol_value[1], 0);
         if (sts == DCLI__NOFILE) {
-          char tmp[200];
-          snprintf(tmp, 200, "Unable to open file \"%s\"", &symbol_value[1]);
+          char tmp[230];
+          snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", &symbol_value[1]);
           message('E', tmp);
           return DCLI__SUCCESS;
         } else if (EVEN(sts))
@@ -9224,7 +9224,6 @@ int XNav::find_name(char* name, pwr_tObjid* objid)
 int XNav::store(char* filename, int collect)
 {
   pwr_tFileName filename_str;
-  char msg[120];
   FILE* outfile;
   int first;
   brow_tNode* node_list;
@@ -9238,8 +9237,8 @@ int XNav::store(char* filename, int collect)
   /* Open the file */
   outfile = fopen(filename_str, "w");
   if (outfile == 0) {
-    char tmp[200];
-    snprintf(tmp, 200, "Unable to open file \"%s\"", filename_str);
+    char tmp[280];
+    snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename_str);
     message('E', tmp);
     return XNAV__HOLDCOMMAND;
   }
@@ -9274,6 +9273,7 @@ int XNav::store(char* filename, int collect)
   dcli_fgetname(outfile, filename_str, filename_str);
   fclose(outfile);
 
+  char msg[15 + sizeof(filename_str) + 1];
   sprintf(msg, "Picture stored %s", filename_str);
   message('I', msg);
   return XNAV__SUCCESS;
@@ -9285,7 +9285,7 @@ int XNav::show_symbols()
   int i;
   char key[DCLI_SYM_KEY_SIZE];
   char value[DCLI_SYM_VALUE_SIZE];
-  char text[400];
+  char text[410];
 
   i = 0;
   while (1) {
@@ -9522,7 +9522,7 @@ static pwr_tStatus xnav_otree_action_cb(void* ctx, pwr_tAttrRef* aref)
   XNav* xnav = (XNav*)ctx;
   pwr_tStatus sts;
   pwr_tAName aname;
-  pwr_tCmd cmd;
+  char cmd[830];
   pwr_tCid cid;
 
   sts = gdh_GetAttrRefTid(aref, &cid);

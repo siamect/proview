@@ -57,7 +57,7 @@ static pwr_tStatus OpenDb(ldh_sMenuCall* ip)
   int sts;
   char name[80];
   char filename[80];
-  char cmd[100];
+  char cmd[256];
 
   sts = ldh_GetObjectPar(ip->PointedSession, ip->Pointed.Objid, "RtBody", "Id",
       (char**)&db_id_p, &size);

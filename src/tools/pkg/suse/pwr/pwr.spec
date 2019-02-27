@@ -7,7 +7,6 @@
 #   See www.rpm.org.
 #
 
-
 Name: pwr46
 Summary: Proview/R development and runtime environment
 Version: 4.6.1
@@ -46,12 +45,12 @@ echo "$ver"
   echo "Copyright © 2004-${d:0:4} SSAB Oxelösund AB"
   echo ""
   echo "This program is free software; you can redistribute it and/or"
-  echo "modify it under the terms of the GNU General Public License as" 
+  echo "modify it under the terms of the GNU General Public License as"
   echo "published by the Free Software Foundation, either version 2 of"
   echo "the License, or (at your option) any later version."
   echo ""
-  echo "This program is distributed in the hope that it will be useful" 
-  echo "but WITHOUT ANY WARRANTY; without even the implied warranty of" 
+  echo "This program is distributed in the hope that it will be useful"
+  echo "but WITHOUT ANY WARRANTY; without even the implied warranty of"
   echo "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
   echo "For more details, see the"
   echo "GNU General Public License. <weblink> http://www.proview.se/gpllicense.html"
@@ -122,7 +121,7 @@ else
 fi
 if [ ! -e /home/pwrp/Desktop ]; then
   mkdir /home/pwrp/Desktop
-  chown pwrp:pwrp /home/pwrp/Desktop	
+  chown pwrp:pwrp /home/pwrp/Desktop
 fi
 cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/proview%{ver}.desktop /home/pwrp/Desktop
 chown pwrp:pwrp /home/pwrp/Desktop/proview%{ver}.desktop

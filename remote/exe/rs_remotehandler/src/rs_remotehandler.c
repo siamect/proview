@@ -416,7 +416,7 @@ static void AddTransports()
 ************************************************************************/
 static int StartTransport(int idx)
 {
-  char arg1[40];
+  char arg1[65];
   char arg2[40];
   char arg3[40];
   int res = 0;

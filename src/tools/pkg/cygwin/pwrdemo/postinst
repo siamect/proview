@@ -68,11 +68,3 @@ if [ -e $USERPROFILE/Desktop ]; then
   cp /usr/pwrp/pwrdemo$ver/cnf/ProviewDemo.lnk $USERPROFILE/Desktop
   cp /usr/pwrp/pwrdemo$ver/cnf/proview_icon.ico $USERPROFILE/Download
 fi
-
-
-
-
-
-
-
-

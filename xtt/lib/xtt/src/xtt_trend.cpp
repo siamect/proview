@@ -527,7 +527,7 @@ void XttTrend::trend_close_cb(void* ctx)
 void XttTrend::trend_snapshot_cb(void* ctx)
 {
   XttTrend* trend = (XttTrend*)ctx;
-  pwr_tCmd cmd;
+  char cmd[820];
 
   sprintf(cmd, "open tcurve %s/title=%s", trend->trend_name[0],
       trend->trend_name[0]);

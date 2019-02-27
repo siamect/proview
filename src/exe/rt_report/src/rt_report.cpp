@@ -472,7 +472,7 @@ void rt_report::create_report(pwr_sClass_Report* o)
   }
   if (o->Media & pwr_mReportMediaMask_Printer) {
     // Convert to postscript
-    pwr_tCmd cmd;
+    char cmd[520];
     pwr_tFileName target_file;
 
     if (!streq(display, ""))

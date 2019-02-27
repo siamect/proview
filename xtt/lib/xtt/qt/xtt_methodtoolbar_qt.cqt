@@ -83,7 +83,7 @@ void XttMethodToolbarQtObject::activate_button()
   int is_attr;
   pwr_sAttrRef aref;
   pwr_tAName aname;
-  pwr_tCmd cmd;
+  char cmd[512];
   xmenu_eItemType menu_type;
 
   if (toolbar->get_select_cb) {

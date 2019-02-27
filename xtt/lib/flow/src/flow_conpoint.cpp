@@ -168,12 +168,13 @@ void FlowConPoint::set_trace_attr(const char* object, const char* attribute,
   trace_attr_type = type;
 }
 
-void FlowConPoint::get_trace_attr(
-    char* object, char* attribute, flow_eTraceType* type, int* inverted)
+FlowTraceAttr FlowConPoint::get_trace_attr()
 {
-  strncpy(attribute, trace_attribute, sizeof(trace_attribute));
-  *type = trace_attr_type;
-  *inverted = 0;
+  FlowTraceAttr attr;
+  strncpy(attr.attribute, trace_attribute, sizeof(attr.attribute));
+  attr.type = trace_attr_type;
+  attr.inverted = 0;
+  return attr;
 }
 
 void FlowConPoint::draw(

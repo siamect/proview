@@ -74,7 +74,7 @@ static dtt_t_store_ctx* dtt_ctx_store = 0;
 static dtt_t_store_menuctx* dtt_menuctx_store = 0;
 static menu_ctx dtt_root_ctx = 0;
 static char dtt_programname[80];
-static char dtt_maintitle[80];
+static char dtt_maintitle[90];
 static char dtt_title_prefix[80];
 
 static int dtt_gdh_initialized = 0;
@@ -297,8 +297,8 @@ static int set_func(edit_ctx ctx, int flag)
 
       rtt_outfile = fopen(str, "w");
       if (rtt_outfile == 0) {
-        char tmp[200];
-        snprintf(tmp, 200, "Unable to open file \"%s\"", str);
+        char tmp[512];
+        snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", str);
         rtt_message('E', tmp);
         return RTT__HOLDCOMMAND;
       }
@@ -410,7 +410,6 @@ static int write_func(edit_ctx ctx, int flag)
   if (ODD(rtt_get_qualifier("rtt_arg1", arg1_str))) {
     if (str_NoCaseStrncmp(arg1_str, "ITEMS", strlen(arg1_str)) == 0) {
       pwr_tFileName outfilename;
-      char message[120];
       FILE* outfile;
 
       /* Command is "WRITE ITEMS" */
@@ -441,8 +440,8 @@ static int write_func(edit_ctx ctx, int flag)
           if (ODD(rtt_get_qualifier("rtt_arg2", arg2_str))) {
             outfile = fopen(arg2_str, "w");
             if (!outfile) {
-              char tmp[200];
-              snprintf(tmp, 200, "Unable to open file \"%s\"", arg2_str);
+              char tmp[512];
+              snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", arg2_str);
               rtt_message('E', tmp);
               return RTT__NOPICTURE;
             }
@@ -454,6 +453,7 @@ static int write_func(edit_ctx ctx, int flag)
             if (EVEN(sts))
               return sts;
 
+            char message[sizeof(outfilename) + 8 + 1];
             sprintf(message, "%s created", outfilename);
             rtt_message('I', message);
             return RTT__NOPICTURE;
@@ -484,8 +484,8 @@ static int write_func(edit_ctx ctx, int flag)
         sts = dtt_edit_write(
             ctx, filename, menu_filename, 1, 1, 0, 0, 0, &messages);
         if (EVEN(sts)) {
-          char tmp[200];
-          snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+          char tmp[512];
+          snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename);
           rtt_message('E', tmp);
           return RTT__NOPICTURE;
         } else
@@ -518,8 +518,8 @@ static int write_func(edit_ctx ctx, int flag)
       if (sts == RTT__PICTURENOTSAVED) {
         return RTT__NOPICTURE;
       } else if (EVEN(sts)) {
-        char tmp[200];
-        snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+        char tmp[512];
+        snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename);
         rtt_message('E', tmp);
         return RTT__NOPICTURE;
       } else
@@ -619,8 +619,8 @@ static int save_func(edit_ctx ctx, int flag)
     if (sts == RTT__PICTURENOTSAVED) {
       return RTT__NOPICTURE;
     } else if (EVEN(sts)) {
-      char tmp[200];
-      snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+      char tmp[512];
+      snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename);
       rtt_message('E', tmp);
       return RTT__NOPICTURE;
     }
@@ -671,8 +671,8 @@ static int save_func(edit_ctx ctx, int flag)
             ctx, filename, menu_filename, 0, nocompile, 0, opsys, 1, &messages);
       }
       if (EVEN(sts)) {
-        char tmp[200];
-        snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+        char tmp[512];
+        snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename);
         rtt_message('E', tmp);
         return RTT__NOPICTURE;
       }
@@ -681,8 +681,8 @@ static int save_func(edit_ctx ctx, int flag)
       if (sts == RTT__PICTURENOTSAVED) {
         return RTT__NOPICTURE;
       } else if (EVEN(sts)) {
-        char tmp[200];
-        snprintf(tmp, 200, "Unable to open file \"%s\"", menu_filename);
+        char tmp[512];
+        snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", menu_filename);
         rtt_message('E', tmp);
         return RTT__NOPICTURE;
       }
@@ -700,8 +700,8 @@ static int save_func(edit_ctx ctx, int flag)
       if (sts == RTT__PICTURENOTSAVED) {
         return RTT__NOPICTURE;
       } else if (EVEN(sts)) {
-        char tmp[200];
-        snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+        char tmp[512];
+        snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename);
         rtt_message('E', tmp);
         return RTT__NOPICTURE;
       }
@@ -766,8 +766,8 @@ static int generate_func(edit_ctx ctx, int flag)
     if (sts == RTT__PICTURENOTSAVED) {
       return RTT__NOPICTURE;
     } else if (EVEN(sts)) {
-      char tmp[200];
-      snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+      char tmp[512];
+      snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename);
       rtt_message('E', tmp);
       return RTT__NOPICTURE;
     }
@@ -800,8 +800,8 @@ static int generate_func(edit_ctx ctx, int flag)
     if (sts == RTT__PICTURENOTSAVED) {
       return RTT__NOPICTURE;
     } else if (EVEN(sts)) {
-      char tmp[200];
-      snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+      char tmp[512];
+      snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename);
       rtt_message('E', tmp);
       return RTT__NOPICTURE;
     }
@@ -816,8 +816,8 @@ static int generate_func(edit_ctx ctx, int flag)
     if (sts == RTT__PICTURENOTSAVED) {
       return RTT__NOPICTURE;
     } else if (EVEN(sts)) {
-      char tmp[200];
-      snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+      char tmp[512];
+      snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename);
       rtt_message('E', tmp);
       return RTT__NOPICTURE;
     }
@@ -923,8 +923,8 @@ static int dtt_exit_func(edit_ctx ctx, int flag)
     sts = dtt_edit_write(
         ctx, filename, menu_filename, 0, 0, 0, dtt_opsys, 1, &messages);
     if (EVEN(sts)) {
-      char tmp[200];
-      snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+      char tmp[512];
+      snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename);
       rtt_message('E', tmp);
       return RTT__NOPICTURE;
     }
@@ -935,8 +935,8 @@ static int dtt_exit_func(edit_ctx ctx, int flag)
     if (sts == RTT__PICTURENOTSAVED) {
       return RTT__NOPICTURE;
     } else if (EVEN(sts)) {
-      char tmp[200];
-      snprintf(tmp, 200, "Unable to open file \"%s\"", menu_filename);
+      char tmp[512];
+      snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", menu_filename);
       rtt_message('E', tmp);
       return RTT__NOPICTURE;
     }
@@ -948,8 +948,8 @@ static int dtt_exit_func(edit_ctx ctx, int flag)
 
     sts = dtt_edit_save_menues(filename, 0);
     if (EVEN(sts)) {
-      char tmp[200];
-      snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+      char tmp[512];
+      snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename);
       rtt_message('E', tmp);
       return RTT__NOPICTURE;
     }
@@ -1057,7 +1057,6 @@ static int dtt_list_func(edit_ctx ctx, int flag)
   char arg1_str[80];
   char arg2_str[80];
   pwr_tFileName outfilename;
-  char message[120];
   FILE* outfile;
 
   if (ODD(rtt_get_qualifier("rtt_arg1", arg1_str))) {
@@ -1087,8 +1086,8 @@ static int dtt_list_func(edit_ctx ctx, int flag)
           if (ODD(rtt_get_qualifier("rtt_arg2", arg2_str))) {
             outfile = fopen(arg2_str, "w");
             if (!outfile) {
-              char tmp[200];
-              snprintf(tmp, 200, "Unable to open file \"%s\"", arg2_str);
+              char tmp[512];
+              snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", arg2_str);
               rtt_message('E', tmp);
               return RTT__NOPICTURE;
             }
@@ -1100,6 +1099,7 @@ static int dtt_list_func(edit_ctx ctx, int flag)
             if (EVEN(sts))
               return sts;
 
+            char message[sizeof(outfilename) + 8 + 1];
             sprintf(message, "%s created", outfilename);
             rtt_message('I', message);
             return RTT__NOPICTURE;
@@ -1518,7 +1518,6 @@ static int dtt_compile_func(edit_ctx ctx, int flag)
 static int dtt_edit_func(edit_ctx ctx, int flag)
 {
   char arg1_str[80];
-  pwr_tFileName filename;
   char menuname[80];
   pwr_tCmd cmd;
 
@@ -1526,14 +1525,12 @@ static int dtt_edit_func(edit_ctx ctx, int flag)
     dtt_get_menufilename(menuname);
     /* Edit help is default */
 
-    sprintf(filename, "%s%s.rhlp", dtt_source_dir, menuname);
-    sprintf(cmd, "vi %s", filename);
+    sprintf(cmd, "vi %s%s.rhlp", dtt_source_dir, menuname);
     system(cmd);
   } else if (str_NoCaseStrncmp(arg1_str, "HELP", strlen(arg1_str)) == 0) {
     /* Edit the help file */
     dtt_get_menufilename(menuname);
-    sprintf(filename, "%s%s.rhlp", dtt_source_dir, menuname);
-    sprintf(cmd, "vi %s", filename);
+    sprintf(cmd, "vi %s%s.rhlp", dtt_source_dir, menuname);
     system(cmd);
   } else if (str_NoCaseStrncmp(arg1_str, "FUNCTIONS", strlen(arg1_str)) == 0) {
 /* Edit the function file */
@@ -1649,8 +1646,8 @@ static int dtt_include_func(menu_ctx ctx, int flag)
 
       sts = dtt_edit_include_menue(ctx, filename);
       if (EVEN(sts)) {
-        char tmp[200];
-        snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+        char tmp[512];
+        snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename);
         rtt_message('E', tmp);
         return RTT__NOPICTURE;
       }
@@ -3095,7 +3092,6 @@ static int dtt_show_func(menu_ctx ctx, int flag)
   if (str_NoCaseStrncmp(arg1_str, "SYMBOL", strlen(arg1_str)) == 0) {
     /* Command is "SHOW SYMBOL" */
     char arg2_str[80];
-    char message_str[80];
     char value[80];
 
     if (EVEN(rtt_get_qualifier("rtt_arg2", arg2_str))) {
@@ -3107,20 +3103,18 @@ static int dtt_show_func(menu_ctx ctx, int flag)
       rtt_message('E', "Symbol not found");
       return RTT__HOLDCOMMAND;
     }
+    char message_str[7 + sizeof(arg2_str) + 3 + sizeof(value) + 1];
     sprintf(message_str, "Symbol %s = %s", arg2_str, value);
     rtt_message('I', message_str);
     return RTT__NOPICTURE;
   } else if (str_NoCaseStrncmp(arg1_str, "TITLEPREFIX", strlen(arg1_str))
       == 0) {
     /* Command is "SHOW TITLEPREFIX" */
-    char message_str[80];
-
+    char message_str[14 + sizeof(dtt_title_prefix) + 1];
     sprintf(message_str, "Titleprefix = %s", dtt_title_prefix);
     rtt_message('I', message_str);
     return RTT__NOPICTURE;
-  }
-
-  else if (str_NoCaseStrncmp(arg1_str, "MENU", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "MENU", strlen(arg1_str)) == 0) {
     /* Command is "SHOW MENU" */
     char name_str[80];
 
@@ -3137,14 +3131,10 @@ static int dtt_show_func(menu_ctx ctx, int flag)
     }
     sts = dtt_show_menu(ctx, name_str);
     return sts;
-  }
-
-  else if (str_NoCaseStrncmp(arg1_str, "COLLECTION", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "COLLECTION", strlen(arg1_str)) == 0) {
     sts = rtt_collect_show(ctx);
     return sts;
-  }
-
-  else if (str_NoCaseStrncmp(arg1_str, "COMMAND", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "COMMAND", strlen(arg1_str)) == 0) {
     /* Show the command string in arg1 */
     /* Check that this is a command menu item */
     ctx_e = (edit_ctx)ctx;
@@ -3167,9 +3157,7 @@ static int dtt_show_func(menu_ctx ctx, int flag)
       sprintf(message, "Command: %s", (char*)menu_ptr->arg1);
     rtt_message('I', message);
     return RTT__NOPICTURE;
-  }
-
-  else if (str_NoCaseStrncmp(arg1_str, "SYSPICTURE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "SYSPICTURE", strlen(arg1_str)) == 0) {
     /* Show the command string in arg1 */
     /* Check that this is a command menu item */
     ctx_e = (edit_ctx)ctx;
@@ -3187,9 +3175,7 @@ static int dtt_show_func(menu_ctx ctx, int flag)
     sprintf(message, "System picture: %s", (char*)menu_ptr->arg1);
     rtt_message('I', message);
     return RTT__NOPICTURE;
-  }
-
-  else if (str_NoCaseStrncmp(arg1_str, "OBJPICTURE", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "OBJPICTURE", strlen(arg1_str)) == 0) {
     /* Show the command string in arg1 */
     /* Check that this is a command menu item */
     ctx_e = (edit_ctx)ctx;
@@ -3207,9 +3193,7 @@ static int dtt_show_func(menu_ctx ctx, int flag)
     sprintf(message, "Object picture: %s", (char*)menu_ptr->arg1);
     rtt_message('I', message);
     return RTT__NOPICTURE;
-  }
-
-  else if (str_NoCaseStrncmp(arg1_str, "FILESPEC", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "FILESPEC", strlen(arg1_str)) == 0) {
     /* Show the command string in arg1 */
     /* Check that this is a command menu item */
     ctx_e = (edit_ctx)ctx;
@@ -3227,9 +3211,7 @@ static int dtt_show_func(menu_ctx ctx, int flag)
     sprintf(message, "File specification: %s", (char*)menu_ptr->arg1);
     rtt_message('I', message);
     return RTT__NOPICTURE;
-  }
-
-  else if (str_NoCaseStrncmp(arg1_str, "NAME", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "NAME", strlen(arg1_str)) == 0) {
     /* Show the command string in arg1 */
     /* Check that this is a command menu item */
     ctx_e = (edit_ctx)ctx;
@@ -3247,9 +3229,7 @@ static int dtt_show_func(menu_ctx ctx, int flag)
     sprintf(message, "Object name: %s", (char*)menu_ptr->arg2);
     rtt_message('I', message);
     return RTT__NOPICTURE;
-  }
-
-  else if (str_NoCaseStrncmp(arg1_str, "FUNCTION", strlen(arg1_str)) == 0) {
+  } else if (str_NoCaseStrncmp(arg1_str, "FUNCTION", strlen(arg1_str)) == 0) {
     /* Show the command string in arg1 */
     /* Check that this is a function menu item */
     ctx_e = (edit_ctx)ctx;
@@ -4006,8 +3986,8 @@ static int dtt_edit_write(edit_ctx ctx, char* filename, char* menu_filename,
   int i, j, k;
   char* char_ptr;
   dtt_item item_ptr;
-  pwr_tFileName fname;
-  pwr_tFileName fnamebld;
+  char fname[270];
+  char fnamebld[260];
   char picture_name[80];
   int x, y;
   int error_count;
@@ -4279,7 +4259,7 @@ static int dtt_edit_read(edit_ctx ctx, char* name, int userspec_name)
 {
   FILE* fin;
   char* s;
-  pwr_tFileName filename;
+  char filename[270];
   int sts;
   char line[200];
   int i, j;
@@ -4354,7 +4334,7 @@ static int dtt_edit_read_v27(edit_ctx ctx, char* name, int userspec_name)
 {
   FILE* fin;
   char* s;
-  pwr_tFileName filename;
+  char filename[270];
   dtt_t_upd_item item_buffer;
   dtt_item item_ptr;
   int sts;
@@ -4507,8 +4487,8 @@ static int dtt_upd_item_show(
     edit_ctx parent_ctx, int arg1, int arg2, int arg3, int arg4)
 {
   int sts;
-  char title[80];
-  char text[80];
+  char title[100];
+  char text[140];
   rtt_t_menu* menulist = 0;
   int i;
   dtt_item item_ptr;
@@ -5543,10 +5523,9 @@ static int dtt_edit_save_menues(char* filename, int generate_only)
   FILE* fout_db2 = NULL;
   FILE* fout_decl = NULL;
   FILE* fout_hlp = 0;
-  pwr_tFileName fname;
+  char fname[270];
   pwr_tFileName fnamebld_noext;
   pwr_tFileName fname_noext;
-  pwr_tCmd cmd;
   pwr_tFileName tmpstr;
   int nocompile = 0;
 
@@ -5567,6 +5546,7 @@ static int dtt_edit_save_menues(char* filename, int generate_only)
 
   if (!nocompile) {
 /* Export help file */
+    char cmd[6 + sizeof(fname_noext) + 6 + sizeof(fnamebld_noext) + 5 + 1];
     sprintf(cmd, "cp -f %s.rhlp %s.rhlp", fname_noext, fnamebld_noext);
     system(cmd);
 
@@ -5688,7 +5668,7 @@ static int dtt_edit_save_one_menu(FILE* fout, FILE* fout_c, FILE* fout_h,
   char picture_name[80];
   char menu_name[80];
   char item_menu_name[80];
-  pwr_tFileName fname;
+  char fname[350];
   FILE* fout_test = 0;
   pwr_tFileName tmpstr;
 
@@ -5956,7 +5936,7 @@ static int dtt_edit_read_menues(char* filename)
   int sts;
   FILE* fin;
   char* s;
-  pwr_tFileName fname;
+  char fname[270];
   char line[80];
 
   sprintf(fname, "%s%s.dtt_m", dtt_source_dir, filename);
@@ -6224,7 +6204,6 @@ int dtt_start(char* programname)
   int sts;
   pwr_tFileName filename;
   rtt_t_menu* menulist;
-  char first_item[80];
   char* s;
 
   strcpy(dtt_programname, programname);
@@ -6302,6 +6281,7 @@ int dtt_start(char* programname)
   if (EVEN(sts)) {
     /* New program, create a hook menu */
     sprintf(dtt_maintitle, "RTT IN %s", dtt_programname);
+    char first_item[sizeof(dtt_programname) + 5 + 1];
     sprintf(first_item, "%s MENU", dtt_programname);
     sts = rtt_menu_list_add(
         &menulist, 0, 0, first_item, 0, 0, 0, pwr_cNObjid, 0, 0, 0, 0);
@@ -6422,8 +6402,7 @@ static int dtt_get_picturename(int index, char* picture_name)
 
 static int dtt_cc(int opsys, int action, int debug)
 {
-  char cmd[100];
-
+  char cmd[400];
   sprintf(cmd, "%s/wb_rtt_appl.sh %s %d %d %d", dtt_exe_dir, dtt_programname,
       action, dtt_is_rttsys, opsys);
   system(cmd);
@@ -6723,7 +6702,6 @@ static int dtt_edit_write_gdhrefs(char* filename)
   FILE* outfile;
   int sts;
   pwr_tFileName outfilename;
-  char message[80];
 
   /* Open file */
   outfile = fopen(filename, "w");
@@ -6737,6 +6715,7 @@ static int dtt_edit_write_gdhrefs(char* filename)
   if (EVEN(sts))
     return sts;
 
+  char message[sizeof(outfilename) + 8 + 1];
   sprintf(message, "%s created", outfilename);
   rtt_message('I', message);
   return RTT__SUCCESS;
@@ -6810,7 +6789,6 @@ static int dtt_edit_pwrplc_gdhrefs(char* filename)
   int sts;
   int externref_index;
   pwr_tFileName outfilename;
-  char message[80];
 
   externref_index = 0;
 
@@ -6838,6 +6816,7 @@ static int dtt_edit_pwrplc_gdhrefs(char* filename)
   if (EVEN(sts))
     return sts;
 
+  char message[sizeof(outfilename) + 8 + 1];
   sprintf(message, "%s created", outfilename);
   rtt_message('I', message);
   return RTT__SUCCESS;
@@ -6981,7 +6960,6 @@ static int dtt_edit_list_items_all(char* filename)
   FILE* outfile;
   int sts;
   pwr_tFileName outfilename;
-  char message[80];
 
   /* Open file */
   outfile = fopen(filename, "w");
@@ -6995,6 +6973,7 @@ static int dtt_edit_list_items_all(char* filename)
   if (EVEN(sts))
     return sts;
 
+  char message[sizeof(outfilename) + 8 + 1];
   sprintf(message, "%s created", outfilename);
   rtt_message('I', message);
   return RTT__SUCCESS;
@@ -7111,14 +7090,13 @@ static int dtt_edit_read_items(edit_ctx ctx, char* filename)
   int row;
   int i;
   int check_state;
-  char message[80];
   char value_str[3][80];
 
   /* Open the file */
   infile = fopen(filename, "r");
   if (!infile) {
-    char tmp[200];
-    snprintf(tmp, 200, "Unable to open file \"%s\"", filename);
+    char tmp[512];
+    snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", filename);
     rtt_message('E', tmp);
     return RTT__NOPICTURE;
   }
@@ -7329,6 +7307,7 @@ static int dtt_edit_read_items(edit_ctx ctx, char* filename)
   fclose(infile);
   return RTT__SUCCESS;
 
+  char message[140];
 error:
   fclose(infile);
   sprintf(message, "Error in line %d, %s", row, line);
@@ -7364,7 +7343,6 @@ static int dtt_edit_read_picture_items(edit_ctx ctx, FILE* infile)
   int x;
   int y;
   int row;
-  char message[80];
   char value_str[3][80];
 
   row = 0;
@@ -7562,6 +7540,8 @@ static int dtt_edit_read_picture_items(edit_ctx ctx, FILE* infile)
   }
   return RTT__SUCCESS;
 
+  char message[140];
+
 error:
   sprintf(message, "Error in line %d, %s", row, line);
   rtt_message('E', message);
@@ -7630,7 +7610,6 @@ static int dtt_edit_convert_picture(menu_ctx ctx, int menu_idx, int keep_ctx,
   rtt_t_menu* menu_ptr;
   edit_ctx picture_ctx;
   char* title;
-  char message[80];
   int unload;
   int messages;
   int generate_only = 0;
@@ -7651,6 +7630,7 @@ static int dtt_edit_convert_picture(menu_ctx ctx, int menu_idx, int keep_ctx,
         return RTT__SUCCESS;
     }
 
+    char message[19 + sizeof(menu_ptr->text) + 1];
     sprintf(message, "Converting picture %s", menu_ptr->text);
     rtt_message('I', message);
 
@@ -7701,7 +7681,6 @@ static int dtt_edit_save_picture(menu_ctx ctx, int menu_idx, int keep_ctx,
   rtt_t_menu* menu_ptr;
   edit_ctx picture_ctx;
   char* title;
-  char message[80];
   int unload;
   int messages;
 
@@ -7720,6 +7699,7 @@ static int dtt_edit_save_picture(menu_ctx ctx, int menu_idx, int keep_ctx,
         return RTT__SUCCESS;
     }
 
+    char message[19 + sizeof(menu_ptr->text) + 1];
     if (!generate_only)
       sprintf(message, "Saving picture %s", menu_ptr->text);
     else

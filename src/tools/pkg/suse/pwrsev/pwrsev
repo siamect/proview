@@ -30,7 +30,7 @@ create_killer()
     echo "#!/bin/bash" > $killer
     echo "source /etc/pwrp_profile" >> $killer
     echo "umask 002" >> $killer
-    
+
     echo "`ps ax | grep "rt_" | awk '{ print "kill -9 "$1}'`" >> $killer
     echo "`ps ax | grep "sev_" | awk '{ print "kill -9 "$1}'`" >> $killer
 
@@ -38,14 +38,13 @@ create_killer()
     echo "eval `ipcs -q|grep ^0x|grep "[ \t]pwrp[ \t]"|awk '{printf "ipcrm msg %s;", $2}'`" >> $killer
     echo "eval `ipcs -m|grep ^0x|grep "[ \t]pwrp[ \t]"|awk '{printf "ipcrm shm %s;", $2}'`" >> $killer
     echo "rm /tmp/pwr*\$PWR_BUS_ID" >> $killer
-    
+
     chmod a+rx $killer
     if [ ! -e $killer ] ;then
       echo "$killer not writable, check permissions"
       exit
     fi
 }
-
 
 pwr_start()
 {
@@ -70,8 +69,8 @@ pwr_stop()
     if [ -e $pwrp_exe/pwrp_stop.sh ]; then
       sudo -u pwrp source $pwrp_exe/pwrp_stop.sh
     fi
-  fi 
-  while [ "`ps aux | grep -v grep | grep rt_`" != "" ] ; do sleep 1; done  
+  fi
+  while [ "`ps aux | grep -v grep | grep rt_`" != "" ] ; do sleep 1; done
 }
 
 pwr_reload()
@@ -90,14 +89,14 @@ pwr_kill()
     $killer
   else
     sudo -u pwrp $killer
-  fi 
+  fi
 }
 
 case "$1"
   in
     start)
 	echo "Start Proview Storage Environment."
-	pwr_start    
+	pwr_start
 	echo "Done."
       ;;
     stop)

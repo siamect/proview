@@ -283,7 +283,7 @@ void XttStreamGtk::reconnect(void* data)
   if (strm->no_uri) {
     printf("Reconnect no URI\n");
     strm->no_uri = 0;
-    pwr_tURL luri;
+    char luri[250];
     char* s;
     if (strm->options & strm_mOptions_HttpBasicAuthentication) {
       if (!streq(strm->user, "") && !streq(strm->password, "")
@@ -608,7 +608,7 @@ XttStreamGtk::XttStreamGtk(GtkWidget* st_parent_wid, void* st_parent_ctx,
   }
 
   /* Set the URI to play, eg "http://192.168.67.248/mjpg/video.mjpg" */
-  pwr_tURL luri;
+  char luri[250];
   char* s;
   if (options & strm_mOptions_HttpBasicAuthentication) {
     if (!streq(user, "") && !streq(password, "")

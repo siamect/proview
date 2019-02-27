@@ -7,7 +7,6 @@
 #   See www.rpm.org.
 #
 
-
 Name:		pwrdemo46
 Summary: 	Proview/R demo project
 Version:        4.6.1
@@ -120,15 +119,13 @@ fi
 
 set -e
 #echo "Here in prerm..."
- 
+
 if [ -e /usr/pwrp/pwrdemo%{ver} ]; then
  rm -r /usr/pwrp/pwrdemo%{ver}
 fi
-
 
 #%postun
 
 %changelog
 * Thu May 28 2009 Claes Sjofors <claes.sjofors@proview.se> 4.6.1-1
 - Base release
- 

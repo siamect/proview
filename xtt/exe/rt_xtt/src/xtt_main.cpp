@@ -356,7 +356,7 @@ void Xtt::activate_opengraph()
   pwr_tFileName filename;
   int is_attr;
   pwr_sAttrRef attrref;
-  pwr_tCmd cmd;
+  char cmd[1080];
 
   sts = xnav->get_select(&attrref, &is_attr);
   if (EVEN(sts)) {
@@ -452,7 +452,7 @@ void Xtt::activate_opengraph()
 	  sprintf( cmd, "open history /name=%s /title=\"%s\"", vname, name);
 	  xnav->command( cmd);
 	  return;
-	}	  
+	}
 	return;
       }
       return;

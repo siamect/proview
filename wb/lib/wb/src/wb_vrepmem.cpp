@@ -1010,7 +1010,7 @@ wb_orep* wb_vrepmem::createObject(pwr_tStatus* sts, wb_cdef cdef,
     else
       strcpy(name_str, name.object());
   } else {
-    if (!classeditorCheck(code, dest, cdef.cid(), &soix, name_str, sts, false))
+    if (!classeditorCheck(code, dest, cdef.cid(), &soix, name_str, sizeof(name_str), sts, false))
       return 0;
 
     if (name.oddSts())
@@ -1204,7 +1204,7 @@ wb_orep* wb_vrepmem::copyObject(pwr_tStatus* sts, const wb_orep* orep,
       *sts = LDH__CLASSMISPLACED;
       return 0;
     }
-    if (!classeditorCheck(code, dest, orep->cid(), &oix, name_str, sts, false))
+    if (!classeditorCheck(code, dest, orep->cid(), &oix, name_str, sizeof(name_str), sts, false))
       return 0;
 
     if (name.oddSts())
@@ -1882,7 +1882,7 @@ bool wb_vrepmem::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
       }
       memo->fth = pmemo;
       if (!classeditorCheck(ldh_eDest_IntoLast, pmemo, cid, &memo->m_oid.oix,
-              memo->m_name, &sts, true))
+              memo->m_name, sizeof(memo->m_name), &sts, true))
         return 0;
     }
   }
@@ -2484,7 +2484,7 @@ void wb_vrepmem::classeditorCheckCommit()
 }
 
 bool wb_vrepmem::classeditorCheck(ldh_eDest dest_code, mem_object* dest,
-    pwr_tCid cid, pwr_tOix* oix, char* name, pwr_tStatus* sts,
+    pwr_tCid cid, pwr_tOix* oix, char* name, int name_size, pwr_tStatus* sts,
     bool import_paste)
 {
   mem_object* fth;
@@ -2640,9 +2640,9 @@ bool wb_vrepmem::classeditorCheck(ldh_eDest dest_code, mem_object* dest,
       pwr_tObjName n;
 
       strncpy(n, name, sizeof(n));
-      snprintf(name, sizeof(pwr_tObjName), "C%u_%s",
+      snprintf(name, name_size, "C%u_%s",
           ((pwr_sClassVolume*)volume_object->rbody)->NextCix, n);
-      name[sizeof(pwr_tObjName) - 1] = 0;
+      name[name_size - 1] = 0;
     }
     break;
 
