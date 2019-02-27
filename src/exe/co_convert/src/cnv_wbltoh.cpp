@@ -104,6 +104,9 @@ int CnvWblToH::init(char* first)
       << "#ifndef pwr_class_h\n"
       << "#include \"pwr_class.h\"\n"
       << "#endif\n"
+      << "#ifndef pwr_systemclasses_h\n"
+      << "#include \"pwr_systemclasses.h\"\n"
+      << "#endif\n"
       << '\n'
       << '\n';
 
@@ -801,7 +804,12 @@ int CnvWblToH::cixstr_to_classid(char* cix_str, pwr_tClassId* cid)
     { "pwr_eCix_ExternVolume", pwr_eCix_ExternVolume },
     { "pwr_eCix_Hier", pwr_eCix_Hier },
     { "pwr_eCix_Security", pwr_eCix_Security },
-    { "pwr_eCix_ReferenceList", pwr_eCix_ReferenceList }, { "", 0 } };
+    { "pwr_eCix_ReferenceList", pwr_eCix_ReferenceList },
+    { "pwr_eCix_Block", pwr_eCix_Block },
+    { "pwr_eCix_BlockAttribute", pwr_eCix_BlockAttribute },
+    { "pwr_eCix_SubBlock", pwr_eCix_SubBlock }, 
+    { "pwr_eCix_MountDynObject", pwr_eCix_MountDynObject }, 
+    { "", 0 } };
 
   found = 0;
   for (cix_p = cix_array; !streq(cix_p->name, ""); cix_p++) {
@@ -855,7 +863,9 @@ int CnvWblToH::check_typename(char* type_volume, char* type_name)
       "pwr_tString32", "pwr_tString16", "pwr_tString8", "pwr_tString1",
       "pwr_tText256", "pwr_tText1024", "pwr_tText8192", "pwr_tURL",
       "pwr_tOpSysEnum", "pwr_tPrivMask", "pwr_tProString40", "pwr_tDataRef",
-      "pwr_tVoid", "pwr_tConfigStatusEnum", "pwr_tSafetyLevelEnum", "" };
+      "pwr_tVoid", "pwr_tConfigStatusEnum", "pwr_tSafetyLevelEnum", "pwr_tPgmName",
+      "pwr_tAdefFlags", "pwr_tObjName", "pwr_sClass_BlockAttribute", 
+      "pwr_Class_BlockAttribute", "" };
 
     for (name = valid_names[0]; !streq(name, "");
          name += sizeof(valid_names[0])) {

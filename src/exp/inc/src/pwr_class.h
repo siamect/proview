@@ -109,10 +109,12 @@ typedef struct pwr_s_ExternVolume pwr_sExternVolume;
 typedef struct pwr_s_CreateVolume pwr_sCreateVolume;
 typedef struct pwr_s_MountVolume pwr_sMountVolume;
 typedef struct pwr_s_MountObject pwr_sMountObject;
+typedef struct pwr_s_MountDynObject pwr_sMountDynObject;
 typedef struct pwr_s_Bit pwr_sBit;
 typedef struct pwr_s_Value pwr_sValue;
 typedef struct pwr_s_Method pwr_sMethod;
 typedef struct pwr_s_Security pwr_sSecurity;
+typedef struct pwr_s_BlockAttribute pwr_sBlockAttribute;
 
 typedef union pwr_u_ParDef pwr_uParDef;
 typedef union pwr_u_Volume pwr_uVolume;
@@ -310,6 +312,10 @@ typedef enum {
   pwr_eCix_Security = 68,
   pwr_eCix_DetachedClassVolume = 69,
   pwr_eCix_ReferenceList = 70,
+  pwr_eCix_Block = 71,
+  pwr_eCix_BlockAttribute = 72,
+  pwr_eCix_SubBlock = 73,
+  pwr_eCix_MountDynObject = 74,
   pwr_eCix_
 } pwr_eCix;
 
@@ -384,6 +390,10 @@ typedef enum {
   pwr_eClass_Security = pwr_ClassId(pwr_eCix_Security),
   pwr_eClass_DetachedClassVolume = pwr_ClassId(pwr_eCix_DetachedClassVolume),
   pwr_eClass_ReferenceList = pwr_ClassId(pwr_eCix_ReferenceList),
+  pwr_eClass_Block = pwr_ClassId(pwr_eCix_Block),
+  pwr_eClass_BlockAttribute = pwr_ClassId(pwr_eCix_BlockAttribute),
+  pwr_eClass_SubBlock = pwr_ClassId(pwr_eCix_SubBlock),
+  pwr_eClass_MountDynObject = pwr_ClassId(pwr_eCix_MountDynObject),
   pwr_eClass_
 } pwr_eClass;
 
@@ -1220,11 +1230,20 @@ struct pwr_s_MountObject {
   pwr_tObjid Object pwr_dAlignW;
 };
 
+struct pwr_s_MountDynObject {
+  pwr_tString80 Description pwr_dAlignLW;
+  pwr_tString256 Object pwr_dAlignW;
+};
+
 struct pwr_s_Security {
   pwr_tMask DefaultWebPriv pwr_dAlignLW;
   pwr_tMask DefaultXttPriv pwr_dAlignW;
   pwr_tBoolean XttUseOpsysUser pwr_dAlignW;
   pwr_tString80 WebSystemGroup pwr_dAlignW;
+};
+
+struct pwr_s_BlockAttribute {
+  pwr_tUInt32 Elements pwr_dAlignLW;
 };
 
 union pwr_u_Volume {

@@ -183,6 +183,7 @@ void wb_dbs::checkObject(sOentry* oep)
   case pwr_eClass_MountVolume:
   case pwr_eClass_CreateVolume:
   case pwr_eClass_MountObject:
+  case pwr_eClass_MountDynObject:
     if (m_volume.cid == pwr_eClass_RootVolume
         || m_volume.cid == pwr_eClass_VolatileVolume) {
       // Root volume or cloned volume

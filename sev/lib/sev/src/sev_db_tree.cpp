@@ -45,14 +45,15 @@ pwr_tStatus sev_db::tree_update()
 {
   int new_item = 0;
   int num;
+  int onum;
   pwr_tAName hname;
+  pwr_tAName aname;
   pwr_tStatus sts;
   pwr_tOid oid;
   pwr_tCid cid = 0;
   char* s;
   pwr_sClass_SevItem ritem;
   char oname_array[20][pwr_cSizObjName + 1];
-  pwr_tObjName itemname;
   char root[] = "pwrNode-sev";
 
   // Check root object
@@ -68,63 +69,12 @@ pwr_tStatus sev_db::tree_update()
     if (m_items[i].deleted)
       continue;
 
-    printf("Tree update item %s\n", m_items[i].oname);
-    switch (m_items[i].attr[0].type) {
-    case pwr_eType_Float32:
-    case pwr_eType_Float64:
-    case pwr_eType_Int8:
-    case pwr_eType_Int16:
-    case pwr_eType_Int32:
-    case pwr_eType_Int64:
-    case pwr_eType_UInt8:
-    case pwr_eType_UInt16:
-    case pwr_eType_UInt32:
-    case pwr_eType_UInt64:
-    case pwr_eType_Boolean:
-      break;
-    default:
-      continue;
-    }
+    for (unsigned int j = 0; j < m_items[i].attrnum; j++) {
 
-    new_item = 0;
-
-    if ((s = strchr(m_items[i].oname, ':')))
-      s++;
-    else
-      s = m_items[i].oname;
-
-    num = dcli_parse(s, "-", "", (char*)oname_array,
-        sizeof(oname_array) / sizeof(oname_array[0]), sizeof(oname_array[0]),
-        0);
-
-    strcpy(hname, root);
-    for (int j = 0; j < num; j++) {
-      strcat(hname, "-");
-      strcat(hname, oname_array[j]);
-
-      if (!new_item)
-        sts = gdh_NameToObjid(hname, &oid);
-      if (new_item || EVEN(sts)) {
-        // Create object
-        sts = gdh_CreateObject(
-            hname, pwr_eClass_NodeHier, 0, &oid, pwr_cNObjid, 0, pwr_cNObjid);
-        if (EVEN(sts))
-          return sts;
-
-        new_item = 1;
-      }
-    }
-    sprintf(itemname, "%sItem", m_items[i].attrnum > 1 ? "O" : "");
-    strcat(hname, "-");
-    strcat(hname, itemname);
-    if (!new_item)
-      sts = gdh_NameToObjid(hname, &oid);
-    if (new_item || EVEN(sts)) {
-      switch (m_items[i].attr[0].type) {
+      printf("Tree update item %s.%s\n", m_items[i].oname, m_items[i].attr[j].aname);
+      switch (m_items[i].attr[j].type) {
       case pwr_eType_Float32:
       case pwr_eType_Float64:
-        cid = pwr_cClass_SevItemFloat;
-        break;
       case pwr_eType_Int8:
       case pwr_eType_Int16:
       case pwr_eType_Int32:
@@ -133,102 +83,200 @@ pwr_tStatus sev_db::tree_update()
       case pwr_eType_UInt16:
       case pwr_eType_UInt32:
       case pwr_eType_UInt64:
-        cid = pwr_cClass_SevItemInt;
-        break;
       case pwr_eType_Boolean:
-        cid = pwr_cClass_SevItemBoolean;
-        break;
-      default:;
+      case pwr_eType_Time:
+      case pwr_eType_String:
+	break;
+      default:
+	continue;
       }
-      sts = gdh_CreateObject(hname, cid, 0, &oid, pwr_cNObjid, 0, pwr_cNObjid);
-      if (EVEN(sts))
-        return sts;
 
-      memset(&ritem, 0, sizeof(ritem));
-      strncpy(ritem.TableName, m_items[i].tablename, sizeof(ritem.TableName));
-      strncpy(ritem.ObjectName, m_items[i].oname, sizeof(ritem.ObjectName));
-      strncpy(ritem.Attr, m_items[i].attr[0].aname, sizeof(ritem.Attr));
-      ritem.AttrType = m_items[i].attr[0].type;
-      ritem.NoOfAttr = m_items[i].attrnum;
-      ritem.Oid = m_items[i].oid;
-      ritem.Id = m_items[i].id;
-      ritem.Options = m_items[i].options;
-      ritem.Deadband = m_items[i].deadband;
-      ritem.ScanTime = m_items[i].scantime;
-      ritem.StorageTime = m_items[i].storagetime;
-      strncpy(
+      new_item = 0;
+
+      if ((s = strchr(m_items[i].oname, ':')))
+	s++;
+      else
+	s = m_items[i].oname;
+
+      strcpy(aname, s);
+      strcat(aname, ".");
+      strcat(aname, m_items[i].attr[j].aname);
+      onum = dcli_parse(aname, "-", "", (char*)oname_array,
+        sizeof(oname_array) / sizeof(oname_array[0]), sizeof(oname_array[0]),
+        0);
+
+      num = dcli_parse(aname, "-.", "", (char*)oname_array,
+        sizeof(oname_array) / sizeof(oname_array[0]), sizeof(oname_array[0]),
+        0);
+
+      strcpy(hname, root);
+      for (int k = 0; k < num - 1; k++) {
+	strcat(hname, "-");
+	strcat(hname, oname_array[k]);
+
+	if (!new_item)
+	  sts = gdh_NameToObjid(hname, &oid);
+	if (new_item || EVEN(sts)) {
+	  // Create object
+	  if (k < onum - 1)
+	    cid = pwr_eClass_NodeHier;
+	  else if (k == onum - 1)
+	    cid = pwr_eClass_Block;
+	  else
+	    cid = pwr_eClass_SubBlock;
+
+	  sts = gdh_CreateObject(hname, cid, 0, &oid, pwr_cNObjid,
+				 0, pwr_cNObjid);
+	  if (EVEN(sts))
+	    return sts;
+	  
+	  new_item = 1;
+	}
+      }
+      strcat(hname, "-");
+      strcat(hname, oname_array[num - 1]);
+      if (!new_item)
+	sts = gdh_NameToObjid(hname, &oid);
+      if (new_item || EVEN(sts)) {
+	switch (m_items[i].attr[j].type) {
+	case pwr_eType_Float32:
+	  cid = pwr_cClass_SevItemFloat32;
+	  break;
+	case pwr_eType_Float64:
+	  cid = pwr_cClass_SevItemFloat64;
+	  break;
+	case pwr_eType_Int8:
+	case pwr_eType_Int16:
+	case pwr_eType_Int32:
+	case pwr_eType_Int64:
+	case pwr_eType_UInt8:
+	case pwr_eType_UInt16:
+	case pwr_eType_UInt32:
+	  cid = pwr_cClass_SevItemInt32;
+	  break;
+	case pwr_eType_UInt64:
+	  cid = pwr_cClass_SevItemInt64;
+	  break;
+	case pwr_eType_Boolean:
+	  cid = pwr_cClass_SevItemBoolean;
+	  break;
+	case pwr_eType_Time:
+	  cid = pwr_cClass_SevItemTime;
+	  break;
+	case pwr_eType_String:
+	  cid = pwr_cClass_SevItemString80;
+	  break;
+	default:;
+	}
+	sts = gdh_CreateObject(hname, cid, 0, &oid, pwr_cNObjid, 0, pwr_cNObjid);
+	if (EVEN(sts))
+	  return sts;
+
+	memset(&ritem, 0, sizeof(ritem));
+	strncpy(ritem.TableName, m_items[i].tablename, sizeof(ritem.TableName));
+	strncpy(ritem.ObjectName, m_items[i].oname, sizeof(ritem.ObjectName));
+	strncpy(ritem.Attr, m_items[i].attr[j].aname, sizeof(ritem.Attr));
+	ritem.AttrType = m_items[i].attr[j].type;
+	ritem.NoOfAttr = m_items[i].attrnum;
+	ritem.Oid = m_items[i].oid;
+	ritem.Id = m_items[i].id;
+	ritem.Options = m_items[i].options;
+	ritem.Deadband = m_items[i].deadband;
+	ritem.ScanTime = m_items[i].scantime;
+	ritem.StorageTime = m_items[i].storagetime;
+	strncpy(
           ritem.Description, m_items[i].description, sizeof(ritem.Description));
 
-      sts = gdh_SetObjectInfo(hname, &ritem, sizeof(ritem));
-      if (EVEN(sts))
-        return sts;
-    }
+	sts = gdh_SetObjectInfo(hname, &ritem, sizeof(ritem));
+	if (EVEN(sts))
+	  return sts;
+      }
 
-    if (!m_items[i].ip) {
-      // Get pointer to object
-      pwr_tAttrRef aref = cdh_ObjidToAref(oid);
-      sts = gdh_DLRefObjectInfoAttrref(
-          &aref, (void**)&m_items[i].ip, &m_items[i].refid);
-      if (EVEN(sts))
-        return sts;
+      if (!m_items[i].attr[j].ip) {
+	//  Get pointer to object
+	
+	pwr_tAttrRef aref = cdh_ObjidToAref(oid);
+	sts = gdh_DLRefObjectInfoAttrref(
+		&aref, (void**)&m_items[i].attr[j].ip, &m_items[i].attr[j].refid);
+	if (EVEN(sts))
+	  return sts;
+      }
     }
   }
   return SEV__SUCCESS;
 }
 
-pwr_tStatus sev_db::tree_update_value(int item_idx, pwr_tTime time, void* buf)
+pwr_tStatus sev_db::tree_update_value(int item_idx, int attr_idx, pwr_tTime time, 
+				      void* buf)
 {
   float value;
   pwr_tTime prev_time;
   float interval = 0;
 
-  if (!m_items[item_idx].ip)
+  if (!m_items[item_idx].attr[attr_idx].ip)
     return SEV__SUCCESS;
-  m_items[item_idx].ip->ReceiveCount++;
-  if (m_items[item_idx].ip->ReceiveCount == 0)
+  m_items[item_idx].attr[attr_idx].ip->ReceiveCount++;
+  if (m_items[item_idx].attr[attr_idx].ip->ReceiveCount == 0)
     // Wrap around, reset write count
-    m_items[item_idx].ip->WriteCount = 0;
+    m_items[item_idx].attr[attr_idx].ip->WriteCount = 0;
   else
-    m_items[item_idx].ip->WriteQuota
-        = (pwr_tFloat32)m_items[item_idx].ip->WriteCount
-        / m_items[item_idx].ip->ReceiveCount * 100;
+    m_items[item_idx].attr[attr_idx].ip->WriteQuota
+        = (pwr_tFloat32)m_items[item_idx].attr[attr_idx].ip->WriteCount
+          / m_items[item_idx].attr[attr_idx].ip->ReceiveCount * 100;
 
-  prev_time = m_items[item_idx].ip->LastTime;
-  m_items[item_idx].ip->LastTime = time;
+  prev_time = m_items[item_idx].attr[attr_idx].ip->LastTime;
+  m_items[item_idx].attr[attr_idx].ip->LastTime = time;
 
-  switch (m_items[item_idx].attr[0].type) {
+  switch (m_items[item_idx].attr[attr_idx].type) {
   case pwr_eType_Float32:
-    ((pwr_sClass_SevItemFloat*)m_items[item_idx].ip)->LastValue
-        = *(pwr_tFloat32*)buf;
-    value = ((pwr_sClass_SevItemFloat*)m_items[item_idx].ip)->LastValue;
+    ((pwr_sClass_SevItemFloat32*)m_items[item_idx].attr[attr_idx].ip)->Value
+          = *(pwr_tFloat32*)buf;
+    value = ((pwr_sClass_SevItemFloat32*)m_items[item_idx].attr[attr_idx].ip)->Value;
     break;
   case pwr_eType_Float64:
-    ((pwr_sClass_SevItemFloat*)m_items[item_idx].ip)->LastValue
-        = *(pwr_tFloat64*)buf;
-    value = ((pwr_sClass_SevItemFloat*)m_items[item_idx].ip)->LastValue;
+    ((pwr_sClass_SevItemFloat64*)m_items[item_idx].attr[attr_idx].ip)->Value
+          = *(pwr_tFloat64*)buf;
+    value = ((pwr_sClass_SevItemFloat64*)m_items[item_idx].attr[attr_idx].ip)->Value;
     break;
   case pwr_eType_Int32:
   case pwr_eType_UInt32:
-    ((pwr_sClass_SevItemInt*)m_items[item_idx].ip)->LastValue
-        = *(pwr_tInt32*)buf;
-    value = ((pwr_sClass_SevItemInt*)m_items[item_idx].ip)->LastValue;
+    ((pwr_sClass_SevItemInt32*)m_items[item_idx].attr[attr_idx].ip)->Value
+          = *(pwr_tInt32*)buf;
+    value = ((pwr_sClass_SevItemInt32*)m_items[item_idx].attr[attr_idx].ip)->Value;
+    break;
+  case pwr_eType_Int64:
+  case pwr_eType_UInt64:
+    ((pwr_sClass_SevItemInt64*)m_items[item_idx].attr[attr_idx].ip)->Value
+          = *(pwr_tInt64*)buf;
+    value = ((pwr_sClass_SevItemInt64*)m_items[item_idx].attr[attr_idx].ip)->Value;
     break;
   case pwr_eType_Int16:
   case pwr_eType_UInt16:
-    ((pwr_sClass_SevItemInt*)m_items[item_idx].ip)->LastValue
-        = *(pwr_tInt16*)buf;
-    value = ((pwr_sClass_SevItemInt*)m_items[item_idx].ip)->LastValue;
+    ((pwr_sClass_SevItemInt32*)m_items[item_idx].attr[attr_idx].ip)->Value
+          = *(pwr_tInt16*)buf;
+    value = ((pwr_sClass_SevItemInt32*)m_items[item_idx].attr[attr_idx].ip)->Value;
     break;
   case pwr_eType_Int8:
   case pwr_eType_UInt8:
-    ((pwr_sClass_SevItemInt*)m_items[item_idx].ip)->LastValue
-        = *(pwr_tInt8*)buf;
-    value = ((pwr_sClass_SevItemInt*)m_items[item_idx].ip)->LastValue;
+    ((pwr_sClass_SevItemInt32*)m_items[item_idx].attr[attr_idx].ip)->Value
+          = *(pwr_tInt8*)buf;
+    value = ((pwr_sClass_SevItemInt32*)m_items[item_idx].attr[attr_idx].ip)->Value;
     break;
   case pwr_eType_Boolean:
-    ((pwr_sClass_SevItemBoolean*)m_items[item_idx].ip)->LastValue
-        = *(pwr_tBoolean*)buf;
-    value = ((pwr_sClass_SevItemInt*)m_items[item_idx].ip)->LastValue;
+    ((pwr_sClass_SevItemBoolean*)m_items[item_idx].attr[attr_idx].ip)->Value
+          = *(pwr_tBoolean*)buf;
+    value = ((pwr_sClass_SevItemBoolean*)m_items[item_idx].attr[attr_idx].ip)->Value;
+    break;
+  case pwr_eType_Time:
+    ((pwr_sClass_SevItemTime*)m_items[item_idx].attr[attr_idx].ip)->Value
+          = *(pwr_tTime*)buf;
+    value = 0;
+    break;
+  case pwr_eType_String:
+    strncpy(((pwr_sClass_SevItemString80*)m_items[item_idx].attr[attr_idx].ip)->Value, 
+	    (const char *)buf, 80);
+    ((pwr_sClass_SevItemString80*)m_items[item_idx].attr[attr_idx].ip)->Value[79] = 0;
+    value = 0;
     break;
   default:
     return 0;
@@ -255,22 +303,22 @@ pwr_tStatus sev_db::tree_update_value(int item_idx, pwr_tTime time, void* buf)
     m_items[item_idx].mean_value
         = (value * scantime
               + m_items[item_idx].mean_value * m_items[item_idx].mean_acc_time)
-        / (scantime + m_items[item_idx].mean_acc_time);
+          / (scantime + m_items[item_idx].mean_acc_time);
     m_items[item_idx].mean_acc_time += scantime;
     m_items[item_idx].variance_acc
         = prev_deviation * (value - m_items[item_idx].mean_value);
     m_items[item_idx].variance_cnt++;
 
     if (m_items[item_idx].mean_acc_time
-        >= (interval - m_items[item_idx].scantime / 2)) {
-      m_items[item_idx].ip->MeanValue = m_items[item_idx].mean_value;
-      m_items[item_idx].ip->MeanValueTime = time;
+	>= (interval - m_items[item_idx].scantime / 2)) {
+      m_items[item_idx].attr[attr_idx].ip->MeanValue = m_items[item_idx].mean_value;
+      m_items[item_idx].attr[attr_idx].ip->MeanValueTime = time;
       if (m_items[item_idx].variance_cnt > 1)
-        m_items[item_idx].ip->StandardDeviation
+	m_items[item_idx].attr[attr_idx].ip->StandardDeviation
             = sqrt(m_items[item_idx].variance_acc
                 / (m_items[item_idx].variance_cnt - 1));
       else
-        m_items[item_idx].ip->StandardDeviation = 0;
+	m_items[item_idx].attr[attr_idx].ip->StandardDeviation = 0;
       m_items[item_idx].mean_acc_time = 0;
       m_items[item_idx].variance_acc = 0;
       m_items[item_idx].variance_cnt = 0;

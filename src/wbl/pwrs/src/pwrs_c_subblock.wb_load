@@ -19,7 +19,7 @@
 ! 
 !  Linking ProviewR statically or dynamically with other modules is
 !  making a combined work based on ProviewR. Thus, the terms and
-!  conditions of the GNU General Public License cover the whole 
+!  conditions of the GNU General Public License cover the whole
 !  combination.
 ! 
 !  In addition, as a special exception, the copyright holders of
@@ -33,44 +33,31 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_a_sevitemint.wb_load -- Defines the class SevItemInt.
+!  pwrs_c_subblock.wb_load -- Defines the class SubBlock.
 !
-SObject pwrb:Class
+SObject pwrs:Class
 !/**
-!  @Version 1.0
-!  Display of a storage item of type Int.
-!  
+!  @Group ClassDefinition
+!  Definition a subblock.
 !
-! @b See also
-!  @classlink SevItem pwrb_sevitem.html
 !*/
-  Object SevItemInt $ClassDef 697 
+!
+  Object $SubBlock $ClassDef pwr_eCix_SubBlock
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
-      Attr Method = pwr_eMethod_Standard
+      Attr Method = pwr_eMethod_SysBody
+      Attr Flags |= pwr_mClassDef_System
     EndBody
-    Object RtBody $ObjBodyDef 1 
+    Object SysBody $ObjBodyDef 1
       Body SysBody
-        Attr StructName = "SevItemInt"
+        Attr StructName = "SubBlock"
       EndBody
       !/**
-      !  Superclass.
+      !  Optional description.
       !*/
-      Object Super $Attribute 1 
+      Object Description $Attribute 1
         Body SysBody
-          Attr TypeRef = "pwrb:Class-SevItem"
-	  Attr Flags |= PWR_MASK_CLASS
-	  Attr Flags |= PWR_MASK_SUPERCLASS
-        EndBody
-      EndObject
-      !/**
-      !  Last value.
-      !*/
-      Object LastValue $Attribute 2 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Int32"
-	  Attr Flags |= PWR_MASK_NOEDIT
-	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
     EndObject

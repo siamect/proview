@@ -41,6 +41,7 @@
 
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
+#include "pwr_sevclasses.h"
 
 #include "rt_mh_net.h"
 #include "rt_sev_net.h"
@@ -107,6 +108,8 @@ public:
   unsigned int size;
   unsigned int elem;
   pwr_tString16 unit;
+  pwr_sClass_SevItem* ip;
+  pwr_tDlid refid;
 };
 
 class sev_event {
@@ -150,8 +153,6 @@ public:
   sev_valuecache* cache;
   unsigned int idx;
   int deleted;
-  pwr_sClass_SevItem* ip;
-  pwr_tDlid refid;
   pwr_tFloat32 mean_value;
   pwr_tFloat32 mean_acc_time;
   pwr_tFloat32 variance_acc;
@@ -169,7 +170,7 @@ public:
   virtual ~sev_db();
 
   pwr_tStatus tree_update();
-  pwr_tStatus tree_update_value(int item_idx, pwr_tTime time, void* buf);
+  pwr_tStatus tree_update_value(int item_idx, int attr_idx, pwr_tTime time, void* buf);
   void get_item_idx(pwr_tStatus* sts, unsigned int* item_idx, pwr_tOid oid,
       char* attributename);
 

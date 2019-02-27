@@ -511,7 +511,7 @@ int sev_dbms_env::createSevVersion2Tables(void)
                  "attributeidx int unsigned not null,"
                  "attributetype int unsigned not null,"
                  "attributesize int unsigned not null,"
-                 "PRIMARY KEY(tablename, attributename));");
+                 "PRIMARY KEY(tablename, attributename)) default charset=utf8;");
 
   rc = mysql_query(m_con, query);
   if (rc) {
@@ -1172,7 +1172,7 @@ int sev_dbms::store_value(pwr_tStatus* sts, void* thread, int item_idx,
   else
     con = m_env->con();
 
-  tree_update_value(item_idx, time, buf);
+  tree_update_value(item_idx, attr_idx, time, buf);
 
   if (m_items[item_idx].options & pwr_mSevOptionsMask_DeadBandLinearRegr) {
     void* value;
@@ -1703,8 +1703,8 @@ int sev_dbms::write_value(pwr_tStatus* sts, int item_idx, int attr_idx,
 
   *sts = SEV__SUCCESS;
 
-  if (m_items[item_idx].ip)
-    m_items[item_idx].ip->WriteCount++;
+  if (m_items[item_idx].attr[0].ip)
+    m_items[item_idx].attr[0].ip->WriteCount++;
   m_items[item_idx].status = *sts;
   m_items[item_idx].logged_status = 1;
   return 1;
@@ -3371,6 +3371,8 @@ int sev_dbms::store_objectvalue(pwr_tStatus* sts, void* thread, int item_idx,
     memcpy(oldbuf, buf, size);
 
     for (size_t i = 0; i < m_items[item_idx].attr.size(); i++) {
+      tree_update_value(item_idx, i, time, buf);
+
       if (m_items[item_idx].attr[i].type == pwr_eType_Time)
         *sts = time_AtoAscii((pwr_tTime*)buf, time_eFormat_NumDateAndTime,
             bufstr, sizeof(bufstr));

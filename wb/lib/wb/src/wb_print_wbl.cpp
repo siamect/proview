@@ -807,6 +807,10 @@ void wb_print_wbl::printClass(wb_volume& vol, ldh_sParDef* par_bd, char* body,
   sts = getBody(vol, par_bd->Par->Param.TypeRef, "RtBody",
       par_bd->Par->Param.Info.Size / par_bd->Par->Param.Info.Elements, &bd,
       &rows, &tb);
+  if (EVEN(sts))
+    sts = getBody(vol, par_bd->Par->Param.TypeRef, "SysBody",
+        par_bd->Par->Param.Info.Size / par_bd->Par->Param.Info.Elements, &bd,
+	&rows, &tb);
   if (EVEN(sts)) {
     m_os << "! %WBDUMP-E-Error Unknown sub class: " << par_bd->Par->Buffer.Class
          << '\n';

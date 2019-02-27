@@ -522,6 +522,43 @@ gdb_sVolume* vol_MountVolume(pwr_tStatus* sts, pwr_tVolumeId vid)
   return vp;
 }
 
+mvol_sAttribute* vol_BlockNameToAttribute(pwr_tStatus* sts, mvol_sAttribute* ap,
+		 cdh_sParseName* pn, gdb_sObject *op, pwr_tBitMask lo_flags, pwr_tBitMask trans)
+{
+  gdb_sObject* nop;
+  pwr_tAName aname;
+  int i;
+
+  gdb_AssumeLocked;
+
+  strcpy(aname, "");
+  for ( i = 0; i < pn->nObject; i++) {
+    strcat(aname, pn->object[i].name.orig);
+    strcat(aname, "-");
+  }
+  for ( i = 0; i < pn->nAttribute; i++) {
+    strcat(aname, pn->attribute[i].name.orig);
+    if ( i != pn->nAttribute - 1)
+      strcat(aname, "-");
+  }
+  strcat(aname, ".Value");
+
+  cdh_ParseName(sts, pn, pn->poid, aname, pn->parseFlags.m);
+
+  nop = vol_NameToObject(sts, pn, lo_flags, trans);
+  if (nop == NULL)
+    return NULL;
+
+  ap = mvol_AnameToAttribute(sts, ap, nop->g.cid, pn, op);
+  if (ap == NULL)
+    return NULL;
+
+  ap->op = nop;
+  /* !!! To do !!! Kolla att allt aer ifyllt! */
+
+  return ap;
+}
+
 /* Get the definition of an attribute denoted by
    a full object + attribute name.
 
@@ -538,6 +575,10 @@ mvol_sAttribute* vol_NameToAttribute(pwr_tStatus* sts, mvol_sAttribute* ap,
   op = vol_NameToObject(sts, pn, lo_flags, trans);
   if (op == NULL)
     return NULL;
+
+  if (op->g.cid == pwr_eClass_Block) {
+    return vol_BlockNameToAttribute(sts, ap, pn, op, lo_flags, trans);
+  }
 
   ap = mvol_AnameToAttribute(sts, ap, op->g.cid, pn, op);
   if (ap == NULL)
@@ -1420,3 +1461,52 @@ pwr_tDisableAttr vol_ArefDisabled(pwr_tStatus* sts, pwr_sAttrRef* arp)
     return *(pwr_tDisableAttr*)p;
   return pwr_cNDisableAttr;
 }
+
+void vol_MountDynObject(pwr_tStatus* sts, gdb_sObject* op)
+{
+  gdb_sVolume* vp = NULL;
+  gdb_sMountServer* msp;
+  void* p;
+  pwr_tObjid soid = pwr_cNObjid;
+
+  if (op->g.oid.vid != gdbroot->db->vid)
+    errh_Bugcheck(GDH__WEIRD, "only root volumes can mount");
+
+  p = pool_Address(sts, gdbroot->rtdb, op->u.n.body);
+  if (p == NULL)
+    return;
+
+  if (op->g.cid != pwr_eClass_MountDynObject) {
+    *sts = GDH__BADARG;
+    return;
+  }
+    
+  cdh_sParseName parseName, *pn;
+  gdb_sObject* sop = NULL;
+
+  pn = cdh_ParseName(sts, &parseName, pwr_cNObjid, ((pwr_sMountDynObject*)p)->Object, 0);
+  if (pn == NULL)
+    return;
+
+  sop = vol_NameToObject(sts, pn, gdb_mLo_global, vol_mTrans_all);
+  if (sop == NULL || cdh_ObjidIsNull(sop->g.oid)) {
+    *sts = GDH__NOMOUNTOBJECT;
+    return;      
+  }
+
+  soid = sop->g.oid;
+  op->g.soid = soid;
+  vp = vol_MountVolume(sts, soid.vid);
+
+  if (vp == NULL)
+    return;
+
+  pwr_Assert(cdh_ObjidIsEqual(op->g.soid, soid));
+
+  if (!op->u.n.flags.b.inMountClientList) {
+    msp = vol_AddMountClient(sts, op);
+    if (msp == NULL)
+      return;
+  }
+}
+

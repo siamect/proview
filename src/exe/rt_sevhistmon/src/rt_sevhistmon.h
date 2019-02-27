@@ -65,6 +65,30 @@ class sev_sevhist {
   pwr_tBoolean disabled;
 };
 
+class sev_sevexport {
+  public:
+  pwr_tAttrRef aref;
+  pwr_tAName aname;
+  pwr_sClass_SevExport* hsp;
+  pwr_tRefId hs_refid;
+  pwr_tRefId refid;
+  void* datap;
+  pwr_tMask options;
+  pwr_eType type;
+  unsigned int size;
+  pwr_tRefId sevid;
+  pwr_tString80 description;
+  pwr_tFloat32 scantime;
+  pwr_tBoolean disabled;
+  sev_sevexport() {}
+  sev_sevexport(const sev_sevexport& x) : aref(x.aref), hsp(x.hsp), hs_refid(x.hs_refid),
+    refid(x.refid), datap(x.datap), options(x.options), type(x.type), size(x.size),
+    sevid(x.sevid), scantime(x.scantime), disabled(x.disabled) { 
+    strcpy(aname, x.aname); 
+    strcpy( description, x.description);
+  }
+};
+
 class sev_sevhistevents {
   public:
   sev_sevhistevents(rt_sevhistmon* m)
@@ -137,6 +161,7 @@ class sev_sevhistthread {
   int configerror;
   std::vector<sev_sevhist> sevhistlist;
   std::vector<sev_sevhistobject> sevhistobjectlist;
+  std::vector<sev_sevexport> sevexportlist;
 };
 
 class sev_node {
@@ -179,12 +204,14 @@ class rt_sevhistmon {
   int init_objects();
   int init_sevhistobjects();
   int init_events();
+  int init_sevexport();
   void insert_sevhistobjectattr(pwr_sAttrRef* aref, pwr_tAName objectname,
       int hs_idx, std::vector<sev_sevhistobjectattr>* listP);
   int get_sevhistobjectattributes(pwr_tAName objectname,
       std::vector<sev_sevhistobjectattr>* listP, int hs_idx,
       pwr_tBoolean first);
   bool correct_histtype(const pwr_eType type);
+  bool correct_exporttype(const pwr_eType type);
   int close();
   int close_objects();
   int mainloop();
@@ -197,6 +224,8 @@ class rt_sevhistmon {
   void receive_server_status(sev_sMsgServerStatus* msg, pwr_tNid nid);
   int send_itemlist(pwr_tNid nid);
   int send_data();
+  int send_exportitemlist(pwr_tNid nid);
+  int send_exportdata();
   void evbuf_insert(sev_sEvent* ev);
   void evbuf_send();
   static pwr_tStatus mh_ack_bc(mh_sAck* MsgP);

@@ -4306,8 +4306,8 @@ static int xnav_open_func(void* client_data, void* client_flag)
         plotgroup = sevhist_aref;
         sevplotgroup_found = 1;
         break;
-      case pwr_cClass_SevItemInt:
-      case pwr_cClass_SevItemFloat:
+      case pwr_cClass_SevItemInt32:
+      case pwr_cClass_SevItemFloat32:
       case pwr_cClass_SevItemBoolean:
         sevitem_found = 1;
         break;
@@ -4493,8 +4493,8 @@ static int xnav_open_func(void* client_data, void* client_flag)
             break;
           }
           case pwr_cClass_SevItemBoolean:
-          case pwr_cClass_SevItemFloat:
-          case pwr_cClass_SevItemInt: {
+          case pwr_cClass_SevItemFloat32:
+          case pwr_cClass_SevItemInt32: {
             pwr_tOName oname;
             pwr_tOid oid;
 
@@ -5833,8 +5833,8 @@ static int xnav_sevhist_get_select_cb(
   sts = gdh_GetObjectClass(sel_aref.Objid, &cid);
   switch (cid) {
   case pwr_cClass_SevHist:
-  case pwr_cClass_SevItemFloat:
-  case pwr_cClass_SevItemInt:
+  case pwr_cClass_SevItemFloat32:
+  case pwr_cClass_SevItemInt32:
   case pwr_cClass_SevItemBoolean:
     break;
   case pwr_cClass_SevHistObject:
@@ -5849,8 +5849,8 @@ static int xnav_sevhist_get_select_cb(
 
       switch (cid) {
       case pwr_cClass_SevHist:
-      case pwr_cClass_SevItemFloat:
-      case pwr_cClass_SevItemInt:
+      case pwr_cClass_SevItemFloat32:
+      case pwr_cClass_SevItemInt32:
       case pwr_cClass_SevItemBoolean:
         sel_aref = cdh_ObjidToAref(ch);
         break;
@@ -5884,8 +5884,8 @@ static int xnav_sevhist_get_select_cb(
     strcpy(aname, s + 1);
     *oid = aref.Objid;
     break;
-  case pwr_cClass_SevItemFloat:
-  case pwr_cClass_SevItemInt:
+  case pwr_cClass_SevItemFloat32:
+  case pwr_cClass_SevItemInt32:
   case pwr_cClass_SevItemBoolean:
     sts = gdh_ArefANameToAref(&sel_aref, "ObjectName", &attr_aref);
     if (EVEN(sts))
@@ -9543,8 +9543,8 @@ static pwr_tStatus xnav_otree_action_cb(void* ctx, pwr_tAttrRef* aref)
     break;
   case pwr_cClass_SevHist:
   case pwr_cClass_SevHistObject:
-  case pwr_cClass_SevItemFloat:
-  case pwr_cClass_SevItemInt:
+  case pwr_cClass_SevItemFloat32:
+  case pwr_cClass_SevItemInt32:
   case pwr_cClass_SevItemBoolean:
   case pwr_cClass_SevPlotGroup:
     sprintf(cmd, "open history/name=%s/title=\"%s\"", aname, aname);

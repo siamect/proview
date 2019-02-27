@@ -68,7 +68,12 @@ typedef enum {
   xnav_eItemType_ObjectStruct,
   xnav_eItemType_AttrObject,
   xnav_eItemType_Enum,
-  xnav_eItemType_Mask
+  xnav_eItemType_Mask,
+  xnav_eItemType_Block,
+  xnav_eItemType_SubBlock,
+  xnav_eItemType_BlockAttr,
+  xnav_eItemType_BlockAttrArray,
+  xnav_eItemType_BlockAttrArrayElem
 } xnav_eItemType;
 
 typedef enum {
@@ -463,6 +468,81 @@ public:
   char mask_name[32];
   int is_element;
   int element;
+};
+
+class ItemBlock : public ItemBaseObject {
+public:
+  int has_child;
+  ItemBlock(XNavBrow* brow, pwr_tObjid item_objid, brow_tNode dest,
+      flow_eDest dest_code);
+  virtual ~ItemBlock();
+  int open_children(XNavBrow* brow, double x, double y);
+  int open_attributes(XNavBrow* brow, double x, double y);
+};
+
+class ItemSubBlock : public Item {
+public:
+  ItemSubBlock(XNavBrow* brow, pwr_tObjid item_objid, brow_tNode dest,
+      flow_eDest dest_code);
+  int open_attributes(XNavBrow* brow, double x, double y);
+  void close(XNavBrow* brow, double x, double y);
+};
+
+class ItemBlockAttr : public Item {
+public:
+  pwr_eType type_id;
+  pwr_tTid tid;
+  int size;
+  int noedit;
+  char old_value[80];
+  pwr_tRefId subid;
+  int first_scan;
+  
+  ItemBlockAttr(XNavBrow* brow, pwr_tObjid item_objid, brow_tNode dest,
+      flow_eDest dest_code);
+  int open_children(XNavBrow* brow, double x, double y);
+  int open_attributes(XNavBrow* brow, double x, double y);
+  void close(XNavBrow* brow, double x, double y);
+  virtual ~ItemBlockAttr();
+};
+
+class ItemBlockAttrArray : public Item {
+public:
+  pwr_eType type_id;
+  pwr_tTid tid;
+  unsigned int size;
+  unsigned int elements;
+  unsigned int flags;
+  int noedit;
+  char old_value[80];
+  pwr_tRefId subid;
+  int first_scan;
+  
+  ItemBlockAttrArray(XNavBrow* brow, pwr_tObjid item_objid, brow_tNode dest,
+      flow_eDest dest_code);
+  int open_attributes(XNavBrow* brow, double x, double y);
+  int open_children(XNavBrow* brow, double x, double y);
+  void close(XNavBrow* brow, double x, double y);
+  virtual ~ItemBlockAttrArray();
+};
+
+class ItemBlockAttrArrayElem : public Item {
+public:
+  unsigned int flags;
+  unsigned int element;
+  pwr_tTid tid;
+  pwr_eType type_id;
+  int size;
+  int noedit;
+  char old_value[80];
+  pwr_tRefId subid;
+  int first_scan;
+  
+  ItemBlockAttrArrayElem(XNavBrow* brow, pwr_tObjid item_objid, brow_tNode dest,
+			 flow_eDest dest_code, char *item_name, 
+			 unsigned int item_flags, unsigned int item_element, 
+			 pwr_tTid item_tid, pwr_eType item_type_id, int item_size);
+  virtual ~ItemBlockAttrArrayElem();
 };
 
 #endif

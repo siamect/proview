@@ -248,7 +248,15 @@ static wbl_sSym classes[] = { { "pwr_eClass_ClassDef", pwr_eClass_ClassDef },
   { "pwr_eClass_Security", pwr_eClass_Security },
   { "pwr_eCix_Security", pwr_eCix_Security },
   { "pwr_eClass_ReferenceList", pwr_eClass_ReferenceList },
-  { "pwr_eCix_ReferenceList", pwr_eCix_ReferenceList }
+  { "pwr_eCix_ReferenceList", pwr_eCix_ReferenceList },
+  { "pwr_eClass_Block", pwr_eClass_Block },
+  { "pwr_eCix_Block", pwr_eCix_Block },
+  { "pwr_eClass_SubBlock", pwr_eClass_SubBlock },
+  { "pwr_eCix_SubBlock", pwr_eCix_SubBlock },
+  { "pwr_eClass_BlockAttribute", pwr_eClass_BlockAttribute },
+  { "pwr_eCix_BlockAttribute", pwr_eCix_BlockAttribute },
+  { "pwr_eClass_MountDynObject", pwr_eClass_MountDynObject },
+  { "pwr_eCix_MountDynObject", pwr_eCix_MountDynObject }
 
   ,
   { "pwr_cClass_ChanDi", pwr_cClass_ChanDi },

@@ -33,46 +33,52 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_a_sevitemfloat.wb_load -- Defines the class SevItemFloat.
+!  pwrb_sevexportoptionsmask.wb_load -- Defines the mask type SevExportOptionsMask
 !
-SObject pwrb:Class
+SObject pwrb:Type
 !/**
 !  @Version 1.0
-!  Display of a storage item of type Float.
-!  
+!  @Group Types
+!  Options attribute type in SevExport objects.
 !
 ! @b See also
-!  @classlink SevItem pwrb_sevitem.html
+!  @classlink SevExport pwrb_sevexport.html
 !*/
-  Object SevItemFloat $ClassDef 694 
+  Object SevExportOptionsMask $TypeDef 89
     Body SysBody
-      Attr Editor = pwr_eEditor_AttrEd
-      Attr Method = pwr_eMethod_Standard
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr PgmName = "SevExportOptionsMask"
     EndBody
-    Object RtBody $ObjBodyDef 1 
-      Body SysBody
-        Attr StructName = "SevItemFloat"
-      EndBody
-      !/**
-      !  Superclass.
-      !*/
-      Object Super $Attribute 1 
-        Body SysBody
-          Attr TypeRef = "pwrb:Class-SevItem"
-	  Attr Flags |= PWR_MASK_CLASS
-	  Attr Flags |= PWR_MASK_SUPERCLASS
-        EndBody
-      EndObject
-      !/**
-      !  Last value.
-      !*/
-      Object LastValue $Attribute 2 
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Float32"
-	  Attr Flags |= PWR_MASK_NOEDIT
-	  Attr Flags |= PWR_MASK_STATE
-        EndBody
-      EndObject
+    !/**
+    !  Event controlled epxort. The attribute will only be exported
+    !  one time when the trigger is activated. 
+    !*/
+    Object Event $Bit
+     Body SysBody
+       Attr PgmName = "Event"
+       Attr Text = "Event"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Calculate mean value with interval 1.
+    !*/
+    Object MeanValue1 $Bit
+     Body SysBody
+       Attr PgmName = "MeanValue1"
+       Attr Text = "MeanValue1"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  Calculate mean value with interval 2.
+    !*/
+    Object MeanValue2 $Bit
+     Body SysBody
+       Attr PgmName = "MeanValue2"
+       Attr Text = "MeanValue2"
+       Attr Value = 4
+     EndBody
     EndObject
   EndObject
 EndSObject

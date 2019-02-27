@@ -3715,6 +3715,12 @@ mysql should be used, and that tables should be created with engine innodb
 
 Install mysql-server on the storage station, and add the mysql user pwrp
 
+For MariaDb:
+<c>> mysql
+<c>MariaDB> create user pwrp@localhost;
+<c>MariaDB> grant all privileges on *.* to pwrp@localhost;
+
+For mysql:
 <c>> mysql
 <c>mysql> grant all privileges on *.* to pwrp@localhost;
 

@@ -1,0 +1,1042 @@
+Volume Sev $ClassVolume 0.0.0.11 
+  Body SysBody 01-JAN-1970 01:00:00.00
+    Attr NextOix = "_X26"
+    Attr NextCix = "_X25"
+  EndBody
+  Object Type $TypeHier 2 22-FEB-2019 16:47:07.49
+  EndObject
+  Object Class $ClassHier 1 22-FEB-2019 16:47:09.02
+    Object SevExpItem $ClassDef 1 22-FEB-2019 17:00:51.71
+      Body SysBody 22-FEB-2019 16:51:45.61
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+      EndBody
+      Object RtBody $ObjBodyDef 1 22-FEB-2019 16:51:45.61
+        Body SysBody 22-FEB-2019 16:51:45.61
+          Attr StructName = "SevExpItem"
+          Attr NextAix = "_X15"
+        EndBody
+        Object Super $Attribute 1 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Super"
+            Attr Size = 8
+            Attr Flags = 393216
+            Attr TypeRef = "pwrs:Class-$BlockAttribute"
+          EndBody
+        EndObject
+        Object Description $Attribute 2 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object ObjectName $Attribute 3 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "ObjectName"
+            Attr Size = 256
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$String256"
+          EndBody
+        EndObject
+        Object Attr $Attribute 4 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Attr"
+            Attr Size = 256
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$String256"
+          EndBody
+        EndObject
+        Object AttrType $Attribute 5 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "AttrType"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$TypeId"
+          EndBody
+        EndObject
+        Object ScanTime $Attribute 6 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "ScanTime"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Options $Attribute 7 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Options"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrb:Type-SevExportOptionsMask"
+          EndBody
+        EndObject
+        Object Oid $Attribute 8 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Oid"
+            Attr Size = 8
+            Attr Flags = 8389648
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object Id $Attribute 9 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Id"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ReceiveCount $Attribute 10 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "ReceiveCount"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object MeanValueTime $Attribute 11 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "MeanValueTime"
+            Attr Size = 16
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        Object MeanValue $Attribute 12 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "MeanValue"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object StandardDeviation $Attribute 13 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "StandardDeviation"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object LastTime $Attribute 14 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "LastTime"
+            Attr Size = 16
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevExpItem 2147975168 22-FEB-2019 16:51:45.61
+        Body RtBody 22-FEB-2019 16:51:45.61
+        EndBody
+      EndObject
+    EndObject
+    Object SevItem $ClassDef 2 22-FEB-2019 17:00:59.00
+      Body SysBody 22-FEB-2019 16:51:45.61
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+      EndBody
+      Object RtBody $ObjBodyDef 1 22-FEB-2019 16:51:45.61
+        Body SysBody 22-FEB-2019 16:51:45.61
+          Attr StructName = "SevItem"
+          Attr NextAix = "_X21"
+        EndBody
+        Object Super $Attribute 1 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Super"
+            Attr Size = 8
+            Attr Flags = 393216
+            Attr TypeRef = "pwrs:Class-$BlockAttribute"
+          EndBody
+        EndObject
+        Object Description $Attribute 2 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Description"
+            Attr Size = 80
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object ObjectName $Attribute 3 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "ObjectName"
+            Attr Size = 256
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$String256"
+          EndBody
+        EndObject
+        Object NoOfAttr $Attribute 4 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "NoOfAttr"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Attr $Attribute 5 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Attr"
+            Attr Size = 256
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$String256"
+          EndBody
+        EndObject
+        Object AttrType $Attribute 6 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "AttrType"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$TypeId"
+          EndBody
+        EndObject
+        Object TableName $Attribute 7 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "TableName"
+            Attr Size = 80
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object ScanTime $Attribute 8 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "ScanTime"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Options $Attribute 9 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Options"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrb:Type-SevHistOptionsMask"
+          EndBody
+        EndObject
+        Object Deadband $Attribute 10 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Deadband"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object StorageTime $Attribute 11 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "StorageTime"
+            Attr Size = 16
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$DeltaTime"
+          EndBody
+        EndObject
+        Object Oid $Attribute 12 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Oid"
+            Attr Size = 8
+            Attr Flags = 8389648
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object Id $Attribute 13 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Id"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ReceiveCount $Attribute 14 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "ReceiveCount"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object WriteCount $Attribute 15 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "WriteCount"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object WriteQuota $Attribute 16 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "WriteQuota"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MeanValueTime $Attribute 17 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "MeanValueTime"
+            Attr Size = 16
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        Object MeanValue $Attribute 18 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "MeanValue"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object StandardDeviation $Attribute 19 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "StandardDeviation"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object LastTime $Attribute 20 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "LastTime"
+            Attr Size = 16
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevItem 2148237312 22-FEB-2019 16:51:45.61
+        Body RtBody 22-FEB-2019 16:51:45.61
+        EndBody
+      EndObject
+    EndObject
+    Object SevExpItemBoolean $ClassDef 3 22-FEB-2019 17:01:06.59
+      Body SysBody 22-FEB-2019 16:51:45.61
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 22-FEB-2019 16:51:45.61
+        Body SysBody 22-FEB-2019 16:51:45.61
+          Attr StructName = "SevExpItemBoolean"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 1 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:52:45.03
+            Attr PgmName = "Super"
+            Attr Size = 672
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevExpItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 2 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Value"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevExpItemBoolean 2148499456 22-FEB-2019 16:51:45.61
+        Body RtBody 22-FEB-2019 16:51:45.61
+        EndBody
+      EndObject
+    EndObject
+    Object SevExpItemBooleanArray $ClassDef 4 22-FEB-2019 17:01:12.60
+      Body SysBody 22-FEB-2019 16:51:45.61
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 22-FEB-2019 16:51:45.61
+        Body SysBody 22-FEB-2019 16:51:45.61
+          Attr StructName = "SevExpItemBooleanArray"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 1 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:53:01.18
+            Attr PgmName = "Super"
+            Attr Size = 672
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevExpItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 2 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Value"
+            Attr Size = 4
+            Attr Flags = 1298
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevExpItemBooleanArray 2148761600 22-FEB-2019 16:51:45.61
+        Body RtBody 22-FEB-2019 16:51:45.61
+        EndBody
+      EndObject
+    EndObject
+    Object SevExpItemFloat32 $ClassDef 5 22-FEB-2019 17:01:19.44
+      Body SysBody 22-FEB-2019 16:51:45.61
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 22-FEB-2019 16:51:45.61
+        Body SysBody 22-FEB-2019 16:51:45.61
+          Attr StructName = "SevExpItemFloat32"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 1 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:53:07.90
+            Attr PgmName = "Super"
+            Attr Size = 672
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevExpItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 2 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Value"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevExpItemFloat32 2149023744 22-FEB-2019 16:51:45.61
+        Body RtBody 22-FEB-2019 16:51:45.61
+        EndBody
+      EndObject
+    EndObject
+    Object SevExpItemFloat32Array $ClassDef 6 22-FEB-2019 17:01:25.55
+      Body SysBody 22-FEB-2019 16:51:45.61
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 22-FEB-2019 16:51:45.61
+        Body SysBody 22-FEB-2019 16:51:45.61
+          Attr StructName = "SevExpItemFloat32Array"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 1 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:53:13.95
+            Attr PgmName = "Super"
+            Attr Size = 672
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevExpItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 2 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Value"
+            Attr Size = 4
+            Attr Flags = 1298
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevExpItemFloat32Array 2149285888 22-FEB-2019 16:51:45.61
+        Body RtBody 22-FEB-2019 16:51:45.61
+        EndBody
+      EndObject
+    EndObject
+    Object SevExpItemInt32 $ClassDef 7 22-FEB-2019 17:01:32.05
+      Body SysBody 22-FEB-2019 16:51:45.61
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 22-FEB-2019 16:51:45.61
+        Body SysBody 22-FEB-2019 16:51:45.61
+          Attr StructName = "SevExpItemInt32"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 1 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:53:21.97
+            Attr PgmName = "Super"
+            Attr Size = 672
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevExpItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 2 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Value"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevExpItemInt32 2149548032 22-FEB-2019 16:51:45.61
+        Body RtBody 22-FEB-2019 16:51:45.61
+        EndBody
+      EndObject
+    EndObject
+    Object SevExpItemInt32Array $ClassDef 8 22-FEB-2019 17:01:40.42
+      Body SysBody 22-FEB-2019 16:51:45.61
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 22-FEB-2019 16:51:45.61
+        Body SysBody 22-FEB-2019 16:51:45.61
+          Attr StructName = "SevExpItemInt32Array"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 1 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:53:32.92
+            Attr PgmName = "Super"
+            Attr Size = 672
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevExpItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 2 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Value"
+            Attr Size = 4
+            Attr Flags = 1298
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevExpItemInt32Array 2149810176 22-FEB-2019 16:51:45.61
+        Body RtBody 22-FEB-2019 16:51:45.61
+        EndBody
+      EndObject
+    EndObject
+    Object SevExpItemFloat64 $ClassDef 14 25-FEB-2019 12:31:01.73
+      Body SysBody 25-FEB-2019 12:30:47.84
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-FEB-2019 12:30:47.85
+        Body SysBody 25-FEB-2019 12:32:07.23
+          Attr StructName = "SevExpItemFloat64"
+          Attr NextAix = "_X5"
+        EndBody
+        Object Super $Attribute 3 25-FEB-2019 12:30:47.85
+          Body SysBody 25-FEB-2019 12:30:47.85
+            Attr PgmName = "Super"
+            Attr Size = 672
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevExpItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 4 25-FEB-2019 12:30:47.85
+          Body SysBody 25-FEB-2019 12:32:16.20
+            Attr PgmName = "Value"
+            Attr Size = 8
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevExpItemFloat64 2151383040 25-FEB-2019 12:30:47.85
+        Body RtBody 25-FEB-2019 12:30:47.85
+        EndBody
+      EndObject
+    EndObject
+    Object SevExpItemFloat64Array $ClassDef 15 25-FEB-2019 12:31:12.63
+      Body SysBody 25-FEB-2019 12:30:47.85
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-FEB-2019 12:30:47.85
+        Body SysBody 25-FEB-2019 12:32:00.50
+          Attr StructName = "SevExpItemFloat64Array"
+          Attr NextAix = "_X5"
+        EndBody
+        Object Super $Attribute 3 25-FEB-2019 12:30:47.85
+          Body SysBody 25-FEB-2019 12:30:47.85
+            Attr PgmName = "Super"
+            Attr Size = 672
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevExpItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 4 25-FEB-2019 12:30:47.85
+          Body SysBody 25-FEB-2019 12:32:25.84
+            Attr PgmName = "Value"
+            Attr Size = 8
+            Attr Flags = 1298
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevExpItemFloat64Array 2151645184 25-FEB-2019 12:30:47.85
+        Body RtBody 25-FEB-2019 12:30:47.85
+        EndBody
+      EndObject
+    EndObject
+    Object SevExpItemInt64 $ClassDef 16 25-FEB-2019 12:31:20.11
+      Body SysBody 25-FEB-2019 12:30:47.85
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-FEB-2019 12:30:47.85
+        Body SysBody 25-FEB-2019 12:31:53.70
+          Attr StructName = "SevExpItemInt64"
+          Attr NextAix = "_X5"
+        EndBody
+        Object Super $Attribute 3 25-FEB-2019 12:30:47.85
+          Body SysBody 25-FEB-2019 12:30:47.85
+            Attr PgmName = "Super"
+            Attr Size = 672
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevExpItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 4 25-FEB-2019 12:30:47.85
+          Body SysBody 25-FEB-2019 12:32:34.69
+            Attr PgmName = "Value"
+            Attr Size = 8
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Int64"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevExpItemInt64 2151907328 25-FEB-2019 12:30:47.85
+        Body RtBody 25-FEB-2019 12:30:47.85
+        EndBody
+      EndObject
+    EndObject
+    Object SevExpItemInt64Array $ClassDef 17 25-FEB-2019 12:31:33.65
+      Body SysBody 25-FEB-2019 12:30:47.85
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-FEB-2019 12:30:47.85
+        Body SysBody 25-FEB-2019 12:31:46.48
+          Attr StructName = "SevExpItemInt64Array"
+          Attr NextAix = "_X5"
+        EndBody
+        Object Super $Attribute 3 25-FEB-2019 12:30:47.85
+          Body SysBody 25-FEB-2019 12:30:47.85
+            Attr PgmName = "Super"
+            Attr Size = 672
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevExpItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 4 25-FEB-2019 12:30:47.85
+          Body SysBody 25-FEB-2019 12:32:44.53
+            Attr PgmName = "Value"
+            Attr Size = 8
+            Attr Flags = 1298
+            Attr TypeRef = "pwrs:Type-$Int64"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevExpItemInt64Array 2152169472 25-FEB-2019 12:30:47.85
+        Body RtBody 25-FEB-2019 12:30:47.85
+        EndBody
+      EndObject
+    EndObject
+    Object SevExpItemTime $ClassDef 18 25-FEB-2019 12:34:04.34
+      Body SysBody 25-FEB-2019 12:33:41.87
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-FEB-2019 12:33:41.87
+        Body SysBody 25-FEB-2019 12:34:15.36
+          Attr StructName = "SevExpItemTime"
+          Attr NextAix = "_X7"
+        EndBody
+        Object Super $Attribute 5 25-FEB-2019 12:33:41.87
+          Body SysBody 25-FEB-2019 12:33:41.87
+            Attr PgmName = "Super"
+            Attr Size = 672
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevExpItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 6 25-FEB-2019 12:33:41.87
+          Body SysBody 25-FEB-2019 12:34:36.69
+            Attr PgmName = "Value"
+            Attr Size = 16
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevExpItemTime 2152431616 25-FEB-2019 12:33:41.87
+        Body RtBody 25-FEB-2019 12:33:41.87
+        EndBody
+      EndObject
+    EndObject
+    Object SevExpItemDeltaTime $ClassDef 19 25-FEB-2019 12:34:59.89
+      Body SysBody 25-FEB-2019 12:34:50.06
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-FEB-2019 12:34:50.06
+        Body SysBody 25-FEB-2019 12:35:08.45
+          Attr StructName = "SevExpItemDeltaTime"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Super $Attribute 7 25-FEB-2019 12:34:50.06
+          Body SysBody 25-FEB-2019 12:34:50.06
+            Attr PgmName = "Super"
+            Attr Size = 672
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevExpItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 8 25-FEB-2019 12:34:50.06
+          Body SysBody 25-FEB-2019 12:35:59.49
+            Attr PgmName = "Value"
+            Attr Size = 16
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$DeltaTime"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevExpItemDeltaTime 2152693760 25-FEB-2019 12:34:50.06
+        Body RtBody 25-FEB-2019 12:34:50.06
+        EndBody
+      EndObject
+    EndObject
+    Object SevExpItemStatus $ClassDef 20 25-FEB-2019 12:39:31.47
+      Body SysBody 25-FEB-2019 12:39:20.51
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-FEB-2019 12:39:20.51
+        Body SysBody 25-FEB-2019 12:39:38.97
+          Attr StructName = "SevExpItemStatus"
+          Attr NextAix = "_X11"
+        EndBody
+        Object Super $Attribute 9 25-FEB-2019 12:39:20.51
+          Body SysBody 25-FEB-2019 12:39:20.51
+            Attr PgmName = "Super"
+            Attr Size = 672
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevExpItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 10 25-FEB-2019 12:39:20.51
+          Body SysBody 25-FEB-2019 12:39:51.02
+            Attr PgmName = "Value"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevExpItemStatus 2152955904 25-FEB-2019 12:39:20.51
+        Body RtBody 25-FEB-2019 12:39:20.51
+        EndBody
+      EndObject
+    EndObject
+    Object SevExpItemString80 $ClassDef 9 22-FEB-2019 17:01:46.22
+      Body SysBody 22-FEB-2019 16:51:45.61
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 22-FEB-2019 16:51:45.61
+        Body SysBody 22-FEB-2019 16:51:45.61
+          Attr StructName = "SevExpItemString80"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 1 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:53:39.78
+            Attr PgmName = "Super"
+            Attr Size = 672
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevExpItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 2 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Value"
+            Attr Size = 80
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevExpItemString80 2150072320 22-FEB-2019 16:51:45.61
+        Body RtBody 22-FEB-2019 16:51:45.61
+        EndBody
+      EndObject
+    EndObject
+    Object SevExpItemString80Array $ClassDef 10 22-FEB-2019 17:01:52.35
+      Body SysBody 22-FEB-2019 16:51:45.61
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 22-FEB-2019 16:51:45.61
+        Body SysBody 22-FEB-2019 16:51:45.61
+          Attr StructName = "SevExpItemString80Array"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 1 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:53:46.22
+            Attr PgmName = "Super"
+            Attr Size = 672
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevExpItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 2 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Value"
+            Attr Size = 80
+            Attr Flags = 1298
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevExpItemString80Array 2150334464 22-FEB-2019 16:51:45.61
+        Body RtBody 22-FEB-2019 16:51:45.61
+        EndBody
+      EndObject
+    EndObject
+    Object SevItemBoolean $ClassDef 11 22-FEB-2019 17:01:57.98
+      Body SysBody 22-FEB-2019 16:51:45.61
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 22-FEB-2019 16:51:45.61
+        Body SysBody 22-FEB-2019 16:51:45.61
+          Attr StructName = "SevItemBoolean"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 1 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:54:02.82
+            Attr PgmName = "Super"
+            Attr Size = 784
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 2 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Value"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevItemBoolean 2150596608 22-FEB-2019 16:51:45.61
+        Body RtBody 22-FEB-2019 16:51:45.61
+        EndBody
+      EndObject
+    EndObject
+    Object SevItemFloat32 $ClassDef 12 22-FEB-2019 17:02:03.54
+      Body SysBody 22-FEB-2019 16:51:45.61
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 22-FEB-2019 16:51:45.61
+        Body SysBody 22-FEB-2019 16:51:45.61
+          Attr StructName = "SevItemFloat32"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 1 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:54:09.30
+            Attr PgmName = "Super"
+            Attr Size = 784
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 2 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Value"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevItemFloat32 2150858752 22-FEB-2019 16:51:45.61
+        Body RtBody 22-FEB-2019 16:51:45.61
+        EndBody
+      EndObject
+    EndObject
+    Object SevItemFloat64 $ClassDef 21 25-FEB-2019 15:27:47.82
+      Body SysBody 25-FEB-2019 15:27:31.65
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-FEB-2019 15:27:31.65
+        Body SysBody 25-FEB-2019 15:27:57.94
+          Attr StructName = "SevItemFloat64"
+          Attr NextAix = "_X5"
+        EndBody
+        Object Super $Attribute 3 25-FEB-2019 15:27:31.65
+          Body SysBody 25-FEB-2019 15:27:31.65
+            Attr PgmName = "Super"
+            Attr Size = 784
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 4 25-FEB-2019 15:27:31.65
+          Body SysBody 25-FEB-2019 15:28:08.39
+            Attr PgmName = "Value"
+            Attr Size = 8
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevItemFloat64 2153218048 25-FEB-2019 15:27:31.65
+        Body RtBody 25-FEB-2019 15:27:31.65
+        EndBody
+      EndObject
+    EndObject
+    Object SevItemInt32 $ClassDef 13 22-FEB-2019 17:02:08.78
+      Body SysBody 22-FEB-2019 16:51:45.61
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 22-FEB-2019 16:51:45.61
+        Body SysBody 22-FEB-2019 16:51:45.61
+          Attr StructName = "SevItemInt32"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 1 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:54:17.16
+            Attr PgmName = "Super"
+            Attr Size = 784
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 2 22-FEB-2019 16:51:45.61
+          Body SysBody 22-FEB-2019 16:51:45.61
+            Attr PgmName = "Value"
+            Attr Size = 4
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevItemInt32 2151120896 22-FEB-2019 16:51:45.61
+        Body RtBody 22-FEB-2019 16:51:45.61
+        EndBody
+      EndObject
+    EndObject
+    Object SevItemInt64 $ClassDef 22 25-FEB-2019 15:28:38.13
+      Body SysBody 25-FEB-2019 15:28:26.09
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-FEB-2019 15:28:26.09
+        Body SysBody 25-FEB-2019 15:28:46.13
+          Attr StructName = "SevItemInt64"
+          Attr NextAix = "_X5"
+        EndBody
+        Object Super $Attribute 3 25-FEB-2019 15:28:26.09
+          Body SysBody 25-FEB-2019 15:28:26.09
+            Attr PgmName = "Super"
+            Attr Size = 784
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 4 25-FEB-2019 15:28:26.09
+          Body SysBody 25-FEB-2019 15:28:55.23
+            Attr PgmName = "Value"
+            Attr Size = 8
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Int64"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevItemInt64 2153480192 25-FEB-2019 15:28:26.09
+        Body RtBody 25-FEB-2019 15:28:26.09
+        EndBody
+      EndObject
+    EndObject
+    Object SevItemTime $ClassDef 23 25-FEB-2019 15:30:18.68
+      Body SysBody 25-FEB-2019 15:30:03.95
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-FEB-2019 15:30:03.95
+        Body SysBody 25-FEB-2019 15:30:23.35
+          Attr StructName = "SevItemTime"
+          Attr NextAix = "_X7"
+        EndBody
+        Object Super $Attribute 5 25-FEB-2019 15:30:03.95
+          Body SysBody 25-FEB-2019 15:30:03.95
+            Attr PgmName = "Super"
+            Attr Size = 784
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 6 25-FEB-2019 15:30:03.95
+          Body SysBody 25-FEB-2019 15:30:35.30
+            Attr PgmName = "Value"
+            Attr Size = 16
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevItemTime 2153742336 25-FEB-2019 15:30:03.95
+        Body RtBody 25-FEB-2019 15:30:03.95
+        EndBody
+      EndObject
+    EndObject
+    Object SevItemString80 $ClassDef 24 25-FEB-2019 15:35:36.53
+      Body SysBody 25-FEB-2019 15:30:41.74
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-FEB-2019 15:30:41.74
+        Body SysBody 25-FEB-2019 15:35:44.94
+          Attr StructName = "SevItemString80"
+          Attr NextAix = "_X7"
+        EndBody
+        Object Super $Attribute 5 25-FEB-2019 15:30:41.74
+          Body SysBody 25-FEB-2019 15:30:41.74
+            Attr PgmName = "Super"
+            Attr Size = 784
+            Attr Flags = 393216
+            Attr TypeRef = "Sev:Class-SevItem"
+          EndBody
+        EndObject
+        Object Value $Attribute 6 25-FEB-2019 15:30:41.74
+          Body SysBody 25-FEB-2019 15:31:13.50
+            Attr PgmName = "Value"
+            Attr Size = 80
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+      EndObject
+      Object Template SevItemString80 2154004480 25-FEB-2019 15:30:41.74
+        Body RtBody 25-FEB-2019 15:30:41.74
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndVolume

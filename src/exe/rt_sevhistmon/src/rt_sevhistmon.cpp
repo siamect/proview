@@ -302,9 +302,85 @@ int rt_sevhistmon::init_objects()
   }
 
   init_sevhistobjects();
+  init_sevexport();
 
   set_status();
 
+  return 1;
+}
+
+int rt_sevhistmon::init_sevexport()
+{
+  pwr_tStatus sts;
+  pwr_tAttrRef h_aref;
+  pwr_tTid a_tid;
+  unsigned int a_size, a_offset, a_dim;
+  pwr_tAName hname;
+
+  for (sts = gdh_GetClassListAttrRef(pwr_cClass_SevExport, &h_aref); ODD(sts);
+       sts = gdh_GetNextAttrRef(pwr_cClass_SevExport, &h_aref, &h_aref)) {
+    sev_sevexport h;
+    int hs_idx;
+
+    m_sts = gdh_DLRefObjectInfoAttrref(&h_aref, (void**)&h.hsp, &h.hs_refid);
+    if (EVEN(m_sts))
+      throw co_error(m_sts);
+
+    h.aref = h.hsp->Attribute;
+
+    m_sts = gdh_AttrrefToName(
+        &h_aref, hname, sizeof(hname), cdh_mName_volumeStrict);
+    if (EVEN(m_sts))
+      throw co_error(m_sts);
+
+    hs_idx = -1;
+    for (int i = 0; i < (int)m_hs.size(); i++) {
+      if (cdh_ObjidIsEqual(h.hsp->ThreadObject, m_hs[i].oid)) {
+        hs_idx = i;
+        break;
+      }
+    }
+    if (hs_idx == -1) {
+      errh_Error("Invalid HistServerObject %s", hname);
+      continue;
+    }
+
+    m_sts = gdh_GetAttributeCharAttrref(
+        &h.hsp->Attribute, &a_tid, &a_size, &a_offset, &a_dim);
+    if (EVEN(m_sts)) {
+      errh_Error("Invalid SevHist Attribute %s", hname);
+      continue;
+    }
+
+    h.sevid.nid = m_nodes[0].nid;
+    h.sevid.rix = m_next_rix++;
+    h.options = h.hsp->Options;
+    h.disabled = h.hsp->Disable;
+    strncpy(h.description, h.hsp->Description, sizeof(h.description));
+
+    h.type = (pwr_eType)a_tid;
+    h.size = a_size;
+    h.scantime = m_hs[hs_idx].scantime;
+
+    if (!correct_exporttype(h.type)) {
+      errh_Error("Invalid SevHist Attribute type %s", hname);
+      continue;
+    }
+
+    m_sts = gdh_AttrrefToName(
+        &h.hsp->Attribute, h.aname, sizeof(h.aname), cdh_mName_volumeStrict);
+    if (EVEN(m_sts))
+      throw co_error(m_sts);
+
+    m_sts = gdh_RefObjectInfo(h.aname, &h.datap, &h.refid, h.size);
+    if (EVEN(m_sts)) {
+      errh_Error("Unable to link to Attribute %s", h.aname);
+      continue;
+    }
+    m_hs[hs_idx].size += h.size;
+    m_hs[hs_idx].sevexportlist.push_back(h);
+    m_hs[hs_idx].threadp->NoOfItems++;
+  }
   return 1;
 }
 
@@ -617,12 +693,48 @@ bool rt_sevhistmon::correct_histtype(const pwr_eType type)
   }
 }
 
+bool rt_sevhistmon::correct_exporttype(const pwr_eType type)
+{
+  switch (type) {
+  case pwr_eType_Boolean:
+  case pwr_eType_Int64:
+  case pwr_eType_Int32:
+  case pwr_eType_Int16:
+  case pwr_eType_Int8:
+  case pwr_eType_UInt64:
+  case pwr_eType_UInt32:
+  case pwr_eType_UInt16:
+  case pwr_eType_UInt8:
+  case pwr_eType_Float32:
+  case pwr_eType_Float64:
+  case pwr_eType_String:
+  case pwr_eType_Enum:
+  case pwr_eType_Mask:
+  case pwr_eType_Status:
+  case pwr_eType_NetStatus:
+  case pwr_eType_Time:
+  case pwr_eType_DeltaTime:
+    return true;
+  default:
+    return false;
+  }
+}
+
 int rt_sevhistmon::close_objects()
 {
   for (unsigned int i = 0; i < m_hs.size(); i++) {
     for (unsigned int j = 0; j < m_hs[i].sevhistlist.size(); j++) {
       gdh_UnrefObjectInfo(m_hs[i].sevhistlist[j].hs_refid);
       gdh_UnrefObjectInfo(m_hs[i].sevhistlist[j].refid);
+    }
+    for (unsigned int j = 0; j < m_hs[i].sevexportlist.size(); j++) {
+      gdh_UnrefObjectInfo(m_hs[i].sevexportlist[j].hs_refid);
+      gdh_UnrefObjectInfo(m_hs[i].sevexportlist[j].refid);
+    }
+    for (unsigned int j = 0; j < m_hs[i].sevhistobjectlist.size(); j++) {
+      gdh_UnrefObjectInfo(m_hs[i].sevhistobjectlist[j].hs_refid);
+      for (unsigned int k = 0; k < m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist.size(); k++)
+	gdh_UnrefObjectInfo(m_hs[i].sevhistobjectlist[j].sevhistobjectattrlist[k].refid);
     }
     gdh_UnrefObjectInfo(m_hs[i].refid);
   }
@@ -775,6 +887,99 @@ int rt_sevhistmon::send_data()
   return 1;
 }
 
+int rt_sevhistmon::send_exportdata()
+{
+  qcom_sQid tgt;
+  qcom_sPut put;
+  pwr_tStatus sts, lsts;
+  int msize;
+  sev_sMsgExportData* msg;
+  sev_sHistData* dp;
+  int stime;
+  pwr_tTime current_time;
+  pwr_tStatus conf_sts = SEV__SUCCESS;
+  int connected;
+
+  for (unsigned int i = 0; i < m_hs.size(); i++) {
+    if (m_hs[i].configerror)
+      continue;
+
+    connected = 0;
+    for (unsigned int j = 0; j < m_nodes.size(); j++) {
+      if (m_hs[i].nid == m_nodes[j].nid) {
+        connected = m_nodes[j].connected;
+        break;
+      }
+    }
+    if (!connected)
+      continue;
+
+    stime = int(m_hs[i].scantime / m_scantime + 0.5);
+    if (!stime || m_loopcnt % stime != 0)
+      continue;
+
+    msize = m_hs[i].sevexportlist.size() * (sizeof(*dp) - sizeof(dp->data))
+        + m_hs[i].size;
+    msize += sizeof(*msg) - sizeof(msg->Data);
+
+    msg = (sev_sMsgExportData*)qcom_Alloc(&lsts, msize);
+
+    put.size = msize;
+    put.data = msg;
+    put.allocate = 0;
+
+    msg->Type = sev_eMsgType_ExportData;
+    msg->Version = sev_cNetVersion;
+    time_GetTime(&current_time);
+    msg->Time = net_TimeToNetTime(&current_time);
+    msg->ServerThread = m_hs[i].threadp->ServerThread;
+
+
+    dp = (sev_sHistData*)&msg->Data;
+    for (unsigned int j = 0; j < m_hs[i].sevexportlist.size(); j++) {
+      if (!m_hs[i].sevexportlist[j].hsp->Disable) {
+        if (m_hs[i].sevexportlist[j].hsp->Options
+            & pwr_mSevExportOptionsMask_Event) {
+	  if (m_hs[i].sevexportlist[j].hsp->Trigger)
+	    m_hs[i].sevexportlist[j].hsp->Trigger = 0;
+	  else
+	    continue;
+	}
+
+        dp->sevid = m_hs[i].sevexportlist[j].sevid;
+        dp->type = m_hs[i].sevexportlist[j].type;
+        dp->size = m_hs[i].sevexportlist[j].size;
+        memcpy(&dp->data, m_hs[i].sevexportlist[j].datap, dp->size);
+        dp = (sev_sHistData*)((char*)dp + sizeof(*dp) - sizeof(dp->data)
+            + dp->size);
+      }
+    }
+
+    tgt.nid = m_hs[i].nid;
+    tgt.qix = sev_eProcSevImport;
+
+    put.size = (char*)dp - (char*)msg;
+    put.reply.nid = m_nodes[0].nid;
+    put.reply.qix = sev_eProcSevClient;
+    put.type.b = (qcom_eBtype)sev_cMsgClass;
+    put.type.s = (qcom_eStype)sev_eMsgType_ExportData;
+    put.msg_id = m_msg_id++;
+
+    if (!qcom_Put(&sts, &tgt, &put)) {
+      m_hs[i].threadp->ErrorCount++;
+      m_hs[i].threadp->Status = sts;
+      conf_sts = sts;
+      qcom_Free(&sts, put.data);
+      continue;
+    }
+    m_hs[i].threadp->SendCount++;
+    m_hs[i].threadp->Status = sts;
+  }
+
+  set_status();
+  return 1;
+}
+
 void rt_sevhistmon::set_status()
 {
   pwr_tStatus sts = m_server_status;
@@ -840,6 +1045,25 @@ bool rt_sevhistmon::send_connect(pwr_tNid nid, pwr_tStatus* sts)
 
   tgt.nid = nid;
   tgt.qix = sev_eProcSevServer;
+
+  put.reply.nid = m_nodes[0].nid;
+  put.reply.qix = sev_eProcSevClient;
+  put.type.b = (qcom_eBtype)sev_cMsgClass;
+  put.type.s = (qcom_eStype)sev_eMsgType_NodeUp;
+  put.msg_id = m_msg_id++;
+  put.size = sizeof(*msg);
+  msg = (sev_sMsgAny*)qcom_Alloc(&lsts, put.size);
+  put.data = msg;
+  put.allocate = 0;
+
+  msg->Type = sev_eMsgType_NodeUp;
+
+  if (!qcom_Put(sts, &tgt, &put)) {
+    qcom_Free(&lsts, put.data);
+  }
+
+  tgt.nid = nid;
+  tgt.qix = sev_eProcSevImport;
 
   put.reply.nid = m_nodes[0].nid;
   put.reply.qix = sev_eProcSevClient;
@@ -1134,6 +1358,121 @@ int rt_sevhistmon::send_itemlist(pwr_tNid nid)
     }
   }
   printf("rt_sevhistmon: ItemList sent\n");
+  return 1;
+}
+
+int rt_sevhistmon::send_exportitemlist(pwr_tNid nid)
+{
+  int item_cnt = 0;
+  int attr_cnt = 0;
+  qcom_sQid tgt;
+  qcom_sPut put;
+  pwr_tStatus sts, lsts;
+  int size = 0;
+  pwr_tAName aname;
+  char* s;
+
+  // Identify node
+  bool found = false;
+  for (unsigned int i = 0; i < m_nodes.size(); i++) {
+    if (nid == m_nodes[i].nid) {
+      found = true;
+      m_nodes[i].connected = 1;
+      printf("rt_sevhistmon: node %s connected\n", m_nodes[i].name);
+      break;
+    }
+  }
+
+  // Count items for this node
+  for (unsigned int i = 0; i < m_hs.size(); i++) {
+    if (m_hs[i].configerror)
+      continue;
+    if (nid == m_hs[i].nid) {
+      item_cnt += m_hs[i].sevexportlist.size();
+      attr_cnt += m_hs[i].sevexportlist.size();
+    }
+  }
+
+  if (item_cnt == 0)
+    return 1;
+
+  size = sizeof(sev_sMsgExportItems) + (item_cnt - 1) * sizeof(sev_sExportItem);
+
+  put.size = size;
+  put.data = qcom_Alloc(&lsts, put.size);
+  put.allocate = 0;
+
+  ((sev_sMsgExportItems*)put.data)->Type = sev_eMsgType_ExportItems;
+  ((sev_sMsgExportItems*)put.data)->Status = SEV__SUCCESS;
+
+  ((sev_sMsgExportItems*)put.data)->NumItems = item_cnt;
+
+  int k = 0;
+  for (unsigned int i = 0; i < m_hs.size(); i++) {
+    if (m_hs[i].configerror)
+      continue;
+    if (nid == m_hs[i].nid) {
+      for (unsigned int j = 0; j < m_hs[i].sevexportlist.size(); j++) {
+        ((sev_sMsgExportItems*)put.data)->Items[k].oid
+            = m_hs[i].sevexportlist[j].aref.Objid;
+        strcpy(aname, m_hs[i].sevexportlist[j].aname);
+        s = strchr(aname, '.');
+        if (!s)
+          continue;
+        *s = 0;
+        strcpy(((sev_sMsgExportItems*)put.data)->Items[k].oname, aname);
+        strcpy(((sev_sMsgExportItems*)put.data)->Items[k].aname, s + 1);
+        ((sev_sMsgExportItems*)put.data)->Items[k].options
+            = m_hs[i].sevexportlist[j].options;
+        ((sev_sMsgExportItems*)put.data)->Items[k].type
+            = m_hs[i].sevexportlist[j].type;
+        ((sev_sMsgExportItems*)put.data)->Items[k].size
+            = m_hs[i].sevexportlist[j].size;
+        ((sev_sMsgExportItems*)put.data)->Items[k].sevid
+            = m_hs[i].sevexportlist[j].sevid;
+        strncpy(((sev_sMsgExportItems*)put.data)->Items[k].description,
+            m_hs[i].sevexportlist[j].description,
+            sizeof(((sev_sMsgExportItems*)put.data)->Items[0].description));
+        ((sev_sMsgExportItems*)put.data)->Items[k].scantime
+            = m_hs[i].sevexportlist[j].scantime;
+        k++;
+      }
+    }
+  }
+
+  tgt.nid = nid;
+  tgt.qix = sev_eProcSevImport;
+
+  put.reply.nid = m_nodes[0].nid;
+  put.reply.qix = sev_eProcSevClient;
+  put.type.b = (qcom_eBtype)sev_cMsgClass;
+  put.type.s = (qcom_eStype)sev_eMsgType_ExportItems;
+  put.msg_id = m_msg_id++;
+
+  if (!qcom_Put(&sts, &tgt, &put)) {
+    printf("rt_sevhistmon: ExportItemList send ERROR sts:%d\n", sts);
+    qcom_Free(&sts, put.data);
+    return 0;
+  }
+
+  // If all nodes are connected, set running status
+  if (!m_allconnected) {
+    bool all_conn = true;
+    for (unsigned int i = 0; i < m_nodes.size(); i++) {
+      printf("Sev %s %d %d\n", m_nodes[i].name, m_nodes[i].is_server,
+          m_nodes[i].connected);
+      if (m_nodes[i].is_server && !m_nodes[i].connected) {
+        all_conn = false;
+        break;
+      }
+    }
+    if (all_conn) {
+      m_allconnected = 1;
+      m_server_status = PWR__SRUN;
+      set_status();
+    }
+  }
+  printf("rt_sevhistmon: ExportItemList sent\n");
   return 1;
 }
 
@@ -1482,6 +1821,7 @@ int rt_sevhistmon::mainloop()
     if (sts == QCOM__TMO || !mp) {
       m_loopcnt++;
       send_data();
+      send_exportdata();
       send_server_status_request(&sts);
 
       if (!m_allconnected) {
@@ -1510,8 +1850,15 @@ int rt_sevhistmon::mainloop()
         printf("rt_sevhistmon: Node up received\n");
         send_itemlist(get.sender.nid);
         break;
+      case sev_eMsgType_ExportNodeUp:
+        printf("rt_sevhistmon: Export node up received\n");
+        send_exportitemlist(get.sender.nid);
+        break;
       case sev_eMsgType_HistItemsRequest:
         send_itemlist(get.sender.nid);
+        break;
+      case sev_eMsgType_ExportItemsRequest:
+        send_exportitemlist(get.sender.nid);
         break;
       case sev_eMsgType_ServerStatus:
         receive_server_status((sev_sMsgServerStatus*)mp, get.sender.nid);

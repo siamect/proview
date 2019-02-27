@@ -46,6 +46,7 @@ extern "C" {
 
 #define sev_eProcSevClient 121
 #define sev_eProcSevServer 122
+#define sev_eProcSevImport 123
 #define sev_cMsgClass 202
 #define sev_cNetVersion 1
 
@@ -62,7 +63,11 @@ typedef enum {
   sev_eMsgType_ServerStatus,
   sev_eMsgType_HistObjectDataGetRequest,
   sev_eMsgType_HistObjectDataGet,
-  sev_eMsgType_EventsStore
+  sev_eMsgType_EventsStore,
+  sev_eMsgType_ExportNodeUp,
+  sev_eMsgType_ExportItemsRequest,
+  sev_eMsgType_ExportItems,
+  sev_eMsgType_ExportData
 } sev_eMsgType;
 
 typedef enum {
@@ -168,6 +173,14 @@ typedef struct {
 typedef struct {
   pwr_tUInt16 Type;
   pwr_tUInt16 Version;
+  net_sTime Time;
+  pwr_tUInt32 ServerThread;
+  int Data[1];
+} sev_sMsgExportData;
+
+typedef struct {
+  pwr_tUInt16 Type;
+  pwr_tUInt16 Version;
   pwr_tOid Oid;
   unsigned int NumEvents;
   pwr_tUInt32 ServerThread;
@@ -237,6 +250,29 @@ typedef struct {
   pwr_tUInt16 Version;
   pwr_tStatus Status;
 } sev_sMsgServerStatus;
+
+typedef struct {
+  pwr_tOid oid;
+  pwr_tOName oname;
+  pwr_tRefId sevid;
+  pwr_tString80 description;
+  pwr_tFloat32 scantime;
+  pwr_tMask options;
+  pwr_tOName aname;
+  pwr_eType type;
+  unsigned int size;
+  unsigned int elem;
+} sev_sExportItem;
+
+typedef struct {
+  pwr_tUInt16 Type;
+  pwr_tUInt16 Version;
+  pwr_tStatus Status;
+  unsigned int NumItems;
+  unsigned int NumAttributes;
+  sev_sExportItem Items[1];
+} sev_sMsgExportItems;
+
 
 #ifdef __cplusplus
 }

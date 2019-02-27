@@ -33,46 +33,37 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrb_c_a_sevitemboolean.wb_load -- Defines the class SevItemBoolean.
+!  pwrs_c_mountdynobject.wb_load -- Defines the class MountDynObject.
 !
-SObject pwrb:Class
+SObject pwrs:Class
 !/**
-!  @Version 1.0
-!  Display of a storage item of type Boolean.
-!  
-!
-! @b See also
-!  @classlink SevItem pwrb_sevitem.html
+!  @Group PlantConfiguration,NodeConfiguration
+!  Mount a volume.
 !*/
-  Object SevItemBoolean $ClassDef 696 
+  Object $MountDynObject $ClassDef pwr_eCix_MountDynObject
     Body SysBody
-      Attr Editor = pwr_eEditor_AttrEd
-      Attr Method = pwr_eMethod_Standard
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_TopObject
+      Attr Flags |= pwr_mClassDef_NoAdopt
     EndBody
-    Object RtBody $ObjBodyDef 1 
+    Object SysBody $ObjBodyDef 1
       Body SysBody
-        Attr StructName = "SevItemBoolean"
+        Attr StructName = "MountDynObject"
       EndBody
-      !/**
-      !  Superclass.
-      !*/
-      Object Super $Attribute 1 
+      Object Description $Attribute 1
         Body SysBody
-          Attr TypeRef = "pwrb:Class-SevItem"
-	  Attr Flags |= PWR_MASK_CLASS
-	  Attr Flags |= PWR_MASK_SUPERCLASS
+          Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
-      !/**
-      !  Last value.
-      !*/
-      Object LastValue $Attribute 2 
+      Object Object $Attribute 2
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$Boolean"
-	  Attr Flags |= PWR_MASK_NOEDIT
-	  Attr Flags |= PWR_MASK_STATE
+          Attr TypeRef = "pwrs:Type-$String256"
         EndBody
       EndObject
+    EndObject
+    Object Template $MountDynObject
+      Body SysBody
+      EndBody
     EndObject
   EndObject
 EndSObject

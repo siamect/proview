@@ -47,13 +47,14 @@
 #include "sev_dbsqlite.h"
 #include "sev_dbhdf5.h"
 
-sev_attr::sev_attr() : type(pwr_eType_), size(0), elem(0)
+sev_attr::sev_attr() : type(pwr_eType_), size(0), elem(0), ip(0), refid(pwr_cNRefId)
 {
   strcpy(aname, "");
   strcpy(unit, "");
 }
 
-sev_attr::sev_attr(const sev_attr& x) : type(x.type), size(x.size), elem(x.elem)
+sev_attr::sev_attr(const sev_attr& x) : type(x.type), size(x.size), elem(x.elem),
+					ip(x.ip), refid(x.refid)
 {
   strncpy(aname, x.aname, sizeof(aname));
   strncpy(unit, x.unit, sizeof(unit));
@@ -62,7 +63,7 @@ sev_attr::sev_attr(const sev_attr& x) : type(x.type), size(x.size), elem(x.elem)
 sev_item::sev_item()
     : deadband_active(0), last_id(0), value_size(0), old_value(0),
       first_storage(1), status(0), logged_status(0), cache(0), idx(0),
-      deleted(0), ip(0), mean_value(0), mean_acc_time(0), variance_acc(0),
+      deleted(0), mean_value(0), mean_acc_time(0), variance_acc(0),
       variance_cnt(0)
 {
   /*memset( old_value, 0, sizeof(old_value));*/
@@ -76,7 +77,7 @@ sev_item::sev_item(const sev_item& x)
       value_size(x.value_size), old_value(x.old_value),
       first_storage(x.first_storage), attrnum(x.attrnum), attr(x.attr),
       status(x.status), logged_status(x.logged_status), cache(0), idx(x.idx),
-      deleted(x.deleted), ip(x.ip), mean_value(x.mean_value),
+      deleted(x.deleted), mean_value(x.mean_value),
       mean_acc_time(x.mean_acc_time), variance_cnt(x.variance_cnt)
 {
   strncpy(tablename, x.tablename, sizeof(tablename));

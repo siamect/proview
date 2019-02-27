@@ -388,7 +388,6 @@ void* gdh_TranslateRtdbPointer(unsigned long rtdbReference);
 
 pwr_tStatus gdh_GetObjectBodyDef(
     pwr_tCid cid, gdh_sAttrDef** bodydef, int* rows, pwr_tOid oid);
-
 /** @} */
 
 void gdh_InitialLoadDone(pwr_tObjid systemobject, pwr_tObjid nodeobject);
@@ -436,6 +435,8 @@ pwr_tStatus gdh_GetLocalClassList(int cidcnt, pwr_tCid* cid, int attrobjects,
     pwr_tAttrRef* classlist[], int* listcnt);
 
 pwr_tStatus gdh_CheckLocalObject(pwr_tOid oid);
+pwr_tStatus gdh_TidToType(pwr_tTid tid, pwr_eType *type);
+pwr_tStatus gdh_MountDynClients(void);
 
 /* Thread safe functions for times and strings */
 void gdh_GetTimeDL(pwr_tTime* atp, pwr_tTime* time);

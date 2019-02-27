@@ -263,8 +263,10 @@ int sev_server::init(int noneth)
     m_nodes.push_back(n);
   }
 
-  if (!m_noneth)
+  if (!m_noneth) {
     m_sts = m_db->tree_update();
+    m_sts = gdh_MountDynClients();
+  }
 
   if (m_read_threads)
     create_garbage_collector_thread();

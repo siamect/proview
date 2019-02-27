@@ -280,11 +280,11 @@ static gdb_sNode* testClient(pwr_tStatus* sts, sub_sClient* cp)
           break; /* Subscription client no longer exists! */
 
         if (op->g.flags.b.isAliasServer)
-          cp->aref.Objid = op->g.oid;
+          cp->aref = cdh_ObjidToAref(op->g.oid);
         /* This is a not to ugly fix, but it should be removed, LW.
            It's done to make Leif-Göran Hansson happier. I.e. it makes
            the linksup program work. */
-        cp->aref.Objid = op->g.oid;
+        cp->aref = cdh_ObjidToAref(op->g.oid);
 
         vp = pool_Address(NULL, gdbroot->pool, op->l.vr);
         np = hash_Search(&lsts, gdbroot->nid_ht, &vp->g.nid);

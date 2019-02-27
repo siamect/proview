@@ -1520,6 +1520,28 @@ int XNav::set_attr_value(char* value_str)
     memcpy(item->col.elem[idx].value_p, buffer, item->col.elem[idx].size);
     break;
   }
+  case xnav_eItemType_BlockAttr: {
+    ItemBlockAttr* item;
+
+    item = (ItemBlockAttr*)base_item;
+    sts = gdh_ObjidToName(
+        item->objid, attr_str, sizeof(attr_str), cdh_mName_volumeStrict);
+    if (EVEN(sts))
+      return sts;
+    strcat(attr_str, ".Value");
+
+    sts = attr_string_to_value(
+        item->type_id, value_str, buffer, sizeof(buffer), item->size);
+    if (EVEN(sts))
+      return sts;
+
+    sts = gdh_SetObjectInfo(attr_str, buffer, item->size);
+    if (EVEN(sts)) {
+      message(' ', get_message(sts));
+      return sts;
+    }
+    break;
+  }
   default:;
   }
   return 1;
@@ -1577,6 +1599,20 @@ int XNav::check_attr_value()
     if (EVEN(sts) || !is_local)
       return XNAV__NOCHANGE;
     return 1;
+  }
+  case xnav_eItemType_BlockAttr: {
+    ItemBlockAttr* item = (ItemBlockAttr*)base_item;
+    if (item->noedit)
+      return XNAV__NOCHANGE;
+    else
+      return 1;
+  }
+  case xnav_eItemType_BlockAttrArrayElem: {
+    ItemBlockAttrArrayElem* item = (ItemBlockAttrArrayElem*)base_item;
+    if (item->noedit)
+      return XNAV__NOCHANGE;
+    else
+      return 1;
   }
   default:
     return XNAV__NOCHANGE;
@@ -2081,6 +2117,7 @@ int XNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
       case xnav_eItemType_AttrArrayElem:
       case xnav_eItemType_Collect:
       case xnav_eItemType_ObjectStruct:
+      case xnav_eItemType_BlockAttr:
         sts = item->open_children(xnav->brow, 0, 0);
         if (ODD(sts))
           break;
@@ -2481,6 +2518,58 @@ int XNav::trace_scan_bc(brow_tObject object, void* p)
 
     break;
   }
+  case xnav_eItemType_BlockAttr: {
+    ItemBlockAttr* item;
+
+    item = (ItemBlockAttr*)base_item;
+
+    if (!item->first_scan) {
+      if (item->size > (int)sizeof(item->old_value)
+          && item->type_id == pwr_eType_String
+          && strlen((char*)p) < sizeof(item->old_value)
+          && streq((char*)p, item->old_value))
+        // No change since last time
+        return 1;
+      else if (memcmp(item->old_value, p, item->size) == 0)
+        // No change since last time
+        return 1;
+    } else
+      item->first_scan = 0;
+
+    attrvalue_to_string(item->type_id, item->tid, p, buf, sizeof(buf), &len,
+        NULL, xnav_eConv_No);
+
+    brow_SetAnnotation(object, 1, buf, len);
+    memcpy(item->old_value, p, MIN(item->size, (int)sizeof(item->old_value)));
+
+    break;
+  }
+  case xnav_eItemType_BlockAttrArrayElem: {
+    ItemBlockAttrArrayElem* item;
+
+    item = (ItemBlockAttrArrayElem*)base_item;
+
+    if (!item->first_scan) {
+      if (item->size > (int)sizeof(item->old_value)
+          && item->type_id == pwr_eType_String
+          && strlen((char*)p) < sizeof(item->old_value)
+          && streq((char*)p, item->old_value))
+        // No change since last time
+        return 1;
+      else if (memcmp(item->old_value, p, item->size) == 0)
+        // No change since last time
+        return 1;
+    } else
+      item->first_scan = 0;
+
+    attrvalue_to_string(item->type_id, item->tid, p, buf, sizeof(buf), &len,
+        NULL, xnav_eConv_No);
+
+    brow_SetAnnotation(object, 1, buf, len);
+    memcpy(item->old_value, p, MIN(item->size, (int)sizeof(item->old_value)));
+
+    break;
+  }
   case xnav_eItemType_Enum: {
     ItemEnum* item;
 
@@ -2660,6 +2749,30 @@ int XNav::trace_connect_bc(
       return sts;
     break;
   }
+  case xnav_eItemType_BlockAttr: {
+    ItemBlockAttr* item;
+
+    item = (ItemBlockAttr*)base_item;
+    strcpy(attr_str, name);
+    strcat(attr_str, ".");
+    strcat(attr_str, attr);
+    sts = gdh_RefObjectInfo(attr_str, p, &item->subid, item->size);
+    if (EVEN(sts))
+      return sts;
+    break;
+  }
+  case xnav_eItemType_BlockAttrArrayElem: {
+    ItemBlockAttrArrayElem* item;
+
+    item = (ItemBlockAttrArrayElem*)base_item;
+    strcpy(attr_str, name);
+    strcat(attr_str, ".");
+    strcat(attr_str, attr);
+    sts = gdh_RefObjectInfo(attr_str, p, &item->subid, item->size);
+    if (EVEN(sts))
+      return sts;
+    break;
+  }
   case xnav_eItemType_Local: {
     *p = ((ItemLocal*)base_item)->value_p;
     break;
@@ -2695,6 +2808,12 @@ int XNav::trace_disconnect_bc(brow_tObject object)
   case xnav_eItemType_AttrArrayElem:
   case xnav_eItemType_Collect: {
     ItemAttr* item = (ItemAttr*)base_item;
+
+    gdh_UnrefObjectInfo(item->subid);
+    break;
+  }
+  case xnav_eItemType_BlockAttr: {
+    ItemBlockAttr* item = (ItemBlockAttr*)base_item;
 
     gdh_UnrefObjectInfo(item->subid);
     break;

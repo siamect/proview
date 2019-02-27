@@ -3676,6 +3676,12 @@ att mysql ska användas, och att tabeller ska skapas med motor innodb
 
 Installera mysql-server på lagringstationen och addera användaren pwrp i mysql
 
+För MariaDb:
+<c>> mysql
+<c>MariaDB> create user pwrp@localhost;
+<c>MariaDB> grant all privileges on *.* to pwrp@localhost;
+
+För mysql:
 <c>> mysql
 <c>mysql> grant all privileges on *.* to pwrp@localhost;
 

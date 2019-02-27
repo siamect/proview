@@ -57,6 +57,7 @@
 #include "rt_sanc.h"
 #include "rt_dl.h"
 #include "rt_lck.h"
+#include "pwr_baseclasses.h"
 
 #if defined(OS_LINUX) || defined OS_MACOS
 #define gdh_Lock                                                               \
@@ -5261,6 +5262,51 @@ pwr_tStatus gdh_CheckLocalObject(pwr_tOid oid)
     return sts;
   return GDH__SUCCESS;
 }
+
+pwr_tStatus gdh_TidToType(pwr_tTid tid, pwr_eType *type)
+{
+  pwr_tOid oid = cdh_TypeIdToObjid(tid);
+  pwr_eType *p;
+  gdb_sObject *op;
+  pwr_tStatus sts = GDH__SUCCESS;
+
+  gdh_ScopeLock
+  {
+    op = vol_OidToObject(
+        &sts, oid, gdb_mLo_native, vol_mTrans_all, cvol_eHint_none);
+    if (op != NULL) {
+      p = (pwr_eType *)vol_ObjectToAddress(&sts, op);
+      if ( p != NULL)
+	*type = *p;
+    }
+  }
+  gdh_ScopeUnlock;
+
+  return sts;
+}
+
+pwr_tStatus gdh_MountDynClients(void)
+{
+  gdb_sObject *op;
+  pwr_tOid oid;
+  pwr_tStatus sts = GDH__SUCCESS;
+
+  for (sts = gdh_GetClassList(pwr_eClass_MountDynObject, &oid); 
+       ODD(sts);
+       sts = gdh_GetNextObject(oid, &oid)) {
+
+    gdh_ScopeLock
+    {
+      op = vol_OidToObject(&sts, oid, gdb_mLo_native, vol_mTrans_all, 
+			   cvol_eHint_none);
+      if (cdh_ObjidIsNull(op->g.soid))
+	vol_MountDynObject(&sts, op);
+    }
+    gdh_ScopeUnlock;
+  }
+  return sts;
+}
+
 
 /**
  * @brief Thread save function to fetch a direct linked absolute time value.

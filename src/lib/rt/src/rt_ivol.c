@@ -150,6 +150,25 @@ static gdb_sVolume* mountVolume(pwr_tStatus* sts, gdb_sObject* op)
     }
     vp = vol_MountVolume(sts, soid.vid);
     break;
+  case pwr_eClass_MountDynObject: {
+    cdh_sParseName parseName, *pn;
+    gdb_sObject* sop = NULL;
+
+    pn = cdh_ParseName(sts, &parseName, pwr_cNObjid, ((pwr_sMountDynObject*)p)->Object, 0);
+    if (pn == NULL)
+      return NULL;
+
+    sop = vol_NameToObject(sts, pn, gdb_mLo_global, vol_mTrans_all);
+    if (sop == NULL || cdh_ObjidIsNull(sop->g.oid)) {
+      *sts = GDH__NOMOUNTOBJECT;
+      return NULL;      
+    }
+
+    soid = sop->g.oid;
+    op->g.soid = soid;
+    vp = vol_MountVolume(sts, soid.vid);
+    break;
+  }
   case pwr_eClass_MountVolume:
     soid.vid = ((pwr_sMountVolume*)p)->Volume;
     if (soid.vid == 0) {

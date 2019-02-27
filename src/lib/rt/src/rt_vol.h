@@ -322,4 +322,6 @@ void vol_UnlinkObject(
 void vol_UpdateAlarm(pwr_tStatus* sts, gdb_sObject* op, net_sAlarm al);
 
 pwr_tDisableAttr vol_ArefDisabled(pwr_tStatus* sts, pwr_sAttrRef* arp);
+
+void vol_MountDynObject(pwr_tStatus* sts, gdb_sObject* op);
 #endif
