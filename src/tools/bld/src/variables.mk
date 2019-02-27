@@ -98,7 +98,6 @@ cp		:= cp
 cpflags		:=
 arflags		:= r
 obj             := -c -o $(target)
-lex             := flex
 javac		:= javac
 ifdef pwre_ar
   ar            := $(pwre_ar)
@@ -160,8 +159,6 @@ domap		= -Xlinker -Map -Xlinker $(map)
 
 log_h_h		= echo "Exporting $<"
 log_x_h		= echo "Exporting $< to $(notdir $@)"
-log_l_obj	= echo "Compiling $<"
-log_l_lib	= echo "Compiling $(notdir $(basename $@))($<)"
 #log_c_d		= echo "Updating dependencies $<"
 log_c_obj	= echo "Compiling $<"
 log_c_lib	= echo "Compiling $(notdir $(basename $@))($<)"

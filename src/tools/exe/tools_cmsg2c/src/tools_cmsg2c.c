@@ -35,22 +35,12 @@
  */
 
 /*
-* Filename:
-*   tools_cmsg2c.c
-*
-* Revision history:
-*   Rev     Edit    Date        Who  Comment
-*   ------- ----    ----------  ---- -------
-*   X0.1       1    1996-10-01  ML   Created
-*
-* Description:	Creates a .c-file from a file which contains all c_msg-files
-*		for which messages should be generated.
-*		The c_msg-file should contain all
-*
-*		The -b branch flag must be set if you wan't to generate messages
-*		for PROVIEW.
-*/
+ * Creates a .c-file from a .cmsg file
+ *
+ * The -b branch flag must be set if you want to generate messages for PROVIEW.
+ */
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -58,9 +48,7 @@
 #include "pwr_lst.h"
 #include "pwr_msg.h"
 
-#include "cmsg2c.h"
-
-#define MSG_NEW_STRING(str) strcpy(malloc(strlen(str) + 1), str)
+#define MSG_NEW_STRING(str) strncpy(malloc(strlen(str) + 1), str, strlen(str) + 1)
 
 typedef struct s_FacilityCB sFacilityCB;
 
@@ -70,16 +58,10 @@ struct s_FacilityCB {
   int facnum;
 };
 
-extern int lineno;
-
-static int SyntaxError;
+static char* inFile;
 
 static struct LstHead lFacH;
 static sFacilityCB* CurrFac = NULL;
-
-static void CopyFile(FILE* ifp, FILE* ofp);
-static void WriteFacility(FILE* cfp, char* branch);
-static void WriteIncludes(FILE* cfp);
 
 static void usage()
 {
@@ -87,66 +69,6 @@ static void usage()
   exit(1);
 }
 
-int main(int argc, char** argv)
-{
-  extern FILE* yyin;
-  extern int yylex();
-
-  FILE* cfp = NULL;
-  int bmsg = 0;
-  char* branch = NULL;
-  int inFile;
-  int outFile;
-
-  if (argc < 3)
-    usage();
-
-  if (argv[1][0] == '-') {
-    if (argv[1][1] == 'b') {
-      branch = argv[2];
-      bmsg = 1;
-    } else
-      usage();
-    if (argc != 5)
-      usage();
-  } else if (argc != 3)
-    usage();
-
-  inFile = bmsg ? 3 : 1;
-  outFile = inFile + 1;
-
-  if (!(yyin = fopen(argv[inFile], "r"))) {
-    printf("Can't open input file: %s", argv[inFile]);
-    exit(1);
-  }
-
-  LstInit(&lFacH);
-  SyntaxError = 0;
-  lineno = 1;
-
-  yylex();
-
-  if (!SyntaxError) {
-    if (!(cfp = fopen(argv[outFile], "w+"))) {
-      printf("Can't open output file: %s", argv[outFile]);
-      exit(1);
-    }
-
-    rewind(yyin);
-    WriteIncludes(cfp);
-    CopyFile(yyin, cfp);
-    WriteFacility(cfp, branch);
-  }
-
-  fclose(yyin);
-  fclose(cfp);
-
-  exit(EXIT_SUCCESS);
-}
-
-/*
- * Routines called by lex
- */
 void lex_FacName(char* facnam)
 {
   sFacilityCB* facp = (sFacilityCB*)calloc(1, sizeof(sFacilityCB));
@@ -176,14 +98,42 @@ void lex_FacNum(int facnum)
   CurrFac = NULL;
 }
 
-/*
- * Local routines
- */
+static void lex(FILE* fp) {
+  char buffer[500];
+  int next_is_facnum = 0;
+  int lineno = 1;
+  while (fgets(buffer, 500, fp) != NULL) {
+    if (strstr(buffer, "msg_sFacility")) {
+      char* facnam = strstr(buffer, "msg_sFacility") + 14; // "MYfacility[] = "
+      facnam[strchr(facnam, '[')-facnam] = '\0'; // "MYfacility"
+      if (!strstr(facnam, "facility")) {
+        fprintf(stderr, "Syntax error in file %s line %d\n", inFile, lineno);
+        exit(1);
+      }
+      lex_FacName(facnam);
+      next_is_facnum = 1;
+    } else if (next_is_facnum) {
+      char *line = buffer;
+      while (!isdigit(line[0])) {
+        line++; // "1337,"
+      }
+      line[strchr(line, ',')-line] = '\0';
+      char* end;
+      int facnum = strtol(line, &end, 10);
+      if (!facnum) {
+        fprintf(stderr, "Syntax error in file %s line %d\n", inFile, lineno);
+        exit(1);
+      }
+      lex_FacNum(facnum);
+      next_is_facnum = 0;
+    }
+    lineno++;
+  }
+}
 
 static void CopyFile(FILE* ifp, FILE* ofp)
 {
   int c;
-
   while ((c = getc(ifp)) != EOF)
     putc(c, ofp);
 }
@@ -210,7 +160,53 @@ static void WriteFacility(FILE* cfp, char* branch)
         branch ? branch : "pwrp");
 }
 
-static void WriteIncludes(FILE* cfp)
+int main(int argc, char** argv)
 {
+  FILE* in;
+  FILE* cfp = NULL;
+  int bmsg = 0;
+  char* branch = NULL;
+  char* outFile;
+
+  if (argc < 3)
+    usage();
+
+  if (argv[1][0] == '-') {
+    if (argv[1][1] == 'b') {
+      branch = argv[2];
+      bmsg = 1;
+    } else
+      usage();
+    if (argc != 5)
+      usage();
+  } else if (argc != 3)
+    usage();
+
+  inFile = bmsg ? argv[3] : argv[1];
+  outFile = bmsg ? argv[4] : argv[2];
+
+  if (!(in = fopen(inFile, "r"))) {
+    printf("Can't open input file: %s", inFile);
+    exit(1);
+  }
+
+  LstInit(&lFacH);
+
+  lex(in);
+
+  if (!(cfp = fopen(outFile, "w+"))) {
+    printf("Can't open output file: %s", outFile);
+    fclose(in);
+    exit(1);
+  }
+
+  rewind(in);
   fprintf(cfp, "#include \"pwr_msg.h\"\n\n");
+  CopyFile(in, cfp);
+  WriteFacility(cfp, branch);
+
+  fclose(in);
+  fclose(cfp);
+
+  return 0;
 }

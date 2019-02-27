@@ -8,7 +8,7 @@ Install the following packages
 
 Mandatory:
 
-> apt-get install doxygen flex gcc g++ make libasound2-dev libdb5.3-dev libdb5.3++-dev
+> apt-get install doxygen gcc g++ make libasound2-dev libdb5.3-dev libdb5.3++-dev
 
 Optional:
 
