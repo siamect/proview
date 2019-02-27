@@ -15800,84 +15800,84 @@ function GrowTable( ctx) {
 	break;
       case Glow.eSave_GrowTable_header_text1: 
 	if ( tokens.length > 1)
-	  this.header_text[0] = tokens[1];
+	  this.header_text[0] = lines[i].substring(5);
 	break;
       case Glow.eSave_GrowTable_column_width2: 
 	this.column_width[1] = parseFloat( tokens[1]);; 
 	break;
       case Glow.eSave_GrowTable_header_text2: 
 	if ( tokens.length > 1)
-	  this.header_text[1] = tokens[1];
+	  this.header_text[1] = lines[i].substring(5);
 	break;
       case Glow.eSave_GrowTable_column_width3: 
 	this.column_width[2] = parseFloat( tokens[1]);; 
 	break;
       case Glow.eSave_GrowTable_header_text3: 
 	if ( tokens.length > 1)
-	  this.header_text[2] = tokens[1];
+	  this.header_text[2] = lines[i].substring(5);
 	break;
       case Glow.eSave_GrowTable_column_width4: 
 	this.column_width[3] = parseFloat( tokens[1]);; 
 	break;
       case Glow.eSave_GrowTable_header_text4: 
 	if ( tokens.length > 1)
-	  this.header_text[3] = tokens[1];
+	  this.header_text[3] = lines[i].substring(5);
 	break;
       case Glow.eSave_GrowTable_column_width5: 
 	this.column_width[4] = parseFloat( tokens[1]);; 
 	break;
       case Glow.eSave_GrowTable_header_text5: 
 	if ( tokens.length > 1)
-	  this.header_text[4] = tokens[1];
+	  this.header_text[4] = lines[i].substring(5);
 	break;
       case Glow.eSave_GrowTable_column_width6: 
 	this.column_width[5] = parseFloat( tokens[1]);; 
 	break;
       case Glow.eSave_GrowTable_header_text6: 
 	if ( tokens.length > 1)
-	  this.header_text[5] = tokens[1];
+	  this.header_text[5] = lines[i].substring(5);
 	break;
       case Glow.eSave_GrowTable_column_width7: 
 	this.column_width[6] = parseFloat( tokens[1]);; 
 	break;
       case Glow.eSave_GrowTable_header_text7: 
 	if ( tokens.length > 1)
-	  this.header_text[6] = tokens[1];
+	  this.header_text[6] = lines[i].substring(5);
 	break;
       case Glow.eSave_GrowTable_column_width8: 
 	this.column_width[7] = parseFloat( tokens[1]);; 
 	break;
       case Glow.eSave_GrowTable_header_text8: 
 	if ( tokens.length > 1)
-	  this.header_text[7] = tokens[1];
+	  this.header_text[7] = lines[i].substring(5);
 	break;
       case Glow.eSave_GrowTable_column_width9: 
 	this.column_width[8] = parseFloat( tokens[1]);; 
 	break;
       case Glow.eSave_GrowTable_header_text9: 
 	if ( tokens.length > 1)
-	  this.header_text[8] = tokens[1];
+	  this.header_text[8] = lines[i].substring(5);
 	break;
       case Glow.eSave_GrowTable_column_width10: 
 	this.column_width[9] = parseFloat( tokens[1]);; 
 	break;
       case Glow.eSave_GrowTable_header_text10: 
 	if ( tokens.length > 1)
-	  this.header_text[9] = tokens[1];
+	  this.header_text[9] = lines[i].substring(5);
 	break;
       case Glow.eSave_GrowTable_column_width11: 
 	this.column_width[10] = parseFloat( tokens[1]);; 
 	break;
       case Glow.eSave_GrowTable_header_text11: 
 	if ( tokens.length > 1)
-	  this.header_text[10] = tokens[1];
+	  this.header_text[10] = lines[i].substring(5);
 	break;
       case Glow.eSave_GrowTable_column_width12: 
 	this.column_width[11] = parseFloat( tokens[1]);; 
 	break;
       case Glow.eSave_GrowTable_header_text12: 
 	if ( tokens.length > 1)
-	  this.header_text[11] = tokens[1];
+	  this.header_text[11] = lines[i].substring(5);
 	break;
       case Glow.eSave_GrowTable_column_adjustment1: 
 	this.column_adjustment[0] = parseInt( tokens[1], 10); 
