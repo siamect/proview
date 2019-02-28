@@ -41,6 +41,7 @@
 #include <iostream>
 
 #include "pwr_systemclasses.h"
+#include "pwr_sevclasses.h"
 
 #include "co_cdh.h"
 #include "co_dcli.h"
@@ -412,8 +413,8 @@ void Xtt::activate_opengraph()
       return;
     case pwr_cClass_SevHist:
     case pwr_cClass_SevHistObject:
-    case pwr_cClass_SevItemInt:
-    case pwr_cClass_SevItemFloat:
+    case pwr_cClass_SevItemInt32:
+    case pwr_cClass_SevItemFloat32:
     case pwr_cClass_SevItemBoolean:
     case pwr_cClass_SevPlotGroup:
       // Open history

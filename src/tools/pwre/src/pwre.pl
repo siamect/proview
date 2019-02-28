@@ -245,6 +245,9 @@ sub build_kernel # args: flavour
   _module("remote");
   build_module("copy", $flavour);
   merge();
+  _module("sev");
+  build_module("copy", $flavour);
+  merge();
   _module("opc");
   build_module("copy", $flavour);
   merge();

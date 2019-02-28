@@ -38,6 +38,7 @@
    This module contains routines for handling of command line in xnav. */
 
 #include "pwr_nmpsclasses.h"
+#include "pwr_sevclasses.h"
 
 #include "co_api_user.h"
 #include "co_ccm_msg.h"
