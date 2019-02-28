@@ -341,28 +341,23 @@ void WNavQtTraceObject::sel_convert_cb()
         wnav->parent_ctx, attrref, &buffp, 0, 1, format);
     if (sts) {
       selection_data_set(wnav, server, buffp);
-      free(node_list);
-      return;
     }
     break;
   }
   case wnav_eItemType_Object: {
-    memset(&attrref, 0, sizeof(attrref));
-    attrref.Objid = item->objid;
+    attrref = cdh_ObjidToAref(item->objid);
     int sts = (wnav->format_selection_cb)(
         wnav->parent_ctx, attrref, &buffp, 0, 0, format);
     if (sts) {
       selection_data_set(wnav, server, buffp);
-      free(node_list);
-      return;
     }
+    break;
   }
   default: {
     char name[200];
     brow_GetAnnotation(node_list[0], 0, name, sizeof(name));
     selection_data_set(wnav, server, name);
-    free(node_list);
-    return;
+    break;
   }
   }
   free(node_list);
