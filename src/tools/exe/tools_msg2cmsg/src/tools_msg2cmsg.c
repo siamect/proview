@@ -35,16 +35,8 @@
  */
 
 /*
-* Filename:
-*   tools_msg2cmsg.c
-*
-* Revision history:
-*   Rev     Edit    Date        Who  Comment
-*   ------- ----    ----------  ---- -------
-*   X0.1       1    1996-10-01  ML   Created
-*
-* Description:	Creates a .c_msg-file and a .h-file from a .msg-file
-*/
+ * Creates a .cmsg file and a .h file from a .msg-file
+ */
 
 #include <ctype.h>
 #include <stdio.h>
@@ -53,10 +45,8 @@
 
 #include "pwr_lst.h"
 #include "pwr_msg.h"
-#include "msg2cmsg.h"
 
-#define MSG_NEW_STRING(str)                                                    \
-  strncpy(malloc(strlen(str) + 1), str, strlen(str) + 1)
+#define MSG_NEW_STRING(str) strncpy(malloc(strlen(str) + 1), str, strlen(str) + 1)
 
 typedef struct s_FacilityCB sFacilityCB;
 typedef struct s_MsgCB sMsgCB;
@@ -73,85 +63,9 @@ struct s_FacilityCB {
   msg_sFacility f;
 };
 
-/* defined by lexyy.c */
-extern int lineno;
-
-static int SyntaxError;
+static char* inFile;
 
 static struct LstHead lFacH;
-
-/*
- * Local functions
- */
-
-static void WriteFiles(char* fname, FILE* cfp, FILE* hfp);
-
-static void TranslateFormatSpec(const char* msgstr, char** transstr);
-
-/*
-* Main
-*/
-int main(int argc, char** argv)
-{
-  extern FILE* yyin;
-  extern int yylex();
-
-  FILE* cfp = NULL;
-  FILE* hfp = NULL;
-
-  if (argc != 4) {
-    printf("Usage: co_msg2cmsg msg-file c_msg-file h_file\n");
-    exit(2);
-  }
-
-  if (!(yyin = fopen(argv[1], "r"))) {
-    printf("Can't open input file: %s\n", argv[1]);
-    exit(2);
-  }
-
-  if (!(cfp = fopen(argv[2], "w"))) {
-    printf("Can't open c_msg-output file: %s\n", argv[2]);
-    fclose(yyin);
-    exit(2);
-  }
-
-  if (!(hfp = fopen(argv[3], "w"))) {
-    printf("Can't open h-output file: %s\n", argv[3]);
-    fclose(yyin);
-    fclose(cfp);
-    exit(2);
-  }
-
-  LstInit(&lFacH);
-  SyntaxError = 0;
-  lineno = 1;
-  yylex();
-
-  if (!SyntaxError) {
-    char fname[256];
-    char* p;
-
-    if ((p = strrchr(argv[2], '/')))
-      strncpy(fname, p + 1, sizeof(fname));
-    else
-      strncpy(fname, argv[2], sizeof(fname));
-
-    if ((p = strchr(fname, '.')))
-      *p = '\0';
-
-    WriteFiles(fname, cfp, hfp);
-  }
-
-  fclose(yyin);
-  fclose(cfp);
-  fclose(hfp);
-
-  exit(EXIT_SUCCESS);
-}
-
-/*
- * Routines which are called by lexyy.c
- */
 
 void lex_FacName(const char* FacName)
 {
@@ -170,21 +84,54 @@ void lex_FacNum(int FacNum)
 
 void lex_FacPrefix(const char* Prefix)
 {
-  LstEntry(lFacH.prev, sFacilityCB, FacL)->f.Prefix = MSG_NEW_STRING(Prefix);
+  char *str = strncpy(malloc(strlen(Prefix) + 3), Prefix, strlen(Prefix)+1);
+  strcat(str, "__\0");
+  LstEntry(lFacH.prev, sFacilityCB, FacL)->f.Prefix = str;
 }
 
 void lex_MsgName(const char* MsgName)
 {
   sMsgCB* msgp = (sMsgCB*)calloc(1, sizeof(sMsgCB));
-  int i;
   int len = strlen(MsgName);
   msgp->m.MsgName = malloc(len + 1);
 
+  int i;
   for (i = 0; i < len; i++)
     msgp->m.MsgName[i] = toupper(MsgName[i]);
   msgp->m.MsgName[i] = '\0';
 
   LstInsert(&LstEntry(lFacH.prev, sFacilityCB, FacL)->MsgH, &msgp->MsgL);
+}
+
+static void TranslateFormatSpec(const char* msgstr, char** transstr)
+{
+  char* l;
+  const char* m = msgstr;
+  int extra = 0;
+  int len = 0;
+
+  /* '"' will be substituted with  '\"', allocate space for it */
+  while (*m) {
+    if (*m == '"')
+      extra++;
+    m++;
+    len++;
+  }
+
+  *transstr = (char*)malloc(len + extra + 1);
+  l = *transstr;
+  m = msgstr;
+
+  while (*m != '\0') {
+    if (*m == '"') {
+      *l++ = '\\';
+      *l++ = '"';
+    } else {
+      *l++ = *m;
+    }
+    m++;
+  }
+  *l = '\0';
 }
 
 void lex_MsgText(const char* Text)
@@ -201,15 +148,77 @@ void lex_MsgSeverity(msg_eSeverity Severity)
   LstEntry(ml, sMsgCB, MsgL)->Severity = Severity;
 }
 
-void lex_LexError(int Lineno, char* Str)
-{
-  printf("LexError: line %d, '%s'\n", Lineno, Str);
-  SyntaxError = 1;
+static void lex(FILE* fp) {
+  char buffer[500];
+  int lineno = 1;
+  while (fgets(buffer, 500, fp) != NULL) {
+    if (strstr(buffer, ".facility")) {
+      char *line = strstr(buffer, ".facility") + 10;
+      while (isspace(line[0])) {
+        line++;
+      }
+      char *facnam = line; // "ASD,123 "
+      char *facnum0 = strchr(line, ',')+1; // "123 "
+      facnam[strchr(facnam, ',')-facnam] = '\0'; // "ASD"
+      char* tmp = facnum0;
+      while (isdigit(tmp[0])) {
+        tmp++;
+      }
+      facnum0[tmp-facnum0] = '\0';
+      tmp = NULL;
+      int facnum = strtol(facnum0, &tmp, 10);
+      if (!facnum) {
+        fprintf(stderr, "Syntax error in file %s line %d\n", inFile, lineno);
+        exit(1);
+      }
+      lex_FacName(facnam);
+      lex_FacNum(facnum);
+      lex_FacPrefix(facnam);
+    } else if (isalnum(buffer[0])) { // "mymsg   <my message text>  /error"
+      char *msgname = buffer; // msgname = "mymsg   <my message text>  /error"
+      char *tmp = msgname;
+      while (isalnum(tmp[0]) || tmp[0] == '_') {
+        tmp++;
+      }
+      tmp[0] = '\0'; // msgname = "mymsg"
+      tmp++;
+
+      while (tmp[0] != '<') {
+        tmp++;
+      }
+      tmp++;
+      char* msgtxt = tmp; // msgtxt = "my message text>  /error"
+      while (tmp[0] != '>') {
+        tmp++;
+      }
+      tmp[0] = '\0'; // msgtxt = "my message text"
+      tmp++;
+
+      char *msgseverity = tmp; // "  /error"
+      while (isspace(msgseverity[0])) {
+        msgseverity++; // "/error"
+      }
+      lex_MsgName(msgname);
+      lex_MsgText(msgtxt);
+      if (msgseverity[1] == 'w') {
+        lex_MsgSeverity(msg_eSeverity_Warning);
+      } else if (msgseverity[1] == 's') {
+        lex_MsgSeverity(msg_eSeverity_Success);
+      } else if (msgseverity[1] == 'e') {
+        lex_MsgSeverity(msg_eSeverity_Error);
+      } else if (msgseverity[1] == 'i') {
+        lex_MsgSeverity(msg_eSeverity_Info);
+      } else if (msgseverity[1] == 'f') {
+        lex_MsgSeverity(msg_eSeverity_Fatal);
+      } else {
+        fprintf(stderr, "Syntax error in file %s line %d\n", inFile, lineno);
+        exit(1);
+      }
+    }
+    lineno++;
+  }
 }
 
-/*
- * Local routines
- */
 static void WriteFiles(char* fname, FILE* cfp, FILE* hfp)
 {
   struct LstHead * fl;
@@ -262,61 +271,54 @@ static void WriteFiles(char* fname, FILE* cfp, FILE* hfp)
   fprintf(hfp, "\n#endif\n");
 }
 
-/*
- * TranslateFormatSpec
- *
- *  search the msgstr and replace any occurance of VMS-like specifiers
- *  (!AF !UL !XL, are replaced by %s %u %x)
- *
- */
-static void TranslateFormatSpec(const char* msgstr, char** transstr)
+int main(int argc, char** argv)
 {
-  char* l;
-  const char* m = msgstr + 1; /* Skip '<' */
-  int extra = 0;
-  int len = 0;
+  FILE* cfp = NULL;
+  FILE* hfp = NULL;
+  FILE* in = NULL;
 
-  /* '"' will be substituted with  '\"', allocate space for it */
-  while (*m) {
-    if (*m == '"')
-      extra++;
-    m++;
-    len++;
+  if (argc != 4) {
+    printf("Usage: co_msg2cmsg msg-file c_msg-file h_file\n");
+    exit(2);
   }
 
-  *transstr = (char*)malloc(len + extra + 1);
-  l = *transstr;
-  m = msgstr + 1; /* Skip '<' */
-
-  while (*m != '\0') {
-    if (*m == '"') {
-      *l++ = '\\';
-      *l++ = '"';
-      m++;
-    } else if (*m++ == '!') {
-      /*
-       * could be a format spec, if so we also skip '!'
-       */
-      if (*m == 'A' && *(m + 1) == 'F') {
-        *l++ = '%';
-        m++;
-        *l++ = 's';
-        m++;
-      } else if (*m == 'U' && *(m + 1) == 'L') {
-        *l++ = '%';
-        m++;
-        *l++ = 'u';
-        m++;
-      } else if (*m == 'X' && *(m + 1) == 'L') {
-        *l++ = '%';
-        m++;
-        *l++ = 'x';
-        m++;
-      } else
-        *l++ = '!'; /* nope, put back the '!' */
-
-    } else /* just copy */
-      *l++ = *(m - 1);
+  inFile = argv[1];
+  if (!(in = fopen(inFile, "r"))) {
+    printf("Can't open input file: %s\n", inFile);
+    exit(2);
   }
-  *(l - 1) = '\0'; /* Skip '>' */
+
+  if (!(cfp = fopen(argv[2], "w"))) {
+    printf("Can't open c_msg-output file: %s\n", argv[2]);
+    fclose(in);
+    exit(2);
+  }
+
+  if (!(hfp = fopen(argv[3], "w"))) {
+    printf("Can't open h-output file: %s\n", argv[3]);
+    fclose(in);
+    fclose(cfp);
+    exit(2);
+  }
+
+  LstInit(&lFacH);
+  lex(in);
+
+  char fname[256];
+  char* p = NULL;
+  if ((p = strrchr(argv[2], '/')))
+    strncpy(fname, p + 1, sizeof(fname));
+  else
+    strncpy(fname, argv[2], sizeof(fname));
+
+  if ((p = strchr(fname, '.')))
+    *p = '\0';
+
+  WriteFiles(fname, cfp, hfp);
+
+  fclose(in);
+  fclose(cfp);
+  fclose(hfp);
+
+  return 0;
 }

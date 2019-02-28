@@ -27,10 +27,6 @@ $(obj_dir)/%.o : $(obj_dir)/%.cmsg
 	@ $(tools_cmsg2c) -b $(comp_name) $(source) $(tmp_dir)/$(sname).c
 	@ $(cc) $(cflags) $(csetos) $(cinc) $(cobj) $(tmp_dir)/$(sname).c
 
-$(bld_dir)/%.c : %.l
-	@ $(log_l_obj)
-	@ $(lex) -o$(bld_dir)/$(sname).c $(source)
-
 %.o : %.c
 	@ echo "Warning, rule shall normally not be used: %.o : %.c"
 ifeq ($(nodep),)
