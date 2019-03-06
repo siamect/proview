@@ -409,7 +409,7 @@ static int xhelpnav_brow_cb(FlowCtx* ctx, flow_tEvent event)
     }
     break;
   case flow_eEvent_Resized:
-    brow_Redraw(xhelpnav->brow->ctx, 0);
+    brow_Redraw(xhelpnav->brow->ctx);
     break;
   default:;
   }
@@ -1102,7 +1102,7 @@ int CoXHelpNav::help(const char* help_key, const char* help_bookmark,
   }
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   if (bookmark_node) {
     brow_CenterObject(brow->ctx, bookmark_node, 0.0);
     sts = brow_GetPrevious(brow->ctx, bookmark_node, &prev);
@@ -1283,7 +1283,7 @@ int CoXHelpNav::help_index(
   qsort(&object_list[2], object_cnt - 2, sizeof(object_list[0]), help_cmp_items);
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   return sts;
 }
 

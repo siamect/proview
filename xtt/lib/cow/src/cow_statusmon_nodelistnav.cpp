@@ -289,7 +289,7 @@ void NodelistNav::read()
   }
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }
 
 //
@@ -321,7 +321,7 @@ void NodelistNav::set_nodraw()
 void NodelistNav::reset_nodraw()
 {
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }
 
 //
@@ -902,7 +902,7 @@ int NodelistNav::update_nodes()
   }
   if (nodraw) {
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, 0);
+    brow_Redraw(brow->ctx);
   }
   first_scan = 0;
   return 1;
@@ -1184,10 +1184,6 @@ int ItemNode::update_color(NodelistNav* nodelistnav, pwr_tStatus system_status)
 
 int ItemNode::open_children(NodelistNav* nodelistnav, double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(nodelistnav->brow->ctx);
@@ -1195,7 +1191,7 @@ int ItemNode::open_children(NodelistNav* nodelistnav, double x, double y)
     brow_SetAnnotPixmap(node, 0, nodelistnav->brow->pixmap_map);
     brow_ResetOpen(node, 1);
     brow_ResetNodraw(nodelistnav->brow->ctx);
-    brow_Redraw(nodelistnav->brow->ctx, node_y);
+    brow_Redraw(nodelistnav->brow->ctx);
   } else {
     brow_SetNodraw(nodelistnav->brow->ctx);
 
@@ -1224,17 +1220,13 @@ int ItemNode::open_children(NodelistNav* nodelistnav, double x, double y)
     brow_SetOpen(node, 1);
     brow_SetAnnotPixmap(node, 0, nodelistnav->brow->pixmap_openmap);
     brow_ResetNodraw(nodelistnav->brow->ctx);
-    brow_Redraw(nodelistnav->brow->ctx, node_y);
+    brow_Redraw(nodelistnav->brow->ctx);
   }
   return 1;
 }
 
 int ItemNode::close(NodelistNav* nodelistnav, double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(nodelistnav->brow->ctx);
@@ -1242,7 +1234,7 @@ int ItemNode::close(NodelistNav* nodelistnav, double x, double y)
     brow_SetAnnotPixmap(node, 0, nodelistnav->brow->pixmap_map);
     brow_ResetOpen(node, 1);
     brow_ResetNodraw(nodelistnav->brow->ctx);
-    brow_Redraw(nodelistnav->brow->ctx, node_y);
+    brow_Redraw(nodelistnav->brow->ctx);
   }
   return 1;
 }
@@ -1296,10 +1288,6 @@ ItemAttrSysSts::ItemAttrSysSts(NodelistNav* item_nodelistnav,
 
 int ItemAttrSysSts::open_children(NodelistNav* nodelistnav, double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(nodelistnav->brow->ctx);
@@ -1307,7 +1295,7 @@ int ItemAttrSysSts::open_children(NodelistNav* nodelistnav, double x, double y)
     brow_SetAnnotPixmap(node, 0, nodelistnav->brow->pixmap_map);
     brow_ResetOpen(node, 1);
     brow_ResetNodraw(nodelistnav->brow->ctx);
-    brow_Redraw(nodelistnav->brow->ctx, node_y);
+    brow_Redraw(nodelistnav->brow->ctx);
     parent->syssts_open = 0;
     memset(&parent->xdata, 0, sizeof(parent->xdata));
   } else {
@@ -1477,7 +1465,7 @@ int ItemAttrSysSts::open_children(NodelistNav* nodelistnav, double x, double y)
     brow_SetOpen(node, 1);
     brow_SetAnnotPixmap(node, 0, nodelistnav->brow->pixmap_openmap);
     brow_ResetNodraw(nodelistnav->brow->ctx);
-    brow_Redraw(nodelistnav->brow->ctx, node_y);
+    brow_Redraw(nodelistnav->brow->ctx);
 
     statussrv_GetExtStatus(parent->name, &parent->xdata);
     nodelistnav->force_trace_scan();
@@ -1487,10 +1475,6 @@ int ItemAttrSysSts::open_children(NodelistNav* nodelistnav, double x, double y)
 
 int ItemAttrSysSts::close(NodelistNav* nodelistnav, double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(nodelistnav->brow->ctx);
@@ -1498,7 +1482,7 @@ int ItemAttrSysSts::close(NodelistNav* nodelistnav, double x, double y)
     brow_SetAnnotPixmap(node, 0, nodelistnav->brow->pixmap_map);
     brow_ResetOpen(node, 1);
     brow_ResetNodraw(nodelistnav->brow->ctx);
-    brow_Redraw(nodelistnav->brow->ctx, node_y);
+    brow_Redraw(nodelistnav->brow->ctx);
     parent->syssts_open = 0;
     memset(&parent->xdata, 0, sizeof(parent->xdata));
   }

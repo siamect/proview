@@ -117,7 +117,7 @@ FUNCTION PUBLIC INT16 dpgdl_get_data_len(IN INT16 result, IN USIGN8 service,
   FUNCTION_BODY
 
   switch (primitive) {
-  /*--- USER REQUESTS ----------------------------------------------------*/
+    /*--- USER REQUESTS ----------------------------------------------------*/
 
   case REQ: {
     switch (service) {
@@ -308,7 +308,7 @@ FUNCTION PUBLIC INT16 dpgdl_get_data_len(IN INT16 result, IN USIGN8 service,
     break;
   } /* case REQ */
 
-  /*---- USER RESPONSES --------------------------------------------------*/
+    /*---- USER RESPONSES --------------------------------------------------*/
 
   case RES: {
     switch (service) {
@@ -357,7 +357,7 @@ FUNCTION PUBLIC INT16 dpgdl_get_data_len(IN INT16 result, IN USIGN8 service,
     break;
   } /* case RES */
 
-  /*---- WRONG PRIMITIVE -------------------------------------------------*/
+    /*---- WRONG PRIMITIVE -------------------------------------------------*/
 
   default:
     result = E_IF_INVALID_PRIMITIVE;

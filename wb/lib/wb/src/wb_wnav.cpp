@@ -2035,7 +2035,7 @@ int WNav::display_object(pwr_tObjid objid)
     sts = find(parent_list[i - 1], (void**)&item);
     if (EVEN(sts)) {
       brow_ResetNodraw(brow->ctx);
-      brow_Redraw(brow->ctx, 0);
+      brow_Redraw(brow->ctx);
       return WNAV__OBJECTNOTFOUND;
     }
     item->open_children(this, 0, 0);
@@ -2043,14 +2043,14 @@ int WNav::display_object(pwr_tObjid objid)
   sts = find(objid, (void**)&item);
   if (EVEN(sts)) {
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, 0);
+    brow_Redraw(brow->ctx);
     return WNAV__OBJECTNOTFOUND;
   }
   brow_SetInverse(item->node, 1);
   brow_SelectInsert(brow->ctx, item->node);
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 
   brow_CenterObject(brow->ctx, item->node, 0.80);
   return 1;
@@ -2200,7 +2200,7 @@ int WNav::setup()
       flow_eDest_IntoLast);
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   force_trace_scan();
   return WNAV__SUCCESS;
 }
@@ -2589,7 +2589,7 @@ int WNav::menu_tree_delete(char* name)
     brow_DeleteAll(brow->ctx);
     ((WItemMenu*)root_item)->open_children(this, 0, 0);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, 0);
+    brow_Redraw(brow->ctx);
   } else {
     if (delete_item->parent->child_list == delete_item)
       delete_item->parent->child_list = delete_item->next;
@@ -2700,7 +2700,7 @@ int WNav::menu_tree_insert(char* title, int item_type, char* command,
     brow_DeleteAll(brow->ctx);
     ((WItemMenu*)root_item)->open_children(this, 0, 0);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, 0);
+    brow_Redraw(brow->ctx);
   }
 
   *menu_item = menu_p;
@@ -3134,7 +3134,7 @@ void WNav::ldh_refresh(pwr_tObjid new_open)
   }
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }
 
 void WNav::ldh_event(ldh_sEvent* e)
@@ -3191,7 +3191,7 @@ void WNav::ldh_event(ldh_sEvent* e)
   }
   if (e->nep) {
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, 0);
+    brow_Redraw(brow->ctx);
   }
 }
 
@@ -3339,7 +3339,7 @@ void WNav::collapse()
   get_rootlist();
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }
 
 void WNav::enable_events(WNavBrow* brow)

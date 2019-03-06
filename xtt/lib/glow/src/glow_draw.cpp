@@ -230,10 +230,6 @@ void GlowDraw::copy_area(GlowWind* w, int x, int y)
 {
 }
 
-void GlowDraw::clear_area(GlowWind* w, int ll_x, int ur_x, int ll_y, int ur_y)
-{
-}
-
 void GlowDraw::set_inputfocus(GlowWind* w)
 {
 }

@@ -394,7 +394,7 @@ int FlowDrawGtk::change_ctx(FlowCtx* from_ctx, FlowCtx* to_ctx)
   to_ctx->reset_nodraw();
   if (from_ctx->type() == flow_eCtxType_Brow) {
     to_ctx->zoom_factor = from_ctx->zoom_factor;
-    ((BrowCtx*)to_ctx)->configure(0);
+    ((BrowCtx*)to_ctx)->configure();
   } else
     to_ctx->redraw();
   return 1;
@@ -1893,15 +1893,6 @@ void FlowDrawGtk::copy_area(FlowCtx* ctx, int x, int y)
       gdk_window_clear_area(window, x, ctx->window_height + y,
           ctx->window_width, ctx->window_height);
   }
-}
-
-void FlowDrawGtk::clear_area(
-    FlowCtx* ctx, int ll_x, int ur_x, int ll_y, int ur_y)
-{
-  if (ctx->nodraw)
-    return;
-
-  gdk_window_clear_area(window, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y);
 }
 
 void FlowDrawGtk::set_inputfocus(FlowCtx* ctx)

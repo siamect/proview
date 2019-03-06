@@ -565,7 +565,7 @@ int WdaNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
     break;
   }
   case flow_eEvent_Resized: {
-    brow_Redraw(wdanav->brow->ctx, 0);
+    brow_Redraw(wdanav->brow->ctx);
     break;
   }
 
@@ -656,7 +656,7 @@ int WdaNav::get_attr()
   free((char*)bodydef);
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   return WDA__SUCCESS;
 }
 
@@ -838,7 +838,7 @@ int WdaNav::update(pwr_tObjid new_objid, pwr_tClassId new_classid,
   brow_DeleteAll(brow->ctx);
   sts = get_attr();
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 
   if (keep_select) {
     // Select previous selected objid
@@ -959,7 +959,7 @@ int WdaNav::set_attr_value(brow_tObject node, char* name, char* value_str)
 
 void WdaNav::redraw()
 {
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }
 
 int WdaNav::select_by_name(char* name)
@@ -1110,7 +1110,7 @@ int WdaNav::import_textfile(char* filename)
     return WDA__NOFILE;
 
   brow_SetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 
   row = 0;
   while (dcli_read_line(line, sizeof(line), fp)) {
@@ -1192,7 +1192,7 @@ int WdaNav::import_textfile(char* filename)
                   sprintf(msg, "** Syntax error, %s, line %d\n", filename, row);
                   MsgWindow::message('E', msg, msgw_ePop_Default);
                   brow_ResetNodraw(brow->ctx);
-                  brow_Redraw(brow->ctx, 0);
+                  brow_Redraw(brow->ctx);
                   return WDA__SYNTAX;
                 }
                 strcat(str, line);
@@ -1216,7 +1216,7 @@ int WdaNav::import_textfile(char* filename)
               sprintf(msg, "** Syntax error, %s, line %d\n", filename, row);
               MsgWindow::message('E', msg, msgw_ePop_Default);
               brow_ResetNodraw(brow->ctx);
-              brow_Redraw(brow->ctx, 0);
+              brow_Redraw(brow->ctx);
               return WDA__SYNTAX;
             }
 
@@ -1249,7 +1249,7 @@ int WdaNav::import_textfile(char* filename)
   fclose(fp);
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 
   return status;
 }

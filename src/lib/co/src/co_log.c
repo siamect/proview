@@ -88,7 +88,7 @@ void log_print(int level, const char* file, int line, const char* fmt, ...)
 
   if (!QUIET) {
     // 1. print timestamp
-    print_time(stderr);
+    print_time(stderr, 1);
     // 2. print filename only, without path
     const char* file2 = strrchr(file, '/');
     file2 = file2 ? (file2 + 1) : file;
@@ -103,7 +103,7 @@ void log_print(int level, const char* file, int line, const char* fmt, ...)
 
   if (FP) {
     // 1. print timestamp
-    print_time(FP);
+    print_time(FP, 1);
     // 2. print filename only, without path
     const char* file2 = strrchr(file, '/');
     file2 = file2 ? (file2 + 1) : file;

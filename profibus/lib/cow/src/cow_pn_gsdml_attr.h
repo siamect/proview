@@ -42,8 +42,7 @@
 #include "cow_pn_gsdml.h"
 #include "rt_pn_gsdml_data.h"
 
-typedef struct
-{
+typedef struct {
   void* value;
   char name[80];
   int type;
@@ -64,8 +63,7 @@ typedef enum {
 class GsdmlAttrNav;
 class CoWow;
 
-class GsdmlAttr
-{
+class GsdmlAttr {
 public:
   void* parent_ctx;
   char name[80];
@@ -85,7 +83,7 @@ public:
   CoWow* wow;
 
   GsdmlAttr(void* a_parent_ctx, void* a_object, pn_gsdml* a_gsdml,
-            int a_edit_mode, const char* a_data_filename);
+      int a_edit_mode, const char* a_data_filename);
   virtual ~GsdmlAttr();
 
   virtual void message(char severity, const char* message) {}

@@ -40,8 +40,8 @@
 #include "pwr_systemclasses.h"
 
 #include "co_dcli.h"
+#include "co_log.h"
 #include "co_string.h"
-#include "co_timelog.h"
 
 #include "rt_gdh.h"
 #include "rt_qdb.h"
@@ -380,7 +380,7 @@ pwr_tStatus redu_receive_table(redu_tCtx ctx, void* table_msg)
   if (ctx->t)
     redu_free_table(ctx);
 
-  timelog(2, "Table received");
+  log_info("Table received");
   tsts = time_Acomp_NE(
       &ctx->nodep->CurrentVersion, &((redu_sTableMsgHeader*)msg)->version);
   if (tsts != 0) {
@@ -593,7 +593,7 @@ pwr_tStatus redu_send_table_request(redu_tCtx ctx)
   redu_sHeader* msg;
   pwr_tStatus sts;
 
-  timelog(2, "Redu seding table request");
+  log_info("Redu seding table request");
 
   msg = (redu_sHeader*)malloc(sizeof(redu_sHeader));
   msg->type = redu_eMsgType_TableRequest;
@@ -610,7 +610,7 @@ pwr_tStatus redu_send_table_version(redu_tCtx ctx)
   redu_sMsgTableVersion* msg;
   pwr_tStatus sts;
 
-  timelog(2, "Redu seding table version");
+  log_info("Redu seding table version");
 
   msg = (redu_sMsgTableVersion*)malloc(sizeof(redu_sMsgTableVersion));
 
@@ -629,7 +629,7 @@ pwr_tStatus redu_send_table_version_request(redu_tCtx ctx)
   redu_sHeader* msg;
   pwr_tStatus sts;
 
-  timelog(1, "");
+  log_info("");
 
   msg = (redu_sHeader*)malloc(sizeof(redu_sHeader));
   msg->type = redu_eMsgType_TableVersionRequest;

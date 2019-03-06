@@ -41,12 +41,8 @@
 
 /*--- initialization/termination functions ----------------------------------*/
 
-void pnak_init(void)
-{
-}
-void pnak_term(void)
-{
-}
+void pnak_init(void) {}
+void pnak_term(void) {}
 
 T_PNAK_RESULT pnak_start_profistack(unsigned short a1, const T_PNAK_MODE_ID a2)
 {

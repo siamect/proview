@@ -441,7 +441,7 @@ int WRevNav::root_objects()
   }
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 
   brow_GetObjectList(brow->ctx, &object_list, &object_cnt);
   for (int i = 0; i < object_cnt; i++) {
@@ -517,7 +517,7 @@ int WRevNav::init_brow_cb(FlowCtx* fctx, void* client_data)
 
 void WRevNav::redraw()
 {
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }
 
 void WRevNav::refresh_node(WItemRev* item)
@@ -593,11 +593,8 @@ WItemRev::~WItemRev()
 
 int WItemRev::close(WRevNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node)) {
     // Close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(brow->ctx);
     brow_CloseNode(brow->ctx, node);
     if (brow_IsOpen(node) & wnav_mOpen_Children) {
@@ -608,7 +605,7 @@ int WItemRev::close(WRevNavBrow* brow, double x, double y)
     }
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
@@ -683,7 +680,7 @@ int WItemRevision::open_children(
   brow_SetAnnotPixmap(node, 0, brow->pixmap_openmap);
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   return 1;
 }
 
@@ -714,7 +711,7 @@ int WItemRevision::open_attributes(WRevNavBrow* brow, double x, double y)
   brow_SetOpen(node, wnav_mOpen_Attributes);
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   return 1;
 }
 

@@ -42,8 +42,7 @@
 #include "cow_pb_gsd_attr.h"
 #include "cow_wow_gtk.h"
 
-class GsdAttrGtk : public GsdAttr
-{
+class GsdAttrGtk : public GsdAttr {
 public:
   GtkWidget* parent_wid;
   GtkWidget* brow_widget;
@@ -63,7 +62,7 @@ public:
   CoWowFocusTimerGtk focustimer;
 
   GsdAttrGtk(GtkWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
-             pb_gsd* a_gsd, int a_edit_mode);
+      pb_gsd* a_gsd, int a_edit_mode);
   ~GsdAttrGtk();
 
   void message(char severity, const char* message);
@@ -88,8 +87,8 @@ public:
   static void cmd_close_apply_cb(void* ctx, void* data);
   static void cmd_close_no_cb(void* ctx, void* data);
   static void activate_cmd_ca(GtkWidget* w, gpointer dataxo);
-  static gboolean action_inputfocus(GtkWidget* w, GdkEvent* event,
-                                    gpointer data);
+  static gboolean action_inputfocus(
+      GtkWidget* w, GdkEvent* event, gpointer data);
   // static void valchanged_cmd_input( GtkWidget *w, gpointer data);
 };
 

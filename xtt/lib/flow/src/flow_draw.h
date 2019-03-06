@@ -144,7 +144,6 @@ public:
   virtual int get_text_extent(FlowCtx* ctx, const char* text, int len,
       flow_eDrawType gc_type, int idx, int* width, int* height, double size);
   virtual void copy_area(FlowCtx* ctx, int x, int y);
-  virtual void clear_area(FlowCtx* ctx, int ll_x, int ur_x, int ll_y, int ur_y);
   virtual int create_input(FlowCtx* ctx, int x, int y, char* text, int len,
       int idx, int width, int height, void* node, int number, void** data);
   virtual int close_input(FlowCtx* ctx, void* data);

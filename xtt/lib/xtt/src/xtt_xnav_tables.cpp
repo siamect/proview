@@ -40,17 +40,18 @@
 
 #include "co_string.h"
 
-#include "rt_gdh_msg.h"
-
-#include "xtt_ssaboxclasses.h"
-#include "xtt_trace.h"
-#include "xtt_item.h"
-
 extern "C" {
+#include "rt_io_base.h"
 #include "rt_qdb.h"
 #include "rt_sub.h"
-#include "rt_io_base.h"
 }
+#include "rt_gdh_msg.h"
+
+#include "flow_node.h"
+
+#include "xtt_item.h"
+#include "xtt_ssaboxclasses.h"
+#include "xtt_trace.h"
 
 typedef struct {
   void* chanp;
@@ -251,7 +252,7 @@ int XNav::show_plcthreads()
   }
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   force_trace_scan();
   return XNAV__SUCCESS;
 }
@@ -375,7 +376,7 @@ int XNav::show_nethandler()
   gdb_ScopeUnlock;
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   force_trace_scan();
   return XNAV__SUCCESS;
 }
@@ -428,7 +429,7 @@ int XNav::show_subsrv()
   gdb_ScopeUnlock;
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   force_trace_scan();
   return XNAV__SUCCESS;
 }
@@ -544,7 +545,7 @@ extern "C" void xnav_show_subsrv_scan(XNav* xnav)
   }
   brow_ResetNodraw(xnav->brow->ctx);
   if (change_detected)
-    brow_Redraw(xnav->brow->ctx, 0);
+    brow_Redraw(xnav->brow->ctx);
 }
 
 int XNav::show_subcli()
@@ -625,7 +626,7 @@ int XNav::show_subcli()
   gdb_ScopeUnlock;
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   force_trace_scan();
   return XNAV__SUCCESS;
 }
@@ -769,7 +770,7 @@ extern "C" void xnav_show_subcli_scan(XNav* xnav)
   }
   brow_ResetNodraw(xnav->brow->ctx);
   if (change_detected)
-    brow_Redraw(xnav->brow->ctx, 0);
+    brow_Redraw(xnav->brow->ctx);
 }
 
 void process_to_name(char* name, pwr_tUInt32 process)
@@ -976,7 +977,7 @@ int XNav::show_device()
   free((char*)rack_class);
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   force_trace_scan();
   return XNAV__SUCCESS;
 }
@@ -1403,7 +1404,7 @@ int XNav::show_channels(pwr_tObjid card_objid)
   }
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   force_trace_scan();
   return XNAV__SUCCESS;
 }
@@ -1643,12 +1644,11 @@ int XNav::show_attr_channels(pwr_tAttrRef* mod_aref, void* cardp,
 
 int XNav::show_object(pwr_tAttrRef* oarp, brow_tNode node)
 {
-  double node_x, node_y;
-
   if (cdh_ObjidIsNull(oarp->Objid))
     return 1;
 
-  brow_GetNodePosition(node, &node_x, &node_y);
+  double node_x, node_y;
+  ((FlowNode*)node)->get_node_position(&node_x, &node_y);
 
   if (brow_IsOpen(node) & xnav_mOpen_Attributes) {
     // Attributes is open, close
@@ -1657,7 +1657,7 @@ int XNav::show_object(pwr_tAttrRef* oarp, brow_tNode node)
     brow_ResetOpen(node, xnav_mOpen_Attributes);
     brow_RemoveAnnotPixmap(node, 1);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     int sts;
     Item* item;
@@ -1673,7 +1673,7 @@ int XNav::show_object(pwr_tAttrRef* oarp, brow_tNode node)
       brow_ResetOpen(node, xnav_mOpen_Crossref);
       brow_SetAnnotPixmap(node, 0, brow->pixmap_map);
       brow_ResetNodraw(brow->ctx);
-      brow_Redraw(brow->ctx, node_y);
+      brow_Redraw(brow->ctx);
     }
 
     sts = gdh_GetAttributeCharAttrref(oarp, &atype, &asize, &aoffset, &adim);
@@ -1859,7 +1859,7 @@ int XNav::show_remnode()
   }
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   force_trace_scan();
   return XNAV__SUCCESS;
 }
@@ -2017,7 +2017,7 @@ int XNav::show_remtrans(pwr_tObjid remnode_objid)
   }
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   force_trace_scan();
   return XNAV__SUCCESS;
 }
@@ -2110,7 +2110,7 @@ int XNav::show_plcpgm()
   }
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   force_trace_scan();
   return XNAV__SUCCESS;
 }

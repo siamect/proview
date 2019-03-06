@@ -660,7 +660,7 @@ void FlowNode::open_annotation_input(int num)
   nc->open_annotation_input(&pos, this, num);
 
   if (ctx->type() == flow_eCtxType_Brow)
-    ((BrowCtx*)ctx)->configure(y_low);
+    ((BrowCtx*)ctx)->configure();
   ctx->widget_cnt++;
 }
 
@@ -674,7 +674,7 @@ void FlowNode::close_annotation_input(int num)
   ctx->widget_cnt--;
 
   if (ctx->type() == flow_eCtxType_Brow)
-    ((BrowCtx*)ctx)->configure(y_low);
+    ((BrowCtx*)ctx)->configure();
 }
 
 int FlowNode::get_annotation_input(int num, char** text)

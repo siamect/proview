@@ -41,12 +41,9 @@
 
 int main(int argc, char* argv[])
 {
-  for (int i = 1; i < argc; i++)
-  {
-    if (streq(argv[i], "-f"))
-    {
-      if (i + 1 >= argc)
-      {
+  for (int i = 1; i < argc; i++) {
+    if (streq(argv[i], "-f")) {
+      if (i + 1 >= argc) {
         printf("\nUsage: profinet_viewer [-f windowmgr]");
         exit(0);
       }

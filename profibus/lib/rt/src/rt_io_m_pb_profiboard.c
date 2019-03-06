@@ -682,8 +682,9 @@ static void dp_get_slave_diag_con(
     }
 
     if (log) {
-      sprintf(s, "Slave [%3hhu] [0x%04hX]: Status = 0x%02hhX 0x%02hhX 0x%02hhX, "
-                 "Master = %3hhu, Ext = %u, Diags = %hu",
+      sprintf(s,
+          "Slave [%3hhu] [0x%04hX]: Status = 0x%02hhX 0x%02hhX 0x%02hhX, "
+          "Master = %3hhu, Ext = %u, Diags = %hu",
           get_slave_diag_con_ptr->rem_add, swap16(diag_data_ptr->ident_number),
           diag_data_ptr->station_status_1, diag_data_ptr->station_status_2,
           diag_data_ptr->station_status_3, diag_data_ptr->master_add,
@@ -1164,7 +1165,7 @@ void* handle_events(void* ptr)
         if (con_ind_sdb.primitive == CON) {
           if (con_ind_sdb.result == POS) {
             switch (con_ind_sdb.service) {
-            /*--------------------------------------------------------------*/
+              /*--------------------------------------------------------------*/
 
             case DP_ACT_PARAM_LOC: {
               if (op->Status == PB__NOTINIT) {
@@ -1190,7 +1191,7 @@ void* handle_events(void* ptr)
               break;
             } /* case DP_ACT_PARAM_LOC */
 
-            /*--------------------------------------------------------------*/
+              /*--------------------------------------------------------------*/
 
             case DP_GET_SLAVE_DIAG: {
               get_slave_diag_con_ptr
@@ -1213,7 +1214,7 @@ void* handle_events(void* ptr)
               break;
             } /* case DP_GET_SLAVE_DIAG */
 
-            /*--------------------------------------------------------------*/
+              /*--------------------------------------------------------------*/
 
             default: {
               break;
@@ -1229,7 +1230,7 @@ void* handle_events(void* ptr)
         else if (con_ind_sdb.primitive == IND) {
           if (con_ind_sdb.result == POS) {
             switch (con_ind_sdb.service) {
-            /*--------------------------------------------------------------*/
+              /*--------------------------------------------------------------*/
 
             case DP_ACT_PARAM_LOC: {
               USIGN8 usif_state;
@@ -1268,7 +1269,7 @@ void* handle_events(void* ptr)
               break;
             } /* case DP_ACT_PARAM_LOC */
 
-            /*--------------------------------------------------------------*/
+              /*--------------------------------------------------------------*/
 
             case DP_GET_SLAVE_DIAG: {
               get_slave_diag_con_ptr
@@ -1299,7 +1300,7 @@ void* handle_events(void* ptr)
               break;
             } /* case DP_GET_SLAVE_DIAG */
 
-            /*--------------------------------------------------------------*/
+              /*--------------------------------------------------------------*/
 
             default: {
               break;

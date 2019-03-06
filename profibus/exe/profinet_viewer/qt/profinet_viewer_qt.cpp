@@ -63,37 +63,27 @@ int main(int argc, char* argv[])
   setlocale(LC_NUMERIC, "POSIX");
   setlocale(LC_TIME, "en_US");
 
-  for (i = 1; i < argc; i++)
-  {
-    if (streq(argv[i], "-h"))
-    {
+  for (i = 1; i < argc; i++) {
+    if (streq(argv[i], "-h")) {
       printf("\nUsage: profinet_viewer [-l language] [device]\n");
       exit(0);
-    }
-    else if (streq(argv[i], "-l"))
-    {
-      if (i + 1 >= argc)
-      {
+    } else if (streq(argv[i], "-l")) {
+      if (i + 1 >= argc) {
         printf("\nUsage: profinet_viewer [-l language] [device]\n");
         exit(0);
       }
       Lng::set(argv[i + 1]);
       i++;
-    }
-    else if (str_StartsWith(argv[i], "eth"))
-    {
+    } else if (str_StartsWith(argv[i], "eth")) {
       snprintf(dev_name, sizeof(dev_name), "%s", argv[i]);
     }
   }
 
   // Open window
   PnViewerQt* viewer;
-  try
-  {
+  try {
     viewer = new PnViewerQt("Profinet Viewer", dev_name, &sts);
-  }
-  catch (co_error& e)
-  {
+  } catch (co_error& e) {
     printf("** Exception: %s\n", e.what().c_str());
     exit(0);
   }
@@ -102,12 +92,9 @@ int main(int argc, char* argv[])
   CoXHelpQt* xhelp = new CoXHelpQt(NULL, xhelp_eUtility_Wtt, (int*)&sts);
   CoXHelpQt::set_default(xhelp);
 
-  try
-  {
+  try {
     viewer->update_devices();
-  }
-  catch (co_error& e)
-  {
+  } catch (co_error& e) {
     printf("** Exception: %s\n", e.what().c_str());
   }
 
@@ -117,6 +104,9 @@ int main(int argc, char* argv[])
 #else
 #include <stdio.h>
 
-int main() { printf("Softing PNAK not built with this Proview release\n"); }
+int main()
+{
+  printf("Softing PNAK not built with this Proview release\n");
+}
 
 #endif

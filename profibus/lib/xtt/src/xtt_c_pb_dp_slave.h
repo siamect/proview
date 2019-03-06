@@ -39,8 +39,7 @@
 
 /* xtt_c_pb_dp_slave.h -- Profibus gsd configure method */
 
-typedef struct
-{
+typedef struct {
   pb_gsd* gsd;
   GsdAttr* attr;
   pwr_tAttrRef aref;
@@ -48,8 +47,8 @@ typedef struct
   void* editor_ctx;
 } xtt_slave_sCtx;
 
-pwr_tStatus xtt_pb_dp_slave_create_ctx(pwr_tAttrRef aref, void* editor_ctx,
-                                       xtt_slave_sCtx** ctxp);
+pwr_tStatus xtt_pb_dp_slave_create_ctx(
+    pwr_tAttrRef aref, void* editor_ctx, xtt_slave_sCtx** ctxp);
 int xtt_pb_dp_slave_help_cb(void* sctx, const char* text);
 void xtt_pb_dp_slave_close_cb(void* sctx);
 int xtt_pb_dp_slave_save_cb(void* sctx);

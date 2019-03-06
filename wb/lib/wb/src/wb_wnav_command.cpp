@@ -1508,7 +1508,7 @@ static int wnav_show_func(void* client_data, void* client_flag)
     sts = wnav->display_object(objid);
     if (EVEN(sts)) {
       brow_ResetNodraw(wnav->brow->ctx);
-      brow_Redraw(wnav->brow->ctx, 0);
+      brow_Redraw(wnav->brow->ctx);
       wnav->message(' ', wnav_get_message(sts));
       return sts;
     }
@@ -1516,7 +1516,7 @@ static int wnav_show_func(void* client_data, void* client_flag)
     sts = wnav->find(objid, (void**)&item);
     if (!sts) {
       brow_ResetNodraw(wnav->brow->ctx);
-      brow_Redraw(wnav->brow->ctx, 0);
+      brow_Redraw(wnav->brow->ctx);
       wnav->message('E', "Object not found");
       return sts;
     }
@@ -1527,7 +1527,7 @@ static int wnav_show_func(void* client_data, void* client_flag)
     default:;
     }
     brow_ResetNodraw(wnav->brow->ctx);
-    brow_Redraw(wnav->brow->ctx, 0);
+    brow_Redraw(wnav->brow->ctx);
     brow_CenterObject(wnav->brow->ctx, item->node, 0.0);
     wnav->last_selected = item->node;
     return WNAV__SUCCESS;
@@ -5586,7 +5586,7 @@ int WNav::show_database()
     return 1;
   }
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 
   return 1;
 }
@@ -5606,7 +5606,7 @@ int WNav::show_volume(int pop)
   get_rootlist();
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 
   return 1;
 }
@@ -6661,7 +6661,7 @@ int WNav::show_symbols()
       message('I', "Symboltable is empty");
     else {
       brow_ResetNodraw(brow->ctx);
-      brow_Redraw(brow->ctx, 0);
+      brow_Redraw(brow->ctx);
     }
   }
   return WNAV__SUCCESS;
@@ -6951,7 +6951,7 @@ int WNav::show_file(const char* filename, const char* intitle, int hide_dir)
   dcli_search_file(filename, found_file, DCLI_DIR_SEARCH_END);
   if (window_type != wnav_eWindowType_No) {
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, 0);
+    brow_Redraw(brow->ctx);
   }
   return WNAV__SUCCESS;
 }
@@ -6998,7 +6998,7 @@ int WNav::display_objects(
       wnav_display_objects_cb, this, 0, 0, 0, 0);
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   return sts;
 }
 

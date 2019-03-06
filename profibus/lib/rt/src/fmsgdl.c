@@ -107,7 +107,7 @@ LOCAL_DATA
 
 FUNCTION LOCAL INT16 fmsgdl_get_ctxt_data_len(IN USIGN8 service, /* Service */
     IN USIGN8 primitive /* Service-Primitive    */
-    )
+)
 
 /*-----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION
@@ -146,7 +146,7 @@ possible return values:
 
 FUNCTION LOCAL INT16 fmsgdl_get_vfd_data_len(IN USIGN8 service, /* Service */
     IN USIGN8 primitive /* Service-Primitive    */
-    )
+)
 
 /*-----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION
@@ -207,7 +207,7 @@ possible return values:
 FUNCTION LOCAL INT16 fmsgdl_get_od_data_len(IN USIGN8 service, /* Service */
     IN USIGN8 primitive, /* Service-Primitive    */
     IN USIGN8 FAR* data_ptr /* pointer to data      */
-    )
+)
 
 /*-----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION
@@ -333,7 +333,7 @@ possible return values:
 FUNCTION LOCAL INT16 fmsgdl_get_var_data_len(IN USIGN8 service, /* Service */
     IN USIGN8 primitive, /* Service-Primitive    */
     IN USIGN8 FAR* data_ptr /* pointer to data      */
-    )
+)
 
 /*-----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION
@@ -460,7 +460,7 @@ possible return values:
 FUNCTION LOCAL INT16 fmsgdl_get_evn_data_len(IN USIGN8 service, /* Service */
     IN USIGN8 primitive, /* Service-Primitive    */
     IN USIGN8 FAR* data_ptr /* pointer to data      */
-    )
+)
 
 /*-----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION
@@ -517,7 +517,7 @@ possible return values:
 FUNCTION LOCAL INT16 fmsgdl_get_dom_data_len(IN USIGN8 service, /* Service */
     IN USIGN8 primitive, /* Service-Primitive    */
     IN USIGN8 FAR* data_ptr /* pointer to data      */
-    )
+)
 
 /*-----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION
@@ -602,7 +602,7 @@ possible return values:
 FUNCTION LOCAL INT16 fmsgdl_get_pi_data_len(IN USIGN8 service, /* Service */
     IN USIGN8 primitive, /* Service-Primitive    */
     IN USIGN8 FAR* data_ptr /* pointer to data      */
-    )
+)
 
 /*-----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION
@@ -695,7 +695,7 @@ possible return values:
 }
 
 FUNCTION LOCAL INT16 fmsgdl_get_error_data_len(IN USIGN8 service /* Service  */
-    )
+)
 
 /*-----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION
@@ -802,7 +802,7 @@ FUNCTION PUBLIC INT16 fmsgdl_get_data_len(IN INT16 result, /* Service-Result */
     IN USIGN8 primitive, /* Service-Primitive */
     IN USIGN8 FAR* data_ptr, /* pointer to data */
     OUT INT16* data_len_ptr /* length of data */
-    )
+)
 
 /*-----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION

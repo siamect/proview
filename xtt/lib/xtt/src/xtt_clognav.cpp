@@ -530,7 +530,7 @@ void CLogNav::draw()
   }
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }
 
 //
@@ -557,7 +557,7 @@ void CLogNav::set_nodraw()
 void CLogNav::reset_nodraw()
 {
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }
 
 //

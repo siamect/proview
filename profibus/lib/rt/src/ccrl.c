@@ -491,22 +491,22 @@ possible return values:
                            (max_scc /* snd DTC.req */
                                + max_sac)) /* snd DTA.req */
         + 1 /* snd ABT.req */
-        );
+    );
 
     lli_api_snd_resrc = (USIGN8)(MIN(ci, 1) /* snd IDLE.req */
         + 1 /* LLI abort resrc */
-        );
+    );
 
     rcv_res = (USIGN8)(MAX(1, /* rcv ASS_RES_PDU */
         (max_scc /* rcv DTC_RES_PDU */
             + max_sac)) /* rcv DTA_ACK_PDU */
-        );
+    );
 
     rcv_ind = (USIGN8)(MAX(1, /* rcv ASS_REQ_PDU */
                            (max_rcc /* rcv DTC_REQ_PDU */
                                + max_rac)) /* rcv DTA_REQ_PDU */
         + 1 /* rcv ABT_REQ_PDU */
-        );
+    );
 
     lli_rcv_ind = (USIGN8)MIN(ci, 1); /* rcv IDLE_REQ_PDU */
     fdl_sap = 1; /* act/deact LSAP */
@@ -531,19 +531,19 @@ possible return values:
 
     lli_api_resrc = (USIGN8)(MIN(ci, 1) /* snd IDLE_REQ_PDU */
         + 1 /* LLI abort resrc */
-        );
+    );
 
     snd_req_csrd = (USIGN8)(MAX(1, /* snd ASS.req */
                                 (max_scc /* snd DTC.req */
                                     + max_sac)) /* snd DTA.req */
         + 1 /* snd ABT.req */
-        );
+    );
 
     snd_req_srd = max_sac; /* snd DTA.req (high) */
 
     rcv_ind_csrd = (USIGN8)(max_rac /* rcv DTA_REQ_PDU */
         + 1 /* rcv ABT_REQ_PDU */
-        );
+    );
 
     snd_res_srd = max_rac; /* snd DTA.ack (high)*/
 
@@ -566,23 +566,23 @@ possible return values:
 
     snd_req = (USIGN8)(max_sac /* snd DTA.req */
         + 1 /* snd ABT.req */
-        );
+    );
 
     rcv_res = max_sac; /* rcv DTA_ACK_PDU */
 
     lli_sr_snd_resrc = (USIGN8)(MIN(ci, 1) /* snd IDLE.req */
         + 1 /* LLI abort resrc */
-        );
+    );
 
     rcv_ind = (USIGN8)(MAX(1, /* rcv ASS_REQ_PDU */
                            (max_rcc /* rcv DTC_REQ_PDU */
                                + max_rac)) /* rcv DTA_REQ_PDU */
         + 1 /* rcv ABT_REQ_PDU */
-        );
+    );
 
     lli_rcv_ind = (USIGN8)(MIN(ci, 1) /* rcv IDLE_REQ_PDU */
         + 2 /* rcv poll telegrams */
-        );
+    );
     fdl_sap = 1; /* act/deact LSAP */
 
     break;

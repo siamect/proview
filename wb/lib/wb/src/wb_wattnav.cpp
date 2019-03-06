@@ -877,7 +877,7 @@ int WAttNav::object_attr()
     }
   }
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   return WATT__SUCCESS;
 }
 
@@ -1082,7 +1082,7 @@ int WAttNav::set_attr_value(brow_tObject node, char* name, char* value_str)
 
 void WAttNav::redraw()
 {
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }
 
 int WAttNav::select_by_name(const char* name)

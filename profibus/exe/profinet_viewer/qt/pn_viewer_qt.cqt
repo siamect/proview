@@ -55,8 +55,9 @@ void PnViewerQtWidget::closeEvent(QCloseEvent* event)
   QWidget::closeEvent(event);
 }
 
-PnViewerQt::PnViewerQt(const char* v_name, const char* v_device,
-    pwr_tStatus* status) : PnViewer(NULL, v_name, v_device, status)
+PnViewerQt::PnViewerQt(
+    const char* v_name, const char* v_device, pwr_tStatus* status)
+    : PnViewer(NULL, v_name, v_device, status)
 {
   toplevel = new PnViewerQtWidget(this);
   toplevel->setMinimumSize(800, 600);
@@ -123,8 +124,8 @@ PnViewerQt::PnViewerQt(const char* v_name, const char* v_device,
   viewernav->change_value_cb = &change_value;
   viewernav->message_cb = &message_cb;
 
-  viewernavconf = new PnViewerNavQt(this, viewer_eType_Configuration,
-      &navconf_widget);
+  viewernavconf
+      = new PnViewerNavQt(this, viewer_eType_Configuration, &navconf_widget);
   viewernavconf->change_value_cb = &change_value;
   viewernavconf->message_cb = &message_cb;
 
@@ -195,7 +196,8 @@ void PnViewerQt::open_change_value()
 void PnViewerQtWidget::valchanged_cmd_entry()
 {
   if (viewer->input_open) {
-    viewer->viewernav->set_attr_value(qPrintableLatin1(viewer->cmd_entry->text()));
+    viewer->viewernav->set_attr_value(
+        qPrintableLatin1(viewer->cmd_entry->text()));
     viewer->cmd_entry->setVisible(false);
     viewer->set_prompt("");
     viewer->input_open = 0;

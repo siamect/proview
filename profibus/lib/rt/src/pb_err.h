@@ -84,31 +84,31 @@
 #define USR_ABT_RC6 5 /* OD loading interacting (OD is beeing loaded)*/
 
 /* --- FMS abort reasons --------------------------------------------------- */
-#define FMS_ABT_RC1 0   /* FMS-CRL error (CRL entry invalid)            */
-#define FMS_ABT_RC2 1   /* user error (protocol violation by user)      */
-#define FMS_ABT_RC3 2   /* FMS-PDU error (invalid FMS PDU received)     */
-#define FMS_ABT_RC4 3   /* connection state conflict LLI                */
-#define FMS_ABT_RC5 4   /* LLI error                                    */
-#define FMS_ABT_RC6 5   /* PDU size exceeds maximum PDU size            */
-#define FMS_ABT_RC7 6   /* feature not supported                        */
-#define FMS_ABT_RC8 7   /* invoke id error in service response          */
-#define FMS_ABT_RC9 8   /* max services overflow                        */
-#define FMS_ABT_RC10 9  /* connection state conflict FMS (Initiate.req) */
+#define FMS_ABT_RC1 0 /* FMS-CRL error (CRL entry invalid)            */
+#define FMS_ABT_RC2 1 /* user error (protocol violation by user)      */
+#define FMS_ABT_RC3 2 /* FMS-PDU error (invalid FMS PDU received)     */
+#define FMS_ABT_RC4 3 /* connection state conflict LLI                */
+#define FMS_ABT_RC5 4 /* LLI error                                    */
+#define FMS_ABT_RC6 5 /* PDU size exceeds maximum PDU size            */
+#define FMS_ABT_RC7 6 /* feature not supported                        */
+#define FMS_ABT_RC8 7 /* invoke id error in service response          */
+#define FMS_ABT_RC9 8 /* max services overflow                        */
+#define FMS_ABT_RC10 9 /* connection state conflict FMS (Initiate.req) */
 #define FMS_ABT_RC11 10 /* service error (res != ind or con != req)     */
 #define FMS_ABT_RC12 11 /* invoke id error in service request           */
 #define FMS_ABT_RC13 12 /* FMS is disabled                              */
 
 /* --- FM7 abort reasons  -------------------------------------------------- */
-#define FM7_ABT_RC1 0   /* FM7-CRL error                                */
-#define FM7_ABT_RC2 1   /* user error                                   */
-#define FM7_ABT_RC3 2   /* FM7-PDU error                                */
-#define FM7_ABT_RC4 3   /* connection state conflict LLI                */
-#define FM7_ABT_RC5 4   /* LLI error                                    */
-#define FM7_ABT_RC6 5   /* PDU size                                     */
-#define FM7_ABT_RC7 6   /* feature not supported                        */
-#define FM7_ABT_RC8 7   /* response error                               */
-#define FM7_ABT_RC9 8   /* max services overflow                        */
-#define FM7_ABT_RC10 9  /* connection state conflict FM7                */
+#define FM7_ABT_RC1 0 /* FM7-CRL error                                */
+#define FM7_ABT_RC2 1 /* user error                                   */
+#define FM7_ABT_RC3 2 /* FM7-PDU error                                */
+#define FM7_ABT_RC4 3 /* connection state conflict LLI                */
+#define FM7_ABT_RC5 4 /* LLI error                                    */
+#define FM7_ABT_RC6 5 /* PDU size                                     */
+#define FM7_ABT_RC7 6 /* feature not supported                        */
+#define FM7_ABT_RC8 7 /* response error                               */
+#define FM7_ABT_RC9 8 /* max services overflow                        */
+#define FM7_ABT_RC10 9 /* connection state conflict FM7                */
 #define FM7_ABT_RC11 10 /* service error                                */
 
 #if (PB_VER < 500)
@@ -126,16 +126,16 @@
 #endif
 
 /* --- LLI abort reasons --------------------------------------------------- */
-#define LLI_ABT_RC1 0   /* LLI context check neg., remote context in AD */
-#define LLI_ABT_RC2 1   /* invalid LLI PDU during associate or abort    */
-#define LLI_ABT_RC3 2   /* invalid LLI PDU during data transfer phase   */
-#define LLI_ABT_RC4 3   /* unknown or invalid LLI PDU received          */
-#define LLI_ABT_RC5 4   /* DTA_ACK_PDU received and SAC = 0             */
-#define LLI_ABT_RC6 5   /* max no of parallel services exceeded (by PDU)*/
-#define LLI_ABT_RC7 6   /* unkown invoke id                             */
-#define LLI_ABT_RC8 7   /* priority error                               */
-#define LLI_ABT_RC9 8   /* local error at remote station                */
-#define LLI_ABT_RC10 9  /* timer 1 expired (associate)                  */
+#define LLI_ABT_RC1 0 /* LLI context check neg., remote context in AD */
+#define LLI_ABT_RC2 1 /* invalid LLI PDU during associate or abort    */
+#define LLI_ABT_RC3 2 /* invalid LLI PDU during data transfer phase   */
+#define LLI_ABT_RC4 3 /* unknown or invalid LLI PDU received          */
+#define LLI_ABT_RC5 4 /* DTA_ACK_PDU received and SAC = 0             */
+#define LLI_ABT_RC6 5 /* max no of parallel services exceeded (by PDU)*/
+#define LLI_ABT_RC7 6 /* unkown invoke id                             */
+#define LLI_ABT_RC8 7 /* priority error                               */
+#define LLI_ABT_RC9 8 /* local error at remote station                */
+#define LLI_ABT_RC10 9 /* timer 1 expired (associate)                  */
 #define LLI_ABT_RC11 10 /* timer 3 expired (supervision of connection)  */
 #define LLI_ABT_RC12 11 /* receive timer expired                        */
 #define LLI_ABT_RC13 12 /* error while activating LSAP (state in AD)    */
@@ -171,18 +171,18 @@
 #define LLI_ABT_AD7 6 /* receive error (CSRD.con)                     */
 
 /* --- FDL abort reasons --------------------------------------------------- */
-#define FDL_ABT_UE 1   /* remote user interface error                  */
-#define FDL_ABT_RR 2   /* no remote resources available                */
-#define FDL_ABT_RS 3   /* service not activated at remote sap          */
-#define FDL_ABT_RA 4   /* no access to remote sap                      */
+#define FDL_ABT_UE 1 /* remote user interface error                  */
+#define FDL_ABT_RR 2 /* no remote resources available                */
+#define FDL_ABT_RS 3 /* service not activated at remote sap          */
+#define FDL_ABT_RA 4 /* no access to remote sap                      */
 #define FDL_ABT_RDL 12 /* no resource for send response data low       */
 #define FDL_ABT_RDH 13 /* no resource for send response data high      */
-#define FDL_ABT_LS 16  /* service not activated at local sap           */
-#define FDL_ABT_NA 17  /* no reaction from remote station              */
-#define FDL_ABT_DS 18  /* disconnected station  (NLT)                  */
-#define FDL_ABT_NO 19  /* FDL servcice not OK                          */
-#define FDL_ABT_LR 20  /* no local resources available                 */
-#define FDL_ABT_IV 21  /* invalid request parameters                   */
+#define FDL_ABT_LS 16 /* service not activated at local sap           */
+#define FDL_ABT_NA 17 /* no reaction from remote station              */
+#define FDL_ABT_DS 18 /* disconnected station  (NLT)                  */
+#define FDL_ABT_NO 19 /* FDL servcice not OK                          */
+#define FDL_ABT_LR 20 /* no local resources available                 */
+#define FDL_ABT_IV 21 /* invalid request parameters                   */
 
 /*****************************************************************************/
 /*************   DP/V1 ABORT INSTANCES AND REASON CODES  *********************/
@@ -473,15 +473,15 @@
 /*****************************************************************************/
 
 /* --- LLI-Fault-Indications ---------------------------------------------- */
-#define LLI_FM7_RC1 1   /* error while activating SAP (result in AD)    */
-#define LLI_FM7_RC2 2   /* error while deactivating SAP (result in AD)  */
-#define LLI_FM7_RC3 3   /* error during FDL_XXX_UPDATE (result in AD)   */
-#define LLI_FM7_RC4 4   /* error while activ. poll list entry (see AD)  */
-#define LLI_FM7_RC5 5   /* error while deactiv. poll list entry (see AD)*/
-#define LLI_FM7_RC6 6   /* illegal FDL prim. during ASS or ABT (see AD) */
-#define LLI_FM7_RC7 7   /* illegal FDL prim. in data transfer (see AD)  */
-#define LLI_FM7_RC8 8   /* unknown FDL primitive                        */
-#define LLI_FM7_RC9 9   /* unknown LLI primitive                        */
+#define LLI_FM7_RC1 1 /* error while activating SAP (result in AD)    */
+#define LLI_FM7_RC2 2 /* error while deactivating SAP (result in AD)  */
+#define LLI_FM7_RC3 3 /* error during FDL_XXX_UPDATE (result in AD)   */
+#define LLI_FM7_RC4 4 /* error while activ. poll list entry (see AD)  */
+#define LLI_FM7_RC5 5 /* error while deactiv. poll list entry (see AD)*/
+#define LLI_FM7_RC6 6 /* illegal FDL prim. during ASS or ABT (see AD) */
+#define LLI_FM7_RC7 7 /* illegal FDL prim. in data transfer (see AD)  */
+#define LLI_FM7_RC8 8 /* unknown FDL primitive                        */
+#define LLI_FM7_RC9 9 /* unknown LLI primitive                        */
 #define LLI_FM7_RC10 10 /* illegal LLI prim. during ASS or ABT (see AD) */
 #define LLI_FM7_RC11 11 /* illegal LLI prim. in data transfer (see AD)  */
 #define LLI_FM7_RC12 12 /* SDA failed (result in AD)                    */
@@ -505,15 +505,15 @@
 #define LLI_FM7_RC30 30 /* LLI state error                              */
 
 #if (PB_VER < 500)
-#define LLI_FMA7_RC1 1   /* error while activating SAP (result in AD)    */
-#define LLI_FMA7_RC2 2   /* error while deactivating SAP (result in AD)  */
-#define LLI_FMA7_RC3 3   /* error during FDL_XXX_UPDATE (result in AD)   */
-#define LLI_FMA7_RC4 4   /* error while activ. poll list entry (see AD)  */
-#define LLI_FMA7_RC5 5   /* error while deactiv. poll list entry (see AD)*/
-#define LLI_FMA7_RC6 6   /* illegal FDL prim. during ASS or ABT (see AD) */
-#define LLI_FMA7_RC7 7   /* illegal FDL prim. in data transfer (see AD)  */
-#define LLI_FMA7_RC8 8   /* unknown FDL primitive                        */
-#define LLI_FMA7_RC9 9   /* unknown LLI primitive                        */
+#define LLI_FMA7_RC1 1 /* error while activating SAP (result in AD)    */
+#define LLI_FMA7_RC2 2 /* error while deactivating SAP (result in AD)  */
+#define LLI_FMA7_RC3 3 /* error during FDL_XXX_UPDATE (result in AD)   */
+#define LLI_FMA7_RC4 4 /* error while activ. poll list entry (see AD)  */
+#define LLI_FMA7_RC5 5 /* error while deactiv. poll list entry (see AD)*/
+#define LLI_FMA7_RC6 6 /* illegal FDL prim. during ASS or ABT (see AD) */
+#define LLI_FMA7_RC7 7 /* illegal FDL prim. in data transfer (see AD)  */
+#define LLI_FMA7_RC8 8 /* unknown FDL primitive                        */
+#define LLI_FMA7_RC9 9 /* unknown LLI primitive                        */
 #define LLI_FMA7_RC10 10 /* illegal LLI prim. during ASS or ABT (see AD) */
 #define LLI_FMA7_RC11 11 /* illegal LLI prim. in data transfer (see AD)  */
 #define LLI_FMA7_RC12 12 /* SDA failed (result in AD)                    */
@@ -541,25 +541,25 @@
 /***********************    FM2 EVENT CODES     *****************************/
 /****************************************************************************/
 
-#define FM2_FAULT_ADDRESS 0x01     /* duplicate address recognized */
-#define FM2_FAULT_PHY 0x02         /* phys.layer is malfunctioning */
-#define FM2_FAULT_TTO 0x03         /* time out on bus detected     */
-#define FM2_FAULT_SYN 0x04         /* no receiver synchronization  */
+#define FM2_FAULT_ADDRESS 0x01 /* duplicate address recognized */
+#define FM2_FAULT_PHY 0x02 /* phys.layer is malfunctioning */
+#define FM2_FAULT_TTO 0x03 /* time out on bus detected     */
+#define FM2_FAULT_SYN 0x04 /* no receiver synchronization  */
 #define FM2_FAULT_OUT_OF_RING 0x05 /* station out of ring          */
-#define FM2_GAP_EVENT 0x06         /* new station in ring          */
+#define FM2_GAP_EVENT 0x06 /* new station in ring          */
 
 #if (PB_VER < 500)
-#define FMA2_FAULT_ADDRESS 0x01     /* duplicate address recognized */
+#define FMA2_FAULT_ADDRESS 0x01 /* duplicate address recognized */
 #define FMA2_FAULT_TRANSCEIVER 0x02 /* transceiver error occured    */
-#define FMA2_FAULT_TTO 0x03         /* time out on bus detected     */
-#define FMA2_FAULT_SYN 0x04         /* no receiver synchronization  */
+#define FMA2_FAULT_TTO 0x03 /* time out on bus detected     */
+#define FMA2_FAULT_SYN 0x04 /* no receiver synchronization  */
 #define FMA2_FAULT_OUT_OF_RING 0x05 /* station out of ring          */
-#define FMA2_GAP_EVENT 0x06         /* new station in ring          */
+#define FMA2_GAP_EVENT 0x06 /* new station in ring          */
 #endif
 
 /* --- Additional FM2-Events ---------------------------------------------- */
 #define FM2_MAC_ERROR 0x13 /* fatal MAC error              */
-#define FM2_HW_ERROR 0x14  /* fatal HW error               */
+#define FM2_HW_ERROR 0x14 /* fatal HW error               */
 
 /****************************************************************************/
 /*************    FMB ERROR CLASSES and ERROR CODES     *********************/
@@ -764,54 +764,54 @@
 /*****************************************************************************/
 
 #if (PB_VER < 500)
-#define E_FATAL_ERROR 7            /* unrecoverable error on board */
+#define E_FATAL_ERROR 7 /* unrecoverable error on board */
 #define E_INIT_INVALID_PARAMETER 8 /* invalid initialize parameter*/
 
 #define E_LOADER_ERROR 9 /* download error */
 
-#define E_NO_CNTRL_RES 10               /* controller does not respond */
+#define E_NO_CNTRL_RES 10 /* controller does not respond */
 #define E_INVALID_CNTRL_TYPE_VERSION 11 /* inv. controller type or SW vers.*/
-#define E_INVALID_LAYER 12              /* invalid layer */
-#define E_INVALID_SERVICE 13            /* invalid service identifier */
-#define E_INVALID_PRIMITIVE 14          /* invalid service primitive */
-#define E_INVALID_DATA_SIZE 15          /* not enough cmi data block memory*/
-#define E_INVALID_COMM_REF 16           /* invalid communication reference */
-#define E_INVALID_FMS_COMM_REF 17       /* invalid FMS comm. reference */
-#define E_INVALID_FMA_COMM_REF 18       /* invalid FMA7 comm. reference */
-#define E_INVALID_CMI_CALL 19           /* invalid CMI call */
-#define E_CMI_ERROR 20                  /* error occured in CMI */
-#define E_RESOURCE_UNAVAILABLE 21       /* no resource available */
-#define E_NO_PARALLEL_SERVICES 22       /* no parallel services allowed */
-#define E_SERVICE_CONSTR_CONFLICT 23    /* serv. tempor. not executable */
-#define E_SERVICE_NOT_SUPPORTED 24      /* service not supported */
-#define E_SERVICE_NOT_EXECUTABLE 25     /* service not executable */
+#define E_INVALID_LAYER 12 /* invalid layer */
+#define E_INVALID_SERVICE 13 /* invalid service identifier */
+#define E_INVALID_PRIMITIVE 14 /* invalid service primitive */
+#define E_INVALID_DATA_SIZE 15 /* not enough cmi data block memory*/
+#define E_INVALID_COMM_REF 16 /* invalid communication reference */
+#define E_INVALID_FMS_COMM_REF 17 /* invalid FMS comm. reference */
+#define E_INVALID_FMA_COMM_REF 18 /* invalid FMA7 comm. reference */
+#define E_INVALID_CMI_CALL 19 /* invalid CMI call */
+#define E_CMI_ERROR 20 /* error occured in CMI */
+#define E_RESOURCE_UNAVAILABLE 21 /* no resource available */
+#define E_NO_PARALLEL_SERVICES 22 /* no parallel services allowed */
+#define E_SERVICE_CONSTR_CONFLICT 23 /* serv. tempor. not executable */
+#define E_SERVICE_NOT_SUPPORTED 24 /* service not supported */
+#define E_SERVICE_NOT_EXECUTABLE 25 /* service not executable */
 #endif
 
-#define E_IF_FATAL_ERROR 7            /* unrecoverable error on board */
+#define E_IF_FATAL_ERROR 7 /* unrecoverable error on board */
 #define E_IF_INIT_INVALID_PARAMETER 8 /* invalid initialize parameter */
-#define E_IF_LOADER_ERROR 9           /* download firmware error */
-#define E_IF_NO_CNTRL_RES 10          /* controller does not respond */
+#define E_IF_LOADER_ERROR 9 /* download firmware error */
+#define E_IF_NO_CNTRL_RES 10 /* controller does not respond */
 #define E_IF_INVALID_CNTRL_TYPE_VERSION                                        \
-  11                                    /* inv. controller type or SW          \
-                                           vers.*/
-#define E_IF_INVALID_LAYER 12           /* invalid layer */
-#define E_IF_INVALID_SERVICE 13         /* invalid service identifier */
-#define E_IF_INVALID_PRIMITIVE 14       /* invalid service primitive */
-#define E_IF_INVALID_DATA_SIZE 15       /* not enough cmi data block memory*/
-#define E_IF_INVALID_COMM_REF 16        /* invalid communication reference */
-#define E_IF_INVALID_CMI_CALL 19        /* invalid CMI call */
-#define E_IF_CMI_ERROR 20               /* error occured in CMI */
-#define E_IF_RESOURCE_UNAVAILABLE 21    /* no resource available */
-#define E_IF_NO_PARALLEL_SERVICES 22    /* no parallel services allowed */
+  11 /* inv. controller type or SW                                             \
+        vers.*/
+#define E_IF_INVALID_LAYER 12 /* invalid layer */
+#define E_IF_INVALID_SERVICE 13 /* invalid service identifier */
+#define E_IF_INVALID_PRIMITIVE 14 /* invalid service primitive */
+#define E_IF_INVALID_DATA_SIZE 15 /* not enough cmi data block memory*/
+#define E_IF_INVALID_COMM_REF 16 /* invalid communication reference */
+#define E_IF_INVALID_CMI_CALL 19 /* invalid CMI call */
+#define E_IF_CMI_ERROR 20 /* error occured in CMI */
+#define E_IF_RESOURCE_UNAVAILABLE 21 /* no resource available */
+#define E_IF_NO_PARALLEL_SERVICES 22 /* no parallel services allowed */
 #define E_IF_SERVICE_CONSTR_CONFLICT 23 /* serv. tempor. not executable */
-#define E_IF_SERVICE_NOT_SUPPORTED 24   /* service not supported */
-#define E_IF_SERVICE_NOT_EXECUTABLE 25  /* service not executable */
-#define E_IF_INVALID_VERSION 26         /* invalid version */
+#define E_IF_SERVICE_NOT_SUPPORTED 24 /* service not supported */
+#define E_IF_SERVICE_NOT_EXECUTABLE 25 /* service not executable */
+#define E_IF_INVALID_VERSION 26 /* invalid version */
 
-#define E_IF_NO_CNTRL_PRESENT 28     /* controller not available */
-#define E_IF_INVALID_PARAMETER 30    /* wrong parameter in REQ or RES */
-#define E_IF_INIT_FAILED 31          /* init. API or Controller failed */
-#define E_IF_EXIT_FAILED 32          /* exit API or Controller failed */
+#define E_IF_NO_CNTRL_PRESENT 28 /* controller not available */
+#define E_IF_INVALID_PARAMETER 30 /* wrong parameter in REQ or RES */
+#define E_IF_INIT_FAILED 31 /* init. API or Controller failed */
+#define E_IF_EXIT_FAILED 32 /* exit API or Controller failed */
 #define E_IF_PAPI_NOT_INITIALIZED 33 /* API not initialized */
 
 #define E_IF_NO_DEVICE_CONNECTION 34 /* no PROFIBUS device connection */
@@ -820,10 +820,10 @@
  */
 #define E_IF_SLAVE_DIAG_DATA 0xF0 /* no data available */
 /* new diagnostics data available */
-#define E_IF_SLAVE_ERROR 0xF1      /* no data exchange */
+#define E_IF_SLAVE_ERROR 0xF1 /* no data exchange */
 #define E_IF_INVALID_DP_STATE 0xF2 /* DP is not in state clear/operate*/
 #define E_IF_READING_REGISTRY 0xF3 /* error reading registry */
-#define E_IF_OS_ERROR 0xFF         /* OS system (WIN,DOS) error */
+#define E_IF_OS_ERROR 0xFF /* OS system (WIN,DOS) error */
 /* get detail with GetLastError */
 
 /* INTERFACE ERROR DETAIL CODES (only Win95/98) -------------------------------
@@ -834,26 +834,26 @@
 /* - E_IF_EXIT_FAILED */
 
 #define PBDRV PROFIBRD
-#define PROFIBRD_INTERNAL_ERROR 0x0030       /* internal driver error */
-#define PROFIBRD_GENERAL_ERROR 0x0031        /* general driver error */
-#define PROFIBRD_IO_PENDING 0x0032           /* driver timeout */
-#define PROFIBRD_IO_CANCELLED 0x0033         /* driver call not finished */
-#define PROFIBRD_ILLEGAL_CALL 0x0034         /* driver call cancelled */
-#define PROFIBRD_NOT_SUPPORTED 0x0035        /* driver call not supported */
-#define PROFIBRD_VERSION_ERROR 0x0036        /* driver interface version  */
+#define PROFIBRD_INTERNAL_ERROR 0x0030 /* internal driver error */
+#define PROFIBRD_GENERAL_ERROR 0x0031 /* general driver error */
+#define PROFIBRD_IO_PENDING 0x0032 /* driver timeout */
+#define PROFIBRD_IO_CANCELLED 0x0033 /* driver call not finished */
+#define PROFIBRD_ILLEGAL_CALL 0x0034 /* driver call cancelled */
+#define PROFIBRD_NOT_SUPPORTED 0x0035 /* driver call not supported */
+#define PROFIBRD_VERSION_ERROR 0x0036 /* driver interface version  */
 #define PROFIBRD_DRIVER_VERSION_ERROR 0x0037 /* driver version */
-#define PROFIBRD_DRIVER_NOT_FOUND 0x0038     /* driver not found */
-#define PROFIBRD_NOT_ENOUGH_MEMORY 0x0039    /* not enough memory */
-#define PROFIBRD_TOO_MANY_DEVICES 0x003A     /* to many devices */
-#define PROFIBRD_UNKNOWN_DEVICE 0x003B       /* unknown device */
-#define PROFIBRD_DEVICE_ACCESS_ERROR 0x003C  /* device access error */
-#define PROFIBRD_DPRAM_ALREADY_USED 0x003D   /* device already exists */
-#define PROFIBRD_MAP_MEMORY_ERROR 0x003E     /* memory mapping error */
-#define PROFIBRD_MEMORY_UNKNOWN 0x003F       /* unknown phys. memory */
-#define PROFIBRD_READ_REGISTRY_ERROR 0x0040  /* read registry error */
-#define PROFIBRD_DEVICE_NOT_FOUND 0x0041     /* device not found */
-#define PROFIBRD_DEVICE_ALREADY_OPEN 0x0042  /* device already opened */
-#define PROFIBRD_PORT_ALREADY_USED 0x0043    /* IO port already in use */
+#define PROFIBRD_DRIVER_NOT_FOUND 0x0038 /* driver not found */
+#define PROFIBRD_NOT_ENOUGH_MEMORY 0x0039 /* not enough memory */
+#define PROFIBRD_TOO_MANY_DEVICES 0x003A /* to many devices */
+#define PROFIBRD_UNKNOWN_DEVICE 0x003B /* unknown device */
+#define PROFIBRD_DEVICE_ACCESS_ERROR 0x003C /* device access error */
+#define PROFIBRD_DPRAM_ALREADY_USED 0x003D /* device already exists */
+#define PROFIBRD_MAP_MEMORY_ERROR 0x003E /* memory mapping error */
+#define PROFIBRD_MEMORY_UNKNOWN 0x003F /* unknown phys. memory */
+#define PROFIBRD_READ_REGISTRY_ERROR 0x0040 /* read registry error */
+#define PROFIBRD_DEVICE_NOT_FOUND 0x0041 /* device not found */
+#define PROFIBRD_DEVICE_ALREADY_OPEN 0x0042 /* device already opened */
+#define PROFIBRD_PORT_ALREADY_USED 0x0043 /* IO port already in use */
 
 /*****************************************************************************/
 /*************        ERROR DATA STRUCTURES      *****************************/
@@ -862,33 +862,29 @@
 #define MAX_ERROR_DESCR_LENGTH _NAME_LENGTH(ERROR_DESCR_LENGTH)
 
 /* --- standard error data structure --------------------------------------- */
-typedef struct _T_ERROR
-{
-  USIGN16 class_code;                              /* class and code         */
-  INT16 add_detail;                                /* additional detail      */
+typedef struct _T_ERROR {
+  USIGN16 class_code; /* class and code         */
+  INT16 add_detail; /* additional detail      */
   STRINGV add_description[MAX_ERROR_DESCR_LENGTH]; /* additional description */
 } T_ERROR;
 
 /* --- PI error data structure --------------------------------------------- */
-typedef struct _T_PI_ERROR
-{
-  T_ERROR error;   /*  standard error type    */
+typedef struct _T_PI_ERROR {
+  T_ERROR error; /*  standard error type    */
   USIGN8 pi_state; /*  pi state               */
-  USIGN8 dummy;    /*  alignment              */
+  USIGN8 dummy; /*  alignment              */
 } T_PI_ERROR;
 
 /* --- PI-LOC error data structure ----------------------------------------- */
-typedef struct _T_PI_LOC_ERROR
-{
-  T_ERROR error;      /*  standard error type    */
-  USIGN8 pi_state;    /*  pi state               */
-  USIGN8 dummy;       /*  alignment              */
+typedef struct _T_PI_LOC_ERROR {
+  T_ERROR error; /*  standard error type    */
+  USIGN8 pi_state; /*  pi state               */
+  USIGN8 dummy; /*  alignment              */
   USIGN32 vfd_number; /*  vfd number             */
 } T_PI_LOC_ERROR;
 
 /* --- OD error data structure --------------------------------------------- */
-typedef struct _T_OD_ERROR
-{
+typedef struct _T_OD_ERROR {
   T_ERROR error; /* standard error type     */
   USIGN16 index; /* error index             */
 } T_OD_ERROR;
@@ -898,11 +894,10 @@ typedef T_OD_ERROR T_OV_ERROR;
 #endif
 
 /* --- source OD error data structure -------------------------------------- */
-typedef struct _T_SRC_OD_ERROR
-{
-  T_ERROR error;      /* standard error type     */
+typedef struct _T_SRC_OD_ERROR {
+  T_ERROR error; /* standard error type     */
   USIGN32 vfd_number; /* vfd number              */
-  USIGN16 index;      /* error index             */
+  USIGN16 index; /* error index             */
 } T_SRC_OD_ERROR;
 
 #if (PB_VER < 500)
@@ -910,16 +905,14 @@ typedef T_SRC_OD_ERROR T_SRC_OV_ERROR;
 #endif
 
 /* --- VFD error data structure -------------------------------------------- */
-typedef struct _T_VFD_ERROR
-{
-  T_ERROR error;      /* standard error type     */
+typedef struct _T_VFD_ERROR {
+  T_ERROR error; /* standard error type     */
   USIGN32 vfd_number; /* vfd number              */
 } T_VFD_ERROR;
 
 /* --- CRL error data structure -------------------------------------------- */
-typedef struct _T_CRL_ERROR
-{
-  T_ERROR error;    /* standard error type     */
+typedef struct _T_CRL_ERROR {
+  T_ERROR error; /* standard error type     */
   USIGN16 error_cr; /* error cr                */
 } T_CRL_ERROR;
 
@@ -930,10 +923,9 @@ typedef T_CRL_ERROR T_KBL_ERROR;
 /*****************************************************************************/
 /*************   FDLIF-ERROR DATA STRUCTURES     *****************************/
 /*****************************************************************************/
-typedef struct _T_FDLIF_ERROR
-{
-  USIGN8 result;      /* class and code */
-  USIGN8 dummy;       /* alignment byte */
+typedef struct _T_FDLIF_ERROR {
+  USIGN8 result; /* class and code */
+  USIGN8 dummy; /* alignment byte */
   USIGN16 add_detail; /* additional detail */
 } T_FDLIF_ERROR;
 
@@ -941,12 +933,11 @@ typedef struct _T_FDLIF_ERROR
 /*************      EXCEPTION STRUCTURES         *****************************/
 /*****************************************************************************/
 
-typedef struct _T_EXCEPTION
-{
+typedef struct _T_EXCEPTION {
   USIGN8 task_id; /* task identifier in which execption occurs */
-  USIGN8 par1;    /* parameter 1 */
-  USIGN16 par2;   /* parameter 2 */
-  USIGN16 par3;   /* parameter 3 */
+  USIGN8 par1; /* parameter 1 */
+  USIGN16 par2; /* parameter 2 */
+  USIGN16 par3; /* parameter 3 */
 } T_EXCEPTION;
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN16) || defined(_WIN16)

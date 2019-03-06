@@ -54,7 +54,7 @@
   printk(fmt, function, lineno, ##args)
 #define DBG_PRN(fmt, args...)                                                  \
   CIF_PRN((__FUNCTION__), (__LINE__), KERN_INFO __FILE__ "::%s(L%.4d): " fmt,  \
-          ##args)
+      ##args)
 #else
 #define DBG_PRN(fmt, args...) /* not debugging: nothing */
 #endif

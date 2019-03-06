@@ -136,7 +136,7 @@ int XNav::help(char* help_key, char* help_bookmark, navh_eHelpFile file_type,
   }
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   if (bookmark_node) {
     brow_CenterObject(brow->ctx, bookmark_node, 0.0);
     sts = brow_GetPrevious(brow->ctx, bookmark_node, &prev);
@@ -184,7 +184,7 @@ int XNav::help_index(navh_eHelpFile file_type, char* file_name, int pop)
       &object_list[2], object_cnt - 2, sizeof(object_list[0]), help_cmp_items);
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   return sts;
 }
 

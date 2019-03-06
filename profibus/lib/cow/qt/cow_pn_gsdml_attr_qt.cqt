@@ -315,8 +315,8 @@ GsdmlAttrQt::GsdmlAttrQt(void* a_parent_ctx, void* a_object, pn_gsdml* a_gsdml,
       toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
 
   // Navigator
-  attrnav = new GsdmlAttrNavQt(this, "Plant", gsdml, edit_mode, &brow_widget,
-      &sts);
+  attrnav
+      = new GsdmlAttrNavQt(this, "Plant", gsdml, edit_mode, &brow_widget, &sts);
   attrnav->message_cb = &GsdmlAttr::gsdmlattr_message;
   attrnav->change_value_cb = &GsdmlAttr::gsdmlattr_change_value_cb;
 

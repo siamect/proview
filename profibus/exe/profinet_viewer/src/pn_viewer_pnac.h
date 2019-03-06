@@ -45,15 +45,14 @@
 #include "rt_io_pnak_locals.h"
 #include "rt_pn_gsdml_data.h"
 
-class PnViewerPNAC
-{
+class PnViewerPNAC {
 public:
   PnViewerPNAC(pwr_tStatus* sts, const char* dev_name);
   ~PnViewerPNAC();
 
   void fetch_devices(std::vector<PnDevice>& dev_vect);
-  void set_device_properties(unsigned char* macaddress,
-                             unsigned char* ipaddress, char* devname);
+  void set_device_properties(
+      unsigned char* macaddress, unsigned char* ipaddress, char* devname);
   GsdmlDeviceData dev_data;
   io_sAgentLocal* local;
 };

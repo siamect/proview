@@ -53,11 +53,10 @@
 // Create the navigator widget
 //
 GsdmlAttrNavGtk::GsdmlAttrNavGtk(void* xn_parent_ctx, GtkWidget* xn_parent_wid,
-                                 const char* xn_name, pn_gsdml* xn_gsdml,
-                                 int xn_edit_mode, GtkWidget** w,
-                                 pwr_tStatus* status)
-    : GsdmlAttrNav(xn_parent_ctx, xn_name, xn_gsdml, xn_edit_mode, status),
-      parent_wid(xn_parent_wid)
+    const char* xn_name, pn_gsdml* xn_gsdml, int xn_edit_mode, GtkWidget** w,
+    pwr_tStatus* status)
+    : GsdmlAttrNav(xn_parent_ctx, xn_name, xn_gsdml, xn_edit_mode, status)
+    , parent_wid(xn_parent_wid)
 {
   form_widget = scrolledbrowwidgetgtk_new(init_brow_cb, this, &brow_widget);
   gtk_widget_show_all(brow_widget);
@@ -80,7 +79,10 @@ GsdmlAttrNavGtk::~GsdmlAttrNavGtk()
   gtk_widget_destroy(form_widget);
 }
 
-void GsdmlAttrNavGtk::set_inputfocus() { gtk_widget_grab_focus(brow_widget); }
+void GsdmlAttrNavGtk::set_inputfocus()
+{
+  gtk_widget_grab_focus(brow_widget);
+}
 
 void GsdmlAttrNavGtk::display_attr_help_text()
 {
@@ -95,16 +97,14 @@ void GsdmlAttrNavGtk::display_attr_help_text()
   brow_GetUserData(node_list[0], (void**)&base_item);
   free(node_list);
 
-  switch (base_item->type)
-  {
+  switch (base_item->type) {
   /*
    * The following two item types could make use of the same info_text that the
    * the base class does,
    * but since they already contained references they were used instead...
    */
   case attrnav_eItemType_PnParValue:
-  case attrnav_eItemType_PnParEnum:
-  {
+  case attrnav_eItemType_PnParEnum: {
     ItemPnParEnum* item = (ItemPnParEnum*)base_item;
     gsdml_ValueItem* vi = 0;
 
@@ -119,8 +119,7 @@ void GsdmlAttrNavGtk::display_attr_help_text()
 
     break;
   }
-  default:
-  {
+  default: {
     // Do we have an associated info text string to show the user some more
     // info?
     if (base_item->info_text)

@@ -113,7 +113,7 @@ LOCAL_DATA
 
 FUNCTION LOCAL INT16 fm7gdl_get_ctxt_data_len(IN USIGN8 service, /* Service */
     IN USIGN8 primitive /* Service-Primitive   */
-    )
+)
 
 /*----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION
@@ -141,7 +141,7 @@ possible return values:
 FUNCTION LOCAL INT16 fm7gdl_get_crl_data_len(IN USIGN8 service, /* Service */
     IN USIGN8 primitive, /* Service-Primitive   */
     IN USIGN8 FAR* data_ptr /* pointer to data     */
-    )
+)
 
 /*----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION
@@ -199,7 +199,7 @@ FUNCTION LOCAL INT16 fm7gdl_get_s_r_value_data_len(
     IN USIGN8 service, /* Service             */
     IN USIGN8 primitive, /* Service-Primitive   */
     IN USIGN8 FAR* data_ptr /* pointer to data     */
-    )
+)
 
 /*-----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION
@@ -255,7 +255,7 @@ possible return values:
 
 FUNCTION LOCAL INT16 fm7gdl_get_ident_data_len(
     IN USIGN8 primitive /* Service-Primitive   */
-    )
+)
 
 /*-----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION
@@ -349,7 +349,7 @@ possible return values:
 }
 
 FUNCTION LOCAL INT16 fm7gdl_get_error_data_len(IN USIGN8 service /* Service  */
-    )
+)
 
 /*-----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION
@@ -430,7 +430,7 @@ FUNCTION PUBLIC INT16 fm7gdl_get_data_len(IN INT16 result, /* Service-Result */
     IN USIGN8 primitive, /* Service-Primitive */
     IN USIGN8 FAR* data_ptr, /* pointer to data */
     OUT INT16* data_len_ptr /* length of data */
-    )
+)
 
 /*-----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION

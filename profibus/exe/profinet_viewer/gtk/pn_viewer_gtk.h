@@ -43,11 +43,10 @@
 
 #include "../src/pn_viewer.h"
 
-class PnViewerGtk : public PnViewer
-{
+class PnViewerGtk : public PnViewer {
 public:
   PnViewerGtk(void* v_parent_ctx, GtkWidget* v_parent_wid, const char* v_name,
-              const char* v_device, pwr_tStatus* status);
+      const char* v_device, pwr_tStatus* status);
   ~PnViewerGtk();
 
   GtkWidget* parent_wid;
@@ -67,8 +66,8 @@ public:
   void set_prompt(const char* prompt);
   void open_change_value();
 
-  static gboolean action_inputfocus(GtkWidget* w, GdkEvent* event,
-                                    gpointer data);
+  static gboolean action_inputfocus(
+      GtkWidget* w, GdkEvent* event, gpointer data);
   static void valchanged_cmd_input(GtkWidget* w, gpointer data);
   static void activate_exit(GtkWidget* w, gpointer data);
   static void activate_update(GtkWidget* w, gpointer data);

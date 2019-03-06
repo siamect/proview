@@ -1525,7 +1525,7 @@ static int xnav_show_func(void* client_data, void* client_flag)
       }
     } catch (co_error& e) {
       xnav->brow_push_all();
-      brow_Redraw(xnav->brow->ctx, 0);
+      brow_Redraw(xnav->brow->ctx);
       xnav->message('E', (char*)e.what().c_str());
     }
 
@@ -2236,7 +2236,7 @@ static int xnav_show_func(void* client_data, void* client_flag)
       sts = gdh_GetNextVolume(vid, &vid);
     }
     brow_ResetNodraw(xnav->brow->ctx);
-    brow_Redraw(xnav->brow->ctx, 0);
+    brow_Redraw(xnav->brow->ctx);
   } else if (str_NoCaseStrncmp(arg1_str, "NODEOBJECTS", strlen(arg1_str))
       == 0) {
     /* Command is "SHOW NODEOBJECTS" */
@@ -2269,7 +2269,7 @@ static int xnav_show_func(void* client_data, void* client_flag)
       node_cnt++;
     }
     brow_ResetNodraw(xnav->brow->ctx);
-    brow_Redraw(xnav->brow->ctx, 0);
+    brow_Redraw(xnav->brow->ctx);
   } else if (str_NoCaseStrncmp(arg1_str, "NODEINFO", strlen(arg1_str)) == 0) {
     /* Command is "SHOW NODEINFO" */
     pwr_tVid vid;
@@ -2321,7 +2321,7 @@ static int xnav_show_func(void* client_data, void* client_flag)
       node_cnt++;
     }
     brow_ResetNodraw(xnav->brow->ctx);
-    brow_Redraw(xnav->brow->ctx, 0);
+    brow_Redraw(xnav->brow->ctx);
   } else if (str_NoCaseStrncmp(arg1_str, "METHODS", strlen(arg1_str)) == 0) {
     /* Command is "SHOW METHODS" */
     xnav->print_methods();
@@ -2529,7 +2529,7 @@ static int xnav_show_func(void* client_data, void* client_flag)
       return XNAV__SUCCESS;
     }
     brow_ResetNodraw(xnav->brow->ctx);
-    brow_Redraw(xnav->brow->ctx, 0);
+    brow_Redraw(xnav->brow->ctx);
   } else {
     /* This might be a system picture */
     sts = 0; // rttsys_start_system_picture( ctx, arg1_str);
@@ -2907,7 +2907,7 @@ static int xnav_add_func(void* client_data, void* client_flag)
       //		0);
     } catch (co_error& e) {
       xnav->brow_push_all();
-      brow_Redraw(xnav->brow->ctx, 0);
+      brow_Redraw(xnav->brow->ctx);
       xnav->message('E', (char*)e.what().c_str());
     }
     return XNAV__SUCCESS;
@@ -6436,7 +6436,7 @@ static int xnav_crossref_func(void* client_data, void* client_flag)
     brow_SetNodraw(xnav->brow->ctx);
     sts = xnav_crr_code(xnav->brow, file_ptr, string_str, brief, 0, case_sens);
     brow_ResetNodraw(xnav->brow->ctx);
-    brow_Redraw(xnav->brow->ctx, 0);
+    brow_Redraw(xnav->brow->ctx);
     if (EVEN(sts)) {
       xnav->brow_push();
       xnav->message(' ', XNav::get_message(sts));
@@ -6448,7 +6448,7 @@ static int xnav_crossref_func(void* client_data, void* client_flag)
     brow_SetNodraw(xnav->brow->ctx);
     sts = xnav_crr_code(xnav->brow, file_ptr, func_str, brief, 1, case_sens);
     brow_ResetNodraw(xnav->brow->ctx);
-    brow_Redraw(xnav->brow->ctx, 0);
+    brow_Redraw(xnav->brow->ctx);
     if (EVEN(sts)) {
       xnav->brow_push();
       xnav->message(' ', XNav::get_message(sts));
@@ -6536,7 +6536,7 @@ static int xnav_crossref_func(void* client_data, void* client_flag)
     if (EVEN(sts))
       xnav->message(' ', XNav::get_message(sts));
     brow_ResetNodraw(xnav->brow->ctx);
-    brow_Redraw(xnav->brow->ctx, 0);
+    brow_Redraw(xnav->brow->ctx);
   }
   return sts;
 }
@@ -7751,7 +7751,7 @@ int XNav::show_database(int nopop)
     return 1;
   }
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   return 1;
 }
 
@@ -9088,7 +9088,7 @@ int XNav::show_file(char* filename, char* intitle, int hide_dir)
         filelist[i].m_file_type, NULL, flow_eDest_IntoLast);
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 
   return XNAV__SUCCESS;
 }
@@ -9207,7 +9207,7 @@ int XNav::show_par_hier_class_name(char* parametername, char* hiername,
         a_type_id, a_tid, a_size, a_flags, 0);
   } catch (co_error& e) {
     brow_push_all();
-    brow_Redraw(brow->ctx, 0);
+    brow_Redraw(brow->ctx);
     message('E', (char*)e.what().c_str());
   }
 
@@ -9308,7 +9308,7 @@ int XNav::show_symbols()
     message('I', "Symboltable is empty");
   else {
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, 0);
+    brow_Redraw(brow->ctx);
   }
   return XNAV__SUCCESS;
 }

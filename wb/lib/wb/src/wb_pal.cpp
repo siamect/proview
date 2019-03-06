@@ -69,7 +69,6 @@ PalItemClassVolume::PalItemClassVolume(Pal* pal, char* item_name,
 
 int PalItemClassVolume::open(Pal* pal, double x, double y)
 {
-  double node_x, node_y;
   pwr_tObjid child;
   int child_exist;
   int sts, size;
@@ -80,11 +79,6 @@ int PalItemClassVolume::open(Pal* pal, double x, double y)
   char volume_name[80];
   pwr_tMask* flags;
 
-  if (!is_root)
-    brow_GetNodePosition(node, &node_x, &node_y);
-  else
-    node_x = node_y = 0;
-
   if (!is_root && brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(pal->brow_ctx);
@@ -92,7 +86,7 @@ int PalItemClassVolume::open(Pal* pal, double x, double y)
     brow_ResetOpen(node, 1);
     brow_SetAnnotPixmap(node, 0, pal->pixmap_map);
     brow_ResetNodraw(pal->brow_ctx);
-    brow_Redraw(pal->brow_ctx, node_y);
+    brow_Redraw(pal->brow_ctx);
   } else {
     PalItem* item;
 
@@ -159,7 +153,7 @@ int PalItemClassVolume::open(Pal* pal, double x, double y)
     }
     brow_ResetNodraw(pal->brow_ctx);
     if (child_exist)
-      brow_Redraw(pal->brow_ctx, node_y);
+      brow_Redraw(pal->brow_ctx);
   }
   return 1;
 }
@@ -443,7 +437,6 @@ int PalItemClassMenu::open(Pal* pal, double x, double y)
     close(pal, x, y);
   else {
     // Display children
-    double node_x, node_y;
     PalItem* item;
     pwr_tCid cid;
     pwr_tOid child;
@@ -452,7 +445,6 @@ int PalItemClassMenu::open(Pal* pal, double x, double y)
     pwr_tMask* flags;
     int size;
 
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(pal->brow_ctx);
 
     child_exist = 0;
@@ -488,24 +480,21 @@ int PalItemClassMenu::open(Pal* pal, double x, double y)
     }
     brow_ResetNodraw(pal->brow_ctx);
     if (child_exist)
-      brow_Redraw(pal->brow_ctx, node_y);
+      brow_Redraw(pal->brow_ctx);
   }
   return 1;
 }
 
 int PalItemClassMenu::close(Pal* pal, double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node)) {
     // Close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(pal->brow_ctx);
     brow_CloseNode(pal->brow_ctx, node);
     brow_SetAnnotPixmap(node, 0, pal->pixmap_map);
     brow_ResetOpen(node, pal_mOpen_All);
     brow_ResetNodraw(pal->brow_ctx);
-    brow_Redraw(pal->brow_ctx, node_y);
+    brow_Redraw(pal->brow_ctx);
   }
   return 1;
 }
@@ -542,14 +531,9 @@ int PalItemMenu::open(Pal* pal, double x, double y)
   }
   if (is_root || action_open) {
     // Display childlist
-    double node_x, node_y;
     PalItem* item;
     PalFileMenu* menu;
 
-    if (!is_root)
-      brow_GetNodePosition(node, &node_x, &node_y);
-    else
-      node_y = 0;
     brow_SetNodraw(pal->brow_ctx);
     menu = *child_list;
     while (menu) {
@@ -575,7 +559,7 @@ int PalItemMenu::open(Pal* pal, double x, double y)
       }
     }
     brow_ResetNodraw(pal->brow_ctx);
-    brow_Redraw(pal->brow_ctx, node_y);
+    brow_Redraw(pal->brow_ctx);
   } else
     close(pal, x, y);
   return 1;
@@ -583,17 +567,14 @@ int PalItemMenu::open(Pal* pal, double x, double y)
 
 int PalItemMenu::close(Pal* pal, double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node)) {
     // Close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(pal->brow_ctx);
     brow_CloseNode(pal->brow_ctx, node);
     brow_SetAnnotPixmap(node, 0, pal->pixmap_map);
     brow_ResetOpen(node, pal_mOpen_All);
     brow_ResetNodraw(pal->brow_ctx);
-    brow_Redraw(pal->brow_ctx, node_y);
+    brow_Redraw(pal->brow_ctx);
   }
   return 1;
 }

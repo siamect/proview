@@ -51,9 +51,9 @@ public:
       flow_eDest destination_code);
   void close(FlowArrayElem* element);
   void remove(FlowArrayElem* element);
-  void configure(double y_redraw);
+  void configure();
   void change_scrollbar();
-  void redraw(double y_redraw);
+  void redraw();
   void zoom(double factor);
   void unzoom()
   {

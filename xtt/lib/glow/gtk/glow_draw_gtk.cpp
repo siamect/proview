@@ -2242,16 +2242,6 @@ void GlowDrawGtk::copy_area(GlowWind* wind, int x, int y)
   }
 }
 
-void GlowDrawGtk::clear_area(
-    GlowWind* wind, int ll_x, int ur_x, int ll_y, int ur_y)
-{
-  if (ctx->nodraw)
-    return;
-  DrawWindGtk* w = (DrawWindGtk*)wind->window;
-
-  gdk_window_clear_area(w->window, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y);
-}
-
 void GlowDrawGtk::set_inputfocus(GlowWind* wind)
 {
   DrawWindGtk* w = (DrawWindGtk*)wind->window;

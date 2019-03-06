@@ -125,10 +125,10 @@ static pwr_tStatus IoRackInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
       ;
 
     switch (cid) {
-    /* Old style configuring with Pb_xx objects. Still here for combatibility
-       reasons.
-       New systems (from v4.1.3) should be build with Pb_Module objects or
-       subclasses */
+      /* Old style configuring with Pb_xx objects. Still here for combatibility
+         reasons.
+         New systems (from v4.1.3) should be build with Pb_Module objects or
+         subclasses */
 
     case pwr_cClass_Pb_Di:
       dip = (pwr_sClass_Pb_Di*)cardp->op;
@@ -178,9 +178,9 @@ static pwr_tStatus IoRackInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
       iop->Status = PB_MODULE_STATE_OPERATE;
       break;
 
-    /* New style configuring (from v4.1.3) with Pb_Module objects or subclass.
-      Loop all channels
-      in the module and set channel size and offset. */
+      /* New style configuring (from v4.1.3) with Pb_Module objects or subclass.
+        Loop all channels
+        in the module and set channel size and offset. */
 
     case pwr_cClass_Pb_Module:
       mp = (pwr_sClass_Pb_Module*)cardp->op;

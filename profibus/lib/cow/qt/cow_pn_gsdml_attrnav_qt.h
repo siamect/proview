@@ -44,8 +44,7 @@
 #include <QWidget>
 
 //! The navigation area of the attribute editor.
-class GsdmlAttrNavQt : public GsdmlAttrNav
-{
+class GsdmlAttrNavQt : public GsdmlAttrNav {
 public:
   GsdmlAttrNavQt(void* xn_parent_ctx, const char* xn_name, pn_gsdml* xn_gsdml,
       int xn_edit_mode, QWidget** w, pwr_tStatus* status);

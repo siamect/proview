@@ -484,18 +484,12 @@ WItemBaseObject::~WItemBaseObject()
 
 int WItemBaseObject::open_children(WNav* wnav, double x, double y)
 {
-  double node_x, node_y;
   pwr_tObjid child;
   int child_exist;
   int sts;
 
   if (cdh_ObjidIsNull(objid))
     return 1;
-
-  if (!is_root)
-    brow_GetNodePosition(node, &node_x, &node_y);
-  else
-    node_y = 0;
 
   if (!is_root && brow_IsOpen(node)) {
     // Close
@@ -509,7 +503,7 @@ int WItemBaseObject::open_children(WNav* wnav, double x, double y)
       brow_SetAnnotPixmap(node, 1, wnav->brow->pixmap_confcomp);
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(wnav->brow->ctx);
-    brow_Redraw(wnav->brow->ctx, node_y);
+    brow_Redraw(wnav->brow->ctx);
   } else {
     // Create some children
     brow_SetNodraw(wnav->brow->ctx);
@@ -528,7 +522,7 @@ int WItemBaseObject::open_children(WNav* wnav, double x, double y)
     }
     brow_ResetNodraw(wnav->brow->ctx);
     if (child_exist)
-      brow_Redraw(wnav->brow->ctx, node_y);
+      brow_Redraw(wnav->brow->ctx);
     else
       return WNAV__NOCHILD;
   }
@@ -537,12 +531,8 @@ int WItemBaseObject::open_children(WNav* wnav, double x, double y)
 
 int WItemBaseObject::open_attributes(WNav* wnav, double x, double y)
 {
-  double node_x, node_y;
-
   if (cdh_ObjidIsNull(objid))
     return 1;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
 
   if (brow_IsOpen(node) & wnav_mOpen_Attributes) {
     // Attributes is open, close
@@ -553,7 +543,7 @@ int WItemBaseObject::open_attributes(WNav* wnav, double x, double y)
     if (wnav->editmode && item_check_configure_method(wnav->ldhses, objid))
       brow_SetAnnotPixmap(node, 1, wnav->brow->pixmap_confcomp);
     brow_ResetNodraw(wnav->brow->ctx);
-    brow_Redraw(wnav->brow->ctx, node_y);
+    brow_Redraw(wnav->brow->ctx);
   } else {
     int sts;
     char parname[80];
@@ -580,7 +570,7 @@ int WItemBaseObject::open_attributes(WNav* wnav, double x, double y)
       brow_ResetOpen(node, wnav_mOpen_Crossref);
       brow_SetAnnotPixmap(node, 0, wnav->brow->pixmap_map);
       brow_ResetNodraw(wnav->brow->ctx);
-      brow_Redraw(wnav->brow->ctx, node_y);
+      brow_Redraw(wnav->brow->ctx);
     }
 
     // Create some attributes
@@ -768,25 +758,19 @@ int WItemBaseObject::open_attributes(WNav* wnav, double x, double y)
       brow_SetAnnotPixmap(node, 1, wnav->brow->pixmap_openattr);
     }
     brow_ResetNodraw(wnav->brow->ctx);
-    brow_Redraw(wnav->brow->ctx, node_y);
+    brow_Redraw(wnav->brow->ctx);
   }
   return 1;
 }
 
 int WItemBaseObject::open_crossref(WNav* wnav, double x, double y)
 {
-  double node_x, node_y;
   int crossref_exist;
   int sts;
   pwr_tClassId classid;
 
   if (cdh_ObjidIsNull(objid))
     return 1;
-
-  if (!is_root)
-    brow_GetNodePosition(node, &node_x, &node_y);
-  else
-    node_y = 0;
 
   if (!is_root && brow_IsOpen(node)) {
     // Close
@@ -804,7 +788,7 @@ int WItemBaseObject::open_crossref(WNav* wnav, double x, double y)
     }
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(wnav->brow->ctx);
-    brow_Redraw(wnav->brow->ctx, node_y);
+    brow_Redraw(wnav->brow->ctx);
   } else {
     // Fetch the cross reference list
     crossref_exist = 0;
@@ -844,21 +828,18 @@ int WItemBaseObject::open_crossref(WNav* wnav, double x, double y)
     }
     brow_ResetNodraw(wnav->brow->ctx);
     if (crossref_exist)
-      brow_Redraw(wnav->brow->ctx, node_y);
+      brow_Redraw(wnav->brow->ctx);
   }
   return 1;
 }
 
 int WItemBaseObject::close(WNav* wnav, double x, double y)
 {
-  double node_x, node_y;
-
   if (cdh_ObjidIsNull(objid))
     return 1;
 
   if (brow_IsOpen(node)) {
     // Close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(wnav->brow->ctx);
     brow_CloseNode(wnav->brow->ctx, node);
     if (brow_IsOpen(node) & wnav_mOpen_Attributes)
@@ -869,7 +850,7 @@ int WItemBaseObject::close(WNav* wnav, double x, double y)
       brow_SetAnnotPixmap(node, 1, wnav->brow->pixmap_confcomp);
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(wnav->brow->ctx);
-    brow_Redraw(wnav->brow->ctx, node_y);
+    brow_Redraw(wnav->brow->ctx);
   }
   return 1;
 }
@@ -945,11 +926,8 @@ int WItemMenu::open_children(WNav* wnav, double x, double y)
 
 int WItemMenu::close(WNav* wnav, double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node)) {
     // Close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(wnav->brow->ctx);
     brow_CloseNode(wnav->brow->ctx, node);
     if (brow_IsOpen(node) & wnav_mOpen_Attributes)
@@ -958,7 +936,7 @@ int WItemMenu::close(WNav* wnav, double x, double y)
       brow_SetAnnotPixmap(node, 0, wnav->brow->pixmap_map);
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(wnav->brow->ctx);
-    brow_Redraw(wnav->brow->ctx, node_y);
+    brow_Redraw(wnav->brow->ctx);
   }
   return 1;
 }
@@ -1180,10 +1158,7 @@ WItemObjectName::~WItemObjectName()
 
 int WItemObjectName::open_children(double x, double y)
 {
-  double node_x, node_y;
   int sts;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
 
   if (brow_IsOpen(node)) {
     // Close
@@ -1194,7 +1169,7 @@ int WItemObjectName::open_children(double x, double y)
 
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     pwr_sClass_ReferenceList listbody;
     pwr_tOName oname;
@@ -1241,24 +1216,20 @@ int WItemObjectName::open_children(double x, double y)
       }
     } catch (wb_error& e) {
       brow_ResetNodraw(brow->ctx);
-      brow_Redraw(brow->ctx, node_y);
+      brow_Redraw(brow->ctx);
       return WNAV__NOCHILDREN;
     }
 
     brow_SetOpen(node, wnav_mOpen_Children);
     brow_SetAnnotPixmap(node, 0, brow->pixmap_openmap);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
 
 int WItemObjectName::close(double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(brow->ctx);
@@ -1268,7 +1239,7 @@ int WItemObjectName::close(double x, double y)
 
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
@@ -1555,7 +1526,6 @@ WItemAttr::~WItemAttr()
 
 int WItemAttr::open_children(double x, double y)
 {
-  double node_x, node_y;
   pwr_tStatus sts;
 
   switch (type_id) {
@@ -1571,8 +1541,6 @@ int WItemAttr::open_children(double x, double y)
   default:
     return WNAV__NOCHILDREN;
   }
-
-  brow_GetNodePosition(node, &node_x, &node_y);
 
   if (brow_IsOpen(node)) {
     // Close
@@ -1594,7 +1562,7 @@ int WItemAttr::open_children(double x, double y)
     }
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     switch (type_id) {
     case pwr_eType_Enum: {
@@ -1867,7 +1835,7 @@ int WItemAttr::open_children(double x, double y)
         }
       } catch (wb_error& e) {
         brow_ResetNodraw(brow->ctx);
-        brow_Redraw(brow->ctx, node_y);
+        brow_Redraw(brow->ctx);
         return WNAV__NOCHILDREN;
       }
 
@@ -1880,17 +1848,13 @@ int WItemAttr::open_children(double x, double y)
     brow_SetOpen(node, wnav_mOpen_Children);
     brow_SetAnnotPixmap(node, 0, brow->pixmap_openmap);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
 
 int WItemAttr::close(double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(brow->ctx);
@@ -1911,7 +1875,7 @@ int WItemAttr::close(double x, double y)
     }
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
@@ -2529,10 +2493,7 @@ WItemAttrArray::~WItemAttrArray()
 
 int WItemAttrArray::open_attributes(double x, double y)
 {
-  double node_x, node_y;
   int i;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
 
   if (brow_IsOpen(node) & wnav_mOpen_Attributes) {
     // Attributes is open, close
@@ -2540,7 +2501,7 @@ int WItemAttrArray::open_attributes(double x, double y)
     brow_CloseNode(brow->ctx, node);
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     // Create some elements
     brow_SetNodraw(brow->ctx);
@@ -2557,23 +2518,20 @@ int WItemAttrArray::open_attributes(double x, double y)
 
     brow_SetOpen(node, wnav_mOpen_Attributes);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
 
 int WItemAttrArray::close(double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node) & wnav_mOpen_Attributes) {
     // Attributes is open, close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(brow->ctx);
     brow_CloseNode(brow->ctx, node);
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
@@ -2684,10 +2642,7 @@ int WItemAttrArrayOutput::set_mask(int radio_button, int value)
 
 int WItemAttrArrayOutput::open_attributes(double x, double y)
 {
-  double node_x, node_y;
   int i;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
 
   if (brow_IsOpen(node) & wnav_mOpen_Attributes) {
     // Attributes is open, close
@@ -2695,7 +2650,7 @@ int WItemAttrArrayOutput::open_attributes(double x, double y)
     brow_CloseNode(brow->ctx, node);
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     // Create some elements
     brow_SetNodraw(brow->ctx);
@@ -2708,23 +2663,20 @@ int WItemAttrArrayOutput::open_attributes(double x, double y)
 
     brow_SetOpen(node, wnav_mOpen_Attributes);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
 
 int WItemAttrArrayOutput::close(double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node) & wnav_mOpen_Attributes) {
     // Attributes is open, close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(brow->ctx);
     brow_CloseNode(brow->ctx, node);
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
@@ -2837,30 +2789,23 @@ WItemAttrObject::~WItemAttrObject()
 
 int WItemAttrObject::close(double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node)) {
     // Close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(brow->ctx);
     brow_CloseNode(brow->ctx, node);
     if (brow_IsOpen(node) & wnav_mOpen_Attributes)
       brow_RemoveAnnotPixmap(node, 1);
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
 
 int WItemAttrObject::open_attributes(double x, double y)
 {
-  double node_x, node_y;
-
   if (cdh_ObjidIsNull(objid))
     return 1;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
 
   if (brow_IsOpen(node)) {
     // Close
@@ -2870,7 +2815,7 @@ int WItemAttrObject::open_attributes(double x, double y)
       brow_RemoveAnnotPixmap(node, 1);
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     int sts;
     pwr_tOName parname;
@@ -3076,14 +3021,13 @@ int WItemAttrObject::open_attributes(double x, double y)
       brow_SetAnnotPixmap(node, 1, brow->pixmap_openattr);
     }
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
 
 int WItemAttrObject::open_crossref(WNav* wnav, double x, double y)
 {
-  double node_x, node_y;
   int crossref_exist;
   int sts;
   pwr_tClassId classid;
@@ -3093,8 +3037,6 @@ int WItemAttrObject::open_crossref(WNav* wnav, double x, double y)
   if (cdh_ObjidIsNull(objid))
     return 1;
 
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(wnav->brow->ctx);
@@ -3103,7 +3045,7 @@ int WItemAttrObject::open_crossref(WNav* wnav, double x, double y)
       brow_RemoveAnnotPixmap(node, 1);
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(wnav->brow->ctx);
-    brow_Redraw(wnav->brow->ctx, node_y);
+    brow_Redraw(wnav->brow->ctx);
   } else {
     // Fetch the cross reference list
     crossref_exist = 0;
@@ -3148,7 +3090,7 @@ int WItemAttrObject::open_crossref(WNav* wnav, double x, double y)
     }
     brow_ResetNodraw(wnav->brow->ctx);
     if (crossref_exist)
-      brow_Redraw(wnav->brow->ctx, node_y);
+      brow_Redraw(wnav->brow->ctx);
   }
   return 1;
 }
@@ -3235,7 +3177,6 @@ int WItemAttrArrayElem::get_value(char** value)
 
 int WItemAttrArrayElem::open_children(double x, double y)
 {
-  double node_x, node_y;
   int sts;
 
   switch (type_id) {
@@ -3247,8 +3188,6 @@ int WItemAttrArrayElem::open_children(double x, double y)
   default:
     return WNAV__NOCHILDREN;
   }
-
-  brow_GetNodePosition(node, &node_x, &node_y);
 
   if (brow_IsOpen(node)) {
     // Close
@@ -3270,7 +3209,7 @@ int WItemAttrArrayElem::open_children(double x, double y)
     }
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else // if ( parent && !noedit)
   {
     switch (type_id) {
@@ -3482,7 +3421,7 @@ int WItemAttrArrayElem::open_children(double x, double y)
         }
       } catch (wb_error& e) {
         brow_ResetNodraw(brow->ctx);
-        brow_Redraw(brow->ctx, node_y);
+        brow_Redraw(brow->ctx);
         return WNAV__NOCHILDREN;
       }
       break;
@@ -3494,17 +3433,13 @@ int WItemAttrArrayElem::open_children(double x, double y)
     brow_SetOpen(node, wnav_mOpen_Children);
     brow_SetAnnotPixmap(node, 0, brow->pixmap_openmap);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
 
 int WItemAttrArrayElem::close(double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(brow->ctx);
@@ -3525,7 +3460,7 @@ int WItemAttrArrayElem::close(double x, double y)
     }
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }

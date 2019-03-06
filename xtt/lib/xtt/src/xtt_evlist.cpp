@@ -38,9 +38,9 @@
 
 #include <stdlib.h>
 
+#include "co_log.h"
 #include "co_string.h"
 #include "co_time.h"
-#include "co_timelog.h"
 
 #include "rt_gdh.h"
 
@@ -566,7 +566,7 @@ void EvList::event_alarm(mh_sMessage* msg)
       return;
 
     if (type != ev_eType_EventList)
-      timelog_sii(4, "Ev, New alarm", event->Info.Id.Nix, event->Info.Id.Idx);
+      log_info("Ev, New alarm %d %d", event->Info.Id.Nix, event->Info.Id.Idx);
 
     sts = get_destination(
         net_NetTimeToTime(&event->Info.EventTime), (void**)&dest);
@@ -772,7 +772,7 @@ void EvList::event_ack(mh_sAck* msg)
       // Check that this id not already inserted
       if (id_to_item(&event->Info.Id, (void**)&item))
         return;
-      timelog_sii(4, "Ev, new ack", event->Info.Id.Nix, event->Info.Id.Idx);
+      log_info("Ev, new ack %d %d", event->Info.Id.Nix, event->Info.Id.Idx);
 
       sts = get_destination(
           net_NetTimeToTime(&event->Info.EventTime), (void**)&dest);
@@ -866,7 +866,7 @@ void EvList::event_return(mh_sReturn* msg)
       // Check that this id not already inserted
       if (id_to_item(&event->Info.Id, (void**)&item))
         return;
-      timelog_sii(4, "Ev, New return", event->Info.Id.Nix, event->Info.Id.Idx);
+      log_info("Ev, New return %d %d", event->Info.Id.Nix, event->Info.Id.Idx);
 
       sts = get_destination(
           net_NetTimeToTime(&event->Info.EventTime), (void**)&dest);
@@ -1062,7 +1062,7 @@ void EvList::set_nodraw()
 void EvList::reset_nodraw()
 {
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }
 
 void EvList::start_trace()
@@ -1858,10 +1858,6 @@ void ItemCategory::alarm(EvList* evlist, ItemAlarm* item)
 
 void ItemCategory::close(EvList* evlist, double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(evlist->brow->ctx);
@@ -1871,16 +1867,12 @@ void ItemCategory::close(EvList* evlist, double x, double y)
     }
     brow_ResetOpen(node, evlist_mOpen_All);
     brow_ResetNodraw(evlist->brow->ctx);
-    brow_Redraw(evlist->brow->ctx, node_y);
+    brow_Redraw(evlist->brow->ctx);
   }
 }
 
 int ItemCategory::open_children(EvList* evlist, double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(evlist->brow->ctx);
@@ -1890,7 +1882,7 @@ int ItemCategory::open_children(EvList* evlist, double x, double y)
     }
     brow_ResetOpen(node, evlist_mOpen_All);
     brow_ResetNodraw(evlist->brow->ctx);
-    brow_Redraw(evlist->brow->ctx, node_y);
+    brow_Redraw(evlist->brow->ctx);
   } else {
     ItemAlarm* item;
     brow_tObject* object_list;
@@ -1962,7 +1954,7 @@ int ItemCategory::open_children(EvList* evlist, double x, double y)
     }
     brow_ResetNodraw(evlist->brow->ctx);
     if (child_exist)
-      brow_Redraw(evlist->brow->ctx, node_y);
+      brow_Redraw(evlist->brow->ctx);
   }
   return 1;
 }
@@ -2390,7 +2382,7 @@ void EvList::update_text()
     }
   }
   brow_ResetNodraw(browbase->ctx);
-  brow_Redraw(browbase->ctx, 0);
+  brow_Redraw(browbase->ctx);
 }
 
 int EvList::id_to_item(mh_sEventId* id, void** item)
