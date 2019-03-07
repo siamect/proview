@@ -172,6 +172,8 @@ struct plc_sThread {
   redu_tCtx redu;
   int tim_copy_lock;
   int str_copy_lock;
+  unsigned int ext_retry_connect;
+  unsigned int ext_retry_connect_cnt;
 };
 
 struct plc_sProcess {

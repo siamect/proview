@@ -119,7 +119,7 @@ int sev_import::init(void)
   if (EVEN(m_sts))
     throw co_error(m_sts);
 
-  sts = gdh_GetClassList(pwr_cClass_SevServer, &conf_oid);
+  sts = gdh_GetClassList(pwr_cClass_SevImportServer, &conf_oid);
   if (EVEN(sts)) {
     errh_CErrLog(PWR__SRVNOTCONF, 0);
     exit(0);

@@ -42,6 +42,7 @@
 #include "rt_vol.h"
 #include "rt_cvolc.h"
 #include "rt_sub.h"
+#include "pwr_systemclasses.h"
 
 gdb_sAliasServer* vol_AddAliasClient(pwr_tStatus* sts, gdb_sObject* op)
 {
@@ -532,16 +533,18 @@ mvol_sAttribute* vol_BlockNameToAttribute(pwr_tStatus* sts, mvol_sAttribute* ap,
   gdb_AssumeLocked;
 
   strcpy(aname, "");
-  for ( i = 0; i < pn->nObject; i++) {
+  for (i = 0; i < pn->nObject; i++) {
     strcat(aname, pn->object[i].name.orig);
     strcat(aname, "-");
   }
-  for ( i = 0; i < pn->nAttribute; i++) {
+  for (i = 0; i < pn->nAttribute; i++) {
     strcat(aname, pn->attribute[i].name.orig);
     if ( i != pn->nAttribute - 1)
       strcat(aname, "-");
   }
   strcat(aname, ".Value");
+  if (pn->hasIndex[pn->nAttribute-1])
+    sprintf(&aname[strlen(aname)], "[%d]", pn->index[pn->nAttribute-1]);
 
   cdh_ParseName(sts, pn, pn->poid, aname, pn->parseFlags.m);
 
@@ -668,8 +671,11 @@ gdb_sObject* vol_NameToObject(pwr_tStatus* sts, cdh_sParseName* pn,
       vp = pool_Address(NULL, gdbroot->pool, pop->l.vr);
       if (vp->l.flags.b.isMounted && vp->l.flags.b.isCached)
         return cvolc_NameToObject(sts, pop, pn, i, trans);
-      else
+      else {
+	if ( vp->g.cid == pwr_cClass_SystemVolume)
+	  *sts = GDH__NODYNLOCOBJ;
         return NULL;
+      }
     }
   }
 
@@ -1269,6 +1275,10 @@ gdb_sObject* vol_TranslateObject(pwr_tStatus* sts, gdb_sObject* op,
   if (op != NULL && op->g.flags.b.isMountClient && trans.b.mount) {
     vp = pool_Address(NULL, gdbroot->pool, op->l.vr);
     if (vp->l.flags.b.transMount) {
+      if (cdh_ObjidIsNull(op->g.soid) && op->g.cid == pwr_cClass_MountDynObject) {
+	*sts = GDH__NODYNLOCOBJ;
+	return NULL;
+      }
       op = vol_OidToObject(sts, op->g.soid, lo_flags, trans.m, cvol_eHint_none);
     }
   }

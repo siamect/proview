@@ -3236,6 +3236,11 @@ pwr_tStatus gdh_RefObjectInfoList(
       char* s;
       pwr_tStatus lsts;
 
+      if ( sts == GDH__NODYNLOCOBJ) {
+	rsts = sts;
+	continue;
+      }
+	
       dl = 0;
 
       /* Check if this is an erroneous local attribute */

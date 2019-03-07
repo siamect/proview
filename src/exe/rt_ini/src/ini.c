@@ -78,6 +78,7 @@
 #define cPrio_report (cPrio_base + 5)
 #define cPrio_sevhistmon (cPrio_base + 15)
 #define cPrio_sev_server (cPrio_base + 15)
+#define cPrio_sev_import (cPrio_base + 15)
 #define cPrio_powerlink (cPrio_base + 15)
 #define cPrio_plc_init (cPrio_base + 5)
 #define cPrio_remh (cPrio_base + 5)
@@ -199,6 +200,10 @@ void ini_ProcTable(pwr_tStatus* status, ini_sContext* cp)
 
   pp = ini_ProcInsert(sts, cp, "pwr_sev_server", "pwr_sev_server_%d", 0, 1,
       "sev_server", cPrio_sev_server, 0, pwr_cClass_SevServer, "", 0);
+  pp->proc.flags.b.system = 1;
+
+  pp = ini_ProcInsert(sts, cp, "pwr_sev_import", "pwr_sev_import_%d", 0, 1,
+      "sev_import", cPrio_sev_import, 0, pwr_cClass_SevImportServer, "", 0);
   pp->proc.flags.b.system = 1;
 
   pp = ini_ProcInsert(sts, cp, "pwr_powerlink", "pwr_powerlink_%d", 0, 1,

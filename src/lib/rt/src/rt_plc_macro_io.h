@@ -34,6 +34,8 @@
  * General Public License plus this exception.
  */
 
+#include "rt_gdh_msg.h"
+
 /*		 PREPROCESSOR RUTINER					    */
 
 /*_*
@@ -631,12 +633,15 @@
 */
 #define GetExtFloat32_init(obj, name)                                          \
   {                                                                            \
-    gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tFloat32));      \
+    if (gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tFloat32)) == GDH__NODYNLOCOBJ) \
+      obj->ExtP = 0;							       \
   }
 
-#define GetExtFloat32_exec(obj)                                                \
+#define GetExtFloat32_exec(obj, name)					       \
   if (obj->ExtP)                                                               \
-    obj->ActVal = *obj->ExtP;
+    obj->ActVal = *obj->ExtP;						       \
+  else if (tp->ext_retry_connect)					       \
+    GetExtFloat32_init(obj, name);
 
 /*_*
   GetExtFloat64
@@ -644,12 +649,15 @@
 */
 #define GetExtFloat64_init(obj, name)                                          \
   {                                                                            \
-    gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tFloat64));      \
+    if (gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tFloat64)) == GDH__NODYNLOCOBJ) \
+      obj->ExtP = 0;							       \
   }
 
-#define GetExtFloat64_exec(obj)                                                \
+#define GetExtFloat64_exec(obj, name)					\
   if (obj->ExtP)                                                               \
-    obj->ActVal = *obj->ExtP;
+    obj->ActVal = *obj->ExtP;						       \
+  else if (tp->ext_retry_connect)					       \
+    GetExtFloat64_init(obj, name);
 
 /*_*
   GetExtInt64
@@ -657,12 +665,15 @@
 */
 #define GetExtInt64_init(obj, name)                                            \
   {                                                                            \
-    gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tInt64));        \
+    if (gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tInt64)) == GDH__NODYNLOCOBJ) \
+      obj->ExtP = 0;							       \
   }
 
-#define GetExtInt64_exec(obj)                                                  \
+#define GetExtInt64_exec(obj, name)						\
   if (obj->ExtP)                                                               \
-    obj->ActVal = *obj->ExtP;
+    obj->ActVal = *obj->ExtP;						       \
+  else if (tp->ext_retry_connect)					       \
+    GetExtInt64_init(obj, name);
 
 /*_*
   GetExtUInt64
@@ -670,12 +681,15 @@
 */
 #define GetExtUInt64_init(obj, name)                                           \
   {                                                                            \
-    gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tUInt64));       \
+    if (gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tUInt64)) == GDH__NODYNLOCOBJ) \
+      obj->ExtP = 0;							       \
   }
 
-#define GetExtUInt64_exec(obj)                                                 \
+#define GetExtUInt64_exec(obj, name)						\
   if (obj->ExtP)                                                               \
-    obj->ActVal = *obj->ExtP;
+    obj->ActVal = *obj->ExtP;						       \
+  else if (tp->ext_retry_connect)					       \
+    GetExtUInt64_init(obj, name);
 
 /*_*
   GetExtInt32
@@ -683,12 +697,15 @@
 */
 #define GetExtInt32_init(obj, name)                                            \
   {                                                                            \
-    gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tInt32));        \
+    if (gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tInt32)) == GDH__NODYNLOCOBJ)	\
+      obj->ExtP = 0;							       \
   }
 
-#define GetExtInt32_exec(obj)                                                  \
+#define GetExtInt32_exec(obj, name)						\
   if (obj->ExtP)                                                               \
-    obj->ActVal = *obj->ExtP;
+    obj->ActVal = *obj->ExtP;						       \
+  else if (tp->ext_retry_connect)					       \
+    GetExtInt32_init(obj, name);
 
 /*_*
   GetExtUInt32
@@ -696,12 +713,15 @@
 */
 #define GetExtUInt32_init(obj, name)                                           \
   {                                                                            \
-    gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tUInt32));       \
+    if (gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tUInt32)) == GDH__NODYNLOCOBJ) \
+      obj->ExtP = 0;							       \
   }
 
-#define GetExtUInt32_exec(obj)                                                 \
+#define GetExtUInt32_exec(obj, name)						\
   if (obj->ExtP)                                                               \
-    obj->ActVal = *obj->ExtP;
+    obj->ActVal = *obj->ExtP;						       \
+  else if (tp->ext_retry_connect)					       \
+    GetExtUInt32_init(obj, name);
 
 /*_*
   GetExtInt16
@@ -709,12 +729,15 @@
 */
 #define GetExtInt16_init(obj, name)                                            \
   {                                                                            \
-    gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tInt16));        \
+    if (gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tInt16)) == GDH__NODYNLOCOBJ) \
+      obj->ExtP = 0;							       \
   }
 
-#define GetExtInt16_exec(obj)                                                  \
+#define GetExtInt16_exec(obj, name)						\
   if (obj->ExtP)                                                               \
-    obj->ActVal = *obj->ExtP;
+    obj->ActVal = *obj->ExtP;						       \
+  else if (tp->ext_retry_connect)					       \
+    GetExtInt16_init(obj, name);
 
 /*_*
   GetExtUInt16
@@ -722,12 +745,15 @@
 */
 #define GetExtUInt16_init(obj, name)                                           \
   {                                                                            \
-    gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tUInt16));       \
+    if (gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tUInt16)) == GDH__NODYNLOCOBJ) \
+      obj->ExtP = 0;							       \
   }
 
-#define GetExtUInt16_exec(obj)                                                 \
+#define GetExtUInt16_exec(obj, name)						\
   if (obj->ExtP)                                                               \
-    obj->ActVal = *obj->ExtP;
+    obj->ActVal = *obj->ExtP;						       \
+  else if (tp->ext_retry_connect)					       \
+    GetExtUInt16_init(obj, name);
 
 /*_*
   GetExtInt8
@@ -735,12 +761,15 @@
 */
 #define GetExtInt8_init(obj, name)                                             \
   {                                                                            \
-    gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tInt8));         \
+    if (gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tInt8)) == GDH__NODYNLOCOBJ) \
+      obj->ExtP = 0;							       \
   }
 
-#define GetExtInt8_exec(obj)                                                   \
+#define GetExtInt8_exec(obj, name)						\
   if (obj->ExtP)                                                               \
-    obj->ActVal = *obj->ExtP;
+    obj->ActVal = *obj->ExtP;						       \
+  else if (tp->ext_retry_connect)					       \
+    GetExtInt8_init(obj, name);
 
 /*_*
   GetExtUInt8
@@ -748,12 +777,15 @@
 */
 #define GetExtUInt8_init(obj, name)                                            \
   {                                                                            \
-    gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tUInt8));        \
+    if (gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tUInt8)) == GDH__NODYNLOCOBJ) \
+      obj->ExtP = 0;							       \
   }
 
-#define GetExtUInt8_exec(obj)                                                  \
+#define GetExtUInt8_exec(obj, name)						\
   if (obj->ExtP)                                                               \
-    obj->ActVal = *obj->ExtP;
+    obj->ActVal = *obj->ExtP;						       \
+  else if (tp->ext_retry_connect)					       \
+    GetExtUInt8_init(obj, name);
 
 /*_*
   GetExtBoolean
@@ -761,12 +793,15 @@
 */
 #define GetExtBoolean_init(obj, name)                                          \
   {                                                                            \
-    gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tBoolean));      \
+    if (gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tBoolean)) == GDH__NODYNLOCOBJ) \
+      obj->ExtP = 0;							       \
   }
 
-#define GetExtBoolean_exec(obj)                                                \
+#define GetExtBoolean_exec(obj, name)					\
   if (obj->ExtP)                                                               \
-    obj->ActVal = *obj->ExtP;
+    obj->ActVal = *obj->ExtP;						       \
+  else if (tp->ext_retry_connect)					       \
+    GetExtBoolean_init(obj, name);
 
 /*_*
   GetExtString
@@ -774,12 +809,15 @@
 */
 #define GetExtString_init(obj, name)                                           \
   {                                                                            \
-    gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tString80));     \
+    if (gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tString80)) == GDH__NODYNLOCOBJ) \
+      obj->ExtP = 0;							       \
   }
 
-#define GetExtString_exec(obj)                                                 \
+#define GetExtString_exec(obj, name)						\
   if (obj->ExtP)                                                               \
-    strncpy(obj->ActVal, obj->ExtP, sizeof(pwr_tString80));
+    strncpy(obj->ActVal, (const char *)obj->ExtP, sizeof(pwr_tString80)); \
+  else if (tp->ext_retry_connect)					       \
+    GetExtString_init(obj, name);
 
 /*_*
   GetExtTime
@@ -787,12 +825,15 @@
 */
 #define GetExtTime_init(obj, name)                                             \
   {                                                                            \
-    gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tTime));         \
+    if (gdh_RefObjectInfo(name, (void**)&obj->ExtP, 0, sizeof(pwr_tTime)) == GDH__NODYNLOCOBJ) \
+      obj->ExtP = 0;							       \
   }
 
-#define GetExtTime_exec(obj)                                                   \
+#define GetExtTime_exec(obj, name)						\
   if (obj->ExtP)                                                               \
-    obj->ActVal = *obj->ExtP;
+    obj->ActVal = *obj->ExtP;						       \
+  else if (tp->ext_retry_connect)					       \
+    GetExtTime_init(obj, name);
 
 /*_*
   Float64toA

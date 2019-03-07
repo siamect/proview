@@ -103,6 +103,7 @@ readonly	<Object or attribute is read only>			/error
 remotemount	<Remotly mounted object>				/error
 dblock		<Unable to map db lock>					/error
 connlost	<Connection lost>					/error
+nodynlocobj	<noexisting dynamic local object>			/error
 .end
 
 

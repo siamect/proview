@@ -92,7 +92,7 @@ public:
   tree_sTable* m_refid;
   unsigned int m_msg_id;
   pwr_tStatus m_server_status;
-  pwr_sClass_SevServer* m_config;
+  pwr_sClass_SevImportServer* m_config;
   pwr_tDlid m_config_dlid;
   std::vector<sev_exportitem> m_items;
 
