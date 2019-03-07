@@ -226,10 +226,6 @@ int GlowDraw::get_text_extent(const char* text, int len, glow_eDrawType gc_type,
   return 1;
 }
 
-void GlowDraw::copy_area(GlowWind* w, int x, int y)
-{
-}
-
 void GlowDraw::set_inputfocus(GlowWind* w)
 {
 }

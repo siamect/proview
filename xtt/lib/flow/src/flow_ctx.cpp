@@ -1450,37 +1450,9 @@ int FlowCtx::event_handler_nav(flow_eEvent event, int x, int y)
       offset_y -= mainwind_delta_y;
       a.traverse(mainwind_delta_x, mainwind_delta_y);
 
-      fdraw->copy_area(this, mainwind_delta_x, mainwind_delta_y);
-      //        clear();
-      if (!unobscured)
-        draw(0, 0, window_width, window_height);
-      else {
-        if (mainwind_delta_x >= 0 && mainwind_delta_y >= 0) {
-          if (mainwind_delta_x)
-            draw(0, 0, mainwind_delta_x, window_height);
-          if (mainwind_delta_y)
-            draw(mainwind_delta_x, 0, window_width, mainwind_delta_y);
-        } else if (mainwind_delta_x <= 0 && mainwind_delta_y <= 0) {
-          if (mainwind_delta_x)
-            draw(window_width + mainwind_delta_x, 0, window_width,
-                window_height);
-          if (mainwind_delta_y)
-            draw(0, window_height + mainwind_delta_y,
-                window_width + mainwind_delta_x, window_height);
-        } else if (mainwind_delta_x <= 0 && mainwind_delta_y >= 0) {
-          if (mainwind_delta_x)
-            draw(window_width + mainwind_delta_x, 0, window_width,
-                window_height);
-          if (mainwind_delta_y)
-            draw(0, 0, window_width + mainwind_delta_x, mainwind_delta_y);
-        } else {
-          if (mainwind_delta_x)
-            draw(0, 0, mainwind_delta_x, window_height);
-          if (mainwind_delta_y)
-            draw(mainwind_delta_x, window_height + mainwind_delta_y,
-                window_width, window_height);
-        }
-      }
+      clear();
+      draw(0, 0, window_width, window_height);
+
       change_scrollbar();
     } else if (nav_rect_zoom_active) {
       int delta_x, delta_y;
@@ -2290,39 +2262,9 @@ void FlowCtx::scroll(int delta_x, int delta_y)
 
   move_widgets(delta_x, delta_y);
 
-  if (window_width <= ABS(delta_x) || window_height <= ABS(delta_y)) {
-    // Entirely new area
-    clear();
-    draw(0, 0, window_width, window_height);
-  } else {
-    fdraw->copy_area(this, delta_x, delta_y);
-    if (!unobscured || widget_cnt)
-      draw(0, 0, window_width, window_height);
-    else {
-      if (delta_x >= 0 && delta_y >= 0) {
-        if (delta_x)
-          draw(0, 0, delta_x, window_height);
-        if (delta_y)
-          draw(delta_x, 0, window_width, delta_y);
-      } else if (delta_x <= 0 && delta_y <= 0) {
-        if (delta_x)
-          draw(window_width + delta_x, 0, window_width, window_height);
-        if (delta_y)
-          draw(0, window_height + delta_y, window_width + delta_x,
-              window_height);
-      } else if (delta_x <= 0 && delta_y >= 0) {
-        if (delta_x)
-          draw(window_width + delta_x, 0, window_width, window_height);
-        if (delta_y)
-          draw(0, 0, window_width + delta_x, delta_y);
-      } else {
-        if (delta_x)
-          draw(0, 0, delta_x, window_height);
-        if (delta_y)
-          draw(delta_x, window_height + delta_y, window_width, window_height);
-      }
-    }
-  }
+  clear();
+  draw(0, 0, window_width, window_height);
+
   nav_clear();
   nav_draw(0, 0, nav_window_width, nav_window_height);
 }

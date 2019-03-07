@@ -1507,38 +1507,9 @@ int GlowCtx::event_handler_nav(glow_eEvent event, int x, int y)
         ((GrowCtx*)this)->polyline_last_end_y += mainwind_delta_y;
       }
 
-      gdraw->copy_area(&mw, mainwind_delta_x, mainwind_delta_y);
-      //        clear();
-      if (!unobscured)
-        draw(&mw, 0, 0, mw.window_width, mw.window_height);
-      else {
-        if (mainwind_delta_x >= 0 && mainwind_delta_y >= 0) {
-          if (mainwind_delta_x)
-            draw(&mw, 0, 0, mainwind_delta_x, mw.window_height);
-          if (mainwind_delta_y)
-            draw(&mw, mainwind_delta_x, 0, mw.window_width, mainwind_delta_y);
-        } else if (mainwind_delta_x <= 0 && mainwind_delta_y <= 0) {
-          if (mainwind_delta_x)
-            draw(&mw, mw.window_width + mainwind_delta_x, 0, mw.window_width,
-                mw.window_height);
-          if (mainwind_delta_y)
-            draw(&mw, 0, mw.window_height + mainwind_delta_y,
-                mw.window_width + mainwind_delta_x, mw.window_height);
-        } else if (mainwind_delta_x <= 0 && mainwind_delta_y >= 0) {
-          if (mainwind_delta_x)
-            draw(&mw, mw.window_width + mainwind_delta_x, 0, mw.window_width,
-                mw.window_height);
-          if (mainwind_delta_y)
-            draw(&mw, 0, 0, mw.window_width + mainwind_delta_x,
-                mainwind_delta_y);
-        } else {
-          if (mainwind_delta_x)
-            draw(&mw, 0, 0, mainwind_delta_x, mw.window_height);
-          if (mainwind_delta_y)
-            draw(&mw, mainwind_delta_x, mw.window_height + mainwind_delta_y,
-                mw.window_width, mw.window_height);
-        }
-      }
+      clear(&mw);
+      draw(&mw, 0, 0, mw.window_width, mw.window_height);
+
       change_scrollbar();
     } else if (nav_rect_zoom_active) {
       int delta_x, delta_y;
@@ -2083,42 +2054,9 @@ void GlowCtx::scroll(int delta_x, int delta_y)
 
   move_widgets(delta_x, delta_y);
 
-  if (mw.window_width <= ABS(delta_x) || mw.window_height <= ABS(delta_y)) {
-    // Entirely new area
-    clear(&mw);
-    draw(&mw, 0, 0, mw.window_width, mw.window_height);
-  } else {
-    gdraw->copy_area(&mw, delta_x, delta_y);
-    if (!unobscured || widget_cnt)
-      draw(&mw, 0, 0, mw.window_width, mw.window_height);
-    else {
-      if (delta_x >= 0 && delta_y >= 0) {
-        if (delta_x)
-          draw(&mw, 0, 0, delta_x, mw.window_height);
-        if (delta_y)
-          draw(&mw, delta_x, 0, mw.window_width, delta_y);
-      } else if (delta_x <= 0 && delta_y <= 0) {
-        if (delta_x)
-          draw(&mw, mw.window_width + delta_x, 0, mw.window_width,
-              mw.window_height);
-        if (delta_y)
-          draw(&mw, 0, mw.window_height + delta_y, mw.window_width + delta_x,
-              mw.window_height);
-      } else if (delta_x <= 0 && delta_y >= 0) {
-        if (delta_x)
-          draw(&mw, mw.window_width + delta_x, 0, mw.window_width,
-              mw.window_height);
-        if (delta_y)
-          draw(&mw, 0, 0, mw.window_width + delta_x, delta_y);
-      } else {
-        if (delta_x)
-          draw(&mw, 0, 0, delta_x, mw.window_height);
-        if (delta_y)
-          draw(&mw, delta_x, mw.window_height + delta_y, mw.window_width,
-              mw.window_height);
-      }
-    }
-  }
+  clear(&mw);
+  draw(&mw, 0, 0, mw.window_width, mw.window_height);
+
   clear(&navw);
   draw(&navw, 0, 0, navw.window_width, navw.window_height);
   if (ctx_type == glow_eCtxType_Grow) {

@@ -1604,57 +1604,6 @@ int FlowDrawQt::get_text_extent_pango(FlowCtx* ctx, const char* text, int len,
   return 1;
 }
 
-void FlowDrawQt::copy_area(FlowCtx* ctx, int x, int y)
-{
-  if (ctx->nodraw) {
-    return;
-  }
-
-  QPixmap screenShot = QPixmap::grabWidget(window);
-  unique_ptr<QPainter> painter = get_painter(flow_eDrawType_Line, 3);
-  if (x >= 0 && y >= 0) {
-    painter->drawPixmap(
-        x, y, screenShot, 0, 0, ctx->window_width - x, ctx->window_height - y);
-    if (x) {
-      painter->eraseRect(0, 0, x, ctx->window_height);
-    }
-    if (y) {
-      painter->eraseRect(x, 0, ctx->window_width, y);
-    }
-  } else if (x <= 0 && y <= 0) {
-    painter->drawPixmap(0, 0, screenShot, -x, -y, ctx->window_width + x,
-        ctx->window_height + y);
-    if (x) {
-      painter->eraseRect(
-          ctx->window_width + x, 0, ctx->window_width, ctx->window_height);
-    }
-    if (y) {
-      painter->eraseRect(
-          0, ctx->window_height + y, ctx->window_width + x, ctx->window_height);
-    }
-  } else if (x <= 0 && y >= 0) {
-    painter->drawPixmap(
-        0, y, screenShot, -x, 0, ctx->window_width + x, ctx->window_height - y);
-    if (x) {
-      painter->eraseRect(
-          ctx->window_width + x, 0, ctx->window_width, ctx->window_height);
-    }
-    if (y) {
-      painter->eraseRect(0, 0, ctx->window_width + x, y);
-    }
-  } else {
-    painter->drawPixmap(
-        x, 0, screenShot, 0, -y, ctx->window_width - x, ctx->window_height + y);
-    if (x) {
-      painter->eraseRect(0, 0, x, ctx->window_height);
-    }
-    if (y) {
-      painter->eraseRect(
-          x, ctx->window_height + y, ctx->window_width, ctx->window_height);
-    }
-  }
-}
-
 void FlowDrawQt::set_inputfocus(FlowCtx* ctx)
 {
   window->setFocus(Qt::OtherFocusReason);

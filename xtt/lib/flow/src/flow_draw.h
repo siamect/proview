@@ -143,7 +143,6 @@ public:
   virtual void set_nav_cursor(FlowCtx* ctx, draw_eCursor cursor);
   virtual int get_text_extent(FlowCtx* ctx, const char* text, int len,
       flow_eDrawType gc_type, int idx, int* width, int* height, double size);
-  virtual void copy_area(FlowCtx* ctx, int x, int y);
   virtual int create_input(FlowCtx* ctx, int x, int y, char* text, int len,
       int idx, int width, int height, void* node, int number, void** data);
   virtual int close_input(FlowCtx* ctx, void* data);

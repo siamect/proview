@@ -225,38 +225,9 @@ int CurveCtx::event_handler_nav(glow_eEvent event, int x, int y)
         ((GrowCtx*)this)->polyline_last_end_y += mainwind_delta_y;
       }
 
-      gdraw->copy_area(&mw, mainwind_delta_x, mainwind_delta_y);
-      //        clear();
-      if (!unobscured)
-        draw(&mw, 0, 0, mw.window_width, mw.window_height);
-      else {
-        if (mainwind_delta_x >= 0 && mainwind_delta_y >= 0) {
-          if (mainwind_delta_x)
-            draw(&mw, 0, 0, mainwind_delta_x, mw.window_height);
-          if (mainwind_delta_y)
-            draw(&mw, mainwind_delta_x, 0, mw.window_width, mainwind_delta_y);
-        } else if (mainwind_delta_x <= 0 && mainwind_delta_y <= 0) {
-          if (mainwind_delta_x)
-            draw(&mw, mw.window_width + mainwind_delta_x, 0, mw.window_width,
-                mw.window_height);
-          if (mainwind_delta_y)
-            draw(&mw, 0, mw.window_height + mainwind_delta_y,
-                mw.window_width + mainwind_delta_x, mw.window_height);
-        } else if (mainwind_delta_x <= 0 && mainwind_delta_y >= 0) {
-          if (mainwind_delta_x)
-            draw(&mw, mw.window_width + mainwind_delta_x, 0, mw.window_width,
-                mw.window_height);
-          if (mainwind_delta_y)
-            draw(&mw, 0, 0, mw.window_width + mainwind_delta_x,
-                mainwind_delta_y);
-        } else {
-          if (mainwind_delta_x)
-            draw(&mw, 0, 0, mainwind_delta_x, mw.window_height);
-          if (mainwind_delta_y)
-            draw(&mw, mainwind_delta_x, mw.window_height + mainwind_delta_y,
-                mw.window_width, mw.window_height);
-        }
-      }
+      clear(&mw);
+      draw(&mw, 0, 0, mw.window_width, mw.window_height);
+
       change_scrollbar();
     } else if (nav_rect_zoom_active) {
       int delta_x, delta_y;
