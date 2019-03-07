@@ -370,7 +370,7 @@ void WbBckWNav::show()
   }
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }
 
 void WbBckWNav::clear()

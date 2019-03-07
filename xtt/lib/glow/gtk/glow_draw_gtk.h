@@ -163,8 +163,6 @@ public:
   virtual int get_text_extent(const char* text, int len, glow_eDrawType gc_type,
       int idx, glow_eFont font_idx, int* width, int* height, int* descent,
       double size, int rot);
-  virtual void copy_area(GlowWind* w, int x, int y);
-  virtual void clear_area(GlowWind* w, int ll_x, int ur_x, int ll_y, int ur_y);
   virtual void set_inputfocus(GlowWind* w);
   virtual void set_background(GlowWind* w, glow_eDrawType drawtype,
       glow_tPixmap pixmap, glow_tImImage image, int pixmap_width,

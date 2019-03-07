@@ -49,8 +49,7 @@
 
 class GsdmlAttrQtWidget;
 
-class GsdmlAttrQt : public GsdmlAttr
-{
+class GsdmlAttrQt : public GsdmlAttr {
 public:
   GsdmlAttrQtWidget* toplevel;
   QWidget* brow_widget;
@@ -76,12 +75,15 @@ public:
   void change_value();
 };
 
-class GsdmlAttrQtWidget : public QWidget
-{
+class GsdmlAttrQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  GsdmlAttrQtWidget(GsdmlAttrQt* parent_ctx) : QWidget(), attr(parent_ctx) {}
+  GsdmlAttrQtWidget(GsdmlAttrQt* parent_ctx)
+      : QWidget()
+      , attr(parent_ctx)
+  {
+  }
 
 protected:
   void focusInEvent(QFocusEvent* event);

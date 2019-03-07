@@ -41,8 +41,7 @@
 
 #include "cow_pb_gsd.h"
 
-typedef struct
-{
+typedef struct {
   void* value;
   char name[80];
   int type;
@@ -57,8 +56,7 @@ typedef struct
 class GsdAttrNav;
 class CoWow;
 
-class GsdAttr
-{
+class GsdAttr {
 public:
   void* parent_ctx;
   char name[80];

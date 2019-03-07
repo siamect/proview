@@ -179,12 +179,12 @@
 #define DPS_DIAG_BIT_WAIT_UNTIL_FETCHED 0x80
 
 #define DPS_DIAG_BIT_STATUS_MASK                                               \
-  (DPS_DIAG_BIT_EXT_DIAG | DPS_DIAG_BIT_STAT_DIAG |                            \
-   DPS_DIAG_BIT_EXT_DIAG_OVERFLOW)
+  (DPS_DIAG_BIT_EXT_DIAG | DPS_DIAG_BIT_STAT_DIAG                              \
+      | DPS_DIAG_BIT_EXT_DIAG_OVERFLOW)
 
 #define DPS_DIAG_BIT_MASK                                                      \
-  (DPS_DIAG_BIT_EXT_DIAG | DPS_DIAG_BIT_STAT_DIAG |                            \
-   DPS_DIAG_BIT_EXT_DIAG_OVERFLOW | DPS_DIAG_BIT_WAIT_UNTIL_FETCHED)
+  (DPS_DIAG_BIT_EXT_DIAG | DPS_DIAG_BIT_STAT_DIAG                              \
+      | DPS_DIAG_BIT_EXT_DIAG_OVERFLOW | DPS_DIAG_BIT_WAIT_UNTIL_FETCHED)
 
 /*--- DPS SPC3 SPECIAL USR_PRM_BYTE ----------------------------------------*/
 
@@ -193,8 +193,8 @@
 #define DPS_SPC3_USR_PRM_WD_BASE_1MS 0x04
 
 #define DPS_SPC3_USR_PRM_MASK                                                  \
-  (DPS_SPC3_USR_PRM_DISABLE_STARTBIT | DPS_SPC3_USR_PRM_DISABLE_STOPBIT |      \
-   DPS_SPC3_USR_PRM_WD_BASE_1MS)
+  (DPS_SPC3_USR_PRM_DISABLE_STARTBIT | DPS_SPC3_USR_PRM_DISABLE_STOPBIT        \
+      | DPS_SPC3_USR_PRM_WD_BASE_1MS)
 
 /*--- DPS INPUT / OUTPUT STATUS --------------------------------------------*/
 
@@ -216,10 +216,9 @@
 /*--- DPS USER INTERFACE STRUCTURES ----------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-typedef struct _T_DPS_INPUT_DATA_HEADER
-{
+typedef struct _T_DPS_INPUT_DATA_HEADER {
   USIGN8 input_data_len; /* length of DPS_USR input data, 0..244 */
-  USIGN8 input_state;    /* status of input image: DPS_INPUT_STATE_xxx */
+  USIGN8 input_state; /* status of input image: DPS_INPUT_STATE_xxx */
 
   USIGN8 input_data[DP_MAX_INPUT_DATA_LEN];
 
@@ -227,10 +226,9 @@ typedef struct _T_DPS_INPUT_DATA_HEADER
 
 /*--------------------------------------------------------------------------*/
 
-typedef struct _T_DPS_OUTPUT_DATA_HEADER
-{
+typedef struct _T_DPS_OUTPUT_DATA_HEADER {
   USIGN8 output_data_len; /* length of DP master output data, 0..244 */
-  USIGN8 output_state;    /* status of output image: DPS_OUTPUT_STATE_xxx */
+  USIGN8 output_state; /* status of output image: DPS_OUTPUT_STATE_xxx */
 
   USIGN8 output_data[DP_MAX_OUTPUT_DATA_LEN];
 
@@ -238,8 +236,7 @@ typedef struct _T_DPS_OUTPUT_DATA_HEADER
 
 /*--------------------------------------------------------------------------*/
 
-typedef struct _T_DPS_CON_IND
-{
+typedef struct _T_DPS_CON_IND {
   USIGN16 status;
 
 } T_DPS_CON_IND;
@@ -248,26 +245,25 @@ typedef struct _T_DPS_CON_IND
 /*--- DPS USIF SERVICE STRUCTURES ------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-typedef struct _T_DPS_INIT_SLAVE_REQ
-{
+typedef struct _T_DPS_INIT_SLAVE_REQ {
   USIGN8
   slave_add; /* 0..125, DPS_DEFAULT_SLAVE_ADD, DPS_NON_VOLATILE_SLAVE_ADD */
   USIGN8 min_tsdr; /* min. station delay responder, default 0, 11..255 */
 
-  PB_BOOL auto_cfg_response;   /* CFG check by DPS_USR ? PB_FALSE : PB_TRUE */
-  PB_BOOL auto_prm_response;   /* PRM check by DPS_USR ? PB_FALSE : PB_TRUE */
+  PB_BOOL auto_cfg_response; /* CFG check by DPS_USR ? PB_FALSE : PB_TRUE */
+  PB_BOOL auto_prm_response; /* PRM check by DPS_USR ? PB_FALSE : PB_TRUE */
   PB_BOOL auto_startup_inputs; /* first input values by DPS at startup ? */
 
   PB_BOOL sync_mode_supported; /* activation of DPS operation modes ? */
   PB_BOOL freeze_mode_supported;
   PB_BOOL set_slave_add_supported; /* activation of DPS service ? */
 
-  USIGN8 max_input_data_len;    /* 0..DP_MAX_INPUT_DATA_LEN */
-  USIGN8 max_output_data_len;   /* 0..DP_MAX_OUTPUT_DATA_LEN */
-  USIGN8 max_cfg_data_len;      /* 1..DP_MAX_CFG_DATA_LEN */
-  USIGN8 max_usr_prm_data_len;  /* 0..DP_MAX_USER_PRM_DATA_LEN */
+  USIGN8 max_input_data_len; /* 0..DP_MAX_INPUT_DATA_LEN */
+  USIGN8 max_output_data_len; /* 0..DP_MAX_OUTPUT_DATA_LEN */
+  USIGN8 max_cfg_data_len; /* 1..DP_MAX_CFG_DATA_LEN */
+  USIGN8 max_usr_prm_data_len; /* 0..DP_MAX_USER_PRM_DATA_LEN */
   USIGN8 max_ext_diag_data_len; /* 0..DP_MAX_EXT_DIAG_DATA_LEN */
-  USIGN8 max_address_data_len;  /* 0..DP_MAX_TELEGRAM_LEN */
+  USIGN8 max_address_data_len; /* 0..DP_MAX_TELEGRAM_LEN */
 
   USIGN16 ident_number; /* 0 == Softing IdentNumber (Default) */
 
@@ -285,8 +281,7 @@ typedef struct _T_DPS_INIT_SLAVE_REQ
 
 /*--------------------------------------------------------------------------*/
 
-typedef struct _T_DPS_INIT_SLAVE_CON
-{
+typedef struct _T_DPS_INIT_SLAVE_CON {
   USIGN16 status; /* OK, IV, NO */
 
   INT16 remaining_frame_memory; /* left memory for telegram buffers */
@@ -299,8 +294,7 @@ typedef VOID T_DPS_EXIT_SLAVE_REQ; /* no request parameters */
 
 /*--------------------------------------------------------------------------*/
 
-typedef struct _T_DPS_EXIT_SLAVE_CON
-{
+typedef struct _T_DPS_EXIT_SLAVE_CON {
   USIGN16 status; /* OK */
 
 } T_DPS_EXIT_SLAVE_CON;
@@ -311,30 +305,29 @@ typedef VOID T_DPS_GET_STATUS_REQ; /* no request parameters */
 
 /*--------------------------------------------------------------------------*/
 
-typedef struct _T_DPS_GET_STATUS_CON_IND
-{
+typedef struct _T_DPS_GET_STATUS_CON_IND {
   USIGN16 status; /* OK, TO */
 
   USIGN8 slave_state; /* operation state of DP slave, DPS_STATE_xxx */
-  USIGN8 diag_state;  /* diagnostic state of DP slave, DPS_DIAG_BIT_xxx */
+  USIGN8 diag_state; /* diagnostic state of DP slave, DPS_DIAG_BIT_xxx */
 
   USIGN16 ident_number; /* PNO ident number of this station */
 
   USIGN8 number_inputs; /* I/O configuration in bytes */
   USIGN8 number_outputs;
 
-  USIGN8 slave_add;              /* current station address, 0..125, 126 */
+  USIGN8 slave_add; /* current station address, 0..125, 126 */
   USIGN8 non_volatile_slave_add; /* via Set_Slave_Add set address */
 
   USIGN8 master_add; /* 0..125 or DP_NO_MASTER_ADDRESS */
-  USIGN8 baud_rate;  /* DPS_KBAUD_xxx, DPS_MBAUD_xxx, DPS_NO_BUS_TRAFFIC */
+  USIGN8 baud_rate; /* DPS_KBAUD_xxx, DPS_MBAUD_xxx, DPS_NO_BUS_TRAFFIC */
 
-  PB_BOOL sync_enabled;   /* sync mode enabled by DP master ? */
+  PB_BOOL sync_enabled; /* sync mode enabled by DP master ? */
   PB_BOOL freeze_enabled; /* freeze mode enabled by DP master ? */
-  PB_BOOL clear_data;     /* DP master in CLEAR operation mode ? */
+  PB_BOOL clear_data; /* DP master in CLEAR operation mode ? */
 
-  PB_BOOL prm_await_response;   /* waits for DPS_Set_Prm.res from DPS_USR */
-  PB_BOOL cfg_await_response;   /* waits for DPS_Chk_Cfg.res from DPS_USR */
+  PB_BOOL prm_await_response; /* waits for DPS_Set_Prm.res from DPS_USR */
+  PB_BOOL cfg_await_response; /* waits for DPS_Chk_Cfg.res from DPS_USR */
   PB_BOOL await_startup_inputs; /* waits for first inputs from DPS_USR */
 
   USIGN8 reserved[16]; /* reserved for extensions, ignore 0 value */
@@ -343,8 +336,7 @@ typedef struct _T_DPS_GET_STATUS_CON_IND
 
 /*==========================================================================*/
 
-typedef struct _T_DPS_SLAVE_DIAG_REQ
-{
+typedef struct _T_DPS_SLAVE_DIAG_REQ {
   USIGN8 diag_state; /* diagnostic state of DP slave, DPS_DIAG_BIT_xxx */
 
   USIGN8 ext_diag_data_len; /* 0..DP_MAX_EXT_DIAG_DATA_LEN */
@@ -354,19 +346,17 @@ typedef struct _T_DPS_SLAVE_DIAG_REQ
 
 /*--------------------------------------------------------------------------*/
 
-typedef struct _T_DPS_SLAVE_DIAG_CON
-{
+typedef struct _T_DPS_SLAVE_DIAG_CON {
   USIGN16 status; /* OK, IV, NO */
 
 } T_DPS_SLAVE_DIAG_CON;
 
 /*==========================================================================*/
 
-typedef struct _T_DPS_CHK_CFG_IND
-{
+typedef struct _T_DPS_CHK_CFG_IND {
   USIGN16 status; /* OK */
 
-  USIGN8 cfg_data_len;        /* CFG from DP master, see EN 50170 */
+  USIGN8 cfg_data_len; /* CFG from DP master, see EN 50170 */
   PB_BOOL cfg_await_response; /* the indication has to be acknowledged */
 
   USIGN8 cfg_data[DP_MAX_CFG_DATA_LEN]; /* cfg_data_len */
@@ -375,19 +365,17 @@ typedef struct _T_DPS_CHK_CFG_IND
 
 /*--------------------------------------------------------------------------*/
 
-typedef struct _T_DPS_CHK_CFG_RES
-{
+typedef struct _T_DPS_CHK_CFG_RES {
   USIGN16 status; /* OK, NO */
 
 } T_DPS_CHK_CFG_RES;
 
 /*==========================================================================*/
 
-typedef struct _T_DPS_SET_PRM_IND
-{
+typedef struct _T_DPS_SET_PRM_IND {
   USIGN16 status; /* OK */
 
-  USIGN8 user_prm_data_len;   /* 0..DP_MAX_USER_PRM_DATA_LEN */
+  USIGN8 user_prm_data_len; /* 0..DP_MAX_USER_PRM_DATA_LEN */
   PB_BOOL prm_await_response; /* the indication has to be acknowledged */
 
   USIGN8 station_status; /* DP_PRM_xxx */
@@ -398,7 +386,7 @@ typedef struct _T_DPS_SET_PRM_IND
   USIGN8 min_tsdr; /* minimum station delay responder */
 
   USIGN16 ident_number; /* PNO ident number */
-  USIGN8 group_ident;   /* groups for GLOBAL_CONTROL */
+  USIGN8 group_ident; /* groups for GLOBAL_CONTROL */
 
   USIGN8 user_prm_data[DP_MAX_USER_PRM_DATA_LEN]; /* user_prm_data_len */
 
@@ -408,20 +396,18 @@ typedef struct _T_DPS_SET_PRM_IND
 
 /*--------------------------------------------------------------------------*/
 
-typedef struct _T_DPS_SET_PRM_RES
-{
+typedef struct _T_DPS_SET_PRM_RES {
   USIGN16 status; /* OK, NO */
 
 } T_DPS_SET_PRM_RES;
 
 /*==========================================================================*/
 
-typedef struct _T_DPS_SET_SLAVE_ADD_IND
-{
+typedef struct _T_DPS_SET_SLAVE_ADD_IND {
   USIGN16 status; /* OK */
 
   USIGN8 rem_slave_data_len; /* 0..DP_MAX_REM_SLAVE_DATA_LEN */
-  USIGN8 new_slave_add;      /* new slave address set by DP master, 0..125 */
+  USIGN8 new_slave_add; /* new slave address set by DP master, 0..125 */
 
   USIGN16 ident_number; /* PNO ident_number */
 

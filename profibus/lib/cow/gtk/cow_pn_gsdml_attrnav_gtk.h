@@ -42,12 +42,11 @@
 #include "cow_pn_gsdml_attrnav.h"
 
 //! The navigation area of the attribute editor.
-class GsdmlAttrNavGtk : public GsdmlAttrNav
-{
+class GsdmlAttrNavGtk : public GsdmlAttrNav {
 public:
   GsdmlAttrNavGtk(void* xn_parent_ctx, GtkWidget* xn_parent_wid,
-                  const char* xn_name, pn_gsdml* xn_gsdml, int xn_edit_mode,
-                  GtkWidget** w, pwr_tStatus* status);
+      const char* xn_name, pn_gsdml* xn_gsdml, int xn_edit_mode, GtkWidget** w,
+      pwr_tStatus* status);
   ~GsdmlAttrNavGtk();
   void set_inputfocus();
   void display_attr_help_text();

@@ -47,8 +47,7 @@
 
 class GsdAttrQtWidget;
 
-class GsdAttrQt : public GsdAttr
-{
+class GsdAttrQt : public GsdAttr {
 public:
   QWidget* brow_widget;
   QWidget* form_widget;
@@ -73,12 +72,15 @@ private:
   GsdAttrQtWidget* toplevel;
 };
 
-class GsdAttrQtWidget : public QWidget
-{
+class GsdAttrQtWidget : public QWidget {
   Q_OBJECT
 
 public:
-  GsdAttrQtWidget(GsdAttrQt* parent_ctx) : QWidget(), attr(parent_ctx) {}
+  GsdAttrQtWidget(GsdAttrQt* parent_ctx)
+      : QWidget()
+      , attr(parent_ctx)
+  {
+  }
 
 protected:
   void focusInEvent(QFocusEvent* event);

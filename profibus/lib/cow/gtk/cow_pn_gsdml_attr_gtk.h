@@ -42,8 +42,7 @@
 #include "cow_pn_gsdml_attr.h"
 #include "cow_wow_gtk.h"
 
-class GsdmlAttrGtk : public GsdmlAttr
-{
+class GsdmlAttrGtk : public GsdmlAttr {
 public:
   GtkWidget* parent_wid;
   GtkWidget* brow_widget;
@@ -66,8 +65,8 @@ public:
   CoWowEntryGtk* cmd_entry;
 
   GsdmlAttrGtk(GtkWidget* a_parent_wid, void* a_parent_ctx, void* a_object,
-               pn_gsdml* a_gsdml, int a_edit_mode, const char* a_data_filename,
-               pwr_tStatus* a_sts);
+      pn_gsdml* a_gsdml, int a_edit_mode, const char* a_data_filename,
+      pwr_tStatus* a_sts);
   ~GsdmlAttrGtk();
 
   void message(char severity, const char* message);
@@ -104,8 +103,8 @@ public:
   static void cmd_close_apply_cb(void* ctx, void* data);
   static void cmd_close_no_cb(void* ctx, void* data);
   static void activate_cmd_ca(GtkWidget* w, gpointer dataxo);
-  static gboolean action_inputfocus(GtkWidget* w, GdkEvent* event,
-                                    gpointer data);
+  static gboolean action_inputfocus(
+      GtkWidget* w, GdkEvent* event, gpointer data);
   // static void valchanged_cmd_input( GtkWidget *w, gpointer data);
 };
 

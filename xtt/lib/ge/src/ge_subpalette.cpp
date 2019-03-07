@@ -677,7 +677,7 @@ int SubPalette::object_attr()
   ((ItemMenu*)root_item)->open_children(this, 0, 0);
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   return 1;
 }
 
@@ -736,7 +736,7 @@ void SubPalette::select_by_name(char* name)
     }
   }
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 
   if (current) {
     brow_SetInverse(current, 1);
@@ -1032,10 +1032,7 @@ int Item::close(SubPalette* subpalette, double x, double y)
 int ItemLocalSubGraphs::open_children(
     SubPalette* subpalette, double x, double y)
 {
-  double node_x, node_y;
   int child_exist;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
 
   if (brow_IsOpen(node)) {
     // Close
@@ -1047,7 +1044,7 @@ int ItemLocalSubGraphs::open_children(
       brow_SetAnnotPixmap(node, 0, subpalette->brow->pixmap_map);
     brow_ResetOpen(node, subpalette_mOpen_All);
     brow_ResetNodraw(subpalette->brow->ctx);
-    brow_Redraw(subpalette->brow->ctx, node_y);
+    brow_Redraw(subpalette->brow->ctx);
   } else {
     int sts;
     char found_file[120];
@@ -1109,24 +1106,21 @@ int ItemLocalSubGraphs::open_children(
     }
     brow_ResetNodraw(subpalette->brow->ctx);
     if (child_exist)
-      brow_Redraw(subpalette->brow->ctx, node_y);
+      brow_Redraw(subpalette->brow->ctx);
   }
   return 1;
 }
 
 int ItemLocalSubGraphs::close(SubPalette* subpalette, double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node)) {
     // Close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(subpalette->brow->ctx);
     brow_CloseNode(subpalette->brow->ctx, node);
     brow_SetAnnotPixmap(node, 0, subpalette->brow->pixmap_map);
     brow_ResetOpen(node, subpalette_mOpen_All);
     brow_ResetNodraw(subpalette->brow->ctx);
-    brow_Redraw(subpalette->brow->ctx, node_y);
+    brow_Redraw(subpalette->brow->ctx);
   }
   return 1;
 }
@@ -1165,16 +1159,10 @@ int ItemMenu::open_children(SubPalette* subpalette, double x, double y)
   }
   if (action_open || is_root) {
     // Display childlist
-    double node_x, node_y;
     Item* item;
-    subpalette_sMenu* menu;
 
-    if (!is_root)
-      brow_GetNodePosition(node, &node_x, &node_y);
-    else
-      node_y = 0;
     brow_SetNodraw(subpalette->brow->ctx);
-    menu = *child_list;
+    subpalette_sMenu* menu = *child_list;
     while (menu) {
       switch (menu->item_type) {
       case subpalette_eItemType_Menu:
@@ -1199,7 +1187,7 @@ int ItemMenu::open_children(SubPalette* subpalette, double x, double y)
       }
     }
     brow_ResetNodraw(subpalette->brow->ctx);
-    brow_Redraw(subpalette->brow->ctx, node_y);
+    brow_Redraw(subpalette->brow->ctx);
   } else
     close(subpalette, x, y);
   return 1;
@@ -1207,11 +1195,8 @@ int ItemMenu::open_children(SubPalette* subpalette, double x, double y)
 
 int ItemMenu::close(SubPalette* subpalette, double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node)) {
     // Close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(subpalette->brow->ctx);
     brow_CloseNode(subpalette->brow->ctx, node);
     if (brow_IsOpen(node) & subpalette_mOpen_Attributes)
@@ -1220,7 +1205,7 @@ int ItemMenu::close(SubPalette* subpalette, double x, double y)
       brow_SetAnnotPixmap(node, 0, subpalette->brow->pixmap_map);
     brow_ResetOpen(node, subpalette_mOpen_All);
     brow_ResetNodraw(subpalette->brow->ctx);
-    brow_Redraw(subpalette->brow->ctx, node_y);
+    brow_Redraw(subpalette->brow->ctx);
   }
   return 1;
 }

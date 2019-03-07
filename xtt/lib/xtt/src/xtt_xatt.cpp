@@ -259,6 +259,6 @@ int XAtt::object_attr()
   free((char*)bd);
 
   brow_ResetNodraw(xattnav->brow->ctx);
-  brow_Redraw(xattnav->brow->ctx, 0);
+  brow_Redraw(xattnav->brow->ctx);
   return XATT__SUCCESS;
 }

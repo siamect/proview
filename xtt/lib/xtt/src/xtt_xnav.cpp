@@ -1164,7 +1164,7 @@ void XNav::show_crossref()
     }
   } catch (co_error& e) {
     brow_push_all();
-    brow_Redraw(brow->ctx, 0);
+    brow_Redraw(brow->ctx);
     message('E', (char*)e.what().c_str());
   }
 }
@@ -1199,7 +1199,7 @@ void XNav::start_trace_selected()
     }
   } catch (co_error& e) {
     brow_push_all();
-    brow_Redraw(brow->ctx, 0);
+    brow_Redraw(brow->ctx);
     message('E', (char*)e.what().c_str());
   }
 }
@@ -2436,13 +2436,13 @@ int XNav::brow_cb(FlowCtx* ctx, flow_tEvent event)
       break;
     }
     case flow_eEvent_Resized:
-      brow_Redraw(xnav->brow->ctx, 0);
+      brow_Redraw(xnav->brow->ctx);
       break;
     default:;
     }
   } catch (co_error& e) {
     xnav->brow_push_all();
-    brow_Redraw(xnav->brow->ctx, 0);
+    brow_Redraw(xnav->brow->ctx);
     xnav->message('E', (char*)e.what().c_str());
   }
   return 1;
@@ -2995,7 +2995,7 @@ int XNav::display_object(pwr_sAttrRef* arp, int open)
         item->open_children(brow, 0, 0);
       }
       brow_ResetNodraw(brow->ctx);
-      brow_Redraw(brow->ctx, 0);
+      brow_Redraw(brow->ctx);
 
       if (open)
         brow_CenterObject(brow->ctx, item->node, 0.00);
@@ -3017,7 +3017,7 @@ int XNav::display_object(pwr_sAttrRef* arp, int open)
         brow_SetInverse(item->node, 1);
         brow_SelectInsert(brow->ctx, item->node);
         brow_ResetNodraw(brow->ctx);
-        brow_Redraw(brow->ctx, 0);
+        brow_Redraw(brow->ctx);
         brow_CenterObject(brow->ctx, item->node, 0.80);
         return 1;
       }
@@ -3054,21 +3054,21 @@ int XNav::display_object(pwr_sAttrRef* arp, int open)
       brow_SelectInsert(brow->ctx, aitem->node);
 
       brow_ResetNodraw(brow->ctx);
-      brow_Redraw(brow->ctx, 0);
+      brow_Redraw(brow->ctx);
 
       brow_CenterObject(brow->ctx, aitem->node, 0.80);
     }
 
   } catch (co_error& e) {
     brow_push_all();
-    brow_Redraw(brow->ctx, 0);
+    brow_Redraw(brow->ctx);
     message('E', (char*)e.what().c_str());
   }
   return 1;
 
 display_error:
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   return sts;
 }
 
@@ -3161,7 +3161,7 @@ int XNav::setup()
       flow_eDest_IntoLast);
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   force_trace_scan();
   return XNAV__SUCCESS;
 }
@@ -3240,7 +3240,7 @@ int XNav::show_logging(int index)
   }
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   force_trace_scan();
   return XNAV__SUCCESS;
 }
@@ -3450,7 +3450,7 @@ int XNav::menu_tree_delete(char* name)
     brow_DeleteAll(brow->ctx);
     ((ItemMenu*)root_item)->open_children(brow, 0, 0);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, 0);
+    brow_Redraw(brow->ctx);
   } else {
     if (delete_item->parent->child_list == delete_item)
       delete_item->parent->child_list = delete_item->next;
@@ -3563,7 +3563,7 @@ int XNav::menu_tree_insert(char* title, int item_type, char* command,
     brow_DeleteAll(brow->ctx);
     ((ItemMenu*)root_item)->open_children(brow, 0, 0);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, 0);
+    brow_Redraw(brow->ctx);
   }
 
   *menu_item = menu_p;
@@ -4270,7 +4270,7 @@ int XNav::show_object_as_struct(
   dcli_readstruct_free(e_list);
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 
   return XNAV__SUCCESS;
 }
@@ -4606,5 +4606,5 @@ void XNav::refresh()
   }
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }

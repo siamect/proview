@@ -248,7 +248,7 @@ void MsgList::set_nodraw()
 void MsgList::reset_nodraw()
 {
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }
 
 void MsgList::remove_oldest()

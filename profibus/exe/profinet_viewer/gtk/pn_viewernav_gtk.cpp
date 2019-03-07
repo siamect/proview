@@ -50,11 +50,12 @@ extern "C" {
 #include "pn_viewernav_gtk.h"
 
 PnViewerNavGtk::PnViewerNavGtk(void* l_parent_ctx, GtkWidget* l_parent_wid,
-                               viewer_eType l_type, GtkWidget** w)
-    : PnViewerNav(l_parent_ctx, l_type), parent_wid(l_parent_wid)
+    viewer_eType l_type, GtkWidget** w)
+    : PnViewerNav(l_parent_ctx, l_type)
+    , parent_wid(l_parent_wid)
 {
-  form_widget =
-      scrolledbrowwidgetgtk_new(PnViewerNav::init_brow_cb, this, &brow_widget);
+  form_widget = scrolledbrowwidgetgtk_new(
+      PnViewerNav::init_brow_cb, this, &brow_widget);
 
   gtk_widget_show_all(brow_widget);
 
@@ -71,6 +72,9 @@ PnViewerNavGtk::~PnViewerNavGtk()
   gtk_widget_destroy(form_widget);
 }
 
-void PnViewerNavGtk::set_input_focus() { gtk_widget_grab_focus(brow_widget); }
+void PnViewerNavGtk::set_input_focus()
+{
+  gtk_widget_grab_focus(brow_widget);
+}
 
 #endif

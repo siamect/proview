@@ -407,7 +407,7 @@ int TblNav::create_items()
     }
   }
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   return TBLNAV__SUCCESS;
 }
 
@@ -629,10 +629,6 @@ ItemLocal::ItemLocal(TblNav* tblnav, TblNav_sevhistobject* xitem,
 
 int ItemLocal::open_attributes(TblNav* tblnav, double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(tblnav->brow->ctx);
@@ -640,7 +636,7 @@ int ItemLocal::open_attributes(TblNav* tblnav, double x, double y)
     brow_SetAnnotPixmap(node, 0, tblnav->brow->pixmap_leaf);
     brow_ResetOpen(node, tblnav_mOpen_All);
     brow_ResetNodraw(tblnav->brow->ctx);
-    brow_Redraw(tblnav->brow->ctx, node_y);
+    brow_Redraw(tblnav->brow->ctx);
   } else {
     char value[256];
     char txt[80];
@@ -752,17 +748,13 @@ int ItemLocal::open_attributes(TblNav* tblnav, double x, double y)
     }
     brow_SetOpen(node, tblnav_mOpen_Attributes);
     brow_ResetNodraw(tblnav->brow->ctx);
-    brow_Redraw(tblnav->brow->ctx, node_y);
+    brow_Redraw(tblnav->brow->ctx);
   }
   return 1;
 }
 
 int ItemLocal::close(TblNav* tblnav, double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(tblnav->brow->ctx);
@@ -770,7 +762,7 @@ int ItemLocal::close(TblNav* tblnav, double x, double y)
     brow_SetAnnotPixmap(node, 0, tblnav->brow->pixmap_leaf);
     brow_ResetOpen(node, tblnav_mOpen_All);
     brow_ResetNodraw(tblnav->brow->ctx);
-    brow_Redraw(tblnav->brow->ctx, node_y);
+    brow_Redraw(tblnav->brow->ctx);
   }
   return 1;
 }
@@ -837,10 +829,6 @@ ItemTreeNode::~ItemTreeNode()
 
 int ItemTreeNode::open_children(TblNav* tblnav, double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node) & tblnav_mOpen_Children) {
     // Attributes is open, close
     brow_SetNodraw(tblnav->brow->ctx);
@@ -848,7 +836,7 @@ int ItemTreeNode::open_children(TblNav* tblnav, double x, double y)
     brow_ResetOpen(node, tblnav_mOpen_Children);
     brow_RemoveAnnotPixmap(node, 1);
     brow_ResetNodraw(tblnav->brow->ctx);
-    brow_Redraw(tblnav->brow->ctx, node_y);
+    brow_Redraw(tblnav->brow->ctx);
   } else {
     brow_SetNodraw(tblnav->brow->ctx);
     for (int i = tblnav->tree[idx].fch; i; i = tblnav->tree[i].fws) {
@@ -869,23 +857,20 @@ int ItemTreeNode::open_children(TblNav* tblnav, double x, double y)
     brow_SetOpen(node, tblnav_mOpen_Children);
     brow_SetAnnotPixmap(node, 1, tblnav->brow->pixmap_openmap);
     brow_ResetNodraw(tblnav->brow->ctx);
-    brow_Redraw(tblnav->brow->ctx, node_y);
+    brow_Redraw(tblnav->brow->ctx);
   }
   return 1;
 }
 
 int ItemTreeNode::close(TblNav* tblnav, double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node) & tblnav_mOpen_Children) {
     // Children is open, close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(tblnav->brow->ctx);
     brow_CloseNode(tblnav->brow->ctx, node);
     brow_ResetOpen(node, tblnav_mOpen_All);
     brow_ResetNodraw(tblnav->brow->ctx);
-    brow_Redraw(tblnav->brow->ctx, node_y);
+    brow_Redraw(tblnav->brow->ctx);
   }
   return 1;
 }

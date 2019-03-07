@@ -41,11 +41,10 @@
 
 #include "../src/pn_viewernav.h"
 
-class PnViewerNavGtk : public PnViewerNav
-{
+class PnViewerNavGtk : public PnViewerNav {
 public:
   PnViewerNavGtk(void* v_parent_ctx, GtkWidget* v_parent_wid,
-                 viewer_eType v_type, GtkWidget** w);
+      viewer_eType v_type, GtkWidget** w);
   ~PnViewerNavGtk();
 
   GtkWidget* parent_wid;

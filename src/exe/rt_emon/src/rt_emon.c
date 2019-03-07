@@ -42,10 +42,10 @@
 #include <unistd.h>
 
 #include "co_cdh.h"
+#include "co_log.h"
 #include "co_string.h"
 #include "co_syi.h"
 #include "co_time.h"
-#include "co_timelog.h"
 
 #include "rt_aproc.h"
 #include "rt_c_iohandler.h"
@@ -3278,7 +3278,7 @@ static void outunitAck(mh_sHead* hp, sOutunit* op)
     return;
   }
 
-  timelog_ss(4, "emon, acked", ap->objName);
+  log_info("emon, acked %s", ap->objName);
 
   switch (ap->source) {
   case mh_eSource_Scanner:
@@ -4940,7 +4940,7 @@ static pwr_tStatus emon_redu_receive()
       case mh_eEvent_UserAlarm4:
         break;
       default:
-        timelog_ss(4, "emon etp type error", ap->objName);
+        log_info("emon etp type error %s", ap->objName);
         activep++;
         continue;
       }

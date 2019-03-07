@@ -363,7 +363,7 @@ int WPkgNav::root_objects()
   is.close();
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   return PKG__SUCCESS;
 }
 
@@ -427,7 +427,7 @@ int WPkgNav::init_brow_cb(FlowCtx* fctx, void* client_data)
 
 void WPkgNav::redraw()
 {
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }
 
 void WPkgNav::refresh_node(WItemPkg* item)
@@ -497,18 +497,15 @@ WItemPkg::~WItemPkg()
 
 int WItemPkg::close(WNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node)) {
     // Close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(brow->ctx);
     brow_CloseNode(brow->ctx, node);
     if (brow_IsOpen(node) & wnav_mOpen_Children)
       brow_SetAnnotPixmap(node, 0, brow->pixmap_map);
     brow_ResetOpen(node, wnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
@@ -578,7 +575,7 @@ int WItemPkgNode::open_children(
     brow_SetAnnotPixmap(node, 0, brow->pixmap_openmap);
   }
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   return 1;
 }
 
@@ -613,7 +610,7 @@ int WItemPkgPackage::open_children(
       brow, "Info", packagename, nodename, bus, node, flow_eDest_IntoLast);
   new WItemPkgFileHier(brow, "Files", packagename, node, flow_eDest_IntoLast);
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   brow_SetOpen(node, wnav_mOpen_Children);
   return 1;
 }
@@ -681,7 +678,7 @@ int WItemPkgInfoHier::open_children(
         brow, "RootVolume", volnamelist[0], node, flow_eDest_IntoLast);
   new WItemPkgInfo(brow, "Version", version, node, flow_eDest_IntoLast);
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   brow_SetOpen(node, wnav_mOpen_Children);
   return 1;
 }
@@ -865,7 +862,7 @@ int WItemPkgFileHier::open_children(
     brow_SetAnnotPixmap(node, 0, brow->pixmap_openmap);
   }
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   return 1;
 }
 

@@ -199,7 +199,6 @@ ItemBaseObject::ItemBaseObject(pwr_tObjid item_objid, int item_is_root)
 
 int ItemBaseObject::open_children(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
   pwr_tObjid child;
   int child_exist;
   int sts;
@@ -207,11 +206,6 @@ int ItemBaseObject::open_children(XNavBrow* brow, double x, double y)
 
   if (cdh_ObjidIsNull(objid))
     return 1;
-
-  if (!is_root)
-    brow_GetNodePosition(node, &node_x, &node_y);
-  else
-    node_y = 0;
 
   if (!is_root && brow_IsOpen(node)) {
     // Close
@@ -227,7 +221,7 @@ int ItemBaseObject::open_children(XNavBrow* brow, double x, double y)
     }
     brow_ResetOpen(node, xnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     Item* item;
 
@@ -243,7 +237,7 @@ int ItemBaseObject::open_children(XNavBrow* brow, double x, double y)
 	item = new ItemBlock(brow, child, node, flow_eDest_IntoLast);
       else
 	item = new ItemObject(brow, child, node, flow_eDest_IntoLast, 0);
-     
+
       sts = gdh_GetNextSibling(child, &child);
     }
 
@@ -253,7 +247,7 @@ int ItemBaseObject::open_children(XNavBrow* brow, double x, double y)
     }
     brow_ResetNodraw(brow->ctx);
     if (child_exist)
-      brow_Redraw(brow->ctx, node_y);
+      brow_Redraw(brow->ctx);
     else
       return XNAV__NOCHILD;
   }
@@ -309,12 +303,8 @@ int ItemBaseObject::open_trace(XNavBrow* brow, double x, double y)
 
 int ItemBaseObject::open_attributes(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
-
   if (cdh_ObjidIsNull(objid))
     return 1;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
 
   if (brow_IsOpen(node) & xnav_mOpen_Attributes) {
     // Attributes is open, close
@@ -323,7 +313,7 @@ int ItemBaseObject::open_attributes(XNavBrow* brow, double x, double y)
     brow_ResetOpen(node, xnav_mOpen_Attributes);
     brow_RemoveAnnotPixmap(node, 1);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     int sts;
     pwr_tClassId classid;
@@ -346,7 +336,7 @@ int ItemBaseObject::open_attributes(XNavBrow* brow, double x, double y)
       else
         brow_SetAnnotPixmap(node, 0, brow->pixmap_map);
       brow_ResetNodraw(brow->ctx);
-      brow_Redraw(brow->ctx, node_y);
+      brow_Redraw(brow->ctx);
     }
 
     // Create some attributes
@@ -456,7 +446,7 @@ int ItemBaseObject::open_attributes(XNavBrow* brow, double x, double y)
     }
     brow_ResetNodraw(brow->ctx);
     if (attr_exist)
-      brow_Redraw(brow->ctx, node_y);
+      brow_Redraw(brow->ctx);
   }
   return 1;
 }
@@ -526,7 +516,6 @@ int ItemBaseObject::open_attribute(
 
 int ItemBaseObject::open_crossref(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
   int crossref_exist;
   int sts;
   pwr_tClassId classid;
@@ -540,11 +529,6 @@ int ItemBaseObject::open_crossref(XNavBrow* brow, double x, double y)
 
   if (cdh_ObjidIsNull(objid))
     return 1;
-
-  if (!is_root)
-    brow_GetNodePosition(node, &node_x, &node_y);
-  else
-    node_y = 0;
 
   if (!is_root && brow_IsOpen(node)) {
     // Close
@@ -560,7 +544,7 @@ int ItemBaseObject::open_crossref(XNavBrow* brow, double x, double y)
     }
     brow_ResetOpen(node, xnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     // Fetch the cross reference list
     crossref_exist = 0;
@@ -600,21 +584,18 @@ int ItemBaseObject::open_crossref(XNavBrow* brow, double x, double y)
     }
     brow_ResetNodraw(brow->ctx);
     if (crossref_exist)
-      brow_Redraw(brow->ctx, node_y);
+      brow_Redraw(brow->ctx);
   }
   return 1;
 }
 
 void ItemBaseObject::close(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
-
   if (cdh_ObjidIsNull(objid))
     return;
 
   if (brow_IsOpen(node)) {
     // Close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(brow->ctx);
     brow_CloseNode(brow->ctx, node);
     if (brow_IsOpen(node) & xnav_mOpen_Attributes)
@@ -627,7 +608,7 @@ void ItemBaseObject::close(XNavBrow* brow, double x, double y)
     }
     brow_ResetOpen(node, xnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
 }
 
@@ -642,10 +623,7 @@ int ItemAttrArray::open_children(XNavBrow* brow, double x, double y)
 
 int ItemAttrArray::open_attributes(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
   int i;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
 
   if (brow_IsOpen(node) & xnav_mOpen_Attributes) {
     // Attributes is open, close
@@ -653,7 +631,7 @@ int ItemAttrArray::open_attributes(XNavBrow* brow, double x, double y)
     brow_CloseNode(brow->ctx, node);
     brow_ResetOpen(node, xnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     Item* item;
 
@@ -674,23 +652,20 @@ int ItemAttrArray::open_attributes(XNavBrow* brow, double x, double y)
       brow_SetOpen(node, xnav_mOpen_Attributes);
     }
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
 
 void ItemAttrArray::close(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node) & xnav_mOpen_Attributes) {
     // Attributes is open, close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(brow->ctx);
     brow_CloseNode(brow->ctx, node);
     brow_ResetOpen(node, xnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
 }
 
@@ -708,12 +683,8 @@ ItemBaseAttr::ItemBaseAttr(pwr_tObjid item_objid, char* attr_name,
 
 int ItemBaseAttr::open_children(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
-
   if (cdh_ObjidIsNull(objid))
     return 1;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
 
   if (brow_IsOpen(node) & xnav_mOpen_Children) {
     // Attributes is open, close
@@ -722,7 +693,7 @@ int ItemBaseAttr::open_children(XNavBrow* brow, double x, double y)
     brow_ResetOpen(node, xnav_mOpen_Children);
     brow_RemoveAnnotPixmap(node, 1);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
     switch (type_id) {
     case pwr_eType_Objid:
       brow_SetAnnotPixmap(node, 0, brow->pixmap_ref);
@@ -781,23 +752,20 @@ int ItemBaseAttr::open_children(XNavBrow* brow, double x, double y)
     brow_SetOpen(node, xnav_mOpen_Children);
     brow_SetAnnotPixmap(node, 0, brow->pixmap_openmap);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
 
 void ItemBaseAttr::close(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node) & xnav_mOpen_Children) {
     // Children is open, close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(brow->ctx);
     brow_CloseNode(brow->ctx, node);
     brow_ResetOpen(node, xnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
     switch (type_id) {
     case pwr_eType_Objid:
       brow_SetAnnotPixmap(node, 0, brow->pixmap_ref);
@@ -1049,14 +1017,11 @@ ItemAttrObject::ItemAttrObject(XNavBrow* brow, pwr_tObjid item_objid,
 
 void ItemAttrObject::close(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
-
   if (cdh_ObjidIsNull(objid))
     return;
 
   if (brow_IsOpen(node)) {
     // Close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(brow->ctx);
     brow_CloseNode(brow->ctx, node);
     if (brow_IsOpen(node) & xnav_mOpen_Attributes)
@@ -1065,18 +1030,14 @@ void ItemAttrObject::close(XNavBrow* brow, double x, double y)
       brow_SetAnnotPixmap(node, 0, brow->pixmap_map);
     brow_ResetOpen(node, xnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
 }
 
 int ItemAttrObject::open_attributes(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
-
   if (cdh_ObjidIsNull(objid))
     return 1;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
 
   if (brow_IsOpen(node) & xnav_mOpen_Attributes) {
     // Attributes is open, close
@@ -1085,7 +1046,7 @@ int ItemAttrObject::open_attributes(XNavBrow* brow, double x, double y)
     brow_ResetOpen(node, xnav_mOpen_Attributes);
     brow_RemoveAnnotPixmap(node, 1);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     int sts;
     unsigned long elements;
@@ -1105,7 +1066,7 @@ int ItemAttrObject::open_attributes(XNavBrow* brow, double x, double y)
       brow_ResetOpen(node, xnav_mOpen_Crossref);
       brow_SetAnnotPixmap(node, 0, brow->pixmap_map);
       brow_ResetNodraw(brow->ctx);
-      brow_Redraw(brow->ctx, node_y);
+      brow_Redraw(brow->ctx);
     }
 
     // Create some attributes
@@ -1190,14 +1151,13 @@ int ItemAttrObject::open_attributes(XNavBrow* brow, double x, double y)
     }
     brow_ResetNodraw(brow->ctx);
     if (attr_exist)
-      brow_Redraw(brow->ctx, node_y);
+      brow_Redraw(brow->ctx);
   }
   return 1;
 }
 
 int ItemAttrObject::open_crossref(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
   int crossref_exist;
   int sts;
   XNav* xnav;
@@ -1212,11 +1172,6 @@ int ItemAttrObject::open_crossref(XNavBrow* brow, double x, double y)
   if (cdh_ObjidIsNull(objid))
     return 1;
 
-  if (!is_root)
-    brow_GetNodePosition(node, &node_x, &node_y);
-  else
-    node_y = 0;
-
   if (!is_root && brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(brow->ctx);
@@ -1227,7 +1182,7 @@ int ItemAttrObject::open_crossref(XNavBrow* brow, double x, double y)
       brow_SetAnnotPixmap(node, 0, brow->pixmap_map);
     brow_ResetOpen(node, xnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     // Fetch the cross reference list
     crossref_exist = 0;
@@ -1271,7 +1226,7 @@ int ItemAttrObject::open_crossref(XNavBrow* brow, double x, double y)
     }
     brow_ResetNodraw(brow->ctx);
     if (crossref_exist)
-      brow_Redraw(brow->ctx, node_y);
+      brow_Redraw(brow->ctx);
   }
   return 1;
 }
@@ -1677,12 +1632,9 @@ int ItemPlc::open_children(XNavBrow* brow, double x, double y)
     return 0;
 
   XNav* xnav = (XNav*)brow->userdata;
-  double node_x, node_y;
   int child_exist;
 
   if (!is_root) {
-    brow_GetNodePosition(node, &node_x, &node_y);
-
     if (brow_IsOpen(node)) {
       // Close
       close(brow, 0, 0);
@@ -1699,7 +1651,7 @@ int ItemPlc::open_children(XNavBrow* brow, double x, double y)
       }
       brow_ResetNodraw(brow->ctx);
       if (child_exist)
-        brow_Redraw(brow->ctx, node_y);
+        brow_Redraw(brow->ctx);
     }
   }
   return 1;
@@ -1780,7 +1732,7 @@ int ItemMenu::open_children(XNavBrow* brow, double x, double y)
       }
     }
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, 0);
+    brow_Redraw(brow->ctx);
   } else
     close(brow, x, y);
   return 1;
@@ -1788,11 +1740,8 @@ int ItemMenu::open_children(XNavBrow* brow, double x, double y)
 
 void ItemMenu::close(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node)) {
     // Close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(brow->ctx);
     brow_CloseNode(brow->ctx, node);
     if (brow_IsOpen(node) & xnav_mOpen_Attributes)
@@ -1801,7 +1750,7 @@ void ItemMenu::close(XNavBrow* brow, double x, double y)
       brow_SetAnnotPixmap(node, 0, brow->pixmap_map);
     brow_ResetOpen(node, xnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
 }
 
@@ -2052,7 +2001,6 @@ int ItemChannel::open_children(XNavBrow* brow, double x, double y)
 
 int ItemChannel::open_crossref(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
   int crossref_exist;
   int sts;
   pwr_tOName signal_name;
@@ -2067,11 +2015,6 @@ int ItemChannel::open_crossref(XNavBrow* brow, double x, double y)
   if (cdh_ObjidIsNull(signal_aref.Objid))
     return 1;
 
-  if (!is_root)
-    brow_GetNodePosition(node, &node_x, &node_y);
-  else
-    node_y = 0;
-
   if (!is_root && brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(brow->ctx);
@@ -2082,7 +2025,7 @@ int ItemChannel::open_crossref(XNavBrow* brow, double x, double y)
       brow_SetAnnotPixmap(node, 0, brow->pixmap_map);
     brow_ResetOpen(node, xnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     // Fetch the cross reference list
     crossref_exist = 0;
@@ -2103,7 +2046,7 @@ int ItemChannel::open_crossref(XNavBrow* brow, double x, double y)
     }
     brow_ResetNodraw(brow->ctx);
     if (crossref_exist)
-      brow_Redraw(brow->ctx, node_y);
+      brow_Redraw(brow->ctx);
   }
   return 1;
 }
@@ -2347,7 +2290,7 @@ ItemBlock::ItemBlock(XNavBrow* brow, pwr_tObjid item_objid, brow_tNode dest,
   sts = gdh_GetObjectClass(objid, &cid);
   if (EVEN(sts))
     throw co_error(sts);
-  
+
   for ( sts = gdh_GetChild(objid, &child);
 	ODD(sts);
 	sts = gdh_GetNextSibling(child, &child)) {
@@ -2361,7 +2304,7 @@ ItemBlock::ItemBlock(XNavBrow* brow, pwr_tObjid item_objid, brow_tNode dest,
       continue;
 
     has_child = 1;
-    break;      
+    break;
   }
 
   // Set pixmap
@@ -2372,7 +2315,7 @@ ItemBlock::ItemBlock(XNavBrow* brow, pwr_tObjid item_objid, brow_tNode dest,
 
   // Set object name annotation
   brow_SetAnnotation(node, 0, segname, strlen(segname));
-  
+
   // Set class annotation
   sts = gdh_ObjidToName(
     cdh_ClassIdToObjid(cid), segname, sizeof(segname), cdh_mName_object);
@@ -2398,7 +2341,6 @@ ItemBlock::~ItemBlock()
 
 int ItemBlock::open_children(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
   pwr_tObjid child;
   int child_exist;
   int sts;
@@ -2406,11 +2348,6 @@ int ItemBlock::open_children(XNavBrow* brow, double x, double y)
 
   if (cdh_ObjidIsNull(objid))
     return 1;
-
-  if (!is_root)
-    brow_GetNodePosition(node, &node_x, &node_y);
-  else
-    node_y = 0;
 
   if (!is_root && brow_IsOpen(node)) {
     // Close
@@ -2426,7 +2363,7 @@ int ItemBlock::open_children(XNavBrow* brow, double x, double y)
     }
     brow_ResetOpen(node, xnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     Item* item;
 
@@ -2462,7 +2399,7 @@ int ItemBlock::open_children(XNavBrow* brow, double x, double y)
     }
     brow_ResetNodraw(brow->ctx);
     if (child_exist)
-      brow_Redraw(brow->ctx, node_y);
+      brow_Redraw(brow->ctx);
     else
       return XNAV__NOCHILD;
   }
@@ -2471,12 +2408,8 @@ int ItemBlock::open_children(XNavBrow* brow, double x, double y)
 
 int ItemBlock::open_attributes(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
-
   if (cdh_ObjidIsNull(objid))
     return 1;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
 
   if (brow_IsOpen(node) & xnav_mOpen_Attributes) {
     // Attributes is open, close
@@ -2485,7 +2418,7 @@ int ItemBlock::open_attributes(XNavBrow* brow, double x, double y)
     brow_ResetOpen(node, xnav_mOpen_Attributes);
     brow_RemoveAnnotPixmap(node, 1);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     int sts;
     Item* item;
@@ -2498,7 +2431,7 @@ int ItemBlock::open_attributes(XNavBrow* brow, double x, double y)
       brow_CloseNode(brow->ctx, node);
       brow_ResetOpen(node, xnav_mOpen_Children);
       brow_ResetNodraw(brow->ctx);
-      brow_Redraw(brow->ctx, node_y);
+      brow_Redraw(brow->ctx);
     }
 
     // Create some attributes
@@ -2533,7 +2466,7 @@ int ItemBlock::open_attributes(XNavBrow* brow, double x, double y)
 	sts = gdh_NameToAttrref(pwr_cNOid, aname, &aref);
 	if ( EVEN(sts)) throw co_error(sts);
 
-	sts = gdh_GetAttributeFlags(&aref, &flags); 
+	sts = gdh_GetAttributeFlags(&aref, &flags);
 	if ( EVEN(sts)) throw co_error(sts);
 
 	if ( flags & PWR_MASK_ARRAY)
@@ -2550,7 +2483,7 @@ int ItemBlock::open_attributes(XNavBrow* brow, double x, double y)
       brow_SetOpen(node, xnav_mOpen_Attributes);
 
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
@@ -2579,27 +2512,20 @@ ItemSubBlock::ItemSubBlock(XNavBrow* brow, pwr_tObjid item_objid,
 
 void ItemSubBlock::close(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node)) {
     // Close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(brow->ctx);
     brow_CloseNode(brow->ctx, node);
     if (brow_IsOpen(node) & xnav_mOpen_Attributes)
       brow_RemoveAnnotPixmap(node, 1);
     brow_ResetOpen(node, xnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
 }
 
 int ItemSubBlock::open_attributes(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node) & xnav_mOpen_Attributes) {
     // Attributes is open, close
     brow_SetNodraw(brow->ctx);
@@ -2607,7 +2533,7 @@ int ItemSubBlock::open_attributes(XNavBrow* brow, double x, double y)
     brow_ResetOpen(node, xnav_mOpen_Attributes);
     brow_RemoveAnnotPixmap(node, 1);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     int sts;
     Item* item;
@@ -2621,7 +2547,7 @@ int ItemSubBlock::open_attributes(XNavBrow* brow, double x, double y)
       brow_CloseNode(brow->ctx, node);
       brow_ResetOpen(node, xnav_mOpen_Children);
       brow_ResetNodraw(brow->ctx);
-      brow_Redraw(brow->ctx, node_y);
+      brow_Redraw(brow->ctx);
     }
 
     // Create some attributes
@@ -2668,7 +2594,7 @@ int ItemSubBlock::open_attributes(XNavBrow* brow, double x, double y)
       brow_SetOpen(node, xnav_mOpen_Attributes);
 
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
@@ -2700,7 +2626,7 @@ ItemBlockAttr::ItemBlockAttr(XNavBrow* brow, pwr_tObjid item_objid, brow_tNode d
   sts = gdh_GetAttributeCharAttrref(&aref, &tid, (pwr_tUInt32 *)&size, 0, 0);
   if ( EVEN(sts)) throw co_error(sts);
 
-  sts = gdh_GetAttributeFlags(&aref, &flags); 
+  sts = gdh_GetAttributeFlags(&aref, &flags);
   if ( EVEN(sts)) throw co_error(sts);
 
   noedit = flags & PWR_MASK_PRIVATE ? 1 : 0;
@@ -2724,14 +2650,11 @@ ItemBlockAttr::ItemBlockAttr(XNavBrow* brow, pwr_tObjid item_objid, brow_tNode d
 
 void ItemBlockAttr::close(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
-
   if (cdh_ObjidIsNull(objid))
     return;
 
   if (brow_IsOpen(node)) {
     // Close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(brow->ctx);
     brow_CloseNode(brow->ctx, node);
     if (brow_IsOpen(node) & xnav_mOpen_Attributes)
@@ -2741,7 +2664,7 @@ void ItemBlockAttr::close(XNavBrow* brow, double x, double y)
     }
     brow_ResetOpen(node, xnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
 }
 
@@ -2752,12 +2675,8 @@ int ItemBlockAttr::open_children(XNavBrow* brow, double x, double y)
 
 int ItemBlockAttr::open_attributes(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
-
   if (cdh_ObjidIsNull(objid))
     return 1;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
 
   if (brow_IsOpen(node) & xnav_mOpen_Attributes) {
     // Attributes is open, close
@@ -2766,7 +2685,7 @@ int ItemBlockAttr::open_attributes(XNavBrow* brow, double x, double y)
     brow_ResetOpen(node, xnav_mOpen_Attributes);
     brow_RemoveAnnotPixmap(node, 1);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     int sts;
     pwr_tClassId classid;
@@ -2786,7 +2705,7 @@ int ItemBlockAttr::open_attributes(XNavBrow* brow, double x, double y)
       brow_ResetOpen(node, xnav_mOpen_Crossref);
       brow_SetAnnotPixmap(node, 0, brow->pixmap_map);
       brow_ResetNodraw(brow->ctx);
-      brow_Redraw(brow->ctx, node_y);
+      brow_Redraw(brow->ctx);
     }
 
     // Create some attributes
@@ -2895,7 +2814,7 @@ int ItemBlockAttr::open_attributes(XNavBrow* brow, double x, double y)
     }
     brow_ResetNodraw(brow->ctx);
     if (attr_exist)
-      brow_Redraw(brow->ctx, node_y);
+      brow_Redraw(brow->ctx);
   }
   return 1;
 }
@@ -2927,7 +2846,7 @@ ItemBlockAttrArray::ItemBlockAttrArray(XNavBrow* brow, pwr_tObjid item_objid,
   sts = gdh_GetAttributeCharAttrref(&aref, &tid, &size, 0, &elements);
   if ( EVEN(sts)) throw co_error(sts);
 
-  sts = gdh_GetAttributeFlags(&aref, &flags); 
+  sts = gdh_GetAttributeFlags(&aref, &flags);
   if ( EVEN(sts)) throw co_error(sts);
 
   if (flags & PWR_MASK_DYNAMIC) {
@@ -2961,10 +2880,7 @@ int ItemBlockAttrArray::open_children(XNavBrow* brow, double x, double y)
 
 int ItemBlockAttrArray::open_attributes(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
   int i;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
 
   if (brow_IsOpen(node) & xnav_mOpen_Attributes) {
     // Attributes is open, close
@@ -2972,7 +2888,7 @@ int ItemBlockAttrArray::open_attributes(XNavBrow* brow, double x, double y)
     brow_CloseNode(brow->ctx, node);
     brow_ResetOpen(node, xnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   } else {
     Item* item;
 
@@ -2986,23 +2902,20 @@ int ItemBlockAttrArray::open_attributes(XNavBrow* brow, double x, double y)
 
     brow_SetOpen(node, xnav_mOpen_Attributes);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
   return 1;
 }
 
 void ItemBlockAttrArray::close(XNavBrow* brow, double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node) & xnav_mOpen_Attributes) {
     // Attributes is open, close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(brow->ctx);
     brow_CloseNode(brow->ctx, node);
     brow_ResetOpen(node, xnav_mOpen_All);
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, node_y);
+    brow_Redraw(brow->ctx);
   }
 }
 
@@ -3013,7 +2926,7 @@ ItemBlockAttrArray::~ItemBlockAttrArray()
 ItemBlockAttrArrayElem::ItemBlockAttrArrayElem(XNavBrow* brow, pwr_tObjid item_objid,
      brow_tNode dest, flow_eDest dest_code, char* item_name, unsigned int item_flags,
      unsigned int item_element, pwr_tTid item_tid, pwr_eType item_type_id, int item_size)
-  : Item(item_objid, 0), flags(item_flags), element(item_element), 
+  : Item(item_objid, 0), flags(item_flags), element(item_element),
     tid(item_tid), type_id(item_type_id), size(item_size), noedit(0), first_scan(1)
 {
   pwr_tAName aname;

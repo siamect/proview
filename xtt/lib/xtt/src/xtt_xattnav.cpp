@@ -783,7 +783,7 @@ int XAttNav::set_attr_value(brow_tObject node, char* name, char* value_str)
 
 void XAttNav::redraw()
 {
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }
 
 int XAttNav::select_by_name(char* name)

@@ -394,7 +394,7 @@ void CoLogWNav::show(char categories[][20], char* item)
   brow_SetNodraw(brow->ctx);
   CoLog::dget(categories, item, item_cb, this);
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 
   // View last items
   brow_tObject last;

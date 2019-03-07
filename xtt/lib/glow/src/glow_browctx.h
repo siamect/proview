@@ -54,9 +54,9 @@ public:
       glow_eDest destination_code);
   void close(GlowArrayElem* element);
   void remove(GlowArrayElem* element);
-  void configure(double y_redraw);
+  void configure();
   void change_scrollbar();
-  void redraw(double y_redraw);
+  void redraw();
   void zoom(double factor);
   void unzoom()
   {

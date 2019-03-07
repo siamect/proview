@@ -55,9 +55,14 @@
 static int test = 0;
 
 PnViewer::PnViewer(void* v_parent_ctx, const char* v_name, const char* v_device,
-                   pwr_tStatus* status)
-    : parent_ctx(v_parent_ctx), viewernav(NULL), viewernavconf(NULL), wow(0),
-      input_open(0), pnet(0), close_cb(0)
+    pwr_tStatus* status)
+    : parent_ctx(v_parent_ctx)
+    , viewernav(NULL)
+    , viewernavconf(NULL)
+    , wow(0)
+    , input_open(0)
+    , pnet(0)
+    , close_cb(0)
 {
   strcpy(name, v_name);
   strcpy(device, v_device);
@@ -66,14 +71,16 @@ PnViewer::PnViewer(void* v_parent_ctx, const char* v_name, const char* v_device,
     pnet = new PnViewerPNAC(status, device);
 }
 
-PnViewer::~PnViewer() { delete pnet; }
+PnViewer::~PnViewer()
+{
+  delete pnet;
+}
 
 void PnViewer::update_devices()
 {
   int sts;
 
-  if (!test)
-  {
+  if (!test) {
     dev_vect.clear();
     pnet->fetch_devices(dev_vect);
 
@@ -84,9 +91,7 @@ void PnViewer::update_devices()
 
     viewernav->set(dev_vect);
     viewernavconf->set(conf_vect);
-  }
-  else
-  {
+  } else {
     dev_vect.clear();
     sts = fetch_config(dev_vect);
     if (EVEN(sts))
@@ -104,8 +109,7 @@ void PnViewer::update_devices()
 
 void PnViewer::filter(viewer_eFilterType filtertype)
 {
-  switch (filtertype)
-  {
+  switch (filtertype) {
   case viewer_eFilterType_No:
     for (unsigned int i = 0; i < dev_vect.size(); i++)
       dev_vect[i].hide = false;
@@ -120,18 +124,15 @@ void PnViewer::filter(viewer_eFilterType filtertype)
     for (unsigned int i = 0; i < conf_vect.size(); i++)
       conf_vect[i].hide = false;
 
-    for (unsigned int i = 0; i < dev_vect.size(); i++)
-    {
-      for (unsigned int j = 0; j < conf_vect.size(); j++)
-      {
-        if (streq(dev_vect[i].devname, conf_vect[j].devname) &&
-            dev_vect[i].vendorid == conf_vect[j].vendorid &&
-            dev_vect[i].deviceid == conf_vect[j].deviceid &&
-            dev_vect[i].ipaddress[0] == conf_vect[j].ipaddress[0] &&
-            dev_vect[i].ipaddress[1] == conf_vect[j].ipaddress[1] &&
-            dev_vect[i].ipaddress[2] == conf_vect[j].ipaddress[2] &&
-            dev_vect[i].ipaddress[3] == conf_vect[j].ipaddress[3])
-        {
+    for (unsigned int i = 0; i < dev_vect.size(); i++) {
+      for (unsigned int j = 0; j < conf_vect.size(); j++) {
+        if (streq(dev_vect[i].devname, conf_vect[j].devname)
+            && dev_vect[i].vendorid == conf_vect[j].vendorid
+            && dev_vect[i].deviceid == conf_vect[j].deviceid
+            && dev_vect[i].ipaddress[0] == conf_vect[j].ipaddress[0]
+            && dev_vect[i].ipaddress[1] == conf_vect[j].ipaddress[1]
+            && dev_vect[i].ipaddress[2] == conf_vect[j].ipaddress[2]
+            && dev_vect[i].ipaddress[3] == conf_vect[j].ipaddress[3]) {
           dev_vect[i].hide = true;
           conf_vect[j].hide = true;
           break;
@@ -164,20 +165,17 @@ int PnViewer::fetch_config(std::vector<PnDevice>& vect)
   if (!fp)
     return 0;
 
-  while (dcli_read_line(line, sizeof(line), fp))
-  {
+  while (dcli_read_line(line, sizeof(line), fp)) {
     nr = dcli_parse(line, " ", "", (char*)elemv,
-                    sizeof(elemv) / sizeof(elemv[0]), sizeof(elemv[0]), 0);
+        sizeof(elemv) / sizeof(elemv[0]), sizeof(elemv[0]), 0);
     if (nr != 6)
       continue;
 
     strncpy(pndevice.devname, elemv[1], sizeof(pndevice.devname));
 
     sts = sscanf(elemv[2], "%hhu.%hhu.%hhu.%hhu", &pndevice.ipaddress[3],
-                 &pndevice.ipaddress[2], &pndevice.ipaddress[1],
-                 &pndevice.ipaddress[0]);
-    if (sts != 4)
-    {
+        &pndevice.ipaddress[2], &pndevice.ipaddress[1], &pndevice.ipaddress[0]);
+    if (sts != 4) {
       printf("Not a valid IP address: %s\n", elemv[2]);
       pndevice.ipaddress[0] = 0;
       pndevice.ipaddress[1] = 0;
@@ -186,11 +184,10 @@ int PnViewer::fetch_config(std::vector<PnDevice>& vect)
     }
 
     sts = sscanf(elemv[3], "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
-                 &pndevice.macaddress[5], &pndevice.macaddress[4],
-                 &pndevice.macaddress[3], &pndevice.macaddress[2],
-                 &pndevice.macaddress[1], &pndevice.macaddress[0]);
-    if (sts != 6)
-    {
+        &pndevice.macaddress[5], &pndevice.macaddress[4],
+        &pndevice.macaddress[3], &pndevice.macaddress[2],
+        &pndevice.macaddress[1], &pndevice.macaddress[0]);
+    if (sts != 6) {
       printf("Not a valid MAC address: %s\n", elemv[3]);
       pndevice.macaddress[0] = 0;
       pndevice.macaddress[1] = 0;
@@ -213,8 +210,8 @@ int PnViewer::fetch_config(std::vector<PnDevice>& vect)
   return 1;
 }
 
-void PnViewer::set_device_properties(unsigned char* macaddress,
-                                     unsigned char* ipaddress, char* devname)
+void PnViewer::set_device_properties(
+    unsigned char* macaddress, unsigned char* ipaddress, char* devname)
 {
   pnet->set_device_properties(macaddress, ipaddress, devname);
 }
@@ -235,12 +232,9 @@ void PnViewer::message_cb(void* ctx, int severity, const char* msg)
 
 void PnViewer::activate_update()
 {
-  try
-  {
+  try {
     update_devices();
-  }
-  catch (co_error& e)
-  {
+  } catch (co_error& e) {
     printf("** Update exception: %s\n", e.what().c_str());
   }
 }
@@ -256,30 +250,28 @@ void PnViewer::activate_setdevice()
   ItemDevice* dev;
 
   sts = viewernav->get_selected_device(&dev);
-  if (EVEN(sts))
-  {
+  if (EVEN(sts)) {
     message('E', "Select a device");
     return;
   }
 
-  try
-  {
+  try {
     set_device_properties(dev->macaddress, dev->ipaddress, dev->devname);
-  }
-  catch (co_error& e)
-  {
+  } catch (co_error& e) {
     printf("** Exception, %s\n", e.what().c_str());
   }
 }
 
-void PnViewer::activate_changevalue() { open_change_value(); }
+void PnViewer::activate_changevalue()
+{
+  open_change_value();
+}
 
 void PnViewer::activate_close()
 {
   if (close_cb)
     close_cb(parent_ctx);
-  else
-  {
+  else {
     delete this;
     exit(0);
   }
@@ -287,8 +279,8 @@ void PnViewer::activate_close()
 
 void PnViewer::activate_help()
 {
-  CoXHelp::dhelp("profinet_viewer", 0, navh_eHelpFile_Other,
-                 "$pwr_lang/man_pb.dat", true);
+  CoXHelp::dhelp(
+      "profinet_viewer", 0, navh_eHelpFile_Other, "$pwr_lang/man_pb.dat", true);
 }
 
 #endif

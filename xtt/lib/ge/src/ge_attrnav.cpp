@@ -2694,7 +2694,7 @@ int AttrNav::object_attr()
     item_p++;
   }
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   force_trace_scan();
   return ATTRNAV__SUCCESS;
 }
@@ -2902,7 +2902,7 @@ void AttrNav::refresh_objects(unsigned int type)
     }
 
     brow_ResetNodraw(brow->ctx);
-    brow_Redraw(brow->ctx, 0);
+    brow_Redraw(brow->ctx);
   } else if (type == attr_mRefresh_Select) {
     brow_tObject* blist;
     int blist_cnt;
@@ -3303,10 +3303,6 @@ AItemLocal::AItemLocal(AttrNav* attrnav, const char* item_name,
 
 int AItemLocal::open_children(AttrNav* attrnav, double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(attrnav->brow->ctx);
@@ -3317,7 +3313,7 @@ int AItemLocal::open_children(AttrNav* attrnav, double x, double y)
       brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_attrarray);
     brow_ResetOpen(node, attrnav_mOpen_All);
     brow_ResetNodraw(attrnav->brow->ctx);
-    brow_Redraw(attrnav->brow->ctx, node_y);
+    brow_Redraw(attrnav->brow->ctx);
   } else if (type_id == ge_eAttrType_Dyn) {
     attr_sItem *itemlist, *item_p;
     int item_cnt;
@@ -3343,7 +3339,7 @@ int AItemLocal::open_children(AttrNav* attrnav, double x, double y)
     brow_SetOpen(node, attrnav_mOpen_Children);
     brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_openmap);
     brow_ResetNodraw(attrnav->brow->ctx);
-    brow_Redraw(attrnav->brow->ctx, node_y);
+    brow_Redraw(attrnav->brow->ctx);
   } else if (parent && !noedit) {
     attrnav_sEnumElement* elem_p = NULL;
     attrnav_sEnum* enum_p;
@@ -3390,7 +3386,7 @@ int AItemLocal::open_children(AttrNav* attrnav, double x, double y)
     brow_SetOpen(node, attrnav_mOpen_Children);
     brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_openmap);
     brow_ResetNodraw(attrnav->brow->ctx);
-    brow_Redraw(attrnav->brow->ctx, node_y);
+    brow_Redraw(attrnav->brow->ctx);
   } else if (subgraph) {
     attr_sItem *itemlist, *item_p;
     int item_cnt;
@@ -3416,17 +3412,13 @@ int AItemLocal::open_children(AttrNav* attrnav, double x, double y)
     brow_SetOpen(node, attrnav_mOpen_Children);
     brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_openmap);
     brow_ResetNodraw(attrnav->brow->ctx);
-    brow_Redraw(attrnav->brow->ctx, node_y);
+    brow_Redraw(attrnav->brow->ctx);
   }
   return 1;
 }
 
 int AItemLocal::close(AttrNav* attrnav, double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(attrnav->brow->ctx);
@@ -3437,7 +3429,7 @@ int AItemLocal::close(AttrNav* attrnav, double x, double y)
       brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_attrarray);
     brow_ResetOpen(node, attrnav_mOpen_All);
     brow_ResetNodraw(attrnav->brow->ctx);
-    brow_Redraw(attrnav->brow->ctx, node_y);
+    brow_Redraw(attrnav->brow->ctx);
   }
   return 1;
 }
@@ -3551,10 +3543,6 @@ AItemObject::AItemObject(AttrNav* attrnav, char* item_name,
 
 int AItemObject::close(AttrNav* attrnav, double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(attrnav->brow->ctx);
@@ -3565,7 +3553,7 @@ int AItemObject::close(AttrNav* attrnav, double x, double y)
       brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_map);
     brow_ResetOpen(node, attrnav_mOpen_All);
     brow_ResetNodraw(attrnav->brow->ctx);
-    brow_Redraw(attrnav->brow->ctx, node_y);
+    brow_Redraw(attrnav->brow->ctx);
     attr_client_data = 0;
   }
   return 1;
@@ -3573,12 +3561,8 @@ int AItemObject::close(AttrNav* attrnav, double x, double y)
 
 int AItemObject::open_children(AttrNav* attrnav, double x, double y)
 {
-  double node_x, node_y;
-
   if (!(object_type == glow_eObjectType_GrowGroup))
     return 1;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
 
   if (brow_IsOpen(node)) {
     // Close
@@ -3591,7 +3575,7 @@ int AItemObject::open_children(AttrNav* attrnav, double x, double y)
 
     brow_ResetOpen(node, attrnav_mOpen_All);
     brow_ResetNodraw(attrnav->brow->ctx);
-    brow_Redraw(attrnav->brow->ctx, node_y);
+    brow_Redraw(attrnav->brow->ctx);
   } else {
     grow_tObject* list;
     int list_cnt;
@@ -3627,17 +3611,13 @@ int AItemObject::open_children(AttrNav* attrnav, double x, double y)
     brow_SetOpen(node, attrnav_mOpen_Children);
     brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_openmap);
     brow_ResetNodraw(attrnav->brow->ctx);
-    brow_Redraw(attrnav->brow->ctx, node_y);
+    brow_Redraw(attrnav->brow->ctx);
   }
   return 1;
 }
 
 int AItemObject::open_attributes(AttrNav* attrnav, double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(attrnav->brow->ctx);
@@ -3649,7 +3629,7 @@ int AItemObject::open_attributes(AttrNav* attrnav, double x, double y)
 
     brow_ResetOpen(node, attrnav_mOpen_All);
     brow_ResetNodraw(attrnav->brow->ctx);
-    brow_Redraw(attrnav->brow->ctx, node_y);
+    brow_Redraw(attrnav->brow->ctx);
     attr_client_data = 0;
   } else {
     // Create some attributes
@@ -3676,7 +3656,7 @@ int AItemObject::open_attributes(AttrNav* attrnav, double x, double y)
     brow_SetOpen(node, attrnav_mOpen_Attributes);
     brow_SetAnnotPixmap(node, 1, attrnav->brow->pixmap_openattr);
     brow_ResetNodraw(attrnav->brow->ctx);
-    brow_Redraw(attrnav->brow->ctx, node_y);
+    brow_Redraw(attrnav->brow->ctx);
   }
   return 1;
 }

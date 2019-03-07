@@ -45,29 +45,20 @@
 int BrowCtx::insert(GlowArrayElem* element, GlowArrayElem* destination,
     glow_eDest destination_code)
 {
-  int sts;
-  double y;
-
-  sts = a.brow_insert(element, destination, destination_code);
+  int sts = a.brow_insert(element, destination, destination_code);
   if (!sts)
     return sts;
 
-  if (destination)
-    y = ((GlowNode*)destination)->y_low;
-  else
-    y = 0;
-  configure(y);
+  configure();
   return 1;
 }
 
 void BrowCtx::remove(GlowArrayElem* element)
 {
-  double pos = ((GlowNode*)element)->y_low;
-
   set_nodraw();
   a.brow_remove(this, element);
   reset_nodraw();
-  configure(pos);
+  configure();
 }
 
 void BrowCtx::close(GlowArrayElem* element)
@@ -75,10 +66,10 @@ void BrowCtx::close(GlowArrayElem* element)
   set_nodraw();
   a.brow_close(this, element);
   reset_nodraw();
-  configure(((GlowNode*)element)->y_low);
+  configure();
 }
 
-void BrowCtx::configure(double y_redraw)
+void BrowCtx::configure()
 {
   if (nodraw)
     return;
@@ -88,7 +79,6 @@ void BrowCtx::configure(double y_redraw)
   frame_x_right
       = MAX(x_right, 1.0 * (mw.window_width + mw.offset_x) / mw.zoom_factor_x);
   a.zoom();
-  redraw(y_redraw);
   change_scrollbar();
 }
 
@@ -120,17 +110,10 @@ void BrowCtx::change_scrollbar()
   (scroll_callback)(&data);
 }
 
-void BrowCtx::redraw(double y_redraw)
+void BrowCtx::redraw()
 {
-  if (y_redraw) {
-    gdraw->clear_area(&mw, 0, mw.window_width,
-        int(y_redraw * mw.zoom_factor_y - mw.offset_y), mw.window_height);
-    draw(&mw, 0, (int)(y_redraw * mw.zoom_factor_y - mw.offset_y),
-        mw.window_width, mw.window_height);
-  } else {
-    clear(&mw);
-    draw(&mw, 0, 0, mw.window_width, mw.window_height);
-  }
+  clear(&mw);
+  draw(&mw, 0, 0, mw.window_width, mw.window_height);
   nav_zoom();
 }
 

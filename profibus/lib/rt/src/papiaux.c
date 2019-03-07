@@ -134,12 +134,13 @@ return value:
 
   FUNCTION_BODY
 
-  if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-                           REGPATH_PARAMETER_FROM_HLM, 0, KEY_READ,
-                           &keyParameters)) {
+  if (ERROR_SUCCESS
+      == RegOpenKeyEx(HKEY_LOCAL_MACHINE, REGPATH_PARAMETER_FROM_HLM, 0,
+             KEY_READ, &keyParameters)) {
     sprintf(szKeyBoard, "%s\\%d", REGPATH_PARAMETER_FROM_HLM, BoardNumber);
-    if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE, szKeyBoard, 0,
-                             KEY_READ, &keyBoard)) {
+    if (ERROR_SUCCESS
+        == RegOpenKeyEx(
+               HKEY_LOCAL_MACHINE, szKeyBoard, 0, KEY_READ, &keyBoard)) {
       SizeofBoardType = sizeof(szBoardType);
       szBoardType[0] = '\0';
 
@@ -198,7 +199,7 @@ FUNCTION PUBLIC int kbhit(VOID)
 
 FUNCTION PUBLIC USIGN16 swap_16_intel_motorola(
     IN USIGN16 input16 /* value to swap */
-    )
+)
 
 /*-----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION
@@ -228,7 +229,7 @@ return value:
 
 FUNCTION PUBLIC USIGN32 swap_32_intel_motorola(
     IN USIGN32 input32 /* value to swap */
-    )
+)
 
 /*-----------------------------------------------------------------------------
 FUNCTIONAL_DESCRIPTION

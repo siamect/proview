@@ -70,17 +70,13 @@ void GsdAttr::gsdattr_change_value_cb(void* attr_ctx)
 //
 void GsdAttr::activate_exit()
 {
-  if (close_cb)
-  {
-    if (gsd->is_modified())
-    {
+  if (close_cb) {
+    if (gsd->is_modified()) {
       wow->DisplayQuestion((void*)this, "Apply", "Do you want to apply changes",
-                           cmd_close_apply_cb, cmd_close_no_cb, 0);
-    }
-    else
+          cmd_close_apply_cb, cmd_close_no_cb, 0);
+    } else
       (close_cb)(parent_ctx);
-  }
-  else
+  } else
     delete this;
 }
 
@@ -89,8 +85,7 @@ void GsdAttr::activate_help()
   int sts;
 
   if (help_cb)
-    sts = (help_cb)(
-        parent_ctx,
+    sts = (help_cb)(parent_ctx,
         "pb_slave_editor /helpfile=\"$pwr_exe/profibus_xtthelp.dat\"");
 }
 
@@ -100,14 +95,12 @@ void GsdAttr::activate_copy()
   int sts;
 
   sts = attrnav->get_select((ItemPb**)&item);
-  if (EVEN(sts))
-  {
+  if (EVEN(sts)) {
     message('E', "Select a module");
     return;
   }
 
-  if (item->type != attrnav_eItemType_PbModule)
-  {
+  if (item->type != attrnav_eItemType_PbModule) {
     message('E', "Only modules can be copied");
     return;
   }
@@ -122,14 +115,12 @@ void GsdAttr::activate_cut()
   int sts;
 
   sts = attrnav->get_select((ItemPb**)&item);
-  if (EVEN(sts))
-  {
+  if (EVEN(sts)) {
     message('E', "Select a module");
     return;
   }
 
-  if (item->type != attrnav_eItemType_PbModule)
-  {
+  if (item->type != attrnav_eItemType_PbModule) {
     message('E', "Only modules can be copied");
     return;
   }
@@ -143,14 +134,12 @@ void GsdAttr::activate_paste()
   int sts;
 
   sts = attrnav->get_select((ItemPb**)&item);
-  if (EVEN(sts))
-  {
+  if (EVEN(sts)) {
     message('E', "Select a module");
     return;
   }
 
-  if (item->type != attrnav_eItemType_PbModule)
-  {
+  if (item->type != attrnav_eItemType_PbModule) {
     message('E', "Only modules can be copied");
     return;
   }
@@ -180,7 +169,10 @@ void GsdAttr::activate_zoom_out()
   attrnav->zoom(1.0 / 1.18);
 }
 
-void GsdAttr::activate_zoom_reset() { attrnav->unzoom(); }
+void GsdAttr::activate_zoom_reset()
+{
+  attrnav->unzoom();
+}
 
 void GsdAttr::activate_print()
 {
@@ -201,24 +193,21 @@ void GsdAttr::activate_cmd_ok()
   int idx;
   char msg[130];
 
-  if (save_cb)
-  {
+  if (save_cb) {
     // Check syntax
     sts = gsd->syntax_check(&idx);
-    if (EVEN(sts))
-    {
-      switch (sts)
-      {
+    if (EVEN(sts)) {
+      switch (sts) {
       case PB__NOMODULENAME:
         sprintf(msg, "Syntax error in module %d, No module name", idx + 1);
         break;
       case PB__DUPLMODULENAME:
         sprintf(msg, "Syntax error in module %s, Duplicate module name",
-                gsd->module_conf[idx].name);
+            gsd->module_conf[idx].name);
         break;
       case PB__NOMODULECLASS:
         sprintf(msg, "Syntax error in module %s, Module class is missing",
-                gsd->module_conf[idx].name);
+            gsd->module_conf[idx].name);
         break;
       default:
         sprintf(msg, "Syntax error in module %d", idx + 1);
@@ -232,8 +221,7 @@ void GsdAttr::activate_cmd_ok()
       message('E', "Error saving profibus data");
     else if (close_cb)
       (close_cb)(parent_ctx);
-  }
-  else if (close_cb)
+  } else if (close_cb)
     (close_cb)(parent_ctx);
 }
 
@@ -243,24 +231,21 @@ void GsdAttr::activate_cmd_apply()
   int idx;
   char msg[130];
 
-  if (save_cb)
-  {
+  if (save_cb) {
     // Check syntax
     sts = gsd->syntax_check(&idx);
-    if (EVEN(sts))
-    {
-      switch (sts)
-      {
+    if (EVEN(sts)) {
+      switch (sts) {
       case PB__NOMODULENAME:
         sprintf(msg, "Syntax error in module %d, No module name", idx + 1);
         break;
       case PB__DUPLMODULENAME:
         sprintf(msg, "Syntax error in module %s, Duplicate module name",
-                gsd->module_conf[idx].name);
+            gsd->module_conf[idx].name);
         break;
       case PB__NOMODULECLASS:
         sprintf(msg, "Syntax error in module %s, Module class is missing",
-                gsd->module_conf[idx].name);
+            gsd->module_conf[idx].name);
         break;
       default:
         sprintf(msg, "Syntax error in module %d", idx + 1);
@@ -285,8 +270,7 @@ void GsdAttr::cmd_close_apply_cb(void* ctx, void* data)
   sts = (attr->save_cb)(attr->parent_ctx);
   if (EVEN(sts))
     attr->message('E', "Error saving profibus data");
-  else
-  {
+  else {
     attr->gsd->set_modified(0);
     (attr->close_cb)(attr->parent_ctx);
   }
@@ -301,24 +285,29 @@ void GsdAttr::cmd_close_no_cb(void* ctx, void* data)
 
 void GsdAttr::activate_cmd_ca()
 {
-  if (close_cb)
-  {
-    if (gsd->is_modified())
-    {
+  if (close_cb) {
+    if (gsd->is_modified()) {
       wow->DisplayQuestion((void*)this, "Apply", "Do you want to apply changes",
-                           cmd_close_apply_cb, cmd_close_no_cb, 0);
-    }
-    else
+          cmd_close_apply_cb, cmd_close_no_cb, 0);
+    } else
       (close_cb)(parent_ctx);
   }
 }
 
 GsdAttr::~GsdAttr() {}
 
-GsdAttr::GsdAttr(void* a_parent_ctx, void* a_object, pb_gsd* a_gsd,
-                 int a_edit_mode)
-    : parent_ctx(a_parent_ctx), gsd(a_gsd), edit_mode(a_edit_mode),
-      input_open(0), object(a_object), close_cb(0), save_cb(0), help_cb(0),
-      client_data(0), recall_idx(-1), value_current_recall(0)
+GsdAttr::GsdAttr(
+    void* a_parent_ctx, void* a_object, pb_gsd* a_gsd, int a_edit_mode)
+    : parent_ctx(a_parent_ctx)
+    , gsd(a_gsd)
+    , edit_mode(a_edit_mode)
+    , input_open(0)
+    , object(a_object)
+    , close_cb(0)
+    , save_cb(0)
+    , help_cb(0)
+    , client_data(0)
+    , recall_idx(-1)
+    , value_current_recall(0)
 {
 }

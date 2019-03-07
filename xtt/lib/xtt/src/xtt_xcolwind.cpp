@@ -275,7 +275,7 @@ void XColWind::activate_moveup()
   brow_GetSelectedNodes(xattnav->brow->ctx, &node_list, &node_count);
   if (node_count == 1) {
     brow_MoveUp(xattnav->brow->ctx, node_list[0]);
-    brow_Redraw(xattnav->brow->ctx, 0);
+    brow_Redraw(xattnav->brow->ctx);
   }
 }
 
@@ -287,7 +287,7 @@ void XColWind::activate_movedown()
   brow_GetSelectedNodes(xattnav->brow->ctx, &node_list, &node_count);
   if (node_count == 1) {
     brow_MoveDown(xattnav->brow->ctx, node_list[0]);
-    brow_Redraw(xattnav->brow->ctx, 0);
+    brow_Redraw(xattnav->brow->ctx);
   }
 }
 
@@ -476,7 +476,7 @@ int XColWind::collect_add(pwr_tAttrRef* areflist)
   }
 
   brow_ResetNodraw(xattnav->brow->ctx);
-  brow_Redraw(xattnav->brow->ctx, 0);
+  brow_Redraw(xattnav->brow->ctx);
   return XATT__SUCCESS;
 }
 
@@ -501,7 +501,7 @@ int XColWind::collect_signals(pwr_tAttrRef* arp)
   delete navcrr;
 
   brow_ResetNodraw(xattnav->brow->ctx);
-  brow_Redraw(xattnav->brow->ctx, 0);
+  brow_Redraw(xattnav->brow->ctx);
   return XATT__SUCCESS;
 }
 

@@ -573,7 +573,7 @@ void WbExpWNav::update()
   }
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   free(open_nodes);
 }
 
@@ -666,7 +666,7 @@ void WbExpWNav::show_export_import()
     brow_CenterObject(brow->ctx, first_item->node, 0);
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }
 
 void WbExpWNav::show_builddir()
@@ -832,7 +832,7 @@ void WbExpWNav::redraw(int posit_top)
     brow_CenterObject(brow->ctx, first_item->node, 0);
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
 }
 
 ExpWDir* WbExpWNav::dir_find(char* name)
@@ -1252,7 +1252,7 @@ int ItemDir::open_children()
       brow_SetAnnotPixmap(node, 0, expwnav->brow->pixmap_map);
     brow_ResetOpen(node, expw_mOpen_All);
     brow_ResetNodraw(expwnav->brow->ctx);
-    brow_Redraw(expwnav->brow->ctx, 0);
+    brow_Redraw(expwnav->brow->ctx);
     dir->open = 0;
   } else {
     // Create some children
@@ -1292,7 +1292,7 @@ int ItemDir::open_children()
     }
     brow_ResetNodraw(expwnav->brow->ctx);
     if (child_exist)
-      brow_Redraw(expwnav->brow->ctx, 0);
+      brow_Redraw(expwnav->brow->ctx);
     else
       return 0;
   }
@@ -1309,7 +1309,7 @@ int ItemDir::close()
       brow_SetAnnotPixmap(node, 0, expwnav->brow->pixmap_map);
     brow_ResetOpen(node, expw_mOpen_All);
     brow_ResetNodraw(expwnav->brow->ctx);
-    brow_Redraw(expwnav->brow->ctx, 0);
+    brow_Redraw(expwnav->brow->ctx);
     dir->open = 0;
   }
   return 1;

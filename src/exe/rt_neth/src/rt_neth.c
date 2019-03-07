@@ -39,25 +39,26 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "co_array.h"
+#include "co_log.h"
 #include "co_time.h"
-#include "rt_qcom_msg.h"
-#include "rt_gdh_msg.h"
-#include "rt_gdh.h"
+
+#include "rt_cbuf.h"
+#include "rt_cmvolsm.h"
+#include "rt_cvolsm.h"
+#include "rt_cvolcm.h"
 #include "rt_dl.h"
+#include "rt_gdh.h"
+#include "rt_gdh_msg.h"
 #include "rt_ini_event.h"
+#include "rt_pwr_msg.h"
+#include "rt_qcom_msg.h"
 #include "rt_san.h"
 #include "rt_sancm.h"
 #include "rt_sansm.h"
 #include "rt_subc.h"
 #include "rt_subsm.h"
 #include "rt_subcm.h"
-#include "rt_cmvolsm.h"
-#include "rt_cvolsm.h"
-#include "rt_cvolcm.h"
-#include "rt_cbuf.h"
-#include "rt_pwr_msg.h"
-#include "co_timelog.h"
-#include "co_array.h"
 
 /* Declare routines used by main.  */
 
@@ -398,7 +399,7 @@ static void id(qcom_sGet* get)
     errh_Info("Received '%s' from nid %s", cMsg[get->type.s],
         cdh_NodeIdToString(NULL, mp->hdr.nid, 0, 0));
   }
-  timelog_ss(1, "Neth Id received from nid",
+  log_info("Neth Id received from nid %s",
       cdh_NodeIdToString(NULL, mp->hdr.nid, 0, 0));
 
   if (get->sender.nid == gdbroot->my_qid.nid
@@ -802,7 +803,7 @@ static void sendId(gdb_sNode* np)
     errh_Info("Sending 'id' to %s (%s)", np->name,
         cdh_NodeIdToString(NULL, np->nid, 0, 0));
   }
-  timelog_ss(1, "Neth sending 'id' to", np->name);
+  log_info("Neth sending 'id' to %s", np->name);
 
   if (np->handler.nid)
     tgt = np->handler;

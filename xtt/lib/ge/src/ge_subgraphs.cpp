@@ -455,7 +455,7 @@ int SubGraphs::object_attr()
   }
 
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   return 1;
 }
 

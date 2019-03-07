@@ -56,8 +56,7 @@ static void get_subcid(pwr_tCid cid, std::vector<pwr_tCid>& v)
   pwr_tStatus sts;
 
   for (sts = gdh_GetSubClassList(cid, &subcid); ODD(sts);
-       sts = gdh_GetNextSubClass(cid, subcid, &subcid))
-  {
+       sts = gdh_GetNextSubClass(cid, subcid, &subcid)) {
     v.push_back(subcid);
     get_subcid(subcid, v);
   }
@@ -81,10 +80,13 @@ void xtt_pndevice_close_cb(void* sctx)
   free((char*)ctx);
 }
 
-int xtt_pndevice_save_cb(void* sctx) { return 1; }
+int xtt_pndevice_save_cb(void* sctx)
+{
+  return 1;
+}
 
-pwr_tStatus xtt_pndevice_create_ctx(pwr_tAttrRef aref, void* editor_ctx,
-                                    xtt_pndevice_sCtx** ctxp)
+pwr_tStatus xtt_pndevice_create_ctx(
+    pwr_tAttrRef aref, void* editor_ctx, xtt_pndevice_sCtx** ctxp)
 {
   pwr_tOName name;
   pwr_tString80 gsdmlfile;
@@ -104,53 +106,46 @@ pwr_tStatus xtt_pndevice_create_ctx(pwr_tAttrRef aref, void* editor_ctx,
   sts = gdh_GetObjectInfoAttrref(&aaref, gsdmlfile, sizeof(gsdmlfile));
   if (EVEN(sts))
     return sts;
-  if (streq(gsdmlfile, ""))
-  {
+  if (streq(gsdmlfile, "")) {
     return PB__GSDATTR;
   }
 
-  xtt_pndevice_sCtx* ctx =
-      (xtt_pndevice_sCtx*)calloc(1, sizeof(xtt_pndevice_sCtx));
+  xtt_pndevice_sCtx* ctx
+      = (xtt_pndevice_sCtx*)calloc(1, sizeof(xtt_pndevice_sCtx));
   ctx->aref = aref;
   ctx->editor_ctx = editor_ctx;
 
   get_subcid(pwr_cClass_PnModule, mcv);
-  ctx->mc =
-      (gsdml_sModuleClass*)calloc(mcv.size() + 2, sizeof(gsdml_sModuleClass));
+  ctx->mc
+      = (gsdml_sModuleClass*)calloc(mcv.size() + 2, sizeof(gsdml_sModuleClass));
 
   ctx->mc[0].cid = pwr_cClass_PnModule;
   sts = gdh_ObjidToName(cdh_ClassIdToObjid(ctx->mc[0].cid), ctx->mc[0].name,
-                        sizeof(ctx->mc[0].name), cdh_mName_object);
-  if (EVEN(sts))
-  {
+      sizeof(ctx->mc[0].name), cdh_mName_object);
+  if (EVEN(sts)) {
     free(ctx);
     return sts;
   }
 
-  for (int i = 1; i <= (int)mcv.size(); i++)
-  {
+  for (int i = 1; i <= (int)mcv.size(); i++) {
     ctx->mc[i].cid = mcv[i - 1];
     sts = gdh_ObjidToName(cdh_ClassIdToObjid(ctx->mc[i].cid), ctx->mc[i].name,
-                          sizeof(ctx->mc[0].name), cdh_mName_object);
-    if (EVEN(sts))
-    {
+        sizeof(ctx->mc[0].name), cdh_mName_object);
+    if (EVEN(sts)) {
       free(ctx);
       return sts;
     }
   }
 
-  if (strchr(gsdmlfile, '/') == 0)
-  {
+  if (strchr(gsdmlfile, '/') == 0) {
     strcpy(fname, "$pwrp_exe/");
     strcat(fname, gsdmlfile);
-  }
-  else
+  } else
     strcpy(fname, gsdmlfile);
 
   ctx->gsdml = new pn_gsdml();
   sts = ctx->gsdml->read(fname);
-  if (EVEN(sts))
-  {
+  if (EVEN(sts)) {
     free(ctx);
     return sts;
   }

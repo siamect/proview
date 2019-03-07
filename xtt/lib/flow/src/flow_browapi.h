@@ -199,7 +199,6 @@ void brow_PositionToPixel(
     brow_tCtx ctx, double x, double y, int* pix_x, int* pix_y);
 void brow_UnZoom(brow_tCtx ctx);
 void brow_CenterObject(brow_tCtx ctx, brow_tObject object, double factor);
-void brow_GetNodePosition(brow_tNode node, double* x, double* y);
 void brow_MeasureAnnotation(brow_tNodeClass node_class, int number, char* text,
     double* width, double* height);
 void brow_MeasureAnnotText(brow_tCtx ctx, char* text, flow_eDrawType draw_type,
@@ -210,7 +209,7 @@ void brow_GetObjectName(brow_tObject object, char* name);
 void brow_Reconfigure(brow_tCtx ctx);
 void brow_SetNodraw(brow_tCtx ctx);
 void brow_ResetNodraw(brow_tCtx ctx);
-void brow_Redraw(brow_tCtx ctx, double y_redraw);
+void brow_Redraw(brow_tCtx ctx);
 void brow_SetAnnotPixmap(
     brow_tNode node, int number, flow_sAnnotPixmap* pixmap);
 void brow_GetAnnotPixmap(

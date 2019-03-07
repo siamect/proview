@@ -43,8 +43,7 @@
 
 /* wb_c_pndevice.h -- Profinet gsdml configure method */
 
-typedef struct
-{
+typedef struct {
   pn_gsdml* gsdml;
   GsdmlAttr* attr;
   ldh_tSession ldhses;
@@ -55,7 +54,7 @@ typedef struct
 } device_sCtx;
 
 pwr_tStatus pndevice_create_ctx(ldh_tSession ldhses, pwr_tAttrRef aref,
-                                void* editor_ctx, device_sCtx** ctxp);
+    void* editor_ctx, device_sCtx** ctxp);
 pwr_tStatus pndevice_init(device_sCtx* ctx);
 int pndevice_help_cb(void* sctx, const char* text);
 void pndevice_close_cb(void* sctx);

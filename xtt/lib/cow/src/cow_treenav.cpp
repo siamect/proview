@@ -389,7 +389,7 @@ int TreeNav::create_items()
     }
   }
   brow_ResetNodraw(brow->ctx);
-  brow_Redraw(brow->ctx, 0);
+  brow_Redraw(brow->ctx);
   return 1;
 }
 
@@ -540,10 +540,6 @@ TrItemObject::TrItemObject(TreeNav* treenav, TreeNav_object* xitem,
 
 int TrItemObject::close(TreeNav* treenav, double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node)) {
     // Close
     brow_SetNodraw(treenav->brow->ctx);
@@ -551,7 +547,7 @@ int TrItemObject::close(TreeNav* treenav, double x, double y)
     brow_SetAnnotPixmap(node, 0, treenav->brow->pixmap_leaf);
     brow_ResetOpen(node, treenav_mOpen_All);
     brow_ResetNodraw(treenav->brow->ctx);
-    brow_Redraw(treenav->brow->ctx, node_y);
+    brow_Redraw(treenav->brow->ctx);
   }
   return 1;
 }
@@ -599,10 +595,6 @@ TrItemNode::TrItemNode(TreeNav* treenav, char* name, char* descr, int index,
 
 int TrItemNode::open_children(TreeNav* treenav, double x, double y)
 {
-  double node_x, node_y;
-
-  brow_GetNodePosition(node, &node_x, &node_y);
-
   if (brow_IsOpen(node) & treenav_mOpen_Children) {
     // Attributes is open, close
     brow_SetNodraw(treenav->brow->ctx);
@@ -611,7 +603,7 @@ int TrItemNode::open_children(TreeNav* treenav, double x, double y)
     brow_SetAnnotPixmap(node, 0, treenav->brow->pixmap_map);
     // brow_RemoveAnnotPixmap( node, 1);
     brow_ResetNodraw(treenav->brow->ctx);
-    brow_Redraw(treenav->brow->ctx, node_y);
+    brow_Redraw(treenav->brow->ctx);
   } else {
     brow_SetNodraw(treenav->brow->ctx);
     for (int i = treenav->tree[idx].fch; i; i = treenav->tree[i].fws) {
@@ -629,24 +621,21 @@ int TrItemNode::open_children(TreeNav* treenav, double x, double y)
     brow_SetOpen(node, treenav_mOpen_Children);
     brow_SetAnnotPixmap(node, 0, treenav->brow->pixmap_openmap);
     brow_ResetNodraw(treenav->brow->ctx);
-    brow_Redraw(treenav->brow->ctx, node_y);
+    brow_Redraw(treenav->brow->ctx);
   }
   return 1;
 }
 
 int TrItemNode::close(TreeNav* treenav, double x, double y)
 {
-  double node_x, node_y;
-
   if (brow_IsOpen(node) & treenav_mOpen_Children) {
     // Children is open, close
-    brow_GetNodePosition(node, &node_x, &node_y);
     brow_SetNodraw(treenav->brow->ctx);
     brow_CloseNode(treenav->brow->ctx, node);
     brow_ResetOpen(node, treenav_mOpen_All);
     brow_SetAnnotPixmap(node, 0, treenav->brow->pixmap_map);
     brow_ResetNodraw(treenav->brow->ctx);
-    brow_Redraw(treenav->brow->ctx, node_y);
+    brow_Redraw(treenav->brow->ctx);
   }
   return 1;
 }

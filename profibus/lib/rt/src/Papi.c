@@ -1389,8 +1389,9 @@ version
   FUNCTION_BODY
 
   if ((hDevice->hServiceReadDevice && hDevice->hServiceWriteDevice)
-      && (hDevice->hDpDataDevice || (hDevice->hDpsInputDataDevice
-                                        && hDevice->hDpsOutputDataDevice))) {
+      && (hDevice->hDpDataDevice
+             || (hDevice->hDpsInputDataDevice
+                    && hDevice->hDpsOutputDataDevice))) {
     return (E_OK); // PAPI is already initialized
   } else {
     return (profi_set_default(
@@ -1431,8 +1432,9 @@ version
   FUNCTION_BODY
 
   if ((hDevice.hServiceReadDevice && hDevice.hServiceWriteDevice)
-      && (hDevice.hDpDataDevice || (hDevice.hDpsInputDataDevice
-                                       && hDevice.hDpsOutputDataDevice))) {
+      && (hDevice.hDpDataDevice
+             || (hDevice.hDpsInputDataDevice
+                    && hDevice.hDpsOutputDataDevice))) {
     return (E_OK); // PAPI is already initialized
   } else {
     return (profi_set_default(&hDevice, 0, 0, 0, 0)); // initalize PAPI

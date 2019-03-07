@@ -55,18 +55,16 @@ int BrowCtx::insert(FlowArrayElem* element, FlowArrayElem* destination,
     y = ((FlowNode*)destination)->y_low;
   else
     y = 0;
-  configure(y);
+  configure();
   return 1;
 }
 
 void BrowCtx::remove(FlowArrayElem* element)
 {
-  double pos = ((FlowNode*)element)->y_low;
-
   set_nodraw();
   a.brow_remove(this, element);
   reset_nodraw();
-  configure(pos);
+  configure();
 }
 
 void BrowCtx::close(FlowArrayElem* element)
@@ -74,10 +72,10 @@ void BrowCtx::close(FlowArrayElem* element)
   set_nodraw();
   a.brow_close(this, element);
   reset_nodraw();
-  configure(((FlowNode*)element)->y_low);
+  configure();
 }
 
-void BrowCtx::configure(double y_redraw)
+void BrowCtx::configure()
 {
   if (nodraw)
     return;
@@ -87,7 +85,7 @@ void BrowCtx::configure(double y_redraw)
   get_borders();
   frame_x_right = MAX(x_right, 1.0 * (window_width + offset_x) / zoom_factor);
   a.zoom();
-  redraw(y_redraw);
+  redraw();
   change_scrollbar();
 }
 
@@ -118,19 +116,11 @@ void BrowCtx::change_scrollbar()
   (scroll_callback)(&data);
 }
 
-void BrowCtx::redraw(double y_redraw)
+void BrowCtx::redraw()
 {
   fdraw->get_window_size(this, &window_width, &window_height);
-
-  if (y_redraw) {
-    fdraw->clear_area(this, 0, window_width,
-        int(y_redraw * zoom_factor - offset_y), window_height);
-    draw(
-        0, int(y_redraw * zoom_factor - offset_y), window_width, window_height);
-  } else {
-    clear();
-    draw(0, 0, window_width, window_height);
-  }
+  clear();
+  draw(0, 0, window_width, window_height);
   nav_zoom();
 }
 

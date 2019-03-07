@@ -214,8 +214,9 @@ GsdAttrQt::~GsdAttrQt()
   delete attrnav;
 }
 
-GsdAttrQt::GsdAttrQt(void* a_parent_ctx, void* a_object, pb_gsd* a_gsd,
-    int a_edit_mode) : GsdAttr(a_parent_ctx, a_object, a_gsd, a_edit_mode)
+GsdAttrQt::GsdAttrQt(
+    void* a_parent_ctx, void* a_object, pb_gsd* a_gsd, int a_edit_mode)
+    : GsdAttr(a_parent_ctx, a_object, a_gsd, a_edit_mode)
 {
   int sts;
 

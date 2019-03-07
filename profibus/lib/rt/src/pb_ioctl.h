@@ -78,31 +78,28 @@
 
 #ifdef __KERNEL__
 extern int pb_ioctl(struct inode* inode, struct file* file, unsigned int cmd,
-                    unsigned long arg);
+    unsigned long arg);
 #endif
 
 /*****************************************************************************/
 /* Structure for data image description                                      */
 /*****************************************************************************/
 
-typedef struct _StatusAndData
-{
+typedef struct _StatusAndData {
   void* StatusImage;
   int StatusLength;
   void* Data;
   int DataLength;
 } StatusAndData;
 
-typedef struct _NTIoctl
-{
+typedef struct _NTIoctl {
   void* InBuf;
   int InBufLength;
   void* OutBuf;
   int OutBufLength;
 } NTIoctl;
 
-typedef struct _DataImage
-{
+typedef struct _DataImage {
   int id;
   void* Buf;
   unsigned short Length; // sizeof( Buf )
@@ -113,7 +110,7 @@ typedef struct _DataImage
 /*****************************************************************************/
 
 #define FMS_DPV1_MASTER_MODE 0x00 // FMS/DPV1-Master
-#define DPV1_MASTER_MODE 0x01     // for future use
-#define DPV1_SLAVE_MODE 0x02      // DP-Slave
+#define DPV1_MASTER_MODE 0x01 // for future use
+#define DPV1_SLAVE_MODE 0x02 // DP-Slave
 
 #endif

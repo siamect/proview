@@ -581,11 +581,6 @@ void brow_CenterObject(brow_tCtx ctx, brow_tObject object, double factor)
   ctx->center_object((FlowArrayElem*)object, factor);
 }
 
-void brow_GetNodePosition(brow_tNode node, double* x, double* y)
-{
-  ((FlowNode*)node)->get_node_position(x, y);
-}
-
 void brow_MeasureAnnotation(brow_tNodeClass node_class, int number, char* text,
     double* width, double* height)
 {
@@ -625,9 +620,9 @@ void brow_ResetNodraw(brow_tCtx ctx)
   ctx->reset_nodraw();
 }
 
-void brow_Redraw(brow_tCtx ctx, double y_redraw)
+void brow_Redraw(brow_tCtx ctx)
 {
-  ctx->configure(y_redraw);
+  ctx->configure();
 }
 
 void brow_SetAnnotPixmap(brow_tNode node, int number, flow_sAnnotPixmap* pixmap)

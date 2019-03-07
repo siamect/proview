@@ -96,7 +96,7 @@
 
 /* --- DPRAM SIZES / IRQ-VAL offset in DPR --------------------------------- */
 #define DPRAM_SIZE_PROFIBOARD 0x4000 /* 16 KB DPRAM */
-#define DPRAM_SIZE_PROFI_104 0x4000  /* 16 KB DPRAM */
+#define DPRAM_SIZE_PROFI_104 0x4000 /* 16 KB DPRAM */
 
 #define DPRAM_H_TO_C_IRQ_OFFSET 0x2 /* IRQ memory cells at DPRAM end */
 #define DPRAM_C_TO_H_IRQ_OFFSET 0x4
@@ -104,10 +104,10 @@
 /* --- IRQ-VALUE ----------------------------------------------------------- */
 #define RST_IRQ_VALUE 0xAA /* Reset */
 
-#define REQ_IRQ_VALUE 0xF0              /* SND/RCV Request */
-#define ACK_IRQ_VALUE 0x0F              /* SND/RCV Acknowledge */
-#define DP_SLAVE_IO_REQ_IRQ_VALUE 0xE0  /* DP-SLAVE-IO Request */
-#define DP_SLAVE_IO_ACK_IRQ_VALUE 0x0E  /* DP-SLAVE-IO Acknowldege */
+#define REQ_IRQ_VALUE 0xF0 /* SND/RCV Request */
+#define ACK_IRQ_VALUE 0x0F /* SND/RCV Acknowledge */
+#define DP_SLAVE_IO_REQ_IRQ_VALUE 0xE0 /* DP-SLAVE-IO Request */
+#define DP_SLAVE_IO_ACK_IRQ_VALUE 0x0E /* DP-SLAVE-IO Acknowldege */
 #define DP_DATA_STOP_REQ_IRQ_VALUE 0xD0 /* data transfer stop Request */
 #define DP_DATA_STOP_ACK_IRQ_VALUE 0x0D /* data transfer stop Acknowldege */
 
@@ -119,19 +119,19 @@
 
 /* --- Write Registers in the I/O Area of the PC --------------------------- */
 #define BOARD_CTRL (IO_BASE_ADD + 0) /* Board Control Register */
-#define BASE_ADD (IO_BASE_ADD + 1)   /* DPRAM Base Address Register */
-#define PAGE_SEL (IO_BASE_ADD + 2)   /* Page Select Register */
-#define CP_IRQ (IO_BASE_ADD + 3)     /* Interrupt Register */
+#define BASE_ADD (IO_BASE_ADD + 1) /* DPRAM Base Address Register */
+#define PAGE_SEL (IO_BASE_ADD + 2) /* Page Select Register */
+#define CP_IRQ (IO_BASE_ADD + 3) /* Interrupt Register */
 
 /* -- Pindefinition of the Board Control Register -------------------------- */
 #define C165_RESET 0x01 /* Reset of the C165 (low active)*/
-#define EN_DPRAM 0x02   /* Enable DPRAM for PC (high active)*/
+#define EN_DPRAM 0x02 /* Enable DPRAM for PC (high active)*/
 #define SIZE_16_64 0x04 /* DPRAM size 1:16 kByte 0:64kByte*/
 /* 64 kByte (low) */
-#define BASE_A14 0x08       /* Address low within the 64 kByte */
-#define BASE_A15 0x10       /* Address high within the 64 kByte */
+#define BASE_A14 0x08 /* Address low within the 64 kByte */
+#define BASE_A15 0x10 /* Address high within the 64 kByte */
 #define DPR_WIDTH_8_16 0x20 /* DPRAM width 0:16Bit 1:8Bit */
-#define MEMCS16_LA_SA 0x40  /* MEMCS16 generation 0:LA 1:SA */
+#define MEMCS16_LA_SA 0x40 /* MEMCS16 generation 0:LA 1:SA */
 
 /* --- Pindefinition of the DPRAM Base Adress Register --------------------- */
 /* Bit 7: Base Address 23 (MSB) to                                           */

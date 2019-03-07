@@ -42,10 +42,10 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
+#include "co_log.h"
 #include "co_string.h"
 #include "co_tree.h"
-#include "co_timelog.h"
-
+ 
 #include "rt_qdb.h"
 #include "rt_net.h"
 #include "rt_que.h"
@@ -514,10 +514,10 @@ static sEseg* create_connect(sLink* lp)
   if (qdb->my_node->redundancy_state == pwr_eRedundancyState_Passive
       || qdb->my_node->redundancy_state == pwr_eRedundancyState_Init) {
     sp->head.flags.b.event = eEvent_connectPassive;
-    timelog(1, "qmon sending connect Passive");
+    log_info("qmon sending connect Passive");
   } else {
     sp->head.flags.b.event = eEvent_connect;
-    timelog(1, "qmon sending connect");
+    log_info("qmon sending connect");
   }
   sp->lp = lp;
   sp->c.action = eAction_export;
@@ -1325,7 +1325,7 @@ static void link_import(sLink* lp, sIseg* sp)
     break;
   case eEvent_connect:
   case eEvent_connectPassive:
-    timelog_ss(1, "Qmon connect received from", lp->np->link[lp->lix].name);
+    log_info("Qmon connect received from %s", lp->np->link[lp->lix].name);
     link_connect(lp, sp);
     lack(lp, sp);
     set_rack(lp, sp);
@@ -1335,13 +1335,13 @@ static void link_import(sLink* lp, sIseg* sp)
     lack(lp, sp);
     set_rack(lp, sp);
     link_redcom_active(lp, sp);
-    timelog_ss(1, "Active received from", lp->np->link[lp->lix].name);
+    log_info("Active received from %s", lp->np->link[lp->lix].name);
     break;
   case eEvent_redcomPassive:
     lack(lp, sp);
     set_rack(lp, sp);
     link_redcom_passive(lp, sp);
-    timelog_ss(1, "Passive received from", lp->np->link[lp->lix].name);
+    log_info("Passive received from %s", lp->np->link[lp->lix].name);
     break;
   default:
     break;
@@ -1958,11 +1958,11 @@ static sEseg* send_action(sLink* lp, qmon_eMsgTypeAction action)
   sp = eseg_alloc(&l.eseg.mutex);
   switch (action) {
   case qmon_eMsgTypeAction_NodeActive:
-    timelog(1, "qmon send NodeActive");
+    log_info("qmon send NodeActive");
     sp->head.flags.b.event = eEvent_redcomActive;
     break;
   case qmon_eMsgTypeAction_NodePassive:
-    timelog(1, "qmon send NodePassive");
+    log_info("qmon send NodePassive");
     sp->head.flags.b.event = eEvent_redcomPassive;
     break;
   default:

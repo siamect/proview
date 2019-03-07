@@ -46,8 +46,8 @@
 #include "pwr_names.h"
 
 #include "co_dcli.h"
+#include "co_log.h"
 #include "co_string.h"
-#include "co_timelog.h"
 #include "co_tree.h"
 
 #include "rt_qdb.h"
@@ -1338,7 +1338,7 @@ static void link_connect(sLink* lp, sIseg* sp)
 {
   if (l.pending_set_active) {
     l.pending_set_active = 0;
-    timelog(1, "Pending set active reset");
+    log_info("Pending set active reset");
   }
 
   lp->np->link.flags.b.active = 1;
@@ -1475,7 +1475,7 @@ static void check_state(sLink* lp, sIseg* sp)
     case pwr_eRedundancyState_Init:
     case pwr_eRedundancyState_Active:
       state_change_request(lp, sp, pwr_eRedundancyState_Passive);
-      timelog(1, "redcom state to Passive, remote is Active");
+      log_info("redcom state to Passive, remote is Active");
       break;
     }
     break;
@@ -1484,7 +1484,7 @@ static void check_state(sLink* lp, sIseg* sp)
     case pwr_eRedundancyState_Init:
     case pwr_eRedundancyState_Passive:
       state_change_request(lp, sp, pwr_eRedundancyState_Active);
-      timelog(1, "redcom state to Active, remote is Passive");
+      log_info("redcom state to Active, remote is Passive");
       break;
     }
     break;
@@ -1495,7 +1495,7 @@ static void check_state(sLink* lp, sIseg* sp)
         state_change_request(lp, sp, pwr_eRedundancyState_Active);
       else
         state_change_request(lp, sp, pwr_eRedundancyState_Passive);
-      timelog(1, "redcom state to Active, remote is Init");
+      log_info("redcom state to Active, remote is Init");
       break;
     }
     break;
@@ -1515,7 +1515,7 @@ static void link_import(sLink* lp, sIseg* sp)
 
   if (l.pending_set_active) {
     l.pending_set_active = 0;
-    timelog(1, "Pending set active reset");
+    log_info("Pending set active reset");
   }
 
   switch (sp->head.flags.b.event) {
@@ -1540,14 +1540,14 @@ static void link_import(sLink* lp, sIseg* sp)
     set_rack(lp, sp);
     break;
   case eEvent_set_active:
-    timelog(1, "redcom Active received");
+    log_info("redcom Active received");
     state_change_request(lp, sp, pwr_eRedundancyState_Active);
 
     lack(lp, sp);
     set_rack(lp, sp);
     break;
   case eEvent_set_passive:
-    timelog(1, "redcom Passive received");
+    log_info("redcom Passive received");
     state_change_request(lp, sp, pwr_eRedundancyState_Passive);
     lack(lp, sp);
     set_rack(lp, sp);
@@ -2098,7 +2098,7 @@ static void state_change_request(
 {
   if (l.pending_set_active) {
     l.pending_set_active = 0;
-    timelog(1, "Pending set active reset");
+    log_info("Pending set active reset");
   }
 
   if (state != l.nodep->RedundancyState) {
@@ -2187,14 +2187,14 @@ static void failover_detection()
       if (l.config->FailoverReason & pwr_mFailoverReasonMask_EmergencyBreak
           && l.nodep->EmergBreakTrue && !l.sup.emergbreaktrue_old) {
         l.config->SetPassive = 1;
-        timelog(1, "Emergency break, set passive");
+        log_info("Emergency break, set passive");
       } else if (l.config->FailoverReason & pwr_mFailoverReasonMask_SystemStatus
           && (errh_SeverityError(l.nodep->SystemStatus)
                  || errh_SeverityFatal(l.nodep->SystemStatus))
           && !(errh_SeverityError(l.sup.systemstatus_old)
                  || errh_SeverityFatal(l.sup.systemstatus_old))) {
         l.config->SetPassive = 1;
-        timelog(1, "Even SystemStatus, set passive");
+        log_info("Even SystemStatus, set passive");
       }
     } else {
       /* State if passive, check for overtaking */
@@ -2202,7 +2202,7 @@ static void failover_detection()
         if (l.config->Link[0].State == pwr_eUpDownEnum_Down
             && l.sup.linkstate_old == pwr_eUpDownEnum_Up) {
           l.config->SetActive = 1;
-          timelog(1, "Link down, set active");
+          log_info("Link down, set active");
         }
 
         for (lp = tree_Minimum(&sts, l.links.table); lp != NULL;
@@ -2219,7 +2219,7 @@ static void failover_detection()
             time_Adiff(&dt, &current, &lp->receive_time);
             ftime = time_DToFloat(0, &dt);
             if (ftime > timeout) {
-              timelog(1, "Link timeout, set active");
+              log_info("Link timeout, set active");
               l.config->SetActive = 1;
             }
             l.config->Link[lp->idx].TimeMean
@@ -2266,12 +2266,12 @@ static void* cyclic_thread()
         if (ftime > 5) {
           l.config->SetActive = 1;
           l.pending_set_active = 0;
-          timelog(1, "Pending set active timed out");
+          log_info("Pending set active timed out");
         }
       }
     } else {
       if (l.pending_set_active) {
-        timelog(1, "Pending set active reset");
+        log_info("Pending set active reset");
         l.pending_set_active = 0;
       }
     }
@@ -2279,7 +2279,7 @@ static void* cyclic_thread()
     failover_detection();
 
     if (l.config->SetActive) {
-      timelog(1, "redcom SetActive");
+      log_info("redcom SetActive");
 
       if (l.nodep->RedundancyState != pwr_eRedundancyState_Active)
         time_GetTimeMonotonic(&l.last_switch_time);
@@ -2293,7 +2293,7 @@ static void* cyclic_thread()
       send_state_change();
     }
     if (l.config->SetPassive) {
-      timelog(1, "redcom SetPassive");
+      log_info("redcom SetPassive");
 
       if (l.nodep->RedundancyState != pwr_eRedundancyState_Passive)
         time_GetTimeMonotonic(&l.last_switch_time);
@@ -2334,11 +2334,11 @@ void send_state_change()
   switch (l.nodep->RedundancyState) {
   case pwr_eRedundancyState_Active:
     put.type.s = (qcom_eStype)qmon_eMsgTypeAction_NodeActive;
-    timelog(1, "redcom to qmon NodeActive");
+    log_info("redcom to qmon NodeActive");
     break;
   case pwr_eRedundancyState_Passive:
     put.type.s = (qcom_eStype)qmon_eMsgTypeAction_NodePassive;
-    timelog(1, "redcom to qmon NodePassive");
+    log_info("redcom to qmon NodePassive");
     break;
   }
   put.size = 4;

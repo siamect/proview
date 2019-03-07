@@ -39,6 +39,10 @@
 #ifndef CO_LOG_H
 #define CO_LOG_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -48,7 +52,7 @@ void log_setLevel(int level);
 void log_setQuiet(int quiet);
 void log_setFile(FILE* fp);
 
-void print_time(FILE* stream, int fulldate = 0);
+void print_time(FILE* stream, int fulldate);
 void log_print(int level, const char* file, int line, const char* fmt, ...);
 
 #define log_trace(...) log_print(LOG_TRACE, __FILE__, __LINE__, __VA_ARGS__);
@@ -57,5 +61,9 @@ void log_print(int level, const char* file, int line, const char* fmt, ...);
 #define log_warn(...)  log_print(LOG_WARN, __FILE__, __LINE__, __VA_ARGS__);
 #define log_error(...) log_print(LOG_ERROR, __FILE__, __LINE__, __VA_ARGS__);
 #define log_fatal(...) log_print(LOG_FATAL, __FILE__, __LINE__, __VA_ARGS__);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

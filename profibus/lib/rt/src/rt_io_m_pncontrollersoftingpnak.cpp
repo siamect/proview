@@ -81,8 +81,7 @@ static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap)
 
   /* Allocate area for local data structure */
   ap->Local = (io_sAgentLocal*)new io_sAgentLocal;
-  if (!ap->Local)
-  {
+  if (!ap->Local) {
     //    errh_Error( "ERROR config Profibus DP Master %s - %s", ap->Name,
     //    "calloc");
     return IO__ERRINIDEVICE;
@@ -149,48 +148,39 @@ static pwr_tStatus IoAgentRead(io_tCtx ctx, io_sAgent* ap)
 
   //  pthread_mutex_lock(&local->mutex);
 
-  for (ii = 1; ii < local->device_data.size(); ii++)
-  {
-    if (local->device_data[ii]->device_state == PNAK_DEVICE_STATE_CONNECTED)
-    {
-      for (jj = 0; jj < local->device_data[ii]->iocr_data.size(); jj++)
-      {
+  for (ii = 1; ii < local->device_data.size(); ii++) {
+    if (local->device_data[ii]->device_state == PNAK_DEVICE_STATE_CONNECTED) {
+      for (jj = 0; jj < local->device_data[ii]->iocr_data.size(); jj++) {
         pn_iocr_data = local->device_data[ii]->iocr_data[jj];
 
-        if (pn_iocr_data->type == PROFINET_IO_CR_TYPE_INPUT)
-        {
+        if (pn_iocr_data->type == PROFINET_IO_CR_TYPE_INPUT) {
           data_length = pn_iocr_data->io_data_length;
 
           sts = pnak_get_iocr_data(0, pn_iocr_data->identifier,
-                                   pn_iocr_data->io_data, &data_length, &ioxs,
-                                   &status_data);
+              pn_iocr_data->io_data, &data_length, &ioxs, &status_data);
 
-          if (sts == PNAK_OK)
-          {
-            for (kk = 0; kk < local->device_data[ii]->module_data.size(); kk++)
-            {
+          if (sts == PNAK_OK) {
+            for (kk = 0; kk < local->device_data[ii]->module_data.size();
+                 kk++) {
               for (ll = 0; ll < local->device_data[ii]
                                     ->module_data[kk]
                                     ->submodule_data.size();
-                   ll++)
-              {
-                submodule =
-                    local->device_data[ii]->module_data[kk]->submodule_data[ll];
-                if ((submodule->type == PROFINET_IO_SUBMODULE_TYPE_INPUT) ||
-                    (submodule->type ==
-                     PROFINET_IO_SUBMODULE_TYPE_INPUT_AND_OUTPUT))
-                {
+                   ll++) {
+                submodule = local->device_data[ii]
+                                ->module_data[kk]
+                                ->submodule_data[ll];
+                if ((submodule->type == PROFINET_IO_SUBMODULE_TYPE_INPUT)
+                    || (submodule->type
+                           == PROFINET_IO_SUBMODULE_TYPE_INPUT_AND_OUTPUT)) {
                   io_datap = (pn_iocr_data->io_data + submodule->offset_io_in);
-                  clean_io_datap = (pn_iocr_data->clean_io_data +
-                                    submodule->offset_clean_io_in);
-                  memcpy(clean_io_datap, io_datap,
-                         submodule->io_in_data_length);
+                  clean_io_datap = (pn_iocr_data->clean_io_data
+                      + submodule->offset_clean_io_in);
+                  memcpy(
+                      clean_io_datap, io_datap, submodule->io_in_data_length);
                 }
               }
             }
-          }
-          else
-          {
+          } else {
             printf("pnak_get_iocr_data failed!\n");
           }
         }
@@ -229,45 +219,37 @@ static pwr_tStatus IoAgentWrite(io_tCtx ctx, io_sAgent* ap)
 
   //  pthread_mutex_lock(&local->mutex);
 
-  for (ii = 1; ii < local->device_data.size(); ii++)
-  {
-    if (slave_list != NULL)
-    {
+  for (ii = 1; ii < local->device_data.size(); ii++) {
+    if (slave_list != NULL) {
       sp = (pwr_sClass_PnDevice*)slave_list->op;
       slave_list = slave_list->next;
     }
 
-    if (local->device_data[ii]->device_state == PNAK_DEVICE_STATE_CONNECTED)
-    {
-      for (jj = 0; jj < local->device_data[ii]->iocr_data.size(); jj++)
-      {
+    if (local->device_data[ii]->device_state == PNAK_DEVICE_STATE_CONNECTED) {
+      for (jj = 0; jj < local->device_data[ii]->iocr_data.size(); jj++) {
         pn_iocr_data = local->device_data[ii]->iocr_data[jj];
 
-        if (pn_iocr_data->type == PROFINET_IO_CR_TYPE_OUTPUT)
-        {
+        if (pn_iocr_data->type == PROFINET_IO_CR_TYPE_OUTPUT) {
           data_length = pn_iocr_data->io_data_length;
 
           /* Set io status to good */
 
           memset(pn_iocr_data->io_data, 0x80,
-                 data_length); // 0x80 is PNAK_IOXS_STATUS_DATA_GOOD
+              data_length); // 0x80 is PNAK_IOXS_STATUS_DATA_GOOD
 
-          for (kk = 0; kk < local->device_data[ii]->module_data.size(); kk++)
-          {
-            for (ll = 0;
-                 ll <
-                 local->device_data[ii]->module_data[kk]->submodule_data.size();
-                 ll++)
-            {
-              submodule =
-                  local->device_data[ii]->module_data[kk]->submodule_data[ll];
-              if ((submodule->type == PROFINET_IO_SUBMODULE_TYPE_OUTPUT) ||
-                  (submodule->type ==
-                   PROFINET_IO_SUBMODULE_TYPE_INPUT_AND_OUTPUT))
-              {
+          for (kk = 0; kk < local->device_data[ii]->module_data.size(); kk++) {
+            for (ll = 0; ll < local->device_data[ii]
+                                  ->module_data[kk]
+                                  ->submodule_data.size();
+                 ll++) {
+              submodule
+                  = local->device_data[ii]->module_data[kk]->submodule_data[ll];
+              if ((submodule->type == PROFINET_IO_SUBMODULE_TYPE_OUTPUT)
+                  || (submodule->type
+                         == PROFINET_IO_SUBMODULE_TYPE_INPUT_AND_OUTPUT)) {
                 io_datap = (pn_iocr_data->io_data + submodule->offset_io_out);
-                clean_io_datap = (pn_iocr_data->clean_io_data +
-                                  submodule->offset_clean_io_out);
+                clean_io_datap = (pn_iocr_data->clean_io_data
+                    + submodule->offset_clean_io_out);
                 memcpy(io_datap, clean_io_datap, submodule->io_out_data_length);
 
                 /*status_datap = io_datap + submodule->io_out_data_length;
@@ -277,60 +259,51 @@ static pwr_tStatus IoAgentWrite(io_tCtx ctx, io_sAgent* ap)
               }
             }
           }
-          char ioxs = CYCLIC_DATA_STATUS_DATA_VALID |
-                      CYCLIC_DATA_STATUS_STATE_PRIMARY |
-                      CYCLIC_DATA_STATUS_STATE_RUN |
-                      CYCLIC_DATA_STATUS_NORMAL_OPERATION;
+          char ioxs = CYCLIC_DATA_STATUS_DATA_VALID
+              | CYCLIC_DATA_STATUS_STATE_PRIMARY | CYCLIC_DATA_STATUS_STATE_RUN
+              | CYCLIC_DATA_STATUS_NORMAL_OPERATION;
           sts = pnak_set_iocr_data(0, pn_iocr_data->identifier,
-                                   pn_iocr_data->io_data,
-                                   pn_iocr_data->io_data_length, ioxs);
-          if (sts != PNAK_OK)
-          {
+              pn_iocr_data->io_data, pn_iocr_data->io_data_length, ioxs);
+          if (sts != PNAK_OK) {
             printf("pnak_set_iocr_data failed!\n");
           }
         }
       }
 
-      if (slave_list != NULL)
-      {
+      if (slave_list != NULL) {
         /* Check if there is a write request pending ?? */
 
-        if (sp->WriteReq.SendReq)
-        {
-          if ((sp->WriteReq.Length > 0) &&
-              (sp->WriteReq.Length <= sizeof(sp->WriteReq.Data)))
-          {
-            for (jj = 0; jj < local->device_data[ii]->module_data.size(); jj++)
-            {
-              if (local->device_data[ii]->module_data[jj]->slot_number ==
-                  sp->WriteReq.SlotNumber)
-              {
+        if (sp->WriteReq.SendReq) {
+          if ((sp->WriteReq.Length > 0)
+              && (sp->WriteReq.Length <= sizeof(sp->WriteReq.Data))) {
+            for (jj = 0; jj < local->device_data[ii]->module_data.size();
+                 jj++) {
+              if (local->device_data[ii]->module_data[jj]->slot_number
+                  == sp->WriteReq.SlotNumber) {
                 for (kk = 0; kk < local->device_data[ii]
                                       ->module_data[jj]
                                       ->submodule_data.size();
-                     kk++)
-                {
+                     kk++) {
                   if (local->device_data[ii]
                           ->module_data[jj]
                           ->submodule_data[kk]
-                          ->subslot_number == sp->WriteReq.SubslotNumber)
-                  {
+                          ->subslot_number
+                      == sp->WriteReq.SubslotNumber) {
                     if (local->device_data[ii]
                             ->module_data[jj]
                             ->submodule_data[kk]
-                            ->api > 0)
-                    {
+                            ->api
+                        > 0) {
                       sp->WriteReq.Api = local->device_data[ii]
                                              ->module_data[jj]
                                              ->submodule_data[kk]
                                              ->api;
                     }
                     pack_write_req(&local->service_req_res,
-                                   local->device_data[ii]->device_ref,
-                                   &sp->WriteReq);
+                        local->device_data[ii]->device_ref, &sp->WriteReq);
                     sts = pnak_send_service_req_res(0, &local->service_req_res);
                     errh_Info("Profinet - Asynch write, dev: %d",
-                              local->device_data[ii]->device_ref);
+                        local->device_data[ii]->device_ref);
                     break;
                   }
                 }
@@ -376,7 +349,7 @@ static pwr_tStatus IoAgentClose(io_tCtx ctx, io_sAgent* ap)
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/
 
-pwr_dExport pwr_BindIoMethods(PnControllerSoftingPNAK) = {
-    pwr_BindIoMethod(IoAgentInit), pwr_BindIoMethod(IoAgentRead),
-    pwr_BindIoMethod(IoAgentWrite), pwr_BindIoMethod(IoAgentClose),
-    pwr_NullMethod};
+pwr_dExport pwr_BindIoMethods(PnControllerSoftingPNAK)
+    = { pwr_BindIoMethod(IoAgentInit), pwr_BindIoMethod(IoAgentRead),
+        pwr_BindIoMethod(IoAgentWrite), pwr_BindIoMethod(IoAgentClose),
+        pwr_NullMethod };
