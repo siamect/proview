@@ -50,6 +50,7 @@
 #include "rt_cbuf.h"
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
+#include "rt_thread.h"
 
 #include "jpwr_rt_gdh.h"
 
@@ -80,6 +81,7 @@ typedef struct {
 #if defined HW_X86_64
 static tree_sTable *jid_table = 0;
 static int jid_next = 1;
+static thread_sMutex jid_mutex;
 #endif
 
 static int gdh_ExtractNameSuffix(	char   *Name,
@@ -3124,8 +3126,13 @@ static int gdh_JidToPointer( int id, void **p)
   pwr_tStatus sts;
   sJid *jp;
 
+  thread_MutexLock(&jid_mutex);
   jp = tree_Find( &sts, jid_table, &id);
-  if ( !jp) return 0;
+  thread_MutexUnlock(&jid_mutex);
+  if ( !jp) {
+    printf("** Jid not found %d %d %lu\n", id, sts, (unsigned long)jid_table);
+    return 0;
+  }
 
   *p = jp->p;
   return 1;
@@ -3142,19 +3149,22 @@ static int gdh_JidStore( void *p, pwr_tRefId r, int *id)
   pwr_tStatus sts;
 
   if ( !jid_table) {
+    sts = thread_MutexInit(&jid_mutex);
     jid_table = tree_CreateTable( &sts, sizeof(int), offsetof(sJid, jid),
 				  sizeof(sJid), 10, tree_Comp_int32);
     if ( EVEN(sts)) return sts;
   }
 
   *id = jid_next++;
+  thread_MutexLock(&jid_mutex);
   jp = tree_Insert(&sts, jid_table, id);
+  thread_MutexUnlock(&jid_mutex);
   if ( !jp) return sts;
 
   jp->p = p;
   jp->refid = r;
 
-  // printf( "Jid store: %d\n", *id);
+  // printf( "Jid store: %d %lu\n", *id, (unsigned long)jid_table);
   return 1;
 #else
   *id = (int)p;
@@ -3168,13 +3178,16 @@ static int gdh_JidRemove( pwr_tRefId r)
   sJid *jp;
   pwr_tStatus sts;
 
+  thread_MutexLock(&jid_mutex);
   for (jp = tree_Minimum( &sts, jid_table); jp != NULL; jp = tree_Successor( &sts, jid_table, jp)) {
     if ( jp->refid.nid == r.nid && jp->refid.rix == r.rix) {
       // printf( "Jid remove: %d\n", jp->jid);
       tree_Remove( &sts, jid_table, jp);
+      thread_MutexUnlock(&jid_mutex);
       return 1;
     }
   }
+  thread_MutexUnlock(&jid_mutex);
   return 0;
 #else
   return 1;
