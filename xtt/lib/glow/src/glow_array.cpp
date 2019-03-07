@@ -48,6 +48,7 @@
 #include "glow_growslider.h"
 #include "glow_growtext.h"
 #include "glow_growbar.h"
+#include "glow_growbararc.h"
 #include "glow_growslider.h"
 #include "glow_growimage.h"
 #include "glow_growgroup.h"
@@ -227,7 +228,7 @@ void GlowArray::copy_from(const GlowArray& array)
       n->highlight = 0;
       n->hot = 0;
       if (n->ctx->userdata_copy_callback)
-        (n->ctx->userdata_copy_callback)(n, ((GrowBarChart*)array.a[i])->user_data,
+        (n->ctx->userdata_copy_callback)(n, ((GrowPie*)array.a[i])->user_data,
             &n->user_data, glow_eUserdataCbType_Node);
       insert(n);
       break;
@@ -309,6 +310,17 @@ void GlowArray::copy_from(const GlowArray& array)
       // Fix, This should be done in the copy constructor !!!
       if (n->ctx->userdata_copy_callback)
         (n->ctx->userdata_copy_callback)(n, ((GrowBar*)array.a[i])->user_data,
+            &n->user_data, glow_eUserdataCbType_Node);
+      insert(n);
+      break;
+    }
+    case glow_eObjectType_GrowBarArc: {
+      GrowBarArc* n = new GrowBarArc(*(GrowBarArc*)array.a[i]);
+      n->highlight = 0;
+      n->hot = 0;
+      // Fix, This should be done in the copy constructor !!!
+      if (n->ctx->userdata_copy_callback)
+        (n->ctx->userdata_copy_callback)(n, ((GrowBarArc*)array.a[i])->user_data,
             &n->user_data, glow_eUserdataCbType_Node);
       insert(n);
       break;
@@ -1031,6 +1043,12 @@ void GlowArray::open(GrowCtx* ctx, std::ifstream& fp)
     }
     case glow_eSave_GrowBar: {
       GrowBar* n = new GrowBar(ctx, "");
+      n->open(fp);
+      insert(n);
+      break;
+    }
+    case glow_eSave_GrowBarArc: {
+      GrowBarArc* n = new GrowBarArc(ctx, "");
       n->open(fp);
       insert(n);
       break;

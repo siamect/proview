@@ -938,6 +938,30 @@ void grow_CreateGrowBar(grow_tCtx ctx, const char* name, double x, double y,
     glow_mDisplayLevel display_level, int fill_rect, int border,
     glow_eDrawType fill_draw_type, void* user_data, grow_tObject* bar);
 
+//! Create a bararc object, i.e an object of class GrowArcBar.
+/*!
+  \param ctx		Grow context.
+  \param name		Object name (max 31 char).
+  \param x1		x coordinate for position of lower left corner of the
+  rectangle.
+  \param y1		y coordinate for position of lower left corner of the
+  rectangle.
+  \param x2		x coordinate for upper right corner.
+  \param y2		y coordinate for upper right corner.
+  \param ang1      	Start angle of the arc in degrees from the x axis.
+  \param ang2      	Lengh of the arc in degrees from the start angle.
+  \param width 		Width of bar.
+  \param draw_type	Border color.
+  \param line_width	Line width of border.
+  \param border	Border is visible.
+  \param fill_draw_type Fill color.
+  \param user_data	User data.
+  \param bar		Created GrowBarArc object.
+*/
+void grow_CreateGrowBarArc(grow_tCtx ctx, const char* name, double x1, double y1,
+    double x2, double y2, int ang1, int ang2, double width, glow_eDrawType border_draw_type, int line_width,
+    int border, glow_eDrawType fill_draw_type, void* user_data, grow_tObject* bar);
+
 //! Create a trend object, i.e an object of class GrowTrend.
 /*!
   \param ctx		Grow context.
@@ -3069,6 +3093,21 @@ void grow_SetBarInfo(grow_tObject object, glow_sBarInfo* info);
   \param info		Info struct.
 */
 void grow_GetBarInfo(grow_tObject object, glow_sBarInfo* info);
+
+//! Set parameters for a bararc object.
+/*!
+  \param object	BarArc object.
+  \param info		Info struct.
+*/
+void grow_SetBarArcInfo(grow_tObject object, glow_sBarInfo* info);
+
+//! Get parameters for a bar arc object.
+/*!
+  \param object	BarArc object.
+  \param info		Info struct.
+*/
+
+void grow_GetBarArcInfo(grow_tObject object, glow_sBarInfo* info);
 
 //! Set parameters for an axis object.
 /*!

@@ -2154,6 +2154,7 @@ var Glow = {
   eObjectType_GrowPie		: 43,
   eObjectType_GrowBarChart   	: 44,
   eObjectType_GrowToolbar   	: 45,
+  eObjectType_GrowBarArc   	: 46,
 
   eDirection_Center		: 0,
   eDirection_Right		: 1,
@@ -2831,6 +2832,7 @@ var Glow = {
   eSave_GrowBarChart		        : 46,
   eSave_GrowToolbar		        : 47,
   eSave_CustomColors		        : 48,
+  eSave_GrowBarArc		        : 49,
   eSave_End				: 99,
   eSave_Ctx_zoom_factor_x		: 100,
   eSave_Ctx_base_zoom_factor		: 101,
@@ -3590,6 +3592,17 @@ var Glow = {
   eSave_CustomColors_colors	     	: 4801,
   eSave_CustomColors_colortheme_lightness : 4802,
   eSave_CustomColors_is_default_colortheme : 4803,
+  eSave_GrowBarArc_max_value 		: 4900,
+  eSave_GrowBarArc_min_value 		: 4901,
+  eSave_GrowBarArc_bar_width 		: 4902,
+  eSave_GrowBarArc_bar_value 		: 4903,
+  eSave_GrowBarArc_bar_drawtype 	: 4904,
+  eSave_GrowBarArc_direction 		: 4905,
+  eSave_GrowBarArc_arc_part 		: 4906,
+  eSave_GrowBarArc_bar_bordercolor 	: 4907,
+  eSave_GrowBarArc_bar_borderwidth 	: 4908,
+  eSave_GrowBarArc_userdata_cb 		: 4909,
+  eSave_GrowBarArc_bar_direction 	: 4910,
 
   ePosition_Absolute			: 0,
   ePosition_Relative			: 1,
@@ -4374,6 +4387,12 @@ function GlowArray( ctx) {
       }
       case Glow.eSave_GrowBar: {
 	o = new GrowBar( this.ctx);
+	i = o.open( lines, i+1);
+	this.add( o);
+	break;
+      }
+      case Glow.eSave_GrowBarArc: {
+	o = new GrowBarArc( this.ctx);
 	i = o.open( lines, i+1);
 	this.add( o);
 	break;
@@ -11740,6 +11759,251 @@ function GrowBar( ctx) {
 
 GrowBar.prototype = Object.create(GrowRect.prototype);
 
+function GrowBarArc( ctx) {
+  GrowArc.call( this, ctx);
+  this.growarc_open = this.open;
+
+  this.max_value;
+  this.min_value;
+  this.bar_width;
+  this.bar_value;
+  this.bar_bordercolor;
+  this.bar_borderwidth;
+  this.bar_drawtype;
+  this.bar_direction;
+  this.userdata = null;
+
+  this.type = function() {
+    return Glow.eObjectType_GrowBarArc;
+  };
+
+  this.open = function( lines, row) {
+    var end = false;
+    var i;
+
+    for ( i = row; i < lines.length; i++) {
+      var tokens = lines[i].split(' ');
+      var key = parseInt(tokens[0], 10);
+      
+      if ( this.ctx.debug) console.log( "GrowBarArc : " + lines[i]);
+      
+      switch ( key) {
+      case Glow.eSave_GrowBarArc: 
+	break;
+      case Glow.eSave_GrowBarArc_max_value: 
+	this.max_value = parseFloat( tokens[1]); 
+	break;
+      case Glow.eSave_GrowBarArc_min_value: 
+	this.min_value = parseFloat( tokens[1]); 
+	break;
+      case Glow.eSave_GrowBarArc_bar_width: 
+	this.bar_width = parseFloat( tokens[1]); 
+	break;
+      case Glow.eSave_GrowBarArc_bar_direction: 
+	this.bar_direction = parseInt(tokens[1], 10); 
+	break;
+      case Glow.eSave_GrowBarArc_bar_value: 
+	this.bar_value = parseFloat( tokens[1]); 
+	break;
+      case Glow.eSave_GrowBarArc_bar_bordercolor: 
+	this.bar_bordercolor = parseInt(tokens[1], 10); 
+	break;
+      case Glow.eSave_GrowBarArc_bar_borderwidth: 
+	this.bar_borderwidth = parseInt(tokens[1], 10); 
+	break;
+      case Glow.eSave_GrowBarArc_bar_drawtype: 
+	this.bar_drawtype = parseInt(tokens[1], 10); 
+	break;
+      case Glow.eSave_GrowBarArc_arc_part: 
+	i = this.growarc_open( lines, i+1);
+	break;
+      case Glow.eSave_GrowBarArc_userdata_cb:
+	if ( this.ctx.appl !== null) {
+	  var ret = this.ctx.appl.growUserdataOpen( lines, i+1, this, Glow.eUserdataCbType_Node);
+	  this.userdata = ret.userdata;
+	  i = ret.row;
+	}
+	break;
+      case Glow.eSave_End:
+	end = true;
+	break;
+      default:
+	console.log( "Syntax error in GrowBarArc");
+	break;
+      }
+      if ( end)
+	break;
+    }
+    return i;
+  };   
+
+  this.tdraw = function( t, highlight, hot, node, colornode) {
+    if (this.ctx.nodraw !== 0)
+      return;
+
+    var idx;
+    var rotation;
+    var ang;
+    var drawtype;
+    var bg_drawtype;
+    var yscale;
+    var width = Math.floor(this.bar_width * this.ctx.mw.zoom_factor_x);
+    var value = Math.max(this.min_value, Math.min(this.bar_value, this.max_value));
+
+    if ( node !== null && node.line_width !== 0)
+      idx = Math.floor( this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor * 
+			node.line_width - 1);
+    else
+      idx = Math.floor( this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor * this.line_width - 1);
+    idx += hot;
+
+    idx = Math.max( 0, idx);
+    idx = Math.min( idx, Glow.DRAW_TYPE_SIZE-1);
+    var x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
+
+    if ( t === null) {
+      x1 = Math.floor( this.trf.x( this.ll.x, this.ll.y) * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+      y1 = Math.floor( this.trf.y( this.ll.x, this.ll.y) * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+      x2 = Math.floor( this.trf.x( this.ur.x, this.ur.y) * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+      y2 = Math.floor( this.trf.y( this.ur.x, this.ur.y) * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+      rotation = (this.trf.rot() / 360 - Math.floor(this.trf.rot() / 360)) * 360;
+    }
+    else {
+      x1 = Math.floor( this.trf.x( t, this.ll.x, this.ll.y) * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+      y1 = Math.floor( this.trf.y( t, this.ll.x, this.ll.y) * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+      x2 = Math.floor( this.trf.x( t, this.ur.x, this.ur.y) * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+      y2 = Math.floor( this.trf.y( t, this.ur.x, this.ur.y) * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+      rotation = (this.trf.rot(t) / 360 - Math.floor(this.trf.rot(t) / 360)) * 360;
+    }
+
+    
+    ll_x = Math.min( x1, x2);
+    ur_x = Math.max( x1, x2);
+    ll_y = Math.min( y1, y2);
+    ur_y = Math.max( y1, y2);
+    
+    yscale = (ur_y - ll_y) / (ur_x - ll_x);
+    if ( width > ur_x - ll_x)
+      width = ur_x - ll_x;
+    drawtype = GlowColor.get_drawtype(this.fill_drawtype, Glow.eDrawType_FillHighlight,
+				      highlight, colornode, 1, 0);
+
+    if ( this.background_drawtype == Glow.eDrawType_No)
+      bg_drawtype = this.ctx.background_color;
+    else
+      bg_drawtype = this.background_drawtype;
+
+    // Draw circle background
+    this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+			    0, 360, bg_drawtype);
+
+    // Draw bar background
+    this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+			    this.angle1 - Math.floor(rotation), this.angle2, drawtype);
+
+    // Draw bar 
+    if ( this.bar_direction === 0)
+      ang = this.angle1 - rotation;
+    else
+      ang = this.angle1 + this.angle2 * (this.max_value - value) / 
+	(this.max_value - this.min_value) - rotation;
+
+    if ( this.gradient == Glow.eGradient_No)
+      this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+			 ang, this.angle2 * (value - this.min_value) / (this.max_value - this.min_value), 
+			 this.bar_drawtype);
+    else {
+      var f1, f2;
+
+      if (this.gradient_contrast >= 0) {
+	f2 = GlowColor.shift_drawtype(this.bar_drawtype, -this.gradient_contrast / 2, null);
+	f1 = GlowColor.shift_drawtype(this.bar_drawtype, Math.floor(this.gradient_contrast/2+0.6), null);
+      } else {
+	f2 = GlowColor.shift_drawtype(this.bar_drawtype, -Math.floor(this.gradient_contrast/2-0.6), null);
+	f1 = GlowColor.shift_drawtype(this.bar_drawtype, this.gradient_contrast/2, null);
+      }
+      this.ctx.gdraw.gradient_fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+				       ang, this.angle2 * (value - this.min_value) / 
+				       (this.max_value - this.min_value), 
+				       this.bar_drawtype, f1, f2, this.gradient);
+    }
+
+    // Draw inner circle background
+    this.ctx.gdraw.fill_arc(ll_x + width, ll_y + yscale * width, 
+			    ur_x - ll_x - 2 * width, 
+			    ur_y - ll_y - yscale * 2 * width,
+			    0, 360, bg_drawtype);
+
+    if ( this.bar_direction === 0)
+      ang = Math.PI*(this.angle1 - rotation + this.angle2 * (value - this.min_value) / 
+		       (this.max_value - this.min_value)) / 180;
+    else
+      ang = Math.PI*(this.angle1 - rotation + this.angle2 * (this.max_value - value) / 
+		       (this.max_value - this.min_value)) / 180;
+
+    this.ctx.gdraw.line((ur_x + ll_x)/2 + (ur_x - ll_x)/2 * Math.cos(ang), 
+			(ur_y + ll_y)/2 - (ur_y - ll_y)/2 * Math.sin(ang), 
+			(ur_x + ll_x)/2 + ((ur_x - ll_x)/2 - width) * Math.cos(ang), 
+			(ur_y + ll_y)/2 - yscale * ((ur_x - ll_x)/2 - width) * Math.sin(ang), 
+			this.bar_bordercolor, this.bar_borderwidth, 0);
+
+    if (this.border !== 0) {
+      var bordercolor = GlowColor.get_drawtype(this.draw_type, Glow.eDrawType_LineHighlight,
+					       highlight, colornode, 0, 0);
+
+      this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+			 this.angle1 - Math.floor(rotation), this.angle2, 
+			 bordercolor, idx);
+
+      this.ctx.gdraw.arc(ll_x + width, ll_y + yscale * width, ur_x - ll_x - 2 * width, 
+			 ur_y - ll_y - yscale * 2 * width,
+			 this.angle1 - Math.floor(rotation), this.angle2, 
+			 bordercolor, idx);
+
+      ang = Math.PI*(this.angle1 - rotation) / 180;
+      this.ctx.gdraw.line((ur_x + ll_x)/2 + (ur_x - ll_x)/2 * Math.cos(ang), 
+			  (ur_y + ll_y)/2 - (ur_y - ll_y)/2 * Math.sin(ang), 
+			  (ur_x + ll_x)/2 + ((ur_x - ll_x)/2 - width) * Math.cos(ang), 
+			  (ur_y + ll_y)/2 - yscale * ((ur_x - ll_x)/2 - width) * Math.sin(ang), 
+			  bordercolor, idx, 0);
+
+      ang = Math.PI*(this.angle1 + this.angle2 - rotation) / 180;
+      this.ctx.gdraw.line((ur_x + ll_x)/2 + (ur_x - ll_x)/2 * Math.cos(ang), 
+			  (ur_y + ll_y)/2 - (ur_y - ll_y)/2 * Math.sin(ang), 
+			  (ur_x + ll_x)/2 + ((ur_x - ll_x)/2 - width) * Math.cos(ang), 
+			  (ur_y + ll_y)/2 - yscale * ((ur_x - ll_x)/2 - width) * Math.sin(ang), 
+			  bordercolor, idx, 0);
+
+    }
+  };
+
+  this.set_range = function( min, max) { 
+    this.max_value = max;
+    this.min_value = min;
+    this.draw();
+  };
+
+  this.set_value = function( value) { 
+    this.bar_value = value; 
+    this.draw();
+  };
+  this.getClassDynType1 = function() { return 0;};
+  this.getClassDynType2 = function() { return 0;};
+  this.getClassActionType1 = function() { return 0;};
+  this.getClassActionType2 = function() { return 0;};
+  this.getClassCycle = function() { return 0;};
+  this.getClassUserData = function() { return null;};
+  this.getUserData = function() {
+    return this.userdata;
+  };
+
+  this.get_background_object_limits = function( t, type, x, y, bo) {
+    return 0;
+  };
+}
+
+GrowBarArc.prototype = Object.create(GrowArc.prototype);
+
 function GrowTrend( ctx) {
   GrowRect.call( this, ctx);
   this.growrect_open = this.open;
@@ -12833,14 +13097,15 @@ function GrowScrollBar( ctx) {
   }
 
   this.set_value = function( value, length) {
+    console.log("Value", value);
     this.bar_value = value; 
     if ( length != 0)
       this.bar_length = length;
 
     if ( this.bar_value < this.min_value)
       this.bar_value = this.min_value;
-    if ( this.bar_value > this.max_value - this.bar_length)
-      this.bar_value = this.max_value - this.bar_length;
+    if ( this.bar_value > this.max_value)
+      this.bar_value = this.max_value;
 
     this.draw();
     return this.bar_value;
@@ -15426,8 +15691,10 @@ function GrowBarChart( ctx) {
   
     var skip;
     var bar_ll_x, bar_ur_x;
-    var bar_ll_y, bar_ur_y;
-    var f_bar_ll_y;
+    var bar_up_ll_y, bar_up_ur_y;
+    var f_bar_up_ll_y;
+    var bar_down_ll_y, bar_down_ur_y, border_bar_down_ur_y;
+    var f_bar_down_ur_y;
     var width;
     var brect_ll_x = 0;
     var brect_ll_y = 0;
@@ -15436,102 +15703,195 @@ function GrowBarChart( ctx) {
 
     width = (ur_x - ll_x) / this.bars;
     bar_ur_x = ll_x;
-    for ( var j = 0; j < this.bars; j++) {
+    for (var j = 0; j < this.bars; j++) {
       bar_ll_x = bar_ur_x;
 
-      if ( j == this.bars - 1)
+      if (j == this.bars - 1)
 	bar_ur_x = ur_x;
       else
-	bar_ur_x = ll_x + Math.floor((j + 1) * width);    
-    
-      bar_ll_y = ur_y;
-      f_bar_ll_y = ur_y;
-      for ( var i = 0; i < this.barsegments + 1; i++) {
+	bar_ur_x = ll_x + (j + 1) * width;
+
+      if ( this.min_value >= 0) {
+	bar_up_ll_y = ur_y;
+	f_bar_up_ll_y = ur_y;
+	
+      } else {
+	bar_up_ll_y = ur_y + this.min_value * (ur_y - ll_y) / (this.max_value - this.min_value);
+	f_bar_up_ll_y = bar_up_ll_y;
+	bar_down_ur_y = ur_y + this.min_value * (ur_y - ll_y) / (this.max_value - this.min_value);
+	f_bar_down_ur_y = bar_down_ur_y;
+      }
+
+      for (var i = 0; i < this.barsegments + 1; i++) {
 	if ( typeof this.bar_values[i] == 'undefined')
-	  continue
+	  continue;
 	var fillcolor = 0;
 
-	skip = 0;
-	bar_ur_y = bar_ll_y;
+	if ( this.min_value > 0 || this.bar_values[i*this.bars+j] > 0) {
+	  skip = 0;
+	  bar_up_ur_y = bar_up_ll_y;
 
-	if ( i == this.barsegments) {
-	  if ( bar_ll_y <= ll_y)
-	    skip = 1;
-	  else
-	    bar_ll_y = ll_y;
-	  fillcolor = GlowColor.get_drawtype( this.fill_drawtype, Glow.eDrawType_FillHighlight,
-					      highlight, colornode, 1, 0 );
-	}
-	else {
-	  if ( this.bar_values[i * this.bars + j] <= this.min_value)	
-	    skip = 1;
-	  else if ( bar_ur_y <= ll_y)
-	    skip = 1;
-	  else {
-	    f_bar_ll_y -= this.bar_values[i*this.bars+j] * (ur_y - ll_y) / (this.max_value - this.min_value);
-	    bar_ll_y = Math.floor(f_bar_ll_y);
-	    if ( bar_ll_y < ll_y)
-	      bar_ll_y = ll_y;
-
-	    fillcolor = GlowColor.get_drawtype( this.bar_color[i], Glow.eDrawType_FillHighlight,
-						highlight, colornode, 1, 0);
-	  }
-	}
-    
-	if ( skip == 0) {
-	  if ( grad == Glow.eGradient_No || fillcolor == Glow.eDrawType_ColorRed || i == this.barsegments) {
-	    if ( chot != 0)
-	      drawtype = GlowColor.shift_drawtype( fillcolor, chot, null);
+	  if (i == this.barsegments) {
+	    if (bar_up_ll_y <= ll_y)
+	      skip = 1;
 	    else
-	      drawtype = fillcolor;
-	    this.ctx.gdraw.fill_rect( bar_ll_x, bar_ll_y, bar_ur_x - bar_ll_x, bar_ur_y - bar_ll_y, drawtype);
-	  }
+	      bar_up_ll_y = ll_y;
+	    fillcolor = GlowColor.get_drawtype( this.fill_drawtype, Glow.eDrawType_FillHighlight,
+						highlight, colornode, 1, 0 );
+	  } 
 	  else {
-	    var f1, f2;
-	    if ( this.gradient_contrast >= 0) {
-	      f2 = GlowColor.shift_drawtype( fillcolor, -this.gradient_contrast/2 + chot, null);
-	      f1 = GlowColor.shift_drawtype( fillcolor, Math.floor((this.gradient_contrast)/2+0.6) + chot, null);
+	    if (this.bar_values[i*this.bars+j] <= this.min_value)
+	      skip = 1;
+	    else if (bar_up_ur_y <= ll_y)
+	      skip = 1;
+	    else {
+	      f_bar_up_ll_y
+		-= this.bar_values[i*this.bars+j] * (ur_y - ll_y) / (this.max_value - this.min_value);
+	      bar_up_ll_y = Math.floor(f_bar_up_ll_y);
+	      if (bar_up_ll_y < ll_y)
+		bar_up_ll_y = ll_y;
+	      
+	      fillcolor = GlowColor.get_drawtype( this.bar_color[i], Glow.eDrawType_FillHighlight,
+						  highlight, colornode, 1, 0);
+	    }
+	  }
+	  if ( skip == 0) {
+	    if ( grad == Glow.eGradient_No || fillcolor == Glow.eDrawType_ColorRed || i == this.barsegments) {
+	      if ( chot != 0)
+		drawtype = GlowColor.shift_drawtype( fillcolor, chot, null);
+	      else
+		drawtype = fillcolor;
+	      this.ctx.gdraw.fill_rect( bar_ll_x, bar_up_ll_y, bar_ur_x - bar_ll_x, 
+				      bar_up_ur_y - bar_up_ll_y, drawtype);
 	    }
 	    else {
-	      f2 = GlowColor.shift_drawtype( fillcolor, -Math.floor((this.gradient_contrast)/2-0.6) + chot, null);
-	      f1 = GlowColor.shift_drawtype( fillcolor, this.gradient_contrast/2 + chot, null);
+	      var f1, f2;
+	      if ( this.gradient_contrast >= 0) {
+		f2 = GlowColor.shift_drawtype( fillcolor, -this.gradient_contrast/2 + chot, null);
+		f1 = GlowColor.shift_drawtype( fillcolor, Math.floor((this.gradient_contrast)/2+0.6) + chot, null);
+	      }
+	      else {
+		f2 = GlowColor.shift_drawtype( fillcolor, -Math.floor((this.gradient_contrast)/2-0.6) + chot, null);
+		f1 = GlowColor.shift_drawtype( fillcolor, this.gradient_contrast/2 + chot, null);
+	      }
+	      this.ctx.gdraw.gradient_fill_rect( bar_ll_x, bar_up_ll_y, bar_ur_x - bar_ll_x, 
+					       bar_up_ur_y - bar_up_ll_y, fillcolor, f1, f2, grad);
 	    }
-	    this.ctx.gdraw.gradient_fill_rect( bar_ll_x, bar_ll_y, bar_ur_x - bar_ll_x, 
-					  bar_ur_y - bar_ll_y, fillcolor, f1, f2, grad);
+	  }
+	
+	} else { 
+	  // negative value, draw bar downwards
+	  skip = 0;
+	  bar_down_ll_y = bar_down_ur_y;
+
+	  if (i == this.barsegments) {
+	    border_bar_down_ur_y = bar_down_ur_y;
+	    if (bar_down_ur_y >= ur_y)
+	      skip = 1;
+	    else
+	      bar_down_ur_y = ur_y;
+	    fillcolor = GlowColor.get_drawtype( this.fill_drawtype, Glow.eDrawType_FillHighlight,
+						highlight, colornode, 1, 0 );
+	  } else {
+	    if (this.bar_values[i*this.bars+j] >= 0)
+	      skip = 1;
+	    else if (bar_down_ll_y >= ur_y)
+	      skip = 1;
+	    else {
+	      f_bar_down_ur_y
+	        -= this.bar_values[i*this.bars+j] * (ur_y - ll_y) / (this.max_value - this.min_value);
+	      bar_down_ur_y = Math.floor(f_bar_down_ur_y);
+	      if (bar_down_ur_y > ur_y)
+		bar_down_ur_y = ur_y;
+
+	      fillcolor = GlowColor.get_drawtype( this.bar_color[i], Glow.eDrawType_FillHighlight,
+						  highlight, colornode, 1, 0);
+	    }
+	  }
+
+	  if (!skip) {
+	    if ( grad == Glow.eGradient_No || fillcolor == Glow.eDrawType_ColorRed || i == this.barsegments) {
+	      if ( chot != 0)
+		drawtype = GlowColor.shift_drawtype( fillcolor, chot, null);
+	      else
+		drawtype = fillcolor;
+	      this.ctx.gdraw.fill_rect( bar_ll_x, bar_down_ll_y, bar_ur_x - bar_ll_x, 
+					bar_down_ur_y - bar_down_ll_y, drawtype);
+	    }
+	    else {
+	      var f1, f2;
+	      if ( this.gradient_contrast >= 0) {
+		f2 = GlowColor.shift_drawtype( fillcolor, -this.gradient_contrast/2 + chot, null);
+		f1 = GlowColor.shift_drawtype( fillcolor, Math.floor((this.gradient_contrast)/2+0.6) + chot, null);
+	      }
+	      else {
+		f2 = GlowColor.shift_drawtype( fillcolor, -Math.floor((this.gradient_contrast)/2-0.6) + chot, null);
+		f1 = GlowColor.shift_drawtype( fillcolor, this.gradient_contrast/2 + chot, null);
+	      }
+	      this.ctx.gdraw.gradient_fill_rect( bar_ll_x, bar_down_ll_y, bar_ur_x - bar_ll_x, 
+						 bar_down_ur_y - bar_down_ll_y, fillcolor, f1, f2, grad);
+	    }
 	  }
 	}
-	if ( this.border !== 0 && i == this.barsegments) {
+
+	if (this.border !== 0 && i == this.barsegments) {
 	  // Draw previous bar border
-	  if ( j > 0) {
-	    drawtype = GlowColor.get_drawtype( this.draw_type, Glow.eDrawType_LineHighlight,
-					       highlight, colornode, 0, 0);
+	  if (j > 0) {
+	    drawtype = GlowColor.get_drawtype(this.draw_type, Glow.eDrawType_LineHighlight,
+					      highlight, colornode, 0, 0);
 
-	    this.ctx.gdraw.rect( brect_ll_x, brect_ll_y, brect_width, brect_height, 
-			    drawtype, idx, 0);
+	    this.ctx.gdraw.rect(brect_ll_x, brect_ll_y, brect_width, brect_height,
+				drawtype, idx, 0);
 	  }
-	  if ( skip === 0) {
+	  if ( this.min_value >= 0) {
 	    brect_ll_x = bar_ll_x;
-	    brect_ll_y = bar_ur_y;
+	    brect_ll_y = bar_up_ll_y;
 	    brect_width = bar_ur_x - bar_ll_x;
-	    brect_height = ur_y - bar_ur_y;
-	  }
-	  else {
+	    brect_height = ur_y - bar_up_ll_y;
+	  } else {
 	    brect_ll_x = bar_ll_x;
-	    brect_ll_y = ll_y;
+	    brect_ll_y = bar_up_ll_y;
 	    brect_width = bar_ur_x - bar_ll_x;
-	    brect_height = ur_y - ll_y;
+	    brect_height = ur_y + this.min_value * (ur_y - ll_y) / 
+	      (this.max_value - this.min_value) - bar_up_ll_y;
 	  }
-	  if ( j == this.bars - 1) {
+	  if (j == this.bars - 1) {
 	    // Draw last bar border
-	    drawtype = GlowColor.get_drawtype( this.draw_type, Glow.eDrawType_LineHighlight,
-					       highlight, colornode, 0, 0);
+	    drawtype = GlowColor.get_drawtype(this.draw_type, Glow.eDrawType_LineHighlight,
+					      highlight, colornode, 0, 0);
 
-	    this.ctx.gdraw.rect( brect_ll_x, brect_ll_y, brect_width, brect_height, 
-			    drawtype, idx, 0);
+	    this.ctx.gdraw.rect(brect_ll_x, brect_ll_y, brect_width, brect_height,
+				drawtype, idx, 0);
+	  }
+
+
+	  // Draw negative bar border
+	  if ( this.min_value < 0) {
+	    if (j > 0) {
+	      drawtype = GlowColor.get_drawtype(this.draw_type, Glow.eDrawType_LineHighlight,
+						highlight, colornode, 0, 0);
+
+	      this.ctx.gdraw.rect(brect_ll_x, brect_ll_y, brect_width, brect_height,
+				  drawtype, idx, 0);
+	    }
+	    brect_ll_x = bar_ll_x;
+	    brect_ll_y = ur_y + this.min_value * (ur_y - ll_y) / (this.max_value - this.min_value);
+	    brect_width = bar_ur_x - bar_ll_x;
+	    brect_height = border_bar_down_ur_y - brect_ll_y;
+	    if (j == this.bars - 1) {
+	      // Draw last bar border
+	      drawtype = GlowColor.get_drawtype(this.draw_type, Glow.eDrawType_LineHighlight,
+						highlight, colornode, 0, 0);
+
+	      this.ctx.gdraw.rect(brect_ll_x, brect_ll_y, brect_width, brect_height,
+				  drawtype, idx, 0);
+	    }
 	  }
 	}
+	
       }
     }
+
 
     drawtype = GlowColor.get_drawtype( this.line_color, Glow.eDrawType_LineHighlight,
 				       highlight, colornode, 0, 0);
@@ -17767,6 +18127,7 @@ function GrowCtx( ctx) {
       if ( this.a.get(i).type() == Glow.eObjectType_GrowNode ||
 	   this.a.get(i).type() == Glow.eObjectType_GrowGroup ||
 	   this.a.get(i).type() == Glow.eObjectType_GrowBar ||
+	   this.a.get(i).type() == Glow.eObjectType_GrowBarArc ||
 	   this.a.get(i).type() == Glow.eObjectType_GrowTrend ||
 	   this.a.get(i).type() == Glow.eObjectType_GrowTable ||
 	   this.a.get(i).type() == Glow.eObjectType_GrowSlider ||
@@ -17805,6 +18166,7 @@ function GrowCtx( ctx) {
       if ( this.a.get(i).type() == Glow.eObjectType_GrowNode ||
 	   this.a.get(i).type() == Glow.eObjectType_GrowGroup ||
 	   this.a.get(i).type() == Glow.eObjectType_GrowBar ||
+	   this.a.get(i).type() == Glow.eObjectType_GrowBarArc ||
 	   this.a.get(i).type() == Glow.eObjectType_GrowTrend ||
 	   this.a.get(i).type() == Glow.eObjectType_GrowTable ||
 	   this.a.get(i).type() == Glow.eObjectType_GrowSlider ||
@@ -17839,6 +18201,7 @@ function GrowCtx( ctx) {
       if ( this.a.get(i).type() == Glow.eObjectType_GrowNode ||
 	   this.a.get(i).type() == Glow.eObjectType_GrowGroup ||
 	   this.a.get(i).type() == Glow.eObjectType_GrowBar ||
+	   this.a.get(i).type() == Glow.eObjectType_GrowBarArc ||
 	   this.a.get(i).type() == Glow.eObjectType_GrowTrend ||
 	   this.a.get(i).type() == Glow.eObjectType_GrowTable ||
 	   this.a.get(i).type() == Glow.eObjectType_GrowSlider ||
@@ -23089,7 +23452,6 @@ function DynBar( dyn)  {
   this.old_ivalue;
 
   this.connect = function( object) {
-
     if ( this.attribute == null)
       return 0;
 
@@ -23334,7 +23696,7 @@ function DynTrend( dyn) {
       this.orig_graph_animation_scan_time = this.dyn.graph.getAnimationScanTime();
     }
 
-    if ( this.mark1_attr.trim() !== "") {
+    if ( this.mark1_attr !== null && this.mark1_attr.trim() !== "") {
       this.mark1_a = new DynReference( this.dyn, this.mark1_attr);
       this.mark1_a.connect(this.dyn);
       if ( !this.mark1_a.sts) {
@@ -23343,7 +23705,7 @@ function DynTrend( dyn) {
       }
     }
 
-    if ( this.mark2_attr.trim() !== "") {
+    if ( this.mark2_attr !== null && this.mark2_attr.trim() !== "") {
       this.mark2_a = new DynReference( this.dyn, this.mark2_attr);
       this.mark2_a.connect(this.dyn);
       if ( !this.mark2_a.sts) {

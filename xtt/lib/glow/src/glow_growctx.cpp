@@ -61,6 +61,7 @@
 #include "glow_growline.h"
 #include "glow_growconpoint.h"
 #include "glow_growbar.h"
+#include "glow_growbararc.h"
 #include "glow_growxycurve.h"
 #include "glow_exportflow.h"
 
@@ -4142,6 +4143,9 @@ int GrowCtx::get_next_object_position(
              || object->type() == glow_eObjectType_GrowGroup
              || object->type() == glow_eObjectType_GrowTrend
              || object->type() == glow_eObjectType_GrowBar
+             || object->type() == glow_eObjectType_GrowBarArc
+             || object->type() == glow_eObjectType_GrowBarChart
+             || object->type() == glow_eObjectType_GrowPie
              || object->type() == glow_eObjectType_GrowText)) {
     return 0;
   }
@@ -4168,6 +4172,9 @@ int GrowCtx::get_next_object_position(
           || a[i]->type() == glow_eObjectType_GrowGroup
           || a[i]->type() == glow_eObjectType_GrowTrend
           || a[i]->type() == glow_eObjectType_GrowBar
+          || a[i]->type() == glow_eObjectType_GrowBarArc
+          || a[i]->type() == glow_eObjectType_GrowBarChart
+          || a[i]->type() == glow_eObjectType_GrowPie
           || a[i]->type() == glow_eObjectType_GrowText) {
         NextElem n;
 
@@ -4488,6 +4495,10 @@ void GrowCtx::read_object(std::ifstream& fp, GlowArrayElem** o)
   }
   case glow_eSave_GrowBar: {
     n = new GrowBar(this, "");
+    break;
+  }
+  case glow_eSave_GrowBarArc: {
+    n = new GrowBarArc(this, "");
     break;
   }
   case glow_eSave_GrowTrend: {
