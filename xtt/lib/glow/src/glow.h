@@ -224,7 +224,8 @@ typedef enum {
   glow_eObjectType_GrowAxisArc,
   glow_eObjectType_GrowPie,
   glow_eObjectType_GrowBarChart,
-  glow_eObjectType_GrowToolbar
+  glow_eObjectType_GrowToolbar,
+  glow_eObjectType_GrowBarArc
 } glow_eObjectType;
 
 //! Direction of a connection points, sliders etc
@@ -1311,6 +1312,7 @@ typedef enum {
   glow_eSave_GrowBarChart = 46,
   glow_eSave_GrowToolbar = 47,
   glow_eSave_CustomColors = 48,
+  glow_eSave_GrowBarArc = 49,
   glow_eSave_End = 99,
   glow_eSave_Ctx_zoom_factor_x = 100,
   glow_eSave_Ctx_base_zoom_factor = 101,
@@ -2069,7 +2071,18 @@ typedef enum {
   glow_eSave_CustomColors_colors_size = 4800,
   glow_eSave_CustomColors_colors = 4801,
   glow_eSave_CustomColors_colortheme_lightness = 4802,
-  glow_eSave_CustomColors_is_default_colortheme = 4803
+  glow_eSave_CustomColors_is_default_colortheme = 4803,
+  glow_eSave_GrowBarArc_max_value = 4900,
+  glow_eSave_GrowBarArc_min_value = 4901,
+  glow_eSave_GrowBarArc_bar_width = 4902,
+  glow_eSave_GrowBarArc_bar_value = 4903,
+  glow_eSave_GrowBarArc_bar_drawtype = 4904,
+  glow_eSave_GrowBarArc_direction = 4905,
+  glow_eSave_GrowBarArc_arc_part = 4906,
+  glow_eSave_GrowBarArc_bar_bordercolor = 4907,
+  glow_eSave_GrowBarArc_bar_borderwidth = 4908,
+  glow_eSave_GrowBarArc_userdata_cb = 4909,
+  glow_eSave_GrowBarArc_bar_direction = 4910
 } glow_eSave;
 
 //! Relative or absolute position for an annotation

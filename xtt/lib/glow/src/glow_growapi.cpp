@@ -49,6 +49,7 @@
 #include "glow_growannot.h"
 #include "glow_growtext.h"
 #include "glow_growbar.h"
+#include "glow_growbararc.h"
 #include "glow_growxycurve.h"
 #include "glow_growtable.h"
 #include "glow_growfolder.h"
@@ -916,6 +917,19 @@ void grow_CreateGrowBar(grow_tCtx ctx, const char* name, double x, double y,
   GrowBar* r1;
   r1 = new GrowBar(ctx, name, x, y, width, height, draw_type, line_width,
       display_level, fill_rect, border, fill_draw_type);
+  r1->set_user_data(user_data);
+  ctx->insert(r1);
+  ctx->nav_zoom();
+  *bar = (grow_tObject)r1;
+}
+
+void grow_CreateGrowBarArc(grow_tCtx ctx, const char* name, double x1, double y1,
+    double x2, double y2, int ang1, int ang2, double width, glow_eDrawType border_draw_type, 
+    int line_width, int border, glow_eDrawType fill_draw_type, void* user_data, grow_tObject* bar)
+{
+  GrowBarArc* r1;
+  r1 = new GrowBarArc(ctx, name, x1, y1, x2, y2, ang1, ang2, width, border, border_draw_type, line_width,
+		      fill_draw_type, 1);
   r1->set_user_data(user_data);
   ctx->insert(r1);
   ctx->nav_zoom();
@@ -1838,6 +1852,106 @@ int grow_GetObjectAttrInfo(
       attrinfo[i].value_p = &op->min_value;
       attrinfo[i].type = glow_eType_Double;
       attrinfo[i++].size = sizeof(op->min_value);
+    }
+
+    if ((name = growapi_translate(transtab, "BarValue"))) {
+      strcpy(attrinfo[i].name, name);
+      attrinfo[i].value_p = &op->bar_value;
+      attrinfo[i].type = glow_eType_Double;
+      attrinfo[i++].size = sizeof(op->bar_value);
+    }
+
+    if ((name = growapi_translate(transtab, "BarColor"))) {
+      strcpy(attrinfo[i].name, name);
+      attrinfo[i].value_p = &op->bar_drawtype;
+      attrinfo[i].type = glow_eType_Color;
+      attrinfo[i++].size = sizeof(op->bar_drawtype);
+    }
+
+    if ((name = growapi_translate(transtab, "BarBorderColor"))) {
+      strcpy(attrinfo[i].name, name);
+      attrinfo[i].value_p = &op->bar_bordercolor;
+      attrinfo[i].type = glow_eType_Color;
+      attrinfo[i++].size = sizeof(op->bar_bordercolor);
+    }
+
+    if ((name = growapi_translate(transtab, "BarBorderWidth"))) {
+      strcpy(attrinfo[i].name, name);
+      attrinfo[i].value_p = &op->bar_borderwidth;
+      attrinfo[i].type = glow_eType_Int;
+      attrinfo[i++].size = sizeof(op->bar_borderwidth);
+    }
+
+    if ((name = growapi_translate(transtab, "Dynamic"))) {
+      strcpy(attrinfo[i].name, name);
+      op->get_dynamic(&dynamic, &dynsize);
+      attrinfo[i].value_p = malloc(1024);
+      if (dynsize)
+        strncpy((char*)attrinfo[i].value_p, dynamic, 1024);
+      else
+        strcpy((char*)attrinfo[i].value_p, "");
+      attrinfo[i].type = glow_eType_String;
+      attrinfo[i].size = 1024;
+      attrinfo[i].multiline = 1;
+      attrinfo[i++].info_type = grow_eInfoType_Dynamic;
+    }
+    break;
+  }
+  case glow_eObjectType_GrowBarArc: {
+    GrowBarArc* op = (GrowBarArc*)object;
+    char* name;
+    char* dynamic;
+    int dynsize;
+
+    strcpy(attrinfo[i].name, "Name");
+    attrinfo[i].value_p = &op->n_name;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i].no_edit = 0;
+    attrinfo[i].no_edit = 0;
+    attrinfo[i].input_validation_cb = grow_name_validation_cb;
+    attrinfo[i].validation_ctx = (void*)op;
+    attrinfo[i++].size = sizeof(op->n_name);
+
+    if ((name = growapi_translate(transtab, "MaxValue"))) {
+      strcpy(attrinfo[i].name, name);
+      attrinfo[i].value_p = &op->max_value;
+      attrinfo[i].type = glow_eType_Double;
+      attrinfo[i++].size = sizeof(op->max_value);
+    }
+
+    if ((name = growapi_translate(transtab, "MinValue"))) {
+      strcpy(attrinfo[i].name, name);
+      attrinfo[i].value_p = &op->min_value;
+      attrinfo[i].type = glow_eType_Double;
+      attrinfo[i++].size = sizeof(op->min_value);
+    }
+
+    if ((name = growapi_translate(transtab, "Angle1"))) {
+      strcpy(attrinfo[i].name, name);
+      attrinfo[i].value_p = &op->angle1;
+      attrinfo[i].type = glow_eType_Int;
+      attrinfo[i++].size = sizeof(op->angle1);
+    }
+
+    if ((name = growapi_translate(transtab, "Angle2"))) {
+      strcpy(attrinfo[i].name, name);
+      attrinfo[i].value_p = &op->angle2;
+      attrinfo[i].type = glow_eType_Int;
+      attrinfo[i++].size = sizeof(op->angle2);
+    }
+
+    if ((name = growapi_translate(transtab, "BarWidth"))) {
+      strcpy(attrinfo[i].name, name);
+      attrinfo[i].value_p = &op->bar_width;
+      attrinfo[i].type = glow_eType_Double;
+      attrinfo[i++].size = sizeof(op->bar_width);
+    }
+
+    if ((name = growapi_translate(transtab, "BarDirection"))) {
+      strcpy(attrinfo[i].name, name);
+      attrinfo[i].value_p = &op->bar_direction;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof(op->bar_direction);
     }
 
     if ((name = growapi_translate(transtab, "BarValue"))) {
@@ -4576,7 +4690,10 @@ void grow_SetSelectTextFont(grow_tCtx ctx, glow_eFont font)
 
 void grow_SetBarValue(grow_tObject object, double value)
 {
-  ((GrowBar*)object)->set_value(value);
+  if (((GlowArrayElem*)object)->type() == glow_eObjectType_GrowBar)
+    ((GrowBar*)object)->set_value(value);
+  else if (((GlowArrayElem*)object)->type() == glow_eObjectType_GrowBarArc)
+    ((GrowBarArc*)object)->set_value(value);
 }
 
 void grow_AddTrendValue(grow_tObject object, double value, int idx)
@@ -4695,12 +4812,18 @@ void grow_SetSliderRange(grow_tObject object, double min, double max)
 
 void grow_GetBarRange(grow_tObject object, double *min, double *max)
 {
-  ((GrowBar*)object)->get_range(min, max);
+  if (((GlowArrayElem*)object)->type() == glow_eObjectType_GrowBar)
+    ((GrowBar*)object)->get_range(min, max);
+  else if (((GlowArrayElem*)object)->type() == glow_eObjectType_GrowBarArc)
+    ((GrowBarArc*)object)->get_range(min, max);
 }
 
 void grow_SetBarRange(grow_tObject object, double min, double max)
 {
-  ((GrowBar*)object)->set_range(min, max);
+  if (((GlowArrayElem*)object)->type() == glow_eObjectType_GrowBar)
+    ((GrowBar*)object)->set_range(min, max);
+  else if (((GlowArrayElem*)object)->type() == glow_eObjectType_GrowBarArc)
+    ((GrowBarArc*)object)->set_range(min, max);
 }
 
 void grow_GetTrendRangeY(grow_tObject object, int curve, double *min, double *max)
@@ -5209,6 +5332,16 @@ void grow_SetBarInfo(grow_tObject object, glow_sBarInfo* info)
 void grow_GetBarInfo(grow_tObject object, glow_sBarInfo* info)
 {
   ((GrowBar*)object)->get_bar_info(info);
+}
+
+void grow_SetBarArcInfo(grow_tObject object, glow_sBarInfo* info)
+{
+  ((GrowBarArc*)object)->set_bar_info(info);
+}
+
+void grow_GetBarArcInfo(grow_tObject object, glow_sBarInfo* info)
+{
+  ((GrowBarArc*)object)->get_bar_info(info);
 }
 
 void grow_SetAxisInfo(grow_tObject object, glow_sAxisInfo* info)

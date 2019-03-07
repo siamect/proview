@@ -1399,6 +1399,15 @@ public:
   */
   void create_bar(grow_tObject* object, double x, double y, int colortheme);
 
+  //! Create a bararc object.
+  /*!
+    \param object	Created bar object.
+    \param x		x coordinate for object.
+    \param y		y coordinate for object.
+    \param colortheme  	Use colortheme colors.
+  */
+  void create_bararc(grow_tObject* object, double x, double y, int colortheme);
+
   //! Create a window object.
   /*!
     \param object	Created bar object.

@@ -1453,6 +1453,23 @@ int Graph::get_attr_items(grow_tObject object, attr_sItem** itemlist,
     dyn->get_attributes(object, items, item_cnt);
 
     *client_data = 0;
+  } else if (grow_GetObjectType(object) == glow_eObjectType_GrowBarArc) {
+    char transtab[][32] = { "MaxValue", "BarArc.MaxValue", "MinValue",
+      "BarArc.MinValue", "Angle1", "BarArc.Angle1", "Angle2", "BarArc.Angle2",
+      "BarWidth", "BarArc.BarWidth", "BarDirection", "BarArc.Direction",
+      "BarValue", "BarArc.Value", "BarColor", "BarArc.BarColor",
+      "BarBorderColor", "BarArc.BorderColor", "BarBorderWidth", "BarArc.BorderWidth",
+      "Dynamic", "Dynamic", "" };
+    GeDyn* dyn;
+
+    grow_GetObjectAttrInfo(object, (char*)transtab, &grow_info, &grow_info_cnt);
+
+    grow_GetUserData(object, (void**)&dyn);
+
+    *item_cnt = 0;
+    dyn->get_attributes(object, items, item_cnt);
+
+    *client_data = 0;
   } else if (grow_GetObjectType(object) == glow_eObjectType_GrowWindow) {
     char transtab[][32] = { "FileName", "Window.FileName", "WindowScale",
       "Window.Scale", "VerticalScrollbar", "Window.VerticalScrollbar",
@@ -1476,7 +1493,8 @@ int Graph::get_attr_items(grow_tObject object, attr_sItem** itemlist,
       "HeaderColumn", "Table.HeaderColumn", "HeaderRowHeight",
       "Table.HeaderRowHeight", "HeaderTextSize", "Table.HeaderTextSize",
       "HeaderTextBold", "Table.HeaderTextBold", "HeaderTextBold",
-      "Table.HeaderTextBold", "SelectColor", "Table.SelectColor", "Options",
+      "Table.HeaderTextBold", "HeaderTextColor", "Table.HeaderTextColor", 
+      "SelectColor", "Table.SelectColor", "Options",
       "Table.Options", "VerticalScrollbar", "Table.VerticalScrollbar",
       "HorizontalScrollbar", "Table.HorizontalScrollbar", "ScrollbarWidth",
       "Table.ScrollbarWidth", "ScrollbarColor", "Table.ScrollbarColor",
@@ -1887,6 +1905,7 @@ int Graph::graph_attr_recall_cb(
       || grow_GetObjectType(object) == glow_eObjectType_GrowXYCurve
       || grow_GetObjectType(object) == glow_eObjectType_GrowTable
       || grow_GetObjectType(object) == glow_eObjectType_GrowBar
+      || grow_GetObjectType(object) == glow_eObjectType_GrowBarArc
       || grow_GetObjectType(object) == glow_eObjectType_GrowPie
       || grow_GetObjectType(object) == glow_eObjectType_GrowBarChart
       || grow_GetObjectType(object) == glow_eObjectType_GrowAxis
@@ -2525,6 +2544,12 @@ static int graph_grow_cb(GlowCtx* ctx, glow_tEvent event)
       } else if (streq(sub_name, "pwr_bar")) {
         grow_tObject t1;
         graph->create_bar(
+            &t1, event->create_grow_object.x, event->create_grow_object.y, 0);
+
+        graph->journal_store(journal_eAction_CreateObject, t1);
+      } else if (streq(sub_name, "pwr_bararc")) {
+        grow_tObject t1;
+        graph->create_bararc(
             &t1, event->create_grow_object.x, event->create_grow_object.y, 0);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
@@ -3639,6 +3664,8 @@ static int graph_trace_grow_cb(GlowCtx* ctx, glow_tEvent event)
                || grow_GetObjectType(event->object.object)
                    == glow_eObjectType_GrowBar
                || grow_GetObjectType(event->object.object)
+                   == glow_eObjectType_GrowBarArc
+               || grow_GetObjectType(event->object.object)
                    == glow_eObjectType_GrowPie
                || grow_GetObjectType(event->object.object)
                    == glow_eObjectType_GrowBarChart
@@ -3674,6 +3701,8 @@ static int graph_trace_grow_cb(GlowCtx* ctx, glow_tEvent event)
             == glow_eObjectType_GrowTable
         || grow_GetObjectType(graph->current_mb1_down)
             == glow_eObjectType_GrowBar
+        || grow_GetObjectType(graph->current_mb1_down)
+            == glow_eObjectType_GrowBarArc
         || grow_GetObjectType(graph->current_mb1_down)
             == glow_eObjectType_GrowPie
         || grow_GetObjectType(graph->current_mb1_down)
@@ -3834,6 +3863,8 @@ static int graph_trace_grow_cb(GlowCtx* ctx, glow_tEvent event)
             || grow_GetObjectType(event->object.object)
                 == glow_eObjectType_GrowBar
             || grow_GetObjectType(event->object.object)
+                == glow_eObjectType_GrowBarArc
+            || grow_GetObjectType(event->object.object)
                 == glow_eObjectType_GrowTable
             || grow_GetObjectType(event->object.object)
                 == glow_eObjectType_GrowXYCurve
@@ -3920,6 +3951,7 @@ static int graph_trace_grow_cb(GlowCtx* ctx, glow_tEvent event)
         || grow_GetObjectType(event->object.object)
             == glow_eObjectType_GrowWindow
         || grow_GetObjectType(event->object.object) == glow_eObjectType_GrowBar
+        || grow_GetObjectType(event->object.object) == glow_eObjectType_GrowBarArc
         || grow_GetObjectType(event->object.object)
             == glow_eObjectType_GrowTable
         || grow_GetObjectType(event->object.object)
@@ -5504,6 +5536,42 @@ void Graph::create_bar(grow_tObject* object, double x, double y, int colortheme)
   info.max_value = 100;
   info.min_value = 0;
   grow_SetBarInfo(*object, &info);
+  grow_Redraw(grow->ctx);
+}
+
+void Graph::create_bararc(grow_tObject* object, double x, double y, int colortheme)
+{
+  double width = 5;
+  double height = 5;
+  double bar_width = 1;
+  GeDyn* dyn;
+  glow_sBarInfo info;
+  glow_eDrawType backgroundcolor, barcolor, barbordercolor;
+
+  if (colortheme) {
+    backgroundcolor = glow_eCtColor_BarBackgroundColor;
+    barcolor = glow_eCtColor_BarBarColor;
+    barbordercolor = glow_eCtColor_BarBarLimitColor;
+  } else {
+    backgroundcolor = glow_eDrawType_Color40;
+    barcolor = glow_eDrawType_Color147;
+    barbordercolor = glow_eDrawType_Color145;
+  }
+
+  grow_CreateGrowBarArc(grow->ctx, get_next_object_name("O", ""), x, y, x + width,
+			y + height, 0, 360, bar_width, glow_eDrawType_Line, 1, 1,
+			backgroundcolor, NULL, object);
+  dyn = new GeDyn(this);
+  dyn->dyn_type1 = dyn->total_dyn_type1 = ge_mDynType1_Bar;
+  dyn->update_elements();
+  grow_SetUserData(*object, (void*)dyn);
+
+  info.bar_drawtype = barcolor;
+  info.bar_bordercolor = barbordercolor;
+  info.bar_borderwidth = 1;
+  info.max_value = 100;
+  info.min_value = 0;
+  grow_SetBarArcInfo(*object, &info);
   grow_Redraw(grow->ctx);
 }
 

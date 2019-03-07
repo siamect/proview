@@ -2137,6 +2137,7 @@ int GeDyn::connect(grow_tObject object, glow_sTraceData* trace_data, bool now)
   int inherit_action_type2;
 
   if (grow_GetObjectType(object) == glow_eObjectType_GrowBar
+      || grow_GetObjectType(object) == glow_eObjectType_GrowBarArc
       || grow_GetObjectType(object) == glow_eObjectType_GrowTable
       || grow_GetObjectType(object) == glow_eObjectType_GrowWindow
       || grow_GetObjectType(object) == glow_eObjectType_GrowXYCurve
@@ -2249,6 +2250,7 @@ void GeDyn::export_java(grow_tObject object, std::ofstream& fp, char* var_name)
   int inherit_dyn_type2, inherit_action_type2;
 
   if (grow_GetObjectType(object) == glow_eObjectType_GrowBar
+      || grow_GetObjectType(object) == glow_eObjectType_GrowBarArc
       || grow_GetObjectType(object) == glow_eObjectType_GrowTable
       || grow_GetObjectType(object) == glow_eObjectType_GrowWindow
       || grow_GetObjectType(object) == glow_eObjectType_GrowXYCurve
