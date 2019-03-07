@@ -535,6 +535,15 @@ static void scan(plc_sThread* tp)
   plc_sProcess* pp = tp->pp;
   int delay_action = 0;
 
+  if ( tp->ext_retry_connect_cnt > (int)(5.0/tp->f_scan_time)) {
+    tp->ext_retry_connect = 1;
+    tp->ext_retry_connect_cnt = 0;
+  }
+  else {
+    tp->ext_retry_connect = 0;
+    tp->ext_retry_connect_cnt++;
+  }
+
   //  time_Uptime(&sts, &tp->before_scan, NULL);
   time_GetTimeMonotonic(&tp->before_scan);
   time_GetTime(&tp->before_scan_abs);

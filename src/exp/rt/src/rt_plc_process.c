@@ -509,11 +509,11 @@ static void link_io_base_areas(plc_sProcess* pp)
       pp->IOHandler->IiCount * sizeof(pwr_tUInt64));
   dlink_area((plc_sDlink*)&pp->base.io_i, "pwrNode-active-io-io_init",
       pp->IOHandler->IoCount * sizeof(pwr_tUInt64));
-  dlink_area((plc_sDlink*)&pp->base.atv_i, "pwrNode-active-io-iatv_init",
+  dlink_area((plc_sDlink*)&pp->base.atv_i, "pwrNode-active-io-atv_init",
       pp->IOHandler->ATvCount * sizeof(pwr_tTime));
-  dlink_area((plc_sDlink*)&pp->base.dtv_i, "pwrNode-active-io-idtv_init",
+  dlink_area((plc_sDlink*)&pp->base.dtv_i, "pwrNode-active-io-dtv_init",
       pp->IOHandler->DTvCount * sizeof(pwr_tDeltaTime));
-  dlink_area((plc_sDlink*)&pp->base.sv_i, "pwrNode-active-io-isv_init",
+  dlink_area((plc_sDlink*)&pp->base.sv_i, "pwrNode-active-io-sv_init",
       pp->IOHandler->SvCount * sizeof(pwr_tString80));
   dlink_area((plc_sDlink*)&pp->base.bi_i, "pwrNode-active-io-bi_init",
       pp->IOHandler->BiCount * sizeof(pwr_tUInt64));

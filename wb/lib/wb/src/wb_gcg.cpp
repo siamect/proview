@@ -13825,8 +13825,8 @@ int gcg_comp_m64(gcg_ctx gcgctx, vldh_t_node node)
     return sts;
 
   /* Print the execute command */
-  IF_PR fprintf(gcgctx->files[GCGM1_CODE_FILE], "%s_exec( %c%s);\n", name,
-      GCG_PREFIX_REF, vldh_IdToStr(0, node->ln.oid));
+  IF_PR fprintf(gcgctx->files[GCGM1_CODE_FILE], "%s_exec( %c%s, \"%s\");\n", name,
+      GCG_PREFIX_REF, vldh_IdToStr(0, node->ln.oid), extattr_ptr);
 
   /* Print the init command */
   IF_PR fprintf(gcgctx->files[GCGM1_REF_FILE], "%s_init( %c%s, \"%s\");\n",
