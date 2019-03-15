@@ -345,6 +345,7 @@ void SubPaletteBrow::allocate_pixmaps()
   brow_LoadPBM(ctx, "ge_bitmap_axisarc250", &pixmaps[idx++]);
   brow_LoadPBM(ctx, "ge_bitmap_methodtoolbar251", &pixmaps[idx++]);
   brow_LoadPBM(ctx, "ge_bitmap_pwrlogotype252", &pixmaps[idx++]);
+  brow_LoadPBM(ctx, "ge_bitmap_bararc253", &pixmaps[idx++]);
 }
 
 //
