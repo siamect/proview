@@ -53,7 +53,6 @@ public:
   void remove(FlowArrayElem* element);
   void configure();
   void change_scrollbar();
-  void redraw();
   void zoom(double factor);
   void unzoom()
   {

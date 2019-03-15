@@ -59,10 +59,6 @@ public:
   {
     a.print_zoom();
   }
-  void traverse(int x, int y)
-  {
-    a.traverse(x, y);
-  }
   void get_borders(double pos_x, double pos_y, double* x_right, double* x_left,
       double* y_high, double* y_low, void* node)
   {

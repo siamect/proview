@@ -58,6 +58,7 @@ public:
   QWidget* form_widget;
 
   void trace_start();
+  void set_inputfocus();
   Attr* new_attr(void* object, attr_sItem* items, int num);
   ~SubGraphsQt();
 

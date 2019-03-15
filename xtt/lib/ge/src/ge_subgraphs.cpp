@@ -115,11 +115,6 @@ SubGraphsBrow::~SubGraphsBrow()
   free_pixmaps();
 }
 
-void SubGraphs::set_inputfocus()
-{
-  brow_SetInputFocus(brow->ctx);
-}
-
 //
 //  Return associated class of selected object
 //

@@ -57,12 +57,6 @@ void FlowRect::print_zoom()
   ur.print_zoom();
 }
 
-void FlowRect::traverse(int x, int y)
-{
-  ll.traverse(x, y);
-  ur.traverse(x, y);
-}
-
 void FlowRect::print(void* pos, void* node, int highlight)
 {
   if (!(display_level & ctx->display_level))
@@ -177,18 +171,18 @@ void FlowRect::draw(void* pos, int highlight, int dimmed, int hot, void* node)
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   if (!fill)
-    ctx->fdraw->rect(ctx, ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+    ctx->fdraw->rect(ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
         ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, ur.z_x - ll.z_x,
-        ur.z_y - ll.z_y, draw_type, idx, highlight, dimmed);
+        ur.z_y - ll.z_y, draw_type, 0, idx, highlight, dimmed);
   else {
     flow_eDrawType dtype;
     if (node && ((FlowNode*)node)->fill_color != flow_eDrawType_Inherit)
       dtype = ((FlowNode*)node)->fill_color;
     else
       dtype = draw_type;
-    ctx->fdraw->fill_rect(ctx, ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+    ctx->fdraw->rect(ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
         ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, ur.z_x - ll.z_x,
-        ur.z_y - ll.z_y, dtype);
+        ur.z_y - ll.z_y, dtype, 1, 0);
   }
 }
 
@@ -209,13 +203,13 @@ void FlowRect::erase(void* pos, int hot, void* node)
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   if (!fill)
-    ctx->fdraw->rect_erase(ctx, ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+    ctx->fdraw->rect(ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
         ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, ur.z_x - ll.z_x,
-        ur.z_y - ll.z_y, idx);
+        ur.z_y - ll.z_y, flow_eDrawType_LineErase, 0, idx);
   else
-    ctx->fdraw->fill_rect(ctx, ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+    ctx->fdraw->rect(ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
         ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, ur.z_x - ll.z_x,
-        ur.z_y - ll.z_y, flow_eDrawType_LineErase);
+        ur.z_y - ll.z_y, flow_eDrawType_LineErase, 1, 0);
 }
 
 void FlowRect::nav_draw(void* pos, int highlight, void* node)
@@ -233,11 +227,10 @@ void FlowRect::nav_draw(void* pos, int highlight, void* node)
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   if (!fill)
-    ctx->fdraw->nav_rect(ctx,
+    ctx->fdraw->rect(
         ll.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
         ll.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
-        ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, draw_type, idx,
-        highlight);
+        ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, draw_type, 0, idx, highlight);
 }
 
 void FlowRect::nav_erase(void* pos, void* node)
@@ -255,10 +248,11 @@ void FlowRect::nav_erase(void* pos, void* node)
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   if (!fill)
-    ctx->fdraw->nav_rect_erase(ctx,
+    ctx->fdraw->rect(
         ll.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
         ll.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
-        ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, idx);
+        ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y,
+        flow_eDrawType_LineErase, 0, idx);
 }
 
 int FlowRect::event_handler(
@@ -298,32 +292,25 @@ void FlowRect::move(
 
   width = ur.x - ll.x;
   height = ur.y - ll.y;
-  erase(pos, hot, NULL);
-  nav_erase(pos, NULL);
   ll.x = x;
   ll.y = y;
   ur.x = x + width;
   ur.y = y + height;
   zoom();
   nav_zoom();
-  draw(pos, highlight, dimmed, hot, NULL);
-  nav_draw(pos, highlight, NULL);
+  ctx->set_dirty();
 }
 
 void FlowRect::shift(void* pos, double delta_x, double delta_y, int highlight,
     int dimmed, int hot)
 {
-  erase(pos, hot, NULL);
-  nav_erase(pos, NULL);
   ll.x += delta_x;
   ll.y += delta_y;
   ur.x += delta_x;
   ur.y += delta_y;
   zoom();
   nav_zoom();
-
-  draw(pos, highlight, dimmed, hot, NULL);
-  nav_draw(pos, highlight, NULL);
+  ctx->set_dirty();
 }
 
 std::ostream& operator<<(std::ostream& o, const FlowRect r)

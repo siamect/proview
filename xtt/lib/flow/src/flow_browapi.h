@@ -244,12 +244,11 @@ int brow_IsVisible(brow_tCtx ctx, brow_tObject object, flow_eVisible type);
 int brow_GetFirstVisible(brow_tCtx ctx, brow_tObject* object);
 int brow_GetLastVisible(brow_tCtx ctx, brow_tObject* object);
 int brow_Page(brow_tCtx ctx, double factor);
-int brow_CreateSecondaryCtx(brow_tCtx ctx, brow_tCtx* secondary_ctx,
+void brow_CreateSecondaryCtx(brow_tCtx ctx, brow_tCtx* secondary_ctx,
     int (*init_proc)(brow_tCtx ctx, void* client_data), void* client_data,
     flow_eCtxType type);
 void brow_DeleteSecondaryCtx(brow_tCtx ctx);
-int brow_ChangeCtx(brow_tCtx from_ctx, brow_tCtx to_ctx);
-void brow_SetInputFocus(brow_tCtx ctx);
+void brow_ChangeCtx(brow_tCtx from_ctx, brow_tCtx to_ctx);
 void brow_SetClickSensitivity(brow_tCtx ctx, int value);
 void brow_SetWhiteBackground(brow_tCtx ctx);
 void brow_SetFillColor(brow_tNode node, flow_eDrawType color);

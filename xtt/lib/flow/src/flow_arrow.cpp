@@ -104,13 +104,6 @@ void FlowArrow::print_zoom()
   p2.print_zoom();
 }
 
-void FlowArrow::traverse(int x, int y)
-{
-  p_dest.traverse(x, y);
-  p1.traverse(x, y);
-  p2.traverse(x, y);
-}
-
 void FlowArrow::print(void* pos, void* node, int highlight)
 {
   double idx = ctx->print_zoom_factor / ctx->base_zoom_factor * line_width;
@@ -192,7 +185,7 @@ void FlowArrow::draw(void* pos, int highlight, int dimmed, int hot, void* node)
   idx += hot;
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->arrow(ctx, p_dest.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+  ctx->fdraw->arrow(p_dest.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       p_dest.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
       p1.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       p1.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
@@ -207,13 +200,13 @@ void FlowArrow::erase(void* pos, int hot, void* node)
   idx += hot;
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->arrow_erase(ctx,
-      p_dest.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+  ctx->fdraw->arrow(p_dest.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       p_dest.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
       p1.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       p1.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
       p2.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
-      p2.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, idx);
+      p2.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
+      flow_eDrawType_LineErase, idx);
 }
 
 void FlowArrow::nav_draw(void* pos, int highlight, void* node)
@@ -221,7 +214,7 @@ void FlowArrow::nav_draw(void* pos, int highlight, void* node)
   int idx = int(ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1);
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->nav_arrow(ctx,
+  ctx->fdraw->arrow(
       p_dest.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
       p_dest.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
       p1.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
@@ -236,21 +229,19 @@ void FlowArrow::nav_erase(void* pos, void* node)
   int idx = int(ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1);
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->nav_arrow_erase(ctx,
+  ctx->fdraw->arrow(
       p_dest.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
       p_dest.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
       p1.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
       p1.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
       p2.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
-      p2.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y, idx);
+      p2.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
+      flow_eDrawType_LineErase, idx);
 }
 
 void FlowArrow::move(void* pos, double x1, double y1, double x2, double y2,
     int highlight, int dimmed, int hot)
 {
-  erase(pos, hot, NULL);
-  nav_erase(pos, NULL);
-
   if (fabs(x2 - x1) < DBL_EPSILON) {
     if (y1 > y2) {
       p1.x = x2 + arrow_width / 2;
@@ -286,15 +277,12 @@ void FlowArrow::move(void* pos, double x1, double y1, double x2, double y2,
   p_dest.y = y2;
   zoom();
   nav_zoom();
-  draw(pos, highlight, dimmed, hot, NULL);
-  nav_draw(pos, highlight, NULL);
+  ctx->set_dirty();
 }
 
 void FlowArrow::shift(void* pos, double delta_x, double delta_y, int highlight,
     int dimmed, int hot)
 {
-  erase(pos, hot, NULL);
-  nav_erase(pos, NULL);
   p_dest.x += delta_x;
   p_dest.y += delta_y;
   p1.x += delta_x;
@@ -303,9 +291,7 @@ void FlowArrow::shift(void* pos, double delta_x, double delta_y, int highlight,
   p2.y += delta_y;
   zoom();
   nav_zoom();
-
-  draw(pos, highlight, dimmed, hot, NULL);
-  nav_draw(pos, highlight, NULL);
+  ctx->set_dirty();
 }
 
 int FlowArrow::event_handler(

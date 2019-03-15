@@ -63,10 +63,6 @@ public:
     nc->print_zoom();
     pos.print_zoom();
   }
-  void traverse(int x, int y)
-  {
-    pos.traverse(x, y);
-  }
   void get_borders(
       double* x1_right, double* x1_left, double* y1_high, double* y1_low)
   {
@@ -209,8 +205,6 @@ public:
         && (obst_y_high + ctx->draw_delta) > y);
   }
   void conpoint_refcon_reconfig(int conpoint);
-  void conpoint_refcon_redraw(void* node, int conpoint){}
-  void conpoint_refcon_erase(void* node, int conpoint){}
   void remove_notify();
   void* user_data;
   void set_user_data(void* data)

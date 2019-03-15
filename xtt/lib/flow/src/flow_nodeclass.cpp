@@ -40,11 +40,12 @@
 #include <iostream>
 #include <vector>
 
-#include "flow_nodeclass.h"
 #include "flow_annot.h"
 #include "flow_annotpixmap.h"
 #include "flow_conpoint.h"
+#include "flow_draw.h"
 #include "flow_msg.h"
+#include "flow_nodeclass.h"
 
 class NextConPoint {
 public:
@@ -126,18 +127,14 @@ void FlowNodeClass::open(std::ifstream& fp)
 void FlowNodeClass::draw(
     FlowPoint* pos, int highlight, int dimmed, int hot, void* node)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     a.a[i]->draw(pos, highlight, dimmed, hot, node);
   }
 }
 
 void FlowNodeClass::nav_draw(FlowPoint* pos, int highlight, void* node)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     a.a[i]->nav_draw(pos, highlight, node);
   }
 }
@@ -160,18 +157,14 @@ void FlowNodeClass::draw_inverse(FlowPoint* pos, int hot, void* node)
 
 void FlowNodeClass::erase(FlowPoint* pos, int hot, void* node)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     a.a[i]->erase(pos, hot, node);
   }
 }
 
 void FlowNodeClass::nav_erase(FlowPoint* pos, void* node)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     a.a[i]->nav_erase(pos, node);
   }
 }

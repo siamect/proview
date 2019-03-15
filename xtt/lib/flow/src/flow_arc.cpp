@@ -56,12 +56,6 @@ void FlowArc::print_zoom()
   ur.print_zoom();
 }
 
-void FlowArc::traverse(int x, int y)
-{
-  ll.traverse(x, y);
-  ur.traverse(x, y);
-}
-
 void FlowArc::print(void* pos, void* node, int highlight)
 {
   double idx = ctx->print_zoom_factor / ctx->base_zoom_factor * line_width;
@@ -135,7 +129,7 @@ void FlowArc::draw(void* pos, int highlight, int dimmed, int hot, void* node)
   idx += hot;
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->arc(ctx, ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+  ctx->fdraw->arc(ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, ur.z_x - ll.z_x,
       ur.z_y - ll.z_y, angle1, angle2, draw_type, idx, highlight, dimmed);
 }
@@ -146,9 +140,9 @@ void FlowArc::erase(void* pos, int hot, void* node)
   idx += hot;
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->arc_erase(ctx, ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+  ctx->fdraw->arc(ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, ur.z_x - ll.z_x,
-      ur.z_y - ll.z_y, angle1, angle2, idx);
+      ur.z_y - ll.z_y, angle1, angle2, flow_eDrawType_LineErase, idx);
 }
 
 void FlowArc::nav_draw(void* pos, int highlight, void* node)
@@ -156,8 +150,7 @@ void FlowArc::nav_draw(void* pos, int highlight, void* node)
   int idx = int(ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1);
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->nav_arc(ctx,
-      ll.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
+  ctx->fdraw->arc(ll.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
       ll.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
       ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, angle1, angle2,
       draw_type, idx, highlight);
@@ -168,10 +161,10 @@ void FlowArc::nav_erase(void* pos, void* node)
   int idx = int(ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1);
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->nav_arc_erase(ctx,
-      ll.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
+  ctx->fdraw->arc(ll.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
       ll.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
-      ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, angle1, angle2, idx);
+      ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, angle1, angle2,
+      flow_eDrawType_LineErase, idx);
 }
 
 int FlowArc::event_handler(
@@ -205,8 +198,6 @@ void FlowArc::get_borders(double pos_x, double pos_y, double* x_right,
 void FlowArc::move(void* pos, double x1, double y1, double x2, double y2,
     int ang1, int ang2, int highlight, int dimmed, int hot)
 {
-  erase(pos, hot, NULL);
-  nav_erase(pos, NULL);
   ll.x = x1;
   ll.y = y1;
   ur.x = x2;
@@ -215,24 +206,19 @@ void FlowArc::move(void* pos, double x1, double y1, double x2, double y2,
   angle2 = ang2;
   zoom();
   nav_zoom();
-  draw(pos, highlight, dimmed, hot, NULL);
-  nav_draw(pos, highlight, NULL);
+  ctx->set_dirty();
 }
 
 void FlowArc::shift(void* pos, double delta_x, double delta_y, int highlight,
     int dimmed, int hot)
 {
-  erase(pos, hot, NULL);
-  nav_erase(pos, NULL);
   ll.x += delta_x;
   ll.y += delta_y;
   ur.x += delta_x;
   ur.y += delta_y;
   zoom();
   nav_zoom();
-
-  draw(pos, highlight, dimmed, hot, NULL);
-  nav_draw(pos, highlight, NULL);
+  ctx->set_dirty();
 }
 
 std::ostream& operator<<(std::ostream& o, const FlowArc a)

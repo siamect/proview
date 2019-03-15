@@ -264,6 +264,11 @@ void SubGraphsGtk::trace_start()
   SubGraphsGtk::trace_scan(this);
 }
 
+void SubGraphsGtk::set_inputfocus()
+{
+  gtk_widget_grab_focus(brow_widget);
+}
+
 static gboolean subgraphsgtk_trace_scan(void* data)
 {
   SubGraphsGtk::trace_scan((SubGraphsGtk*)data);

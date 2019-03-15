@@ -58,11 +58,6 @@ void FlowAnnot::print_zoom()
   p.print_zoom();
 }
 
-void FlowAnnot::traverse(int x, int y)
-{
-  p.traverse(x, y);
-}
-
 void FlowAnnot::print(void* pos, void* node, int highlight)
 {
   if (!(display_level & ctx->display_level))
@@ -102,7 +97,7 @@ void FlowAnnot::print(void* pos, void* node, int highlight)
     char* s;
     switch (ctx->current_print->type()) {
     case print_eType_Pdf: {
-      ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type, text_size, &z_width,
+      ctx->fdraw->get_text_extent("Ag", 2, draw_type, text_size, &z_width,
           &z_height, ctx->print_zoom_factor / ctx->base_zoom_factor
               * (12 + 2 * text_size));
       float k = -2.5 * ctx->print_zoom_factor / ctx->base_zoom_factor + 2.62;
@@ -110,7 +105,7 @@ void FlowAnnot::print(void* pos, void* node, int highlight)
       break;
     }
     default:
-      ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type, text_size, &z_width,
+      ctx->fdraw->get_text_extent("Ag", 2, draw_type, text_size, &z_width,
           &z_height, ctx->print_zoom_factor / ctx->base_zoom_factor
               * (12 + 2 * text_size));
     }
@@ -153,7 +148,7 @@ void FlowAnnot::print(void* pos, void* node, int highlight)
             int h1_size = text_size + 4;
             switch (ctx->current_print->type()) {
             case print_eType_Pdf: {
-              ctx->fdraw->get_text_extent(ctx, "Ag", 2,
+              ctx->fdraw->get_text_extent("Ag", 2,
                   flow_eDrawType_TextHelveticaBold, h1_size, &z_width,
                   &z_height, print_zoom_factor / ctx->base_zoom_factor
                       * (12 + 2 * h1_size));
@@ -163,7 +158,7 @@ void FlowAnnot::print(void* pos, void* node, int highlight)
               break;
             }
             default:
-              ctx->fdraw->get_text_extent(ctx, "Ag", 2,
+              ctx->fdraw->get_text_extent("Ag", 2,
                   flow_eDrawType_TextHelveticaBold, h1_size, &z_width,
                   &z_height, ctx->print_zoom_factor / ctx->base_zoom_factor
                       * (12 + 2 * h1_size));
@@ -183,7 +178,7 @@ void FlowAnnot::print(void* pos, void* node, int highlight)
             int h2_size = text_size + 2;
             switch (ctx->current_print->type()) {
             case print_eType_Pdf: {
-              ctx->fdraw->get_text_extent(ctx, "Ag", 2,
+              ctx->fdraw->get_text_extent("Ag", 2,
                   flow_eDrawType_TextHelveticaBold, h2_size, &z_width,
                   &z_height, print_zoom_factor / ctx->base_zoom_factor
                       * (12 + 2 * h2_size));
@@ -195,7 +190,7 @@ void FlowAnnot::print(void* pos, void* node, int highlight)
               break;
             }
             default:
-              ctx->fdraw->get_text_extent(ctx, "Ag", 2,
+              ctx->fdraw->get_text_extent("Ag", 2,
                   flow_eDrawType_TextHelveticaBold, h2_size, &z_width,
                   &z_height, ctx->print_zoom_factor / ctx->base_zoom_factor
                       * (12 + 2 * h2_size));
@@ -214,7 +209,7 @@ void FlowAnnot::print(void* pos, void* node, int highlight)
           } else if (str_NoCaseStrncmp(line, "<b>", 3) == 0) {
             switch (ctx->current_print->type()) {
             case print_eType_Pdf: {
-              ctx->fdraw->get_text_extent(ctx, "Ag", 2,
+              ctx->fdraw->get_text_extent("Ag", 2,
                   flow_eDrawType_TextHelveticaBold, text_size, &z_width,
                   &z_height, print_zoom_factor / ctx->base_zoom_factor
                       * (12 + 2 * text_size));
@@ -224,7 +219,7 @@ void FlowAnnot::print(void* pos, void* node, int highlight)
               break;
             }
             default:
-              ctx->fdraw->get_text_extent(ctx, "Ag", 2,
+              ctx->fdraw->get_text_extent("Ag", 2,
                   flow_eDrawType_TextHelveticaBold, text_size, &z_width,
                   &z_height, ctx->print_zoom_factor / ctx->base_zoom_factor
                       * (12 + 2 * text_size));
@@ -257,7 +252,7 @@ void FlowAnnot::print(void* pos, void* node, int highlight)
             }
             switch (ctx->current_print->type()) {
             case print_eType_Pdf: {
-              ctx->fdraw->get_text_extent(ctx, "Ag", 2,
+              ctx->fdraw->get_text_extent("Ag", 2,
                   flow_eDrawType_TextHelvetica, text_size, &z_width, &z_height,
                   print_zoom_factor / ctx->base_zoom_factor
                       * (12 + 2 * text_size));
@@ -266,7 +261,7 @@ void FlowAnnot::print(void* pos, void* node, int highlight)
               break;
             }
             default:
-              ctx->fdraw->get_text_extent(ctx, "Ag", 2,
+              ctx->fdraw->get_text_extent("Ag", 2,
                   flow_eDrawType_TextHelvetica, text_size, &z_width, &z_height,
                   ctx->print_zoom_factor / ctx->base_zoom_factor
                       * (12 + 2 * text_size));
@@ -381,14 +376,10 @@ void FlowAnnot::draw(void* pos, int highlight, int dimmed, int hot, void* node)
                 ((FlowNode*)node)->rel_annot_x[number] * ctx->zoom_factor));
     } else
       x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x;
-    ctx->fdraw->text(ctx, x, p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
+    ctx->fdraw->text(x, p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
         ((FlowNode*)node)->annotv[number],
-        strlen(((FlowNode*)node)->annotv[number]), draw_type, idx, highlight,
-        dimmed, 0, tsize(text_size));
-    if (((FlowNode*)node)->annotv_inputmode[number])
-      ctx->fdraw->move_input(ctx, ((FlowNode*)node)->annotv_input[number], x,
-          p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
-          flow_ePosition_Absolute);
+        strlen(((FlowNode*)node)->annotv[number]), draw_type, idx, tsize(text_size),
+        highlight, dimmed);
     break;
   case flow_eAnnotType_MultiLine: {
     int z_width, z_height;
@@ -399,13 +390,13 @@ void FlowAnnot::draw(void* pos, int highlight, int dimmed, int hot, void* node)
     char* line = ((FlowNode*)node)->annotv[number];
     char* s;
     ctx->fdraw->get_text_extent(
-        ctx, "Ag", 2, draw_type, idx, &z_width, &z_height, tsize(text_size));
+        "Ag", 2, draw_type, idx, &z_width, &z_height, tsize(text_size));
     for (s = ((FlowNode*)node)->annotv[number]; *s; s++) {
       if (*s == 10) {
         if (len) {
           *s = 0;
-          ctx->fdraw->text(ctx, z_x, z_y + line_cnt * z_height, line, len,
-              draw_type, idx, highlight, dimmed, 0, tsize(text_size));
+          ctx->fdraw->text(z_x, z_y + line_cnt * z_height, line, len,
+              draw_type, idx, tsize(text_size), highlight, dimmed);
           *s = 10;
         }
         len = 0;
@@ -415,8 +406,8 @@ void FlowAnnot::draw(void* pos, int highlight, int dimmed, int hot, void* node)
         len++;
     }
     if (len)
-      ctx->fdraw->text(ctx, z_x, z_y + line_cnt * z_height, line, len,
-          draw_type, idx, highlight, dimmed, 0, tsize(text_size));
+      ctx->fdraw->text(z_x, z_y + line_cnt * z_height, line, len,
+          draw_type, idx, tsize(text_size), highlight, dimmed);
     break;
   }
   case flow_eAnnotType_HelpText: {
@@ -439,46 +430,46 @@ void FlowAnnot::draw(void* pos, int highlight, int dimmed, int hot, void* node)
           *s = 0;
           if (str_NoCaseStrncmp(line, "<h1>", 4) == 0) {
             int h1_size = text_size + 4;
-            ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
+            ctx->fdraw->get_text_extent("Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
                 tsize(h1_size));
             if (line_cnt > 0)
               y_offs += z_height;
             else
               y_offs += z_height / 3;
-            ctx->fdraw->text(ctx, z_x, z_y + y_offs, &line[4], len - 4,
-                flow_eDrawType_TextHelveticaBold, idx, highlight, dimmed, 0,
-                tsize(h1_size));
+            ctx->fdraw->text(z_x, z_y + y_offs, &line[4], len - 4,
+                flow_eDrawType_TextHelveticaBold, idx, tsize(h1_size),
+                highlight, dimmed);
           } else if (str_NoCaseStrncmp(line, "<h2>", 4) == 0) {
             int h2_size = text_size + 2;
-            ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
+            ctx->fdraw->get_text_extent("Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
                 tsize(h2_size));
             if (line_cnt > 0)
               y_offs += z_height;
             else
               y_offs += z_height / 3;
-            ctx->fdraw->text(ctx, z_x, z_y + y_offs, &line[4], len - 4,
-                flow_eDrawType_TextHelveticaBold, idx, highlight, dimmed, 0,
-                tsize(h2_size));
+            ctx->fdraw->text(z_x, z_y + y_offs, &line[4], len - 4,
+                flow_eDrawType_TextHelveticaBold, idx, tsize(h2_size),
+                highlight, dimmed);
           } else if (str_NoCaseStrncmp(line, "<b>", 3) == 0) {
-            ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
+            ctx->fdraw->get_text_extent("Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
                 tsize(text_size));
             if (line_cnt > 0)
               y_offs += z_height;
             else
               y_offs += z_height / 3;
-            ctx->fdraw->text(ctx, z_x, z_y + y_offs, &line[3], len - 3,
-                flow_eDrawType_TextHelveticaBold, idx, highlight, dimmed, 0,
-                tsize(text_size));
+            ctx->fdraw->text(z_x, z_y + y_offs, &line[3], len - 3,
+                flow_eDrawType_TextHelveticaBold, idx, tsize(text_size),
+                highlight, dimmed);
           } else if (str_NoCaseStrncmp(line, "<image>", 7) == 0) {
           } else {
             if (str_NoCaseStrncmp(line, "<c>", 3) == 0)
               lix = 3;
             else
               lix = 0;
-            ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type, draw_type,
+            ctx->fdraw->get_text_extent("Ag", 2, draw_type, draw_type,
                 &z_width, &z_height, tsize(text_size));
             char* s1 = strstr(line, "<link>");
             int eix = 0;
@@ -492,9 +483,9 @@ void FlowAnnot::draw(void* pos, int highlight, int dimmed, int hot, void* node)
               y_offs += z_height;
             else
               y_offs += z_height / 3;
-            ctx->fdraw->text(ctx, z_x, z_y + y_offs, &line[lix],
-                len - lix - eix, draw_type, idx, highlight, dimmed, 0,
-                tsize(text_size));
+            ctx->fdraw->text(z_x, z_y + y_offs, &line[lix],
+                len - lix - eix, draw_type, idx, tsize(text_size),
+                highlight, dimmed);
             if (s1)
               *s1 = c;
           }
@@ -511,6 +502,16 @@ void FlowAnnot::draw(void* pos, int highlight, int dimmed, int hot, void* node)
     }
     break;
   }
+  }
+}
+
+static flow_eDrawType get_erase_gc(flow_eDrawType gc) {
+  if (gc == flow_eDrawType_TextHelvetica) {
+    return flow_eDrawType_TextHelveticaErase;
+  } else if (gc == flow_eDrawType_TextHelveticaBold) {
+    return flow_eDrawType_TextHelveticaEraseBold;
+  } else {
+    return gc;
   }
 }
 
@@ -535,10 +536,9 @@ void FlowAnnot::erase(void* pos, int hot, void* node)
                 ((FlowNode*)node)->rel_annot_x[number] * ctx->zoom_factor));
     } else
       x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x;
-    ctx->fdraw->text_erase(ctx, x,
-        p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
+    ctx->fdraw->text(x, p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
         ((FlowNode*)node)->annotv[number],
-        strlen(((FlowNode*)node)->annotv[number]), draw_type, idx, 0,
+        strlen(((FlowNode*)node)->annotv[number]), get_erase_gc(draw_type), idx,
         tsize(text_size));
     break;
   case flow_eAnnotType_MultiLine: {
@@ -550,13 +550,13 @@ void FlowAnnot::erase(void* pos, int hot, void* node)
     char* line = ((FlowNode*)node)->annotv[number];
     char* s;
     ctx->fdraw->get_text_extent(
-        ctx, "Ag", 2, draw_type, idx, &z_width, &z_height, tsize(text_size));
+        "Ag", 2, draw_type, idx, &z_width, &z_height, tsize(text_size));
     for (s = ((FlowNode*)node)->annotv[number]; *s; s++) {
       if (*s == 10) {
         if (len) {
           *s = 0;
-          ctx->fdraw->text_erase(ctx, z_x, z_y + line_cnt * z_height, line, len,
-              draw_type, idx, 0, tsize(text_size));
+          ctx->fdraw->text(z_x, z_y + line_cnt * z_height, line, len,
+              get_erase_gc(draw_type), idx, tsize(text_size));
           *s = 10;
         }
         len = 0;
@@ -566,8 +566,8 @@ void FlowAnnot::erase(void* pos, int hot, void* node)
         len++;
     }
     if (len)
-      ctx->fdraw->text_erase(ctx, z_x, z_y + line_cnt * z_height, line, len,
-          draw_type, idx, 0, tsize(text_size));
+      ctx->fdraw->text(z_x, z_y + line_cnt * z_height, line, len,
+          get_erase_gc(draw_type), idx, tsize(text_size));
     break;
   }
   case flow_eAnnotType_HelpText: {
@@ -590,36 +590,36 @@ void FlowAnnot::erase(void* pos, int hot, void* node)
           *s = 0;
           if (str_NoCaseStrncmp(line, "<h1>", 4) == 0) {
             int h1_size = text_size + 4;
-            ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
+            ctx->fdraw->get_text_extent("Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
                 tsize(h1_size));
             if (line_cnt > 0)
               y_offs += z_height;
             else
               y_offs += z_height / 3;
-            ctx->fdraw->text_erase(ctx, z_x, z_y + y_offs, &line[4], len - 4,
-                flow_eDrawType_TextHelveticaBold, idx, 0, tsize(h1_size));
+            ctx->fdraw->text(z_x, z_y + y_offs, &line[4], len - 4,
+                get_erase_gc(flow_eDrawType_TextHelveticaBold), idx, tsize(h1_size));
           } else if (str_NoCaseStrncmp(line, "<h2>", 4) == 0) {
             int h2_size = text_size + 2;
-            ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
+            ctx->fdraw->get_text_extent("Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
                 tsize(h2_size));
             if (line_cnt > 0)
               y_offs += z_height;
             else
               y_offs += z_height / 3;
-            ctx->fdraw->text_erase(ctx, z_x, z_y + y_offs, &line[4], len - 4,
-                flow_eDrawType_TextHelveticaBold, idx, 0, tsize(h2_size));
+            ctx->fdraw->text(z_x, z_y + y_offs, &line[4], len - 4,
+                get_erase_gc(flow_eDrawType_TextHelveticaBold), idx, tsize(h2_size));
           } else if (str_NoCaseStrncmp(line, "<b>", 3) == 0) {
-            ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
+            ctx->fdraw->get_text_extent("Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
                 tsize(text_size));
             if (line_cnt > 0)
               y_offs += z_height;
             else
               y_offs += z_height / 3;
-            ctx->fdraw->text_erase(ctx, z_x, z_y + y_offs, &line[3], len - 3,
-                flow_eDrawType_TextHelveticaBold, idx, 0, tsize(text_size));
+            ctx->fdraw->text(z_x, z_y + y_offs, &line[3], len - 3,
+                get_erase_gc(flow_eDrawType_TextHelveticaBold), idx, tsize(text_size));
           } else if (str_NoCaseStrncmp(line, "<image>", 7) == 0) {
           } else {
             if (str_NoCaseStrncmp(line, "<c>", 3) == 0)
@@ -634,14 +634,14 @@ void FlowAnnot::erase(void* pos, int hot, void* node)
               c = *s1;
               *s1 = 0;
             }
-            ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type, draw_type,
+            ctx->fdraw->get_text_extent("Ag", 2, draw_type, draw_type,
                 &z_width, &z_height, tsize(text_size));
             if (line_cnt > 0)
               y_offs += z_height;
             else
               y_offs += z_height / 3;
-            ctx->fdraw->text_erase(ctx, z_x, z_y + y_offs, &line[lix],
-                len - lix - eix, draw_type, idx, 0, tsize(text_size));
+            ctx->fdraw->text(z_x, z_y + y_offs, &line[lix], len - lix - eix,
+                get_erase_gc(draw_type), idx, tsize(text_size));
             if (s1)
               *s1 = c;
           }
@@ -682,11 +682,10 @@ void FlowAnnot::draw_inverse(void* pos, int hot, void* node)
                 ((FlowNode*)node)->rel_annot_x[number] * ctx->zoom_factor));
     } else
       x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x;
-    ctx->fdraw->text_inverse(ctx, x,
-        p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
+    ctx->fdraw->text(x, p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
         ((FlowNode*)node)->annotv[number],
-        strlen(((FlowNode*)node)->annotv[number]), draw_type, idx, 0,
-        tsize(text_size));
+        strlen(((FlowNode*)node)->annotv[number]), get_erase_gc(draw_type),
+        idx, tsize(text_size));
     break;
   case flow_eAnnotType_MultiLine: {
     int z_width, z_height;
@@ -697,13 +696,13 @@ void FlowAnnot::draw_inverse(void* pos, int hot, void* node)
     char* line = ((FlowNode*)node)->annotv[number];
     char* s;
     ctx->fdraw->get_text_extent(
-        ctx, "Ag", 2, draw_type, idx, &z_width, &z_height, tsize(text_size));
+        "Ag", 2, draw_type, idx, &z_width, &z_height, tsize(text_size));
     for (s = ((FlowNode*)node)->annotv[number]; *s; s++) {
       if (*s == 10) {
         if (len) {
           *s = 0;
-          ctx->fdraw->text_inverse(ctx, z_x, z_y + line_cnt * z_height, line,
-              len, draw_type, idx, 0, tsize(text_size));
+          ctx->fdraw->text(z_x, z_y + line_cnt * z_height, line, len,
+              get_erase_gc(draw_type), idx, tsize(text_size));
           *s = 10;
         }
         len = 0;
@@ -713,8 +712,8 @@ void FlowAnnot::draw_inverse(void* pos, int hot, void* node)
         len++;
     }
     if (len)
-      ctx->fdraw->text_inverse(ctx, z_x, z_y + line_cnt * z_height, line, len,
-          draw_type, idx, 0, tsize(text_size));
+      ctx->fdraw->text(z_x, z_y + line_cnt * z_height, line, len,
+          get_erase_gc(draw_type), idx, tsize(text_size));
     break;
   }
   case flow_eAnnotType_HelpText: {
@@ -737,36 +736,36 @@ void FlowAnnot::draw_inverse(void* pos, int hot, void* node)
           *s = 0;
           if (str_NoCaseStrncmp(line, "<h1>", 4) == 0) {
             int h1_size = text_size + 4;
-            ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
+            ctx->fdraw->get_text_extent("Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
                 tsize(h1_size));
             if (line_cnt > 0)
               y_offs += z_height;
             else
               y_offs += z_height / 3;
-            ctx->fdraw->text_inverse(ctx, z_x, z_y + y_offs, &line[4], len - 4,
-                flow_eDrawType_TextHelveticaBold, idx, 0, tsize(h1_size));
+            ctx->fdraw->text(z_x, z_y + y_offs, &line[4], len - 4,
+                get_erase_gc(flow_eDrawType_TextHelveticaBold), idx, tsize(h1_size));
           } else if (str_NoCaseStrncmp(line, "<h2>", 4) == 0) {
             int h2_size = text_size + 2;
-            ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
+            ctx->fdraw->get_text_extent("Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
                 tsize(h2_size));
             if (line_cnt > 0)
               y_offs += z_height;
             else
               y_offs += z_height / 3;
-            ctx->fdraw->text_inverse(ctx, z_x, z_y + y_offs, &line[4], len - 4,
-                flow_eDrawType_TextHelveticaBold, idx, 0, tsize(h2_size));
+            ctx->fdraw->text(z_x, z_y + y_offs, &line[4], len - 4,
+                get_erase_gc(flow_eDrawType_TextHelveticaBold), idx, tsize(h2_size));
           } else if (str_NoCaseStrncmp(line, "<b>", 3) == 0) {
-            ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type,
+            ctx->fdraw->get_text_extent("Ag", 2, draw_type,
                 flow_eDrawType_TextHelveticaBold, &z_width, &z_height,
                 tsize(text_size));
             if (line_cnt > 0)
               y_offs += z_height;
             else
               y_offs += z_height / 3;
-            ctx->fdraw->text_inverse(ctx, z_x, z_y + y_offs, &line[3], len - 3,
-                flow_eDrawType_TextHelveticaBold, idx, 0, tsize(text_size));
+            ctx->fdraw->text(z_x, z_y + y_offs, &line[3], len - 3,
+                get_erase_gc(flow_eDrawType_TextHelveticaBold), idx, tsize(text_size));
           } else if (str_NoCaseStrncmp(line, "<image>", 7) == 0) {
           } else {
             if (str_NoCaseStrncmp(line, "<c>", 3) == 0)
@@ -781,14 +780,14 @@ void FlowAnnot::draw_inverse(void* pos, int hot, void* node)
               c = *s1;
               *s1 = 0;
             }
-            ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type, draw_type,
+            ctx->fdraw->get_text_extent("Ag", 2, draw_type, draw_type,
                 &z_width, &z_height, tsize(text_size));
             if (line_cnt > 0)
               y_offs += z_height;
             else
               y_offs += z_height / 3;
-            ctx->fdraw->text_inverse(ctx, z_x, z_y + y_offs, &line[lix],
-                len - lix - eix, draw_type, idx, 0, tsize(text_size));
+            ctx->fdraw->text(z_x, z_y + y_offs, &line[lix], len - lix - eix,
+                get_erase_gc(draw_type), idx, tsize(text_size));
             if (s1)
               *s = c;
           }
@@ -821,12 +820,12 @@ void FlowAnnot::nav_draw(void* pos, int highlight, void* node)
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   switch (annot_type) {
   case flow_eAnnotType_OneLine:
-    ctx->fdraw->nav_text(ctx,
+    ctx->fdraw->text(
         p.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
         p.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
         ((FlowNode*)node)->annotv[number],
-        strlen(((FlowNode*)node)->annotv[number]), draw_type, idx, highlight, 0,
-        nav_tsize(text_size));
+        strlen(((FlowNode*)node)->annotv[number]), draw_type,
+        idx, nav_tsize(text_size), highlight);
     break;
   case flow_eAnnotType_MultiLine:
   case flow_eAnnotType_HelpText: {
@@ -837,14 +836,14 @@ void FlowAnnot::nav_draw(void* pos, int highlight, void* node)
     int line_cnt = 0;
     char* line = ((FlowNode*)node)->annotv[number];
     char* s;
-    ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type, idx, &z_width,
+    ctx->fdraw->get_text_extent("Ag", 2, draw_type, idx, &z_width,
         &z_height, nav_tsize(text_size));
     for (s = ((FlowNode*)node)->annotv[number]; *s; s++) {
       if (*s == 10) {
         if (len) {
           *s = 0;
-          ctx->fdraw->nav_text(ctx, z_x, z_y + line_cnt * z_height, line, len,
-              draw_type, idx, highlight, 0, nav_tsize(text_size));
+          ctx->fdraw->text(z_x, z_y + line_cnt * z_height, line, len, draw_type,
+              idx, nav_tsize(text_size), highlight);
           *s = 10;
         }
         len = 0;
@@ -854,8 +853,8 @@ void FlowAnnot::nav_draw(void* pos, int highlight, void* node)
         len++;
     }
     if (len)
-      ctx->fdraw->nav_text(ctx, z_x, z_y + line_cnt * z_height, line, len,
-          draw_type, idx, highlight, 0, nav_tsize(text_size));
+      ctx->fdraw->text(z_x, z_y + line_cnt * z_height, line, len, draw_type,
+          idx, nav_tsize(text_size), highlight);
     break;
   }
   }
@@ -874,12 +873,11 @@ void FlowAnnot::nav_erase(void* pos, void* node)
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   switch (annot_type) {
   case flow_eAnnotType_OneLine:
-    ctx->fdraw->nav_text_erase(ctx,
-        p.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
+    ctx->fdraw->text(p.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
         p.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
         ((FlowNode*)node)->annotv[number],
-        strlen(((FlowNode*)node)->annotv[number]), draw_type, idx, 0,
-        nav_tsize(text_size));
+        strlen(((FlowNode*)node)->annotv[number]), get_erase_gc(draw_type),
+        idx, nav_tsize(text_size));
     break;
   case flow_eAnnotType_MultiLine:
   case flow_eAnnotType_HelpText: {
@@ -891,13 +889,13 @@ void FlowAnnot::nav_erase(void* pos, void* node)
     char* line = ((FlowNode*)node)->annotv[number];
     char* s;
     ctx->fdraw->get_text_extent(
-        ctx, "Ag", 2, draw_type, idx, &z_width, &z_height, tsize(text_size));
+        "Ag", 2, draw_type, idx, &z_width, &z_height, tsize(text_size));
     for (s = ((FlowNode*)node)->annotv[number]; *s; s++) {
       if (*s == 10) {
         if (len) {
           *s = 0;
-          ctx->fdraw->nav_text_erase(ctx, z_x, z_y + line_cnt * z_height, line,
-              len, draw_type, idx, 0, nav_tsize(text_size));
+          ctx->fdraw->text(z_x, z_y + line_cnt * z_height, line, len,
+              get_erase_gc(draw_type), idx, nav_tsize(text_size));
           *s = 10;
         }
         len = 0;
@@ -907,8 +905,8 @@ void FlowAnnot::nav_erase(void* pos, void* node)
         len++;
     }
     if (len)
-      ctx->fdraw->nav_text_erase(ctx, z_x, z_y + line_cnt * z_height, line, len,
-          draw_type, idx, 0, nav_tsize(text_size));
+      ctx->fdraw->text(z_x, z_y + line_cnt * z_height, line, len,
+          get_erase_gc(draw_type), idx, nav_tsize(text_size));
     break;
   }
   }
@@ -973,7 +971,7 @@ void FlowAnnot::measure_annot(char* text, double* width, double* height)
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   switch (annot_type) {
   case flow_eAnnotType_OneLine:
-    ctx->fdraw->get_text_extent(ctx, text, strlen(text), draw_type, idx,
+    ctx->fdraw->get_text_extent(text, strlen(text), draw_type, idx,
         &z_width, &z_height, tsize(text_size));
     break;
   case flow_eAnnotType_MultiLine: {
@@ -983,14 +981,14 @@ void FlowAnnot::measure_annot(char* text, double* width, double* height)
     char* line = text;
     char* s;
 
-    ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type, text_size, &z_width,
+    ctx->fdraw->get_text_extent("Ag", 2, draw_type, text_size, &z_width,
         &z_height, tsize(text_size));
 
     z_width = 0;
     for (s = text; *s; s++) {
       if (*s == 10) {
         if (len) {
-          ctx->fdraw->get_text_extent(ctx, line, len, draw_type, idx, &l_width,
+          ctx->fdraw->get_text_extent(line, len, draw_type, idx, &l_width,
               &l_height, tsize(text_size));
           z_width = MAX(z_width, l_width);
         }
@@ -1001,7 +999,7 @@ void FlowAnnot::measure_annot(char* text, double* width, double* height)
         len++;
     }
     if (len) {
-      ctx->fdraw->get_text_extent(ctx, line, len, draw_type, idx, &l_width,
+      ctx->fdraw->get_text_extent(line, len, draw_type, idx, &l_width,
           &l_height, tsize(text_size));
       z_width = MAX(z_width, l_width);
       line_cnt++;
@@ -1028,20 +1026,20 @@ void FlowAnnot::measure_annot(char* text, double* width, double* height)
           *s = 0;
           if (str_NoCaseStrncmp(line, "<h1>", 4) == 0) {
             int h1_size = text_size + 4;
-            ctx->fdraw->get_text_extent(ctx, &line[4], len - 4,
+            ctx->fdraw->get_text_extent(&line[4], len - 4,
                 flow_eDrawType_TextHelveticaBold, idx, &l_width, &l_height,
                 tsize(h1_size));
             z_height += l_height;
             z_width = MAX(z_width, l_width);
           } else if (str_NoCaseStrncmp(line, "<h2>", 4) == 0) {
             int h2_size = text_size + 2;
-            ctx->fdraw->get_text_extent(ctx, &line[4], len - 4,
+            ctx->fdraw->get_text_extent(&line[4], len - 4,
                 flow_eDrawType_TextHelveticaBold, idx, &l_width, &l_height,
                 tsize(h2_size));
             z_height += l_height;
             z_width = MAX(z_width, l_width);
           } else if (str_NoCaseStrncmp(line, "<b>", 3) == 0) {
-            ctx->fdraw->get_text_extent(ctx, &line[3], len - 3,
+            ctx->fdraw->get_text_extent(&line[3], len - 3,
                 flow_eDrawType_TextHelveticaBold, idx, &l_width, &l_height,
                 tsize(text_size));
             z_height += l_height;
@@ -1061,7 +1059,7 @@ void FlowAnnot::measure_annot(char* text, double* width, double* height)
               *s1 = 0;
             }
 
-            ctx->fdraw->get_text_extent(ctx, &line[lix], len - lix - eix,
+            ctx->fdraw->get_text_extent(&line[lix], len - lix - eix,
                 draw_type, idx, &l_width, &l_height, tsize(text_size));
             z_height += l_height;
             z_width = MAX(z_width, l_width);
@@ -1124,11 +1122,6 @@ void FlowAnnot::open_annotation_input(void* pos, void* node)
                 ((FlowNode*)node)->rel_annot_x[number] * ctx->zoom_factor));
     } else
       x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x;
-    ctx->fdraw->create_input(ctx, x,
-        p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
-        ((FlowNode*)node)->annotv[number],
-        strlen(((FlowNode*)node)->annotv[number]), idx, width_pix, height_pix,
-        node, number, &((FlowNode*)node)->annotv_input[number]);
     break;
   case flow_eAnnotType_MultiLine:
   case flow_eAnnotType_HelpText:
@@ -1139,10 +1132,6 @@ void FlowAnnot::open_annotation_input(void* pos, void* node)
 
 void FlowAnnot::close_annotation_input(void* node)
 {
-  if (!((FlowNode*)node)->annotv_inputmode[number])
-    return;
-
-  ctx->fdraw->close_input(ctx, ((FlowNode*)node)->annotv_input[number]);
 }
 
 int FlowAnnot::get_annotation_input(void* node, char** text)
@@ -1150,17 +1139,11 @@ int FlowAnnot::get_annotation_input(void* node, char** text)
   if (!((FlowNode*)node)->annotv_inputmode[number])
     return 0;
 
-  return ctx->fdraw->get_input(
-      ctx, ((FlowNode*)node)->annotv_input[number], text);
+  return 1;
 }
 
 void FlowAnnot::move_widgets(void* node, int x, int y)
 {
-  if (!((FlowNode*)node)->annotv_inputmode[number])
-    return;
-
-  ctx->fdraw->move_input(ctx, ((FlowNode*)node)->annotv_input[number], x, y,
-      flow_ePosition_Relative);
 }
 
 std::ostream& operator<<(std::ostream& o, const FlowAnnot a)
@@ -1177,7 +1160,7 @@ void flow_measure_annot_text(FlowCtx* ctx, char* text, flow_eDrawType draw_type,
 
   switch (annot_type) {
   case flow_eAnnotType_OneLine:
-    ctx->fdraw->get_text_extent(ctx, text, strlen(text), draw_type, text_size,
+    ctx->fdraw->get_text_extent(text, strlen(text), draw_type, text_size,
         &z_width, &z_height, (8 + 2 * text_size));
     *rows = 1;
     break;
@@ -1188,14 +1171,14 @@ void flow_measure_annot_text(FlowCtx* ctx, char* text, flow_eDrawType draw_type,
     char* line = text;
     char* s;
 
-    ctx->fdraw->get_text_extent(ctx, "Ag", 2, draw_type, text_size, &z_width,
+    ctx->fdraw->get_text_extent("Ag", 2, draw_type, text_size, &z_width,
         &z_height, (8 + 2 * text_size));
 
     z_width = 0;
     for (s = text; *s; s++) {
       if (*s == 10) {
         if (len) {
-          ctx->fdraw->get_text_extent(ctx, line, len, draw_type, text_size,
+          ctx->fdraw->get_text_extent(line, len, draw_type, text_size,
               &l_width, &l_height, (8 + 2 * text_size));
           z_width = MAX(z_width, l_width);
         }
@@ -1206,7 +1189,7 @@ void flow_measure_annot_text(FlowCtx* ctx, char* text, flow_eDrawType draw_type,
         len++;
     }
     if (len) {
-      ctx->fdraw->get_text_extent(ctx, line, len, draw_type, text_size,
+      ctx->fdraw->get_text_extent(line, len, draw_type, text_size,
           &l_width, &l_height, (8 + 2 * text_size));
       z_width = MAX(z_width, l_width);
       line_cnt++;
@@ -1234,20 +1217,20 @@ void flow_measure_annot_text(FlowCtx* ctx, char* text, flow_eDrawType draw_type,
           *s = 0;
           if (str_NoCaseStrncmp(line, "<h1>", 4) == 0) {
             int h1_size = text_size + 4;
-            ctx->fdraw->get_text_extent(ctx, &line[4], len - 4,
+            ctx->fdraw->get_text_extent(&line[4], len - 4,
                 flow_eDrawType_TextHelveticaBold, text_size, &l_width,
                 &l_height, (8 + 2 * h1_size));
             z_height += l_height;
             z_width = MAX(z_width, l_width);
           } else if (str_NoCaseStrncmp(line, "<h2>", 4) == 0) {
             int h2_size = text_size + 2;
-            ctx->fdraw->get_text_extent(ctx, &line[4], len - 4,
+            ctx->fdraw->get_text_extent(&line[4], len - 4,
                 flow_eDrawType_TextHelveticaBold, text_size, &l_width,
                 &l_height, (8 + 2 * h2_size));
             z_height += l_height;
             z_width = MAX(z_width, l_width);
           } else if (str_NoCaseStrncmp(line, "<b>", 3) == 0) {
-            ctx->fdraw->get_text_extent(ctx, &line[3], len - 3,
+            ctx->fdraw->get_text_extent(&line[3], len - 3,
                 flow_eDrawType_TextHelveticaBold, text_size, &l_width,
                 &l_height, (8 + 2 * text_size));
             z_height += l_height;
@@ -1266,7 +1249,7 @@ void flow_measure_annot_text(FlowCtx* ctx, char* text, flow_eDrawType draw_type,
               c = *s1;
               *s1 = 0;
             }
-            ctx->fdraw->get_text_extent(ctx, &line[lix], len - lix - eix,
+            ctx->fdraw->get_text_extent(&line[lix], len - lix - eix,
                 flow_eDrawType_TextHelvetica, text_size, &l_width, &l_height,
                 (8 + 2 * text_size));
             z_height += l_height;

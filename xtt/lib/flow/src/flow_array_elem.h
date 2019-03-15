@@ -54,7 +54,6 @@ public:
   virtual void zoom();
   virtual void nav_zoom();
   virtual void print_zoom();
-  virtual void traverse(int x, int y);
   virtual void get_borders(
       double* x_right, double* x_left, double* y_high, double* y_low);
   virtual void get_borders(double pos_x, double pos_y, double* x_right,
@@ -99,8 +98,7 @@ public:
   virtual int in_area_exact(double ll_x, double ll_y, double ur_x, double ur_y);
   virtual int in_vert_line(double x, double l_y, double u_y);
   virtual int in_horiz_line(double y, double l_x, double u_x);
-  virtual void conpoint_refcon_redraw(void* node, int conpoint);
-  virtual void conpoint_refcon_erase(void* node, int conpoint);
+  virtual void conpoint_refcon_redraw(void* node, int conpoint) {}
   virtual void remove_notify();
   virtual void set_user_data(void* data);
   virtual void get_user_data(void** data);

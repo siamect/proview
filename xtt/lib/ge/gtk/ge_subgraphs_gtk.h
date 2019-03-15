@@ -60,6 +60,7 @@ public:
   gint trace_timerid;
 
   void trace_start();
+  void set_inputfocus();
   Attr* new_attr(void* object, attr_sItem* items, int num);
   static void trace_scan(SubGraphsGtk* subgraphs);
   ~SubGraphsGtk();

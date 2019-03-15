@@ -261,7 +261,6 @@ void flow_GetObjectName(flow_tObject object, char* name);
 void flow_Reconfigure(flow_tCtx ctx);
 void flow_SetNodraw(flow_tCtx ctx);
 void flow_ResetNodraw(flow_tCtx ctx);
-void flow_Redraw(flow_tCtx ctx);
 int flow_FindByName(flow_tCtx ctx, char* name, flow_tObject* object);
 int flow_FindByNameNoCase(flow_tCtx ctx, char* name, flow_tObject* object);
 FlowTraceAttr flow_GetConPointTraceAttr(flow_tObject object, int num);

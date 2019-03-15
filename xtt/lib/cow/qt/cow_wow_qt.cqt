@@ -1013,8 +1013,11 @@ static void EndPrint(flow_tCtx ctx, ctx_settings* settings)
   ctx->offset_x = settings->offset_x;
   ctx->offset_y = settings->offset_y;
   ctx->a.zoom();
-  ctx->clear();
-  ctx->draw(0, 0, ctx->window_width, ctx->window_height);
+  int nav_backup = ctx->no_nav;
+  ctx->no_nav = true;
+  ctx->set_dirty();
+  ctx->redraw_if_dirty();
+  ctx->no_nav = nav_backup;
   ctx->nav_zoom();
   ctx->change_scrollbar();
 }
@@ -1040,11 +1043,15 @@ static void PrintPage(QPainter* painter, const char* title, flow_tCtx ctx, QImag
   ctx->offset_x = ll_x * zoom;
   ctx->offset_y = ll_y * zoom;
   ctx->a.zoom();
-  ctx->clear();
 
-  double document_width = (ur_x - ll_x) * zoom + 2;
-  double document_height = (ur_y - ll_y) * zoom + 2;
-  ctx->draw(0, 0, document_width, document_height);
+  double width_backup = ctx->window_width;
+  double height_backup = ctx->window_height;
+  int nav_backup = ctx->no_nav;
+  ctx->window_width = (ur_x - ll_x) * zoom + 2;
+  ctx->window_height = (ur_y - ll_y) * zoom + 2;
+  ctx->no_nav = true;
+  ctx->set_dirty();
+  ctx->redraw_if_dirty();
 
   double margin_y = GetPrintHeaderMargin(painter);
 
@@ -1052,7 +1059,7 @@ static void PrintPage(QPainter* painter, const char* title, flow_tCtx ctx, QImag
   QPen pen = QPen(QColor::fromRgbF(0, 0, 0));
   pen.setWidthF(0.5);
   painter->setPen(pen);
-  painter->drawLine(0, margin_y, document_width, margin_y);
+  painter->drawLine(0, margin_y, ctx->window_width, margin_y);
 
   painter->setPen(tmpPen); // Restore pen
 
@@ -1063,20 +1070,24 @@ static void PrintPage(QPainter* painter, const char* title, flow_tCtx ctx, QImag
   if (page > 0) {
     char page_str[40];
     sprintf(page_str, "Page %d", page);
-    painter->drawText(document_width - fm.width(fl(page_str)), margin_y, fl(page_str));
+    painter->drawText(ctx->window_width - fm.width(fl(page_str)), margin_y, fl(page_str));
   }
-  painter->drawText(document_width / 2.0 - fm.width(fl(title)) / 2.0, margin_y, fl(title));
+  painter->drawText(ctx->window_width / 2.0 - fm.width(fl(title)) / 2.0, margin_y, fl(title));
 
   painter->setFont(tmpFont); // Restore font
 
   painter->translate(0, margin_y);
 
-  painter->setClipRect(0, 0, document_width, document_height);
+  painter->setClipRect(0, 0, ctx->window_width, ctx->window_height);
   painter->setClipping(true);
 
   painter->drawImage(0, 0, *image);
 
   painter->setClipping(false);
+
+  ctx->window_width = width_backup;
+  ctx->window_height = height_backup;
+  ctx->no_nav = nav_backup;
 }
 
 #include <assert.h>

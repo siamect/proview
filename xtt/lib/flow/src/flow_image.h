@@ -48,7 +48,6 @@ public:
   void zoom();
   void nav_zoom();
   void print_zoom();
-  void traverse(int x, int y);
   int event_handler(void* pos, flow_eEvent event, int x, int y, void* node);
   void conpoint_select(void* pos, int x, int y, double* distance, void** cp){}
   void print(void* pos, void* node, int highlight);

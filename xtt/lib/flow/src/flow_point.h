@@ -43,15 +43,12 @@ class FlowPoint : public FlowArrayElem {
 public:
   FlowPoint(){}
   FlowPoint(FlowCtx* flow_ctx, double x1 = 0, double y1 = 0);
-  const FlowPoint& operator+=(const FlowPoint p);
-  FlowPoint operator+(const FlowPoint p);
-  const FlowPoint& operator-=(const FlowPoint p);
-  FlowPoint operator-(const FlowPoint p);
+  FlowPoint operator+(const FlowPoint &p);
+  FlowPoint operator-(const FlowPoint &p);
   friend std::ostream& operator<<(std::ostream& o, const FlowPoint p);
   void zoom();
   void nav_zoom();
   void print_zoom();
-  void traverse(int x, int y);
   void posit(double x, double y);
   void posit_z(int x, int y);
   void save(std::ofstream& fp, flow_eSaveMode mode);
@@ -65,7 +62,6 @@ public:
   int nav_z_y;
   double print_z_x;
   double print_z_y;
-  double current_zoom_factor;
 };
 
 #endif

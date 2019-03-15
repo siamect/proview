@@ -101,7 +101,7 @@ public:
   int get_select(pwr_sAttrRef* attrref, int* is_attr);
   int set_all_extern(int eval);
   void message(char sev, char* text);
-  void set_inputfocus();
+  virtual void set_inputfocus() = 0;
   int object_attr();
   int get_select(void** subgraph_item);
   int edit_attributes(void* object);

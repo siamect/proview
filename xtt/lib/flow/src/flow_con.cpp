@@ -110,8 +110,6 @@ static double sort_dest_y;
 static FlowNode* sort_source;
 static FlowNode* sort_dest;
 
-void draw_line(FlowCtx* ctx, double x1, double y1, double x2, double y2);
-
 FlowCon::FlowCon(FlowCtx* flow_ctx, const char* name, FlowConClass* con_class,
     FlowNode* source, FlowNode* dest, int source_cp, int dest_cp, int* rsts,
     int nodraw, int point_num, double* x_vect, double* y_vect)
@@ -153,10 +151,6 @@ FlowCon::FlowCon(FlowCtx* flow_ctx, const char* name, FlowConClass* con_class,
     line_a.insert(l1);
     l_num = 1;
     nav_zoom();
-    if (nodraw)
-      break;
-    l1->draw(&cc->zero, highlight, dimmed, hot, NULL);
-    l1->nav_draw(&cc->zero, highlight, NULL);
     break;
   case flow_eConType_StraightOneArrow:
     l1 = new FlowLine(
@@ -168,12 +162,6 @@ FlowCon::FlowCon(FlowCtx* flow_ctx, const char* name, FlowConClass* con_class,
     arrow_a.insert(arrow);
     arrow_num = 1;
     nav_zoom();
-    if (nodraw)
-      break;
-    l1->draw(&cc->zero, highlight, dimmed, hot, NULL);
-    l1->nav_draw(&cc->zero, highlight, NULL);
-    arrow->draw(&cc->zero, highlight, dimmed, hot, NULL);
-    arrow->nav_draw(&cc->zero, highlight, NULL);
     break;
   case flow_eConType_StepDiv:
   case flow_eConType_StepConv:
@@ -183,10 +171,6 @@ FlowCon::FlowCon(FlowCtx* flow_ctx, const char* name, FlowConClass* con_class,
       l1 = new FlowLine(ctx, 0, 0, 0, 0, cc->draw_type, cc->line_width);
       line_a.insert(l1);
     }
-
-    if (nodraw)
-      break;
-    con_route_grafcet(cc->con_type, src_x, src_y, dest_x, dest_y);
     break;
   case flow_eConType_Fixed:
     if (!point_num) {
@@ -214,20 +198,8 @@ FlowCon::FlowCon(FlowCtx* flow_ctx, const char* name, FlowConClass* con_class,
       l1 = new FlowLine(ctx, 0, 0, 0, 0, cc->draw_type, cc->line_width);
       line_a.insert(l1);
     }
-    if (nodraw)
-      break;
-    if (cc->corner == flow_eCorner_Rounded)
-      draw_routed_roundcorner(p_num, point_x, point_y);
-    else
-      draw_routed(p_num, point_x, point_y);
     break;
   case flow_eConType_AllFixed:
-    if (nodraw)
-      break;
-    if (cc->corner == flow_eCorner_Rounded)
-      draw_routed_roundcorner(p_num, point_x, point_y);
-    else
-      draw_routed(p_num, point_x, point_y);
     break;
   case flow_eConType_Routed:
     for (i = 0; i < MAX_POINT - 1; i++) {
@@ -242,23 +214,6 @@ FlowCon::FlowCon(FlowCtx* flow_ctx, const char* name, FlowConClass* con_class,
     }
     l_num = 0;
     a_num = 0;
-    if (nodraw)
-      break;
-    if (p_num && x_vect && y_vect) {
-      if (cc->corner == flow_eCorner_Rounded)
-        draw_routed_roundcorner(p_num, point_x, point_y);
-      else
-        draw_routed(p_num, point_x, point_y);
-    } else {
-      *rsts = con_route(
-          src_x, src_y, source_direction, dest_x, dest_y, dest_direction);
-      if (EVEN(*rsts) && *rsts != 0)
-        return;
-      if (*rsts == 0)
-        temporary_ref = 1;
-      else
-        temporary_ref = 0;
-    }
     break;
   case flow_eConType_Reference:
     break;
@@ -337,35 +292,19 @@ FlowCon::FlowCon(FlowCtx* flow_ctx, const char* name, FlowConClass* con_class,
     source_ref_cnt = source->refcon_cnt[source_cp]++;
     dest_ref_cnt = dest->refcon_cnt[dest_cp]++;
     nav_zoom();
-    ref_a.draw(&cc->zero, highlight, dimmed, hot, NULL);
-    ref_a.nav_draw(&cc->zero, highlight, NULL);
   }
 
   strcpy(c_name, name);
   get_con_borders();
   *rsts = FLOW__SUCCESS;
+
+  if (!nodraw)
+      ctx->set_dirty();
 }
 
 FlowCon::~FlowCon()
 {
-  int i;
-
   ctx->object_deleted(this);
-  if (ctx->nodraw)
-    return;
-
-  for (i = 0; i < l_num; i++) {
-    ((FlowLine*)line_a[i])->erase(&cc->zero, hot, NULL);
-    ((FlowLine*)line_a[i])->nav_erase(&cc->zero, NULL);
-  }
-  for (i = 0; i < a_num; i++) {
-    ((FlowArc*)arc_a[i])->erase(&cc->zero, hot, NULL);
-    ((FlowArc*)arc_a[i])->nav_erase(&cc->zero, NULL);
-  }
-  arrow_a.erase(&cc->zero, hot, NULL);
-  arrow_a.nav_erase(&cc->zero, NULL);
-  ref_a.erase(&cc->zero, hot, NULL);
-  ref_a.nav_erase(&cc->zero, NULL);
 
   ctx->remove(this);
   ctx->select_remove(this);
@@ -374,16 +313,11 @@ FlowCon::~FlowCon()
     source_node->conpoint_refcon_reconfig(source_conpoint);
     dest_node->conpoint_refcon_reconfig(dest_conpoint);
   }
-  ctx->draw(int(x_left * ctx->zoom_factor - ctx->offset_x - 20),
-      int(y_low * ctx->zoom_factor - ctx->offset_y - 20),
-      int(x_right * ctx->zoom_factor - ctx->offset_x + 20),
-      int(y_high * ctx->zoom_factor - ctx->offset_y + 20));
-  ctx->nav_draw(int(x_left * ctx->nav_zoom_factor - ctx->nav_offset_x - 1),
-      int(y_low * ctx->nav_zoom_factor - ctx->nav_offset_y - 1),
-      int(x_right * ctx->nav_zoom_factor - ctx->nav_offset_x + 1),
-      int(y_high * ctx->nav_zoom_factor - ctx->nav_offset_y + 1));
+
+  if (!ctx->nodraw)
+    ctx->set_dirty();
   if (hot)
-    ctx->fdraw->set_cursor(ctx, draw_eCursor_Normal);
+    ctx->fdraw->set_cursor(ctx->mw, draw_eCursor_Normal);
 }
 
 FlowCon::FlowCon(const FlowCon& c, FlowNode* source, FlowNode* dest)
@@ -408,47 +342,15 @@ FlowCon::FlowCon(const FlowCon& c, FlowNode* source, FlowNode* dest)
 
 void FlowCon::set_highlight(int on)
 {
-  int i;
-
   highlight = on;
-  if (temporary_ref || cc->con_type == flow_eConType_Reference) {
-    ref_a.draw(&cc->zero, highlight, dimmed, hot, NULL);
-    ref_a.nav_draw(&cc->zero, highlight, NULL);
-  } else {
-    for (i = 0; i < l_num; i++) {
-      ((FlowLine*)line_a[i])->draw(&cc->zero, highlight, dimmed, hot, NULL);
-      ((FlowLine*)line_a[i])->nav_draw(&cc->zero, highlight, NULL);
-    }
-    for (i = 0; i < a_num; i++) {
-      ((FlowArc*)arc_a[i])->draw(&cc->zero, highlight, dimmed, hot, NULL);
-      ((FlowArc*)arc_a[i])->nav_draw(&cc->zero, highlight, NULL);
-    }
-    arrow_a.draw(&cc->zero, highlight, dimmed, hot, NULL);
-    arrow_a.nav_draw(&cc->zero, highlight, NULL);
-  }
+  ctx->set_dirty();
 }
 
 void FlowCon::set_hot(int on)
 {
-  int i;
-
   if (hot != on) {
     hot = on;
-    if (temporary_ref || cc->con_type == flow_eConType_Reference) {
-      ref_a.draw(&cc->zero, highlight, dimmed, hot, NULL);
-      ref_a.nav_draw(&cc->zero, highlight, NULL);
-    } else {
-      for (i = 0; i < l_num; i++) {
-        ((FlowLine*)line_a[i])->draw(&cc->zero, highlight, dimmed, hot, NULL);
-        ((FlowLine*)line_a[i])->nav_draw(&cc->zero, highlight, NULL);
-      }
-      for (i = 0; i < a_num; i++) {
-        ((FlowArc*)arc_a[i])->draw(&cc->zero, highlight, dimmed, hot, NULL);
-        ((FlowArc*)arc_a[i])->nav_draw(&cc->zero, highlight, NULL);
-      }
-      arrow_a.draw(&cc->zero, highlight, dimmed, hot, NULL);
-      arrow_a.nav_draw(&cc->zero, highlight, NULL);
-    }
+    ctx->set_dirty();
   }
 }
 
@@ -564,14 +466,7 @@ void FlowCon::move(int delta_x, int delta_y, int grid)
       arrow_a.shift(&cc->zero, x, y, highlight, dimmed, hot);
     }
     get_con_borders();
-    ctx->draw(int(x_left * ctx->zoom_factor - ctx->offset_x - 20),
-        int(y_low * ctx->zoom_factor - ctx->offset_y - 20),
-        int(x_right * ctx->zoom_factor - ctx->offset_x + 20),
-        int(y_high * ctx->zoom_factor - ctx->offset_y + 20));
-    ctx->nav_draw(int(x_left * ctx->nav_zoom_factor - ctx->nav_offset_x - 1),
-        int(y_low * ctx->nav_zoom_factor - ctx->nav_offset_y - 1),
-        int(x_right * ctx->nav_zoom_factor - ctx->nav_offset_x + 1),
-        int(y_high * ctx->nav_zoom_factor - ctx->nav_offset_y + 1));
+    ctx->set_dirty();
   }
 }
 
@@ -594,20 +489,9 @@ void FlowCon::move_noerase(int delta_x, int delta_y, int grid)
       point_y[i] += y;
     }
     l_num = a_num = 0;
-    if (cc->corner == flow_eCorner_Rounded)
-      draw_routed_roundcorner(p_num, point_x, point_y);
-    else
-      draw_routed(p_num, point_x, point_y);
     get_con_borders();
   }
-  ctx->draw(int(x_left * ctx->zoom_factor - ctx->offset_x - 20),
-      int(y_low * ctx->zoom_factor - ctx->offset_y - 20),
-      int(x_right * ctx->zoom_factor - ctx->offset_x + 20),
-      int(y_high * ctx->zoom_factor - ctx->offset_y + 20));
-  ctx->nav_draw(int(x_left * ctx->nav_zoom_factor - ctx->nav_offset_x - 1),
-      int(y_low * ctx->nav_zoom_factor - ctx->nav_offset_y - 1),
-      int(x_right * ctx->nav_zoom_factor - ctx->nav_offset_x + 1),
-      int(y_high * ctx->nav_zoom_factor - ctx->nav_offset_y + 1));
+  ctx->set_dirty();
 }
 
 void FlowCon::reconfigure()
@@ -616,9 +500,7 @@ void FlowCon::reconfigure()
   FlowLine* l1;
   FlowArrow* arrow;
   flow_eDirection dir1, dir2;
-  int sts, i;
-
-  sts = source_node->get_conpoint(source_conpoint, &x1, &y1, &dir1);
+  int sts = source_node->get_conpoint(source_conpoint, &x1, &y1, &dir1);
   if (EVEN(sts)) {
     std::cout << "FlowCon:no such conpoint\n";
     return;
@@ -669,14 +551,6 @@ void FlowCon::reconfigure()
     sts = con_route(x1, y1, dir1, x2, y2, dir2);
     if (sts == 0) {
       if (!temporary_ref) {
-        for (i = 0; i < l_num; i++) {
-          ((FlowLine*)line_a[i])->erase(&cc->zero, hot, NULL);
-          ((FlowLine*)line_a[i])->nav_erase(&cc->zero, NULL);
-        }
-        for (i = 0; i < a_num; i++) {
-          ((FlowArc*)arc_a[i])->erase(&cc->zero, hot, NULL);
-          ((FlowArc*)arc_a[i])->nav_erase(&cc->zero, NULL);
-        }
         temporary_ref = 1;
         a_num = l_num = p_num = 0;
         source_ref_cnt = source_node->refcon_cnt[source_conpoint]++;
@@ -685,22 +559,13 @@ void FlowCon::reconfigure()
       move_ref(x1, y1, x2, y2);
     } else if (temporary_ref) {
       temporary_ref = 0;
-      ref_a.erase(&cc->zero, hot, NULL);
-      ref_a.nav_erase(&cc->zero, NULL);
       source_node->conpoint_refcon_reconfig(source_conpoint);
       dest_node->conpoint_refcon_reconfig(dest_conpoint);
     }
     break;
   }
   get_con_borders();
-  ctx->draw(int(x_left * ctx->zoom_factor - ctx->offset_x - 20),
-      int(y_low * ctx->zoom_factor - ctx->offset_y - 20),
-      int(x_right * ctx->zoom_factor - ctx->offset_x + 20),
-      int(y_high * ctx->zoom_factor - ctx->offset_y + 20));
-  ctx->nav_draw(int(x_left * ctx->nav_zoom_factor - ctx->nav_offset_x - 1),
-      int(y_low * ctx->nav_zoom_factor - ctx->nav_offset_y - 1),
-      int(x_right * ctx->nav_zoom_factor - ctx->nav_offset_x + 1),
-      int(y_high * ctx->nav_zoom_factor - ctx->nav_offset_y + 1));
+  ctx->set_dirty();
 }
 
 void FlowCon::print(double ll_x, double ll_y, double ur_x, double ur_y)
@@ -1193,10 +1058,7 @@ int FlowCon::con_route_noobstacle(double src_x, double src_y,
       break;
     case eState_Success:
       /* Routing found */
-      if (cc->corner == flow_eCorner_Rounded)
-        draw_routed_roundcorner(point, x, y);
-      else
-        draw_routed(point, x, y);
+      ctx->set_dirty();
 
       state = eState_Exit;
       break;
@@ -1266,7 +1128,7 @@ int FlowCon::con_route_grafcet(flow_eConType con_type, double src_x,
       y[point++] = dest_y;
     }
     p_num = point;
-    draw_routed(point, x, y);
+    ctx->set_dirty();
     break;
   case flow_eConType_StepConv:
 
@@ -1310,7 +1172,7 @@ int FlowCon::con_route_grafcet(flow_eConType con_type, double src_x,
       y[point++] = src_y;
     }
     p_num = point;
-    draw_routed(point, x, y);
+    ctx->set_dirty();
     break;
   case flow_eConType_TransDiv:
 
@@ -1368,7 +1230,7 @@ int FlowCon::con_route_grafcet(flow_eConType con_type, double src_x,
       y[point++] = dest_y;
     }
     p_num = point;
-    draw_routed_trans(point, x, y);
+    ctx->set_dirty();
     break;
   case flow_eConType_TransConv:
 
@@ -1425,7 +1287,7 @@ int FlowCon::con_route_grafcet(flow_eConType con_type, double src_x,
       y[point++] = src_y;
     }
     p_num = point;
-    draw_routed_trans(point, x, y);
+    ctx->set_dirty();
     break;
   default:;
   }
@@ -1527,10 +1389,6 @@ int FlowCon::con_route_area(
       point_x[1] = x[1] = src_x;
       point_y[1] = y[1] = src_y;
       point = p_num = 2;
-      if (cc->corner == flow_eCorner_Rounded)
-        draw_routed_roundcorner(point, x, y);
-      else
-        draw_routed(point, x, y);
       return 1;
     }
   } else if (fabs(dest_x - src_x) < CON_EPSILON
@@ -1557,10 +1415,6 @@ int FlowCon::con_route_area(
       point_x[1] = x[1] = src_x;
       point_y[1] = y[1] = src_y;
       point = p_num = 2;
-      if (cc->corner == flow_eCorner_Rounded)
-        draw_routed_roundcorner(point, x, y);
-      else
-        draw_routed(point, x, y);
       return 1;
     }
   }
@@ -1841,21 +1695,11 @@ int FlowCon::con_route_area(
   point++;
   p_num = point;
 
-  if (cc->corner == flow_eCorner_Rounded)
-    draw_routed_roundcorner(point, x, y);
-  else
-    draw_routed(point, x, y);
+  ctx->set_dirty();
 
   return 1;
 }
 
-void draw_line(FlowCtx* ctx, double x1, double y1, double x2, double y2)
-{
-  ctx->fdraw->line(ctx, int(x1 * ctx->zoom_factor - ctx->offset_x),
-      int(y1 * ctx->zoom_factor - ctx->offset_y),
-      int(x2 * ctx->zoom_factor - ctx->offset_x),
-      int(y2 * ctx->zoom_factor - ctx->offset_y), flow_eDrawType_Line, 0, 0, 0);
-}
 void print_line()
 {
   int j;
@@ -2979,9 +2823,7 @@ void FlowCon::find_vert_line_low_border(double x, double start_y,
 
 int FlowCon::event_handler(flow_eEvent event, int x, int y)
 {
-  int sts, i;
-
-  sts = 0;
+  int sts = 0;
   switch (event) {
   case flow_eEvent_CursorMotion:
     if (temporary_ref || cc->con_type == flow_eConType_Reference)
@@ -2990,39 +2832,14 @@ int FlowCon::event_handler(flow_eEvent event, int x, int y)
       sts = line_a.event_handler(&cc->zero, event, x, y, l_num);
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
-      ctx->fdraw->set_cursor(ctx, draw_eCursor_CrossHair);
+      ctx->fdraw->set_cursor(ctx->mw, draw_eCursor_CrossHair);
       hot = 1;
-      if (temporary_ref || cc->con_type == flow_eConType_Reference)
-        ref_a.draw(&cc->zero, highlight, dimmed, hot, NULL);
-      else {
-        for (i = 0; i < l_num; i++)
-          ((FlowLine*)line_a[i])->draw(&cc->zero, highlight, dimmed, hot, NULL);
-        for (i = 0; i < a_num; i++)
-          ((FlowArc*)arc_a[i])->draw(&cc->zero, highlight, dimmed, hot, NULL);
-        arrow_a.draw(&cc->zero, highlight, dimmed, hot, NULL);
-      }
+      ctx->set_dirty();
     }
     if (!sts && hot) {
-      ctx->fdraw->set_cursor(ctx, draw_eCursor_Normal);
-      if (temporary_ref || cc->con_type == flow_eConType_Reference)
-        ref_a.erase(&cc->zero, hot, NULL);
-      else {
-        for (i = 0; i < l_num; i++)
-          ((FlowLine*)line_a[i])->erase(&cc->zero, hot, NULL);
-        for (i = 0; i < a_num; i++)
-          ((FlowArc*)arc_a[i])->erase(&cc->zero, hot, NULL);
-        arrow_a.erase(&cc->zero, hot, NULL);
-      }
+      ctx->fdraw->set_cursor(ctx->mw, draw_eCursor_Normal);
       hot = 0;
-      if (temporary_ref || cc->con_type == flow_eConType_Reference)
-        ref_a.draw(&cc->zero, highlight, dimmed, hot, NULL);
-      else {
-        for (i = 0; i < l_num; i++)
-          ((FlowLine*)line_a[i])->draw(&cc->zero, highlight, dimmed, hot, NULL);
-        for (i = 0; i < a_num; i++)
-          ((FlowArc*)arc_a[i])->draw(&cc->zero, highlight, dimmed, hot, NULL);
-        arrow_a.draw(&cc->zero, highlight, dimmed, hot, NULL);
-      }
+      ctx->set_dirty();
     }
     break;
   default:
@@ -3040,303 +2857,6 @@ std::ostream& operator<<(std::ostream& o, const FlowCon c)
 {
   o << "Con: " << c.c_name << " Class: " << c.cc->cc_name;
   return o;
-}
-
-void FlowCon::draw_routed(int points, double* x, double* y)
-{
-  int i;
-  FlowLine* l;
-  FlowArc* a;
-
-  for (i = 0; i < points - 1; i++) {
-    l = (FlowLine*)line_a[i];
-    l->move(&cc->zero, x[i], y[i], x[i + 1], y[i + 1], highlight, dimmed, hot);
-  }
-
-  for (i = points - 1; i < l_num; i++) {
-    /* Remove lines that isn't used any longer */
-    l = (FlowLine*)line_a[i];
-    l->erase(&cc->zero, hot, NULL);
-    l->nav_erase(&cc->zero, NULL);
-  }
-  for (i = points - 2; i < a_num; i++) {
-    /* Remove arcs that isn't used any longer */
-    a = (FlowArc*)arc_a[i];
-    a->erase(&cc->zero, hot, NULL);
-    a->nav_erase(&cc->zero, NULL);
-  }
-  l_num = points - 1;
-  p_num = points;
-}
-
-void FlowCon::draw_routed_trans(int points, double* x, double* y)
-{
-  int i, j;
-  FlowLine* l;
-
-  j = 0;
-  for (i = 0; i < points - 1; i++) {
-    if (i == 2)
-      continue;
-    l = (FlowLine*)line_a[j];
-    l->move(&cc->zero, x[i], y[i], x[i + 1], y[i + 1], highlight, dimmed, hot);
-    j++;
-  }
-
-  for (i = j; i < l_num; i++) {
-    /* Remove lines that isn't used any longer */
-    l = (FlowLine*)line_a[i];
-    l->erase(&cc->zero, hot, NULL);
-    l->nav_erase(&cc->zero, NULL);
-  }
-  l_num = j;
-  p_num = points;
-}
-
-void FlowCon::draw_routed_roundcorner(int points, double* x, double* y)
-{
-  int i;
-  double r = cc->round_corner_amount;
-  double line_x1[8], line_y1[8], line_x2[8], line_y2[8];
-  double arc_ll_x[8], arc_ll_y[8], arc_ur_x[8], arc_ur_y[8];
-  int arc_angle1[8], arc_angle2[8];
-  con_eCorner corner_type[8];
-  FlowLine* l;
-  FlowArc* a;
-  double r_x[8], r_y[8];
-
-  for (i = 1; i < points - 1; i++) {
-    if (i == 1 && fabs(y[0] - y[1]) < DBL_EPSILON
-        && fabs(x[0] - x[1]) < DBL_EPSILON) {
-      /* First line is a Null line */
-      corner_type[0] = eCorner_Sharp;
-      if (i != points - 2) {
-        corner_type[i] = eCorner_Sharp;
-        i++;
-        continue;
-      }
-    }
-
-    /* Find corner type */
-    if (fabs(y[i - 1] - y[i]) < DBL_EPSILON) {
-      if (fabs(y[i] - y[i + 1]) < DBL_EPSILON) {
-        /* Next line is a Null line */
-        corner_type[i - 1] = eCorner_Sharp;
-        if (i != points - 2) {
-          corner_type[i] = eCorner_Sharp;
-          i++;
-          continue;
-        }
-      }
-
-      if (x[i - 1] < x[i] && y[i] < y[i + 1])
-        corner_type[i - 1] = eCorner_RightToUp;
-      else if (x[i - 1] < x[i] && y[i] > y[i + 1])
-        corner_type[i - 1] = eCorner_RightToDown;
-      else if (x[i - 1] > x[i] && y[i] < y[i + 1])
-        corner_type[i - 1] = eCorner_LeftToUp;
-      else if (x[i - 1] > x[i] && y[i] > y[i + 1])
-        corner_type[i - 1] = eCorner_LeftToDown;
-
-      /* Check if short line */
-      if (fabs(x[i] - x[i - 1]) < 2 * r) {
-        r_x[i - 1] = fabs(x[i] - x[i - 1]) / 2;
-        if (i > 1)
-          r_x[i - 2] = r_x[i - 1];
-      } else
-        r_x[i - 1] = r;
-      r_y[i - 1] = r;
-    } else if (fabs(x[i - 1] - x[i]) < DBL_EPSILON) {
-      if (fabs(x[i] - x[i + 1]) < DBL_EPSILON) {
-        /* Next line is a Null line */
-        corner_type[i - 1] = eCorner_Sharp;
-        if (i != points - 2) {
-          corner_type[i] = eCorner_Sharp;
-          i++;
-          continue;
-        }
-      }
-
-      if (y[i - 1] < y[i] && x[i] < x[i + 1])
-        corner_type[i - 1] = eCorner_UpToRight;
-      else if (y[i - 1] < y[i] && x[i] > x[i + 1])
-        corner_type[i - 1] = eCorner_UpToLeft;
-      else if (y[i - 1] > y[i] && x[i] < x[i + 1])
-        corner_type[i - 1] = eCorner_DownToRight;
-      else if (y[i - 1] > y[i] && x[i] > x[i + 1])
-        corner_type[i - 1] = eCorner_DownToLeft;
-
-      /* Check if short line */
-      if (fabs(y[i] - y[i - 1]) < 2 * r) {
-        r_y[i - 1] = fabs(y[i] - y[i - 1]) / 2;
-        if (i > 1)
-          r_y[i - 2] = r_y[i - 1];
-      } else
-        r_y[i - 1] = r;
-      r_x[i - 1] = r;
-    } else
-      corner_type[i - 1] = eCorner_Sharp;
-  }
-  line_x1[0] = x[0];
-  line_y1[0] = y[0];
-  for (i = 1; i < points - 1; i++) {
-    switch (corner_type[i - 1]) {
-    case eCorner_RightToUp:
-    case eCorner_RightToDown: {
-      line_x2[i - 1] = x[i] - r_x[i - 1];
-      line_y2[i - 1] = y[i];
-      switch (corner_type[i - 1]) {
-      case eCorner_RightToUp:
-        line_x1[i] = x[i];
-        line_y1[i] = y[i] + r_y[i - 1];
-        arc_ll_x[i - 1] = x[i] - 2 * r_x[i - 1];
-        arc_ll_y[i - 1] = y[i];
-        arc_ur_x[i - 1] = x[i];
-        arc_ur_y[i - 1] = y[i] + 2 * r_y[i - 1];
-        arc_angle1[i - 1] = 0;
-        arc_angle2[i - 1] = 90;
-        break;
-      case eCorner_RightToDown:
-        line_x1[i] = x[i];
-        line_y1[i] = y[i] - r_y[i - 1];
-        arc_ll_x[i - 1] = x[i] - 2 * r_x[i - 1];
-        arc_ll_y[i - 1] = y[i] - 2 * r_y[i - 1];
-        arc_ur_x[i - 1] = x[i];
-        arc_ur_y[i - 1] = y[i];
-        arc_angle1[i - 1] = 270;
-        arc_angle2[i - 1] = 90;
-        break;
-      default:;
-      }
-      break;
-    }
-    case eCorner_LeftToUp:
-    case eCorner_LeftToDown: {
-      line_x2[i - 1] = x[i] + r_x[i - 1];
-      line_y2[i - 1] = y[i];
-      switch (corner_type[i - 1]) {
-      case eCorner_LeftToUp:
-        line_x1[i] = x[i];
-        line_y1[i] = y[i] + r_y[i - 1];
-        arc_ll_x[i - 1] = x[i];
-        arc_ll_y[i - 1] = y[i];
-        arc_ur_x[i - 1] = x[i] + 2 * r_x[i - 1];
-        arc_ur_y[i - 1] = y[i] + 2 * r_y[i - 1];
-        arc_angle1[i - 1] = 90;
-        arc_angle2[i - 1] = 90;
-        break;
-      case eCorner_LeftToDown:
-        line_x1[i] = x[i];
-        line_y1[i] = y[i] - r_y[i - 1];
-        arc_ll_x[i - 1] = x[i];
-        arc_ll_y[i - 1] = y[i] - 2 * r_y[i - 1];
-        arc_ur_x[i - 1] = x[i] + 2 * r_x[i - 1];
-        arc_ur_y[i - 1] = y[i];
-        arc_angle1[i - 1] = 180;
-        arc_angle2[i - 1] = 90;
-        break;
-      default:;
-      }
-      break;
-    }
-    case eCorner_UpToRight:
-    case eCorner_UpToLeft: {
-      line_x2[i - 1] = x[i];
-      line_y2[i - 1] = y[i] - r_y[i - 1];
-      switch (corner_type[i - 1]) {
-      case eCorner_UpToRight:
-        line_x1[i] = x[i] + r_x[i - 1];
-        line_y1[i] = y[i];
-        arc_ll_x[i - 1] = x[i];
-        arc_ll_y[i - 1] = y[i] - 2 * r_y[i - 1];
-        arc_ur_x[i - 1] = x[i] + 2 * r_x[i - 1];
-        arc_ur_y[i - 1] = y[i];
-        arc_angle1[i - 1] = 180;
-        arc_angle2[i - 1] = 90;
-        break;
-      case eCorner_UpToLeft:
-        line_x1[i] = x[i] - r_x[i - 1];
-        line_y1[i] = y[i];
-        arc_ll_x[i - 1] = x[i] - 2 * r_x[i - 1];
-        arc_ll_y[i - 1] = y[i] - 2 * r_y[i - 1];
-        arc_ur_x[i - 1] = x[i];
-        arc_ur_y[i - 1] = y[i];
-        arc_angle1[i - 1] = 270;
-        arc_angle2[i - 1] = 90;
-        break;
-      default:;
-      }
-      break;
-    }
-    case eCorner_DownToRight:
-    case eCorner_DownToLeft: {
-      line_x2[i - 1] = x[i];
-      line_y2[i - 1] = y[i] + r_y[i - 1];
-      switch (corner_type[i - 1]) {
-      case eCorner_DownToRight:
-        line_x1[i] = x[i] + r_x[i - 1];
-        line_y1[i] = y[i];
-        arc_ll_x[i - 1] = x[i];
-        arc_ll_y[i - 1] = y[i];
-        arc_ur_x[i - 1] = x[i] + 2 * r_x[i - 1];
-        arc_ur_y[i - 1] = y[i] + 2 * r_y[i - 1];
-        arc_angle1[i - 1] = 90;
-        arc_angle2[i - 1] = 90;
-        break;
-      case eCorner_DownToLeft:
-        line_x1[i] = x[i] - r_x[i - 1];
-        line_y1[i] = y[i];
-        arc_ll_x[i - 1] = x[i] - 2 * r_x[i - 1];
-        arc_ll_y[i - 1] = y[i];
-        arc_ur_x[i - 1] = x[i];
-        arc_ur_y[i - 1] = y[i] + 2 * r_y[i - 1];
-        arc_angle1[i - 1] = 0;
-        arc_angle2[i - 1] = 90;
-        break;
-      default:;
-      }
-      break;
-    }
-    case eCorner_Sharp:
-      line_x2[i - 1] = x[i];
-      line_y2[i - 1] = y[i];
-      line_x1[i] = x[i];
-      line_y1[i] = y[i];
-      arc_ll_x[i - 1] = 0;
-      arc_ll_y[i - 1] = 0;
-      arc_ur_x[i - 1] = 0;
-      arc_ur_y[i - 1] = 0;
-      break;
-    }
-  }
-  line_x2[points - 2] = x[points - 1];
-  line_y2[points - 2] = y[points - 1];
-
-  for (i = 0; i < points - 1; i++) {
-    l = (FlowLine*)line_a[i];
-    l->move(&cc->zero, line_x1[i], line_y1[i], line_x2[i], line_y2[i],
-        highlight, dimmed, hot);
-  }
-  for (i = 0; i < points - 2; i++) {
-    a = (FlowArc*)arc_a[i];
-    a->move(&cc->zero, arc_ll_x[i], arc_ll_y[i], arc_ur_x[i], arc_ur_y[i],
-        arc_angle1[i], arc_angle2[i], highlight, dimmed, hot);
-  }
-  for (i = points - 1; i < l_num; i++) {
-    /* Remove lines that isn't used any longer */
-    l = (FlowLine*)line_a[i];
-    l->erase(&cc->zero, hot, NULL);
-    l->nav_erase(&cc->zero, NULL);
-  }
-  for (i = points - 2; i < a_num; i++) {
-    /* Remove arcs that isn't used any longer */
-    a = (FlowArc*)arc_a[i];
-    a->erase(&cc->zero, hot, NULL);
-    a->nav_erase(&cc->zero, NULL);
-  }
-  l_num = points - 1;
-  p_num = points;
-  a_num = points - 2;
 }
 
 void FlowCon::set_movement_type(FlowArrayElem** a, int a_size)
@@ -3444,28 +2964,6 @@ void FlowCon::move_ref(double x1, double y1, double x2, double y2)
     t2 = (FlowText*)ref_a[3];
     r2->move(&cc->zero, rect_x, rect_y, highlight, dimmed, hot);
     t2->move(&cc->zero, text_x, text_y, highlight, dimmed, hot);
-  }
-}
-
-void FlowCon::conpoint_refcon_erase(void* node, int conpoint)
-{
-  FlowText* t1;
-  FlowRect* r1;
-
-  if (source_node == (FlowNode*)node && conpoint == source_conpoint) {
-    r1 = (FlowRect*)ref_a[0];
-    t1 = (FlowText*)ref_a[1];
-    t1->erase(&cc->zero, hot, NULL);
-    t1->nav_erase(&cc->zero, NULL);
-    r1->erase(&cc->zero, hot, NULL);
-    r1->nav_erase(&cc->zero, NULL);
-  } else if (dest_node == (FlowNode*)node && conpoint == dest_conpoint) {
-    r1 = (FlowRect*)ref_a[2];
-    t1 = (FlowText*)ref_a[3];
-    t1->erase(&cc->zero, hot, NULL);
-    t1->nav_erase(&cc->zero, NULL);
-    r1->erase(&cc->zero, hot, NULL);
-    r1->nav_erase(&cc->zero, NULL);
   }
 }
 

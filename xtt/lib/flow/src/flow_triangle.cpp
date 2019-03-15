@@ -93,19 +93,18 @@ void FlowTriangle::draw(
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   if (!fill)
-    ctx->fdraw->triangle(ctx, ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+    ctx->fdraw->triangle(ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
         ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, ur.z_x - ll.z_x,
-        ur.z_y - ll.z_y, draw_type, idx, highlight, dimmed);
+        ur.z_y - ll.z_y, draw_type, 0, idx, highlight, dimmed);
   else {
     flow_eDrawType dtype;
     if (node && ((FlowNode*)node)->fill_color != flow_eDrawType_Inherit)
       dtype = ((FlowNode*)node)->fill_color;
     else
       dtype = draw_type;
-    ctx->fdraw->fill_triangle(ctx,
-        ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+    ctx->fdraw->triangle(ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
         ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, ur.z_x - ll.z_x,
-        ur.z_y - ll.z_y, dtype);
+        ur.z_y - ll.z_y, dtype, 1, 0);
   }
 }
 
@@ -126,15 +125,13 @@ void FlowTriangle::erase(void* pos, int hot, void* node)
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   if (!fill)
-    ctx->fdraw->triangle_erase(ctx,
-        ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+    ctx->fdraw->triangle(ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
         ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, ur.z_x - ll.z_x,
-        ur.z_y - ll.z_y, idx);
+        ur.z_y - ll.z_y, flow_eDrawType_LineErase, 0, idx);
   else
-    ctx->fdraw->fill_triangle(ctx,
-        ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+    ctx->fdraw->triangle(ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
         ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, ur.z_x - ll.z_x,
-        ur.z_y - ll.z_y, flow_eDrawType_LineErase);
+        ur.z_y - ll.z_y, flow_eDrawType_LineErase, 1, 0);
 }
 
 void FlowTriangle::nav_draw(void* pos, int highlight, void* node)
@@ -152,16 +149,16 @@ void FlowTriangle::nav_draw(void* pos, int highlight, void* node)
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   if (!fill)
-    ctx->fdraw->nav_triangle(ctx,
+    ctx->fdraw->triangle(
         ll.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
         ll.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
-        ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, draw_type, idx,
+        ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, draw_type, 0, idx,
         highlight);
   else {
-    ctx->fdraw->nav_fill_triangle(ctx,
+    ctx->fdraw->triangle(
         ll.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
         ll.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
-        ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, draw_type);
+        ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, draw_type, 1, 0);
   }
 }
 
@@ -180,16 +177,17 @@ void FlowTriangle::nav_erase(void* pos, void* node)
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   if (!fill)
-    ctx->fdraw->nav_triangle_erase(ctx,
-        ll.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
-        ll.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
-        ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, idx);
-  else
-    ctx->fdraw->nav_fill_triangle(ctx,
+    ctx->fdraw->triangle(
         ll.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
         ll.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
         ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y,
-        flow_eDrawType_LineErase);
+        flow_eDrawType_LineErase, 0, idx);
+  else
+    ctx->fdraw->triangle(
+        ll.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
+        ll.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
+        ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y,
+        flow_eDrawType_LineErase, 1, 0);
 }
 
 void FlowTriangle::print(void* pos, void* node, int highlight)

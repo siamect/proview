@@ -759,11 +759,6 @@ void flow_ResetNodraw(flow_tCtx ctx)
   ctx->reset_nodraw();
 }
 
-void flow_Redraw(flow_tCtx ctx)
-{
-  ctx->redraw();
-}
-
 int flow_FindByName(flow_tCtx ctx, char* name, flow_tObject* object)
 {
   return ctx->find_by_name(name, (FlowArrayElem**)object);
@@ -787,7 +782,7 @@ int flow_GetConPoint(
 
 void flow_SetClickSensitivity(flow_tCtx ctx, int value)
 {
-  ctx->fdraw->set_click_sensitivity(ctx, value);
+  ctx->fdraw->set_click_sensitivity(value);
 }
 
 void flow_SetNoConObstacle(flow_tNodeClass nc, int no_obstacle)

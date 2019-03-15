@@ -67,7 +67,6 @@ void FlowPoint::zoom()
 {
   z_x = int(x * ctx->zoom_factor + 0.5);
   z_y = int(y * ctx->zoom_factor + 0.5);
-  current_zoom_factor = ctx->zoom_factor;
 }
 
 void FlowPoint::nav_zoom()
@@ -80,10 +79,6 @@ void FlowPoint::print_zoom()
 {
   print_z_x = x * ctx->print_zoom_factor;
   print_z_y = y * ctx->print_zoom_factor;
-}
-
-void FlowPoint::traverse(int x, int y)
-{
 }
 
 void FlowPoint::save(std::ofstream& fp, flow_eSaveMode mode)
@@ -123,36 +118,14 @@ void FlowPoint::open(std::ifstream& fp)
   }
 }
 
-const FlowPoint& FlowPoint::operator+=(const FlowPoint p)
+FlowPoint FlowPoint::operator+(const FlowPoint &p)
 {
-  x += p.x;
-  y += p.y;
-  z_x += p.z_x;
-  z_y += p.z_y;
-  return *this;
+  return FlowPoint(ctx, x + p.x, y + p.y);
 }
 
-FlowPoint FlowPoint::operator+(const FlowPoint p)
+FlowPoint FlowPoint::operator-(const FlowPoint &p)
 {
-  FlowPoint tmp(*this);
-  tmp += p;
-  return tmp;
-}
-
-const FlowPoint& FlowPoint::operator-=(const FlowPoint p)
-{
-  x -= p.x;
-  y -= p.y;
-  z_x -= p.z_x;
-  z_y -= p.z_y;
-  return *this;
-}
-
-FlowPoint FlowPoint::operator-(const FlowPoint p)
-{
-  FlowPoint tmp(*this);
-  tmp -= p;
-  return tmp;
+  return FlowPoint(ctx, x - p.x, y - p.y);
 }
 
 std::ostream& operator<<(std::ostream& o, const FlowPoint p)
