@@ -38,6 +38,7 @@
 #define glow_nodeclass_h
 
 #include "glow_point.h"
+#include "co_string.h"
 
 /*! \file glow_nodeclass.h
     \brief Contains the GlowNodeClass class. */
@@ -363,6 +364,9 @@ public:
   */
   void set_extern(int ext)
   {
+    if (streq(n_name, "mbtoolbar"))
+      return;
+	
     nc_extern = ext;
   }
 

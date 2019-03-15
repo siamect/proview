@@ -449,6 +449,10 @@ int SubGraphs::object_attr()
 
     grow_GetNodeClassName(*list_p, name, sizeof(name));
 
+    if (streq("mbtoolbar", name)) {
+      list_p++;
+      continue;
+    }
     new ItemSubGraph(
         this, name, extern_p, *list_p, grow_ctx, NULL, flow_eDest_IntoLast);
     list_p++;
