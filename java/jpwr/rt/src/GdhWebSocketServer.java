@@ -140,8 +140,8 @@ public class GdhWebSocketServer
   public final static int __IO_EXCEPTION = 2000;
   public final static int __UNREFED = 0;
 
-  //static ArrayList<SubElement> subscriptions = new ArrayList<SubElement>();
-  static ArrayList subscriptions = new ArrayList();
+  static ArrayList<SubElement> subscriptions = new ArrayList<SubElement>();
+  //static ArrayList subscriptions = new ArrayList();
 
   static int subscriptionCount = 0;
 
@@ -1144,7 +1144,7 @@ public class GdhWebSocketServer
 
 		  for ( int i = 0; i < thSub.size(); i++) {
 		      Sub asub = (Sub)thSub.elementAt(i);
-		      if ( asub == null)
+		      if ( asub == null || asub.subscriptionsIndex == -1)
 			  continue;
 		      switch( asub.typeId) {
 		      case Pwr.eType_Boolean:
@@ -1248,7 +1248,7 @@ public class GdhWebSocketServer
 		  j += 4;
 		  for ( int i = 0; i < thSub.size(); i++) {
 		      Sub asub = (Sub)thSub.elementAt(i); 
-		      if ( asub == null ||  asub.subscriptionsIndex == -1)
+		      if ( asub == null || asub.subscriptionsIndex == -1)
 			  continue;
 		      switch( asub.typeId) {
 		      case Pwr.eType_Boolean:
