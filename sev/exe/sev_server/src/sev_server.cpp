@@ -856,6 +856,7 @@ int sev_server::check_histitems(sev_sMsgHistItems* msg, unsigned int size)
     m_sts = m_db->tree_update();
     if (EVEN(m_sts))
       printf("Tree error %d\n", m_sts);
+    m_sts = gdh_MountDynClients();
   }
 
   return 1;
@@ -1483,7 +1484,17 @@ void* sev_server::receive_histdata_thread(void* arg)
 
         dp = (sev_sHistData*)&msg->data;
 
-        sev->m_db->begin_transaction(th->db_ctx);
+        sts = sev->m_db->begin_transaction(th->db_ctx);
+	if (sts == SEV__NOCONNECTION) {
+	  if ( th->reconnect_cnt < 50) {
+	    errh_Error("Database connection lost, thread %d, reconnecting",th->key);
+	    th->db_ctx = sev->m_db->new_thread();
+	    th->reconnect_cnt++;
+	    sts = sev->m_db->begin_transaction(th->db_ctx);
+	  }
+	  if (EVEN(sts))
+	    break;
+	}
 
         while ((char*)dp - (char*)msg->data < data_size) {
           sev_sRefid* rp;
@@ -1513,8 +1524,14 @@ void* sev_server::receive_histdata_thread(void* arg)
               + dp->size);
         }
 
-        sev->m_db->commit_transaction(th->db_ctx);
-
+        sts = sev->m_db->commit_transaction(th->db_ctx);
+	if (sts == SEV__NOCONNECTION) {
+	  if ( th->reconnect_cnt < 50) {
+	    errh_Error("Database connection lost, thread %d, reconnecting",th->key);
+	    th->db_ctx = sev->m_db->new_thread();
+	    th->reconnect_cnt++;
+	  }
+	}
         break;
       }
       case sev_eQMsgType_Event: {

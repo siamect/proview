@@ -535,7 +535,8 @@ mvol_sAttribute* vol_BlockNameToAttribute(pwr_tStatus* sts, mvol_sAttribute* ap,
   strcpy(aname, "");
   for (i = 0; i < pn->nObject; i++) {
     strcat(aname, pn->object[i].name.orig);
-    strcat(aname, "-");
+    if (pn->nAttribute != 0)
+      strcat(aname, "-");
   }
   for (i = 0; i < pn->nAttribute; i++) {
     strcat(aname, pn->attribute[i].name.orig);
@@ -543,7 +544,7 @@ mvol_sAttribute* vol_BlockNameToAttribute(pwr_tStatus* sts, mvol_sAttribute* ap,
       strcat(aname, "-");
   }
   strcat(aname, ".Value");
-  if (pn->hasIndex[pn->nAttribute-1])
+  if (pn->nAttribute != 0 && pn->hasIndex[pn->nAttribute-1])
     sprintf(&aname[strlen(aname)], "[%d]", pn->index[pn->nAttribute-1]);
 
   cdh_ParseName(sts, pn, pn->poid, aname, pn->parseFlags.m);
@@ -579,7 +580,7 @@ mvol_sAttribute* vol_NameToAttribute(pwr_tStatus* sts, mvol_sAttribute* ap,
   if (op == NULL)
     return NULL;
 
-  if (op->g.cid == pwr_eClass_Block) {
+  if (op->g.cid == pwr_eClass_Block && pn->nAttribute != 0) {
     return vol_BlockNameToAttribute(sts, ap, pn, op, lo_flags, trans);
   }
 

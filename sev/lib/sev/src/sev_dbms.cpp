@@ -43,6 +43,7 @@
 #include <sys/stat.h>
 
 #include <mysql/mysqld_error.h>
+#include <mysql/errmsg.h>
 
 #include "pwr_names.h"
 
@@ -4863,7 +4864,9 @@ int sev_dbms::begin_transaction(void* thread)
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
     printf("Begin transaction: %s\n", mysql_error(con));
-    return 0;
+    if ( con->net.last_errno == CR_SERVER_GONE_ERROR)
+      return SEV__NOCONNECTION;
+    return SEV__DBERROR;
   }
   return 1;
 }
@@ -4883,8 +4886,10 @@ int sev_dbms::commit_transaction(void* thread)
   rc = mysql_query(con, query);
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
-    printf("Begin transaction: %s\n", mysql_error(con));
-    return 0;
+    printf("Commit transaction: %s\n", mysql_error(con));
+    if ( con->net.last_errno == CR_SERVER_GONE_ERROR)
+      return SEV__NOCONNECTION;
+    return SEV__DBERROR;
   }
   return 1;
 }
