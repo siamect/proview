@@ -74,11 +74,11 @@ void FlowFrame::draw(void* pos, int highlight, int dimmed, int hot, void* node)
   idx += hot;
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->rect(ctx, ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+  ctx->fdraw->rect(ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
       int(ur_x * ctx->zoom_factor - ll.z_x - ((FlowPoint*)pos)->z_x - 1),
       int(ur_y * ctx->zoom_factor - ll.z_y - ((FlowPoint*)pos)->z_y - 1),
-      draw_type, idx, highlight, 0);
+      draw_type, 0, idx, highlight);
 }
 
 void FlowFrame::erase(void* pos, int hot, void* node)
@@ -103,10 +103,11 @@ void FlowFrame::erase(void* pos, int hot, void* node)
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
 
-  ctx->fdraw->rect_erase(ctx, ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+  ctx->fdraw->rect(ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
       int(ur_x * ctx->zoom_factor - ll.z_x - ((FlowPoint*)pos)->z_x - 1),
-      int(ur_y * ctx->zoom_factor - ll.z_y - ((FlowPoint*)pos)->z_y - 1), idx);
+      int(ur_y * ctx->zoom_factor - ll.z_y - ((FlowPoint*)pos)->z_y - 1),
+      flow_eDrawType_LineErase, 0, idx);
 }
 
 void FlowFrame::get_borders(double pos_x, double pos_y, double* x_right,

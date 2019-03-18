@@ -248,7 +248,7 @@ void QtScrollWidgetFlow::handleEvent(QEvent* event)
       FlowCtx* ctx = (FlowCtx*)parent_ctx;
       FlowDrawQt* drawer = ((FlowDrawQt*)ctx->fdraw);
       if (event->type() == QEvent::MouseMove) {
-        drawer->window->update();
+        drawer->m_wind.window->update();
       }
       drawer->event_handler((FlowCtx*)parent_ctx, event, this);
     }

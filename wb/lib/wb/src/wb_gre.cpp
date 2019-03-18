@@ -1149,7 +1149,7 @@ int WGre::window_draw()
     free((char*)node_list);
 
   flow_ResetNodraw(flow_ctx);
-  flow_Redraw(flow_ctx);
+  flow_ctx->set_dirty();
 
   return GRE__SUCCESS;
 }
@@ -2718,7 +2718,7 @@ int WGre::display()
   flow_attr.display_level = flow_mDisplayLevel_1 | flow_mDisplayLevel_2;
   mask = flow_eAttr_display_level;
   flow_SetAttributes(flow_ctx, &flow_attr, mask);
-  flow_Redraw(flow_ctx);
+  flow_ctx->set_dirty();
   return GRE__SUCCESS;
 }
 
@@ -2746,7 +2746,7 @@ int WGre::undisplay()
   flow_attr.display_level = flow_mDisplayLevel_1;
   mask = flow_eAttr_display_level;
   flow_SetAttributes(flow_ctx, &flow_attr, mask);
-  flow_Redraw(flow_ctx);
+  flow_ctx->set_dirty();
   return GRE__SUCCESS;
 }
 

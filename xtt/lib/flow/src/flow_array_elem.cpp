@@ -48,10 +48,6 @@ void FlowArrayElem::print_zoom()
 {
 }
 
-void FlowArrayElem::traverse(int x, int y)
-{
-}
-
 void FlowArrayElem::get_borders(
     double* x_right, double* x_left, double* y_high, double* y_low)
 {
@@ -222,14 +218,6 @@ int FlowArrayElem::in_vert_line(double x, double l_y, double u_y)
 int FlowArrayElem::in_horiz_line(double y, double l_x, double u_x)
 {
   return 0;
-}
-
-void FlowArrayElem::conpoint_refcon_redraw(void* node, int conpoint)
-{
-}
-
-void FlowArrayElem::conpoint_refcon_erase(void* node, int conpoint)
-{
 }
 
 void FlowArrayElem::remove_notify()

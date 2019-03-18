@@ -43,6 +43,7 @@
 
 #define CONPOINT_SELECTLIST_SIZE 2
 
+class DrawWind;
 class FlowDraw;
 class FlowTipText;
 
@@ -61,6 +62,8 @@ public:
   FlowCtx(const char* ctx_name, double zoom_fact = 100, int offs_x = 0,
       int offs_y = 0);
 
+  DrawWind* mw; //!< Main window data.
+  DrawWind* navw; //!< Navigation window data.
   flow_eCtxType ctx_type;
   double zoom_factor;
   double base_zoom_factor;
@@ -265,12 +268,8 @@ public:
     return default_conclass;
   }
   void print(double ll_x, double ll_y, double ur_x, double ur_y);
-  void draw(int ll_x, int ll_y, int ur_x, int ur_y);
-  void clear();
   void nav_zoom();
   void print_zoom();
-  void nav_clear();
-  void nav_draw(int ll_x, int ll_y, int ur_x, int ur_y);
   int event_handler(flow_eEvent event, int x, int y, int w, int h);
   int event_handler_nav(flow_eEvent event, int x, int y);
   void enable_event(flow_eEvent event, flow_eEventType event_type,
@@ -280,17 +279,9 @@ public:
   void tiptext_event(FlowArrayElem* object, int x, int y);
   void redraw_node_cons(void* node);
   void delete_node_cons(void* node);
-  void set_defered_redraw();
-  void redraw_defered();
-  int defered_redraw_active;
-  int defered_x_low;
-  int defered_x_high;
-  int defered_y_low;
-  int defered_y_high;
-  int defered_x_low_nav;
-  int defered_x_high_nav;
-  int defered_y_low_nav;
-  int defered_y_high_nav;
+  void set_dirty();
+  void redraw_if_dirty();
+  int is_dirty;
   FlowArray a;
   FlowArray a_sel;
   FlowArray a_paste;
@@ -349,10 +340,6 @@ public:
   void conpoint_refcon_redraw(void* node, int conpoint)
   {
     a.conpoint_refcon_redraw(node, conpoint);
-  }
-  void conpoint_refcon_erase(void* node, int conpoint)
-  {
-    a.conpoint_refcon_erase(node, conpoint);
   }
   FlowArrayElem* get_node_from_name(char* name);
   FlowArrayElem* get_nodeclass_from_name(char* name);
@@ -422,7 +409,6 @@ public:
       nodraw--;
   }
   void reconfigure();
-  void redraw();
   void object_deleted(FlowArrayElem* object);
   void annotation_input_cb(FlowArrayElem* object, int number, char* text);
   int radiobutton_cb(FlowArrayElem* object, int number, int value);
@@ -488,13 +474,17 @@ public:
   void set_inverse_color(flow_eDrawType color)
   {
     inverse_color = color;
-    redraw();
+    set_dirty();
   }
   void set_text_coding(flow_eTextCoding coding)
   {
     text_coding = coding;
   }
   ~FlowCtx();
+
+private:
+  void draw(int ll_x, int ll_y, int ur_x, int ur_y);
+  void nav_draw(int ll_x, int ll_y, int ur_x, int ur_y);
 };
 
 void auto_scrolling(FlowCtx* ctx);

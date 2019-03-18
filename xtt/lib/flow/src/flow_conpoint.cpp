@@ -122,11 +122,6 @@ void FlowConPoint::open(std::ifstream& fp)
   }
 }
 
-void FlowConPoint::traverse(int x, int y)
-{
-  p.traverse(x, y);
-}
-
 int FlowConPoint::event_handler(
     void* pos, flow_eEvent event, int x, int y, void* node)
 {
@@ -211,8 +206,7 @@ void FlowConPoint::draw(
       x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x - size / 2;
       y = p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y - size / 2;
     }
-    ctx->fdraw->arc(
-        ctx, x, y, size, size, 0, 360, flow_eDrawType_LineRed, idx, 0, 0);
+    ctx->fdraw->arc(x, y, size, size, 0, 360, flow_eDrawType_LineRed, idx, 0, 0);
   }
 }
 
@@ -249,7 +243,7 @@ void FlowConPoint::erase(void* pos, int hot, void* node)
       x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x - size / 2;
       y = p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y - size / 2;
     }
-    ctx->fdraw->arc_erase(ctx, x, y, size, size, 0, 360, idx);
+    ctx->fdraw->arc(x, y, size, size, 0, 360, flow_eDrawType_LineErase, idx);
   }
 }
 

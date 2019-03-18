@@ -94,12 +94,6 @@ void FlowImage::print_zoom()
   ur.print_zoom();
 }
 
-void FlowImage::traverse(int x, int y)
-{
-  ll.traverse(x, y);
-  ur.traverse(x, y);
-}
-
 void FlowImage::print(void* pos, void* node, int highlight)
 {
   if (!(display_level & ctx->display_level))
@@ -187,24 +181,24 @@ void FlowImage::draw(void* pos, int highlight, int dimmed, int hot, void* node)
           * ctx->fdraw->image_get_height(image));
     }
 
-    ctx->fdraw->image(ctx, ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+    ctx->fdraw->image(ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
         ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
         ctx->fdraw->image_get_width(image) /*ur.z_x - ll.z_x*/,
         ctx->fdraw->image_get_height(image) /*ur.z_y - ll.z_y*/, image, pixmap,
         clip_mask);
   } else
-    ctx->fdraw->fill_rect(ctx, ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+    ctx->fdraw->rect(ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
         ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, ur.z_x - ll.z_x,
-        ur.z_y - ll.z_y, flow_eDrawType_LineGray);
+        ur.z_y - ll.z_y, flow_eDrawType_LineGray, 1, 0);
 }
 
 void FlowImage::erase(void* pos, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
-  ctx->fdraw->fill_rect(ctx, ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+  ctx->fdraw->rect(ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, ur.z_x - ll.z_x,
-      ur.z_y - ll.z_y, flow_eDrawType_LineErase);
+      ur.z_y - ll.z_y, flow_eDrawType_LineErase, 1, 0);
 }
 
 void FlowImage::nav_draw(void* pos, int highlight, void* node)
@@ -249,36 +243,25 @@ void FlowImage::get_borders(double pos_x, double pos_y, double* x_right,
 void FlowImage::move(
     void* pos, double x, double y, int highlight, int dimmed, int hot)
 {
-  double width, height;
-
-  width = ur.x - ll.x;
-  height = ur.y - ll.y;
-  erase(pos, hot, NULL);
-  nav_erase(pos, NULL);
+  ur.x = x + ur.x - ll.x;
+  ur.y = y + ur.y - ll.y;
   ll.x = x;
   ll.y = y;
-  ur.x = x + width;
-  ur.y = y + height;
   zoom();
   nav_zoom();
-  draw(pos, highlight, dimmed, hot, NULL);
-  nav_draw(pos, highlight, NULL);
+  ctx->set_dirty();
 }
 
 void FlowImage::shift(void* pos, double delta_x, double delta_y, int highlight,
     int dimmed, int hot)
 {
-  erase(pos, hot, NULL);
-  nav_erase(pos, NULL);
   ll.x += delta_x;
   ll.y += delta_y;
   ur.x += delta_x;
   ur.y += delta_y;
   zoom();
   nav_zoom();
-
-  draw(pos, highlight, dimmed, hot, NULL);
-  nav_draw(pos, highlight, NULL);
+  ctx->set_dirty();
 }
 
 std::ostream& operator<<(std::ostream& o, const FlowImage r)

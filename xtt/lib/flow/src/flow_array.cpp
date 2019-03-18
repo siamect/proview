@@ -67,13 +67,11 @@ void FlowArray::new_array(const FlowArray& array)
 
 void FlowArray::move_from(FlowArray& array)
 {
-  int i;
-
   free(a);
   a_size = 0;
   allocated = alloc_incr;
   a = (FlowArrayElem**)calloc(allocated, sizeof(FlowArrayElem*));
-  for (i = 0; i < array.a_size; i++) {
+  for (int i = 0; i < array.a_size; i++) {
     insert(array.a[i]);
     array.remove(array.a[i]);
     i--;
@@ -82,23 +80,19 @@ void FlowArray::move_from(FlowArray& array)
 
 void FlowArray::copy_from_common_objects(FlowArray& array)
 {
-  int i;
-
   a_size = 0;
   free(a);
   allocated = alloc_incr;
   a = (FlowArrayElem**)calloc(allocated, sizeof(FlowArrayElem*));
-  for (i = 0; i < array.a_size; i++) {
+  for (int i = 0; i < array.a_size; i++) {
     insert(array.a[i]);
   }
 }
 
 void FlowArray::copy_from(const FlowArray& array)
 {
-  int i;
-
   a_size = 0;
-  for (i = 0; i < array.a_size; i++) {
+  for (int i = 0; i < array.a_size; i++) {
     switch (array.a[i]->type()) {
     case flow_eObjectType_Node: {
       FlowNode* n = new FlowNode();
@@ -109,7 +103,7 @@ void FlowArray::copy_from(const FlowArray& array)
     default:;
     }
   }
-  for (i = 0; i < array.a_size; i++) {
+  for (int i = 0; i < array.a_size; i++) {
     switch (array.a[i]->type()) {
     case flow_eObjectType_Con: {
       /* Both source and destination has to be members */
@@ -187,9 +181,7 @@ void FlowArray::copy_from(const FlowArray& array)
 
 FlowArray::~FlowArray()
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     delete a[i];
   }
   free(a);
@@ -314,9 +306,7 @@ int FlowArray::brow_insert(
 
 void FlowArray::remove(FlowArrayElem* element)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (*(a + i) == element) {
       if (a_size - i - 1 > 0) {
         void* tmp = malloc((a_size - i - 1) * sizeof(*a));
@@ -340,9 +330,8 @@ void FlowArray::brow_remove(void* ctx, FlowArrayElem* element)
 void FlowArray::brow_close(void* ctx, FlowArrayElem* element)
 {
   int i;
-  int idx = 0, next_idx;
+  int idx = 0;
   int found;
-  int level;
   FlowArrayElem* e;
 
   found = 0;
@@ -356,12 +345,12 @@ void FlowArray::brow_close(void* ctx, FlowArrayElem* element)
     return;
 
   // Find next element with the same level
-  level = ((FlowNode*)a[idx])->get_level();
+  int level = ((FlowNode*)a[idx])->get_level();
   for (i = idx + 1; i < a_size; i++) {
     if (((FlowNode*)a[i])->get_level() <= level)
       break;
   }
-  next_idx = i;
+  int next_idx = i;
   if (next_idx == idx + 1)
     return;
 
@@ -377,10 +366,8 @@ int FlowArray::brow_get_parent(FlowArrayElem* element, FlowArrayElem** parent)
 {
   int i;
   int idx = 0;
-  int found;
-  int level;
+  int found = 0;
 
-  found = 0;
   for (i = 0; i < a_size; i++) {
     if (*(a + i) == element) {
       idx = i;
@@ -393,7 +380,7 @@ int FlowArray::brow_get_parent(FlowArrayElem* element, FlowArrayElem** parent)
 
   // Find previous element with lower level
   found = 0;
-  level = ((FlowNode*)a[idx])->get_level();
+  int level = ((FlowNode*)a[idx])->get_level();
   for (i = idx - 1; i >= 0; i--) {
     if (((FlowNode*)a[i])->get_level() < level) {
       found = 1;
@@ -408,12 +395,9 @@ int FlowArray::brow_get_parent(FlowArrayElem* element, FlowArrayElem** parent)
 
 int FlowArray::brow_get_child(FlowArrayElem* element, FlowArrayElem** child)
 {
-  int i;
   int idx = 0;
-  int found;
-
-  found = 0;
-  for (i = 0; i < a_size; i++) {
+  int found = 0;
+  for (int i = 0; i < a_size; i++) {
     if (*(a + i) == element) {
       idx = i;
       found = 1;
@@ -437,13 +421,10 @@ int FlowArray::brow_get_child(FlowArrayElem* element, FlowArrayElem** child)
 int FlowArray::brow_get_next_sibling(
     FlowArrayElem* element, FlowArrayElem** sibling)
 {
-  int i;
   int idx = 0;
-  int found;
-  int level;
+  int found = 0;
 
-  found = 0;
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (*(a + i) == element) {
       idx = i;
       found = 1;
@@ -457,8 +438,8 @@ int FlowArray::brow_get_next_sibling(
     return FLOW__NONEXTSIBLING;
 
   // Return next element of higher level
-  level = ((FlowNode*)a[idx])->get_level();
-  for (i = idx + 1; i < a_size; i++) {
+  int level = ((FlowNode*)a[idx])->get_level();
+  for (int i = idx + 1; i < a_size; i++) {
     if (((FlowNode*)a[i])->get_level() == level) {
       *sibling = a[i];
       return 1;
@@ -472,13 +453,10 @@ int FlowArray::brow_get_next_sibling(
 int FlowArray::brow_get_previous_sibling(
     FlowArrayElem* element, FlowArrayElem** sibling)
 {
-  int i;
   int idx = 0;
-  int found;
-  int level;
+  int found = 0;
 
-  found = 0;
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (*(a + i) == element) {
       idx = i;
       found = 1;
@@ -492,8 +470,8 @@ int FlowArray::brow_get_previous_sibling(
     return FLOW__NONEXTSIBLING;
 
   // Return previous element of the same level
-  level = ((FlowNode*)a[idx])->get_level();
-  for (i = idx - 1; i >= 0; i--) {
+  int level = ((FlowNode*)a[idx])->get_level();
+  for (int i = idx - 1; i >= 0; i--) {
     if (((FlowNode*)a[i])->get_level() == level) {
       *sibling = a[i];
       return 1;
@@ -506,69 +484,48 @@ int FlowArray::brow_get_previous_sibling(
 
 void FlowArray::zoom()
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->zoom();
   }
 }
 
 void FlowArray::nav_zoom()
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->nav_zoom();
   }
 }
 
 void FlowArray::print_zoom()
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->print_zoom();
-  }
-}
-
-void FlowArray::traverse(int x, int y)
-{
-  int i;
-
-  for (i = 0; i < a_size; i++) {
-    a[i]->traverse(x, y);
   }
 }
 
 void FlowArray::conpoint_select(
     void* pos, int x, int y, double* distance, void** cp)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->conpoint_select(pos, x, y, distance, cp);
   }
 }
 
 void FlowArray::print(void* pos, void* node, int highlight)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->print(pos, node, highlight);
   }
 }
 
 void FlowArray::save(std::ofstream& fp, flow_eSaveMode mode)
 {
-  int i;
-
   fp << int(flow_eSave_Array) << '\n';
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (a[i]->type() != flow_eObjectType_Con)
       a[i]->save(fp, mode);
   }
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (a[i]->type() == flow_eObjectType_Con)
       a[i]->save(fp, mode);
   }
@@ -707,54 +664,42 @@ void FlowArray::open(void* ctx, std::ifstream& fp)
 
 void FlowArray::draw(void* pos, int highlight, int dimmed, int hot, void* node)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->draw(pos, highlight, dimmed, hot, node);
   }
 }
 
 void FlowArray::draw_inverse(void* pos, int hot, void* node)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->draw_inverse(pos, hot, node);
   }
 }
 
 void FlowArray::erase(void* pos, int hot, void* node)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->erase(pos, hot, node);
   }
 }
 
 void FlowArray::nav_draw(void* pos, int highlight, void* node)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->nav_draw(pos, highlight, node);
   }
 }
 
 void FlowArray::nav_erase(void* pos, void* node)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->nav_erase(pos, node);
   }
 }
 
 int FlowArray::find(FlowArrayElem* element)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (a[i] == element)
       return 1;
   }
@@ -763,10 +708,9 @@ int FlowArray::find(FlowArrayElem* element)
 
 int FlowArray::find_by_name(char* name, FlowArrayElem** element)
 {
-  int i;
   char object_name[32];
 
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->get_object_name(object_name);
     if (streq(name, object_name)) {
       *element = a[i];
@@ -778,7 +722,6 @@ int FlowArray::find_by_name(char* name, FlowArrayElem** element)
 
 int FlowArray::find_by_name_no_case(char* name, FlowArrayElem** element)
 {
-  int i;
   char object_name[32];
   char lname[32];
   char* s;
@@ -787,7 +730,7 @@ int FlowArray::find_by_name_no_case(char* name, FlowArrayElem** element)
   for (s = lname; *s; s++)
     *s = toupper(*s);
 
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->get_object_name(object_name);
     for (s = object_name; *s; s++)
       *s = toupper(*s);
@@ -801,27 +744,21 @@ int FlowArray::find_by_name_no_case(char* name, FlowArrayElem** element)
 
 void FlowArray::set_highlight(int on)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->set_highlight(on);
   }
 }
 
 void FlowArray::set_dimmed(int on)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->set_dimmed(on);
   }
 }
 
 void FlowArray::set_hot(int on)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->set_hot(on);
   }
 }
@@ -829,9 +766,7 @@ void FlowArray::set_hot(int on)
 void FlowArray::select_region_insert(
     double ll_x, double ll_y, double ur_x, double ur_y)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->select_region_insert(ll_x, ll_y, ur_x, ur_y);
   }
 }
@@ -839,18 +774,14 @@ void FlowArray::select_region_insert(
 void FlowArray::get_borders(
     double* x_right, double* x_left, double* y_high, double* y_low)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->get_borders(x_right, x_left, y_high, y_low);
   }
 }
 
 void FlowArray::get_borders()
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->get_borders();
   }
 }
@@ -858,18 +789,14 @@ void FlowArray::get_borders()
 void FlowArray::get_borders(double pos_x, double pos_y, double* x_right,
     double* x_left, double* y_high, double* y_low, void* node)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->get_borders(pos_x, pos_y, x_right, x_left, y_high, y_low, node);
   }
 }
 
 void FlowArray::move(int delta_x, int delta_y, int grid)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->move(delta_x, delta_y, grid);
   }
 }
@@ -877,56 +804,37 @@ void FlowArray::move(int delta_x, int delta_y, int grid)
 void FlowArray::shift(void* pos, double delta_x, double delta_y, int highlight,
     int dimmed, int hot)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->shift(pos, delta_x, delta_y, highlight, dimmed, hot);
   }
 }
 
 void FlowArray::move_noerase(int delta_x, int delta_y, int grid)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->move_noerase(delta_x, delta_y, grid);
   }
 }
 
 void FlowArray::conpoint_refcon_redraw(void* node, int conpoint)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->conpoint_refcon_redraw(node, conpoint);
   }
 }
 
-void FlowArray::conpoint_refcon_erase(void* node, int conpoint)
-{
-  int i;
-
-  for (i = 0; i < a_size; i++) {
-    a[i]->conpoint_refcon_redraw(node, conpoint);
-  }
-}
 
 void FlowArray::set_inverse(int on)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->set_inverse(on);
   }
 }
 
 int FlowArray::event_handler(flow_eEvent event, int x, int y)
 {
-  int i;
-  int sts;
-
-  for (i = 0; i < a_size; i++) {
-    sts = a[i]->event_handler(event, x, y);
+  for (int i = 0; i < a_size; i++) {
+    int sts = a[i]->event_handler(event, x, y);
     if (sts)
       return sts;
   }
@@ -936,11 +844,8 @@ int FlowArray::event_handler(flow_eEvent event, int x, int y)
 int FlowArray::event_handler(
     void* pos, flow_eEvent event, int x, int y, void* node)
 {
-  int i;
-  int sts;
-
-  for (i = 0; i < a_size; i++) {
-    sts = a[i]->event_handler(pos, event, x, y, node);
+  for (int i = 0; i < a_size; i++) {
+    int sts = a[i]->event_handler(pos, event, x, y, node);
     if (sts)
       return sts;
   }
@@ -952,11 +857,8 @@ int FlowArray::event_handler(
 int FlowArray::event_handler(
     void* pos, flow_eEvent event, int x, int y, int num)
 {
-  int i;
-  int sts;
-
-  for (i = 0; i < num; i++) {
-    sts = a[i]->event_handler(pos, event, x, y, NULL);
+  for (int i = 0; i < num; i++) {
+    int sts = a[i]->event_handler(pos, event, x, y, NULL);
     if (sts)
       return sts;
   }
@@ -965,9 +867,7 @@ int FlowArray::event_handler(
 
 void FlowArray::configure()
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (i == 0)
       a[i]->configure(NULL);
     else
@@ -977,18 +877,14 @@ void FlowArray::configure()
 
 void FlowArray::move_widgets(int x, int y)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->move_widgets(x, y);
   }
 }
 
 int FlowArray::get_next(FlowArrayElem* element, FlowArrayElem** next)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (a[i] == element) {
       if (i == a_size - 1)
         return FLOW__NONEXT;
@@ -1001,9 +897,7 @@ int FlowArray::get_next(FlowArrayElem* element, FlowArrayElem** next)
 
 int FlowArray::get_previous(FlowArrayElem* element, FlowArrayElem** prev)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (a[i] == element) {
       if (i == 0)
         return FLOW__NOPREVIOUS;
@@ -1032,14 +926,11 @@ int FlowArray::get_last(FlowArrayElem** last)
 
 int FlowArray::move_up(FlowArrayElem* element)
 {
-  int i;
-  FlowArrayElem* prev;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (a[i] == element) {
       if (i == 0)
         return FLOW__NOPREVIOUS;
-      prev = a[i - 1];
+      FlowArrayElem* prev = a[i - 1];
       a[i - 1] = a[i];
       a[i] = prev;
       return 1;
@@ -1050,14 +941,11 @@ int FlowArray::move_up(FlowArrayElem* element)
 
 int FlowArray::move_down(FlowArrayElem* element)
 {
-  int i;
-  FlowArrayElem* next;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (a[i] == element) {
       if (i == a_size - 1)
         return FLOW__NONEXT;
-      next = a[i + 1];
+      FlowArrayElem* next = a[i + 1];
       a[i + 1] = a[i];
       a[i] = next;
       return 1;
@@ -1070,14 +958,11 @@ int FlowArray::sort_children(
     FlowArrayElem* element, int offset, int (*comp)(const void*, const void*))
 {
   // Count children
-  int i;
   int idx = 0;
   int last_idx = 0;
-  int found;
-  int level;
+  int found = 0;
 
-  found = 0;
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (*(a + i) == element) {
       idx = i;
       found = 1;
@@ -1091,9 +976,9 @@ int FlowArray::sort_children(
     return FLOW__NOCHILD;
 
   // Return next element of higher level
-  level = ((FlowNode*)a[idx])->get_level();
+  int level = ((FlowNode*)a[idx])->get_level();
   found = 0;
-  for (i = idx + 1 + offset; i < a_size; i++) {
+  for (int i = idx + 1 + offset; i < a_size; i++) {
     if (((FlowNode*)a[i])->get_level() <= level)
       break;
 

@@ -178,6 +178,11 @@ void SubGraphsQt::trace_start()
   toplevel->trace_scan();
 }
 
+void SubGraphsQt::set_inputfocus()
+{
+  brow_widget->setFocus();
+}
+
 SubGraphsQtWidget::SubGraphsQtWidget(SubGraphsQt* parent_ctx)
     : QWidget(), subgraphs(parent_ctx)
 {

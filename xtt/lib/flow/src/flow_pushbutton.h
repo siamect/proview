@@ -49,7 +49,6 @@ public:
   void zoom(){}
   void nav_zoom(){}
   void print_zoom(){}
-  void traverse(int x, int y){}
   void print(double ll_x, double ll_y, double ur_x, double ur_y){}
   void draw(int ll_x, int ll_y, int ur_x, int ur_y);
   void get_borders(
@@ -62,8 +61,6 @@ public:
   char name[32];
   FlowRect r;
   FlowText t;
-  void conpoint_refcon_redraw(void* node, int conpoint){}
-  void conpoint_refcon_erase(void* node, int conpoint){}
   void remove_notify(){}
 };
 

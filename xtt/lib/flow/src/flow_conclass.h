@@ -49,7 +49,6 @@ public:
   void zoom(){}
   void nav_zoom(){}
   void print_zoom(){}
-  void traverse(int x, int y){}
   void get_borders(double pos_x, double pos_y, double* x_right, double* x_left,
       double* y_high, double* y_low, void* node){}
   int event_handler(void* pos, flow_eEvent event, int x, int y, void* node)

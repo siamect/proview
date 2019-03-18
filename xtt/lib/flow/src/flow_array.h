@@ -72,7 +72,6 @@ public:
   void draw_inverse(void* pos, int hot, void* node);
   void nav_draw(void* pos, int highlight, void* node);
   void nav_erase(void* pos, void* node);
-  void traverse(int x, int y);
   void get_borders(
       double* x_right, double* x_left, double* y_high, double* y_low);
   void get_borders();
@@ -92,7 +91,6 @@ public:
   void move(int delta_x, int delta_y, int grid);
   void move_noerase(int delta_x, int delta_y, int grid);
   void conpoint_refcon_redraw(void* node, int conpoint);
-  void conpoint_refcon_erase(void* node, int conpoint);
   void set_inverse(int on);
   void configure();
   int brow_insert(

@@ -852,11 +852,11 @@ int brow_Page(brow_tCtx ctx, double factor)
   return ctx->page(factor);
 }
 
-extern "C" int brow_CreateSecondaryCtx(brow_tCtx ctx, brow_tCtx* secondary_ctx,
+extern "C" void brow_CreateSecondaryCtx(brow_tCtx ctx, brow_tCtx* secondary_ctx,
     int (*init_proc)(brow_tCtx ctx, void* client_data), void* client_data,
     flow_eCtxType type)
 {
-  return ctx->fdraw->create_secondary_ctx((FlowCtx*)ctx, (void**)secondary_ctx,
+  ctx->fdraw->create_secondary_ctx((FlowCtx*)ctx, (void**)secondary_ctx,
       (int (*)(FlowCtx*, void*))init_proc, client_data, type);
 }
 
@@ -865,24 +865,19 @@ void brow_DeleteSecondaryCtx(brow_tCtx ctx)
   ctx->fdraw->delete_secondary_ctx((FlowCtx*)ctx);
 }
 
-int brow_ChangeCtx(brow_tCtx from_ctx, brow_tCtx to_ctx)
+void brow_ChangeCtx(brow_tCtx from_ctx, brow_tCtx to_ctx)
 {
-  return from_ctx->fdraw->change_ctx((FlowCtx*)from_ctx, (FlowCtx*)to_ctx);
-}
-
-void brow_SetInputFocus(brow_tCtx ctx)
-{
-  ctx->fdraw->set_inputfocus((FlowCtx*)ctx);
+  from_ctx->fdraw->change_ctx((FlowCtx*)from_ctx, (FlowCtx*)to_ctx);
 }
 
 void brow_SetClickSensitivity(brow_tCtx ctx, int value)
 {
-  ctx->fdraw->set_click_sensitivity((FlowCtx*)ctx, value);
+  ctx->fdraw->set_click_sensitivity(value);
 }
 
 void brow_SetWhiteBackground(brow_tCtx ctx)
 {
-  ctx->fdraw->set_white_background((FlowCtx*)ctx);
+  ctx->fdraw->set_white_background();
 }
 
 void brow_SetFillColor(brow_tNode node, flow_eDrawType color)

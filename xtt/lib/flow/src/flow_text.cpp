@@ -63,11 +63,6 @@ void FlowText::print_zoom()
   p.print_zoom();
 }
 
-void FlowText::traverse(int x, int y)
-{
-  p.traverse(x, y);
-}
-
 void FlowText::print(void* pos, void* node, int highlight)
 {
   double idx
@@ -137,10 +132,20 @@ void FlowText::draw(void* pos, int highlight, int dimmed, int hot, void* node)
   if (idx < 0)
     return;
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->text(ctx, p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+  ctx->fdraw->text(p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, text, strlen(text),
-      draw_type, idx, highlight, dimmed, 0,
-      ctx->zoom_factor / ctx->base_zoom_factor * (8 + 2 * text_size));
+      draw_type, idx, ctx->zoom_factor / ctx->base_zoom_factor * (8 + 2 * text_size),
+      highlight, dimmed);
+}
+
+static flow_eDrawType get_erase_gc(flow_eDrawType gc) {
+  if (gc == flow_eDrawType_TextHelvetica) {
+    return flow_eDrawType_TextHelveticaErase;
+  } else if (gc == flow_eDrawType_TextHelveticaBold) {
+    return flow_eDrawType_TextHelveticaEraseBold;
+  } else {
+    return gc;
+  }
 }
 
 void FlowText::draw_inverse(void* pos, int hot, void* node)
@@ -149,9 +154,9 @@ void FlowText::draw_inverse(void* pos, int hot, void* node)
   if (idx < 0)
     return;
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->text_inverse(ctx, p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+  ctx->fdraw->text(p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, text, strlen(text),
-      draw_type, idx, 0,
+      get_erase_gc(draw_type), idx,
       ctx->zoom_factor / ctx->base_zoom_factor * (8 + 2 * text_size));
 }
 
@@ -161,9 +166,9 @@ void FlowText::erase(void* pos, int hot, void* node)
   if (idx < 0)
     return;
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->text_erase(ctx, p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+  ctx->fdraw->text(p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, text, strlen(text),
-      draw_type, idx, 0,
+      get_erase_gc(draw_type), idx,
       ctx->zoom_factor / ctx->base_zoom_factor * (8 + 2 * text_size));
 }
 
@@ -174,11 +179,10 @@ void FlowText::nav_draw(void* pos, int highlight, void* node)
   if (idx < 0)
     return;
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->nav_text(ctx,
-      p.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
+  ctx->fdraw->text(p.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
       p.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y, text,
-      strlen(text), draw_type, idx, highlight, 0,
-      ctx->nav_zoom_factor / ctx->base_zoom_factor * (8 + 2 * text_size));
+      strlen(text), draw_type, idx,
+      ctx->nav_zoom_factor / ctx->base_zoom_factor * (8 + 2 * text_size), highlight);
 }
 
 void FlowText::nav_erase(void* pos, void* node)
@@ -188,10 +192,9 @@ void FlowText::nav_erase(void* pos, void* node)
   if (idx < 0)
     return;
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->nav_text_erase(ctx,
-      p.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
+  ctx->fdraw->text(p.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
       p.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y, text,
-      strlen(text), draw_type, idx, 0,
+      strlen(text), get_erase_gc(draw_type), idx,
       ctx->nav_zoom_factor / ctx->base_zoom_factor * (8 + 2 * text_size));
 }
 
@@ -241,28 +244,21 @@ void FlowText::get_borders(double pos_x, double pos_y, double* x_right,
 void FlowText::move(
     void* pos, double x, double y, int highlight, int dimmed, int hot)
 {
-  erase(pos, hot, NULL);
-  nav_erase(pos, NULL);
   p.x = x;
   p.y = y;
   zoom();
   nav_zoom();
-  draw(pos, highlight, dimmed, hot, NULL);
-  nav_draw(pos, highlight, NULL);
+  ctx->set_dirty();
 }
 
 void FlowText::shift(void* pos, double delta_x, double delta_y, int highlight,
     int dimmed, int hot)
 {
-  erase(pos, hot, NULL);
-  nav_erase(pos, NULL);
   p.x += delta_x;
   p.y += delta_y;
   zoom();
   nav_zoom();
-
-  draw(pos, highlight, dimmed, hot, NULL);
-  nav_draw(pos, highlight, NULL);
+  ctx->set_dirty();
 }
 
 std::ostream& operator<<(std::ostream& o, const FlowText t)

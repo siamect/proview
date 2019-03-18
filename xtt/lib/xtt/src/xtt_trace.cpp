@@ -1488,7 +1488,7 @@ void RtTrace::swap(int mode)
         flow_SetAttributes(flow_ctx, &attr, ~0);
         flow_Zoom(flow_ctx, 1);
         flow_ResetNodraw(flow_ctx);
-        flow_Redraw(flow_ctx);
+        flow_ctx->set_dirty();
         trace_start();
         flow_OpenTrace(flow_ctx, tfile);
       } else {

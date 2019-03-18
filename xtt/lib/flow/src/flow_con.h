@@ -73,10 +73,6 @@ public:
   void zoom();
   void nav_zoom();
   void print_zoom();
-  void traverse(int x, int y)
-  {
-    line_a.traverse(x, y);
-  }
   void get_borders(
       double* x1_right, double* x1_left, double* y1_high, double* y1_low){}
   void get_con_borders();
@@ -101,9 +97,6 @@ public:
       double dest_x, double dest_y, flow_eDirection dest_dir);
   int con_route_grafcet(flow_eConType con_type, double src_x, double src_y,
       double dest_x, double dest_y);
-  void draw_routed_roundcorner(int points, double* x, double* y);
-  void draw_routed(int points, double* x, double* y);
-  void draw_routed_trans(int points, double* x, double* y);
   void set_highlight(int on);
   int get_highlight()
   {
@@ -217,7 +210,6 @@ public:
       double src_x, double src_y, flow_eDirection src_dir);
   void move_ref(double x1, double y1, double x2, double y2);
   void conpoint_refcon_redraw(void* node, int conpoint);
-  void conpoint_refcon_erase(void* node, int conpoint);
   void remove_notify();
   int ideal_line_cnt;
   int current_line_cnt;

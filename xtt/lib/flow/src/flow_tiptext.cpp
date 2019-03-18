@@ -46,12 +46,12 @@ static void tiptext_timer_cb(FlowCtx* ctx)
   ctx->tiptext->timer_id = 0;
   ctx->tiptext->active = true;
 
-  ctx->tiptext->draw();
+  ctx->set_dirty();
 }
 FlowTipText::~FlowTipText()
 {
   if (timer_id)
-    ctx->fdraw->cancel_timer(ctx, timer_id);
+    ctx->fdraw->cancel_timer(timer_id);
 }
 
 void FlowTipText::draw_text(FlowArrayElem* e, char* text, int x, int y)
@@ -63,7 +63,7 @@ void FlowTipText::draw_text(FlowArrayElem* e, char* text, int x, int y)
   if (active)
     remove_text(text_object);
   if (timer_id) {
-    ctx->fdraw->cancel_timer(ctx, timer_id);
+    ctx->fdraw->cancel_timer(timer_id);
     timer_id = 0;
   }
 
@@ -91,7 +91,7 @@ void FlowTipText::draw_text(FlowArrayElem* e, char* text, int x, int y)
   text_width = 0;
   text_height = 0;
   for (int i = 0; i < tiptext_rows; i++) {
-    ctx->fdraw->get_text_extent(ctx, tiptext[i], strlen(tiptext[i]),
+    ctx->fdraw->get_text_extent(tiptext[i], strlen(tiptext[i]),
         flow_eDrawType_TextHelvetica, text_size, &z_width, &z_height,
         ctx->zoom_factor / ctx->base_zoom_factor * (8 + 2 * text_size));
     if (z_width > text_width)
@@ -122,15 +122,13 @@ void FlowTipText::draw()
   if (!active || !tiptext_rows)
     return;
 
-  ctx->fdraw->fill_rect(
-      ctx, text_x, text_y, text_width, text_height, flow_eDrawType_LineErase);
-  ctx->fdraw->rect(ctx, text_x, text_y, text_width, text_height,
-      flow_eDrawType_Line, 0, 0, 0);
+  ctx->fdraw->rect(text_x, text_y, text_width, text_height,
+      flow_eDrawType_Line, 0, 0);
 
   int y = text_y + 4 + (text_height - 4) / tiptext_rows;
   for (int i = 0; i < tiptext_rows; i++) {
-    ctx->fdraw->text(ctx, text_x + 6, y - text_descent - 2, tiptext[i],
-        strlen(tiptext[i]), flow_eDrawType_TextHelvetica, text_size, 0, 0, 0,
+    ctx->fdraw->text(text_x + 6, y - text_descent - 2, tiptext[i],
+        strlen(tiptext[i]), flow_eDrawType_TextHelvetica, text_size,
         ctx->zoom_factor / ctx->base_zoom_factor * (8 + 2 * text_size));
 
     y += (text_height - 3) / tiptext_rows;
@@ -143,24 +141,21 @@ void FlowTipText::remove_text(FlowArrayElem* e)
     return;
 
   if (timer_id) {
-    ctx->fdraw->cancel_timer(ctx, timer_id);
+    ctx->fdraw->cancel_timer(timer_id);
     timer_id = 0;
     return;
   }
 
   if (active) {
     active = false;
-    ctx->fdraw->fill_rect(ctx, text_x, text_y, text_width + 1, text_height + 1,
-        flow_eDrawType_LineErase);
-    ctx->draw(
-        text_x, text_y, text_x + text_width + 1, text_y + text_height + 1);
+    ctx->set_dirty();
   }
 }
 
 void FlowTipText::remove()
 {
   if (timer_id) {
-    ctx->fdraw->cancel_timer(ctx, timer_id);
+    ctx->fdraw->cancel_timer(timer_id);
     timer_id = 0;
   }
 

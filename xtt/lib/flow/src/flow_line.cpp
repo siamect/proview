@@ -59,12 +59,6 @@ void FlowLine::print_zoom()
   p2.print_zoom();
 }
 
-void FlowLine::traverse(int x, int y)
-{
-  p1.traverse(x, y);
-  p2.traverse(x, y);
-}
-
 void FlowLine::print(void* pos, void* node, int highlight)
 {
   if (feq(p1.print_z_x, p2.print_z_x) && feq(p1.print_z_y, p2.print_z_y))
@@ -135,7 +129,7 @@ void FlowLine::draw(void* pos, int highlight, int dimmed, int hot, void* node)
   idx += hot;
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->line(ctx, p1.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+  ctx->fdraw->line(p1.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       p1.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
       p2.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       p2.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, draw_type, idx,
@@ -150,10 +144,11 @@ void FlowLine::erase(void* pos, int hot, void* node)
   idx += hot;
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->line_erase(ctx, p1.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
+  ctx->fdraw->line(p1.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       p1.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
       p2.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
-      p2.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, idx);
+      p2.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
+      flow_eDrawType_LineErase, idx);
 }
 
 void FlowLine::nav_draw(void* pos, int highlight, void* node)
@@ -163,8 +158,7 @@ void FlowLine::nav_draw(void* pos, int highlight, void* node)
   int idx = int(ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1);
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->nav_line(ctx,
-      p1.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
+  ctx->fdraw->line(p1.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
       p1.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
       p2.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
       p2.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y, draw_type,
@@ -178,11 +172,11 @@ void FlowLine::nav_erase(void* pos, void* node)
   int idx = int(ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1);
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->fdraw->nav_line_erase(ctx,
-      p1.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
+  ctx->fdraw->line(p1.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
       p1.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
       p2.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
-      p2.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y, idx);
+      p2.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y,
+      flow_eDrawType_LineErase, idx);
 }
 
 int FlowLine::event_handler(
@@ -244,32 +238,25 @@ void FlowLine::get_borders(double pos_x, double pos_y, double* x_right,
 void FlowLine::move(void* pos, double x1, double y1, double x2, double y2,
     int highlight, int dimmed, int hot)
 {
-  erase(pos, hot, NULL);
-  nav_erase(pos, NULL);
   p1.x = x1;
   p1.y = y1;
   p2.x = x2;
   p2.y = y2;
   zoom();
   nav_zoom();
-  draw(pos, highlight, dimmed, hot, NULL);
-  nav_draw(pos, highlight, NULL);
+  ctx->set_dirty();
 }
 
 void FlowLine::shift(void* pos, double delta_x, double delta_y, int highlight,
     int dimmed, int hot)
 {
-  erase(pos, hot, NULL);
-  nav_erase(pos, NULL);
   p1.x += delta_x;
   p1.y += delta_y;
   p2.x += delta_x;
   p2.y += delta_y;
   zoom();
   nav_zoom();
-
-  draw(pos, highlight, dimmed, hot, NULL);
-  nav_draw(pos, highlight, NULL);
+  ctx->set_dirty();
 }
 
 std::ostream& operator<<(std::ostream& o, const FlowLine l)
