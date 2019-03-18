@@ -15,6 +15,7 @@ topobjects NavigatorW1
   class $Hier
   class $Alias
   class $MountObject
+  class $MountDynObject
   class $MountVolume
   class ProjectReg
   class VolumeReg
@@ -72,6 +73,7 @@ palette NavigatorPalette
       class DsFastCurve
       class DsTrend
       class DsTrendCurve
+      class SevExport
       class SevHist
       class SevHistObject
       menu CircularBuffer
@@ -239,7 +241,8 @@ palette NavigatorPalette
     class PlcPgm
     class Backup
     class $LibHier
-    class $Mountobject
+    class $MountObject
+    class $MountDynObject
     class $Alias
   }
   menu Node
@@ -268,6 +271,7 @@ palette NavigatorPalette
       class SimulateConfig
       class SevHistMonitor
       class SevHistThread
+      class SevImportServer
       class SevServer
       class StatusServerConfig
       class SysMonConfig
@@ -772,6 +776,7 @@ palette PlcEditorPalette
     class NotEqual
     class PiSpeed
     class Ramp
+    class Random
     class Select
     class ScanTime
     class Speed
