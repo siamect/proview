@@ -5302,7 +5302,7 @@ pwr_tStatus gdh_MountDynClients(void)
 
     gdh_ScopeLock
     {
-      op = vol_OidToObject(&sts, oid, gdb_mLo_native, vol_mTrans_all, 
+      op = vol_OidToObject(&sts, oid, gdb_mLo_native, vol_mTrans_none, 
 			   cvol_eHint_none);
       if (cdh_ObjidIsNull(op->g.soid))
 	vol_MountDynObject(&sts, op);

@@ -56,6 +56,7 @@ unknowntype	<Unknown data type>					/error
 nosuchtable	<Table doesn't exist>					/error
 norows		<No rows found>						/error
 nowrite		<Nothings written>					/info
+noconnection	<Connection has gone>					/error
 .end
 
 

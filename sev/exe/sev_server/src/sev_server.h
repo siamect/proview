@@ -72,6 +72,7 @@ typedef struct {
   int alloc;
   void* db_ctx;
   int conf_idx;
+  unsigned int reconnect_cnt;
 } sev_sThread;
 
 typedef struct {

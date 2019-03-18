@@ -354,6 +354,7 @@ int sev_import::check_exportitems(sev_sMsgExportItems* msg, unsigned int size)
   m_sts = tree_update();
   if (EVEN(m_sts))
     printf("Tree error %d\n", m_sts);
+  m_sts = gdh_MountDynClients();
 
   return 1;
 }
