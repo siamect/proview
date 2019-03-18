@@ -1085,6 +1085,21 @@ void Min_exec(plc_sThread* tp, pwr_sClass_Min* o)
 }
 
 /*_*
+  Random Random value generator.
+  @aref random Random
+*/
+void Random_exec(plc_sThread* tp, pwr_sClass_Random* o)
+{
+  if ( o->CondP == &o->Cond)
+    o->ActVal = o->MinValue + (float)(rand())/RAND_MAX * (o->MaxValue - o->MinValue);
+  else {
+    if ( *o->CondP && !o->CondOld)
+      o->ActVal = o->MinValue + (float)(rand())/RAND_MAX * (o->MaxValue - o->MinValue);
+    o->CondOld = *o->CondP;
+  }
+}
+
+/*_*
   BwShiftLeft Bitwise shift left.
   @aref bwshiftleft BwShiftLeft
 */

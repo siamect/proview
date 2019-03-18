@@ -90,6 +90,7 @@ void Sub_exec(plc_sThread* tp, pwr_sClass_Sub* object);
 void Div_exec(plc_sThread* tp, pwr_sClass_Div* object);
 void Max_exec(plc_sThread* tp, pwr_sClass_Max* object);
 void Min_exec(plc_sThread* tp, pwr_sClass_Min* object);
+void Random_exec(plc_sThread* tp, pwr_sClass_Random* o);
 void BwShiftLeft_exec(plc_sThread* tp, pwr_sClass_BwShiftLeft* object);
 void BwShiftRight_exec(plc_sThread* tp, pwr_sClass_BwShiftRight* object);
 void BwRotateRight_exec(plc_sThread* tp, pwr_sClass_BwRotateRight* object);
