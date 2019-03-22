@@ -47,6 +47,7 @@ static void tiptext_timer_cb(FlowCtx* ctx)
   ctx->tiptext->active = true;
 
   ctx->set_dirty();
+  ctx->redraw_if_dirty();
 }
 FlowTipText::~FlowTipText()
 {

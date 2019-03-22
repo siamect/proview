@@ -1051,7 +1051,6 @@ void FlowDrawQt::cancel_event_timer(FlowCtx* ctx)
   FlowDrawQt* draw_ctx = (FlowDrawQt*)ctx->fdraw;
   if (draw_ctx->timer_id) {
     draw_ctx->timer_id->stop();
-    draw_ctx->timer_id = 0;
   }
 }
 
