@@ -426,7 +426,7 @@ pwr_tStatus mh_OutunitDisconnect()
 pwr_tStatus mh_OutunitReceive()
 {
   pwr_tStatus sts;
-  static char mp[2000];
+  static char mp[8000];
   mh_sHead* hp;
   qcom_sGet msg;
   XDR xdrs;
