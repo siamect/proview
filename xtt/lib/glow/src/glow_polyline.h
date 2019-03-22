@@ -75,7 +75,6 @@ public:
   }
   void add_points(void* pos, glow_sPoint* pointarray, int point_cnt,
       int highlight, int hot);
-  void traverse(int x, int y);
   GrowCtx* ctx;
   GlowArray a_points;
   glow_sPointX* points;

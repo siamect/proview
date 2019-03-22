@@ -57,53 +57,6 @@ public:
   char text[100][200];
 };
 
-//! Main or navigation window
-class GlowWind {
-public:
-  DrawWind* window; //!< Window context.
-  double zoom_factor_x; //!< Zoom factor in x direction.
-  double zoom_factor_y; //!< Zoom factor in y direction.
-  double base_zoom_factor; //!< Original zoom factor.
-  int offset_x; //!< Offset in pixel between origo and displayed window in x
-  //! direction.
-  int offset_y; //!< Offset in pixel between origo and displayde window in y
-  //! direction.
-  int window_width; //!< Window width in pixel.
-  int window_height; //!< Window height in pixel.
-  int subwindow_x; //!< Subwindow x coordinate in pixel.
-  int subwindow_y; //!< Subwindow y coordinate in pixel.
-  double subwindow_scale; //!< Subwindow scale.
-  int defered_x_low; //!< Left border of defered redrawing area.
-  int defered_x_high; //!< Right border of defered redrawing area.
-  int defered_y_low; //!< Low border of defered redrawing area.
-  int defered_y_high; //!< High border of defered redrawing area.
-
-  GlowWind(double zoom_fact_x, double zoom_fact_y, double base_zoom_fact,
-      int offs_x, int offs_y)
-      : window(0), zoom_factor_x(zoom_fact_x), zoom_factor_y(zoom_fact_y),
-        base_zoom_factor(base_zoom_fact), offset_x(offs_x), offset_y(offs_y),
-        window_width(0), window_height(0), subwindow_x(0), subwindow_y(0),
-        subwindow_scale(1)
-  {
-  }
-
-  //! Draw in the double buffering buffer only.
-  /*! Increase the draw_buffer_only count. As long as this is > 0, no drawing is
-   * made to the screen, only in the buffer. */
-  void set_draw_buffer_only();
-
-  //! Reset draw in the double buffering buffer only.
-  /*! Decrease the draw_buffer_only count. As long as this is > 0, no drawing is
-   * made to the screen, only in the buffer. */
-  void reset_draw_buffer_only();
-
-  int draw_buffer_only();
-  int double_buffer_on();
-  int double_buffered();
-  void set_double_buffered(int val);
-  void set_double_buffer_on(int val);
-};
-
 //! Backcall data for scrollbar reconfiguration
 typedef struct {
   void* scroll_data; //!< Scrollbar data (growwidget_sScroll).
@@ -145,21 +98,14 @@ public:
       int offs_y = 0);
 
   glow_eCtxType ctx_type; //!< Type of context
-  GlowWind mw; //!< Main window data.
-  GlowWind navw; //!< Navigation window data.
+  DrawWind* mw; //!< Main window data.
+  DrawWind* navw; //!< Navigation window data.
   double print_zoom_factor; //!< Zoom factor when printing to postscript.
   double x_right; //!< Right border of work area.
   double x_left; //!< Left border of work area.
   double y_high; //!< High border of work area.
   double y_low; //!< Low border of work area.
-  int nav_rect_ll_x; //!< x coordinate for lower left corner of navigation
-  //! rectangle in nav window.
-  int nav_rect_ll_y; //!< y coordinate for lower left corner of navigation
-  //! rectangle in nav window.
-  int nav_rect_ur_x; //!< x coordinate for upper right corner of navigation
-  //! rectangle in nav window.
-  int nav_rect_ur_y; //!< y coordinate for upper right corner of navigation
-  //! rectangle in nav window.
+  int nav_rect_ll_x, nav_rect_ll_y, nav_rect_ur_x, nav_rect_ur_y;
   int nav_rect_hot; //!< Cursor is in navigation rectangle in navigation window.
   GlowDraw* gdraw; //!< Draw context.
 
@@ -604,7 +550,7 @@ public:
     \param ur_y		y coordiate for upper right corner of area to draw in
     pixel.
   */
-  void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  virtual void draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Redraw an area of the window. Arguments in double.
   /*!
@@ -617,14 +563,10 @@ public:
     \param ur_y		y coordiate for upper right corner of area to draw in
     pixel.
   */
-  void draw(GlowWind* w, double ll_x, double ll_y, double ur_x, double ur_y)
+  void draw(DrawWind* w, double ll_x, double ll_y, double ur_x, double ur_y)
   {
     draw(w, (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);
   }
-
-  //! Clear the window.
-  /*! Draw background color. */
-  void clear(GlowWind* w);
 
   //! Update zoom of navigation window.
   /*! The zoomfactor of the navigation window is updated to match the extent of
@@ -633,39 +575,6 @@ public:
 
   //! Zoom to appropriate scale for postscript output.
   void print_zoom();
-
-  //! Clear the navigation window.
-  /*! Draw background color. */
-  void nav_clear();
-
-  //! Redraw an area of the navigation window.
-  /*!
-    \param ll_x		x coordiate for lower left corner of area to draw in
-    pixel.
-    \param ll_y		y coordiate for lower left corner of area to draw in
-    pixel.
-    \param ur_x		x coordiate for upper right corner of area to draw in
-    pixel.
-    \param ur_y		y coordiate for upper right corner of area to draw in
-    pixel.
-  */
-  void nav_draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
-
-  //! Redraw an area of the navigation window. Arguments in double.
-  /*!
-    \param ll_x		x coordiate for lower left corner of area to draw in
-    pixel.
-    \param ll_y		y coordiate for lower left corner of area to draw in
-    pixel.
-    \param ur_x		x coordiate for upper right corner of area to draw in
-    pixel.
-    \param ur_y		y coordiate for upper right corner of area to draw in
-    pixel.
-  */
-  void nav_draw(GlowWind* w, double ll_x, double ll_y, double ur_x, double ur_y)
-  {
-    nav_draw(w, (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);
-  }
 
   //! Handle events.
   /*! Calls the event handler of GrowCtx. */
@@ -700,16 +609,15 @@ public:
   /*! \param node	Node.*/
   void delete_node_cons(void* node);
 
-  //! Set defered redraw.
-  /*! The redraw will be deferd until a call to redraw_defered() is made. */
-  void set_defered_redraw();
+  //! Mark that window needs to be redrawn.
+  /*! The window will be redrawn when a call to redraw_if_dirty() is made. */
+  void set_dirty();
 
-  //! Execute the defered redrawings.
-  /*! Execute redrawing the defered redrawing area since the call to
-   * set_defered_redraw(). */
-  void redraw_defered();
+  //! Redraw the window if it is dirty.
+  /*! Redraw the window if it has been marked as dirty by set_dirty() */
+  void redraw_if_dirty();
 
-  int defered_redraw_active; //!< Defered redraw is active.
+  int is_dirty; //!< Defered redraw is active.
   GlowArray a_nc; //!< Array of nodeclasses.
   GlowArray a_cc; //!< Array of connection classes.
   GlowArray a; //!< Object array.
@@ -906,18 +814,11 @@ public:
     \param pix_x	x coordinate in pixel.
     \param pix_y	y coordinate in pixel.
   */
-  void position_to_pixel(double x, double y, int* pix_x, int* pix_y)
-  {
-    *pix_x = int(x * mw.zoom_factor_x - mw.offset_x);
-    *pix_y = int(y * mw.zoom_factor_y - mw.offset_y);
-  }
+  void position_to_pixel(double x, double y, int* pix_x, int* pix_y);
 
   //! Unzoom.
   /*! Return to base zoom factor. */
-  void unzoom()
-  {
-    zoom(mw.base_zoom_factor / mw.zoom_factor_x);
-  }
+  void unzoom();
 
   //! Position the view so that the specified object is in the center of the
   //! window.
@@ -936,22 +837,17 @@ public:
   /*! No drawing is performed. */
   void set_nodraw()
   {
-    nodraw++;
+    nodraw = 1;
   }
 
   //! Reset nodraw.
   /*! Drawing is resumed when the nodraw counter is zero. */
   void reset_nodraw()
   {
-    if (nodraw)
-      nodraw--;
+    nodraw = 0;
   }
 
   void reconfigure();
-
-  //! Redraw the window.
-  /*! The window is cleard and all objects are redrawn. */
-  void redraw();
 
   //! Send an object deleted event callback if this event is registred.
   /*! \param object	Object that is to be deleted. */
@@ -1089,7 +985,7 @@ public:
     \param ur_x		x coordinate for upper right corner of area in pixel.
     \param ur_y		y coordinate for upper right corner of area in pixel.
   */
-  void draw_grid(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw_grid(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Register callback functions for userdata handling.
   /*!
@@ -1140,7 +1036,7 @@ public:
 
   //! Destructor
   /*! Delete all objects in the context. */
-  ~GlowCtx();
+  virtual ~GlowCtx();
 };
 
 //! Start autoscrolling.

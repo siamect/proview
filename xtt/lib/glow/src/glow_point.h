@@ -55,7 +55,6 @@ public:
   void zoom();
   void nav_zoom();
   void print_zoom();
-  void traverse(int x, int y);
   void posit(double x, double y);
   void posit_z(int x, int y);
   void save(std::ofstream& fp, glow_eSaveMode mode);

@@ -94,8 +94,7 @@ public:
     as
     current callback object.
   */
-  int event_handler(
-      GlowWind* w, glow_eEvent event, int x, int y, double fx, double fy);
+  int event_handler(glow_eEvent event, int x, int y, double fx, double fy);
 
   //! Detects if the object is hit by an event in transformed coordinates
   /*!
@@ -111,7 +110,7 @@ public:
     Compares the coordinates of the event with the borders of the object.
     If the event is inside the borders, 1 is returned, otherwise 0 is returned.
   */
-  int event_handler(GlowWind* w, glow_eEvent event, double fx, double fy);
+  int event_handler(glow_eEvent event, double fx, double fy);
 
   //! Detects if the object is hit by an event in local coordinates
   /*!
@@ -190,7 +189,7 @@ public:
     \param ur_x		Upper right x coordinate of drawing area.
     \param ur_y		Upper right y coordinate of drawing area.
   */
-  void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Draw the objects if any part is inside the drawing area, and extends the
   //! drawing area.
@@ -204,10 +203,10 @@ public:
     drawing area,
     the drawingarea is extended so it contains the whole objects.
   */
-  void draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
+  void draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
 
   //! Erase the object
-  void erase(GlowWind* w)
+  void erase(DrawWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
   }
@@ -427,14 +426,14 @@ public:
   void set_text_color(glow_eDrawType drawtype)
   {
     color_drawtype = drawtype;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Reset the text color to the original text color.
   void reset_text_color()
   {
     color_drawtype = original_color_drawtype;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Set the original text color.
@@ -460,7 +459,7 @@ public:
     multiplied with the parentnodes transform, to give the appropriate
     coordinates for the drawing.
   */
-  void draw(GlowWind* w, GlowTransform* t, int highlight, int hot, void* node,
+  void draw(DrawWind* w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
 
   //! Erase the object.
@@ -469,10 +468,7 @@ public:
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase(GlowWind* w, GlowTransform* t, int hot, void* node);
-
-  //! Redraw the area inside the objects border.
-  void draw();
+  void erase(DrawWind* w, GlowTransform* t, int hot, void* node);
 
   //! Add a transform to the current transform.
   /*!

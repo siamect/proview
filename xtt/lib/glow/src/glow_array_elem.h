@@ -45,7 +45,7 @@
 /*! \addtogroup Glow */
 /*@{*/
 
-class GlowWind;
+class DrawWind;
 class GlowExportFlow;
 
 //! Base class for all drawing objects and components.
@@ -74,29 +74,27 @@ public:
   virtual void zoom(){}
   virtual void nav_zoom(){}
   virtual void print_zoom(){}
-  virtual void traverse(int x, int y){}
   virtual void get_borders(
       double* x_right, double* x_left, double* y_high, double* y_low){}
   virtual void get_borders(GlowTransform* t, double* x_right, double* x_left,
       double* y_high, double* y_low){}
   virtual void get_borders(double pos_x, double pos_y, double* x_right,
       double* x_left, double* y_high, double* y_low, void* node){}
-  virtual int event_handler(GlowWind* w, glow_eEvent event, int x, int y)
+  virtual int event_handler(glow_eEvent event, int x, int y)
   {
     return 0;
   }
-  virtual int event_handler(
-      GlowWind* w, glow_eEvent event, int x, int y, double fx, double fy)
+  virtual int event_handler(glow_eEvent event, int x, int y, double fx,
+      double fy)
   {
     return 0;
   }
-  virtual int event_handler(
-      GlowWind* w, glow_eEvent event, double fx, double fy)
+  virtual int event_handler(glow_eEvent event, double fx, double fy)
   {
     return 0;
   }
-  virtual int event_handler(
-      GlowWind* w, void* pos, glow_eEvent event, int x, int y, void* node)
+  virtual int event_handler(void* pos, glow_eEvent event, int x, int y,
+      void* node)
   {
     return 0;
   }
@@ -105,28 +103,19 @@ public:
   virtual void open(std::ifstream& fp){}
   virtual void print(void* pos, void* node){}
   virtual void draw(){}
-  virtual void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y){}
-  virtual void draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y){}
-  virtual void draw(
-      GlowWind* w, void* pos, int highlight, int hot, void* node){}
-  virtual void draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
+  virtual void draw(DrawWind *w, int ll_x, int ll_y, int ur_x, int ur_y){}
+  virtual void draw(DrawWind *w, int* ll_x, int* ll_y, int* ur_x, int* ur_y){}
+  virtual void draw(DrawWind *w, void* pos, int highlight, int hot, void* node){}
+  virtual void draw(DrawWind *w, GlowTransform* t, int highlight, int hot,
       void* node, void* colornode){}
   virtual void erase(){}
-  virtual void erase(GlowWind* w, void* pos, int hot, void* node){}
-  virtual void erase(GlowWind* w, GlowTransform* t, int hot, void* node){}
+  virtual void erase(DrawWind *w, void* pos, int hot, void* node){}
+  virtual void erase(DrawWind *w, GlowTransform* t, int hot, void* node){}
   virtual void draw_inverse(void* pos, int hot, void* node){}
   virtual void move(double delta_x, double delta_y, int grid){}
   virtual void move_noerase(int delta_x, int delta_y, int grid){}
   virtual void shift(
       void* pos, double delta_x, double delta_y, int highlight, int hot){}
-  virtual void nav_draw(int ll_x, int ll_y, int ur_x, int ur_y){}
-  virtual void nav_draw(int* ll_x, int* ll_y, int* ur_x, int* ur_y){}
-  virtual void nav_draw(void* pos, int highlight, void* node){}
-  virtual void nav_draw(
-      GlowTransform* t, int highlight, void* node, void* colornode){}
-  virtual void nav_erase(){}
-  virtual void nav_erase(void* pos, void* node){}
-  virtual void nav_erase(GlowTransform* t, void* node){}
   virtual void conpoint_select(
       void* pos, int x, int y, double* distance, void** cp){}
   virtual void conpoint_select(GlowTransform* t, int x, int y, double* distance,

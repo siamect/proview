@@ -2039,8 +2039,6 @@ static int attrnav_brow_cb(FlowCtx* ctx, flow_tEvent event)
       grow_OrderGroupObject(
           parent_item->id, sel_item->id, dest_item->id, glow_eDest_Before);
     }
-    grow_DrawObject(sel_item->id);
-    grow_DrawObject(dest_item->id);
     attrnav->refresh_objects(attr_mRefresh_Objects);
     break;
   }

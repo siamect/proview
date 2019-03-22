@@ -242,10 +242,9 @@ void GrowXYCurve::set_xy_data(
     point_p++;
   }
 
-  ctx->nodraw++;
+  ctx->set_nodraw();
   if (curve[j])
     delete curve[j];
-  ctx->nodraw--;
 
   if (curve_drawtype[j] != glow_eDrawType_Inherit)
     dt = curve_drawtype[j];
@@ -257,12 +256,11 @@ void GrowXYCurve::set_xy_data(
   else
     dt_fill = draw_type;
 
-  ctx->nodraw++;
   curve[j] = new GrowPolyLine(ctx, "", pointarray, cpoints, dt, curve_width, 0,
       fill_curve, 1, 0, dt_fill, 0, 1);
-  ctx->nodraw--;
+  ctx->reset_nodraw();
   free((char*)pointarray);
-  draw();
+  ctx->set_dirty();
 }
 
 //! Export the object as a javabean.
@@ -289,15 +287,15 @@ void GrowXYCurve::export_javabean(GlowTransform* t, void* node,
   double rotation;
 
   if (!t) {
-    x1 = trf.x(ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y1 = trf.y(ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
-    x2 = trf.x(ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y2 = trf.y(ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x1 = trf.x(ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y1 = trf.y(ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+    x2 = trf.x(ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y2 = trf.y(ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
   } else {
-    x1 = trf.x(t, ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y1 = trf.y(t, ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
-    x2 = trf.x(t, ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y2 = trf.y(t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x1 = trf.x(t, ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y1 = trf.y(t, ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+    x2 = trf.x(t, ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y2 = trf.y(t, ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
   }
 
   ll_x = MIN(x1, x2);

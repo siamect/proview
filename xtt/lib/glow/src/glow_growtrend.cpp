@@ -83,19 +83,15 @@ GrowTrend::GrowTrend(GrowCtx* glow_ctx, const char* name, double x, double y,
 
   configure_curves();
   if (!nodraw)
-    draw(&ctx->mw, (GlowTransform*)NULL, highlight, hot, NULL, NULL);
+    ctx->set_dirty();
 }
 
 //! Destructor
 /*! Remove the object from context, and erase it from the screen.
  */
-
 GrowTrend::~GrowTrend()
 {
-  if (!ctx->nodraw) {
-    erase(&ctx->mw);
-    erase(&ctx->navw);
-  }
+  ctx->set_dirty();
   for (int i = 0; i < curve_cnt; i++)
     delete curve[i];
 }
@@ -136,11 +132,10 @@ void GrowTrend::configure_curves()
     point_p++;
   }
 
+  ctx->set_nodraw();
   for (i = 0; i < curve_cnt; i++) {
-    ctx->nodraw++;
     if (curve[i])
       delete curve[i];
-    ctx->nodraw--;
 
     if (curve_drawtype[i] != glow_eDrawType_Inherit)
       dt = curve_drawtype[i];
@@ -152,11 +147,10 @@ void GrowTrend::configure_curves()
     else
       dt_fill = draw_type;
 
-    ctx->nodraw++;
     curve[i] = new GrowPolyLine(ctx, "", pointarray, points, dt, curve_width, 0,
         fill_curve, 1, 0, dt_fill, 0, 1, 1);
-    ctx->nodraw--;
   }
+  ctx->reset_nodraw();
   free((char*)pointarray);
 }
 
@@ -407,7 +401,7 @@ void GrowTrend::open(std::ifstream& fp)
   \param ur_x		Upper right x coordinate of drawing area.
   \param ur_y		Upper right y coordinate of drawing area.
 */
-void GrowTrend::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowTrend::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -444,7 +438,7 @@ void GrowTrend::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   drawing area,
   the drawingarea is extended so it contains the whole objects.
 */
-void GrowTrend::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowTrend::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -488,7 +482,7 @@ void GrowTrend::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 void GrowTrend::set_highlight(int on)
 {
   highlight = on;
-  draw();
+  ctx->set_dirty();
 }
 
 //! Draw the object.
@@ -505,16 +499,10 @@ void GrowTrend::set_highlight(int on)
   multiplied with the parentnodes transform, to give the appropriate coordinates
   for the drawing.
 */
-void GrowTrend::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
+void GrowTrend::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  if (ctx->nodraw)
-    return;
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
-    hot = 0;
-  }
+  hot = (w == ctx->navw) ? 0 : hot;
   int i;
   if (!(display_level & ctx->display_level))
     return;
@@ -575,7 +563,7 @@ void GrowTrend::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
       if (ur_x > w->subwindow_x + w->window_width)
         width -= ur_x - (w->subwindow_x + w->window_width);
-      ctx->gdraw->fill_rect(w, x, ll_y, width, ur_y - ll_y, drawtype);
+      ctx->gdraw->rect(x, ll_y, width, ur_y - ll_y, drawtype, 1, 0);
     } else {
       glow_eDrawType f1, f2;
       double rotation;
@@ -593,7 +581,7 @@ void GrowTrend::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
             drawtype, -int(float(gradient_contrast) / 2 - 0.6), 0);
         f1 = GlowColor::shift_drawtype(drawtype, gradient_contrast / 2, 0);
       }
-      ctx->gdraw->gradient_fill_rect(w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+      ctx->gdraw->gradient_fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
           drawtype, f1, f2, ctx->gdraw->gradient_rotate(rotation, grad));
     }
   }
@@ -627,7 +615,7 @@ void GrowTrend::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 
   for (i = 0; i < vertical_lines; i++) {
     int x = int(ll_x + double(ur_x - ll_x) / (vertical_lines + 1) * (i + 1));
-    ctx->gdraw->line(w, x, ll_y, x, ur_y, drawtype, 0, 0);
+    ctx->gdraw->line(x, ll_y, x, ur_y, drawtype, 0, 0);
   }
 
   for (i = 0; i < horizontal_lines; i++) {
@@ -640,11 +628,11 @@ void GrowTrend::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     }
     if (ur_x > w->subwindow_x + w->window_width)
       width -= ur_x - (w->subwindow_x + w->window_width);
-    ctx->gdraw->line(w, x, y, x + width, y, drawtype, 0, 0);
+    ctx->gdraw->line(x, y, x + width, y, drawtype, 0, 0);
   }
 
   if (border)
-    ctx->gdraw->rect(w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx, 0);
+    ctx->gdraw->rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, 0, idx);
 
   if (fill_curve) {
     for (i = 0; i < curve_cnt; i++) {
@@ -668,8 +656,8 @@ void GrowTrend::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   ctx->gdraw->reset_clip_rectangle(w);
 
   if (fill_curve) {
-    ctx->gdraw->line(w, ll_x, ll_y, ll_x, ur_y, drawtype, idx, 0);
-    ctx->gdraw->line(w, ur_x, ll_y, ur_x, ur_y, drawtype, idx, 0);
+    ctx->gdraw->line(ll_x, ll_y, ll_x, ur_y, drawtype, idx, 0);
+    ctx->gdraw->line(ur_x, ll_y, ur_x, ur_y, drawtype, idx, 0);
 
     for (i = 0; i < curve_cnt; i++) {
       if (curve[i])
@@ -686,7 +674,7 @@ void GrowTrend::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       drawtype = mark1_color;
       if (drawtype == glow_eDrawType_Inherit)
         drawtype = glow_eDrawType_ColorYellow;
-      ctx->gdraw->line(w, xm, ll_y, xm, ur_y, drawtype, idx, 0);
+      ctx->gdraw->line(xm, ll_y, xm, ur_y, drawtype, idx, 0);
     }
   }
   if (display_x_mark2) {
@@ -699,7 +687,7 @@ void GrowTrend::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       drawtype = mark2_color;
       if (drawtype == glow_eDrawType_Inherit)
         drawtype = glow_eDrawType_ColorRed;
-      ctx->gdraw->line(w, xm, ll_y, xm, ur_y, drawtype, idx, 0);
+      ctx->gdraw->line(xm, ll_y, xm, ur_y, drawtype, idx, 0);
     }
   }
   if (display_y_mark1) {
@@ -712,7 +700,7 @@ void GrowTrend::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       drawtype = mark1_color;
       if (drawtype == glow_eDrawType_Inherit)
         drawtype = glow_eDrawType_ColorYellow;
-      ctx->gdraw->line(w, ll_x, ym, ur_x, ym, drawtype, idx, 0);
+      ctx->gdraw->line(ll_x, ym, ur_x, ym, drawtype, idx, 0);
     }
   }
   if (display_y_mark2) {
@@ -725,7 +713,7 @@ void GrowTrend::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       drawtype = mark2_color;
       if (drawtype == glow_eDrawType_Inherit)
         drawtype = glow_eDrawType_ColorRed;
-      ctx->gdraw->line(w, ll_x, ym, ur_x, ym, drawtype, idx, 0);
+      ctx->gdraw->line(ll_x, ym, ur_x, ym, drawtype, idx, 0);
     }
   }
 }
@@ -736,15 +724,11 @@ void GrowTrend::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   \param hot		Draw as hot, with larger line width.
   \param node		Parent node. Can be zero.
 */
-void GrowTrend::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
+void GrowTrend::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
-    hot = 0;
-  }
+  hot = (w == ctx->navw) ? 0 : hot;
   int idx;
   if (fix_line_width) {
     idx = line_width;
@@ -780,12 +764,11 @@ void GrowTrend::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
   ll_y = MIN(y1, y2);
   ur_y = MAX(y1, y2);
 
-  w->set_draw_buffer_only();
   if (border)
-    ctx->gdraw->rect_erase(w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, idx);
-  ctx->gdraw->fill_rect(
-      w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
-  w->reset_draw_buffer_only();
+    ctx->gdraw->rect(
+        ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase, 0, idx);
+  ctx->gdraw->rect(
+      ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase, 1, 0);
 }
 
 //! Scan trace
@@ -821,20 +804,6 @@ void GrowTrend::trace_close()
     ctx->trace_disconnect_func((void*)this);
 }
 
-//! Redraw the area inside the objects border.
-void GrowTrend::draw()
-{
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->mw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->mw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->mw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->mw.offset_y + 1);
-}
-
 //! Add a new value to the specified curve
 /*!
   \param value	New value.
@@ -856,14 +825,11 @@ void GrowTrend::add_value(double value, int idx)
             * (ur.y - ll.y);
 
   curve_value = MAX(ll.y, MIN(curve_value, ur.y));
-  if (!fill)
-    erase(&ctx->mw);
   if (!fill_curve)
     curve[idx]->add_and_shift_y_value(curve_value);
   else
     curve[idx]->add_and_shift_y_value_filled(curve_value);
-  draw();
-  draw(&ctx->navw, (GlowTransform*)NULL, highlight, 0, NULL, NULL);
+  ctx->set_dirty();
 }
 
 //! Moves object to alignment line or point.
@@ -876,10 +842,7 @@ void GrowTrend::align(double x, double y, glow_eAlignDirection direction)
 {
   double dx, dy;
 
-  erase(&ctx->mw);
-  erase(&ctx->navw);
-  ctx->set_defered_redraw();
-  draw();
+  ctx->set_dirty();
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -915,9 +878,6 @@ void GrowTrend::align(double x, double y, glow_eAlignDirection direction)
   x_left += dx;
   y_high += dy;
   y_low += dy;
-
-  draw();
-  ctx->redraw_defered();
 }
 
 void GrowTrend::set_trace_attr(GlowTraceData* attr)
@@ -1016,15 +976,15 @@ void GrowTrend::export_javabean(GlowTransform* t, void* node,
   double rotation;
 
   if (!t) {
-    x1 = trf.x(ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y1 = trf.y(ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
-    x2 = trf.x(ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y2 = trf.y(ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x1 = trf.x(ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y1 = trf.y(ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+    x2 = trf.x(ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y2 = trf.y(ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
   } else {
-    x1 = trf.x(t, ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y1 = trf.y(t, ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
-    x2 = trf.x(t, ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y2 = trf.y(t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x1 = trf.x(t, ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y1 = trf.y(t, ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+    x2 = trf.x(t, ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y2 = trf.y(t, ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
   }
 
   ll_x = MIN(x1, x2);
@@ -1113,6 +1073,7 @@ void GrowTrend::set_data(double* data[3], int data_curves, int data_points)
     return;
 
   pointarray = (glow_sPoint*)calloc(cpoints, sizeof(glow_sPoint));
+  ctx->set_nodraw();
   for (j = 0; j < curve_cnt; j++) {
     point_p = pointarray;
     for (i = 0, idx = 0; i < cpoints; i++, idx++) {
@@ -1150,10 +1111,8 @@ void GrowTrend::set_data(double* data[3], int data_curves, int data_points)
       point_p++;
     }
 
-    ctx->nodraw++;
     if (curve[j])
       delete curve[j];
-    ctx->nodraw--;
 
     if (curve_drawtype[j] != glow_eDrawType_Inherit)
       dt = curve_drawtype[j];
@@ -1165,13 +1124,12 @@ void GrowTrend::set_data(double* data[3], int data_curves, int data_points)
     else
       dt_fill = draw_type;
 
-    ctx->nodraw++;
     curve[j] = new GrowPolyLine(ctx, "", pointarray, cpoints, dt, curve_width,
         0, fill_curve, 1, 0, dt_fill, 0, 1, 1);
-    ctx->nodraw--;
   }
+  ctx->reset_nodraw();
   free((char*)pointarray);
-  draw();
+  ctx->set_dirty();
 }
 
 //! Set vertical mark 1.
@@ -1184,7 +1142,7 @@ void GrowTrend::set_x_mark1(double mark)
   x_mark1 = ll.x
       + (mark - x_min_value[0]) / (x_max_value[0] - x_min_value[0])
           * (ur.x - ll.x);
-  draw();
+  ctx->set_dirty();
 }
 
 //! Set vertical mark 2.
@@ -1197,7 +1155,7 @@ void GrowTrend::set_x_mark2(double mark)
   x_mark2 = ll.x
       + (mark - x_min_value[0]) / (x_max_value[0] - x_min_value[0])
           * (ur.x - ll.x);
-  draw();
+  ctx->set_dirty();
 }
 
 //! Set horizontal mark 1.
@@ -1210,7 +1168,7 @@ void GrowTrend::set_y_mark1(double mark)
   y_mark1 = ur.y
       - (mark - y_min_value[0]) / (y_max_value[0] - y_min_value[0])
           * (ur.y - ll.y);
-  draw();
+  ctx->set_dirty();
 }
 
 //! Set horizontal mark 2.
@@ -1223,7 +1181,7 @@ void GrowTrend::set_y_mark2(double mark)
   y_mark2 = ur.y
       - (mark - y_min_value[0]) / (y_max_value[0] - y_min_value[0])
           * (ur.y - ll.y);
-  draw();
+  ctx->set_dirty();
 }
 
 void GrowTrend::set_mark_color(glow_eDrawType m1color, glow_eDrawType m2color)

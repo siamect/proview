@@ -132,11 +132,6 @@ void GlowConPoint::open(std::ifstream& fp)
   }
 }
 
-void GlowConPoint::traverse(int x, int y)
-{
-  p.traverse(x, y);
-}
-
 int GlowConPoint::event_handler(
     void* pos, glow_eEvent event, int x, int y, void* node)
 {
@@ -146,13 +141,10 @@ int GlowConPoint::event_handler(
 void GlowConPoint::conpoint_select(
     void* pos, int x, int y, double* distance, void** cp)
 {
-  int px, py;
-  double dist;
+  int px = ((GlowPoint*)pos)->z_x - ctx->mw->offset_x + p.z_x;
+  int py = ((GlowPoint*)pos)->z_y - ctx->mw->offset_y + p.z_y;
 
-  px = ((GlowPoint*)pos)->z_x - ctx->mw.offset_x + p.z_x;
-  py = ((GlowPoint*)pos)->z_y - ctx->mw.offset_y + p.z_y;
-
-  dist = sqrt(1.0 * (x - px) * (x - px) + 1.0 * (y - py) * (y - py));
+  double dist = sqrt(1.0 * (x - px) * (x - px) + 1.0 * (y - py) * (y - py));
   if (dist < *distance) {
     *distance = dist;
     *cp = (void*)this;
@@ -162,16 +154,10 @@ void GlowConPoint::conpoint_select(
 void GlowConPoint::conpoint_select(GlowTransform* t, int x, int y,
     double* distance, void** cp, int* pix_x, int* pix_y)
 {
-  int px, py;
-  double dist;
-  double x1, y1;
+  int px = int(trf.x(t, p.x, p.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x);
+  int py = int(trf.y(t, p.x, p.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y);
 
-  x1 = trf.x(t, p.x, p.y);
-  y1 = trf.y(t, p.x, p.y);
-  px = int(x1 * ctx->mw.zoom_factor_x - ctx->mw.offset_x);
-  py = int(y1 * ctx->mw.zoom_factor_y - ctx->mw.offset_y);
-
-  dist = sqrt(1.0 * (x - px) * (x - px) + 1.0 * (y - py) * (y - py));
+  double dist = sqrt(1.0 * (x - px) * (x - px) + 1.0 * (y - py) * (y - py));
   if (dist < *distance) {
     *distance = dist;
     *cp = (void*)this;

@@ -157,11 +157,9 @@ public:
     strcpy(nc->n_name, name);
   }
 
-  int event_handler(GlowWind* w, glow_eEvent event, double fx, double fy);
-  int event_handler(
-      GlowWind* w, glow_eEvent event, int x, int y, double fx, double fy);
-  int nc_event_handler(
-      GlowWind* w, glow_eEvent event, double x, double y, int* idx);
+  int event_handler(glow_eEvent event, double fx, double fy);
+  int event_handler(glow_eEvent event, int x, int y, double fx, double fy);
+  int nc_event_handler(glow_eEvent event, double x, double y, int* idx);
   void configure(char* tools1, char* tools2, int tools1_cnt, int tools2_cnt,
       unsigned int show_mask1, unsigned int show_mask2,
       unsigned int insensitive_mask1, unsigned int insensitive_mask2);

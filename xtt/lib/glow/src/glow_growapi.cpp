@@ -668,7 +668,7 @@ void grow_ZoomAbsolute(grow_tCtx ctx, double zoom_factor)
 
 void grow_GetZoom(grow_tCtx ctx, double* zoom_factor)
 {
-  *zoom_factor = ctx->mw.zoom_factor_x;
+  *zoom_factor = ctx->mw->zoom_factor_x;
 }
 
 void grow_Scroll(grow_tCtx ctx, double x, double y)
@@ -681,14 +681,14 @@ void grow_SetAttributes(
     grow_tCtx ctx, grow_sAttributes* attr, unsigned long mask)
 {
   if (mask & grow_eAttr_base_zoom_factor) {
-    ctx->mw.zoom_factor_x *= attr->base_zoom_factor / ctx->mw.base_zoom_factor;
-    ctx->mw.zoom_factor_y *= attr->base_zoom_factor / ctx->mw.base_zoom_factor;
-    ctx->mw.base_zoom_factor = attr->base_zoom_factor;
+    ctx->mw->zoom_factor_x *= attr->base_zoom_factor / ctx->mw->base_zoom_factor;
+    ctx->mw->zoom_factor_y *= attr->base_zoom_factor / ctx->mw->base_zoom_factor;
+    ctx->mw->base_zoom_factor = attr->base_zoom_factor;
   }
   if (mask & grow_eAttr_offset_x)
-    ctx->mw.offset_x = attr->offset_x;
+    ctx->mw->offset_x = attr->offset_x;
   if (mask & grow_eAttr_offset_y)
-    ctx->mw.offset_y = attr->offset_y;
+    ctx->mw->offset_y = attr->offset_y;
   if (mask & grow_eAttr_grid_size_x)
     ctx->grid_size_x = attr->grid_size_x;
   if (mask & grow_eAttr_grid_size_y)
@@ -719,14 +719,6 @@ void grow_SetAttributes(
     ctx->default_hot_mode = ctx->hot_mode = attr->default_hot_mode;
   if (mask & grow_eAttr_enable_bg_pixmap)
     ctx->enable_bg_pixmap = attr->enable_bg_pixmap;
-  if (mask & grow_eAttr_double_buffer_on) {
-    if (!ctx->mw.window->double_buffer_on)
-      ctx->mw.window->double_buffer_on = attr->double_buffer_on;
-    if (ctx->mw.window->double_buffer_on) {
-      ctx->gdraw->create_buffer(&ctx->mw);
-      // ctx->mw.window->double_buffered = 1;
-    }
-  }
   if (mask & grow_eAttr_hot_mode) {
     ctx->default_hot_mode = attr->hot_mode;
     ctx->hot_mode = attr->hot_mode;
@@ -745,11 +737,11 @@ void grow_GetAttributes(
     grow_tCtx ctx, grow_sAttributes* attr, unsigned long mask)
 {
   if (mask & grow_eAttr_base_zoom_factor)
-    attr->base_zoom_factor = ctx->mw.base_zoom_factor;
+    attr->base_zoom_factor = ctx->mw->base_zoom_factor;
   if (mask & grow_eAttr_offset_x)
-    attr->offset_x = ctx->mw.offset_x;
+    attr->offset_x = ctx->mw->offset_x;
   if (mask & grow_eAttr_offset_y)
-    attr->offset_y = ctx->mw.offset_y;
+    attr->offset_y = ctx->mw->offset_y;
   if (mask & grow_eAttr_grid_size_x)
     attr->grid_size_x = ctx->grid_size_x;
   if (mask & grow_eAttr_grid_size_y)
@@ -781,7 +773,7 @@ void grow_GetAttributes(
   if (mask & grow_eAttr_enable_bg_pixmap)
     attr->enable_bg_pixmap = ctx->enable_bg_pixmap;
   if (mask & grow_eAttr_double_buffer_on)
-    attr->double_buffer_on = ctx->mw.window->double_buffer_on;
+    attr->double_buffer_on = 1;
   if (mask & grow_eAttr_hot_mode)
     attr->hot_mode = ctx->hot_mode;
   if (mask & grow_eAttr_initial_position)
@@ -850,22 +842,18 @@ void grow_ResetNodraw(grow_tCtx ctx)
 
 void grow_SetDeferedRedraw(grow_tCtx ctx)
 {
-  ctx->set_defered_redraw();
+  ctx->set_dirty();
 }
 
 void grow_RedrawDefered(grow_tCtx ctx)
 {
-  ctx->redraw_defered();
+  ctx->redraw_if_dirty();
 }
 
 void grow_Redraw(grow_tCtx ctx)
 {
-  ctx->redraw();
-}
-
-void grow_SetInputFocus(grow_tCtx ctx)
-{
-  ctx->gdraw->set_inputfocus(&ctx->mw);
+  ctx->set_dirty();
+  ctx->redraw_if_dirty();
 }
 
 void grow_SetMode(grow_tCtx ctx, grow_eMode mode)
@@ -924,7 +912,7 @@ void grow_CreateGrowBar(grow_tCtx ctx, const char* name, double x, double y,
 }
 
 void grow_CreateGrowBarArc(grow_tCtx ctx, const char* name, double x1, double y1,
-    double x2, double y2, int ang1, int ang2, double width, glow_eDrawType border_draw_type, 
+    double x2, double y2, int ang1, int ang2, double width, glow_eDrawType border_draw_type,
     int line_width, int border, glow_eDrawType fill_draw_type, void* user_data, grow_tObject* bar)
 {
   GrowBarArc* r1;
@@ -1205,7 +1193,6 @@ void grow_CreateGrowMenu(grow_tCtx ctx, const char* name, glow_sMenuInfo* info,
       disabled_text_color, text_font, (GlowArrayElem*)parent);
   ctx->insert(r1);
   ctx->pop(r1);
-  r1->draw();
   *menu = (grow_tObject)r1;
 }
 
@@ -3490,11 +3477,6 @@ int grow_GetGraphAttrInfo(grow_tCtx ctx, grow_sAttrInfo** info, int* attr_cnt)
   attrinfo[i].type = glow_eType_Boolean;
   attrinfo[i++].size = sizeof(ctx->background_tiled);
 
-  strcpy(attrinfo[i].name, "DoubleBuffered");
-  attrinfo[i].value_p = &ctx->mw.window->double_buffered;
-  attrinfo[i].type = glow_eType_Boolean;
-  attrinfo[i++].size = sizeof(ctx->mw.window->double_buffered);
-
   strcpy(attrinfo[i].name, "MB3Action");
   attrinfo[i].value_p = &ctx->mb3_action;
   attrinfo[i].type = glow_eType_MB3Action;
@@ -3606,7 +3588,6 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
     ((GrowRect*)object)->zoom();
     ((GrowRect*)object)->nav_zoom();
     ((GrowRect*)object)->get_node_borders();
-    ((GrowRect*)object)->draw(&ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
     break;
   case glow_eObjectType_GrowPolyLine:
     // Set changed dynamic
@@ -3639,7 +3620,6 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
     ((GrowPolyLine*)object)->zoom();
     ((GrowPolyLine*)object)->nav_zoom();
     ((GrowPolyLine*)object)->get_node_borders();
-    ((GrowPolyLine*)object)->draw(&ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
     break;
   case glow_eObjectType_GrowLine:
     info_p = info;
@@ -3670,7 +3650,6 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
     ((GrowLine*)object)->zoom();
     ((GrowLine*)object)->nav_zoom();
     ((GrowLine*)object)->get_node_borders();
-    ((GrowLine*)object)->draw(&ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
     break;
   case glow_eObjectType_GrowArc:
     info_p = info;
@@ -3701,14 +3680,12 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
     ((GrowArc*)object)->zoom();
     ((GrowArc*)object)->nav_zoom();
     ((GrowArc*)object)->get_node_borders();
-    ((GrowArc*)object)->draw(&ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
     break;
   case glow_eObjectType_GrowConPoint:
     ((GrowConPoint*)object)->move(0, 0, 0);
     ((GrowConPoint*)object)->zoom();
     ((GrowConPoint*)object)->nav_zoom();
     ((GrowConPoint*)object)->get_node_borders();
-    ((GrowConPoint*)object)->draw(&ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
     break;
   case glow_eObjectType_GrowSubAnnot:
     ((GrowSubAnnot*)object)->text.text_size
@@ -3719,7 +3696,6 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
     ((GrowSubAnnot*)object)->zoom();
     ((GrowSubAnnot*)object)->nav_zoom();
     ((GrowSubAnnot*)object)->get_node_borders();
-    ((GrowSubAnnot*)object)->draw(&ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
     break;
   case glow_eObjectType_GrowText:
 
@@ -3757,7 +3733,6 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
     ((GrowText*)object)->zoom();
     ((GrowText*)object)->nav_zoom();
     ((GrowText*)object)->get_node_borders();
-    ((GrowText*)object)->draw(&ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
     break;
   case glow_eObjectType_GrowImage:
     // Set changed dynamic
@@ -3794,7 +3769,6 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
     ((GrowImage*)object)->zoom();
     ((GrowImage*)object)->nav_zoom();
     ((GrowImage*)object)->get_node_borders();
-    ((GrowImage*)object)->draw(&ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
     break;
   case glow_eObjectType_GrowBar:
     // Set changed dynamic
@@ -3827,7 +3801,6 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
     ((GrowBar*)object)->zoom();
     ((GrowBar*)object)->nav_zoom();
     ((GrowBar*)object)->get_node_borders();
-    ((GrowBar*)object)->draw(&ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
     break;
   case glow_eObjectType_GrowTrend:
   case glow_eObjectType_GrowXYCurve:
@@ -3862,7 +3835,6 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
     ((GrowTrend*)object)->zoom();
     ((GrowTrend*)object)->nav_zoom();
     ((GrowTrend*)object)->get_node_borders();
-    ((GrowTrend*)object)->draw(&ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
     break;
   case glow_eObjectType_GrowWindow:
     ((GrowWindow*)object)->update_attributes();
@@ -3905,7 +3877,6 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
     ((GrowAxis*)object)->zoom();
     ((GrowAxis*)object)->nav_zoom();
     ((GrowAxis*)object)->get_node_borders();
-    ((GrowAxis*)object)->draw(&ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
     break;
   case glow_eObjectType_GrowAxisArc:
     // Set changed dynamic
@@ -3939,7 +3910,6 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
     ((GrowAxisArc*)object)->zoom();
     ((GrowAxisArc*)object)->nav_zoom();
     ((GrowAxisArc*)object)->get_node_borders();
-    ((GrowAxisArc*)object)->draw(&ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
     break;
   case glow_eObjectType_GrowPie:
     // Set changed dynamic
@@ -3972,7 +3942,6 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
     ((GrowAxisArc*)object)->zoom();
     ((GrowAxisArc*)object)->nav_zoom();
     ((GrowAxisArc*)object)->get_node_borders();
-    ((GrowAxisArc*)object)->draw(&ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
     break;
   case glow_eObjectType_GrowNode:
   case glow_eObjectType_GrowGroup:
@@ -4023,7 +3992,6 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
     ((GrowNode*)object)->zoom();
     ((GrowNode*)object)->nav_zoom();
     ((GrowNode*)object)->get_node_borders();
-    ((GrowNode*)object)->draw(&ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
     break;
   case glow_eObjectType_GrowSlider:
     // Set changed annotations
@@ -4073,7 +4041,6 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
     ((GrowNode*)object)->zoom();
     ((GrowNode*)object)->nav_zoom();
     ((GrowNode*)object)->get_node_borders();
-    ((GrowNode*)object)->draw(&ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
     break;
   default:;
   }
@@ -4212,7 +4179,7 @@ void grow_MoveObject(grow_tObject object, double x, double y)
 {
   grow_tCtx ctx = (grow_tCtx)((GlowArrayElem*)object)->get_ctx();
   ((GlowArrayElem*)object)
-      ->move(x * ctx->mw.zoom_factor_x, y * ctx->mw.zoom_factor_y, 0);
+      ->move(x * ctx->mw->zoom_factor_x, y * ctx->mw->zoom_factor_y, 0);
 }
 
 void grow_SetObjectScale(grow_tObject object, double scale_x, double scale_y,
@@ -5150,7 +5117,7 @@ void grow_RestoreGeometry(grow_tCtx ctx)
 
 void grow_SetClickSensitivity(grow_tCtx ctx, int value)
 {
-  ctx->gdraw->set_click_sensitivity(&ctx->mw, value);
+  ctx->gdraw->set_click_sensitivity(value);
 }
 
 void grow_MoveNode(grow_tNode node, double x, double y)
@@ -5565,8 +5532,8 @@ grow_tCtx grow_GetWindowCtx( grow_tObject window)
 
 void grow_GetWindowSize(grow_tCtx ctx, int* width, int* height)
 {
-  *width = ctx->mw.window_width;
-  *height = ctx->mw.window_height;
+  *width = ctx->mw->window_width;
+  *height = ctx->mw->window_height;
 }
 
 int grow_IsJava(char* name, int* is_frame, int* is_applet, char* java_name)
@@ -5896,11 +5863,6 @@ int grow_KeyPressed(grow_tCtx ctx, int key)
 void grow_SignalSend(grow_tCtx ctx, char* signalname)
 {
   ((GrowCtx*)ctx)->signal_send(signalname);
-}
-
-void grow_DrawObject(grow_tObject object)
-{
-  ((GlowArrayElem*)object)->draw();
 }
 
 void grow_NavRedraw(grow_tCtx ctx)

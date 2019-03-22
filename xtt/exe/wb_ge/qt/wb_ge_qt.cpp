@@ -80,9 +80,6 @@ int main(int argc, char* argv[])
   setlocale(LC_TIME, "en_US");
 
   toplevel = new QWidget();
-  toplevel->setMinimumSize(100, 100);
-  toplevel->setWindowTitle("Pwr wb_ge");
-  toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
   // Create help window
   CoXHelpQt* xhelp = new CoXHelpQt(0, xhelp_eUtility_Wtt, &sts);
@@ -128,8 +125,6 @@ int main(int argc, char* argv[])
     gectx->command(fname);
   }
   fprintf(stderr, "\n");
-
-  toplevel->show();
 
   new wb_log_qt(toplevel);
 

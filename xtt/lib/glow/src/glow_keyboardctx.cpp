@@ -619,15 +619,8 @@ void KeyboardCtx::configure()
   }
   get_borders();
   a.zoom();
-  redraw();
+  set_dirty();
   hot_mode = glow_eHotMode_Disabled;
-}
-
-void KeyboardCtx::redraw()
-{
-  clear(&mw);
-  draw(&mw, 0, 0, mw.window_width, mw.window_height);
-  nav_zoom();
 }
 
 void KeyboardCtx::zoom(double factor)
@@ -635,24 +628,27 @@ void KeyboardCtx::zoom(double factor)
   if (fabs(factor) < DBL_EPSILON)
     return;
 
-  mw.zoom_factor_x *= factor;
-  mw.zoom_factor_y *= factor;
-  if (mw.offset_x != 0)
-    mw.offset_x = int(
-        (mw.offset_x - mw.window_width / 2.0 * (1.0 / factor - 1)) * factor);
-  if (mw.offset_y != 0)
-    mw.offset_y = int(
-        (mw.offset_y - mw.window_height / 2.0 * (1.0 / factor - 1)) * factor);
-  mw.offset_x = MAX(mw.offset_x, 0);
-  mw.offset_y = MAX(mw.offset_y, 0);
-  if ((x_right - x_left) * mw.zoom_factor_x <= mw.window_width)
-    mw.offset_x = 0;
-  if ((y_high - y_low) * mw.zoom_factor_y <= mw.window_height)
-    mw.offset_y = 0;
+  mw->zoom_factor_x *= factor;
+  mw->zoom_factor_y *= factor;
+  if (mw->offset_x != 0)
+    mw->offset_x = int(
+        (mw->offset_x - mw->window_width / 2.0 * (1.0 / factor - 1)) * factor);
+  if (mw->offset_y != 0)
+    mw->offset_y = int(
+        (mw->offset_y - mw->window_height / 2.0 * (1.0 / factor - 1)) * factor);
+  mw->offset_x = MAX(mw->offset_x, 0);
+  mw->offset_y = MAX(mw->offset_y, 0);
+  if ((x_right - x_left) * mw->zoom_factor_x <= mw->window_width)
+    mw->offset_x = 0;
+  if ((y_high - y_low) * mw->zoom_factor_y <= mw->window_height)
+    mw->offset_y = 0;
   a.zoom();
-  clear(&mw);
-  draw(&mw, 0, 0, mw.window_width, mw.window_height);
   nav_zoom();
+}
+
+void KeyboardCtx::unzoom()
+{
+  zoom(mw->base_zoom_factor / mw->zoom_factor_y);
 }
 
 int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
@@ -670,8 +666,8 @@ int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   ctx = this;
   //  std::cout << "Event: " << event << '\n';
 
-  fx = double(x + ctx->mw.offset_x) / ctx->mw.zoom_factor_x;
-  fy = double(y + ctx->mw.offset_y) / ctx->mw.zoom_factor_y;
+  fx = double(x + ctx->mw->offset_x) / ctx->mw->zoom_factor_x;
+  fy = double(y + ctx->mw->offset_y) / ctx->mw->zoom_factor_y;
 
   callback_object_type = glow_eObjectType_NoObject;
   callback_object = 0;
@@ -680,7 +676,7 @@ int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   case glow_eEvent_MB1Up: {
     sts = 0;
     for (i = 0; i < a.a_size; i++) {
-      sts = a.a[i]->event_handler(&ctx->mw, event, x, y, fx, fy);
+      sts = a.a[i]->event_handler(event, x, y, fx, fy);
       if (sts == GLOW__NO_PROPAGATE)
         break;
     }
@@ -713,7 +709,7 @@ int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       if (idx_found) {
         // Invert rect
         ((GrowRect*)keys[idx])->relief = glow_eRelief_Up;
-        ((GrowRect*)keys[idx])->draw();
+        set_dirty();
       }
     }
     break;
@@ -721,12 +717,12 @@ int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   case glow_eEvent_MB1Down: {
     sts = 0;
     for (i = 0; i < a.a_size; i++) {
-      sts = a.a[i]->event_handler(&ctx->mw, event, x, y, fx, fy);
+      sts = a.a[i]->event_handler(event, x, y, fx, fy);
       if (sts == GLOW__NO_PROPAGATE)
         break;
     }
 
-    ctx->gdraw->set_click_sensitivity(&ctx->mw, glow_mSensitivity_MB1Click);
+    ctx->gdraw->set_click_sensitivity(glow_mSensitivity_MB1Click);
 
     if (callback_object_type != glow_eObjectType_NoObject) {
       int idx_found = 0;
@@ -756,7 +752,7 @@ int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       if (idx_found) {
         // Invert rect
         ((GrowRect*)keys[idx])->relief = glow_eRelief_Down;
-        ((GrowRect*)keys[idx])->draw();
+        set_dirty();
       }
     }
     break;
@@ -766,7 +762,7 @@ int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   case glow_eEvent_MB2Click: {
     sts = 0;
     for (i = 0; i < a.a_size; i++) {
-      sts = a.a[i]->event_handler(&ctx->mw, event, x, y, fx, fy);
+      sts = a.a[i]->event_handler(event, x, y, fx, fy);
       if (sts == GLOW__NO_PROPAGATE)
         break;
     }
@@ -918,8 +914,8 @@ int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           e.any.type = glow_eEventType_KeyAscii;
           e.any.x_pixel = x;
           e.any.y_pixel = y;
-          e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
-          e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
+          e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
+          e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
           e.key.ascii = keyc;
           event_callback[glow_eEvent_Key_Ascii](this, &e);
         }
@@ -930,32 +926,34 @@ int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   case glow_eEvent_Exposure:
     int width, height;
 
-    gdraw->get_window_size(&mw, &width, &height);
-    if (mw.window_width != width || mw.window_height != height) {
-      mw.window_width = width;
-      mw.window_height = height;
+    gdraw->get_window_size(mw, &width, &height);
+    if (mw->window_width != width || mw->window_height != height) {
+      mw->window_width = width;
+      mw->window_height = height;
     }
 
-    draw(&mw, x, y, x + w, y + h);
+    set_dirty();
     break;
   default:;
   }
+
+  redraw_if_dirty();
 
   return 1;
 }
 
 void KeyboardCtx::get_size(int* width, int* height)
 {
-  *width = int((x_right - x_left) * mw.zoom_factor_x);
-  *height = int((y_high - y_low) * mw.zoom_factor_y);
+  *width = int((x_right - x_left) * mw->zoom_factor_x);
+  *height = int((y_high - y_low) * mw->zoom_factor_y);
 }
 
 void KeyboardCtx::set_size(int width, int height)
 {
-  mw.zoom_factor_x = ((float)width) / (x_right - x_left);
-  mw.zoom_factor_y = ((float)height) / (y_high - y_low);
+  mw->zoom_factor_x = ((float)width) / (x_right - x_left);
+  mw->zoom_factor_y = ((float)height) / (y_high - y_low);
   a.zoom();
-  redraw();
+  set_dirty();
 }
 
 void KeyboardCtx::set_shift(int shift)

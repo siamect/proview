@@ -86,11 +86,6 @@ void GlowPolyLine::print_zoom()
   a_points.print_zoom();
 }
 
-void GlowPolyLine::traverse(int x, int y)
-{
-  a_points.traverse(x, y);
-}
-
 void GlowPolyLine::save(std::ofstream& fp, glow_eSaveMode mode)
 {
   fp << int(glow_eSave_PolyLine) << '\n';
@@ -198,6 +193,4 @@ void GlowPolyLine::add_points(
   }
   zoom();
   nav_zoom();
-  // draw( pos, highlight, hot, NULL);
-  // nav_draw( pos, highlight, NULL);
 }

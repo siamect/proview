@@ -41,6 +41,7 @@
 
 #include "co_string.h"
 
+#include "glow_draw.h"
 #include "glow_growannot.h"
 #include "glow_growrect.h"
 #include "glow_msg.h"
@@ -373,7 +374,7 @@ void GlowNodeClass::open(std::ifstream& fp)
 }
 
 void GlowNodeClass::draw(
-    GlowWind* w, GlowPoint* pos, int highlight, int hot, void* node)
+    DrawWind* w, GlowPoint* pos, int highlight, int hot, void* node)
 {
   int i;
 
@@ -382,7 +383,7 @@ void GlowNodeClass::draw(
   }
 }
 
-void GlowNodeClass::erase(GlowWind* w, GlowPoint* pos, int hot, void* node)
+void GlowNodeClass::erase(DrawWind* w, GlowPoint* pos, int hot, void* node)
 {
   int i;
 
@@ -391,7 +392,7 @@ void GlowNodeClass::erase(GlowWind* w, GlowPoint* pos, int hot, void* node)
   }
 }
 
-void GlowNodeClass::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
+void GlowNodeClass::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
   int i;
@@ -401,7 +402,7 @@ void GlowNodeClass::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   }
 }
 
-void GlowNodeClass::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
+void GlowNodeClass::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 {
   int i;
 
@@ -437,16 +438,14 @@ int GlowNodeClass::get_conpoint(GlowTransform* t, int num, bool flip_horizontal,
   return GLOW__NOCONPOINT;
 }
 
-int GlowNodeClass::event_handler(
-    GlowWind* w, void* pos, glow_eEvent event, int x, int y, void* node)
+int GlowNodeClass::event_handler(void* pos, glow_eEvent event, int x, int y, void* node)
 {
-  return a.event_handler(w, pos, event, x, y, node);
+  return a.event_handler(pos, event, x, y, node);
 }
 
-int GlowNodeClass::event_handler(
-    GlowWind* w, glow_eEvent event, double fx, double fy)
+int GlowNodeClass::event_handler(glow_eEvent event, double fx, double fy)
 {
-  return a.event_handler(w, event, fx, fy);
+  return a.event_handler(event, fx, fy);
 }
 
 void GlowNodeClass::erase_annotation(
@@ -458,8 +457,8 @@ void GlowNodeClass::erase_annotation(
     if ((a.a[i]->type() == glow_eObjectType_Annot
             || a.a[i]->type() == glow_eObjectType_GrowAnnot)
         && ((GlowAnnot*)a.a[i])->number == num) {
-      a.a[i]->erase(&ctx->mw, pos, hot, node);
-      a.a[i]->erase(&ctx->navw, pos, 0, node);
+      a.a[i]->erase(ctx->mw, pos, hot, node);
+      a.a[i]->erase(ctx->navw, pos, 0, node);
       break;
     }
   }
@@ -474,8 +473,8 @@ void GlowNodeClass::draw_annotation(
     if ((a.a[i]->type() == glow_eObjectType_Annot
             || a.a[i]->type() == glow_eObjectType_GrowAnnot)
         && ((GlowAnnot*)a.a[i])->number == num) {
-      a.a[i]->draw(&ctx->mw, pos, highlight, hot, node);
-      a.a[i]->draw(&ctx->navw, pos, highlight, 0, node);
+      a.a[i]->draw(ctx->mw, pos, highlight, hot, node);
+      a.a[i]->draw(ctx->navw, pos, highlight, 0, node);
       break;
     }
   }
@@ -489,8 +488,8 @@ void GlowNodeClass::erase_annotation(
   for (i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == glow_eObjectType_GrowAnnot
         && ((GlowAnnot*)a.a[i])->number == num) {
-      ((GrowAnnot*)a.a[i])->erase_background(&ctx->mw, t, hot, node);
-      a.a[i]->erase(&ctx->navw, t, 0, node);
+      ((GrowAnnot*)a.a[i])->erase_background(ctx->mw, t, hot, node);
+      a.a[i]->erase(ctx->navw, t, 0, node);
       break;
     }
   }
@@ -504,8 +503,8 @@ void GlowNodeClass::draw_annotation(
   for (i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == glow_eObjectType_GrowAnnot
         && ((GlowAnnot*)a.a[i])->number == num) {
-      a.a[i]->draw(&ctx->mw, t, highlight, hot, node, NULL);
-      a.a[i]->draw(&ctx->navw, t, highlight, 0, node, NULL);
+      a.a[i]->draw(ctx->mw, t, highlight, hot, node, NULL);
+      a.a[i]->draw(ctx->navw, t, highlight, 0, node, NULL);
       break;
     }
   }
@@ -653,10 +652,10 @@ void GlowNodeClass::measure_javabean(double* pix_x_right, double* pix_x_left,
     a.get_borders(
         (GlowTransform*)NULL, &jb_x_right, &jb_x_left, &jb_y_high, &jb_y_low);
 
-  *pix_x_right = jb_x_right * ctx->mw.zoom_factor_x - double(ctx->mw.offset_x);
-  *pix_x_left = jb_x_left * ctx->mw.zoom_factor_x - double(ctx->mw.offset_x);
-  *pix_y_high = jb_y_high * ctx->mw.zoom_factor_y - double(ctx->mw.offset_y);
-  *pix_y_low = jb_y_low * ctx->mw.zoom_factor_y - double(ctx->mw.offset_y);
+  *pix_x_right = jb_x_right * ctx->mw->zoom_factor_x - double(ctx->mw->offset_x);
+  *pix_x_left = jb_x_left * ctx->mw->zoom_factor_x - double(ctx->mw->offset_x);
+  *pix_y_high = jb_y_high * ctx->mw->zoom_factor_y - double(ctx->mw->offset_y);
+  *pix_y_low = jb_y_low * ctx->mw->zoom_factor_y - double(ctx->mw->offset_y);
 }
 
 void GlowNodeClass::set_java_name(char* name)

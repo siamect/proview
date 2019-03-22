@@ -160,12 +160,10 @@ void GlowArrow::open(std::ifstream& fp)
   }
 }
 
-void GlowArrow::draw(GlowWind* w, void* pos, int highlight, int hot, void* node)
+void GlowArrow::draw(DrawWind *w, void* pos, int highlight, int hot, void* node)
 {
   int p1_x, p1_y, p2_x, p2_y, p_dest_x, p_dest_y;
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
+  if (w == ctx->navw) {
     hot = 0;
     p1_x = p1.nav_z_x;
     p1_y = p1.nav_z_y;
@@ -185,7 +183,7 @@ void GlowArrow::draw(GlowWind* w, void* pos, int highlight, int hot, void* node)
   idx += hot;
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->gdraw->arrow(w, p_dest_x + ((GlowPoint*)pos)->z_x - w->offset_x,
+  ctx->gdraw->arrow(p_dest_x + ((GlowPoint*)pos)->z_x - w->offset_x,
       p_dest_y + ((GlowPoint*)pos)->z_y - w->offset_y,
       p1_x + ((GlowPoint*)pos)->z_x - w->offset_x,
       p1_y + ((GlowPoint*)pos)->z_y - w->offset_y,
@@ -193,12 +191,10 @@ void GlowArrow::draw(GlowWind* w, void* pos, int highlight, int hot, void* node)
       p2_y + ((GlowPoint*)pos)->z_y - w->offset_y, draw_type, idx, highlight);
 }
 
-void GlowArrow::erase(GlowWind* w, void* pos, int hot, void* node)
+void GlowArrow::erase(DrawWind *w, void* pos, int hot, void* node)
 {
   int p1_x, p1_y, p2_x, p2_y, p_dest_x, p_dest_y;
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
+  if (w == ctx->navw) {
     hot = 0;
     p1_x = p1.nav_z_x;
     p1_y = p1.nav_z_y;
@@ -218,30 +214,25 @@ void GlowArrow::erase(GlowWind* w, void* pos, int hot, void* node)
   idx += hot;
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->gdraw->arrow_erase(w, p_dest_x + ((GlowPoint*)pos)->z_x - w->offset_x,
+  ctx->gdraw->arrow(p_dest_x + ((GlowPoint*)pos)->z_x - w->offset_x,
       p_dest_y + ((GlowPoint*)pos)->z_y - w->offset_y,
       p1_x + ((GlowPoint*)pos)->z_x - w->offset_x,
       p1_y + ((GlowPoint*)pos)->z_y - w->offset_y,
       p2_x + ((GlowPoint*)pos)->z_x - w->offset_x,
-      p2_y + ((GlowPoint*)pos)->z_y - w->offset_y, idx);
+      p2_y + ((GlowPoint*)pos)->z_y - w->offset_y, glow_eDrawType_LineErase, idx);
 }
 
 void GlowArrow::move(void* pos, double x1, double y1, double x2, double y2,
     int highlight, int hot)
 {
-  erase(&ctx->mw, pos, hot, NULL);
-  erase(&ctx->navw, pos, 0, NULL);
-
   if (fabs(x2 - x1) < DBL_EPSILON) {
+    p1.x = x2 + arrow_width / 2;
+    p2.x = x2 - arrow_width / 2;
     if (y1 > y2) {
-      p1.x = x2 + arrow_width / 2;
       p1.y = y2 + arrow_length;
-      p2.x = x2 - arrow_width / 2;
       p2.y = y2 + arrow_length;
     } else {
-      p1.x = x2 + arrow_width / 2;
       p1.y = y2 - arrow_length;
-      p2.x = x2 - arrow_width / 2;
       p2.y = y2 - arrow_length;
     }
   } else if (fabs(y2 - y1) < DBL_EPSILON) {
@@ -267,15 +258,13 @@ void GlowArrow::move(void* pos, double x1, double y1, double x2, double y2,
   p_dest.y = y2;
   zoom();
   nav_zoom();
-  draw(&ctx->mw, pos, highlight, hot, NULL);
-  draw(&ctx->navw, pos, highlight, 0, NULL);
+
+  ctx->set_dirty();
 }
 
 void GlowArrow::shift(
     void* pos, double delta_x, double delta_y, int highlight, int hot)
 {
-  erase(&ctx->mw, pos, hot, NULL);
-  erase(&ctx->navw, pos, 0, NULL);
   p_dest.x += delta_x;
   p_dest.y += delta_y;
   p1.x += delta_x;
@@ -285,12 +274,11 @@ void GlowArrow::shift(
   zoom();
   nav_zoom();
 
-  draw(&ctx->mw, pos, highlight, hot, NULL);
-  draw(&ctx->navw, pos, highlight, 0, NULL);
+  ctx->set_dirty();
 }
 
 int GlowArrow::event_handler(
-    GlowWind* w, void* pos, glow_eEvent event, int x, int y, void* node)
+    void* pos, glow_eEvent event, int x, int y, void* node)
 {
   return 0;
 }

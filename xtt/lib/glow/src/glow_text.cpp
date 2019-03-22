@@ -67,11 +67,6 @@ void GlowText::print_zoom()
   p.print_zoom();
 }
 
-void GlowText::traverse(int x, int y)
-{
-  p.traverse(x, y);
-}
-
 void GlowText::save(std::ofstream& fp, glow_eSaveMode mode)
 {
   fp << int(glow_eSave_Text) << '\n';
@@ -137,36 +132,43 @@ void GlowText::open(std::ifstream& fp)
   }
 }
 
-void GlowText::draw(GlowWind* w, void* pos, int highlight, int hot, void* node)
+void GlowText::draw(DrawWind* w, void* pos, int highlight, int hot, void* node)
 {
   int idx = int(w->zoom_factor_y / w->base_zoom_factor * (text_size + 4) - 4);
   if (idx < 0)
     return;
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->gdraw->text(w, p.z_x + ((GlowPoint*)pos)->z_x - w->offset_x,
+  ctx->gdraw->text(p.z_x + ((GlowPoint*)pos)->z_x - w->offset_x,
       p.z_y + ((GlowPoint*)pos)->z_y - w->offset_y, text, strlen(text),
-      draw_type, color_drawtype, idx, highlight, 0, glow_eFont_Helvetica,
+      draw_type, color_drawtype, idx, highlight, glow_eFont_Helvetica,
       w->zoom_factor_y / w->base_zoom_factor * (8 + 2 * text_size), 0);
 }
 
-void GlowText::erase(GlowWind* w, void* pos, int hot, void* node)
+static glow_eDrawType get_erase_gc(glow_eDrawType gc) {
+  if (gc == glow_eDrawType_TextHelvetica) {
+    return glow_eDrawType_TextHelveticaErase;
+  } else if (gc == glow_eDrawType_TextHelveticaBold) {
+    return glow_eDrawType_TextHelveticaEraseBold;
+  } else {
+    return gc;
+  }
+}
+
+void GlowText::erase(DrawWind* w, void* pos, int hot, void* node)
 {
   int idx = int(w->zoom_factor_y / w->base_zoom_factor * (text_size + 4) - 4);
   if (idx < 0)
     return;
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->gdraw->text_erase(w, p.z_x + ((GlowPoint*)pos)->z_x - w->offset_x,
+  ctx->gdraw->text(p.z_x + ((GlowPoint*)pos)->z_x - w->offset_x,
       p.z_y + ((GlowPoint*)pos)->z_y - w->offset_y, text, strlen(text),
-      draw_type, idx, 0, glow_eFont_Helvetica,
+      get_erase_gc(draw_type), glow_eDrawType_Line, idx, 0, glow_eFont_Helvetica,
       w->zoom_factor_y / w->base_zoom_factor * (8 + 2 * text_size), 0);
 }
 
 int GlowText::event_handler(
-    GlowWind* w, void* pos, glow_eEvent event, int x, int y, void* node)
+    void* pos, glow_eEvent event, int x, int y, void* node)
 {
-  GlowPoint* p;
-
-  p = (GlowPoint*)pos;
   return 0;
 }
 
@@ -177,26 +179,19 @@ void GlowText::get_borders(double pos_x, double pos_y, double* x_right,
 
 void GlowText::move(void* pos, double x, double y, int highlight, int hot)
 {
-  erase(&ctx->mw, pos, hot, NULL);
-  erase(&ctx->navw, pos, 0, NULL);
   p.x = x;
   p.y = y;
   zoom();
   nav_zoom();
-  draw(&ctx->mw, pos, highlight, hot, NULL);
-  draw(&ctx->navw, pos, highlight, 0, NULL);
+  ctx->set_dirty();
 }
 
 void GlowText::shift(
     void* pos, double delta_x, double delta_y, int highlight, int hot)
 {
-  erase(&ctx->mw, pos, hot, NULL);
-  erase(&ctx->navw, pos, 0, NULL);
   p.x += delta_x;
   p.y += delta_y;
   zoom();
   nav_zoom();
-
-  draw(&ctx->mw, pos, highlight, hot, NULL);
-  draw(&ctx->navw, pos, highlight, 0, NULL);
+  ctx->set_dirty();
 }

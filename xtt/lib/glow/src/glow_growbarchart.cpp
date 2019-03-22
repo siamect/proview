@@ -63,15 +63,12 @@ GrowBarChart::GrowBarChart(GrowCtx* glow_ctx, const char* name, double x,
   memset(bar_values, 0, sizeof(bar_values));
 
   if (!nodraw)
-    draw(&ctx->mw, (GlowTransform*)NULL, highlight, hot, NULL, NULL);
+    ctx->set_dirty();
 }
 
 GrowBarChart::~GrowBarChart()
 {
-  if (ctx->nodraw)
-    return;
-  erase(&ctx->mw);
-  erase(&ctx->navw);
+  ctx->set_dirty();
 }
 
 void GrowBarChart::save(std::ofstream& fp, glow_eSaveMode mode)
@@ -228,7 +225,7 @@ void GrowBarChart::trace_close()
     ctx->trace_disconnect_func((void*)this);
 }
 
-void GrowBarChart::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowBarChart::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -253,7 +250,7 @@ void GrowBarChart::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowBarChart::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowBarChart::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -293,19 +290,13 @@ void GrowBarChart::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 void GrowBarChart::set_highlight(int on)
 {
   highlight = on;
-  draw();
+  ctx->set_dirty();
 }
 
-void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
+void GrowBarChart::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  if (ctx->nodraw)
-    return;
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
-    hot = 0;
-  }
+  hot = (w == ctx->navw) ? 0 : hot;
   int chot = 0;
   if (hot && ctx->environment != glow_eEnv_Development) {
     if (ctx->hot_indication == glow_eHotIndication_No)
@@ -380,7 +371,7 @@ void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     if ( min_value >= 0) {
       bar_up_ll_y = ur_y;
       f_bar_up_ll_y = ur_y;
-      
+
     } else {
       bar_up_ll_y = ur_y + min_value * (ur_y - ll_y) / (max_value - min_value);
       f_bar_up_ll_y = bar_up_ll_y;
@@ -425,8 +416,8 @@ void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 	      drawtype = GlowColor::shift_drawtype(fillcolor, chot, 0);
 	    else
 	      drawtype = fillcolor;
-	    ctx->gdraw->fill_rect(w, bar_ll_x, bar_up_ll_y, bar_ur_x - bar_ll_x,
-	        bar_up_ur_y - bar_up_ll_y, drawtype);
+	    ctx->gdraw->rect(bar_ll_x, bar_up_ll_y, bar_ur_x - bar_ll_x,
+	        bar_up_ur_y - bar_up_ll_y, drawtype, 1, 0);
 	  } else {
 	    glow_eDrawType f1, f2;
 	    if (gradient_contrast >= 0) {
@@ -440,13 +431,13 @@ void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 	      f1 = GlowColor::shift_drawtype(
                   fillcolor, gradient_contrast / 2 + chot, 0);
 	  }
-	    ctx->gdraw->gradient_fill_rect(w, bar_ll_x, bar_up_ll_y,
+	    ctx->gdraw->gradient_fill_rect(bar_ll_x, bar_up_ll_y,
 	        bar_ur_x - bar_ll_x, bar_up_ur_y - bar_up_ll_y, fillcolor, f1, f2,
 	        grad);
 	  }
 	}
 
-      } else { 
+      } else {
 	// negative value, draw bar downwards
 	skip = 0;
 	bar_down_ll_y = bar_down_ur_y;
@@ -483,8 +474,8 @@ void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 	      drawtype = GlowColor::shift_drawtype(fillcolor, chot, 0);
 	    else
 	      drawtype = fillcolor;
-	    ctx->gdraw->fill_rect(w, bar_ll_x, bar_down_ll_y, bar_ur_x - bar_ll_x,
-	         bar_down_ur_y - bar_down_ll_y, drawtype);
+	    ctx->gdraw->rect(bar_ll_x, bar_down_ll_y, bar_ur_x - bar_ll_x,
+	         bar_down_ur_y - bar_down_ll_y, drawtype, 1, 0);
 	  } else {
 	    glow_eDrawType f1, f2;
 	    if (gradient_contrast >= 0) {
@@ -498,7 +489,7 @@ void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 	      f1 = GlowColor::shift_drawtype(
                   fillcolor, gradient_contrast / 2 + chot, 0);
 	    }
-	    ctx->gdraw->gradient_fill_rect(w, bar_ll_x, bar_down_ll_y,
+	    ctx->gdraw->gradient_fill_rect(bar_ll_x, bar_down_ll_y,
 		bar_ur_x - bar_ll_x, bar_down_ur_y - bar_down_ll_y, fillcolor, f1, f2,
 		grad);
 	  }
@@ -511,8 +502,8 @@ void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 	  drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
 	     highlight, (GrowNode*)colornode, 0);
 
-	  ctx->gdraw->rect(w, brect_ll_x, brect_ll_y, brect_width, brect_height,
-              drawtype, idx, 0);
+	  ctx->gdraw->rect(brect_ll_x, brect_ll_y, brect_width, brect_height,
+              drawtype, 0, idx);
 	}
 	if ( min_value >= 0) {
 	  brect_ll_x = bar_ll_x;
@@ -530,8 +521,8 @@ void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 	  drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
               highlight, (GrowNode*)colornode, 0);
 
-	  ctx->gdraw->rect(w, brect_ll_x, brect_ll_y, brect_width, brect_height,
-	      drawtype, idx, 0);
+	  ctx->gdraw->rect(brect_ll_x, brect_ll_y, brect_width, brect_height,
+	      drawtype, 0, idx);
 	}
 
 
@@ -541,8 +532,8 @@ void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 	    drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
                 highlight, (GrowNode*)colornode, 0);
 
-	    ctx->gdraw->rect(w, brect_ll_x, brect_ll_y, brect_width, brect_height,
-                drawtype, idx, 0);
+	    ctx->gdraw->rect(brect_ll_x, brect_ll_y, brect_width, brect_height,
+                drawtype, 0, idx);
 	  }
 	  brect_ll_x = bar_ll_x;
 	  brect_ll_y = ur_y + min_value * (ur_y - ll_y) / (max_value - min_value);
@@ -553,12 +544,12 @@ void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 	    drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
                 highlight, (GrowNode*)colornode, 0);
 
-	    ctx->gdraw->rect(w, brect_ll_x, brect_ll_y, brect_width, brect_height,
-	        drawtype, idx, 0);
+	    ctx->gdraw->rect(brect_ll_x, brect_ll_y, brect_width, brect_height,
+	        drawtype, 0, idx);
 	  }
 	}
       }
-	
+
     }
   }
 
@@ -567,35 +558,27 @@ void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 
   for (int i = 0; i < vertical_lines; i++) {
     int x = int(ll_x + double(ur_x - ll_x) / (vertical_lines + 1) * (i + 1));
-    ctx->gdraw->line(w, x, ll_y, x, ur_y, drawtype, 0, 0);
+    ctx->gdraw->line(x, ll_y, x, ur_y, drawtype, 0, 0);
   }
 
   for (int i = 0; i < horizontal_lines; i++) {
     int y = int(ll_y + double(ur_y - ll_y) / (horizontal_lines + 1) * (i + 1));
-    ctx->gdraw->line(w, ll_x, y, ur_x, y, drawtype, 0, 0);
+    ctx->gdraw->line(ll_x, y, ur_x, y, drawtype, 0, 0);
   }
 
   if (border) {
     drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
         highlight, (GrowNode*)colornode, 0);
 
-    // printf( "draw: %d %d\n", ll_x, ll_y);
-    ctx->gdraw->rect(w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx, 0);
+    ctx->gdraw->rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, 0, idx);
   }
 }
 
-void GrowBarChart::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
+void GrowBarChart::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 {
-  if (ctx->nodraw)
-    return;
-
   int idx;
 
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
-    hot = 0;
-  }
+  hot = (w == ctx->navw) ? 0 : hot;
   if (node && ((GrowNode*)node)->line_width)
     idx = int(
         w->zoom_factor_y / w->base_zoom_factor * ((GrowNode*)node)->line_width
@@ -628,38 +611,18 @@ void GrowBarChart::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
   ll_y = MIN(y1, y2);
   ur_y = MAX(y1, y2);
 
-  // printf( "eras: %d %d\n", ll_x, ll_y);
-
-  w->set_draw_buffer_only();
   if (border)
-    ctx->gdraw->rect_erase(w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, idx);
-  ctx->gdraw->fill_rect(
-      w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
-  w->reset_draw_buffer_only();
-}
-
-void GrowBarChart::draw()
-{
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+    ctx->gdraw->rect(
+        ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase, 0, idx);
+  ctx->gdraw->rect(
+      ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase, 1, 0);
 }
 
 void GrowBarChart::align(double x, double y, glow_eAlignDirection direction)
 {
   double dx, dy;
 
-  erase(&ctx->mw);
-  erase(&ctx->navw);
-  ctx->set_defered_redraw();
-  draw();
+  ctx->set_dirty();
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -695,9 +658,6 @@ void GrowBarChart::align(double x, double y, glow_eAlignDirection direction)
   x_left += dx;
   y_high += dy;
   y_low += dy;
-
-  draw();
-  ctx->redraw_defered();
 }
 
 void GrowBarChart::export_javabean(GlowTransform* t, void* node,
@@ -710,15 +670,15 @@ void GrowBarChart::export_javabean(GlowTransform* t, void* node,
   int gc1, gc2;
 
   if (!t) {
-    x1 = trf.x(ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y1 = trf.y(ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
-    x2 = trf.x(ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y2 = trf.y(ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x1 = trf.x(ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y1 = trf.y(ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+    x2 = trf.x(ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y2 = trf.y(ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
   } else {
-    x1 = trf.x(t, ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y1 = trf.y(t, ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
-    x2 = trf.x(t, ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y2 = trf.y(t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x1 = trf.x(t, ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y1 = trf.y(t, ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+    x2 = trf.x(t, ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y2 = trf.y(t, ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
   }
 
   ll_x = MIN(x1, x2);
@@ -760,7 +720,7 @@ void GrowBarChart::set_conf(int bar_num, int barsegment_num, double min_val,
   line_color = lcolor;
   for (int i = 0; i < bars; i++)
     bar_color[i] = color[i];
-  draw();
+  ctx->set_dirty();
 }
 
 void GrowBarChart::get_conf(
@@ -801,7 +761,7 @@ void GrowBarChart::set_values(float* values1, float* values2, float* values3,
     memcpy(bar_values[10], values11, bars * sizeof(bar_values[0][0]));
   if (barsegments > 11 && values12)
     memcpy(bar_values[11], values12, bars * sizeof(bar_values[0][0]));
-  draw();
+  ctx->set_dirty();
 }
 
 void GrowBarChart::convert(glow_eConvert version)

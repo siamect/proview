@@ -82,13 +82,11 @@ void GlowArray::new_array(const GlowArray& array)
 
 void GlowArray::move_from(GlowArray& array)
 {
-  int i;
-
   free(a);
   a_size = 0;
   allocated = alloc_incr;
   a = (GlowArrayElem**)calloc(allocated, sizeof(GlowArrayElem*));
-  for (i = 0; i < array.a_size; i++) {
+  for (int i = 0; i < array.a_size; i++) {
     insert(array.a[i]);
     array.remove(array.a[i]);
     i--;
@@ -97,23 +95,19 @@ void GlowArray::move_from(GlowArray& array)
 
 void GlowArray::copy_from_common_objects(GlowArray& array)
 {
-  int i;
-
   a_size = 0;
   free(a);
   allocated = alloc_incr;
   a = (GlowArrayElem**)calloc(allocated, sizeof(GlowArrayElem*));
-  for (i = 0; i < array.a_size; i++) {
+  for (int i = 0; i < array.a_size; i++) {
     insert(array.a[i]);
   }
 }
 
 void GlowArray::copy_from(const GlowArray& array)
 {
-  int i;
-
   a_size = 0;
-  for (i = 0; i < array.a_size; i++) {
+  for (int i = 0; i < array.a_size; i++) {
     switch (array.a[i]->type()) {
     case glow_eObjectType_GrowNode: {
       GrowNode* n = new GrowNode();
@@ -408,7 +402,7 @@ void GlowArray::copy_from(const GlowArray& array)
     default:;
     }
   }
-  for (i = 0; i < array.a_size; i++) {
+  for (int i = 0; i < array.a_size; i++) {
     switch (array.a[i]->type()) {
     case glow_eObjectType_Con: {
       /* Both source and destination has to be members */
@@ -455,9 +449,7 @@ void GlowArray::delete_all()
 
 GlowArray::~GlowArray()
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     delete a[i];
   }
   free(a);
@@ -491,7 +483,7 @@ int GlowArray::brow_insert(
     GlowArrayElem* element, GlowArrayElem* destination, glow_eDest code)
 {
   GlowArrayElem** a_tmp;
-  int idx, i, j, found;
+  int idx, found;
   int destination_level = 0;
 
   if (find(element))
@@ -530,7 +522,7 @@ int GlowArray::brow_insert(
 
   switch (code) {
   case glow_eDest_IntoFirst:
-    for (j = a_size - 1; j >= idx; j--)
+    for (int j = a_size - 1; j >= idx; j--)
       a[j + 1] = a[j];
     a[idx] = element;
     if (destination)
@@ -539,13 +531,14 @@ int GlowArray::brow_insert(
       ((GlowNode*)element)->set_level(destination_level);
     a_size++;
     break;
-  case glow_eDest_IntoLast:
+  case glow_eDest_IntoLast: {
+    int i;
     for (i = idx; i < a_size; i++) {
       if (((GlowNode*)a[i])->get_level() <= destination_level)
         break;
     }
     idx = i;
-    for (j = a_size - 1; j >= idx; j--)
+    for (int j = a_size - 1; j >= idx; j--)
       a[j + 1] = a[j];
     a[idx] = element;
     if (destination)
@@ -554,21 +547,25 @@ int GlowArray::brow_insert(
       ((GlowNode*)element)->set_level(destination_level);
     a_size++;
     break;
-  case glow_eDest_After:
+  }
+  case glow_eDest_After: {
+    int i;
     for (i = idx; i < a_size; i++) {
       if (((GlowNode*)a[i])->get_level() >= destination_level)
         break;
     }
     idx = i;
-    for (j = a_size - 1; j >= idx; j--)
+    for (int j = a_size - 1; j >= idx; j--)
       a[j + 1] = a[j];
     a[idx] = element;
     ((GlowNode*)element)->set_level(destination_level);
     a_size++;
+    break;
+  }
   case glow_eDest_Before:
     if (idx > 0)
       idx--;
-    for (j = a_size - 1; j >= idx; j--)
+    for (int j = a_size - 1; j >= idx; j--)
       a[j + 1] = a[j];
     a[idx] = element;
     ((GlowNode*)element)->set_level(destination_level);
@@ -582,9 +579,7 @@ int GlowArray::brow_insert(
 int GlowArray::move(
     GlowArrayElem* element, GlowArrayElem* destination, glow_eDest code)
 {
-  int elem_idx, dest_idx, i, found;
-
-  found = 0;
+  int elem_idx, dest_idx, found = 0;
   for (elem_idx = 0; elem_idx < a_size; elem_idx++) {
     if (a[elem_idx] == element) {
       found = 1;
@@ -624,11 +619,11 @@ int GlowArray::move(
     if (elem_idx == dest_idx + 1)
       return 1;
     if (elem_idx < dest_idx + 1) {
-      for (i = elem_idx + 1; i <= dest_idx; i++)
+      for (int i = elem_idx + 1; i <= dest_idx; i++)
         a[i - 1] = a[i];
       a[dest_idx] = element;
     } else {
-      for (i = elem_idx; i > dest_idx; i--)
+      for (int i = elem_idx; i > dest_idx; i--)
         a[i] = a[i - 1];
       a[dest_idx + 1] = element;
     }
@@ -637,11 +632,11 @@ int GlowArray::move(
     if (elem_idx == dest_idx - 1)
       return 1;
     if (elem_idx < dest_idx - 1) {
-      for (i = elem_idx + 1; i < dest_idx; i++)
+      for (int i = elem_idx + 1; i < dest_idx; i++)
         a[i - 1] = a[i];
       a[dest_idx - 1] = element;
     } else {
-      for (i = elem_idx; i >= dest_idx; i--)
+      for (int i = elem_idx; i >= dest_idx; i--)
         a[i] = a[i - 1];
       a[dest_idx] = element;
     }
@@ -653,9 +648,7 @@ int GlowArray::move(
 
 void GlowArray::remove(GlowArrayElem* element)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (*(a + i) == element) {
       if (a_size - i - 1 > 0) {
         void* tmp = malloc((a_size - i - 1) * sizeof(*a));
@@ -678,13 +671,13 @@ void GlowArray::brow_remove(void* ctx, GlowArrayElem* element)
 
 void GlowArray::brow_close(void* ctx, GlowArrayElem* element)
 {
-  int i;
   int idx = 0, next_idx;
   int found;
   int level;
   GlowArrayElem* e;
 
   found = 0;
+  int i;
   for (i = 0; i < a_size; i++) {
     if (*(a + i) == element) {
       idx = i;
@@ -714,12 +707,12 @@ void GlowArray::brow_close(void* ctx, GlowArrayElem* element)
 
 int GlowArray::brow_get_parent(GlowArrayElem* element, GlowArrayElem** parent)
 {
-  int i;
   int idx = 0;
   int found;
   int level;
 
   found = 0;
+  int i;
   for (i = 0; i < a_size; i++) {
     if (*(a + i) == element) {
       idx = i;
@@ -747,46 +740,29 @@ int GlowArray::brow_get_parent(GlowArrayElem* element, GlowArrayElem** parent)
 
 void GlowArray::zoom()
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->zoom();
   }
 }
 
 void GlowArray::nav_zoom()
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->nav_zoom();
   }
 }
 
 void GlowArray::print_zoom()
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->print_zoom();
-  }
-}
-
-void GlowArray::traverse(int x, int y)
-{
-  int i;
-
-  for (i = 0; i < a_size; i++) {
-    a[i]->traverse(x, y);
   }
 }
 
 void GlowArray::conpoint_select(
     void* pos, int x, int y, double* distance, void** cp)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->conpoint_select(pos, x, y, distance, cp);
   }
 }
@@ -794,32 +770,26 @@ void GlowArray::conpoint_select(
 void GlowArray::conpoint_select(GlowTransform* t, int x, int y,
     double* distance, void** cp, int* pix_x, int* pix_y)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->conpoint_select(t, x, y, distance, cp, pix_x, pix_y);
   }
 }
 
 void GlowArray::print(void* pos, void* node)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->print(pos, node);
   }
 }
 
 void GlowArray::save(std::ofstream& fp, glow_eSaveMode mode)
 {
-  int i;
-
   fp << int(glow_eSave_Array) << '\n';
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (a[i]->type() != glow_eObjectType_Con)
       a[i]->save(fp, mode);
   }
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (a[i]->type() == glow_eObjectType_Con)
       a[i]->save(fp, mode);
   }
@@ -1123,94 +1093,45 @@ void GlowArray::open(GrowCtx* ctx, std::ifstream& fp)
   }
 }
 
-void GlowArray::draw(GlowWind* w, void* pos, int highlight, int hot, void* node)
+void GlowArray::draw(DrawWind *w, void* pos, int highlight, int hot, void* node)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->draw(w, pos, highlight, hot, node);
   }
 }
 
-void GlowArray::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
+void GlowArray::draw(DrawWind *w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->draw(w, t, highlight, hot, node, colornode);
   }
 }
 
 void GlowArray::draw_inverse(void* pos, int hot, void* node)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->draw_inverse(pos, hot, node);
   }
 }
 
-void GlowArray::erase(GlowWind* w, void* pos, int hot, void* node)
+void GlowArray::erase(DrawWind *w, void* pos, int hot, void* node)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->erase(w, pos, hot, node);
   }
 }
 
-void GlowArray::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
+void GlowArray::erase(DrawWind *w, GlowTransform* t, int hot, void* node)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->erase(w, t, hot, node);
-  }
-}
-
-void GlowArray::nav_draw(void* pos, int highlight, void* node)
-{
-  int i;
-
-  for (i = 0; i < a_size; i++) {
-    a[i]->nav_draw(pos, highlight, node);
-  }
-}
-
-void GlowArray::nav_draw(
-    GlowTransform* t, int highlight, void* node, void* colornode)
-{
-  int i;
-
-  for (i = 0; i < a_size; i++) {
-    a[i]->nav_draw(t, highlight, node, colornode);
-  }
-}
-
-void GlowArray::nav_erase(void* pos, void* node)
-{
-  int i;
-
-  for (i = 0; i < a_size; i++) {
-    a[i]->nav_erase(pos, node);
-  }
-}
-
-void GlowArray::nav_erase(GlowTransform* t, void* node)
-{
-  int i;
-
-  for (i = 0; i < a_size; i++) {
-    a[i]->nav_erase(t, node);
   }
 }
 
 int GlowArray::find(GlowArrayElem* element)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (a[i] == element)
       return 1;
   }
@@ -1219,7 +1140,6 @@ int GlowArray::find(GlowArrayElem* element)
 
 int GlowArray::find_by_name(const char* name, GlowArrayElem** element)
 {
-  int i;
   char object_name[80];
   char* s;
 
@@ -1235,7 +1155,7 @@ int GlowArray::find_by_name(const char* name, GlowArrayElem** element)
     gname[len] = 0;
 
     found = 0;
-    for (i = 0; i < a_size; i++) {
+    for (int i = 0; i < a_size; i++) {
       a[i]->get_object_name(
           object_name, sizeof(object_name), glow_eName_Object);
       if (str_NoCaseStrcmp(gname, object_name) == 0) {
@@ -1249,7 +1169,7 @@ int GlowArray::find_by_name(const char* name, GlowArrayElem** element)
 
     return ((GrowGroup*)group)->find_by_name(&name[len + 1], element);
   } else {
-    for (i = 0; i < a_size; i++) {
+    for (int i = 0; i < a_size; i++) {
       a[i]->get_object_name(
           object_name, sizeof(object_name), glow_eName_Object);
       if (str_NoCaseStrcmp(name, object_name) == 0) {
@@ -1263,18 +1183,14 @@ int GlowArray::find_by_name(const char* name, GlowArrayElem** element)
 
 void GlowArray::set_highlight(int on)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->set_highlight(on);
   }
 }
 
 void GlowArray::set_hot(int on)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->set_hot(on);
   }
 }
@@ -1282,9 +1198,7 @@ void GlowArray::set_hot(int on)
 void GlowArray::select_region_insert(double ll_x, double ll_y, double ur_x,
     double ur_y, glow_eSelectPolicy select_policy)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->select_region_insert(ll_x, ll_y, ur_x, ur_y, select_policy);
   }
 }
@@ -1292,9 +1206,7 @@ void GlowArray::select_region_insert(double ll_x, double ll_y, double ur_x,
 void GlowArray::get_borders(
     double* x_right, double* x_left, double* y_high, double* y_low)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->get_borders(x_right, x_left, y_high, y_low);
   }
 }
@@ -1302,9 +1214,7 @@ void GlowArray::get_borders(
 void GlowArray::get_borders(double pos_x, double pos_y, double* x_right,
     double* x_left, double* y_high, double* y_low, void* node)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->get_borders(pos_x, pos_y, x_right, x_left, y_high, y_low, node);
   }
 }
@@ -1312,18 +1222,14 @@ void GlowArray::get_borders(double pos_x, double pos_y, double* x_right,
 void GlowArray::get_borders(GlowTransform* t, double* x_right, double* x_left,
     double* y_high, double* y_low)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->get_borders(t, x_right, x_left, y_high, y_low);
   }
 }
 
 void GlowArray::move(double delta_x, double delta_y, int grid)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->move(delta_x, delta_y, grid);
   }
 }
@@ -1331,98 +1237,83 @@ void GlowArray::move(double delta_x, double delta_y, int grid)
 void GlowArray::shift(
     void* pos, double delta_x, double delta_y, int highlight, int hot)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->shift(pos, delta_x, delta_y, highlight, hot);
   }
 }
 
 void GlowArray::move_noerase(int delta_x, int delta_y, int grid)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->move_noerase(delta_x, delta_y, grid);
   }
 }
 
 void GlowArray::conpoint_refcon_redraw(void* node, int conpoint)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->conpoint_refcon_redraw(node, conpoint);
   }
 }
 
 void GlowArray::conpoint_refcon_erase(void* node, int conpoint)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->conpoint_refcon_redraw(node, conpoint);
   }
 }
 
 void GlowArray::set_inverse(int on)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->set_inverse(on);
   }
 }
 
-int GlowArray::event_handler(GlowWind* w, glow_eEvent event, int x, int y)
+int GlowArray::event_handler(glow_eEvent event, int x, int y)
 {
-  int i;
   int sts;
 
-  for (i = 0; i < a_size; i++) {
-    sts = a[i]->event_handler(w, event, x, y);
+  for (int i = 0; i < a_size; i++) {
+    sts = a[i]->event_handler(event, x, y);
     if (sts)
       return sts;
   }
   return 0;
 }
 
-int GlowArray::event_handler(
-    GlowWind* w, glow_eEvent event, int x, int y, double fx, double fy)
+int GlowArray::event_handler(glow_eEvent event, int x, int y, double fx,
+    double fy)
 {
-  int i;
   int sts;
 
-  for (i = a_size - 1; i >= 0; i--) {
-    sts = a[i]->event_handler(w, event, x, y, fx, fy);
+  for (int i = a_size - 1; i >= 0; i--) {
+    sts = a[i]->event_handler(event, x, y, fx, fy);
     if (sts)
       return sts;
   }
   return 0;
 }
 
-int GlowArray::event_handler(
-    GlowWind* w, glow_eEvent event, double fx, double fy)
+int GlowArray::event_handler(glow_eEvent event, double fx, double fy)
 {
-  int i;
   int sts;
 
-  for (i = a_size - 1; i >= 0; i--) {
-    sts = a[i]->event_handler(w, event, fx, fy);
+  for (int i = a_size - 1; i >= 0; i--) {
+    sts = a[i]->event_handler(event, fx, fy);
     if (sts)
       return sts;
   }
   return 0;
 }
 
-int GlowArray::event_handler(
-    GlowWind* w, void* pos, glow_eEvent event, int x, int y, void* node)
+int GlowArray::event_handler(void* pos, glow_eEvent event, int x, int y,
+    void* node)
 {
-  int i;
   int sts;
 
-  for (i = 0; i < a_size; i++) {
-    sts = a[i]->event_handler(w, pos, event, x, y, node);
+  for (int i = 0; i < a_size; i++) {
+    sts = a[i]->event_handler(pos, event, x, y, node);
     if (sts)
       return sts;
   }
@@ -1431,14 +1322,13 @@ int GlowArray::event_handler(
 
 // Special eventhandler for connection lines...
 
-int GlowArray::event_handler(
-    GlowWind* w, void* pos, glow_eEvent event, int x, int y, int num)
+int GlowArray::event_handler(void* pos, glow_eEvent event, int x, int y,
+    int num)
 {
-  int i;
   int sts;
 
-  for (i = 0; i < num; i++) {
-    sts = a[i]->event_handler(w, pos, event, x, y, NULL);
+  for (int i = 0; i < num; i++) {
+    sts = a[i]->event_handler(pos, event, x, y, NULL);
     if (sts)
       return sts;
   }
@@ -1447,9 +1337,7 @@ int GlowArray::event_handler(
 
 void GlowArray::configure()
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (i == 0)
       a[i]->configure(NULL);
     else
@@ -1459,18 +1347,14 @@ void GlowArray::configure()
 
 void GlowArray::move_widgets(int x, int y)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     a[i]->move_widgets(x, y);
   }
 }
 
 int GlowArray::get_next(GlowArrayElem* element, GlowArrayElem** next)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (a[i] == element) {
       if (i == a_size - 1)
         return GLOW__NONEXT;
@@ -1483,9 +1367,7 @@ int GlowArray::get_next(GlowArrayElem* element, GlowArrayElem** next)
 
 int GlowArray::get_previous(GlowArrayElem* element, GlowArrayElem** prev)
 {
-  int i;
-
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (a[i] == element) {
       if (i == 0)
         return GLOW__NOPREVIOUS;
@@ -1801,25 +1683,20 @@ void GlowArray::set_last_group(char* name)
 
 char* GlowArray::get_last_group()
 {
-  char* name;
   static char groups[10][32];
   static char nullstr[] = "";
   char member_cnt[10];
-  int group_cnt;
-  int found;
-  int max_members;
   int max_idx = 0;
-  int i, j;
 
   memset(member_cnt, 0, sizeof(member_cnt));
-  group_cnt = 0;
+  int group_cnt = 0;
 
-  for (i = 0; i < a_size; i++) {
-    name = a[i]->get_last_group();
+  for (int i = 0; i < a_size; i++) {
+    char* name = a[i]->get_last_group();
     if (!streq(name, "")) {
       // Find group and increment member count
-      found = 0;
-      for (j = 0; j < group_cnt; j++) {
+      int found = 0;
+      for (int j = 0; j < group_cnt; j++) {
         if (streq(groups[j], name)) {
           member_cnt[j]++;
           found = 1;
@@ -1835,8 +1712,8 @@ char* GlowArray::get_last_group()
   }
 
   // Analyse result
-  max_members = 0;
-  for (i = 0; i < group_cnt; i++) {
+  int max_members = 0;
+  for (int i = 0; i < group_cnt; i++) {
     if (member_cnt[i] > max_members) {
       max_members = member_cnt[i];
       max_idx = i;

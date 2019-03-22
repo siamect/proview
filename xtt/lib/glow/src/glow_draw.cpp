@@ -36,6 +36,8 @@
 
 #include "glow_draw.h"
 
+#include <math.h>
+
 GlowDraw::GlowDraw() : ctx(0), imlib(0)
 {
 }
@@ -44,414 +46,82 @@ GlowDraw::~GlowDraw()
 {
 }
 
-void GlowDraw::enable_event(glow_eEvent event, glow_eEventType event_type,
-    int (*event_cb)(GlowCtx* ctx, glow_tEvent event))
-{
-}
-
-void GlowDraw::clear(GlowWind* w)
-{
-}
-
-void GlowDraw::copy_buffer(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
-{
-}
-
-void GlowDraw::get_window_size(GlowWind* w, int* width, int* height)
-{
-}
-
-void GlowDraw::set_window_size(GlowWind* w, int width, int height)
-{
-}
-
-int GlowDraw::rect(GlowWind* w, int x, int y, int width, int height,
-    glow_eDrawType gc_type, int idx, int highlight)
-{
-  return 1;
-}
-
-int GlowDraw::rect_erase(
-    GlowWind* w, int x, int y, int width, int height, int idx)
-{
-  return 1;
-}
-
-int GlowDraw::arrow(GlowWind* w, int x1, int y1, int x2, int y2, int x3, int y3,
-    glow_eDrawType gc_type, int idx, int highlight)
-{
-  return 1;
-}
-
-int GlowDraw::arrow_erase(
-    GlowWind* w, int x1, int y1, int x2, int y2, int x3, int y3, int idx)
-{
-  return 1;
-}
-
-int GlowDraw::arc(GlowWind* w, int x, int y, int width, int height, int angle1,
-    int angle2, glow_eDrawType gc_type, int idx, int highlight)
-{
-  return 1;
-}
-
-int GlowDraw::fill_arc(GlowWind* w, int x, int y, int width, int height,
-    int angle1, int angle2, glow_eDrawType gc_type, int highlight)
-{
-  return 1;
-}
-
-int GlowDraw::arc_erase(GlowWind* w, int x, int y, int width, int height,
-    int angle1, int angle2, int idx)
-{
-  return 1;
-}
-
-int GlowDraw::line(GlowWind* w, int x1, int y1, int x2, int y2,
-    glow_eDrawType gc_type, int idx, int highlight)
-{
-  return 1;
-}
-
-int GlowDraw::line_dashed(GlowWind* w, int x1, int y1, int x2, int y2,
-    glow_eDrawType gc_type, int idx, int highlight, glow_eLineType line_type)
-{
-  return 1;
-}
-
-int GlowDraw::line_erase(GlowWind* w, int x1, int y1, int x2, int y2, int idx)
-{
-  return 1;
-}
-
-int GlowDraw::polyline(GlowWind* w, glow_sPointX* points, int point_cnt,
-    glow_eDrawType gc_type, int idx, int highlight)
-{
-  return 1;
-}
-
-int GlowDraw::fill_polyline(GlowWind* w, glow_sPointX* points, int point_cnt,
-    glow_eDrawType gc_type, int highlight)
-{
-  return 1;
-}
-
-int GlowDraw::polyline_erase(
-    GlowWind* w, glow_sPointX* points, int point_cnt, int idx)
-{
-  return 1;
-}
-
-int GlowDraw::text(GlowWind* w, int x, int y, char* text, int len,
-    glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight,
-    int line, glow_eFont font_idx, double size, int rot)
-{
-  return 1;
-}
-
-int GlowDraw::text_cursor(GlowWind* w, int x, int y, char* text, int len,
-    glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight,
-    int pos, glow_eFont font, double size)
-{
-  return 1;
-}
-
-int GlowDraw::text_erase(GlowWind* w, int x, int y, char* text, int len,
-    glow_eDrawType gc_type, int idx, int line, glow_eFont font_idx, double size,
-    int rot)
-{
-  return 1;
-}
-
-int GlowDraw::fill_rect(
-    GlowWind* w, int x, int y, int width, int height, glow_eDrawType gc_type)
-{
-  return 1;
-}
-
-int GlowDraw::pixmaps_create(
-    GlowWind* w, glow_sPixmapData* pixmap_data, void** pixmaps)
-{
-  return 1;
-}
-
-void GlowDraw::pixmaps_delete(GlowWind* w, void* pixmaps)
-{
-}
-
-int GlowDraw::pixmap(GlowWind* w, int x, int y, glow_sPixmapData* pixmap_data,
-    void* pixmaps, glow_eDrawType gc_type, int idx, int highlight, int line)
-{
-  return 1;
-}
-
-int GlowDraw::pixmap_inverse(GlowWind* w, int x, int y,
-    glow_sPixmapData* pixmap_data, void* pixmaps, glow_eDrawType gc_type,
-    int idx, int line)
-{
-  return 1;
-}
-
-int GlowDraw::pixmap_erase(GlowWind* w, int x, int y,
-    glow_sPixmapData* pixmap_data, void* pixmaps, glow_eDrawType gc_type,
-    int idx, int line)
-{
-  return 1;
-}
-
-int GlowDraw::image(GlowWind* w, int x, int y, int width, int height,
-    glow_tImImage image, glow_tPixmap pixmap, glow_tPixmap clip_mask)
-{
-  return 1;
-}
-
-int GlowDraw::image_d(GlowWind* wind, double x, double y, int width, int height,
-    glow_tImImage img, glow_tPixmap pixmap, glow_tPixmap clip_mask)
-{
-  return image(wind, (int)x, (int)y, width, height, img, pixmap, clip_mask);
-}
-
-void GlowDraw::set_cursor(GlowWind* w, glow_eDrawCursor cursor)
-{
-}
-
-void GlowDraw::set_nav_cursor(glow_eDrawCursor cursor)
-{
-}
-
-int GlowDraw::get_text_extent(const char* text, int len, glow_eDrawType gc_type,
-    int idx, glow_eFont font_idx, int* width, int* height, int* descent,
-    double size, int rot)
-{
-  return 1;
-}
-
-void GlowDraw::set_inputfocus(GlowWind* w)
-{
-}
-
-void GlowDraw::set_background(GlowWind* w, glow_eDrawType drawtype,
-    glow_tPixmap pixmap, glow_tImImage image, int pixmap_width,
-    int pixmap_height)
-{
-}
-
-void GlowDraw::reset_background(GlowWind* w)
-{
-}
-
-void GlowDraw::set_image_clip_mask(
-    DrawWind* w, glow_tPixmap pixmap, int x, int y)
-{
-}
-
-void GlowDraw::reset_image_clip_mask(DrawWind* w)
-{
-}
-
-int GlowDraw::set_clip_rectangle(
-    GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
-{
-  return 1;
-}
-
-void GlowDraw::reset_clip_rectangle(GlowWind* w)
-{
-}
-
-int GlowDraw::clip_level(GlowWind* w)
-{
-  return 1;
-}
-
-int GlowDraw::draw_point(GlowWind* w, int x1, int y1, glow_eDrawType gc_type)
-{
-  return 1;
-}
-
-int GlowDraw::draw_points(GlowWind* w, glow_sPointX* points, int point_num,
-    glow_eDrawType gc_type, int idx)
-{
-  return 1;
-}
-
-void GlowDraw::set_click_sensitivity(GlowWind* w, int value)
-{
-}
-
-void GlowDraw::draw_background(GlowWind* wind, int x, int y, int w, int h)
-{
-}
-
-int GlowDraw::create_buffer(GlowWind* w)
-{
-  return 1;
-}
-
-void GlowDraw::delete_buffer(GlowWind* w)
-{
-}
-
-void GlowDraw::buffer_background(DrawWind* w, GlowCtx* cctx)
-{
-}
-
-int GlowDraw::export_image(char* filename)
-{
-  return 1;
-}
-
-int GlowDraw::print(char* filename, double x0, double x1, int end)
-{
-  return 1;
-}
-
-void GlowDraw::set_timer(
-    GlowCtx* gctx, int time_ms, void (*callback_func)(GlowCtx* ctx), void** id)
-{
-}
-
-void GlowDraw::remove_timer(void* id)
-{
-}
-
-int GlowDraw::image_get_width(glow_tImImage image)
-{
-  return 0;
-}
-
-int GlowDraw::image_get_height(glow_tImImage image)
-{
-  return 0;
-}
-
-int GlowDraw::image_get_rowstride(glow_tImImage image)
-{
-  return 0;
-}
-
-unsigned char* GlowDraw::image_get_data(glow_tImImage image)
-{
-  return 0;
-}
-
-void GlowDraw::image_copy(glow_tImImage orig_image, glow_tImImage* image)
-{
-}
-
-void GlowDraw::image_rotate(
-    glow_tImImage* image, int to_rotation, int from_rotation)
-{
-}
-
-void GlowDraw::image_flip_vertical(glow_tImImage* image)
-{
-}
-
-void GlowDraw::image_flip_horizontal(glow_tImImage* image)
-{
-}
-
-int GlowDraw::image_scale(int width, int height, glow_tImImage orig_im,
-    glow_tImImage* im, glow_tImData* im_data, glow_tPixmap* im_pixmap,
-    glow_tPixmap* im_mask)
-{
-  return 0;
-}
-
-int GlowDraw::image_load(char* imagefile, glow_tImImage* orig_im,
-    glow_tImImage* im, glow_tImData* im_data)
-{
-  return 0;
-}
-
-int GlowDraw::image_render(int width, int height, glow_tImImage orig_im,
-    glow_tImImage* im, glow_tPixmap* im_pixmap, glow_tPixmap* im_mask)
-{
-  return 0;
-}
-
-void GlowDraw::image_free(glow_tImImage image)
-{
-}
-
-void GlowDraw::pixmap_free(glow_tPixmap pixmap)
-{
-}
-
-void GlowDraw::image_pixel_iter(glow_tImImage orig_image, glow_tImImage* image,
-    void (*pixel_cb)(void*, unsigned char*), void* userdata)
-{
+void GlowDraw::reset_clip_rectangle(DrawWind* w)
+{
+  if (w->clip_cnt == 0) {
+    printf("** Draw clip mismatch\n");
+    return;
+  }
+  w->clip_cnt--;
+  if (w->clip_cnt == 0)
+    w->clip_on = 0;
 }
 
 glow_eGradient GlowDraw::gradient_rotate(double rot, glow_eGradient gradient)
 {
-  return glow_eGradient_No;
-}
+  glow_eGradient g = gradient;
+  double rotation = (rot / 360 - floor(rot / 360)) * 360;
 
-int GlowDraw::gradient_fill_rect(GlowWind* wind, int x, int y, int w, int h,
-    glow_eDrawType d0, glow_eDrawType d1, glow_eDrawType d2,
-    glow_eGradient gradient)
-{
-  return fill_rect(wind, x, y, w, h, d0);
-}
-
-int GlowDraw::gradient_fill_rectrounded(GlowWind* wind, int x, int y, int w,
-    int h, int roundamount, glow_eDrawType d0, glow_eDrawType d1,
-    glow_eDrawType d2, glow_eGradient gradient)
-{
-  return fill_rect(wind, x, y, w, h, d0);
-}
-
-int GlowDraw::gradient_fill_arc(GlowWind* wind, int x, int y, int w, int h,
-    int angle1, int angle2, glow_eDrawType d0, glow_eDrawType d1,
-    glow_eDrawType d2, glow_eGradient gradient)
-{
-  return fill_arc(wind, x, y, w, h, angle1, angle2, d0, 0);
-}
-
-int GlowDraw::gradient_fill_polyline(GlowWind* wind, glow_sPointX* points,
-    int point_cnt, glow_eDrawType d0, glow_eDrawType d1, glow_eDrawType d2,
-    glow_eGradient gradient)
-{
-  return fill_polyline(wind, points, point_cnt, d0, 0);
-}
-
-void GlowDraw::event_exec(void* event, unsigned int size)
-{
-}
-
-int GlowDraw::open_color_selection(double* r, double* g, double* b)
-{
-  return 0;
-}
-
-void GlowDraw::update_color(glow_eDrawType color)
-{
-}
-
-void GlowDraw::push_customcolors(GlowCustomColors* cc)
-{
-}
-
-void GlowDraw::set_customcolors(GlowCustomColors* cc)
-{
-}
-
-void GlowDraw::pop_customcolors()
-{
-}
-
-GlowCustomColors* GlowDraw::create_customcolors()
-{
-  return 0;
-}
-
-void GlowDraw::reset_customcolors(GlowCustomColors* cc)
-{
-}
-
-DrawWind::DrawWind()
-    : double_buffered(0), double_buffer_on(0), draw_buffer_only(0), is_nav(0)
-{
+  while (rotation > 45) {
+    switch (g) {
+    case glow_eGradient_HorizontalUp:
+      g = glow_eGradient_VerticalRight;
+      break;
+    case glow_eGradient_HorizontalDown:
+      g = glow_eGradient_VerticalLeft;
+      break;
+    case glow_eGradient_HorizontalTube1:
+      g = glow_eGradient_VerticalTube1;
+      break;
+    case glow_eGradient_HorizontalTube2:
+      g = glow_eGradient_VerticalTube2;
+      break;
+    case glow_eGradient_VerticalLeft:
+      g = glow_eGradient_HorizontalUp;
+      break;
+    case glow_eGradient_VerticalRight:
+      g = glow_eGradient_HorizontalDown;
+      break;
+    case glow_eGradient_VerticalTube1:
+      g = glow_eGradient_HorizontalTube1;
+      break;
+    case glow_eGradient_VerticalTube2:
+      g = glow_eGradient_HorizontalTube2;
+      break;
+    case glow_eGradient_DiagonalUpperLeft:
+      g = glow_eGradient_DiagonalUpperRight;
+      break;
+    case glow_eGradient_DiagonalLowerLeft:
+      g = glow_eGradient_DiagonalUpperLeft;
+      break;
+    case glow_eGradient_DiagonalUpperRight:
+      g = glow_eGradient_DiagonalLowerRight;
+      break;
+    case glow_eGradient_DiagonalLowerRight:
+      g = glow_eGradient_DiagonalLowerLeft;
+      break;
+    case glow_eGradient_DiagonalUpTube:
+      g = glow_eGradient_DiagonalDownTube;
+      break;
+    case glow_eGradient_DiagonalDownTube:
+      g = glow_eGradient_DiagonalUpTube;
+      break;
+    case glow_eGradient_RadialUpperLeft:
+      g = glow_eGradient_RadialUpperRight;
+      break;
+    case glow_eGradient_RadialLowerLeft:
+      g = glow_eGradient_RadialUpperLeft;
+      break;
+    case glow_eGradient_RadialUpperRight:
+      g = glow_eGradient_RadialLowerRight;
+      break;
+    case glow_eGradient_RadialLowerRight:
+      g = glow_eGradient_RadialLowerLeft;
+      break;
+    default:
+      break;
+    }
+    rotation -= 90;
+  }
+  return g;
 }

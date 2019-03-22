@@ -93,8 +93,6 @@ public:
   //! Adjust pixel coordinates for navigaion window to current zoom factor.
   void nav_zoom();
 
-  void traverse(int x, int y); //!< Not used.
-
   //! Event handler
   /*!
     \param pos		Position of object. Should be zero.
@@ -106,8 +104,7 @@ public:
 
     Detects if the object is hit by the event.
   */
-  int event_handler(
-      GlowWind* w, void* pos, glow_eEvent event, int x, int y, void* node);
+  int event_handler(void* pos, glow_eEvent event, int x, int y, void* node);
 
   //! Not implemented
   void conpoint_select(void* pos, int x, int y, double* distance, void** cp){}
@@ -134,7 +131,7 @@ public:
 
     Draw the object, without borders or shadow.
   */
-  void draw(GlowWind* w, void* pos, int highlight, int hot, void* node);
+  void draw(DrawWind *w, void* pos, int highlight, int hot, void* node);
 
   //! Draw border and shadow of the arc.
   /*!
@@ -147,7 +144,7 @@ public:
     linewidth 1 pixel.
     The shadow also always has linewith 1 pixel.
   */
-  void draw_shadow(GlowWind* w, int border, int shadow, int highlight, int hot);
+  void draw_shadow(DrawWind *w, int border, int shadow, int highlight, int hot);
 
   //! Erase the object.
   /*!
@@ -155,7 +152,7 @@ public:
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase(GlowWind* w, void* pos, int hot, void* node);
+  void erase(DrawWind *w, void* pos, int hot, void* node);
 
   //! Calculate the border for a set of objects or for a parent node.
   /*!

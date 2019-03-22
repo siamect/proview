@@ -73,15 +73,12 @@ GrowAxisArc::GrowAxisArc(GrowCtx* glow_ctx, const char* name, double x1,
 
   configure();
   if (!nodraw)
-    draw(&ctx->mw, (GlowTransform*)NULL, highlight, hot, NULL, NULL);
+    ctx->set_dirty();
 }
 
 GrowAxisArc::~GrowAxisArc()
 {
-  if (ctx->nodraw)
-    return;
-  erase(&ctx->mw);
-  erase(&ctx->navw);
+  ctx->set_dirty();
 }
 
 void GrowAxisArc::configure()
@@ -192,7 +189,7 @@ void GrowAxisArc::open(std::ifstream& fp)
   configure();
 }
 
-void GrowAxisArc::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowAxisArc::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -217,7 +214,7 @@ void GrowAxisArc::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowAxisArc::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowAxisArc::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -257,19 +254,13 @@ void GrowAxisArc::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 void GrowAxisArc::set_highlight(int on)
 {
   highlight = on;
-  draw();
+  ctx->set_dirty();
 }
 
-void GrowAxisArc::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
+void GrowAxisArc::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  if (ctx->nodraw)
-    return;
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
-    hot = 0;
-  }
+  hot = (w == ctx->navw) ? 0 : hot;
   int i;
   int draw_text = (fabs(increment) > DBL_EPSILON);
   int idx;
@@ -316,8 +307,8 @@ void GrowAxisArc::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       highlight, (GrowNode*)colornode, 0);
 
   // Lines inwards
-  ctx->gdraw->arc(w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-      angle1 - (int)rotation, angle2, drawtype, idx, 0);
+  ctx->gdraw->arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+      angle1 - (int)rotation, angle2, drawtype, 0, idx);
 
   if (lines == 1)
     return;
@@ -354,7 +345,7 @@ void GrowAxisArc::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     xt = int(((double)ur_x - ll_x) / 2 * (cos1 * (1.0 - linelength) + 1)
         + ll_x - cos1 * z_width / 2);
 
-    ctx->gdraw->line(w, x1, y1, x2, y2, drawtype, idx, 0);
+    ctx->gdraw->line(x1, y1, x2, y2, drawtype, idx, 0);
     if (draw_text) {
       if (text_idx >= 0 && i % valuequotient == 0
           && !(angle2 == 360 && ((increment > 0 && i == lines - 1)
@@ -374,23 +365,17 @@ void GrowAxisArc::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
           yt = yt + (z_height - z_descent) / 2;
           xt = xt - z_width / 2;
         }
-        ctx->gdraw->text(w, xt, yt, text, strlen(text), text_drawtype,
-            text_color_drawtype, text_idx, highlight, 0, glow_eFont_Helvetica,
+        ctx->gdraw->text(xt, yt, text, strlen(text), text_drawtype,
+            text_color_drawtype, text_idx, highlight, glow_eFont_Helvetica,
             tsize, 0);
       }
     }
   }
 }
 
-void GrowAxisArc::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
+void GrowAxisArc::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 {
-  if (ctx->nodraw)
-    return;
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
-    hot = 0;
-  }
+  hot = (w == ctx->navw) ? 0 : hot;
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
   double rotation;
   int idx;
@@ -427,36 +412,17 @@ void GrowAxisArc::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
   ll_y = MIN(y1, y2);
   ur_y = MAX(y1, y2);
 
-  w->set_draw_buffer_only();
-  ctx->gdraw->arc_erase(w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-      angle1 - (int)rotation, angle2, idx);
-  ctx->gdraw->fill_rect(
-      w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
-  w->reset_draw_buffer_only();
-}
-
-void GrowAxisArc::draw()
-{
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->gdraw->arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, angle1 - (int)rotation,
+      angle2, glow_eDrawType_LineErase, 0, idx);
+  ctx->gdraw->rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+      glow_eDrawType_LineErase, 1, 0);
 }
 
 void GrowAxisArc::align(double x, double y, glow_eAlignDirection direction)
 {
   double dx, dy;
 
-  erase(&ctx->mw);
-  erase(&ctx->navw);
-  ctx->set_defered_redraw();
-  draw();
+  ctx->set_dirty();
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -492,18 +458,13 @@ void GrowAxisArc::align(double x, double y, glow_eAlignDirection direction)
   x_left += dx;
   y_high += dy;
   y_low += dy;
-
-  draw();
-  ctx->redraw_defered();
 }
 
 void GrowAxisArc::set_textsize(int size)
 {
-  erase(&ctx->mw);
-  erase(&ctx->navw);
   text_size = size;
   get_node_borders();
-  draw();
+  ctx->set_dirty();
 }
 
 void GrowAxisArc::set_textbold(int bold)
@@ -512,14 +473,12 @@ void GrowAxisArc::set_textbold(int bold)
       || (!bold && text_drawtype == glow_eDrawType_TextHelvetica))
     return;
 
-  erase(&ctx->mw);
-  erase(&ctx->navw);
   if (bold)
     text_drawtype = glow_eDrawType_TextHelveticaBold;
   else
     text_drawtype = glow_eDrawType_TextHelvetica;
   get_node_borders();
-  draw();
+  ctx->set_dirty();
 }
 
 void GrowAxisArc::set_range(double minval, double maxval, int keep_settings)
@@ -575,12 +534,10 @@ void GrowAxisArc::set_range(double minval, double maxval, int keep_settings)
         { 49, 2, 4, 8, "%2.0f" }, // 24
         { 26, 5, 5, 5, "%2.0f" } } }; // 25
 
-  erase(&ctx->mw);
-  erase(&ctx->navw);
   max_value = maxval;
   min_value = minval;
 
-  GlowWind* w = &ctx->mw;
+  DrawWind* w = ctx->mw;
   // double tsize = w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
   int x1 = int(trf.x(ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
   int y1 = int(trf.y(ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
@@ -647,7 +604,7 @@ void GrowAxisArc::set_range(double minval, double maxval, int keep_settings)
   }
 
   configure();
-  draw();
+  ctx->set_dirty();
 }
 
 void GrowAxisArc::export_javabean(GlowTransform* t, void* node,
@@ -658,21 +615,21 @@ void GrowAxisArc::export_javabean(GlowTransform* t, void* node,
   double rotation;
   int bold;
   int idx = int(
-      ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (text_size + 4) - 4);
+      ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * (text_size + 4) - 4);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
 
   bold = (text_drawtype == glow_eDrawType_TextHelveticaBold);
 
   if (!t) {
-    x1 = trf.x(ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y1 = trf.y(ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
-    x2 = trf.x(ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y2 = trf.y(ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x1 = trf.x(ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y1 = trf.y(ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+    x2 = trf.x(ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y2 = trf.y(ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
   } else {
-    x1 = trf.x(t, ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y1 = trf.y(t, ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
-    x2 = trf.x(t, ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y2 = trf.y(t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x1 = trf.x(t, ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y1 = trf.y(t, ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+    x2 = trf.x(t, ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y2 = trf.y(t, ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
   }
 
   ll_x = MIN(x1, x2);
@@ -719,7 +676,6 @@ void GrowAxisArc::trace_close()
 void GrowAxisArc::set_conf(double max_val, double min_val, int no_of_lines,
     int long_quot, int value_quot, double rot, const char* value_format)
 {
-  erase(&ctx->mw);
   max_value = max_val;
   min_value = min_val;
   lines = no_of_lines;
@@ -730,7 +686,7 @@ void GrowAxisArc::set_conf(double max_val, double min_val, int no_of_lines,
     strcpy(format, value_format);
 
   configure();
-  draw();
+  ctx->set_dirty();
 }
 
 void GrowAxisArc::set_axis_info(glow_sAxisInfo* info)

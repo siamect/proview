@@ -49,10 +49,7 @@ public:
   int layout_adjusted;
   void configure();
   void zoom(double factor);
-  void unzoom()
-  {
-    zoom(mw.base_zoom_factor / mw.zoom_factor_x);
-  }
+  void unzoom();
   void nav_zoom();
   void get_zoom(double* factor_x, double* factor_y);
   void get_prefered_zoom_y(int height, double* factor_y);

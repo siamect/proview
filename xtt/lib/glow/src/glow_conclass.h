@@ -76,7 +76,6 @@ public:
   void zoom(){}
   void nav_zoom(){}
   void print_zoom(){}
-  void traverse(int x, int y){}
   void get_borders(double pos_x, double pos_y, double* x_right, double* x_left,
       double* y_high, double* y_low, void* node){}
   int event_handler(void* pos, glow_eEvent event, int x, int y, void* node)
@@ -98,7 +97,6 @@ public:
   */
   void open(std::ifstream& fp);
   void draw(GlowPoint* pos, int highlight, int hot, void* node){}
-  void nav_draw(GlowPoint* pos, int highlight, void* node){}
   void erase(GlowPoint* pos, int hot, void* node){}
   void nav_erase(GlowPoint* pos, void* node){}
 

@@ -73,112 +73,66 @@ GrowRectRounded::GrowRectRounded(GrowCtx* glow_ctx, const char* name, double x,
     ur.posit(x_grid, y_grid);
   }
   if (!nodraw)
-    draw(&ctx->mw, (GlowTransform*)NULL, highlight, hot, NULL, NULL);
+    ctx->set_dirty();
   get_node_borders();
 }
 
 GrowRectRounded::~GrowRectRounded()
 {
   ctx->object_deleted(this);
-  if (ctx->nodraw)
-    return;
-
-  erase(&ctx->mw);
-  erase(&ctx->navw);
-
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->set_dirty();
   if (hot)
-    ctx->gdraw->set_cursor(&ctx->mw, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
 }
 
 void GrowRectRounded::move(double delta_x, double delta_y, int grid)
 {
   if (fixposition)
     return;
-  ctx->set_defered_redraw();
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+
   if (grid) {
     double x_grid, y_grid;
 
     /* Move to closest grid point */
-    erase(&ctx->mw);
-    erase(&ctx->navw);
-    ctx->find_grid(x_left + delta_x / ctx->mw.zoom_factor_x,
-        y_low + delta_y / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid(x_left + delta_x / ctx->mw->zoom_factor_x,
+        y_low + delta_y / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
     trf.move(x_grid - x_left, y_grid - y_low);
     get_node_borders();
   } else {
-    double dx, dy;
-
-    erase(&ctx->mw);
-    erase(&ctx->navw);
-    dx = delta_x / ctx->mw.zoom_factor_x;
-    dy = delta_y / ctx->mw.zoom_factor_y;
+    double dx = delta_x / ctx->mw->zoom_factor_x;
+    double dy = delta_y / ctx->mw->zoom_factor_y;
     trf.move(dx, dy);
     x_right += dx;
     x_left += dx;
     y_high += dy;
     y_low += dy;
   }
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->redraw_defered();
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->set_dirty();
 }
 
 void GrowRectRounded::move_noerase(int delta_x, int delta_y, int grid)
 {
   if (fixposition)
     return;
+
   if (grid) {
     double x_grid, y_grid;
 
     /* Move to closest grid point */
-    ctx->find_grid(x_left + double(delta_x) / ctx->mw.zoom_factor_x,
-        y_low + double(delta_y) / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid(x_left + double(delta_x) / ctx->mw->zoom_factor_x,
+        y_low + double(delta_y) / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
     trf.move(x_grid - x_left, y_grid - y_low);
     get_node_borders();
   } else {
-    double dx, dy;
-
-    dx = double(delta_x) / ctx->mw.zoom_factor_x;
-    dy = double(delta_y) / ctx->mw.zoom_factor_y;
+    double dx = double(delta_x) / ctx->mw->zoom_factor_x;
+    double dy = double(delta_y) / ctx->mw->zoom_factor_y;
     trf.move(dx, dy);
     x_right += dx;
     x_left += dx;
     y_high += dy;
     y_low += dy;
   }
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->set_dirty();
 }
 
 int GrowRectRounded::local_event_handler(glow_eEvent event, double x, double y)
@@ -197,8 +151,7 @@ int GrowRectRounded::local_event_handler(glow_eEvent event, double x, double y)
     return 0;
 }
 
-int GrowRectRounded::event_handler(
-    GlowWind* w, glow_eEvent event, double fx, double fy)
+int GrowRectRounded::event_handler(glow_eEvent event, double fx, double fy)
 {
   double x, y;
 
@@ -206,8 +159,7 @@ int GrowRectRounded::event_handler(
   return local_event_handler(event, x, y);
 }
 
-int GrowRectRounded::event_handler(
-    GlowWind* w, glow_eEvent event, int x, int y, double fx, double fy)
+int GrowRectRounded::event_handler(glow_eEvent event, int x, int y, double fx, double fy)
 {
   int sts;
 
@@ -227,8 +179,6 @@ int GrowRectRounded::event_handler(
   }
   switch (event) {
   case glow_eEvent_CursorMotion: {
-    int redraw = 0;
-
     if (ctx->hot_mode == glow_eHotMode_TraceAction)
       sts = 0;
     else if (ctx->hot_found)
@@ -240,22 +190,15 @@ int GrowRectRounded::event_handler(
     }
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
-      ctx->gdraw->set_cursor(w, glow_eDrawCursor_CrossHair);
+      ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
       hot = 1;
-      redraw = 1;
+      ctx->set_dirty();
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
-        ctx->gdraw->set_cursor(w, glow_eDrawCursor_Normal);
-      erase(w);
+        ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
       hot = 0;
-      redraw = 1;
-    }
-    if (redraw) {
-      ctx->draw(w, x_left * w->zoom_factor_x - w->offset_x - DRAW_MP,
-          y_low * w->zoom_factor_y - w->offset_y - DRAW_MP,
-          x_right * w->zoom_factor_x - w->offset_x + DRAW_MP,
-          y_high * w->zoom_factor_y - w->offset_y + DRAW_MP);
+      ctx->set_dirty();
     }
     break;
   }
@@ -444,7 +387,7 @@ void GrowRectRounded::open(std::ifstream& fp)
   }
 }
 
-void GrowRectRounded::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowRectRounded::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -470,7 +413,7 @@ void GrowRectRounded::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 }
 
 void GrowRectRounded::draw(
-    GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+    DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -510,7 +453,7 @@ void GrowRectRounded::draw(
 void GrowRectRounded::set_highlight(int on)
 {
   highlight = on;
-  draw();
+  ctx->set_dirty();
 }
 
 void GrowRectRounded::select_region_insert(double ll_x, double ll_y,
@@ -546,33 +489,12 @@ void GrowRectRounded::exec_dynamic()
 
 void GrowRectRounded::set_position(double x, double y)
 {
-  double old_x_left, old_x_right, old_y_low, old_y_high;
-
   if (feq(trf.a13, x) && feq(trf.a23, y))
     return;
-  old_x_left = x_left;
-  old_x_right = x_right;
-  old_y_low = y_low;
-  old_y_high = y_high;
-  erase(&ctx->mw);
-  erase(&ctx->navw);
+
   trf.posit(x, y);
   get_node_borders();
-  ctx->draw(&ctx->mw,
-      old_x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      old_y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      old_x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      old_y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->set_dirty();
 }
 
 void GrowRectRounded::set_scale(
@@ -615,8 +537,6 @@ void GrowRectRounded::set_scale(
   old_x_right = x_right;
   old_y_low = y_low;
   old_y_high = y_high;
-  erase(&ctx->mw);
-  erase(&ctx->navw);
   trf.scale_from_stored(scale_x, scale_y, x0, y0);
   get_node_borders();
 
@@ -645,28 +565,12 @@ void GrowRectRounded::set_scale(
     break;
   default:;
   }
-  ctx->draw(&ctx->mw,
-      old_x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      old_y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      old_x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      old_y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->set_dirty();
 }
 
 void GrowRectRounded::set_rotation(
     double angle, double x0, double y0, glow_eRotationPoint type)
 {
-  double old_x_left, old_x_right, old_y_low, old_y_high;
-
   if (fabs(angle - trf.rotation + trf.s_rotation) < FLT_EPSILON)
     return;
 
@@ -694,54 +598,17 @@ void GrowRectRounded::set_rotation(
   default:;
   }
 
-  old_x_left = x_left;
-  old_x_right = x_right;
-  old_y_low = y_low;
-  old_y_high = y_high;
-  erase(&ctx->mw);
-  erase(&ctx->navw);
   trf.rotate_from_stored(angle, x0, y0);
   get_node_borders();
-  ctx->draw(&ctx->mw,
-      old_x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      old_y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      old_x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      old_y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->set_dirty();
 }
 
-void GrowRectRounded::draw()
-{
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
-}
-void GrowRectRounded::draw(GlowWind* w, GlowTransform* t, int highlight,
+void GrowRectRounded::draw(DrawWind* w, GlowTransform* t, int highlight,
     int hot, void* node, void* colornode)
 {
   if (!(display_level & ctx->display_level))
     return;
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
-    hot = 0;
-  }
+  hot = (w == ctx->navw) ? 0 : hot;
   int chot = 0;
   if (hot && ctx->environment != glow_eEnv_Development) {
     if (ctx->hot_indication == glow_eHotIndication_No)
@@ -813,20 +680,20 @@ void GrowRectRounded::draw(GlowWind* w, GlowTransform* t, int highlight,
         else
           drawtype = fillcolor;
 
-        ctx->gdraw->fill_rect(w, ll_x, ll_y + amount, ur_x - ll_x,
-            ur_y - ll_y - 2 * amount, drawtype);
-        ctx->gdraw->fill_rect(
-            w, ll_x + amount, ll_y, ur_x - ll_x - 2 * amount, amount, drawtype);
-        ctx->gdraw->fill_rect(w, ll_x + amount, ur_y - amount,
-            ur_x - ll_x - 2 * amount, amount, drawtype);
-        ctx->gdraw->fill_arc(
-            w, ll_x, ll_y, 2 * amount, 2 * amount, 90, 90, drawtype, 0);
-        ctx->gdraw->fill_arc(w, ll_x, ur_y - 2 * amount, 2 * amount, 2 * amount,
-            180, 90, drawtype, 0);
-        ctx->gdraw->fill_arc(w, ur_x - 2 * amount, ur_y - 2 * amount,
-            2 * amount, 2 * amount, 270, 90, drawtype, 0);
-        ctx->gdraw->fill_arc(w, ur_x - 2 * amount, ll_y, 2 * amount, 2 * amount,
-            0, 90, drawtype, 0);
+        ctx->gdraw->rect(ll_x, ll_y + amount, ur_x - ll_x,
+            ur_y - ll_y - 2 * amount, drawtype, 1, 0);
+        ctx->gdraw->rect(ll_x + amount, ll_y, ur_x - ll_x - 2 * amount, amount,
+            drawtype, 1, 0);
+        ctx->gdraw->rect(ll_x + amount, ur_y - amount, ur_x - ll_x - 2 * amount,
+            amount, drawtype, 1, 0);
+        ctx->gdraw->arc(ll_x, ll_y, 2 * amount, 2 * amount, 90, 90, drawtype,
+            1, 0);
+        ctx->gdraw->arc(ll_x, ur_y - 2 * amount, 2 * amount, 2 * amount, 180,
+            90, drawtype, 1, 0);
+        ctx->gdraw->arc(ur_x - 2 * amount, ur_y - 2 * amount, 2 * amount,
+            2 * amount, 270, 90, drawtype, 1, 0);
+        ctx->gdraw->arc(ur_x - 2 * amount, ll_y, 2 * amount, 2 * amount, 0, 90,
+            drawtype, 1, 0);
       } else {
         glow_eDrawType f1, f2;
         double rotation;
@@ -846,7 +713,7 @@ void GrowRectRounded::draw(GlowWind* w, GlowTransform* t, int highlight,
           f1 = GlowColor::shift_drawtype(
               fillcolor, gradient_contrast / 2 + chot, 0);
         }
-        ctx->gdraw->gradient_fill_rectrounded(w, ll_x, ll_y, ur_x - ll_x,
+        ctx->gdraw->gradient_fill_rectrounded(ll_x, ll_y, ur_x - ll_x,
             ur_y - ll_y, amount, fillcolor, f1, f2,
             ctx->gdraw->gradient_rotate(rotation, grad));
       }
@@ -858,29 +725,29 @@ void GrowRectRounded::draw(GlowWind* w, GlowTransform* t, int highlight,
       // Draw light shadow
       drawtype = ctx->shift_drawtype(
           fillcolor, -drawtype_incr + chot, (GrowNode*)colornode);
-      ctx->gdraw->fill_rect(
-          w, ll_x + amount, ll_y, ur_x - ll_x - 2 * amount, ish, drawtype);
-      ctx->gdraw->fill_rect(
-          w, ll_x, ll_y + amount, ish, ur_y - ll_y - 2 * amount, drawtype);
-      ctx->gdraw->fill_arc(
-          w, ll_x, ll_y, 2 * amount, 2 * amount, 90, 90, drawtype, 0);
-      ctx->gdraw->fill_arc(w, ll_x, ur_y - 2 * amount, 2 * amount, 2 * amount,
-          180, 45, drawtype, 0);
-      ctx->gdraw->fill_arc(w, ur_x - 2 * amount, ll_y, 2 * amount, 2 * amount,
-          45, 45, drawtype, 0);
+      ctx->gdraw->rect(
+          ll_x + amount, ll_y, ur_x - ll_x - 2 * amount, ish, drawtype, 1, 0);
+      ctx->gdraw->rect(
+          ll_x, ll_y + amount, ish, ur_y - ll_y - 2 * amount, drawtype, 1, 0);
+      ctx->gdraw->arc(
+          ll_x, ll_y, 2 * amount, 2 * amount, 90, 90, drawtype, 1, 0);
+      ctx->gdraw->arc(ll_x, ur_y - 2 * amount, 2 * amount, 2 * amount, 180, 45,
+          drawtype, 1, 0);
+      ctx->gdraw->arc(ur_x - 2 * amount, ll_y, 2 * amount, 2 * amount, 45, 45,
+          drawtype, 1, 0);
       // Draw dark shadow
       drawtype = ctx->shift_drawtype(
           fillcolor, drawtype_incr + chot, (GrowNode*)colornode);
-      ctx->gdraw->fill_rect(w, ll_x + amount, ur_y - ish,
-          ur_x - ll_x - 2 * amount, ish, drawtype);
-      ctx->gdraw->fill_rect(w, ur_x - ish, ll_y + amount, ish,
-          ur_y - ll_y - 2 * amount, drawtype);
-      ctx->gdraw->fill_arc(w, ll_x, ur_y - 2 * amount, 2 * amount, 2 * amount,
-          225, 45, drawtype, 0);
-      ctx->gdraw->fill_arc(w, ur_x - 2 * amount, ll_y, 2 * amount, 2 * amount,
-          0, 45, drawtype, 0);
-      ctx->gdraw->fill_arc(w, ur_x - 2 * amount, ur_y - 2 * amount, 2 * amount,
-          2 * amount, 270, 90, drawtype, 0);
+      ctx->gdraw->rect(ll_x + amount, ur_y - ish, ur_x - ll_x - 2 * amount,
+          ish, drawtype, 1, 0);
+      ctx->gdraw->rect(ur_x - ish, ll_y + amount, ish,
+          ur_y - ll_y - 2 * amount, drawtype, 1, 0);
+      ctx->gdraw->arc(ll_x, ur_y - 2 * amount, 2 * amount, 2 * amount, 225, 45,
+          drawtype, 1, 0);
+      ctx->gdraw->arc(ur_x - 2 * amount, ll_y, 2 * amount, 2 * amount, 0, 45,
+          drawtype, 1, 0);
+      ctx->gdraw->arc(ur_x - 2 * amount, ur_y - 2 * amount, 2 * amount,
+          2 * amount, 270, 90, drawtype, 1, 0);
 
       if (grad == glow_eGradient_No) {
         if (chot)
@@ -889,24 +756,26 @@ void GrowRectRounded::draw(GlowWind* w, GlowTransform* t, int highlight,
           drawtype = fillcolor;
 
         if (amount > ish) {
-          ctx->gdraw->fill_rect(w, ll_x + ish, ll_y + amount,
-              ur_x - ll_x - 2 * ish, ur_y - ll_y - 2 * amount, drawtype);
-          ctx->gdraw->fill_rect(w, ll_x + amount, ll_y + ish,
-              ur_x - ll_x - 2 * amount, amount - ish, drawtype);
-          ctx->gdraw->fill_rect(w, ll_x + amount, ur_y - amount,
-              ur_x - ll_x - 2 * amount, amount - ish, drawtype);
-          ctx->gdraw->fill_arc(w, ll_x + ish, ll_y + ish, 2 * amount - 2 * ish,
-              2 * amount - 2 * ish, 90, 90, drawtype, 0);
-          ctx->gdraw->fill_arc(w, ll_x + ish, ur_y - 2 * amount + ish,
-              2 * amount - 2 * ish, 2 * amount - 2 * ish, 180, 90, drawtype, 0);
-          ctx->gdraw->fill_arc(w, ur_x - 2 * amount + ish,
-              ur_y - 2 * amount + ish, 2 * amount - 2 * ish,
-              2 * amount - 2 * ish, 270, 90, drawtype, 0);
-          ctx->gdraw->fill_arc(w, ur_x - 2 * amount + ish, ll_y + ish,
-              2 * amount - 2 * ish, 2 * amount - 2 * ish, 0, 90, drawtype, 0);
+          ctx->gdraw->rect(ll_x + ish, ll_y + amount,
+              ur_x - ll_x - 2 * ish, ur_y - ll_y - 2 * amount, drawtype, 1, 0);
+          ctx->gdraw->rect(ll_x + amount, ll_y + ish,
+              ur_x - ll_x - 2 * amount, amount - ish, drawtype, 1, 0);
+          ctx->gdraw->rect(ll_x + amount, ur_y - amount,
+              ur_x - ll_x - 2 * amount, amount - ish, drawtype, 1, 0);
+          ctx->gdraw->arc(ll_x + ish, ll_y + ish, 2 * amount - 2 * ish,
+              2 * amount - 2 * ish, 90, 90, drawtype, 1, 0);
+          ctx->gdraw->arc(ll_x + ish, ur_y - 2 * amount + ish,
+              2 * amount - 2 * ish, 2 * amount - 2 * ish, 180, 90, drawtype, 1,
+              0);
+          ctx->gdraw->arc(ur_x - 2 * amount + ish, ur_y - 2 * amount + ish,
+              2 * amount - 2 * ish, 2 * amount - 2 * ish, 270, 90, drawtype, 1,
+              0);
+          ctx->gdraw->arc(ur_x - 2 * amount + ish, ll_y + ish,
+              2 * amount - 2 * ish, 2 * amount - 2 * ish, 0, 90, drawtype, 1,
+              0);
         } else {
-          ctx->gdraw->fill_rect(w, ll_x + amount, ll_y + amount,
-              ur_x - ll_x - 2 * amount, ur_y - ll_y - 2 * amount, drawtype);
+          ctx->gdraw->rect(ll_x + amount, ll_y + amount,
+              ur_x - ll_x - 2 * amount, ur_y - ll_y - 2 * amount, drawtype, 1, 0);
         }
       } else {
         glow_eDrawType f1, f2;
@@ -927,7 +796,7 @@ void GrowRectRounded::draw(GlowWind* w, GlowTransform* t, int highlight,
           f1 = GlowColor::shift_drawtype(
               fillcolor, gradient_contrast / 2 + chot, 0);
         }
-        ctx->gdraw->gradient_fill_rectrounded(w, ll_x + ish, ll_y + ish,
+        ctx->gdraw->gradient_fill_rectrounded(ll_x + ish, ll_y + ish,
             ur_x - ll_x - 2 * ish, ur_y - ll_y - 2 * ish, amount - ish,
             fillcolor, f1, f2, ctx->gdraw->gradient_rotate(rotation, grad));
       }
@@ -938,33 +807,29 @@ void GrowRectRounded::draw(GlowWind* w, GlowTransform* t, int highlight,
         highlight, (GrowNode*)colornode, 0);
     int c = 0;
     ctx->gdraw->line(
-        w, ll_x + amount, ll_y, ur_x - amount, ll_y, drawtype, idx, 0);
+        ll_x + amount, ll_y, ur_x - amount, ll_y, drawtype, idx, 0);
     ctx->gdraw->line(
-        w, ll_x, ll_y - c + amount, ll_x, ur_y - c - amount, drawtype, idx, 0);
+        ll_x, ll_y - c + amount, ll_x, ur_y - c - amount, drawtype, idx, 0);
     ctx->gdraw->line(
-        w, ll_x + amount, ur_y, ur_x - amount, ur_y, drawtype, idx, 0);
+        ll_x + amount, ur_y, ur_x - amount, ur_y, drawtype, idx, 0);
     ctx->gdraw->line(
-        w, ur_x - c, ll_y + amount, ur_x - c, ur_y - amount, drawtype, idx, 0);
+        ur_x - c, ll_y + amount, ur_x - c, ur_y - amount, drawtype, idx, 0);
     ctx->gdraw->arc(
-        w, ll_x, ll_y, 2 * amount, 2 * amount, 90, 90, drawtype, idx, 0);
-    ctx->gdraw->arc(w, ll_x, ur_y - 2 * amount, 2 * amount, 2 * amount, 180, 90,
-        drawtype, idx, 0);
-    ctx->gdraw->arc(w, ur_x - 2 * amount, ur_y - 2 * amount, 2 * amount,
-        2 * amount, 270, 90, drawtype, idx, 0);
-    ctx->gdraw->arc(w, ur_x - 2 * amount, ll_y, 2 * amount, 2 * amount, 0, 90,
-        drawtype, idx, 0);
+        ll_x, ll_y, 2 * amount, 2 * amount, 90, 90, drawtype, 0, idx);
+    ctx->gdraw->arc(ll_x, ur_y - 2 * amount, 2 * amount, 2 * amount, 180, 90,
+        drawtype, 0, idx);
+    ctx->gdraw->arc(ur_x - 2 * amount, ur_y - 2 * amount, 2 * amount,
+        2 * amount, 270, 90, drawtype, 0, idx);
+    ctx->gdraw->arc(ur_x - 2 * amount, ll_y, 2 * amount, 2 * amount, 0, 90,
+        drawtype, 0, idx);
   }
 }
 
-void GrowRectRounded::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
+void GrowRectRounded::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
-    hot = 0;
-  }
+  hot = (w == ctx->navw) ? 0 : hot;
   if (hot && ctx->environment != glow_eEnv_Development
       && ctx->hot_indication != glow_eHotIndication_LineWidth)
     hot = 0;
@@ -1005,24 +870,27 @@ void GrowRectRounded::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
   ur_y = MAX(y1, y2);
 
   int amount = int(round_amount / 100 * MIN(ur_x - ll_x, ur_y - ll_y) + 0.5);
-  w->set_draw_buffer_only();
   if (border || !fill) {
-    ctx->gdraw->line_erase(w, ll_x + amount, ll_y, ur_x - amount, ll_y, idx);
-    ctx->gdraw->line_erase(w, ll_x, ll_y + amount, ll_x, ur_y - amount, idx);
-    ctx->gdraw->line_erase(w, ll_x + amount, ur_y, ur_x - amount, ur_y, idx);
-    ctx->gdraw->line_erase(w, ur_x, ll_y + amount, ur_x, ur_y - amount, idx);
-    ctx->gdraw->arc_erase(w, ll_x, ll_y, 2 * amount, 2 * amount, 90, 90, idx);
-    ctx->gdraw->arc_erase(
-        w, ll_x, ur_y - 2 * amount, 2 * amount, 2 * amount, 180, 90, idx);
-    ctx->gdraw->arc_erase(w, ur_x - 2 * amount, ur_y - 2 * amount, 2 * amount,
-        2 * amount, 270, 90, idx);
-    ctx->gdraw->arc_erase(
-        w, ur_x - 2 * amount, ll_y, 2 * amount, 2 * amount, 0, 90, idx);
+    ctx->gdraw->line(ll_x + amount, ll_y, ur_x - amount, ll_y,
+        glow_eDrawType_LineErase, idx);
+    ctx->gdraw->line(ll_x, ll_y + amount, ll_x, ur_y - amount,
+        glow_eDrawType_LineErase, idx);
+    ctx->gdraw->line(ll_x + amount, ur_y, ur_x - amount, ur_y,
+        glow_eDrawType_LineErase, idx);
+    ctx->gdraw->line(ur_x, ll_y + amount, ur_x, ur_y - amount,
+        glow_eDrawType_LineErase, idx);
+    ctx->gdraw->arc(ll_x, ll_y, 2 * amount, 2 * amount, 90, 90,
+        glow_eDrawType_LineErase, 0, idx);
+    ctx->gdraw->arc(ll_x, ur_y - 2 * amount, 2 * amount, 2 * amount, 180, 90,
+        glow_eDrawType_LineErase, 0, idx);
+    ctx->gdraw->arc(ur_x - 2 * amount, ur_y - 2 * amount, 2 * amount,
+        2 * amount, 270, 90, glow_eDrawType_LineErase, 0, idx);
+    ctx->gdraw->arc(ur_x - 2 * amount, ll_y, 2 * amount, 2 * amount, 0, 90,
+        glow_eDrawType_LineErase, 0, idx);
   }
   if (fill)
-    ctx->gdraw->fill_rect(
-        w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
-  w->reset_draw_buffer_only();
+    ctx->gdraw->rect(
+        ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase, 1, 0);
 }
 
 void GrowRectRounded::get_borders(GlowTransform* t, double* x_right,
@@ -1067,33 +935,25 @@ void GrowRectRounded::set_transform(GlowTransform* t)
 
 void GrowRectRounded::set_linewidth(int linewidth)
 {
-  erase(&ctx->mw);
-  erase(&ctx->navw);
   GlowRect::set_linewidth(linewidth);
-  draw();
 }
 
 void GrowRectRounded::set_fill(int fillval)
 {
-  erase(&ctx->mw);
-  erase(&ctx->navw);
   GlowRect::set_fill(fillval);
-  draw();
 }
 
 void GrowRectRounded::set_border(int borderval)
 {
-  erase(&ctx->mw);
-  erase(&ctx->navw);
   border = borderval;
-  draw();
+  ctx->set_dirty();
 }
 
 int GrowRectRounded::draw_annot_background(
     GlowTransform* t, void* node, double x, double y)
 {
   if (fill) {
-    draw(&ctx->mw, t, 0, 0, node, node);
+    draw(ctx->mw, t, 0, 0, node, node);
     return 1;
   }
   return 0;
@@ -1117,10 +977,7 @@ void GrowRectRounded::align(double x, double y, glow_eAlignDirection direction)
   if (fixposition)
     return;
 
-  erase(&ctx->mw);
-  erase(&ctx->navw);
-  ctx->set_defered_redraw();
-  draw();
+  ctx->set_dirty();
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -1156,9 +1013,6 @@ void GrowRectRounded::align(double x, double y, glow_eAlignDirection direction)
   x_left += dx;
   y_high += dy;
   y_low += dy;
-
-  draw();
-  ctx->redraw_defered();
 }
 
 void GrowRectRounded::export_javabean(GlowTransform* t, void* node,
@@ -1174,17 +1028,17 @@ void GrowRectRounded::export_javabean(GlowTransform* t, void* node,
     idx = line_width;
     idx += hot;
     if (idx < 0) {
-      erase(&ctx->mw, t, hot, node);
+      erase(ctx->mw, t, hot, node);
       return;
     }
   } else {
     if (node && ((GrowNode*)node)->line_width)
-      idx = int(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor
+      idx = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor
               * ((GrowNode*)node)->line_width
           - 1);
     else
       idx = int(
-          ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
+          ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * line_width - 1);
     idx += hot;
   }
   idx = MAX(0, idx);
@@ -1192,15 +1046,15 @@ void GrowRectRounded::export_javabean(GlowTransform* t, void* node,
   double x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
   if (!t) {
-    x1 = trf.x(ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y1 = trf.y(ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
-    x2 = trf.x(ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y2 = trf.y(ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x1 = trf.x(ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y1 = trf.y(ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+    x2 = trf.x(ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y2 = trf.y(ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
   } else {
-    x1 = trf.x(t, ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y1 = trf.y(t, ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
-    x2 = trf.x(t, ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y2 = trf.y(t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x1 = trf.x(t, ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y1 = trf.y(t, ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+    x2 = trf.x(t, ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y2 = trf.y(t, ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
   }
 
   ll_x = MIN(x1, x2);

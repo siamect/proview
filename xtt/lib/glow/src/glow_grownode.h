@@ -90,7 +90,7 @@ public:
   void copy_from(const GrowNode& n);
 
   //! Erase the object
-  void erase(GlowWind* w)
+  void erase(DrawWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
   }
@@ -175,7 +175,7 @@ public:
     Compares the coordinates of the event with the borders of the object.
     If the event is inside the borders, 1 is returned, otherwise 0 is returned.
   */
-  int event_handler(GlowWind* w, glow_eEvent event, double fx, double fy);
+  int event_handler(glow_eEvent event, double fx, double fy);
 
   //! Event handler
   /*!
@@ -192,8 +192,7 @@ public:
     as
     current callback object.
   */
-  int event_handler(
-      GlowWind* w, glow_eEvent event, int x, int y, double fx, double fy);
+  int event_handler(glow_eEvent event, int x, int y, double fx, double fy);
 
   //! Set hot
   /*! Increase the linewith to mark that the cursor points at the node.
@@ -279,7 +278,7 @@ public:
     color_shift = 0;
     color_lightness = 0;
     color_intensity = 0;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Reset the fill color to the original fill color.
@@ -292,7 +291,7 @@ public:
     color_shift = original_color_shift;
     color_lightness = original_color_lightness;
     color_intensity = original_color_intensity;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Set the border color.
@@ -308,7 +307,7 @@ public:
     color_shift = 0;
     color_lightness = 0;
     color_intensity = 0;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Reset the border color to the original border color.
@@ -317,7 +316,7 @@ public:
     if (draw_type == original_border_drawtype)
       return;
     draw_type = original_border_drawtype;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Set the text color.
@@ -333,7 +332,7 @@ public:
     color_shift = 0;
     color_lightness = 0;
     color_intensity = 0;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Reset the text color to the original text color.
@@ -342,7 +341,7 @@ public:
     if (text_drawtype == original_text_drawtype)
       return;
     text_drawtype = original_text_drawtype;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Set the original fill color.
@@ -425,7 +424,7 @@ public:
       return;
     color_tone = tone;
     color_shift = 0;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Reset color tone to original color tone.
@@ -435,7 +434,7 @@ public:
       return;
     color_tone = original_color_tone;
     color_shift = original_color_shift;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Set the original color lightness.
@@ -471,7 +470,7 @@ public:
     if (color_lightness == lightness)
       return;
     color_lightness = lightness;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Reset color lightness to original color lightness.
@@ -480,7 +479,7 @@ public:
     if (color_lightness == original_color_lightness)
       return;
     color_lightness = original_color_lightness;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Set the original color intensity.
@@ -516,7 +515,7 @@ public:
     if (color_intensity == intensity)
       return;
     color_intensity = intensity;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Reset the color intensity to original color intensity.
@@ -525,7 +524,7 @@ public:
     if (color_intensity == original_color_intensity)
       return;
     color_intensity = original_color_intensity;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Set the original color shift.
@@ -557,7 +556,7 @@ public:
     if (!shift)
       return;
     color_shift += shift;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Set the original color shift.
@@ -569,7 +568,7 @@ public:
     if (color_shift == shift)
       return;
     color_shift = shift;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Reset the color shift to original color shift.
@@ -578,7 +577,7 @@ public:
     if (color_shift == original_color_shift)
       return;
     color_shift = original_color_shift;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Set the color inverse.
@@ -588,7 +587,7 @@ public:
   void set_color_inverse(int inverse)
   {
     color_inverse = inverse;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Set the original background color.
@@ -608,7 +607,7 @@ public:
   void set_background_color(glow_eDrawType color)
   {
     background_drawtype = color;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Reset the background color to the original background color.
@@ -617,7 +616,7 @@ public:
     if (background_drawtype == original_background_drawtype)
       return;
     background_drawtype = original_background_drawtype;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Set the level fill color.
@@ -645,7 +644,7 @@ public:
   void set_fill_level(double level)
   {
     fill_level = level;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Set the level direction.
@@ -709,9 +708,6 @@ public:
   void set_rotation(
       double angle, double x0, double y0, glow_eRotationPoint type);
 
-  //! Redraw the area inside the objects border.
-  void draw();
-
   //! Draw the objects if any part is inside the drawing area.
   /*!
     \param ll_x		Lower left x coordinate of drawing area.
@@ -719,7 +715,7 @@ public:
     \param ur_x		Upper right x coordinate of drawing area.
     \param ur_y		Upper right y coordinate of drawing area.
   */
-  void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Draw the objects if any part is inside the drawing area, and extends the
   //! drawing area.
@@ -733,7 +729,7 @@ public:
     drawing area,
     the drawingarea is extended so it contains the whole objects.
   */
-  void draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
+  void draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
   //! Draw the object.
   /*!
     \param t		Transform of parent node. Can be zero.
@@ -748,7 +744,7 @@ public:
     multiplied with the parentnodes transform, to give the appropriate
     coordinates for the drawing.
   */
-  void draw(GlowWind* w, GlowTransform* t, int highlight, int hot, void* node,
+  void draw(DrawWind* w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
 
   //! Erase the object.
@@ -757,7 +753,7 @@ public:
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase(GlowWind* w, GlowTransform* t, int hot, void* node);
+  void erase(DrawWind* w, GlowTransform* t, int hot, void* node);
 
   //! Add a transform to the current transform.
   /*!
@@ -1069,7 +1065,7 @@ public:
   void set_shadow(int shadowval)
   {
     shadow = shadowval;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Set Gradient.
@@ -1079,7 +1075,7 @@ public:
   void set_gradient(glow_eGradient gradientval)
   {
     gradient = gradientval;
-    draw();
+    ctx->set_dirty();
   }
 
   //! Set root node.

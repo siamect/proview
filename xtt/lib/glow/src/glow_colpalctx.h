@@ -93,19 +93,11 @@ public:
   //! Update the layout of the scrollbars.
   void change_scrollbar();
 
-  //! Redraw the window.
-  /*! Redraw all objects in the window.
-   */
-  void redraw();
-
   //! Adjust the pixel coordinates to the current zoomfactor.
   void zoom(double factor);
 
   //! Reset to base zoomfactor.
-  void unzoom()
-  {
-    zoom(mw.base_zoom_factor / mw.zoom_factor_y);
-  }
+  void unzoom();
 
   //! Not used.
   void print(char* filename);

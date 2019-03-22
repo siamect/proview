@@ -59,12 +59,6 @@ void GlowRect::print_zoom()
   ur.print_zoom();
 }
 
-void GlowRect::traverse(int x, int y)
-{
-  ll.traverse(x, y);
-  ur.traverse(x, y);
-}
-
 void GlowRect::save(std::ofstream& fp, glow_eSaveMode mode)
 {
   fp << int(glow_eSave_Rect) << '\n';
@@ -130,14 +124,12 @@ void GlowRect::open(std::ifstream& fp)
   }
 }
 
-void GlowRect::draw(GlowWind* w, void* pos, int highlight, int hot, void* node)
+void GlowRect::draw(DrawWind* w, void* pos, int highlight, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
   int ll_x, ll_y, ur_x, ur_y;
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
+  if (w == ctx->navw) {
     hot = 0;
     ll_x = ll.nav_z_x;
     ll_y = ll.nav_z_y;
@@ -164,23 +156,21 @@ void GlowRect::draw(GlowWind* w, void* pos, int highlight, int hot, void* node)
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   if (!fill)
-    ctx->gdraw->rect(w, ll_x + ((GlowPoint*)pos)->z_x - w->offset_x,
+    ctx->gdraw->rect(ll_x + ((GlowPoint*)pos)->z_x - w->offset_x,
         ll_y + ((GlowPoint*)pos)->z_y - w->offset_y, ur_x - ll_x, ur_y - ll_y,
-        draw_type, idx, highlight);
+        draw_type, 0, idx, highlight);
   else
-    ctx->gdraw->fill_rect(w, ll_x + ((GlowPoint*)pos)->z_x - w->offset_x,
+    ctx->gdraw->rect(ll_x + ((GlowPoint*)pos)->z_x - w->offset_x,
         ll_y + ((GlowPoint*)pos)->z_y - w->offset_y, ur_x - ll_x, ur_y - ll_y,
-        draw_type);
+        draw_type, 1, 0);
 }
 
-void GlowRect::erase(GlowWind* w, void* pos, int hot, void* node)
+void GlowRect::erase(DrawWind* w, void* pos, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
   int ll_x, ll_y, ur_x, ur_y;
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
+  if (w == ctx->navw) {
     hot = 0;
     ll_x = ll.nav_z_x;
     ll_y = ll.nav_z_y;
@@ -205,26 +195,23 @@ void GlowRect::erase(GlowWind* w, void* pos, int hot, void* node)
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   if (!fill)
-    ctx->gdraw->rect_erase(w, ll_x + ((GlowPoint*)pos)->z_x - w->offset_x,
+    ctx->gdraw->rect(ll_x + ((GlowPoint*)pos)->z_x - w->offset_x,
         ll_y + ((GlowPoint*)pos)->z_y - w->offset_y, ur_x - ll_x, ur_y - ll_y,
-        idx);
+        glow_eDrawType_LineErase, 0, idx);
   else
-    ctx->gdraw->fill_rect(w, ll_x + ((GlowPoint*)pos)->z_x - w->offset_x,
+    ctx->gdraw->rect(ll_x + ((GlowPoint*)pos)->z_x - w->offset_x,
         ll_y + ((GlowPoint*)pos)->z_y - w->offset_y, ur_x - ll_x, ur_y - ll_y,
-        glow_eDrawType_LineErase);
+        glow_eDrawType_LineErase, 1, 0);
 }
 
 int GlowRect::event_handler(
-    GlowWind* w, void* pos, glow_eEvent event, int x, int y, void* node)
+    void* pos, glow_eEvent event, int x, int y, void* node)
 {
-  GlowPoint* p;
-
-  p = (GlowPoint*)pos;
-  if (ll.z_x + ((GlowPoint*)pos)->z_x - w->offset_x <= x
-      && x <= ur.z_x + ((GlowPoint*)pos)->z_x - w->offset_x
-      && ll.z_y + ((GlowPoint*)pos)->z_y - w->offset_y <= y
-      && y <= ur.z_y + ((GlowPoint*)pos)->z_y - w->offset_y) {
-    //    std::cout << "Event handler: Hit in rect\n";
+  GlowPoint* p = (GlowPoint*)pos;
+  if (ll.z_x + p->z_x - ctx->mw->offset_x <= x
+      && x <= ur.z_x + p->z_x - ctx->mw->offset_x
+      && ll.z_y + p->z_y - ctx->mw->offset_y <= y
+      && y <= ur.z_y + p->z_y - ctx->mw->offset_y) {
     return 1;
   } else
     return 0;
@@ -247,34 +234,25 @@ void GlowRect::get_borders(double pos_x, double pos_y, double* x_right,
 
 void GlowRect::move(void* pos, double x, double y, int highlight, int hot)
 {
-  double width, height;
-
-  width = ur.x - ll.x;
-  height = ur.y - ll.y;
-  erase(&ctx->mw, pos, hot, NULL);
-  erase(&ctx->navw, pos, 0, NULL);
+  double width = ur.x - ll.x;
+  double height = ur.y - ll.y;
   ll.x = x;
   ll.y = y;
   ur.x = x + width;
   ur.y = y + height;
   zoom();
   nav_zoom();
-  draw(&ctx->mw, pos, highlight, hot, NULL);
-  draw(&ctx->navw, pos, highlight, 0, NULL);
+  ctx->set_dirty();
 }
 
 void GlowRect::shift(
     void* pos, double delta_x, double delta_y, int highlight, int hot)
 {
-  erase(&ctx->mw, pos, hot, NULL);
-  erase(&ctx->navw, pos, 0, NULL);
   ll.x += delta_x;
   ll.y += delta_y;
   ur.x += delta_x;
   ur.y += delta_y;
   zoom();
   nav_zoom();
-
-  draw(&ctx->mw, pos, highlight, hot, NULL);
-  draw(&ctx->navw, pos, highlight, 0, NULL);
+  ctx->set_dirty();
 }
