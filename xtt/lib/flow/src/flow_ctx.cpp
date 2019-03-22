@@ -1529,6 +1529,8 @@ void FlowCtx::trace_scan()
 
   for (i = 0; i < a.a_size; i++)
     a.a[i]->trace_scan();
+
+  redraw_if_dirty();
 }
 
 void FlowCtx::get_selected_nodes(FlowArrayElem*** nodes, int* num)

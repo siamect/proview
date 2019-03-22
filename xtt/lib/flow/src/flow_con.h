@@ -97,6 +97,9 @@ public:
       double dest_x, double dest_y, flow_eDirection dest_dir);
   int con_route_grafcet(flow_eConType con_type, double src_x, double src_y,
       double dest_x, double dest_y);
+  void draw_routed_roundcorner(int points, double* x, double* y);
+  void draw_routed(int points, double* x, double* y);
+  void draw_routed_trans(int points, double* x, double* y);
   void set_highlight(int on);
   int get_highlight()
   {
