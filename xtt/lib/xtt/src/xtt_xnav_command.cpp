@@ -8779,11 +8779,6 @@ static int xnav_attribute_func(char* name, int* return_decl,
   int sts;
   char object_par[80];
   char* object_element;
-  int element;
-  char elementstr[20];
-  char* s;
-  char* t;
-  int len;
   int decl = 0;
   ccm_tInt int_val = 0;
   ccm_tFloat float_val = 0.0;
@@ -8807,26 +8802,7 @@ static int xnav_attribute_func(char* name, int* return_decl,
   if (EVEN(sts))
     return sts;
 
-  /* Check index in parameter */
-  s = strchr(name, '[');
-  if (s == 0)
-    element = 0;
-  else {
-    t = strchr(name, ']');
-    if (t == 0)
-      return DCLI__ELEMSYNTAX;
-    else {
-      len = t - s - 1;
-      strncpy(elementstr, s + 1, len);
-      elementstr[len] = 0;
-      sscanf(elementstr, "%d", &element);
-      *s = '\0';
-      if ((element < 0) || (element > 100))
-        return DCLI__ELEMSYNTAX;
-    }
-  }
-
-  object_element = object_par + element * (attrsize / attrelem);
+  object_element = object_par;
 
   switch (attrtype) {
   case pwr_eType_Boolean: {
