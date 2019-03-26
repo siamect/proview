@@ -70,3 +70,4 @@ undeferr	<undefined error>					/error
 typeundef       <undefined type>                                        /error
 toolong		<qualifier value is too long>				/error
 nostruct	<no struct>						/info
+nodefine	<array size define not found>				/error
