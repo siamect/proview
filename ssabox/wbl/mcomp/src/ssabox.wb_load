@@ -202,7 +202,6 @@ Volume SsabOx $ClassVolume 0.0.250.5
           Attr Super.Alarm.EventType = 64
           Attr Super.Alarm.EventPriority = 67
           Attr Super.Alarm.EventFlags = 7
-          Attr Super.Alarm.MoreText = ""
           Attr Super.Alarm.Attribute = "SsabOx:Class-Ssab_SafetySwitch-Template"
           Attr Super.Alarm.CtrlPosition = 1
           Attr Super.Alarm.LockAttribute = 1
@@ -1434,7 +1433,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 320
+            Attr Size = 280
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
           EndBody
@@ -2159,7 +2158,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 320
+            Attr Size = 280
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
           EndBody
@@ -2560,7 +2559,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 320
+            Attr Size = 280
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
           EndBody
@@ -2802,7 +2801,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 320
+            Attr Size = 280
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
           EndBody
@@ -3034,7 +3033,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 320
+            Attr Size = 280
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
           EndBody
@@ -3233,7 +3232,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 320
+            Attr Size = 280
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
           EndBody
@@ -3600,7 +3599,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 336
+            Attr Size = 296
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseDiCard"
           EndBody
@@ -3863,7 +3862,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         EndObject
       EndObject
       Object Template Ssab_DI32D 2149548032 06-OCT-2005 14:45:53.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 26-MAR-2019 13:10:36.76
           Attr Super.ErrorSoftLimit = 15
           Attr Super.ErrorHardLimit = 50
           Attr Super.MaxNoOfChannels = 32
@@ -3871,6 +3870,37 @@ Volume SsabOx $ClassVolume 0.0.250.5
           Attr Super.DataSheet = "$pwr_lang/dsh/ssab_di32d.pdf"
           Attr Super.ConvMask1 = 65535
           Attr Super.ConvMask2 = 65535
+          Attr Ch02.Number = 1
+          Attr Ch03.Number = 2
+          Attr Ch04.Number = 3
+          Attr Ch05.Number = 4
+          Attr Ch06.Number = 5
+          Attr Ch07.Number = 6
+          Attr Ch08.Number = 7
+          Attr Ch09.Number = 8
+          Attr Ch10.Number = 9
+          Attr Ch11.Number = 10
+          Attr Ch12.Number = 11
+          Attr Ch13.Number = 12
+          Attr Ch14.Number = 13
+          Attr Ch15.Number = 14
+          Attr Ch16.Number = 15
+          Attr Ch17.Number = 16
+          Attr Ch18.Number = 17
+          Attr Ch19.Number = 18
+          Attr Ch20.Number = 19
+          Attr Ch21.Number = 20
+          Attr Ch22.Number = 21
+          Attr Ch23.Number = 22
+          Attr Ch24.Number = 23
+          Attr Ch25.Number = 24
+          Attr Ch26.Number = 25
+          Attr Ch27.Number = 26
+          Attr Ch28.Number = 27
+          Attr Ch29.Number = 28
+          Attr Ch30.Number = 29
+          Attr Ch31.Number = 30
+          Attr Ch32.Number = 31
         EndBody
       EndObject
       Object IoMethods $RtMethod 19 06-OCT-2005 14:45:53.00
@@ -3921,7 +3951,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 352
+            Attr Size = 312
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseDoCard"
           EndBody
@@ -4184,12 +4214,43 @@ Volume SsabOx $ClassVolume 0.0.250.5
         EndObject
       EndObject
       Object Template Ssab_DO32DKS 2149810176 06-OCT-2005 14:45:53.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 26-MAR-2019 13:12:59.55
           Attr Super.ErrorSoftLimit = 15
           Attr Super.ErrorHardLimit = 50
           Attr Super.MaxNoOfChannels = 32
           Attr Super.Process = 1
           Attr Super.DataSheet = "$pwr_lang/dsh/ssab_do32dks.pdf"
+          Attr Ch02.Number = 1
+          Attr Ch03.Number = 2
+          Attr Ch04.Number = 3
+          Attr Ch05.Number = 4
+          Attr Ch06.Number = 5
+          Attr Ch07.Number = 6
+          Attr Ch08.Number = 7
+          Attr Ch09.Number = 8
+          Attr Ch10.Number = 9
+          Attr Ch11.Number = 10
+          Attr Ch12.Number = 11
+          Attr Ch13.Number = 12
+          Attr Ch14.Number = 13
+          Attr Ch15.Number = 14
+          Attr Ch16.Number = 15
+          Attr Ch17.Number = 16
+          Attr Ch18.Number = 17
+          Attr Ch19.Number = 18
+          Attr Ch20.Number = 19
+          Attr Ch21.Number = 20
+          Attr Ch22.Number = 21
+          Attr Ch23.Number = 22
+          Attr Ch24.Number = 23
+          Attr Ch25.Number = 24
+          Attr Ch26.Number = 25
+          Attr Ch27.Number = 26
+          Attr Ch28.Number = 27
+          Attr Ch29.Number = 28
+          Attr Ch30.Number = 29
+          Attr Ch31.Number = 30
+          Attr Ch32.Number = 31
         EndBody
       EndObject
       Object IoMethods $RtMethod 23 06-OCT-2005 14:45:53.00
@@ -4238,7 +4299,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object Super $Attribute 1 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
-            Attr Size = 352
+            Attr Size = 312
             Attr Flags = 393216
             Attr TypeRef = "SsabOx:Class-Ssab_BaseDoCard"
           EndBody
@@ -4501,12 +4562,43 @@ Volume SsabOx $ClassVolume 0.0.250.5
         EndObject
       EndObject
       Object Template Ssab_DO32DKS_Stall 2151120896 06-OCT-2005 14:45:53.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 26-MAR-2019 13:15:14.33
           Attr Super.ErrorSoftLimit = 15
           Attr Super.ErrorHardLimit = 50
           Attr Super.MaxNoOfChannels = 32
           Attr Super.Process = 1
           Attr Super.DataSheet = "$pwr_lang/dsh/ssab_do32dks.pdf"
+          Attr Ch02.Number = 1
+          Attr Ch03.Number = 2
+          Attr Ch04.Number = 3
+          Attr Ch05.Number = 4
+          Attr Ch06.Number = 5
+          Attr Ch07.Number = 6
+          Attr Ch08.Number = 7
+          Attr Ch09.Number = 8
+          Attr Ch10.Number = 9
+          Attr Ch11.Number = 10
+          Attr Ch12.Number = 11
+          Attr Ch13.Number = 12
+          Attr Ch14.Number = 13
+          Attr Ch15.Number = 14
+          Attr Ch16.Number = 15
+          Attr Ch17.Number = 16
+          Attr Ch18.Number = 17
+          Attr Ch19.Number = 18
+          Attr Ch20.Number = 19
+          Attr Ch21.Number = 20
+          Attr Ch22.Number = 21
+          Attr Ch23.Number = 22
+          Attr Ch24.Number = 23
+          Attr Ch25.Number = 24
+          Attr Ch26.Number = 25
+          Attr Ch27.Number = 26
+          Attr Ch28.Number = 27
+          Attr Ch29.Number = 28
+          Attr Ch30.Number = 29
+          Attr Ch31.Number = 30
+          Attr Ch32.Number = 31
         EndBody
       EndObject
       Object IoMethods $RtMethod 46 06-OCT-2005 14:45:53.00
