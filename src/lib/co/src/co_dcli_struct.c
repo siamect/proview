@@ -87,6 +87,7 @@ static int find_struct(t_ctx ctx, char* filename, char* struct_name,
     dcli_sStructElement** e_list, int caller);
 static int process_struct(t_ctx ctx, t_filectx filectx, char* struct_line,
     dcli_sStructElement* struct_element);
+static int store_define( char *fname, t_define **definelist);
 
 /*___Local functions_________________________________________________________*/
 
@@ -349,7 +350,7 @@ static int find_define(t_filectx filectx, char* str, int* value)
       return DCLI__SUCCESS;
     }
   }
-  return 0;
+  return DCLI__NODEFINE;
 }
 
 /*************************************************************************
@@ -612,7 +613,7 @@ static int add_element(t_ctx ctx, t_filectx filectx, char* line,
         if (EVEN(sts)) {
           strcpy(ctx->error_file, filectx->filename);
           ctx->error_line = filectx->lines;
-          return DCLI__STRUCTSYNTAX;
+          return sts;
         }
       }
       i++;
@@ -960,6 +961,17 @@ static int find_struct(t_ctx ctx, char* filename, char* struct_name,
     }
     filectx->lines++;
 
+    if ((s = strstr(line, "#include")) != 0) {
+      if ((s = strchr(line, '"')) != 0) {
+        s++;
+        strcpy(includename, s);
+        if ((s = strchr(includename, '"')) != 0) {
+          *s = 0;
+          sts = store_define(includename, &filectx->definelist);
+        }
+      }
+    }
+
     /* Store all defines */
     if ((s = strstr(line, "#define")) != 0) {
       nr = dcli_parse(s + strlen("#define"), " 	", "", (char*)define_elem,
@@ -1159,6 +1171,9 @@ readstruct_error_return:
   else if (return_sts == DCLI__ENDSTRUCTERR)
     sprintf(dcli_message, "Syntax error at end of struct, line: %d,  file: %s",
         ctx->error_line, ctx->error_file);
+  else if (return_sts == DCLI__STRUCTSYNTAX)
+    sprintf(dcli_message, "Syntax error in struct, line: %d, file: %s",
+        ctx->error_line, ctx->error_file);
   else if (return_sts == DCLI__ELEMSYNTAX)
     sprintf(dcli_message, "Syntax error in element, line: %d, file: %s",
         ctx->error_line, ctx->error_file);
@@ -1168,6 +1183,9 @@ readstruct_error_return:
   else if (return_sts == DCLI__TYPEUNDEF)
     sprintf(dcli_message, "Unknown type %s, line: %d, file: %s", e_ptr->typestr,
         e_ptr->line_nr, e_ptr->filename);
+  else if (return_sts == DCLI__NODEFINE)
+    sprintf(dcli_message, "Array size define not found: line: %d, file: %s",
+	ctx->error_line, ctx->error_file);
   else
     sprintf(dcli_message, "Unknown error message");
   dcli_message_set = 1;
@@ -1200,6 +1218,8 @@ int dcli_readstruct_find(
 
   *e_list = 0;
   dcli_message_set = 0;
+  dcli_set_default_directory("$pwrp_inc");
+
   sts = find_struct(
       NULL, filename, struct_name, e_list, READSTRUCT_CALLER_ROOT);
   if (sts == DCLI__EOF && !dcli_message_set) {
@@ -1214,6 +1234,62 @@ int dcli_readstruct_find(
     return sts;
 
   return DCLI__SUCCESS;
+}
+
+
+int store_define( char *fname, t_define **definelist)
+{
+  FILE *file;
+  pwr_tFileName filename;
+  char line[200];
+  t_define* define_ptr;
+  char define_elem[2][READSTRUCT_DEFINESIZE];
+  int define_num;
+  char includename[256];
+  int nr;
+  char *s;
+  int sts;
+
+  dcli_get_defaultfilename(fname, filename, ".h");
+
+  file = fopen(filename, "r");
+  if (file == NULL)
+    return DCLI__NOFILE;
+
+  while (dcli_read_line(line, sizeof(line), file)) {
+      
+    if ((s = strstr(line, "#include")) != 0) {
+      if ((s = strchr(line, '"')) != 0) {
+	s++;
+	strcpy(includename, s);
+	if ((s = strchr(includename, '"')) != 0) {
+	  *s = 0;
+	  sts = store_define(includename, definelist);
+	}
+      }
+    }
+    
+    /* Store all defines */
+    if ((s = strstr(line, "#define")) != 0) {
+      nr = dcli_parse(s + strlen("#define"), " 	", "", (char*)define_elem,
+		      sizeof(define_elem) / sizeof(define_elem[0]), sizeof(define_elem[0]),
+		      1);
+      if (nr > 1) {
+	define_elem[0][READSTRUCT_DEFINESIZE - 1] = 0;
+	define_elem[1][READSTRUCT_DEFINESIZE - 1] = 0;
+	nr = sscanf(define_elem[1], "%d", &define_num);
+	if (nr == 1) {
+	  define_ptr = calloc(1, sizeof(t_define));
+	  strcpy(define_ptr->define, define_elem[0]);
+	  define_ptr->value = define_num;
+	  define_ptr->next = *definelist;
+	  *definelist = define_ptr;
+	}
+      }
+    }
+  }
+  fclose(file);
+  return 1;
 }
 
 int dcli_readstruct_get_message(char** message)
