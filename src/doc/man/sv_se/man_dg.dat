@@ -8872,7 +8872,7 @@ Kommandon
 <b>delete volume<t>Ta bort en volym		<LINK> delete volume
 <b>disconnect 	<t>Koppla ifrån signal och kanal <LINK> disconnect
 <b>display     <t>Visa ett fönster		<LINK> display
-<b>distribute  <t>Distribuera till operatörs eller processtation <LINK> distribute
+<b>distribute  <t>Distribuera till operatörs eller processtation <LINK> cdistribute
 <b>edit        <t>Sätt edit mod			<LINK> edit
 <b>exit        <t>Stäng wtt			<LINK> exit
 <b>help        <t>Visa hjälp			<LINK> help help
@@ -9238,7 +9238,7 @@ Visa anläggnings eller nod hierarkin i fönster (w1 eller w2).
 <B>wtt> display w2
 </TOPIC>
 
-<TOPIC> distribute <style> function
+<TOPIC> cdistribute <style> function
 Command   distribute
 
 Distribuerar filer till operatörs och processnoder.
