@@ -410,6 +410,10 @@ typedef char pwr_tString132[132]; //!< 132 byte string type.
 */
 typedef char pwr_tString80[80]; //!< 80 byte string type.
 /*_*
+  @aref string64 String64
+*/
+typedef char pwr_tString64[64]; //!< 64 byte string type.
+/*_*
   @aref string40 String40
 */
 typedef char pwr_tString40[40]; //!< 40 byte string type.
