@@ -3321,6 +3321,7 @@ int gobj_expand(WFoe* foe, vldh_t_node node, int compress)
   case pwr_cClass_GetBoFloat32:
   case pwr_cClass_GetBoString80:
   case pwr_cClass_SuppressSup:
+  case pwr_cClass_reset_so:
     sts = gobj_expand_m1(foe, node, compress);
     break;
   case pwr_cClass_and:

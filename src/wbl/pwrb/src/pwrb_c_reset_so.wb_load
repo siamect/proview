@@ -102,9 +102,20 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Objid"
           Attr GraphName = "Order"
           Attr NiNaAnnot = 1
+          Attr NiNaSegments = 1
         EndBody
       EndObject
-      Object PlcNode $Buffer 2 
+      !/**
+      !  Specifies how many segments of the Order object name that
+      !  is to be displayed in the symbol of the Reset_SO object.
+      !  The segments are counted from behind.
+      !*/
+      Object OrderObjectSegments $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 3 
         Body SysBody
           Attr Class = pwr_eClass_PlcNode
           Attr Flags |= PWR_MASK_INVISIBLE
