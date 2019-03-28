@@ -249,7 +249,7 @@ void QtScrollWidgetGlow::handleEvent(QEvent* event)
       GlowCtx* ctx = (GlowCtx*)parent_ctx;
       GlowDrawQt* drawer = ((GlowDrawQt*)ctx->gdraw);
       if (event->type() == QEvent::MouseMove) {
-        drawer->m_wind->window->update();
+        drawer->m_wind.window->update();
       }
       drawer->event_handler(event, this);
     }

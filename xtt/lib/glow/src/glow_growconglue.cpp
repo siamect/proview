@@ -85,13 +85,12 @@ GrowConGlue::GrowConGlue(
   }
   get_node_borders();
   if (!nodraw)
-    draw(&ctx->mw, (GlowTransform*)NULL, highlight, hot, NULL, NULL);
+    ctx->set_dirty();
 }
 
 GrowConGlue::~GrowConGlue()
 {
-  erase(&ctx->mw, (GlowTransform*)NULL, hot, NULL);
-  erase(&ctx->navw, (GlowTransform*)NULL, hot, NULL);
+  ctx->set_dirty();
 }
 
 void GrowConGlue::configure(GlowCon* con)
@@ -294,7 +293,7 @@ void GrowConGlue::open(std::ifstream& fp)
   }
 }
 
-void GrowConGlue::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowConGlue::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -319,7 +318,7 @@ void GrowConGlue::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowConGlue::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowConGlue::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -359,19 +358,13 @@ void GrowConGlue::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 void GrowConGlue::set_highlight(int on)
 {
   highlight = on;
-  draw();
+  ctx->set_dirty();
 }
 
-void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
+void GrowConGlue::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  if (ctx->nodraw)
-    return;
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
-    hot = 0;
-  }
+  hot = (w == ctx->navw) ? 0 : hot;
   int idx, idx_up, idx_down, idx_left, idx_right;
   glow_eDrawType drawtype;
   glow_eDrawType shift_drawtype;
@@ -430,11 +423,10 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   idx_right = MAX(0, idx_right);
   idx_right = MIN(idx_right, DRAW_TYPE_SIZE - 1);
 
-  w->set_draw_buffer_only();
   if (lw_up != -1 && lw_down == -1 && lw_right == -1 && lw_left == -1) {
     // Up termination
-    ctx->gdraw->fill_rect(
-        w, m_x - idx_up + idx_up / 2, m_y, idx_up + 1, ur_y - m_y, drawtype);
+    ctx->gdraw->rect(m_x - idx_up + idx_up / 2, m_y, idx_up + 1, ur_y - m_y,
+        drawtype, 1, 0);
     if (shadow && idx_up > 2) {
       if (border) {
         idx_up -= 2;
@@ -442,12 +434,12 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
 
       shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y, m_x + idx_up / 2, ur_y,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y, m_x + idx_up / 2, ur_y,
           shift_drawtype, 0, 0);
       shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y,
           m_x - idx_up + idx_up / 2, ur_y, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y, m_x + idx_up / 2, m_y,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y, m_x + idx_up / 2, m_y,
           shift_drawtype, 0, 0);
 
       if (border) {
@@ -456,17 +448,17 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
     }
     if (border) {
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y,
           m_x - idx_up + idx_up / 2, ur_y, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y, m_x + idx_up / 2, ur_y,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y, m_x + idx_up / 2, ur_y,
           glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y, m_x + idx_up / 2, m_y,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y, m_x + idx_up / 2, m_y,
           glow_eDrawType_Line, 0, 0);
     }
   } else if (lw_up == -1 && lw_down != -1 && lw_right == -1 && lw_left == -1) {
     // Down termination
-    ctx->gdraw->fill_rect(w, m_x - idx_down + idx_down / 2, ll_y, idx_down + 1,
-        m_y - ll_y, drawtype);
+    ctx->gdraw->rect(m_x - idx_down + idx_down / 2, ll_y, idx_down + 1,
+        m_y - ll_y, drawtype, 1, 0);
     if (shadow && idx_down > 2) {
       if (border) {
         idx_down -= 2;
@@ -474,12 +466,12 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
 
       shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
-      ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y,
+      ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y,
           shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, m_y,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, m_y,
           m_x + idx_down / 2, m_y, shift_drawtype, 0, 0);
       shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
           m_x - idx_down + idx_down / 2, m_y, shift_drawtype, 0, 0);
 
       if (border) {
@@ -488,17 +480,17 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
     }
     if (border) {
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
           m_x - idx_down + idx_down / 2, m_y, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y,
+      ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y,
           glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, m_y,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, m_y,
           m_x + idx_down / 2, m_y, glow_eDrawType_Line, 0, 0);
     }
   } else if (lw_up == -1 && lw_down == -1 && lw_right != -1 && lw_left == -1) {
     // Right termination
-    ctx->gdraw->fill_rect(w, m_x, m_y - idx_right + idx_right / 2, ur_x - m_x,
-        idx_right + 1, drawtype);
+    ctx->gdraw->rect(m_x, m_y - idx_right + idx_right / 2, ur_x - m_x,
+        idx_right + 1, drawtype, 1, 0);
     if (shadow && idx_right > 2) {
       if (border) {
         idx_right -= 2;
@@ -506,12 +498,12 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
 
       shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
-      ctx->gdraw->line(w, m_x, m_y + idx_right / 2, ur_x, m_y + idx_right / 2,
+      ctx->gdraw->line(m_x, m_y + idx_right / 2, ur_x, m_y + idx_right / 2,
           shift_drawtype, 0, 0);
       shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
-      ctx->gdraw->line(w, m_x, m_y - idx_right + idx_right / 2, ur_x,
+      ctx->gdraw->line(m_x, m_y - idx_right + idx_right / 2, ur_x,
           m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x, m_y - idx_right + idx_right / 2, m_x,
+      ctx->gdraw->line(m_x, m_y - idx_right + idx_right / 2, m_x,
           m_y + idx_right / 2, shift_drawtype, 0, 0);
 
       if (border) {
@@ -520,17 +512,17 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
     }
     if (border) {
-      ctx->gdraw->line(w, m_x, m_y - idx_right + idx_right / 2, ur_x,
+      ctx->gdraw->line(m_x, m_y - idx_right + idx_right / 2, ur_x,
           m_y - idx_right + idx_right / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x, m_y + idx_right / 2, ur_x, m_y + idx_right / 2,
+      ctx->gdraw->line(m_x, m_y + idx_right / 2, ur_x, m_y + idx_right / 2,
           glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x, m_y - idx_right + idx_right / 2, m_x,
+      ctx->gdraw->line(m_x, m_y - idx_right + idx_right / 2, m_x,
           m_y + idx_right / 2, glow_eDrawType_Line, 0, 0);
     }
   } else if (lw_up == -1 && lw_down == -1 && lw_right == -1 && lw_left != -1) {
     // Left termination
-    ctx->gdraw->fill_rect(w, ll_x, m_y - idx_left + idx_left / 2, m_x - ll_x,
-        idx_left + 1, drawtype);
+    ctx->gdraw->rect(ll_x, m_y - idx_left + idx_left / 2, m_x - ll_x,
+        idx_left + 1, drawtype, 1, 0);
     if (shadow && idx_left > 2) {
       if (border) {
         idx_left -= 2;
@@ -538,12 +530,12 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
 
       shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
-      ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, m_x, m_y + idx_left / 2,
+      ctx->gdraw->line(ll_x, m_y + idx_left / 2, m_x, m_y + idx_left / 2,
           shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x, m_y - idx_left + idx_left / 2, m_x,
+      ctx->gdraw->line(m_x, m_y - idx_left + idx_left / 2, m_x,
           m_y + idx_left / 2, shift_drawtype, 0, 0);
       shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
-      ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2, m_x,
+      ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2, m_x,
           m_y - idx_left + idx_left / 2, shift_drawtype, 0, 0);
 
       if (border) {
@@ -552,19 +544,19 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
     }
     if (border) {
-      ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2, m_x,
+      ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2, m_x,
           m_y - idx_left + idx_left / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, m_x, m_y + idx_left / 2,
+      ctx->gdraw->line(ll_x, m_y + idx_left / 2, m_x, m_y + idx_left / 2,
           glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x, m_y - idx_left + idx_left / 2, m_x,
+      ctx->gdraw->line(m_x, m_y - idx_left + idx_left / 2, m_x,
           m_y + idx_left / 2, glow_eDrawType_Line, 0, 0);
     }
   } else if (lw_up != -1 && lw_down != -1 && lw_right == -1 && lw_left == -1) {
     // Vertical glue
-    ctx->gdraw->fill_rect(
-        w, m_x - idx_up + idx_up / 2, m_y, idx_up + 1, ur_y - m_y, drawtype);
-    ctx->gdraw->fill_rect(w, m_x - idx_down + idx_down / 2, ll_y, idx_down + 1,
-        m_y - ll_y, drawtype);
+    ctx->gdraw->rect(m_x - idx_up + idx_up / 2, m_y, idx_up + 1, ur_y - m_y,
+        drawtype, 1, 0);
+    ctx->gdraw->rect(m_x - idx_down + idx_down / 2, ll_y, idx_down + 1,
+        m_y - ll_y, drawtype, 1, 0);
 
     if (shadow && idx_down > 2) {
       if (border) {
@@ -572,14 +564,14 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
         idx_down -= 2;
       }
       shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
           m_x - idx_down + idx_down / 2, m_y, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y,
           m_x - idx_up + idx_up / 2, ur_y, shift_drawtype, 0, 0);
       shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
-      ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y,
+      ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y,
           shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y, m_x + idx_up / 2, ur_y,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y, m_x + idx_up / 2, ur_y,
           shift_drawtype, 0, 0);
       if (border) {
         idx_up += 2;
@@ -587,41 +579,41 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
     }
     if (border) {
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
           m_x - idx_down + idx_down / 2, m_y, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y,
+      ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y,
           glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y,
           m_x - idx_up + idx_up / 2, ur_y, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y, m_x + idx_up / 2, ur_y,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y, m_x + idx_up / 2, ur_y,
           glow_eDrawType_Line, 0, 0);
       if (idx_down != idx_up) {
-        ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y,
+        ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y,
             m_x - idx_down + idx_down / 2, m_y, glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x + idx_up / 2, m_y, m_x + idx_down / 2, m_y,
+        ctx->gdraw->line(m_x + idx_up / 2, m_y, m_x + idx_down / 2, m_y,
             glow_eDrawType_Line, 0, 0);
       }
     }
   } else if (lw_left != -1 && lw_right != -1 && lw_up == -1 && lw_down == -1) {
     // Horizontal glue
-    ctx->gdraw->fill_rect(w, m_x, m_y - idx_right + idx_right / 2, ur_x - m_x,
-        idx_right + 1, drawtype);
-    ctx->gdraw->fill_rect(w, ll_x, m_y - idx_left + idx_left / 2, m_x - ll_x,
-        idx_left + 1, drawtype);
+    ctx->gdraw->rect(m_x, m_y - idx_right + idx_right / 2, ur_x - m_x,
+        idx_right + 1, drawtype, 1, 0);
+    ctx->gdraw->rect(ll_x, m_y - idx_left + idx_left / 2, m_x - ll_x,
+        idx_left + 1, drawtype, 1, 0);
     if (shadow && (idx_left > 2 || idx_right > 2)) {
       if (border) {
         idx_left -= 2;
         idx_right -= 2;
       }
       shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
-      ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2, m_x,
+      ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2, m_x,
           m_y - idx_left + idx_left / 2, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x, m_y - idx_right + idx_right / 2, ur_x,
+      ctx->gdraw->line(m_x, m_y - idx_right + idx_right / 2, ur_x,
           m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
       shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
-      ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, m_x, m_y + idx_left / 2,
+      ctx->gdraw->line(ll_x, m_y + idx_left / 2, m_x, m_y + idx_left / 2,
           shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x, m_y + idx_right / 2, ur_x, m_y + idx_right / 2,
+      ctx->gdraw->line(m_x, m_y + idx_right / 2, ur_x, m_y + idx_right / 2,
           shift_drawtype, 0, 0);
       if (border) {
         idx_left += 2;
@@ -629,41 +621,41 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
     }
     if (border) {
-      ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2, m_x,
+      ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2, m_x,
           m_y - idx_left + idx_left / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, m_x, m_y + idx_left / 2,
+      ctx->gdraw->line(ll_x, m_y + idx_left / 2, m_x, m_y + idx_left / 2,
           glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x, m_y - idx_right + idx_right / 2, ur_x,
+      ctx->gdraw->line(m_x, m_y - idx_right + idx_right / 2, ur_x,
           m_y - idx_right + idx_right / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x, m_y + idx_right / 2, ur_x, m_y + idx_right / 2,
+      ctx->gdraw->line(m_x, m_y + idx_right / 2, ur_x, m_y + idx_right / 2,
           glow_eDrawType_Line, 0, 0);
       if (idx_left != idx_right) {
-        ctx->gdraw->line(w, m_x, m_y - idx_right + idx_right / 2, m_x,
+        ctx->gdraw->line(m_x, m_y - idx_right + idx_right / 2, m_x,
             m_y - idx_left + idx_left / 2, glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x, m_y + idx_right / 2, m_x, m_y + idx_left / 2,
+        ctx->gdraw->line(m_x, m_y + idx_right / 2, m_x, m_y + idx_left / 2,
             glow_eDrawType_Line, 0, 0);
       }
     }
   } else if (lw_left != -1 && lw_right == -1 && lw_up != -1 && lw_down == -1) {
     // Left up corner
-    ctx->gdraw->fill_rect(w, m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
-        idx_up + 1, ur_y - (m_y + idx_left / 2), drawtype);
-    ctx->gdraw->fill_rect(w, ll_x, m_y - idx_left + idx_left / 2,
-        m_x + idx_up / 2 - ll_x + 1, idx_left + 1, drawtype);
+    ctx->gdraw->rect(m_x - idx_up + idx_up / 2, m_y + idx_left / 2, idx_up + 1,
+        ur_y - (m_y + idx_left / 2), drawtype, 1, 0);
+    ctx->gdraw->rect(ll_x, m_y - idx_left + idx_left / 2,
+        m_x + idx_up / 2 - ll_x + 1, idx_left + 1, drawtype, 1, 0);
     if (shadow && (idx_left > 2 || idx_up > 2)) {
       if (border) {
         idx_left -= 2;
         idx_up -= 2;
       }
       shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
-      ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2, m_x + idx_up / 2,
+      ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2, m_x + idx_up / 2,
           m_y - idx_left + idx_left / 2, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
           m_x - idx_up + idx_up / 2, ur_y, shift_drawtype, 0, 0);
       shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
-      ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2,
+      ctx->gdraw->line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2,
           m_y + idx_left / 2, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y - idx_left + idx_left / 2,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y - idx_left + idx_left / 2,
           m_x + idx_up / 2, ur_y, shift_drawtype, 0, 0);
       if (border) {
         idx_left += 2;
@@ -671,38 +663,37 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
     }
     if (border) {
-      ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2, m_x + idx_up / 2,
+      ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2, m_x + idx_up / 2,
           m_y - idx_left + idx_left / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2,
+      ctx->gdraw->line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2,
           m_y + idx_left / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
           m_x - idx_up + idx_up / 2, ur_y, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y - idx_left + idx_left / 2,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y - idx_left + idx_left / 2,
           m_x + idx_up / 2, ur_y, glow_eDrawType_Line, 0, 0);
     }
   } else if (lw_left == -1 && lw_right != -1 && lw_up != -1 && lw_down == -1) {
     // Right up corner
-    ctx->gdraw->fill_rect(w, m_x - idx_up + idx_up / 2,
-        m_y - idx_right + idx_right / 2, idx_up + 1,
-        ur_y - (m_y - idx_right + idx_right / 2), drawtype);
-    ctx->gdraw->fill_rect(w, m_x + idx_up / 2, m_y - idx_right + idx_right / 2,
-        ur_x - (m_x + idx_up / 2), idx_right + 1, drawtype);
+    ctx->gdraw->rect(m_x - idx_up + idx_up / 2, m_y - idx_right + idx_right / 2,
+        idx_up + 1, ur_y - (m_y - idx_right + idx_right / 2), drawtype, 1, 0);
+    ctx->gdraw->rect(m_x + idx_up / 2, m_y - idx_right + idx_right / 2,
+        ur_x - (m_x + idx_up / 2), idx_right + 1, drawtype, 1, 0);
     if (shadow && (idx_right > 2 || idx_up > 2)) {
       if (border) {
         idx_right -= 2;
         idx_up -= 2;
       }
       shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2,
           m_y - idx_right + idx_right / 2, ur_x,
           m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2,
           m_y - idx_right + idx_right / 2, m_x - idx_up + idx_up / 2, ur_y,
           shift_drawtype, 0, 0);
       shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_right / 2, ur_x,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_right / 2, ur_x,
           m_y + idx_right / 2, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_right / 2,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_right / 2,
           m_x + idx_up / 2, ur_y, shift_drawtype, 0, 0);
       if (border) {
         idx_right += 2;
@@ -710,39 +701,39 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
     }
     if (border) {
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2,
           m_y - idx_right + idx_right / 2, ur_x,
           m_y - idx_right + idx_right / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_right / 2, ur_x,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_right / 2, ur_x,
           m_y + idx_right / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2,
           m_y - idx_right + idx_right / 2, m_x - idx_up + idx_up / 2, ur_y,
           glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_right / 2,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_right / 2,
           m_x + idx_up / 2, ur_y, glow_eDrawType_Line, 0, 0);
     }
   } else if (lw_left == -1 && lw_right != -1 && lw_up == -1 && lw_down != -1) {
     // Right down corner
-    ctx->gdraw->fill_rect(w, m_x - idx_down + idx_down / 2, ll_y, idx_down + 1,
-        m_y - idx_right + idx_right / 2 - ll_y, drawtype);
-    ctx->gdraw->fill_rect(w, m_x - idx_down + idx_down / 2,
+    ctx->gdraw->rect(m_x - idx_down + idx_down / 2, ll_y, idx_down + 1,
+        m_y - idx_right + idx_right / 2 - ll_y, drawtype, 1, 0);
+    ctx->gdraw->rect(m_x - idx_down + idx_down / 2,
         m_y - idx_right + idx_right / 2, ur_x - (m_x - idx_down + idx_down / 2),
-        idx_right + 1, drawtype);
+        idx_right + 1, drawtype, 1, 0);
     if (shadow && (idx_right > 2 || idx_down > 2)) {
       if (border) {
         idx_right -= 2;
         idx_down -= 2;
       }
       shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
-      ctx->gdraw->line(w, m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
           ur_x, m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
           m_x - idx_down + idx_down / 2, m_y + idx_right / 2, shift_drawtype, 0,
           0);
       shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, m_y + idx_right / 2,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, m_y + idx_right / 2,
           ur_x, m_y + idx_right / 2, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
           m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
       if (border) {
         idx_right += 2;
@@ -750,38 +741,38 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
     }
     if (border) {
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, m_y + idx_right / 2,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, m_y + idx_right / 2,
           ur_x, m_y + idx_right / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
           ur_x, m_y - idx_right + idx_right / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
           m_x - idx_down + idx_down / 2, m_y + idx_right / 2,
           glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
           m_y - idx_right + idx_right / 2, glow_eDrawType_Line, 0, 0);
     }
   } else if (lw_left != -1 && lw_right == -1 && lw_up == -1 && lw_down != -1) {
     // Left down corner
-    ctx->gdraw->fill_rect(w, m_x - idx_down + idx_down / 2, ll_y, idx_down + 1,
-        m_y + idx_left / 2 - ll_y + 1, drawtype);
-    ctx->gdraw->fill_rect(w, ll_x, m_y - idx_left + idx_left / 2,
-        m_x - idx_down + idx_down / 2 - ll_x, idx_left + 1, drawtype);
+    ctx->gdraw->rect(m_x - idx_down + idx_down / 2, ll_y, idx_down + 1,
+        m_y + idx_left / 2 - ll_y + 1, drawtype, 1, 0);
+    ctx->gdraw->rect(ll_x, m_y - idx_left + idx_left / 2,
+        m_x - idx_down + idx_down / 2 - ll_x, idx_left + 1, drawtype, 1, 0);
     if (shadow && (idx_left > 2 || idx_down > 2)) {
       if (border) {
         idx_left -= 2;
         idx_down -= 2;
       }
       shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
-      ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2,
+      ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           shift_drawtype, 0, 0);
       shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
-      ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, m_x + idx_down / 2,
+      ctx->gdraw->line(ll_x, m_y + idx_left / 2, m_x + idx_down / 2,
           m_y + idx_left / 2, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
           m_y + idx_left / 2, shift_drawtype, 0, 0);
       if (border) {
         idx_left += 2;
@@ -789,26 +780,26 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
     }
     if (border) {
-      ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2,
+      ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, m_x + idx_down / 2,
+      ctx->gdraw->line(ll_x, m_y + idx_left / 2, m_x + idx_down / 2,
           m_y + idx_left / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
           m_y + idx_left / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           glow_eDrawType_Line, 0, 0);
     }
   } else if (lw_left != -1 && lw_right != -1 && lw_up == -1 && lw_down != -1) {
     // Left right down threeway
-    ctx->gdraw->fill_rect(w, m_x - idx_down + idx_down / 2, ll_y, idx_down + 1,
-        m_y - ll_y + 1, drawtype);
-    ctx->gdraw->fill_rect(w, ll_x, m_y - idx_left + idx_left / 2,
-        m_x + idx_down / 2 - ll_x, idx_left + 1, drawtype);
-    ctx->gdraw->fill_rect(w, m_x - idx_down + idx_down / 2,
+    ctx->gdraw->rect(m_x - idx_down + idx_down / 2, ll_y, idx_down + 1,
+        m_y - ll_y + 1, drawtype, 1, 0);
+    ctx->gdraw->rect(ll_x, m_y - idx_left + idx_left / 2,
+        m_x + idx_down / 2 - ll_x, idx_left + 1, drawtype, 1, 0);
+    ctx->gdraw->rect(m_x - idx_down + idx_down / 2,
         m_y - idx_right + idx_right / 2, ur_x - (m_x - idx_down + idx_down / 2),
-        idx_right + 1, drawtype);
+        idx_right + 1, drawtype, 1, 0);
     if (shadow && (idx_left > 2 || idx_right > 2 || idx_down > 2)) {
       if (border) {
         idx_left -= 2;
@@ -816,30 +807,30 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
         idx_down -= 2;
       }
       shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
-      ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2,
+      ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
           ur_x, m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
       shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
-      ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
           m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
       if (idx_right == idx_left)
-        ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, ur_x, m_y + idx_left / 2,
+        ctx->gdraw->line(ll_x, m_y + idx_left / 2, ur_x, m_y + idx_left / 2,
             shift_drawtype, 0, 0);
       else if (idx_right > idx_left) {
-        ctx->gdraw->line(w, ll_x, m_y + idx_left / 2,
+        ctx->gdraw->line(ll_x, m_y + idx_left / 2,
             m_x - idx_down + idx_down / 2, m_y + idx_left / 2, shift_drawtype,
             0, 0);
-        ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, m_y + idx_right / 2,
+        ctx->gdraw->line(m_x - idx_down + idx_down / 2, m_y + idx_right / 2,
             ur_x, m_y + idx_right / 2, shift_drawtype, 0, 0);
       } else {
-        ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, m_x + idx_down / 2,
+        ctx->gdraw->line(ll_x, m_y + idx_left / 2, m_x + idx_down / 2,
             m_y + idx_left / 2, shift_drawtype, 0, 0);
-        ctx->gdraw->line(w, m_x + idx_down / 2, m_y + idx_right / 2, ur_x,
+        ctx->gdraw->line(m_x + idx_down / 2, m_y + idx_right / 2, ur_x,
             m_y + idx_right / 2, shift_drawtype, 0, 0);
       }
       if (border) {
@@ -849,46 +840,45 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
     }
     if (border) {
-      ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2,
+      ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
           ur_x, m_y - idx_right + idx_right / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
           m_y - idx_right + idx_right / 2, glow_eDrawType_Line, 0, 0);
       if (idx_right == idx_left)
-        ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, ur_x, m_y + idx_left / 2,
+        ctx->gdraw->line(ll_x, m_y + idx_left / 2, ur_x, m_y + idx_left / 2,
             glow_eDrawType_Line, 0, 0);
       else if (idx_right > idx_left) {
-        ctx->gdraw->line(w, ll_x, m_y + idx_left / 2,
+        ctx->gdraw->line(ll_x, m_y + idx_left / 2,
             m_x - idx_down + idx_down / 2, m_y + idx_left / 2,
             glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, m_y + idx_right / 2,
+        ctx->gdraw->line(m_x - idx_down + idx_down / 2, m_y + idx_right / 2,
             ur_x, m_y + idx_right / 2, glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, m_y + idx_right / 2,
+        ctx->gdraw->line(m_x - idx_down + idx_down / 2, m_y + idx_right / 2,
             m_x - idx_down + idx_down / 2, m_y + idx_left / 2,
             glow_eDrawType_Line, 0, 0);
       } else {
-        ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, m_x + idx_down / 2,
+        ctx->gdraw->line(ll_x, m_y + idx_left / 2, m_x + idx_down / 2,
             m_y + idx_left / 2, glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x + idx_down / 2, m_y + idx_right / 2, ur_x,
+        ctx->gdraw->line(m_x + idx_down / 2, m_y + idx_right / 2, ur_x,
             m_y + idx_right / 2, glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x + idx_down / 2, m_y + idx_right / 2,
+        ctx->gdraw->line(m_x + idx_down / 2, m_y + idx_right / 2,
             m_x + idx_down / 2, m_y + idx_left / 2, glow_eDrawType_Line, 0, 0);
       }
     }
   } else if (lw_left != -1 && lw_right != -1 && lw_up != -1 && lw_down == -1) {
     // Left right up threeway
-    ctx->gdraw->fill_rect(
-        w, m_x - idx_up + idx_up / 2, m_y, idx_up + 1, ur_y - m_y, drawtype);
-    ctx->gdraw->fill_rect(w, ll_x, m_y - idx_left + idx_left / 2,
-        m_x + idx_up / 2 - ll_x, idx_left + 1, drawtype);
-    ctx->gdraw->fill_rect(w, m_x - idx_up + idx_up / 2,
-        m_y - idx_right + idx_right / 2, ur_x - (m_x - idx_up + idx_up / 2),
-        idx_right + 1, drawtype);
+    ctx->gdraw->rect(m_x - idx_up + idx_up / 2, m_y, idx_up + 1, ur_y - m_y,
+        drawtype, 1, 0);
+    ctx->gdraw->rect(ll_x, m_y - idx_left + idx_left / 2,
+        m_x + idx_up / 2 - ll_x, idx_left + 1, drawtype, 1, 0);
+    ctx->gdraw->rect(m_x - idx_up + idx_up / 2, m_y - idx_right + idx_right / 2,
+        ur_x - (m_x - idx_up + idx_up / 2), idx_right + 1, drawtype, 1, 0);
     if (shadow && (idx_left > 2 || idx_right > 2 || idx_up > 2)) {
       if (border) {
         idx_left -= 2;
@@ -896,37 +886,37 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
         idx_up -= 2;
       }
       shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
           m_x - idx_up + idx_up / 2, ur_y, shift_drawtype, 0, 0);
       if (idx_right == idx_left)
-        ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2, ur_x,
+        ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2, ur_x,
             m_y - idx_left + idx_left / 2, shift_drawtype, 0, 0);
       else if (idx_right > idx_left) {
-        ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2,
+        ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2,
             m_x - idx_up + idx_up / 2, m_y - idx_left + idx_left / 2,
             shift_drawtype, 0, 0);
-        ctx->gdraw->line(w, m_x - idx_up + idx_up / 2,
+        ctx->gdraw->line(m_x - idx_up + idx_up / 2,
             m_y - idx_right + idx_right / 2, ur_x,
             m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
-        ctx->gdraw->line(w, m_x - idx_up + idx_up / 2,
+        ctx->gdraw->line(m_x - idx_up + idx_up / 2,
             m_y - idx_right + idx_right / 2, m_x - idx_up + idx_up / 2,
             m_y - idx_left + idx_left / 2, shift_drawtype, 0, 0);
       } else {
-        ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2,
+        ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2,
             m_x + idx_up / 2, m_y - idx_left + idx_left / 2, shift_drawtype, 0,
             0);
-        ctx->gdraw->line(w, m_x + idx_up / 2, m_y - idx_right + idx_right / 2,
+        ctx->gdraw->line(m_x + idx_up / 2, m_y - idx_right + idx_right / 2,
             ur_x, m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
-        ctx->gdraw->line(w, m_x + idx_up / 2, m_y - idx_right + idx_right / 2,
+        ctx->gdraw->line(m_x + idx_up / 2, m_y - idx_right + idx_right / 2,
             m_x + idx_up / 2, m_y - idx_left + idx_left / 2, shift_drawtype, 0,
             0);
       }
       shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
-      ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2,
+      ctx->gdraw->line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2,
           m_y + idx_left / 2, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_right / 2, ur_x,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_right / 2, ur_x,
           m_y + idx_right / 2, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_right / 2,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_right / 2,
           m_x + idx_up / 2, ur_y, shift_drawtype, 0, 0);
       if (border) {
         idx_left += 2;
@@ -935,47 +925,46 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
     }
     if (border) {
-      ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2,
+      ctx->gdraw->line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2,
           m_y + idx_left / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
           m_x - idx_up + idx_up / 2, ur_y, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_right / 2, ur_x,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_right / 2, ur_x,
           m_y + idx_right / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_right / 2,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_right / 2,
           m_x + idx_up / 2, ur_y, glow_eDrawType_Line, 0, 0);
       if (idx_right == idx_left)
-        ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2, ur_x,
+        ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2, ur_x,
             m_y - idx_left + idx_left / 2, glow_eDrawType_Line, 0, 0);
       else if (idx_right > idx_left) {
-        ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2,
+        ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2,
             m_x - idx_up + idx_up / 2, m_y - idx_left + idx_left / 2,
             glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x - idx_up + idx_up / 2,
+        ctx->gdraw->line(m_x - idx_up + idx_up / 2,
             m_y - idx_right + idx_right / 2, ur_x,
             m_y - idx_right + idx_right / 2, glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x - idx_up + idx_up / 2,
+        ctx->gdraw->line(m_x - idx_up + idx_up / 2,
             m_y - idx_right + idx_right / 2, m_x - idx_up + idx_up / 2,
             m_y - idx_left + idx_left / 2, glow_eDrawType_Line, 0, 0);
       } else {
-        ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2,
+        ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2,
             m_x + idx_up / 2, m_y - idx_left + idx_left / 2,
             glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x + idx_up / 2, m_y - idx_right + idx_right / 2,
+        ctx->gdraw->line(m_x + idx_up / 2, m_y - idx_right + idx_right / 2,
             ur_x, m_y - idx_right + idx_right / 2, glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x + idx_up / 2, m_y - idx_right + idx_right / 2,
+        ctx->gdraw->line(m_x + idx_up / 2, m_y - idx_right + idx_right / 2,
             m_x + idx_up / 2, m_y - idx_left + idx_left / 2,
             glow_eDrawType_Line, 0, 0);
       }
     }
   } else if (lw_left != -1 && lw_right == -1 && lw_up != -1 && lw_down != -1) {
     // Left up down threeway
-    ctx->gdraw->fill_rect(w, ll_x, m_y - idx_left + idx_left / 2, m_x - ll_x,
-        idx_left + 1, drawtype);
-    ctx->gdraw->fill_rect(w, m_x - idx_up + idx_up / 2,
-        m_y - idx_left + idx_left / 2, idx_up + 1,
-        ur_y - (m_y - idx_left + idx_left / 2), drawtype);
-    ctx->gdraw->fill_rect(w, m_x - idx_down + idx_down / 2, ll_y, idx_down + 1,
-        m_y + idx_left / 2 - ll_y, drawtype);
+    ctx->gdraw->rect(ll_x, m_y - idx_left + idx_left / 2, m_x - ll_x,
+        idx_left + 1, drawtype, 1, 0);
+    ctx->gdraw->rect(m_x - idx_up + idx_up / 2, m_y - idx_left + idx_left / 2,
+        idx_up + 1, ur_y - (m_y - idx_left + idx_left / 2), drawtype, 1, 0);
+    ctx->gdraw->rect(m_x - idx_down + idx_down / 2, ll_y, idx_down + 1,
+        m_y + idx_left / 2 - ll_y, drawtype, 1, 0);
     if (shadow && (idx_left > 2 || idx_down > 2 || idx_up > 2)) {
       if (border) {
         idx_left -= 2;
@@ -983,34 +972,34 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
         idx_up -= 2;
       }
       shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
-      ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2,
+      ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
           m_x - idx_up + idx_up / 2, ur_y, shift_drawtype, 0, 0);
       shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
-      ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2,
+      ctx->gdraw->line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2,
           m_y + idx_left / 2, shift_drawtype, 0, 0);
 
       if (idx_up == idx_down)
-        ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2, ur_y,
+        ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, ur_y,
             shift_drawtype, 0, 0);
       else if (idx_down > idx_up) {
-        ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
+        ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
             m_y + idx_left / 2, shift_drawtype, 0, 0);
-        ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_left / 2,
+        ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_left / 2,
             m_x + idx_up / 2, ur_y, shift_drawtype, 0, 0);
-        ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_left / 2,
+        ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_left / 2,
             m_x + idx_down / 2, m_y + idx_left / 2, shift_drawtype, 0, 0);
       } else {
-        ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
+        ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
             m_y - idx_left + idx_left / 2, shift_drawtype, 0, 0);
-        ctx->gdraw->line(w, m_x + idx_up / 2, m_y - idx_left + idx_left / 2,
+        ctx->gdraw->line(m_x + idx_up / 2, m_y - idx_left + idx_left / 2,
             m_x + idx_up / 2, ur_y, shift_drawtype, 0, 0);
-        ctx->gdraw->line(w, m_x + idx_up / 2, m_y - idx_left + idx_left / 2,
+        ctx->gdraw->line(m_x + idx_up / 2, m_y - idx_left + idx_left / 2,
             m_x + idx_down / 2, m_y - idx_left + idx_left / 2, shift_drawtype,
             0, 0);
       }
@@ -1021,46 +1010,45 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
     }
     if (border) {
-      ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2,
+      ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2,
+      ctx->gdraw->line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2,
           m_y + idx_left / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
           m_x - idx_up + idx_up / 2, ur_y, glow_eDrawType_Line, 0, 0);
 
       if (idx_up == idx_down)
-        ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2, ur_y,
+        ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, ur_y,
             glow_eDrawType_Line, 0, 0);
       else if (idx_down > idx_up) {
-        ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
+        ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
             m_y + idx_left / 2, glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_left / 2,
+        ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_left / 2,
             m_x + idx_up / 2, ur_y, glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_left / 2,
+        ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_left / 2,
             m_x + idx_down / 2, m_y + idx_left / 2, glow_eDrawType_Line, 0, 0);
       } else {
-        ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
+        ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
             m_y - idx_left + idx_left / 2, glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x + idx_up / 2, m_y - idx_left + idx_left / 2,
+        ctx->gdraw->line(m_x + idx_up / 2, m_y - idx_left + idx_left / 2,
             m_x + idx_up / 2, ur_y, glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x + idx_up / 2, m_y - idx_left + idx_left / 2,
+        ctx->gdraw->line(m_x + idx_up / 2, m_y - idx_left + idx_left / 2,
             m_x + idx_down / 2, m_y - idx_left + idx_left / 2,
             glow_eDrawType_Line, 0, 0);
       }
     }
   } else if (lw_left == -1 && lw_right != -1 && lw_up != -1 && lw_down != -1) {
     // Right up down threeway
-    ctx->gdraw->fill_rect(w, m_x, m_y - idx_right + idx_right / 2, ur_x - m_x,
-        idx_right + 1, drawtype);
-    ctx->gdraw->fill_rect(w, m_x - idx_up + idx_up / 2,
-        m_y - idx_right + idx_right / 2, idx_up + 1,
-        ur_y - (m_y - idx_right + idx_right / 2), drawtype);
-    ctx->gdraw->fill_rect(w, m_x - idx_down + idx_down / 2, ll_y, idx_down + 1,
-        m_y + idx_right / 2 - ll_y, drawtype);
+    ctx->gdraw->rect(m_x, m_y - idx_right + idx_right / 2, ur_x - m_x,
+        idx_right + 1, drawtype, 1, 0);
+    ctx->gdraw->rect(m_x - idx_up + idx_up / 2, m_y - idx_right + idx_right / 2,
+        idx_up + 1, ur_y - (m_y - idx_right + idx_right / 2), drawtype, 1, 0);
+    ctx->gdraw->rect(m_x - idx_down + idx_down / 2, ll_y, idx_down + 1,
+        m_y + idx_right / 2 - ll_y, drawtype, 1, 0);
     if (shadow && (idx_right > 2 || idx_down > 2 || idx_up > 2)) {
       if (border) {
         idx_right -= 2;
@@ -1068,37 +1056,37 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
         idx_up -= 2;
       }
       shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
-      ctx->gdraw->line(w, m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
           ur_x, m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
 
       if (idx_up == idx_down)
-        ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+        ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
             m_x - idx_down + idx_down / 2, ur_y, shift_drawtype, 0, 0);
       else if (idx_down > idx_up) {
-        ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+        ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
             m_x - idx_down + idx_down / 2, m_y + idx_right / 2, shift_drawtype,
             0, 0);
-        ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y + idx_right / 2,
+        ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y + idx_right / 2,
             m_x - idx_up + idx_up / 2, ur_y, shift_drawtype, 0, 0);
         // ctx->gdraw->line( w, m_x - idx_up + idx_up/2, m_y + idx_right/2, m_x
         // - idx_down + idx_down/2, m_y + idx_right/2, shift_drawtype, 0, 0);
       } else {
-        ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+        ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
             m_x - idx_down + idx_down / 2, m_y - idx_right + idx_right / 2,
             shift_drawtype, 0, 0);
-        ctx->gdraw->line(w, m_x - idx_up + idx_up / 2,
+        ctx->gdraw->line(m_x - idx_up + idx_up / 2,
             m_y - idx_right + idx_right / 2, m_x - idx_up + idx_up / 2, ur_y,
             shift_drawtype, 0, 0);
-        ctx->gdraw->line(w, m_x - idx_up + idx_up / 2,
+        ctx->gdraw->line(m_x - idx_up + idx_up / 2,
             m_y - idx_right + idx_right / 2, m_x - idx_down + idx_down / 2,
             m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
       }
       shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
-      ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
           m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_right / 2, ur_x,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_right / 2, ur_x,
           m_y + idx_right / 2, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_right / 2,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_right / 2,
           m_x + idx_up / 2, ur_y, shift_drawtype, 0, 0);
       if (border) {
         idx_right += 2;
@@ -1107,49 +1095,49 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
     }
     if (border) {
-      ctx->gdraw->line(w, m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
           ur_x, m_y - idx_right + idx_right / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
           m_y - idx_right + idx_right / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_right / 2, ur_x,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_right / 2, ur_x,
           m_y + idx_right / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_right / 2,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_right / 2,
           m_x + idx_up / 2, ur_y, glow_eDrawType_Line, 0, 0);
 
       if (idx_up == idx_down)
-        ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+        ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
             m_x - idx_down + idx_down / 2, ur_y, glow_eDrawType_Line, 0, 0);
       else if (idx_down > idx_up) {
-        ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+        ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
             m_x - idx_down + idx_down / 2, m_y + idx_right / 2,
             glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y + idx_right / 2,
+        ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y + idx_right / 2,
             m_x - idx_up + idx_up / 2, ur_y, glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y + idx_right / 2,
+        ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y + idx_right / 2,
             m_x - idx_down + idx_down / 2, m_y + idx_right / 2,
             glow_eDrawType_Line, 0, 0);
       } else {
-        ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+        ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
             m_x - idx_down + idx_down / 2, m_y - idx_right + idx_right / 2,
             glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x - idx_up + idx_up / 2,
+        ctx->gdraw->line(m_x - idx_up + idx_up / 2,
             m_y - idx_right + idx_right / 2, m_x - idx_up + idx_up / 2, ur_y,
             glow_eDrawType_Line, 0, 0);
-        ctx->gdraw->line(w, m_x - idx_up + idx_up / 2,
+        ctx->gdraw->line(m_x - idx_up + idx_up / 2,
             m_y - idx_right + idx_right / 2, m_x - idx_down + idx_down / 2,
             m_y - idx_right + idx_right / 2, glow_eDrawType_Line, 0, 0);
       }
     }
   } else if (lw_left != -1 && lw_right != -1 && lw_up != -1 && lw_down != -1) {
     // Right left up down fourway
-    ctx->gdraw->fill_rect(w, m_x, m_y - idx_right + idx_right / 2, ur_x - m_x,
-        idx_right + 1, drawtype);
-    ctx->gdraw->fill_rect(w, ll_x, m_y - idx_left + idx_left / 2, m_x - ll_x,
-        idx_left + 1, drawtype);
-    ctx->gdraw->fill_rect(
-        w, m_x - idx_up + idx_up / 2, m_y, idx_up + 1, ur_y - m_y, drawtype);
-    ctx->gdraw->fill_rect(w, m_x - idx_down + idx_down / 2, ll_y, idx_down + 1,
-        m_y - ll_y, drawtype);
+    ctx->gdraw->rect(m_x, m_y - idx_right + idx_right / 2, ur_x - m_x,
+        idx_right + 1, drawtype, 1, 0);
+    ctx->gdraw->rect(ll_x, m_y - idx_left + idx_left / 2, m_x - ll_x,
+        idx_left + 1, drawtype, 1, 0);
+    ctx->gdraw->rect(m_x - idx_up + idx_up / 2, m_y, idx_up + 1, ur_y - m_y,
+        drawtype, 1, 0);
+    ctx->gdraw->rect(m_x - idx_down + idx_down / 2, ll_y, idx_down + 1,
+        m_y - ll_y, drawtype, 1, 0);
     if (shadow
         && (idx_left > 2 || idx_right > 2 || idx_down > 2 || idx_up > 2)) {
       if (border) {
@@ -1159,24 +1147,24 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
         idx_up -= 2;
       }
       shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
-      ctx->gdraw->line(w, m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
           ur_x, m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2,
+      ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
           m_x - idx_up + idx_up / 2, ur_y, shift_drawtype, 0, 0);
       shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_right / 2, ur_x,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_right / 2, ur_x,
           m_y + idx_right / 2, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2,
+      ctx->gdraw->line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2,
           m_y + idx_left / 2, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_right / 2,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_right / 2,
           m_x + idx_up / 2, ur_y, shift_drawtype, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
           m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
       if (border) {
         idx_right += 2;
@@ -1186,44 +1174,37 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       }
     }
     if (border) {
-      ctx->gdraw->line(w, m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
           ur_x, m_y - idx_right + idx_right / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
+      ctx->gdraw->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
           m_y - idx_right + idx_right / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_right / 2, ur_x,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_right / 2, ur_x,
           m_y + idx_right / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x + idx_up / 2, m_y + idx_right / 2,
+      ctx->gdraw->line(m_x + idx_up / 2, m_y + idx_right / 2,
           m_x + idx_up / 2, ur_y, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, ll_x, m_y - idx_left + idx_left / 2,
+      ctx->gdraw->line(ll_x, m_y - idx_left + idx_left / 2,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_down + idx_down / 2, ll_y,
+      ctx->gdraw->line(m_x - idx_down + idx_down / 2, ll_y,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2,
+      ctx->gdraw->line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up / 2,
           m_y + idx_left / 2, glow_eDrawType_Line, 0, 0);
-      ctx->gdraw->line(w, m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
+      ctx->gdraw->line(m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
           m_x - idx_up + idx_up / 2, ur_y, glow_eDrawType_Line, 0, 0);
     }
   } else {
-    ctx->gdraw->line(w, m_x, ll_y, m_x, m_y, drawtype, idx, 0);
-    ctx->gdraw->line(w, m_x, m_y, m_x, ur_y, drawtype, idx, 0);
-    ctx->gdraw->line(w, ll_x, m_y, m_x, m_y, drawtype, idx, 0);
-    ctx->gdraw->line(w, m_x, m_y, ur_x, m_y, drawtype, idx, 0);
+    ctx->gdraw->line(m_x, ll_y, m_x, m_y, drawtype, idx, 0);
+    ctx->gdraw->line(m_x, m_y, m_x, ur_y, drawtype, idx, 0);
+    ctx->gdraw->line(ll_x, m_y, m_x, m_y, drawtype, idx, 0);
+    ctx->gdraw->line(m_x, m_y, ur_x, m_y, drawtype, idx, 0);
   }
-  w->reset_draw_buffer_only();
 }
 
-void GrowConGlue::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
+void GrowConGlue::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 {
   double x1, y1, x2, y2;
   int ll_x, ll_y, ur_x, ur_y;
-
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
-    hot = 0;
-  }
 
   if (!t) {
     x1 = x_left * w->zoom_factor_x - w->offset_x;
@@ -1241,32 +1222,15 @@ void GrowConGlue::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
   ll_y = int(MIN(y1, y2) + 0.5);
   ur_y = int(MAX(y1, y2) + 0.5);
 
-  ctx->gdraw->fill_rect(w, ll_x, ll_y, ur_x - ll_x + 1, ur_y - ll_y + 1,
-      glow_eDrawType_LineErase);
-}
-
-void GrowConGlue::draw()
-{
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->gdraw->rect(ll_x, ll_y, ur_x - ll_x + 1, ur_y - ll_y + 1,
+      glow_eDrawType_LineErase, 1, 0);
 }
 
 void GrowConGlue::align(double x, double y, glow_eAlignDirection direction)
 {
   double dx, dy;
 
-  erase(&ctx->mw);
-  erase(&ctx->navw);
-  ctx->set_defered_redraw();
-  draw();
+  ctx->set_dirty();
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -1302,9 +1266,6 @@ void GrowConGlue::align(double x, double y, glow_eAlignDirection direction)
   x_left += dx;
   y_high += dy;
   y_low += dy;
-
-  draw();
-  ctx->redraw_defered();
 }
 
 void GrowConGlue::export_javabean(GlowTransform* t, void* node,
@@ -1317,19 +1278,19 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
   int idx_up, idx_down, idx_left, idx_right;
 
   int idx
-      = int(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
+      = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * line_width - 1);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
 
   if (!t) {
-    x1 = x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y1 = y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
-    x2 = x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y2 = y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x1 = x_left * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y1 = y_low * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+    x2 = x_right * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y2 = y_high * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
   } else {
-    x1 = t->x(x_left, y_low) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y1 = t->y(x_left, y_low) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
-    x2 = t->x(x_right, y_high) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    y2 = t->y(x_right, y_high) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x1 = t->x(x_left, y_low) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y1 = t->y(x_left, y_low) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+    x2 = t->x(x_right, y_high) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    y2 = t->y(x_right, y_high) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
   }
   ll_x = int(MIN(x1, x2) + 0.5);
   ur_x = int(MAX(x1, x2) + 0.5);
@@ -1349,16 +1310,16 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
   lw_up = line_width_up;
   lw_left = line_width_left;
 
-  idx_up = int(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * lw_up - 1);
+  idx_up = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * lw_up - 1);
   idx_up += hot;
   idx_down
-      = int(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * lw_down - 1);
+      = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * lw_down - 1);
   idx_down += hot;
   idx_left
-      = int(ctx->mw.zoom_factor_x / ctx->mw.base_zoom_factor * lw_left - 1);
+      = int(ctx->mw->zoom_factor_x / ctx->mw->base_zoom_factor * lw_left - 1);
   idx_left += hot;
   idx_right
-      = int(ctx->mw.zoom_factor_x / ctx->mw.base_zoom_factor * lw_right - 1);
+      = int(ctx->mw->zoom_factor_x / ctx->mw->base_zoom_factor * lw_right - 1);
   idx_right += hot;
 
   idx = MAX(0, idx);

@@ -47,7 +47,6 @@ public:
   void zoom();
   void nav_zoom();
   void print_zoom();
-  void traverse(int x, int y);
   int event_handler(void* pos, glow_eEvent event, int x, int y, void* node);
   void conpoint_select(void* pos, int x, int y, double* distance, void** cp);
   void conpoint_select(GlowTransform* t, int x, int y, double* distance,

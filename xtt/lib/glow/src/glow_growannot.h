@@ -123,7 +123,7 @@ public:
     multiplied with the parentnodes transform, to give the appropriate
     coordinates for the drawing.
   */
-  void draw(GlowWind* w, GlowTransform* t, int highlight, int hot, void* node,
+  void draw(DrawWind* w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
 
   //! Erase the object.
@@ -132,7 +132,7 @@ public:
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase(GlowWind* w, GlowTransform* t, int hot, void* node);
+  void erase(DrawWind* w, GlowTransform* t, int hot, void* node);
 
   //! Redraw the background of the annotation
   /*!
@@ -140,7 +140,7 @@ public:
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase_background(GlowWind* w, GlowTransform* t, int hot, void* node);
+  void erase_background(DrawWind* w, GlowTransform* t, int hot, void* node);
 
   //! Calculate the border for a set of objects or for a parent node.
   /*!

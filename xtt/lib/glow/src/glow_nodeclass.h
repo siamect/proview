@@ -97,10 +97,6 @@ public:
   {
     a.print_zoom();
   }
-  void traverse(int x, int y)
-  {
-    a.traverse(x, y);
-  }
   void get_borders(double pos_x, double pos_y, double* x_right, double* x_left,
       double* y_high, double* y_low, void* node)
   {
@@ -123,8 +119,7 @@ public:
 
   void get_obstacle_borders(double pos_x, double pos_y, double* x_right,
       double* x_left, double* y_high, double* y_low, void* node);
-  int event_handler(
-      GlowWind* w, void* pos, glow_eEvent event, int x, int y, void* node);
+  int event_handler(void* pos, glow_eEvent event, int x, int y, void* node);
 
   //! Event handler
   /*!
@@ -134,7 +129,7 @@ public:
 
     Checks if any of the elements covers the coordinate.
   */
-  int event_handler(GlowWind* w, glow_eEvent event, double fx, double fy);
+  int event_handler(glow_eEvent event, double fx, double fy);
 
   //! Print as postscript. Not used.
   void print(GlowPoint* pos, void* node);
@@ -150,8 +145,8 @@ public:
   /*! \param fp	Input file. */
   void open(std::ifstream& fp);
 
-  void draw(GlowWind* w, GlowPoint* pos, int highlight, int hot, void* node);
-  void erase(GlowWind* w, GlowPoint* pos, int hot, void* node);
+  void draw(DrawWind* w, GlowPoint* pos, int highlight, int hot, void* node);
+  void erase(DrawWind* w, GlowPoint* pos, int hot, void* node);
 
   //! Draw the calling node.
   /*!
@@ -164,7 +159,7 @@ public:
 
     Call the draw function for each element.
   */
-  void draw(GlowWind* w, GlowTransform* t, int highlight, int hot, void* node,
+  void draw(DrawWind* w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
 
   //! Erase the calling node.
@@ -175,7 +170,7 @@ public:
 
     Call the erase fuction for each element.
   */
-  void erase(GlowWind* w, GlowTransform* t, int hot, void* node);
+  void erase(DrawWind* w, GlowTransform* t, int hot, void* node);
 
   int get_conpoint(int num, double* x, double* y, glow_eDirection* dir);
 

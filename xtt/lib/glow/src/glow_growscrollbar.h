@@ -97,7 +97,7 @@ public:
   void open(std::ifstream& fp);
 
   //! Erase the object
-  void erase(GlowWind* w)
+  void erase(DrawWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
   }
@@ -136,8 +136,7 @@ public:
     callback_userdata = userdata, value_changed_cb = value_changed;
   }
 
-  int event_handler(
-      GlowWind* w, glow_eEvent event, int x, int y, double fx, double fy);
+  int event_handler(glow_eEvent event, int x, int y, double fx, double fy);
 
   //! Draw the object.
   /*!
@@ -153,7 +152,7 @@ public:
     multiplied with the parentnodes transform, to give the appropriate
     coordinates for the drawing.
   */
-  void draw(GlowWind* w, GlowTransform* t, int highlight, int hot, void* node,
+  void draw(DrawWind* w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
 
   //! Erase the object.
@@ -162,13 +161,7 @@ public:
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase(GlowWind* w, GlowTransform* t, int hot, void* node);
-
-  //! Redraw the area inside the objects border.
-  void draw()
-  {
-    draw(&ctx->mw, 0, 0, 0, 0, 0);
-  }
+  void erase(DrawWind* w, GlowTransform* t, int hot, void* node);
 
   //! Set the bar value
   /*!

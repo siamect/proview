@@ -99,7 +99,7 @@ public:
   }
 
   //! Erase the object
-  void erase(GlowWind* w)
+  void erase(DrawWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
   }
@@ -111,7 +111,7 @@ public:
     \param ur_x		Upper right x coordinate of drawing area.
     \param ur_y		Upper right y coordinate of drawing area.
   */
-  void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Draw the objects if any part is inside the drawing area, and extends the
   //! drawing area.
@@ -125,12 +125,7 @@ public:
     drawing area,
     the drawingarea is extended so it contains the whole objects.
   */
-  void draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
-
-  //! Drawing in the navigation window. See the corresponding draw function.
-  void nav_draw(int ll_x, int ll_y, int ur_x, int ur_y)
-  {
-  }
+  void draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
 
   glow_eObjectType type()
   {
@@ -167,7 +162,7 @@ public:
     multiplied with the parentnodes transform, to give the appropriate
     coordinates for the drawing.
   */
-  void draw(GlowWind* w, GlowTransform* t, int highlight, int hot, void* node,
+  void draw(DrawWind* w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
 
   //! Erase the object.
@@ -176,20 +171,16 @@ public:
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase(GlowWind* w, GlowTransform* t, int hot, void* node);
-
-  //! Redraw the area inside the objects border.
-  void draw();
+  void erase(DrawWind* w, GlowTransform* t, int hot, void* node);
 
   void export_javabean(GlowTransform* t, void* node, glow_eExportPass pass,
       int* shape_cnt, int node_cnt, int in_nc, std::ofstream& fp)
   {
   }
 
-  int event_handler(
-      GlowWind* w, glow_eEvent event, int x, int y, double fx, double fy);
-  int event_handler(GlowWind* w, glow_eEvent event, double fx, double fy);
-  int local_event_handler(GlowWind* w, glow_eEvent event, double x, double y);
+  int event_handler(glow_eEvent event, int x, int y, double fx, double fy);
+  int event_handler(glow_eEvent event, double fx, double fy);
+  int local_event_handler(glow_eEvent event, double x, double y);
 
   //! Check this menu object is a child to the specified menu object, and delete
   //! it if it is.

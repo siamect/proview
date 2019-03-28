@@ -41,6 +41,27 @@
 
 #define DRAW_CLIP_SIZE 10
 
+class DrawWind {
+public:
+  int type;
+  int double_buffered = 1;
+
+  double zoom_factor_x; //!< Zoom factor in x direction.
+  double zoom_factor_y; //!< Zoom factor in y direction.
+  double base_zoom_factor; //!< Original zoom factor.
+  int offset_x; //!< Offset in pixel between origo and displayed window in x
+  //! direction.
+  int offset_y; //!< Offset in pixel between origo and displayde window in y
+  //! direction.
+  int window_width; //!< Window width in pixel.
+  int window_height; //!< Window height in pixel.
+  int subwindow_x; //!< Subwindow x coordinate in pixel.
+  int subwindow_y; //!< Subwindow y coordinate in pixel.
+  double subwindow_scale; //!< Subwindow scale.
+  int clip_on = 0;
+  int clip_cnt = 0;
+};
+
 class GlowDraw {
 public:
   GlowCtx* ctx;
@@ -49,152 +70,95 @@ public:
   GlowDraw();
   virtual ~GlowDraw();
 
-  // virtual int event_handler( XEvent event) { return 1;}
   virtual void enable_event(glow_eEvent event, glow_eEventType event_type,
-      int (*event_cb)(GlowCtx* ctx, glow_tEvent event));
-  virtual void clear(GlowWind* w);
-  virtual void copy_buffer(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+      int (*event_cb)(GlowCtx* ctx, glow_tEvent event)) = 0;
+  virtual void clear() = 0;
 
-  virtual void get_window_size(GlowWind* w, int* width, int* height);
-  virtual void set_window_size(GlowWind* w, int width, int height);
+  virtual void get_window_size(DrawWind* w, int* width, int* height) = 0;
+  virtual void set_window_size(DrawWind* w, int width, int height) = 0;
 
-  virtual int rect(GlowWind* w, int x, int y, int width, int height,
-      glow_eDrawType gc_type, int idx, int highlight);
-  virtual int rect_erase(
-      GlowWind* w, int x, int y, int width, int height, int idx);
-  virtual int arrow(GlowWind* w, int x1, int y1, int x2, int y2, int x3, int y3,
-      glow_eDrawType gc_type, int idx, int highlight);
-  virtual int arrow_erase(
-      GlowWind* w, int x1, int y1, int x2, int y2, int x3, int y3, int idx);
-  virtual int arc(GlowWind* w, int x, int y, int width, int height, int angle1,
-      int angle2, glow_eDrawType gc_type, int idx, int highlight);
-  virtual int fill_arc(GlowWind* w, int x, int y, int width, int height,
-      int angle1, int angle2, glow_eDrawType gc_type, int highlight);
-  virtual int arc_erase(GlowWind* w, int x, int y, int width, int height,
-      int angle1, int angle2, int idx);
-  virtual int line(GlowWind* w, int x1, int y1, int x2, int y2,
-      glow_eDrawType gc_type, int idx, int highlight);
-  virtual int line_dashed(GlowWind* w, int x1, int y1, int x2, int y2,
-      glow_eDrawType gc_type, int idx, int highlight, glow_eLineType line_type);
-  virtual int line_erase(GlowWind* w, int x1, int y1, int x2, int y2, int idx);
-  virtual int polyline(GlowWind* w, glow_sPointX* points, int point_cnt,
-      glow_eDrawType gc_type, int idx, int highlight);
-  virtual int fill_polyline(GlowWind* w, glow_sPointX* points, int point_cnt,
-      glow_eDrawType gc_type, int highlight);
-  virtual int polyline_erase(
-      GlowWind* w, glow_sPointX* points, int point_cnt, int idx);
-  virtual int text(GlowWind* w, int x, int y, char* text, int len,
+  virtual int begin(DrawWind* wind) = 0;
+  virtual void end() = 0;
+
+  virtual void rect(int x, int y, int width, int height, glow_eDrawType gc_type,
+      int fill, int idx, int highlight = 0) = 0;
+  virtual void arrow(int x1, int y1, int x2, int y2, int x3, int y3,
+      glow_eDrawType gc_type, int idx, int highlight = 0) = 0;
+  virtual void arc(int x, int y, int width, int height, int angle1, int angle2,
+      glow_eDrawType gc_type, int fill, int idx, int highlight = 0) = 0;
+  virtual void line(int x1, int y1, int x2, int y2,
+      glow_eDrawType gc_type, int idx, int highlight = 0,
+      glow_eLineType line_type = glow_eLineType_Solid) = 0;
+  virtual void polyline(glow_sPointX* points, int point_cnt,
+      glow_eDrawType gc_type, int fill, int idx, int highlight = 0) = 0;
+  virtual void text(int x, int y, char* text, int len, glow_eDrawType gc_type,
+      glow_eDrawType color, int idx, int highlight, glow_eFont font_idx,
+      double size, int rot) = 0;
+  virtual void text_cursor(int x, int y, char* text, int len,
       glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight,
-      int line, glow_eFont font_idx, double size, int rot);
-  virtual int text_cursor(GlowWind* w, int x, int y, char* text, int len,
-      glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight,
-      int pos, glow_eFont font, double size);
-  virtual int text_erase(GlowWind* w, int x, int y, char* text, int len,
-      glow_eDrawType gc_type, int idx, int line, glow_eFont font_idx,
-      double size, int rot);
-  virtual int fill_rect(
-      GlowWind* w, int x, int y, int width, int height, glow_eDrawType gc_type);
-  virtual int pixmaps_create(
-      GlowWind* w, glow_sPixmapData* pixmap_data, void** pixmaps);
-  virtual void pixmaps_delete(GlowWind* w, void* pixmaps);
-  virtual int pixmap(GlowWind* w, int x, int y, glow_sPixmapData* pixmap_data,
-      void* pixmaps, glow_eDrawType gc_type, int idx, int highlight, int line);
-  virtual int pixmap_inverse(GlowWind* w, int x, int y,
-      glow_sPixmapData* pixmap_data, void* pixmaps, glow_eDrawType gc_type,
-      int idx, int line);
-  virtual int pixmap_erase(GlowWind* w, int x, int y,
-      glow_sPixmapData* pixmap_data, void* pixmaps, glow_eDrawType gc_type,
-      int idx, int line);
-  virtual int image(GlowWind* w, int x, int y, int width, int height,
-      glow_tImImage image, glow_tPixmap pixmap, glow_tPixmap clip_mask);
-  virtual int image_d(GlowWind* wind, double x, double y, int width, int height,
-      glow_tImImage img, glow_tPixmap pixmap, glow_tPixmap clip_mask);
+      int pos, glow_eFont font, double size) = 0;
+  virtual void image(int x, int y, int width, int height, glow_tImImage image,
+      glow_tPixmap pixmap, glow_tPixmap clip_mask) = 0;
 
-  virtual void set_cursor(GlowWind* w, glow_eDrawCursor cursor);
-  virtual void set_nav_cursor(glow_eDrawCursor cursor);
-  virtual int get_text_extent(const char* text, int len, glow_eDrawType gc_type,
+  virtual void set_cursor(DrawWind* w, glow_eDrawCursor cursor) = 0;
+  virtual void get_text_extent(const char* text, int len, glow_eDrawType gc_type,
       int idx, glow_eFont font_idx, int* width, int* height, int* descent,
-      double size, int rot);
-  virtual void set_inputfocus(GlowWind* w);
-  virtual void set_background(GlowWind* w, glow_eDrawType drawtype,
+      double size, int rot) = 0;
+  virtual void set_background(DrawWind* w, glow_eDrawType drawtype,
       glow_tPixmap pixmap, glow_tImImage image, int pixmap_width,
-      int pixmap_height);
-  virtual void reset_background(GlowWind* w);
-  virtual void set_image_clip_mask(
-      DrawWind* w, glow_tPixmap pixmap, int x, int y);
-  virtual void reset_image_clip_mask(DrawWind* w);
-  virtual int set_clip_rectangle(
-      GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
-  virtual void reset_clip_rectangle(GlowWind* w);
-  virtual int clip_level(GlowWind* w);
-  virtual int draw_point(GlowWind* w, int x1, int y1, glow_eDrawType gc_type);
-  virtual int draw_points(GlowWind* w, glow_sPointX* points, int point_num,
-      glow_eDrawType gc_type, int idx = 0);
-  virtual void set_click_sensitivity(GlowWind* w, int value);
-  virtual void draw_background(GlowWind* wind, int x, int y, int w, int h);
-  virtual int create_buffer(GlowWind* w);
-  virtual void delete_buffer(GlowWind* w);
-  virtual void buffer_background(DrawWind* w, GlowCtx* cctx);
-  virtual int export_image(char* filename);
-  virtual int print(char* filename, double x0, double x1, int end);
-  // virtual void set_clip( DrawWind *w, GC gc) {}
-  // virtual void reset_clip( DrawWind *w, GC gc) {}
+      int pixmap_height) = 0;
+  virtual void reset_background(DrawWind* w) = 0;
+  virtual int set_clip_rectangle(DrawWind* w, int ll_x, int ll_y, int ur_x,
+      int ur_y) = 0;
+  virtual void reset_clip_rectangle(DrawWind* w);
+  virtual void draw_point(int x1, int y1, glow_eDrawType gc_type) = 0;
+  virtual void draw_points(glow_sPointX* points, int point_num,
+      glow_eDrawType gc_type, int idx = 0) = 0;
+  virtual void set_click_sensitivity(int value) = 0;
+  virtual int export_image(char* filename) = 0;
+  virtual int print(char* filename, double x0, double x1, int end) = 0;
 
   virtual void set_timer(GlowCtx* gctx, int time_ms,
-      void (*callback_func)(GlowCtx* ctx), void** id);
-  virtual void remove_timer(void* id);
+      void (*callback_func)(GlowCtx* ctx), void** id) = 0;
+  virtual void remove_timer(void* id) = 0;
 
-  virtual int image_get_width(glow_tImImage image);
-  virtual int image_get_height(glow_tImImage image);
-  virtual int image_get_rowstride(glow_tImImage image);
-  virtual unsigned char* image_get_data(glow_tImImage image);
-  virtual void image_copy(glow_tImImage orig_image, glow_tImImage* image);
-  virtual void image_rotate(
-      glow_tImImage* image, int to_rotation, int from_rotation);
-  virtual void image_flip_vertical(glow_tImImage* image);
-  virtual void image_flip_horizontal(glow_tImImage* image);
+  virtual int image_get_width(glow_tImImage image) = 0;
+  virtual int image_get_height(glow_tImImage image) = 0;
+  virtual int image_get_rowstride(glow_tImImage image) = 0;
+  virtual unsigned char* image_get_data(glow_tImImage image) = 0;
+  virtual void image_copy(glow_tImImage orig_image, glow_tImImage* image) = 0;
+  virtual void image_rotate(glow_tImImage* image, int to_rotation,
+      int from_rotation) = 0;
+  virtual void image_flip_vertical(glow_tImImage* image) = 0;
+  virtual void image_flip_horizontal(glow_tImImage* image) = 0;
   virtual int image_scale(int width, int height, glow_tImImage orig_im,
       glow_tImImage* im, glow_tImData* im_data, glow_tPixmap* im_pixmap,
-      glow_tPixmap* im_mask);
+      glow_tPixmap* im_mask) = 0;
   virtual int image_load(char* imagefile, glow_tImImage* orig_im,
-      glow_tImImage* im, glow_tImData* im_data);
-  virtual int image_render(int width, int height, glow_tImImage orig_im,
-      glow_tImImage* im, glow_tPixmap* im_pixmap, glow_tPixmap* im_mask);
-  virtual void image_free(glow_tImImage image);
-  virtual void pixmap_free(glow_tPixmap pixmap);
+      glow_tImImage* im, glow_tImData* im_data) = 0;
+  virtual void image_free(glow_tImImage image) = 0;
   virtual void image_pixel_iter(glow_tImImage orig_image, glow_tImImage* image,
-      void (*pixel_cb)(void*, unsigned char*), void* userdata);
-  virtual glow_eGradient gradient_rotate(double rot, glow_eGradient gradient);
-  virtual int gradient_fill_rect(GlowWind* wind, int x, int y, int w, int h,
+      void (*pixel_cb)(void*, unsigned char*), void* userdata) = 0;
+  glow_eGradient gradient_rotate(double rot, glow_eGradient gradient);
+  virtual void gradient_fill_rect(int x, int y, int w, int h, glow_eDrawType d0,
+      glow_eDrawType d1, glow_eDrawType d2, glow_eGradient gradient) = 0;
+  virtual void gradient_fill_rectrounded(int x, int y, int w, int h,
+      int roundamount, glow_eDrawType d0, glow_eDrawType d1, glow_eDrawType d2,
+      glow_eGradient gradient) = 0;
+  virtual void gradient_fill_arc(int x, int y, int w, int h, int angle1,
+      int angle2, glow_eDrawType d0, glow_eDrawType d1, glow_eDrawType d2,
+      glow_eGradient gradient) = 0;
+  virtual void gradient_fill_polyline(glow_sPointX* points, int point_cnt,
       glow_eDrawType d0, glow_eDrawType d1, glow_eDrawType d2,
-      glow_eGradient gradient);
-  virtual int gradient_fill_rectrounded(GlowWind* wind, int x, int y, int w,
-      int h, int roundamount, glow_eDrawType d0, glow_eDrawType d1,
-      glow_eDrawType d2, glow_eGradient gradient);
-  virtual int gradient_fill_arc(GlowWind* wind, int x, int y, int w, int h,
-      int angle1, int angle2, glow_eDrawType d0, glow_eDrawType d1,
-      glow_eDrawType d2, glow_eGradient gradient);
-  virtual int gradient_fill_polyline(GlowWind* wind, glow_sPointX* points,
-      int point_cnt, glow_eDrawType d0, glow_eDrawType d1, glow_eDrawType d2,
-      glow_eGradient gradient);
-  virtual void event_exec(void* event, unsigned int size);
-  virtual int open_color_selection(double* r, double* g, double* b);
-  virtual void update_color(glow_eDrawType color);
-  virtual void push_customcolors(GlowCustomColors* cc);
-  virtual void set_customcolors(GlowCustomColors* cc);
-  virtual void pop_customcolors();
-  virtual GlowCustomColors* create_customcolors();
-  virtual void reset_customcolors(GlowCustomColors* cc);
-};
-
-class DrawWind {
-public:
-  DrawWind();
-  int type;
-  int double_buffered; //!< Double buffering is configured.
-  int double_buffer_on; //!< Double buffering is on.
-  int draw_buffer_only; //!< Draw in double buffering buffer only.
-  int is_nav; //!< Is navigator window.
+      glow_eGradient gradient) = 0;
+  virtual void event_exec(void* event, unsigned int size) = 0;
+  virtual int open_color_selection(double* r, double* g, double* b) = 0;
+  virtual void update_color(glow_eDrawType color) = 0;
+  virtual void push_customcolors(GlowCustomColors* cc) = 0;
+  virtual void set_customcolors(GlowCustomColors* cc) = 0;
+  virtual void pop_customcolors() = 0;
+  virtual GlowCustomColors* create_customcolors() = 0;
+  virtual void reset_customcolors(GlowCustomColors* cc) = 0;
 };
 
 #endif

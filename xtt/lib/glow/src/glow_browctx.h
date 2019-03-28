@@ -56,12 +56,8 @@ public:
   void remove(GlowArrayElem* element);
   void configure();
   void change_scrollbar();
-  void redraw();
   void zoom(double factor);
-  void unzoom()
-  {
-    zoom(mw.base_zoom_factor / mw.zoom_factor_y);
-  }
+  void unzoom();
   void print(char* filename);
   int get_first(GlowArrayElem** first)
   {
@@ -89,8 +85,5 @@ public:
   double frame_x_right;
   double annotation_space;
 };
-
-// void brow_scroll_horizontal( BrowCtx *ctx, int value, int bottom);
-// void brow_scroll_vertical( BrowCtx *ctx, int value, int bottom);
 
 #endif

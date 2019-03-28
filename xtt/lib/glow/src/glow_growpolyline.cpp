@@ -94,7 +94,7 @@ GrowPolyLine::GrowPolyLine(GrowCtx* glow_ctx, const char* name,
     }
   }
   if (!nodraw)
-    draw(&ctx->mw, (GlowTransform*)NULL, highlight, hot, NULL, NULL);
+    ctx->set_dirty();
   get_node_borders();
 }
 
@@ -327,14 +327,10 @@ void GrowPolyLine::calculate_shadow(glow_sShadowInfo** s, int* num, int ish,
   *num = p_num;
 }
 
-void GrowPolyLine::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
+void GrowPolyLine::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
-    hot = 0;
-  }
+  hot = (w == ctx->navw) ? 0 : hot;
   int chot = 0;
   if (hot && ctx->environment != glow_eEnv_Development) {
     if (ctx->hot_indication == glow_eHotIndication_No)
@@ -429,7 +425,7 @@ void GrowPolyLine::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       drawtype = GlowColor::shift_drawtype(drawtype, chot, 0);
 
     if (grad == glow_eGradient_No || drawtype == glow_eDrawType_ColorRed)
-      ctx->gdraw->fill_polyline(w, points, a_points.a_size, drawtype, 0);
+      ctx->gdraw->polyline(points, a_points.a_size, drawtype, 1, 0);
     else {
       glow_eDrawType f1, f2;
       double rotation;
@@ -447,7 +443,7 @@ void GrowPolyLine::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
             drawtype, -int(float(gradient_contrast) / 2 - 0.6), 0);
         f1 = GlowColor::shift_drawtype(drawtype, gradient_contrast / 2, 0);
       }
-      ctx->gdraw->gradient_fill_polyline(w, points, a_points.a_size, drawtype,
+      ctx->gdraw->gradient_fill_polyline(points, a_points.a_size, drawtype,
           f1, f2, ctx->gdraw->gradient_rotate(rotation, grad));
     }
   }
@@ -479,7 +475,7 @@ void GrowPolyLine::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
         p[2].x = sp[i + 1].x;
         p[2].y = sp[i + 1].y;
 
-        ctx->gdraw->fill_polyline(w, p, 4, sp[i].drawtype, 0);
+        ctx->gdraw->polyline(p, 4, sp[i].drawtype, 1, 0);
       }
       free(sp);
     }
@@ -492,26 +488,22 @@ void GrowPolyLine::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     case glow_eCurveType_Square:
     case glow_eCurveType_DigSquare:
     case glow_eCurveType_Inherit:
-      ctx->gdraw->polyline(w, points, a_points.a_size, drawtype, idx, 0);
+      ctx->gdraw->polyline(points, a_points.a_size, drawtype, 0, idx);
       break;
     case glow_eCurveType_Points:
-      ctx->gdraw->draw_points(w, points, a_points.a_size, drawtype, 3);
+      ctx->gdraw->draw_points(points, a_points.a_size, drawtype, 3);
       break;
     case glow_eCurveType_LinePoints:
-      ctx->gdraw->polyline(w, points, a_points.a_size, drawtype, idx, 0);
-      ctx->gdraw->draw_points(w, points, a_points.a_size, drawtype, 3);
+      ctx->gdraw->polyline(points, a_points.a_size, drawtype, 0, idx);
+      ctx->gdraw->draw_points(points, a_points.a_size, drawtype, 3);
       break;
     }
   }
 }
 
-void GrowPolyLine::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
+void GrowPolyLine::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 {
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
-    hot = 0;
-  }
+  hot = (w == ctx->navw) ? 0 : hot;
   if (hot && ctx->environment != glow_eEnv_Development
       && ctx->hot_indication != glow_eHotIndication_LineWidth)
     hot = 0;
@@ -545,81 +537,48 @@ void GrowPolyLine::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
   int display_shadow = ((node && ((GrowNode*)node)->shadow) || shadow)
       && !disable_shadow && !fill_eq_light && !fill_eq_shadow;
 
-  w->set_draw_buffer_only();
   if (border || !(fill || (display_shadow && !feq(shadow_width, 0.0))))
-    ctx->gdraw->polyline_erase(w, points, a_points.a_size, idx);
+    ctx->gdraw->polyline(points, a_points.a_size, glow_eDrawType_LineErase, 0, idx);
   if (fill || (display_shadow && !feq(shadow_width, 0.0)))
-    ctx->gdraw->fill_polyline(
-        w, points, a_points.a_size, glow_eDrawType_LineErase, 0);
-  w->reset_draw_buffer_only();
+    ctx->gdraw->polyline(points, a_points.a_size, glow_eDrawType_LineErase, 1, 0);
 }
 
 void GrowPolyLine::move(double delta_x, double delta_y, int grid)
 {
   if (fixposition)
     return;
-  ctx->set_defered_redraw();
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - 2 * DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - 2 * DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + 2 * DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + 2 * DRAW_MP);
+
   if (grid) {
     double x_grid, y_grid;
 
     /* Move to closest grid point */
-    erase(&ctx->mw);
-    erase(&ctx->navw);
-    ctx->find_grid(x_left + delta_x / ctx->mw.zoom_factor_x,
-        y_low + delta_y / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid(x_left + delta_x / ctx->mw->zoom_factor_x,
+        y_low + delta_y / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
     trf.move(x_grid - x_left, y_grid - y_low);
     get_node_borders();
   } else {
-    double dx, dy;
-
-    erase(&ctx->mw);
-    erase(&ctx->navw);
-    dx = delta_x / ctx->mw.zoom_factor_x;
-    dy = delta_y / ctx->mw.zoom_factor_y;
+    double dx = delta_x / ctx->mw->zoom_factor_x;
+    double dy = delta_y / ctx->mw->zoom_factor_y;
     trf.move(dx, dy);
     x_right += dx;
     x_left += dx;
     y_high += dy;
     y_low += dy;
   }
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - 2 * DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - 2 * DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + 2 * DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + 2 * DRAW_MP);
-  ctx->redraw_defered();
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->set_dirty();
 }
 
 void GrowPolyLine::move_current_point(int delta_x, int delta_y, int grid)
 {
-  ctx->set_defered_redraw();
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - 4 * DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - 4 * DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + 4 * DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + 4 * DRAW_MP);
   if (grid) {
-    double x, y, x_grid, y_grid;
+    double x_grid, y_grid;
 
-    erase(&ctx->mw);
-    erase(&ctx->navw);
-
-    x = trf.x(((GlowPoint*)a_points[current_point])->x,
+    double x = trf.x(((GlowPoint*)a_points[current_point])->x,
         ((GlowPoint*)a_points[current_point])->y);
-    y = trf.y(((GlowPoint*)a_points[current_point])->x,
+    double y = trf.y(((GlowPoint*)a_points[current_point])->x,
         ((GlowPoint*)a_points[current_point])->y);
-    x += double(delta_x) / ctx->mw.zoom_factor_x;
-    y += double(delta_y) / ctx->mw.zoom_factor_y;
+    x += double(delta_x) / ctx->mw->zoom_factor_x;
+    y += double(delta_y) / ctx->mw->zoom_factor_y;
     ctx->find_grid(x, y, &x_grid, &y_grid);
 
     trf.reverse(x_grid, y_grid, &((GlowPoint*)a_points[current_point])->x,
@@ -627,56 +586,26 @@ void GrowPolyLine::move_current_point(int delta_x, int delta_y, int grid)
     zoom();
     get_node_borders();
   } else {
-    double x, y;
-
-    erase(&ctx->mw);
-    erase(&ctx->navw);
-
-    x = trf.x(((GlowPoint*)a_points[current_point])->x,
+    double x = trf.x(((GlowPoint*)a_points[current_point])->x,
         ((GlowPoint*)a_points[current_point])->y);
-    y = trf.y(((GlowPoint*)a_points[current_point])->x,
+    double y = trf.y(((GlowPoint*)a_points[current_point])->x,
         ((GlowPoint*)a_points[current_point])->y);
-    x += double(delta_x) / ctx->mw.zoom_factor_x;
-    y += double(delta_y) / ctx->mw.zoom_factor_y;
+    x += double(delta_x) / ctx->mw->zoom_factor_x;
+    y += double(delta_y) / ctx->mw->zoom_factor_y;
     trf.reverse(x, y, &((GlowPoint*)a_points[current_point])->x,
         &((GlowPoint*)a_points[current_point])->y);
     zoom();
     get_node_borders();
   }
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - 4 * DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - 4 * DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + 4 * DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + 4 * DRAW_MP);
-  ctx->redraw_defered();
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->set_dirty();
 }
 
 GrowPolyLine::~GrowPolyLine()
 {
   ctx->object_deleted(this);
-  if (ctx->nodraw)
-    return;
-
-  erase(&ctx->mw);
-  erase(&ctx->navw);
-
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->set_dirty();
   if (hot)
-    ctx->gdraw->set_cursor(&ctx->navw, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
 }
 
 void GrowPolyLine::move_noerase(int delta_x, int delta_y, int grid)
@@ -688,35 +617,23 @@ void GrowPolyLine::move_noerase(int delta_x, int delta_y, int grid)
     double x_grid, y_grid;
 
     /* Move to closest grid point */
-    ctx->find_grid(x_left + double(delta_x) / ctx->mw.zoom_factor_x,
-        y_low + double(delta_y) / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid(x_left + double(delta_x) / ctx->mw->zoom_factor_x,
+        y_low + double(delta_y) / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
     trf.move(x_grid - x_left, y_grid - y_low);
     get_node_borders();
   } else {
-    double dx, dy;
-
-    dx = double(delta_x) / ctx->mw.zoom_factor_x;
-    dy = double(delta_y) / ctx->mw.zoom_factor_y;
+    double dx = double(delta_x) / ctx->mw->zoom_factor_x;
+    double dy = double(delta_y) / ctx->mw->zoom_factor_y;
     trf.move(dx, dy);
     x_right += dx;
     x_left += dx;
     y_high += dy;
     y_low += dy;
   }
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->set_dirty();
 }
 
-int GrowPolyLine::local_event_handler(
-    GlowWind* w, glow_eEvent event, double x, double y)
+int GrowPolyLine::local_event_handler(glow_eEvent event, double x, double y)
 {
   if (ctx->edit_mode == grow_eMode_EditPolyLine && ctx->a_sel[0] == this) {
     int x1, xc, y1, yc;
@@ -724,19 +641,16 @@ int GrowPolyLine::local_event_handler(
     int dx = 4;
     int dy = 4;
 
-    xc = int(trf.x(x, y) * w->zoom_factor_x) + w->offset_x;
-    yc = int(trf.y(x, y) * w->zoom_factor_y) + w->offset_y;
+    xc = int(trf.x(x, y) * ctx->mw->zoom_factor_x) + ctx->mw->offset_x;
+    yc = int(trf.y(x, y) * ctx->mw->zoom_factor_y) + ctx->mw->offset_y;
 
     for (i = 0; i < a_points.a_size; i++) {
       x1 = int(trf.x(((GlowPoint*)a_points[i])->x, ((GlowPoint*)a_points[i])->y)
-               * w->zoom_factor_x)
-          + w->offset_x;
+               * ctx->mw->zoom_factor_x) + ctx->mw->offset_x;
       y1 = int(trf.y(((GlowPoint*)a_points[i])->x, ((GlowPoint*)a_points[i])->y)
-               * w->zoom_factor_y)
-          + w->offset_y;
+               * ctx->mw->zoom_factor_y) + ctx->mw->offset_y;
 
       if (ABS(x1 - xc) < dx && ABS(y1 - yc) < dy) {
-        // std::cout << "Event handler: Hit in polyline point\n";
         current_point = i;
         return 1;
       }
@@ -782,17 +696,15 @@ int GrowPolyLine::local_event_handler(
   return 0;
 }
 
-int GrowPolyLine::event_handler(
-    GlowWind* w, glow_eEvent event, double fx, double fy)
+int GrowPolyLine::event_handler(glow_eEvent event, double fx, double fy)
 {
   double x, y;
 
   trf.reverse(fx, fy, &x, &y);
-  return local_event_handler(w, event, x, y);
+  return local_event_handler(event, x, y);
 }
 
-int GrowPolyLine::event_handler(
-    GlowWind* w, glow_eEvent event, int x, int y, double fx, double fy)
+int GrowPolyLine::event_handler(glow_eEvent event, int x, int y, double fx, double fy)
 {
   int sts;
   double rx, ry;
@@ -802,7 +714,7 @@ int GrowPolyLine::event_handler(
 
   sts = 0;
   if (event == ctx->event_move_node) {
-    sts = local_event_handler(w, event, rx, ry);
+    sts = local_event_handler(event, rx, ry);
     if (sts) {
       /* Register node for potential movement */
       ctx->move_insert(this);
@@ -811,40 +723,31 @@ int GrowPolyLine::event_handler(
   }
   switch (event) {
   case glow_eEvent_CursorMotion: {
-    int redraw = 0;
-
     if (ctx->hot_mode == glow_eHotMode_TraceAction)
       sts = 0;
     else if (ctx->hot_found)
       sts = 0;
     else {
-      sts = local_event_handler(w, event, rx, ry);
+      sts = local_event_handler(event, rx, ry);
       if (sts)
         ctx->hot_found = 1;
     }
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
-      ctx->gdraw->set_cursor(w, glow_eDrawCursor_CrossHair);
+      ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
       hot = 1;
-      redraw = 1;
+      ctx->set_dirty();
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
-        ctx->gdraw->set_cursor(w, glow_eDrawCursor_Normal);
-      erase(w);
+        ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
       hot = 0;
-      redraw = 1;
-    }
-    if (redraw) {
-      ctx->draw(w, x_left * w->zoom_factor_x - w->offset_x - DRAW_MP,
-          y_low * w->zoom_factor_y - w->offset_y - DRAW_MP,
-          x_right * w->zoom_factor_x - w->offset_x + DRAW_MP,
-          y_high * w->zoom_factor_y - w->offset_y + DRAW_MP);
+      ctx->set_dirty();
     }
     break;
   }
   default:
-    sts = local_event_handler(w, event, rx, ry);
+    sts = local_event_handler(event, rx, ry);
   }
   if (sts)
     ctx->register_callback_object(glow_eObjectType_Node, this);
@@ -1064,7 +967,7 @@ void GrowPolyLine::open(std::ifstream& fp)
   }
 }
 
-void GrowPolyLine::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowPolyLine::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -1089,7 +992,7 @@ void GrowPolyLine::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowPolyLine::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowPolyLine::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -1129,7 +1032,7 @@ void GrowPolyLine::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 void GrowPolyLine::set_highlight(int on)
 {
   highlight = on;
-  draw();
+  ctx->set_dirty();
 }
 
 void GrowPolyLine::get_borders(GlowTransform* t, double* x_right,
@@ -1212,46 +1115,27 @@ void GrowPolyLine::add_points(glow_sPoint* point_array, int point_cnt)
   GlowPolyLine::add_points(
       (void*)&pzero, point_array, point_cnt, highlight, hot);
   get_node_borders();
-  draw();
 }
 
 void GrowPolyLine::set_fill(int fillval)
 {
-  erase(&ctx->mw);
-  erase(&ctx->navw);
   GlowPolyLine::set_fill(fillval);
-  draw();
 }
 
 void GrowPolyLine::set_border(int borderval)
 {
-  erase(&ctx->mw);
-  erase(&ctx->navw);
   border = borderval;
-  draw();
+  ctx->set_dirty();
 }
 
 void GrowPolyLine::set_drawtype(glow_eDrawType drawtype)
 {
   GlowPolyLine::set_drawtype(drawtype);
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 }
 
 void GrowPolyLine::set_linewidth(int linewidth)
 {
-  erase(&ctx->mw);
-  erase(&ctx->navw);
   GlowPolyLine::set_linewidth(linewidth);
-  draw();
 }
 
 void GrowPolyLine::set_dynamic(char* code, int size)
@@ -1275,33 +1159,12 @@ void GrowPolyLine::exec_dynamic()
 
 void GrowPolyLine::set_position(double x, double y)
 {
-  double old_x_left, old_x_right, old_y_low, old_y_high;
-
   if (feq(trf.a13, x) && feq(trf.a23, y))
     return;
-  old_x_left = x_left;
-  old_x_right = x_right;
-  old_y_low = y_low;
-  old_y_high = y_high;
-  erase(&ctx->mw);
-  erase(&ctx->navw);
+
   trf.posit(x, y);
   get_node_borders();
-  ctx->draw(&ctx->mw,
-      old_x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      old_y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      old_x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      old_y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->set_dirty();
 }
 
 void GrowPolyLine::set_scale(
@@ -1344,8 +1207,6 @@ void GrowPolyLine::set_scale(
   old_x_right = x_right;
   old_y_low = y_low;
   old_y_high = y_high;
-  erase(&ctx->mw);
-  erase(&ctx->navw);
   trf.scale_from_stored(scale_x, scale_y, x0, y0);
   get_node_borders();
 
@@ -1374,28 +1235,12 @@ void GrowPolyLine::set_scale(
     break;
   default:;
   }
-  ctx->draw(&ctx->mw,
-      old_x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      old_y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      old_x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      old_y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->set_dirty();
 }
 
 void GrowPolyLine::set_rotation(
     double angle, double x0, double y0, glow_eRotationPoint type)
 {
-  double old_x_left, old_x_right, old_y_low, old_y_high;
-
   if (fabs(angle - trf.rotation + trf.s_rotation) < FLT_EPSILON)
     return;
 
@@ -1423,43 +1268,9 @@ void GrowPolyLine::set_rotation(
   default:;
   }
 
-  old_x_left = x_left;
-  old_x_right = x_right;
-  old_y_low = y_low;
-  old_y_high = y_high;
-  erase(&ctx->mw);
-  erase(&ctx->navw);
   trf.rotate_from_stored(angle, x0, y0);
   get_node_borders();
-  ctx->draw(&ctx->mw,
-      old_x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      old_y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      old_x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      old_y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
-}
-
-void GrowPolyLine::draw()
-{
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->set_dirty();
 }
 
 void GrowPolyLine::set_transform(GlowTransform* t)
@@ -1531,10 +1342,7 @@ void GrowPolyLine::align(double x, double y, glow_eAlignDirection direction)
   if (fixposition)
     return;
 
-  erase(&ctx->mw);
-  erase(&ctx->navw);
-  ctx->set_defered_redraw();
-  draw();
+  ctx->set_dirty();
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -1570,9 +1378,6 @@ void GrowPolyLine::align(double x, double y, glow_eAlignDirection direction)
   x_left += dx;
   y_high += dy;
   y_low += dy;
-
-  draw();
-  ctx->redraw_defered();
 }
 
 void GrowPolyLine::export_javabean(GlowTransform* t, void* node,
@@ -1584,12 +1389,12 @@ void GrowPolyLine::export_javabean(GlowTransform* t, void* node,
   int gc1, gc2;
 
   if (node && ((GrowNode*)node)->line_width)
-    idx = int(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor
+    idx = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor
             * ((GrowNode*)node)->line_width
         - 1);
   else
     idx = int(
-        ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
+        ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * line_width - 1);
   idx += hot;
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
@@ -1608,8 +1413,8 @@ void GrowPolyLine::export_javabean(GlowTransform* t, void* node,
       y1 = trf.y(t, ((GlowPoint*)a_points[i])->x, ((GlowPoint*)a_points[i])->y);
     }
 
-    p[i].x = x1 * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
-    p[i].y = y1 * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    p[i].x = x1 * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+    p[i].y = y1 * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
     if (jshadow) {
       points[i].x = int(p[i].x + round);
       points[i].y = int(p[i].y + round);
@@ -1621,8 +1426,8 @@ void GrowPolyLine::export_javabean(GlowTransform* t, void* node,
   if (jshadow) {
     double trf_scale = trf.vertical_scale(t);
     int ish = int(shadow_width / 100 * trf_scale
-            * MIN((x_right - x_left) * ctx->mw.zoom_factor_x,
-                  (y_high - y_low) * ctx->mw.zoom_factor_y)
+            * MIN((x_right - x_left) * ctx->mw->zoom_factor_x,
+                  (y_high - y_low) * ctx->mw->zoom_factor_y)
         + round);
 
     if (ish)

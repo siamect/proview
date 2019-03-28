@@ -205,7 +205,7 @@ void ColPalCtx::configure()
   }
   get_borders();
   a.zoom();
-  redraw();
+  set_dirty();
   change_scrollbar();
   set_colors();
   hot_mode = glow_eHotMode_Disabled;
@@ -216,28 +216,21 @@ void ColPalCtx::change_scrollbar()
   glow_sScroll data;
 
   if (!scroll_size) {
-    scroll_size = entry_height + 1.0 / mw.zoom_factor_y;
+    scroll_size = entry_height + 1.0 / mw->zoom_factor_y;
   }
 
   data.scroll_data = scroll_data;
   data.total_width = int((x_right - x_left) / scroll_size) + 1;
   data.total_height = int((y_high - y_low) / scroll_size) + 1;
-  data.window_width = int(mw.window_width / scroll_size / mw.zoom_factor_x) + 1;
+  data.window_width = int(mw->window_width / scroll_size / mw->zoom_factor_x) + 1;
   data.window_height
-      = int(mw.window_height / scroll_size / mw.zoom_factor_y) + 1;
+      = int(mw->window_height / scroll_size / mw->zoom_factor_y) + 1;
   data.offset_x = int(
-      mw.offset_x / scroll_size / mw.zoom_factor_x - x_left / scroll_size);
+      mw->offset_x / scroll_size / mw->zoom_factor_x - x_left / scroll_size);
   data.offset_y
-      = int(mw.offset_y / scroll_size / mw.zoom_factor_y - y_low / scroll_size);
+      = int(mw->offset_y / scroll_size / mw->zoom_factor_y - y_low / scroll_size);
 
   (scroll_callback)(&data);
-}
-
-void ColPalCtx::redraw()
-{
-  clear(&mw);
-  draw(&mw, 0, 0, mw.window_width, mw.window_height);
-  nav_zoom();
 }
 
 void ColPalCtx::zoom(double factor)
@@ -245,25 +238,28 @@ void ColPalCtx::zoom(double factor)
   if (fabs(factor) < DBL_EPSILON)
     return;
 
-  mw.zoom_factor_x *= factor;
-  mw.zoom_factor_y *= factor;
-  if (mw.offset_x != 0)
-    mw.offset_x = int(
-        (mw.offset_x - mw.window_width / 2.0 * (1.0 / factor - 1)) * factor);
-  if (mw.offset_y != 0)
-    mw.offset_y = int(
-        (mw.offset_y - mw.window_height / 2.0 * (1.0 / factor - 1)) * factor);
-  mw.offset_x = MAX(mw.offset_x, 0);
-  mw.offset_y = MAX(mw.offset_y, 0);
-  if ((x_right - x_left) * mw.zoom_factor_x <= mw.window_width)
-    mw.offset_x = 0;
-  if ((y_high - y_low) * mw.zoom_factor_y <= mw.window_height)
-    mw.offset_y = 0;
+  mw->zoom_factor_x *= factor;
+  mw->zoom_factor_y *= factor;
+  if (mw->offset_x != 0)
+    mw->offset_x = int(
+        (mw->offset_x - mw->window_width / 2.0 * (1.0 / factor - 1)) * factor);
+  if (mw->offset_y != 0)
+    mw->offset_y = int(
+        (mw->offset_y - mw->window_height / 2.0 * (1.0 / factor - 1)) * factor);
+  mw->offset_x = MAX(mw->offset_x, 0);
+  mw->offset_y = MAX(mw->offset_y, 0);
+  if ((x_right - x_left) * mw->zoom_factor_x <= mw->window_width)
+    mw->offset_x = 0;
+  if ((y_high - y_low) * mw->zoom_factor_y <= mw->window_height)
+    mw->offset_y = 0;
   a.zoom();
-  clear(&mw);
-  draw(&mw, 0, 0, mw.window_width, mw.window_height);
   nav_zoom();
   change_scrollbar();
+}
+
+void ColPalCtx::unzoom()
+{
+  zoom(mw->base_zoom_factor / mw->zoom_factor_y);
 }
 
 void ColPalCtx::print(char* filename)
@@ -297,8 +293,8 @@ void colpal_scroll_horizontal(ColPalCtx* ctx, int value, int bottom)
 {
   int x_pix;
 
-  x_pix = int(-value * ctx->scroll_size * ctx->mw.zoom_factor_x
-      + (ctx->mw.offset_x - ctx->x_left * ctx->mw.zoom_factor_x));
+  x_pix = int(-value * ctx->scroll_size * ctx->mw->zoom_factor_x
+      + (ctx->mw->offset_x - ctx->x_left * ctx->mw->zoom_factor_x));
   ctx->scroll(x_pix, 0);
 }
 
@@ -306,16 +302,16 @@ void colpal_scroll_vertical(ColPalCtx* ctx, int value, int bottom)
 {
   int y_pix;
 
-  y_pix = int(-value * ctx->scroll_size * ctx->mw.zoom_factor_y
-      + (ctx->mw.offset_y - ctx->y_low * ctx->mw.zoom_factor_y));
+  y_pix = int(-value * ctx->scroll_size * ctx->mw->zoom_factor_y
+      + (ctx->mw->offset_y - ctx->y_low * ctx->mw->zoom_factor_y));
   // Correction for the bottom position
   if (bottom
       && (y_pix >= 0
-             || ctx->mw.window_height + y_pix
-                 < ctx->y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y))
+             || ctx->mw->window_height + y_pix
+                 < ctx->y_high * ctx->mw->zoom_factor_y - ctx->mw->offset_y))
     //        window_height >= (y_high - y_low) * zoom_factor_y)
-    y_pix = int(ctx->mw.window_height + ctx->mw.offset_y
-        - ctx->y_high * ctx->mw.zoom_factor_y);
+    y_pix = int(ctx->mw->window_height + ctx->mw->offset_y
+        - ctx->y_high * ctx->mw->zoom_factor_y);
   ctx->scroll(0, y_pix);
 }
 
@@ -331,8 +327,8 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   ctx = this;
   //  std::cout << "Event: " << event << '\n';
 
-  fx = double(x + ctx->mw.offset_x) / ctx->mw.zoom_factor_x;
-  fy = double(y + ctx->mw.offset_y) / ctx->mw.zoom_factor_y;
+  fx = double(x + ctx->mw->offset_x) / ctx->mw->zoom_factor_x;
+  fy = double(y + ctx->mw->offset_y) / ctx->mw->zoom_factor_y;
 
   callback_object_type = glow_eObjectType_NoObject;
   callback_object = 0;
@@ -341,7 +337,7 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   case glow_eEvent_MB1Down: {
     sts = 0;
     for (i = 0; i < a.a_size; i++) {
-      sts = a.a[i]->event_handler(&ctx->mw, event, x, y, fx, fy);
+      sts = a.a[i]->event_handler(event, x, y, fx, fy);
       if (sts == GLOW__NO_PROPAGATE)
         break;
     }
@@ -363,7 +359,7 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       }
     }
     if (!enable_doubleclick)
-      ctx->gdraw->set_click_sensitivity(&ctx->mw, glow_mSensitivity_MB1Click);
+      ctx->gdraw->set_click_sensitivity(glow_mSensitivity_MB1Click);
     break;
   }
   case glow_eEvent_MB1Click:
@@ -371,7 +367,7 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   case glow_eEvent_MB2Click:
     sts = 0;
     for (i = 0; i < a.a_size; i++) {
-      sts = a.a[i]->event_handler(&ctx->mw, event, x, y, fx, fy);
+      sts = a.a[i]->event_handler(event, x, y, fx, fy);
       if (sts == GLOW__NO_PROPAGATE)
         break;
     }
@@ -403,8 +399,8 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
             e.any.type = glow_eEventType_ColorTone;
             e.any.x_pixel = x;
             e.any.y_pixel = y;
-            e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
-            e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
+            e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
+            e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
             e.colortone.tone = tone;
             event_callback[event](this, &e);
           }
@@ -450,8 +446,8 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
             e.any.type = glow_eEventType_ColorTone;
             e.any.x_pixel = x;
             e.any.y_pixel = y;
-            e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
-            e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
+            e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
+            e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
             e.colortone.tone = tone;
             event_callback[event](this, &e);
           }
@@ -505,7 +501,7 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   case glow_eEvent_MB1ClickShiftCtrl:
     sts = 0;
     for (i = 0; i < a.a_size; i++) {
-      sts = a.a[i]->event_handler(&ctx->mw, event, x, y, fx, fy);
+      sts = a.a[i]->event_handler(event, x, y, fx, fy);
       if (sts == GLOW__NO_PROPAGATE)
         break;
     }
@@ -525,8 +521,8 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
             e.any.type = glow_eEventType_ColorTone;
             e.any.x_pixel = x;
             e.any.y_pixel = y;
-            e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
-            e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
+            e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
+            e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
             e.colortone.tone = (glow_eDrawTone)rect->fill_drawtype;
             event_callback[event](this, &e);
           }
@@ -538,8 +534,8 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
             e.any.type = glow_eEventType_ColorTone;
             e.any.x_pixel = x;
             e.any.y_pixel = y;
-            e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
-            e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
+            e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
+            e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
             e.colortone.tone = (glow_eDrawTone)glow_eDrawType_LineErase;
             event_callback[event](this, &e);
           }
@@ -558,8 +554,8 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
             e.any.type = glow_eEventType_ColorTone;
             e.any.x_pixel = x;
             e.any.y_pixel = y;
-            e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
-            e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
+            e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
+            e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
             e.colortone.tone = (glow_eDrawTone)glow_eDrawType_LineErase;
             event_callback[event](this, &e);
           }
@@ -571,7 +567,7 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   case glow_eEvent_MB1DoubleClick:
     sts = 0;
     for (i = 0; i < a.a_size; i++) {
-      sts = a.a[i]->event_handler(&ctx->mw, event, x, y, fx, fy);
+      sts = a.a[i]->event_handler(event, x, y, fx, fy);
       if (sts == GLOW__NO_PROPAGATE)
         break;
     }
@@ -604,8 +600,8 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
                 e.any.type = glow_eEventType_CustomColor;
                 e.any.x_pixel = x;
                 e.any.y_pixel = y;
-                e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
-                e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
+                e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
+                e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
                 e.customcolor.color = rect->fill_drawtype;
                 e.customcolor.red = r;
                 e.customcolor.green = g;
@@ -613,9 +609,9 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
                 event_callback[event](this, &e);
 
                 // Redraw with the new color
-                // draw( &mw, 0, 0, mw.window_width, mw.window_height);
+                // draw(mw, 0, 0, mw->window_width, mw->window_height);
                 gdraw->update_color(rect->fill_drawtype);
-                redraw();
+                set_dirty();
               }
             }
           }
@@ -634,7 +630,7 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
     hot_found = 0;
     for (i = 0; i < a.a_size; i++) {
-      sts = a.a[i]->event_handler(&ctx->mw, event, x, y, fx, fy);
+      sts = a.a[i]->event_handler(event, x, y, fx, fy);
       if (sts == GLOW__NO_PROPAGATE)
         break;
     }
@@ -674,14 +670,14 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   case glow_eEvent_Exposure:
     int width, height;
 
-    gdraw->get_window_size(&mw, &width, &height);
-    if (mw.window_width != width || mw.window_height != height) {
-      mw.window_width = width;
-      mw.window_height = height;
+    gdraw->get_window_size(mw, &width, &height);
+    if (mw->window_width != width || mw->window_height != height) {
+      mw->window_width = width;
+      mw->window_height = height;
       change_scrollbar();
     }
 
-    draw(&mw, x, y, x + w, y + h);
+    set_dirty();
     break;
   default:;
   }
@@ -693,13 +689,17 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     e.any.type = glow_eEventType_Object;
     e.any.x_pixel = x;
     e.any.y_pixel = y;
-    e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
-    e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
+    e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
+    e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
     e.object.object_type = callback_object_type;
     if (callback_object_type != glow_eObjectType_NoObject)
       e.object.object = callback_object;
     event_callback[event](this, &e);
+    redraw_if_dirty();
   }
+
+  redraw_if_dirty();
+
   return 1;
 }
 
@@ -726,77 +726,29 @@ void ColPalCtx::set_active(colpal_eActive a)
   set_colors();
 }
 
+static glow_eDrawType get_shadow_color(glow_eDrawType color)
+{
+  if (color > 19) {
+    return color;
+  }
+  glow_eDrawType colors[] = {
+    glow_eDrawType_Color30, glow_eDrawType_Color188, glow_eDrawType_Color24,
+    glow_eDrawType_Color31, glow_eDrawType_Color87, glow_eDrawType_Color115,
+    glow_eDrawType_Color144, glow_eDrawType_Color145, glow_eDrawType_Color175,
+    glow_eDrawType_Color176, glow_eDrawType_Color205, glow_eDrawType_Color206,
+    glow_eDrawType_Color209, glow_eDrawType_Color239, glow_eDrawType_Color238,
+    glow_eDrawType_Color236, glow_eDrawType_Color264, glow_eDrawType_Color264,
+    glow_eDrawType_Color294, glow_eDrawType_Color294
+  };
+  return colors[color];
+}
+
 void ColPalCtx::set_colors()
 {
-  glow_eDrawType shadowcolor;
   glow_eDrawType textcolor;
 
   ((GrowRect*)display_fill)->set_fill_color(current_fill);
-  switch (current_fill) {
-  case 0:
-    shadowcolor = glow_eDrawType_Color30;
-    break;
-  case 1:
-    shadowcolor = glow_eDrawType_Color188;
-    break;
-  case 2:
-    shadowcolor = glow_eDrawType_Color24;
-    break;
-  case 3:
-    shadowcolor = glow_eDrawType_Color31;
-    break;
-  case 4:
-    shadowcolor = glow_eDrawType_Color87;
-    break;
-  case 5:
-    shadowcolor = glow_eDrawType_Color115;
-    break;
-  case 6:
-    shadowcolor = glow_eDrawType_Color144;
-    break;
-  case 7:
-    shadowcolor = glow_eDrawType_Color145;
-    break;
-  case 8:
-    shadowcolor = glow_eDrawType_Color175;
-    break;
-  case 9:
-    shadowcolor = glow_eDrawType_Color176;
-    break;
-  case 10:
-    shadowcolor = glow_eDrawType_Color205;
-    break;
-  case 11:
-    shadowcolor = glow_eDrawType_Color206;
-    break;
-  case 12:
-    shadowcolor = glow_eDrawType_Color209;
-    break;
-  case 13:
-    shadowcolor = glow_eDrawType_Color239;
-    break;
-  case 14:
-    shadowcolor = glow_eDrawType_Color238;
-    break;
-  case 15:
-    shadowcolor = glow_eDrawType_Color236;
-    break;
-  case 16:
-    shadowcolor = glow_eDrawType_Color264;
-    break;
-  case 17:
-    shadowcolor = glow_eDrawType_Color264;
-    break;
-  case 18:
-    shadowcolor = glow_eDrawType_Color294;
-    break;
-  case 19:
-    shadowcolor = glow_eDrawType_Color294;
-    break;
-  default:
-    shadowcolor = current_fill;
-  }
-  ((GrowRect*)active_fill)->set_fill_color(shadowcolor);
+  ((GrowRect*)active_fill)->set_fill_color(get_shadow_color(current_fill));
 
   if (current_fill < glow_eDrawType_Color__) {
     if (current_fill == glow_eDrawType_Line
@@ -818,71 +770,7 @@ void ColPalCtx::set_colors()
   text_fill->set_text_color(textcolor);
 
   ((GrowRect*)display_border)->set_fill_color(current_border);
-  switch (current_border) {
-  case 0:
-    shadowcolor = glow_eDrawType_Color30;
-    break;
-  case 1:
-    shadowcolor = glow_eDrawType_Color188;
-    break;
-  case 2:
-    shadowcolor = glow_eDrawType_Color24;
-    break;
-  case 3:
-    shadowcolor = glow_eDrawType_Color31;
-    break;
-  case 4:
-    shadowcolor = glow_eDrawType_Color87;
-    break;
-  case 5:
-    shadowcolor = glow_eDrawType_Color115;
-    break;
-  case 6:
-    shadowcolor = glow_eDrawType_Color144;
-    break;
-  case 7:
-    shadowcolor = glow_eDrawType_Color145;
-    break;
-  case 8:
-    shadowcolor = glow_eDrawType_Color175;
-    break;
-  case 9:
-    shadowcolor = glow_eDrawType_Color176;
-    break;
-  case 10:
-    shadowcolor = glow_eDrawType_Color205;
-    break;
-  case 11:
-    shadowcolor = glow_eDrawType_Color206;
-    break;
-  case 12:
-    shadowcolor = glow_eDrawType_Color209;
-    break;
-  case 13:
-    shadowcolor = glow_eDrawType_Color239;
-    break;
-  case 14:
-    shadowcolor = glow_eDrawType_Color238;
-    break;
-  case 15:
-    shadowcolor = glow_eDrawType_Color236;
-    break;
-  case 16:
-    shadowcolor = glow_eDrawType_Color264;
-    break;
-  case 17:
-    shadowcolor = glow_eDrawType_Color264;
-    break;
-  case 18:
-    shadowcolor = glow_eDrawType_Color294;
-    break;
-  case 19:
-    shadowcolor = glow_eDrawType_Color294;
-    break;
-  default:
-    shadowcolor = current_border;
-  }
-  ((GrowRect*)active_border)->set_fill_color(shadowcolor);
+  ((GrowRect*)active_border)->set_fill_color(get_shadow_color(current_border));
 
   if (current_border < glow_eDrawType_Color__) {
     if (current_border == glow_eDrawType_Line
@@ -904,71 +792,7 @@ void ColPalCtx::set_colors()
   text_border->set_text_color(textcolor);
 
   ((GrowRect*)display_text)->set_fill_color(current_text);
-  switch (current_text) {
-  case 0:
-    shadowcolor = glow_eDrawType_Color30;
-    break;
-  case 1:
-    shadowcolor = glow_eDrawType_Color188;
-    break;
-  case 2:
-    shadowcolor = glow_eDrawType_Color24;
-    break;
-  case 3:
-    shadowcolor = glow_eDrawType_Color31;
-    break;
-  case 4:
-    shadowcolor = glow_eDrawType_Color87;
-    break;
-  case 5:
-    shadowcolor = glow_eDrawType_Color115;
-    break;
-  case 6:
-    shadowcolor = glow_eDrawType_Color144;
-    break;
-  case 7:
-    shadowcolor = glow_eDrawType_Color145;
-    break;
-  case 8:
-    shadowcolor = glow_eDrawType_Color175;
-    break;
-  case 9:
-    shadowcolor = glow_eDrawType_Color176;
-    break;
-  case 10:
-    shadowcolor = glow_eDrawType_Color205;
-    break;
-  case 11:
-    shadowcolor = glow_eDrawType_Color206;
-    break;
-  case 12:
-    shadowcolor = glow_eDrawType_Color209;
-    break;
-  case 13:
-    shadowcolor = glow_eDrawType_Color239;
-    break;
-  case 14:
-    shadowcolor = glow_eDrawType_Color238;
-    break;
-  case 15:
-    shadowcolor = glow_eDrawType_Color236;
-    break;
-  case 16:
-    shadowcolor = glow_eDrawType_Color264;
-    break;
-  case 17:
-    shadowcolor = glow_eDrawType_Color264;
-    break;
-  case 18:
-    shadowcolor = glow_eDrawType_Color294;
-    break;
-  case 19:
-    shadowcolor = glow_eDrawType_Color294;
-    break;
-  default:
-    shadowcolor = current_text;
-  }
-  ((GrowRect*)active_text)->set_fill_color(shadowcolor);
+  ((GrowRect*)active_text)->set_fill_color(get_shadow_color(current_text));
 
   if (current_text < glow_eDrawType_Color__) {
     if (current_text == glow_eDrawType_Line
@@ -989,103 +813,71 @@ void ColPalCtx::set_colors()
     textcolor = glow_eDrawType_Line;
   text_text->set_text_color(textcolor);
 
-  draw(&mw, 0, 0, mw.window_width, mw.window_height);
+  set_dirty();
 }
 
 int tone_color_match(int tone)
 {
-  int drawtype;
-
   switch (tone) {
   case glow_eDrawTone_No:
-    drawtype = glow_eDrawType_Color32;
-    break;
+    return glow_eDrawType_Color32;
   case glow_eDrawTone_Gray:
-    drawtype = glow_eDrawType_Color35;
-    break;
+    return glow_eDrawType_Color35;
   case glow_eDrawTone_YellowGreen:
-    drawtype = glow_eDrawType_Color85;
-    break;
+    return glow_eDrawType_Color85;
   case glow_eDrawTone_Yellow:
-    drawtype = glow_eDrawType_Color115;
-    break;
+    return glow_eDrawType_Color115;
   case glow_eDrawTone_Orange:
-    drawtype = glow_eDrawType_Color145;
-    break;
+    return glow_eDrawType_Color145;
   case glow_eDrawTone_Red:
-    drawtype = glow_eDrawType_Color175;
-    break;
+    return glow_eDrawType_Color175;
   case glow_eDrawTone_Magenta:
-    drawtype = glow_eDrawType_Color205;
-    break;
+    return glow_eDrawType_Color205;
   case glow_eDrawTone_Blue:
-    drawtype = glow_eDrawType_Color235;
-    break;
+    return glow_eDrawType_Color235;
   case glow_eDrawTone_Seablue:
-    drawtype = glow_eDrawType_Color265;
-    break;
+    return glow_eDrawType_Color265;
   case glow_eDrawTone_Green:
-    drawtype = glow_eDrawType_Color295;
-    break;
+    return glow_eDrawType_Color295;
   case glow_eDrawTone_DarkGray:
-    drawtype = glow_eDrawType_Color38;
-    break;
+    return glow_eDrawType_Color38;
   case glow_eDrawTone_DarkYellowGreen:
-    drawtype = glow_eDrawType_Color88;
-    break;
+    return glow_eDrawType_Color88;
   case glow_eDrawTone_DarkYellow:
-    drawtype = glow_eDrawType_Color118;
-    break;
+    return glow_eDrawType_Color118;
   case glow_eDrawTone_DarkOrange:
-    drawtype = glow_eDrawType_Color148;
-    break;
+    return glow_eDrawType_Color148;
   case glow_eDrawTone_DarkRed:
-    drawtype = glow_eDrawType_Color178;
-    break;
+    return glow_eDrawType_Color178;
   case glow_eDrawTone_DarkMagenta:
-    drawtype = glow_eDrawType_Color208;
-    break;
+    return glow_eDrawType_Color208;
   case glow_eDrawTone_DarkBlue:
-    drawtype = glow_eDrawType_Color238;
-    break;
+    return glow_eDrawType_Color238;
   case glow_eDrawTone_DarkSeablue:
-    drawtype = glow_eDrawType_Color268;
-    break;
+    return glow_eDrawType_Color268;
   case glow_eDrawTone_DarkGreen:
-    drawtype = glow_eDrawType_Color298;
-    break;
+    return glow_eDrawType_Color298;
   case glow_eDrawTone_LightGray:
-    drawtype = glow_eDrawType_Color32;
-    break;
+    return glow_eDrawType_Color32;
   case glow_eDrawTone_LightYellowGreen:
-    drawtype = glow_eDrawType_Color82;
-    break;
+    return glow_eDrawType_Color82;
   case glow_eDrawTone_LightYellow:
-    drawtype = glow_eDrawType_Color112;
-    break;
+    return glow_eDrawType_Color112;
   case glow_eDrawTone_LightOrange:
-    drawtype = glow_eDrawType_Color142;
-    break;
+    return glow_eDrawType_Color142;
   case glow_eDrawTone_LightRed:
-    drawtype = glow_eDrawType_Color172;
-    break;
+    return glow_eDrawType_Color172;
   case glow_eDrawTone_LightMagenta:
-    drawtype = glow_eDrawType_Color202;
-    break;
+    return glow_eDrawType_Color202;
   case glow_eDrawTone_LightBlue:
-    drawtype = glow_eDrawType_Color232;
-    break;
+    return glow_eDrawType_Color232;
   case glow_eDrawTone_LightSeablue:
-    drawtype = glow_eDrawType_Color262;
-    break;
+    return glow_eDrawType_Color262;
   case glow_eDrawTone_LightGreen:
-    drawtype = glow_eDrawType_Color292;
-    break;
+    return glow_eDrawType_Color292;
   default:
     return glow_eDrawType_No;
   }
-
-  return drawtype;
 }
 
 void ColPalCtx::update_custom_colors(GlowCustomColors* cc)
@@ -1096,7 +888,7 @@ void ColPalCtx::update_custom_colors(GlowCustomColors* cc)
   for (int i = glow_eDrawType_CustomColor1; i < glow_eDrawType_CustomColor__;
        i += 4)
     gdraw->update_color((glow_eDrawType)i);
-  redraw();
+  set_dirty();
 }
 
 char* ColPalCtx::color_idx_to_text(int idx)

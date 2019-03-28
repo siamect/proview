@@ -148,31 +148,23 @@ public:
   void print(void* pos, void* node);
   void save(std::ofstream& fp, glow_eSaveMode mode);
   void open(GrowCtx* ctx, std::ifstream& fp);
-  void draw(GlowWind* w, void* pos, int highlight, int hot, void* node);
-  void erase(GlowWind* w, void* pos, int hot, void* node);
-  void draw(GlowWind* w, GlowTransform* t, int highlight, int hot, void* node,
+  void draw(DrawWind *w, void* pos, int highlight, int hot, void* node);
+  void erase(DrawWind *w, void* pos, int hot, void* node);
+  void draw(DrawWind *w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
-  void erase(GlowWind* w, GlowTransform* t, int hot, void* node);
+  void erase(DrawWind *w, GlowTransform* t, int hot, void* node);
   void draw_inverse(void* pos, int hot, void* node);
-  void nav_draw(void* pos, int highlight, void* node);
-  void nav_draw(GlowTransform* t, int highlight, void* node, void* colornode);
-  void nav_erase(void* pos, void* node);
-  void nav_erase(GlowTransform* t, void* node);
-  void traverse(int x, int y);
   void get_borders(
       double* x_right, double* x_left, double* y_high, double* y_low);
   void get_borders(double pos_x, double pos_y, double* x_right, double* x_left,
       double* y_high, double* y_low, void* node);
   void get_borders(GlowTransform* t, double* x_right, double* x_left,
       double* y_high, double* y_low);
-  int event_handler(GlowWind* w, glow_eEvent event, int x, int y);
-  int event_handler(
-      GlowWind* w, glow_eEvent event, int x, int y, double fx, double fy);
-  int event_handler(GlowWind* w, glow_eEvent event, double fx, double fy);
-  int event_handler(
-      GlowWind* w, void* pos, glow_eEvent event, int x, int y, void* node);
-  int event_handler(
-      GlowWind* w, void* pos, glow_eEvent event, int x, int y, int num);
+  int event_handler(glow_eEvent event, int x, int y);
+  int event_handler(glow_eEvent event, int x, int y, double fx, double fy);
+  int event_handler(glow_eEvent event, double fx, double fy);
+  int event_handler(void* pos, glow_eEvent event, int x, int y, void* node);
+  int event_handler(void* pos, glow_eEvent event, int x, int y, int num);
   void conpoint_select(void* pos, int x, int y, double* distance, void** cp);
   void conpoint_select(GlowTransform* t, int x, int y, double* distance,
       void** cp, int* pix_x, int* pix_y);

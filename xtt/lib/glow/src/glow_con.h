@@ -116,11 +116,10 @@ public:
   void get_borders(
       double* x1_right, double* x1_left, double* y1_high, double* y1_low){}
   void get_con_borders();
-  int event_handler(GlowWind* w, glow_eEvent event, int x, int y);
-  int event_handler(
-      GlowWind* w, glow_eEvent event, int x, int y, double fx, double fy)
+  int event_handler(glow_eEvent event, int x, int y);
+  int event_handler(glow_eEvent event, int x, int y, double fx, double fy)
   {
-    return event_handler(w, event, x, y);
+    return event_handler(event, x, y);
   }
 
   //! Save the content of the object to file.
@@ -135,9 +134,8 @@ public:
     \param fp	Input file.
   */
   void open(std::ifstream& fp);
-  void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
-  void draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
-  void draw();
+  void draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
   void erase(){}
   void move(double delta_x, double delta_y, int grid);
   void move_noerase(int delta_x, int delta_y, int move);

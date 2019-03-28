@@ -73,14 +73,14 @@ public:
   void open(std::ifstream& fp);
 
   //! Erase the object
-  void erase(GlowWind* w)
+  void erase(DrawWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
   }
 
-  void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
 
-  void draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
+  void draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
 
   void set_highlight(int on);
 
@@ -136,12 +136,10 @@ public:
   glow_eDrawType mark1_color; //!< Marker line 1 color.
   glow_eDrawType mark2_color; //!< Marker line 2 color.
 
-  void draw(GlowWind* w, GlowTransform* t, int highlight, int hot, void* node,
+  void draw(DrawWind* w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
 
-  void erase(GlowWind* w, GlowTransform* t, int hot, void* node);
-
-  void draw();
+  void erase(DrawWind* w, GlowTransform* t, int hot, void* node);
 
   int trace_scan();
 

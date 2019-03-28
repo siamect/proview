@@ -52,10 +52,6 @@ public:
         font(glow_eFont_Helvetica), protect(0){}
   void save(std::ofstream& fp, glow_eSaveMode mode);
   void open(std::ifstream& fp);
-  void traverse(int x, int y)
-  {
-    p.traverse(x, y);
-  }
 
   GrowCtx* ctx;
   int number;

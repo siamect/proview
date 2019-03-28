@@ -843,8 +843,6 @@ void grow_RedrawDefered(grow_tCtx ctx);
 /*! \param ctx	Grow context. */
 void grow_Redraw(grow_tCtx ctx);
 
-void grow_SetInputFocus(grow_tCtx ctx);
-
 //! Set editing mode of grow.
 /*!
   \param ctx		Grow context.
@@ -3345,7 +3343,6 @@ int grow_SetObjectClass(grow_tObject object, grow_tNodeClass nodeclass);
 int grow_CheckObjectName(grow_tCtx ctx, char* name);
 int grow_KeyPressed(grow_tCtx ctx, int key);
 void grow_SignalSend(grow_tCtx ctx, char* signalname);
-void grow_DrawObject(grow_tObject object);
 void grow_NavRedraw(grow_tCtx ctx);
 
 /*@}*/

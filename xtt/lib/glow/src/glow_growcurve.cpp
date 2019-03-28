@@ -50,7 +50,7 @@ GrowCurve::GrowCurve(GrowCtx* glow_ctx, const char* name, glow_sCurveData* data,
   if (data)
     configure_curves(data);
   if (!nodraw)
-    draw(&ctx->mw, (GlowTransform*)NULL, highlight, hot, NULL, NULL);
+    ctx->set_dirty();
 }
 
 GrowCurve::~GrowCurve()
@@ -75,12 +75,12 @@ void GrowCurve::configure_curves(glow_sCurveData* data)
   int dix = 0;
 
   // Remove old curves
-  ctx->nodraw++;
+  ctx->set_nodraw();
   for (i = 0; i < curve_cnt; i++) {
     if (curve[i])
       delete curve[i];
   }
-  ctx->nodraw--;
+  ctx->reset_nodraw();
 
   if (data->type == glow_eCurveDataType_CommonX) {
     curve_cnt = data->curves;
@@ -197,10 +197,10 @@ void GrowCurve::configure_curves(glow_sCurveData* data)
         else
           dt_fill = draw_type;
 
-        ctx->nodraw++;
+        ctx->set_nodraw();
         curve[idx] = new GrowPolyLine(ctx, "", pointarray, points, dt,
             curve_width, 0, fill_curve, 1, 0, dt_fill, 0, 0, 0, type);
-        ctx->nodraw--;
+        ctx->reset_nodraw();
         free((char*)pointarray);
         break;
 
@@ -310,10 +310,10 @@ void GrowCurve::configure_curves(glow_sCurveData* data)
         else
           dt_fill = draw_type;
 
-        ctx->nodraw++;
+        ctx->set_nodraw();
         curve[idx] = new GrowPolyLine(ctx, "", pointarray, points, dt,
             curve_width, 0, fill_curve, 1, 0, dt_fill);
-        ctx->nodraw--;
+        ctx->reset_nodraw();
         free((char*)pointarray);
         break;
       case glow_eCurveType_DigSquare: {
@@ -437,10 +437,10 @@ void GrowCurve::configure_curves(glow_sCurveData* data)
         else
           dt_fill = draw_type;
 
-        ctx->nodraw++;
+        ctx->set_nodraw();
         curve[idx] = new GrowPolyLine(ctx, "", pointarray, points, dt,
             curve_width, 0, fill_curve, 1, 0, dt_fill);
-        ctx->nodraw--;
+        ctx->reset_nodraw();
         free((char*)pointarray);
         break;
       }
@@ -448,7 +448,7 @@ void GrowCurve::configure_curves(glow_sCurveData* data)
       }
     }
 
-    draw();
+    ctx->set_dirty();
   } else if (data->type == glow_eCurveDataType_SeparateX) {
     curve_cnt = data->curves;
     no_of_points = data->rows[0];
@@ -754,22 +754,22 @@ void GrowCurve::configure_curves(glow_sCurveData* data)
       else
         dt_fill = draw_type;
 
-      ctx->nodraw++;
+      ctx->set_nodraw();
       curve[idx] = new GrowPolyLine(ctx, "", pointarray, points, dt,
           curve_width, 0, fill_curve, 1, 0, dt_fill, 0, 0, 0, type);
-      ctx->nodraw--;
+      ctx->reset_nodraw();
 
       free((char*)pointarray);
     }
 
-    draw();
+    ctx->set_dirty();
   }
 }
 
 void GrowCurve::add_points(glow_sCurveData* data, unsigned int* no_of_points)
 {
   if (data->type == glow_eCurveDataType_CommonX) {
-    ctx->nodraw++;
+    ctx->set_nodraw();
     for (int idx = 0; idx < curve_cnt; idx++) {
       if (no_of_points[0] == 1) {
         double y_value;
@@ -785,7 +785,7 @@ void GrowCurve::add_points(glow_sCurveData* data, unsigned int* no_of_points)
           y_value = MAX(ll.y, MIN(y_value, ur.y));
         }
         if (!fill)
-          erase(&ctx->mw);
+          erase(ctx->mw);
 
         if (!fill_curve)
           curve[idx]->add_and_shift_y_value(y_value);
@@ -819,7 +819,7 @@ void GrowCurve::add_points(glow_sCurveData* data, unsigned int* no_of_points)
           }
         }
         if (!fill)
-          erase(&ctx->mw);
+          erase(ctx->mw);
 
         if (!fill_curve)
           curve[idx]->add_and_shift_y_values(y_values, no_of_points[0]);
@@ -829,12 +829,7 @@ void GrowCurve::add_points(glow_sCurveData* data, unsigned int* no_of_points)
         free((char*)y_values);
       }
     }
-    ctx->nodraw--;
-
-    draw();
-    // draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
-    ctx->nav_draw(
-        &ctx->navw, 0, 0, ctx->navw.window_width, ctx->navw.window_height);
-    // nav_draw( (GlowTransform *) NULL, highlight, NULL, NULL);
+    ctx->reset_nodraw();
+    ctx->set_dirty();
   }
 }

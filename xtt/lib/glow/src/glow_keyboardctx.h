@@ -93,19 +93,11 @@ public:
   //! Configure the keyboard
   void configure();
 
-  //! Redraw the window.
-  /*! Redraw all objects in the window.
-   */
-  void redraw();
-
   //! Adjust the pixel coordinates to the current zoomfactor.
   void zoom(double factor);
 
   //! Reset to base zoomfactor.
-  void unzoom()
-  {
-    zoom(mw.base_zoom_factor / mw.zoom_factor_y);
-  }
+  void unzoom();
 
   //! Event handler
   /*!

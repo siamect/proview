@@ -63,77 +63,41 @@ GrowConPoint::GrowConPoint(GrowCtx* glow_ctx, const char* name, double x,
   arc.ll.posit(-ctx->draw_delta, -ctx->draw_delta);
   arc.ur.posit(ctx->draw_delta, ctx->draw_delta);
   if (!nodraw)
-    draw(&ctx->mw, (GlowTransform*)NULL, highlight, hot, NULL, NULL);
+    ctx->set_dirty();
   get_node_borders();
 }
 
 GrowConPoint::~GrowConPoint()
 {
   ctx->object_deleted(this);
-  if (ctx->nodraw)
-    return;
 
-  erase(&ctx->mw);
-  erase(&ctx->navw);
-
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->set_dirty();
   if (hot)
-    ctx->gdraw->set_cursor(&ctx->navw, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
 }
 
 void GrowConPoint::move(double delta_x, double delta_y, int grid)
 {
-  ctx->set_defered_redraw();
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
   if (grid) {
     double x, y, x_grid, y_grid;
 
     /* Move to closest grid point */
-    erase(&ctx->mw);
-    erase(&ctx->navw);
     x = (x_right + x_left) / 2;
     y = (y_high + y_low) / 2;
-    ctx->find_grid(x + delta_x / ctx->mw.zoom_factor_x,
-        y + delta_y / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid(x + delta_x / ctx->mw->zoom_factor_x,
+        y + delta_y / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
     trf.move(x_grid - x, y_grid - y);
     get_node_borders();
   } else {
-    double dx, dy;
-
-    erase(&ctx->mw);
-    erase(&ctx->navw);
-    dx = delta_x / ctx->mw.zoom_factor_x;
-    dy = delta_y / ctx->mw.zoom_factor_y;
+    double dx = delta_x / ctx->mw->zoom_factor_x;
+    double dy = delta_y / ctx->mw->zoom_factor_y;
     trf.move(dx, dy);
     x_right += dx;
     x_left += dx;
     y_high += dy;
     y_low += dy;
   }
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
-  ctx->redraw_defered();
+  ctx->set_dirty();
 }
 
 void GrowConPoint::move_noerase(int delta_x, int delta_y, int grid)
@@ -144,35 +108,23 @@ void GrowConPoint::move_noerase(int delta_x, int delta_y, int grid)
     /* Move to closest grid point */
     x = (x_right + x_left) / 2;
     y = (y_high + y_low) / 2;
-    ctx->find_grid(x + double(delta_x) / ctx->mw.zoom_factor_x,
-        y + double(delta_y) / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid(x + double(delta_x) / ctx->mw->zoom_factor_x,
+        y + double(delta_y) / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
     trf.move(x_grid - x, y_grid - y);
     get_node_borders();
   } else {
-    double dx, dy;
-
-    dx = double(delta_x) / ctx->mw.zoom_factor_x;
-    dy = double(delta_y) / ctx->mw.zoom_factor_y;
+    double dx = double(delta_x) / ctx->mw->zoom_factor_x;
+    double dy = double(delta_y) / ctx->mw->zoom_factor_y;
     trf.move(dx, dy);
     x_right += dx;
     x_left += dx;
     y_high += dy;
     y_low += dy;
   }
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  ctx->set_dirty();
 }
 
-int GrowConPoint::event_handler(
-    GlowWind* w, glow_eEvent event, int x, int y, double fx, double fy)
+int GrowConPoint::event_handler(glow_eEvent event, int x, int y, double fx, double fy)
 {
   int sts;
   GlowPoint p1(p);
@@ -182,7 +134,7 @@ int GrowConPoint::event_handler(
 
   sts = 0;
   if (event == ctx->event_move_node) {
-    sts = arc.event_handler(w, (void*)&p1, event, x, y, NULL);
+    sts = arc.event_handler((void*)&p1, event, x, y, NULL);
     if (sts) {
       /* Register node for potential movement */
       ctx->move_insert(this);
@@ -191,37 +143,28 @@ int GrowConPoint::event_handler(
   }
   switch (event) {
   case glow_eEvent_CursorMotion: {
-    int redraw = 0;
-
     if (ctx->hot_found)
       sts = 0;
     else {
-      sts = arc.event_handler(w, (void*)&p1, event, x, y, NULL);
+      sts = arc.event_handler((void*)&p1, event, x, y, NULL);
       if (sts)
         ctx->hot_found = 1;
     }
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
-      ctx->gdraw->set_cursor(w, glow_eDrawCursor_CrossHair);
+      ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
       hot = 1;
-      redraw = 1;
+      ctx->set_dirty();
     }
     if (!sts && hot) {
-      ctx->gdraw->set_cursor(w, glow_eDrawCursor_Normal);
-      erase(w);
+      ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
       hot = 0;
-      redraw = 1;
-    }
-    if (redraw) {
-      ctx->draw(w, x_left * w->zoom_factor_x - w->offset_x - DRAW_MP,
-          y_low * w->zoom_factor_y - w->offset_y - DRAW_MP,
-          x_right * w->zoom_factor_x - w->offset_x + DRAW_MP,
-          y_high * w->zoom_factor_y - w->offset_y + DRAW_MP);
+      ctx->set_dirty();
     }
     break;
   }
   default:
-    sts = arc.event_handler(w, (void*)&p1, event, x, y, NULL);
+    sts = arc.event_handler((void*)&p1, event, x, y, NULL);
   }
   if (sts)
     ctx->register_callback_object(glow_eObjectType_Node, this);
@@ -298,7 +241,7 @@ void GrowConPoint::open(std::ifstream& fp)
   }
 }
 
-void GrowConPoint::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowConPoint::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -323,7 +266,7 @@ void GrowConPoint::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowConPoint::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowConPoint::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -363,8 +306,7 @@ void GrowConPoint::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 void GrowConPoint::set_highlight(int on)
 {
   highlight = on;
-  draw(&ctx->mw, (GlowTransform*)NULL, highlight, hot, NULL, NULL);
-  draw(&ctx->navw, (GlowTransform*)NULL, highlight, 0, NULL, NULL);
+  ctx->set_dirty();
 }
 
 void GrowConPoint::select_region_insert(double ll_x, double ll_y, double ur_x,
@@ -391,10 +333,10 @@ void GrowConPoint::nav_zoom()
   arc.nav_zoom();
 }
 
-void GrowConPoint::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
+void GrowConPoint::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  if (w == &ctx->navw) {
+  if (w == ctx->navw) {
     return;
   }
 
@@ -410,13 +352,9 @@ void GrowConPoint::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   arc.draw(w, (void*)&p1, highlight, hot, NULL);
 }
 
-void GrowConPoint::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
+void GrowConPoint::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 {
-  if (w == &ctx->navw) {
-    if (ctx->no_nav)
-      return;
-    hot = 0;
-  }
+  hot = (w == ctx->navw) ? 0 : hot;
 
   GlowPoint p1(p);
   if (t) {
@@ -427,9 +365,7 @@ void GrowConPoint::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
     p1.y = trf.y(p.x, p.y);
   }
   p1.zoom();
-  w->set_draw_buffer_only();
   arc.erase(w, (void*)&p1, hot, NULL);
-  w->reset_draw_buffer_only();
 }
 
 void GrowConPoint::set_transform(GlowTransform* t)
@@ -442,10 +378,7 @@ void GrowConPoint::align(double x, double y, glow_eAlignDirection direction)
 {
   double dx, dy;
 
-  erase(&ctx->mw);
-  erase(&ctx->navw);
-  ctx->set_defered_redraw();
-  draw();
+  ctx->set_dirty();
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -481,23 +414,6 @@ void GrowConPoint::align(double x, double y, glow_eAlignDirection direction)
   x_left += dx;
   y_high += dy;
   y_low += dy;
-
-  draw();
-  ctx->redraw_defered();
-}
-
-void GrowConPoint::draw()
-{
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 }
 
 void GrowConPoint::get_node_borders(GlowTransform* t, double* x_right,

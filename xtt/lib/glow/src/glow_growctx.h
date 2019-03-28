@@ -105,10 +105,7 @@ public:
     \param ur_x		x coordinate for upper right corner in pixel.
     \param ur_y		y coordinate for upper right corner in pixel.
 
-    If draw is defered the area of defered redraw is extended with this new
-    area, and nothing
-    more is done. If double buffering is on, drawing is made in the buffer and
-    the specified
+    If double buffering is on, drawing is made in the buffer and the specified
     area is the copied to the screen.
     Sets a clip of the specified area and draws first all connections in the
     area, and then all
@@ -116,32 +113,14 @@ public:
     selection rectangle
     if this is active.
   */
-  void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw(DrawWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Draw a specified area of the window.
   /*! Interface with double arguments */
-  void draw(GlowWind* w, double ll_x, double ll_y, double ur_x, double ur_y)
+  void draw(DrawWind *w, double ll_x, double ll_y, double ur_x, double ur_y)
   {
     draw(w, (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);
   }
-
-  //! Draw a specified area of the navigation window.
-  /*! The drawing is done with extending drawing area which should be replaced
-    with drawing with clip
-    to increase performance.
-  */
-  void nav_draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
-
-  //! Draw a specified area of the navigation window.
-  /*! Interface with double arguments */
-  void nav_draw(GlowWind* w, double ll_x, double ll_y, double ur_x, double ur_y)
-  {
-    nav_draw(w, (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);
-  }
-
-  //! Draw the defered drawing area.
-  /*! Redraw the area and deactivate refered drawing. */
-  void redraw_defered();
 
   //! Set edit mode.
   /*! \param grow_mode		Edit mode. */
