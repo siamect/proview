@@ -98,6 +98,7 @@ void XNavBrow::free_pixmaps()
   brow_FreeAnnotPixmap(ctx, pixmap_inverted);
   brow_FreeAnnotPixmap(ctx, pixmap_teston);
   brow_FreeAnnotPixmap(ctx, pixmap_offline);
+  brow_FreeAnnotPixmap(ctx, pixmap_filter);
 }
 
 //
@@ -125,6 +126,7 @@ void XNavBrow::allocate_pixmaps()
   brow_LoadPBMs(ctx, "xnav_bitmap_crrwrite", &pixmap_crrwrite);
   brow_LoadPBM(ctx, "xnav_bitmap_curve", &pixmap_curve);
   brow_LoadPBM(ctx, "xnav_bitmap_file", &pixmap_file);
+  brow_LoadPBMs(ctx, "xnav_bitmap_filter", &pixmap_filter);
   brow_LoadPBM(ctx, "xnav_bitmap_graph", &pixmap_graph);
   brow_LoadPBMs(ctx, "xnav_bitmap_inverted", &pixmap_inverted);
   brow_LoadPBMs(ctx, "xnav_bitmap_leaf", &pixmap_leaf);

@@ -92,6 +92,7 @@ public:
   flow_sAnnotPixmap* pixmap_inverted;
   flow_sAnnotPixmap* pixmap_teston;
   flow_sAnnotPixmap* pixmap_offline;
+  flow_sAnnotPixmap* pixmap_filter;
   char push_command[200];
 
   void free_pixmaps();

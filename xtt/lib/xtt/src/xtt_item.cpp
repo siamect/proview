@@ -2975,6 +2975,7 @@ static void xnav_set_sigchan_flags(
   int is_signal = 0;
   pwr_tBoolean inv;
   pwr_tBoolean conv;
+  pwr_tEnum filtertype = 0;
   pwr_tBoolean test;
   pwr_tAttrRef aref;
   pwr_tAttrRef chanaref;
@@ -3014,6 +3015,20 @@ static void xnav_set_sigchan_flags(
     default:
       return;
     }
+  }
+
+  switch (cid) {
+  case pwr_cClass_Di:
+    sts = gdh_ArefANameToAref(arp, "FilterType", &aref);
+    if (EVEN(sts))
+      return;
+
+    sts = gdh_GetObjectInfoAttrref(&aref, &filtertype, sizeof(filtertype));
+    if (EVEN(sts)) 
+      return;
+
+    break;
+  default: ;
   }
 
   if (is_signal) {
@@ -3333,6 +3348,8 @@ static void xnav_set_sigchan_flags(
     brow_SetAnnotPixmap(node, annot, brow->pixmap_teston);
   else if (inv)
     brow_SetAnnotPixmap(node, annot, brow->pixmap_inverted);
+  else if (filtertype)
+    brow_SetAnnotPixmap(node, annot, brow->pixmap_filter);
   else
     brow_RemoveAnnotPixmap(node, annot);
 }
