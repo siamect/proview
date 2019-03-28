@@ -1422,9 +1422,10 @@ pwr_sAttrRef WItemBaseAttr::aref()
   pwr_tAName aname;
   pwr_sAttrRef a;
   pwr_tStatus sts;
+  int asize;
 
   sts = ldh_ObjidToName(
-      ldhses, objid, ldh_eName_VolPath, aname, sizeof(aname), &size);
+      ldhses, objid, ldh_eName_VolPath, aname, sizeof(aname), &asize);
   if (EVEN(sts))
     return pwr_cNAttrRef;
 
