@@ -52,7 +52,7 @@ SObject pwrb:Type
       Attr Elements = 1
     EndBody
     !/**
-    !  Full screen.
+    !  Full screen. The window is created fullscreen without frame.
     !*/
     Object FullSceen $Bit
      Body SysBody
@@ -62,7 +62,7 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  Maximize.
+    !  Maximize. The window is created maximized.
     !*/
     Object Maximize $Bit
      Body SysBody
@@ -82,7 +82,7 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  Iconify.
+    !  Iconify. The window is created iconified.
     !*/
     Object Iconify $Bit
      Body SysBody
@@ -102,7 +102,7 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  Scrollbars.
+    !  Scrollbars. Adds horizontal and vertical scrollbar.
     !*/
     Object Scrollbars $Bit
      Body SysBody
@@ -112,7 +112,7 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  Navigator.
+    !  Navigator. Opens a navigator for scrolling and zooming.
     !*/
     Object Navigator $Bit
      Body SysBody
@@ -122,7 +122,7 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  Decorations.
+    !  Decorations. The window is create without frame.
     !*/
     Object HideDecorations $Bit
       Body SysBody
@@ -132,7 +132,7 @@ SObject pwrb:Type
       EndBody
      EndObject
     !/**
-    !  Dialog window.
+    !  Dialog window. Window can't be resized, minimized or maximized.
     !*/
     Object Dialog $Bit
       Body SysBody
