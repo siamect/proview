@@ -38,7 +38,7 @@
 #define glow_draw_gtk_h
 
 #include <stdlib.h>
-
+#include <string.h>
 #include <fstream>
 
 #include <gtk/gtk.h>
