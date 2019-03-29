@@ -125,7 +125,7 @@ void FlowAnnotPixmap::draw(
   ctx->fdraw->pixmap(x, p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y,
       &((FlowNode*)node)->annotpixmapv[number]->pixmap_data,
       ((FlowNode*)node)->annotpixmapv[number]->pixmaps,
-      flow_eDrawType_LineErase, idx);
+      draw_type, idx);
 }
 
 void FlowAnnotPixmap::draw_inverse(void* pos, int hot, void* node)
