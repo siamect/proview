@@ -2202,6 +2202,7 @@ int GeDyn::scan(grow_tObject object)
         || sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED)
       return sts;
   }
+  grow_RedrawDefered(graph->grow->ctx);
   return 1;
 }
 
