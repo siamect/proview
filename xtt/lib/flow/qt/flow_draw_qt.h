@@ -52,12 +52,6 @@ public:
     QImage* buffer = NULL;
 };
 
-typedef struct {
-  FlowCtx* ctx;
-  void (*callback_func)(FlowCtx* ctx);
-  QTimer* timer_id;
-} flow_draw_sTimerCb;
-
 class FlowDrawQt : private QObject, public FlowDraw {
   Q_OBJECT
 
@@ -148,7 +142,8 @@ private:
   void event_timer(FlowCtx* ctx, QMouseEvent *event, QWidget *target);
   void cancel_event_timer(FlowCtx* ctx);
 
-  flow_draw_sTimerCb* timer_cb;
+  void (*draw_timer_callback_func)(FlowCtx* ctx);
+  QTimer* draw_timer_id;
 
 public slots:
   bool event_timer_cb();
