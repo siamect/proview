@@ -20,7 +20,7 @@ Optional:
 
 Mandatory if you want to build the QT version of ProviewR:
 
-> apt-get install qt4-dev-tools libphonon-dev
+> apt-get install libqt4-dev libphonon-dev
 
 Mandatory if you want to build the GTK version of ProviewR:
 
@@ -39,15 +39,15 @@ Optional if you build the GTK version of ProviewR:
 
 Unpack the source package
 
-> tar -xzvf pwrsrc_4.8.0.tar.gz
+> tar -xzvf pwrsrc_5.6.1.tar.gz
 
 Enter the sourcecode root directory
 
-> cd pwr_4.8.0
+> cd pwr_5.6.1
 
-Execute the makefile
+Execute the build script
 
-> make
+> ./build.sh
 
 When the compilation is finished, follow the instructions to insert the three lines in your .bashrc file.
 
@@ -69,15 +69,15 @@ Replace /home/robert/x5-6-1 with the directory where you unpacked the sources.
 
 ### 3.2 Creating the environment
 
-Creating and handling your environment is done with the pwre-function (added by sourcing $pwre_bin/pwre_function). See section "Cross-compiling" below about compiling a 32-bit version of ProviewR on a 64-bit machine.
+Creating and handling your environment is done with the pwre-function (added by sourcing $pwre_bin/pwre_function). If you want to compile a 32-bit version of ProviewR on a 64-bit machine, see section "Cross-compiling" below.
 
 > pwre
 
 shows all possibilites of the pwre build script.
 
-Add an environment named 'x561x86' (choose any name you like).
+Add an environment named 'x561x86_64' (choose any name you like).
 
-> pwre add x561x86
+> pwre add x561x86_64
 
 > Source root [...] ? /home/robert/x5-6-1/src  (where /home/robert/x5-6-1 is replaced with the directory where you unpacked the sources)
 Import root [] ?
@@ -92,12 +92,12 @@ List all existing environments:
 > pwre list
 
 > -- Defined environments:
-   x460x86
+   x561x86_64
 --
 
 Initiate your new environment:
 
-> pwre init x561x86
+> pwre init x561x86_64
 
 Now, create the build tree
 
