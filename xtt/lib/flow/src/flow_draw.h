@@ -76,7 +76,7 @@ public:
   virtual void image(int x, int y, int width, int height, flow_tImImage image,
       flow_tPixmap pixmap, flow_tPixmap clip_mask) = 0;
   virtual void pixmap(int x, int y, flow_sPixmapData* pixmap_data,
-      void* pixmaps, flow_eDrawType gc_type, int idx) = 0;
+      void* pixmaps, flow_eDrawType gc_bg, flow_eDrawType gc_fg, int idx) = 0;
 
   virtual void pixmaps_create(flow_sPixmapData* pixmap_data, void** pixmaps) = 0;
   virtual void pixmaps_delete(void* pixmaps) = 0;

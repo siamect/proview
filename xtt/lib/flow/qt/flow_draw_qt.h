@@ -100,7 +100,7 @@ public:
   void image(int x, int y, int width, int height,
       flow_tImImage image, flow_tPixmap pixmap, flow_tPixmap clip_mask);
   void pixmap(int x, int y, flow_sPixmapData* pixmap_data,
-      void* pixmaps, flow_eDrawType gc_type, int idx);
+      void* pixmaps, flow_eDrawType gc_bg, flow_eDrawType gc_fg, int idx);
 
   void pixmaps_create(
       flow_sPixmapData* pixmap_data, void** pixmaps);

@@ -966,23 +966,18 @@ void FlowDrawQt::pixmaps_delete(void* pixmaps)
   delete ((draw_sPixmap*)pixmaps);
 }
 
-void FlowDrawQt::pixmap(int x, int y,
-    flow_sPixmapData* pixmap_data, void* pixmaps, flow_eDrawType painter_type,
-    int idx)
+void FlowDrawQt::pixmap(int x, int y, flow_sPixmapData* pixmap_data,
+    void* pixmaps, flow_eDrawType gc_bg, flow_eDrawType gc_fg, int idx)
 {
   flow_sPixmapDataElem* pdata = (flow_sPixmapDataElem*)pixmap_data + idx;
-
   draw_sPixmap* pms = (draw_sPixmap*)pixmaps;
 
-  flow_eDrawType gc2 = (painter_type == flow_eDrawType_Line) ?
-      flow_eDrawType_LineErase : flow_eDrawType_Line;
-
   {
-    unique_ptr<QPainter> painter = get_painter(gc2, idx);
+    unique_ptr<QPainter> painter = get_painter(gc_bg, idx);
     painter->fillRect(x, y, pdata->width, pdata->height, painter->brush());
   }
 
-  unique_ptr<QPainter> painter = get_painter(painter_type, idx);
+  unique_ptr<QPainter> painter = get_painter(gc_fg, idx);
 
   QRegion clipRegion = QRegion(pms->pixmap[idx].createMaskFromColor(Qt::black));
   painter->setClipRegion(clipRegion.translated(x, y));

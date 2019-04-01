@@ -110,7 +110,7 @@ public:
   void pixmaps_create(flow_sPixmapData* pixmap_data, void** pixmaps);
   void pixmaps_delete(void* pixmaps);
   void pixmap(int x, int y, flow_sPixmapData* pixmap_data, void* pixmaps,
-      flow_eDrawType gc_type, int idx);
+      flow_eDrawType gc_bg, flow_eDrawType gc_fg, int idx);
 
   void set_timer(FlowCtx* ctx, int time_ms, void (*callback_func)(FlowCtx* ctx),
       void** id);

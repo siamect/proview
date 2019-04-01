@@ -1203,23 +1203,19 @@ void FlowDrawGtk::pixmaps_delete(void* pixmaps)
 }
 
 void FlowDrawGtk::pixmap(int x, int y, flow_sPixmapData* pixmap_data,
-    void* pixmaps, flow_eDrawType gc_type, int idx)
+    void* pixmaps, flow_eDrawType gc_bg, flow_eDrawType gc_fg, int idx)
 {
   flow_sPixmapDataElem* pdata = (flow_sPixmapDataElem*)pixmap_data + idx;
-
   draw_sPixmap* pms = (draw_sPixmap*)pixmaps;
 
-  flow_eDrawType gc2 = (gc_type == flow_eDrawType_Line) ?
-      flow_eDrawType_LineErase : flow_eDrawType_Line;
-
   gdk_draw_rectangle(
-      w->buffer, gcs[gc2][idx], 1, x, y, pdata->width, pdata->height);
-  gdk_gc_set_clip_mask(gcs[gc_type][idx], pms->pixmap[idx]);
-  gdk_gc_set_clip_origin(gcs[gc_type][idx], x, y);
-  gdk_draw_rectangle(w->buffer, gcs[gc_type][idx], 1, x, y,
+      w->buffer, gcs[gc_bg][idx], 1, x, y, pdata->width, pdata->height);
+  gdk_gc_set_clip_mask(gcs[gc_fg][idx], pms->pixmap[idx]);
+  gdk_gc_set_clip_origin(gcs[gc_fg][idx], x, y);
+  gdk_draw_rectangle(w->buffer, gcs[gc_fg][idx], 1, x, y,
       pdata->width, pdata->height);
-  gdk_gc_set_clip_mask(gcs[gc_type][idx], NULL);
-  gdk_gc_set_clip_origin(gcs[gc_type][idx], 0, 0);
+  gdk_gc_set_clip_mask(gcs[gc_fg][idx], NULL);
+  gdk_gc_set_clip_origin(gcs[gc_fg][idx], 0, 0);
 }
 
 void FlowDrawGtk::image(int x, int y, int width, int height,
