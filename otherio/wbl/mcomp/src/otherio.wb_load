@@ -2217,7 +2217,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
       Object RtBody $ObjBodyDef 1 08-FEB-2008 10:26:36.84
         Body SysBody 08-FEB-2008 10:26:36.85
           Attr StructName = "Modbus_TCP_Slave"
-          Attr NextAix = "_X21"
+          Attr NextAix = "_X23"
         EndBody
         !/**
         ! Description of slave
@@ -2328,6 +2328,18 @@ Volume OtherIO $ClassVolume 0.0.250.10
             Attr PgmName = "StallAction"
             Attr Size = 4
             Attr TypeRef = "pwrb:Type-StallActionEnum"
+          EndBody
+        EndObject
+        !/**
+	! Network format is set to little endian.
+        ! The standard network format for Modbus TCP is big endian. Despite 
+        ! this, slaves despite this uses little endian. Setting byte 
+        ! ordering to little endian makes it possible to connect to such slaves.
+        !*/
+        Object ByteOrderingLE $Attribute 22 29-MAR-2019 11:26:24.84
+          Body SysBody 29-MAR-2019 11:26:54.23
+            Attr Flags = 16777216
+            Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         !/**
@@ -5947,7 +5959,7 @@ Volume OtherIO $ClassVolume 0.0.250.10
         Object FirmwareVersion $Attribute 27 05-FEB-2012 16:33:33.69
           Body SysBody 05-FEB-2012 16:33:52.27
             Attr PgmName = "FirmwareVersion"
-            Attr Size = 40
+            Attr Size = 132
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$String132"
           EndBody
