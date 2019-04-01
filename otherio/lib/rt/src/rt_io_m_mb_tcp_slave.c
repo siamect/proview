@@ -704,7 +704,7 @@ static pwr_tStatus IoRackInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
   char name[196];
   pwr_tStatus sts;
   pwr_tCid cid;
-
+  pwr_eByteOrderingEnum byteorder = pwr_eByteOrderingEnum_BigEndian;
   io_sChannel* chanp;
   int i;
 
@@ -715,6 +715,9 @@ static pwr_tStatus IoRackInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
 
   rp->Local = calloc(1, sizeof(io_sRackLocal));
   local = rp->Local;
+
+  if ( op->ByteOrderingLE)
+    byteorder = pwr_eByteOrderingEnum_LittleEndian;
 
   /* Create socket, store in local struct */
 
@@ -763,7 +766,7 @@ static pwr_tStatus IoRackInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
 
       io_bus_card_init(ctx, cardp, &input_area_offset, &input_area_chansize,
           &output_area_offset, &output_area_chansize,
-          pwr_eByteOrderingEnum_BigEndian, io_eAlignment_Packed);
+          byteorder, io_eAlignment_Packed);
 
       /* Count number of di and do */
       for (i = 0; i < cardp->ChanListSize; i++) {
@@ -814,7 +817,7 @@ static pwr_tStatus IoRackInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
 
       io_bus_card_init(ctx, cardp, &input_area_offset, &input_area_chansize,
           &output_area_offset, &output_area_chansize,
-          pwr_eByteOrderingEnum_BigEndian, io_eAlignment_Packed);
+          byteorder, io_eAlignment_Packed);
 
       /* Count number of di and do */
       for (i = 0; i < cardp->ChanListSize; i++) {

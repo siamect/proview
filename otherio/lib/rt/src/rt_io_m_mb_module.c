@@ -86,6 +86,7 @@ static pwr_tStatus IoCardRead(
   io_sCardLocalMsg* local;
   pwr_sClass_Modbus_Module* op;
   pwr_sClass_Modbus_TCP_Slave* slave;
+  pwr_eByteOrderingEnum byteorder = pwr_eByteOrderingEnum_BigEndian;
 
   op = (pwr_sClass_Modbus_Module*)cp->op;
   local = ((io_sCardLocal*)cp->Local)->msg;
@@ -102,9 +103,12 @@ static pwr_tStatus IoCardRead(
     local->interval_cnt++;
   }
 
+  if ( slave->ByteOrderingLE)
+    byteorder = pwr_eByteOrderingEnum_LittleEndian;
+
   if (slave->Status == MB__NORMAL) {
     io_bus_card_read(ctx, rp, cp, slave->Inputs, NULL,
-        pwr_eByteOrderingEnum_BigEndian, pwr_eFloatRepEnum_FloatIntel);
+        byteorder, pwr_eFloatRepEnum_FloatIntel);
   }
   //  printf("Method Modbus_Module-IoCardRead\n");
   return IO__SUCCESS;
@@ -120,6 +124,7 @@ static pwr_tStatus IoCardWrite(
   pwr_sClass_Modbus_Module* op;
 
   pwr_sClass_Modbus_TCP_Slave* slave;
+  pwr_eByteOrderingEnum byteorder = pwr_eByteOrderingEnum_BigEndian;
 
   op = (pwr_sClass_Modbus_Module*)cp->op;
   local = ((io_sCardLocal*)cp->Local)->msg;
@@ -138,8 +143,11 @@ static pwr_tStatus IoCardWrite(
       return IO__SUCCESS;
   }
 
+  if ( slave->ByteOrderingLE)
+    byteorder = pwr_eByteOrderingEnum_LittleEndian;
+
   if (slave->Status == MB__NORMAL) {
-    io_bus_card_write(ctx, cp, slave->Outputs, pwr_eByteOrderingEnum_BigEndian,
+    io_bus_card_write(ctx, cp, slave->Outputs, byteorder,
         pwr_eFloatRepEnum_FloatIntel);
   }
   //  printf("Method Modbus_Module-IoCardWrite\n");
