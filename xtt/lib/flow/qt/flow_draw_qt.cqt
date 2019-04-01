@@ -187,6 +187,7 @@ FlowDrawQt::FlowDrawQt(QWidget* x_toplevel, void** flow_ctx,
     : toplevel(x_toplevel), closing_down(0)
 {
   timer_id = new QTimer(this);
+  draw_timer_id = new QTimer(this);
 
   if (type == flow_eCtxType_Brow) {
     ctx = (FlowCtx*)new BrowCtx("Claes context", 20);
@@ -965,23 +966,18 @@ void FlowDrawQt::pixmaps_delete(void* pixmaps)
   delete ((draw_sPixmap*)pixmaps);
 }
 
-void FlowDrawQt::pixmap(int x, int y,
-    flow_sPixmapData* pixmap_data, void* pixmaps, flow_eDrawType painter_type,
-    int idx)
+void FlowDrawQt::pixmap(int x, int y, flow_sPixmapData* pixmap_data,
+    void* pixmaps, flow_eDrawType gc_bg, flow_eDrawType gc_fg, int idx)
 {
   flow_sPixmapDataElem* pdata = (flow_sPixmapDataElem*)pixmap_data + idx;
-
   draw_sPixmap* pms = (draw_sPixmap*)pixmaps;
 
-  flow_eDrawType gc2 = (painter_type == flow_eDrawType_Line) ?
-      flow_eDrawType_LineErase : flow_eDrawType_Line;
-
   {
-    unique_ptr<QPainter> painter = get_painter(gc2, idx);
+    unique_ptr<QPainter> painter = get_painter(gc_bg, idx);
     painter->fillRect(x, y, pdata->width, pdata->height, painter->brush());
   }
 
-  unique_ptr<QPainter> painter = get_painter(painter_type, idx);
+  unique_ptr<QPainter> painter = get_painter(gc_fg, idx);
 
   QRegion clipRegion = QRegion(pms->pixmap[idx].createMaskFromColor(Qt::black));
   painter->setClipRegion(clipRegion.translated(x, y));
@@ -1029,13 +1025,9 @@ void FlowDrawQt::set_window_size(DrawWind *wind, int width, int height)
 
 bool FlowDrawQt::draw_timer_cb()
 {
-  FlowDrawQt* draw_ctx = (FlowDrawQt*)timer_cb->ctx->fdraw;
-
-  (timer_cb->callback_func)(timer_cb->ctx);
-
-  draw_ctx->toplevel->update();
-  delete timer_cb->timer_id;
-  delete timer_cb;
+  draw_timer_id->stop();
+  (draw_timer_callback_func)(ctx);
+  toplevel->update();
   return FALSE;
 }
 
@@ -1070,21 +1062,16 @@ void FlowDrawQt::event_timer(FlowCtx* ctx, QMouseEvent* event, QWidget *target)
 void FlowDrawQt::set_timer(FlowCtx* ctx, int time_ms,
     void (*callback_func)(FlowCtx* ctx), void** id)
 {
-  timer_cb = new flow_draw_sTimerCb();
-  timer_cb->ctx = ctx;
-  timer_cb->callback_func = callback_func;
-  timer_cb->timer_id = new QTimer(this);
-
-  initOneShotTimer(timer_cb->timer_id, SLOT(draw_timer_cb()), time_ms);
-
-  *id = (void*)timer_cb;
+  draw_timer_callback_func = callback_func;
+  initOneShotTimer(draw_timer_id, SLOT(draw_timer_cb()), time_ms);
+  *id = (void*)draw_timer_id;
 }
 
-void FlowDrawQt::cancel_timer(void* id)
+void FlowDrawQt::cancel_timer(void* ctx)
 {
-  delete (((flow_draw_sTimerCb*)id)->timer_id);
-
-  delete ((char*)id);
+  if (draw_timer_id) {
+    draw_timer_id->stop();
+  }
 }
 
 void FlowDrawQt::set_cursor(DrawWind *wind, draw_eCursor cursor)

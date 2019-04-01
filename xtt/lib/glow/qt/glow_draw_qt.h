@@ -69,12 +69,6 @@ public:
   QPixmap* background_pixmap = NULL;
 };
 
-typedef struct {
-  GlowCtx* ctx;
-  void (*callback_func)(GlowCtx* ctx);
-  QTimer* timer_id;
-} glow_draw_sTimerCb;
-
 class GlowCustomColorsQt;
 
 class GlowDrawQt : private QObject, public GlowDraw {
@@ -196,7 +190,8 @@ private:
   void event_timer(QMouseEvent *event, QWidget *target);
   void cancel_event_timer();
 
-  glow_draw_sTimerCb* timer_cb;
+  void (*draw_timer_callback_func)(GlowCtx* ctx);
+  QTimer* draw_timer_id;
 
 public slots:
   bool event_timer_cb();

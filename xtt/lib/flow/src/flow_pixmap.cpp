@@ -107,7 +107,7 @@ void FlowPixmap::draw(void* pos, int highlight, int dimmed, int hot, void* node)
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   ctx->fdraw->pixmap(p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, &pixmap_data, pixmaps,
-      flow_eDrawType_LineErase, idx);
+      draw_type, flow_eDrawType_LineErase, idx);
 }
 
 void FlowPixmap::draw_inverse(void* pos, int hot, void* node)
@@ -119,7 +119,7 @@ void FlowPixmap::draw_inverse(void* pos, int hot, void* node)
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   ctx->fdraw->pixmap(p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x,
       p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y, &pixmap_data, pixmaps,
-      flow_eDrawType_Line, idx);
+      flow_eDrawType_LineErase, draw_type, idx);
 }
 
 void FlowPixmap::erase(void* pos, int hot, void* node)
@@ -144,7 +144,7 @@ void FlowPixmap::nav_draw(void* pos, int highlight, void* node)
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
   ctx->fdraw->pixmap(p.nav_z_x + ((FlowPoint*)pos)->nav_z_x - ctx->nav_offset_x,
       p.nav_z_y + ((FlowPoint*)pos)->nav_z_y - ctx->nav_offset_y, &pixmap_data,
-      pixmaps, draw_type, idx);
+      pixmaps, draw_type, flow_eDrawType_LineErase, idx);
 }
 
 void FlowPixmap::nav_erase(void* pos, void* node)

@@ -153,9 +153,7 @@ void GlowPolyLine::open(std::ifstream& fp)
 void GlowPolyLine::get_borders(double pos_x, double pos_y, double* x_right,
     double* x_left, double* y_high, double* y_low, void* node)
 {
-  int i;
-
-  for (i = 0; i < a_points.a_size - 1; i++) {
+  for (int i = 0; i < a_points.a_size - 1; i++) {
     if (pos_x + ((GlowPoint*)a_points[i])->x < *x_left)
       *x_left = pos_x + ((GlowPoint*)a_points[i])->x;
     if (pos_x + ((GlowPoint*)a_points[i + 1])->x < *x_left)
@@ -178,19 +176,16 @@ void GlowPolyLine::get_borders(double pos_x, double pos_y, double* x_right,
 void GlowPolyLine::add_points(
     void* pos, glow_sPoint* pointarray, int point_cnt, int highlight, int hot)
 {
-  int i;
-
   if (points) {
-    // erase( pos, hot, NULL);
-    // nav_erase( pos, NULL);
     free((char*)points);
   }
   points = (glow_sPointX*)calloc(
       a_points.a_size + point_cnt, sizeof(glow_sPointX));
-  for (i = 0; i < point_cnt; i++) {
+  for (int i = 0; i < point_cnt; i++) {
     GlowPoint* p = new GlowPoint(ctx, pointarray[i].x, pointarray[i].y);
     a_points.insert(p);
   }
   zoom();
   nav_zoom();
+  ctx->set_dirty();
 }

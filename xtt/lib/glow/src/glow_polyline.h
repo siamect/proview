@@ -64,14 +64,17 @@ public:
   void set_fill(int fillval)
   {
     fill = fillval;
+    ctx->set_dirty();
   }
   void set_drawtype(glow_eDrawType drawtype)
   {
     draw_type = drawtype;
+    ctx->set_dirty();
   }
   void set_linewidth(int linewidth)
   {
     line_width = linewidth;
+    ctx->set_dirty();
   }
   void add_points(void* pos, glow_sPoint* pointarray, int point_cnt,
       int highlight, int hot);
