@@ -38,7 +38,7 @@
 !  This module contains the defintion of the error messages used
 !  in ccm modules.
 !
-.facility       NAV,106 /prefix = NAV__	
+.facility       NAV,109 /prefix = NAV__	
 
 success		<successful completion>					/succ
 nofile		<unable to open file>					/error
