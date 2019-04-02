@@ -122,7 +122,7 @@ int io_connect_status(pwr_sAttrRef* sig_aref, pwr_sAttrRef* chan_aref)
   char* s;
   int found;
 
-  if (chan_aref->Offset == 0 || sig_aref->Offset == 0)
+  if (sig_aref->Offset == 0)
     return 0;
 
   /* Find content of IoConnect attribute in the signal object */
