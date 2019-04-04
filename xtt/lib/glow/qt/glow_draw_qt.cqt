@@ -280,8 +280,6 @@ GlowDrawQt::GlowDrawQt(QWidget* toplevel, void** glow_ctx,
   assert(dynamic_cast<QtScrollWidgetGlow*>(toplevel) != NULL);
   m_wind.window = dynamic_cast<QtScrollWidgetGlow*>(toplevel);
   m_wind.buffer = &(dynamic_cast<QtScrollWidgetGlow*>(toplevel)->image);
-  m_wind.clip_cnt = 0;
-  m_wind.clip_on = 0;
 
   ctx->mw = &m_wind;
   ctx->navw = &nav_wind;

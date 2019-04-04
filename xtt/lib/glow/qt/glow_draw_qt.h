@@ -60,7 +60,12 @@ class DrawWindQt : public DrawWind {
 public:
   DrawWindQt()
   {
+    zoom_factor_x = zoom_factor_y = base_zoom_factor = 100;
+    offset_x = offset_y = 0;
+    window_width = window_height = 0;
+    subwindow_x = subwindow_y = 0;
     subwindow_scale = 1;
+    clip_cnt = clip_on = 0;
     memset(clip_rectangle, 0, sizeof(clip_rectangle));
   }
 

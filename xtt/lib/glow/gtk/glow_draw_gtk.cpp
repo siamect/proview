@@ -597,8 +597,6 @@ GlowDrawGtk::GlowDrawGtk(GtkWidget* toplevel, void** glow_ctx,
   display = gtk_widget_get_display(toplevel);
   m_wind.window = toplevel->window;
   screen = gtk_widget_get_screen(toplevel);
-  m_wind.clip_cnt = 0;
-  m_wind.clip_on = 0;
 
   ctx->mw = &m_wind;
   ctx->navw = &nav_wind;
