@@ -151,5 +151,10 @@ SObject pwrb:Class
         Attr graphname = "WINDOW"
       EndBody
     EndObject
+    Object PostCopy $DbCallBack
+      Body SysBody
+        Attr MethodName = "WindowPlc-PostCopy"
+      EndBody
+    EndObject
   EndObject
 EndSObject

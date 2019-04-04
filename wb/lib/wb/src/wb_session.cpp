@@ -207,7 +207,9 @@ wb_object wb_session::copyObject(wb_object o, wb_destination d, wb_name name)
   ldh_sEvent* ep = m_srep->eventStart(onew.oid(), ldh_eEvent_ObjectCreated);
   m_srep->eventNewFamily(ep, onew);
   triggPostCreate(onew);
+  triggPostCopy(onew, o);
   triggPostAdopt(parent, onew);
+
   m_srep->eventSend(ep);
 
   return onew;
@@ -493,7 +495,21 @@ bool wb_session::copyOset(pwr_sAttrRef* arp, bool keepref, bool keepsym,
   if (vmem)
     *vmem = mem;
 
+  m_vrep->set_object_import_cb(import_cb, (void *)this);
   return mem->importTree(keepref, keepsym);
+}
+
+void wb_session::import_cb(wb_orep *o, wb_orep *os, void *data)
+{
+  wb_session *ses = (wb_session *)data;
+  wb_object object = wb_object(o);
+  wb_object source;
+  if (os)
+    source = wb_object(os);
+  else
+    source = wb_object();
+
+  ses->triggPostCopy(object, source);
 }
 
 bool wb_session::cutOset(pwr_sAttrRef* arp, bool keepref)
@@ -610,6 +626,7 @@ bool wb_session::pasteOset(
   if (recycleix)
     recix = m_srep->recix();
   pwr_tOid* olist;
+  m_vrep->set_object_import_cb(import_cb, (void *)this);
   mem->exportPaste(*m_vrep, doid, dest, keepoid, recix, &olist);
   m_srep->update();
   if (recycleix)

@@ -993,3 +993,21 @@ pwr_tStatus pndevice_init(device_sCtx* ctx)
   }
   return 1;
 }
+
+pwr_tStatus pndevice_postcopy(
+    ldh_tSesContext Session, pwr_tOid Object, pwr_tOid Source, pwr_tCid Class)
+{
+  pwr_tCmd cmd;
+  char soidstr[40];
+
+  if (cdh_ObjidIsNotNull(Source)) {
+    printf("-- Create $pwrp_load/pwr_pn_%s.xml\n", cdh_ObjidToFnString(0, Object));
+    strcpy( soidstr, cdh_ObjidToFnString(0, Source));
+    sprintf(cmd, "cp $pwrp_load/pwr_pn_%s.xml $pwrp_load/pwr_pn_%s.xml", 
+	    soidstr, cdh_ObjidToFnString(0, Object));
+    system(cmd);
+  }
+
+  return PWRB__SUCCESS;
+}
+

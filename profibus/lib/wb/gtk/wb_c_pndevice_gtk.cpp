@@ -263,6 +263,12 @@ static pwr_tStatus SetIoDeviceData(
   return sts;
 }
 
+static pwr_tStatus PostCopy(
+    ldh_tSesContext Session, pwr_tOid Object, pwr_tOid Source, pwr_tCid Class)
+{
+  return pndevice_postcopy(Session, Object, Source, Class);
+}
+
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/
@@ -271,4 +277,5 @@ pwr_dExport pwr_BindMethods(PnDevice)
     = { pwr_BindMethod(Configure), pwr_BindMethod(ConfigureFilter),
         pwr_BindMethod(CopyDevice), pwr_BindMethod(CopyDeviceFilter),
         pwr_BindMethod(SyntaxCheck), pwr_BindMethod(GetIoDeviceData),
-        pwr_BindMethod(SetIoDeviceData), pwr_NullMethod };
+        pwr_BindMethod(SetIoDeviceData), pwr_BindMethod(PostCopy), 
+	pwr_NullMethod };

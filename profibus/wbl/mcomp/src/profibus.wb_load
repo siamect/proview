@@ -1,6 +1,6 @@
 Volume Profibus $ClassVolume 0.0.250.7 
   Body SysBody 05-SEP-2005 17:51:40.00
-    Attr NextOix = "_X262"
+    Attr NextOix = "_X263"
     Attr NextCix = "_X22"
     Attr NextTix[0] = "_X14"
   EndBody
@@ -3840,6 +3840,11 @@ Volume Profibus $ClassVolume 0.0.250.7
       Object PostCreate $DbCallBack 179 05-OCT-2010 16:27:03.21
         Body SysBody 05-OCT-2010 16:27:09.73
           Attr MethodName = "BaseIORack-PostCreate"
+        EndBody
+      EndObject
+      Object PostCopy $DbCallBack 263 03-APR-2019 15:28:20.40
+        Body SysBody 03-APR-2019 15:28:39.62
+          Attr MethodName = "PnDevice-PostCopy"
         EndBody
       EndObject
       Object Template PnDevice 2151907328 01-JAN-1970 01:00:00.00

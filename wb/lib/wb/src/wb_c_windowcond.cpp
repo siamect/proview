@@ -34,33 +34,42 @@
  * General Public License plus this exception.
  */
 
-#ifndef wb_c_pndevice_h
-#define wb_c_pndevice_h
+/* wb_c_windowcond.cpp -- work bench methods of the WindowCond class. */
 
-#include "wb_ldh.h"
+#include "pwr_baseclasses.h"
+#include "wb_pwrs.h"
+#include "wb_pwrb_msg.h"
 
-#include "cow_pn_gsdml_attr.h"
+static pwr_tStatus PostCopy(
+    ldh_tSesContext Session, pwr_tOid Object, pwr_tOid Father, pwr_tCid Class)
+{
+  pwr_tStatus sts;
+  pwr_tTime time = pwr_cNTime;
+  pwr_tUInt32 version = 0;
 
-/* wb_c_pndevice.h -- Profinet gsdml configure method */
+  // Reset time for modified and compile
+  sts = ldh_SetObjectPar(
+        Session, Object, "RtBody", "Version", (char*)&version, sizeof(version));
+  if (EVEN(sts))
+    return sts;
 
-typedef struct {
-  pn_gsdml* gsdml;
-  GsdmlAttr* attr;
-  ldh_tSession ldhses;
-  pwr_tAttrRef aref;
-  gsdml_sModuleClass* mc;
-  void* editor_ctx;
-  int edit_mode;
-} device_sCtx;
+  sts = ldh_SetObjectPar(
+        Session, Object, "DevBody", "Modified", (char*)&time, sizeof(time));
+  if (EVEN(sts))
+    return sts;
 
-pwr_tStatus pndevice_create_ctx(ldh_tSession ldhses, pwr_tAttrRef aref,
-    void* editor_ctx, device_sCtx** ctxp);
-pwr_tStatus pndevice_init(device_sCtx* ctx);
-int pndevice_help_cb(void* sctx, const char* text);
-void pndevice_close_cb(void* sctx);
-int pndevice_save_cb(void* sctx);
-pwr_tStatus pndevice_postcopy( ldh_tSesContext Session, pwr_tOid Object, 
-    pwr_tOid Source, pwr_tCid Class);
+  sts = ldh_SetObjectPar(
+        Session, Object, "DevBody", "Compiled", (char*)&time, sizeof(time));
+  if (EVEN(sts))
+    return sts;
+
+  return PWRB__SUCCESS;
+}
 
 
-#endif
+/*----------------------------------------------------------------------------*\
+  Every method to be exported to the workbench should be registred here.
+\*----------------------------------------------------------------------------*/
+
+pwr_dExport pwr_BindMethods(WindowCond) = { pwr_BindMethod(PostCopy),
+  pwr_NullMethod };
