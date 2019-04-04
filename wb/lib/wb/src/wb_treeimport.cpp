@@ -38,6 +38,7 @@
 #include "wb_bdrep.h"
 #include "wb_cdrep.h"
 #include "wb_merep.h"
+#include "wb_volume.h"
 
 wb_treeimport::~wb_treeimport()
 {
@@ -107,6 +108,18 @@ bool wb_treeimport::importUpdateTree(wb_vrep* vrep)
 
     o->ref();
     importUpdateObject(o, vrep);
+    if (m_object_import_cb) {
+      oid.oix = it->first;
+      oid.vid = vrep->vid();
+      wb_orep* os = vrep->object(&sts, oid);
+      if (ODD(sts))
+	os->ref();
+      else
+	os = 0;
+      (m_object_import_cb)(o, os, m_object_import_cb_data);
+      if (os)
+	os->unref();
+    }
     o->unref();
   }
   return true;

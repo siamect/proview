@@ -65,6 +65,7 @@ static pwr_tString32 callBackName[] = {
   "AnteUpdate", // ldh_eDbCallBack_AnteUpdate
   "PostUpdate", // ldh_eDbCallBack_PostUpdate
   "SyntaxCheck", // ldh_eDbCallBack_SyntaxCheck
+  "PostCopy", // ldh_eDbCallBack_PostCopy
   "-" // ldh_eDbCallBack_
 };
 

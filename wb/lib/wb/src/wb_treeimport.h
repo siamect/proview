@@ -52,6 +52,8 @@ class wb_treeimport {
   std::map<pwr_tOix, pwr_tOix> m_translation_table;
   std::map<pwr_tCid, pwr_tCid> m_translation_table_cid;
   pwr_tVid m_import_source_vid;
+  void (*m_object_import_cb)(wb_orep *, wb_orep *, void *);
+  void *m_object_import_cb_data;
 
   typedef std::map<pwr_tOix, pwr_tOix>::iterator iterator_translation_table;
   typedef std::map<pwr_tCid, pwr_tCid>::iterator iterator_translation_table_cid;
@@ -61,6 +63,7 @@ class wb_treeimport {
   bool importUpdateObject(wb_orep* o, wb_vrep* vrep);
 
 public:
+  wb_treeimport() : m_object_import_cb(0) {}
   virtual ~wb_treeimport();
   virtual bool importTree(bool keepref, bool keepsym) = 0;
   virtual bool importTreeObject(wb_merep* merep, pwr_tOid oid, pwr_tCid cid,
@@ -81,6 +84,10 @@ public:
   pwr_tCid importTranslateCid(pwr_tCid cid);
   void importSetSourceVid(pwr_tVid vid);
   bool importUpdateTree(wb_vrep* vrep);
+  void set_object_import_cb(void (*object_import_cb)(wb_orep *, wb_orep *, void *), void *data) {
+    m_object_import_cb = object_import_cb;
+    m_object_import_cb_data = data;
+  }
 };
 
 #endif

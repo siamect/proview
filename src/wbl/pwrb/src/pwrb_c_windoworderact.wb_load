@@ -143,5 +143,10 @@ SObject pwrb:Class
         Attr graphname = "Activity"
       EndBody
     EndObject
+    Object PostCopy $DbCallBack
+      Body SysBody
+        Attr MethodName = "WindowOrderact-PostCopy"
+      EndBody
+    EndObject
   EndObject
 EndSObject

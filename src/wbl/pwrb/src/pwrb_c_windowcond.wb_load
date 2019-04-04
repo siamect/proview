@@ -139,5 +139,10 @@ SObject pwrb:Class
         Attr graphname = "Condition"
       EndBody
     EndObject
+    Object PostCopy $DbCallBack
+      Body SysBody
+        Attr MethodName = "WindowCond-PostCopy"
+      EndBody
+    EndObject
   EndObject
 EndSObject

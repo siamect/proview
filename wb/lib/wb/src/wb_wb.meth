@@ -42,3 +42,7 @@ FriendNodeConfig
 SevHistThread
 SevHistObject
 AppGraph
+WindowCond
+WindowOrderact
+WindowPlc
+WindowSubstep

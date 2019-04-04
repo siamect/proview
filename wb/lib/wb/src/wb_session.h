@@ -139,6 +139,7 @@ public:
   {
     m_srep->recix_set_destination(d);
   }
+  static void import_cb(wb_orep *o, wb_orep *os, void *data);
 };
 
 inline bool wb_session::isEmpty()

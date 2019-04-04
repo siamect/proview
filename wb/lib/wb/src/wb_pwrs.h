@@ -106,5 +106,7 @@ typedef pwr_tStatus (*wb_tMethodGetIoDeviceData)(
     pwr_tAttrRef, const char*, char*, int);
 typedef pwr_tStatus (*wb_tMethodSetIoDeviceData)(
     pwr_tAttrRef, const char*, const char*);
+typedef pwr_tStatus (*wb_tMethodPostCopy)(
+    ldh_tSesContext, pwr_tOid, pwr_tOid, pwr_tCid);
 
 #endif

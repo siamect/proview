@@ -903,6 +903,36 @@ pwr_tStatus wb_volume::triggPostRename(wb_object& o)
   return sts;
 }
 
+pwr_tStatus wb_volume::triggPostCopy(wb_object& o, wb_object& so)
+{
+  pwr_tStatus sts;
+  char* methodName;
+  wb_tMethod method;
+
+  // Call object method, or inherited method
+  for (wb_cdef cd = cdef(o.cid()); cd; cd = cd.super()) {
+    wb_cdrep* cdrep = cd;
+
+    cdrep->dbCallBack(&sts, ldh_eDbCallBack_PostCopy, &methodName, 0);
+
+    if (ODD(sts)) {
+      m_vrep->erep()->method(&sts, methodName, &method);
+      if (EVEN(sts))
+        return LDH__SUCCESS;
+
+      if (so) {
+        sts = ((wb_tMethodPostCopy)(method))(
+            (ldh_tSesContext)this, o.oid(), so.oid(), so.cid());
+      } else
+        sts = ((wb_tMethodPostCopy)(method))(
+            (ldh_tSesContext)this, o.oid(), pwr_cNObjid, pwr_cNClassId);
+      return sts;
+    }
+  }
+
+  return LDH__SUCCESS;
+}
+
 ldh_sRefInfo* wb_volume::refinfo(wb_object o, ldh_sRefInfo* rp)
 {
   int rows;

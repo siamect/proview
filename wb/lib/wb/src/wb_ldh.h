@@ -204,6 +204,7 @@ typedef enum {
   ldh_eDbCallBack_AnteUpdate,
   ldh_eDbCallBack_PostUpdate,
   ldh_eDbCallBack_SyntaxCheck,
+  ldh_eDbCallBack_PostCopy,
   ldh_eDbCallBack_
 } ldh_eDbCallBack;
 

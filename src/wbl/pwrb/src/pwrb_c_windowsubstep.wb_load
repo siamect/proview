@@ -140,5 +140,10 @@ SObject pwrb:Class
         Attr graphname = "Substep"
       EndBody
     EndObject
+    Object PostCopy $DbCallBack
+      Body SysBody
+        Attr MethodName = "WindowSubstep-PostCopy"
+      EndBody
+    EndObject
   EndObject
 EndSObject
