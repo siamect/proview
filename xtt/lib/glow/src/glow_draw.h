@@ -81,7 +81,7 @@ public:
   virtual void set_window_size(DrawWind* w, int width, int height) = 0;
 
   virtual int begin(DrawWind* wind) = 0;
-  virtual void end() = 0;
+  virtual void end(bool flush = true) = 0;
 
   virtual void rect(int x, int y, int width, int height, glow_eDrawType gc_type,
       int fill, int idx, int highlight = 0) = 0;

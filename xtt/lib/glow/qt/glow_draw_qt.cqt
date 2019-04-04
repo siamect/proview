@@ -877,7 +877,7 @@ int GlowDrawQt::begin(DrawWind *w) {
   return 0;
 }
 
-void GlowDrawQt::end() {
+void GlowDrawQt::end(bool flush) {
   this->w = NULL;
 }
 

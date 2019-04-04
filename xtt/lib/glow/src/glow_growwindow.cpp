@@ -323,7 +323,11 @@ void GrowWindow::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       ctx->gdraw->rect(
           ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fill_drawtype, 1, 0);
 
+    ctx->gdraw->end(false);
+    ctx->gdraw->begin(window_ctx->mw);
     window_ctx->draw(window_ctx->mw, ll_x, ll_y, ur_x, ur_y);
+    ctx->gdraw->end(false);
+    ctx->gdraw->begin(w);
     ctx->gdraw->pop_customcolors();
   }
 

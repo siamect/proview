@@ -1216,12 +1216,14 @@ int GlowDrawGtk::begin(DrawWind *w) {
   return 0;
 }
 
-void GlowDrawGtk::end() {
-  int width, height;
-  gdk_drawable_get_size(w->buffer, &width, &height);
+void GlowDrawGtk::end(bool flush) {
+  if (flush) {
+    int width, height;
+    gdk_drawable_get_size(w->buffer, &width, &height);
 
-  gdk_draw_drawable(w->window, get_gc(this, glow_eDrawType_Line, 0), w->buffer,
-      0, 0, 0, 0, width, height);
+    gdk_draw_drawable(w->window, get_gc(this, glow_eDrawType_Line, 0), w->buffer,
+        0, 0, 0, 0, width, height);
+  }
   this->w = NULL;
 }
 

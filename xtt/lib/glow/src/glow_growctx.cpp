@@ -168,11 +168,10 @@ void GrowCtx::set_mode(grow_eMode grow_mode)
 int GrowCtx::subw_event_handler(glow_eEvent event, int x, int y, int w, int h)
 {
   int i;
-  double fx, fy;
   int sts;
 
-  fx = double(x + mw->offset_x) / mw->zoom_factor_x;
-  fy = double(y + mw->offset_y) / mw->zoom_factor_y;
+  double fx = double(x + mw->offset_x) / mw->zoom_factor_x;
+  double fy = double(y + mw->offset_y) / mw->zoom_factor_y;
 
   if (has_subwindows == -1) {
     // Initialize
@@ -258,14 +257,10 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 {
   int sts = 0;
   int i;
-  GlowCtx* ctx;
   int node_move_event = 0;
-  double fx, fy;
 
-  ctx = this;
-
-  fx = double(x + ctx->mw->offset_x) / ctx->mw->zoom_factor_x;
-  fy = double(y + ctx->mw->offset_y) / ctx->mw->zoom_factor_y;
+  double fx = double(x + mw->offset_x) / mw->zoom_factor_x;
+  double fy = double(y + mw->offset_y) / mw->zoom_factor_y;
 
   callback_object_type = glow_eObjectType_NoObject;
   callback_object = 0;
@@ -1555,13 +1550,13 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     } else if (select_rect_active && edit_mode != grow_eMode_Scale) {
       glow_eSelectPolicy policy;
 
-      if (ctx->select_policy == glow_eSelectPolicy_Both) {
+      if (select_policy == glow_eSelectPolicy_Both) {
         if (x < select_rect_start_x)
           policy = glow_eSelectPolicy_Partial;
         else
           policy = glow_eSelectPolicy_Surround;
       } else
-        policy = ctx->select_policy;
+        policy = select_policy;
 
       select_rect_active = 0;
       select_rect_last_x = x;
@@ -1745,12 +1740,11 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     cursor_present = 0;
     if (node_movement_active || con_create_active || select_rect_active
         || node_movement_paste_active) {
-      if (x < 0 || x > ctx->mw->window_width || y < 0 || y > mw->window_height) {
+      if (x < 0 || x > mw->window_width || y < 0 || y > mw->window_height) {
         /* Start auto scrolling */
         auto_scrolling(this);
       }
-    } else if (x < 0 || x > ctx->mw->window_width || y < 0
-        || y > mw->window_height)
+    } else if (x < 0 || x > mw->window_width || y < 0 || y > mw->window_height)
       a.set_hot(0);
     tiptext->remove();
     break;

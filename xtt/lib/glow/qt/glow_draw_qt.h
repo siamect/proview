@@ -110,7 +110,7 @@ public:
   void clear();
 
   int begin(DrawWind *w);
-  void end();
+  void end(bool flush = true);
 
   void get_window_size(DrawWind* w, int* width, int* height);
   void set_window_size(DrawWind* w, int width, int height);
