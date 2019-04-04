@@ -112,6 +112,7 @@ public:
   int closing_down;
   GlowCustomColorsGtk* customcolors[CUSTOMCOLORS_STACK_SIZE];
   int customcolors_cnt;
+  guint redraw_timer;
 
   void event_handler(GdkEvent event);
   void enable_event(glow_eEvent event, glow_eEventType event_type,

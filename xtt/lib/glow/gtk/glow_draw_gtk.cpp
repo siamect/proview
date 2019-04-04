@@ -172,6 +172,7 @@ static GdkColor glow_allocate_custom_color(GlowDrawGtk* draw_ctx,
 static void event_timer(GlowDrawGtk* ctx, int time_ms);
 static void cancel_event_timer(GlowDrawGtk* ctx);
 static gboolean event_timer_cb(void* ctx);
+static gboolean redraw_timer_cb(void* ctx);
 static int glow_read_color_file(
     const char* filename, draw_sColor** color_array, int* size);
 
@@ -532,6 +533,9 @@ GlowDrawGtk::~GlowDrawGtk()
 {
   closing_down = 1;
 
+  if (redraw_timer)
+    g_source_remove(redraw_timer);
+
   ctx->set_nodraw();
   if (ctx->type() == glow_eCtxType_Grow)
     delete (GrowCtx*)ctx;
@@ -620,6 +624,8 @@ GlowDrawGtk::GlowDrawGtk(GtkWidget* toplevel, void** glow_ctx,
   get_window_size(ctx->mw, &ctx->mw->window_width, &ctx->mw->window_height);
   create_buffer(&m_wind);
   init_proc(toplevel, ctx, client_data);
+
+  redraw_timer = g_timeout_add(40, redraw_timer_cb, this);
 }
 
 void GlowDrawGtk::event_handler(GdkEvent event)
@@ -1633,6 +1639,12 @@ static void cancel_event_timer(GlowDrawGtk* draw_ctx)
 static void event_timer(GlowDrawGtk* draw_ctx, int time_ms)
 {
   draw_ctx->timer_id = g_timeout_add(time_ms, event_timer_cb, draw_ctx);
+}
+
+static gboolean redraw_timer_cb(void* data) {
+  GlowDrawGtk* draw_ctx = (GlowDrawGtk*)data;
+  draw_ctx->ctx->redraw_if_dirty();
+  return TRUE;
 }
 
 void GlowDrawGtk::set_timer(
