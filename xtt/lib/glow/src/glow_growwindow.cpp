@@ -582,6 +582,9 @@ int GrowWindow::event_handler(glow_eEvent event, int x, int y, double fx, double
   int sts, v_sts, h_sts;
 
   switch (event) {
+  case glow_eEvent_Exposure:
+    window_ctx->mw->update_buffer(ctx->mw);
+    return 1;
   case glow_eEvent_Key_Right:
   case glow_eEvent_Key_Left:
   case glow_eEvent_Key_Up:
@@ -916,8 +919,8 @@ void GrowWindow::new_ctx()
       = new GrowCtx("WindowComponent", ctx->mw->zoom_factor_x * window_scale);
   window_ctx->gdraw = ctx->gdraw;
   window_ctx->is_subwindow = 1;
-  window_ctx->mw = ctx->mw;
-  window_ctx->navw = ctx->navw;
+  window_ctx->mw = ctx->mw->copy();
+  window_ctx->navw = ctx->navw->copy();
   window_ctx->userdata_save_callback = ctx->userdata_save_callback;
   window_ctx->userdata_open_callback = ctx->userdata_open_callback;
   window_ctx->userdata_copy_callback = ctx->userdata_copy_callback;

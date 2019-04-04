@@ -60,6 +60,9 @@ public:
   double subwindow_scale; //!< Subwindow scale.
   int clip_on = 0;
   int clip_cnt = 0;
+
+  virtual DrawWind* copy() = 0;
+  virtual void update_buffer(DrawWind* w) {}
 };
 
 class GlowDraw {

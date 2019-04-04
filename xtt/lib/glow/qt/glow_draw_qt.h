@@ -60,6 +60,7 @@ class DrawWindQt : public DrawWind {
 public:
   DrawWindQt()
   {
+    subwindow_scale = 1;
     memset(clip_rectangle, 0, sizeof(clip_rectangle));
   }
 
@@ -67,6 +68,17 @@ public:
   QImage* buffer = NULL;
   QRect clip_rectangle[DRAW_CLIP_SIZE];
   QPixmap* background_pixmap = NULL;
+
+  DrawWind* copy() {
+    DrawWindQt* tmp = new DrawWindQt();
+    tmp->clip_on = this->clip_on;
+    tmp->clip_cnt = this->clip_cnt;
+    tmp->window = this->window;
+    tmp->buffer = this->buffer;
+    memcpy(tmp->clip_rectangle, this->clip_rectangle, sizeof(this->clip_rectangle));
+    tmp->background_pixmap = this->background_pixmap;
+    return tmp;
+  }
 };
 
 class GlowCustomColorsQt;

@@ -54,12 +54,28 @@ class DrawWindGtk : public DrawWind {
 public:
   DrawWindGtk()
   {
+    subwindow_scale = 1;
     memset(clip_rectangle, 0, sizeof(clip_rectangle));
   }
   GdkWindow* window = NULL;
   GdkPixmap* buffer = NULL;
   GdkRectangle clip_rectangle[DRAW_CLIP_SIZE];
   GdkPixmap* background_pixmap = NULL;
+
+  DrawWind* copy() {
+    DrawWindGtk* tmp = new DrawWindGtk();
+    tmp->clip_on = this->clip_on;
+    tmp->clip_cnt = this->clip_cnt;
+    tmp->window = this->window;
+    tmp->buffer = this->buffer;
+    memcpy(tmp->clip_rectangle, this->clip_rectangle, sizeof(this->clip_rectangle));
+    tmp->background_pixmap = this->background_pixmap;
+    return tmp;
+  }
+
+  virtual void update_buffer(DrawWind* w) {
+    this->buffer = ((DrawWindGtk*)w)->buffer;
+  }
 };
 
 class GlowDrawGtk : public GlowDraw {

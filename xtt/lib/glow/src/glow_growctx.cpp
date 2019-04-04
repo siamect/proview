@@ -195,9 +195,12 @@ int GrowCtx::subw_event_handler(glow_eEvent event, int x, int y, int w, int h)
         || a[i]->type() == glow_eObjectType_GrowFolder
         || a[i]->type() == glow_eObjectType_GrowTable) {
       switch (event) {
+      case glow_eEvent_Exposure:
+        if (a[i]->type() == glow_eObjectType_GrowWindow)
+          a[i]->event_handler(event, 0, 0, 0, 0);
+        break;
       case glow_eEvent_Leave:
       case glow_eEvent_Enter:
-      case glow_eEvent_Exposure:
       case glow_eEvent_VisibilityUnobscured:
       case glow_eEvent_VisibilityObscured:
         break;
