@@ -183,7 +183,7 @@ SObject pwrb:Class
       EndObject
       !/**
       !  Disable post.
-      !  When Disable is 0, no events are posted.
+      !  When Disable is 1, no events are posted.
       !*/
       Object Disable $Attribute 8
         Body SysBody
