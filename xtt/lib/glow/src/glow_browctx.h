@@ -43,9 +43,8 @@
 
 class BrowCtx : public GlowCtx {
 public:
-  BrowCtx(const char* ctx_name, double zoom_fact = 100)
-      : GlowCtx(ctx_name, zoom_fact), indentation(0.8), frame_x_right(0),
-        annotation_space(0.3)
+  BrowCtx(const char* ctx_name) : GlowCtx(ctx_name), indentation(0.8),
+      frame_x_right(0), annotation_space(0.3)
   {
     ctx_type = glow_eCtxType_Brow;
   }

@@ -41,8 +41,7 @@
 
 class CurveCtx : public GrowCtx {
 public:
-  CurveCtx(const char* ctx_name, double zoom_fact = 100)
-      : GrowCtx(ctx_name, zoom_fact), layout_adjusted(0)
+  CurveCtx(const char* ctx_name) : GrowCtx(ctx_name), layout_adjusted(0)
   {
     ctx_type = glow_eCtxType_Curve;
   }

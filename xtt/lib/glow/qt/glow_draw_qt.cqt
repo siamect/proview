@@ -259,17 +259,17 @@ GlowDrawQt::GlowDrawQt(QWidget* toplevel, void** glow_ctx,
   memset(customcolors, 0, sizeof(customcolors));
 
   if (type == glow_eCtxType_Brow) {
-    ctx = (GlowCtx*)new BrowCtx("Claes context", 20);
+    ctx = (GlowCtx*)new BrowCtx("Claes context");
   } else if (type == glow_eCtxType_Grow) {
-    ctx = (GlowCtx*)new GrowCtx("Claes context", 20);
+    ctx = (GlowCtx*)new GrowCtx("Claes context");
   } else if (type == glow_eCtxType_ColPal) {
-    ctx = (GlowCtx*)new ColPalCtx("Claes context", 20);
+    ctx = (GlowCtx*)new ColPalCtx("Claes context");
   } else if (type == glow_eCtxType_Keyboard) {
-    ctx = (GlowCtx*)new KeyboardCtx("Claes context", 20);
+    ctx = (GlowCtx*)new KeyboardCtx("Claes context");
   } else if (type == glow_eCtxType_Curve) {
-    ctx = (GlowCtx*)new CurveCtx("Claes context", 20);
+    ctx = (GlowCtx*)new CurveCtx("Claes context");
   } else {
-    ctx = new GlowCtx("Claes context", 20);
+    ctx = new GlowCtx("Claes context");
   }
   *glow_ctx = (void*)ctx;
 

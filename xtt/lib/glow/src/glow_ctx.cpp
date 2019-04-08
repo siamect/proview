@@ -61,7 +61,7 @@ CtxComment::CtxComment()
   memset(text, 0, sizeof(text));
 }
 
-GlowCtx::GlowCtx(const char* ctx_name, double zoom_fact, int offs_x, int offs_y)
+GlowCtx::GlowCtx(const char* ctx_name, int offs_x, int offs_y)
   : ctx_type(glow_eCtxType_Glow), print_zoom_factor(100), x_right(0),
     x_left(0), y_high(0), y_low(0), nav_rect_ll_x(0), nav_rect_ll_y(0),
     nav_rect_ur_x(0), nav_rect_ur_y(0), gdraw(0), node_movement_active(0),

@@ -90,12 +90,10 @@ public:
   //! Constructor
   /*!
     \param ctx_name	Name of context.
-    \param zoom_fact	Initial zoom factor.
     \param offs_x	Initial offset for x-coordinate.
     \param offs_y	Initial offset for y-coordinate.
   */
-  GlowCtx(const char* ctx_name, double zoom_fact = 100, int offs_x = 0,
-      int offs_y = 0);
+  GlowCtx(const char* ctx_name, int offs_x = 0, int offs_y = 0);
 
   glow_eCtxType ctx_type; //!< Type of context
   DrawWind* mw; //!< Main window data.

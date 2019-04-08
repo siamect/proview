@@ -54,7 +54,7 @@ class DrawWindGtk : public DrawWind {
 public:
   DrawWindGtk()
   {
-    zoom_factor_x = zoom_factor_y = base_zoom_factor = 100;
+    zoom_factor_x = zoom_factor_y = base_zoom_factor = 20;
     offset_x = offset_y = 0;
     window_width = window_height = 0;
     subwindow_x = subwindow_y = 0;

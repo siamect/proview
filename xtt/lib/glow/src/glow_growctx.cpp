@@ -79,27 +79,25 @@ public:
   double rank;
 };
 
-GrowCtx::GrowCtx(const char* ctx_name, double zoom_fact)
-    : GlowCtx(ctx_name, zoom_fact), edit_mode(grow_eMode_Edit),
-      conpoint_num_cnt(0), objectname_cnt(0), polyline_not_first(0),
-      background_color(glow_eDrawType_LineErase), highlight_disabled(0),
-      dynamic(0), dynamicsize(0), arg_cnt(0), x0(0), y0(0), x1(0), y1(0),
-      path_cnt(0), dyn_type1(0), dyn_type2(0), dyn_action_type1(0),
-      dyn_action_type2(0), no_con_obstacle(0), slider(0),
-      slider_cursor_offset(0), move_restriction(glow_eMoveRestriction_No),
-      restriction_max_limit(0), restriction_min_limit(0), restriction_object(0),
-      subgraph(0), modified(0), export_jbean(0), animation_count(1),
-      scantime(0.5), fast_scantime(0.5), animation_scantime(0.5),
-      stored_zoom_factor_x(0), stored_zoom_factor_y(0), java_width(0),
-      enable_bg_pixmap(0), background_tiled(0), scale_active(0),
-      initial_position(glow_eDirection_Up), is_javaapplet(0),
-      is_javaapplication(0), cycle(glow_eCycle_Slow),
-      mb3_action(glow_eMB3Action_PopupMenu), scale_equal(0), translate_on(0),
-      input_focus_mark(glow_eInputFocusMark_Relief), background_disabled(0),
-      redraw_callback(0), redraw_data(0), has_subwindows(-1), is_subwindow(0),
-      bitmap_fonts(0), environment(glow_eEnv_Runtime),
-      text_coding(glow_eTextCoding_ISO8859_1), recursive_trace(0),
-      edit_set_mode(glow_eEditSetMode_None)
+GrowCtx::GrowCtx(const char* ctx_name) : GlowCtx(ctx_name),
+    edit_mode(grow_eMode_Edit), conpoint_num_cnt(0), objectname_cnt(0),
+    polyline_not_first(0), background_color(glow_eDrawType_LineErase),
+    highlight_disabled(0), dynamic(0), dynamicsize(0), arg_cnt(0), x0(0), y0(0),
+    x1(0), y1(0), path_cnt(0), dyn_type1(0), dyn_type2(0), dyn_action_type1(0),
+    dyn_action_type2(0), no_con_obstacle(0), slider(0), slider_cursor_offset(0),
+    move_restriction(glow_eMoveRestriction_No), restriction_max_limit(0),
+    restriction_min_limit(0), restriction_object(0), subgraph(0), modified(0),
+    export_jbean(0), animation_count(1), scantime(0.5), fast_scantime(0.5),
+    animation_scantime(0.5), stored_zoom_factor_x(0), stored_zoom_factor_y(0),
+    java_width(0), enable_bg_pixmap(0), background_tiled(0), scale_active(0),
+    initial_position(glow_eDirection_Up), is_javaapplet(0),
+    is_javaapplication(0), cycle(glow_eCycle_Slow),
+    mb3_action(glow_eMB3Action_PopupMenu), scale_equal(0), translate_on(0),
+    input_focus_mark(glow_eInputFocusMark_Relief), background_disabled(0),
+    redraw_callback(0), redraw_data(0), has_subwindows(-1), is_subwindow(0),
+    bitmap_fonts(0), environment(glow_eEnv_Runtime),
+    text_coding(glow_eTextCoding_ISO8859_1), recursive_trace(0),
+    edit_set_mode(glow_eEditSetMode_None)
 {
   ctx_type = glow_eCtxType_Grow;
   strcpy(name, "");
