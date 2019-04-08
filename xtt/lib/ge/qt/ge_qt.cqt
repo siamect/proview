@@ -1261,8 +1261,8 @@ void GeQtWidget::focusInEvent(QFocusEvent* event)
 
 GeQt::~GeQt()
 {
-  if (subgraphs_widget) {
-    subgraphs_widget->close();
+  if (subgraphs) {
+    delete subgraphs;
   }
   delete subpalette;
   delete recall_entry;
