@@ -59,7 +59,7 @@ public:
     window_width = window_height = 0;
     subwindow_x = subwindow_y = 0;
     subwindow_scale = 1;
-    clip_cnt = clip_on = 0;
+    clip_cnt = 0;
     memset(clip_rectangle, 0, sizeof(clip_rectangle));
   }
   GdkWindow* window = NULL;
@@ -69,7 +69,6 @@ public:
 
   DrawWind* copy() {
     DrawWindGtk* tmp = new DrawWindGtk();
-    tmp->clip_on = this->clip_on;
     tmp->clip_cnt = this->clip_cnt;
     tmp->window = this->window;
     tmp->buffer = this->buffer;

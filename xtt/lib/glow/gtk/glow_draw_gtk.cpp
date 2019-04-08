@@ -563,8 +563,6 @@ void GlowDrawGtk::init_nav(GtkWidget* nav_widget)
 {
   nav_wind.window = nav_widget->window;
   create_buffer(&nav_wind);
-  nav_wind.clip_cnt = 0;
-  nav_wind.clip_on = 0;
 
   gtk_widget_modify_bg(nav_widget, GTK_STATE_NORMAL, &background);
 
@@ -1845,15 +1843,15 @@ void GlowDrawGtk::reset_background(DrawWind* wind)
 
 void GlowDrawGtk::set_clip(GdkGC* gc)
 {
-  if (((DrawWindGtk*)w)->clip_on) {
+  if (w->clip_cnt > 0) {
     gdk_gc_set_clip_rectangle(gc,
-        &((DrawWindGtk*)w)->clip_rectangle[((DrawWindGtk*)w)->clip_cnt - 1]);
+        &((DrawWindGtk*)w)->clip_rectangle[w->clip_cnt - 1]);
   }
 }
 
 void GlowDrawGtk::reset_clip(GdkGC* gc)
 {
-  if (((DrawWindGtk*)w)->clip_on) {
+  if (w->clip_cnt > 0) {
     gdk_gc_set_clip_rectangle(gc, NULL);
   }
 }
@@ -1870,22 +1868,19 @@ int GlowDrawGtk::set_clip_rectangle(
   int x1 = MAX(ll_x, ur_x);
   int y0 = MIN(ll_y, ur_y);
   int y1 = MAX(ll_y, ur_y);
-  if (w->clip_cnt != 0) {
+  if (w->clip_cnt > 0) {
     x0 = MAX(x0, w->clip_rectangle[w->clip_cnt - 1].x);
     x1 = MIN(x1, w->clip_rectangle[w->clip_cnt - 1].x
             + w->clip_rectangle[w->clip_cnt - 1].width);
     y0 = MAX(y0, w->clip_rectangle[w->clip_cnt - 1].y);
     y1 = MIN(y1, w->clip_rectangle[w->clip_cnt - 1].y
             + w->clip_rectangle[w->clip_cnt - 1].height);
-    x0 = (x0 > x1) ? x1 : x0;
-    y0 = (y0 > y1) ? y1 : y0;
   }
   w->clip_rectangle[w->clip_cnt].x = x0;
   w->clip_rectangle[w->clip_cnt].y = y0;
   w->clip_rectangle[w->clip_cnt].width = x1 - x0;
   w->clip_rectangle[w->clip_cnt].height = y1 - y0;
   w->clip_cnt++;
-  w->clip_on = 1;
   return 1;
 }
 
@@ -2371,7 +2366,7 @@ void GlowDrawGtk::image_pixel_iter(glow_tImImage orig_image,
 
 void GlowDrawGtk::set_cairo_clip(cairo_t* cr)
 {
-  if (w->clip_on) {
+  if (w->clip_cnt > 0) {
     cairo_rectangle(cr, w->clip_rectangle[w->clip_cnt - 1].x,
         w->clip_rectangle[w->clip_cnt - 1].y,
         w->clip_rectangle[w->clip_cnt - 1].width,
@@ -2382,7 +2377,7 @@ void GlowDrawGtk::set_cairo_clip(cairo_t* cr)
 
 void GlowDrawGtk::reset_cairo_clip(cairo_t* cr)
 {
-  if (((DrawWindGtk*)w)->clip_on) {
+  if (w->clip_cnt > 0) {
     cairo_reset_clip(cr);
   }
 }
