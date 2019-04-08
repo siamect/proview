@@ -63,6 +63,7 @@
 #include "wb_wnav_selformat.h"
 
 #include <QApplication>
+#include <QCloseEvent>
 #include <QFontDatabase>
 #include <QHBoxLayout>
 #include <QInputDialog>
@@ -1237,7 +1238,7 @@ void GeQt::update()
 void GeQtWidget::closeEvent(QCloseEvent* event)
 {
   ge->Ge::activate_exit();
-  QWidget::closeEvent(event);
+  event->ignore();
 }
 
 void GeQtWidget::focusInEvent(QFocusEvent* event)
@@ -1260,15 +1261,6 @@ void GeQtWidget::focusInEvent(QFocusEvent* event)
 
 GeQt::~GeQt()
 {
-  if (graph->is_modified()) {
-    open_yesnodia("Do you wan't to save changes", "Save", Ge::exit_save_cb,
-        Ge::exit_nosave_cb);
-  }
-
-  if (open_dialog) {
-    wow->DeleteList(open_dialog);
-  }
-
   if (subgraphs_widget) {
     subgraphs_widget->close();
   }
@@ -1288,7 +1280,7 @@ GeQt::~GeQt()
     delete objectnav;
   }
 
-  toplevel->close();
+  delete toplevel;
 
   if (exit_when_close) {
     exit(0);
@@ -1325,7 +1317,6 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
 
   toplevel->setMinimumSize(window_width, window_height);
   toplevel->setWindowTitle(fl(title));
-  toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
   CoWowQt::SetWindowIcon(toplevel);
 
