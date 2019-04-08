@@ -309,12 +309,6 @@ void CoWowQt::PopList(void* data)
   pop(ctx);
 }
 
-void CoWowQt::DeleteList(void* data)
-{
-  CoWowListWidgetQt* ctx = (CoWowListWidgetQt*)data;
-  ctx->close();
-}
-
 void CoWowWarrantQt::reject()
 {
   QDialog::reject();

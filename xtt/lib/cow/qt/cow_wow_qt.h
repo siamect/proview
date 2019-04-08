@@ -196,7 +196,6 @@ public:
       void(action_cb)(void*, char*, int), void(cancel_cb)(void*), void* ctx,
       int show_apply_button = 0);
   void PopList(void* ctx);
-  void DeleteList(void* ctx);
   void CreateFileSelDia(const char* title, void* parent_ctx,
       void (*file_selected_cb)(void*, char*, wow_eFileSelType),
       wow_eFileSelType file_type);
