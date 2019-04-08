@@ -667,7 +667,7 @@ void GlowCtx::redraw_if_dirty()
 
     gdraw->begin(navw);
     gdraw->clear();
-    draw(navw, nav_rect_ll_x, nav_rect_ll_y, nav_rect_ur_x, nav_rect_ur_y);
+    draw(navw, 0, 0, navw->window_width, navw->window_height);
     gdraw->end();
   }
 }
