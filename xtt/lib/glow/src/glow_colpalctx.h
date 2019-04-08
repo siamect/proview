@@ -94,9 +94,6 @@ public:
   //! Adjust the pixel coordinates to the current zoomfactor.
   void zoom(double factor);
 
-  //! Reset to base zoomfactor.
-  void unzoom();
-
   //! Not used.
   void print(char* filename);
 

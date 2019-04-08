@@ -205,7 +205,6 @@ void ColPalCtx::configure()
   }
   get_borders();
   a.zoom();
-  set_dirty();
   change_scrollbar();
   set_colors();
   hot_mode = glow_eHotMode_Disabled;
@@ -255,11 +254,6 @@ void ColPalCtx::zoom(double factor)
   a.zoom();
   nav_zoom();
   change_scrollbar();
-}
-
-void ColPalCtx::unzoom()
-{
-  zoom(mw->base_zoom_factor / mw->zoom_factor_y);
 }
 
 void ColPalCtx::print(char* filename)
@@ -493,7 +487,6 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           }
           callback = 1;
         }
-      } else if (callback_object->type() == glow_eObjectType_GrowText) {
       }
     }
     break;
@@ -695,7 +688,6 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     if (callback_object_type != glow_eObjectType_NoObject)
       e.object.object = callback_object;
     event_callback[event](this, &e);
-    redraw_if_dirty();
   }
 
   redraw_if_dirty();

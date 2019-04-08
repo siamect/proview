@@ -94,9 +94,6 @@ public:
   //! Adjust the pixel coordinates to the current zoomfactor.
   void zoom(double factor);
 
-  //! Reset to base zoomfactor.
-  void unzoom();
-
   //! Event handler
   /*!
     \param event	Current event.

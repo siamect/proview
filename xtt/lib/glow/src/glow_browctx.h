@@ -56,7 +56,6 @@ public:
   void configure();
   void change_scrollbar();
   void zoom(double factor);
-  void unzoom();
   void print(char* filename);
   int get_first(GlowArrayElem** first)
   {

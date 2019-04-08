@@ -135,11 +135,6 @@ void BrowCtx::zoom(double factor)
   change_scrollbar();
 }
 
-void BrowCtx::unzoom()
-{
-  zoom(mw->base_zoom_factor / mw->zoom_factor_y);
-}
-
 void BrowCtx::print(char* filename)
 {
   int i;

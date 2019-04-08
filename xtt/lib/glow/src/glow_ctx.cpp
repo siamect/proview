@@ -177,6 +177,10 @@ int GlowCtx::save(char* filename, glow_eSaveMode mode)
   fp << int(glow_eSave_Ctx_x_left) << FSPACE << x_left << '\n';
   fp << int(glow_eSave_Ctx_y_high) << FSPACE << y_high << '\n';
   fp << int(glow_eSave_Ctx_y_low) << FSPACE << y_low << '\n';
+  fp << int(glow_eSave_Ctx_window_width) << FSPACE << mw->window_width << '\n';
+  fp << int(glow_eSave_Ctx_window_height) << FSPACE << mw->window_height << '\n';
+  fp << int(glow_eSave_Ctx_nav_window_width) << FSPACE << navw->window_width << '\n';
+  fp << int(glow_eSave_Ctx_nav_window_height) << FSPACE << navw->window_height << '\n';
   fp << int(glow_eSave_Ctx_nav_rect_ll_x) << FSPACE << nav_rect_ll_x << '\n';
   fp << int(glow_eSave_Ctx_nav_rect_ll_y) << FSPACE << nav_rect_ll_y << '\n';
   fp << int(glow_eSave_Ctx_nav_rect_ur_x) << FSPACE << nav_rect_ur_x << '\n';
@@ -344,6 +348,18 @@ int GlowCtx::open(char* filename, glow_eSaveMode mode)
       break;
     case glow_eSave_Ctx_y_low:
       fp >> y_low;
+      break;
+    case glow_eSave_Ctx_window_width:
+      fp >> mw->window_width;
+      break;
+    case glow_eSave_Ctx_window_height:
+      fp >> mw->window_height;
+      break;
+    case glow_eSave_Ctx_nav_window_width:
+      fp >> navw->window_width;
+      break;
+    case glow_eSave_Ctx_nav_window_height:
+      fp >> navw->window_height;
       break;
     case glow_eSave_Ctx_nav_rect_ll_x:
       fp >> nav_rect_ll_x;
@@ -834,6 +850,7 @@ void GlowCtx::nav_zoom()
     return;
 
   if (a.size() > 0) {
+    set_dirty();
     get_borders();
     double x_nav_left = MIN(x_left, mw->offset_x / mw->zoom_factor_x);
     double x_nav_right
@@ -849,7 +866,6 @@ void GlowCtx::nav_zoom()
     navw->offset_x = int(x_nav_left * navw->zoom_factor_x);
     navw->offset_y = int(y_nav_low * navw->zoom_factor_y);
     a.nav_zoom();
-    set_dirty();
   }
 }
 
@@ -917,7 +933,6 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       if (sts)
         break;
     }
-  } else if (event == event_create_node) {
   } else if (event == event_move_node) {
     move_clear();
 

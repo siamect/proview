@@ -88,11 +88,6 @@ void CurveCtx::zoom(double factor)
   change_scrollbar();
 }
 
-void CurveCtx::unzoom()
-{
-  zoom(mw->base_zoom_factor / mw->zoom_factor_x);
-}
-
 void CurveCtx::adjust_layout()
 {
   int width, height;
@@ -113,23 +108,15 @@ void CurveCtx::nav_zoom()
   if (nodraw)
     return;
   if (a.size() > 0) {
-    double x_nav_left, x_nav_right, y_nav_low, y_nav_high;
-
-    get_borders();
-    //    std::cout << "Borders : <" << x_left << " > " << x_right << " ^ " <<
-    //		y_high << " Y " << y_low << '\n';
-    x_nav_left = x_left;
-    x_nav_right = x_right;
-    y_nav_low = y_low;
-    y_nav_high = y_high;
-    if (feq(x_nav_right, x_nav_left) || feq(y_nav_high, y_nav_low))
-      return;
-    navw->zoom_factor_x = navw->window_width / (x_nav_right - x_nav_left);
-    navw->zoom_factor_y = navw->window_height / (y_nav_high - y_nav_low);
-    navw->offset_x = int(x_nav_left * navw->zoom_factor_x);
-    navw->offset_y = int(y_nav_low * navw->zoom_factor_y);
-    a.nav_zoom();
     set_dirty();
+    get_borders();
+    if (feq(x_right, x_left) || feq(y_high, y_low))
+      return;
+    navw->zoom_factor_x = navw->window_width / (x_right - x_left);
+    navw->zoom_factor_y = navw->window_height / (y_high - y_low);
+    navw->offset_x = int(x_left * navw->zoom_factor_x);
+    navw->offset_y = int(y_low * navw->zoom_factor_y);
+    a.nav_zoom();
   }
 }
 

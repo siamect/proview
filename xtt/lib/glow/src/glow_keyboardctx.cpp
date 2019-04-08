@@ -646,11 +646,6 @@ void KeyboardCtx::zoom(double factor)
   nav_zoom();
 }
 
-void KeyboardCtx::unzoom()
-{
-  zoom(mw->base_zoom_factor / mw->zoom_factor_y);
-}
-
 int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 {
   int sts;
