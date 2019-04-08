@@ -680,7 +680,9 @@ static void loadPBM(const char *filename, PBM* img)
   while (fgetc(f) != '\n')
     ;
 
-  int size = img->width * (img->height / 8 + 1);
+  // The number of bytes per row is width / 8 rounded upwards.
+  // So the total number of bytes is height * ceil(width / 8)
+  int size = img->height * (img->width / 8 + 1);
   img->data = new unsigned char[size];
 
   for (int i = 0; i < size; i++) {
