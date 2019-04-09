@@ -291,4 +291,5 @@ void QtScrollWidgetFlow::realize()
           client_data, static_cast<flow_eCtxType>(ctxType));
     }
   }
+  setFocus();
 }

@@ -293,4 +293,5 @@ void QtScrollWidgetGlow::realize()
           client_data, static_cast<glow_eCtxType>(ctxType));
     }
   }
+  setFocus();
 }
