@@ -228,10 +228,10 @@ public slots:
   void activate_helpplc();
   void activate_helpplclist();
   void activate_helpclass();
-  void activate_trace_togg(bool set);
-  void activate_simulate_togg(bool set);
-  void activate_view_togg(bool set);
-  void activate_edit_togg(bool set);
+  void activate_trace_togg();
+  void activate_simulate_togg();
+  void activate_view_togg();
+  void activate_edit_togg();
   void valchanged_textinput();
   void popup_unmap_cb();
 

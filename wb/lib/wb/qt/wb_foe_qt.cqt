@@ -436,37 +436,33 @@ void WFoeQtWidget::activate_helpclass()
 // (and not directly by the user ) the event is 0.
 // These callbacks are use to determine in which mode the user works:
 // 	SG 01.05.91
-void WFoeQtWidget::activate_trace_togg(bool set)
+void WFoeQtWidget::activate_trace_togg()
 {
-  foe->activate_trace_togg(set);
+  foe->activate_trace_togg(true);
 }
 
 // Callbacks from the toggle buttons under the customize entry.
-void WFoeQtWidget::activate_simulate_togg(bool set)
+void WFoeQtWidget::activate_simulate_togg()
 {
-  foe->activate_simulate_togg(set);
+  foe->activate_simulate_togg(true);
 }
 
-void WFoeQtWidget::activate_view_togg(bool set)
+void WFoeQtWidget::activate_view_togg()
 {
   if (sender() != foe->view_togg) {
     foe->view_togg->setChecked(true);
   }
 
-  set = foe->view_togg->isChecked();
-
-  foe->activate_view_togg(set);
+  foe->activate_view_togg(true);
 }
 
-void WFoeQtWidget::activate_edit_togg(bool set)
+void WFoeQtWidget::activate_edit_togg()
 {
   if (sender() != foe->edit_togg) {
     foe->edit_togg->setChecked(true);
   }
 
-  set = foe->edit_togg->isChecked();
-
-  foe->activate_edit_togg(set);
+  foe->activate_edit_togg(true);
 }
 
 void WFoeQtWidget::valchanged_textinput()
@@ -949,14 +945,16 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
 
   // Mode entry
   QMenu* mode = menu_bar->addMenu(translate_utf8("&Mode"));
-  view_togg = addCheckableMenuItem(
-      toplevel, mode, "&View", SLOT(activate_view_togg(bool)));
-  edit_togg = addCheckableMenuItem(
-      toplevel, mode, "&Edit", SLOT(activate_edit_togg(bool)), "CTRL+E");
-  trace_togg = addCheckableMenuItem(
-      toplevel, mode, "&Trace", SLOT(activate_trace_togg(bool)));
-  simulate_togg = addCheckableMenuItem(
-      toplevel, mode, "&Simulate", SLOT(activate_simulate_togg(bool)));
+  QActionGroup* mode_group = new QActionGroup(toplevel);
+  view_togg = addMenuRadioItem(
+      toplevel, mode, "&View", SLOT(activate_view_togg()), mode_group);
+  edit_togg = addMenuRadioItem(
+      toplevel, mode, "&Edit", SLOT(activate_edit_togg()), mode_group);
+  edit_togg->setShortcut(fl("CTRL+E"));
+  trace_togg = addMenuRadioItem(
+      toplevel, mode, "&Trace", SLOT(activate_trace_togg()), mode_group);
+  simulate_togg = addMenuRadioItem(
+      toplevel, mode, "&Simulate", SLOT(activate_simulate_togg()), mode_group);
 
   // Menu Help
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
@@ -972,10 +970,10 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
       toplevel, tools, "Save", SLOT(activate_save()), "document-save");
   addToolItem(toplevel, tools, "Print documents", SLOT(activate_print()),
       "document-print");
-  addCheckableToolItem(toplevel, tools, "Set edit mode",
-      SLOT(activate_edit_togg(bool)), "$pwr_exe/foe_edit.png");
-  addCheckableToolItem(toplevel, tools, "Set view mode",
-      SLOT(activate_view_togg(bool)), "$pwr_exe/foe_view.png");
+  addToolItem(toplevel, tools, "Set edit mode", SLOT(activate_edit_togg()),
+      "$pwr_exe/foe_edit.png");
+  addToolItem(toplevel, tools, "Set view mode", SLOT(activate_view_togg()),
+      "$pwr_exe/foe_view.png");
   tools_build = addToolItem(
       toplevel, tools, "Build Program", SLOT(activate_compile()), "system-run");
   addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoomin()),
