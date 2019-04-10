@@ -382,6 +382,7 @@ void GlowDrawQt::event_handler(QEvent* event, QWidget* target)
       }
       break;
     }
+    case QEvent::MouseButtonDblClick:
     case QEvent::MouseButtonPress: {
       QMouseEvent* mouseEvent = ((QMouseEvent*)event);
       switch (mouseEvent->button()) {

@@ -307,6 +307,7 @@ void FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
       }
       break;
     }
+    case QEvent::MouseButtonDblClick:
     case QEvent::MouseButtonPress: {
       QMouseEvent* mouseEvent = ((QMouseEvent*)event);
       switch (mouseEvent->button()) {
