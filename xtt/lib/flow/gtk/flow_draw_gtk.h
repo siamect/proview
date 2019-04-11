@@ -93,6 +93,8 @@ public:
 
   int begin(DrawWind *wind);
   void end();
+  void start_redraw_timer();
+  void cancel_redraw_timer();
 
   void rect(int x, int y, int width, int height, flow_eDrawType gc_type,
       int fill, int idx, int highlight = 0, int dimmed = 0);

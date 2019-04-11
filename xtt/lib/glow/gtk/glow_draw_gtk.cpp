@@ -533,8 +533,7 @@ GlowDrawGtk::~GlowDrawGtk()
 {
   closing_down = 1;
 
-  if (redraw_timer)
-    g_source_remove(redraw_timer);
+  cancel_redraw_timer();
 
   ctx->set_nodraw();
   if (ctx->type() == glow_eCtxType_Grow)
@@ -622,8 +621,6 @@ GlowDrawGtk::GlowDrawGtk(GtkWidget* toplevel, void** glow_ctx,
   get_window_size(ctx->mw, &ctx->mw->window_width, &ctx->mw->window_height);
   create_buffer(&m_wind);
   init_proc(toplevel, ctx, client_data);
-
-  redraw_timer = g_timeout_add(40, redraw_timer_cb, this);
 }
 
 void GlowDrawGtk::event_handler(GdkEvent event)
@@ -1641,8 +1638,22 @@ static void event_timer(GlowDrawGtk* draw_ctx, int time_ms)
 
 static gboolean redraw_timer_cb(void* data) {
   GlowDrawGtk* draw_ctx = (GlowDrawGtk*)data;
+  draw_ctx->redraw_timer = 0;
   draw_ctx->ctx->redraw_if_dirty();
-  return TRUE;
+  return FALSE;
+}
+
+void GlowDrawGtk::cancel_redraw_timer()
+{
+  if (redraw_timer) {
+    g_source_remove(redraw_timer);
+    redraw_timer = 0;
+  }
+}
+
+void GlowDrawGtk::start_redraw_timer()
+{
+  redraw_timer = g_timeout_add(40, redraw_timer_cb, this);
 }
 
 void GlowDrawGtk::set_timer(

@@ -120,6 +120,8 @@ public:
 
   int begin(DrawWind* wind);
   void end(bool flush = true);
+  void start_redraw_timer();
+  void cancel_redraw_timer();
 
   void get_window_size(DrawWind* w, int* width, int* height);
   void set_window_size(DrawWind* w, int width, int height);

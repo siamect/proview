@@ -59,6 +59,8 @@ public:
 
   virtual int begin(DrawWind* wind);
   virtual void end();
+  virtual void start_redraw_timer() {}
+  virtual void cancel_redraw_timer() {}
 
   virtual void rect(int x, int y, int width, int height, flow_eDrawType gc_type,
       int fill, int idx, int highlight = 0, int dimmed = 0) = 0;

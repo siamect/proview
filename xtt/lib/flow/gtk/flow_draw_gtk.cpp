@@ -336,8 +336,7 @@ FlowDrawGtk::~FlowDrawGtk()
 {
   closing_down = 1;
 
-  if (redraw_timer)
-    g_source_remove(redraw_timer);
+  cancel_redraw_timer();
 
   ctx->set_nodraw();
   delete ctx;
@@ -466,8 +465,6 @@ FlowDrawGtk::FlowDrawGtk(GtkWidget* x_toplevel, void** flow_ctx,
   flow_create_cursor(this);
 
   init_proc(toplevel, ctx, client_data);
-
-  redraw_timer = g_timeout_add(40, redraw_timer_cb, this);
 }
 
 void FlowDrawGtk::init_nav(GtkWidget* nav_widget, void* flow_ctx)
@@ -1298,8 +1295,22 @@ static void event_timer(FlowCtx* ctx, int time_ms)
 
 static gboolean redraw_timer_cb(void* data) {
   FlowDrawGtk* draw_ctx = (FlowDrawGtk*)data;
+  draw_ctx->redraw_timer = 0;
   draw_ctx->ctx->redraw_if_dirty();
-  return TRUE;
+  return FALSE;
+}
+
+void FlowDrawGtk::cancel_redraw_timer()
+{
+  if (redraw_timer) {
+    g_source_remove(redraw_timer);
+    redraw_timer = 0;
+  }
+}
+
+void FlowDrawGtk::start_redraw_timer()
+{
+  redraw_timer = g_timeout_add(40, redraw_timer_cb, this);
 }
 
 void FlowDrawGtk::set_timer(FlowCtx* ctx, int time_ms,
