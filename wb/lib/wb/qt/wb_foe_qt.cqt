@@ -753,7 +753,7 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   // File Entry
   QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   save = addMenuItem(
-      toplevel, file, "Save", SLOT(activate_save()), "", "document-save");
+      toplevel, file, "Save", SLOT(activate_save()), "CTRL+S", "document-save");
 
   // Submenu Print
   QMenu* file_print = file->addMenu(translate_utf8("&Print"));
