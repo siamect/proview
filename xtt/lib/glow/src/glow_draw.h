@@ -60,7 +60,7 @@ public:
   double subwindow_scale; //!< Subwindow scale.
   int clip_cnt = 0;
 
-  virtual DrawWind* copy() = 0;
+  virtual DrawWind* copy() { return NULL; }
   virtual void update_buffer(DrawWind* w) {}
 };
 

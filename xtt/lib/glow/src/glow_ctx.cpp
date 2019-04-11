@@ -62,13 +62,14 @@ CtxComment::CtxComment()
 }
 
 GlowCtx::GlowCtx(const char* ctx_name, int offs_x, int offs_y)
-  : ctx_type(glow_eCtxType_Glow), print_zoom_factor(100), x_right(0),
-    x_left(0), y_high(0), y_low(0), nav_rect_ll_x(0), nav_rect_ll_y(0),
-    nav_rect_ur_x(0), nav_rect_ur_y(0), gdraw(0), node_movement_active(0),
-    node_movement_paste_active(0), node_movement_paste_pending(0),
-    nav_rect_movement_active(0), nav_rect_zoom_active(0), select_rect_active(0),
-    con_create_active(0), auto_scrolling_active(0), is_dirty(0), a_nc(20, 20),
-    a_cc(20, 20), a(50, 50), a_sel(20, 20), a_paste(20, 20), a_move(20, 20),
+  : ctx_type(glow_eCtxType_Glow), mw(NULL), navw(NULL), print_zoom_factor(100),
+    x_right(0), x_left(0), y_high(0), y_low(0), nav_rect_ll_x(0),
+    nav_rect_ll_y(0), nav_rect_ur_x(0), nav_rect_ur_y(0), gdraw(0),
+    node_movement_active(0), node_movement_paste_active(0),
+    node_movement_paste_pending(0), nav_rect_movement_active(0),
+    nav_rect_zoom_active(0), select_rect_active(0), con_create_active(0),
+    auto_scrolling_active(0), is_dirty(0), a_nc(20, 20), a_cc(20, 20),
+    a(50, 50), a_sel(20, 20), a_paste(20, 20), a_move(20, 20),
     event_region_select(glow_eEvent_Null),
     event_region_add_select(glow_eEvent_Null),
     event_create_con(glow_eEvent_Null), event_create_node(glow_eEvent_Null),
@@ -294,6 +295,14 @@ int GlowCtx::open(char* filename, glow_eSaveMode mode)
   set_nodraw();
   if (gdraw)
     gdraw->ctx->set_nodraw(); // Needed for growwindows
+
+  // If mw and navw have not been initialized, it means that we created a
+  // context only to call open() to obtain some variables from a pwg file.
+  DrawWind tmp_mw, tmp_navw;
+  if (!mw)
+    mw = &tmp_mw;
+  if (!navw)
+    navw = &tmp_navw;
 
   for (;;) {
     if (!fp.good()) {
