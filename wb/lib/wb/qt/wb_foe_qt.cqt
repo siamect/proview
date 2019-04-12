@@ -56,6 +56,7 @@
 #include "wb_watt_qt.h"
 #include "wb_watttext_qt.h"
 
+#include <QCloseEvent>
 #include <QHBoxLayout>
 #include <QMenu>
 #include <QMenuBar>
@@ -578,7 +579,7 @@ void WFoeQt::destroy()
   delete navctx;
 
   /* Destroy the widget */
-  toplevel->close();
+  delete toplevel;
 
   // Yes, this is intentional, we want to call the destructor here.
   delete this;
@@ -725,7 +726,7 @@ void WFoeQt::pop()
 void WFoeQtWidget::closeEvent(QCloseEvent* event)
 {
   foe->activate_quit();
-  QWidget::closeEvent(event);
+  event->ignore();
 }
 
 // Create a new foe window
@@ -747,7 +748,6 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   pwr_tStatus sts;
 
   toplevel->setMinimumSize(1100, 1000);
-  toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
   CoWowQt::SetWindowIcon(toplevel);
 
