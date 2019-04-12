@@ -1287,7 +1287,6 @@ int FlowCtx::event_handler_nav(flow_eEvent event, int x, int y)
   case flow_eEvent_Exposure:
     fdraw->get_window_size(navw, &nav_window_width, &nav_window_height);
     nav_zoom();
-    change_scrollbar();
     break;
   case flow_eEvent_ButtonMotion:
     if (nav_rect_movement_active) {

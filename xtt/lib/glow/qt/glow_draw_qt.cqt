@@ -827,10 +827,6 @@ void GlowDrawQt::event_handler(QEvent* event, QWidget* target)
           glow_eEvent_ButtonRelease, mouseEvent->x(), mouseEvent->y());
       break;
     }
-    case QEvent::Show: {
-      sts = ctx->event_handler_nav(glow_eEvent_Exposure, 0, 0);
-      break;
-    }
     case QEvent::Paint:
     case QEvent::UpdateRequest: {
       sts = ctx->event_handler_nav(glow_eEvent_Exposure, 0, 0);
@@ -857,7 +853,6 @@ void GlowDrawQt::event_handler(QEvent* event, QWidget* target)
   }
 
   m_wind.window->update();
-  return;
 }
 
 void GlowDrawQt::enable_event(glow_eEvent event, glow_eEventType event_type,

@@ -686,9 +686,9 @@ void FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
     case QEvent::Wheel: {
       QWheelEvent* wheelEvent = ((QWheelEvent*)event);
       if (wheelEvent->delta() > 0) {
-        sts = ctx->event_handler(flow_eEvent_ScrollUp, 0, 0, 0, 0);
+        sts = ctx->event_handler(flow_eEvent_ScrollUp, wheelEvent->x(), wheelEvent->y(), 0, 0);
       } else if (wheelEvent->delta() < 0) {
-        sts = ctx->event_handler(flow_eEvent_ScrollDown, 0, 0, 0, 0);
+        sts = ctx->event_handler(flow_eEvent_ScrollDown, wheelEvent->x(), wheelEvent->y(), 0, 0);
       }
       break;
     }
@@ -746,9 +746,7 @@ void FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
     }
     case QEvent::Paint:
     case QEvent::UpdateRequest: {
-      QPaintEvent* paintEvent = ((QPaintEvent*)event);
-      sts = ctx->event_handler_nav(
-          flow_eEvent_Exposure, paintEvent->rect().x(), paintEvent->rect().y());
+      sts = ctx->event_handler_nav(flow_eEvent_Exposure, 0, 0);
       nav_wind.window->update();
       break;
     }
@@ -771,7 +769,7 @@ void FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
     return;
   }
 
-  toplevel->update();
+  m_wind.window->update();
 }
 
 void FlowDrawQt::enable_event(FlowCtx* ctx, flow_eEvent event, flow_eEventType event_type,
@@ -1032,7 +1030,7 @@ bool FlowDrawQt::draw_timer_cb()
 {
   draw_timer_id->stop();
   (draw_timer_callback_func)(ctx);
-  toplevel->update();
+  m_wind.window->update();
   return FALSE;
 }
 
