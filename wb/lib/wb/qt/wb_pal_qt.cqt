@@ -101,6 +101,8 @@ void PalQt::set_inputfocus(int focus)
     brow_widget->setFocus();
   } else {
     modifyBackground(form_widget, QColor("White"));
+    brow_SetInverseColor(brow_ctx, flow_eDrawType_LineGray);
+    selection_owner = 0;
   }
 }
 
@@ -145,8 +147,4 @@ void PalQtTraceObject::sel_convert_cb()
   clientConnection->write(block);
   clientConnection->flush();
   clientConnection->disconnectFromServer();
-
-  // brow_SelectClear(brow_ctx);
-  brow_SetInverseColor(pal->brow_ctx, flow_eDrawType_LineGray);
-  pal->selection_owner = 0;
 }
