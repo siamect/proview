@@ -62,7 +62,7 @@ void QtScrollWidgetFlow::init(unsigned int eCtxType,
     int (*init_proc2)(QWidget* w, FlowCtx* ctx, void* client_data))
 {
   createBuffer(size());
-  setFocusPolicy(Qt::StrongFocus);
+  setFocusPolicy(Qt::ClickFocus);
   setMouseTracking(true);
   this->ctxType = eCtxType;
   this->init_proc = init_proc;
@@ -81,7 +81,7 @@ QWidget* QtScrollWidgetFlow::initScroll(unsigned int eCtxType,
     int (*init_proc2)(QWidget* w, FlowCtx* ctx, void* client_data))
 {
   createBuffer(size());
-  setFocusPolicy(Qt::StrongFocus);
+  setFocusPolicy(Qt::ClickFocus);
   setMouseTracking(true);
   this->ctxType = eCtxType;
   this->init_proc = init_proc;
@@ -89,6 +89,7 @@ QWidget* QtScrollWidgetFlow::initScroll(unsigned int eCtxType,
   this->client_data = client_data;
   this->scroll_timerid = new QTimer(this);
   form = new QScrollArea();
+  form->setFocusPolicy(Qt::NoFocus);
   form->installEventFilter(this);
   scroll_h = form->horizontalScrollBar();
   scroll_v = form->verticalScrollBar();
@@ -113,7 +114,7 @@ QWidget* QtScrollWidgetFlow::initScroll(unsigned int eCtxType,
 void QtScrollWidgetFlow::init(unsigned int eCtxType, QWidget* main)
 {
   createBuffer(size());
-  setFocusPolicy(Qt::StrongFocus);
+  setFocusPolicy(Qt::ClickFocus);
   setMouseTracking(true);
   this->ctxType = eCtxType;
   this->scroll_timerid = new QTimer(this);
@@ -289,7 +290,7 @@ void QtScrollWidgetFlow::realize()
     } else {
       draw_ctx = new FlowDrawQt(this, &parent_ctx, init_widget_proc,
           client_data, static_cast<flow_eCtxType>(ctxType));
+      setFocus();
     }
   }
-  setFocus();
 }
