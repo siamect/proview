@@ -1030,7 +1030,6 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   statusbar->addWidget(label);
   add_expanding(statusbar, textinput);
 
-  subpane = new QSplitter(Qt::Vertical);
   QHBoxLayout* palbox = new QHBoxLayout();
   node_palctx = new PalQt(this, "Objects", ldhsession, "PlcEditorPalette",
       &node_palette, &sts);
@@ -1047,13 +1046,13 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   add_expanding(palbox, con_palette);
   add_expanding(palbox, nav_palette);
 
+  subpane = new QSplitter(Qt::Vertical);
   add_expanding(subpane, palbox);
 
   pane = new QSplitter(Qt::Horizontal);
   gre = new WGreQt(this, "Name");
 
-  ((WGreQt*)gre)->new_navigator(subpane);
-  subpane->addWidget(((WGreQt*)gre)->nav_widget);
+  subpane->addWidget(((WGreQt*)gre)->create_navigator());
 
   add_expanding(pane, ((WGreQt*)gre)->form_widget);
   pane->addWidget(subpane);

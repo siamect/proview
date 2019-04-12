@@ -66,10 +66,10 @@ WGreQt::~WGreQt()
   }
 }
 
-int WGreQt::new_navigator(QWidget* parent)
+QWidget* WGreQt::create_navigator()
 {
   nav_widget = flownavwidgetqt_new(flow_widget);
-  return 1;
+  return nav_widget;
 }
 
 int WGreQt::new_navigator_popup()

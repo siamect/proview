@@ -1954,8 +1954,7 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   add_expanding(vpaned, palbox);
   vpaned->addWidget(colpal_main_widget);
 
-  ((GraphQt*)graph)->create_navigator();
-  vpaned->addWidget(((GraphQt*)graph)->nav_widget);
+  vpaned->addWidget(((GraphQt*)graph)->create_navigator());
 
   graph_list = new GeItemViewQt(this);
 
