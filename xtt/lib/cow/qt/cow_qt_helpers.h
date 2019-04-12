@@ -53,7 +53,7 @@
 QString fl(const char* text);
 
 #ifndef qPrintableLatin1
-#define qPrintableLatin1(string) (string).toLatin1().data()
+#define qPrintableLatin1(string) ((string).isEmpty() ? (char*)"" : (string).toLatin1().data())
 #endif
 QString convert_utf8(const char* str);
 QString translate_utf8(const char* str);
