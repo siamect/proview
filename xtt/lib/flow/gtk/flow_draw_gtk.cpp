@@ -427,7 +427,7 @@ void FlowDrawGtk::create_buffer(DrawWind *w)
 
   w->buffer = gdk_pixmap_new(w->window, window_width, window_height, -1);
 
-  gdk_draw_rectangle(w->buffer, gcs[flow_eDrawType_LineErase][0], TRUE, 0, 0, window_width, window_height);
+  ctx->set_dirty();
 }
 
 FlowDrawGtk::FlowDrawGtk(GtkWidget* x_toplevel, void** flow_ctx,
@@ -1310,7 +1310,9 @@ void FlowDrawGtk::cancel_redraw_timer()
 
 void FlowDrawGtk::start_redraw_timer()
 {
-  redraw_timer = g_timeout_add(40, redraw_timer_cb, this);
+  if (!redraw_timer) {
+    redraw_timer = g_timeout_add(40, redraw_timer_cb, this);
+  }
 }
 
 void FlowDrawGtk::set_timer(FlowCtx* ctx, int time_ms,

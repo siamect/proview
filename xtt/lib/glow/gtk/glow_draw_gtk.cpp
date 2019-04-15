@@ -618,7 +618,6 @@ GlowDrawGtk::GlowDrawGtk(GtkWidget* toplevel, void** glow_ctx,
 
   glow_create_cursor(this);
 
-  get_window_size(ctx->mw, &ctx->mw->window_width, &ctx->mw->window_height);
   create_buffer(&m_wind);
   init_proc(toplevel, ctx, client_data);
 }
@@ -1653,7 +1652,9 @@ void GlowDrawGtk::cancel_redraw_timer()
 
 void GlowDrawGtk::start_redraw_timer()
 {
-  redraw_timer = g_timeout_add(40, redraw_timer_cb, this);
+  if (!redraw_timer) {
+    redraw_timer = g_timeout_add(40, redraw_timer_cb, this);
+  }
 }
 
 void GlowDrawGtk::set_timer(
@@ -1952,6 +1953,7 @@ void GlowDrawGtk::create_buffer(DrawWindGtk* w)
   w->buffer = gdk_pixmap_new(w->window, window_width, window_height, -1);
   w->window_width = window_width;
   w->window_height = window_height;
+  ctx->set_dirty();
 }
 
 int GlowDrawGtk::export_image(char* filename)
