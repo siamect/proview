@@ -2707,6 +2707,7 @@ void GrowCtx::set_background(glow_eDrawType color)
       gdraw->set_background(navw, color, 0, 0, 0, 0);
   }
   background_color = color;
+  set_dirty();
 }
 
 int GrowCtx::get_background_image_size(int* width, int* height)
@@ -2748,6 +2749,7 @@ void GrowCtx::reset_background()
 {
   gdraw->reset_background(mw);
   background_color = glow_eDrawType_LineErase;
+  set_dirty();
 }
 
 void GrowCtx::set_dynamic(char* code, int size)
