@@ -1,5 +1,15 @@
 "use strict";
 
+if (!Object.create) {
+  Object.create = function (proto) {
+    function ctor() {
+    }
+
+    ctor.prototype = proto;
+    return new ctor();
+  };
+}
+
 function PwrtStatus(sts) {
   this.sts = sts;
 
