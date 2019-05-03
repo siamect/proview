@@ -17,7 +17,7 @@ function PwrtStatus(sts) {
     return (sts % 2 === 0);
   };
   this.oddSts = function () {
-    return (sts % 2 == 1);
+    return (sts % 2 === 1);
   };
   this.getSts = function () {
     return sts;
@@ -178,7 +178,7 @@ function CdhrNumber(value, sts) {
     return (sts % 2 === 0);
   };
   this.oddSts = function () {
-    return (sts % 2 == 1);
+    return (sts % 2 === 1);
   };
   this.getSts = function () {
     return sts;

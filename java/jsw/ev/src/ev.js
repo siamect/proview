@@ -84,7 +84,6 @@ function Ev() {
         document.title = "Event List";
         break;
       default:
-        ;
     }
 
     this.priv = sessionStorage.getItem("pwr_privilege");
@@ -97,7 +96,7 @@ function Ev() {
 
     this.ctx.gdh = new Gdh();
     this.ctx.gdh.open_cb = this.gdh_init_cb;
-    this.ctx.gdh.init()
+    this.ctx.gdh.init();
 
     this.ctx.gdraw.canvas.addEventListener("click", function (event) {
       var y = event.pageY - self.ctx.gdraw.offset_top;
@@ -109,33 +108,33 @@ function Ev() {
       }
     });
     document.addEventListener("keydown", function (event) {
-      if (event.keyCode == 40) {
+      if (event.keyCode === 40) {
         self.ctx.event_handler(Plow.eEvent_Key_Down);
         event.preventDefault();
-      } else if (event.keyCode == 39) {
+      } else if (event.keyCode === 39) {
         if (event.shiftKey) {
           self.ctx.event_handler(Plow.eEvent_Key_ShiftRight);
         } else {
           self.ctx.event_handler(Plow.eEvent_Key_Right);
         }
         event.preventDefault();
-      } else if (event.keyCode == 37) {
+      } else if (event.keyCode === 37) {
         self.ctx.event_handler(Plow.eEvent_Key_Left);
         event.preventDefault();
-      } else if (event.keyCode == 38) {
+      } else if (event.keyCode === 38) {
         self.ctx.event_handler(Plow.eEvent_Key_Up);
         event.preventDefault();
-      } else if (event.keyCode == 82) {
+      } else if (event.keyCode === 82) {
         if (event.ctrlKey) {
           self.ctx.event_handler(Plow.eEvent_Key_CtrlR);
         }
         event.preventDefault();
-      } else if (event.keyCode == 76) {
+      } else if (event.keyCode === 76) {
         if (event.ctrlKey) {
           self.ctx.event_handler(Plow.eEvent_Key_CtrlL);
         }
         event.preventDefault();
-      } else if (event.keyCode == 71) {
+      } else if (event.keyCode === 71) {
         if (event.ctrlKey) {
           self.ctx.event_handler(Plow.eEvent_Key_CtrlG);
         }
@@ -261,11 +260,11 @@ function Ev() {
         }
       });
 
-  }
+  };
 
   this.is_authorized = function (access) {
-    return (this.priv & access) ? true : false;
-  }
+    return !!(this.priv & access);
+  };
 
   this.gdh_init_cb = function () {
     if (self.priv == null) {
@@ -276,7 +275,7 @@ function Ev() {
 
     self.ctx.gdh.listSent = true;
     self.trace_cyclic();
-  }
+  };
 
   this.login_cb = function (id, data, sts, result) {
     console.log("Login:", sts, result);
@@ -296,7 +295,7 @@ function Ev() {
       return;
     }
 
-    if (self.type == EvC.eType_AlarmList) {
+    if (self.type === EvC.eType_AlarmList) {
 
       self.ctx.set_nodraw();
       for (var i = result.length - 1; i >= 0; i--) {
@@ -348,7 +347,7 @@ function Ev() {
       self.ctx.configure();
       self.ctx.reset_nodraw();
       self.ctx.draw();
-    } else if (self.type == EvC.eType_EventList) {
+    } else if (self.type === EvC.eType_EventList) {
       self.ctx.set_nodraw();
       for (var i = result.length - 1; i >= 0; i--) {
         var e = result[i];
@@ -372,17 +371,17 @@ function Ev() {
     for (var o = this.ctx.get_first_object(); o !== null;
          o = this.ctx.get_next_object(o)) {
       var item = o.get_userdata();
-      if (item.e.eventId.nix == event_id.nix &&
-        item.e.eventId.idx == event_id.idx) {
+      if (item.e.eventId.nix === event_id.nix &&
+        item.e.eventId.idx === event_id.idx) {
         return item;
       }
     }
     return null;
-  }
+  };
 
   this.is_authorized = function (access) {
-    return (this.priv & access) ? true : false;
-  }
+    return !!(this.priv & access);
+  };
 
   this.ack = function () {
     if (!this.is_authorized(Pwr.mAccess_RtEventsAck)) {
@@ -408,26 +407,28 @@ function Ev() {
     }
     this.ctx.configure();
     this.ctx.draw();
-  }
+  };
 
   this.ack_cb = function (id, data, sts) {
     console.log("ack sts", sts);
-  }
+  };
 
   this.open_objectgraph_cb = function (id, data, sts, result) {
-    if ((sts & 1) != 0) {
+    if ((sts & 1) === 0) {
+      data.document.write("Error status " + sts);
+    } else {
       data.location.href =
         "ge.html?graph=" + result.param1 + "&instance=" + result.fullname;
       data.document.title = result.fullname;
-    } else {
-      data.document.write("Error status " + sts);
     }
-  }
+  };
 
   this.open_graph_cb = function (id, data, sts, result) {
-    if ((sts & 1) != 0) {
+    if ((sts & 1) === 0) {
+      data.document.write("Error status " + sts);
+    } else {
       var idx = result.param1.indexOf('.');
-      if (idx != -1) {
+      if (idx !== -1) {
         result.param1 = result.param1.substring(0, idx);
       }
 
@@ -438,18 +439,18 @@ function Ev() {
 
       data.location.href = "ge.html?graph=" + result.param1 + instancestr;
       data.document.title = result.param1;
-    } else {
-      data.document.write("Error status " + sts);
     }
-  }
+  };
 
   this.open_plc_cb = function (id, data, sts, result) {
-    if ((sts & 1) != 0) {
+    if ((sts & 1) === 0) {
+      data.document.write("Error status " + sts);
+    } else {
       var param1;
-      if (result.param1 !== "") {
-        param1 = "&obj=" + result.param1;
-      } else {
+      if (result.param1 === "") {
         param1 = "";
+      } else {
+        param1 = "&obj=" + result.param1;
       }
       console.log("flow.html?vid=" + result.objid.vid + "&oix=" +
         result.objid.oix + param1);
@@ -457,61 +458,59 @@ function Ev() {
         "flow.html?vid=" + result.objid.vid + "&oix=" + result.objid.oix +
         param1;
       data.document.title = "Trace " + result.fullname;
-    } else {
-      data.document.write("Error status " + sts);
     }
-  }
+  };
 
   this.open_navigator_cb = function (id, data, sts, result) {
     console.log("Open navigator", sts);
-    if ((sts & 1) != 0) {
+    if ((sts & 1) === 0) {
+      console.log("Error status " + sts);
+    } else {
       localStorage.setItem("XttMethodNavigator", result.fullname);
       console.log("storage", localStorage.getItem("XttMethodNavigator"));
-    } else {
-      console.log("Error status " + sts);
     }
-  }
+  };
 
   this.open_objectgraph_cb = function (id, data, sts, result) {
-    if ((sts & 1) != 0) {
+    if ((sts & 1) === 0) {
+      data.document.write("Error status " + sts);
+    } else {
       var classname = result.classname.toLowerCase();
-      if (classname.substring(0, 1) == "$") {
+      if (classname.substring(0, 1) === "$") {
         classname = classname.substring(1);
       }
       var graphname = "pwr_c_" + classname;
       data.location.href =
         "ge.html?graph=" + graphname + "&instance=" + result.fullname;
       data.document.title = graphname + " " + result.fullname;
-    } else {
-      data.document.write("Error status " + sts);
     }
-  }
+  };
 
   this.open_helpclass_cb = function (id, data, sts, result) {
-    if ((sts & 1) != 0) {
-      console.log("open_helpclass", result.param1);
-      var url = location.protocol + "//" + location.host + result.param1;
-      data.location.href = url;
-    } else {
+    if ((sts & 1) === 0) {
       data.document.write("Error status " + sts);
+    } else {
+      console.log("open_helpclass", result.param1);
+      data.location.href =
+        location.protocol + "//" + location.host + result.param1;
     }
-  }
+  };
 
   this.methods_init = function () {
     localStorage.setItem("EvMethodNavigator", "");
-  }
+  };
 
   this.collapse = function () {
     this.ctx.set_nodraw();
     for (var i = 0; i < this.ctx.a.size(); i++) {
       var node = this.ctx.a.get(i);
-      if (node.level == 0) {
+      if (node.level === 0) {
         node.userdata.close(this);
       }
     }
     this.ctx.reset_nodraw();
     this.ctx.draw();
-  }
+  };
 
   this.trace_cyclic = function () {
     self.ctx.gdh.mhSync(self.mhSyncIdx, self.sync_cb, self);
@@ -650,7 +649,11 @@ function Ev() {
         break;
       case Plow.eEvent_Key_Down: {
         var o = self.ctx.get_select();
-        if (o != null) {
+        if (o == null) {
+          o = self.ctx.a.a[0];
+          o.set_select(true);
+          o.set_invert(true);
+        } else {
           var next = self.ctx.get_next_object(o);
           if (next != null) {
             o.set_select(false);
@@ -661,10 +664,6 @@ function Ev() {
               self.ctx.scroll(next.y_low, 0.10);
             }
           }
-        } else {
-          o = self.ctx.a.a[0];
-          o.set_select(true);
-          o.set_invert(true);
         }
 
         break;
@@ -732,9 +731,9 @@ function Ev() {
 
     var vars = query.split('&');
     var typestr = vars[0].substring(5);
-    if (typestr == "event") {
+    if (typestr === "event") {
       type = EvC.eType_EventList;
-    } else if (typestr == "block") {
+    } else if (typestr === "block") {
       type = EvC.eType_BlockList;
     } else {
       type = EvC.eType_AlarmList;

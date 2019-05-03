@@ -28,7 +28,7 @@ function Xtt() {
 
     this.ctx.gdh = new Gdh();
     this.ctx.gdh.open_cb = this.gdh_init_cb;
-    this.ctx.gdh.init()
+    this.ctx.gdh.init();
 
     this.ctx.gdraw.canvas.addEventListener("click", function (event) {
       var y = event.pageY - self.ctx.gdraw.offset_top;
@@ -40,33 +40,33 @@ function Xtt() {
       }
     });
     document.addEventListener("keydown", function (event) {
-      if (event.keyCode == 40) {
+      if (event.keyCode === 40) {
         self.ctx.event_handler(Plow.eEvent_Key_Down);
         event.preventDefault();
-      } else if (event.keyCode == 39) {
+      } else if (event.keyCode === 39) {
         if (event.shiftKey) {
           self.ctx.event_handler(Plow.eEvent_Key_ShiftRight);
         } else {
           self.ctx.event_handler(Plow.eEvent_Key_Right);
         }
         event.preventDefault();
-      } else if (event.keyCode == 37) {
+      } else if (event.keyCode === 37) {
         self.ctx.event_handler(Plow.eEvent_Key_Left);
         event.preventDefault();
-      } else if (event.keyCode == 38) {
+      } else if (event.keyCode === 38) {
         self.ctx.event_handler(Plow.eEvent_Key_Up);
         event.preventDefault();
-      } else if (event.keyCode == 82) {
+      } else if (event.keyCode === 82) {
         if (event.ctrlKey) {
           self.ctx.event_handler(Plow.eEvent_Key_CtrlR);
         }
         event.preventDefault();
-      } else if (event.keyCode == 76) {
+      } else if (event.keyCode === 76) {
         if (event.ctrlKey) {
           self.ctx.event_handler(Plow.eEvent_Key_CtrlL);
         }
         event.preventDefault();
-      } else if (event.keyCode == 71) {
+      } else if (event.keyCode === 71) {
         if (event.ctrlKey) {
           self.ctx.event_handler(Plow.eEvent_Key_CtrlG);
         }
@@ -105,7 +105,7 @@ function Xtt() {
         } else if (o.userdata instanceof XttItemCrr) {
           var idx = o.userdata.name.lastIndexOf('-');
           var ostring = "";
-          if (idx != -1) {
+          if (idx !== -1) {
             ostring = "&obj=" + o.userdata.name.substring(idx + 1);
           }
           console.log("flow.html?vid=" + o.userdata.objid.vid + "&oix=" +
@@ -154,18 +154,18 @@ function Xtt() {
       });
 
     window.addEventListener("storage", function (event) {
-      if (event.newValue == "") {
+      if (event.newValue === "") {
         return;
       }
       localStorage.setItem("XttMethodNavigator", "");
       self.display_object(event.newValue);
     });
 
-  }
+  };
 
   this.is_authorized = function (access) {
-    return (this.priv & access) ? true : false;
-  }
+    return !!(this.priv & access);
+  };
 
   this.gdh_init_cb = function () {
     if (self.priv == null) {
@@ -178,7 +178,7 @@ function Xtt() {
 
     self.ctx.gdh.listSent = true;
     self.trace_cyclic();
-  }
+  };
 
   this.login_cb = function (id, data, sts, result) {
     console.log("Login:", sts, result);
@@ -204,14 +204,14 @@ function Xtt() {
     self.ctx.configure();
 
     if (data.open_next != null) {
-      if (data.open_next.length == 0) {
+      if (data.open_next.length === 0) {
         self.ctx.reset_nodraw();
         return;
       }
       var child = self.ctx.a.get_first_child(data.node);
       while (child != null) {
-        if (child.userdata.name == data.open_next[0]) {
-          if (data.open_next.length == 1) {
+        if (child.userdata.name === data.open_next[0]) {
+          if (data.open_next.length === 1) {
             child.set_select(true);
             child.set_invert(true);
             if (!self.ctx.is_visible(child)) {
@@ -220,7 +220,7 @@ function Xtt() {
             window.focus(); // Doesn't work
           } else {
             data.open_next.splice(0, 1);
-            if (data.open_next[0] == '.') {
+            if (data.open_next[0] === '.') {
               data.open_next.splice(0, 1);
               child.userdata.open_attributes(self, data.open_next);
             } else {
@@ -235,16 +235,16 @@ function Xtt() {
 
     self.ctx.reset_nodraw();
     self.ctx.draw();
-  }
+  };
 
   this.open_attributes_cb = function (id, data, sts, result) {
     self.ctx.set_nodraw();
     for (var i = 0; i < result.length; i++) {
       result[i].objid = data.node.userdata.objid;
       result[i].full_name = data.node.userdata.full_name + "." + result[i].name;
-      if ((result[i].flags & Pwr.mAdef_array) != 0) {
+      if ((result[i].flags & Pwr.mAdef_array) !== 0) {
         new XttItemAttrArray(self, result[i], data.node, Plow.DEST_INTOLAST);
-      } else if ((result[i].flags & Pwr.mAdef_class) != 0) {
+      } else if ((result[i].flags & Pwr.mAdef_class) !== 0) {
         new XttItemAttrObject(self, result[i], data.node, Plow.DEST_INTOLAST);
       } else {
         new XttItemAttr(self, result[i], data.node, Plow.DEST_INTOLAST);
@@ -254,14 +254,14 @@ function Xtt() {
     self.ctx.configure();
 
     if (data.open_next != null) {
-      if (data.open_next.length == 0) {
+      if (data.open_next.length === 0) {
         self.ctx.reset_nodraw();
         return;
       }
       var child = self.ctx.a.get_first_child(data.node);
       while (child != null) {
-        if (child.userdata.name == data.open_next[0]) {
-          if (data.open_next.length == 1) {
+        if (child.userdata.name === data.open_next[0]) {
+          if (data.open_next.length === 1) {
             child.set_select(true);
             child.set_invert(true);
             if (!self.ctx.is_visible(child)) {
@@ -280,15 +280,17 @@ function Xtt() {
 
     self.ctx.reset_nodraw();
     self.ctx.draw();
-  }
+  };
 
   this.open_plc_cb = function (id, data, sts, result) {
-    if ((sts & 1) != 0) {
+    if ((sts & 1) === 0) {
+      data.document.write("Error status " + sts);
+    } else {
       var param1;
-      if (result.param1 !== "") {
-        param1 = "&obj=" + result.param1;
-      } else {
+      if (result.param1 === "") {
         param1 = "";
+      } else {
+        param1 = "&obj=" + result.param1;
       }
       console.log("flow.html?vid=" + result.objid.vid + "&oix=" +
         result.objid.oix + param1);
@@ -296,25 +298,25 @@ function Xtt() {
         "flow.html?vid=" + result.objid.vid + "&oix=" + result.objid.oix +
         param1;
       data.document.title = "Trace " + result.fullname;
-    } else {
-      data.document.write("Error status " + sts);
     }
-  }
+  };
 
   this.open_objectgraph_cb = function (id, data, sts, result) {
-    if ((sts & 1) != 0) {
+    if ((sts & 1) === 0) {
+      data.document.write("Error status " + sts);
+    } else {
       data.location.href =
         "ge.html?graph=" + result.param1 + "&instance=" + result.fullname;
       data.document.title = result.fullname;
-    } else {
-      data.document.write("Error status " + sts);
     }
-  }
+  };
 
   this.open_graph_cb = function (id, data, sts, result) {
-    if ((sts & 1) != 0) {
+    if ((sts & 1) === 0) {
+      data.document.write("Error status " + sts);
+    } else {
       var idx = result.param1.indexOf('.');
-      if (idx != -1) {
+      if (idx !== -1) {
         result.param1 = result.param1.substring(0, idx);
       }
 
@@ -325,27 +327,25 @@ function Xtt() {
 
       data.location.href = "ge.html?graph=" + result.param1 + instancestr;
       data.document.title = result.param1;
-    } else {
-      data.document.write("Error status " + sts);
     }
-  }
+  };
 
   this.open_crr_cb = function (id, node, sts, crrdata) {
-    if ((sts & 1) == 0) {
+    if ((sts & 1) === 0) {
       return;
     }
     node.userdata.open_crossreferences(self, crrdata);
-  }
+  };
 
   this.open_helpclass_cb = function (id, data, sts, result) {
-    if ((sts & 1) != 0) {
-      console.log("open_helpclass", result.param1);
-      var url = location.protocol + "//" + location.host + result.param1;
-      data.location.href = url;
-    } else {
+    if ((sts & 1) === 0) {
       data.document.write("Error status " + sts);
+    } else {
+      console.log("open_helpclass", result.param1);
+      data.location.href =
+        location.protocol + "//" + location.host + result.param1;
     }
-  }
+  };
 
   this.plow_event = function (event, object, x, y) {
 
@@ -383,7 +383,11 @@ function Xtt() {
         break;
       case Plow.eEvent_Key_Down: {
         var o = self.ctx.get_select();
-        if (o != null) {
+        if (o == null) {
+          o = self.ctx.a.a[0];
+          o.set_select(true);
+          o.set_invert(true);
+        } else {
           var next = self.ctx.get_next_object(o);
           if (next != null) {
             o.set_select(false);
@@ -394,10 +398,6 @@ function Xtt() {
               self.ctx.scroll(next.y_low, 0.10);
             }
           }
-        } else {
-          o = self.ctx.a.a[0];
-          o.set_select(true);
-          o.set_invert(true);
         }
 
         break;
@@ -461,7 +461,7 @@ function Xtt() {
         } else if (o.userdata instanceof XttItemCrr) {
           var idx = o.userdata.name.lastIndexOf('-');
           var ostring = "";
-          if (idx != -1) {
+          if (idx !== -1) {
             ostring = "&obj=" + o.userdata.name.substring(idx + 1);
           }
           window.open("flow.html?vid=" + o.userdata.objid.vid + "&oix=" +
@@ -481,7 +481,7 @@ function Xtt() {
         break;
       }
     }
-  }
+  };
 
   this.createNodeClasses = function () {
     var r1 = new PlowRect(this.ctx, 0, 0, 50, 1.0, Plow.COLOR_WHITE,
@@ -501,29 +501,31 @@ function Xtt() {
     this.ncObject.insert(a12);
     this.ncObject.insert(p1);
     this.ctx.insert_nc(this.ncObject);
-  }
+  };
 
   this.methods_init = function () {
     localStorage.setItem("XttMethodNavigator", "");
-  }
+  };
 
   this.collapse = function () {
     this.ctx.set_nodraw();
     for (var i = 0; i < this.ctx.a.size(); i++) {
       var node = this.ctx.a.get(i);
-      if (node.level == 0) {
+      if (node.level === 0) {
         node.userdata.close(this);
       }
     }
     this.ctx.reset_nodraw();
     this.ctx.draw();
-  }
+  };
 
   this.display_object = function (name) {
     var i = name.indexOf('.');
     var attr = null;
     var path;
-    if (i != -1) {
+    if (i === -1) {
+      path = name.split('-');
+    } else {
       attr = name.substring(i + 1);
       name = name.substring(0, i);
       var p1 = name.split('-');
@@ -537,16 +539,14 @@ function Xtt() {
       for (j = 0; j < p2.length; j++) {
         path[j + p1.length + 1] = p2[j];
       }
-    } else {
-      path = name.split('-');
     }
 
     var idx = 0;
 
     this.collapse();
     for (var j = idx; j < this.ctx.a.size(); j++) {
-      if (this.ctx.a.get(j).userdata.name == path[0]) {
-        if (j == this.ctx.a.size() - 1) {
+      if (this.ctx.a.get(j).userdata.name === path[0]) {
+        if (j === this.ctx.a.size() - 1) {
           var node = this.ctx.a.get(j);
           node.set_select(true);
           node.set_invert(true);
@@ -561,7 +561,7 @@ function Xtt() {
         break;
       }
     }
-  }
+  };
 
   this.trace_cyclic = function () {
     self.ctx.gdh.getRefObjectInfoAll(self.trace_scan);
@@ -615,7 +615,7 @@ function XttItemObject(xtt, object_info, destination, destCode) {
   }
 
   this.open_children = function (xtt, open_next) {
-    if (this.node.node_open != 0) {
+    if (this.node.node_open !== 0) {
       this.close(xtt);
     } else if (!this.has_children) {
       this.open_attributes(xtt, null);
@@ -625,25 +625,23 @@ function XttItemObject(xtt, object_info, destination, destCode) {
       this.node.node_open |= Plow.OPEN_CHILDREN;
       this.node.set_annotation_pixmap(0, Bitmaps.openmap);
     }
-  }
+  };
 
   this.open_attributes = function (xtt, open_next) {
-    if (this.node.node_open != 0) {
-      this.close(xtt);
-    } else {
+    if (this.node.node_open === 0) {
       xtt.ctx.gdh.getAllClassAttributes(this.cid, this.objid,
         xtt.open_attributes_cb, new XttOpenChildrenData(this.node, open_next));
 
       this.node.node_open |= Plow.OPEN_ATTRIBUTES;
       xtt.ctx.configure();
       xtt.ctx.draw();
+    } else {
+      this.close(xtt);
     }
-  }
+  };
 
   this.open_crossreferences = function (xtt, crrdata) {
-    if (this.node.node_open != 0) {
-      this.close(xtt);
-    } else {
+    if (this.node.node_open === 0) {
       for (var i = 0; i < crrdata.length; i++) {
         new XttItemCrr(xtt, crrdata[i], this.node, Plow.DEST_INTOLAST);
       }
@@ -651,8 +649,10 @@ function XttItemObject(xtt, object_info, destination, destCode) {
       this.node.node_open |= Plow.OPEN_CROSSREFERENCES;
       xtt.ctx.configure();
       xtt.ctx.draw();
+    } else {
+      this.close(xtt);
     }
-  }
+  };
 
   this.close = function (xtt) {
     if (this.node.node_open & Plow.OPEN_CHILDREN) {
@@ -739,7 +739,7 @@ function XttItemAttr(xtt, info, destination, destCode) {
   };
 
   this.open_attributes = function (xtt, open_next) {
-  }
+  };
 
   this.close = function (xtt) {
     var parent = xtt.ctx.get_parent_object(this.node);
@@ -748,14 +748,14 @@ function XttItemAttr(xtt, info, destination, destCode) {
       parent.set_select(true);
       parent.set_invert(true);
     }
-  }
+  };
 
   this.scan = function (xtt) {
     if (!this.refid) {
       return;
     }
     var value = xtt.ctx.gdh.getObjectRefInfo(this.refid);
-    if (this.firstScan || value != this.old_value) {
+    if (this.firstScan || value !== this.old_value) {
       var value_str;
 
       switch (this.type) {
@@ -787,7 +787,7 @@ function XttItemAttr(xtt, info, destination, destCode) {
       xtt.scan_update = true;
     }
     this.firstScan = false;
-  }
+  };
   this.scan_close = function (xtt) {
     xtt.ctx.gdh.unrefObjectInfo(this.refid);
   };
@@ -809,7 +809,7 @@ function XttItemAttrArray(xtt, info, destination, destCode) {
 
   this.open_children = function (xtt, open_next) {
     this.open_attributes(xtt, open_next);
-  }
+  };
 
   this.open_attributes = function (xtt, open_next) {
     var info = new AttributeInfo();
@@ -819,17 +819,17 @@ function XttItemAttrArray(xtt, info, destination, destCode) {
     info.flags = this.flags & ~Pwr.mAdef_array;
     info.size = this.size / this.elements;
     info.elements = 1;
-    info.name = ""
-    info.full_name = ""
-    info.classname = ""
+    info.name = "";
+    info.full_name = "";
+    info.classname = "";
 
     xtt.ctx.set_nodraw();
     for (var i = 0; i < this.elements; i++) {
       info.name = this.name + "[" + i + "]";
       info.full_name = this.full_name + "[" + i + "]";
-      if ((info.flags & Pwr.mAdef_array) != 0) {
+      if ((info.flags & Pwr.mAdef_array) !== 0) {
         new XttItemAttrArray(xtt, info, this.node, Plow.DEST_INTOLAST);
-      } else if ((info.flags & Pwr.mAdef_class) != 0) {
+      } else if ((info.flags & Pwr.mAdef_class) !== 0) {
         new XttItemAttrObject(xtt, info, this.node, Plow.DEST_INTOLAST);
       } else {
         new XttItemAttr(xtt, info, this.node, Plow.DEST_INTOLAST);
@@ -876,18 +876,18 @@ function XttItemAttrObject(xtt, info, destination, destCode) {
 
   this.open_children = function (xtt, open_next) {
     this.open_attributes(xtt, null);
-  }
+  };
 
   this.open_attributes = function (xtt, open_next) {
-    if (this.node.node_open != 0) {
-      this.close(xtt);
-    } else {
+    if (this.node.node_open === 0) {
       xtt.ctx.gdh.getAllClassAttributes(this.cid, this.objid,
-        xtt.open_attributes_cb, new XttOpenChildrenData(this.node, open_next))
+        xtt.open_attributes_cb, new XttOpenChildrenData(this.node, open_next));
 
       this.node.node_open |= Plow.OPEN_ATTRIBUTES;
+    } else {
+      this.close(xtt);
     }
-  }
+  };
 
   this.close = function (xtt) {
     if (this.node.node_open & Plow.OPEN_ATTRIBUTES) {

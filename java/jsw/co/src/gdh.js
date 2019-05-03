@@ -200,7 +200,7 @@ function Gdh() {
     };
 
     this.ws.onmessage = function (e) {
-      if (typeof e.data == "string") {
+      if (typeof e.data === "string") {
         console.log("String message received", e, e.data);
       } else {
         if (e.data instanceof ArrayBuffer) {
@@ -322,7 +322,7 @@ function Gdh() {
                 var esize = dv.getUint32(j);
                 j += 4;
                 var sub = this.gdh.sub[eid];
-                if (typeof sub == 'undefined') {
+                if (typeof sub === 'undefined') {
                   j += esize;
                 } else {
                   var value;
@@ -333,7 +333,7 @@ function Gdh() {
                         j += 1;
                       } else {
                         var elements = esize;
-                        if (elements != sub.elements) {
+                        if (elements !== sub.elements) {
                           console.log("Subscription size error", elements,
                             sub.elements, eid);
                         }
@@ -350,7 +350,7 @@ function Gdh() {
                         j += 4;
                       } else {
                         var elements = esize / 4;
-                        if (elements != sub.elements) {
+                        if (elements !== sub.elements) {
                           console.log("Subscription size error", elements,
                             sub.elements, eid);
                         }
@@ -377,7 +377,7 @@ function Gdh() {
                         j += 4;
                       } else {
                         var elements = esize / 4;
-                        if (elements != sub.elements) {
+                        if (elements !== sub.elements) {
                           console.log("Subscription size error", elements,
                             sub.elements, eid);
                         }
@@ -403,7 +403,7 @@ function Gdh() {
                         value = String.fromCharCode.apply(null, iarr);
                       } else {
                         var elements = sub.elements;
-                        if (elements != sub.elements) {
+                        if (elements !== sub.elements) {
                           console.log("Subscription size error", elements,
                             sub.elements, eid);
                         }
@@ -425,7 +425,7 @@ function Gdh() {
                   this.gdh.sub[eid].value = value;
                 }
               }
-              if (typeof this.gdh.pending[id] == 'undefined') {
+              if (typeof this.gdh.pending[id] === 'undefined') {
                 console.log("** GetObjectRefInfoAll received removed", id);
                 break;
               }
@@ -953,9 +953,7 @@ function Gdh() {
     sub.elements = elements;
     this.sub[this.subscriptionCount] = sub;
     this.subscriptionCount++;
-    if (!this.listSent) {
-      return sub.refid;
-    } else {
+    if (this.listSent) {
       var size = 0;
       var len = 0;
 
@@ -997,6 +995,8 @@ function Gdh() {
 
       this.next_id++;
 
+      return sub.refid;
+    } else {
       return sub.refid;
     }
   };

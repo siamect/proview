@@ -1663,8 +1663,7 @@ function GlowRectangle() {
   this.y1;
   this.x2;
   this.y2;
-};
-
+}
 function GlowPointX() {
   this.x;
   this.y;
@@ -1838,7 +1837,7 @@ var GlowColor = {
         drawtype = base_drawtype + incr;
       }
     } else if (this.is_custom(dt)) {
-      if (shift == -1) {
+      if (shift === -1) {
         drawtype = (dt + 3);
       } else if (shift < 0) {
         drawtype = (dt + 2);
@@ -1870,17 +1869,17 @@ var GlowColor = {
     if (highlight !== 0 && highlight_disabled === 0) {
       drawtype = highlight_drawtype;
     } else if (highlight !== 0 && highlight_disabled !== 0 && fill === 0 &&
-      local_drawtype == Glow.eDrawType_Line) {
+      local_drawtype === Glow.eDrawType_Line) {
       drawtype = highlight_drawtype;
     } else {
-      if (node !== null && node.getColorTone() != Glow.eDrawTone_No) {
+      if (node !== null && node.getColorTone() !== Glow.eDrawTone_No) {
         var tone = node.getColorTone();
 
         if (local_drawtype > 30 && local_drawtype < 300) {
-          if (tone == Glow.eDrawTone_LightGrayHighSaturation) {
+          if (tone === Glow.eDrawTone_LightGrayHighSaturation) {
             drawtype = Glow.eDrawType_Color31;
           }// GrayLow1
-          else if (tone == Glow.eDrawTone_DarkGrayHighSaturation) {
+          else if (tone === Glow.eDrawTone_DarkGrayHighSaturation) {
             drawtype = Glow.eDrawType_Color30;
           }// DarkGrey
           else {
@@ -1907,17 +1906,17 @@ var GlowColor = {
         } else {
           drawtype = local_drawtype;
         }
-      } else if (node !== null && fill == 1 &&
-        node.getFillDrawtype() != Glow.eDrawType_No) {
+      } else if (node !== null && fill === 1 &&
+        node.getFillDrawtype() !== Glow.eDrawType_No) {
         drawtype = node.getFillDrawtype();
-      } else if (node !== null && fill == 2 &&
-        node.getTextDrawtype() != Glow.eDrawType_No) {
+      } else if (node !== null && fill === 2 &&
+        node.getTextDrawtype() !== Glow.eDrawType_No) {
         drawtype = node.getTextDrawtype();
-      } else if (node !== null && fill == 3 &&
-        node.getBackgroundDrawtype() != Glow.eDrawType_No) {
+      } else if (node !== null && fill === 3 &&
+        node.getBackgroundDrawtype() !== Glow.eDrawType_No) {
         drawtype = node.getBackgroundDrawtype();
       } else if (node !== null && fill === 0 &&
-        node.getDrawtype() != Glow.eDrawType_No) {
+        node.getDrawtype() !== Glow.eDrawType_No) {
         drawtype = node.getDrawtype();
       } else {
         drawtype = local_drawtype;
@@ -1968,11 +1967,11 @@ var GlowColor = {
         if (drawtype >= 30 && drawtype < 300) {
           drawtype = drawtype + 10 - 2 * (drawtype % 10) - 1;
         } else if (this.is_custom(drawtype)) {
-          if ((drawtype - Glow.eDrawType_CustomColor1) % 4 == 1) {
+          if ((drawtype - Glow.eDrawType_CustomColor1) % 4 === 1) {
             drawtype = drawtype + 1;
-          } else if ((drawtype - Glow.eDrawType_CustomColor1) % 4 == 2) {
+          } else if ((drawtype - Glow.eDrawType_CustomColor1) % 4 === 2) {
             drawtype = drawtype - 1;
-          } else if ((drawtype - Glow.eDrawType_CustomColor1) % 4 == 3) {
+          } else if ((drawtype - Glow.eDrawType_CustomColor1) % 4 === 3) {
             drawtype = drawtype - 2;
           }
         }
@@ -1989,12 +1988,12 @@ var GlowColor = {
         } else if (56 <= drawtype && drawtype <= 59) {
           drawtype = (drawtype - 4);
         } else if (this.is_custom(drawtype)) {
-          if (drawtype == Glow.eDrawType_CustomColor37)
+          if (drawtype === Glow.eDrawType_CustomColor37)
           // Button border color
           {
             drawtype = Glow.eDrawType_CustomColor40;
           }
-          if (drawtype == Glow.eDrawType_CustomColor38)
+          if (drawtype === Glow.eDrawType_CustomColor38)
           // Button text color
           {
             drawtype = Glow.eDrawType_CustomColor39;
@@ -2019,17 +2018,17 @@ var GlowColor = {
     var b = 0;
 
 
-    if (idx == 300) {
+    if (idx === 300) {
       idx = 31;
     }
 
-    if (idx == 3) // White
+    if (idx === 3) // White
     {
       r = g = b = 1.0;
-    } else if (idx == 2) // Gray
+    } else if (idx === 2) // Gray
     {
       r = g = b = 0.75;
-    } else if (idx == 1) { // Red
+    } else if (idx === 1) { // Red
       r = 1.0;
       g = b = 0;
     } else if (idx === 0) // Black
@@ -2055,7 +2054,7 @@ var GlowColor = {
       j = Math.floor((idx - 60 - i * 30) / 10);
       k = 9 - (idx - 60 - i * 30 - j * 10);
 
-      if ((i === 0 && j == 2) || (i == 2 && j == 2 && k > 5)) {
+      if ((i === 0 && j === 2) || (i === 2 && j === 2 && k > 5)) {
         // Formula doesn't work for yellow...
         r = this.rgbtab[i * 10 + k].r;
         g = this.rgbtab[i * 10 + k].g;
@@ -2204,7 +2203,7 @@ function GlowCustomColors() {
 
   this.read_colorfile = function (ctx, name) {
     ctx.appl.frame.readGrowWeb(name, this.read_cb);
-  }
+  };
 
   this.read_cb = function (lines, row) {
     self.open(lines, row);
@@ -2221,7 +2220,7 @@ function GlowArray(ctx) {
   };
   this.remove = function (elem) {
     for (var i = 0; i < this.a.length; i++) {
-      if (this.a[i] == elem) {
+      if (this.a[i] === elem) {
         this.a.splice(i, 1);
         return 1;
       }
@@ -2573,7 +2572,7 @@ function GlowTransform() {
     if (arguments.length === 0) {
       return this.rotation;
     }
-    if (arguments.length == 1) {
+    if (arguments.length === 1) {
       var t = arguments[0];
       return t.rotation + this.rotation;
     }
@@ -2581,12 +2580,12 @@ function GlowTransform() {
 
   this.x = function () {
     var t, x1, y1;
-    if (arguments.length == 2) {
+    if (arguments.length === 2) {
       x1 = arguments[0];
       y1 = arguments[1];
       return x1 * this.a11 + y1 * this.a12 + this.a13;
     }
-    if (arguments.length == 3) {
+    if (arguments.length === 3) {
       t = arguments[0];
       x1 = arguments[1];
       y1 = arguments[2];
@@ -2599,12 +2598,12 @@ function GlowTransform() {
 
   this.y = function () {
     var t, x1, y1;
-    if (arguments.length == 2) {
+    if (arguments.length === 2) {
       x1 = arguments[0];
       y1 = arguments[1];
       return x1 * this.a21 + y1 * this.a22 + this.a23;
     }
-    if (arguments.length == 3) {
+    if (arguments.length === 3) {
       t = arguments[0];
       x1 = arguments[1];
       y1 = arguments[2];
@@ -2974,16 +2973,16 @@ function GlowNodeClass(ctx) {
       // Will not work in rotated nodes
       var ll_x, ur_x, ll_y, ur_y, kx1, kx2, ky1, ky2;
 
-      if (t !== null) {
-        kx1 = t.x(base.x0, base.y0);
-        kx2 = t.x(base.x1, base.y1);
-        ky1 = t.y(base.x0, base.y0);
-        ky2 = t.y(base.x1, base.y1);
-      } else {
+      if (t === null) {
         kx1 = base.x0;
         kx2 = base.x1;
         ky1 = base.y0;
         ky2 = base.y1;
+      } else {
+        kx1 = t.x(base.x0, base.y0);
+        kx2 = t.x(base.x1, base.y1);
+        ky1 = t.y(base.x0, base.y0);
+        ky2 = t.y(base.x1, base.y1);
       }
 
       ll_x = Math.min(kx1, kx2);
@@ -3014,7 +3013,6 @@ function GlowNodeClass(ctx) {
     var base;
 
     for (base = this; base.prev_nc !== null; base = base.prev_nc) {
-      ;
     }
     return base;
   };
@@ -3023,8 +3021,8 @@ function GlowNodeClass(ctx) {
     var i;
 
     for (i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() == Glow.eObjectType_GrowAnnot &&
-        this.a.get(i).getNumber() == num) {
+      if (this.a.get(i).type() === Glow.eObjectType_GrowAnnot &&
+        this.a.get(i).getNumber() === num) {
         var d = this.a.get(i).getTextExtent(t, node);
         d.width /= this.ctx.mw.zoom_factor_x;
         d.height /= this.ctx.mw.zoom_factor_y;
@@ -3352,15 +3350,15 @@ function GlowCon(ctx) {
   };
 
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0) {
+    if (this.ctx.nodraw !== 0) {
       return;
     }
 
     var tmp;
     var i;
 
-    if (this.temporary_ref != 0 ||
-      this.cc.con_type == Glow.eConType_Reference) {
+    if (this.temporary_ref !== 0 ||
+      this.cc.con_type === Glow.eConType_Reference) {
       // ref_a.draw( w, &cc->zero, highlight, hot, NULL);
     } else {
       for (i = 0; i < this.l_num; i++) {
@@ -3370,9 +3368,9 @@ function GlowCon(ctx) {
         this.arc_a.get(i).draw(highlight, hot);
       }
       // arrow_a.draw( highlight, hot);
-      if ((this.shadow != 0 || this.border != 0) &&
-        this.cc.con_type == Glow.eConType_Routed &&
-        this.cc.corner == Glow.eCorner_Rounded) {
+      if ((this.shadow !== 0 || this.border !== 0) &&
+        this.cc.con_type === Glow.eConType_Routed &&
+        this.cc.corner === Glow.eCorner_Rounded) {
         for (i = 0; i < this.l_num; i++) {
           this.line_a.get(i)
             .draw_shadow(this.border, this.shadow, highlight, hot);
@@ -3386,7 +3384,7 @@ function GlowCon(ctx) {
   };
   this.getName = function () {
     return "Con";
-  }
+  };
   this.event_handler = function (event, fx, fy) {
     return 0;
   };
@@ -3452,7 +3450,7 @@ function GlowLine(ctx) {
 
 
   this.draw = function (highlight, hot) {
-    if (this.ctx.nodraw != 0) {
+    if (this.ctx.nodraw !== 0) {
       return;
     }
 
@@ -3466,7 +3464,7 @@ function GlowLine(ctx) {
     p2_y = Math.floor(this.p2.y * this.ctx.mw.zoom_factor_y + 0.5) -
       this.ctx.mw.offset_y;
 
-    if (p1_x == p2_x && p1_y == p2_y) {
+    if (p1_x === p2_x && p1_y === p2_y) {
       return;
     }
     var idx = Math.floor(this.ctx.mw.zoom_factor_y /
@@ -3475,10 +3473,10 @@ function GlowLine(ctx) {
     idx = Math.max(0, idx);
     idx = Math.min(idx, Glow.DRAW_TYPE_SIZE - 1);
     this.ctx.gdraw.line(p1_x, p1_y, p2_x, p2_y, this.draw_type, idx, highlight);
-  }
+  };
 
   this.draw_shadow = function (border, shadow, highlight, hot) {
-    if (this.ctx.nodraw != 0) {
+    if (this.ctx.nodraw !== 0) {
       return;
     }
 
@@ -3492,7 +3490,7 @@ function GlowLine(ctx) {
     p2_y = Math.floor(this.p2.y * this.ctx.mw.zoom_factor_y + 0.5) -
       this.ctx.mw.offset_y;
 
-    if (p1_x == p2_x && p1_y == p2_y) {
+    if (p1_x === p2_x && p1_y === p2_y) {
       return;
     }
     var idx = Math.floor(this.ctx.mw.zoom_factor_y /
@@ -3503,8 +3501,8 @@ function GlowLine(ctx) {
     var ish = 1;
     var offs = border;
 
-    if (shadow != 0 && idx > 2) {
-      if (p1_x == p2_x) {
+    if (shadow !== 0 && idx > 2) {
+      if (p1_x === p2_x) {
         // Vertical line
         this.ctx.gdraw.line(p1_x + idx / 2 - idx + offs, p1_y, p2_x + idx / 2 -
           idx + offs, p2_y,
@@ -3524,8 +3522,8 @@ function GlowLine(ctx) {
           highlight);
       }
     }
-    if (border != 0) {
-      if (p1_x == p2_x) {
+    if (border !== 0) {
+      if (p1_x === p2_x) {
         // Vertical line
         this.ctx.gdraw.line(p1_x + idx / 2 - idx, p1_y, p2_x + idx / 2 - idx,
           p2_y, Glow.eDrawType_Line, 0, highlight);
@@ -3615,7 +3613,7 @@ function GlowArc(ctx) {
   };
 
   this.draw = function (highlight, hot) {
-    if (this.ctx.nodraw != 0) {
+    if (this.ctx.nodraw !== 0) {
       return;
     }
 
@@ -3629,7 +3627,7 @@ function GlowArc(ctx) {
     ur_y = Math.floor(this.ur.y * this.ctx.mw.zoom_factor_y + 0.5) -
       this.ctx.mw.offset_y;
 
-    if (ll_x == ur_x && ll_y == ur_y) {
+    if (ll_x === ur_x && ll_y === ur_y) {
       return;
     }
     var idx = Math.floor(this.ctx.mw.zoom_factor_y /
@@ -3639,10 +3637,10 @@ function GlowArc(ctx) {
     idx = Math.min(idx, Glow.DRAW_TYPE_SIZE - 1);
     this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, this.angle1,
       this.angle2, this.draw_type, idx, highlight);
-  }
+  };
 
   this.draw_shadow = function (border, shadow, highlight, hot) {
-    if (this.ctx.nodraw != 0) {
+    if (this.ctx.nodraw !== 0) {
       return;
     }
 
@@ -3663,8 +3661,8 @@ function GlowArc(ctx) {
     var ish = 1;
     var offs = border;
 
-    if (shadow != 0 && idx > 2) {
-      if (this.angle1 == 0) {
+    if (shadow !== 0 && idx > 2) {
+      if (this.angle1 === 0) {
         this.ctx.gdraw.arc(ll_x + idx / 2 - idx + offs, ll_y + idx / 2 - idx +
           offs, ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs *
           2, this.angle1 + 45, this.angle2 - 45,
@@ -3686,7 +3684,7 @@ function GlowArc(ctx) {
           Math.max(0, ur_y - ll_y - idx + offs * 2), this.angle1, this.angle2 -
           45, GlowColor.shift_drawtype(this.draw_type, -2, null), ish - 1,
           highlight);
-      } else if (this.angle1 == 90) {
+      } else if (this.angle1 === 90) {
         this.ctx.gdraw.arc(ll_x + idx / 2 - idx + offs, ll_y + idx / 2 - idx +
           offs, ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2,
           this.angle1, this.angle2,
@@ -3695,7 +3693,7 @@ function GlowArc(ctx) {
           Math.max(0, ur_x - ll_x - idx + offs * 2),
           Math.max(0, ur_y - ll_y - idx + offs * 2), this.angle1, this.angle2,
           GlowColor.shift_drawtype(draw_type, 2, null), ish - 1, highlight);
-      } else if (this.angle1 == 180) {
+      } else if (this.angle1 === 180) {
         this.ctx.gdraw.arc(ll_x + idx / 2 - idx + offs, ll_y + idx / 2 - idx +
           offs, ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs *
           2, this.angle1 + 45, this.angle2 - 45,
@@ -3713,7 +3711,7 @@ function GlowArc(ctx) {
           Math.max(0, ur_x - ll_x - idx + offs * 2),
           Math.max(0, ur_y - ll_y - idx + offs * 2), this.angle1, this.angle2 -
           45, GlowColor.shift_drawtype(draw_type, 2, null), ish - 1, highlight);
-      } else if (this.angle1 == 270) {
+      } else if (this.angle1 === 270) {
         this.ctx.gdraw.arc(ll_x + idx / 2 - idx + offs, ll_y + idx / 2 - idx +
           offs, ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2,
           this.angle1, this.angle2,
@@ -3724,7 +3722,7 @@ function GlowArc(ctx) {
           GlowColor.shift_drawtype(draw_type, -2, null), ish - 1, highlight);
       }
     }
-    if (border != 0) {
+    if (border !== 0) {
       this.ctx.gdraw.arc(ll_x + idx / 2 - idx, ll_y + idx / 2 - idx, ur_x -
         ll_x + idx, ur_y - ll_y + idx, this.angle1, this.angle2,
         Glow.eDrawType_Line, 0, highlight);
@@ -4099,7 +4097,7 @@ function GrowNode(ctx) {
           break;
         case Glow.eSave_Node_nc:
           this.nc_name = tokens[1];
-          if (this.type() != Glow.eObjectType_GrowGroup) {
+          if (this.type() !== Glow.eObjectType_GrowGroup) {
             this.nc = ctx.get_nodeclass_from_name(this.nc_name);
             this.nc_root = this.nc;
             if (this.nc === null) {
@@ -4211,7 +4209,7 @@ function GrowNode(ctx) {
     var rp = this.trf.reverse(fx, fy);
     var sts = this.nc.event_handler(event, rp.x, rp.y);
     if (sts !== 0) {
-      if (!(this.type() == Glow.eObjectType_GrowGroup &&
+      if (!(this.type() === Glow.eObjectType_GrowGroup &&
           this.ctx.callback_object !== null)) {
         this.ctx.register_callback_object(Glow.eObjectType_Node, this);
       }
@@ -4236,8 +4234,8 @@ function GrowNode(ctx) {
     }
     if (colornode === null) {
       colornode = this;
-    } else if (colornode.fill_drawtype == Glow.eDrawType_No &&
-      colornode.color_tone == Glow.eDrawTone_No) {
+    } else if (colornode.fill_drawtype === Glow.eDrawType_No &&
+      colornode.color_tone === Glow.eDrawTone_No) {
       colornode = this;
     }
 
@@ -4245,7 +4243,7 @@ function GrowNode(ctx) {
       return;
     }
 
-    if (this.annot_scrollingtext != -1) {
+    if (this.annot_scrollingtext !== -1) {
       this.ctx.gdraw.set_clip_rectangle(this.x_left *
         this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x, this.y_low *
         this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y, this.x_right *
@@ -4254,13 +4252,13 @@ function GrowNode(ctx) {
     }
 
     var trf_tot;
-    if (this.fill_level == 1) {
-      if (t !== null) {
+    if (this.fill_level === 1) {
+      if (t === null) {
+        this.nc.tdraw(this.trf, highlight, hot, node, node);
+      } else {
         trf_tot = t.multiply(this.trf);
 
         this.nc.tdraw(trf_tot, highlight, hot, this, this);
-      } else {
-        this.nc.tdraw(this.trf, highlight, hot, node, node);
       }
     } else {
       var x1, x2, y1, y2;
@@ -4303,10 +4301,10 @@ function GrowNode(ctx) {
           clip_sts =
             this.ctx.gdraw.set_clip_rectangle(x1 - 1, y1 - 1, x1 + x_level, y2 +
               1);
-          if (this.level_color_tone != Glow.eDrawTone_No) {
+          if (this.level_color_tone !== Glow.eDrawTone_No) {
             old_color_tone = this.color_tone;
             this.color_tone = this.level_color_tone;
-          } else if (this.level_fill_drawtype != Glow.eDrawType_No) {
+          } else if (this.level_fill_drawtype !== Glow.eDrawType_No) {
             old_fill_drawtype = this.fill_drawtype;
             this.fill_drawtype = this.level_fill_drawtype;
           }
@@ -4322,10 +4320,10 @@ function GrowNode(ctx) {
           clip_sts =
             this.ctx.gdraw.set_clip_rectangle(x1 - 1, y1 - 1, x2 + 1, y1 +
               y_level);
-          if (this.level_color_tone != Glow.eDrawTone_No) {
+          if (this.level_color_tone !== Glow.eDrawTone_No) {
             old_color_tone = this.color_tone;
             this.color_tone = this.level_color_tone;
-          } else if (this.level_fill_drawtype != Glow.eDrawType_No) {
+          } else if (this.level_fill_drawtype !== Glow.eDrawType_No) {
             old_fill_drawtype = this.fill_drawtype;
             this.fill_drawtype = this.level_fill_drawtype;
           }
@@ -4334,13 +4332,13 @@ function GrowNode(ctx) {
           break;
       }
 
-      if (t !== null) {
+      if (t === null) {
+        this.nc.tdraw(this.trf, highlight, hot, node, node);
+      } else {
         trf_tot = t.multiply(this.trf);
 
         // If this node has a trace pointer, use colors for this node
         this.nc.tdraw(trf_tot, highlight, hot, this, this);
-      } else {
-        this.nc.tdraw(this.trf, highlight, hot, node, node);
       }
       if ((clip_sts & 1) !== 0) {
         this.ctx.gdraw.reset_clip_rectangle();
@@ -4348,10 +4346,10 @@ function GrowNode(ctx) {
 
       switch (this.level_direction) {
         case Glow.eDirection_Right:
-          if (this.level_color_tone != Glow.eDrawTone_No) {
+          if (this.level_color_tone !== Glow.eDrawTone_No) {
             old_color_tone = this.color_tone;
             this.color_tone = this.level_color_tone;
-          } else if (this.level_fill_drawtype != Glow.eDrawType_No) {
+          } else if (this.level_fill_drawtype !== Glow.eDrawType_No) {
             old_fill_drawtype = this.fill_drawtype;
             this.fill_drawtype = this.level_fill_drawtype;
           }
@@ -4360,9 +4358,9 @@ function GrowNode(ctx) {
               1);
           break;
         case Glow.eDirection_Left:
-          if (this.level_color_tone != Glow.eDrawTone_No) {
+          if (this.level_color_tone !== Glow.eDrawTone_No) {
             this.color_tone = old_color_tone;
-          } else if (this.level_fill_drawtype != Glow.eDrawType_No) {
+          } else if (this.level_fill_drawtype !== Glow.eDrawType_No) {
             this.fill_drawtype = old_fill_drawtype;
           }
           clip_sts =
@@ -4370,10 +4368,10 @@ function GrowNode(ctx) {
               1);
           break;
         case Glow.eDirection_Up:
-          if (this.level_color_tone != Glow.eDrawTone_No) {
+          if (this.level_color_tone !== Glow.eDrawTone_No) {
             old_color_tone = this.color_tone;
             this.color_tone = this.level_color_tone;
-          } else if (this.level_fill_drawtype != Glow.eDrawType_No) {
+          } else if (this.level_fill_drawtype !== Glow.eDrawType_No) {
             old_fill_drawtype = this.fill_drawtype;
             this.fill_drawtype = this.level_fill_drawtype;
           }
@@ -4382,9 +4380,9 @@ function GrowNode(ctx) {
               1);
           break;
         case Glow.eDirection_Down:
-          if (this.level_color_tone != Glow.eDrawTone_No) {
+          if (this.level_color_tone !== Glow.eDrawTone_No) {
             this.color_tone = old_color_tone;
-          } else if (this.level_fill_drawtype != Glow.eDrawType_No) {
+          } else if (this.level_fill_drawtype !== Glow.eDrawType_No) {
             this.fill_drawtype = old_fill_drawtype;
           }
           clip_sts =
@@ -4395,13 +4393,13 @@ function GrowNode(ctx) {
           break;
       }
 
-      if (t !== null) {
+      if (t === null) {
+        this.nc.tdraw(this.trf, highlight, hot, node, node);
+      } else {
         trf_tot = t.multiply(this.trf);
 
         // If this node has a trace pointer, use colors for this node
         this.nc.tdraw(trf_tot, highlight, hot, this, this);
-      } else {
-        this.nc.tdraw(this.trf, highlight, hot, node, node);
       }
       if ((clip_sts & 1) !== 0) {
         this.ctx.gdraw.reset_clip_rectangle();
@@ -4409,18 +4407,18 @@ function GrowNode(ctx) {
 
       switch (this.level_direction) {
         case Glow.eDirection_Right:
-          if (this.level_color_tone != Glow.eDrawTone_No) {
+          if (this.level_color_tone !== Glow.eDrawTone_No) {
             this.color_tone = old_color_tone;
-          } else if (this.level_fill_drawtype != Glow.eDrawType_No) {
+          } else if (this.level_fill_drawtype !== Glow.eDrawType_No) {
             this.fill_drawtype = old_fill_drawtype;
           }
           break;
         case Glow.eDirection_Left:
           break;
         case Glow.eDirection_Up:
-          if (this.level_color_tone != Glow.eDrawTone_No) {
+          if (this.level_color_tone !== Glow.eDrawTone_No) {
             this.color_tone = old_color_tone;
-          } else if (this.level_fill_drawtype != Glow.eDrawType_No) {
+          } else if (this.level_fill_drawtype !== Glow.eDrawType_No) {
             this.fill_drawtype = old_fill_drawtype;
           }
           break;
@@ -4431,7 +4429,7 @@ function GrowNode(ctx) {
       }
     }
 
-    if (this.annot_scrollingtext != -1) {
+    if (this.annot_scrollingtext !== -1) {
       this.ctx.gdraw.reset_clip_rectangle();
     }
   };
@@ -4439,8 +4437,8 @@ function GrowNode(ctx) {
   this.set_position = function (x, y) {
     var old_x_left, old_x_right, old_y_low, old_y_high;
 
-    if (this.trf.a13 == this.trf.s_a13 + x &&
-      this.trf.a23 == this.trf.s_a23 + y) {
+    if (this.trf.a13 === this.trf.s_a13 + x &&
+      this.trf.a23 === this.trf.s_a23 + y) {
       return;
     }
     old_x_left = this.x_left;
@@ -4528,7 +4526,7 @@ function GrowNode(ctx) {
   this.set_scale = function (scale_x, scale_y, x0, y0, type) {
     var old_x_left, old_x_right, old_y_low, old_y_high;
 
-    if (!((scale_x == -1 && scale_y == 1) || (scale_x == 1 && scale_y == -1))) {
+    if (!((scale_x === -1 && scale_y === 1) || (scale_x === 1 && scale_y === -1))) {
       if (scale_x < 0) {
         scale_x = 0;
       }
@@ -4567,7 +4565,6 @@ function GrowNode(ctx) {
         y0 = (this.y_low + this.y_high) / 2;
         break;
       default:
-        ;
     }
 
     old_x_left = this.x_left;
@@ -4661,9 +4658,8 @@ function GrowNode(ctx) {
   this.set_last_nodeclass = function () {
     var next;
     for (next = this.nc_root; next.next_nc !== null; next = next.next_nc) {
-      ;
     }
-    if (next != this.nc) {
+    if (next !== this.nc) {
       this.set_nodeclass(next);
     }
   };
@@ -4679,7 +4675,7 @@ function GrowNode(ctx) {
       }
       next = next.next_nc;
     }
-    if (next != this.nc) {
+    if (next !== this.nc) {
       this.set_nodeclass(next);
     }
     return 1;
@@ -4694,7 +4690,7 @@ function GrowNode(ctx) {
   };
 
   this.set_root_nodeclass = function () {
-    if (this.nc_root != this.nc) {
+    if (this.nc_root !== this.nc) {
       this.set_nodeclass(this.nc_root);
     }
   };
@@ -4801,11 +4797,11 @@ function GrowNode(ctx) {
   };
 
   this.get_borders = function (t, g) {
-    if (t !== null) {
+    if (t === null) {
+      this.nc.get_borders(this.trf, g);
+    } else {
       var t2 = t.multiply(this.trf);
       this.nc.get_borders(t2, g);
-    } else {
-      this.nc.get_borders(this.trf, g);
     }
   };
 
@@ -4815,10 +4811,10 @@ function GrowNode(ctx) {
     var base_nc = this.nc.get_base_nc();
     dyn_type = base_nc.dyn_type1;
 
-    if ((type & dyn_type) == 0) {
+    if ((type & dyn_type) === 0) {
       return 0;
     }
-    if (this.nc.y0 == 0 && this.nc.y1 == 0) {
+    if (this.nc.y0 === 0 && this.nc.y1 === 0) {
       return 0;
     }
 
@@ -4852,12 +4848,12 @@ function GrowNode(ctx) {
         y2 = this.trf.y(t, 0, this.nc.y1);
       }
 
-      if (t != null) {
-        rotation =
-          (this.trf.rot(t) / 360 - Math.floor(this.trf.rot(t) / 360)) * 360;
-      } else {
+      if (t == null) {
         rotation =
           (this.trf.rot() / 360 - Math.floor(this.trf.rot() / 360)) * 360;
+      } else {
+        rotation =
+          (this.trf.rot(t) / 360 - Math.floor(this.trf.rot(t) / 360)) * 360;
       }
 
       if (45 >= rotation || rotation > 315) {
@@ -5032,10 +5028,10 @@ function GrowNode(ctx) {
     this.annotv[number] = annot;
   };
   this.setAnnotationTextOffset = function (num, x, y) {
-    if (this.annot_scrollingtext == -1) {
+    if (this.annot_scrollingtext === -1) {
       this.annot_scrollingtext = num;
     }
-    if (num == this.annot_scrollingtext) {
+    if (num === this.annot_scrollingtext) {
       this.annot_offset_x = x;
       this.annot_offset_y = y;
     }
@@ -5050,7 +5046,7 @@ function GrowNode(ctx) {
       return;
     }
 
-    if (this.ctx.customcolors.colortheme_lightness != this.color_lightness) {
+    if (this.ctx.customcolors.colortheme_lightness !== this.color_lightness) {
       this.color_lightness = this.ctx.customcolors.colortheme_lightness;
     }
   };
@@ -5107,12 +5103,12 @@ function GrowGroup(ctx) {
     var group;
 
     for (var i = 0; i < this.nc.a.size(); i++) {
-      if (this.nc.a.get(i).type() == Glow.eObjectType_GrowGroup) {
+      if (this.nc.a.get(i).type() === Glow.eObjectType_GrowGroup) {
         group = nc.a.get(i).get_object_group(object);
         if (group != null) {
           return group;
         }
-      } else if (this.nc.a.get(i) == object) {
+      } else if (this.nc.a.get(i) === object) {
         return this;
       }
     }
@@ -5311,7 +5307,6 @@ function GrowToolbar(ctx) {
       case Glow.eEvent_CursorMotion:
         return 0;
       default:
-        ;
     }
 
     rp = this.trf.reverse(fx, fy);
@@ -5319,14 +5314,14 @@ function GrowToolbar(ctx) {
     switch (event.event) {
       case Glow.eEvent_MB1Down:
         sts = this.nc_event_handler(event, rp.x, rp.y);
-        if (sts != 0) {
+        if (sts !== 0) {
           idx = sts - 1;
           this.nc.a.get(idx).setColorInverse(1);
         }
         break;
       case Glow.eEvent_MB1Up:
         sts = this.nc_event_handler(event, rp.x, rp.y);
-        if (sts != 0) {
+        if (sts !== 0) {
           idx = sts - 1;
           this.nc.a.get(idx).setColorInverse(0);
         }
@@ -5334,7 +5329,7 @@ function GrowToolbar(ctx) {
       case Glow.eEvent_MB1Click:
         sts = this.nc_event_handler(event, rp.x, rp.y);
         console.log("MB1 Click toolbar", sts);
-        if (sts != 0) {
+        if (sts !== 0) {
           idx = sts - 1;
           var lsts = this.get_mask_index(idx);
           if (lsts == null) {
@@ -5353,7 +5348,7 @@ function GrowToolbar(ctx) {
         break;
       default:
         sts = this.nc.event_handler(event, rp.x, rp.y);
-        if (sts != 0) {
+        if (sts !== 0) {
           return sts;
         }
     }
@@ -5366,7 +5361,7 @@ function GrowToolbar(ctx) {
 
     for (i = 0; i < this.nc.a.size(); i++) {
       sts = this.nc.a.get(i).event_handler(event, x, y);
-      if (sts != 0) {
+      if (sts !== 0) {
         return i + 1;
       }
     }
@@ -5394,7 +5389,7 @@ function GrowToolbar(ctx) {
       this.tools1_mask = 0;
       mask = 1;
       for (var i = 0; i < tools1_cnt; i++) {
-        if ((mask & show_mask1) != 0) {
+        if ((mask & show_mask1) !== 0) {
           if (tools1[i] === "") {
             mask = mask << 1;
             continue;
@@ -5406,7 +5401,7 @@ function GrowToolbar(ctx) {
           if (nc1 === null) {
             var fname = subg_name + ".pwsg";
             sts = this.ctx.loadSubgraph(fname);
-            if ((sts & 1) != 0) {
+            if ((sts & 1) !== 0) {
               nc1 = this.ctx.get_nodeclass_from_name(subg_name);
             }
           }
@@ -5438,7 +5433,7 @@ function GrowToolbar(ctx) {
       this.tools2_mask = 0;
       mask = 1;
       for (var i = 0; i < tools2_cnt; i++) {
-        if ((mask & show_mask2) != 0) {
+        if ((mask & show_mask2) !== 0) {
           if (tools2[i] === "") {
             mask = mask << 1;
             continue;
@@ -5450,7 +5445,7 @@ function GrowToolbar(ctx) {
           if (nc1 === null) {
             var fname = subg_name + ".pwsg";
             sts = this.ctx.loadSubgraph(fname);
-            if ((sts & 1) != 0) {
+            if ((sts & 1) !== 0) {
               nc1 = this.ctx.get_nodeclass_from_name(subg_name);
             }
           }
@@ -5464,7 +5459,7 @@ function GrowToolbar(ctx) {
             // n1.disable_callback();
             this.nc.a.add(n1);
 
-            if ((mask & insensitive_mask2) != 0) {
+            if ((mask & insensitive_mask2) !== 0) {
               n1.setVisibility(Glow.eVis_Dimmed);
             }
 
@@ -5496,11 +5491,11 @@ function GrowToolbar(ctx) {
       } else {
         mask = 1 << (i - 32);
       }
-      if ((i < 32 && (this.tools1_mask & mask) != 0) ||
-        (i >= 32 && (this.tools2_mask & mask) != 0)) {
+      if ((i < 32 && (this.tools1_mask & mask) !== 0) ||
+        (i >= 32 && (this.tools2_mask & mask) !== 0)) {
         cnt++;
       }
-      if (cnt == idx + 1) {
+      if (cnt === idx + 1) {
         mask_idx = i % 32;
         category = i / 32 + 1;
         var ret = new Array(2);
@@ -5515,7 +5510,7 @@ function GrowToolbar(ctx) {
   this.scale = function () {
     var scale;
 
-    if (this.ctx.mw.window_width == 0) {
+    if (this.ctx.mw.window_width === 0) {
       return;
     }
 
@@ -5827,18 +5822,18 @@ function GrowRect(ctx) {
     var display_shadow = ((node !== null && node.shadow !== 0) ||
       this.shadow !== 0) && this.disable_shadow === 0;
     var fillcolor;
-    if (this.fill_eq_background !== 0) {
-      fillcolor = GlowColor.get_drawtype(this.background_drawtype,
-        Glow.eDrawType_FillHighlight, highlight, colornode, 3, 0);
-    } else {
+    if (this.fill_eq_background === 0) {
       fillcolor =
         GlowColor.get_drawtype(this.fill_drawtype, Glow.eDrawType_FillHighlight,
           highlight, colornode, 1, 0);
+    } else {
+      fillcolor = GlowColor.get_drawtype(this.background_drawtype,
+        Glow.eDrawType_FillHighlight, highlight, colornode, 3, 0);
     }
 
     var grad = this.gradient;
-    if (this.gradient == Glow.eGradient_No &&
-      (node !== null && node.gradient != Glow.eGradient_No) &&
+    if (this.gradient === Glow.eGradient_No &&
+      (node !== null && node.gradient !== Glow.eGradient_No) &&
       this.disable_gradient === 0) {
       grad = node.gradient;
     }
@@ -5851,7 +5846,7 @@ function GrowRect(ctx) {
 
       // Draw light shadow
       var drawtype_incr = this.shadow_contrast;
-      if (this.relief == Glow.eRelief_Down) {
+      if (this.relief === Glow.eRelief_Down) {
         drawtype_incr = -this.shadow_contrast;
       }
 
@@ -5896,25 +5891,25 @@ function GrowRect(ctx) {
     }
     if (this.fill !== 0) {
       if (display_shadow && ish !== 0) {
-        if (grad == Glow.eGradient_No || fillcolor == Glow.eDrawType_ColorRed) {
-          if (chot !== 0) {
-            drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
-          } else {
+        if (grad === Glow.eGradient_No || fillcolor === Glow.eDrawType_ColorRed) {
+          if (chot === 0) {
             drawtype = fillcolor;
+          } else {
+            drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
           }
           this.ctx.gdraw.fill_rect(ll_x + ish, ll_y + ish, ur_x - ll_x - 2 *
             ish, ur_y - ll_y - 2 * ish, drawtype);
         } else {
           var fa0, fa1, fa2;
           var rotationa;
-          if (t !== null) {
-            rotationa = this.trf.rot(t);
-          } else {
+          if (t === null) {
             rotationa = this.trf.rot();
+          } else {
+            rotationa = this.trf.rot(t);
           }
 
           if (this.bgcolor_gradient !== 0 &&
-            this.background_drawtype != Glow.eDrawType_No) {
+            this.background_drawtype !== Glow.eDrawType_No) {
             fa2 = fillcolor;
             fa1 = GlowColor.get_drawtype(this.background_drawtype,
               Glow.eDrawType_FillHighlight, highlight, colornode, 1, 0);
@@ -5941,24 +5936,24 @@ function GrowRect(ctx) {
             this.ctx.gdraw.gradient_rotate(rotationa, grad));
         }
       } else {
-        if (grad == Glow.eGradient_No || fillcolor == Glow.eDrawType_ColorRed) {
-          if (chot !== 0) {
-            drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
-          } else {
+        if (grad === Glow.eGradient_No || fillcolor === Glow.eDrawType_ColorRed) {
+          if (chot === 0) {
             drawtype = fillcolor;
+          } else {
+            drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
           }
           this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
             drawtype);
         } else {
           var fb0, fb1, fb2;
           var rotationb;
-          if (t !== null) {
-            rotationb = this.trf.rot(t);
-          } else {
+          if (t === null) {
             rotationb = this.trf.rot();
+          } else {
+            rotationb = this.trf.rot(t);
           }
           if (this.bgcolor_gradient !== 0 &&
-            this.background_drawtype != Glow.eDrawType_No) {
+            this.background_drawtype !== Glow.eDrawType_No) {
             fb2 = fillcolor;
             fb1 = GlowColor.get_drawtype(this.background_drawtype,
               Glow.eDrawType_FillHighlight, highlight, colornode, 1, 0);
@@ -5999,16 +5994,16 @@ function GrowRect(ctx) {
   this.get_borders = function (t, g) {
     var ll_x, ur_x, ll_y, ur_y, x1, x2, y1, y2;
 
-    if (t !== null) {
-      x1 = this.trf.x(t, this.ll.x, this.ll.y);
-      x2 = this.trf.x(t, this.ur.x, this.ur.y);
-      y1 = this.trf.y(t, this.ll.x, this.ll.y);
-      y2 = this.trf.y(t, this.ur.x, this.ur.y);
-    } else {
+    if (t === null) {
       x1 = this.trf.x(this.ll.x, this.ll.y);
       x2 = this.trf.x(this.ur.x, this.ur.y);
       y1 = this.trf.y(this.ll.x, this.ll.y);
       y2 = this.trf.y(this.ur.x, this.ur.y);
+    } else {
+      x1 = this.trf.x(t, this.ll.x, this.ll.y);
+      x2 = this.trf.x(t, this.ur.x, this.ur.y);
+      y1 = this.trf.y(t, this.ll.x, this.ll.y);
+      y2 = this.trf.y(t, this.ur.x, this.ur.y);
     }
 
     ll_x = Math.min(x1, x2);
@@ -6045,7 +6040,7 @@ function GrowRect(ctx) {
   this.set_scale = function (scale_x, scale_y, x0, y0, type) {
     var old_x_left, old_x_right, old_y_low, old_y_high;
 
-    if (this.trf.s_a11 != 0 && this.trf.s_a22 != 0 &&
+    if (this.trf.s_a11 !== 0 && this.trf.s_a22 !== 0 &&
       Math.abs(scale_x - this.trf.a11 / this.trf.s_a11) < Number.MIN_VALUE &&
       Math.abs(scale_y - this.trf.a22 / this.trf.s_a22) < Number.MIN_VALUE) {
       return;
@@ -6075,7 +6070,6 @@ function GrowRect(ctx) {
         y0 = (this.y_low + this.y_high) / 2;
         break;
       default:
-        ;
     }
 
     old_x_left = this.x_left;
@@ -6109,7 +6103,6 @@ function GrowRect(ctx) {
         y0 = (this.y_low + this.y_high) / 2;
         break;
       default:
-        ;
     }
     this.ctx.draw(old_x_left * this.ctx.mw.zoom_factor_x -
       this.ctx.mw.offset_x - Glow.DRAW_MP, old_y_low *
@@ -6421,18 +6414,18 @@ function GrowRectRounded(ctx) {
         Glow.eDrawType_FillHighlight, highlight, colornode, 1, 0);
 
       var grad = this.gradient;
-      if (this.gradient == Glow.eGradient_No &&
-        (node !== null && node.gradient != Glow.eGradient_No) &&
+      if (this.gradient === Glow.eGradient_No &&
+        (node !== null && node.gradient !== Glow.eGradient_No) &&
         this.disable_gradient === 0) {
         grad = node.gradient;
       }
 
       if (!display_shadow || ish === 0) {
-        if (grad == Glow.eGradient_No) {
-          if (chot !== 0) {
-            drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
-          } else {
+        if (grad === Glow.eGradient_No) {
+          if (chot === 0) {
             drawtype = fillcolor;
+          } else {
+            drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
           }
 
           this.ctx.gdraw.fill_rect(ll_x, ll_y + amount, ur_x - ll_x, ur_y -
@@ -6452,10 +6445,10 @@ function GrowRectRounded(ctx) {
         } else {
           var fa1, fa2;
           var rotationa;
-          if (t !== null) {
-            rotationa = this.trf.rot(t);
-          } else {
+          if (t === null) {
             rotationa = this.trf.rot();
+          } else {
+            rotationa = this.trf.rot(t);
           }
 
           if (this.gradient_contrast >= 0) {
@@ -6480,7 +6473,7 @@ function GrowRectRounded(ctx) {
       } else {
 
         var drawtype_incr = this.shadow_contrast;
-        if (this.relief == Glow.eRelief_Down) {
+        if (this.relief === Glow.eRelief_Down) {
           drawtype_incr = -this.shadow_contrast;
         }
 
@@ -6511,11 +6504,11 @@ function GrowRectRounded(ctx) {
         this.ctx.gdraw.fill_arc(ur_x - 2 * amount, ur_y - 2 * amount, 2 *
           amount, 2 * amount, 270, 90, drawtype);
 
-        if (grad == Glow.eGradient_No) {
-          if (chot !== 0) {
-            drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
-          } else {
+        if (grad === Glow.eGradient_No) {
+          if (chot === 0) {
             drawtype = fillcolor;
+          } else {
+            drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
           }
 
           if (amount > ish) {
@@ -6542,10 +6535,10 @@ function GrowRectRounded(ctx) {
         } else {
           var fb1, fb2;
           var rotationb;
-          if (t !== null) {
-            rotationb = this.trf.rot(t);
-          } else {
+          if (t === null) {
             rotationb = this.trf.rot();
+          } else {
+            rotationb = this.trf.rot(t);
           }
 
           if (this.gradient_contrast >= 0) {
@@ -6736,7 +6729,7 @@ function GrowLine(ctx) {
       return;
     }
 
-    if (hot != 9 && this.ctx.hot_indication != Glow.eHotIndication_LineWidth) {
+    if (hot !== 9 && this.ctx.hot_indication !== Glow.eHotIndication_LineWidth) {
       hot = 0;
     }
 
@@ -6775,14 +6768,14 @@ function GrowLine(ctx) {
       y2 = Math.floor(this.trf.y(t, this.p2.x, this.p2.y) *
         this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
     }
-    if (x1 == x2 && y1 == y2) {
+    if (x1 === x2 && y1 === y2) {
       return;
     }
     drawtype =
       GlowColor.get_drawtype(this.draw_type, Glow.eDrawType_LineHighlight,
         highlight, colornode, 0, 0);
 
-    if (this.line_type == Glow.eLineType_Solid) {
+    if (this.line_type === Glow.eLineType_Solid) {
       this.ctx.gdraw.line(x1, y1, x2, y2, drawtype, idx, 0);
     } else {
       this.ctx.gdraw.line_dashed(x1, y1, x2, y2, drawtype, idx, 0,
@@ -7027,12 +7020,12 @@ function GrowArc(ctx) {
     var idx;
     var chot = 0;
 
-    if (this.ctx.hot_indication == Glow.eHotIndication_No) {
+    if (this.ctx.hot_indication === Glow.eHotIndication_No) {
       hot = 0;
-    } else if (this.ctx.hot_indication == Glow.eHotIndication_DarkColor) {
+    } else if (this.ctx.hot_indication === Glow.eHotIndication_DarkColor) {
       chot = hot;
       hot = 0;
-    } else if (this.ctx.hot_indication == Glow.eHotIndication_LightColor) {
+    } else if (this.ctx.hot_indication === Glow.eHotIndication_LightColor) {
       chot = -hot;
       hot = 0;
     }
@@ -7125,27 +7118,27 @@ function GrowArc(ctx) {
       var display_shadow = ((node !== null && node.shadow !== 0) ||
         this.shadow !== 0) && this.disable_shadow === 0;
       var fillcolor;
-      if (this.fill_eq_background !== 0) {
-        fillcolor = GlowColor.get_drawtype(this.background_drawtype,
-          Glow.eDrawType_FillHighlight, highlight, colornode, 3, 0);
-      } else {
+      if (this.fill_eq_background === 0) {
         fillcolor = GlowColor.get_drawtype(this.fill_drawtype,
           Glow.eDrawType_FillHighlight, highlight, colornode, 1, 0);
+      } else {
+        fillcolor = GlowColor.get_drawtype(this.background_drawtype,
+          Glow.eDrawType_FillHighlight, highlight, colornode, 3, 0);
       }
 
       var grad = this.gradient;
-      if (this.gradient == Glow.eGradient_No &&
-        (node !== null && node.gradient != Glow.eGradient_No) &&
+      if (this.gradient === Glow.eGradient_No &&
+        (node !== null && node.gradient !== Glow.eGradient_No) &&
         this.disable_gradient === 0) {
         grad = node.gradient;
       }
 
-      if (!display_shadow || this.shadow_width === 0 || this.angle2 != 360) {
-        if (grad == Glow.eGradient_No || fillcolor == Glow.eDrawType_ColorRed) {
-          if (chot !== 0) {
-            drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
-          } else {
+      if (!display_shadow || this.shadow_width === 0 || this.angle2 !== 360) {
+        if (grad === Glow.eGradient_No || fillcolor === Glow.eDrawType_ColorRed) {
+          if (chot === 0) {
             drawtype = fillcolor;
+          } else {
+            drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
           }
           this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y -
             ll_y, this.angle1 - rot, this.angle2, drawtype);
@@ -7173,11 +7166,11 @@ function GrowArc(ctx) {
         var ish = Math.floor(this.shadow_width / 100 *
           Math.min(ur_x - ll_x, ur_y - ll_y) + 0.5);
         var drawtype_incr = this.shadow_contrast;
-        if (this.relief == Glow.eRelief_Down) {
+        if (this.relief === Glow.eRelief_Down) {
           drawtype_incr = -this.shadow_contrast;
         }
 
-        if (grad == Glow.eGradient_No || fillcolor == Glow.eDrawType_ColorRed) {
+        if (grad === Glow.eGradient_No || fillcolor === Glow.eDrawType_ColorRed) {
 
           // Draw light shadow
           drawtype = GlowColor.shift_drawtype(fillcolor, -drawtype_incr + chot,
@@ -7194,10 +7187,10 @@ function GrowArc(ctx) {
             140, drawtype);
 
           // Draw medium shadow and body
-          if (chot !== 0) {
-            drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
-          } else {
+          if (chot === 0) {
             drawtype = fillcolor;
+          } else {
+            drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
           }
 
           this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, -5, 40,
@@ -7255,16 +7248,16 @@ function GrowArc(ctx) {
   this.get_borders = function (t, g) {
     var ll_x, ur_x, ll_y, ur_y, x1, x2, y1, y2;
 
-    if (t !== null) {
-      x1 = this.trf.x(t, this.ll.x, this.ll.y);
-      x2 = this.trf.x(t, this.ur.x, this.ur.y);
-      y1 = this.trf.y(t, this.ll.x, this.ll.y);
-      y2 = this.trf.y(t, this.ur.x, this.ur.y);
-    } else {
+    if (t === null) {
       x1 = this.trf.x(this.ll.x, this.ll.y);
       x2 = this.trf.x(this.ur.x, this.ur.y);
       y1 = this.trf.y(this.ll.x, this.ll.y);
       y2 = this.trf.y(this.ur.x, this.ur.y);
+    } else {
+      x1 = this.trf.x(t, this.ll.x, this.ll.y);
+      x2 = this.trf.x(t, this.ur.x, this.ur.y);
+      y1 = this.trf.y(t, this.ll.x, this.ll.y);
+      y2 = this.trf.y(t, this.ur.x, this.ur.y);
     }
 
     ll_x = Math.min(x1, x2);
@@ -7462,7 +7455,7 @@ function GrowText(ctx) {
     var lfont;
     var ldraw_type;
 
-    if (node !== null && node.text_font != Glow.eFont_No) {
+    if (node !== null && node.text_font !== Glow.eFont_No) {
       lfont = node.text_font;
       ldraw_type = node.text_type;
     } else {
@@ -7486,7 +7479,7 @@ function GrowText(ctx) {
         this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
       rot = Math.floor(this.trf.rot(t));
     }
-    if (this.adjustment == Glow.eAdjustment_Center) {
+    if (this.adjustment === Glow.eAdjustment_Center) {
       rot = rot < 0 ? rot % 360 + 360 : rot % 360;
     } else {
       rot = 0;
@@ -7494,7 +7487,7 @@ function GrowText(ctx) {
 
     if (this.text !== "") {
       if (highl !== 0 || (hot !== 0 && node === null) ||
-        this.adjustment != Glow.eAdjustment_Left) {
+        this.adjustment !== Glow.eAdjustment_Left) {
         var dim = this.ctx.gdraw.getTextExtent(this.text, Math.max(0, idx),
           lfont, ldraw_type);
         z_width = dim.width;
@@ -7719,12 +7712,12 @@ function GrowAnnot(ctx) {
     var lfont;
     var ldraw_type;
 
-    if (node !== null && node.annot_scrollingtext == this.number) {
+    if (node !== null && node.annot_scrollingtext === this.number) {
       offset_x = node.annot_offset_x;
       offset_y = node.annot_offset_y;
     }
 
-    if (node !== null && node.text_font != Glow.eFont_No) {
+    if (node !== null && node.text_font !== Glow.eFont_No) {
       lfont = node.text_font;
       ldraw_type = node.text_type;
     } else {
@@ -7760,8 +7753,8 @@ function GrowAnnot(ctx) {
         if (((rot < 45 || rot >= 315) &&
             (node.annotv_inputmode[this.number] !== 0 && node.input_selected !==
               0)) || (!(rot < 45 || rot >= 315)) ||
-          this.adjustment == Glow.eAdjustment_Right ||
-          this.adjustment == Glow.eAdjustment_Center) {
+          this.adjustment === Glow.eAdjustment_Right ||
+          this.adjustment === Glow.eAdjustment_Center) {
           var d = this.getTextExtent(t, node);
           width = d.width;
           height = d.height;
@@ -7790,7 +7783,7 @@ function GrowAnnot(ctx) {
           }
         } else {
           // Text is rotated, adjust the coordinates
-          if (this.adjustment == Glow.eAdjustment_Center) {
+          if (this.adjustment === Glow.eAdjustment_Center) {
             // Only center adjustment supports text rotation
             if (45 <= rot && rot < 135) {
               x1 += width / 2;
@@ -8136,12 +8129,12 @@ function GrowPolyline(ctx) {
 
     var chot = 0;
     if (hot !== 0) {
-      if (this.ctx.hot_indication == Glow.eHotIndication_No) {
+      if (this.ctx.hot_indication === Glow.eHotIndication_No) {
         hot = 0;
-      } else if (this.ctx.hot_indication == Glow.eHotIndication_DarkColor) {
+      } else if (this.ctx.hot_indication === Glow.eHotIndication_DarkColor) {
         chot = hot;
         hot = 0;
-      } else if (this.ctx.hot_indication == Glow.eHotIndication_LightColor) {
+      } else if (this.ctx.hot_indication === Glow.eHotIndication_LightColor) {
         chot = -hot;
         hot = 0;
       }
@@ -8183,8 +8176,8 @@ function GrowPolyline(ctx) {
     }
     if (this.fill !== 0) {
       var grad = this.gradient;
-      if (this.gradient == Glow.eGradient_No &&
-        (node !== null && node.gradient != Glow.eGradient_No) &&
+      if (this.gradient === Glow.eGradient_No &&
+        (node !== null && node.gradient !== Glow.eGradient_No) &&
         this.disable_gradient === 0) {
         grad = node.gradient;
       }
@@ -8206,7 +8199,7 @@ function GrowPolyline(ctx) {
             colornode);
       } else if (this.fill_eq_bglight !== 0) {
         if (colornode !== null &&
-          node.background_drawtype != Glow.eDrawType_No) {
+          node.background_drawtype !== Glow.eDrawType_No) {
           drawtype = GlowColor.shift_drawtype(
             colornode.background_drawtype, -this.shadow_contrast + chot,
             colornode);
@@ -8222,7 +8215,7 @@ function GrowPolyline(ctx) {
             colornode);
       } else if (this.fill_eq_bgshadow !== 0) {
         if (colornode !== null &&
-          node.background_drawtype != Glow.eDrawType_No) {
+          node.background_drawtype !== Glow.eDrawType_No) {
           drawtype = GlowColor.shift_drawtype(
             colornode.background_drawtype, this.shadow_contrast + chot,
             colornode);
@@ -8235,16 +8228,16 @@ function GrowPolyline(ctx) {
         drawtype = GlowColor.shift_drawtype(drawtype, chot, null);
       }
 
-      if (grad == Glow.eGradient_No || drawtype == Glow.eDrawType_ColorRed) {
+      if (grad === Glow.eGradient_No || drawtype === Glow.eDrawType_ColorRed) {
         this.ctx.gdraw.fill_polyline(this.points, this.a_points.size(),
           drawtype, 0);
       } else {
         var f1, f2;
         var rotation;
-        if (t !== null) {
-          rotation = this.trf.rot(t);
-        } else {
+        if (t === null) {
           rotation = this.trf.rot();
+        } else {
+          rotation = this.trf.rot(t);
         }
 
         if (this.gradient_contrast >= 0) {
@@ -8321,13 +8314,13 @@ function GrowPolyline(ctx) {
       var dark_drawtype;
 
       var p_num = this.a_points.size();
-      if (this.points[0].x == this.points[p_num - 1].x &&
-        this.points[0].y == this.points[p_num - 1].y) {
+      if (this.points[0].x === this.points[p_num - 1].x &&
+        this.points[0].y === this.points[p_num - 1].y) {
         p_num--;
       }
 
-      if (this.points[0].x == this.points[this.a_points.size() - 1].x &&
-        this.points[0].y == this.points[this.a_points.size() - 1].y) {
+      if (this.points[0].x === this.points[this.a_points.size() - 1].x &&
+        this.points[0].y === this.points[this.a_points.size() - 1].y) {
         sp = new Array(p_num + 1);
       } else {
         sp = new Array(p_num);
@@ -8337,7 +8330,7 @@ function GrowPolyline(ctx) {
         Glow.eDrawType_FillHighlight, highlight, colornode, 1, 0);
 
       var drawtype_incr = this.shadow_contrast;
-      if (this.relief == Glow.eRelief_Down) {
+      if (this.relief === Glow.eRelief_Down) {
         drawtype_incr = -this.shadow_contrast;
       }
       light_drawtype =
@@ -8362,7 +8355,7 @@ function GrowPolyline(ctx) {
         }
         sx1 = this.points[i].x;
         sy1 = this.points[i].y;
-        if (i == p_num - 1) {
+        if (i === p_num - 1) {
           sx2 = this.points[0].x;
           sy2 = this.points[0].y;
         } else {
@@ -8371,7 +8364,7 @@ function GrowPolyline(ctx) {
         }
 
         pos12 = pos01;
-        if (i != -1) {
+        if (i !== -1) {
           if (Math.abs(sx0 - sx1) < Number.MIN_VALUE) {
             if (sx1 > sx2 && sy1 < sy0) {
               pos12 = -pos01;
@@ -8441,15 +8434,15 @@ function GrowPolyline(ctx) {
             sp[i].y = Math.floor(k12 * x + m12 + 0.5);
           }
         }
-        if (pos12 == 1) {
+        if (pos12 === 1) {
           sp[i].drawtype = light_drawtype;
         } else {
           sp[i].drawtype = dark_drawtype;
         }
         pos01 = pos12;
       }
-      if (this.points[0].x == this.points[this.a_points.size() - 1].x &&
-        this.points[0].y == this.points[this.a_points.size() - 1].y) {
+      if (this.points[0].x === this.points[this.a_points.size() - 1].x &&
+        this.points[0].y === this.points[this.a_points.size() - 1].y) {
         sp[p_num] = new GlowShadowInfo();
         sp[p_num].x = sp[0].x;
         sp[p_num].y = sp[0].y;
@@ -8466,14 +8459,14 @@ function GrowPolyline(ctx) {
     a1_old = 0;
     a0_old = 0;
 
-    if ((this.points[p_num - 1].x == this.points[0].x &&
-        this.points[p_num - 1].y == this.points[0].y)) {
+    if ((this.points[p_num - 1].x === this.points[0].x &&
+        this.points[p_num - 1].y === this.points[0].y)) {
       p_num--;
     }
 
     for (var i = 0; i < p_num; i++) {
-      if (i == p_num - 1) {
-        if (this.points[0].x == this.points[i].x) {
+      if (i === p_num - 1) {
+        if (this.points[0].x === this.points[i].x) {
           a1 = 90;
           if (this.points[0].y < this.points[i].y) {
             a1 += 180;
@@ -8486,7 +8479,7 @@ function GrowPolyline(ctx) {
           a1 += 180;
         }
       } else {
-        if (this.points[i + 1].x == this.points[i].x) {
+        if (this.points[i + 1].x === this.points[i].x) {
           a1 = 90;
           if (this.points[i + 1].y < this.points[i].y) {
             a1 += 180;
@@ -8512,7 +8505,7 @@ function GrowPolyline(ctx) {
         a_sum2 += 360 - a2;
 
       }
-      if (i == p_num - 1) {
+      if (i === p_num - 1) {
         a2 = a0_old - (a1 - 180);
         if (a2 < 0) {
           a2 += 360;
@@ -8526,15 +8519,15 @@ function GrowPolyline(ctx) {
     }
     var dir;
     var last_point;
-    if (this.points[0].x == this.points[this.a_points.size() - 1].x &&
-      this.points[0].y == this.points[this.a_points.size() - 1].y) {
+    if (this.points[0].x === this.points[this.a_points.size() - 1].x &&
+      this.points[0].y === this.points[this.a_points.size() - 1].y) {
       last_point = this.points[this.a_points.size() - 2];
     } else {
       last_point = this.points[this.a_points.size() - 1];
     }
 
     if (a_sum2 - a_sum1 < 0) {
-      if (this.points[0].x == last_point.x) {
+      if (this.points[0].x === last_point.x) {
         if (this.points[0].x < this.points[1].x) {
           dir = 1;
         } else {
@@ -8546,7 +8539,7 @@ function GrowPolyline(ctx) {
         dir = -1;
       }
     } else {
-      if (this.points[0].x == last_point.x) {
+      if (this.points[0].x === last_point.x) {
         if (this.points[0].x < this.points[1].x) {
           dir = 1;
         } else {
@@ -8580,17 +8573,7 @@ function GrowPolyline(ctx) {
     var x1, y1, x2 = 0, y2 = 0;
 
     for (i = 0; i < this.a_points.size() - 1; i++) {
-      if (t !== null) {
-        if (i === 0) {
-          x1 = this.trf.x(t, this.a_points.get(i).x, this.a_points.get(i).y);
-          y1 = this.trf.y(t, this.a_points.get(i).x, this.a_points.get(i).y);
-        } else {
-          x1 = x2;
-          y1 = y2;
-        }
-        x2 = this.trf.x(t, this.a_points.get(i).x, this.a_points.get(i).y);
-        y2 = this.trf.y(t, this.a_points.get(i).x, this.a_points.get(i).y);
-      } else {
+      if (t === null) {
         if (i === 0) {
           x1 = this.trf.x(this.a_points.get(i).x, this.a_points.get(i).y);
           y1 = this.trf.y(this.a_points.get(i).x, this.a_points.get(i).y);
@@ -8600,6 +8583,16 @@ function GrowPolyline(ctx) {
         }
         x2 = this.trf.x(this.a_points.get(i + 1).x, this.a_points.get(i + 1).y);
         y2 = this.trf.y(this.a_points.get(i + 1).x, this.a_points.get(i + 1).y);
+      } else {
+        if (i === 0) {
+          x1 = this.trf.x(t, this.a_points.get(i).x, this.a_points.get(i).y);
+          y1 = this.trf.y(t, this.a_points.get(i).x, this.a_points.get(i).y);
+        } else {
+          x1 = x2;
+          y1 = y2;
+        }
+        x2 = this.trf.x(t, this.a_points.get(i).x, this.a_points.get(i).y);
+        y2 = this.trf.y(t, this.a_points.get(i).x, this.a_points.get(i).y);
       }
 
       if (x1 < g.ll_x) {
@@ -8938,7 +8931,7 @@ function GlowArc(ctx) {
     ur_y = Math.floor(this.ur.y * this.ctx.mw.zoom_factor_y + 0.5) -
       this.ctx.mw.offset_y;
 
-    if (ll_x == ur_x && ll_y == ur_y) {
+    if (ll_x === ur_x && ll_y === ur_y) {
       return;
     }
     var idx = Math.floor(this.ctx.mw.zoom_factor_y /
@@ -8996,7 +8989,7 @@ function GlowArc(ctx) {
           Math.max(0, ur_y - ll_y - idx + offs * 2), this.angle1, this.angle2 -
           45, GlowColor.shift_drawtype(this.draw_type, -2, null), ish - 1,
           highlight);
-      } else if (this.angle1 == 90) {
+      } else if (this.angle1 === 90) {
         this.ctx.gdraw.arc(ll_x + idx / 2 - idx + offs, ll_y + idx / 2 - idx +
           offs, ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2,
           this.angle1, this.angle2,
@@ -9007,7 +9000,7 @@ function GlowArc(ctx) {
           Math.max(0, ur_y - ll_y - idx + offs * 2), this.angle1, this.angle2,
           GlowColor.shift_drawtype(this.draw_type, 2, null), ish - 1,
           highlight);
-      } else if (this.angle1 == 180) {
+      } else if (this.angle1 === 180) {
         this.ctx.gdraw.arc(ll_x + idx / 2 - idx + offs, ll_y + idx / 2 - idx +
           offs, ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs *
           2, this.angle1 + 45, this.angle2 - 45,
@@ -9029,7 +9022,7 @@ function GlowArc(ctx) {
           Math.max(0, ur_y - ll_y - idx + offs * 2), this.angle1, this.angle2 -
           45, GlowColor.shift_drawtype(this.draw_type, 2, null), ish - 1,
           highlight);
-      } else if (this.angle1 == 270) {
+      } else if (this.angle1 === 270) {
         this.ctx.gdraw.arc(ll_x + idx / 2 - idx + offs, ll_y + idx / 2 - idx +
           offs, ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2,
           this.angle1, this.angle2,
@@ -9079,7 +9072,7 @@ function GrowImage(ctx) {
   this.image.onLoad = function () {
     console.log("Loading image");
     self.draw();
-  }
+  };
 
   this.type = function () {
     return Glow.eObjectType_GrowImage;
@@ -9184,7 +9177,6 @@ function GrowImage(ctx) {
       case Glow.eEvent_CursorMotion:
         return 0;
       default:
-        ;
     }
 
     rp = this.trf.reverse(fx, fy);
@@ -9205,7 +9197,7 @@ function GrowImage(ctx) {
 
 
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0) {
+    if (this.ctx.nodraw !== 0) {
       return;
     }
 
@@ -9260,16 +9252,16 @@ function GrowImage(ctx) {
   this.get_borders = function (t, g) {
     var ll_x, ur_x, ll_y, ur_y, x1, x2, y1, y2;
 
-    if (t !== null) {
-      x1 = this.trf.x(t, this.ll.x, this.ll.y);
-      x2 = this.trf.x(t, this.ur.x, this.ur.y);
-      y1 = this.trf.y(t, this.ll.x, this.ll.y);
-      y2 = this.trf.y(t, this.ur.x, this.ur.y);
-    } else {
+    if (t === null) {
       x1 = this.trf.x(this.ll.x, this.ll.y);
       x2 = this.trf.x(this.ur.x, this.ur.y);
       y1 = this.trf.y(this.ll.x, this.ll.y);
       y2 = this.trf.y(this.ur.x, this.ur.y);
+    } else {
+      x1 = this.trf.x(t, this.ll.x, this.ll.y);
+      x2 = this.trf.x(t, this.ur.x, this.ur.y);
+      y1 = this.trf.y(t, this.ll.x, this.ll.y);
+      y2 = this.trf.y(t, this.ur.x, this.ur.y);
     }
 
     ll_x = Math.min(x1, x2);
@@ -9289,7 +9281,7 @@ function GrowImage(ctx) {
     if (ur_y > g.ur_y) {
       g.ur_y = ur_y;
     }
-  }
+  };
 
   this.get_node_borders = function () {
     var g = new GlowGeometry();
@@ -9300,7 +9292,7 @@ function GrowImage(ctx) {
     this.x_right = g.ur_x;
     this.y_low = g.ll_y;
     this.y_high = g.ur_y;
-  }
+  };
 
   this.set_scale = function (scale_x, scale_y, x0, y0, type) {
     var old_x_left, old_x_right, old_y_low, old_y_high;
@@ -9335,7 +9327,6 @@ function GrowImage(ctx) {
         y0 = (this.y_low + this.y_high) / 2;
         break;
       default:
-        ;
     }
 
     old_x_left = this.x_left;
@@ -9369,7 +9360,6 @@ function GrowImage(ctx) {
         y0 = (y_low + y_high) / 2;
         break;
       default:
-        ;
     }
     this.ctx.draw(old_x_left * this.ctx.mw.zoom_factor_x -
       this.ctx.mw.offset_x - Glow.DRAW_MP, old_y_low *
@@ -9457,10 +9447,10 @@ function GrowConGlue(ctx) {
 
   this.draw = function () {
     this.tdraw(null, this.highlight, this.hot, null, null);
-  }
+  };
 
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0) {
+    if (this.ctx.nodraw !== 0) {
       return;
     }
     var idx, idx_up, idx_down, idx_left, idx_right;
@@ -9535,12 +9525,12 @@ function GrowConGlue(ctx) {
     idx_right = Math.max(0, idx_right);
     idx_right = Math.min(idx_right, Glow.DRAW_TYPE_SIZE - 1);
 
-    if (lw_up != -1 && lw_down == -1 && lw_right == -1 && lw_left == -1) {
+    if (lw_up !== -1 && lw_down === -1 && lw_right === -1 && lw_left === -1) {
       // Up termination
       this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y, idx_up +
         1, ur_y - m_y, drawtype);
-      if (this.shadow != 0 && idx_up > 2) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && idx_up > 2) {
+        if (this.border !== 0) {
           idx_up -= 2;
           m_y++;
         }
@@ -9554,12 +9544,12 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y, m_x + idx_up / 2,
           m_y, shift_drawtype, 0, 0);
 
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_up += 2;
           m_y--;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y, m_x - idx_up +
           idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y, m_x + idx_up / 2, ur_y,
@@ -9567,13 +9557,13 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y, m_x + idx_up / 2,
           m_y, Glow.eDrawType_Line, 0, 0);
       }
-    } else if (lw_up == -1 && lw_down != -1 && lw_right == -1 &&
-      lw_left == -1) {
+    } else if (lw_up === -1 && lw_down !== -1 && lw_right === -1 &&
+      lw_left === -1) {
       // Down termination
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
         1, m_y - ll_y, drawtype);
-      if (this.shadow != 0 && idx_down > 2) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && idx_down > 2) {
+        if (this.border !== 0) {
           idx_down -= 2;
           m_y--;
         }
@@ -9587,12 +9577,12 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, ll_y, m_x -
           idx_down + idx_down / 2, m_y, shift_drawtype, 0, 0);
 
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_down += 2;
           m_y++;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, ll_y, m_x -
           idx_down + idx_down / 2, m_y, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y,
@@ -9600,13 +9590,13 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, m_y, m_x + idx_down /
           2, m_y, Glow.eDrawType_Line, 0, 0);
       }
-    } else if (lw_up == -1 && lw_down == -1 && lw_right != -1 &&
-      lw_left == -1) {
+    } else if (lw_up === -1 && lw_down === -1 && lw_right !== -1 &&
+      lw_left === -1) {
       // Right termination
       this.ctx.gdraw.fill_rect(m_x, m_y - idx_right + idx_right / 2, ur_x -
         m_x, idx_right + 1, drawtype);
-      if (this.shadow != 0 && idx_right > 2) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && idx_right > 2) {
+        if (this.border !== 0) {
           idx_right -= 2;
           m_x++;
         }
@@ -9620,12 +9610,12 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x, m_y - idx_right + idx_right / 2, m_x, m_y +
           idx_right / 2, shift_drawtype, 0, 0);
 
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_right += 2;
           m_x--;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(m_x, m_y - idx_right + idx_right / 2, ur_x, m_y -
           idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x, m_y + idx_right / 2, ur_x, m_y + idx_right / 2,
@@ -9633,13 +9623,13 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x, m_y - idx_right + idx_right / 2, m_x, m_y +
           idx_right / 2, Glow.eDrawType_Line, 0, 0);
       }
-    } else if (lw_up == -1 && lw_down == -1 && lw_right == -1 &&
-      lw_left != -1) {
+    } else if (lw_up === -1 && lw_down === -1 && lw_right === -1 &&
+      lw_left !== -1) {
       // Left termination
       this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x -
         ll_x, idx_left + 1, drawtype);
-      if (this.shadow != 0 && idx_left > 2) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && idx_left > 2) {
+        if (this.border !== 0) {
           idx_left -= 2;
           m_x--;
         }
@@ -9653,12 +9643,12 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, m_x, m_y -
           idx_left + idx_left / 2, shift_drawtype, 0, 0);
 
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_left += 2;
           m_x++;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, m_x, m_y -
           idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x, m_y + idx_left / 2,
@@ -9666,16 +9656,16 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x, m_y - idx_left + idx_left / 2, m_x, m_y +
           idx_left / 2, Glow.eDrawType_Line, 0, 0);
       }
-    } else if (lw_up != -1 && lw_down != -1 && lw_right == -1 &&
-      lw_left == -1) {
+    } else if (lw_up !== -1 && lw_down !== -1 && lw_right === -1 &&
+      lw_left === -1) {
       // Vertical glue
       this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y, idx_up +
         1, ur_y - m_y, drawtype);
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
         1, m_y - ll_y, drawtype);
 
-      if (this.shadow != 0 && idx_down > 2) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && idx_down > 2) {
+        if (this.border !== 0) {
           idx_up -= 2;
           idx_down -= 2;
         }
@@ -9689,12 +9679,12 @@ function GrowConGlue(ctx) {
           shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y, m_x + idx_up / 2, ur_y,
           shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_up += 2;
           idx_down += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, ll_y, m_x -
           idx_down + idx_down / 2, m_y, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y,
@@ -9703,22 +9693,22 @@ function GrowConGlue(ctx) {
           idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y, m_x + idx_up / 2, ur_y,
           Glow.eDrawType_Line, 0, 0);
-        if (idx_down != idx_up) {
+        if (idx_down !== idx_up) {
           this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y, m_x - idx_down +
             idx_down / 2, m_y, Glow.eDrawType_Line, 0, 0);
           this.ctx.gdraw.line(m_x + idx_up / 2, m_y, m_x + idx_down / 2, m_y,
             Glow.eDrawType_Line, 0, 0);
         }
       }
-    } else if (lw_left != -1 && lw_right != -1 && lw_up == -1 &&
-      lw_down == -1) {
+    } else if (lw_left !== -1 && lw_right !== -1 && lw_up === -1 &&
+      lw_down === -1) {
       // Horizontal glue
       this.ctx.gdraw.fill_rect(m_x, m_y - idx_right + idx_right / 2, ur_x -
         m_x, idx_right + 1, drawtype);
       this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x -
         ll_x, idx_left + 1, drawtype);
-      if (this.shadow != 0 && (idx_left > 2 || idx_right > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_left > 2 || idx_right > 2)) {
+        if (this.border !== 0) {
           idx_left -= 2;
           idx_right -= 2;
         }
@@ -9732,12 +9722,12 @@ function GrowConGlue(ctx) {
           shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x, m_y + idx_right / 2, ur_x, m_y + idx_right / 2,
           shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_left += 2;
           idx_right += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, m_x, m_y -
           idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x, m_y + idx_left / 2,
@@ -9746,22 +9736,22 @@ function GrowConGlue(ctx) {
           idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x, m_y + idx_right / 2, ur_x, m_y + idx_right / 2,
           Glow.eDrawType_Line, 0, 0);
-        if (idx_left != idx_right) {
+        if (idx_left !== idx_right) {
           this.ctx.gdraw.line(m_x, m_y - idx_right + idx_right / 2, m_x, m_y -
             idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
           this.ctx.gdraw.line(m_x, m_y + idx_right / 2, m_x, m_y + idx_left / 2,
             Glow.eDrawType_Line, 0, 0);
         }
       }
-    } else if (lw_left != -1 && lw_right == -1 && lw_up != -1 &&
-      lw_down == -1) {
+    } else if (lw_left !== -1 && lw_right === -1 && lw_up !== -1 &&
+      lw_down === -1) {
       // Left up corner
       this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y + idx_left /
         2, idx_up + 1, ur_y - (m_y + idx_left / 2), drawtype);
       this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x +
         idx_up / 2 - ll_x + 1, idx_left + 1, drawtype);
-      if (this.shadow != 0 && (idx_left > 2 || idx_up > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_left > 2 || idx_up > 2)) {
+        if (this.border !== 0) {
           idx_left -= 2;
           idx_up -= 2;
         }
@@ -9775,12 +9765,12 @@ function GrowConGlue(ctx) {
           2, m_y + idx_left / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y - idx_left + idx_left /
           2, m_x + idx_up / 2, ur_y, shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_left += 2;
           idx_up += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, m_x + idx_up /
           2, m_y - idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up /
@@ -9790,16 +9780,16 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y - idx_left + idx_left /
           2, m_x + idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
       }
-    } else if (lw_left == -1 && lw_right != -1 && lw_up != -1 &&
-      lw_down == -1) {
+    } else if (lw_left === -1 && lw_right !== -1 && lw_up !== -1 &&
+      lw_down === -1) {
       // Right up corner
       this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y - idx_right +
         idx_right / 2, idx_up + 1, ur_y - (m_y - idx_right + idx_right / 2),
         drawtype);
       this.ctx.gdraw.fill_rect(m_x + idx_up / 2, m_y - idx_right + idx_right /
         2, ur_x - (m_x + idx_up / 2), idx_right + 1, drawtype);
-      if (this.shadow != 0 && (idx_right > 2 || idx_up > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_right > 2 || idx_up > 2)) {
+        if (this.border !== 0) {
           idx_right -= 2;
           idx_up -= 2;
         }
@@ -9814,12 +9804,12 @@ function GrowConGlue(ctx) {
           idx_right / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, m_x +
           idx_up / 2, ur_y, shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_right += 2;
           idx_up += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y - idx_right +
           idx_right / 2, ur_x, m_y - idx_right + idx_right / 2,
           Glow.eDrawType_Line, 0, 0);
@@ -9831,16 +9821,16 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, m_x +
           idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
       }
-    } else if (lw_left == -1 && lw_right != -1 && lw_up == -1 &&
-      lw_down != -1) {
+    } else if (lw_left === -1 && lw_right !== -1 && lw_up === -1 &&
+      lw_down !== -1) {
       // Right down corner
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
         1, m_y - idx_right + idx_right / 2 - ll_y, drawtype);
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, m_y - idx_right +
         idx_right / 2, ur_x - (m_x - idx_down + idx_down / 2), idx_right + 1,
         drawtype);
-      if (this.shadow != 0 && (idx_right > 2 || idx_down > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_right > 2 || idx_down > 2)) {
+        if (this.border !== 0) {
           idx_right -= 2;
           idx_down -= 2;
         }
@@ -9854,12 +9844,12 @@ function GrowConGlue(ctx) {
           ur_x, m_y + idx_right / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y -
           idx_right + idx_right / 2, shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_right += 2;
           idx_down += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, m_y + idx_right / 2,
           ur_x, m_y + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
@@ -9870,15 +9860,15 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y -
           idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
       }
-    } else if (lw_left != -1 && lw_right == -1 && lw_up == -1 &&
-      lw_down != -1) {
+    } else if (lw_left !== -1 && lw_right === -1 && lw_up === -1 &&
+      lw_down !== -1) {
       // Left down corner
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
         1, m_y + idx_left / 2 - ll_y + 1, drawtype);
       this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x -
         idx_down + idx_down / 2 - ll_x, idx_left + 1, drawtype);
-      if (this.shadow != 0 && (idx_left > 2 || idx_down > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_left > 2 || idx_down > 2)) {
+        if (this.border !== 0) {
           idx_left -= 2;
           idx_down -= 2;
         }
@@ -9894,12 +9884,12 @@ function GrowConGlue(ctx) {
           idx_left / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y +
           idx_left / 2, shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_left += 2;
           idx_down += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, m_x -
           idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           Glow.eDrawType_Line, 0, 0);
@@ -9911,8 +9901,8 @@ function GrowConGlue(ctx) {
           idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           Glow.eDrawType_Line, 0, 0);
       }
-    } else if (lw_left != -1 && lw_right != -1 && lw_up == -1 &&
-      lw_down != -1) {
+    } else if (lw_left !== -1 && lw_right !== -1 && lw_up === -1 &&
+      lw_down !== -1) {
       // Left right down threeway
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
         1, m_y - ll_y + 1, drawtype);
@@ -9921,8 +9911,8 @@ function GrowConGlue(ctx) {
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, m_y - idx_right +
         idx_right / 2, ur_x - (m_x - idx_down + idx_down / 2), idx_right + 1,
         drawtype);
-      if (this.shadow != 0 && (idx_left > 2 || idx_right > 2 || idx_down > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_left > 2 || idx_right > 2 || idx_down > 2)) {
+        if (this.border !== 0) {
           idx_left -= 2;
           idx_right -= 2;
           idx_down -= 2;
@@ -9939,7 +9929,7 @@ function GrowConGlue(ctx) {
         shift_drawtype = GlowColor.shift_drawtype(this.draw_type, 2, null); // Dark
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y -
           idx_right + idx_right / 2, shift_drawtype, 0, 0);
-        if (idx_right == idx_left) {
+        if (idx_right === idx_left) {
           this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, ur_x, m_y + idx_left /
             2, shift_drawtype, 0, 0);
         } else if (idx_right > idx_left) {
@@ -9953,13 +9943,13 @@ function GrowConGlue(ctx) {
           this.ctx.gdraw.line(m_x + idx_down / 2, m_y + idx_right / 2,
             ur_x, m_y + idx_right / 2, shift_drawtype, 0, 0);
         }
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_left += 2;
           idx_right += 2;
           idx_down += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, m_x -
           idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           Glow.eDrawType_Line, 0, 0);
@@ -9970,7 +9960,7 @@ function GrowConGlue(ctx) {
           ur_x, m_y - idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y -
           idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
-        if (idx_right == idx_left) {
+        if (idx_right === idx_left) {
           this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, ur_x, m_y + idx_left /
             2, Glow.eDrawType_Line, 0, 0);
         } else if (idx_right > idx_left) {
@@ -9990,8 +9980,8 @@ function GrowConGlue(ctx) {
             idx_down / 2, m_y + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         }
       }
-    } else if (lw_left != -1 && lw_right != -1 && lw_up != -1 &&
-      lw_down == -1) {
+    } else if (lw_left !== -1 && lw_right !== -1 && lw_up !== -1 &&
+      lw_down === -1) {
       // Left right up threeway
       this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y, idx_up +
         1, ur_y - m_y, drawtype);
@@ -10000,8 +9990,8 @@ function GrowConGlue(ctx) {
       this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y - idx_right +
         idx_right / 2, ur_x - (m_x - idx_up + idx_up / 2), idx_right + 1,
         drawtype);
-      if (this.shadow != 0 && (idx_left > 2 || idx_right > 2 || idx_up > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_left > 2 || idx_right > 2 || idx_up > 2)) {
+        if (this.border !== 0) {
           idx_left -= 2;
           idx_right -= 2;
           idx_up -= 2;
@@ -10009,7 +9999,7 @@ function GrowConGlue(ctx) {
         shift_drawtype = GlowColor.shift_drawtype(this.draw_type, -2, null); // Light
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y + idx_left / 2, m_x -
           idx_up + idx_up / 2, ur_y, shift_drawtype, 0, 0);
-        if (idx_right == idx_left) {
+        if (idx_right === idx_left) {
           this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, ur_x, m_y -
             idx_left + idx_left / 2, shift_drawtype, 0, 0);
         } else if (idx_right > idx_left) {
@@ -10038,13 +10028,13 @@ function GrowConGlue(ctx) {
           idx_right / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, m_x +
           idx_up / 2, ur_y, shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_left += 2;
           idx_right += 2;
           idx_up += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up /
           2, m_y + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y + idx_left / 2, m_x -
@@ -10053,7 +10043,7 @@ function GrowConGlue(ctx) {
           idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, m_x +
           idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
-        if (idx_right == idx_left) {
+        if (idx_right === idx_left) {
           this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, ur_x, m_y -
             idx_left + idx_left / 2, Glow.eDrawType_Line, 0, 0);
         } else if (idx_right > idx_left) {
@@ -10077,8 +10067,8 @@ function GrowConGlue(ctx) {
             Glow.eDrawType_Line, 0, 0);
         }
       }
-    } else if (lw_left != -1 && lw_right == -1 && lw_up != -1 &&
-      lw_down != -1) {
+    } else if (lw_left !== -1 && lw_right === -1 && lw_up !== -1 &&
+      lw_down !== -1) {
       // Left up down threeway
       this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x -
         ll_x, idx_left + 1, drawtype);
@@ -10087,8 +10077,8 @@ function GrowConGlue(ctx) {
         drawtype);
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
         1, m_y + idx_left / 2 - ll_y, drawtype);
-      if (this.shadow != 0 && (idx_left > 2 || idx_down > 2 || idx_up > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_left > 2 || idx_down > 2 || idx_up > 2)) {
+        if (this.border !== 0) {
           idx_left -= 2;
           idx_down -= 2;
           idx_up -= 2;
@@ -10106,7 +10096,7 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(ll_x, m_y + idx_left / 2, m_x - idx_up + idx_up /
           2, m_y + idx_left / 2, shift_drawtype, 0, 0);
 
-        if (idx_up == idx_down) {
+        if (idx_up === idx_down) {
           this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
             ur_y, shift_drawtype, 0, 0);
         } else if (idx_down > idx_up) {
@@ -10125,13 +10115,13 @@ function GrowConGlue(ctx) {
             2, m_x + idx_down / 2, m_y - idx_left + idx_left / 2,
             shift_drawtype, 0, 0);
         }
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_left += 2;
           idx_down += 2;
           idx_up += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(ll_x, m_y - idx_left + idx_left / 2, m_x -
           idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           Glow.eDrawType_Line, 0, 0);
@@ -10143,7 +10133,7 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x - idx_up + idx_up / 2, m_y + idx_left / 2, m_x -
           idx_up + idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
 
-        if (idx_up == idx_down) {
+        if (idx_up === idx_down) {
           this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2,
             ur_y, Glow.eDrawType_Line, 0, 0);
         } else if (idx_down > idx_up) {
@@ -10163,8 +10153,8 @@ function GrowConGlue(ctx) {
             Glow.eDrawType_Line, 0, 0);
         }
       }
-    } else if (lw_left == -1 && lw_right != -1 && lw_up != -1 &&
-      lw_down != -1) {
+    } else if (lw_left === -1 && lw_right !== -1 && lw_up !== -1 &&
+      lw_down !== -1) {
       // Right up down threeway
       this.ctx.gdraw.fill_rect(m_x, m_y - idx_right + idx_right / 2, ur_x -
         m_x, idx_right + 1, drawtype);
@@ -10173,8 +10163,8 @@ function GrowConGlue(ctx) {
         drawtype);
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
         1, m_y + idx_right / 2 - ll_y, drawtype);
-      if (this.shadow != 0 && (idx_right > 2 || idx_down > 2 || idx_up > 2)) {
-        if (this.border != 0) {
+      if (this.shadow !== 0 && (idx_right > 2 || idx_down > 2 || idx_up > 2)) {
+        if (this.border !== 0) {
           idx_right -= 2;
           idx_down -= 2;
           idx_up -= 2;
@@ -10183,7 +10173,7 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
           ur_x, m_y - idx_right + idx_right / 2, shift_drawtype, 0, 0);
 
-        if (idx_up == idx_down) {
+        if (idx_up === idx_down) {
           this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, ll_y, m_x -
             idx_down + idx_down / 2, ur_y, shift_drawtype, 0, 0);
         } else if (idx_down > idx_up) {
@@ -10210,13 +10200,13 @@ function GrowConGlue(ctx) {
           idx_right / 2, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, m_x +
           idx_up / 2, ur_y, shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_right += 2;
           idx_down += 2;
           idx_up += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
           ur_x, m_y - idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y -
@@ -10226,7 +10216,7 @@ function GrowConGlue(ctx) {
         this.ctx.gdraw.line(m_x + idx_up / 2, m_y + idx_right / 2, m_x +
           idx_up / 2, ur_y, Glow.eDrawType_Line, 0, 0);
 
-        if (idx_up == idx_down) {
+        if (idx_up === idx_down) {
           this.ctx.gdraw.line(m_x - idx_down + idx_down / 2, ll_y, m_x -
             idx_down + idx_down / 2, ur_y, Glow.eDrawType_Line, 0, 0);
         } else if (idx_down > idx_up) {
@@ -10250,8 +10240,8 @@ function GrowConGlue(ctx) {
             idx_right / 2, Glow.eDrawType_Line, 0, 0);
         }
       }
-    } else if (lw_left != -1 && lw_right != -1 && lw_up != -1 &&
-      lw_down != -1) {
+    } else if (lw_left !== -1 && lw_right !== -1 && lw_up !== -1 &&
+      lw_down !== -1) {
       // Right left up down fourway
       this.ctx.gdraw.fill_rect(m_x, m_y - idx_right + idx_right / 2, ur_x -
         m_x, idx_right + 1, drawtype);
@@ -10261,9 +10251,9 @@ function GrowConGlue(ctx) {
         1, ur_y - m_y, drawtype);
       this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
         1, m_y - ll_y, drawtype);
-      if (this.shadow != 0 &&
+      if (this.shadow !== 0 &&
         (idx_left > 2 || idx_right > 2 || idx_down > 2 || idx_up > 2)) {
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_right -= 2;
           idx_left -= 2;
           idx_down -= 2;
@@ -10289,14 +10279,14 @@ function GrowConGlue(ctx) {
           idx_up / 2, ur_y, shift_drawtype, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y -
           idx_right + idx_right / 2, shift_drawtype, 0, 0);
-        if (this.border != 0) {
+        if (this.border !== 0) {
           idx_right += 2;
           idx_left += 2;
           idx_down += 2;
           idx_up += 2;
         }
       }
-      if (this.border != 0) {
+      if (this.border !== 0) {
         this.ctx.gdraw.line(m_x + idx_down / 2, m_y - idx_right + idx_right / 2,
           ur_x, m_y - idx_right + idx_right / 2, Glow.eDrawType_Line, 0, 0);
         this.ctx.gdraw.line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y -
@@ -10436,8 +10426,8 @@ function GrowBar(ctx) {
     var drawtype;
     var rotation;
     var grad = this.gradient;
-    if (this.gradient == Glow.eGradient_No &&
-      (node !== null && node.gradient != Glow.eGradient_No) &&
+    if (this.gradient === Glow.eGradient_No &&
+      (node !== null && node.gradient !== Glow.eGradient_No) &&
       this.disable_gradient === 0) {
       grad = node.gradient;
     }
@@ -10491,16 +10481,16 @@ function GrowBar(ctx) {
         GlowColor.get_drawtype(this.fill_drawtype, Glow.eDrawType_FillHighlight,
           highlight, colornode, 1, 0);
 
-      if (grad == Glow.eGradient_No) {
+      if (grad === Glow.eGradient_No) {
         this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
           drawtype);
       } else {
         var fa1, fa2;
 
-        if (t !== null) {
-          rotation = this.trf.rot(t);
-        } else {
+        if (t === null) {
           rotation = this.trf.rot();
+        } else {
+          rotation = this.trf.rot(t);
         }
         if (this.gradient_contrast >= 0) {
           fa2 = GlowColor.shift_drawtype(drawtype, -this.gradient_contrast / 2,
@@ -10521,15 +10511,15 @@ function GrowBar(ctx) {
       GlowColor.get_drawtype(this.draw_type, Glow.eDrawType_LineHighlight,
         highlight, colornode, 0, 0);
 
-    if (this.max_value != this.min_value) {
+    if (this.max_value !== this.min_value) {
       var x0, y0, width, height, l_x0, l_y0, l_x1, l_y1;
 
-      if (t !== null) {
-        rotation =
-          (this.trf.rot(t) / 360 - Math.floor(this.trf.rot(t) / 360)) * 360;
-      } else {
+      if (t === null) {
         rotation =
           (this.trf.rot() / 360 - Math.floor(this.trf.rot() / 360)) * 360;
+      } else {
+        rotation =
+          (this.trf.rot(t) / 360 - Math.floor(this.trf.rot(t) / 360)) * 360;
       }
       if (45 >= rotation || rotation > 315) {
         height = Math.floor((this.bar_value - this.min_value) /
@@ -10578,19 +10568,19 @@ function GrowBar(ctx) {
       }
 
       var dt = drawtype;
-      if (this.bar_drawtype != Glow.eDrawType_Inherit) {
+      if (this.bar_drawtype !== Glow.eDrawType_Inherit) {
         dt = this.bar_drawtype;
       }
 
-      if (grad == Glow.eGradient_No) {
+      if (grad === Glow.eGradient_No) {
         this.ctx.gdraw.fill_rect(x0, y0, width, height, dt);
       } else {
         var fb1, fb2;
 
-        if (t !== null) {
-          rotation = this.trf.rot(t);
-        } else {
+        if (t === null) {
           rotation = this.trf.rot();
+        } else {
+          rotation = this.trf.rot(t);
         }
         if (this.gradient_contrast >= 0) {
           fb2 = GlowColor.shift_drawtype(dt, -this.gradient_contrast / 2, null);
@@ -10606,7 +10596,7 @@ function GrowBar(ctx) {
       }
 
       dt = drawtype;
-      if (this.bar_bordercolor != Glow.eDrawType_Inherit) {
+      if (this.bar_bordercolor !== Glow.eDrawType_Inherit) {
         dt = this.bar_bordercolor;
       }
       this.ctx.gdraw.line(l_x0, l_y0, l_x1, l_y1, dt, bar_border_idx, 0);
@@ -10807,7 +10797,7 @@ function GrowBarArc(ctx) {
       GlowColor.get_drawtype(this.fill_drawtype, Glow.eDrawType_FillHighlight,
         highlight, colornode, 1, 0);
 
-    if (this.background_drawtype == Glow.eDrawType_No) {
+    if (this.background_drawtype === Glow.eDrawType_No) {
       bg_drawtype = this.ctx.background_color;
     } else {
       bg_drawtype = this.background_drawtype;
@@ -10829,7 +10819,7 @@ function GrowBarArc(ctx) {
         (this.max_value - this.min_value) - rotation;
     }
 
-    if (this.gradient == Glow.eGradient_No) {
+    if (this.gradient === Glow.eGradient_No) {
       this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
         ang, this.angle2 * (value - this.min_value) /
         (this.max_value - this.min_value), this.bar_drawtype);
@@ -11143,8 +11133,8 @@ function GrowTrend(ctx) {
     ur_y = Math.max(y1, y2);
     if (this.fill !== 0) {
       var grad = this.gradient;
-      if (this.gradient == Glow.eGradient_No &&
-        (node !== null && node.gradient != Glow.eGradient_No) &&
+      if (this.gradient === Glow.eGradient_No &&
+        (node !== null && node.gradient !== Glow.eGradient_No) &&
         this.disable_gradient === 0) {
         grad = node.gradient;
       }
@@ -11152,17 +11142,17 @@ function GrowTrend(ctx) {
       drawtype =
         GlowColor.get_drawtype(this.fill_drawtype, Glow.eDrawType_FillHighlight,
           highlight, colornode, 1, 0);
-      if (grad == Glow.eGradient_No) {
+      if (grad === Glow.eGradient_No) {
         this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
           drawtype);
       } else {
         var f1, f2;
         var rotation;
 
-        if (t !== null) {
-          rotation = this.trf.rot(t);
-        } else {
+        if (t === null) {
           rotation = this.trf.rot();
+        } else {
+          rotation = this.trf.rot(t);
         }
         if (this.gradient_contrast >= 0) {
           f2 = GlowColor.shift_drawtype(drawtype, -this.gradient_contrast / 2,
@@ -11188,19 +11178,19 @@ function GrowTrend(ctx) {
           this.curve[i].border = 0;
         }
       }
-      if (t !== null) {
-        var tmp1 = t.multiply(this.trf);
-        for (i = 0; i < this.curve_cnt; i++) {
-          if (curve[i] !== null) {
-            curve[i].tdraw(tmp1, highlight, hot, node, colornode);
-          }
-        }
-      } else {
+      if (t === null) {
         for (i = 0; i < this.curve_cnt; i++) {
           if (this.curve[i] !== null) {
             //for ( var j = 0; j < 10; j++)
             //  console.log( "tdraw", i, this.curve[i].points[j].x, this.curve[i].points[j].y);
             this.curve[i].tdraw(this.trf, highlight, hot, node, colornode);
+          }
+        }
+      } else {
+        var tmp1 = t.multiply(this.trf);
+        for (i = 0; i < this.curve_cnt; i++) {
+          if (curve[i] !== null) {
+            curve[i].tdraw(tmp1, highlight, hot, node, colornode);
           }
         }
       }
@@ -11230,17 +11220,17 @@ function GrowTrend(ctx) {
         }
       }
     }
-    if (t !== null) {
+    if (t === null) {
+      for (i = 0; i < this.curve_cnt; i++) {
+        if (this.curve[i] !== null) {
+          this.curve[i].tdraw(this.trf, highlight, hot, node, colornode);
+        }
+      }
+    } else {
       var tmp2 = t.multiply(this.trf);
       for (i = 0; i < this.curve_cnt; i++) {
         if (this.curve[i] !== null) {
           this.curve[i].tdraw(tmp2, highlight, hot, node, colornode);
-        }
-      }
-    } else {
-      for (i = 0; i < this.curve_cnt; i++) {
-        if (this.curve[i] !== null) {
-          this.curve[i].tdraw(this.trf, highlight, hot, node, colornode);
         }
       }
     }
@@ -11264,7 +11254,7 @@ function GrowTrend(ctx) {
       }
       if (xm1 >= ll_x && xm1 <= ur_x) {
         drawtype = this.mark1_color;
-        if (drawtype == Glow.eDrawType_Inherit) {
+        if (drawtype === Glow.eDrawType_Inherit) {
           drawtype = Glow.eDrawType_ColorYellow;
         }
         this.ctx.gdraw.line(xm1, ll_y, xm1, ur_y, drawtype, idx, 0);
@@ -11281,7 +11271,7 @@ function GrowTrend(ctx) {
       }
       if (xm2 >= ll_x && xm2 <= ur_x) {
         drawtype = this.mark2_color;
-        if (drawtype == Glow.eDrawType_Inherit) {
+        if (drawtype === Glow.eDrawType_Inherit) {
           drawtype = Glow.eDrawType_ColorYellow;
         }
         this.ctx.gdraw.line(xm2, ll_y, xm2, ur_y, drawtype, idx, 0);
@@ -11298,7 +11288,7 @@ function GrowTrend(ctx) {
       }
       if (ym1 >= ll_y && ym1 <= ur_y) {
         drawtype = this.mark1_color;
-        if (drawtype == Glow.eDrawType_Inherit) {
+        if (drawtype === Glow.eDrawType_Inherit) {
           drawtype = Glow.eDrawType_ColorYellow;
         }
         this.ctx.gdraw.line(ll_x, ym1, ur_x, ym1, drawtype, idx, 0);
@@ -11315,7 +11305,7 @@ function GrowTrend(ctx) {
       }
       if (ym2 >= ll_y && ym2 <= ur_y) {
         drawtype = this.mark2_color;
-        if (drawtype == Glow.eDrawType_Inherit) {
+        if (drawtype === Glow.eDrawType_Inherit) {
           drawtype = Glow.eDrawType_ColorYellow;
         }
         this.ctx.gdraw.line(ll_x, ym2, ur_x, ym2, drawtype, idx, 0);
@@ -11329,7 +11319,7 @@ function GrowTrend(ctx) {
   };
 
   this.set_range = function (curve, min, max) {
-    if (!(curve === 0 || curve == 1)) {
+    if (!(curve === 0 || curve === 1)) {
       return;
     }
     this.y_max_value[curve] = max;
@@ -11366,7 +11356,7 @@ function GrowTrend(ctx) {
         point_p.y = this.ur.y;
         if (i === 0) {
           point_p.x = this.ur.x;
-        } else if (i == points - 1) {
+        } else if (i === points - 1) {
           point_p.x = this.ll.x;
         } else {
           point_p.x =
@@ -11380,16 +11370,16 @@ function GrowTrend(ctx) {
         this.curve[i] = null;
       }
 
-      if (this.curve_drawtype[i] != Glow.eDrawType_Inherit) {
-        dt = this.curve_drawtype[i];
-      } else {
+      if (this.curve_drawtype[i] === Glow.eDrawType_Inherit) {
         dt = this.draw_type;
+      } else {
+        dt = this.curve_drawtype[i];
       }
 
-      if (this.curve_fill_drawtype[i] != Glow.eDrawType_Inherit) {
-        dt_fill = this.curve_fill_drawtype[i];
-      } else {
+      if (this.curve_fill_drawtype[i] === Glow.eDrawType_Inherit) {
         dt_fill = this.draw_type;
+      } else {
+        dt_fill = this.curve_fill_drawtype[i];
       }
 
       this.ctx.nodraw++;
@@ -11402,7 +11392,7 @@ function GrowTrend(ctx) {
   };
 
   this.set_range_y = function (curve, min, max) {
-    if (!(curve === 0 || curve == 1)) {
+    if (!(curve === 0 || curve === 1)) {
       return;
     }
 
@@ -11433,7 +11423,7 @@ function GrowTrend(ctx) {
     if (idx >= this.curve_cnt) {
       return;
     }
-    if (this.y_max_value[idx] != this.y_min_value[idx]) {
+    if (this.y_max_value[idx] !== this.y_min_value[idx]) {
       curve_value = this.ur.y - (value - this.y_min_value[idx]) /
         (this.y_max_value[idx] - this.y_min_value[idx]) *
         (this.ur.y - this.ll.y);
@@ -11584,7 +11574,7 @@ function GrowXYCurve(ctx) {
     }
     this.x_max_value[curve] = max;
     this.x_min_value[curve] = min;
-  }
+  };
 
   this.set_xy_range_y = function (curve, min, max) {
     if (curve > Glow.TREND_MAX_CURVES || curve < 0) {
@@ -11647,9 +11637,9 @@ function GrowXYCurve(ctx) {
     j = curve_idx;
     for (i = 0, idx = 0; i < cpoints; i++, idx++) {
       point_p = pointarray[i] = new GlowPointX();
-      if (this.fill_curve == 0) {
+      if (this.fill_curve === 0) {
         idx = i;
-        if (this.y_max_value[j] != this.y_min_value[j]) {
+        if (this.y_max_value[j] !== this.y_min_value[j]) {
           point_p.y = this.ur.y - (y_data[idx] - this.y_min_value[j]) /
             (this.y_max_value[j] - this.y_min_value[j]) *
             (this.ur.y - this.ll.y);
@@ -11657,7 +11647,7 @@ function GrowXYCurve(ctx) {
 
         point_p.y = Math.max(this.ll.y, Math.min(point_p.y, this.ur.y));
 
-        if (this.x_max_value[j] != this.x_min_value[j]) {
+        if (this.x_max_value[j] !== this.x_min_value[j]) {
           point_p.x = this.ll.x + (x_data[idx] - this.x_min_value[j]) /
             (this.x_max_value[j] - this.x_min_value[j]) *
             (this.ur.x - this.ll.x);
@@ -11667,8 +11657,8 @@ function GrowXYCurve(ctx) {
 
       } else {
 
-        if (i == 0) {
-          if (this.x_max_value[j] != this.x_min_value[j]) {
+        if (i === 0) {
+          if (this.x_max_value[j] !== this.x_min_value[j]) {
             point_p.x = this.ll.x + (x_data[idx] - this.x_min_value[j]) /
               (this.x_max_value[j] - this.x_min_value[j]) *
               (this.ur.x - this.ll.x);
@@ -11677,8 +11667,8 @@ function GrowXYCurve(ctx) {
           point_p.x = Math.max(this.ll.x, Math.min(point_p.x, this.ur.x));
           point_p.y = this.ur.y;
           idx--;
-        } else if (i == cpoints - 1) {
-          if (this.x_max_value[j] != this.x_min_value[j]) {
+        } else if (i === cpoints - 1) {
+          if (this.x_max_value[j] !== this.x_min_value[j]) {
             point_p.x = this.ll.x + (x_data[idx - 1] - this.x_min_value[j]) /
               (this.x_max_value[j] - this.x_min_value[j]) *
               (this.ur.x - this.ll.x);
@@ -11687,7 +11677,7 @@ function GrowXYCurve(ctx) {
           point_p.x = Math.max(this.ll.x, Math.min(point_p.x, this.ur.x));
           point_p.y = this.ur.y;
         } else {
-          if (this.y_max_value[j] != this.y_min_value[j]) {
+          if (this.y_max_value[j] !== this.y_min_value[j]) {
             point_p.y = this.ur.y - (y_data[idx] - this.y_min_value[j]) /
               (this.y_max_value[j] - this.y_min_value[j]) *
               (this.ur.y - this.ll.y);
@@ -11695,7 +11685,7 @@ function GrowXYCurve(ctx) {
 
           point_p.y = Math.max(this.ll.y, Math.min(point_p.y, this.ur.y));
 
-          if (this.x_max_value[j] != this.x_min_value[j]) {
+          if (this.x_max_value[j] !== this.x_min_value[j]) {
             point_p.x = this.ll.x + (x_data[idx] - this.x_min_value[j]) /
               (this.x_max_value[j] - this.x_min_value[j]) *
               (this.ur.x - this.ll.x);
@@ -11706,16 +11696,16 @@ function GrowXYCurve(ctx) {
       }
     }
 
-    if (this.curve_drawtype[j] != Glow.eDrawType_Inherit) {
-      dt = this.curve_drawtype[j];
-    } else {
+    if (this.curve_drawtype[j] === Glow.eDrawType_Inherit) {
       dt = this.draw_type;
+    } else {
+      dt = this.curve_drawtype[j];
     }
 
-    if (this.curve_fill_drawtype[j] != Glow.eDrawType_Inherit) {
-      dt_fill = this.curve_fill_drawtype[j];
-    } else {
+    if (this.curve_fill_drawtype[j] === Glow.eDrawType_Inherit) {
       dt_fill = this.draw_type;
+    } else {
+      dt_fill = this.curve_fill_drawtype[j];
     }
 
     this.ctx.nodraw++;
@@ -11781,7 +11771,7 @@ function GrowMenu(ctx) {
   };
 
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0) {
+    if (this.ctx.nodraw !== 0) {
       return;
     }
     var idx;
@@ -11819,13 +11809,13 @@ function GrowMenu(ctx) {
           max_z_width = z_width;
         }
         tot_z_height += Math.floor(1.6 * z_height);
-        if (this.info.item[i].type == Glow.eMenuItem_PulldownMenu) {
+        if (this.info.item[i].type === Glow.eMenuItem_PulldownMenu) {
           pulldown_found = 1;
         }
         this.item_cnt++;
       }
     }
-    if (this.item_cnt == 0) {
+    if (this.item_cnt === 0) {
       return;
     }
 
@@ -11876,7 +11866,7 @@ function GrowMenu(ctx) {
     for (i = 0; i < this.info.item.length; i++) {
       if (this.info.item[i].occupied) {
         y_text = ll_y + Math.floor(this.item_height * item_idx + z_height + 1);
-        if (i == this.current_item) {
+        if (i === this.current_item) {
           if (this.fill_drawtype % 10 < 7) {
             drawtype = GlowColor.shift_drawtype(this.fill_drawtype, 2, null);
           } else {
@@ -11886,7 +11876,7 @@ function GrowMenu(ctx) {
             Math.floor(ll_y + item_idx * this.item_height), ur_x - ll_x,
             Math.floor(this.item_height), drawtype);
         }
-        if (this.info.item[i].type == Glow.eMenuItem_ButtonDisabled) {
+        if (this.info.item[i].type === Glow.eMenuItem_ButtonDisabled) {
           this.ctx.gdraw.text(x_text, y_text, this.info.item[i].text,
             this.text_drawtype, this.text_color_disabled, text_idx, highlight,
             0, this.font, tsize, 0);
@@ -11895,7 +11885,7 @@ function GrowMenu(ctx) {
             this.text_drawtype, this.text_color, text_idx, highlight, 0,
             this.font, tsize, 0);
         }
-        if (this.info.item[i].type == Glow.eMenuItem_PulldownMenu) {
+        if (this.info.item[i].type === Glow.eMenuItem_PulldownMenu) {
           // Draw arrow
           var p = new Array(4);
           for (var j = 0; j < 4; j++) {
@@ -11923,7 +11913,7 @@ function GrowMenu(ctx) {
         item_idx++;
       }
     }
-    if (this.border != 0) {
+    if (this.border !== 0) {
       this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, this.draw_type,
         idx, 0);
     }
@@ -11949,7 +11939,10 @@ function GrowMenu(ctx) {
       if (item < 0) {
         item = 0;
       }
-      if (item != this.current_idx) {
+      if (item === this.current_idx) {
+        this.new_item = 0;
+        this.old_item = this.current_item;
+      } else {
         this.new_item = 1;
         this.old_item = this.current_item;
         this.current_idx = item;
@@ -11957,15 +11950,12 @@ function GrowMenu(ctx) {
           if (!this.info.item[i].occupied) {
             continue;
           }
-          if (item_idx == item) {
+          if (item_idx === item) {
             this.current_item = i;
             break;
           }
           item_idx++;
         }
-      } else {
-        this.new_item = 0;
-        this.old_item = this.current_item;
       }
       return 1;
     } else {
@@ -11988,21 +11978,21 @@ function GrowMenu(ctx) {
       case Glow.eEvent_CursorMotion: {
         var redraw = 0;
         sts = this.local_event_handler(event, rp.x, rp.y);
-        if (sts != 0) {
+        if (sts !== 0) {
           this.ctx.hot_found = 1;
           redraw = 1;
         }
-        if (sts != 0 && this.hot == 0) {
+        if (sts !== 0 && this.hot === 0) {
           this.hot = 1;
           redraw = 1;
         }
-        if (sts == 0 && this.hot != 0) {
-          if (this.ctx.hot_found == 0) {
+        if (sts === 0 && this.hot !== 0) {
+          if (this.ctx.hot_found === 0) {
             this.hot = 0;
           }
           redraw = 1;
         }
-        if (redraw != 0) {
+        if (redraw !== 0) {
           this.ctx.draw(this.x_left * this.ctx.mw.zoom_factor_x -
             this.ctx.mw.offset_x - Glow.DRAW_MP, this.y_low *
             this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y -
@@ -12010,16 +12000,16 @@ function GrowMenu(ctx) {
             this.ctx.mw.offset_x + Glow.DRAW_MP, this.y_high *
             this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y + Glow.DRAW_MP);
         }
-        if (this.old_item != this.current_item && this.old_item != -1) {
-          if (this.info.item[this.old_item].type ==
+        if (this.old_item !== this.current_item && this.old_item !== -1) {
+          if (this.info.item[this.old_item].type ===
             Glow.eMenuItem_PulldownMenu) {
             // Delete all child menu objects.
             // TODO ctx->delete_menu_child( this);
           }
         }
-        if (this.hot != 0 && this.new_item != 0) {
+        if (this.hot !== 0 && this.new_item !== 0) {
           console.log("GrowMenu new item,send MenuCreate");
-          if (this.info.item[this.current_item].type ==
+          if (this.info.item[this.current_item].type ===
             Glow.eMenuItem_PulldownMenu) {
             this.ctx.send_menu_callback(this, this.current_item,
               Glow.eEvent_MenuCreate, this.ur.x, this.ll.y + this.item_height /
@@ -12030,18 +12020,17 @@ function GrowMenu(ctx) {
       }
       case Glow.eEvent_MB1Click: {
         sts = this.local_event_handler(event, rp.x, rp.y);
-        if (sts != 0 && this.current_item != -1) {
-          if (this.info.item[this.current_item].type == Glow.eMenuItem_Button) {
+        if (sts !== 0 && this.current_item !== -1) {
+          if (this.info.item[this.current_item].type === Glow.eMenuItem_Button) {
             csts = this.ctx.send_menu_callback(this, this.current_item,
               Glow.eEvent_MenuActivated, fx, fy);
-            if (csts == Glow.GLOW__TERMINATED) {
+            if (csts === Glow.GLOW__TERMINATED) {
               return csts;
             }
 
             // Send delete callback for the root menu of this node
             var e;
             for (e = this; e.parent_menu != null; e = e.parent_menu) {
-              ;
             }
             this.ctx.send_menu_callback(e, 0, Glow.eEvent_MenuDelete, 0, 0);
             return Glow.GLOW__NO_PROPAGATE;
@@ -12051,7 +12040,7 @@ function GrowMenu(ctx) {
       default:
         sts = this.local_event_handler(event, rp.x, rp.y);
     }
-    if (sts != 0) {
+    if (sts !== 0) {
       this.ctx.register_callback_object(Glow.eObjectType_Node, this);
     }
 
@@ -12098,14 +12087,14 @@ function GrowScrollBar(ctx) {
       this.bar_color = bar_d_type;
       this.direction = dir;
       this.parent = parent;
-      if (nodraw != 0) {
+      if (nodraw !== 0) {
         this.draw(null, this.highlight, this.hot, null, null);
       }
     };
 
 
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0) {
+    if (this.ctx.nodraw !== 0) {
       return;
     }
 
@@ -12165,7 +12154,7 @@ function GrowScrollBar(ctx) {
         shift_drawtype, 0, 0);
     }
 
-    if (this.max_value != this.min_value) {
+    if (this.max_value !== this.min_value) {
 
       switch (this.direction) {
         case Glow.eDir_Vertical:
@@ -12207,12 +12196,12 @@ function GrowScrollBar(ctx) {
 
     this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, bdrawtype, idx,
       0);
-  }
+  };
 
   this.set_value = function (value, length) {
     console.log("Value", value);
     this.bar_value = value;
-    if (length != 0) {
+    if (length !== 0) {
       this.bar_length = length;
     }
 
@@ -12225,7 +12214,7 @@ function GrowScrollBar(ctx) {
 
     this.draw();
     return this.bar_value;
-  }
+  };
 
   this.event_handler = function (event, fx, fy) {
     var ll_x, ur_x, ll_y, ur_y;
@@ -12240,11 +12229,11 @@ function GrowScrollBar(ctx) {
       return 0;
     }
 
-    if (event.event == Glow.eEvent_ButtonMotion && this.movement_active == 0) {
+    if (event.event === Glow.eEvent_ButtonMotion && this.movement_active === 0) {
       return 0;
     }
 
-    if (this.min_value == this.max_value) {
+    if (this.min_value === this.max_value) {
       return 1;
     }
 
@@ -12280,7 +12269,7 @@ function GrowScrollBar(ctx) {
         this.ctx.setSliderActive(false);
         break;
       case Glow.eEvent_ButtonMotion:
-        if (this.movement_active != 0) {
+        if (this.movement_active !== 0) {
           if (this.bar_length >= this.max_value - this.min_value) {
             break;
           }
@@ -12313,7 +12302,6 @@ function GrowScrollBar(ctx) {
         }
         break;
       default:
-        ;
     }
     return 1;
   };
@@ -12428,7 +12416,6 @@ function GrowWindow(ctx) {
           break;
         case Glow.eSave_GrowWindow_rect_part:
           i = this.growrect_open(lines, i + 1);
-          ;
           break;
         case Glow.eSave_GrowWindow_userdata_cb:
           if (this.ctx.appl != null) {
@@ -12450,7 +12437,7 @@ function GrowWindow(ctx) {
       }
     }
 
-    if (this.file_name !== null && this.file_name != "") {
+    if (this.file_name !== null && this.file_name !== "") {
       this.new_ctx();
     }
 
@@ -12458,7 +12445,7 @@ function GrowWindow(ctx) {
   };
 
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0) {
+    if (this.ctx.nodraw !== 0) {
       return;
     }
 
@@ -12574,28 +12561,28 @@ function GrowWindow(ctx) {
 
 
   this.new_ctx = function () {
-    if (this.file_name == "_no_" || this.file_name === "") {
+    if (this.file_name === "_no_" || this.file_name === "") {
       return;
     }
 
     var idx;
-    if ((idx = this.file_name.indexOf('/')) != -1) {
+    if ((idx = this.file_name.indexOf('/')) !== -1) {
       this.file_name = this.file_name.substring(idx + 1);
     }
 
-    if (this.file_name.indexOf('.') == -1) {
+    if (this.file_name.indexOf('.') === -1) {
       this.file_name = this.file_name + ".pwg";
     }
 
     var windOwner = this.owner;
     for (var i = 0; i < 4; i++) {
       var idx;
-      if ((idx = windOwner.indexOf("$object")) != -1) {
+      if ((idx = windOwner.indexOf("$object")) === -1) {
+        break;
+      } else {
         var oname = this.ctx.getOwner();
         windOwner =
           windOwner.substring(0, idx) + oname + windOwner.substring(idx + 7);
-      } else {
-        break;
       }
     }
     this.owner = windOwner;
@@ -12616,13 +12603,13 @@ function GrowWindow(ctx) {
       self.windowCtx.mw.subwindow_scale * self.ctx.mw.zoom_factor_x;
 
     self.input_file_name = self.file_name;
-    if (self.windowCtx.background_color != Glow.eDrawType_Inherit) {
+    if (self.windowCtx.background_color !== Glow.eDrawType_Inherit) {
       self.fill_drawtype =
         self.original_fill_drawtype = self.windowCtx.background_color;
       self.fill = 1;
     }
-    if (self.windowCtx.x0 != self.windowCtx.x1 &&
-      self.windowCtx.y0 != self.windowCtx.y1) {
+    if (self.windowCtx.x0 !== self.windowCtx.x1 &&
+      self.windowCtx.y0 !== self.windowCtx.y1) {
       self.wctx_x0 = self.windowCtx.x0;
       self.wctx_x1 = self.windowCtx.x1;
       self.wctx_y0 = self.windowCtx.y0;
@@ -12744,13 +12731,13 @@ function GrowWindow(ctx) {
     if (this.h_scrollbar != null) {
       h_sts = h_scrollbar.event_handler(event, fx, fy);
     }
-    if (v_sts != 0 || h_sts != 0) {
+    if (v_sts !== 0 || h_sts !== 0) {
       return 1;
     }
 
     sts = this.growrect_event_handler(event, fx, fy);
 
-    if (this.ctx.callback_object == this) {
+    if (this.ctx.callback_object === this) {
       // Disable event callback for this object, let the window ctx handle it
       this.ctx.callback_object = null;
       thix.ctx.callback_object_type = Glow.eObjectType_NoObject;
@@ -12787,7 +12774,7 @@ function GrowWindow(ctx) {
       e.object = event.object;
       e.object_type = event.object_type;
       sts = this.windowCtx.event_handler(e, fx, fy);
-      if (sts == Glow.GLOW__TERMINATED) {
+      if (sts === Glow.GLOW__TERMINATED) {
         return sts;
       }
 
@@ -12818,11 +12805,11 @@ function GrowWindow(ctx) {
       x0 = this.x_right - this.scrollbar_width;
       y0 = this.y_low + this.y_low_offs;
       width = this.scrollbar_width;
-      if (this.horizontal_scrollbar !== 0) {
+      if (this.horizontal_scrollbar === 0) {
+        height = this.y_high - (this.y_low + this.y_low_offs);
+      } else {
         height =
           this.y_high - (this.y_low + this.y_low_offs) - this.scrollbar_width;
-      } else {
-        height = this.y_high - (this.y_low + this.y_low_offs);
       }
 
       this.v_scrollbar = new GrowScrollBar(this.ctx);
@@ -12857,10 +12844,10 @@ function GrowWindow(ctx) {
       x0 = this.x_left;
       y0 = this.y_high - this.scrollbar_width;
       height = this.scrollbar_width;
-      if (this.vertical_scrollbar !== 0) {
-        width = this.x_right - this.x_left - this.scrollbar_width;
-      } else {
+      if (this.vertical_scrollbar === 0) {
         width = this.x_right - this.x_left;
+      } else {
+        width = this.x_right - this.x_left - this.scrollbar_width;
       }
 
       this.h_scrollbar = new GrowScrollBar(this.ctx);
@@ -12891,17 +12878,17 @@ function GrowWindow(ctx) {
       this.h_value = this.wctx_x0 * this.windowCtx.mw.subwindow_scale;
     }
 
-  }
+  };
 
   this.verticalScrollValueChanged = function (value) {
-    if (this.v_value != value) {
+    if (this.v_value !== value) {
       this.v_value = value;
       this.draw();
     }
   };
 
   this.horizontalScrollValueChanged = function (value) {
-    if (this.h_value != value) {
+    if (this.h_value !== value) {
       this.h_value = value;
       this.draw();
     }
@@ -12913,8 +12900,8 @@ function GrowWindow(ctx) {
     if (this.owner === null) {
       this.owner = "";
     }
-    if (this.input_file_name != this.file_name || this.windowCtx == null ||
-      this.windowCtx.owner != this.owner) {
+    if (this.input_file_name !== this.file_name || this.windowCtx == null ||
+      this.windowCtx.owner !== this.owner) {
       // New graph, create new context
       var ur_x = Math.floor(this.x_right * this.ctx.mw.zoom_factor_x) -
         this.ctx.mw.offset_x;
@@ -12978,7 +12965,7 @@ function GrowWindow(ctx) {
       console.log("background_object_limits", this.windowCtx.a.get(i).type());
       sts = this.windowCtx.a.get(i)
         .get_background_object_limits(null, type, x, y, b);
-      if ((sts & 1) != 0) {
+      if ((sts & 1) !== 0) {
         break;
       }
     }
@@ -13369,7 +13356,7 @@ function GrowFolder(ctx) {
   };
 
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0) {
+    if (this.ctx.nodraw !== 0) {
       return;
     }
 
@@ -13428,18 +13415,18 @@ function GrowFolder(ctx) {
       p[j] = new GlowPointX();
     }
     for (var i = this.folders - 1; i >= -1; i--) {
-      if (i == this.current_folder)
+      if (i === this.current_folder)
       // Draw this last
       {
         continue;
       }
 
-      if (i == -1) {
+      if (i === -1) {
         i = this.current_folder;
       }
 
       x = ll_x + i * width;
-      if (i == 0) {
+      if (i === 0) {
         p[0].x = ll_x;
       } else {
         p[0].x = x - h / 4;
@@ -13449,21 +13436,21 @@ function GrowFolder(ctx) {
       p[1].y = ll_y;
       p[2].x = x + width - h / 4;
       p[2].y = ll_y;
-      if (i == this.folders - 1) {
+      if (i === this.folders - 1) {
         p[3].x = ur_x;
       } else {
         p[3].x = x + width + h / 4;
       }
       p[3].y = ll_y + h;
 
-      if (i == this.current_folder) {
+      if (i === this.current_folder) {
         this.ctx.gdraw.fill_polyline(p, 4, this.color_selected, 0);
       } else {
         this.ctx.gdraw.fill_polyline(p, 4, this.color_unselected, 0);
         if (this.shadow !== 0) {
           this.ctx.gdraw.line(p[0].x + 1, p[0].y, p[1].x + 1, p[1].y,
             drawtype_light, 0, 0);
-          if (i != 0) {
+          if (i !== 0) {
             var ps = new Array(4);
             for (var j = 0; j < 4; j++) {
               ps[j] = new GlowPointX();
@@ -13483,8 +13470,8 @@ function GrowFolder(ctx) {
         }
       }
 
-      if (this.shadow != 0) {
-        if (i == this.current_folder) {
+      if (this.shadow !== 0) {
+        if (i === this.current_folder) {
           drawtype_light =
             GlowColor.shift_drawtype(this.color_selected, -2, colornode);
           this.ctx.gdraw.line(p[0].x + 1, p[0].y, p[1].x + 1, p[1].y,
@@ -13500,7 +13487,7 @@ function GrowFolder(ctx) {
           this.text_drawtype, this.text_color_drawtype, text_idx, highlight, 0,
           Glow.eFont_Helvetica, tsize, 0);
       }
-      if (i == this.current_folder) {
+      if (i === this.current_folder) {
         break;
       }
     }
@@ -13514,7 +13501,7 @@ function GrowFolder(ctx) {
   this.event_handler = function (event, fx, fy) {
     var sts;
 
-    if (event.event == Glow.eEvent_MB1Click) {
+    if (event.event === Glow.eEvent_MB1Click) {
       if (this.x_left <= fx && fx <= this.x_right && this.y_low <= fy &&
         fy <= this.y_low + this.header_height) {
         var w = (this.x_right - this.x_left) / this.folders;
@@ -13842,7 +13829,7 @@ function GrowAxis(ctx) {
 
           if (text_idx >= 0 && max_z_width < ur_x - ll_x &&
             i % this.valuequotient === 0) {
-            if (i == this.lines - 1) {
+            if (i === this.lines - 1) {
               y_text = y;
             } else if (i === 0) {
               y_text = y + z_height - z_descent - 3;
@@ -13896,7 +13883,7 @@ function GrowAxis(ctx) {
           z_descent = z_height / 4;
 
           if (text_idx >= 0 && z_height < ur_y - ll_y) {
-            if (i == this.lines - 1) {
+            if (i === this.lines - 1) {
               x_text = x;
             } else if (i === 0) {
               x_text = x - z_width;
@@ -13954,7 +13941,7 @@ function GrowAxis(ctx) {
 
         if (draw_text && text_idx >= 0 && max_z_width < ur_x - ll_x &&
           i % this.valuequotient === 0) {
-          if (i == this.lines - 1) {
+          if (i === this.lines - 1) {
             y_text = y + z_height - z_descent - 3;
           } else if (i === 0) {
             y_text = y;
@@ -14005,7 +13992,7 @@ function GrowAxis(ctx) {
           z_descent = z_height / 4;
 
           if (text_idx >= 0 && z_height - z_descent < ur_y - ll_y) {
-            if (i == this.lines - 1) {
+            if (i === this.lines - 1) {
               x_text = x - z_width;
             } else if (i === 0) {
               x_text = x;
@@ -14026,8 +14013,7 @@ function GrowAxis(ctx) {
     if (Math.abs(value) < Number.MIN_VALUE) {
       value = 0;
     }
-    var sb = this.cFormat.format(value, sb);
-    return sb;
+    return this.cFormat.format(value, sb);
   };
 
   this.getUserData = function () {
@@ -14055,10 +14041,10 @@ function GrowAxis(ctx) {
       var di;
       var horizontal = (rotation < 45 || (rotation > 135 && rotation < 225) ||
         rotation > 315) ? 0 : 1;
-      if (horizontal !== 0) {
-        len = Math.abs(x2 - x1);
-      } else {
+      if (horizontal === 0) {
         len = Math.abs(y2 - y1);
+      } else {
+        len = Math.abs(x2 - x1);
       }
 
       if (len < 150) {
@@ -14080,10 +14066,10 @@ function GrowAxis(ctx) {
       if (di > 0 && di <= 25) {
         this.lines = RangeData[lix][di - 1].lines;
         this.longquotient = RangeData[lix][di - 1].longq;
-        if (this.horizontal !== 0) {
-          this.valuequotient = RangeData[lix][di - 1].hvalq;
-        } else {
+        if (this.horizontal === 0) {
           this.valuequotient = RangeData[lix][di - 1].vvalq;
+        } else {
+          this.valuequotient = RangeData[lix][di - 1].hvalq;
         }
       }
 
@@ -14372,7 +14358,7 @@ function GrowAxisArc(ctx) {
       this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, this.angle1 -
         rotation, this.angle2, drawtype, idx, 0);
 
-      if (this.lines == 1) {
+      if (this.lines === 1) {
         return;
       }
 
@@ -14418,8 +14404,8 @@ function GrowAxisArc(ctx) {
         this.ctx.gdraw.line(x1, y1, x2, y2, drawtype, idx, 0);
         if (draw_text) {
           if (text_idx >= 0 && i % this.valuequotient === 0 &&
-            !(this.angle2 == 360 &&
-              ((this.increment > 0 && i == this.lines - 1) ||
+            !(this.angle2 === 360 &&
+              ((this.increment > 0 && i === this.lines - 1) ||
                 (this.increment < 0 && i === 0)))) {
             text = this.format_text(this.format, this.min_value + i *
               this.increment);
@@ -14432,10 +14418,10 @@ function GrowAxisArc(ctx) {
               max_z_width = z_width;
             }
 
-            if (i == this.lines - 1 && this.angle1 === 0 &&
-              this.angle2 == 180) {
+            if (i === this.lines - 1 && this.angle1 === 0 &&
+              this.angle2 === 180) {
               xt = xt - z_width / 2;
-            } else if (i === 0 && this.angle1 === 0 && this.angle2 != 360) {
+            } else if (i === 0 && this.angle1 === 0 && this.angle2 !== 360) {
               xt = xt - z_width / 2;
             } else {
               yt = yt + (z_height - z_descent) / 2;
@@ -14455,8 +14441,7 @@ function GrowAxisArc(ctx) {
     if (Math.abs(value) < Number.MIN_VALUE) {
       value = 0;
     }
-    var sb = this.cFormat.format(value, sb);
-    return sb;
+    return this.cFormat.format(value, sb);
   };
 
   this.getUserData = function () {
@@ -14484,10 +14469,10 @@ function GrowAxisArc(ctx) {
       var di;
       var horizontal = (rotation < 45 || (rotation > 135 && rotation < 225) ||
         rotation > 315) ? 0 : 1;
-      if (horizontal !== 0) {
-        len = Math.abs(x2 - x1);
-      } else {
+      if (horizontal === 0) {
         len = Math.abs(y2 - y1);
+      } else {
+        len = Math.abs(x2 - x1);
       }
 
       if (len < 150) {
@@ -14509,10 +14494,10 @@ function GrowAxisArc(ctx) {
       if (di > 0 && di <= 25) {
         this.lines = RangeData[lix][di - 1].lines;
         this.longquotient = RangeData[lix][di - 1].longq;
-        if (horizontal !== 0) {
-          this.valuequotient = RangeData[lix][di - 1].hvalq;
-        } else {
+        if (horizontal === 0) {
           this.valuequotient = RangeData[lix][di - 1].vvalq;
+        } else {
+          this.valuequotient = RangeData[lix][di - 1].hvalq;
         }
       }
 
@@ -14639,11 +14624,9 @@ function GrowPie(ctx) {
           break;
         case Glow.eSave_GrowPie_max_value:
           this.max_value = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowPie_min_value:
           this.min_value = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowPie_sector_color1:
           this.sector_color[0] = parseInt(tokens[1], 10);
@@ -14683,51 +14666,39 @@ function GrowPie(ctx) {
           break;
         case Glow.eSave_GrowPie_sector_size1:
           this.sector_size[0] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowPie_sector_size2:
           this.sector_size[1] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowPie_sector_size3:
           this.sector_size[2] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowPie_sector_size4:
           this.sector_size[3] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowPie_sector_size5:
           this.sector_size[4] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowPie_sector_size6:
           this.sector_size[5] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowPie_sector_size7:
           this.sector_size[6] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowPie_sector_size8:
           this.sector_size[7] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowPie_sector_size9:
           this.sector_size[8] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowPie_sector_size10:
           this.sector_size[9] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowPie_sector_size11:
           this.sector_size[10] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowPie_sector_size12:
           this.sector_size[11] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowPie_userdata_cb:
           if (this.ctx.appl !== null) {
@@ -14761,12 +14732,12 @@ function GrowPie(ctx) {
     var idx;
     var chot = 0;
 
-    if (this.ctx.hot_indication == Glow.eHotIndication_No) {
+    if (this.ctx.hot_indication === Glow.eHotIndication_No) {
       hot = 0;
-    } else if (this.ctx.hot_indication == Glow.eHotIndication_DarkColor) {
+    } else if (this.ctx.hot_indication === Glow.eHotIndication_DarkColor) {
       chot = hot;
       hot = 0;
-    } else if (this.ctx.hot_indication == Glow.eHotIndication_LightColor) {
+    } else if (this.ctx.hot_indication === Glow.eHotIndication_LightColor) {
       chot = -hot;
       hot = 0;
     }
@@ -14819,8 +14790,8 @@ function GrowPie(ctx) {
     var display_shadow = ((node !== null && node.shadow !== 0) ||
       this.shadow !== 0) && this.disable_shadow === 0;
     var grad = this.gradient;
-    if (this.gradient == Glow.eGradient_No &&
-      (node !== null && node.gradient != Glow.eGradient_No) &&
+    if (this.gradient === Glow.eGradient_No &&
+      (node !== null && node.gradient !== Glow.eGradient_No) &&
       this.disable_gradient === 0) {
       grad = node.gradient;
     }
@@ -14832,7 +14803,7 @@ function GrowPie(ctx) {
     for (var i = 0; i < this.sectors + 1; i++) {
       var fillcolor;
 
-      if (i == this.sectors) {
+      if (i === this.sectors) {
         if (ia1 >= this.angle1 + this.angle2) {
           break;
         }
@@ -14858,11 +14829,11 @@ function GrowPie(ctx) {
       }
 
 
-      if (grad == Glow.eGradient_No || fillcolor == Glow.eDrawType_ColorRed) {
-        if (chot !== 0) {
-          drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
-        } else {
+      if (grad === Glow.eGradient_No || fillcolor === Glow.eDrawType_ColorRed) {
+        if (chot === 0) {
           drawtype = fillcolor;
+        } else {
+          drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
         }
         this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, ia1 - rot,
           ia2, drawtype);
@@ -14887,7 +14858,7 @@ function GrowPie(ctx) {
         var ish = Math.floor(this.shadow_width / 100 *
           Math.min(ur_x - ll_x, ur_y - ll_y) + 0.5);
         var drawtype_incr = this.shadow_contrast;
-        if (this.relief == Glow.eRelief_Down) {
+        if (this.relief === Glow.eRelief_Down) {
           drawtype_incr = -this.shadow_contrast;
         }
 
@@ -14933,7 +14904,7 @@ function GrowPie(ctx) {
       this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, this.angle1 -
         rot, this.angle2, drawtype, idx, 0);
     }
-  }
+  };
 
   this.set_conf = function (sector_num, min_val, max_val, color) {
     this.sectors = sector_num;
@@ -14943,7 +14914,7 @@ function GrowPie(ctx) {
       this.sector_color[i] = color[i];
     }
     this.draw();
-  }
+  };
 
   this.get_conf = function () {
     var info = new GlowPieInfo();
@@ -14951,14 +14922,14 @@ function GrowPie(ctx) {
     info.min_val = this.min_value;
     info.max_val = this.max_value;
     return info;
-  }
+  };
 
   this.set_values = function (values) {
     for (var i = 0; i < this.sectors; i++) {
       this.sector_size[i] = values[i];
     }
     this.draw();
-  }
+  };
 
   this.getUserData = function () {
     return userdata;
@@ -15034,11 +15005,9 @@ function GrowBarChart(ctx) {
           break;
         case Glow.eSave_GrowBarChart_max_value:
           this.max_value = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowBarChart_min_value:
           this.min_value = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowBarChart_horizontal_lines:
           this.horizontal_lines = parseInt(tokens[1], 10);
@@ -15109,7 +15078,7 @@ function GrowBarChart(ctx) {
   };
 
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0) {
+    if (this.ctx.nodraw !== 0) {
       return;
     }
 
@@ -15117,17 +15086,17 @@ function GrowBarChart(ctx) {
     var idx;
     var chot = 0;
 
-    if (this.ctx.hot_indication == Glow.eHotIndication_No) {
+    if (this.ctx.hot_indication === Glow.eHotIndication_No) {
       hot = 0;
-    } else if (this.ctx.hot_indication == Glow.eHotIndication_DarkColor) {
+    } else if (this.ctx.hot_indication === Glow.eHotIndication_DarkColor) {
       chot = hot;
       hot = 0;
-    } else if (this.ctx.hot_indication == Glow.eHotIndication_LightColor) {
+    } else if (this.ctx.hot_indication === Glow.eHotIndication_LightColor) {
       chot = -hot;
       hot = 0;
     }
 
-    if (node != null && node.line_width != 0) {
+    if (node != null && node.line_width !== 0) {
       idx =
         Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
           node.line_width - 1);
@@ -15169,8 +15138,8 @@ function GrowBarChart(ctx) {
     ur_y = Math.max(y1, y2);
 
     var grad = this.gradient;
-    if (this.gradient == Glow.eGradient_No &&
-      (node !== null && node.gradient != Glow.eGradient_No) &&
+    if (this.gradient === Glow.eGradient_No &&
+      (node !== null && node.gradient !== Glow.eGradient_No) &&
       this.disable_gradient === 0) {
       grad = node.gradient;
     }
@@ -15192,7 +15161,7 @@ function GrowBarChart(ctx) {
     for (var j = 0; j < this.bars; j++) {
       bar_ll_x = bar_ur_x;
 
-      if (j == this.bars - 1) {
+      if (j === this.bars - 1) {
         bar_ur_x = ur_x;
       } else {
         bar_ur_x = ll_x + (j + 1) * width;
@@ -15212,7 +15181,7 @@ function GrowBarChart(ctx) {
       }
 
       for (var i = 0; i < this.barsegments + 1; i++) {
-        if (typeof this.bar_values[i] == 'undefined') {
+        if (typeof this.bar_values[i] === 'undefined') {
           continue;
         }
         var fillcolor = 0;
@@ -15221,7 +15190,7 @@ function GrowBarChart(ctx) {
           skip = 0;
           bar_up_ur_y = bar_up_ll_y;
 
-          if (i == this.barsegments) {
+          if (i === this.barsegments) {
             if (bar_up_ll_y <= ll_y) {
               skip = 1;
             } else {
@@ -15247,13 +15216,13 @@ function GrowBarChart(ctx) {
                 Glow.eDrawType_FillHighlight, highlight, colornode, 1, 0);
             }
           }
-          if (skip == 0) {
-            if (grad == Glow.eGradient_No ||
-              fillcolor == Glow.eDrawType_ColorRed || i == this.barsegments) {
-              if (chot != 0) {
-                drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
-              } else {
+          if (skip === 0) {
+            if (grad === Glow.eGradient_No ||
+              fillcolor === Glow.eDrawType_ColorRed || i === this.barsegments) {
+              if (chot === 0) {
                 drawtype = fillcolor;
+              } else {
+                drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
               }
               this.ctx.gdraw.fill_rect(bar_ll_x, bar_up_ll_y, bar_ur_x -
                 bar_ll_x, bar_up_ur_y - bar_up_ll_y, drawtype);
@@ -15285,7 +15254,7 @@ function GrowBarChart(ctx) {
           skip = 0;
           bar_down_ll_y = bar_down_ur_y;
 
-          if (i == this.barsegments) {
+          if (i === this.barsegments) {
             border_bar_down_ur_y = bar_down_ur_y;
             if (bar_down_ur_y >= ur_y) {
               skip = 1;
@@ -15314,12 +15283,12 @@ function GrowBarChart(ctx) {
           }
 
           if (!skip) {
-            if (grad == Glow.eGradient_No ||
-              fillcolor == Glow.eDrawType_ColorRed || i == this.barsegments) {
-              if (chot != 0) {
-                drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
-              } else {
+            if (grad === Glow.eGradient_No ||
+              fillcolor === Glow.eDrawType_ColorRed || i === this.barsegments) {
+              if (chot === 0) {
                 drawtype = fillcolor;
+              } else {
+                drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
               }
               this.ctx.gdraw.fill_rect(bar_ll_x, bar_down_ll_y, bar_ur_x -
                 bar_ll_x, bar_down_ur_y - bar_down_ll_y, drawtype);
@@ -15347,7 +15316,7 @@ function GrowBarChart(ctx) {
           }
         }
 
-        if (this.border !== 0 && i == this.barsegments) {
+        if (this.border !== 0 && i === this.barsegments) {
           // Draw previous bar border
           if (j > 0) {
             drawtype = GlowColor.get_drawtype(this.draw_type,
@@ -15368,7 +15337,7 @@ function GrowBarChart(ctx) {
             brect_height = ur_y + this.min_value * (ur_y - ll_y) /
               (this.max_value - this.min_value) - bar_up_ll_y;
           }
-          if (j == this.bars - 1) {
+          if (j === this.bars - 1) {
             // Draw last bar border
             drawtype = GlowColor.get_drawtype(this.draw_type,
               Glow.eDrawType_LineHighlight, highlight, colornode, 0, 0);
@@ -15392,7 +15361,7 @@ function GrowBarChart(ctx) {
               (this.max_value - this.min_value);
             brect_width = bar_ur_x - bar_ll_x;
             brect_height = border_bar_down_ur_y - brect_ll_y;
-            if (j == this.bars - 1) {
+            if (j === this.bars - 1) {
               // Draw last bar border
               drawtype = GlowColor.get_drawtype(this.draw_type,
                 Glow.eDrawType_LineHighlight, highlight, colornode, 0, 0);
@@ -15431,7 +15400,7 @@ function GrowBarChart(ctx) {
         0);
     }
 
-  }
+  };
 
   this.set_conf =
     function (bar_num, barsegment_num, min_val, max_val, vert_lines,
@@ -15637,7 +15606,6 @@ function GrowTable(ctx) {
           break;
         case Glow.eSave_GrowTable_scrollbar_width:
           this.scrollbar_width = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowTable_scrollbar_color:
           this.scrollbar_color = parseInt(tokens[1], 10);
@@ -15653,7 +15621,6 @@ function GrowTable(ctx) {
           break;
         case Glow.eSave_GrowTable_window_scale:
           this.window_scale = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowTable_rows:
           this.rows = parseInt(tokens[1], 10);
@@ -15690,11 +15657,9 @@ function GrowTable(ctx) {
           break;
         case Glow.eSave_GrowTable_header_row_height:
           this.header_row_height = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowTable_row_height:
           this.row_height = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowTable_options:
           this.options = parseInt(tokens[1], 10);
@@ -15707,7 +15672,6 @@ function GrowTable(ctx) {
           break;
         case Glow.eSave_GrowTable_column_width1:
           this.column_width[0] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowTable_header_text1:
           if (tokens.length > 1) {
@@ -15716,7 +15680,6 @@ function GrowTable(ctx) {
           break;
         case Glow.eSave_GrowTable_column_width2:
           this.column_width[1] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowTable_header_text2:
           if (tokens.length > 1) {
@@ -15725,7 +15688,6 @@ function GrowTable(ctx) {
           break;
         case Glow.eSave_GrowTable_column_width3:
           this.column_width[2] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowTable_header_text3:
           if (tokens.length > 1) {
@@ -15734,7 +15696,6 @@ function GrowTable(ctx) {
           break;
         case Glow.eSave_GrowTable_column_width4:
           this.column_width[3] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowTable_header_text4:
           if (tokens.length > 1) {
@@ -15743,7 +15704,6 @@ function GrowTable(ctx) {
           break;
         case Glow.eSave_GrowTable_column_width5:
           this.column_width[4] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowTable_header_text5:
           if (tokens.length > 1) {
@@ -15752,7 +15712,6 @@ function GrowTable(ctx) {
           break;
         case Glow.eSave_GrowTable_column_width6:
           this.column_width[5] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowTable_header_text6:
           if (tokens.length > 1) {
@@ -15761,7 +15720,6 @@ function GrowTable(ctx) {
           break;
         case Glow.eSave_GrowTable_column_width7:
           this.column_width[6] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowTable_header_text7:
           if (tokens.length > 1) {
@@ -15770,7 +15728,6 @@ function GrowTable(ctx) {
           break;
         case Glow.eSave_GrowTable_column_width8:
           this.column_width[7] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowTable_header_text8:
           if (tokens.length > 1) {
@@ -15779,7 +15736,6 @@ function GrowTable(ctx) {
           break;
         case Glow.eSave_GrowTable_column_width9:
           this.column_width[8] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowTable_header_text9:
           if (tokens.length > 1) {
@@ -15788,7 +15744,6 @@ function GrowTable(ctx) {
           break;
         case Glow.eSave_GrowTable_column_width10:
           this.column_width[9] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowTable_header_text10:
           if (tokens.length > 1) {
@@ -15797,7 +15752,6 @@ function GrowTable(ctx) {
           break;
         case Glow.eSave_GrowTable_column_width11:
           this.column_width[10] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowTable_header_text11:
           if (tokens.length > 1) {
@@ -15806,7 +15760,6 @@ function GrowTable(ctx) {
           break;
         case Glow.eSave_GrowTable_column_width12:
           this.column_width[11] = parseFloat(tokens[1]);
-          ;
           break;
         case Glow.eSave_GrowTable_header_text12:
           if (tokens.length > 1) {
@@ -15892,16 +15845,16 @@ function GrowTable(ctx) {
     }
     this.table_y1 = this.row_height * this.rows;
 
-    if (this.header_row !== 0) {
-      this.y_low_offs = this.header_row_height;
-    } else {
+    if (this.header_row === 0) {
       this.y_low_offs = 0;
+    } else {
+      this.y_low_offs = this.header_row_height;
     }
 
-    if (this.header_column != 0) {
-      this.x_left_offs = this.column_width[0];
-    } else {
+    if (this.header_column === 0) {
       this.x_left_offs = 0;
+    } else {
+      this.x_left_offs = this.column_width[0];
     }
 
     this.cell_value = new Array(this.columns * this.rows);
@@ -15914,11 +15867,11 @@ function GrowTable(ctx) {
       x0 = this.x_right - this.scrollbar_width;
       y0 = this.y_low + this.y_low_offs;
       width = this.scrollbar_width;
-      if (this.horizontal_scrollbar !== 0) {
+      if (this.horizontal_scrollbar === 0) {
+        height = this.y_high - (this.y_low + this.y_low_offs);
+      } else {
         height =
           this.y_high - (this.y_low + this.y_low_offs) - this.scrollbar_width;
-      } else {
-        height = this.y_high - (this.y_low + this.y_low_offs);
       }
 
       this.v_scrollbar = new GrowScrollBar(ctx);
@@ -15932,7 +15885,7 @@ function GrowTable(ctx) {
         this.scrollbar_width * this.horizontal_scrollbar);
       this.v_scrollbar.set_shadow(this.shadow);
       this.v_value = this.table_y0 * this.window_scale;
-    } else if (this.vertical_scrollbar == 0 && this.v_scrollbar != null) {
+    } else if (this.vertical_scrollbar === 0 && this.v_scrollbar != null) {
       this.v_scrollbar = null;
       this.v_value = this.table_y0 * this.window_scale;
     } else if (this.v_scrollbar !== null) {
@@ -15952,11 +15905,11 @@ function GrowTable(ctx) {
       x0 = this.x_left + this.x_left_offs;
       y0 = this.y_high - this.scrollbar_width;
       height = this.scrollbar_width;
-      if (this.vertical_scrollbar !== 0) {
+      if (this.vertical_scrollbar === 0) {
+        width = this.x_right - (this.x_left + this.x_left_offs);
+      } else {
         width = this.x_right - (this.x_left + this.x_left_offs) -
           this.scrollbar_width;
-      } else {
-        width = this.x_right - (this.x_left + this.x_left_offs);
       }
 
       this.h_scrollbar = new GrowScrollBar(ctx);
@@ -15992,7 +15945,7 @@ function GrowTable(ctx) {
     this.tdraw(null, 0, 0, null, null);
   };
   this.tdraw = function (t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw != 0) {
+    if (this.ctx.nodraw !== 0) {
       return;
     }
 
@@ -16070,7 +16023,7 @@ function GrowTable(ctx) {
 
     dark_drawtype = GlowColor.shift_drawtype(this.fill_drawtype, 2, null);
     light_drawtype = GlowColor.shift_drawtype(this.fill_drawtype, -2, null);
-    if (this.select_drawtype == Glow.eDrawType_Inherit) {
+    if (this.select_drawtype === Glow.eDrawType_Inherit) {
       sel_drawtype = dark_drawtype;
     } else {
       sel_drawtype = this.select_drawtype;
@@ -16092,8 +16045,7 @@ function GrowTable(ctx) {
 
     var t_ll_x = o_ll_x - Math.floor(this.h_value * this.ctx.mw.zoom_factor_x);
     var t_ll_y = o_ll_y - Math.floor(this.v_value * this.ctx.mw.zoom_factor_y);
-    ;var t_ur_x = t_ll_x +
-      Math.floor(this.table_x1 * this.ctx.mw.zoom_factor_x);
+    var t_ur_x = t_ll_x + Math.floor(this.table_x1 * this.ctx.mw.zoom_factor_x);
     var t_ur_y = t_ll_y + Math.floor(this.table_y1 * this.ctx.mw.zoom_factor_y);
 
     var x;
@@ -16103,7 +16055,7 @@ function GrowTable(ctx) {
     var header_w = 0;
     var text_offs = 10;
 
-    if (this.header_row != 0) {
+    if (this.header_row !== 0) {
       header_h = Math.floor(this.header_row_height * this.ctx.mw.zoom_factor_y);
     }
     if (this.header_column !== 0) {
@@ -16127,11 +16079,11 @@ function GrowTable(ctx) {
           if (x > ur_x) {
             break;
           }
-          if (i != this.header_column) {
+          if (i !== this.header_column) {
             this.ctx.gdraw.line(Math.floor(x) - 1, ll_y, Math.floor(x) -
               1, ll_y + header_h, dark_drawtype, 0, 0);
           }
-          if (i != this.columns) {
+          if (i !== this.columns) {
             this.ctx.gdraw.line(Math.floor(x) + 1, ll_y, Math.floor(x) +
               1, ll_y + header_h, light_drawtype, 0, 0);
           }
@@ -16228,11 +16180,11 @@ function GrowTable(ctx) {
             break;
           }
           if (y > ll_y) {
-            if (i != 0) {
+            if (i !== 0) {
               this.ctx.gdraw.line(ll_x, Math.floor(y) - 1, ll_x +
                 header_w, Math.floor(y) - 1, dark_drawtype, 0, 0);
             }
-            if (i != this.rows) {
+            if (i !== this.rows) {
               this.ctx.gdraw.line(ll_x, Math.floor(y) + 1, ll_x +
                 header_w, Math.floor(y) + 1, light_drawtype, 0, 0);
             }
@@ -16261,8 +16213,8 @@ function GrowTable(ctx) {
             this.cell_value[offs] !== "") {
             var text_x = Math.floor(x) + text_offs;
 
-            if (this.column_adjustment[0] == Glow.eAdjustment_Right ||
-              this.column_adjustment[0] == Glow.eAdjustment_Center) {
+            if (this.column_adjustment[0] === Glow.eAdjustment_Right ||
+              this.column_adjustment[0] === Glow.eAdjustment_Center) {
               var width, height, descent;
               var dim = this.ctx.gdraw.getTextExtent(this.cell_value[offs],
                 text_idx, this.font, this.text_drawtype);
@@ -16326,11 +16278,11 @@ function GrowTable(ctx) {
           break;
         }
         if (x > ll_x) {
-          if (i != this.header_column) {
+          if (i !== this.header_column) {
             this.ctx.gdraw.line(Math.floor(x) - 1, t_ll_y, Math.floor(x) - 1,
               t_ur_y, dark_drawtype, 0, 0);
           }
-          if (i != this.columns) {
+          if (i !== this.columns) {
             this.ctx.gdraw.line(Math.floor(x) + 1, t_ll_y, Math.floor(x) + 1,
               t_ur_y, light_drawtype, 0, 0);
           }
@@ -16343,11 +16295,11 @@ function GrowTable(ctx) {
           break;
         }
         if (y > ll_y) {
-          if (i != 0) {
+          if (i !== 0) {
             this.ctx.gdraw.line(t_ll_x, Math.floor(y - 1), t_ur_x, Math.floor(
               y) - 1, dark_drawtype, 0, 0);
           }
-          if (i != this.rows) {
+          if (i !== this.rows) {
             this.ctx.gdraw.line(t_ll_x, Math.floor(y) + 1, t_ur_x, Math.floor(
               y) + 1, light_drawtype, 0, 0);
           }
@@ -16408,7 +16360,7 @@ function GrowTable(ctx) {
           }
           if ((this.options & this.mTableOptions_ZeroIfHeaderIs0) !== 0) {
             // Don't draw the row if the value in the first column is zero
-            if (this.cell_value[j] === null || this.cell_value[j] == "0") {
+            if (this.cell_value[j] === null || this.cell_value[j] === "0") {
               continue;
             }
           }
@@ -16419,8 +16371,8 @@ function GrowTable(ctx) {
               this.cell_value[offs] !== "") {
               var text_x = Math.floor(x) + text_offs;
 
-              if (this.column_adjustment[i] == Glow.eAdjustment_Right ||
-                this.column_adjustment[i] == Glow.eAdjustment_Center) {
+              if (this.column_adjustment[i] === Glow.eAdjustment_Right ||
+                this.column_adjustment[i] === Glow.eAdjustment_Center) {
                 var width, height, descent;
                 var dim = this.ctx.gdraw.getTextExtent(this.cell_value[offs],
                   text_idx, this.font, this.text_drawtype);
@@ -16475,21 +16427,21 @@ function GrowTable(ctx) {
 
   this.getUserData = function () {
     return this.userdata;
-  }
+  };
 
   this.verticalScrollValueChanged = function (value) {
-    if (this.v_value != value) {
+    if (this.v_value !== value) {
       this.v_value = value;
       this.draw();
     }
   };
 
   this.horizontalScrollValueChanged = function (value) {
-    if (this.h_value != value) {
+    if (this.h_value !== value) {
       this.h_value = value;
       this.draw();
     }
-  }
+  };
 
   this.event_handler = function (event, fx, fy) {
     var sts, v_sts, h_sts;
@@ -16501,12 +16453,12 @@ function GrowTable(ctx) {
     if (this.h_scrollbar !== null) {
       h_sts = this.h_scrollbar.event_handler(event, fx, fy);
     }
-    if (v_sts != 0 || h_sts != 0) {
+    if (v_sts !== 0 || h_sts !== 0) {
       return 1;
     }
 
     sts = this.growrect_event_handler(event, fx, fy);
-    if (event.event == Glow.eEvent_ButtonMotion) {
+    if (event.event === Glow.eEvent_ButtonMotion) {
       return 0;
     }
 
@@ -16527,7 +16479,7 @@ function GrowTable(ctx) {
         var t_ll_y = o_ll_y - this.v_value;
 
         if (o_ll_y <= fy && fy <= o_ur_y) {
-          if (this.header_column != 0 && this.x_left <= fx &&
+          if (this.header_column !== 0 && this.x_left <= fx &&
             fx <= this.x_left + this.x_left_offs) {
             column = 0;
           } else if (o_ll_x <= fx && fx <= o_ur_x) {
@@ -16550,13 +16502,12 @@ function GrowTable(ctx) {
           }
         }
 
-        if (row != -1 && column != -1) {
+        if (row !== -1 && column !== -1) {
           this.ctx.send_table_callback(this, event.event, fx, fy, column, row);
         }
         break;
       }
       default:
-        ;
     }
 
     return sts;
@@ -16586,7 +16537,7 @@ function GrowTable(ctx) {
   };
 
   this.setSelectedCell = function (column, row) {
-    if (this.selected_cell_column == column && this.selected_cell_row == row) {
+    if (this.selected_cell_column === column && this.selected_cell_row === row) {
       return;
     }
 
@@ -16603,7 +16554,7 @@ function GrowTable(ctx) {
     return this.selected_cell_row;
   };
   this.getSelectedCellColumn = function () {
-    if (this.selected_cell_row == -1) {
+    if (this.selected_cell_row === -1) {
       return -1;
     }
     return this.selected_cell_column;
@@ -16709,7 +16660,7 @@ function GlowDraw(ctx) {
     this.gctx.strokeStyle = this.getColor(gc_type);
     this.gctx.lineWidth = idx + 1;
     this.gctx.beginPath();
-    if (typeof this.gctx.ellipse == 'function') {
+    if (typeof this.gctx.ellipse === 'function') {
       this.gctx.ellipse(x + width / 2, y + height / 2, width / 2, height / 2,
         0, -a1 * Math.PI / 180, -(a1 + a2) * Math.PI / 180, true);
     } else {
@@ -16722,10 +16673,10 @@ function GlowDraw(ctx) {
   this.fill_arc = function (x, y, width, height, a1, a2, gc_type) {
     this.gctx.fillStyle = this.getColor(gc_type);
     this.gctx.beginPath();
-    if (a2 != 360) {
+    if (a2 !== 360) {
       this.gctx.moveTo(x + width / 2, y + height / 2);
     }
-    if (typeof this.gctx.ellipse == 'function') {
+    if (typeof this.gctx.ellipse === 'function') {
       this.gctx.ellipse(x + width / 2, y + height / 2, width / 2, height / 2,
         0, -a1 * Math.PI / 180, -(a1 + a2) * Math.PI / 180, true);
     } else {
@@ -16895,10 +16846,10 @@ function GlowDraw(ctx) {
       this.setGradient(gradient, f1, f2, x, y, width, height);
 
       this.gctx.beginPath();
-      if (a2 != 360) {
+      if (a2 !== 360) {
         this.gctx.moveTo(x + width / 2, y + height / 2);
       }
-      if (typeof this.gctx.ellipse == 'function') {
+      if (typeof this.gctx.ellipse === 'function') {
         this.gctx.ellipse(x + width / 2, y + height / 2, width / 2, height / 2,
           0, -a1 * Math.PI / 180, -(a1 + a2) * Math.PI / 180, true);
       } else {
@@ -17183,7 +17134,7 @@ function GlowDraw(ctx) {
   };
 
   this.reset_clip_rectangle = function () {
-    if (this.clipCount == 0) {
+    if (this.clipCount === 0) {
       console.log("Clip mismatch");
       return;
     }
@@ -17204,7 +17155,7 @@ function GlowDraw(ctx) {
   };
 
   this.get_clip_rectangle = function () {
-    if (this.clipCount == 0) {
+    if (this.clipCount === 0) {
       return null;
     }
 
@@ -17245,7 +17196,7 @@ function GlowDraw(ctx) {
   };
 
   this.get_customcolors = function () {
-    if (this.customcolors_cnt == 0) {
+    if (this.customcolors_cnt === 0) {
       return null;
     }
     return this.customcolors[0];
@@ -17337,10 +17288,10 @@ function GrowCtx(ctx) {
     var grow_loaded = false;
 
     for (var i = row; i < lines.length; i++) {
-      if (lines[i].length > 2 && lines[i].substring(0, 2) == "0!") {
+      if (lines[i].length > 2 && lines[i].substring(0, 2) === "0!") {
         continue;
       }
-      if (lines[i].length > 1 && lines[i].substring(0, 1) == "!") {
+      if (lines[i].length > 1 && lines[i].substring(0, 1) === "!") {
         continue;
       }
 
@@ -17457,7 +17408,7 @@ function GrowCtx(ctx) {
     }
 
     if (this.color_theme !== null && this.color_theme !== "") {
-      if (this.color_theme == "$default") {
+      if (this.color_theme === "$default") {
         if (this.default_color_theme !== null) {
           this.customcolors.read_colorfile(this, this.default_color_theme);
           this.gdraw.push_customcolors(this.customcolors);
@@ -17472,10 +17423,10 @@ function GrowCtx(ctx) {
   this.open_comment = function (lines, row) {
     var i;
     for (i = row; i < lines.length; i++) {
-      if (!lines[i].substring(0, 1) == "!") {
+      if (!lines[i].substring(0, 1) === "!") {
         break;
       }
-      if (lines[i].substring(0, 3) == "!*/") {
+      if (lines[i].substring(0, 3) === "!*/") {
         break;
       }
     }
@@ -17667,7 +17618,7 @@ function GrowCtx(ctx) {
 
   this.get_nodeclass_from_name = function (nc_name) {
     for (var i = 0; i < this.a_nc.size(); i++) {
-      if (nc_name == this.a_nc.get(i).nc_name) {
+      if (nc_name === this.a_nc.get(i).nc_name) {
         return this.a_nc.get(i);
       }
     }
@@ -17676,7 +17627,7 @@ function GrowCtx(ctx) {
 
   this.get_conclass_from_name = function (cc_name) {
     for (var i = 0; i < this.a_cc.size(); i++) {
-      if (cc_name == this.a_cc.get(i).cc_name) {
+      if (cc_name === this.a_cc.get(i).cc_name) {
         return this.a_cc.get(i);
       }
     }
@@ -17694,21 +17645,21 @@ function GrowCtx(ctx) {
 
     for (var i = this.a.size() - 1; i >= 0; i--) {
       sts = this.a.get(i).event_handler(e, e.x, e.y);
-      if (sts == Glow.GLOW__NO_PROPAGATE) {
+      if (sts === Glow.GLOW__NO_PROPAGATE) {
         break;
       }
-      if (sts == Glow.GLOW__TERMINATED) {
+      if (sts === Glow.GLOW__TERMINATED) {
         return sts;
       }
-      if (sts == 1) {
+      if (sts === 1) {
         break;
       }
     }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
-        if (sts == 1 && this.callback_object !== null &&
-          this.callback_object.type() == Glow.eObjectType_GrowSlider) {
+        if (sts === 1 && this.callback_object !== null &&
+          this.callback_object.type() === Glow.eObjectType_GrowSlider) {
           this.sliderActive = true;
           this.sliderObject = this.callback_object;
 
@@ -17723,7 +17674,7 @@ function GrowCtx(ctx) {
 
           if (this.restriction_object !== null) {
             var g = this.restriction_object.measure();
-            if (this.move_restriction == Glow.eMoveRestriction_VerticalSlider) {
+            if (this.move_restriction === Glow.eMoveRestriction_VerticalSlider) {
               this.slider_cursor_offset = g.ll_y - e.y;
             } else {
               this.slider_cursor_offset = g.ll_x - e.x;
@@ -17874,7 +17825,7 @@ function GrowCtx(ctx) {
         break;
     }
 
-    if (sts == 1 && this.appl !== null) {
+    if (sts === 1 && this.appl !== null) {
       e.object = this.callback_object;
       e.object_type = this.callback_object_type;
       this.appl.event_handler(e);
@@ -17914,12 +17865,12 @@ function GrowCtx(ctx) {
     var i;
 
     for (i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() == Glow.eObjectType_Con) {
+      if (this.a.get(i).type() === Glow.eObjectType_Con) {
         this.a.get(i).draw();
       }
     }
     for (i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() != Glow.eObjectType_Con) {
+      if (this.a.get(i).type() !== Glow.eObjectType_Con) {
         this.a.get(i).draw();
       }
     }
@@ -17934,13 +17885,13 @@ function GrowCtx(ctx) {
       this.gdraw.canvas.height, this.background_color);
     // Draw connections
     for (i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() == Glow.eObjectType_Con) {
+      if (this.a.get(i).type() === Glow.eObjectType_Con) {
         this.a.get(i).draw();
       }
     }
     // Draw nodes
     for (i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() != Glow.eObjectType_Con) {
+      if (this.a.get(i).type() !== Glow.eObjectType_Con) {
         this.a.get(i).draw();
       }
     }
@@ -17951,32 +17902,32 @@ function GrowCtx(ctx) {
     var sts;
     this.nodraw++;
     for (var i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() == Glow.eObjectType_GrowNode ||
-        this.a.get(i).type() == Glow.eObjectType_GrowGroup ||
-        this.a.get(i).type() == Glow.eObjectType_GrowBar ||
-        this.a.get(i).type() == Glow.eObjectType_GrowBarArc ||
-        this.a.get(i).type() == Glow.eObjectType_GrowTrend ||
-        this.a.get(i).type() == Glow.eObjectType_GrowTable ||
-        this.a.get(i).type() == Glow.eObjectType_GrowSlider ||
-        this.a.get(i).type() == Glow.eObjectType_GrowWindow ||
-        this.a.get(i).type() == Glow.eObjectType_GrowFolder ||
-        this.a.get(i).type() == Glow.eObjectType_GrowXYCurve ||
-        this.a.get(i).type() == Glow.eObjectType_GrowPie ||
-        this.a.get(i).type() == Glow.eObjectType_GrowBarChart ||
-        this.a.get(i).type() == Glow.eObjectType_GrowToolbar ||
-        this.a.get(i).type() == Glow.eObjectType_GrowAxis ||
-        this.a.get(i).type() == Glow.eObjectType_GrowAxisArc) {
+      if (this.a.get(i).type() === Glow.eObjectType_GrowNode ||
+        this.a.get(i).type() === Glow.eObjectType_GrowGroup ||
+        this.a.get(i).type() === Glow.eObjectType_GrowBar ||
+        this.a.get(i).type() === Glow.eObjectType_GrowBarArc ||
+        this.a.get(i).type() === Glow.eObjectType_GrowTrend ||
+        this.a.get(i).type() === Glow.eObjectType_GrowTable ||
+        this.a.get(i).type() === Glow.eObjectType_GrowSlider ||
+        this.a.get(i).type() === Glow.eObjectType_GrowWindow ||
+        this.a.get(i).type() === Glow.eObjectType_GrowFolder ||
+        this.a.get(i).type() === Glow.eObjectType_GrowXYCurve ||
+        this.a.get(i).type() === Glow.eObjectType_GrowPie ||
+        this.a.get(i).type() === Glow.eObjectType_GrowBarChart ||
+        this.a.get(i).type() === Glow.eObjectType_GrowToolbar ||
+        this.a.get(i).type() === Glow.eObjectType_GrowAxis ||
+        this.a.get(i).type() === Glow.eObjectType_GrowAxisArc) {
         this.appl.traceConnect(this.a.get(i));
-        if (this.a.get(i).type() == Glow.eObjectType_GrowGroup) {
+        if (this.a.get(i).type() === Glow.eObjectType_GrowGroup) {
           for (var j = 0; j < this.a.get(i).nc.a.size(); j++) {
-            if (this.a.get(i).nc.a.get(j).type() == Glow.eObjectType_GrowNode ||
-              this.a.get(i).nc.a.get(j).type() == Glow.eObjectType_GrowGroup) {
+            if (this.a.get(i).nc.a.get(j).type() === Glow.eObjectType_GrowNode ||
+              this.a.get(i).nc.a.get(j).type() === Glow.eObjectType_GrowGroup) {
               this.appl.traceConnect(this.a.get(i).nc.a.get(j));
             }
           }
 
-        } else if (this.a.get(i).type() == Glow.eObjectType_GrowWindow ||
-          this.a.get(i).type() == Glow.eObjectType_GrowFolder) {
+        } else if (this.a.get(i).type() === Glow.eObjectType_GrowWindow ||
+          this.a.get(i).type() === Glow.eObjectType_GrowFolder) {
           this.a.get(i).traceConnect();
         }
       }
@@ -17989,30 +17940,30 @@ function GrowCtx(ctx) {
     var sts;
     this.trace_started = false;
     for (var i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() == Glow.eObjectType_GrowNode ||
-        this.a.get(i).type() == Glow.eObjectType_GrowGroup ||
-        this.a.get(i).type() == Glow.eObjectType_GrowBar ||
-        this.a.get(i).type() == Glow.eObjectType_GrowBarArc ||
-        this.a.get(i).type() == Glow.eObjectType_GrowTrend ||
-        this.a.get(i).type() == Glow.eObjectType_GrowTable ||
-        this.a.get(i).type() == Glow.eObjectType_GrowSlider ||
-        this.a.get(i).type() == Glow.eObjectType_GrowWindow ||
-        this.a.get(i).type() == Glow.eObjectType_GrowFolder ||
-        this.a.get(i).type() == Glow.eObjectType_GrowXYCurve ||
-        this.a.get(i).type() == Glow.eObjectType_GrowPie ||
-        this.a.get(i).type() == Glow.eObjectType_GrowBarChart ||
-        this.a.get(i).type() == Glow.eObjectType_GrowAxis ||
-        this.a.get(i).type() == Glow.eObjectType_GrowAxisArc) {
+      if (this.a.get(i).type() === Glow.eObjectType_GrowNode ||
+        this.a.get(i).type() === Glow.eObjectType_GrowGroup ||
+        this.a.get(i).type() === Glow.eObjectType_GrowBar ||
+        this.a.get(i).type() === Glow.eObjectType_GrowBarArc ||
+        this.a.get(i).type() === Glow.eObjectType_GrowTrend ||
+        this.a.get(i).type() === Glow.eObjectType_GrowTable ||
+        this.a.get(i).type() === Glow.eObjectType_GrowSlider ||
+        this.a.get(i).type() === Glow.eObjectType_GrowWindow ||
+        this.a.get(i).type() === Glow.eObjectType_GrowFolder ||
+        this.a.get(i).type() === Glow.eObjectType_GrowXYCurve ||
+        this.a.get(i).type() === Glow.eObjectType_GrowPie ||
+        this.a.get(i).type() === Glow.eObjectType_GrowBarChart ||
+        this.a.get(i).type() === Glow.eObjectType_GrowAxis ||
+        this.a.get(i).type() === Glow.eObjectType_GrowAxisArc) {
         this.appl.traceDisconnect(this.a.get(i));
-        if (this.a.get(i).type() == Glow.eObjectType_GrowGroup) {
+        if (this.a.get(i).type() === Glow.eObjectType_GrowGroup) {
           for (var j = 0; j < this.a.get(i).nc.a.size(); j++) {
-            if (this.a.get(i).nc.a.get(j).type() == Glow.eObjectType_GrowNode ||
-              this.a.get(i).nc.a.get(j).type() == Glow.eObjectType_GrowGroup) {
+            if (this.a.get(i).nc.a.get(j).type() === Glow.eObjectType_GrowNode ||
+              this.a.get(i).nc.a.get(j).type() === Glow.eObjectType_GrowGroup) {
               this.appl.traceDisconnect(this.a.get(i).nc.a.get(j));
             }
           }
-        } else if (this.a.get(i).type() == Glow.eObjectType_GrowWindow ||
-          this.a.get(i).type() == Glow.eObjectType_GrowFolder) {
+        } else if (this.a.get(i).type() === Glow.eObjectType_GrowWindow ||
+          this.a.get(i).type() === Glow.eObjectType_GrowFolder) {
           this.a.get(i).traceDisconnect();
         }
       }
@@ -18023,31 +17974,31 @@ function GrowCtx(ctx) {
     var sts;
 
     for (var i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() == Glow.eObjectType_GrowNode ||
-        this.a.get(i).type() == Glow.eObjectType_GrowGroup ||
-        this.a.get(i).type() == Glow.eObjectType_GrowBar ||
-        this.a.get(i).type() == Glow.eObjectType_GrowBarArc ||
-        this.a.get(i).type() == Glow.eObjectType_GrowTrend ||
-        this.a.get(i).type() == Glow.eObjectType_GrowTable ||
-        this.a.get(i).type() == Glow.eObjectType_GrowSlider ||
-        this.a.get(i).type() == Glow.eObjectType_GrowWindow ||
-        this.a.get(i).type() == Glow.eObjectType_GrowFolder ||
-        this.a.get(i).type() == Glow.eObjectType_GrowXYCurve ||
-        this.a.get(i).type() == Glow.eObjectType_GrowPie ||
-        this.a.get(i).type() == Glow.eObjectType_GrowBarChart ||
-        this.a.get(i).type() == Glow.eObjectType_GrowAxis ||
-        this.a.get(i).type() == Glow.eObjectType_GrowAxisArc) {
+      if (this.a.get(i).type() === Glow.eObjectType_GrowNode ||
+        this.a.get(i).type() === Glow.eObjectType_GrowGroup ||
+        this.a.get(i).type() === Glow.eObjectType_GrowBar ||
+        this.a.get(i).type() === Glow.eObjectType_GrowBarArc ||
+        this.a.get(i).type() === Glow.eObjectType_GrowTrend ||
+        this.a.get(i).type() === Glow.eObjectType_GrowTable ||
+        this.a.get(i).type() === Glow.eObjectType_GrowSlider ||
+        this.a.get(i).type() === Glow.eObjectType_GrowWindow ||
+        this.a.get(i).type() === Glow.eObjectType_GrowFolder ||
+        this.a.get(i).type() === Glow.eObjectType_GrowXYCurve ||
+        this.a.get(i).type() === Glow.eObjectType_GrowPie ||
+        this.a.get(i).type() === Glow.eObjectType_GrowBarChart ||
+        this.a.get(i).type() === Glow.eObjectType_GrowAxis ||
+        this.a.get(i).type() === Glow.eObjectType_GrowAxisArc) {
         this.appl.traceScan(this.a.get(i));
-        if (this.a.get(i).type() == Glow.eObjectType_GrowGroup) {
+        if (this.a.get(i).type() === Glow.eObjectType_GrowGroup) {
           for (var j = 0; j < this.a.get(i).nc.a.size(); j++) {
-            if (this.a.get(i).nc.a.get(j).type() == Glow.eObjectType_GrowNode ||
-              this.a.get(i).nc.a.get(j).type() == Glow.eObjectType_GrowGroup) {
+            if (this.a.get(i).nc.a.get(j).type() === Glow.eObjectType_GrowNode ||
+              this.a.get(i).nc.a.get(j).type() === Glow.eObjectType_GrowGroup) {
               this.appl.traceScan(this.a.get(i).nc.a.get(j));
             }
           }
 
-        } else if (this.a.get(i).type() == Glow.eObjectType_GrowWindow ||
-          this.a.get(i).type() == Glow.eObjectType_GrowFolder) {
+        } else if (this.a.get(i).type() === Glow.eObjectType_GrowWindow ||
+          this.a.get(i).type() === Glow.eObjectType_GrowFolder) {
           this.a.get(i).traceScan();
         }
       }
@@ -18056,12 +18007,12 @@ function GrowCtx(ctx) {
 
   this.traceStarted = function () {
     return this.trace_started;
-  }
+  };
 
   this.get_node_from_name = function (name) {
     for (var i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() == Glow.eObjectType_GrowNode) {
-        if (name == this.a.get(i).n_name) {
+      if (this.a.get(i).type() === Glow.eObjectType_GrowNode) {
+        if (name === this.a.get(i).n_name) {
           return this.a.get(i);
         }
       }
@@ -18074,7 +18025,7 @@ function GrowCtx(ctx) {
     var group;
 
     for (var i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).type() == Glow.eObjectType_GrowGroup) {
+      if (this.a.get(i).type() === Glow.eObjectType_GrowGroup) {
         group = this.a.get(i).get_object_group(object);
         if (group != null) {
           return group;
@@ -18160,7 +18111,7 @@ function GrowCtx(ctx) {
 
     for (var i = 0; i < this.a.size(); i++) {
       sts = this.a.get(i).get_background_object_limits(null, type, x, y, b);
-      if ((sts & 1) != 0) {
+      if ((sts & 1) !== 0) {
         break;
       }
     }
@@ -18179,7 +18130,7 @@ function GrowCtx(ctx) {
   this.findByName = function (name) {
     var uname = name.toUpperCase();
     for (var i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).n_name.toUpperCase() == uname) {
+      if (this.a.get(i).n_name.toUpperCase() === uname) {
         return this.a.get(i);
       }
     }
@@ -18188,7 +18139,7 @@ function GrowCtx(ctx) {
 
   this.setSubwindowSource = function (name, source, owner) {
     var e = this.findByName(name);
-    if (e == null || e.type() != Glow.eObjectType_GrowWindow) {
+    if (e == null || e.type() !== Glow.eObjectType_GrowWindow) {
       console.log("Window " + name + " not found " + e);
       return;
     }
@@ -18216,10 +18167,8 @@ function GrowFrame(appl) {
 
   this.get_nogdh = function () {
     var vars = window.location.search.substring(1).split('&');
-    if (vars.length > 2 && vars[2].substring(4) == "no") {
-      return true;
-    }
-    return false;
+    return vars.length > 2 && vars[2].substring(4) === "no";
+
   };
   this.nogdh = this.get_nogdh();
   console.log("Nogdh:", this.nogdh);
@@ -18251,9 +18200,9 @@ function GrowFrame(appl) {
 
 
   this.read_func = function (ctx, lines, row) {
-    if (ctx == self.appl.baseCtx) {
-      if (lines[0].substring(3, 15) == "DefaultWidth" &&
-        lines[1].substring(3, 16) == "DefaultHeight") {
+    if (ctx === self.appl.baseCtx) {
+      if (lines[0].substring(3, 15) === "DefaultWidth" &&
+        lines[1].substring(3, 16) === "DefaultHeight") {
         var width = parseInt(lines[0].substring(16), 10);
         var height = parseInt(lines[1].substring(17), 10);
         ctx.gdraw.canvas.width = width;
@@ -18289,9 +18238,9 @@ function GrowFrame(appl) {
       var x = event.pageX - 10;
       var button_motion = 0;
       if (event.buttons == null) {
-        button_motion = (event.witch == 1);
+        button_motion = (event.witch === 1);
       } else {
-        button_motion = (event.buttons == 1);
+        button_motion = (event.buttons === 1);
       }
       if (button_motion) {
         self.event_handler(x, y, Glow.eEvent_ButtonMotion);
@@ -18346,13 +18295,7 @@ function GrowFrame(appl) {
   };
 
   this.get_filename = function () {
-    var query = window.location.search.substring(1);
-
-    var vars = query.split('&');
-    var graph = vars[0].substring(6);
-    var fname = graph + ".pwg";
-
-    return fname;
+    return window.location.search.substring(1).split('&')[0].substring(6) + ".pwg";
   };
 
   this.get_instance = function () {

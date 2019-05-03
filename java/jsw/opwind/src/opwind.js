@@ -12,7 +12,7 @@ function OpWindMenu() {
 
   this.init = function () {
     this.host = window.location.hostname;
-    if (this.host == "") {
+    if (this.host === "") {
       this.host = "localhost";
     }
 
@@ -22,8 +22,8 @@ function OpWindMenu() {
   };
 
   this.is_authorized = function (access) {
-    return (this.priv & access) ? true : false;
-  }
+    return !!(this.priv & access);
+  };
 
   this.get_opplace = function () {
     var query = window.location.search.substring(1);
@@ -69,7 +69,7 @@ function OpWindMenu() {
 
       document.getElementById("login_button")
         .addEventListener("click", function (event) {
-          if (document.getElementById("login_frame").style.visibility ==
+          if (document.getElementById("login_frame").style.visibility ===
             'hidden') {
             document.getElementById("login_user").value = "";
             document.getElementById("login_passw").value = "";
@@ -85,7 +85,7 @@ function OpWindMenu() {
         .addEventListener("click", function (event) {
           var user = document.getElementById("login_user").value;
           var passwd = document.getElementById("login_passw").value;
-          if (user.trim() == "") {
+          if (user.trim() === "") {
             return;
           }
           document.getElementById("login_frame").style.visibility = 'hidden';
@@ -150,66 +150,64 @@ function OpWindMenu() {
 
   this.button_cb = function (text) {
 
-    if (self.info.enable_language && text == "Language") {
+    if (self.info.enable_language && text === "Language") {
       console.log("Language activated");
-    } else if (self.info.enable_alarmlist && text == "AlarmList") {
+    } else if (self.info.enable_alarmlist && text === "AlarmList") {
       console.log("AlarmList activated");
-      if (!(self.is_authorized(Pwr.mAccess_RtRead | Pwr.mAccess_RtWrite |
+      if (self.is_authorized(Pwr.mAccess_RtRead | Pwr.mAccess_RtWrite |
           Pwr.mAccess_AllOperators | Pwr.mAccess_System |
           Pwr.mAccess_Maintenance | Pwr.mAccess_Process |
-          Pwr.mAccess_Instrument))) {
-        window.alert("Not authorized for this operation");
-      } else {
+          Pwr.mAccess_Instrument)) {
         window.open("ev.html?list=alarm", "_blank");
+      } else {
+        window.alert("Not authorized for this operation");
       }
-    } else if (self.info.enable_alarmlist && text == "EventList") {
+    } else if (self.info.enable_alarmlist && text === "EventList") {
       console.log("EventList activated");
-      if (!(self.is_authorized(Pwr.mAccess_RtRead | Pwr.mAccess_RtWrite |
+      if (self.is_authorized(Pwr.mAccess_RtRead | Pwr.mAccess_RtWrite |
           Pwr.mAccess_AllOperators | Pwr.mAccess_System |
           Pwr.mAccess_Maintenance | Pwr.mAccess_Process |
-          Pwr.mAccess_Instrument))) {
-        window.alert("Not authorized for this operation");
-      } else {
+          Pwr.mAccess_Instrument)) {
         window.open("ev.html?list=event", "_blank");
+      } else {
+        window.alert("Not authorized for this operation");
       }
-    } else if (self.info.enable_eventlog && text == "EventLog") {
+    } else if (self.info.enable_eventlog && text === "EventLog") {
       console.log("EventLog activated");
-      if (!(self.is_authorized(Pwr.mAccess_RtRead | Pwr.mAccess_RtWrite |
+      if (self.is_authorized(Pwr.mAccess_RtRead | Pwr.mAccess_RtWrite |
           Pwr.mAccess_AllOperators | Pwr.mAccess_System |
           Pwr.mAccess_Maintenance | Pwr.mAccess_Process |
-          Pwr.mAccess_Instrument))) {
-        window.alert("Not authorized for this operation");
-      } else {
+          Pwr.mAccess_Instrument)) {
         window.alert("Not yet implemented");
-      }
-    } else if (self.info.enable_navigator && text == "Navigator") {
-      console.log("Navigator activated");
-      if (!(self.is_authorized(Pwr.mAccess_RtNavigator | Pwr.mAccess_System |
-          Pwr.mAccess_Maintenance | Pwr.mAccess_Process |
-          Pwr.mAccess_Instrument))) {
-        window.alert("Not authorized for this operation");
       } else {
-        window.open("xtt.html", "_blank");
+        window.alert("Not authorized for this operation");
       }
-    } else if (!self.info.disable_help && text == "Help") {
+    } else if (self.info.enable_navigator && text === "Navigator") {
+      console.log("Navigator activated");
+      if (self.is_authorized(Pwr.mAccess_RtNavigator | Pwr.mAccess_System |
+          Pwr.mAccess_Maintenance | Pwr.mAccess_Process |
+          Pwr.mAccess_Instrument)) {
+        window.open("xtt.html", "_blank");
+      } else {
+        window.alert("Not authorized for this operation");
+      }
+    } else if (!self.info.disable_help && text === "Help") {
       console.log("Help activated");
       window.open("xtt_help_index.html", "_blank");
-    } else if (!self.info.disable_proview && text == "ProviewR") {
+    } else if (!self.info.disable_proview && text === "ProviewR") {
       console.log("ProviewR activated");
       window.open("http://www.proview.se", "_blank");
     } else {
-      if (!(self.is_authorized(Pwr.mAccess_RtRead | Pwr.mAccess_RtWrite |
+      if (self.is_authorized(Pwr.mAccess_RtRead | Pwr.mAccess_RtWrite |
           Pwr.mAccess_AllOperators | Pwr.mAccess_System |
           Pwr.mAccess_Maintenance | Pwr.mAccess_Process |
-          Pwr.mAccess_Instrument))) {
-        window.alert("Not authorized for this operation");
-      } else {
+          Pwr.mAccess_Instrument)) {
         for (var i = 0; i < self.info.buttons.length; i++) {
-          if (self.info.buttons[i].text == text) {
+          if (self.info.buttons[i].text === text) {
             console.log("Found", self.info.buttons[i].text);
             var name = self.info.buttons[i].name;
             var n = name.indexOf(".pwg");
-            if (n != -1) {
+            if (n !== -1) {
               name = name.substring(0, n);
             }
             var url = "ge.html?graph=" + name;
@@ -218,6 +216,8 @@ function OpWindMenu() {
             break;
           }
         }
+      } else {
+        window.alert("Not authorized for this operation");
       }
     }
   };

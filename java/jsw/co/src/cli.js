@@ -93,7 +93,7 @@ function Cli(cliTable) {
       var c = cmd.charAt(i);
       switch (state) {
         case CliC.STATE_INIT:
-          if (c == CliC.SPACE || c == CliC.TAB) {
+          if (c === CliC.SPACE || c === CliC.TAB) {
             break;
           } else {
             state = CliC.STATE_VERB;
@@ -101,20 +101,20 @@ function Cli(cliTable) {
           }
           break;
         case CliC.STATE_SPACE:
-          if (c == CliC.SPACE || c == CliC.TAB) {
+          if (c === CliC.SPACE || c === CliC.TAB) {
             break;
           }
-          if (c == '/') {
+          if (c === '/') {
             state = CliC.STATE_QUAL;
             start_pos = i;
-          } else if (c == '=') {
+          } else if (c === '=') {
             if (this.qualifierCount === 0) {
               state = CliC.STATE_ERROR;
               this.status = CliC.SYNTAX_ERROR;
               break;
             }
             state = CliC.STATE_EQUAL;
-          } else if (c == '"') {
+          } else if (c === '"') {
             state = CliC.STATE_QUOTE_VERB;
             break;
           } else {
@@ -123,8 +123,8 @@ function Cli(cliTable) {
           }
           break;
         case CliC.STATE_VERB:
-          if (c == CliC.SPACE || c == CliC.TAB) {
-            if (this.verbCount == CliC.VERB_VECT_SIZE) {
+          if (c === CliC.SPACE || c === CliC.TAB) {
+            if (this.verbCount === CliC.VERB_VECT_SIZE) {
               state = CliC.STATE_ERROR;
               break;
             }
@@ -135,8 +135,8 @@ function Cli(cliTable) {
               this.verb[this.verbCount++] = cmd.substring(start_pos, i);
             }
             state = CliC.STATE_SPACE;
-          } else if (c == '/') {
-            if (this.verbCount == CliC.VERB_VECT_SIZE) {
+          } else if (c === '/') {
+            if (this.verbCount === CliC.VERB_VECT_SIZE) {
               state = CliC.STATE_ERROR;
               break;
             }
@@ -147,8 +147,8 @@ function Cli(cliTable) {
           }
           break;
         case CliC.STATE_VERB_EXACT:
-          if (c == '"') {
-            if (this.verbCount == CliC.VERB_VECT_SIZE) {
+          if (c === '"') {
+            if (this.verbCount === CliC.VERB_VECT_SIZE) {
               state = CliC.STATE_ERROR;
               break;
             }
@@ -157,15 +157,15 @@ function Cli(cliTable) {
           }
           break;
         case CliC.STATE_QUAL:
-          if (c == CliC.SPACE || c == CliC.TAB) {
+          if (c === CliC.SPACE || c === CliC.TAB) {
             this.qualifier[this.qualifierCount++] =
               cmd.substring(start_pos, i).toUpperCase();
             state = CliC.STATE_SPACE;
-          } else if (c == '=') {
+          } else if (c === '=') {
             this.qualifier[this.qualifierCount++] =
               cmd.substring(start_pos, i).toUpperCase();
             state = CliC.STATE_EQUAL;
-          } else if (c == '/') {
+          } else if (c === '/') {
             this.qualifier[this.qualifierCount++] =
               cmd.substring(start_pos, i).toUpperCase();
             state = CliC.STATE_QUAL;
@@ -173,11 +173,11 @@ function Cli(cliTable) {
           }
           break;
         case CliC.STATE_QUALVALUE:
-          if (c == CliC.SPACE || c == CliC.TAB) {
+          if (c === CliC.SPACE || c === CliC.TAB) {
             this.qualValue[this.qualifierCount - 1] =
               cmd.substring(start_pos, i);
             state = CliC.STATE_SPACE;
-          } else if (c == '/') {
+          } else if (c === '/') {
             this.qualValue[this.qualifierCount - 1] =
               cmd.substring(start_pos, i);
             state = CliC.STATE_QUAL;
@@ -185,7 +185,7 @@ function Cli(cliTable) {
           }
           break;
         case CliC.STATE_QUALVALUE_EXACT:
-          if (c == '"') {
+          if (c === '"') {
             this.qualValue[this.qualifierCount - 1] =
               cmd.substring(start_pos, i);
             state = CliC.STATE_SPACE;
@@ -200,10 +200,10 @@ function Cli(cliTable) {
           start_pos = i;
           break;
         case CliC.STATE_EQUAL:
-          if (c == CliC.SPACE || c == CliC.TAB) {
+          if (c === CliC.SPACE || c === CliC.TAB) {
             break;
           }
-          if (c == '"') {
+          if (c === '"') {
             state = CliC.STATE_QUOTE_QUALVALUE;
           } else {
             state = CliC.STATE_QUALVALUE;
@@ -212,7 +212,7 @@ function Cli(cliTable) {
           break;
 
       }
-      if (state == CliC.STATE_ERROR) {
+      if (state === CliC.STATE_ERROR) {
         break;
       }
     }
@@ -221,7 +221,7 @@ function Cli(cliTable) {
       case CliC.STATE_ERROR:
         return "";
       case CliC.STATE_VERB:
-        if (this.verbCount == CliC.VERB_VECT_SIZE) {
+        if (this.verbCount === CliC.VERB_VECT_SIZE) {
           state = CliC.STATE_ERROR;
           break;
         }
@@ -233,7 +233,7 @@ function Cli(cliTable) {
         }
         break;
       case CliC.STATE_VERB_EXACT:
-        if (this.verbCount == CliC.VERB_VECT_SIZE) {
+        if (this.verbCount === CliC.VERB_VECT_SIZE) {
           state = CliC.STATE_ERROR;
           break;
         }
@@ -272,7 +272,7 @@ function Cli(cliTable) {
       if (this.verb[0].length > this.cliTable[i].command.length) {
         continue;
       }
-      if (this.verb[0] ==
+      if (this.verb[0] ===
         (this.cliTable[i].command.substring(0, this.verb[0].length))) {
         this.verb[0] = this.cliTable[i].command;
         found = true;
@@ -291,19 +291,19 @@ function Cli(cliTable) {
         if (this.cliTable[this.cliTableIndex].qualifier[i] === null) {
           break;
         }
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg1")) {
+        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg1")) {
           this.configuredVerbs++;
         }
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg2")) {
+        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg2")) {
           this.configuredVerbs++;
         }
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg3")) {
+        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg3")) {
           this.configuredVerbs++;
         }
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg4")) {
+        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg4")) {
           this.configuredVerbs++;
         }
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg5")) {
+        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg5")) {
           this.configuredVerbs++;
         }
       }
@@ -319,7 +319,7 @@ function Cli(cliTable) {
             this.cliTable[this.cliTableIndex].qualifier[i].length) {
             continue;
           }
-          if (this.qualifier[j] ==
+          if (this.qualifier[j] ===
             (this.cliTable[this.cliTableIndex].qualifier[i].substring(0,
               this.qualifier[j].length))) {
             this.cliQualifierIndex[j] = i;
@@ -346,32 +346,20 @@ function Cli(cliTable) {
    */
   this.qualifierFound = function (qual) {
 
-    if (qual == ("cli_arg1")) {
-      if (this.verbCount < 2 || this.configuredVerbs < 1) {
-        return false;
-      }
-      return true;
+    if (qual === ("cli_arg1")) {
+      return !(this.verbCount < 2 || this.configuredVerbs < 1);
     }
-    if (qual == ("cli_arg2")) {
-      if (this.verbCount < 3 || this.configuredVerbs < 2) {
-        return false;
-      }
-      return true;
+    if (qual === ("cli_arg2")) {
+      return !(this.verbCount < 3 || this.configuredVerbs < 2);
     }
-    if (qual == ("cli_arg3")) {
-      if (this.verbCount < 4 || this.configuredVerbs < 3) {
-        return false;
-      }
-      return true;
+    if (qual === ("cli_arg3")) {
+      return !(this.verbCount < 4 || this.configuredVerbs < 3);
     }
-    if (qual == ("cli_arg4")) {
-      if (this.verbCount < 5 || this.configuredVerbs < 4) {
-        return false;
-      }
-      return true;
+    if (qual === ("cli_arg4")) {
+      return !(this.verbCount < 5 || this.configuredVerbs < 4);
     }
     for (var i = 0; i < this.qualifierCount; i++) {
-      if (qual == (this.qualifier[i])) {
+      if (qual === (this.qualifier[i])) {
         return true;
       }
     }
@@ -384,31 +372,31 @@ function Cli(cliTable) {
    * @return Returns the value of the qualifier.
    */
   this.getQualValue = function (qual) {
-    if (qual == ("cli_arg1")) {
+    if (qual === ("cli_arg1")) {
       if (this.verbCount < 2 || this.configuredVerbs < 1) {
         return "";
       }
       return this.verb[1];
     }
-    if (qual == ("cli_arg2")) {
+    if (qual === ("cli_arg2")) {
       if (this.verbCount < 3 || this.configuredVerbs < 2) {
         return "";
       }
       return this.verb[2];
     }
-    if (qual == ("cli_arg3")) {
+    if (qual === ("cli_arg3")) {
       if (this.verbCount < 4 || this.configuredVerbs < 3) {
         return this.verb[3];
       }
     }
-    if (qual == ("cli_arg4")) {
+    if (qual === ("cli_arg4")) {
       if (this.verbCount < 5 || this.configuredVerbs < 4) {
         return "";
       }
       return this.verb[4];
     }
     for (var i = 0; i < this.qualifierCount; i++) {
-      if (qual == (this.qualifier[i])) {
+      if (qual === (this.qualifier[i])) {
         if (this.qualValue[i] === null) {
           return "";
         } else {
