@@ -1,33 +1,5 @@
 "use strict";
 
-/** Start Cli **/
-function CliTable(command, qualifier) {
-  this.command = command;
-  this.qualifier = qualifier;
-}
-
-var CliC = {
-  SUCCESS: 1,
-  SYNTAX_ERROR: 2,
-  UNKNOWN_COMMAND: 4,
-  QUALNOTFOUND: 6,
-  VERB_VECT_SIZE: 5,
-
-  STATE_INIT: 0,
-  STATE_VERB: 1,
-  STATE_QUAL: 2,
-  STATE_QUALVALUE: 3,
-  STATE_SPACE: 4,
-  STATE_EQUAL: 5,
-  STATE_ERROR: 6,
-  STATE_QUOTE_VERB: 7,
-  STATE_QUOTE_QUALVALUE: 8,
-  STATE_QUALVALUE_EXACT: 9,
-  STATE_VERB_EXACT: 10,
-  TAB: '	',
-  SPACE: ' '
-};
-
 var MhC = {
   eEvent_Ack: 1,
   eEvent_Block: 2,
