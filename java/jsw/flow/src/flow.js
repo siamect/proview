@@ -1,7 +1,5 @@
 "use strict";
 
-/** Start Flow **/
-
 var Flow = {
   DRAWOFFSET: 2,
 
@@ -247,7 +245,9 @@ function FlowArray(ctx) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0]);
 
-      if (this.ctx.debug) console.log("array : " + lines[i]);
+      if (this.ctx.debug) {
+        console.log("array : " + lines[i]);
+      }
 
       switch (key) {
         case Flow.eSave_Array:
@@ -324,15 +324,17 @@ function FlowArray(ctx) {
           console.log("Syntax error in FlowArray", key);
           break;
       }
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
 
   this.draw = function (g, p, node, highlight) {
-    for (var i = 0; i < this.a.length; i++)
+    for (var i = 0; i < this.a.length; i++) {
       this.a[i].draw(g, p, node, highlight);
+    }
   }
 
   this.search_by_name = function (name) {
@@ -340,8 +342,9 @@ function FlowArray(ctx) {
     for (var i = 0; i < this.a.length; i++) {
       if (this.a[i] instanceof FlowNode) {
         console.log("Search", this.a[i].n_name, name);
-        if (this.a[i].n_name.toUpperCase() == uname)
+        if (this.a[i].n_name.toUpperCase() == uname) {
           return this.a[i];
+        }
       }
     }
     return null;
@@ -365,7 +368,9 @@ function FlowNodeClass(ctx) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0]);
 
-      if (this.ctx.debug) console.log("nodeclass : " + lines[i]);
+      if (this.ctx.debug) {
+        console.log("nodeclass : " + lines[i]);
+      }
 
       switch (key) {
         case Flow.eSave_NodeClass_nc_name:
@@ -386,8 +391,9 @@ function FlowNodeClass(ctx) {
           console.log("Syntax error in FlowNodeClass");
           break;
       }
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   }
@@ -415,7 +421,9 @@ function FlowConClass(ctx) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0]);
 
-      if (this.ctx.debug) console.log("conclass : " + lines[i]);
+      if (this.ctx.debug) {
+        console.log("conclass : " + lines[i]);
+      }
 
       switch (key) {
         case Flow.eSave_ConClass:
@@ -454,8 +462,9 @@ function FlowConClass(ctx) {
           console.log("Syntax error in FlowConClass");
           break;
       }
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   }
@@ -473,7 +482,9 @@ function FlowPoint(ctx) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0]);
 
-      if (this.ctx.debug) console.log("point : " + lines[i]);
+      if (this.ctx.debug) {
+        console.log("point : " + lines[i]);
+      }
 
       switch (key) {
         case Flow.eSave_Point:
@@ -491,8 +502,9 @@ function FlowPoint(ctx) {
           System.out.println("Syntax error in FlowPoint");
           break;
       }
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   }
@@ -511,9 +523,11 @@ function FlowLine(ctx) {
     var x2 = (this.p2.x + p.x) * this.ctx.zoom_factor;
     var y2 = (this.p2.y + p.y) * this.ctx.zoom_factor;
 
-    g.lineWidth = this.ctx.zoom_factor / this.ctx.base_zoom_factor * this.line_width;
-    if (g.lineWidth < 1)
+    g.lineWidth =
+      this.ctx.zoom_factor / this.ctx.base_zoom_factor * this.line_width;
+    if (g.lineWidth < 1) {
       g.lineWidth = 1;
+    }
 
     switch (this.draw_type) {
       case Flow.eDrawType_LineDashed:
@@ -535,8 +549,9 @@ function FlowLine(ctx) {
       default:
         g.strokeStyle = "black";
     }
-    if (highlight)
+    if (highlight) {
       g.strokeStyle = "red";
+    }
     g.beginPath();
     g.moveTo(x1, y1);
     g.lineTo(x2, y2);
@@ -555,7 +570,9 @@ function FlowLine(ctx) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0]);
 
-      if (this.ctx.debug) console.log("line : " + lines[i]);
+      if (this.ctx.debug) {
+        console.log("line : " + lines[i]);
+      }
 
       switch (key) {
         case Flow.eSave_Line:
@@ -579,8 +596,9 @@ function FlowLine(ctx) {
           console.log("Syntax error in FlowLine");
           break;
       }
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   }
@@ -601,7 +619,9 @@ function FlowRect(ctx) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0]);
 
-      if (this.ctx.debug) console.log("rect : " + lines[i]);
+      if (this.ctx.debug) {
+        console.log("rect : " + lines[i]);
+      }
 
       switch (key) {
         case Flow.eSave_Rect:
@@ -631,23 +651,27 @@ function FlowRect(ctx) {
           console.log("Syntax error in FlowRect");
           break;
       }
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   }
   this.draw = function (g, p, node, highlight) {
-    if ((this.display_level & this.ctx.display_level) == 0)
+    if ((this.display_level & this.ctx.display_level) == 0) {
       return;
+    }
 
     var x = (this.ll.x + p.x) * this.ctx.zoom_factor;
     var y = (this.ll.y + p.y) * this.ctx.zoom_factor;
     var width = (this.ur.x - this.ll.x) * this.ctx.zoom_factor;
     var height = (this.ur.y - this.ll.y) * this.ctx.zoom_factor;
 
-    g.lineWidth = this.ctx.zoom_factor / this.ctx.base_zoom_factor * this.line_width;
-    if (g.lineWidth < 1)
+    g.lineWidth =
+      this.ctx.zoom_factor / this.ctx.base_zoom_factor * this.line_width;
+    if (g.lineWidth < 1) {
       g.lineWidth = 1;
+    }
     switch (this.draw_type) {
       case Flow.eDrawType_LineGray:
         g.strokeStyle = "grey";
@@ -661,8 +685,9 @@ function FlowRect(ctx) {
       default:
         g.strokeStyle = "black";
     }
-    if (highlight)
+    if (highlight) {
       g.strokeStyle = "red";
+    }
     g.strokeRect(x, y, width, height);
   }
 }
@@ -680,18 +705,22 @@ function FlowArc(ctx) {
     var r = (this.ur.x - this.ll.x) / 2 * this.ctx.zoom_factor;
     var x = (this.ll.x + p.x) * this.ctx.zoom_factor + r;
     var y = (this.ll.y + p.y) * this.ctx.zoom_factor + r;
-    if (this.angel1 == 90 || this.angel1 == 270)
+    if (this.angel1 == 90 || this.angel1 == 270) {
       var a1 = (this.angel1 + 90) / 180 * Math.PI;
-    else
+    } else {
       var a1 = (this.angel1 - 90) / 180 * Math.PI;
+    }
     var a2 = a1 + this.angel2 / 180 * Math.PI;
-    g.lineWidth = this.ctx.zoom_factor / this.ctx.base_zoom_factor * this.line_width;
-    if (g.lineWidth < 1)
+    g.lineWidth =
+      this.ctx.zoom_factor / this.ctx.base_zoom_factor * this.line_width;
+    if (g.lineWidth < 1) {
       g.lineWidth = 1;
+    }
 
     g.strokeStyle = "black";
-    if (highlight)
+    if (highlight) {
       g.strokeStyle = "red";
+    }
 
     g.beginPath()
     g.arc(x, y, r, a1, a2, false);
@@ -703,7 +732,9 @@ function FlowArc(ctx) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0]);
 
-      if (this.ctx.debug) console.log("arc : " + lines[i]);
+      if (this.ctx.debug) {
+        console.log("arc : " + lines[i]);
+      }
 
       switch (key) {
         case Flow.eSave_Arc:
@@ -733,8 +764,9 @@ function FlowArc(ctx) {
           console.log("Syntax error in FlowArc");
           break;
       }
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   }
@@ -749,8 +781,11 @@ function FlowText(ctx) {
 
   this.draw = function (g, p0, node, highlight) {
     var tsize = 0;
-    var idx = this.ctx.zoom_factor / this.ctx.base_zoom_factor * (this.text_size + 4) - 4;
-    if (idx < 0) return;
+    var idx = this.ctx.zoom_factor / this.ctx.base_zoom_factor *
+      (this.text_size + 4) - 4;
+    if (idx < 0) {
+      return;
+    }
 
     var x = (this.p.x + p0.x) * this.ctx.zoom_factor;
     var y = (this.p.y + p0.y) * this.ctx.zoom_factor;
@@ -787,8 +822,9 @@ function FlowText(ctx) {
     g.lineWidth = 0.5;
 
     g.fillStyle = "black";
-    if (highlight)
+    if (highlight) {
       g.fillStyle = "red";
+    }
     g.fillText(this.text, x, y);
   }
   this.open = function (lines, row) {
@@ -797,7 +833,9 @@ function FlowText(ctx) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0]);
 
-      if (this.ctx.debug) console.log("text : " + lines[i]);
+      if (this.ctx.debug) {
+        console.log("text : " + lines[i]);
+      }
 
       switch (key) {
         case Flow.eSave_Text:
@@ -821,8 +859,9 @@ function FlowText(ctx) {
           console.log("Syntax error in FlowText");
           break;
       }
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   }
@@ -859,8 +898,9 @@ function FlowArrow(ctx) {
       default:
         g.fillStyle = "black";
     }
-    if (highlight)
+    if (highlight) {
       g.fillStyle = "red";
+    }
     g.beginPath()
     g.moveTo(x1, y1);
     g.lineTo(x2, y2);
@@ -875,7 +915,9 @@ function FlowArrow(ctx) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0]);
 
-      if (this.ctx.debug) console.log("arrow : " + lines[i]);
+      if (this.ctx.debug) {
+        console.log("arrow : " + lines[i]);
+      }
 
       switch (key) {
         case Flow.eSave_Arrow:
@@ -908,8 +950,9 @@ function FlowArrow(ctx) {
           console.log("Syntax error in FlowArrow");
           break;
       }
-      if (end)
+      if (end) {
         break;
+      }
     }
   }
 }
@@ -923,14 +966,17 @@ function FlowTriangle(ctx) {
     var x2 = (this.prototype.ur.x + p.x) * this.prototype.ctx.zoom_factor;
     var y2 = (this.prototype.ur.y + p.y) * this.prototype.ctx.zoom_factor;
 
-    g.lineWidth = this.prototype.ctx.zoom_factor / this.prototype.ctx.base_zoom_factor *
+    g.lineWidth =
+      this.prototype.ctx.zoom_factor / this.prototype.ctx.base_zoom_factor *
       this.prototype.line_width;
-    if (g.lineWidth < 1)
+    if (g.lineWidth < 1) {
       g.lineWidth = 1;
+    }
 
     var dtype = this.prototype.draw_type;
-    if (dtype == Flow.eDrawType_Inherit && node != null)
+    if (dtype == Flow.eDrawType_Inherit && node != null) {
       dtype = node.fill_color;
+    }
 
     if (this.prototype.fill == 1) {
       switch (dtype) {
@@ -953,8 +999,7 @@ function FlowTriangle(ctx) {
       g.lineTo(x2, y2);
       g.lineTo(x1, y2);
       g.fill();
-    }
-    else {
+    } else {
       g.strokeStyle = "black";
       g.beginPath();
       g.moveTo(x1, y2);
@@ -970,7 +1015,9 @@ function FlowTriangle(ctx) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0]);
 
-      if (this.prototype.ctx.debug) console.log("triangle : " + lines[i]);
+      if (this.prototype.ctx.debug) {
+        console.log("triangle : " + lines[i]);
+      }
 
       switch (key) {
         case Flow.eSave_Triangle_rect_part:
@@ -983,8 +1030,9 @@ function FlowTriangle(ctx) {
           console.log("Syntax error in FlowTriangle");
           break;
       }
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   }
@@ -1006,7 +1054,9 @@ function FlowConPoint(ctx) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0]);
 
-      if (ctx.debug) console.log("conpoint : " + lines[i]);
+      if (ctx.debug) {
+        console.log("conpoint : " + lines[i]);
+      }
 
       switch (key) {
         case Flow.eSave_ConPoint:
@@ -1033,8 +1083,9 @@ function FlowConPoint(ctx) {
           console.log("Syntax error in FlowConPoint");
           break;
       }
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   }
@@ -1050,16 +1101,22 @@ function FlowAnnot(ctx) {
   this.ctx = ctx;
 
   this.draw = function (g, p0, node, highlight) {
-    if (node == null)
+    if (node == null) {
       return;
-    if (node.annotv[this.number] == null)
+    }
+    if (node.annotv[this.number] == null) {
       return;
-    if ((this.display_level & this.ctx.display_level) == 0)
+    }
+    if ((this.display_level & this.ctx.display_level) == 0) {
       return;
+    }
 
     var tsize = 0;
-    var idx = this.ctx.zoom_factor / this.ctx.base_zoom_factor * (this.text_size + 4) - 4;
-    if (idx < 0) return;
+    var idx = this.ctx.zoom_factor / this.ctx.base_zoom_factor *
+      (this.text_size + 4) - 4;
+    if (idx < 0) {
+      return;
+    }
 
     switch (idx) {
       case 0:
@@ -1099,8 +1156,9 @@ function FlowAnnot(ctx) {
         g.font = tsize + "px Arial";
     }
     g.fillStyle = "black";
-    if (highlight)
+    if (highlight) {
       g.fillStyle = "red";
+    }
     g.lineWidth = 0.5;
 
     var x = (this.p.x + p0.x) * this.ctx.zoom_factor;
@@ -1118,7 +1176,9 @@ function FlowAnnot(ctx) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0]);
 
-      if (this.ctx.debug) console.log("annot : " + lines[i]);
+      if (this.ctx.debug) {
+        console.log("annot : " + lines[i]);
+      }
 
       switch (key) {
         case Flow.eSave_Annot:
@@ -1148,8 +1208,9 @@ function FlowAnnot(ctx) {
           console.log("Syntax error in FlowAnnot");
           break;
       }
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   }
@@ -1182,14 +1243,16 @@ function FlowCon(ctx) {
   this.redraw = true;
 
   this.draw = function (g, p0, node, highlight) {
-    if (!this.redraw)
+    if (!this.redraw) {
       return;
+    }
     var p = new FlowPoint(ctx);
     p.x = 0;
     p.y = 0;
-    if (this.temporary_ref != 0 || this.cc.con_type == Flow.eConType_Reference)
+    if (this.temporary_ref != 0 ||
+      this.cc.con_type == Flow.eConType_Reference) {
       this.ref_a.draw(g, p, null, highlight);
-    else {
+    } else {
       this.line_a.draw(g, p, null, highlight);
       this.arc_a.draw(g, p, null, highlight);
       this.arrow_a.draw(g, p, null, highlight);
@@ -1202,7 +1265,9 @@ function FlowCon(ctx) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0]);
 
-      if (this.ctx.debug) console.log("con : " + lines[i]);
+      if (this.ctx.debug) {
+        console.log("con : " + lines[i]);
+      }
 
       switch (key) {
         case Flow.eSave_Con:
@@ -1217,12 +1282,14 @@ function FlowCon(ctx) {
               break;
             }
           }
-          if (!found)
+          if (!found) {
             console.log("FlowCon: ConClass not found: " + cc_name);
+          }
           break;
         case Flow.eSave_Con_c_name:
-          if (tokens[1] != null)
+          if (tokens[1] != null) {
             this.c_name = tokens[1];
+          }
           break;
         case Flow.eSave_Con_x_right:
           this.x_right = parseFloat(tokens[1]);
@@ -1291,12 +1358,14 @@ function FlowCon(ctx) {
         case Flow.eSave_Con_dest_ref_cnt:
           break;
         case Flow.eSave_Con_trace_object:
-          if (tokens[1] != null)
+          if (tokens[1] != null) {
             this.trace_object = tokens[1];
+          }
           break;
         case Flow.eSave_Con_trace_attribute:
-          if (tokens[1] != null)
+          if (tokens[1] != null) {
             this.trace_attribute = tokens[1];
+          }
           break;
         case Flow.eSave_Con_trace_attr_type:
           this.trace_attr_type = parseInt(tokens[1]);
@@ -1311,8 +1380,9 @@ function FlowCon(ctx) {
           console.log("Syntax error in FlowCon");
           break;
       }
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   }
@@ -1346,8 +1416,9 @@ function FlowNode(ctx) {
   this.redraw = true;
 
   this.draw = function (g, p, node, highlight) {
-    if (!this.redraw)
+    if (!this.redraw) {
       return;
+    }
 
     if (this.nc.group != Flow.eNodeGroup_Document) {
       var x = this.x_left * this.ctx.zoom_factor;
@@ -1355,8 +1426,9 @@ function FlowNode(ctx) {
       var width = (this.x_right - this.x_left) * this.ctx.zoom_factor;
       var height = (this.y_high - this.y_low) * this.ctx.zoom_factor + 2;
       g.fillStyle = "white";
-      if (this.select)
+      if (this.select) {
         g.fillStyle = "lightblue";
+      }
       g.fillRect(x, y, width, height);
     }
 
@@ -1370,7 +1442,9 @@ function FlowNode(ctx) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0]);
 
-      if (this.ctx.debug) console.log("node : " + lines[i]);
+      if (this.ctx.debug) {
+        console.log("node : " + lines[i]);
+      }
 
       switch (key) {
         case Flow.eSave_Node_nc:
@@ -1383,12 +1457,14 @@ function FlowNode(ctx) {
               break;
             }
           }
-          if (!found)
+          if (!found) {
             console.log("FlowNode: NodeClass not found: " + nc_name);
+          }
           break;
         case Flow.eSave_Node_n_name:
-          if (tokens[1] != null)
+          if (tokens[1] != null) {
             this.n_name = tokens[1];
+          }
           break;
         case Flow.eSave_Node_refcon_cnt:
           i += 32;
@@ -1446,11 +1522,13 @@ function FlowNode(ctx) {
                     break;
                   }
                   sb.push(c);
-                  if (k == lines[i].length - 1)
+                  if (k == lines[i].length - 1) {
                     sb.push('\n');
+                  }
                 }
-                if (end_found)
+                if (end_found) {
                   break;
+                }
               }
               this.annotv[j] = sb.join("");
             }
@@ -1460,12 +1538,14 @@ function FlowNode(ctx) {
           i = this.pos.open(lines, i + 1);
           break;
         case Flow.eSave_Node_trace_object:
-          if (tokens[1] != null)
+          if (tokens[1] != null) {
             this.trace_object = tokens[1];
+          }
           break;
         case Flow.eSave_Node_trace_attribute:
-          if (tokens[1] != null)
+          if (tokens[1] != null) {
             this.trace_attribute = tokens[1];
+          }
           break;
         case Flow.eSave_Node_trace_attr_type:
           this.trace_attr_type = parseInt(tokens[1]);
@@ -1483,22 +1563,26 @@ function FlowNode(ctx) {
           console.log("Syntax error in FlowNode");
           break;
       }
-      if (end)
+      if (end) {
         break;
+      }
     }
     console.log("Node", this.trace_attr_type, this.n_name);
     return i;
   }
 
   this.connect = function () {
-    if (this.trace_object == "" || this.trace_attribute == "")
+    if (this.trace_object == "" || this.trace_attribute == "") {
       return;
-    if (this.trace_attr_type == Flow.eTraceType_User)
+    }
+    if (this.trace_attr_type == Flow.eTraceType_User) {
       return;
+    }
 
     var n = this.trace_attribute.indexOf('#');
-    if (n != -1)
+    if (n != -1) {
       this.trace_attribute = this.trace_attribute.substring(0, n);
+    }
 
     var o = this.trace_object + "." + this.trace_attribute;
     var pwr_type;
@@ -1520,20 +1604,23 @@ function FlowNode(ctx) {
     console.log("connecting", o, this.p);
   }
   this.scan = function () {
-    if (this.p == 0)
+    if (this.p == 0) {
       return;
+    }
 
     var v1 = this.ctx.gdh.getObjectRefInfo(this.p);
     var evaluate = true;
-    if (this.first_scan)
+    if (this.first_scan) {
       this.first_scan = false;
-    else if (v1 == this.old_value)
+    } else if (v1 == this.old_value) {
       return;
+    }
 
-    if (v1)
+    if (v1) {
       this.highlight = true;
-    else
+    } else {
       this.highlight = false;
+    }
 
     this.old_value = v1;
     this.redraw = true;
@@ -1542,14 +1629,13 @@ function FlowNode(ctx) {
   this.event_handler = function (x, y) {
     var zx = x / this.ctx.zoom_factor + ctx.x_left;
     var zy = y / this.ctx.zoom_factor + ctx.y_low;
-    if (zx >= this.x_left && zx <= this.x_right &&
-      zy >= this.y_low && zy <= this.y_high) {
+    if (zx >= this.x_left && zx <= this.x_right && zy >= this.y_low &&
+      zy <= this.y_high) {
       console.log("Hit in node");
       if (this.select) {
         this.select = false;
         this.redraw = true;
-      }
-      else {
+      } else {
         this.ctx.set_select(false);
         this.set_select(true);
       }
@@ -1563,10 +1649,11 @@ function FlowNode(ctx) {
     if (select != this.select) {
       this.select = select;
       this.redraw = true;
-      if (this.select)
+      if (this.select) {
         this.ctx.select_object = this;
-      else
+      } else {
         this.ctx.select_object = null;
+      }
     }
   }
 }
@@ -1599,7 +1686,9 @@ function FlowCtx() {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0]);
 
-      if (this.debug) console.log("ctx : " + lines[i]);
+      if (this.debug) {
+        console.log("ctx : " + lines[i]);
+      }
 
       switch (key) {
         case Flow.eSave_Ctx:
@@ -1668,8 +1757,9 @@ function FlowCtx() {
         default:
           console.log("Syntax error in FlowCtx", key);
       }
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -1677,12 +1767,14 @@ function FlowCtx() {
 
   this.connect = function () {
     console.log("ctx connect", this.a.size());
-    for (var i = 0; i < this.a.size(); i++)
+    for (var i = 0; i < this.a.size(); i++) {
       this.a.get(i).connect();
+    }
   }
   this.scan = function () {
-    for (var i = 0; i < this.a.size(); i++)
+    for (var i = 0; i < this.a.size(); i++) {
       this.a.get(i).scan();
+    }
   }
 
   this.event_handler = function (x, y) {
@@ -1690,33 +1782,42 @@ function FlowCtx() {
     for (var i = 0; i < this.a.size(); i++) {
       if (this.a.get(i) instanceof FlowNode) {
         sts = this.a.get(i).event_handler(x, y);
-        if (sts == 1)
+        if (sts == 1) {
           break;
+        }
       }
     }
-    if (sts == 1)
+    if (sts == 1) {
       this.draw();
+    }
   }
 
   this.set_select = function (select) {
     for (var i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i) instanceof FlowNode)
+      if (this.a.get(i) instanceof FlowNode) {
         this.a.get(i).set_select(select);
+      }
     }
   }
 
   this.search_object = function (name) {
     console.log("Searching for ", name);
     var node = this.a.search_by_name(name);
-    if (node != null)
+    if (node != null) {
       console.log("Found", name);
+    }
     return node;
   }
   this.center_object = function (o) {
-    console.log("center_object", o.pos.x * this.zoom_factor + this.offset_x, window.innerWidth, o.pos.x * this.zoom_factor + this.offset_x - window.innerWidth / 2);
-    console.log("center_object", o.pos.y * this.zoom_factor + this.offset_y, window.innerHeight, o.pos.y * this.zoom_factor + this.offset_y - window.innerHeight / 2);
-    window.scrollTo(o.pos.x * this.zoom_factor + this.offset_x - window.innerWidth / 2,
-      o.pos.y * this.zoom_factor + this.offset_y - window.innerHeight / 2 + this.gdraw.offset_top);
+    console.log("center_object", o.pos.x * this.zoom_factor + this.offset_x,
+      window.innerWidth, o.pos.x * this.zoom_factor + this.offset_x -
+      window.innerWidth / 2);
+    console.log("center_object", o.pos.y * this.zoom_factor + this.offset_y,
+      window.innerHeight, o.pos.y * this.zoom_factor + this.offset_y -
+      window.innerHeight / 2);
+    window.scrollTo(o.pos.x * this.zoom_factor + this.offset_x -
+      window.innerWidth / 2, o.pos.y * this.zoom_factor + this.offset_y -
+      window.innerHeight / 2 + this.gdraw.offset_top);
   }
 }
 
@@ -1757,27 +1858,35 @@ function FlowFrame() {
       console.log("Click", x, y);
       self.ctx.event_handler(x, y);
     });
-    document.getElementById("toolitem1").addEventListener("click", function (event) {
-      console.log("toolitem3 event");
-    });
-    document.getElementById("toolitem2").addEventListener("click", function (event) {
-      console.log("toolitem1 event, storage");
-      console.log("storage", localStorage.getItem("XttMethodNavigator"));
-      if (self.ctx.select_object != null) {
-        localStorage.setItem("XttMethodNavigator", self.ctx.select_object.trace_object);
-      }
-      console.log("storage", localStorage.getItem("XttMethodNavigator"));
-      console.log("toolitem2 event window", window.opener);
-      window.opener.focus();
-    });
-    document.getElementById("toolitem3").addEventListener("click", function (event) {
-    });
-    document.getElementById("toolitem4").addEventListener("click", function (event) {
-    });
+    document.getElementById("toolitem1")
+      .addEventListener("click", function (event) {
+        console.log("toolitem3 event");
+      });
+    document.getElementById("toolitem2")
+      .addEventListener("click", function (event) {
+        console.log("toolitem1 event, storage");
+        console.log("storage", localStorage.getItem("XttMethodNavigator"));
+        if (self.ctx.select_object != null) {
+          localStorage.setItem("XttMethodNavigator",
+            self.ctx.select_object.trace_object);
+        }
+        console.log("storage", localStorage.getItem("XttMethodNavigator"));
+        console.log("toolitem2 event window", window.opener);
+        window.opener.focus();
+      });
+    document.getElementById("toolitem3")
+      .addEventListener("click", function (event) {
+      });
+    document.getElementById("toolitem4")
+      .addEventListener("click", function (event) {
+      });
 
-    self.ctx.gdraw.canvas.width = (self.ctx.x_right - self.ctx.x_left) * self.ctx.zoom_factor;
-    self.ctx.gdraw.canvas.height = (self.ctx.y_high - self.ctx.y_low) * self.ctx.zoom_factor;
-    self.ctx.gdraw.gctx.translate(-self.ctx.x_left * self.ctx.zoom_factor, -self.ctx.y_low * self.ctx.zoom_factor);
+    self.ctx.gdraw.canvas.width =
+      (self.ctx.x_right - self.ctx.x_left) * self.ctx.zoom_factor;
+    self.ctx.gdraw.canvas.height =
+      (self.ctx.y_high - self.ctx.y_low) * self.ctx.zoom_factor;
+    self.ctx.gdraw.gctx.translate(-self.ctx.x_left *
+      self.ctx.zoom_factor, -self.ctx.y_low * self.ctx.zoom_factor);
     self.ctx.offset_x -= self.ctx.x_left * self.ctx.zoom_factor;
     self.ctx.offset_y -= self.ctx.y_low * self.ctx.zoom_factor;
 
@@ -1820,8 +1929,9 @@ function FlowFrame() {
   this.flow_close = function () {
     console.log("Close function", self.timer);
     clearTimeout(self.timer);
-    for (var i in self.ctx.gdh.pending)
+    for (var i in self.ctx.gdh.pending) {
       delete self.ctx.gdh.pending[i];
+    }
   }
 
   this.get_filename = function () {
@@ -1829,7 +1939,8 @@ function FlowFrame() {
 
     console.log("query", query);
     var vars = query.split('&');
-    console.log("vars", vars.length, vars[0].substring(4), vars[1].substring(4));
+    console.log("vars", vars.length, vars[0].substring(4),
+      vars[1].substring(4));
     var vid = parseInt(vars[0].substring(4));
     var oix = parseInt(vars[1].substring(4));
     var avid = [];
@@ -1841,17 +1952,20 @@ function FlowFrame() {
     for (var i = 0; i < 4; i++) {
       svid[i] = avid[i].toString();
       for (var j = 0; j < 3; j++) {
-        if (svid[i].length < 3)
+        if (svid[i].length < 3) {
           svid[i] = "0" + svid[i];
+        }
       }
     }
     var soix = oix.toString(16);
     for (var j = 0; j < 8; j++) {
-      if (soix.length < 8)
+      if (soix.length < 8) {
         soix = "0" + soix;
+      }
     }
 
-    var fname = "pwr_" + svid[3] + "_" + svid[2] + "_" + svid[1] + "_" + svid[0] + "_" + soix + ".flw";
+    var fname = "pwr_" + svid[3] + "_" + svid[2] + "_" + svid[1] + "_" +
+      svid[0] + "_" + soix + ".flw";
     console.log(fname);
 
     if (vars.length > 2) {

@@ -21,96 +21,55 @@ var Bitmaps = {
   maintenance: 34,
   blockl: 36,
   blockr: 38,
-  img: [null, null, null, null, null, null, null, null, null, null,
-    null, null, null, null, null, null, null, null, null, null,
-    null, null, null, null, null, null, null, null, null, null,
-    null, null, null, null, null, null, null, null],
-  pending: [null, null, null, null, null, null, null, null, null, null,
-    null, null, null, null, null, null, null, null, null, null,
-    null, null, null, null, null, null, null, null, null, null,
-    null, null, null, null, null, null, null, null],
-  images: [
-    // leaf
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAASElEQVQokWP4jwMwMDBgYBR5XBpwGYZVIzYNGDZB+QyEFOBiM+CyCacGBI0hgEGjsxkYGCiwkSI/4tKMz0DqxCM2A4hOOcQCAObFEQyI2PpKAAAAAElFTkSuQmCC',
-    // leaf inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAQUlEQVQokWNgYGD4jw1jA2hqsGvAZRhWjdg0oIsh8QkqwMXGbhMuDXAxdAFsNDobyifTRor8SFGoUhSPFKUcYjEAMsMz2y6w8kgAAAAASUVORK5CYII=',
-    // map
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAKElEQVQokWP4DwUMDAwYGB9gwKUQm0FoGL/JOGwb1TgINZKFSbYOCgD1JxQJG0vK9AAAAABJRU5ErkJggg==',
-    // map inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAK0lEQVQokWNgYGD4z8DA8B8bgMlhxbgUEgIMBE3Ggkc1Dk6N5AAGUm2DYQAkYTDe0vu7CAAAAABJRU5ErkJggg==',
-    // openmap
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAQklEQVQokaXOwQ4AIAgCUP7/p+nUlpMSzY2bDwWHA5IEkFJCtaiKxE7dvsue8HZNJEPneoAuSq+OYAf9wy4K0Mk5C+d++RWimsw3AAAAAElFTkSuQmCC',
-    // openmap inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAPUlEQVQokaXRQQoAQAgCQP//6brKZmSt0M2hIACI4yBURqiKXQp0ThuhGwmt7Vy00XvqCa7QN1wjhtYLCCYyCkvDVnkJOQAAAABJRU5ErkJggg==',
-    // object
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAH0lEQVQokWP4TyJgYGBg+E8iZiDFdHrZMKqBGA2kYAD8gaJsjwzf9wAAAABJRU5ErkJggg==',
-    //  object inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAIklEQVQokWNgYGD4TxL+TyJg+P//P9GmwzXQ3oZRDdSOBwAGOSrkrXppgQAAAABJRU5ErkJggg==',
-    // attrenum
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAPklEQVQokWP4////fwYGBgxMCDBgU4jNICyYsOlYbENoJNIW7BqJsYm2NuJyBVE2EqWRfjbiUoQ3oAgpwgUANLqccvbgec0AAAAASUVORK5CYII=',
-    // attrenum inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAPElEQVQokWNgYGD4jw0wMDDgx9gUEgMYiDIdDaNoJBZg1UiUTTS1EZcriLKRKI30sxGXIgKBhF8RrqgBAOTOqGZ5aiCnAAAAAElFTkSuQmCC',
-    // attrarra
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAMElEQVQokWP4////fwYGBgxMCDBgU4jNICwYv+nY5InWOGojXW0khLEahtc6PDYCAB9hxkjBPICvAAAAAElFTkSuQmCC',
-    // attrarray inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAALUlEQVQokWNgYGD4jw0wMDDgx9gUEgMYCJmOTZ5ojaM20tVGQgCHK/AnLVwAAPonfpBwU5f4AAAAAElFTkSuQmCC',
-    // attrarel
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAIklEQVQokWP4////fwYGBpwYHTDANGADeDWM2jAEbSAFAADB26JsIjYj1AAAAABJRU5ErkJggg==',
-    // attrarel inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAIElEQVQokWNgYGD4jw8wMDCgYwZcEvg1jNowBG0gBQMAQN8q5COZl1cAAAAASUVORK5CYII=',
-    // attr
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAIUlEQVQokWP4TyJgGIQaGBgY/pOIibcEroEkTLIfhoEGADzs8B5gcUg/AAAAAElFTkSuQmCC',
-    // attr inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAJUlEQVQokWNgYGD4TyIedBr+kwgY/v//T7TpcA0k2TAIQ4nmGgDFzt0jExR7hgAAAABJRU5ErkJggg==',
-    // crrwrite
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAN0lEQVQokaWNQQoAMAjD8v9P633WVWhBkJIotQQoYPYbrHYrqC9D+MG54OBMuMC54GApuPBed9OxiMNLGke1JwAAAABJRU5ErkJggg==',
-    // crrwrite inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAANElEQVQokWNgYGD4jw3DABY57IqxsQlqwGELSYop1ECEYgo0EKmYQg1EKMbUQEAxRAMpAABRMgoFjbTzXgAAAABJRU5ErkJggg==',
-    // crrread
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAPElEQVQokWNgYGD4j4yRATY5BmyKkGks4qgS2BSj2UYFDdgAdW2gvpOwhDW6ItwaCGI8JuHWgMOtWD0PACufaaWhXDFDAAAAAElFTkSuQmCC',
-    // crrread inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAPElEQVQokWP4jwYYGBjgGKscNkXINLo4hgZsipFto44GbJi6NlDfSehhjUxjyGMVxQMYcJmEVwPB5ICEAdcbY6vf9TVAAAAAAElFTkSuQmCC',
-    // ack
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAS0lEQVQokZ2Q2w4AIAhCz///ND11M3RVmxuDUBRAtw8QHRyC4SSJSDjDht1Yhxdudks+bFNxYsX9G6rz2qVHxqRspGi2Wpoji/dqaLh22DbO2VuXAAAAAElFTkSuQmCC',
-    // ack inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAASklEQVQokWP4////fwYGBqIwVC2cgSKBTQzKxhDA0ICmGau12BRCMLJp2BQgy8H9gM9ELGJkasAXvFg9TQjgDCVc8YBXAwFMmgYASkT1C9E5Ya0AAAAASUVORK5CYII=',
-    // alarm
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAARklEQVQokZ2QQQoAMAjD+v9Pu9PA1ThQQRBtoFUBJSkk0SlwOwKykCAEcn+BK8hih/aAe++y7IDuhWgXfcKHCuBBfX6ASR3Vn8ZINQzCrQAAAABJRU5ErkJggg==',
-    // alarm inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAQ0lEQVQokWNgYGD4j45hAJscA8UakBXi0ITddDy2YJqOrBiLJjI1oLsdj1/I0IAnCLFpwtSALYQwNKB7FJ2NooEUDAAtGwcI+Svs4gAAAABJRU5ErkJggg==',
-    // eventacked
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAL0lEQVQokWP4TyJgGCkaGBgQyhhwSeASw9CAYho2A3CZiE0xVg34FOPUgA+QrAEA1FYi+tWeG/cAAAAASUVORK5CYII=',
-    // eventacked inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAMElEQVQokWNgYGD4TyIeGRr+//+PXQOaBC4xVElkBdgMwHASTBEOxdj9gEcxHYIVAC5kqlZXl5JMAAAAAElFTkSuQmCC',
-    // eventalarm
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAJ0lEQVQokWP4jwMwMDBgF8elGIZHNeDSANOEVRyXBpwGUcUGqvoBAK+H8xt0qXFWAAAAAElFTkSuQmCC',
-    // eventalarm inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAJ0lEQVQokWNgYGD4jw3///8fqzgDLsUwMKoBlwaSg5UAHoiIw2cDAFMz2iY65DAoAAAAAElFTkSuQmC',
-    // eventreturn
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAASUlEQVQokZ2RUQoAIAjFdv9L11dhskeUEIQ2mcYIAXjeisA+EahFA9ad/siAA0wqSUsnu87wDZh3VEodO6Rr1c51rc8fd9OoMQHLk7dXak3qLwAAAABJRU5ErkJggg==',
-    // eventreturn inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAR0lEQVQokZ2S2woAIAhD9/8/vV6tjgMNhLxMN1SSTGYb46JkfS2gJglQ/ncRAZ5JTCXQYsFRwxpAvFtKoeMvmoqDv1jc5DQONycV+bfOetgAAAAASUVORK5CYII=',
-    // info
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAOUlEQVQokWNgYGD4///////E0AwMDP8hPDQAk8QhjlMCuzg2G3AB6tlAez8MglAiCZNiw/////8DACmmtFrq9aGNAAAAAElFTkSuQmCC',
-    // info inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAN0lEQVQokWP4////fwYGhv/E0FA2w390jCSJIc6ASwKnBmw24MLUs4H2fhgEoUQKIMkGBgaG/wDZFBj2pVi3HgAAAABJRU5ErkJggg==',
-    // system
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAN0lEQVQokWNgYGD4TyJm+E8sgGugig3YxHFqwGcIQQ3obAwN6G7GawMuhVg1EFKMUwM+QJ+IAwDD1Gyi1EZc6gAAAABJRU5ErkJggg==',
-    // system inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAO0lEQVQokWP4TyJg+P///38GBgaiMFwDVWzAJo5TA15DCGnAYKNrwHAzPhtwKcSqgZBinBqIigeaRhwAPuZgrlZXy70AAAAASUVORK5CYII=',
-    // maintenance
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAP0lEQVQokZWPQQoAMAzC8v9Pu8soDOxaBS82QkWNgPKTJ/BYsLekAOxfquwHWyfws6ED7OgtfNk9bAuTSGBJOufqnHIsmYkzAAAAAElFTkSuQmCC',
-    // maintenance inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAQUlEQVQokZWPQQ4AMAQE5/+f1kuTCkuROGAmADCVPsJsBfdCsX0u3N7sJFfXsAqW8BMaID+9gE3SJayEFo7CFwY7GtAw3ouVj50AAAAASUVORK5CYII=',
-    // blockl
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAQElEQVQokZ2QQQ4AMAjC+v9Pu9MWl5AJ42a0IlKBgCIadgGgQ8imqo9D3zDBvJoyR+zwlWHS9SUHaOf4QOywtQCQGucn0g2dEQAAAABJRU5ErkJggg==',
-    // blockl inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAOklEQVQokWNgYGD4Tyz+////fwZSFBOtAaoQQsM46JLY+HAbUEwgrJmwyZTZQJYfSAolmsQDWTENwwByoOYaWbAqegAAAABJRU5ErkJggg==',
-    // blockr
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAPElEQVQokWP4jwMwMDBgF8enAZsmvBqw2cSARQBDIQqbGEUoaggpQBcj3Qay/IAN4AwlfBrIigeiNeACADpU5yeYXn+XAAAAAElFTkSuQmCC',
-    // blockr inverted
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAPElEQVQokWNgYGD4jw3///8fqzgDPg04NOG3AUMTugA2hWhqiFKEzCeoAF2MRBvI8gNJoUT1eCBaAy4MAMhm5hr5iTaWAAAAAElFTkSuQmCC'
-  ]
+  img: [null, null, null, null, null, null, null, null, null, null, null, null,
+    null, null, null, null, null, null, null, null, null, null, null, null,
+    null, null, null, null, null, null, null, null, null, null, null, null,
+    null, null],
+  pending: [null, null, null, null, null, null, null, null, null, null, null,
+    null, null, null, null, null, null, null, null, null, null, null, null,
+    null, null, null, null, null, null, null, null, null, null, null, null,
+    null, null, null],
+  images: [// leaf
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAASElEQVQokWP4jwMwMDBgYBR5XBpwGYZVIzYNGDZB+QyEFOBiM+CyCacGBI0hgEGjsxkYGCiwkSI/4tKMz0DqxCM2A4hOOcQCAObFEQyI2PpKAAAAAElFTkSuQmCC', // leaf inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAQUlEQVQokWNgYGD4jw1jA2hqsGvAZRhWjdg0oIsh8QkqwMXGbhMuDXAxdAFsNDobyifTRor8SFGoUhSPFKUcYjEAMsMz2y6w8kgAAAAASUVORK5CYII=', // map
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAKElEQVQokWP4DwUMDAwYGB9gwKUQm0FoGL/JOGwb1TgINZKFSbYOCgD1JxQJG0vK9AAAAABJRU5ErkJggg==', // map inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAK0lEQVQokWNgYGD4z8DA8B8bgMlhxbgUEgIMBE3Ggkc1Dk6N5AAGUm2DYQAkYTDe0vu7CAAAAABJRU5ErkJggg==', // openmap
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAQklEQVQokaXOwQ4AIAgCUP7/p+nUlpMSzY2bDwWHA5IEkFJCtaiKxE7dvsue8HZNJEPneoAuSq+OYAf9wy4K0Mk5C+d++RWimsw3AAAAAElFTkSuQmCC', // openmap inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAPUlEQVQokaXRQQoAQAgCQP//6brKZmSt0M2hIACI4yBURqiKXQp0ThuhGwmt7Vy00XvqCa7QN1wjhtYLCCYyCkvDVnkJOQAAAABJRU5ErkJggg==', // object
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAH0lEQVQokWP4TyJgYGBg+E8iZiDFdHrZMKqBGA2kYAD8gaJsjwzf9wAAAABJRU5ErkJggg==', //  object inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAIklEQVQokWNgYGD4TxL+TyJg+P//P9GmwzXQ3oZRDdSOBwAGOSrkrXppgQAAAABJRU5ErkJggg==', // attrenum
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAPklEQVQokWP4////fwYGBgxMCDBgU4jNICyYsOlYbENoJNIW7BqJsYm2NuJyBVE2EqWRfjbiUoQ3oAgpwgUANLqccvbgec0AAAAASUVORK5CYII=', // attrenum inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAPElEQVQokWNgYGD4jw0wMDDgx9gUEgMYiDIdDaNoJBZg1UiUTTS1EZcriLKRKI30sxGXIgKBhF8RrqgBAOTOqGZ5aiCnAAAAAElFTkSuQmCC', // attrarra
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAMElEQVQokWP4////fwYGBgxMCDBgU4jNICwYv+nY5InWOGojXW0khLEahtc6PDYCAB9hxkjBPICvAAAAAElFTkSuQmCC', // attrarray inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAALUlEQVQokWNgYGD4jw0wMDDgx9gUEgMYCJmOTZ5ojaM20tVGQgCHK/AnLVwAAPonfpBwU5f4AAAAAElFTkSuQmCC', // attrarel
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAIklEQVQokWP4////fwYGBpwYHTDANGADeDWM2jAEbSAFAADB26JsIjYj1AAAAABJRU5ErkJggg==', // attrarel inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAIElEQVQokWNgYGD4jw8wMDCgYwZcEvg1jNowBG0gBQMAQN8q5COZl1cAAAAASUVORK5CYII=', // attr
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAIUlEQVQokWP4TyJgGIQaGBgY/pOIibcEroEkTLIfhoEGADzs8B5gcUg/AAAAAElFTkSuQmCC', // attr inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAJUlEQVQokWNgYGD4TyIedBr+kwgY/v//T7TpcA0k2TAIQ4nmGgDFzt0jExR7hgAAAABJRU5ErkJggg==', // crrwrite
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAN0lEQVQokaWNQQoAMAjD8v9P633WVWhBkJIotQQoYPYbrHYrqC9D+MG54OBMuMC54GApuPBed9OxiMNLGke1JwAAAABJRU5ErkJggg==', // crrwrite inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAANElEQVQokWNgYGD4jw3DABY57IqxsQlqwGELSYop1ECEYgo0EKmYQg1EKMbUQEAxRAMpAABRMgoFjbTzXgAAAABJRU5ErkJggg==', // crrread
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAPElEQVQokWNgYGD4j4yRATY5BmyKkGks4qgS2BSj2UYFDdgAdW2gvpOwhDW6ItwaCGI8JuHWgMOtWD0PACufaaWhXDFDAAAAAElFTkSuQmCC', // crrread inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAPElEQVQokWP4jwYYGBjgGKscNkXINLo4hgZsipFto44GbJi6NlDfSehhjUxjyGMVxQMYcJmEVwPB5ICEAdcbY6vf9TVAAAAAAElFTkSuQmCC', // ack
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAS0lEQVQokZ2Q2w4AIAhCz///ND11M3RVmxuDUBRAtw8QHRyC4SSJSDjDht1Yhxdudks+bFNxYsX9G6rz2qVHxqRspGi2Wpoji/dqaLh22DbO2VuXAAAAAElFTkSuQmCC', // ack inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAASklEQVQokWP4////fwYGBqIwVC2cgSKBTQzKxhDA0ICmGau12BRCMLJp2BQgy8H9gM9ELGJkasAXvFg9TQjgDCVc8YBXAwFMmgYASkT1C9E5Ya0AAAAASUVORK5CYII=', // alarm
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAARklEQVQokZ2QQQoAMAjD+v9Pu9PA1ThQQRBtoFUBJSkk0SlwOwKykCAEcn+BK8hih/aAe++y7IDuhWgXfcKHCuBBfX6ASR3Vn8ZINQzCrQAAAABJRU5ErkJggg==', // alarm inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAQ0lEQVQokWNgYGD4j45hAJscA8UakBXi0ITddDy2YJqOrBiLJjI1oLsdj1/I0IAnCLFpwtSALYQwNKB7FJ2NooEUDAAtGwcI+Svs4gAAAABJRU5ErkJggg==', // eventacked
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAL0lEQVQokWP4TyJgGCkaGBgQyhhwSeASw9CAYho2A3CZiE0xVg34FOPUgA+QrAEA1FYi+tWeG/cAAAAASUVORK5CYII=', // eventacked inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAMElEQVQokWNgYGD4TyIeGRr+//+PXQOaBC4xVElkBdgMwHASTBEOxdj9gEcxHYIVAC5kqlZXl5JMAAAAAElFTkSuQmCC', // eventalarm
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAJ0lEQVQokWP4jwMwMDBgF8elGIZHNeDSANOEVRyXBpwGUcUGqvoBAK+H8xt0qXFWAAAAAElFTkSuQmCC', // eventalarm inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAJ0lEQVQokWNgYGD4jw3///8fqzgDLsUwMKoBlwaSg5UAHoiIw2cDAFMz2iY65DAoAAAAAElFTkSuQmC', // eventreturn
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAASUlEQVQokZ2RUQoAIAjFdv9L11dhskeUEIQ2mcYIAXjeisA+EahFA9ad/siAA0wqSUsnu87wDZh3VEodO6Rr1c51rc8fd9OoMQHLk7dXak3qLwAAAABJRU5ErkJggg==', // eventreturn inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAR0lEQVQokZ2S2woAIAhD9/8/vV6tjgMNhLxMN1SSTGYb46JkfS2gJglQ/ncRAZ5JTCXQYsFRwxpAvFtKoeMvmoqDv1jc5DQONycV+bfOetgAAAAASUVORK5CYII=', // info
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAOUlEQVQokWNgYGD4///////E0AwMDP8hPDQAk8QhjlMCuzg2G3AB6tlAez8MglAiCZNiw/////8DACmmtFrq9aGNAAAAAElFTkSuQmCC', // info inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAN0lEQVQokWP4////fwYGhv/E0FA2w390jCSJIc6ASwKnBmw24MLUs4H2fhgEoUQKIMkGBgaG/wDZFBj2pVi3HgAAAABJRU5ErkJggg==', // system
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAN0lEQVQokWNgYGD4TyJm+E8sgGugig3YxHFqwGcIQQ3obAwN6G7GawMuhVg1EFKMUwM+QJ+IAwDD1Gyi1EZc6gAAAABJRU5ErkJggg==', // system inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAO0lEQVQokWP4TyJg+P///38GBgaiMFwDVWzAJo5TA15DCGnAYKNrwHAzPhtwKcSqgZBinBqIigeaRhwAPuZgrlZXy70AAAAASUVORK5CYII=', // maintenance
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAP0lEQVQokZWPQQoAMAzC8v9Pu8soDOxaBS82QkWNgPKTJ/BYsLekAOxfquwHWyfws6ED7OgtfNk9bAuTSGBJOufqnHIsmYkzAAAAAElFTkSuQmCC', // maintenance inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAQUlEQVQokZWPQQ4AMAQE5/+f1kuTCkuROGAmADCVPsJsBfdCsX0u3N7sJFfXsAqW8BMaID+9gE3SJayEFo7CFwY7GtAw3ouVj50AAAAASUVORK5CYII=', // blockl
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAQElEQVQokZ2QQQ4AMAjC+v9Pu9MWl5AJ42a0IlKBgCIadgGgQ8imqo9D3zDBvJoyR+zwlWHS9SUHaOf4QOywtQCQGucn0g2dEQAAAABJRU5ErkJggg==', // blockl inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAOklEQVQokWNgYGD4Tyz+////fwZSFBOtAaoQQsM46JLY+HAbUEwgrJmwyZTZQJYfSAolmsQDWTENwwByoOYaWbAqegAAAABJRU5ErkJggg==', // blockr
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAPElEQVQokWP4jwMwMDBgF8enAZsmvBqw2cSARQBDIQqbGEUoaggpQBcj3Qay/IAN4AwlfBrIigeiNeACADpU5yeYXn+XAAAAAElFTkSuQmCC', // blockr inverted
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAPElEQVQokWNgYGD4jw3///8fqzgDPg04NOG3AUMTugA2hWhqiFKEzCeoAF2MRBvI8gNJoUT1eCBaAy4MAMhm5hr5iTaWAAAAAElFTkSuQmCC']
 };
 
 
@@ -184,8 +143,9 @@ function PlowArray(ctx) {
   }
   this.insertNode = function (elem, destination, code) {
     var idx = this.find(elem);
-    if (idx != -1)
+    if (idx != -1) {
       return;
+    }
 
     if (destination == null) {
       switch (code) {
@@ -198,24 +158,25 @@ function PlowArray(ctx) {
           elem.level = 0;
           this.a.unshift(elem);
       }
-    }
-    else {
+    } else {
       var dest_idx = this.find(destination);
-      if (dest_idx == -1)
+      if (dest_idx == -1) {
         return;
+      }
 
       switch (code) {
         case Plow.DEST_INTOFIRST:
-          if (dest_idx == this.a.length - 1)
+          if (dest_idx == this.a.length - 1) {
             this.a.push(elem);
-          else
+          } else {
             this.a.splice(dest_idx + 1, 0, elem);
+          }
           elem.level = destination.level + 1;
           break;
         case Plow.DEST_INTOLAST: {
-          if (dest_idx == this.a.length - 1)
+          if (dest_idx == this.a.length - 1) {
             this.a.push(elem);
-          else {
+          } else {
             idx = this.a.length;
             for (var i = dest_idx + 1; i < this.a.length; i++) {
               if (this.a[i].level <= destination.level) {
@@ -223,22 +184,24 @@ function PlowArray(ctx) {
                 break;
               }
             }
-            if (idx == this.a.length)
+            if (idx == this.a.length) {
               this.a.push(elem);
-            else
+            } else {
               this.a.splice(idx, 0, elem);
+            }
           }
           elem.level = destination.level + 1;
           break;
         }
         case Plow.DEST_AFTER: {
-          if (dest_idx == this.a.length - 1)
+          if (dest_idx == this.a.length - 1) {
             this.a.push(elem);
-          else {
+          } else {
             var i;
             for (i = idx; i < this.a.length; i++) {
-              if (this.a[i].level < destination.level)
+              if (this.a[i].level < destination.level) {
                 break;
+              }
             }
             this.a.splice(i, 0, elem);
           }
@@ -246,8 +209,9 @@ function PlowArray(ctx) {
           break;
         }
         case Plow.DEST_BEFORE:
-          if (idx > 0)
+          if (idx > 0) {
             idx--;
+          }
           this.a.splice(idx, 0, elem);
           elem.level = destination.level;
           break;
@@ -257,8 +221,9 @@ function PlowArray(ctx) {
 
   this.remove = function (elem) {
     var idx = this.find(elem);
-    if (idx == -1)
+    if (idx == -1) {
       return;
+    }
     this.ctx.event_cb(Plow.eEvent_ObjectDeleted, this.a[idx + 1], 0, 0);
     this.a.splice(idx, 1);
   }
@@ -270,12 +235,14 @@ function PlowArray(ctx) {
     return this.a[idx];
   }
   this.draw = function (g, p, node, highlight) {
-    for (var i = 0; i < this.a.length; i++)
+    for (var i = 0; i < this.a.length; i++) {
       this.a[i].draw(g, p, node, highlight);
+    }
   }
   this.set_borders = function (node) {
-    for (var i = 0; i < this.a.length; i++)
+    for (var i = 0; i < this.a.length; i++) {
       this.a[i].set_borders(node);
+    }
   }
   this.configure = function () {
     for (var i = 0; i < this.a.length; i++) {
@@ -285,47 +252,56 @@ function PlowArray(ctx) {
   }
   this.close_node = function (node) {
     var idx = this.find(node);
-    if (idx == -1)
+    if (idx == -1) {
       return;
+    }
     var level = node.level;
     var i;
     for (i = idx + 1; i < this.a.length; i++) {
-      if (this.a[i].level <= level)
+      if (this.a[i].level <= level) {
         break;
+      }
     }
     var next_idx = i;
-    if (next_idx == idx + 1)
+    if (next_idx == idx + 1) {
       return;
+    }
     for (i = idx + 1; i < next_idx; i++) {
       // Event backcall
-      if (ctx.select_object == this.a[idx + 1])
+      if (ctx.select_object == this.a[idx + 1]) {
         ctx.select_object = null;
+      }
       this.ctx.event_cb(Plow.eEvent_ObjectDeleted, this.a[idx + 1], 0, 0);
       this.a.splice(idx + 1, 1);
     }
   }
   this.get_parent_object = function (node) {
     var idx = this.find(node);
-    if (idx == -1)
+    if (idx == -1) {
       return null;
+    }
 
     for (var i = idx; i >= 0; i--) {
-      if (this.a[i].level < node.level)
+      if (this.a[i].level < node.level) {
         return this.a[i];
+      }
     }
     return null;
   }
 
   this.get_first_child = function (node) {
     var idx = this.find(node);
-    if (idx == -1)
+    if (idx == -1) {
       return null;
+    }
 
-    if (this.a.length == idx - 1)
+    if (this.a.length == idx - 1) {
       return null;
+    }
 
-    if (this.a[idx + 1].level > node.level)
+    if (this.a[idx + 1].level > node.level) {
       return this.a[idx + 1];
+    }
     return null;
   }
 
@@ -337,10 +313,12 @@ function PlowArray(ctx) {
         continue;
       }
       if (found) {
-        if (this.a[i].level == node.level)
+        if (this.a[i].level == node.level) {
           return this.a[i];
-        if (this.a[i].level < node.level)
+        }
+        if (this.a[i].level < node.level) {
           return null;
+        }
       }
     }
     return null;
@@ -349,8 +327,9 @@ function PlowArray(ctx) {
   this.get_next_object = function (node) {
     for (var i = 0; i < this.a.length; i++) {
       if (this.a[i] == node) {
-        if (i == this.a.length - 1)
+        if (i == this.a.length - 1) {
           return null;
+        }
         return this.a[i + 1];
       }
     }
@@ -359,28 +338,32 @@ function PlowArray(ctx) {
   this.get_previous_object = function (node) {
     for (var i = 0; i < this.a.length; i++) {
       if (this.a[i] == node) {
-        if (i == 0)
+        if (i == 0) {
           return null;
+        }
         return this.a[i - 1];
       }
     }
     return null;
   }
   this.get_first_object = function () {
-    if (this.a.length == 0)
+    if (this.a.length == 0) {
       return null;
+    }
     return this.a[0];
   }
   this.get_last_object = function () {
-    if (this.a.length == 0)
+    if (this.a.length == 0) {
       return null;
+    }
     return this.a[this.a.length - 1];
   }
 
   this.find = function (elem) {
     for (var i = 0; i < this.a.length; i++) {
-      if (this.a[i] == elem)
+      if (this.a[i] == elem) {
         return i;
+      }
     }
     return -1;
   }
@@ -415,13 +398,15 @@ function PlowNode(ctx, nc, level) {
   this.relative_position = 0;
 
   this.set_annotation = function (number, text) {
-    if (number >= 10)
+    if (number >= 10) {
       return;
+    }
     this.annotv[number] = text;
   }
   this.set_annotation_pixmap = function (number, pixmap) {
-    if (number >= 10)
+    if (number >= 10) {
       return;
+    }
     this.pixmapv[number] = pixmap;
   }
   this.draw_object = function () {
@@ -433,39 +418,45 @@ function PlowNode(ctx, nc, level) {
     var width = (this.x_right - this.x_left) * this.ctx.zoom_factor;
     var height = (this.y_high - this.y_low) * this.ctx.zoom_factor + 2;
     g.fillStyle = "white";
-    if (this.select)
+    if (this.select) {
       g.fillStyle = "lightblue";
+    }
     g.fillRect(x, y, width, height);
 
     this.nc.draw(g, this.pos, this, this.highlight);
   }
 
   this.connect = function () {
-    if (this.trace_object == "" || this.trace_attribute == "")
+    if (this.trace_object == "" || this.trace_attribute == "") {
       return;
+    }
 
     var n = this.trace_attribute.indexOf('#');
-    if (n != -1)
+    if (n != -1) {
       this.trace_attribute = this.trace_attribute.substring(0, n);
+    }
 
     var o = this.trace_object + "." + this.trace_attribute;
     this.p = ctx.gdh.refObjectInfo(o, this.trace_attr_type);
     console.log("connecting", o, this.p);
   }
   this.scan = function () {
-    if (this.p == 0)
+    if (this.p == 0) {
       return;
+    }
     var v1 = ctx.gdh.getRefObjectInfo(this.p);
     var evaluate = true;
-    if (this.first_scan)
+    if (this.first_scan) {
       this.first_scan = false;
-    else if (v1 == this.old_value)
+    } else if (v1 == this.old_value) {
       return;
+    }
 
-    if (v1)
+    if (v1) {
       this.highlight = true;
-    else
+    } else {
       this.highlight = false;
+    }
 
     this.old_value = v1;
     this.draw_object();
@@ -494,14 +485,15 @@ function PlowNode(ctx, nc, level) {
     if (select) {
       this.select = true;
       this.ctx.select_object = this;
-    }
-    else {
+    } else {
       this.select = false;
-      if (this.ctx.select_object == this)
+      if (this.ctx.select_object == this) {
         this.ctx.select_object = null;
+      }
     }
-    if (select != this.select)
+    if (select != this.select) {
       this.draw_object();
+    }
   }
   this.set_invert = function (invert) {
     this.invert = invert;
@@ -515,8 +507,9 @@ function PlowNode(ctx, nc, level) {
   }
   this.in_icon = function (x, y) {
     if (x >= this.x_left * this.ctx.zoom_factor &&
-      x <= (this.x_left + 1.75) * this.ctx.zoom_factor)
+      x <= (this.x_left + 1.75) * this.ctx.zoom_factor) {
       return true;
+    }
     return false;
   }
   this.measure = function () {
@@ -547,14 +540,19 @@ function PlowAnnot(ctx, x, y, text_size, text_color, annot_type, number) {
   this.ctx = ctx;
 
   this.draw = function (g, p0, node, highlight) {
-    if (node == null)
+    if (node == null) {
       return;
-    if (node.annotv[this.number] == null)
+    }
+    if (node.annotv[this.number] == null) {
       return;
+    }
 
     var tsize = 0;
-    var idx = this.ctx.zoom_factor / this.ctx.base_zoom_factor * (this.text_size + 4) - 4;
-    if (idx < 0) return;
+    var idx = this.ctx.zoom_factor / this.ctx.base_zoom_factor *
+      (this.text_size + 4) - 4;
+    if (idx < 0) {
+      return;
+    }
 
     switch (idx) {
       case 0:
@@ -587,21 +585,25 @@ function PlowAnnot(ctx, x, y, text_size, text_color, annot_type, number) {
 
 
     g.font = tsize + "px Arial";
-    if (node.invert)
+    if (node.invert) {
       g.fillStyle = "white";
-    else
+    } else {
       g.fillStyle = "black";
-    if (highlight)
+    }
+    if (highlight) {
       g.fillStyle = "red";
+    }
     g.lineWidth = 0.5;
 
     var x = (this.p.x + p0.x) * this.ctx.zoom_factor;
     var y = (this.p.y + p0.y) * this.ctx.zoom_factor - tsize / 4;
 
     if ((this.annot_type & Plow.RELATIVE_POSITION) != 0) {
-      var rel_x = (p0.x + node.relative_position + this.RELATIVE_OFFSET) * this.ctx.zoom_factor;
-      if (x < rel_x)
+      var rel_x = (p0.x + node.relative_position + this.RELATIVE_OFFSET) *
+        this.ctx.zoom_factor;
+      if (x < rel_x) {
         x = rel_x;
+      }
     }
 
     var tokens = node.annotv[this.number].split('\n');
@@ -609,8 +611,11 @@ function PlowAnnot(ctx, x, y, text_size, text_color, annot_type, number) {
       g.fillText(tokens[i], x, y);
       y += tsize * 1.4;
     }
-    if ((this.annot_type & Plow.NEXT_RELATIVE_POSITION) != 0 || (this.annot_type & Plow.RELATIVE_POSITION) != 0) {
-      node.relative_position = (x + g.measureText(node.annotv[this.number]).width) / this.ctx.zoom_factor - p0.x;
+    if ((this.annot_type & Plow.NEXT_RELATIVE_POSITION) != 0 ||
+      (this.annot_type & Plow.RELATIVE_POSITION) != 0) {
+      node.relative_position =
+        (x + g.measureText(node.annotv[this.number]).width) /
+        this.ctx.zoom_factor - p0.x;
     }
   }
   this.set_borders = function (node) {
@@ -628,10 +633,12 @@ function PlowAnnotPixmap(ctx, x, y, number) {
 
     var img;
     var bix = node.pixmapv[this.number];
-    if (typeof bix === 'undefined' || bix === null)
+    if (typeof bix === 'undefined' || bix === null) {
       return;
-    if (node.invert)
+    }
+    if (node.invert) {
       bix++;
+    }
 
     img = Bitmaps.img[bix];
     if (img == null) {
@@ -642,16 +649,18 @@ function PlowAnnotPixmap(ctx, x, y, number) {
       Bitmaps.pending[bix].push(new PlowPoint(this.ctx, x, y));
 
       img.onload = function () {
-        for (var i = 0; i < Bitmaps.pending[bix].length; i++)
-          gctx.drawImage(img, Bitmaps.pending[bix][i].x, Bitmaps.pending[bix][i].y);
+        for (var i = 0; i < Bitmaps.pending[bix].length; i++) {
+          gctx.drawImage(img, Bitmaps.pending[bix][i].x,
+            Bitmaps.pending[bix][i].y);
+        }
         Bitmaps.pending[bix] = null;
       }
-    }
-    else {
-      if (!img.complete)
+    } else {
+      if (!img.complete) {
         Bitmaps.pending[bix].push(new PlowPoint(this.ctx, x, y));
-      else
+      } else {
         gctx.drawImage(img, x, y);
+      }
     }
 
   }
@@ -659,7 +668,8 @@ function PlowAnnotPixmap(ctx, x, y, number) {
   }
 }
 
-function PlowRect(ctx, x, y, width, height, fill_color, border_color, fill, fix_color) {
+function PlowRect(ctx, x, y, width, height, fill_color, border_color, fill,
+                  fix_color) {
   this.ll = new PlowPoint(ctx, x, y);
   this.ur = new PlowPoint(ctx, x + width, y + height);
   this.border_color = border_color;
@@ -689,8 +699,9 @@ function PlowRect(ctx, x, y, width, height, fill_color, border_color, fill, fix_
       default:
         g.strokeStyle = "black";
     }
-    if (highlight)
+    if (highlight) {
       g.strokeStyle = "red";
+    }
     g.strokeRect(x, y, width, height);
 
     if (this.fill) {
@@ -708,29 +719,35 @@ function PlowRect(ctx, x, y, width, height, fill_color, border_color, fill, fix_
           g.fillStyle = "lightgreen";
           break;
         case Plow.COLOR_WHITE:
-          if (node.invert)
+          if (node.invert) {
             g.fillStyle = "black";
-          else
+          } else {
             g.fillStyle = "white";
+          }
           break;
         default:
-          if (node.invert)
+          if (node.invert) {
             g.fillStyle = "white";
-          else
+          } else {
             g.fillStyle = "black";
+          }
       }
       g.fillRect(x, y, width, height);
     }
   }
   this.set_borders = function (node) {
-    if (this.ll.x + node.pos.x < node.x_left)
+    if (this.ll.x + node.pos.x < node.x_left) {
       node.x_left = this.ll.x + node.pos.x;
-    if (this.ur.x + node.pos.x > node.x_right)
+    }
+    if (this.ur.x + node.pos.x > node.x_right) {
       node.x_right = this.ur.x + node.pos.x;
-    if (this.ll.y + node.pos.y < node.y_low)
+    }
+    if (this.ll.y + node.pos.y < node.y_low) {
       node.y_low = this.ll.y + node.pos.y;
-    if (this.ur.y + node.pos.y > node.y_high)
+    }
+    if (this.ur.y + node.pos.y > node.y_high) {
       node.y_high = this.ur.y + node.pos.y;
+    }
   }
 }
 
@@ -762,21 +779,25 @@ function PlowCtx() {
   this.event_object = null;
 
   this.draw = function () {
-    if (this.nodraw > 0)
+    if (this.nodraw > 0) {
       return;
+    }
     this.gdraw.gctx.fillStyle = "white";
-    this.gdraw.gctx.fillRect(0, 0, this.gdraw.canvas.width, this.gdraw.canvas.height);
+    this.gdraw.gctx.fillRect(0, 0, this.gdraw.canvas.width,
+      this.gdraw.canvas.height);
     this.a.draw(this.gdraw.gctx, null, null, false);
   };
 
   this.connect = function () {
-    for (var i = 0; i < this.a.size(); i++)
+    for (var i = 0; i < this.a.size(); i++) {
       this.a.get(i).connect();
+    }
   };
   this.scan = function () {
     console.log("ctx scan", this.a.size());
-    for (var i = 0; i < this.a.size(); i++)
+    for (var i = 0; i < this.a.size(); i++) {
       this.a.get(i).scan();
+    }
   };
   this.set_nodraw = function () {
     this.nodraw++;
@@ -795,8 +816,9 @@ function PlowCtx() {
         for (var i = 0; i < this.a.size(); i++) {
           if (this.a.get(i) instanceof PlowNode) {
             sts = this.a.get(i).event_handler(event, x, y);
-            if (sts == 1)
+            if (sts == 1) {
               break;
+            }
           }
         }
         if (sts == 1) {
@@ -819,14 +841,16 @@ function PlowCtx() {
 
   this.set_select = function (select) {
     for (var i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i) instanceof PlowNode)
+      if (this.a.get(i) instanceof PlowNode) {
         this.a.get(i).set_select(select);
+      }
     }
   };
   this.set_invert = function (invert) {
     for (var i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i) instanceof PlowNode)
+      if (this.a.get(i) instanceof PlowNode) {
         this.a.get(i).set_invert(invert);
+      }
     }
   };
 
@@ -840,8 +864,9 @@ function PlowCtx() {
     this.a.insertNode(n, destination, destCode);
   };
   this.remove = function (n) {
-    if (this.select_object == n)
+    if (this.select_object == n) {
       this.select_object = null;
+    }
     this.a.remove(n);
   };
   this.insert_nc = function (nc) {
@@ -873,12 +898,16 @@ function PlowCtx() {
     this.a.close_node(o);
   };
   this.is_visible = function (o) {
-    if ((o.y_high * this.zoom_factor <= window.pageYOffset + window.innerHeight - this.gdraw.offset_top) &&
-      (o.y_low * this.zoom_factor >= window.pageYOffset - this.gdraw.offset_top))
+    if ((o.y_high * this.zoom_factor <= window.pageYOffset +
+        window.innerHeight - this.gdraw.offset_top) &&
+      (o.y_low * this.zoom_factor >= window.pageYOffset -
+        this.gdraw.offset_top)) {
       return true;
+    }
     return false;
   };
   this.scroll = function (y, factor) {
-    window.scrollTo(window.scrollX, y * this.zoom_factor - window.innerHeight * factor + this.gdraw.offset_top)
+    window.scrollTo(window.scrollX, y * this.zoom_factor - window.innerHeight *
+      factor + this.gdraw.offset_top)
   };
 }

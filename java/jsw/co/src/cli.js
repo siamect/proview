@@ -93,33 +93,31 @@ function Cli(cliTable) {
       var c = cmd.charAt(i);
       switch (state) {
         case CliC.STATE_INIT:
-          if (c == CliC.SPACE || c == CliC.TAB)
+          if (c == CliC.SPACE || c == CliC.TAB) {
             break;
-          else {
+          } else {
             state = CliC.STATE_VERB;
             start_pos = i;
           }
           break;
         case CliC.STATE_SPACE:
-          if (c == CliC.SPACE || c == CliC.TAB)
+          if (c == CliC.SPACE || c == CliC.TAB) {
             break;
+          }
           if (c == '/') {
             state = CliC.STATE_QUAL;
             start_pos = i;
-          }
-          else if (c == '=') {
+          } else if (c == '=') {
             if (this.qualifierCount === 0) {
               state = CliC.STATE_ERROR;
               this.status = CliC.SYNTAX_ERROR;
               break;
             }
             state = CliC.STATE_EQUAL;
-          }
-          else if (c == '"') {
+          } else if (c == '"') {
             state = CliC.STATE_QUOTE_VERB;
             break;
-          }
-          else {
+          } else {
             state = CliC.STATE_VERB;
             start_pos = i;
           }
@@ -130,18 +128,20 @@ function Cli(cliTable) {
               state = CliC.STATE_ERROR;
               break;
             }
-            if (this.verbCount === 0)
-              this.verb[this.verbCount++] = cmd.substring(start_pos, i).toUpperCase();
-            else
+            if (this.verbCount === 0) {
+              this.verb[this.verbCount++] = cmd.substring(start_pos, i)
+                .toUpperCase();
+            } else {
               this.verb[this.verbCount++] = cmd.substring(start_pos, i);
+            }
             state = CliC.STATE_SPACE;
-          }
-          else if (c == '/') {
+          } else if (c == '/') {
             if (this.verbCount == CliC.VERB_VECT_SIZE) {
               state = CliC.STATE_ERROR;
               break;
             }
-            this.verb[this.verbCount++] = cmd.substring(start_pos, i).toUpperCase();
+            this.verb[this.verbCount++] =
+              cmd.substring(start_pos, i).toUpperCase();
             state = CliC.STATE_QUAL;
             start_pos = i;
           }
@@ -158,33 +158,36 @@ function Cli(cliTable) {
           break;
         case CliC.STATE_QUAL:
           if (c == CliC.SPACE || c == CliC.TAB) {
-            this.qualifier[this.qualifierCount++] = cmd.substring(start_pos, i).toUpperCase();
+            this.qualifier[this.qualifierCount++] =
+              cmd.substring(start_pos, i).toUpperCase();
             state = CliC.STATE_SPACE;
-          }
-          else if (c == '=') {
-            this.qualifier[this.qualifierCount++] = cmd.substring(start_pos, i).toUpperCase();
+          } else if (c == '=') {
+            this.qualifier[this.qualifierCount++] =
+              cmd.substring(start_pos, i).toUpperCase();
             state = CliC.STATE_EQUAL;
-          }
-          else if (c == '/') {
-            this.qualifier[this.qualifierCount++] = cmd.substring(start_pos, i).toUpperCase();
+          } else if (c == '/') {
+            this.qualifier[this.qualifierCount++] =
+              cmd.substring(start_pos, i).toUpperCase();
             state = CliC.STATE_QUAL;
             start_pos = i;
           }
           break;
         case CliC.STATE_QUALVALUE:
           if (c == CliC.SPACE || c == CliC.TAB) {
-            this.qualValue[this.qualifierCount - 1] = cmd.substring(start_pos, i);
+            this.qualValue[this.qualifierCount - 1] =
+              cmd.substring(start_pos, i);
             state = CliC.STATE_SPACE;
-          }
-          else if (c == '/') {
-            this.qualValue[this.qualifierCount - 1] = cmd.substring(start_pos, i);
+          } else if (c == '/') {
+            this.qualValue[this.qualifierCount - 1] =
+              cmd.substring(start_pos, i);
             state = CliC.STATE_QUAL;
             start_pos = i;
           }
           break;
         case CliC.STATE_QUALVALUE_EXACT:
           if (c == '"') {
-            this.qualValue[this.qualifierCount - 1] = cmd.substring(start_pos, i);
+            this.qualValue[this.qualifierCount - 1] =
+              cmd.substring(start_pos, i);
             state = CliC.STATE_SPACE;
           }
           break;
@@ -197,20 +200,21 @@ function Cli(cliTable) {
           start_pos = i;
           break;
         case CliC.STATE_EQUAL:
-          if (c == CliC.SPACE || c == CliC.TAB)
+          if (c == CliC.SPACE || c == CliC.TAB) {
             break;
+          }
           if (c == '"') {
             state = CliC.STATE_QUOTE_QUALVALUE;
-          }
-          else {
+          } else {
             state = CliC.STATE_QUALVALUE;
             start_pos = i;
           }
           break;
 
       }
-      if (state == CliC.STATE_ERROR)
+      if (state == CliC.STATE_ERROR) {
         break;
+      }
     }
     switch (state) {
       case CliC.STATE_INIT:
@@ -221,10 +225,12 @@ function Cli(cliTable) {
           state = CliC.STATE_ERROR;
           break;
         }
-        if (this.verbCount === 0)
-          this.verb[this.verbCount++] = cmd.substring(start_pos, i).toUpperCase();
-        else
+        if (this.verbCount === 0) {
+          this.verb[this.verbCount++] = cmd.substring(start_pos, i)
+            .toUpperCase();
+        } else {
           this.verb[this.verbCount++] = cmd.substring(start_pos, i);
+        }
         break;
       case CliC.STATE_VERB_EXACT:
         if (this.verbCount == CliC.VERB_VECT_SIZE) {
@@ -234,7 +240,8 @@ function Cli(cliTable) {
         this.verb[this.verbCount++] = cmd.substring(start_pos, i);
         break;
       case CliC.STATE_QUAL:
-        this.qualifier[this.qualifierCount++] = cmd.substring(start_pos, i).toUpperCase();
+        this.qualifier[this.qualifierCount++] =
+          cmd.substring(start_pos, i).toUpperCase();
         break;
       case CliC.STATE_QUALVALUE:
         this.qualValue[this.qualifierCount - 1] = cmd.substring(start_pos, i);
@@ -262,9 +269,11 @@ function Cli(cliTable) {
     // Identify verbs and qualifiers
     var found = false;
     for (i = 0; i < this.cliTable.length; i++) {
-      if (this.verb[0].length > this.cliTable[i].command.length)
+      if (this.verb[0].length > this.cliTable[i].command.length) {
         continue;
-      if (this.verb[0] == (this.cliTable[i].command.substring(0, this.verb[0].length))) {
+      }
+      if (this.verb[0] ==
+        (this.cliTable[i].command.substring(0, this.verb[0].length))) {
         this.verb[0] = this.cliTable[i].command;
         found = true;
         break;
@@ -279,28 +288,40 @@ function Cli(cliTable) {
     this.configuredVerbs = 0;
     if (this.cliTable[this.cliTableIndex].qualifier !== null) {
       for (i = 0; i < this.cliTable[this.cliTableIndex].qualifier.length; i++) {
-        if (this.cliTable[this.cliTableIndex].qualifier[i] === null)
+        if (this.cliTable[this.cliTableIndex].qualifier[i] === null) {
           break;
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg1"))
+        }
+        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg1")) {
           this.configuredVerbs++;
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg2"))
+        }
+        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg2")) {
           this.configuredVerbs++;
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg3"))
+        }
+        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg3")) {
           this.configuredVerbs++;
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg4"))
+        }
+        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg4")) {
           this.configuredVerbs++;
-        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg5"))
+        }
+        if (this.cliTable[this.cliTableIndex].qualifier[i] == ("cli_arg5")) {
           this.configuredVerbs++;
+        }
       }
 
       for (var j = 0; j < this.qualifierCount; j++) {
         found = false;
-        for (i = 0; i < this.cliTable[this.cliTableIndex].qualifier.length; i++) {
-          if (this.cliTable[this.cliTableIndex].qualifier[i] === null)
+        for (i = 0; i < this.cliTable[this.cliTableIndex].qualifier.length;
+             i++) {
+          if (this.cliTable[this.cliTableIndex].qualifier[i] === null) {
             break;
-          if (this.qualifier[j].length > this.cliTable[this.cliTableIndex].qualifier[i].length)
+          }
+          if (this.qualifier[j].length >
+            this.cliTable[this.cliTableIndex].qualifier[i].length) {
             continue;
-          if (this.qualifier[j] == (this.cliTable[this.cliTableIndex].qualifier[i].substring(0, this.qualifier[j].length))) {
+          }
+          if (this.qualifier[j] ==
+            (this.cliTable[this.cliTableIndex].qualifier[i].substring(0,
+              this.qualifier[j].length))) {
             this.cliQualifierIndex[j] = i;
             found = true;
             this.qualifier[j] = this.cliTable[this.cliTableIndex].qualifier[i];
@@ -311,8 +332,7 @@ function Cli(cliTable) {
           return "";
         }
       }
-    }
-    else if (this.qualifierCount > 0) {
+    } else if (this.qualifierCount > 0) {
       this.status = CliC.QUALNOTFOUND;
       return "";
     }
@@ -327,28 +347,33 @@ function Cli(cliTable) {
   this.qualifierFound = function (qual) {
 
     if (qual == ("cli_arg1")) {
-      if (this.verbCount < 2 || this.configuredVerbs < 1)
+      if (this.verbCount < 2 || this.configuredVerbs < 1) {
         return false;
+      }
       return true;
     }
     if (qual == ("cli_arg2")) {
-      if (this.verbCount < 3 || this.configuredVerbs < 2)
+      if (this.verbCount < 3 || this.configuredVerbs < 2) {
         return false;
+      }
       return true;
     }
     if (qual == ("cli_arg3")) {
-      if (this.verbCount < 4 || this.configuredVerbs < 3)
+      if (this.verbCount < 4 || this.configuredVerbs < 3) {
         return false;
+      }
       return true;
     }
     if (qual == ("cli_arg4")) {
-      if (this.verbCount < 5 || this.configuredVerbs < 4)
+      if (this.verbCount < 5 || this.configuredVerbs < 4) {
         return false;
+      }
       return true;
     }
     for (var i = 0; i < this.qualifierCount; i++) {
-      if (qual == (this.qualifier[i]))
+      if (qual == (this.qualifier[i])) {
         return true;
+      }
     }
     return false;
   };
@@ -360,30 +385,35 @@ function Cli(cliTable) {
    */
   this.getQualValue = function (qual) {
     if (qual == ("cli_arg1")) {
-      if (this.verbCount < 2 || this.configuredVerbs < 1)
+      if (this.verbCount < 2 || this.configuredVerbs < 1) {
         return "";
+      }
       return this.verb[1];
     }
     if (qual == ("cli_arg2")) {
-      if (this.verbCount < 3 || this.configuredVerbs < 2)
+      if (this.verbCount < 3 || this.configuredVerbs < 2) {
         return "";
+      }
       return this.verb[2];
     }
     if (qual == ("cli_arg3")) {
-      if (this.verbCount < 4 || this.configuredVerbs < 3)
+      if (this.verbCount < 4 || this.configuredVerbs < 3) {
         return this.verb[3];
+      }
     }
     if (qual == ("cli_arg4")) {
-      if (this.verbCount < 5 || this.configuredVerbs < 4)
+      if (this.verbCount < 5 || this.configuredVerbs < 4) {
         return "";
+      }
       return this.verb[4];
     }
     for (var i = 0; i < this.qualifierCount; i++) {
       if (qual == (this.qualifier[i])) {
-        if (this.qualValue[i] === null)
+        if (this.qualValue[i] === null) {
           return "";
-        else
+        } else {
           return this.qualValue[i];
+        }
       }
     }
     return "";

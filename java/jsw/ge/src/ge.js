@@ -691,77 +691,35 @@ var DynC = {
 
   method_toolbar_op_cnt: 12,
   method_toolbar_op_helpmask: 1 << 8,
-  method_toolbar_op_subgraph: ["pwr_mb2opengraph",
-    "pwr_mb2openobjectgraph",
-    "pwr_mb2trend",
-    "pwr_mb2history",
-    "pwr_mb2fast",
-    "pwr_mb2camera",
-    "pwr_mb2histevent",
-    "pwr_mb2blockevents",
-    "pwr_mb2help",
-    "pwr_mb2photo",
-    "pwr_mb2note",
-    "pwr_mb2parentgraph"],
+  method_toolbar_op_subgraph: ["pwr_mb2opengraph", "pwr_mb2openobjectgraph",
+    "pwr_mb2trend", "pwr_mb2history", "pwr_mb2fast", "pwr_mb2camera",
+    "pwr_mb2histevent", "pwr_mb2blockevents", "pwr_mb2help", "pwr_mb2photo",
+    "pwr_mb2note", "pwr_mb2parentgraph"],
   method_toolbar_mnt_cnt: 32,
   method_toolbar_mnt_helpmask: 1 << 4,
-  method_toolbar_mnt_subgraph: ["pwr_mb2openobject",
-    "pwr_mb2openplc",
-    "pwr_mb2rtnavigator",
-    "pwr_mb2crossreferences",
-    "pwr_mb2helpclass",
-    "pwr_mb2datasheet",
-    "pwr_mb2circuitdiagram",
-    "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-    "pwr_mb2simulate"
-  ],
+  method_toolbar_mnt_subgraph: ["pwr_mb2openobject", "pwr_mb2openplc",
+    "pwr_mb2rtnavigator", "pwr_mb2crossreferences", "pwr_mb2helpclass",
+    "pwr_mb2datasheet", "pwr_mb2circuitdiagram", "", "", "", "", "", "", "", "",
+    "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+    "pwr_mb2simulate"],
 
-  method_toolbar_op_methods: ["Graph",
-    "Object Graph",
-    "Trend",
-    "History",
-    "Fast",
-    "Camera",
-    "Event Log...",
-    "Block Events...",
-    "Help",
-    "Photo",
-    "Note",
-    "Parent Object Graph"],
+  method_toolbar_op_methods: ["Graph", "Object Graph", "Trend", "History",
+    "Fast", "Camera", "Event Log...", "Block Events...", "Help", "Photo",
+    "Note", "Parent Object Graph"],
 
-  method_toolbar_mnt_methods: ["Open Object",
-    "Open Plc",
-    "RtNavigator",
-    "Crossreferences",
-    "Help Class",
-    "DataSheet",
-    "CircuitDiagram",
-    "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-    "Simulate"],
+  method_toolbar_mnt_methods: ["Open Object", "Open Plc", "RtNavigator",
+    "Crossreferences", "Help Class", "DataSheet", "CircuitDiagram", "", "", "",
+    "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+    "", "", "Simulate"],
 
-  method_toolbar_op_tooltip: ["Graph",
-    "Object graph",
-    "Trend",
-    "History",
-    "Fast curve",
-    "Camera",
-    "Event log",
-    "Block events",
-    "Help",
-    "Photo",
-    "Note",
-    "Open parent object graph"
-  ],
+  method_toolbar_op_tooltip: ["Graph", "Object graph", "Trend", "History",
+    "Fast curve", "Camera", "Event log", "Block events", "Help", "Photo",
+    "Note", "Open parent object graph"],
 
-  method_toolbar_mnt_tooltip: ["Open object",
-    "Open plc",
-    "Navigator",
-    "CrossReferences",
-    "Help class",
-    "Datasheet",
-    "CircuitDiagram",
-    "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-    "Simulate"]
+  method_toolbar_mnt_tooltip: ["Open object", "Open plc", "Navigator",
+    "CrossReferences", "Help class", "Datasheet", "CircuitDiagram", "", "", "",
+    "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+    "", "", "Simulate"]
 };
 
 function DynParsedAttrName() {
@@ -833,8 +791,8 @@ function Dyn(graph) {
           elem.action_type2 == xelem.action_type2) {
           // Element exists in both, use element in x, i.e. remove current element
           if (typeof elem.instance == 'undefined' ||
-            (typeof elem.instance != 'undefined' &&
-              elem.instance == xelem.instance)) {
+            (typeof elem.instance != 'undefined' && elem.instance ==
+              xelem.instance)) {
             this.elements.splice(j, 1);
             break;
           }
@@ -868,7 +826,9 @@ function Dyn(graph) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.debug) console.log("Dyn : " + lines[i]);
+      if (this.debug) {
+        console.log("Dyn : " + lines[i]);
+      }
 
       elem = null;
 
@@ -1097,8 +1057,9 @@ function Dyn(graph) {
         i = elem.open(lines, i + 1);
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -1110,8 +1071,7 @@ function Dyn(graph) {
       var inherit_dyn_type2 = object.getClassDynType2();
       this.total_dyn_type1 = this.dyn_type1 | inherit_dyn_type1;
       this.total_dyn_type2 = this.dyn_type2 | inherit_dyn_type2;
-    }
-    else {
+    } else {
       this.total_dyn_type1 = this.dyn_type1;
       this.total_dyn_type2 = this.dyn_type2;
     }
@@ -1121,16 +1081,16 @@ function Dyn(graph) {
       var inherit_action_type2 = object.getClassActionType2();
       this.total_action_type1 = this.action_type1 | inherit_action_type1;
       this.total_action_type2 = this.action_type2 | inherit_action_type2;
-    }
-    else {
+    } else {
       this.total_action_type1 = this.action_type1;
       this.total_action_type2 = this.action_type2;
     }
 
     if (this.cycle == Glow.eCycle_Inherit) {
       this.cycle = object.getClassCycle();
-      if (this.cycle == Glow.eCycle_Inherit)
+      if (this.cycle == Glow.eCycle_Inherit) {
         this.cycle = Glow.eCycle_Slow;
+      }
     }
     for (var i = 0; i < this.elements.length; i++) {
       this.elements[i].connect(object);
@@ -1155,8 +1115,9 @@ function Dyn(graph) {
     for (var i = 0; i < this.elements.length; i++) {
       this.elements[i].scan(object);
     }
-    if (this.repaintNow)
+    if (this.repaintNow) {
       object.draw();
+    }
   };
 
   this.action = function (object, event) {
@@ -1164,8 +1125,9 @@ function Dyn(graph) {
     for (var i = 0; i < this.elements.length; i++) {
       sts = this.elements[i].action(object, event);
       if (sts == DynC.DYN__NO_PROPAGATE || sts == Glow.GLOW__TERMINATED ||
-        sts == Glow.GLOW__SUBTERMINATED)
+        sts == Glow.GLOW__SUBTERMINATED) {
         return sts;
+      }
     }
     return 1;
   };
@@ -1176,15 +1138,13 @@ function Dyn(graph) {
       this.total_dyn_type2 = this.dyn_type2;
       this.total_action_type1 = this.action_type1;
       this.total_action_type2 = this.action_type2;
-    }
-    else {
+    } else {
       if ((this.dyn_type1 & DynC.mDynType1_Inherit) != 0) {
         var inherit_dyn_type1 = object.getClassDynType1();
         var inherit_dyn_type2 = object.getClassDynType2();
         this.total_dyn_type1 = this.dyn_type1 | inherit_dyn_type1;
         this.total_dyn_type2 = this.dyn_type2 | inherit_dyn_type2;
-      }
-      else {
+      } else {
         this.total_dyn_type1 = this.dyn_type1;
         this.total_dyn_type2 = this.dyn_type2;
       }
@@ -1194,8 +1154,7 @@ function Dyn(graph) {
         var inherit_action_type2 = object.getClassActionType2();
         this.total_action_type1 = this.action_type1 | inherit_action_type1;
         this.total_action_type2 = this.action_type2 | inherit_action_type2;
-      }
-      else {
+      } else {
         this.total_action_type1 = this.action_type1;
         this.total_action_type2 = this.action_type2;
       }
@@ -1203,8 +1162,9 @@ function Dyn(graph) {
   };
 
   this.parseAttrName = function (name) {
-    if (name === null)
+    if (name === null) {
       return null;
+    }
     if ((this.total_dyn_type1 & DynC.mDynType1_HostObject) !== 0) {
       var idx = name.indexOf("$hostobject");
       if (idx != -1) {
@@ -1219,8 +1179,9 @@ function Dyn(graph) {
 
   this.getHostObject = function () {
     for (var i = 0; i < this.elements.length; i++) {
-      if ((this.elements[i].dyn_type1 & DynC.mDynType1_HostObject) !== 0)
+      if ((this.elements[i].dyn_type1 & DynC.mDynType1_HostObject) !== 0) {
         return this.elements[i].hostobject;
+      }
     }
     return "";
   };
@@ -1305,15 +1266,17 @@ function Dyn(graph) {
   };
 
   this.confirmedAction = function (event, object) {
-    if (this.elements == null)
+    if (this.elements == null) {
       return;
+    }
 
     var e = new GlowEvent();
     e.event = event;
     e.object = object;
     this.action_type1 &= ~DynC.mActionType1_Confirm;
-    for (var i = 0; i < this.elements.length; i++)
+    for (var i = 0; i < this.elements.length; i++) {
       this.elements[i].action(object, e);
+    }
     this.action_type1 |= DynC.mActionType1_Confirm;
   };
 
@@ -1328,8 +1291,9 @@ function Dyn(graph) {
   };
 
   this.valueInputAction = function (object, str) {
-    if (this.elements === null)
+    if (this.elements === null) {
       return DynC.eValueInput_Error;
+    }
 
     var e = object;
 
@@ -1351,18 +1315,18 @@ function Dyn(graph) {
 	}
          minval = ret.value;
          **/
-      }
-      else
+      } else {
         minval = e.min_value;
-    }
-    else
+      }
+    } else {
       minval = e.min_value;
+    }
 
     if (e.maxvalue_attr !== null) {
       var pname = e.dyn.parseAttrName(e.maxvalue_attr);
-      if (pname === null || pname.name === "")
+      if (pname === null || pname.name === "") {
         maxval = e.max_value;
-      else {
+      } else {
         if (pname.type == Pwr.eType_Float32) {
           /** TODO
            CdhrFloat ret = e.dyn.graph.getGdh().getObjectInfoFloat( pname.name);
@@ -1373,48 +1337,55 @@ function Dyn(graph) {
 	  }
            maxval = ret.value;
            **/
-        }
-        else
+        } else {
           maxval = e.max_value;
+        }
       }
-    }
-    else
+    } else {
       maxval = e.max_value;
+    }
 
     switch (e.a_typeid) {
       case Pwr.eType_Float32: {
         var inputValue = parseFloat(str.trim());
         if (minval !== 0 && maxval !== 0 && inputValue < minval) {
-          if (ctx_popped)
+          if (ctx_popped) {
             e.dyn.graph.ctxPush();
+          }
           return DynC.eValueInput_MinValueExceeded;
         }
         if (minval !== 0 && maxval !== 0 && inputValue > maxval) {
-          if (ctx_popped)
+          if (ctx_popped) {
             e.dyn.graph.ctxPush();
+          }
           return DynC.eValueInput_MaxValueExceeded;
         }
 
         var pname = e.dyn.parseAttrName(e.value_element.attribute);
-        if (pname === null || pname.name === "")
+        if (pname === null || pname.name === "") {
           break;
+        }
 
         switch (pname.database) {
           case GraphIfc.eDatabase_Gdh:
-            sts = e.dyn.graph.getGdh().setObjectInfoFloat(pname.name, inputValue);
+            sts =
+              e.dyn.graph.getGdh().setObjectInfoFloat(pname.name, inputValue);
             break;
           case GraphIfc.eDatabase_Local:
-            sts = e.dyn.graph.getLdb().setObjectInfo(graph, pname.name, inputValue);
+            sts =
+              e.dyn.graph.getLdb().setObjectInfo(graph, pname.name, inputValue);
             break;
           default:
-            if (ctx_popped)
+            if (ctx_popped) {
               e.dyn.graph.ctxPush();
+            }
             return DynC.eValueInput_Error;
         }
         if (sts.evenSts()) {
           console.log("setObjectInfoError " + sts);
-          if (ctx_popped)
+          if (ctx_popped) {
             e.dyn.graph.ctxPush();
+          }
           return DynC.eValueInput_Error;
         }
         break;
@@ -1427,36 +1398,42 @@ function Dyn(graph) {
       case Pwr.eType_UInt8: {
         var inputValue = parseInt(str.trim(), 10);
         if (minval !== 0 && maxval !== 0 && inputValue < minval) {
-          if (ctx_popped)
+          if (ctx_popped) {
             e.dyn.graph.ctxPush();
+          }
           return DynC.eValueInput_MinValueExceeded;
         }
         if (minval !== 0 && maxval !== 0 && inputValue > maxval) {
-          if (ctx_popped)
+          if (ctx_popped) {
             e.dyn.graph.ctxPush();
+          }
           return DynC.eValueInput_MaxValueExceeded;
         }
 
         var pname = e.dyn.parseAttrName(e.value_element.attribute);
-        if (pname === null || pname.name === "")
+        if (pname === null || pname.name === "") {
           break;
+        }
 
         switch (pname.database) {
           case GraphIfc.eDatabase_Gdh:
             sts = e.dyn.graph.getGdh().setObjectInfoInt(pname.name, inputValue);
             break;
           case GraphIfc.eDatabase_Local:
-            sts = e.dyn.graph.getLdb().setObjectInfo(graph, pname.name, inputValue);
+            sts =
+              e.dyn.graph.getLdb().setObjectInfo(graph, pname.name, inputValue);
             break;
           default:
-            if (ctx_popped)
+            if (ctx_popped) {
               e.dyn.graph.ctxPush();
+            }
             return DynC.eValueInput_Error;
         }
         if (sts.evenSts()) {
           console.log("setObjectInfoError " + sts);
-          if (ctx_popped)
+          if (ctx_popped) {
             e.dyn.graph.ctxPush();
+          }
           return DynC.eValueInput_Error;
         }
         break;
@@ -1464,33 +1441,38 @@ function Dyn(graph) {
       case Pwr.eType_Boolean: {
         var inputValueInt = parseInt(str.trim(), 10);
         var inputValue;
-        if (inputValueInt === 0)
+        if (inputValueInt === 0) {
           inputValue = false;
-        else if (inputValueInt == 1)
+        } else if (inputValueInt == 1) {
           inputValue = true;
-        else
+        } else {
           break;
+        }
 
         // valueElement.oldValueB = inputValue;
 
         var pname = e.dyn.parseAttrName(e.value_element.attribute);
-        if (pname === null || pname.name === "")
+        if (pname === null || pname.name === "") {
           break;
+        }
 
         switch (pname.database) {
           case GraphIfc.eDatabase_Gdh:
-            sts = e.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, inputValue);
+            sts =
+              e.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, inputValue);
             break;
           case GraphIfc.eDatabase_Local:
-            sts = e.dyn.graph.getLdb().setObjectInfo(graph, pname.name, inputValue);
+            sts =
+              e.dyn.graph.getLdb().setObjectInfo(graph, pname.name, inputValue);
             break;
           default:
             return DynC.eValueInput_Error;
         }
         if (sts.evenSts()) {
           console.log("setObjectInfoError " + sts);
-          if (ctx_popped)
+          if (ctx_popped) {
             e.dyn.graph.ctxPush();
+          }
           return DynC.eValueInput_Error;
         }
         break;
@@ -1499,8 +1481,9 @@ function Dyn(graph) {
         // valueElement.oldValueS = str;
 
         var pname = e.dyn.parseAttrName(e.value_element.attribute);
-        if (pname === null || pname.name === "")
+        if (pname === null || pname.name === "") {
           break;
+        }
 
         switch (pname.database) {
           case GraphIfc.eDatabase_Gdh:
@@ -1510,30 +1493,33 @@ function Dyn(graph) {
             sts = e.dyn.graph.getLdb().setObjectInfo(graph, pname.name, str);
             break;
           default:
-            if (ctx_popped)
+            if (ctx_popped) {
               e.dyn.graph.ctxPush();
+            }
             return DynC.eValueInput_Error;
         }
         if (sts.evenSts()) {
           console.log("setObjectInfoError " + sts);
-          if (ctx_popped)
+          if (ctx_popped) {
             e.dyn.graph.ctxPush();
+          }
           return DynC.eValueInput_Error;
         }
         break;
       }
     }
-    if (ctx_popped)
+    if (ctx_popped) {
       e.dyn.graph.ctxPush();
+    }
 
     return DynC.eValueInput_Success;
   };
 
   this.value_to_msg = function (value) {
     var str;
-    if (value === 0)
+    if (value === 0) {
       str = "";
-    else {
+    } else {
       switch (value & 7) {
         case 3:
         case 1:
@@ -1592,13 +1578,15 @@ function DynReference(dyn, attribute) {
   this.sts = false;
 
   this.connect = function (dyn) {
-    if (!this.sts)
+    if (!this.sts) {
       return;
+    }
     this.sts = false;
     switch (this.pname.database) {
       case GraphIfc.eDatabase_Gdh:
-        this.p = dyn.graph.getGdh().refObjectInfo(this.pname.tname, this.pname.type,
-          this.pname.elements);
+        this.p = dyn.graph.getGdh()
+          .refObjectInfo(this.pname.tname, this.pname.type,
+            this.pname.elements);
         break;
       case GraphIfc.eDatabase_Local:
         this.p = dyn.graph.getLdb().refObjectInfo(dyn.graph, this.pname.name);
@@ -1608,8 +1596,9 @@ function DynReference(dyn, attribute) {
         break;
     }
 
-    if (this.p === 0)
+    if (this.p === 0) {
       return;
+    }
 
     this.inverted = this.pname.inverted;
     this.typeid = this.pname.type;
@@ -1642,8 +1631,9 @@ function DynReference(dyn, attribute) {
   };
 
   this.pname = dyn.parseAttrName(this.name);
-  if (this.pname === null || this.pname.name === "")
+  if (this.pname === null || this.pname.name === "") {
     return;
+  }
   this.sts = true;
 }
 
@@ -1665,8 +1655,9 @@ function DynDigLowColor(dyn) {
   this.connect = function (o) {
     var object = o;
     this.color = this.dyn.getColor1(object, this.color);
-    if (this.color < 0 || this.color >= Glow.eDrawType__)
+    if (this.color < 0 || this.color >= Glow.eDrawType__) {
       return 0;
+    }
 
     this.a = new DynReference(this.dyn, this.attribute);
     this.a.connect(this.dyn);
@@ -1679,46 +1670,52 @@ function DynDigLowColor(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.a !== null)
+    if (this.a !== null) {
       this.a.disconnect(this.dyn);
+    }
   };
 
 
   this.scan = function (o) {
     var object = o;
-    if (this.a === null || !this.a.sts || this.dyn.ignoreColor)
+    if (this.a === null || !this.a.sts || this.dyn.ignoreColor) {
       return;
-    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    }
+    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
+      this.a.database);
 
-    if (this.a.inverted)
+    if (this.a.inverted) {
       value = !value;
+    }
 
     if (!this.firstScan) {
-      if (this.a.oldValue == value && !this.dyn.resetColor)
+      if (this.a.oldValue == value && !this.dyn.resetColor) {
         return;
-    }
-    else
+      }
+    } else {
       this.firstScan = false;
+    }
 
     if ((this.dyn.total_dyn_type1 & DynC.mDynType1_Tone) !== 0) {
       if (!value) {
-        if (this.color >= Glow.eDrawTone__)
+        if (this.color >= Glow.eDrawTone__) {
           object.setFillColor(this.color);
-        else
+        } else {
           object.setColorTone(this.color);
-      }
-      else {
-        if (this.color >= Glow.eDrawTone__)
+        }
+      } else {
+        if (this.color >= Glow.eDrawTone__) {
           object.resetFillColor();
+        }
         object.resetColorTone();
       }
       this.dyn.repaintNow = true;
-    }
-    else {
-      if (!value)
+    } else {
+      if (!value) {
         object.setFillColor(this.color);
-      else
+      } else {
         object.resetFillColor();
+      }
       this.dyn.repaintNow = true;
     }
     this.a.oldValue = value;
@@ -1733,7 +1730,9 @@ function DynDigLowColor(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynDigLowColor : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynDigLowColor : " + lines[i]);
+      }
 
       elem = null;
 
@@ -1741,8 +1740,9 @@ function DynDigLowColor(dyn) {
         case DynC.eSave_DigLowColor:
           break;
         case DynC.eSave_DigLowColor_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_DigLowColor_color:
           this.color = parseInt(tokens[1], 10);
@@ -1755,8 +1755,9 @@ function DynDigLowColor(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -1784,8 +1785,9 @@ function DynDigColor(dyn) {
 
   this.connect = function (object) {
     this.color = this.dyn.getColor2(object, this.color);
-    if (this.color < 0 || this.color >= Glow.eDrawType__)
+    if (this.color < 0 || this.color >= Glow.eDrawType__) {
       return 0;
+    }
 
     this.a = new DynReference(this.dyn, this.attribute);
     this.a.connect(this.dyn);
@@ -1797,55 +1799,59 @@ function DynDigColor(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.a !== null)
+    if (this.a !== null) {
       this.a.disconnect(this.dyn);
+    }
   };
 
 
   this.scan = function (object) {
-    if (this.a === null || !this.a.sts || this.dyn.ignoreColor)
+    if (this.a === null || !this.a.sts || this.dyn.ignoreColor) {
       return;
-    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    }
+    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
+      this.a.database);
 
-    if (this.a.inverted)
+    if (this.a.inverted) {
       value = !value;
+    }
 
     if (!this.firstScan) {
       if (this.a.oldValue == value && !this.dyn.resetColor) {
         // No change since last time
-        if (value)
+        if (value) {
           this.dyn.ignoreColor = true;
+        }
         return;
       }
-    }
-    else
+    } else {
       this.firstScan = false;
+    }
 
     if ((this.dyn.total_dyn_type1 & DynC.mDynType1_Tone) !== 0) {
       if (value) {
         if (this.color >= Glow.eDrawTone__) {
-          if (this.dyn.resetColor)
+          if (this.dyn.resetColor) {
             object.resetFillColor();
+          }
           object.setFillColor(this.color);
-        }
-        else
+        } else {
           object.setColorTone(this.color);
+        }
         this.dyn.ignoreColor = true;
-      }
-      else {
-        if (this.color >= Glow.eDrawTone__)
+      } else {
+        if (this.color >= Glow.eDrawTone__) {
           object.resetFillColor();
+        }
         object.resetColorTone();
         this.dyn.resetColor = true;
       }
       this.dyn.repaintNow = true;
-    }
-    else {
+    } else {
       if (value) {
         object.setFillColor(this.color);
         this.dyn.ignoreColor = true;
-      }
-      else {
+      } else {
         object.resetFillColor();
         this.dyn.resetColor = true;
       }
@@ -1863,7 +1869,9 @@ function DynDigColor(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynDigColor : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynDigColor : " + lines[i]);
+      }
 
       elem = null;
 
@@ -1871,8 +1879,9 @@ function DynDigColor(dyn) {
         case DynC.eSave_DigColor:
           break;
         case DynC.eSave_DigColor_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_DigColor_color:
           this.color = parseInt(tokens[1], 10);
@@ -1891,8 +1900,9 @@ function DynDigColor(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -1934,42 +1944,45 @@ function DynDigWarning(dyn) {
 
 
   this.scan = function (object) {
-    if (!this.a.sts || this.dyn.ignoreColor)
+    if (!this.a.sts || this.dyn.ignoreColor) {
       return;
-    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    }
+    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
+      this.a.database);
 
-    if (this.a.inverted)
+    if (this.a.inverted) {
       value = !value;
+    }
 
     if (!this.firstScan) {
       if (this.a.oldValue == value && !this.dyn.resetColor) {
         // No change since last time
-        if (value)
+        if (value) {
           this.dyn.ignoreColor = true;
+        }
         return;
       }
-    }
-    else
+    } else {
       this.firstScan = false;
+    }
 
     if ((this.dyn.total_dyn_type1 & DynC.mDynType1_Tone) !== 0) {
       if (value) {
         object.setColorTone(Glow.eDrawTone_Yellow);
         this.dyn.ignoreColor = true;
-      }
-      else {
+      } else {
         object.resetFillColor();
         object.resetColorTone();
         this.dyn.resetColor = true;
       }
       this.dyn.repaintNow = true;
-    }
-    else {
+    } else {
       if (value) {
-        object.setFillColor((this.use_colortheme !== 0) ? Glow.eDrawType_CustomColor41 : Glow.eDrawType_ColorYellow);
+        object.setFillColor(
+          (this.use_colortheme !== 0) ? Glow.eDrawType_CustomColor41 :
+            Glow.eDrawType_ColorYellow);
         this.dyn.ignoreColor = true;
-      }
-      else {
+      } else {
         object.resetFillColor();
         this.dyn.resetColor = true;
       }
@@ -1987,7 +2000,9 @@ function DynDigWarning(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynDigWarning : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynDigWarning : " + lines[i]);
+      }
 
       elem = null;
 
@@ -1995,8 +2010,9 @@ function DynDigWarning(dyn) {
         case DynC.eSave_DigWarning:
           break;
         case DynC.eSave_DigWarning_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_DigWarning_use_colortheme:
           this.use_colortheme = parseInt(tokens[1], 10);
@@ -2009,8 +2025,9 @@ function DynDigWarning(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -2051,42 +2068,45 @@ function DynDigError(dyn) {
 
 
   this.scan = function (object) {
-    if (!this.a.sts || this.dyn.ignoreColor)
+    if (!this.a.sts || this.dyn.ignoreColor) {
       return;
-    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    }
+    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
+      this.a.database);
 
-    if (this.a.inverted)
+    if (this.a.inverted) {
       value = !value;
+    }
 
     if (!this.firstScan) {
       if (this.a.oldValue == value && !this.dyn.resetColor) {
         // No change since last time
-        if (value)
+        if (value) {
           this.dyn.ignoreColor = true;
+        }
         return;
       }
-    }
-    else
+    } else {
       this.firstScan = false;
+    }
 
     if ((this.dyn.total_dyn_type1 & DynC.mDynType1_Tone) !== 0) {
       if (value) {
         object.setColorTone(Glow.eDrawTone_Red);
         this.dyn.ignoreColor = true;
-      }
-      else {
+      } else {
         object.resetFillColor();
         object.resetColorTone();
         this.dyn.resetColor = true;
       }
       this.dyn.repaintNow = true;
-    }
-    else {
+    } else {
       if (value) {
-        object.setFillColor((this.use_colortheme !== 0) ? Glow.eDrawType_CustomColor11 : Glow.eDrawType_ColorRed);
+        object.setFillColor(
+          (this.use_colortheme !== 0) ? Glow.eDrawType_CustomColor11 :
+            Glow.eDrawType_ColorRed);
         this.dyn.ignoreColor = true;
-      }
-      else {
+      } else {
         object.resetFillColor();
         this.dyn.resetColor = true;
       }
@@ -2104,7 +2124,9 @@ function DynDigError(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynDigError : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynDigError : " + lines[i]);
+      }
 
       elem = null;
 
@@ -2112,8 +2134,9 @@ function DynDigError(dyn) {
         case DynC.eSave_DigError:
           break;
         case DynC.eSave_DigError_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_DigError_use_colortheme:
           this.use_colortheme = parseInt(tokens[1], 10);
@@ -2126,8 +2149,9 @@ function DynDigError(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -2170,65 +2194,64 @@ function DynDigFlash(dyn) {
 
 
   this.scan = function (object) {
-    if (!this.a.sts || this.dyn.ignoreColor)
+    if (!this.a.sts || this.dyn.ignoreColor) {
       return;
-    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    }
+    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
+      this.a.database);
 
-    if (this.a.inverted)
+    if (this.a.inverted) {
       value = !value;
+    }
 
     if (!this.firstScan) {
       if (this.a.oldValue == value && !this.dyn.resetColor) {
         // No change since last time
-        if (!value)
+        if (!value) {
           return;
+        }
       }
-    }
-    else
+    } else {
       this.firstScan = false;
+    }
 
     if ((this.dyn.total_dyn_type1 & DynC.mDynType1_Tone) !== 0) {
       if (value) {
         if (this.on) {
-          if (this.color >= Glow.eDrawTone__)
+          if (this.color >= Glow.eDrawTone__) {
             object.setColorTone(this.color);
-          else
+          } else {
             object.setFillColor(this.color);
+          }
           this.dyn.ignoreColor = true;
-        }
-        else {
+        } else {
           object.resetFillColor();
           object.resetColorTone();
           this.dyn.resetColor = true;
         }
         this.on = !this.on;
-      }
-      else {
+      } else {
         object.resetFillColor();
         object.resetColorTone();
         this.dyn.resetColor = true;
       }
       this.dyn.repaintNow = true;
-    }
-    else {
+    } else {
       if (value) {
         if (this.on) {
           object.setFillColor(this.color);
           this.dyn.ignoreColor = true;
-        }
-        else {
+        } else {
           if (this.color2 == Glow.eDrawType_Inherit) {
             object.resetFillColor();
             this.dyn.resetColor = true;
-          }
-          else {
+          } else {
             object.setFillColor(this.color2);
             this.dyn.ignoreColor = true;
           }
         }
         this.on = !this.on;
-      }
-      else {
+      } else {
         object.resetFillColor();
         this.dyn.resetColor = true;
       }
@@ -2246,7 +2269,9 @@ function DynDigFlash(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynDigError : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynDigError : " + lines[i]);
+      }
 
       elem = null;
 
@@ -2254,8 +2279,9 @@ function DynDigFlash(dyn) {
         case DynC.eSave_DigFlash:
           break;
         case DynC.eSave_DigFlash_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_DigFlash_color:
           this.color = parseInt(tokens[1], 10);
@@ -2271,8 +2297,9 @@ function DynDigFlash(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -2301,16 +2328,17 @@ function DynInvisible(dyn) {
 
   this.connect = function (object) {
 
-    if (this.attribute !== null && this.attribute.toLowerCase().substring(0, 5) == "$cmd(") {
+    if (this.attribute !== null &&
+      this.attribute.toLowerCase().substring(0, 5) == "$cmd(") {
       this.cmd = true;
       var idx = this.attribute.lastIndexOf(')');
-      if (idx != -1 && idx > 5)
+      if (idx != -1 && idx > 5) {
         this.command = this.attribute.substring(5, idx);
-      else
+      } else {
         this.command = this.attribute.substring(5);
+      }
       this.command = this.dyn.graph.getCommand(command);
-    }
-    else {
+    } else {
       this.a = new DynReference(this.dyn, this.attribute);
       this.a.connect(this.dyn);
       if (!this.a.sts) {
@@ -2332,44 +2360,50 @@ function DynInvisible(dyn) {
         var sts = this.dyn.graph.command(this.command);
         console.log("DynInvisible: " + this.command + ", value: " + sts);
         if (sts === 0) {
-          if (this.dimmed === 0)
+          if (this.dimmed === 0) {
             o.setVisibility(Glow.eVis_Invisible);
-          else
+          } else {
             o.setVisibility(Glow.eVis_Dimmed);
+          }
         }
         this.firstScan = false;
       }
       return;
     }
 
-    if (!this.a.sts || this.dyn.ignoreColor)
+    if (!this.a.sts || this.dyn.ignoreColor) {
       return;
-    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    }
+    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
+      this.a.database);
 
 
-    if (this.a.typeid == Pwr.eType_String)
+    if (this.a.typeid == Pwr.eType_String) {
       value = !value;
+    }
 
-    if (this.a.inverted)
+    if (this.a.inverted) {
       value = !value;
+    }
 
     if (!this.firstScan) {
       if (this.a.oldValue == value && !this.dyn.resetColor) {
         // No change since last time
-        if (!value)
+        if (!value) {
           return;
+        }
       }
-    }
-    else
+    } else {
       this.firstScan = false;
+    }
 
     if (value) {
-      if (this.dimmed === 0)
+      if (this.dimmed === 0) {
         o.setVisibility(Glow.eVis_Invisible);
-      else
+      } else {
         o.setVisibility(Glow.eVis_Dimmed);
-    }
-    else {
+      }
+    } else {
       o.setVisibility(Glow.eVis_Visible);
     }
     this.dyn.repaintNow = true;
@@ -2385,7 +2419,9 @@ function DynInvisible(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynInvisible : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynInvisible : " + lines[i]);
+      }
 
       elem = null;
 
@@ -2393,8 +2429,9 @@ function DynInvisible(dyn) {
         case DynC.eSave_Invisible:
           break;
         case DynC.eSave_Invisible_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = lines[i].substring(4);
+          }
           break;
         case DynC.eSave_Invisible_dimmed:
           this.dimmed = parseInt(tokens[1], 10);
@@ -2413,8 +2450,9 @@ function DynInvisible(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -2442,8 +2480,9 @@ function DynDigTextColor(dyn) {
 
   this.connect = function (object) {
     this.color = this.dyn.getColor1(object, this.color);
-    if (this.color < 0 || this.color >= Glow.eDrawType__)
+    if (this.color < 0 || this.color >= Glow.eDrawType__) {
       return 0;
+    }
 
     this.a = new DynReference(this.dyn, this.attribute);
     this.a.connect(this.dyn);
@@ -2455,30 +2494,36 @@ function DynDigTextColor(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.a !== null)
+    if (this.a !== null) {
       this.a.disconnect(this.dyn);
+    }
   };
 
 
   this.scan = function (object) {
-    if (this.a === null || !this.a.sts || this.dyn.ignoreColor)
+    if (this.a === null || !this.a.sts || this.dyn.ignoreColor) {
       return;
-    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    }
+    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
+      this.a.database);
 
-    if (this.a.inverted)
+    if (this.a.inverted) {
       value = !value;
+    }
 
     if (!this.firstScan) {
-      if (this.a.oldValue == value && !this.dyn.resetColor)
+      if (this.a.oldValue == value && !this.dyn.resetColor) {
         return;
-    }
-    else
+      }
+    } else {
       this.firstScan = false;
+    }
 
-    if (value)
+    if (value) {
       object.setTextColor(this.color);
-    else
+    } else {
       object.resetTextColor();
+    }
     this.dyn.repaintNow = true;
 
     this.a.oldValue = value;
@@ -2493,7 +2538,9 @@ function DynDigTextColor(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DigTextColor : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DigTextColor : " + lines[i]);
+      }
 
       elem = null;
 
@@ -2501,8 +2548,9 @@ function DynDigTextColor(dyn) {
         case DynC.eSave_DigTextColor:
           break;
         case DynC.eSave_DigTextColor_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_DigTextColor_color:
           this.color = parseInt(tokens[1], 10);
@@ -2515,8 +2563,9 @@ function DynDigTextColor(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -2545,8 +2594,9 @@ function DynDigText(dyn) {
 
   this.connect = function (object) {
 
-    if (this.low_text === null)
+    if (this.low_text === null) {
       return 1;
+    }
 
     this.a = new DynReference(this.dyn, this.attribute);
     this.a.connect(this.dyn);
@@ -2555,8 +2605,9 @@ function DynDigText(dyn) {
       return 1;
     }
     this.high_text = object.getAnnotation(1);
-    if (this.high_text === null)
+    if (this.high_text === null) {
       this.high_text = "";
+    }
     return 1;
   };
 
@@ -2565,24 +2616,29 @@ function DynDigText(dyn) {
   };
 
   this.scan = function (object) {
-    if (!this.a.sts)
+    if (!this.a.sts) {
       return;
-    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    }
+    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
+      this.a.database);
 
-    if (this.a.inverted)
+    if (this.a.inverted) {
       value = !value;
+    }
 
     if (!this.firstScan) {
-      if (this.a.oldValue == value)
+      if (this.a.oldValue == value) {
         return;
-    }
-    else
+      }
+    } else {
       this.firstScan = false;
+    }
 
-    if (value)
+    if (value) {
       object.setAnnotation(1, this.high_text);
-    else
+    } else {
       object.setAnnotation(1, this.low_text);
+    }
     this.dyn.repaintNow = true;
     this.a.oldValue = value;
   };
@@ -2596,7 +2652,9 @@ function DynDigText(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DigText : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DigText : " + lines[i]);
+      }
 
       elem = null;
 
@@ -2604,12 +2662,14 @@ function DynDigText(dyn) {
         case DynC.eSave_DigText:
           break;
         case DynC.eSave_DigText_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_DigText_low_text:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.low_text = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_DigText_instance:
           this.instance = parseInt(tokens[1], 10);
@@ -2625,8 +2685,9 @@ function DynDigText(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -2667,26 +2728,28 @@ function DynDigBorder(dyn) {
 
 
   this.scan = function (object) {
-    if (!this.a.sts)
+    if (!this.a.sts) {
       return;
-    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    }
+    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
+      this.a.database);
 
-    if (this.a.inverted)
+    if (this.a.inverted) {
       value = !value;
+    }
 
     if (!this.firstScan) {
       if (this.a.oldValue == value) {
         // No change since last time
         return;
       }
-    }
-    else
+    } else {
       this.firstScan = false;
+    }
 
     if (value) {
       object.setBorderColor(this.color);
-    }
-    else {
+    } else {
       object.resetBorderColor();
     }
     this.dyn.repaintNow = true;
@@ -2702,7 +2765,9 @@ function DynDigBorder(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynBorder : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynBorder : " + lines[i]);
+      }
 
       elem = null;
 
@@ -2710,8 +2775,9 @@ function DynDigBorder(dyn) {
         case DynC.eSave_DigBorder:
           break;
         case DynC.eSave_DigBorder_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_DigBorder_color:
           this.color = parseInt(tokens[1], 10);
@@ -2724,8 +2790,9 @@ function DynDigBorder(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -2762,8 +2829,9 @@ function DynValue(dyn) {
     var decimals;
 
     var pname = dyn.parseAttrName(attr);
-    if (pname === null || pname.name === "")
+    if (pname === null || pname.name === "") {
       return format;
+    }
 
     switch (pname.type) {
       case Pwr.eType_Int32:
@@ -2778,39 +2846,50 @@ function DynValue(dyn) {
     // TODO
     return format; // TODO
     var ret = this.dyn.graph.getGdh().getObjectInfoInt(pname.name);
-    if (ret.evenSts()) return format;
+    if (ret.evenSts()) {
+      return format;
+    }
 
     decimals = ret.value - decr;
-    if (decimals < 0)
+    if (decimals < 0) {
       decimals = 0;
-    if (decimals >= 10)
+    }
+    if (decimals >= 10) {
       return format;
+    }
 
-    if (format === null)
+    if (format === null) {
       return "%." + decimals + "f";
+    }
 
     // Print format, of replace digit between . and f
     var s = format.indexOf('f');
-    if (s == -1)
+    if (s == -1) {
       return "%." + decimals + "f";
-    else {
-      if (s < 2 || format.charAt(s - 2) != '.')
+    } else {
+      if (s < 2 || format.charAt(s - 2) != '.') {
         return "%." + decimals + "f";
-      else
+      } else {
         return format.substring(0, s - 1) + decimals + format.substring(s);
+      }
     }
   };
 
   this.connect = function (object) {
-    if (this.format === null && this.decimals_attr === null)
+    if (this.format === null && this.decimals_attr === null) {
       return 1;
+    }
 
-    if (typeof this.decimals_attr != 'undefined' && this.decimals_attr !== null && !(this.decimals_attr === "")) {
-      this.format = this.read_decimals(this.dyn, this.decimals_attr, this.decimals_decr, this.format);
+    if (typeof this.decimals_attr != 'undefined' &&
+      this.decimals_attr !== null && !(this.decimals_attr === "")) {
+      this.format =
+        this.read_decimals(this.dyn, this.decimals_attr, this.decimals_decr,
+          this.format);
       console.log("read_decimals " + this.format);
     }
-    if (this.format === null)
+    if (this.format === null) {
       return 1;
+    }
     this.cFormat = new GlowCFormat(this.format);
 
     this.a = new DynReference(this.dyn, this.attribute);
@@ -2827,16 +2906,18 @@ function DynValue(dyn) {
   };
 
   this.scan = function (object) {
-    if (!this.a.sts)
+    if (!this.a.sts) {
       return;
+    }
 
     var annot_num = this.dyn.instance_to_number(this.instance);
 
     switch (this.a.typeid) {
       case Pwr.eType_Float32: {
         var value0 = this.a.get_ref_value(this.dyn);
-        if (typeof value0 == 'undefined')
+        if (typeof value0 == 'undefined') {
           return;
+        }
 
         if (value0 != this.oldValueF || this.firstScan) {
           if (this.cFormat !== null) {
@@ -2855,8 +2936,9 @@ function DynValue(dyn) {
       case Pwr.eType_Int8:
       case Pwr.eType_UInt8: {
         var value0 = this.a.get_ref_value(this.dyn);
-        if (typeof value0 == 'undefined')
+        if (typeof value0 == 'undefined') {
           return;
+        }
 
         if (value0 != this.oldValueI || this.firstScan) {
           if (this.cFormat !== null) {
@@ -2870,8 +2952,9 @@ function DynValue(dyn) {
       }
       case Pwr.eType_Boolean: {
         var value0 = this.a.get_ref_value(this.dyn);
-        if (typeof value0 == 'undefined')
+        if (typeof value0 == 'undefined') {
           return;
+        }
 
         if (value0 != this.oldValueB || this.firstScan) {
           if (this.cFormat !== null) {
@@ -2888,18 +2971,20 @@ function DynValue(dyn) {
       case Pwr.eType_Time:
       case Pwr.eType_DeltaTime: {
         var value0 = this.a.get_ref_value(this.dyn);
-        if (typeof value0 == 'undefined')
+        if (typeof value0 == 'undefined') {
           return;
+        }
 
         if (this.firstScan || !(value0 == this.oldValueS)) {
           if (this.cFormat !== null) {
             if (this.a_typeid == Pwr.eType_String) {
               var sb = this.cFormat.format(value0);
               object.setAnnotation(annot_num, sb);
-            }
-            else
+            } else
             // TODO time format
+            {
               object.setAnnotation(annot_num, value0);
+            }
           }
           this.dyn.repaintNow = true;
           this.oldValueS = value0;
@@ -2909,15 +2994,15 @@ function DynValue(dyn) {
       case Pwr.eType_Status:
       case Pwr.eType_NetStatus: {
         var value0 = this.a.get_ref_value(this.dyn);
-        if (typeof value0 == 'undefined')
+        if (typeof value0 == 'undefined') {
           return;
+        }
 
         if (value0 != this.oldValueI || this.firstScan) {
           if (value0 === 0) {
             object.setAnnotation(annot_num, "");
             this.dyn.repaintNow = true;
-          }
-          else {
+          } else {
             if (this.a.database == GraphIfc.eDatabase_Gdh) {
               var data = new Array(2);
               data[0] = this;
@@ -2946,8 +3031,9 @@ function DynValue(dyn) {
         break;
       }
     }
-    if (this.firstScan)
+    if (this.firstScan) {
       this.firstScan = false;
+    }
   };
 
   this.scan2 = function (id, data, sts, value) {
@@ -2958,8 +3044,7 @@ function DynValue(dyn) {
 
       object.setAnnotation(annot_num, value);
       self.dyn.repaintNow = true;
-    }
-    else {
+    } else {
       object.setAnnotation(annot_num, "Unknown message");
       this.dyn.repaintNow = true;
     }
@@ -2974,7 +3059,9 @@ function DynValue(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynBorder : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynBorder : " + lines[i]);
+      }
 
       elem = null;
 
@@ -2982,12 +3069,14 @@ function DynValue(dyn) {
         case DynC.eSave_Value:
           break;
         case DynC.eSave_Value_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_Value_format:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.format = tokens[1];
+          }
           break;
         case DynC.eSave_Value_instance:
           this.instance = parseInt(tokens[1], 10);
@@ -2999,8 +3088,9 @@ function DynValue(dyn) {
           this.zero_blank = parseInt(tokens[1], 10);
           break;
         case DynC.eSave_Value_decimals_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.decimals_attr = tokens[1];
+          }
           break;
         case DynC.eSave_Value_decimals_decr:
           this.decimals_decr = parseInt(tokens[1], 10);
@@ -3013,12 +3103,14 @@ function DynValue(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
-    if (this.format !== null)
+    if (this.format !== null) {
       this.cFormat = new GlowCFormat(this.format);
+    }
 
     return i;
   };
@@ -3070,8 +3162,9 @@ function DynValueInput(dyn) {
   };
 
   this.action = function (object, e) {
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Click:
@@ -3091,7 +3184,9 @@ function DynValueInput(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynValueInput : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynValueInput : " + lines[i]);
+      }
 
       elem = null;
 
@@ -3099,8 +3194,9 @@ function DynValueInput(dyn) {
         case DynC.eSave_ValueInput:
           break;
         case DynC.eSave_ValueInput_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_ValueInput_format:
           break;
@@ -3120,12 +3216,14 @@ function DynValueInput(dyn) {
           this.popup = parseInt(tokens[1], 10);
           break;
         case DynC.eSave_ValueInput_minvalue_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.minvalue_attr = tokens[1];
+          }
           break;
         case DynC.eSave_ValueInput_maxvalue_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.maxvalue_attr = tokens[1];
+          }
           break;
         case DynC.eSave_ValueInput_escape_store:
           this.escape_store = parseInt(tokens[1], 10);
@@ -3144,8 +3242,9 @@ function DynValueInput(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -3192,8 +3291,9 @@ function DynAnalogColor(dyn) {
       if (mainInstance.a == null || !mainInstance.a.attrFound) {
         mainInstance.a = new DynReference(this.dyn, mainInstance.attribute);
         mainInstance.a.connect(this.dyn);
-        if (!mainInstance.a.sts)
+        if (!mainInstance.a.sts) {
           return 1;
+        }
         mainInstance.isMainInstance = true;
       }
       if (!this.isMainInstance) {
@@ -3210,13 +3310,15 @@ function DynAnalogColor(dyn) {
 
 
   this.disconnect = function () {
-    if (this.isMainInstance)
+    if (this.isMainInstance) {
       this.a.disconnect(this.dyn);
+    }
   };
 
   this.scan = function (object) {
-    if (!this.a.sts || this.dyn.ignoreColor)
+    if (!this.a.sts || this.dyn.ignoreColor) {
       return;
+    }
 
     var state = false;
     var set_color = false;
@@ -3228,13 +3330,14 @@ function DynAnalogColor(dyn) {
 
       if (!this.firstScan) {
         if (!this.dyn.resetColor && value == this.oldValueF) {
-          if (this.oldState)
+          if (this.oldState) {
             this.dyn.ignoreColor = true;
+          }
           return;
         }
-      }
-      else
+      } else {
         this.firstScan = false;
+      }
 
       switch (this.limit_type) {
         case DynC.eLimitType_Gt:
@@ -3254,19 +3357,20 @@ function DynAnalogColor(dyn) {
           break;
       }
       this.oldValueF = value;
-    }
-    else if (this.a.typeid == Pwr.eType_Int32 || this.a.typeid == Pwr.eType_UInt32) {
+    } else if (this.a.typeid == Pwr.eType_Int32 ||
+      this.a.typeid == Pwr.eType_UInt32) {
       var value = this.dyn.graph.getGdh().getObjectRefInfo(this.a.p);
       var i;
       if (!this.firstScan) {
         if (!this.dyn.resetColor && value == this.oldValueI) {
-          if (this.oldState)
+          if (this.oldState) {
             this.dyn.ignoreColor = true;
+          }
           return;
         }
-      }
-      else
+      } else {
         this.firstScan = false;
+      }
 
       switch (this.limit_type) {
         case DynC.eLimitType_Gt:
@@ -3292,57 +3396,58 @@ function DynAnalogColor(dyn) {
       if (state) {
         set_color = true;
         this.dyn.ignoreColor = true;
-      }
-      else {
+      } else {
         reset_color = true;
         this.dyn.resetColor = true;
       }
       this.oldState = state;
-    }
-    else if (state)
+    } else if (state) {
       this.dyn.ignoreColor = true;
+    }
 
 
-    if (!set_color && !reset_color)
+    if (!set_color && !reset_color) {
       return;
+    }
 
     if ((this.dyn.total_dyn_type1 & DynC.mDynType1_Tone) !== 0) {
       if (set_color) {
         if (color >= Glow.eDrawTone__) {
-          if (this.border === 0)
+          if (this.border === 0) {
             object.setFillColor(this.color);
-          else
+          } else {
             object.setBorderColor(this.color);
-        }
-        else
+          }
+        } else {
           object.setColorTone(this.color);
+        }
         this.dyn.ignoreColor = true;
-      }
-      else {
+      } else {
         if (this.color >= Glow.eDrawTone__) {
-          if (this.border === 0)
+          if (this.border === 0) {
             object.resetFillColor();
-          else
+          } else {
             object.resetBorderColor();
+          }
         }
         object.resetColorTone();
         this.dyn.resetColor = true;
       }
       this.dyn.repaintNow = true;
-    }
-    else {
+    } else {
       if (set_color) {
-        if (this.border === 0)
+        if (this.border === 0) {
           object.setFillColor(this.color);
-        else
+        } else {
           object.setBorderColor(this.color);
+        }
         this.dyn.ignoreColor = true;
-      }
-      else {
-        if (this.border === 0)
+      } else {
+        if (this.border === 0) {
           object.resetFillColor();
-        else
+        } else {
           object.resetBorderColor();
+        }
         this.dyn.resetColor = true;
       }
       this.dyn.repaintNow = true;
@@ -3358,7 +3463,9 @@ function DynAnalogColor(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynAnalogColor : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynAnalogColor : " + lines[i]);
+      }
 
       elem = null;
 
@@ -3366,8 +3473,9 @@ function DynAnalogColor(dyn) {
         case DynC.eSave_AnalogColor:
           break;
         case DynC.eSave_AnalogColor_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_AnalogColor_limit:
           this.limit = parseFloat(tokens[1]);
@@ -3398,8 +3506,9 @@ function DynAnalogColor(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -3438,10 +3547,11 @@ function DynRotate(dyn) {
       return 1;
     }
 
-    if (this.x0 !== 0 || this.y0 !== 0)
+    if (this.x0 !== 0 || this.y0 !== 0) {
       this.rotation_point = Glow.eRotationPoint_FixPoint;
-    else
+    } else {
       this.rotation_point = Glow.eRotationPoint_Zero;
+    }
 
     object.storeTransform();
     return 1;
@@ -3452,17 +3562,20 @@ function DynRotate(dyn) {
   };
 
   this.scan = function (object) {
-    if (!this.a.sts)
+    if (!this.a.sts) {
       return;
+    }
     var value0 = this.a.get_ref_value(this.dyn);
     if (value0 != this.a.oldValue || this.firstScan) {
-      object.setRotation(value0 * this.factor, this.x0, this.y0, this.rotation_point);
+      object.setRotation(value0 * this.factor, this.x0, this.y0,
+        this.rotation_point);
 
       this.dyn.repaintNow = true;
       this.a.oldValue = value0;
     }
-    if (this.firstScan)
+    if (this.firstScan) {
       this.firstScan = false;
+    }
   };
 
   this.open = function (lines, row) {
@@ -3474,7 +3587,9 @@ function DynRotate(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynRotate : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynRotate : " + lines[i]);
+      }
 
       elem = null;
 
@@ -3482,8 +3597,9 @@ function DynRotate(dyn) {
         case DynC.eSave_Rotate:
           break;
         case DynC.eSave_Rotate_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_Rotate_x0:
           this.x0 = parseFloat(tokens[1]);
@@ -3502,8 +3618,9 @@ function DynRotate(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -3656,39 +3773,48 @@ function DynMove(dyn) {
 
     update = false;
     if (!this.firstScan) {
-      if (this.move_x_a.sts && move_x_value != this.move_x_a.oldValue)
+      if (this.move_x_a.sts && move_x_value != this.move_x_a.oldValue) {
         update = true;
-      else if (this.move_y_a.sts && move_y_value != this.move_y_a.oldValue)
+      } else if (this.move_y_a.sts && move_y_value != this.move_y_a.oldValue) {
         update = true;
-      else if (this.scale_x_a.sts && scale_x_value != this.scale_x_a.oldValue)
+      } else if (this.scale_x_a.sts &&
+        scale_x_value != this.scale_x_a.oldValue) {
         update = true;
-      else if (this.scale_y_a.sts && scale_y_value != this.scale_y_a.oldValue)
+      } else if (this.scale_y_a.sts &&
+        scale_y_value != this.scale_y_a.oldValue) {
         update = true;
-      if (!update)
+      }
+      if (!update) {
         return;
+      }
 
-    }
-    else
+    } else {
       this.firstScan = false;
+    }
 
     var move_x = 0;
     var move_y = 0;
     var scale_x = 1;
     var scale_y = 1;
 
-    if (this.scale_x_a.sts)
+    if (this.scale_x_a.sts) {
       scale_x = scale_x_value * this.scale_x_factor;
+    }
 
-    if (this.scale_y_a.sts)
+    if (this.scale_y_a.sts) {
       scale_y = scale_y_value * this.scale_y_factor;
+    }
 
 
-    if (!(this.move_x_a.sts || this.move_y_a.sts))
+    if (!(this.move_x_a.sts || this.move_y_a.sts)) {
       object.set_scale(scale_x, scale_y, 0, 0, this.scale_type);
-    if (this.scale_x_a.sts)
+    }
+    if (this.scale_x_a.sts) {
       this.scale_x_a.oldValue = scale_x_value;
-    if (this.scale_y_a.sts)
+    }
+    if (this.scale_y_a.sts) {
       this.scale_y_a.oldValue = scale_y_value;
+    }
 
 
     if (this.move_x_a.sts || this.move_y_a.sts) {
@@ -3707,10 +3833,11 @@ function DynMove(dyn) {
             break;
         }
 
-        move_x = this.x_orig + scale_offs + (move_x_value - this.x_offset) * this.x_factor;
-      }
-      else
+        move_x = this.x_orig + scale_offs + (move_x_value - this.x_offset) *
+          this.x_factor;
+      } else {
         move_x = this.x_orig;
+      }
 
       if (this.move_y_a.sts) {
         var scale_offs = 0;
@@ -3727,42 +3854,48 @@ function DynMove(dyn) {
             break;
         }
 
-        move_y = this.y_orig + scale_offs + (move_y_value - this.y_offset) * this.y_factor;
-      }
-      else
+        move_y = this.y_orig + scale_offs + (move_y_value - this.y_offset) *
+          this.y_factor;
+      } else {
         move_y = this.y_orig;
+      }
 
-      if (Math.abs(scale_x) < Number.MIN_VALUE)
+      if (Math.abs(scale_x) < Number.MIN_VALUE) {
         scale_x = 10e-5;
-      if (Math.abs(scale_y) < Number.MIN_VALUE)
+      }
+      if (Math.abs(scale_y) < Number.MIN_VALUE) {
         scale_y = 10e-5;
+      }
 
-      object.set_scale_pos(move_x, move_y,
-        scale_x, scale_y, 0, 0,
+      object.set_scale_pos(move_x, move_y, scale_x, scale_y, 0, 0,
         this.scale_type);
-      if (this.move_x_a.sts)
+      if (this.move_x_a.sts) {
         this.move_x_a.oldValue = move_x_value;
-      if (this.move_y_a.sts)
+      }
+      if (this.move_y_a.sts) {
         this.move_y_a.oldValue = move_y_value;
-    }
-    else {
-      if (this.move_x_a.sts)
+      }
+    } else {
+      if (this.move_x_a.sts) {
         move_x = (move_x_value - x_offset) * this.x_factor;
-      else
+      } else {
         move_x = 0;
+      }
 
       if (this.move_y_a.sts) {
         move_y = (move_y_value - y_offset) * this.y_factor;
-      }
-      else
+      } else {
         move_y = 0;
+      }
 
       object.set_position(move_x, move_y);
 
-      if (this.move_x_a.sts)
+      if (this.move_x_a.sts) {
         this.move_x_a.oldValue = move_x_value;
-      if (this.move_y_a.sts)
+      }
+      if (this.move_y_a.sts) {
         this.move_y_a.oldValue = move_y_value;
+      }
     }
   };
 
@@ -3775,7 +3908,9 @@ function DynMove(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynMove : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynMove : " + lines[i]);
+      }
 
       elem = null;
 
@@ -3783,20 +3918,24 @@ function DynMove(dyn) {
         case DynC.eSave_Move:
           break;
         case DynC.eSave_Move_move_x_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.move_x_attribute = tokens[1];
+          }
           break;
         case DynC.eSave_Move_move_y_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.move_y_attribute = tokens[1];
+          }
           break;
         case DynC.eSave_Move_scale_x_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.scale_x_attribute = tokens[1];
+          }
           break;
         case DynC.eSave_Move_scale_y_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.scale_y_attribute = tokens[1];
+          }
           break;
         case DynC.eSave_Move_x_offset:
           this.x_offset = parseFloat(tokens[1]);
@@ -3827,8 +3966,9 @@ function DynMove(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -3872,8 +4012,9 @@ function DynAnalogShift(dyn) {
 
 
   this.scan = function (object) {
-    if (!this.a.sts)
+    if (!this.a.sts) {
       return;
+    }
 
     var index = 0;
 
@@ -3886,9 +4027,9 @@ function DynAnalogShift(dyn) {
           if (value == this.oldValueF) {
             return;
           }
-        }
-        else
+        } else {
           this.firstScan = false;
+        }
 
         index = Math.floor(value + 0.5);
         this.oldValueF = value;
@@ -3903,9 +4044,9 @@ function DynAnalogShift(dyn) {
           if (value == this.oldValueI) {
             return;
           }
-        }
-        else
+        } else {
           this.firstScan = false;
+        }
 
         index = value;
         this.oldValueI = value;
@@ -3925,7 +4066,9 @@ function DynAnalogShift(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynAnalogShift : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynAnalogShift : " + lines[i]);
+      }
 
       elem = null;
 
@@ -3933,8 +4076,9 @@ function DynAnalogShift(dyn) {
         case DynC.eSave_AnalogShift:
           break;
         case DynC.eSave_AnalogShift_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -3944,8 +4088,9 @@ function DynAnalogShift(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -3988,24 +4133,27 @@ function DynDigShift(dyn) {
 
 
   this.scan = function (object) {
-    if (!this.a.sts)
+    if (!this.a.sts) {
       return;
-    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    }
+    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
+      this.a.database);
 
-    if (this.a.inverted)
+    if (this.a.inverted) {
       value = !value;
+    }
 
     if (!this.firstScan) {
-      if (this.a.oldValue == value)
+      if (this.a.oldValue == value) {
         return;
-    }
-    else
+      }
+    } else {
       this.firstScan = false;
+    }
 
     if (value) {
       object.set_last_nodeclass();
-    }
-    else {
+    } else {
       object.set_root_nodeclass();
     }
     this.a.oldValue = value;
@@ -4020,7 +4168,9 @@ function DynDigShift(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynDigShift : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynDigShift : " + lines[i]);
+      }
 
       elem = null;
 
@@ -4028,8 +4178,9 @@ function DynDigShift(dyn) {
         case DynC.eSave_DigShift:
           break;
         case DynC.eSave_DigShift_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -4039,8 +4190,9 @@ function DynDigShift(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -4103,34 +4255,44 @@ function DynDigFourShift(dyn) {
 
 
   this.scan = function (object) {
-    if (!this.a1.attrFound || !this.a2.attrFound || !this.a3.attrFound)
+    if (!this.a1.attrFound || !this.a2.attrFound || !this.a3.attrFound) {
       return;
-    var value1 = this.dyn.getDig(this.a1.p, this.a1.typeid, this.a1.bitmask, this.a1.database);
-    var value2 = this.dyn.getDig(this.a2.p, this.a2.typeid, this.a2.bitmask, this.a2.database);
-    var value3 = this.dyn.getDig(this.a3.p, this.a3.typeid, this.a3.bitmask, this.a3.database);
+    }
+    var value1 = this.dyn.getDig(this.a1.p, this.a1.typeid, this.a1.bitmask,
+      this.a1.database);
+    var value2 = this.dyn.getDig(this.a2.p, this.a2.typeid, this.a2.bitmask,
+      this.a2.database);
+    var value3 = this.dyn.getDig(this.a3.p, this.a3.typeid, this.a3.bitmask,
+      this.a3.database);
 
-    if (this.a1.inverted)
+    if (this.a1.inverted) {
       value1 = !value1;
-    if (this.a2.inverted)
+    }
+    if (this.a2.inverted) {
       value2 = !value2;
-    if (this.a3.inverted)
+    }
+    if (this.a3.inverted) {
       value3 = !value3;
+    }
 
     if (!this.firstScan) {
-      if (this.a1.oldValue == value1 && this.a2.oldValue == value2 && this.a3.oldValue == value3)
+      if (this.a1.oldValue == value1 && this.a2.oldValue == value2 &&
+        this.a3.oldValue == value3) {
         return;
-    }
-    else
+      }
+    } else {
       this.firstScan = false;
+    }
 
-    if (value3)
+    if (value3) {
       object.set_nodeclass_by_index(2);
-    else if (value2)
+    } else if (value2) {
       object.set_nodeclass_by_index(1);
-    else if (value1)
+    } else if (value1) {
       object.set_root_nodeclass();
-    else
+    } else {
       object.set_last_nodeclass();
+    }
     this.a1.oldValue = value1;
     this.a2.oldValue = value2;
     this.a3.oldValue = value3;
@@ -4145,7 +4307,9 @@ function DynDigFourShift(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynDigFourShift : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynDigFourShift : " + lines[i]);
+      }
 
       elem = null;
 
@@ -4153,16 +4317,19 @@ function DynDigFourShift(dyn) {
         case DynC.eSave_DigFourShift:
           break;
         case DynC.eSave_DigFourShift_attribute1:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute1 = tokens[1];
+          }
           break;
         case DynC.eSave_DigFourShift_attribute2:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute2 = tokens[1];
+          }
           break;
         case DynC.eSave_DigFourShift_attribute3:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute3 = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -4172,8 +4339,9 @@ function DynDigFourShift(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -4211,7 +4379,8 @@ function DynScrollingText(dyn) {
       console.log("ScrollingText: " + this.attribute);
       return 1;
     }
-    if (!(this.a.typeid == Pwr.eType_String || this.a.typeid == Pwr.eType_Text)) {
+    if (!(this.a.typeid == Pwr.eType_String || this.a.typeid ==
+        Pwr.eType_Text)) {
       console.log("ScrollingText: " + this.attribute);
       this.a.disconnect(dyn);
       return 1;
@@ -4238,8 +4407,9 @@ function DynScrollingText(dyn) {
   this.scan = function (object) {
 
     var d = object.getAnnotationTextExtent(1);
-    if (d === null)
+    if (d === null) {
       return;
+    }
 
     switch (this.direction) {
       case Glow.eDirection_Left: {
@@ -4250,17 +4420,16 @@ function DynScrollingText(dyn) {
               this.offset = -this.offset;
               this.direction = Glow.eDirection_Right;
             }
-          }
-          else {
+          } else {
             if (this.offset < this.osize - d.width) {
               this.offset += (this.osize - d.width) - this.offset;
               this.direction = Glow.eDirection_Right;
             }
           }
-        }
-        else {
-          if (this.offset < -d.width)
+        } else {
+          if (this.offset < -d.width) {
             this.offset = this.osize;
+          }
         }
         object.setAnnotationTextOffset(1, this.offset, 0);
         break;
@@ -4273,17 +4442,16 @@ function DynScrollingText(dyn) {
               this.offset -= this.offset - (this.osize - d.width);
               this.direction = Glow.eDirection_Left;
             }
-          }
-          else {
+          } else {
             if (this.offset > 0) {
               this.offset = -this.offset;
               this.direction = Glow.eDirection_Left;
             }
           }
-        }
-        else {
-          if (this.offset > this.osize)
+        } else {
+          if (this.offset > this.osize) {
             this.offset = -d.width;
+          }
         }
         object.setAnnotationTextOffset(1, this.offset, 0);
         break;
@@ -4295,10 +4463,10 @@ function DynScrollingText(dyn) {
             this.offset -= this.offset - (this.osize - d.height);
             this.direction = Glow.eDirection_Down;
           }
-        }
-        else {
-          if (this.offset > this.osize)
+        } else {
+          if (this.offset > this.osize) {
             this.offset = -d.height;
+          }
         }
         object.setAnnotationTextOffset(1, 0, this.offset);
         break;
@@ -4310,10 +4478,10 @@ function DynScrollingText(dyn) {
             this.offset = -this.offset;
             this.direction = Glow.eDirection_Up;
           }
-        }
-        else {
-          if (this.offset < -d.height)
+        } else {
+          if (this.offset < -d.height) {
             this.offset = this.osize;
+          }
         }
         object.setAnnotationTextOffset(1, 0, this.offset);
         break;
@@ -4329,8 +4497,9 @@ function DynScrollingText(dyn) {
       this.dyn.repaintNow = true;
       this.a.oldValue = value0;
     }
-    if (this.firstScan)
+    if (this.firstScan) {
       this.firstScan = false;
+    }
   }
 
   this.open = function (lines, row) {
@@ -4342,7 +4511,9 @@ function DynScrollingText(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynScrollingText : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynScrollingText : " + lines[i]);
+      }
 
       elem = null;
 
@@ -4350,8 +4521,9 @@ function DynScrollingText(dyn) {
         case DynC.eSave_ScrollingText:
           break;
         case DynC.eSave_ScrollingText_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_ScrollingText_direction:
           this.direction = parseInt(tokens[1], 10);
@@ -4370,8 +4542,9 @@ function DynScrollingText(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -4416,7 +4589,9 @@ function DynColorThemeLightness(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynColorThemeLightness : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynColorThemeLightness : " + lines[i]);
+      }
 
       elem = null;
 
@@ -4431,8 +4606,9 @@ function DynColorThemeLightness(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -4455,8 +4631,9 @@ function DynDigBackgroundColor(dyn) {
   this.firstScan = true;
 
   this.connect = function (object) {
-    if (this.color < 0 || this.color >= Glow.eDrawType__)
+    if (this.color < 0 || this.color >= Glow.eDrawType__) {
       return 0;
+    }
 
     this.a = new DynReference(this.dyn, this.attribute);
     this.a.connect(this.dyn);
@@ -4468,35 +4645,39 @@ function DynDigBackgroundColor(dyn) {
   };
 
   this.disconnect = function () {
-    if (this.a != null)
+    if (this.a != null) {
       this.a.disconnect(this.dyn);
+    }
   };
 
 
   this.scan = function (object) {
-    if (this.a === null || !this.a.sts || this.dyn.ignoreBgColor)
+    if (this.a === null || !this.a.sts || this.dyn.ignoreBgColor) {
       return;
-    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    }
+    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
+      this.a.database);
 
-    if (this.a.inverted)
+    if (this.a.inverted) {
       value = !value;
+    }
 
     if (!this.firstScan) {
       if (this.a.oldValue == value && !this.dyn.resetColor) {
         // No change since last time
-        if (value)
+        if (value) {
           this.dyn.ignoreBgColor = true;
+        }
         return;
       }
-    }
-    else
+    } else {
       this.firstScan = false;
+    }
 
     if (value) {
       object.setBackgroundColor(this.color);
       this.dyn.ignoreBgColor = true;
-    }
-    else {
+    } else {
       object.resetBackgroundColor();
       this.dyn.resetBgColor = true;
     }
@@ -4517,7 +4698,9 @@ function DynDigBackgroundColor(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynDigBackgroundColor : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynDigBackgroundColor : " + lines[i]);
+      }
 
       elem = null;
 
@@ -4525,8 +4708,9 @@ function DynDigBackgroundColor(dyn) {
         case DynC.eSave_DigBackgroundColor:
           break;
         case DynC.eSave_DigBackgroundColor_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_DigBackgroundColor_color:
           this.color = parseInt(tokens[1], 10);
@@ -4545,8 +4729,9 @@ function DynDigBackgroundColor(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -4586,9 +4771,11 @@ function DynDigSwap(dyn) {
 
 
   this.scan = function (object) {
-    if (!this.a.sts)
+    if (!this.a.sts) {
       return;
-    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    }
+    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
+      this.a.database);
 
     if (!this.firstScan) {
       this.a.oldValue = value;
@@ -4596,8 +4783,9 @@ function DynDigSwap(dyn) {
       return;
     }
 
-    if (this.a.inverted)
+    if (this.a.inverted) {
       value = !value;
+    }
 
     if (this.a.oldValue == value) {
       // No change since last time
@@ -4625,7 +4813,9 @@ function DynDigSwap(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynDigSwap : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynDigSwap : " + lines[i]);
+      }
 
       elem = null;
 
@@ -4633,8 +4823,9 @@ function DynDigSwap(dyn) {
         case DynC.eSave_DigSwap:
           break;
         case DynC.eSave_DigSwap_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             attribute = tokens[1];
+          }
           break;
         case DynC.eSave_DigSwap_reset_value:
           reset_value = parseInt(tokens[1], 10);
@@ -4647,8 +4838,9 @@ function DynDigSwap(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -4681,8 +4873,9 @@ function DynAnimation(dyn) {
       return 1;
     }
 
-    if (this.sequence == DynC.eAnimSequence_Inherit)
+    if (this.sequence == DynC.eAnimSequence_Inherit) {
       this.sequence = object.get_nodeclass_dyn_attr1();
+    }
 
     return 1;
   };
@@ -4695,20 +4888,24 @@ function DynAnimation(dyn) {
     var max_count;
     var sts;
 
-    if (!this.a.sts)
+    if (!this.a.sts) {
       return;
+    }
 
-    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
-    if (this.a.inverted)
+    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
+      this.a.database);
+    if (this.a.inverted) {
       value = !value;
+    }
 
     if (this.firstScan) {
       this.animation_count = 0;
       this.animation_direction = 0;
       this.firstScan = false;
       if (this.sequence == DynC.eAnimSequence_Dig) {
-        if (value)
+        if (value) {
           object.set_last_nodeclass();
+        }
         this.a.oldValue = value;
       }
     }
@@ -4719,8 +4916,7 @@ function DynAnimation(dyn) {
         if (value) {
           this.animation_count = 0;
           this.animation_direction = 1;
-        }
-        else if (!value) {
+        } else if (!value) {
           this.animation_direction = 2;
           this.animation_count = 0;
         }
@@ -4741,8 +4937,7 @@ function DynAnimation(dyn) {
               this.animation_direction = 0;
             }
             this.animation_count = 0;
-          }
-          else {
+          } else {
             // Shift backward
 
             sts = object.set_previous_nodeclass();
@@ -4755,8 +4950,7 @@ function DynAnimation(dyn) {
           }
         }
       }
-    }
-    else {
+    } else {
       if (value) {
         if (this.animation_direction == 0) {
           // Animation has been stopped
@@ -4776,16 +4970,14 @@ function DynAnimation(dyn) {
               if (this.sequence == DynC.eAnimSequence_Cycle) {
                 // Start from the beginning again
                 object.set_nodeclass_by_index(1);
-              }
-              else {
+              } else {
                 // Change direction
                 this.animation_direction = 2;
                 object.set_previous_nodeclass();
               }
             }
             this.animation_count = 0;
-          }
-          else {
+          } else {
             // Shift backward
 
             sts = object.set_previous_nodeclass();
@@ -4797,8 +4989,7 @@ function DynAnimation(dyn) {
             this.animation_count = 0;
           }
         }
-      }
-      else {
+      } else {
         if (this.animation_direction != 0) {
           // Stop and reset animation
           this.animation_direction = 0;
@@ -4822,7 +5013,9 @@ function DynAnimation(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("Animation : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("Animation : " + lines[i]);
+      }
 
       elem = null;
 
@@ -4830,8 +5023,9 @@ function DynAnimation(dyn) {
         case DynC.eSave_Animation:
           break;
         case DynC.eSave_Animation_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_Animation_sequence:
           this.sequence = parseInt(tokens[1], 10);
@@ -4844,8 +5038,9 @@ function DynAnimation(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -4881,7 +5076,9 @@ function DynVideo(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("Video : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("Video : " + lines[i]);
+      }
 
       elem = null;
 
@@ -4896,8 +5093,9 @@ function DynVideo(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -4926,8 +5124,9 @@ function DynBar(dyn) {
   this.old_ivalue;
 
   this.connect = function (object) {
-    if (this.attribute == null)
+    if (this.attribute == null) {
       return 0;
+    }
 
     this.a = new DynReference(this.dyn, this.attribute);
     this.a.connect(this.dyn);
@@ -4952,8 +5151,9 @@ function DynBar(dyn) {
   };
 
   this.scan = function (object) {
-    if (!this.a.sts)
+    if (!this.a.sts) {
       return;
+    }
 
     var minval, maxval;
     if (this.maxvalue_a.sts && this.minvalue_a.sts) {
@@ -4974,10 +5174,12 @@ function DynBar(dyn) {
         if (!this.firstScan) {
           if (Math.abs(this.old_value - value) < Number.MIN_VALUE)
           // No change since last time
+          {
             return;
-        }
-        else
+          }
+        } else {
           this.firstScan = false;
+        }
 
         object.set_value(value);
         this.old_value = value;
@@ -4989,10 +5191,12 @@ function DynBar(dyn) {
         if (!this.firstScan) {
           if (this.old_ivalue == value)
           // No change since last time
+          {
             return;
-        }
-        else
+          }
+        } else {
           this.firstScan = false;
+        }
 
         object.set_value(value);
         this.old_ivalue = value;
@@ -5010,7 +5214,9 @@ function DynBar(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynBar : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynBar : " + lines[i]);
+      }
 
       elem = null;
 
@@ -5018,16 +5224,19 @@ function DynBar(dyn) {
         case DynC.eSave_Bar:
           break;
         case DynC.eSave_Bar_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_Bar_minvalue_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.minvalue_attr = tokens[1];
+          }
           break;
         case DynC.eSave_Bar_maxvalue_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.maxvalue_attr = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -5037,8 +5246,9 @@ function DynBar(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -5167,7 +5377,8 @@ function DynTrend(dyn) {
 
       this.orig_graph_scan_time = this.dyn.graph.getScanTime();
       this.orig_graph_fast_scan_time = this.dyn.graph.getFastScanTime();
-      this.orig_graph_animation_scan_time = this.dyn.graph.getAnimationScanTime();
+      this.orig_graph_animation_scan_time =
+        this.dyn.graph.getAnimationScanTime();
     }
 
     if (this.mark1_attr !== null && this.mark1_attr.trim() !== "") {
@@ -5188,47 +5399,61 @@ function DynTrend(dyn) {
       }
     }
 
-    if (this.mark1_color != Glow.eDrawType_Inherit || this.mark2_color != Glow.eDrawType_Inherit)
+    if (this.mark1_color != Glow.eDrawType_Inherit ||
+      this.mark2_color != Glow.eDrawType_Inherit) {
       object.set_mark_color(this.mark1_color, this.mark2_color);
+    }
     return 1;
   };
 
   this.disconnect = function () {
     this.a1.disconnect(this.dyn);
-    if (this.a2 != null)
+    if (this.a2 != null) {
       this.a2.disconnect(this.dyn);
-    if (this.minvalue_a1 != null)
+    }
+    if (this.minvalue_a1 != null) {
       this.minvalue_a1.disconnect(this.dyn);
-    if (this.maxvalue_a1 != null)
+    }
+    if (this.maxvalue_a1 != null) {
       this.maxvalue_a1.disconnect(this.dyn);
-    if (this.minvalue_a2 != null)
+    }
+    if (this.minvalue_a2 != null) {
       this.minvalue_a2.disconnect(this.dyn);
-    if (this.maxvalue_a2 != null)
+    }
+    if (this.maxvalue_a2 != null) {
       this.maxvalue_a2.disconnect(this.dyn);
-    if (this.hold_a != null)
+    }
+    if (this.hold_a != null) {
       this.hold_a.disconnect(this.dyn);
-    if (this.timerange_a != null)
+    }
+    if (this.timerange_a != null) {
       this.timerange_a.disconnect(this.dyn);
-    if (this.mark1_a != null)
+    }
+    if (this.mark1_a != null) {
       this.mark1_a.disconnect(this.dyn);
-    if (this.mark2_a != null)
+    }
+    if (this.mark2_a != null) {
       this.mark2_a.disconnect(this.dyn);
+    }
   };
 
   this.scan = function (object) {
 
-    if (!this.a1.attrFound)
+    if (!this.a1.attrFound) {
       return;
+    }
 
     if (this.hold_a !== null) {
       var holdval = this.hold_a.get_ref_value(this.dyn);
-      if (this.holdval)
+      if (this.holdval) {
         return;
+      }
     }
 
     if (this.timerange_a !== null) {
       var timerangeval = this.timerange_a.get_ref_value(this.dyn);
-      if (Math.abs(timerangeval - this.timerange_a.oldValue) > Number.MIN_VALUE) {
+      if (Math.abs(timerangeval - this.timerange_a.oldValue) >
+        Number.MIN_VALUE) {
         var dt = timerangeval / this.no_of_points;
 
         if (dt >= 0.001) {
@@ -5238,50 +5463,56 @@ function DynTrend(dyn) {
             var current_graph_scan_time = this.dyn.graph.getScanTime();
             var current_graph_fast_scan_time = this.dyn.graph.getFastScanTime();
             var current_graph_animation_scan_time = this.dyn.graph.getAnimationScanTime();
-            if (current_graph_scan_time > this.scan_time)
+            if (current_graph_scan_time > this.scan_time) {
               this.dyn.graph.setScanTime(this.scan_time);
-            else {
-              if (this.scan_time > this.orig_graph_scan_time)
+            } else {
+              if (this.scan_time > this.orig_graph_scan_time) {
                 this.dyn.graph.setScanTime(this.orig_graph_scan_time);
-              else
+              } else {
                 this.dyn.graph.setScanTime(this.scan_time);
+              }
             }
-            if (current_graph_fast_scan_time > this.scan_time)
+            if (current_graph_fast_scan_time > this.scan_time) {
               this.dyn.graph.setFastScanTime(this.scan_time);
-            else {
-              if (this.scan_time > orig_graph_fast_scan_time)
+            } else {
+              if (this.scan_time > orig_graph_fast_scan_time) {
                 this.dyn.graph.setFastScanTime(this.orig_graph_fast_scan_time);
-              else
+              } else {
                 this.dyn.graph.setFastScanTime(this.scan_time);
+              }
             }
-            if (current_graph_animation_scan_time > this.scan_time)
+            if (current_graph_animation_scan_time > this.scan_time) {
               this.dyn.graph.setAnimationScanTime(this.scan_time);
-            else {
-              if (this.scan_time > orig_graph_animation_scan_time)
-                this.dyn.graph.setAnimationScanTime(this.orig_graph_animation_scan_time);
-              else
+            } else {
+              if (this.scan_time > orig_graph_animation_scan_time) {
+                this.dyn.graph.setAnimationScanTime(
+                  this.orig_graph_animation_scan_time);
+              } else {
                 this.dyn.graph.setAnimationScanTime(this.scan_time);
+              }
             }
-          }
-          else {
+          } else {
             // Fast cycle
             var current_graph_fast_scan_time = this.dyn.graph.getFastScanTime();
             var current_graph_animation_scan_time = this.dyn.graph.getAnimationScanTime();
-            if (current_graph_fast_scan_time > this.scan_time)
+            if (current_graph_fast_scan_time > this.scan_time) {
               this.dyn.graph.setFastScanTime(this.scan_time);
-            else {
-              if (this.scan_time > orig_graph_fast_scan_time)
+            } else {
+              if (this.scan_time > orig_graph_fast_scan_time) {
                 this.dyn.graph.setFastScanTime(this.orig_graph_fast_scan_time);
-              else
+              } else {
                 this.dyn.graph.setFastScanTime(this.scan_time);
+              }
             }
-            if (current_graph_animation_scan_time > this.scan_time)
+            if (current_graph_animation_scan_time > this.scan_time) {
               this.dyn.graph.setAnimationScanTime(this.scan_time);
-            else {
-              if (this.scan_time > orig_graph_animation_scan_time)
-                this.dyn.graph.setAnimationScanTime(orig_graph_animation_scan_time);
-              else
+            } else {
+              if (this.scan_time > orig_graph_animation_scan_time) {
+                this.dyn.graph.setAnimationScanTime(
+                  orig_graph_animation_scan_time);
+              } else {
                 this.dyn.graph.setAnimationScanTime(this.scan_time);
+              }
             }
           }
         }
@@ -5295,8 +5526,9 @@ function DynTrend(dyn) {
       maxval = this.maxvalue_a1.get_ref_value(this.dyn);
       if (minval != this.minvalue_a1.oldValue ||
         maxval != this.maxvalue_a1.oldValue) {
-        if (Math.abs(maxval - minval) > Number.MIN_VALUE)
+        if (Math.abs(maxval - minval) > Number.MIN_VALUE) {
           object.set_range_y(0, minval, maxval);
+        }
         this.minvalue_a1.oldValue = minval;
         this.maxvalue_a1.oldValue = maxval;
       }
@@ -5307,8 +5539,9 @@ function DynTrend(dyn) {
       maxval = this.maxvalue_a2.get_ref_value(this.dyn);
       if (minval != this.minvalue_a2.oldValue ||
         maxval != this.maxvalue_a2.oldValue) {
-        if (Math.abs(maxval - minval) > Number.MIN_VALUE)
+        if (Math.abs(maxval - minval) > Number.MIN_VALUE) {
           object.set_range_y(1, minval, maxval);
+        }
         this.minvalue_a2.oldValue = minval;
         this.maxvalue_a2.oldValue = maxval;
       }
@@ -5316,35 +5549,40 @@ function DynTrend(dyn) {
 
     if (this.mark1_a !== null) {
       var mark1val = this.mark1_a.get_ref_value(this.dyn);
-      if (this.firstScan || Math.abs(mark1val - this.mark1_a.oldValue) > Number.MIN_VALUE) {
+      if (this.firstScan ||
+        Math.abs(mark1val - this.mark1_a.oldValue) > Number.MIN_VALUE) {
         object.set_y_mark1(mark1val);
         this.mark1_a.oldValue = mark1val;
       }
     }
     if (this.mark2_a !== null) {
       var mark2val = this.mark2_a.get_ref_value(this.dyn);
-      if (this.firstScan || Math.abs(mark2val - this.mark2_a.oldValue) > Number.MIN_VALUE) {
+      if (this.firstScan ||
+        Math.abs(mark2val - this.mark2_a.oldValue) > Number.MIN_VALUE) {
         object.set_y_mark2(mark2val);
         this.mark2_a.oldValue = mark2val;
       }
     }
 
-    if (this.firstScan)
+    if (this.firstScan) {
       this.firstScan = false;
+    }
 
-    if (this.cycle == Glow.eCycle_Slow)
+    if (this.cycle == Glow.eCycle_Slow) {
       this.acc_time += this.dyn.graph.getScanTime();
-    else
+    } else {
       this.acc_time += this.dyn.graph.getFastScanTime();
+    }
     if (this.acc_time + Number.MIN_VALUE >= this.scan_time) {
       if (this.p1 != 0) {
         switch (this.a1.typeid) {
           case Pwr.eType_Boolean: {
             var value = this.a1.get_ref_value(this.dyn);
-            if (value)
+            if (value) {
               object.add_value(1, 0);
-            else
+            } else {
               object.add_value(0, 0);
+            }
             break;
           }
           case Pwr.eType_Float32: {
@@ -5366,10 +5604,11 @@ function DynTrend(dyn) {
         switch (this.a2.typeid) {
           case Pwr.eType_Boolean: {
             var value = this.a2.get_ref_value(this.dyn);
-            if (value)
+            if (value) {
               object.add_value(1, 1);
-            else
+            } else {
               object.add_value(0, 1);
+            }
             break;
           }
           case Pwr.eType_Float32: {
@@ -5405,7 +5644,9 @@ function DynTrend(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynTrend : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynTrend : " + lines[i]);
+      }
 
       elem = null;
 
@@ -5413,44 +5654,54 @@ function DynTrend(dyn) {
         case DynC.eSave_Trend:
           break;
         case DynC.eSave_Trend_attribute1:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute1 = tokens[1];
+          }
           break;
         case DynC.eSave_Trend_attribute2:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute2 = tokens[1];
+          }
           break;
         case DynC.eSave_Trend_minvalue_attr1:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.minvalue_attr1 = tokens[1];
+          }
           break;
         case DynC.eSave_Trend_maxvalue_attr1:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.maxvalue_attr1 = tokens[1];
+          }
           break;
         case DynC.eSave_Trend_minvalue_attr2:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.minvalue_attr2 = tokens[1];
+          }
           break;
         case DynC.eSave_Trend_maxvalue_attr2:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.maxvalue_attr2 = tokens[1];
+          }
           break;
         case DynC.eSave_Trend_hold_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.hold_attr = tokens[1];
+          }
           break;
         case DynC.eSave_Trend_timerange_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.timerange_attr = tokens[1];
+          }
           break;
         case DynC.eSave_Trend_mark1_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.mark1_attr = tokens[1];
+          }
           break;
         case DynC.eSave_Trend_mark2_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.mark2_attr = tokens[1];
+          }
           break;
         case DynC.eSave_Trend_mark1_color:
           this.mark1_color = parseInt(tokens[1], 10);
@@ -5466,8 +5717,9 @@ function DynTrend(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -5537,7 +5789,9 @@ function DynXY_Curve(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynXYCurve : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynXYCurve : " + lines[i]);
+      }
 
       elem = null;
 
@@ -5545,36 +5799,44 @@ function DynXY_Curve(dyn) {
         case DynC.eSave_XY_Curve:
           break;
         case DynC.eSave_XY_Curve_x_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.x_attr = tokens[1];
+          }
           break;
         case DynC.eSave_XY_Curve_y_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.y_attr = tokens[1];
+          }
           break;
         case DynC.eSave_XY_Curve_y_minvalue_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.y_minvalue_attr = tokens[1];
+          }
           break;
         case DynC.eSave_XY_Curve_y_maxvalue_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.y_maxvalue_attr = tokens[1];
+          }
           break;
         case DynC.eSave_XY_Curve_x_minvalue_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.x_minvalue_attr = tokens[1];
+          }
           break;
         case DynC.eSave_XY_Curve_x_maxvalue_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.x_maxvalue_attr = tokens[1];
+          }
           break;
         case DynC.eSave_XY_Curve_noofpoints_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.noofpoints_attr = tokens[1];
+          }
           break;
         case DynC.eSave_XY_Curve_update_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.update_attr = tokens[1];
+          }
           break;
         case DynC.eSave_XY_Curve_y_min_value:
           this.y_min_value = parseFloat(tokens[1]);
@@ -5611,20 +5873,24 @@ function DynXY_Curve(dyn) {
           this.horizontal_padding = parseInt(tokens[1], 10);
           break;
         case DynC.eSave_XY_Curve_x_mark1_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.x_mark1_attr = tokens[1];
+          }
           break;
         case DynC.eSave_XY_Curve_x_mark2_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.x_mark2_attr = tokens[1];
+          }
           break;
         case DynC.eSave_XY_Curve_y_mark1_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.y_mark1_attr = tokens[1];
+          }
           break;
         case DynC.eSave_XY_Curve_y_mark2_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.y_mark2_attr = tokens[1];
+          }
           break;
         case DynC.eSave_XY_Curve_mark1_color:
           this.mark1_color = parseInt(tokens[1], 10);
@@ -5640,8 +5906,9 @@ function DynXY_Curve(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -5649,8 +5916,9 @@ function DynXY_Curve(dyn) {
 
 
   this.connect = function (object) {
-    if (this.x_attr == null || this.y_attr == null)
+    if (this.x_attr == null || this.y_attr == null) {
       return 1;
+    }
 
     if (this.update_attr.trim() !== "") {
       this.update_a = new DynReference(this.dyn, this.update_attr);
@@ -5744,37 +6012,54 @@ function DynXY_Curve(dyn) {
     }
 
     this.noofpoints = object.get_no_of_points();
-    if (Math.abs(this.y_max_value - this.y_min_value) > Number.MIN_VALUE)
-      object.set_xy_range_y(this.curve_number - 1, this.y_min_value, this.y_max_value);
-    if (Math.abs(this.x_max_value - this.x_min_value) > Number.MIN_VALUE)
-      object.set_xy_range_x(this.curve_number - 1, this.x_min_value, this.x_max_value);
-    object.set_xy_curve_color(this.curve_number - 1, this.curve_color, this.fill_color);
-    if (this.mark1_color != Glow.eDrawType_Inherit || this.mark2_color != Glow.eDrawType_Inherit)
+    if (Math.abs(this.y_max_value - this.y_min_value) > Number.MIN_VALUE) {
+      object.set_xy_range_y(this.curve_number - 1, this.y_min_value,
+        this.y_max_value);
+    }
+    if (Math.abs(this.x_max_value - this.x_min_value) > Number.MIN_VALUE) {
+      object.set_xy_range_x(this.curve_number - 1, this.x_min_value,
+        this.x_max_value);
+    }
+    object.set_xy_curve_color(this.curve_number - 1, this.curve_color,
+      this.fill_color);
+    if (this.mark1_color != Glow.eDrawType_Inherit ||
+      this.mark2_color != Glow.eDrawType_Inherit) {
       object.set_mark_color(this.mark1_color, this.mark2_color);
+    }
     return 1;
   };
 
   this.disconnect = function () {
-    if (this.update_a !== null)
+    if (this.update_a !== null) {
       this.update_a.disconnect(this.dyn);
-    if (this.noofpoints_a !== null)
+    }
+    if (this.noofpoints_a !== null) {
       this.noofpoints_a.disconnect(this.dyn);
-    if (this.y_minvalue_a !== null)
+    }
+    if (this.y_minvalue_a !== null) {
       this.y_minvalue_a.disconnect(this.dyn);
-    if (this.y_maxvalue_a !== null)
+    }
+    if (this.y_maxvalue_a !== null) {
       this.y_maxvalue_a.disconnect(this.dyn);
-    if (this.x_minvalue_a !== null)
+    }
+    if (this.x_minvalue_a !== null) {
       this.x_minvalue_a.disconnect(this.dyn);
-    if (this.x_maxvalue_a !== null)
+    }
+    if (this.x_maxvalue_a !== null) {
       this.x_maxvalue_a.disconnect(this.dyn);
-    if (this.x_mark1_a !== null)
+    }
+    if (this.x_mark1_a !== null) {
       this.x_mark1_a.disconnect(this.dyn);
-    if (this.x_mark2_a !== null)
+    }
+    if (this.x_mark2_a !== null) {
       this.x_mark2_a.disconnect(this.dyn);
-    if (this.y_mark1_a !== null)
+    }
+    if (this.y_mark1_a !== null) {
       this.y_mark1_a.disconnect(this.dyn);
-    if (this.y_mark2_a !== null)
+    }
+    if (this.y_mark2_a !== null) {
       this.y_mark2_a.disconnect(this.dyn);
+    }
   };
 
   this.scan = function (object) {
@@ -5785,16 +6070,19 @@ function DynXY_Curve(dyn) {
     this.object = object;
     this.noOfPoints = this.noofpoints;
 
-    if (this.x_attr == null || this.y_attr == null)
+    if (this.x_attr == null || this.y_attr == null) {
       return;
+    }
 
-    if (this.firstScan)
+    if (this.firstScan) {
       update = true;
+    }
 
     if (this.update_a !== null) {
       var value = this.update_a.get_ref_value(this.dyn);
-      if (value && !this.update_a.oldValue)
+      if (value && !this.update_a.oldValue) {
         update = true;
+      }
       this.update_a.oldValue = value;
     }
 
@@ -5811,8 +6099,10 @@ function DynXY_Curve(dyn) {
       var value = this.y_minvalue_a.get_ref_value(this.dyn);
       if (value != this.y_min_value) {
         this.y_min_value = value;
-        if (Math.abs(this.y_max_value - this.y_min_value) > Number.MIN_VALUE)
-          object.set_xy_range_y(this.curve_number - 1, this.y_min_value, this.y_max_value);
+        if (Math.abs(this.y_max_value - this.y_min_value) > Number.MIN_VALUE) {
+          object.set_xy_range_y(this.curve_number - 1, this.y_min_value,
+            this.y_max_value);
+        }
         update = true;
       }
     }
@@ -5820,8 +6110,10 @@ function DynXY_Curve(dyn) {
       var value = this.y_maxvalue_a.get_ref_value(this.dyn);
       if (value != this.y_max_value) {
         this.y_max_value = value;
-        if (Math.abs(this.y_max_value - this.y_min_value) > Number.MIN_VALUE)
-          object.set_xy_range_y(this.curve_number - 1, this.y_min_value, this.y_max_value);
+        if (Math.abs(this.y_max_value - this.y_min_value) > Number.MIN_VALUE) {
+          object.set_xy_range_y(this.curve_number - 1, this.y_min_value,
+            this.y_max_value);
+        }
         update = true;
       }
     }
@@ -5830,8 +6122,10 @@ function DynXY_Curve(dyn) {
       var value = this.x_minvalue_a.get_ref_value(this.dyn);
       if (value != this.x_min_value) {
         this.x_min_value = value;
-        if (Math.abs(x_max_value - this.x_min_value) > Number.MIN_VALUE)
-          object.set_xy_range_x(this.curve_number - 1, this.x_min_value, this.x_max_value);
+        if (Math.abs(x_max_value - this.x_min_value) > Number.MIN_VALUE) {
+          object.set_xy_range_x(this.curve_number - 1, this.x_min_value,
+            this.x_max_value);
+        }
         update = true;
       }
     }
@@ -5839,36 +6133,42 @@ function DynXY_Curve(dyn) {
       var value = this.x_maxvalue_a.get_ref_value(this.dyn);
       if (value != this.x_max_value) {
         this.x_max_value = value;
-        if (Math.abs(x_max_value - this.x_min_value) > Number.MIN_VALUE)
-          object.set_xy_range_x(this.curve_number - 1, this.x_min_value, this.x_max_value);
+        if (Math.abs(x_max_value - this.x_min_value) > Number.MIN_VALUE) {
+          object.set_xy_range_x(this.curve_number - 1, this.x_min_value,
+            this.x_max_value);
+        }
         update = true;
       }
     }
 
     if (this.x_mark1_a !== null) {
       var mark1val = this.x_mark1_a.get_ref_value(this.dyn);
-      if (this.firstScan || Math.abs(mark1val - this.x_mark1_a.oldValue) > Number.MIN_VALUE) {
+      if (this.firstScan ||
+        Math.abs(mark1val - this.x_mark1_a.oldValue) > Number.MIN_VALUE) {
         object.set_x_mark1(mark1val);
         this.x_mark1_a.oldValue = mark1val;
       }
     }
     if (this.x_mark2_a !== null) {
       var mark2val = this.x_mark2_a.get_ref_value(this.dyn);
-      if (this.firstScan || Math.abs(mark2val - this.x_mark2_a.oldValue) > Number.MIN_VALUE) {
+      if (this.firstScan ||
+        Math.abs(mark2val - this.x_mark2_a.oldValue) > Number.MIN_VALUE) {
         object.set_x_mark2(mark2val);
         this.x_mark2_a.oldValue = mark2val;
       }
     }
     if (this.y_mark1_a !== null) {
       var mark1val = this.y_mark1_a.get_ref_value(this.dyn);
-      if (this.firstScan || Math.abs(mark1val - this.y_mark1_a.oldValue) > Number.MIN_VALUE) {
+      if (this.firstScan ||
+        Math.abs(mark1val - this.y_mark1_a.oldValue) > Number.MIN_VALUE) {
         object.set_y_mark1(mark1val);
         this.y_mark1_a.oldValue = mark1val;
       }
     }
     if (this.y_mark2_a !== null) {
       var mark2val = this.y_mark2_a.get_ref_value(this.dyn);
-      if (this.firstScan || Math.abs(mark2val - this.y_mark2_a.oldValue) > Number.MIN_VALUE) {
+      if (this.firstScan ||
+        Math.abs(mark2val - this.y_mark2_a.oldValue) > Number.MIN_VALUE) {
         object.set_y_mark2(mark2val);
         this.y_mark2_a.oldValue = mark2val;
       }
@@ -5881,18 +6181,21 @@ function DynXY_Curve(dyn) {
 
       switch (this.datatype) {
         case DynC.eCurveDataType_XYArrays:
-          if (attrSize < this.noOfPoints)
+          if (attrSize < this.noOfPoints) {
             this.noOfPoints = attrSize;
+          }
           size = this.noOfPoints;
           break;
         case DynC.eCurveDataType_PointArray:
-          if (attrSize / 2 < this.noOfPoints)
+          if (attrSize / 2 < this.noOfPoints) {
             this.noOfPoints = attrSize / 2;
+          }
           size = this.noOfPoints * 2;
           break;
         case DynC.eCurveDataType_TableObject:
-          if ((attrSize - 1) / 2 < this.noOfPoints)
+          if ((attrSize - 1) / 2 < this.noOfPoints) {
             this.noOfPoints = (attrSize - 1) / 2;
+          }
           size = this.noOfPoints * 2 + 1;
           break;
       }
@@ -5900,8 +6203,8 @@ function DynXY_Curve(dyn) {
       // Read x-array
       switch (this.xAttrType) {
         case Pwr.eType_Float32:
-          this.dyn.graph.getGdh().getObjectInfoFloatArray(pname.name, size,
-            this.scan2, this);
+          this.dyn.graph.getGdh()
+            .getObjectInfoFloatArray(pname.name, size, this.scan2, this);
           break;
         case Pwr.eType_Int32:
         case Pwr.eType_Int16:
@@ -5909,8 +6212,8 @@ function DynXY_Curve(dyn) {
         case Pwr.eType_UInt32:
         case Pwr.eType_UInt16:
         case Pwr.eType_UInt8:
-          this.dyn.graph.getGdh().getObjectInfoIntArray(pname.name, size,
-            this.scan2, this);
+          this.dyn.graph.getGdh()
+            .getObjectInfoIntArray(pname.name, size, this.scan2, this);
           break;
         default:
           return;
@@ -5922,14 +6225,16 @@ function DynXY_Curve(dyn) {
   this.scan2 = function (id, self, sts, value) {
     switch (self.xAttrType) {
       case Pwr.eType_Float32:
-        if (!(sts & 1))
+        if (!(sts & 1)) {
           return;
+        }
 
         switch (self.datatype) {
           case DynC.eCurveDataType_XYArrays:
             self.curveX = new Array(self.noOfPoints);
-            for (var i = 0; i < self.noOfPoints; i++)
+            for (var i = 0; i < self.noOfPoints; i++) {
               self.curveX[i] = value[i];
+            }
             break;
           case DynC.eCurveDataType_PointArray:
             curveX = new Array(self.noOfPoints);
@@ -5942,10 +6247,12 @@ function DynXY_Curve(dyn) {
             break;
           case DynC.eCurveDataType_TableObject:
             self.noOfPoints = Math.floor(value[0]);
-            if (self.noOfPoints > self.noofpoints)
+            if (self.noOfPoints > self.noofpoints) {
               self.noOfPoints = self.noofpoints;
-            if (attrSize < self.noOfPoints)
+            }
+            if (attrSize < self.noOfPoints) {
               self.noOfPoints = attrSize;
+            }
             self.curveY = new Array(self.noOfPoints);
             self.curveX = new Array(self.noOfPoints);
             for (var i = 0; i < self.noOfPoints; i++) {
@@ -5962,13 +6269,15 @@ function DynXY_Curve(dyn) {
       case Pwr.eType_UInt32:
       case Pwr.eType_UInt16:
       case Pwr.eType_UInt8:
-        if (!(sts & 1))
+        if (!(sts & 1)) {
           return;
+        }
         switch (self.datatype) {
           case DynC.eCurveDataType_XYArrays:
             self.curveX = new Array(self.noOfPoints);
-            for (var i = 0; i < self.noOfPoints; i++)
+            for (var i = 0; i < self.noOfPoints; i++) {
               self.curveX[i] = value[i];
+            }
             break;
           case DynC.eCurveDataType_PointArray:
             self.curveX = new Array(self.noOfPoints);
@@ -5981,10 +6290,12 @@ function DynXY_Curve(dyn) {
             break;
           case DynC.eCurveDataType_TableObject:
             self.noOfPoints = Math.floor(value[0]);
-            if (self.noOfPoints > self.noofpoints)
+            if (self.noOfPoints > self.noofpoints) {
               self.noOfPoints = self.noofpoints;
-            if (attrSize < self.noOfPoints)
+            }
+            if (attrSize < self.noOfPoints) {
               self.noOfPoints = attrSize;
+            }
             self.curveY = new Array(self.noOfPoints);
             self.curveX = new Array(self.noOfPoints);
             for (var i = 0; i < self.noOfPoints; i++) {
@@ -6003,15 +6314,17 @@ function DynXY_Curve(dyn) {
     switch (self.datatype) {
       case DynC.eCurveDataType_XYArrays:
         var pname = self.dyn.parseAttrName(self.y_attr);
-        if (pname.elements < self.noOfPoints)
+        if (pname.elements < self.noOfPoints) {
           self.noOfPoints = pname.elements;
+        }
         self.yAttrType = pname.type;
         self.curveY = new Array(self.noOfPoints);
 
         switch (self.yAttrType) {
           case Pwr.eType_Float32:
-            self.dyn.graph.getGdh().getObjectInfoFloatArray(pname.name, self.noOfPoints,
-              self.scan3, self);
+            self.dyn.graph.getGdh()
+              .getObjectInfoFloatArray(pname.name, self.noOfPoints, self.scan3,
+                self);
             break;
           case Pwr.eType_Int32:
           case Pwr.eType_Int16:
@@ -6019,8 +6332,9 @@ function DynXY_Curve(dyn) {
           case Pwr.eType_UInt32:
           case Pwr.eType_UInt16:
           case Pwr.eType_UInt8:
-            self.dyn.graph.getGdh().getObjectInfoIntArray(pname.name, self.noOfPoints,
-              self.scan3, self);
+            self.dyn.graph.getGdh()
+              .getObjectInfoIntArray(pname.name, self.noOfPoints, self.scan3,
+                self);
             break;
           default:
             return;
@@ -6031,15 +6345,17 @@ function DynXY_Curve(dyn) {
 
 
   this.scan3 = function (id, self, sts, value) {
-    if (!(sts & 1))
+    if (!(sts & 1)) {
       return;
+    }
 
     switch (self.datatype) {
       case DynC.eCurveDataType_XYArrays:
         switch (self.yAttrType) {
           case Pwr.eType_Float32:
-            for (var i = 0; i < self.noOfPoints; i++)
+            for (var i = 0; i < self.noOfPoints; i++) {
               self.curveY[i] = value[i];
+            }
             self.dyn.repaintNow = true;
             break;
           case Pwr.eType_Int32:
@@ -6048,8 +6364,9 @@ function DynXY_Curve(dyn) {
           case Pwr.eType_UInt32:
           case Pwr.eType_UInt16:
           case Pwr.eType_UInt8:
-            for (var i = 0; i < self.noOfPoints; i++)
+            for (var i = 0; i < self.noOfPoints; i++) {
               self.curveY[i] = value[i];
+            }
 
             self.dyn.repaintNow = true;
 
@@ -6060,7 +6377,8 @@ function DynXY_Curve(dyn) {
         break;
     }
 
-    self.object.set_xy_data(self.curveY, self.curveX, self.curve_number - 1, self.noOfPoints);
+    self.object.set_xy_data(self.curveY, self.curveX, self.curve_number - 1,
+      self.noOfPoints);
   };
 };
 
@@ -6093,7 +6411,9 @@ function DynPie(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynPie : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynPie : " + lines[i]);
+      }
 
       elem = null;
 
@@ -6104,52 +6424,64 @@ function DynPie(dyn) {
           this.fix_range = parseInt(tokens[1], 10);
           break;
         case DynC.eSave_Pie_attribute1:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[0] = tokens[1];
+          }
           break;
         case DynC.eSave_Pie_attribute2:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[1] = tokens[1];
+          }
           break;
         case DynC.eSave_Pie_attribute3:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[2] = tokens[1];
+          }
           break;
         case DynC.eSave_Pie_attribute4:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[3] = tokens[1];
+          }
           break;
         case DynC.eSave_Pie_attribute5:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[4] = tokens[1];
+          }
           break;
         case DynC.eSave_Pie_attribute6:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[5] = tokens[1];
+          }
           break;
         case DynC.eSave_Pie_attribute7:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[6] = tokens[1];
+          }
           break;
         case DynC.eSave_Pie_attribute8:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[7] = tokens[1];
+          }
           break;
         case DynC.eSave_Pie_attribute9:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[8] = tokens[1];
+          }
           break;
         case DynC.eSave_Pie_attribute10:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[9] = tokens[1];
+          }
           break;
         case DynC.eSave_Pie_attribute11:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[10] = tokens[1];
+          }
           break;
         case DynC.eSave_Pie_attribute12:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[11] = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -6159,8 +6491,9 @@ function DynPie(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -6171,8 +6504,9 @@ function DynPie(dyn) {
     this.min_value = info.min_val;
     this.max_value = info.max_val;
     this.sectors = info.sector_num;
-    if (this.sectors > GrowPie.PIE_MAX_SECTORS)
+    if (this.sectors > GrowPie.PIE_MAX_SECTORS) {
       this.sectors = GrowPie.PIE_MAX_SECTORS;
+    }
 
     this.a = new Array(this.sectors);
     for (var i = 0; i < this.sectors; i++) {
@@ -6189,19 +6523,22 @@ function DynPie(dyn) {
         return 1;
       }
 
-      if (i === 0)
+      if (i === 0) {
         this.attr_type = this.a[0].typeid;
+      }
     }
     this.connected = true;
     return 1;
   };
 
   this.disconnect = function () {
-    if (!this.connected)
+    if (!this.connected) {
       return;
+    }
     for (var i = 0; i < this.sectors; i++) {
-      if (this.a[i] !== null)
+      if (this.a[i] !== null) {
         this.a[i].disconnect(this.dyn);
+      }
     }
   };
 
@@ -6210,14 +6547,16 @@ function DynPie(dyn) {
   };
 
   this.scan = function (object) {
-    if (!this.connected)
+    if (!this.connected) {
       return;
+    }
 
     switch (this.attr_type) {
       case Pwr.eType_Float32: {
         var val = new Array(GrowPie.PIE_MAX_SECTORS);
-        for (var i = 0; i < this.sectors; i++)
+        for (var i = 0; i < this.sectors; i++) {
           val[i] = this.a[i].get_ref_value(this.dyn);
+        }
 
         if (!this.firstScan) {
           var update = 0;
@@ -6227,36 +6566,41 @@ function DynPie(dyn) {
               break;
             }
           }
-          if (update === 0)
+          if (update === 0) {
             return;
-        }
-        else
+          }
+        } else {
           this.firstScan = false;
+        }
 
-        if (Math.abs(this.max_value - this.min_value) < Number.MIN_VALUE)
+        if (Math.abs(this.max_value - this.min_value) < Number.MIN_VALUE) {
           return;
+        }
 
         var dval = new Array(GrowPie.PIE_MAX_SECTORS);
         if (this.fix_range != 0 || this.sectors == 1) {
-          for (var i = 0; i < this.sectors; i++)
-            dval[i] = val[i] - this.min_value;
-        }
-        else {
-          var sum = 0;
-          for (var i = 0; i < this.sectors; i++)
-            sum += val[i] - this.min_value;
           for (var i = 0; i < this.sectors; i++) {
-            if (Math.abs(sum) < Number.MIN_VALUE)
+            dval[i] = val[i] - this.min_value;
+          }
+        } else {
+          var sum = 0;
+          for (var i = 0; i < this.sectors; i++) {
+            sum += val[i] - this.min_value;
+          }
+          for (var i = 0; i < this.sectors; i++) {
+            if (Math.abs(sum) < Number.MIN_VALUE) {
               dval[i] = 0;
-            else
+            } else {
               dval[i] = (val[i] - this.min_value) / sum *
                 (this.max_value - this.min_value);
+            }
           }
         }
 
         object.set_values(dval);
-        for (var i = 0; i < this.sectors; i++)
+        for (var i = 0; i < this.sectors; i++) {
           this.a[i].oldValue = val[i];
+        }
         break;
       }
       case Pwr.eType_Int32: {
@@ -6301,7 +6645,9 @@ function DynBarChart(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynBarChart : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynBarChart : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_BarChart:
@@ -6310,52 +6656,64 @@ function DynBarChart(dyn) {
           this.fix_range = parseInt(tokens[1], 10);
           break;
         case DynC.eSave_BarChart_attribute1:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[0] = tokens[1];
+          }
           break;
         case DynC.eSave_BarChart_attribute2:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[1] = tokens[1];
+          }
           break;
         case DynC.eSave_BarChart_attribute3:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[2] = tokens[1];
+          }
           break;
         case DynC.eSave_BarChart_attribute4:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[3] = tokens[1];
+          }
           break;
         case DynC.eSave_BarChart_attribute5:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[4] = tokens[1];
+          }
           break;
         case DynC.eSave_BarChart_attribute6:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[5] = tokens[1];
+          }
           break;
         case DynC.eSave_BarChart_attribute7:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[6] = tokens[1];
+          }
           break;
         case DynC.eSave_BarChart_attribute8:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[7] = tokens[1];
+          }
           break;
         case DynC.eSave_BarChart_attribute9:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[8] = tokens[1];
+          }
           break;
         case DynC.eSave_BarChart_attribute10:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[9] = tokens[1];
+          }
           break;
         case DynC.eSave_BarChart_attribute11:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[10] = tokens[1];
+          }
           break;
         case DynC.eSave_BarChart_attribute12:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[11] = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -6365,8 +6723,9 @@ function DynBarChart(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -6390,8 +6749,9 @@ function DynBarChart(dyn) {
       this.a[i] = new DynReference(this.dyn, this.attribute[i]);
       this.a[i].connect(this.dyn);
 
-      if (this.a[i].elements == 0)
+      if (this.a[i].elements == 0) {
         return 1;
+      }
 
       this.bars = Math.min(this.bars, this.a[i].elements);
       if (i == 0) {
@@ -6406,8 +6766,7 @@ function DynBarChart(dyn) {
           default:
             return 1;
         }
-      }
-      else {
+      } else {
         if (this.attr_type != this.a[i].typeid) {
           console.log("BarChart type", this.attribute[i], this.a[i].typeid);
           return 1;
@@ -6419,10 +6778,12 @@ function DynBarChart(dyn) {
   }
 
   this.disconnect = function () {
-    if (!this.connected)
+    if (!this.connected) {
       return;
-    for (var i = 0; i < this.barsegments; i++)
+    }
+    for (var i = 0; i < this.barsegments; i++) {
       this.a[i].disconnect(this.dyn);
+    }
   }
 
   this.action = function (object, e) {
@@ -6430,15 +6791,17 @@ function DynBarChart(dyn) {
   };
 
   this.scan = function (object) {
-    if (!this.connected)
+    if (!this.connected) {
       return;
+    }
     switch (this.attr_type) {
       case Pwr.eType_Float32: {
         this.valueF = new Array(GrowBarChart.BARCHART_MAX_BARSEGMENTS);
         for (var i = 0; i < this.barsegments; i++) {
           this.valueF[i] = this.a[i].get_ref_value(this.dyn);
           if (this.valueF[i].length < this.bars) {
-            console.log("BarChart, value array to short", this.valueF[i].length);
+            console.log("BarChart, value array to short",
+              this.valueF[i].length);
             break;
           }
         }
@@ -6446,31 +6809,38 @@ function DynBarChart(dyn) {
         if (!this.firstScan) {
           var update = 0;
           if (this.oldValueF != null) {
-            for (var i = 0; i < this.barsegments && this.valueF[i] != null; i++) {
-              if (this.oldValueF[i] === null || this.valueF[i] === null)
+            for (var i = 0; i < this.barsegments && this.valueF[i] != null;
+                 i++) {
+              if (this.oldValueF[i] === null || this.valueF[i] === null) {
                 break;
+              }
               for (var j = 0; j < this.bars; j++) {
-                if (Math.abs(this.oldValueF[i][j] - this.valueF[i][j]) > Number.MIN_VALUE) {
+                if (Math.abs(this.oldValueF[i][j] - this.valueF[i][j]) >
+                  Number.MIN_VALUE) {
                   update = 1;
                   break;
                 }
               }
-              if (update == 1)
+              if (update == 1) {
                 break;
+              }
             }
-            if (update == 0)
+            if (update == 0) {
               return;
+            }
           }
-        }
-        else
+        } else {
           this.firstScan = false;
+        }
 
-        if (Math.abs(this.max_value - this.min_value) < Number.MIN_VALUE)
+        if (Math.abs(this.max_value - this.min_value) < Number.MIN_VALUE) {
           return;
+        }
 
-        object.set_values(this.valueF[0], this.valueF[1], this.valueF[2], this.valueF[3], this.valueF[4],
-          this.valueF[5], this.valueF[6], this.valueF[7], this.valueF[8], this.valueF[9],
-          this.valueF[10], this.valueF[11]);
+        object.set_values(this.valueF[0], this.valueF[1], this.valueF[2],
+          this.valueF[3], this.valueF[4], this.valueF[5], this.valueF[6],
+          this.valueF[7], this.valueF[8], this.valueF[9], this.valueF[10],
+          this.valueF[11]);
         this.oldValueF = this.valueF;
 
         break;
@@ -6524,154 +6894,192 @@ function DynTable(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynTable : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynTable : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_Table:
           break;
         case DynC.eSave_Table_attribute1:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[0] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_format1:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.format[0] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_sel_attribute1:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.sel_attribute[0] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_attribute2:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[1] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_format2:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.format[1] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_sel_attribute2:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.sel_attribute[1] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_attribute3:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[2] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_format3:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.format[2] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_sel_attribute3:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.sel_attribute[2] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_attribute4:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[3] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_format4:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.format[3] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_sel_attribute4:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.sel_attribute[3] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_attribute5:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[4] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_format5:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.format[4] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_sel_attribute5:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.sel_attribute[4] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_attribute6:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[5] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_format6:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.format[5] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_sel_attribute6:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.sel_attribute[5] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_attribute7:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[6] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_format7:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.format[6] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_sel_attribute7:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.sel_attribute[6] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_attribute8:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[7] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_format8:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.format[7] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_sel_attribute8:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.sel_attribute[7] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_attribute9:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[8] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_format9:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.format[8] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_sel_attribute9:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.sel_attribute[8] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_attribute10:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[9] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_format10:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.format[9] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_sel_attribute10:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.sel_attribute[9] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_attribute11:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[10] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_format11:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.format[10] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_sel_attribute11:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.sel_attribute[10] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_attribute12:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute[11] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_format12:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.format[11] = tokens[1];
+          }
           break;
         case DynC.eSave_Table_sel_attribute12:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.sel_attribute[11] = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -6681,8 +7089,9 @@ function DynTable(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -6702,52 +7111,59 @@ function DynTable(dyn) {
     this.type_id = new Array(this.columns);
     this.headerRef = new Array(this.columns);
     this.p = new Array(this.columns);
-    for (var i = 0; i < this.columns; i++)
+    for (var i = 0; i < this.columns; i++) {
       this.p[i] = 0;
+    }
     this.oldValueB = new Array(this.columns);
     this.oldValueF = new Array(this.columns);
     this.oldValueI = new Array(this.columns);
     this.oldValueS = new Array(this.columns);
     this.cFormat = new Array(this.columns);
-    for (var i = 0; i < this.columns; i++)
+    for (var i = 0; i < this.columns; i++) {
       this.cFormat[i] = new GlowCFormat(this.format[i]);
+    }
     this.sel_p = new Array(this.columns);
     this.sel_elements = new Array(this.columns);
     this.bitmask = new Array(this.columns);
 
     for (var i = 0; i < this.columns; i++) {
       var pname = this.dyn.parseAttrName(this.attribute[i]);
-      if (pname === null || pname.name === "")
+      if (pname === null || pname.name === "") {
         continue;
+      }
 
-      if (pname.elements == 0)
+      if (pname.elements == 0) {
         continue;
+      }
 
       this.db[i] = pname.database;
 
       if (pname.tname.substring(0, 7) != "$header") {
         switch (this.db[i]) {
           case GraphIfc.eDatabase_Gdh:
-            this.p[i] = this.dyn.graph.getGdh().refObjectInfo(pname.tname, pname.type, pname.elements);
-            if (i === 0)
+            this.p[i] = this.dyn.graph.getGdh()
+              .refObjectInfo(pname.tname, pname.type, pname.elements);
+            if (i === 0) {
               aname0 = pname.name;
+            }
             break;
           default:
             ;
         }
-        if (this.p[i] === 0)
+        if (this.p[i] === 0) {
           continue;
+        }
 
         this.size[i] = pname.elements;
         this.type_id[i] = pname.type;
         this.elements[i] = Math.min(pname.elements, this.rows);
         this.bitmask[i] = pname.bitmask;
-      }
-      else {
+      } else {
         this.headerRef[i] = true;
 
-        if (aname0 == null)
+        if (aname0 == null) {
           continue;
+        }
 
         for (var j = 0; j < this.elements[0]; j++) {
           var hname = aname0 + "[" + j + "]";
@@ -6755,16 +7171,19 @@ function DynTable(dyn) {
 
           if (this.hp === null) {
             this.hp = new Array(this.columns);
-            for (var n = 0; n < this.columns; n++)
+            for (var n = 0; n < this.columns; n++) {
               this.hp[n] = null;
+            }
           }
           if (this.hp[i] == null) {
             this.hp[i] = new Array(this.elements[0]);
-            for (var k = 0; k < this.elements[0]; k++)
+            for (var k = 0; k < this.elements[0]; k++) {
               this.hp[i][k] = 0;
+            }
           }
 
-          this.hp[i][j] = this.dyn.graph.getGdh().refObjectInfo(aname, pname.type, pname.elements);
+          this.hp[i][j] = this.dyn.graph.getGdh()
+            .refObjectInfo(aname, pname.type, pname.elements);
           console.log("Table $header " + i + " hp " + this.hp[i][j]);
           if (j === 0) {
             this.size[i] = pname.elements;
@@ -6804,21 +7223,26 @@ function DynTable(dyn) {
       // Connect select array
       this.sel_p[i] = 0;
       pname = this.dyn.parseAttrName(this.sel_attribute[i]);
-      if (pname === null || pname.name === "")
+      if (pname === null || pname.name === "") {
         continue;
+      }
 
-      if (pname.type != Pwr.eType_Boolean)
+      if (pname.type != Pwr.eType_Boolean) {
         continue;
+      }
 
       switch (pname.database) {
         case GraphIfc.eDatabase_Gdh:
-          sel_p[i] = this.dyn.graph.getGdh().refObjectInfo(pname.tname, pname.type, pname.elements);
+          sel_p[i] = this.dyn.graph.getGdh()
+            .refObjectInfo(pname.tname, pname.type, pname.elements);
           if (sel_p[i] !== 0) {
-            if (ret.getElements() == 0)
+            if (ret.getElements() == 0) {
               break;
+            }
             this.sel_elements[i] = pname.elements;
-            if (this.sel_elements[i] > this.elements[i])
+            if (this.sel_elements[i] > this.elements[i]) {
               this.sel_elements[i] = this.elements[i];
+            }
           }
           break;
         default:
@@ -6834,25 +7258,30 @@ function DynTable(dyn) {
   this.disconnect = function () {
     for (var i = 0; i < this.columns; i++) {
       if (!this.headerRef[i]) {
-        if (this.p[i] != 0 && this.db[i] == GraphIfc.eDatabase_Gdh)
-          this.dyn.graph.getGdh().unrefObjectInfo(this.p[i]);
+        if (this.p[i] != 0 && this.db[i] == GraphIfc.eDatabase_Gdh) {
+          this.dyn.graph.getGdh()
+            .unrefObjectInfo(this.p[i]);
+        }
         this.p[i] = 0;
-      }
-      else {
+      } else {
         for (var j = 0; j < this.elements[i]; j++) {
-          if (this.hp[i][j] != 0)
-            this.dyn.graph.getGdh().unrefObjectInfo(this.hp[i][j]);
+          if (this.hp[i][j] != 0) {
+            this.dyn.graph.getGdh()
+              .unrefObjectInfo(this.hp[i][j]);
+          }
         }
       }
       switch (this.type_id[i]) {
         case Pwr.eType_Float32:
-          if (this.oldValueF[i] !== null)
+          if (this.oldValueF[i] !== null) {
             this.oldValueF[i] = null;
+          }
           break;
         case Pwr.eType_Boolean:
         case GraphIfc.eType_Bit:
-          if (this.oldValueB[i] !== null)
+          if (this.oldValueB[i] !== null) {
             this.oldValueB[i] = null;
+          }
           break;
         case Pwr.eType_Int32:
         case Pwr.eType_Int16:
@@ -6860,16 +7289,18 @@ function DynTable(dyn) {
         case Pwr.eType_UInt32:
         case Pwr.eType_UInt16:
         case Pwr.eType_UInt8:
-          if (this.oldValueI[i] !== null)
+          if (this.oldValueI[i] !== null) {
             this.oldValueI[i] = null;
+          }
           break;
         case Pwr.eType_String:
         case Pwr.eType_Objid:
         case Pwr.eType_AttrRef:
         case Pwr.eType_Time:
         case Pwr.eType_DeltaTime:
-          if (this.oldValueS[i] !== null)
+          if (this.oldValueS[i] !== null) {
             this.oldValueS[i] = null;
+          }
           break;
       }
       if (this.sel_p[i] !== 0) {
@@ -6881,19 +7312,22 @@ function DynTable(dyn) {
 
   this.scan = function (object) {
 
-    if (this.p[0] == 0)
+    if (this.p[0] == 0) {
       return;
+    }
 
     for (var i = 0; i < this.columns; i++) {
       if (!this.headerRef[i]) {
-        if (this.p[i] === 0)
+        if (this.p[i] === 0) {
           continue;
+        }
 
         switch (this.type_id[i]) {
           case Pwr.eType_Float32: {
             var val = this.dyn.graph.getGdh().getObjectRefInfo(this.p[i]);
-            if (val === null)
+            if (val === null) {
               break;
+            }
             for (var j = 0; j < Math.min(this.elements[i], val.length); j++) {
               if (this.oldValueF[i][j] != val[j] || this.firstScan) {
                 var sb = this.cFormat[i].format(val[j]);
@@ -6905,14 +7339,16 @@ function DynTable(dyn) {
           }
           case Pwr.eType_Boolean: {
             var val = this.dyn.graph.getGdh().getObjectRefInfo(this.p[i]);
-            if (val === null)
+            if (val === null) {
               break;
+            }
             for (var j = 0; j < Math.min(this.elements[i], val.length); j++) {
               if (this.firstScan || this.oldValueB[i][j] != val[j]) {
-                if (val[j])
+                if (val[j]) {
                   object.setValue("1", i, j);
-                else
+                } else {
                   object.setValue("0", i, j);
+                }
                 oldValueB[i][j] = val[j];
               }
             }
@@ -6925,8 +7361,9 @@ function DynTable(dyn) {
           case Pwr.eType_UInt16:
           case Pwr.eType_UInt8: {
             var val = this.dyn.graph.getGdh().getObjectRefInfo(this.p[i]);
-            if (val == null)
+            if (val == null) {
               break;
+            }
             for (var j = 0; j < Math.min(this.elements[i], val.length); j++) {
               if (this.oldValueI[i][j] != val[j] || this.firstScan) {
                 var sb = cFormat[i].format(val[j]);
@@ -6942,21 +7379,23 @@ function DynTable(dyn) {
           case Pwr.eType_Time:
           case Pwr.eType_DeltaTime: {
             var val = this.dyn.graph.getGdh().getObjectRefInfo(this.p[i]);
-            if (val === null)
+            if (val === null) {
               break;
+            }
             for (var j = 0; j < Math.min(this.elements[i], val.length); j++) {
               if (this.firstScan || this.oldValueS[i][j] != val[j]) {
                 switch (this.type_id[i]) {
                   case Pwr.eType_AttrRef:
                   case Pwr.eType_Objid: {
-                    if (this.format[i] == "%1o")
+                    if (this.format[i] == "%1o") {
                       object.setValue(val[j], i, j);
-                    else {
+                    } else {
                       var idx = val[j].lastIndexOf('-');
-                      if (idx == -1)
+                      if (idx == -1) {
                         object.setValue(val[j], i, j);
-                      else
+                      } else {
                         object.setValue(val[j].substring(idx + 1), i, j);
+                      }
                     }
 
                     break;
@@ -6971,15 +7410,17 @@ function DynTable(dyn) {
           }
           case GraphIfc.eType_Bit: {
             var val = this.dyn.graph.getGdh().getObjectRefInfo(this.p[i]);
-            if (val == null)
+            if (val == null) {
               break;
+            }
             for (var j = 0; j < Math.min(this.elements[i], val.length); j++) {
               var bitval = ((this.bitmask[i] & val[j]) !== 0);
               if (this.oldValueB[i][j] != bitval || this.firstScan) {
-                if (bitval)
+                if (bitval) {
                   object.setValue("1", i, j);
-                else
+                } else {
                   object.setValue("0", i, j);
+                }
                 this.oldValueB[i][j] = bitval;
               }
             }
@@ -6987,18 +7428,19 @@ function DynTable(dyn) {
           }
 
         }
-      }
-      else {
+      } else {
         // $header reference
         for (var j = 0; j < this.elements[i]; j++) {
-          if (this.hp[i][j] == 0)
+          if (this.hp[i][j] == 0) {
             continue;
+          }
 
           switch (this.type_id[i]) {
             case Pwr.eType_Float32: {
               var val = this.dyn.graph.getGdh().getObjectRefInfo(this.hp[i][j]);
-              if (typeof val === 'undefined')
+              if (typeof val === 'undefined') {
                 break;
+              }
 
               if (this.oldValueF[i][j] != val || this.firstScan) {
                 var sb = this.cFormat[i].format(val);
@@ -7009,14 +7451,16 @@ function DynTable(dyn) {
             }
             case Pwr.eType_Boolean: {
               var val = this.dyn.graph.getGdh().getObjectRefInfo(this.hp[i][j]);
-              if (typeof val === 'undefined')
+              if (typeof val === 'undefined') {
                 break;
+              }
 
               if (this.firstScan || this.oldValueB[i][j] != val) {
-                if (val)
+                if (val) {
                   object.setValue("1", i, j);
-                else
+                } else {
                   object.setValue("0", i, j);
+                }
                 object.setValue(sb, i, j);
                 this.oldValueB[i][j] = val;
               }
@@ -7029,8 +7473,9 @@ function DynTable(dyn) {
             case Pwr.eType_UInt16:
             case Pwr.eType_UInt8: {
               var val = this.dyn.graph.getGdh().getObjectRefInfo(this.hp[i][j]);
-              if (typeof val == 'undefined')
+              if (typeof val == 'undefined') {
                 break;
+              }
 
               if (this.oldValueI[i][j] != val || this.firstScan) {
                 var sb = this.cFormat[i].format(val);
@@ -7045,8 +7490,9 @@ function DynTable(dyn) {
             case Pwr.eType_Time:
             case Pwr.eType_DeltaTime: {
               var val = this.dyn.graph.getGdh().getObjectRefInfo(this.hp[i][j]);
-              if (typeof val === 'undefined')
+              if (typeof val === 'undefined') {
                 break;
+              }
               if (this.firstScan || oldValueS[i][j] != val) {
                 object.setValue(val, i, j);
                 this.oldValueS[i][j] = val;
@@ -7055,15 +7501,17 @@ function DynTable(dyn) {
             }
             case GraphIfc.eType_Bit: {
               var val = this.dyn.graph.getGdh().getObjectRefInfo(this.hp[i][j]);
-              if (typeof val === 'undefined')
+              if (typeof val === 'undefined') {
                 break;
+              }
 
               var bitval = ((this.bitmask[i] & val) !== 0);
               if (this.oldValueB[i][j] != bitval || this.firstScan) {
-                if (bitval)
+                if (bitval) {
                   object.setValue("1", i, j);
-                else
+                } else {
                   object.setValue("0", i, j);
+                }
                 this.oldValueB[i][j] = bitval;
               }
               break;
@@ -7077,11 +7525,13 @@ function DynTable(dyn) {
     // Examine select array
     var sel_found = false;
     for (var i = 0; i < this.columns; i++) {
-      if (this.sel_p[i] === 0)
+      if (this.sel_p[i] === 0) {
         continue;
+      }
       var val = this.dyn.graph.getGdh().getObjectRefInfo(this.sel_p[i]);
-      if (val === null)
+      if (val === null) {
         continue;
+      }
       for (var j = 0; j < this.sel_elements[i]; j++) {
         if (val[j]) {
           sel_found = true;
@@ -7089,24 +7539,28 @@ function DynTable(dyn) {
         }
       }
     }
-    if (!sel_found)
+    if (!sel_found) {
       object.setSelectedCell(-1, -1);
+    }
 
-    if (this.firstScan)
+    if (this.firstScan) {
       this.firstScan = false;
+    }
   };
 
   this.action = function (object, e) {
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Click:
         var column, row;
         var value;
 
-        if (e.type != Glow.eEventType_Table)
+        if (e.type != Glow.eEventType_Table) {
           break;
+        }
 
         var event = e;
         row = object.getSelectedCellRow();
@@ -7114,8 +7568,9 @@ function DynTable(dyn) {
         if (row >= 0 && this.sel_p[column] !== 0) {
           // Reset previously selected
           var pname = this.dyn.parseAttrName(this.sel_attribute[column]);
-          if (pname === null || pname.name === "")
+          if (pname === null || pname.name === "") {
             break;
+          }
           value = false;
           var aname = pname.name + "[" + row + "]";
           this.dyn.graph.getGdh().setObjectInfoBoolean(aname, value);
@@ -7124,8 +7579,9 @@ function DynTable(dyn) {
           !(event.column == column && event.row == row)) {
           // Set new selected, if not same as previous selected
           var pname = this.dyn.parseAttrName(this.sel_attribute[event.column]);
-          if (pname === null || pname.name === "")
+          if (pname === null || pname.name === "") {
             break;
+          }
           value = true;
           var aname = pname.name + "[" + event.row + "]";
           this.dyn.graph.getGdh().setObjectInfoBoolean(aname, value);
@@ -7173,10 +7629,12 @@ function DynStatusColor(dyn) {
   };
 
   this.scan = function (object) {
-    if (!this.a.sts || this.dyn.ignoreColor)
+    if (!this.a.sts || this.dyn.ignoreColor) {
       return;
+    }
 
-    if (this.a.database == GraphIfc.eDatabase_Gdh && this.a.typeid == Pwr.eType_NetStatus) {
+    if (this.a.database == GraphIfc.eDatabase_Gdh &&
+      this.a.typeid == Pwr.eType_NetStatus) {
       // TODO get subscription oldness
     }
 
@@ -7185,13 +7643,15 @@ function DynStatusColor(dyn) {
     if (!this.firstScan && this.oldStatus != DynC.ePwrStatus_Fatal) {
       if (this.a.oldValue == value && this.dyn.resetColor)
       // No change since last time
+      {
         return;
+      }
     }
 
     this.a.oldValue = value;
-    if (value === 0)
+    if (value === 0) {
       value = DynC.ePwrStatus_No;
-    else {
+    } else {
       switch (value & 7) {
         case 3:
         case 1:
@@ -7210,45 +7670,55 @@ function DynStatusColor(dyn) {
           value = DynC.ePwrStatus_No;
       }
     }
-    if (!this.firstScan && this.oldStatus == value && this.oldStatus != DynC.ePwrStatus_Fatal)
+    if (!this.firstScan && this.oldStatus == value &&
+      this.oldStatus != DynC.ePwrStatus_Fatal) {
       return;
-    else
+    } else {
       this.firstScan = false;
+    }
 
     if ((this.dyn.total_dyn_type1 & DynC.mDynType1_Tone) !== 0) {
       switch (value) {
         case DynC.ePwrStatus_No:
-          if (this.nostatus_color >= Glow.eDrawTone__)
+          if (this.nostatus_color >= Glow.eDrawTone__) {
             object.setFillColor(this.nostatus_color);
-          else
+          } else {
             object.setColorTone(this.nostatus_color);
+          }
           break;
         case DynC.ePwrStatus_Success:
-          if (nostatus_color >= Glow.eDrawTone__)
+          if (nostatus_color >= Glow.eDrawTone__) {
             object.resetFillColor();
+          }
           object.resetColorTone();
           break;
         case DynC.ePwrStatus_Warning:
-          object.setColorTone((this.use_colortheme !== 0) ? Glow.eDrawType_CustomColor42 : Glow.eDrawTone_Yellow);
+          object.setColorTone(
+            (this.use_colortheme !== 0) ? Glow.eDrawType_CustomColor42 :
+              Glow.eDrawTone_Yellow);
           break;
         case DynC.ePwrStatus_Error:
-          object.setColorTone((this.use_colortheme !== 0) ? Glow.eDrawType_CustomColor11 : Glow.eDrawTone_Red);
+          object.setColorTone(
+            (this.use_colortheme !== 0) ? Glow.eDrawType_CustomColor11 :
+              Glow.eDrawTone_Red);
           break;
         case DynC.ePwrStatus_Fatal:
           this.on = !this.on;
-          if (this.on)
-            object.setColorTone((this.use_colortheme !== 0) ? Glow.eDrawType_CustomColor11 : Glow.eDrawTone_Red);
-          else {
-            if (this.nostatus_color >= Glow.eDrawTone__)
+          if (this.on) {
+            object.setColorTone(
+              (this.use_colortheme !== 0) ? Glow.eDrawType_CustomColor11 :
+                Glow.eDrawTone_Red);
+          } else {
+            if (this.nostatus_color >= Glow.eDrawTone__) {
               object.setFillColor(this.nostatus_color);
-            else
+            } else {
               object.setColorTone(this.nostatus_color);
+            }
           }
           break;
       }
       this.dyn.repaintNow = true;
-    }
-    else {
+    } else {
       switch (value) {
         case DynC.ePwrStatus_No:
           object.setFillColor(this.nostatus_color);
@@ -7264,10 +7734,11 @@ function DynStatusColor(dyn) {
           break;
         case DynC.ePwrStatus_Fatal:
           this.on = !this.on;
-          if (this.on)
+          if (this.on) {
             object.setFillColor(Glow.eDrawType_ColorRed);
-          else
+          } else {
             object.setFillColor(this.nostatus_color);
+          }
           break;
       }
       this.dyn.repaintNow = true;
@@ -7288,7 +7759,9 @@ function DynStatusColor(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynStatusColor : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynStatusColor : " + lines[i]);
+      }
 
       elem = null;
 
@@ -7296,8 +7769,9 @@ function DynStatusColor(dyn) {
         case DynC.eSave_StatusColor:
           break;
         case DynC.eSave_StatusColor_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_StatusColor_nostatus_color:
           this.nostatus_color = parseInt(tokens[1], 10);
@@ -7313,8 +7787,9 @@ function DynStatusColor(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -7350,7 +7825,9 @@ function DynAxis(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynAxis : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynAxis : " + lines[i]);
+      }
 
       elem = null;
 
@@ -7358,12 +7835,14 @@ function DynAxis(dyn) {
         case DynC.eSave_Axis:
           break;
         case DynC.eSave_Axis_minvalue_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.minvalue_attr = tokens[1];
+          }
           break;
         case DynC.eSave_Axis_maxvalue_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.maxvalue_attr = tokens[1];
+          }
           break;
         case DynC.eSave_Axis_keep_settings:
           this.keep_settings = parseInt(tokens[1], 10);
@@ -7376,8 +7855,9 @@ function DynAxis(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -7387,24 +7867,27 @@ function DynAxis(dyn) {
 
     this.minvalue_a = new DynReference(this.dyn, this.minvalue_attr);
     this.minvalue_a.connect(this.dyn);
-    if (!this.minvalue_a.sts)
+    if (!this.minvalue_a.sts) {
       console.log("Axis: " + this.minvalue_attr);
+    }
 
     this.maxvalue_a = new DynReference(this.dyn, this.maxvalue_attr);
     this.maxvalue_a.connect(this.dyn);
-    if (!this.maxvalue_a.sts)
+    if (!this.maxvalue_a.sts) {
       console.log("Axis: " + this.maxvalue_attr);
+    }
 
     if (this.minvalue_a.sts && this.maxvalue_a.sts) {
-      if (this.minvalue_a.typeid != this.maxvalue_a.typeid)
+      if (this.minvalue_a.typeid != this.maxvalue_a.typeid) {
         this.attr_type = 0;
-      else
+      } else {
         this.attr_type = this.maxvalue_a.typeid;
-    }
-    else if (this.maxvalue_a.sts)
+      }
+    } else if (this.maxvalue_a.sts) {
       this.attr_type = this.maxvalue_a.typeid;
-    else if (this.minvalue_a.sts)
+    } else if (this.minvalue_a.sts) {
       this.attr_type = this.minvalue_a.typeid;
+    }
 
     return 1;
   };
@@ -7419,36 +7902,45 @@ function DynAxis(dyn) {
 
     switch (this.attr_type) {
       case Pwr.eType_Float32: {
-        if (!this.maxvalue_a.sts && !this.minvalue_a.sts)
+        if (!this.maxvalue_a.sts && !this.minvalue_a.sts) {
           return;
+        }
 
         var min_value = 0;
         var max_value = 0;
 
-        if (this.minvalue_a.sts)
+        if (this.minvalue_a.sts) {
           min_value = this.minvalue_a.get_ref_value(this.dyn);
-        if (this.maxvalue_a.sts)
+        }
+        if (this.maxvalue_a.sts) {
           max_value = this.maxvalue_a.get_ref_value(this.dyn);
+        }
 
         if (!(this.firstScan ||
             (this.maxvalue_a.sts && (max_value != this.maxvalue_a.oldValue)) ||
-            (this.minvalue_a.sts && (min_value != this.minvalue_a.oldValue))))
+            (this.minvalue_a.sts && (min_value != this.minvalue_a.oldValue)))) {
           return;
+        }
 
-        if (this.firstScan)
+        if (this.firstScan) {
           this.firstScan = true;
-        if (this.minvalue_a.sts)
+        }
+        if (this.minvalue_a.sts) {
           this.minvalue_a.oldValue = min_value;
-        if (this.maxvalue_a.sts)
+        }
+        if (this.maxvalue_a.sts) {
           this.maxvalue_a.oldValue = max_value;
+        }
 
-        if (max_value == min_value)
+        if (max_value == min_value) {
           return;
+        }
 
-        if (o.type() == Glow.eObjectType_GrowAxis)
+        if (o.type() == Glow.eObjectType_GrowAxis) {
           o.set_range(min_value, max_value, this.keep_settings);
-        else if (o.type() == Glow.eObjectType_GrowAxisArc)
+        } else if (o.type() == Glow.eObjectType_GrowAxisArc) {
           o.set_range(min_value, max_value, this.keep_settings);
+        }
         break;
       }
       default:
@@ -7491,7 +7983,9 @@ function DynTimeoutColor(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynTimeoutColor : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynTimeoutColor : " + lines[i]);
+      }
 
       elem = null;
 
@@ -7512,8 +8006,9 @@ function DynTimeoutColor(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -7553,7 +8048,9 @@ function DynHostObject(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynHostObject : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynHostObject : " + lines[i]);
+      }
 
       elem = null;
 
@@ -7561,8 +8058,9 @@ function DynHostObject(dyn) {
         case DynC.eSave_HostObject:
           break;
         case DynC.eSave_HostObject_object:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.hostobject = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -7572,8 +8070,9 @@ function DynHostObject(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -7617,7 +8116,9 @@ function DynDigSound(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynDigSound : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynDigSound : " + lines[i]);
+      }
 
       elem = null;
 
@@ -7625,12 +8126,14 @@ function DynDigSound(dyn) {
         case DynC.eSave_DigSound:
           break;
         case DynC.eSave_DigSound_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_DigSound_soundobject:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.soundobject = tokens[1];
+          }
           break;
         case DynC.eSave_DigSound_level:
           this.level = parseInt(tokens[1], 10);
@@ -7652,8 +8155,9 @@ function DynDigSound(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -7690,11 +8194,13 @@ function DynFillLevel(dyn) {
 
     this.color = this.dyn.getColor2(object, this.color);
 
-    if (this.color < 0 || this.color >= Glow.eDrawType__)
+    if (this.color < 0 || this.color >= Glow.eDrawType__) {
       return 0;
+    }
 
-    if (this.attribute.trim() === null)
+    if (this.attribute.trim() === null) {
       return 0;
+    }
 
     this.a = new DynReference(this.dyn, this.attribute);
     this.a.connect(this.dyn);
@@ -7704,13 +8210,14 @@ function DynFillLevel(dyn) {
     }
 
     if ((this.dyn.total_dyn_type1 & DynC.mDynType1_Tone) != 0) {
-      if (this.color >= Glow.eDrawTone__)
+      if (this.color >= Glow.eDrawTone__) {
         object.setLevelFillColor(this.color);
-      else
+      } else {
         object.setLevelColorTone(this.color);
-    }
-    else
+      }
+    } else {
       object.setLevelFillColor(this.color);
+    }
 
     var limits = object.getLimits();
     if ((limits.status & 1) !== 0) {
@@ -7731,24 +8238,25 @@ function DynFillLevel(dyn) {
   }
 
   this.disconnect = function () {
-    if (this.a === null)
+    if (this.a === null) {
       return;
+    }
     this.a.disconnect(this.dyn);
     this.minvalue_a.disconnect(this.dyn);
     this.maxvalue_a.disconnect(this.dyn);
   }
 
   this.scan = function (object) {
-    if (this.a === null || !this.a.sts)
+    if (this.a === null || !this.a.sts) {
       return;
+    }
 
     var minval, maxval;
     var pvalue = this.a.get_ref_value(this.dyn);
     if (this.maxvalue_a.sts && this.minvalue_a.sts) {
       minval = this.minvalue_a.get_ref_value(this.dyn);
       maxval = this.maxvalue_a.get_ref_value(this.dyn);
-      if (minval != this.min_value ||
-        maxval != this.max_value) {
+      if (minval != this.min_value || maxval != this.max_value) {
         this.min_value = minval;
         this.max_value = maxval;
         this.firstScan = true;
@@ -7758,36 +8266,47 @@ function DynFillLevel(dyn) {
     if (!this.firstScan) {
       if (Math.abs(this.a.oldValue - pvalue) < Number.MIN_VALUE)
       // No change since last time
+      {
         return;
-    }
-    else
+      }
+    } else {
       this.firstScan = false;
+    }
 
-    if (this.max_value == this.min_value)
+    if (this.max_value == this.min_value) {
       return;
+    }
 
     var value = 0;
-    if (!this.limits_found)
+    if (!this.limits_found) {
       value = (pvalue - this.min_value) / (this.max_value - this.min_value);
-    else {
+    } else {
       var geom = object.measure();
 
       switch (this.direction) {
         case Glow.eDirection_Right:
-          value = ((pvalue - this.min_value) / (this.max_value - this.min_value) * (this.limit_max - this.limit_min)
-            + (this.limit_min - geom.ll_x)) / (geom.ur_x - geom.ll_x);
+          value =
+            ((pvalue - this.min_value) / (this.max_value - this.min_value) *
+              (this.limit_max - this.limit_min) +
+              (this.limit_min - geom.ll_x)) / (geom.ur_x - geom.ll_x);
           break;
         case Glow.eDirection_Left:
-          value = ((pvalue - this.min_value) / (this.max_value - this.min_value) * (this.limit_max - this.limit_min)
-            + (geom.ur_x - this.limit_max)) / (geom.ur_x - geom.ll_x);
+          value =
+            ((pvalue - this.min_value) / (this.max_value - this.min_value) *
+              (this.limit_max - this.limit_min) +
+              (geom.ur_x - this.limit_max)) / (geom.ur_x - geom.ll_x);
           break;
         case Glow.eDirection_Up:
-          value = ((pvalue - this.min_value) / (this.max_value - this.min_value) * (this.limit_max - this.limit_min)
-            + (this.limit_min - geom.ll_y)) / (geom.ur_y - geom.ll_y);
+          value =
+            ((pvalue - this.min_value) / (this.max_value - this.min_value) *
+              (this.limit_max - this.limit_min) +
+              (this.limit_min - geom.ll_y)) / (geom.ur_y - geom.ll_y);
           break;
         case Glow.eDirection_Down:
-          value = ((pvalue - this.min_value) / (this.max_value - this.min_value) * (this.limit_max - this.limit_min)
-            + (geom.ur_y - this.limit_max)) / (geom.ur_y - geom.ll_y);
+          value =
+            ((pvalue - this.min_value) / (this.max_value - this.min_value) *
+              (this.limit_max - this.limit_min) +
+              (geom.ur_y - this.limit_max)) / (geom.ur_y - geom.ll_y);
           break;
         default:
           ;
@@ -7810,7 +8329,9 @@ function DynFillLevel(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynFillLevel : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynFillLevel : " + lines[i]);
+      }
 
       elem = null;
 
@@ -7818,8 +8339,9 @@ function DynFillLevel(dyn) {
         case DynC.eSave_FillLevel:
           break;
         case DynC.eSave_FillLevel_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_FillLevel_color:
           this.color = parseInt(tokens[1], 10);
@@ -7834,12 +8356,14 @@ function DynFillLevel(dyn) {
           this.max_value = parseFloat(tokens[1]);
           break;
         case DynC.eSave_FillLevel_minvalue_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.minvalue_attr = tokens[1];
+          }
           break;
         case DynC.eSave_FillLevel_maxvalue_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.maxvalue_attr = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -7849,8 +8373,9 @@ function DynFillLevel(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -7879,8 +8404,9 @@ function DynSetDig(dyn) {
     return 1;
   };
   this.action = function (object, e) {
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
@@ -7892,25 +8418,30 @@ function DynSetDig(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0) {
           break;
+        }
 
         var pname = this.dyn.parseAttrName(this.attribute);
-        if (pname === null)
+        if (pname === null) {
           return 1;
+        }
         var sts = null;
         switch (pname.database) {
           case GraphIfc.eDatabase_Gdh:
-            sts = this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, true);
+            sts =
+              this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, true);
             break;
           case GraphIfc.eDatabase_Local:
-            sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, true);
+            sts = this.dyn.graph.getLdb()
+              .setObjectInfo(this.dyn.graph, pname.name, true);
             break;
           default:
             break;
         }
-        if (sts.evenSts())
+        if (sts.evenSts()) {
           console.log("SetDig: " + pname.name);
+        }
         break;
       default:
         break;
@@ -7927,7 +8458,9 @@ function DynSetDig(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynSetDig : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynSetDig : " + lines[i]);
+      }
 
       elem = null;
 
@@ -7935,8 +8468,9 @@ function DynSetDig(dyn) {
         case DynC.eSave_SetDig:
           break;
         case DynC.eSave_SetDig_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_SetDig_instance:
           this.instance = parseInt(tokens[1], 10);
@@ -7952,8 +8486,9 @@ function DynSetDig(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -7980,8 +8515,9 @@ function DynResetDig(dyn) {
     return 1;
   };
   this.action = function (object, e) {
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
@@ -7993,25 +8529,30 @@ function DynResetDig(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0) {
           break;
+        }
 
         var pname = this.dyn.parseAttrName(this.attribute);
-        if (pname === null)
+        if (pname === null) {
           return 1;
+        }
         var sts = null;
         switch (pname.database) {
           case GraphIfc.eDatabase_Gdh:
-            sts = this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, false);
+            sts =
+              this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, false);
             break;
           case GraphIfc.eDatabase_Local:
-            sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, false);
+            sts = this.dyn.graph.getLdb()
+              .setObjectInfo(this.dyn.graph, pname.name, false);
             break;
           default:
             break;
         }
-        if (sts.evenSts())
+        if (sts.evenSts()) {
           console.log("ResetDig: " + pname.name);
+        }
         break;
       default:
         break;
@@ -8028,7 +8569,9 @@ function DynResetDig(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynResetDig : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynResetDig : " + lines[i]);
+      }
 
       elem = null;
 
@@ -8036,8 +8579,9 @@ function DynResetDig(dyn) {
         case DynC.eSave_ResetDig:
           break;
         case DynC.eSave_ResetDig_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_ResetDig_instance:
           this.instance = parseInt(tokens[1], 10);
@@ -8053,8 +8597,9 @@ function DynResetDig(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -8081,8 +8626,9 @@ function DynToggleDig(dyn) {
     return 1;
   };
   this.action = function (object, e) {
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
@@ -8096,23 +8642,27 @@ function DynToggleDig(dyn) {
         this.dyn.graph.setClickActive(0);
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0) {
           break;
+        }
 
         var pname = this.dyn.parseAttrName(this.attribute);
-        if (pname === null)
+        if (pname === null) {
           return 1;
+        }
         var sts = null;
         switch (pname.database) {
           case GraphIfc.eDatabase_Gdh:
             sts = this.dyn.graph.getGdh().toggleObjectInfo(pname.name);
             break;
           case GraphIfc.eDatabase_Local:
-            sts = this.dyn.graph.getLdb().toggleObjectInfo(this.dyn.graph, pname.name);
+            sts = this.dyn.graph.getLdb()
+              .toggleObjectInfo(this.dyn.graph, pname.name);
             break;
         }
-        if (sts.evenSts())
+        if (sts.evenSts()) {
           console.log("ToggleDig: " + pname.name);
+        }
         break;
     }
     return 1;
@@ -8127,7 +8677,9 @@ function DynToggleDig(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynToggleDig : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynToggleDig : " + lines[i]);
+      }
 
       elem = null;
 
@@ -8135,8 +8687,9 @@ function DynToggleDig(dyn) {
         case DynC.eSave_ToggleDig:
           break;
         case DynC.eSave_ToggleDig_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -8146,8 +8699,9 @@ function DynToggleDig(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -8176,50 +8730,59 @@ function DynStoDig(dyn) {
     return 1;
   };
   this.action = function (object, e) {
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down: {
         object.setColorInverse(1);
         this.dyn.repaintNow = true;
 
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0) {
           break;
+        }
 
         var pname = this.dyn.parseAttrName(this.attribute);
         var sts = null;
         switch (pname.database) {
           case GraphIfc.eDatabase_Gdh:
-            sts = this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, true);
+            sts =
+              this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, true);
             break;
           case GraphIfc.eDatabase_Local:
-            sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, true);
+            sts = this.dyn.graph.getLdb()
+              .setObjectInfo(this.dyn.graph, pname.name, true);
             break;
         }
-        if (sts.evenSts())
+        if (sts.evenSts()) {
           console.log("StoDig: " + pname.name);
+        }
         break;
       }
       case Glow.eEvent_MB1Up: {
         object.setColorInverse(0);
         this.dyn.repaintNow = true;
 
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0) {
           break;
+        }
 
         var pname = this.dyn.parseAttrName(this.attribute);
         var sts = null;
         switch (pname.database) {
           case GraphIfc.eDatabase_Gdh:
-            sts = this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, false);
+            sts =
+              this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, false);
             break;
           case GraphIfc.eDatabase_Local:
-            sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, false);
+            sts = this.dyn.graph.getLdb()
+              .setObjectInfo(this.dyn.graph, pname.name, false);
             break;
         }
-        if (sts.evenSts())
+        if (sts.evenSts()) {
           console.log("StoDig: " + pname.name);
+        }
         break;
       }
     }
@@ -8234,14 +8797,17 @@ function DynStoDig(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynToggleDig : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynToggleDig : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_StoDig:
           break;
         case DynC.eSave_StoDig_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -8251,8 +8817,9 @@ function DynStoDig(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -8282,8 +8849,9 @@ function DynCommand(dyn) {
   };
 
   this.action = function (object, e) {
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
@@ -8295,22 +8863,26 @@ function DynCommand(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0) {
           break;
+        }
 
-        if (this.command == null)
+        if (this.command == null) {
           return 1;
+        }
 
         var cmd = this.dyn.graph.getCommand(this.command);
 
         var r = this.dyn.graph.ctx.gdraw.get_clip_rectangle();
-        if (r != null)
+        if (r != null) {
           this.dyn.graph.ctx.gdraw.reset_clip_rectangle();
+        }
 
         this.dyn.graph.command(cmd);
 
-        if (r != null)
+        if (r != null) {
           this.dyn.graph.ctx.gdraw.set_clip_rectangle(r.x1, r.y1, r.x2, r.y2);
+        }
 
         break;
     }
@@ -8325,14 +8897,17 @@ function DynCommand(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynCommand : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynCommand : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_Command:
           break;
         case DynC.eSave_Command_command:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.command = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -8342,8 +8917,9 @@ function DynCommand(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -8372,8 +8948,9 @@ function DynScript(dyn) {
   };
 
   this.action = function (object, e) {
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
@@ -8385,11 +8962,13 @@ function DynScript(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0) {
           break;
+        }
 
-        if (this.script == null)
+        if (this.script == null) {
           return 1;
+        }
 
         this.dyn.graph.script(this.script);
         break;
@@ -8405,7 +8984,9 @@ function DynScript(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynScript : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynScript : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_Script:
@@ -8425,23 +9006,25 @@ function DynScript(dyn) {
             while ((idx = line.indexOf('"', idx)) != -1) {
               if (idx > 0 && (line.charAt(idx - 1) == '\\')) {
                 line = line.substring(0, idx - 1) + line.substring(idx);
-              }
-              else {
-                if (idx > 0)
+              } else {
+                if (idx > 0) {
                   line = line.substring(0, idx - 1);
-                else
+                } else {
                   line = "";
+                }
                 this.script += line;
                 send = true;
                 break;
               }
             }
-            if (send)
+            if (send) {
               break;
+            }
             this.script += line + "\n";
             i++;
-            if (i >= lines.length)
+            if (i >= lines.length) {
               break;
+            }
 
             line = lines[i];
           }
@@ -8454,8 +9037,9 @@ function DynScript(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     console.log("script : \"" + this.script + "\"");
     return i;
@@ -8485,8 +9069,9 @@ function DynCommandDoubleClick(dyn) {
   };
 
   this.action = function (object, e) {
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
@@ -8498,11 +9083,13 @@ function DynCommandDoubleClick(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1ClickDoubleClick:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0) {
           break;
+        }
 
-        if (this.command == null)
+        if (this.command == null) {
           return 1;
+        }
 
         var cmd = this.dyn.graph.getCommand(this.command);
 
@@ -8520,14 +9107,17 @@ function DynCommandDoubleClick(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynCommandDoubleClick : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynCommandDoubleClick : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_CommandDC:
           break;
         case DynC.eSave_CommandDC_command:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.command = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -8537,8 +9127,9 @@ function DynCommandDoubleClick(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -8568,11 +9159,13 @@ function DynConfirm(dyn) {
   };
 
   this.action = function (object, e) {
-    if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) == 0)
+    if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) == 0) {
       return 1;
+    }
 
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
@@ -8581,24 +9174,31 @@ function DynConfirm(dyn) {
       case Glow.eEvent_ValueChanged:
 
         var skip = 0;
-        if (((this.on_set != 0 && this.on_reset == 0) || (this.on_reset != 0 && this.on_set == 0)) &&
+        if (((this.on_set != 0 && this.on_reset == 0) ||
+            (this.on_reset != 0 && this.on_set == 0)) &&
           (this.dyn.total_action_type1 & DynC.mActionType1_ToggleDig) != 0) {
           for (var j = 0; j < this.dyn.elements.length; j++) {
-            if (dyn.elements.get(j).action_type1 == DynC.mActionType1_ToggleDig) {
-              var pname = this.dyn.parseAttrName(this.dyn.elements.get(j).attribute);
-              if (pname.name.substring(0, 1) == "&")
+            if (dyn.elements.get(j).action_type1 ==
+              DynC.mActionType1_ToggleDig) {
+              var pname = this.dyn.parseAttrName(
+                this.dyn.elements.get(j).attribute);
+              if (pname.name.substring(0, 1) == "&") {
                 pname.name = this.dyn.graph.get_reference_name(pname.name);
+              }
 
               switch (pname.database) {
                 case GraphIfc.eDatabase_Gdh:
                   // TODO
-                  var ret = this.dyn.graph.getGdh().getObjectInfoBoolean(pname.name);
+                  var ret = this.dyn.graph.getGdh()
+                    .getObjectInfoBoolean(pname.name);
                   if (ret.oddSts()) {
-                    if ((this.on_set != 0 && ret.value) || (this.on_reset != 0 && !ret.value))
+                    if ((this.on_set != 0 && ret.value) ||
+                      (this.on_reset != 0 && !ret.value)) {
                       skip = 1;
-                  }
-                  else
+                    }
+                  } else {
                     console.log("Confirm: " + ret.getSts());
+                  }
                   break;
                 case GraphIfc.eDatabase_Ccm:
                   // TODO
@@ -8629,14 +9229,17 @@ function DynConfirm(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynConfirm : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynConfirm : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_Confirm:
           break;
         case DynC.eSave_Confirm_text:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.text = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_Confirm_on_set:
           this.on_set = parseInt(tokens[1], 10);
@@ -8652,8 +9255,9 @@ function DynConfirm(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -8687,8 +9291,9 @@ function DynIncrAnalog(dyn) {
 
   this.action = function (object, e) {
 
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
@@ -8700,23 +9305,28 @@ function DynIncrAnalog(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0) {
           break;
+        }
 
         var pname = this.dyn.parseAttrName(this.attribute);
-        if (pname == null)
+        if (pname == null) {
           return 1;
+        }
         var typeId = pname.type;
-        if (pname.type < 0)
+        if (pname.type < 0) {
           typeId = Pwr.eType_Float32;
+        }
         switch (typeId) {
           case Pwr.eType_Int32:
             switch (pname.database) {
               case GraphIfc.eDatabase_Gdh:
-                this.dyn.graph.getGdh().getObjectInfoInt(pname.name, this.action2, this);
+                this.dyn.graph.getGdh()
+                  .getObjectInfoInt(pname.name, this.action2, this);
                 break;
               case GraphIfc.eDatabase_Local:
-                var ret = this.dyn.graph.getLdb().getObjectInfo(this.dyn.graph, pname.name);
+                var ret = this.dyn.graph.getLdb()
+                  .getObjectInfo(this.dyn.graph, pname.name);
                 this.action2(0, this, 1, ret.value);
                 break;
             }
@@ -8724,10 +9334,12 @@ function DynIncrAnalog(dyn) {
           default:
             switch (pname.database) {
               case GraphIfc.eDatabase_Gdh:
-                this.dyn.graph.getGdh().getObjectInfoFloat(pname.name, this.action2, this);
+                this.dyn.graph.getGdh()
+                  .getObjectInfoFloat(pname.name, this.action2, this);
                 break;
               case GraphIfc.eDatabase_Local:
-                var ret = this.dyn.graph.getLdb().getObjectInfo(this.dyn.graph, pname.name);
+                var ret = this.dyn.graph.getLdb()
+                  .getObjectInfo(this.dyn.graph, pname.name);
                 this.action2(0, this, 1, ret.value);
                 break;
             }
@@ -8738,23 +9350,28 @@ function DynIncrAnalog(dyn) {
   };
 
   this.action2 = function (id, self, sts, value) {
-    if (!(sts & 1))
+    if (!(sts & 1)) {
       return;
+    }
 
     var pname = self.dyn.parseAttrName(self.attribute);
-    if (pname == null)
+    if (pname == null) {
       return 1;
+    }
     var typeId = pname.type;
-    if (pname.type < 0)
+    if (pname.type < 0) {
       typeId = Pwr.eType_Float32;
+    }
     switch (typeId) {
       case Pwr.eType_Int32: {
         value += self.increment;
         if (!(self.min_value == 0 && self.max_value == 0)) {
-          if (value < self.min_value)
+          if (value < self.min_value) {
             value = Math.floor(self.min_value);
-          if (value > self.max_value)
+          }
+          if (value > self.max_value) {
             value = Math.floor(self.max_value);
+          }
         }
 
         var sts;
@@ -8763,20 +9380,24 @@ function DynIncrAnalog(dyn) {
             sts = self.dyn.graph.getGdh().setObjectInfoInt(pname.name, value);
             break;
           case GraphIfc.eDatabase_Local:
-            sts = self.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, value);
+            sts = self.dyn.graph.getLdb()
+              .setObjectInfo(this.dyn.graph, pname.name, value);
             break;
         }
-        if (sts.evenSts())
+        if (sts.evenSts()) {
           console.log("IncrAnalog " + pname.name);
+        }
         break;
       }
       default: {
         value += self.increment;
         if (!(self.min_value == 0 && self.max_value == 0)) {
-          if (value < self.min_value)
+          if (value < self.min_value) {
             value = self.min_value;
-          if (value > self.max_value)
+          }
+          if (value > self.max_value) {
             value = self.max_value;
+          }
         }
         var sts;
         switch (pname.database) {
@@ -8784,11 +9405,13 @@ function DynIncrAnalog(dyn) {
             sts = self.dyn.graph.getGdh().setObjectInfoFloat(pname.name, value);
             break;
           case GraphIfc.eDatabase_Local:
-            sts = self.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, value);
+            sts = self.dyn.graph.getLdb()
+              .setObjectInfo(this.dyn.graph, pname.name, value);
             break;
         }
-        if (sts.evenSts())
+        if (sts.evenSts()) {
           console.log("IncrAnalog " + pname.name);
+        }
       }
     }
     return 1;
@@ -8803,14 +9426,17 @@ function DynIncrAnalog(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynConfirm : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynConfirm : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_IncrAnalog:
           break;
         case DynC.eSave_IncrAnalog_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_IncrAnalog_increment:
           this.increment = parseFloat(tokens[1]);
@@ -8829,8 +9455,9 @@ function DynIncrAnalog(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -8869,23 +9496,26 @@ function DynRadioButton(dyn) {
 
 
   this.scan = function (object) {
-    if (!this.a.sts)
+    if (!this.a.sts) {
       return;
-    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
-    if (this.a.inverted)
+    }
+    var value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
+      this.a.database);
+    if (this.a.inverted) {
       value = !value;
+    }
 
     if (!this.firstScan) {
-      if (this.a.oldValue == value)
+      if (this.a.oldValue == value) {
         return;
-    }
-    else
+      }
+    } else {
       this.firstScan = false;
+    }
 
     if (value) {
       object.set_last_nodeclass();
-    }
-    else {
+    } else {
       object.set_root_nodeclass();
     }
     this.a.oldValue = value;
@@ -8893,8 +9523,9 @@ function DynRadioButton(dyn) {
 
   this.action = function (object, e) {
 
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
@@ -8906,35 +9537,43 @@ function DynRadioButton(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1Click: {
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0) {
           break;
+        }
 
         var value;
         var group = this.dyn.graph.getCtx().get_object_group(object);
-        if (group == null) break;
+        if (group == null) {
+          break;
+        }
 
         var list = group.get_object_list();
 
         for (var i = 0; i < list.size(); i++) {
           var oe = list.get(i);
-          if (oe != e.object &&
-            oe.type() == Glow.eObjectType_GrowNode) {
+          if (oe != e.object && oe.type() == Glow.eObjectType_GrowNode) {
             value = false;
             var gm_dyn = oe.getUserData();
 
-            if ((gm_dyn.total_action_type1 & DynC.mActionType1_RadioButton) !== 0) {
+            if ((gm_dyn.total_action_type1 & DynC.mActionType1_RadioButton) !==
+              0) {
               for (var j = 0; j < gm_dyn.elements.length; j++) {
-                if (gm_dyn.elements[j].action_type1 == DynC.mActionType1_RadioButton) {
-                  var pname = this.dyn.parseAttrName(gm_dyn.elements[j].attribute);
-                  if (pname.name.substring(0, 1) == "&")
+                if (gm_dyn.elements[j].action_type1 ==
+                  DynC.mActionType1_RadioButton) {
+                  var pname = this.dyn.parseAttrName(
+                    gm_dyn.elements[j].attribute);
+                  if (pname.name.substring(0, 1) == "&") {
                     pname.name = this.dyn.graph.get_reference_name(pname.name);
+                  }
                   var sts;
                   switch (pname.database) {
                     case GraphIfc.eDatabase_Gdh:
-                      sts = this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, value);
+                      sts = this.dyn.graph.getGdh()
+                        .setObjectInfoBoolean(pname.name, value);
                       break;
                     case GraphIfc.eDatabase_Local:
-                      sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, value);
+                      sts = this.dyn.graph.getLdb()
+                        .setObjectInfo(this.dyn.graph, pname.name, value);
                       break;
                     case GraphIfc.eDatabase_Ccm:
                       // TODO
@@ -8949,17 +9588,20 @@ function DynRadioButton(dyn) {
         }
 
         var pname = this.dyn.parseAttrName(this.attribute);
-        if (pname.name.substring(0, 1) == "&")
+        if (pname.name.substring(0, 1) == "&") {
           pname.name = this.dyn.graph.get_reference_name(pname.name);
+        }
 
         value = true;
         var sts;
         switch (pname.database) {
           case GraphIfc.eDatabase_Gdh:
-            sts = this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, value);
+            sts =
+              this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, value);
             break;
           case GraphIfc.eDatabase_Local:
-            sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, value);
+            sts = this.dyn.graph.getLdb()
+              .setObjectInfo(this.dyn.graph, pname.name, value);
             break;
           case GraphIfc.eDatabase_Ccm:
             // TODO
@@ -8981,14 +9623,17 @@ function DynRadioButton(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynRadioButton : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynRadioButton : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_RadioButton:
           break;
         case DynC.eSave_RadioButton_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -8998,8 +9643,9 @@ function DynRadioButton(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -9038,14 +9684,17 @@ function DynTipText(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynTipText : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynTipText : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_TipText:
           break;
         case DynC.eSave_TipText_text:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.text = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -9055,8 +9704,9 @@ function DynTipText(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -9084,8 +9734,9 @@ function DynHelp(dyn) {
     return 1;
   };
   this.action = function (object, e) {
-    if (this.topic == null)
+    if (this.topic == null) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
@@ -9097,14 +9748,16 @@ function DynHelp(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0) {
           break;
+        }
 
         var command;
-        if (this.bookmark !== null && this.bookmark !== "")
+        if (this.bookmark !== null && this.bookmark !== "") {
           command = "help " + this.topic + " /bookmark=" + this.bookmark;
-        else
+        } else {
           command = "help " + this.topic;
+        }
 
         this.dyn.graph.command(command);
         break;
@@ -9120,18 +9773,22 @@ function DynHelp(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynHelp : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynHelp : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_Help:
           break;
         case DynC.eSave_Help_topic:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.topic = tokens[1];
+          }
           break;
         case DynC.eSave_Help_bookmark:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.bookmark = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -9141,8 +9798,9 @@ function DynHelp(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -9170,8 +9828,9 @@ function DynOpenGraph(dyn) {
     return 1;
   };
   this.action = function (o, e) {
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
@@ -9183,25 +9842,31 @@ function DynOpenGraph(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) !== 0) {
           break;
+        }
         var command = null;
-        if (!(this.graph_object === null || this.graph_object === ""))
+        if (!(this.graph_object === null || this.graph_object === "")) {
           command = "open graph/object=" + this.graph_object;
-        else {
+        } else {
           // Open classgraph for popup menu object
-          if ((this.dyn.total_action_type1 & DynC.mActionType1_PopupMenu) !== 0) {
+          if ((this.dyn.total_action_type1 & DynC.mActionType1_PopupMenu) !==
+            0) {
             for (var i = 0; i < this.dyn.elements.length; i++) {
-              if (this.dyn.elements[i].action_type1 == DynC.mActionType1_PopupMenu) {
-                command = "open graph/class/instance=" + this.dyn.elements[i].ref_object;
+              if (this.dyn.elements[i].action_type1 ==
+                DynC.mActionType1_PopupMenu) {
+                command = "open graph/class/instance=" +
+                  this.dyn.elements[i].ref_object;
                 break;
               }
             }
-          }
-          else if ((this.dyn.total_dyn_type1 & DynC.mDynType1_HostObject) !== 0) {
+          } else if ((this.dyn.total_dyn_type1 & DynC.mDynType1_HostObject) !==
+            0) {
             for (var i = 0; i < this.dyn.elements.length; i++) {
-              if (this.dyn.elements.get(i).dyn_type1 == DynC.mDynType1_HostObject) {
-                command = "open graph/class/instance=" + this.dyn.elements[i].hostobject;
+              if (this.dyn.elements.get(i).dyn_type1 ==
+                DynC.mDynType1_HostObject) {
+                command = "open graph/class/instance=" +
+                  this.dyn.elements[i].hostobject;
                 break;
               }
             }
@@ -9222,14 +9887,17 @@ function DynOpenGraph(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynOpenGraph : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynOpenGraph : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_OpenGraph:
           break;
         case DynC.eSave_OpenGraph_graph_object:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.graph_object = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -9239,8 +9907,9 @@ function DynOpenGraph(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -9269,8 +9938,9 @@ function DynOpenURL(dyn) {
     return 1;
   };
   this.action = function (object, e) {
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
@@ -9282,8 +9952,9 @@ function DynOpenURL(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0) {
           break;
+        }
 
         var command = "open url \"" + this.url + "\"";
 
@@ -9301,14 +9972,17 @@ function DynOpenURL(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynOpenURL : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynOpenURL : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_OpenURL:
           break;
         case DynC.eSave_OpenURL_url:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.url = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -9318,8 +9992,9 @@ function DynOpenURL(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -9362,7 +10037,9 @@ function DynInputFocus(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynInputFocus : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynInputFocus : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_InputFocus:
@@ -9371,16 +10048,19 @@ function DynInputFocus(dyn) {
           this.initial_focus = parseInt(tokens[1], 10);
           break;
         case DynC.eSave_InputFocus_next_horizontal:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.next_horizontal = tokens[1];
+          }
           break;
         case DynC.eSave_InputFocus_next_vertical:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.next_vertical = tokens[1];
+          }
           break;
         case DynC.eSave_InputFocus_next_tab:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.next_tab = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -9390,8 +10070,9 @@ function DynInputFocus(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -9418,8 +10099,9 @@ function DynCloseGraph(dyn) {
     return 1;
   };
   this.action = function (object, e) {
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
@@ -9431,8 +10113,9 @@ function DynCloseGraph(dyn) {
         this.dyn.repaintNow = true;
         break;
       case Glow.eEvent_MB1Click:
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0) {
           break;
+        }
 
         this.dyn.graph.closeGraph();
         break;
@@ -9448,7 +10131,9 @@ function DynCloseGraph(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynCloseGraph : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynCloseGraph : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_CloseGraph:
@@ -9461,8 +10146,9 @@ function DynCloseGraph(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -9497,8 +10183,9 @@ function DynSlider(dyn) {
   this.direction;
 
   this.connect = function (object) {
-    if (this.attribute.trim() === "")
+    if (this.attribute.trim() === "") {
       return 0;
+    }
 
     this.a = new DynReference(this.dyn, this.attribute);
     this.a.connect(this.dyn);
@@ -9516,8 +10203,9 @@ function DynSlider(dyn) {
       object.storeTransform();
       var g = object.measure();
       var info = object.get_info();
-      var b = this.dyn.graph.getCtx().getBackgroundObjectLimits(DynC.mDynType1_SliderBackground,
-        (g.ll_x + g.ur_x) / 2, (g.ll_y + g.ur_y) / 2);
+      var b = this.dyn.graph.getCtx()
+        .getBackgroundObjectLimits(DynC.mDynType1_SliderBackground, (g.ll_x +
+          g.ur_x) / 2, (g.ll_y + g.ur_y) / 2);
       if ((b.sts & 1) !== 0) {
         this.direction = b.direction;
         origo = object.get_origo(info.direction);
@@ -9551,9 +10239,9 @@ function DynSlider(dyn) {
           default:
             ;
         }
-      }
-      else
+      } else {
         this.direction = info.direction;
+      }
 
       object.storeTransform();
     }
@@ -9571,8 +10259,9 @@ function DynSlider(dyn) {
   }
 
   this.disconnect = function () {
-    if (this.a == null || !this.a.sts)
+    if (this.a == null || !this.a.sts) {
       return;
+    }
     this.a.disconnect(this.dyn);
     this.minvalue_a.disconnect(this.dyn);
     this.maxvalue_a.disconnect(this.dyn);
@@ -9580,8 +10269,9 @@ function DynSlider(dyn) {
   }
 
   this.scan = function (object) {
-    if (this.a == null || !this.a.sts)
+    if (this.a == null || !this.a.sts) {
       return;
+    }
 
     var value = 0;
     var ivalue = 0;
@@ -9589,19 +10279,22 @@ function DynSlider(dyn) {
     switch (this.a.typeid) {
       case Pwr.eType_Float32:
         value = this.a.get_ref_value(this.dyn);
-        if (typeof value == 'undefined')
+        if (typeof value == 'undefined') {
           value = 0;
+        }
         break;
       case Pwr.eType_Int32:
         ivalue = this.a.get_ref_value(this.dyn);
-        if (typeof ivalue == 'undefined')
+        if (typeof ivalue == 'undefined') {
           ivalue = 0;
+        }
         break;
       case Pwr.eType_Boolean: {
         var b;
         b = this.a.get_ref_value(this.dyn);
-        if (typeof b == 'undefined')
+        if (typeof b == 'undefined') {
           b = false;
+        }
         ivalue = b ? 1 : 0;
         break;
       }
@@ -9609,19 +10302,21 @@ function DynSlider(dyn) {
 
     if (this.insensitive_a.sts) {
       this.slider_disabled = this.insensitive_a.get_ref_value(this.dyn);
-      if (this.insensitive_a.inverted)
+      if (this.insensitive_a.inverted) {
         this.slider_disabled = !this.slider_disabled;
-    }
-    else
+      }
+    } else {
       this.slider_disabled = false;
+    }
 
     if (this.maxvalue_a.sts && this.minvalue_a.sts) {
       this.max_value = this.maxvalue_a.get_ref_value(this.dyn);
       this.min_value = this.minvalue_a.get_ref_value(this.dyn);
       if (this.max_value != this.maxvalue_a.oldValue ||
         this.min_value != this.minvalue_a.oldValue) {
-        if (Math.abs(this.max_value - this.min_value) > Number.MIN_VALUE)
+        if (Math.abs(this.max_value - this.min_value) > Number.MIN_VALUE) {
           this.firstScan = true;
+        }
       }
       this.minvalue_a.oldValue = this.min_value;
       this.maxvalue_a.oldValue = this.max_value;
@@ -9632,19 +10327,22 @@ function DynSlider(dyn) {
         case Pwr.eType_Float32:
           if (Math.abs(this.old_value - value) < Number.MIN_VALUE)
           // No change since last time
+          {
             return;
+          }
           break;
         case Pwr.eType_Int32:
         case Pwr.eType_Boolean:
-          if (ivalue == this.old_ivalue)
+          if (ivalue == this.old_ivalue) {
             return;
+          }
           break;
         default:
           ;
       }
-    }
-    else
+    } else {
       this.firstScan = false;
+    }
 
     switch (this.a.typeid) {
       case Pwr.eType_Float32:
@@ -9660,7 +10358,8 @@ function DynSlider(dyn) {
 
     var info = object.get_info();
 
-    if (!(this.maxvalue_a.sts && this.minvalue_a.sts && this.max_value != this.min_value)) {
+    if (!(this.maxvalue_a.sts && this.minvalue_a.sts && this.max_value !=
+        this.min_value)) {
       this.max_value = info.max_value;
       this.min_value = info.min_value;
     }
@@ -9679,41 +10378,49 @@ function DynSlider(dyn) {
 
         switch (this.direction) {
           case Glow.eDirection_Down:
-            pos_y = (this.max_value - value) / (this.max_value - this.min_value) *
+            pos_y =
+              (this.max_value - value) / (this.max_value - this.min_value) *
               (info.max_position - info.min_position);
-            if (pos_y < 0)
+            if (pos_y < 0) {
               pos_y = 0;
-            else if (pos_y > info.max_position - info.min_position)
+            } else if (pos_y > info.max_position - info.min_position) {
               pos_y = info.max_position - info.min_position;
+            }
             pos_x = 0;
             break;
           case Glow.eDirection_Right:
-            pos_x = info.max_position - info.min_position -
-              (value - this.min_value) / (this.max_value - this.min_value) *
+            pos_x =
+              info.max_position - info.min_position - (value - this.min_value) /
+              (this.max_value - this.min_value) *
               (info.max_position - info.min_position);
-            if (pos_x < 0)
+            if (pos_x < 0) {
               pos_x = 0;
-            else if (pos_x > info.max_position - info.min_position)
+            } else if (pos_x > info.max_position - info.min_position) {
               pos_x = info.max_position - info.min_position;
+            }
             pos_y = 0;
             break;
           case Glow.eDirection_Left:
-            pos_x = info.max_position - info.min_position -
-              (this.max_value - value) / (this.max_value - this.min_value) *
+            pos_x =
+              info.max_position - info.min_position - (this.max_value - value) /
+              (this.max_value - this.min_value) *
               (info.max_position - info.min_position);
-            if (pos_x < 0)
+            if (pos_x < 0) {
               pos_x = 0;
-            else if (pos_x > info.max_position - info.min_position)
+            } else if (pos_x > info.max_position - info.min_position) {
               pos_x = info.max_position - info.min_position;
+            }
             pos_y = 0;
             break;
           default:   // Up
-            pos_y = (value - this.min_value) / (this.max_value - this.min_value) *
+            pos_y =
+              (value - this.min_value) / (this.max_value - this.min_value) *
               (info.max_position - info.min_position);
-            if (pos_y < 0)
+            if (pos_y < 0) {
               pos_y = 0;
-            else if (pos_y > info.max_position - info.min_position)
+            } else if (pos_y > info.max_position - info.min_position) {
               pos_y = info.max_position - info.min_position;
+            }
             pos_x = 0;
         }
         object.set_position(pos_x, pos_y);
@@ -9723,8 +10430,9 @@ function DynSlider(dyn) {
   };
 
   this.action = function (object, e) {
-    if (this.slider_disabled)
+    if (this.slider_disabled) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_SliderMoveEnd: {
@@ -9735,10 +10443,12 @@ function DynSlider(dyn) {
             case Pwr.eType_Boolean: {
               switch (pname.database) {
                 case GraphIfc.eDatabase_Gdh:
-                  sts = this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, 1);
+                  sts =
+                    this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, 1);
                   break;
                 case GraphIfc.eDatabase_Local:
-                  sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, 1);
+                  sts = this.dyn.graph.getLdb()
+                    .setObjectInfo(this.dyn.graph, pname.name, 1);
                   break;
               }
               break;
@@ -9747,25 +10457,30 @@ function DynSlider(dyn) {
               ;
           }
         }
-        if (this.dyn.graph.getCurrentSlider() == object)
+        if (this.dyn.graph.getCurrentSlider() == object) {
           this.dyn.graph.setCurrentSlider(null);
+        }
         break;
       }
       case Glow.eEvent_SliderMoveStart: {
         if (!this.dyn.graph.isAuthorized(this.dyn.access) ||
           this.slider_disabled) {
-          this.dyn.graph.getCtx().setMoveRestrictions(Glow.eMoveRestriction_Disable, 0, 0, null);
+          this.dyn.graph.getCtx()
+            .setMoveRestrictions(Glow.eMoveRestriction_Disable, 0, 0, null);
           this.dyn.graph.setCurrentSlider(null);
           break;
         }
         var info = object.get_info();
         if (this.direction == Glow.eDirection_Right ||
-          this.direction == Glow.eDirection_Left)
-          this.dyn.graph.getCtx().setMoveRestrictions(Glow.eMoveRestriction_HorizontalSlider,
-            info.max_position, info.min_position, e.object);
-        else
-          this.dyn.graph.getCtx().setMoveRestrictions(Glow.eMoveRestriction_VerticalSlider,
-            info.max_position, info.min_position, e.object);
+          this.direction == Glow.eDirection_Left) {
+          this.dyn.graph.getCtx()
+            .setMoveRestrictions(Glow.eMoveRestriction_HorizontalSlider,
+              info.max_position, info.min_position, e.object);
+        } else {
+          this.dyn.graph.getCtx()
+            .setMoveRestrictions(Glow.eMoveRestriction_VerticalSlider,
+              info.max_position, info.min_position, e.object);
+        }
 
         this.dyn.graph.setCurrentSlider(object);
         break;
@@ -9775,7 +10490,8 @@ function DynSlider(dyn) {
 
         var info = object.get_info();
         if (info.min_position != info.max_position) {
-          if (!(this.max_value_p !== 0 && this.min_value_p !== 0 && this.max_value != this.min_value)) {
+          if (!(this.max_value_p !== 0 && this.min_value_p !== 0 &&
+              this.max_value != this.min_value)) {
             this.max_value = info.max_value;
             this.min_value = info.min_value;
           }
@@ -9783,39 +10499,48 @@ function DynSlider(dyn) {
 
           switch (this.direction) {
             case Glow.eDirection_Down:
-              value = ((info.max_position - g.ll_y) / (info.max_position - info.min_position) *
+              value = ((info.max_position - g.ll_y) /
+                (info.max_position - info.min_position) *
                 (this.max_value - this.min_value) + this.min_value);
               break;
             case Glow.eDirection_Right:
-              value = ((info.max_position - g.ll_x) / (info.max_position - info.min_position) *
+              value = ((info.max_position - g.ll_x) /
+                (info.max_position - info.min_position) *
                 (this.max_value - this.min_value) + this.min_value);
               break;
             case Glow.eDirection_Left:
-              value = ((g.ll_x - info.min_position) / (info.max_position - info.min_position) *
+              value = ((g.ll_x - info.min_position) /
+                (info.max_position - info.min_position) *
                 (this.max_value - this.min_value) + this.min_value);
               break;
             default:
-              value = ((g.ll_y - info.min_position) / (info.max_position - info.min_position) *
+              value = ((g.ll_y - info.min_position) /
+                (info.max_position - info.min_position) *
                 (this.max_value - this.min_value) + this.min_value);
           }
-          if (value > this.max_value)
+          if (value > this.max_value) {
             value = this.max_value;
-          if (value < this.min_value)
+          }
+          if (value < this.min_value) {
             value = this.min_value;
+          }
 
           var pname = this.dyn.parseAttrName(this.attribute);
-          if (pname === null || pname.name === "")
+          if (pname === null || pname.name === "") {
             return 1;
+          }
 
           var sts;
           switch (pname.type) {
             case Pwr.eType_Float32:
               switch (pname.database) {
                 case GraphIfc.eDatabase_Gdh:
-                  sts = this.dyn.graph.getGdh().setObjectInfoFloat(pname.name, value);
+                  sts = this.dyn.graph.getGdh()
+                    .setObjectInfoFloat(pname.name, value);
                   break;
                 case GraphIfc.eDatabase_Local:
-                  sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, value);
+                  sts = this.dyn.graph.getLdb()
+                    .setObjectInfo(this.dyn.graph, pname.name, value);
                   break;
               }
               break;
@@ -9823,10 +10548,12 @@ function DynSlider(dyn) {
               var bvalue = (value > 0.5 ? true : false);
               switch (pname.database) {
                 case GraphIfc.eDatabase_Gdh:
-                  sts = this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, bvalue);
+                  sts = this.dyn.graph.getGdh()
+                    .setObjectInfoBoolean(pname.name, bvalue);
                   break;
                 case GraphIfc.eDatabase_Local:
-                  sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, bvalue);
+                  sts = this.dyn.graph.getLdb()
+                    .setObjectInfo(this.dyn.graph, pname.name, bvalue);
                   break;
               }
               break;
@@ -9835,16 +10562,20 @@ function DynSlider(dyn) {
               var ivalue = Math.floor(value > 0 ? value + 0.5 : value - 0.5);
               switch (pname.database) {
                 case GraphIfc.eDatabase_Gdh:
-                  sts = this.dyn.graph.getGdh().setObjectInfoInt(pname.name, ivalue);
+                  sts = this.dyn.graph.getGdh()
+                    .setObjectInfoInt(pname.name, ivalue);
                   break;
                 case GraphIfc.eDatabase_Local:
                   console.log("Set ivalue", ivalue, pname.name);
-                  sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, ivalue);
+                  sts = this.dyn.graph.getLdb()
+                    .setObjectInfo(this.dyn.graph, pname.name, ivalue);
                   break;
               }
             }
           }
-          if (sts.evenSts()) console.log("Slider error: " + this.attribute);
+          if (sts.evenSts()) {
+            console.log("Slider error: " + this.attribute);
+          }
         }
         break;
       }
@@ -9862,30 +10593,37 @@ function DynSlider(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynSlider : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynSlider : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_Slider:
           break;
         case DynC.eSave_Slider_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_Slider_minvalue_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.minvalue_attr = tokens[1];
+          }
           break;
         case DynC.eSave_Slider_maxvalue_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.maxvalue_attr = tokens[1];
+          }
           break;
         case DynC.eSave_Slider_insensitive_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.insensitive_attr = tokens[1];
+          }
           break;
         case DynC.eSave_Slider_release_attr:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.release_attr = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -9895,8 +10633,9 @@ function DynSlider(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -9935,14 +10674,17 @@ function DynFastCurve(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynSlider : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynSlider : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_FastCurve:
           break;
         case DynC.eSave_FastCurve_fast_object:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.fast_object = tokens[1];
+          }
           break;
         case DynC.eSave_FastCurve_curve_index1:
           this.curve_index1 = parseInt(tokens[1], 10);
@@ -9958,8 +10700,9 @@ function DynFastCurve(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -9981,26 +10724,28 @@ function DynPulldownMenu(dyn) {
   this.menu_object = null;
   this.text_size;
 
-  for (var i = 0; i < 32; i++)
+  for (var i = 0; i < 32; i++) {
     this.items_dyn[i] = null;
+  }
 
   this.action = function (object, e) {
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Click:
         if (this.menu_object !== null) {
           // Close, delete this menu and all childmenues
           for (var j = 0; j < 32; j++) {
-            if (this.items_dyn[j] !== null &&
-              (this.items_dyn[j].action_type1 & DynC.mActionType1_PulldownMenu) !== 0)
+            if (this.items_dyn[j] !== null && (this.items_dyn[j].action_type1 &
+                DynC.mActionType1_PulldownMenu) !== 0) {
               this.items_dyn[j].action(null, e);
+            }
           }
           this.dyn.graph.getCtx().remove(this.menu_object);
           this.menu_object = null;
-        }
-        else if (object !== null) {
+        } else if (object !== null) {
           var ll_x, ll_y, ur_x, ur_y;
           var info = new GlowMenuInfo();
 
@@ -10011,24 +10756,28 @@ function DynPulldownMenu(dyn) {
               info.item[i].text = this.items_text[i];
 
               // Check access
-              if ((this.items_dyn[i].action_type1 & DynC.mActionType1_PulldownMenu) !== 0)
+              if ((this.items_dyn[i].action_type1 &
+                  DynC.mActionType1_PulldownMenu) !== 0) {
                 info.item[i].type = Glow.eMenuItem_PulldownMenu;
-              else {
+              } else {
                 // Check access
                 if (this.dyn.graph.isAuthorized(this.items_dyn[i].access)) {
                   info.item[i].type = Glow.eMenuItem_Button;
-                  if ((this.items_dyn[i].dyn_type1 & DynC.mDynType1_Invisible) !== 0) {
+                  if ((this.items_dyn[i].dyn_type1 &
+                      DynC.mDynType1_Invisible) !== 0) {
                     var sts;
                     var invis_element = null;
                     var command;
 
                     for (var j = 0; j < this.dyn.elements.length; j++) {
-                      if (this.dyn.elements[j].dyn_type1 == DynC.mDynType1_Invisible) {
+                      if (this.dyn.elements[j].dyn_type1 ==
+                        DynC.mDynType1_Invisible) {
                         invis_element = this.dyn.elements[j];
                       }
                     }
                     if (invis_element !== null) {
-                      var pname = this.dyn.parseAttrName(invis_element.attribute);
+                      var pname = this.dyn.parseAttrName(
+                        invis_element.attribute);
                       if ((pname !== null) && pname.name !== "") {
                         if (pname.name.substring(0, 5) == "$cmd(") {
                           var idx = pname.name.lastIndexOf(")");
@@ -10036,12 +10785,12 @@ function DynPulldownMenu(dyn) {
                             command = pname.name.substring(5, idx);
                             command = this.dyn.graph.getCommand(command);
                             sts = this.dyn.graph.command(command);
-                            if ((sts & 1) == 0)
+                            if ((sts & 1) == 0) {
                               info.item[i].type = Glow.eMenuItem_ButtonDisabled;
+                            }
                           }
                         }
-                      }
-                      else {
+                      } else {
                         /** TODO
                          this.dyn.graph.getGdh().getObjectInfoBoolean( pname.name, this.action2, data);
                          if (ret.oddSts()) {
@@ -10056,13 +10805,13 @@ function DynPulldownMenu(dyn) {
                       }
                     }
                   }
-                }
-                else
+                } else {
                   info.item[i].type = Glow.eMenuItem_ButtonDisabled;
+                }
               }
-            }
-            else
+            } else {
               info.item[i].occupied = false;
+            }
             b_mask = b_mask << 1;
           }
 
@@ -10080,17 +10829,18 @@ function DynPulldownMenu(dyn) {
             text_font = Glow.eFont_LucidaSans;
             text_color = Glow.eDrawType_Line;
             bg_color = Glow.eDrawType_LightGray;
-          }
-          else if (bg_color == Glow.eDrawType_No || bg_color == Glow.eDrawType_Inherit)
+          } else if (bg_color == Glow.eDrawType_No ||
+            bg_color == Glow.eDrawType_Inherit) {
             bg_color = Glow.eDrawType_LightGray;
+          }
 
           var g = object.measure();
           this.menu_object = new GrowMenu(this.dyn.graph.getCtx());
           this.menu_object.init("__Menu", info, g.ll_x, g.ur_y, g.ur_x - g.ll_x,
-            Glow.eDrawType_Line, 0, 1, 1, bg_color, text_size,
-            text_drawtype, text_color,
-            Glow.eDrawType_MediumGray, text_font);
-          this.menu_object.set_scale(scale, scale, 0, 0, Glow.eScaleType_LowerLeft);
+            Glow.eDrawType_Line, 0, 1, 1, bg_color, text_size, text_drawtype,
+            text_color, Glow.eDrawType_MediumGray, text_font);
+          this.menu_object.set_scale(scale, scale, 0, 0,
+            Glow.eScaleType_LowerLeft);
           this.dyn.graph.getCtx().insert(this.menu_object);
 
           // grow_SetMenuInputFocus( menu_object, 1);
@@ -10098,26 +10848,29 @@ function DynPulldownMenu(dyn) {
 
         break;
       case Glow.eEvent_MenuActivated:
-        if (this.menu_object == null)
+        if (this.menu_object == null) {
           break;
+        }
         if (e.object == this.menu_object) {
           if (this.items_dyn[e.item] !== null) {
             var event = new GlowEvent();
             event.event = Glow.eEvent_MB1Click;
             return this.items_dyn[e.item].action(e.object, event);
           }
-        }
-        else {
+        } else {
           for (var j = 0; j < 32; j++) {
             if (this.items_dyn[j] !== null &&
-              (items_dyn[j].action_type1 & DynC.mActionType1_PulldownMenu) !== 0)
+              (items_dyn[j].action_type1 & DynC.mActionType1_PulldownMenu) !==
+              0) {
               this.items_dyn[j].action(null, e);
+            }
           }
         }
         break;
       case Glow.eEvent_MenuDelete:
-        if (this.menu_object == null)
+        if (this.menu_object == null) {
           break;
+        }
         if (e.object == null || e.object == this.menu_object) {
           // Delete this menu
           this.dyn.graph.getCtx().remove(this.menu_object);
@@ -10147,7 +10900,9 @@ function DynPulldownMenu(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynPulldownMenu : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynPulldownMenu : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_PulldownMenu:
@@ -10156,132 +10911,164 @@ function DynPulldownMenu(dyn) {
           this.button_mask = parseInt(tokens[1], 10);
           break;
         case DynC.eSave_PulldownMenu_items_text0:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[0] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text1:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[1] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text2:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[2] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text3:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[3] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text4:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[4] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text5:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[5] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text6:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[6] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text7:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[7] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text8:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[8] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text9:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[9] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text10:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[10] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text11:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[11] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text12:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[12] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text13:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[13] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text14:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[14] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text15:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[15] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text16:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[16] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text17:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[17] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text18:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[18] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text19:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[19] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text20:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[20] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text21:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[21] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text22:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[22] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text23:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[23] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text24:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[24] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text25:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[25] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text26:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[26] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text27:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[27] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text28:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[28] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text29:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[29] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text30:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[30] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_text31:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[31] = tokens[1];
+          }
           break;
         case DynC.eSave_PulldownMenu_items_dyn0:
           this.items_dyn[0] = new Dyn(dyn.graph);
@@ -10419,8 +11206,9 @@ function DynPulldownMenu(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -10477,27 +11265,31 @@ function DynOptionMenu(dyn) {
 
   this.disconnect = function () {
     this.a.disconnect(this.dyn);
-    if (this.update_a != null)
+    if (this.update_a != null) {
       this.update_a.disconnect(this.dyn);
+    }
   };
 
   this.scan = function (object) {
-    if (!this.a.sts)
+    if (!this.a.sts) {
       return;
+    }
 
     var update_texts = false;
     if (this.update_a !== null && this.update_a.sts) {
 
-      var value = this.dyn.getDig(this.update_a.p, this.update_a.typeid, this.update_a.bitmask, this.update_a.database);
+      var value = this.dyn.getDig(this.update_a.p, this.update_a.typeid,
+        this.update_a.bitmask, this.update_a.database);
 
-      if (this.update_a.inverted)
+      if (this.update_a.inverted) {
         value = !value;
+      }
 
       if (!this.firstScan) {
-        if (this.update_a.oldValue != value)
+        if (this.update_a.oldValue != value) {
           update_texts = true;
-      }
-      else {
+        }
+      } else {
         update_texts = false;
       }
       this.update_a.oldValue = value;
@@ -10517,9 +11309,9 @@ function DynOptionMenu(dyn) {
           if (value == this.oldValueF) {
             return;
           }
-        }
-        else
+        } else {
           this.firstScan = false;
+        }
 
         enum_value = Math.floor(value + 0.5);
         this.oldValueF = value;
@@ -10535,9 +11327,9 @@ function DynOptionMenu(dyn) {
           if (value == this.oldValueI) {
             return;
           }
-        }
-        else
+        } else {
           this.firstScan = false;
+        }
 
         enum_value = value;
         this.oldValueI = value;
@@ -10557,18 +11349,19 @@ function DynOptionMenu(dyn) {
           break;
         }
       }
-      if (!found)
+      if (!found) {
         object.setAnnotation(1, "");
-    }
-    else {
+      }
+    } else {
     }
 
   }
 
   this.action = function (object, e) {
 
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Click:
@@ -10576,8 +11369,7 @@ function DynOptionMenu(dyn) {
           // Close, delete this menu
           this.dyn.graph.getCtx().remove(this.menu_object);
           this.menu_object = null;
-        }
-        else {
+        } else {
           var ll_x, ll_y, ur_x, ur_y;
           var info = new GlowMenuInfo();
 
@@ -10590,21 +11382,20 @@ function DynOptionMenu(dyn) {
 
                 // Check access
                 info.item[i].type = Glow.eMenuItem_Button;
-              }
-              else
+              } else {
                 info.item[i].occupied = false;
+              }
               b_mask = b_mask << 1;
             }
-          }
-          else {
+          } else {
             for (var i = 0; i < 32; i++) {
               if (i < this.text_size) {
                 info.item[i].text = this.items_text[i];
                 info.item[i].type = Glow.eMenuItem_Button;
                 info.item[i].occupied = true;
-              }
-              else
+              } else {
                 info.item[i].occupied = false;
+              }
             }
           }
 
@@ -10622,29 +11413,32 @@ function DynOptionMenu(dyn) {
             text_drawtype = Glow.eDrawType_TextHelveticaBold;
             text_color = Glow.eDrawType_Line;
             bg_color = Glow.eDrawType_LightGray;
-          }
-          else if (bg_color == Glow.eDrawType_No || bg_color == Glow.eDrawType_Inherit)
+          } else if (bg_color == Glow.eDrawType_No ||
+            bg_color == Glow.eDrawType_Inherit) {
             bg_color = Glow.eDrawType_LightGray;
+          }
 
           var g = object.measure();
           this.menu_object = new GrowMenu(this.dyn.graph.getCtx());
           this.menu_object.init("__Menu", info, g.ll_x, g.ur_y, g.ur_x - g.ll_x,
-            Glow.eDrawType_Line, 0, 1, 1, bg_color, tsize,
-            text_drawtype, text_color,
-            Glow.eDrawType_MediumGray, text_font);
-          this.menu_object.set_scale(scale, scale, 0, 0, Glow.eScaleType_LowerLeft);
+            Glow.eDrawType_Line, 0, 1, 1, bg_color, tsize, text_drawtype,
+            text_color, Glow.eDrawType_MediumGray, text_font);
+          this.menu_object.set_scale(scale, scale, 0, 0,
+            Glow.eScaleType_LowerLeft);
           this.dyn.graph.getCtx().insert(this.menu_object);
         }
         break;
       case Glow.eEvent_MenuActivated:
-        if (this.menu_object === null)
+        if (this.menu_object === null) {
           break;
+        }
         if (e.object == this.menu_object) {
           // Set enum value to attribute
 
           var pname = this.dyn.parseAttrName(this.attribute);
-          if (pname === null || pname.name === "")
+          if (pname === null || pname.name === "") {
             return 1;
+          }
 
           var sts = null;
 
@@ -10653,7 +11447,8 @@ function DynOptionMenu(dyn) {
               switch (pname.type) {
                 case Pwr.eType_Float32: {
                   var value = this.items_enum[e.item];
-                  sts = this.dyn.graph.getGdh().setObjectInfoFloat(pname.name, value);
+                  sts = this.dyn.graph.getGdh()
+                    .setObjectInfoFloat(pname.name, value);
                   break;
                 }
                 case Pwr.eType_Int32:
@@ -10663,7 +11458,8 @@ function DynOptionMenu(dyn) {
                 case Pwr.eType_Int8:
                 case Pwr.eType_UInt8: {
                   var value = this.items_enum[e.item];
-                  sts = this.dyn.graph.getGdh().setObjectInfoInt(pname.name, value);
+                  sts =
+                    this.dyn.graph.getGdh().setObjectInfoInt(pname.name, value);
                   break;
                 }
                 default:
@@ -10674,7 +11470,8 @@ function DynOptionMenu(dyn) {
               switch (pname.type) {
                 case Pwr.eType_Float32: {
                   var value = this.items_enum[e.item];
-                  sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, value);
+                  sts = this.dyn.graph.getLdb()
+                    .setObjectInfo(this.dyn.graph, pname.name, value);
                   break;
                 }
                 case Pwr.eType_Int32:
@@ -10684,7 +11481,8 @@ function DynOptionMenu(dyn) {
                 case Pwr.eType_Int8:
                 case Pwr.eType_UInt8: {
                   var value = this.items_enum[e.item];
-                  sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, value);
+                  sts = this.dyn.graph.getLdb()
+                    .setObjectInfo(this.dyn.graph, pname.name, value);
                   break;
                 }
                 default:
@@ -10702,12 +11500,15 @@ function DynOptionMenu(dyn) {
               ;
           }
 
-          if (sts == null || sts.evenSts()) console.log("Option menu error: " + pname.name);
+          if (sts == null || sts.evenSts()) {
+            console.log("Option menu error: " + pname.name);
+          }
         }
         break;
       case Glow.eEvent_MenuDelete:
-        if (this.menu_object == null)
+        if (this.menu_object == null) {
           break;
+        }
         if (e.object === null || e.object == this.menu_object) {
           // Delete this menu
           this.dyn.graph.getCtx().remove(this.menu_object);
@@ -10729,26 +11530,32 @@ function DynOptionMenu(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("OptionsMenu : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("OptionsMenu : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_OptionMenu:
           break;
         case DynC.eSave_OptionMenu_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_OptionMenu_text_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.text_attribute = tokens[1];
+          }
           break;
         case DynC.eSave_OptionMenu_size_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.size_attribute = tokens[1];
+          }
           break;
         case DynC.eSave_OptionMenu_update_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.update_attribute = tokens[1];
+          }
           break;
         case DynC.eSave_OptionMenu_optionmenu_type:
           this.optionmenu_type = parseInt(tokens[1], 10);
@@ -10757,132 +11564,164 @@ function DynOptionMenu(dyn) {
           this.button_mask = parseInt(tokens[1], 10);
           break;
         case DynC.eSave_OptionMenu_items_text0:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[0] = tokens[1];
+          }
           break;
         case DynC.eSave_OptionMenu_items_text1:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[1] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text2:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[2] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text3:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[3] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text4:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[4] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text5:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[5] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text6:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[6] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text7:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[7] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text8:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[8] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text9:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[9] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text10:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[10] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text11:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[11] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text12:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[12] = tokens[1];
+          }
           break;
         case DynC.eSave_OptionMenu_items_text13:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[13] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text14:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[14] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text15:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[15] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text16:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[16] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text17:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[17] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text18:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[18] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text19:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[19] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text20:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[20] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text21:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[21] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text22:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[22] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text23:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[23] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text24:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[24] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text25:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[25] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text26:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[26] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text27:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[27] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text28:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[28] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text29:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[29] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text30:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[30] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_text31:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.items_text[31] = lines[i].substring(5);
+          }
           break;
         case DynC.eSave_OptionMenu_items_enum0:
           this.items_enum[0] = parseInt(tokens[1], 10);
@@ -10988,8 +11827,9 @@ function DynOptionMenu(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -11022,7 +11862,9 @@ function DynAnalogText(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("AnalogText : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("AnalogText : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_AnalogText:
@@ -11038,8 +11880,9 @@ function DynAnalogText(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -11071,18 +11914,22 @@ function DynSetValue(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("AnalogText : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("AnalogText : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_SetValue:
           break;
         case DynC.eSave_SetValue_attribute:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.attribute = tokens[1];
+          }
           break;
         case DynC.eSave_SetValue_value:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.value = tokens[1];
+          }
           break;
         case DynC.eSave_SetValue_instance:
           this.instance = parseInt(tokens[1], 10);
@@ -11098,8 +11945,9 @@ function DynSetValue(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -11113,8 +11961,9 @@ function DynSetValue(dyn) {
   };
   this.action = function (object, e) {
 
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
@@ -11126,8 +11975,9 @@ function DynSetValue(dyn) {
       case Glow.eEvent_MB1Click: {
         var sts;
 
-        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0)
+        if ((this.dyn.action_type1 & DynC.mActionType1_Confirm) != 0) {
           break;
+        }
 
         var pname = this.dyn.parseAttrName(this.attribute);
 
@@ -11137,10 +11987,12 @@ function DynSetValue(dyn) {
 
             switch (pname.database) {
               case GraphIfc.eDatabase_Gdh:
-                sts = this.dyn.graph.getGdh().setObjectInfoFloat(pname.name, inputValue);
+                sts = this.dyn.graph.getGdh()
+                  .setObjectInfoFloat(pname.name, inputValue);
                 break;
               case GraphIfc.eDatabase_Local:
-                sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, inputValue);
+                sts = this.dyn.graph.getLdb()
+                  .setObjectInfo(this.dyn.graph, pname.name, inputValue);
                 break;
               default:
                 return 0;
@@ -11164,10 +12016,12 @@ function DynSetValue(dyn) {
             switch (pname.database) {
               case GraphIfc.eDatabase_Gdh:
                 console.log("SetValue", pname.name, inputValue);
-                sts = this.dyn.graph.getGdh().setObjectInfoInt(pname.name, inputValue);
+                sts = this.dyn.graph.getGdh()
+                  .setObjectInfoInt(pname.name, inputValue);
                 break;
               case GraphIfc.eDatabase_Local:
-                sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, inputValue);
+                sts = this.dyn.graph.getLdb()
+                  .setObjectInfo(this.dyn.graph, pname.name, inputValue);
                 break;
               default:
                 return 0;
@@ -11181,19 +12035,22 @@ function DynSetValue(dyn) {
           case Pwr.eType_Boolean: {
             var inputValueInt = parseInt(this.value.trim(), 10);
             var inputValue;
-            if (inputValueInt == 0)
+            if (inputValueInt == 0) {
               inputValue = false;
-            else if (inputValueInt == 1)
+            } else if (inputValueInt == 1) {
               inputValue = true;
-            else
+            } else {
               break;
+            }
 
             switch (pname.database) {
               case GraphIfc.eDatabase_Gdh:
-                sts = this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, inputValue);
+                sts = this.dyn.graph.getGdh()
+                  .setObjectInfoBoolean(pname.name, inputValue);
                 break;
               case GraphIfc.eDatabase_Local:
-                sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, inputValue);
+                sts = this.dyn.graph.getLdb()
+                  .setObjectInfo(this.dyn.graph, pname.name, inputValue);
                 break;
               default:
                 return 0;
@@ -11207,10 +12064,12 @@ function DynSetValue(dyn) {
           case Pwr.eType_String: {
             switch (pname.database) {
               case GraphIfc.eDatabase_Gdh:
-                sts = this.dyn.graph.getGdh().setObjectInfoString(pname.name, this.value);
+                sts = this.dyn.graph.getGdh()
+                  .setObjectInfoString(pname.name, this.value);
                 break;
               case GraphIfc.eDatabase_Local:
-                sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, this.value);
+                sts = this.dyn.graph.getLdb()
+                  .setObjectInfo(this.dyn.graph, pname.name, this.value);
                 break;
               default:
                 return 0;
@@ -11264,14 +12123,17 @@ function DynMethodToolbar(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("MethodToolbar : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("MethodToolbar : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_MethodToolbar:
           break;
         case DynC.eSave_MethodToolbar_method_object:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.method_object = tokens[1];
+          }
           break;
         case DynC.eSave_MethodToolbar_toolbar_type:
           this.toolbar_type = parseInt(tokens[1], 10);
@@ -11284,8 +12146,9 @@ function DynMethodToolbar(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
     return i;
   };
@@ -11294,8 +12157,9 @@ function DynMethodToolbar(dyn) {
     this.o = object;
 
     var pname = this.dyn.parseAttrName(this.method_object);
-    if (pname === null || pname.name === "")
+    if (pname === null || pname.name === "") {
       return 1;
+    }
 
     this.pname_name = pname.name;
 
@@ -11311,13 +12175,11 @@ function DynMethodToolbar(dyn) {
         self.mask_configure = 1;
         self.mask_store = 1;
         self.connect5();
-      }
-      else {
+      } else {
         var parsed_name = self.pname_name + ".XttMethodsMask.OpMethods";
         dyn.graph.getGdh().getObjectInfoInt(parsed_name, self.connect3, self);
       }
-    }
-    else {
+    } else {
       self.mask_configure = 1;
       self.connect5();
     }
@@ -11327,9 +12189,9 @@ function DynMethodToolbar(dyn) {
     if (!(sts & 1)) {
       console.log("DynMethodToolbar: " + self.pname_name);
       self.mask_configure = 1;
-    }
-    else
+    } else {
       self.xm_mask_opmethods = value;
+    }
     var parsed_name = self.pname_name + ".XttMethodsMask.MntMethods";
     dyn.graph.getGdh().getObjectInfoInt(parsed_name, self.connect4, self);
   };
@@ -11338,9 +12200,9 @@ function DynMethodToolbar(dyn) {
     if (!(sts & 1)) {
       console.log("DynMethodToolbar: " + self.pname_name);
       self.mask_configure = 1;
-    }
-    else
+    } else {
       self.xm_mask_mntmethods = value;
+    }
     self.connect5();
   };
 
@@ -11352,37 +12214,44 @@ function DynMethodToolbar(dyn) {
     if (this.mask_configure != 0) {
       this.xm_mask_opmethods = 0;
       for (var i = 0; i < DynC.method_toolbar_op_cnt; i++) {
-        if (DynC.method_toolbar_op_methods[i] == "")
+        if (DynC.method_toolbar_op_methods[i] == "") {
           continue;
-        if (DynC.method_toolbar_op_methods[i] == "Parent Object Graph") {
-          if (this.method_object.indexOf('.') != -1)
-            this.xm_mask_opmethods |= 1 << i;
         }
-        else {
-          command = "check method/method=\"" + DynC.method_toolbar_op_methods[i] + "\"/object=" +
-            this.method_object;
+        if (DynC.method_toolbar_op_methods[i] == "Parent Object Graph") {
+          if (this.method_object.indexOf('.') != -1) {
+            this.xm_mask_opmethods |= 1 << i;
+          }
+        } else {
+          command =
+            "check method/method=\"" + DynC.method_toolbar_op_methods[i] +
+            "\"/object=" + this.method_object;
 
           command = this.dyn.graph.getCommand(command);
           sts = this.dyn.graph.command(command);
-          if ((sts & 1) != 0)
+          if ((sts & 1) != 0) {
             this.xm_mask_opmethods |= 1 << i;
+          }
         }
       }
       this.xm_mask_mntmethods = 0;
       for (var i = 0; i < DynC.method_toolbar_mnt_cnt; i++) {
-        if (DynC.method_toolbar_mnt_methods[i] === "")
+        if (DynC.method_toolbar_mnt_methods[i] === "") {
           continue;
-        command = "check method/method=\"" + DynC.method_toolbar_mnt_methods[i] + "\"/object=" +
-          this.method_object;
+        }
+        command =
+          "check method/method=\"" + DynC.method_toolbar_mnt_methods[i] +
+          "\"/object=" + this.method_object;
 
         command = this.dyn.graph.getCommand(command);
         sts = this.dyn.graph.command(command);
-        if ((sts & 1) != 0)
+        if ((sts & 1) != 0) {
           this.xm_mask_mntmethods |= 1 << i;
+        }
       }
       this.xm_mask_flags |= Pwrb.mXttMethodsFlagsMask_IsConfigured;
     }
-    console.log("Method mask: " + this.xm_mask_opmethods + " " + this.xm_mask_mntmethods);
+    console.log("Method mask: " + this.xm_mask_opmethods + " " +
+      this.xm_mask_mntmethods);
 
     var opmask = this.xm_mask_opmethods;
     var mntmask = this.xm_mask_mntmethods;
@@ -11390,41 +12259,56 @@ function DynMethodToolbar(dyn) {
     var insensitive_mntmask = 0;
 
     opmask &= ~Pwrb.mXttOpMethodsMask_OpenObjectGraph;
-    if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtEventsBlock | Pwr.mAccess_System))
+    if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtEventsBlock |
+        Pwr.mAccess_System)) {
       insensitive_opmask |= Pwrb.mXttOpMethodsMask_BlockEvents;
-    if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtNavigator | Pwr.mAccess_System | Pwr.mAccess_RtWrite |
-        Pwr.mAccess_Maintenance | Pwr.mAccess_Process | Pwr.mAccess_Instrument))
+    }
+    if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtNavigator |
+        Pwr.mAccess_System | Pwr.mAccess_RtWrite | Pwr.mAccess_Maintenance |
+        Pwr.mAccess_Process | Pwr.mAccess_Instrument)) {
       insensitive_opmask |= Pwrb.mXttOpMethodsMask_Note;
-    if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtNavigator | Pwr.mAccess_System))
+    }
+    if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtNavigator |
+        Pwr.mAccess_System)) {
       insensitive_mntmask |= Pwrb.mXttMntMethodsMask_RtNavigator;
-    if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtPlc | Pwr.mAccess_System))
+    }
+    if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtPlc | Pwr.mAccess_System)) {
       insensitive_mntmask |= Pwrb.mXttMntMethodsMask_OpenTrace;
+    }
 
-    if (this.toolbar_type == DynC.eMethodToolbarType_Simulate)
+    if (this.toolbar_type == DynC.eMethodToolbarType_Simulate) {
       opmask = 0;
+    }
 
-    this.o.configure(DynC.method_toolbar_op_subgraph, DynC.method_toolbar_mnt_subgraph,
-      DynC.method_toolbar_op_cnt, DynC.method_toolbar_mnt_cnt, opmask, mntmask,
-      insensitive_opmask, insensitive_mntmask);
+    this.o.configure(DynC.method_toolbar_op_subgraph,
+      DynC.method_toolbar_mnt_subgraph, DynC.method_toolbar_op_cnt,
+      DynC.method_toolbar_mnt_cnt, opmask, mntmask, insensitive_opmask,
+      insensitive_mntmask);
 
     this.mask_store = 0; // Check call is not universal
     if (this.mask_store != 0) {
       var psts;
 
       parsed_name = this.pname_name + ".XttMethodsMask.OpMethods";
-      psts = this.dyn.graph.getGdh().setObjectInfoInt(parsed_name, this.xm_mask_opmethods);
-      if (psts.evenSts())
+      psts = this.dyn.graph.getGdh()
+        .setObjectInfoInt(parsed_name, this.xm_mask_opmethods);
+      if (psts.evenSts()) {
         console.log("Set mask error " + parsed_name);
+      }
 
       parsed_name = this.pname_name + ".XttMethodsMask.MntMethods";
-      psts = this.dyn.graph.getGdh().setObjectInfoInt(parsed_name, this.xm_mask_mntmethods);
-      if (psts.evenSts())
+      psts = this.dyn.graph.getGdh()
+        .setObjectInfoInt(parsed_name, this.xm_mask_mntmethods);
+      if (psts.evenSts()) {
         console.log("Set mask error " + parsed_name);
+      }
 
       parsed_name = this.pname_name + ".XttMethodsMask.Flags";
-      psts = this.dyn.graph.getGdh().setObjectInfoInt(parsed_name, this.xm_mask_flags);
-      if (psts.evenSts())
+      psts = this.dyn.graph.getGdh()
+        .setObjectInfoInt(parsed_name, this.xm_mask_flags);
+      if (psts.evenSts()) {
         console.log("Set mask error " + parsed_name);
+      }
 
     }
 
@@ -11433,8 +12317,9 @@ function DynMethodToolbar(dyn) {
 
   this.action = function (object, e) {
 
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB1Down:
@@ -11452,14 +12337,16 @@ function DynMethodToolbar(dyn) {
         console.log("Toolbar action " + category + " " + idx);
 
         if (category == 1) {
-          if (DynC.method_toolbar_op_methods[idx] == "Parent Object Graph")
+          if (DynC.method_toolbar_op_methods[idx] == "Parent Object Graph") {
             command = "open graph/class/parent/instance=" + this.method_object;
-          else
-            command = "call method/method=\"" + DynC.method_toolbar_op_methods[idx] +
+          } else {
+            command =
+              "call method/method=\"" + DynC.method_toolbar_op_methods[idx] +
               "\"/object=" + this.method_object;
-        }
-        else {
-          command = "call method/method=\"" + DynC.method_toolbar_mnt_methods[idx] +
+          }
+        } else {
+          command =
+            "call method/method=\"" + DynC.method_toolbar_mnt_methods[idx] +
             "\"/object=" + this.method_object;
         }
 
@@ -11505,14 +12392,17 @@ function DynMethodPulldownMenu(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("MethodToolbar : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("MethodToolbar : " + lines[i]);
+      }
 
       switch (key) {
         case DynC.eSave_MethodPulldownMenu:
           break;
         case DynC.eSave_MethodPulldownMenu_method_object:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.method_object = tokens[1];
+          }
           break;
         case DynC.eSave_MethodPulldownMenu_menu_type:
           this.menu_type = parseInt(tokens[1], 10);
@@ -11525,8 +12415,9 @@ function DynMethodPulldownMenu(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -11540,8 +12431,9 @@ function DynMethodPulldownMenu(dyn) {
   this.xm_mask_mntmethods = 0;
 
   this.action = function (object, e) {
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     this.o = object;
     switch (e.event) {
@@ -11550,25 +12442,27 @@ function DynMethodPulldownMenu(dyn) {
           // Close, delete this menu
           this.dyn.graph.getCtx().remove(this.menu_object);
           this.menu_object = null;
-        }
-        else if (object != null) {
+        } else if (object != null) {
           var ll_x, ll_y, ur_x, ur_y;
           var parsed_name;
 
           var pname = this.dyn.parseAttrName(this.method_object);
-          if (pname == null || pname.name === "")
+          if (pname == null || pname.name === "") {
             return 1;
+          }
 
           this.pname_name = pname.name;
           parsed_name = this.pname_name + ".XttMethodsMask.Flags";
 
-          this.dyn.graph.getGdh().getObjectInfoInt(parsed_name, this.action2, this);
+          this.dyn.graph.getGdh()
+            .getObjectInfoInt(parsed_name, this.action2, this);
         }
 
         break;
       case Glow.eEvent_MenuActivated:
-        if (this.menu_object == null)
+        if (this.menu_object == null) {
           break;
+        }
         if (e.object == this.menu_object) {
 
           var sts;
@@ -11577,15 +12471,20 @@ function DynMethodPulldownMenu(dyn) {
           var found = 0;
 
           for (var i = 0; i < DynC.method_toolbar_op_cnt; i++) {
-            if (this.menu_type != DynC.eMethodsMenuType_Help && (DynC.method_toolbar_op_helpmask & (1 << i)) == 0)
+            if (this.menu_type != DynC.eMethodsMenuType_Help &&
+              (DynC.method_toolbar_op_helpmask & (1 << i)) == 0) {
               continue;
-            if (this.menu_type != DynC.eMethodsMenuType_Simulate)
+            }
+            if (this.menu_type != DynC.eMethodsMenuType_Simulate) {
               continue;
+            }
 
-            if ((this.opmask & (1 << i)) != 0)
+            if ((this.opmask & (1 << i)) != 0) {
               idx++;
+            }
             if (e.item + 1 == idx) {
-              command = "call method/method=\"" + DynC.method_toolbar_op_methods[i] +
+              command =
+                "call method/method=\"" + DynC.method_toolbar_op_methods[i] +
                 "\"/object=" + this.method_object;
               command = this.dyn.graph.getCommand(command);
               sts = this.dyn.graph.command(command);
@@ -11596,13 +12495,17 @@ function DynMethodPulldownMenu(dyn) {
 
           if (found == 0) {
             for (var i = 0; i < DynC.method_toolbar_mnt_cnt; i++) {
-              if (this.menu_type == DynC.eMethodsMenuType_Help && (DynC.method_toolbar_mnt_helpmask & (1 << i)) == 0)
+              if (this.menu_type == DynC.eMethodsMenuType_Help &&
+                (DynC.method_toolbar_mnt_helpmask & (1 << i)) == 0) {
                 continue;
+              }
 
-              if ((this.mntmask & (1 << i)) != 0)
+              if ((this.mntmask & (1 << i)) != 0) {
                 idx++;
+              }
               if (e.item + 1 == idx) {
-                command = "call method/method=\"" + DynC.method_toolbar_mnt_methods[i] +
+                command =
+                  "call method/method=\"" + DynC.method_toolbar_mnt_methods[i] +
                   "\"/object=" + this.method_object;
                 command = this.dyn.graph.getCommand(command);
                 sts = this.dyn.graph.command(command);
@@ -11614,8 +12517,9 @@ function DynMethodPulldownMenu(dyn) {
         }
         break;
       case Glow.eEvent_MenuDelete:
-        if (this.menu_object == null)
+        if (this.menu_object == null) {
           break;
+        }
         if (e.object == null || e.object == this.menu_object) {
           // Delete this menu
           this.dyn.graph.getCtx().remove(this.menu_object);
@@ -11638,14 +12542,13 @@ function DynMethodPulldownMenu(dyn) {
         self.mask_configure = 1;
         self.mask_store = 1;
         self.action5();
-      }
-      else {
+      } else {
         var parsed_name = self.pname_name + ".XttMethodsMask.OpMethods";
 
-        self.dyn.graph.getGdh().getObjectInfoInt(parsed_name, self.action3, self);
+        self.dyn.graph.getGdh()
+          .getObjectInfoInt(parsed_name, self.action3, self);
       }
-    }
-    else {
+    } else {
       self.mask_configure = 1;
       self.action5();
     }
@@ -11656,9 +12559,9 @@ function DynMethodPulldownMenu(dyn) {
     if (!(sts & 1)) {
       console.log("DynMethodToolbar: " + self.pname__name);
       self.mask_configure = 1;
-    }
-    else
+    } else {
       self.xm_mask_opmethods = value;
+    }
 
     var parsed_name = self.pname_name + ".XttMethodsMask.MntMethods";
     self.dyn.graph.getGdh().getObjectInfoInt(parsed_name, self.action4, self);
@@ -11668,9 +12571,9 @@ function DynMethodPulldownMenu(dyn) {
     if (!(sts & 1)) {
       console.log("DynMethodToolbar: " + self.pname_name);
       self.mask_configure = 1;
-    }
-    else
+    } else {
       self.xm_mask_mntmethods = value;
+    }
     self.action5();
   };
 
@@ -11682,28 +12585,32 @@ function DynMethodPulldownMenu(dyn) {
       this.xm_mask_opmethods = 0;
       for (var i = 0; i < DynC.method_toolbar_op_cnt; i++) {
         if (DynC.method_toolbar_op_methods[i] == "Parent Object Graph") {
-          if (this.method_object.indexOf('.') != -1)
+          if (this.method_object.indexOf('.') != -1) {
             this.xm_mask_opmethods |= 1 << i;
-        }
-        else {
-          command = "check method/method=\"" + DynC.method_toolbar_op_methods[i] + "\"/object=" +
-            this.method_object;
+          }
+        } else {
+          command =
+            "check method/method=\"" + DynC.method_toolbar_op_methods[i] +
+            "\"/object=" + this.method_object;
 
           command = this.dyn.graph.getCommand(command);
           sts = this.dyn.graph.command(command);
-          if ((sts & 1) != 0)
+          if ((sts & 1) != 0) {
             this.xm_mask_opmethods |= 1 << i;
+          }
         }
       }
       this.xm_mask_mntmethods = 0;
       for (var i = 0; i < DynC.method_toolbar_mnt_cnt; i++) {
-        command = "check method/method=\"" + DynC.method_toolbar_mnt_methods[i] + "\"/object=" +
-          this.method_object;
+        command =
+          "check method/method=\"" + DynC.method_toolbar_mnt_methods[i] +
+          "\"/object=" + this.method_object;
 
         command = dyn.graph.getCommand(command);
         var sts = dyn.graph.command(command);
-        if ((sts & 1) != 0)
+        if ((sts & 1) != 0) {
           this.xm_mask_mntmethods |= 1 << i;
+        }
       }
       this.xm_mask_flags |= Pwrb.mXttMethodsFlagsMask_IsConfigured;
     }
@@ -11715,52 +12622,70 @@ function DynMethodPulldownMenu(dyn) {
     var info = new GlowMenuInfo();
 
     this.opmask &= ~Pwrb.mXttOpMethodsMask_OpenObjectGraph;
-    if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtEventsBlock | Pwr.mAccess_System))
+    if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtEventsBlock |
+        Pwr.mAccess_System)) {
       insensitive_opmask |= Pwrb.mXttOpMethodsMask_BlockEvents;
-    if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtNavigator | Pwr.mAccess_System | Pwr.mAccess_RtWrite |
-        Pwr.mAccess_Maintenance | Pwr.mAccess_Process | Pwr.mAccess_Instrument))
+    }
+    if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtNavigator |
+        Pwr.mAccess_System | Pwr.mAccess_RtWrite | Pwr.mAccess_Maintenance |
+        Pwr.mAccess_Process | Pwr.mAccess_Instrument)) {
       insensitive_opmask |= Pwrb.mXttOpMethodsMask_Note;
-    if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtNavigator | Pwr.mAccess_System))
+    }
+    if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtNavigator |
+        Pwr.mAccess_System)) {
       insensitive_mntmask |= Pwrb.mXttMntMethodsMask_RtNavigator;
-    if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtPlc | Pwr.mAccess_System))
+    }
+    if (!this.dyn.graph.isAuthorized(Pwr.mAccess_RtPlc | Pwr.mAccess_System)) {
       insensitive_mntmask |= Pwrb.mXttMntMethodsMask_OpenTrace;
+    }
 
 
     var menu_idx = 0;
-    for (var i = 0; i < 32; i++)
+    for (var i = 0; i < 32; i++) {
       info.item[i].occupied = false;
+    }
 
     for (var i = 0; i < DynC.method_toolbar_op_cnt; i++) {
-      if (menu_idx >= 32)
+      if (menu_idx >= 32) {
         break;
+      }
 
-      if (this.menu_type == DynC.eMethodsMenuType_Help && (DynC.method_toolbar_op_helpmask & (1 << i)) == 0)
+      if (this.menu_type == DynC.eMethodsMenuType_Help &&
+        (DynC.method_toolbar_op_helpmask & (1 << i)) == 0) {
         continue;
-      if (this.menu_type == DynC.eMethodsMenuType_Simulate)
+      }
+      if (this.menu_type == DynC.eMethodsMenuType_Simulate) {
         continue;
+      }
 
       if ((this.opmask & (1 << i)) != 0) {
         info.item[menu_idx].type = Glow.eMenuItem_Button;
-        info.item[menu_idx].text = new String(DynC.method_toolbar_op_methods[i]);
+        info.item[menu_idx].text =
+          new String(DynC.method_toolbar_op_methods[i]);
         info.item[menu_idx].occupied = true;
-        if ((insensitive_opmask & (1 << i)) != 0)
+        if ((insensitive_opmask & (1 << i)) != 0) {
           info.item[menu_idx].type = Glow.eMenuItem_ButtonDisabled;
+        }
         menu_idx++;
       }
     }
     for (var i = 0; i < DynC.method_toolbar_mnt_cnt; i++) {
-      if (menu_idx >= 32)
+      if (menu_idx >= 32) {
         break;
+      }
 
-      if (this.menu_type == DynC.eMethodsMenuType_Help && (DynC.method_toolbar_mnt_helpmask & (1 << i)) == 0)
+      if (this.menu_type == DynC.eMethodsMenuType_Help &&
+        (DynC.method_toolbar_mnt_helpmask & (1 << i)) == 0) {
         continue;
+      }
 
       if ((this.mntmask & (1 << i)) != 0) {
         info.item[menu_idx].type = Glow.eMenuItem_Button;
         info.item[menu_idx].text = DynC.method_toolbar_mnt_methods[i];
         info.item[menu_idx].occupied = true;
-        if ((insensitive_mntmask & (1 << i)) != 0)
+        if ((insensitive_mntmask & (1 << i)) != 0) {
           info.item[menu_idx].type = Glow.eMenuItem_ButtonDisabled;
+        }
         menu_idx++;
       }
     }
@@ -11778,16 +12703,16 @@ function DynMethodPulldownMenu(dyn) {
       text_font = Glow.eFont_LucidaSans;
       text_color = Glow.eDrawType_Line;
       bg_color = Glow.eDrawType_LightGray;
-    }
-    else if (bg_color == Glow.eDrawType_No || bg_color == Glow.eDrawType_Inherit)
+    } else if (bg_color == Glow.eDrawType_No ||
+      bg_color == Glow.eDrawType_Inherit) {
       bg_color = Glow.eDrawType_LightGray;
+    }
 
     var g = this.o.measure();
     this.menu_object = new GrowMenu(this.dyn.graph.getCtx());
     this.menu_object.init("__Menu", info, g.ll_x, g.ur_y, g.ur_x - g.ll_x,
-      Glow.eDrawType_Line, 0, 1, 1, bg_color, text_size,
-      text_drawtype, text_color,
-      Glow.eDrawType_MediumGray, text_font);
+      Glow.eDrawType_Line, 0, 1, 1, bg_color, text_size, text_drawtype,
+      text_color, Glow.eDrawType_MediumGray, text_font);
     this.menu_object.set_scale(scale, scale, 0, 0, Glow.eScaleType_LowerLeft);
     this.dyn.graph.getCtx().insert(this.menu_object);
 
@@ -11823,8 +12748,9 @@ function DynPopupMenu(dyn) {
     return 1;
   };
   this.action = function (object, e) {
-    if (!this.dyn.graph.isAuthorized(this.dyn.access))
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
       return 1;
+    }
 
     switch (e.event) {
       case Glow.eEvent_MB3Press:
@@ -11844,7 +12770,9 @@ function DynPopupMenu(dyn) {
       var tokens = lines[i].split(' ');
       var key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) console.log("DynResetDig : " + lines[i]);
+      if (this.dyn.debug) {
+        console.log("DynResetDig : " + lines[i]);
+      }
 
       elem = null;
 
@@ -11852,8 +12780,9 @@ function DynPopupMenu(dyn) {
         case DynC.eSave_PopupMenu:
           break;
         case DynC.eSave_PopupMenu_ref_object:
-          if (tokens.length > 1)
+          if (tokens.length > 1) {
             this.ref_object = tokens[1];
+          }
           break;
         case DynC.eSave_End:
           end = true;
@@ -11863,8 +12792,9 @@ function DynPopupMenu(dyn) {
           break;
       }
 
-      if (end)
+      if (end) {
         break;
+      }
     }
 
     return i;
@@ -11873,10 +12803,7 @@ function DynPopupMenu(dyn) {
 }
 
 var GraphIfc = {
-  eDatabase_Gdh: 0,
-  eDatabase_User: 1,
-  eDatabase_Local: 2,
-  eDatabase_Ccm: 3,
+  eDatabase_Gdh: 0, eDatabase_User: 1, eDatabase_Local: 2, eDatabase_Ccm: 3,
 
   eType_Bit: (1 << 15) + 1
 };
@@ -11918,8 +12845,7 @@ function Graph(appl) {
       self.priv = 5;
       self.ctx.traceConnect();
       self.trace_cyclic();
-    }
-    else {
+    } else {
       self.gdh = new Gdh();
       self.gdh.open_cb = self.gdh_init_cb;
       self.gdh.init();
@@ -11930,13 +12856,18 @@ function Graph(appl) {
   this.ldb = new GraphLocalDb();
 
   // Set init values for Ge demo
-  this.ldb.setObjectInfo(this, "$local.Demo-Ge-Dynamics-ScrollingText-ScrollingText.ActualValue##String80", "ProviewR");
-  this.ldb.setObjectInfo(this, "$local.Demo-Ge-Subgraphs-DynamicAxis-Av2.ActualValue##Float32", 100);
-  this.ldb.setObjectInfo(this, "$local.Demo-Ge-Subgraphs-DynamicAxisArc-Av2.ActualValue##Float32", 100);
+  this.ldb.setObjectInfo(this,
+    "$local.Demo-Ge-Dynamics-ScrollingText-ScrollingText.ActualValue##String80",
+    "ProviewR");
+  this.ldb.setObjectInfo(this,
+    "$local.Demo-Ge-Subgraphs-DynamicAxis-Av2.ActualValue##Float32", 100);
+  this.ldb.setObjectInfo(this,
+    "$local.Demo-Ge-Subgraphs-DynamicAxisArc-Av2.ActualValue##Float32", 100);
 
   this.gdh_init_cb = function () {
-    if (self.priv == null)
+    if (self.priv == null) {
       self.gdh.login("", "", self.login_cb, self);
+    }
 
     self.ctx.traceConnect();
     self.gdh.refObjectInfoList(self.trace_connected);
@@ -11944,10 +12875,11 @@ function Graph(appl) {
 
   this.login_cb = function (id, data, sts, result) {
     console.log("Login:", sts, result);
-    if (sts & 1)
+    if (sts & 1) {
       self.priv = result;
-    else
+    } else {
       self.priv = 0;
+    }
   };
 
   this.trace_connected = function (id, sts) {
@@ -11955,10 +12887,11 @@ function Graph(appl) {
   };
 
   this.trace_cyclic = function () {
-    if (self.frame.nogdh)
+    if (self.frame.nogdh) {
       self.trace_scan(0, 0);
-    else
+    } else {
       self.gdh.getRefObjectInfoAll(self.trace_scan);
+    }
   };
   this.trace_scan = function (id, sts) {
     self.scan_time = self.ctx.scantime;
@@ -11970,14 +12903,15 @@ function Graph(appl) {
     self.ctx.draw();
 
     self.slow_scan_cnt++;
-    if (self.slow_scan_cnt
-      >= (self.scan_time / self.animation_scan_time))
+    if (self.slow_scan_cnt >= (self.scan_time / self.animation_scan_time)) {
       self.slow_scan_cnt = 0;
+    }
 
     self.fast_scan_cnt++;
-    if (self.fast_scan_cnt
-      >= (self.fast_scan_time / self.animation_scan_time))
+    if (self.fast_scan_cnt >=
+      (self.fast_scan_time / self.animation_scan_time)) {
       self.fast_scan_cnt = 0;
+    }
 
     self.timer = setTimeout(self.trace_cyclic, 1000 * self.animation_scan_time);
   };
@@ -11991,8 +12925,7 @@ function Graph(appl) {
         if (lines[row] != "1") {
           ret.row = row - 1;
           ret.userdata = null;
-        }
-        else {
+        } else {
           dyn = new Dyn(this);
           dyn.userdata = this;
           ret.userdata = dyn;
@@ -12021,8 +12954,7 @@ function Graph(appl) {
     var dyn;
     var o;
 
-    if (e.object_type != Glow.eObjectType_NoObject &&
-      e.object !== null) {
+    if (e.object_type != Glow.eObjectType_NoObject && e.object !== null) {
       ctx_popped = this.ctxPop(e.object.ctx);
     }
 
@@ -12039,18 +12971,20 @@ function Graph(appl) {
           var list = this.ctx.get_object_list();
           for (var i = 0; i < list.size(); i++) {
             o = list.get(i);
-            if ((o.type() == Glow.eObjectType_GrowNode ||
-                o.type() == Glow.eObjectType_GrowGroup) &&
-              (e.object_type == Glow.eObjectType_NoObject ||
-                o != e.object)) {
+            if ((o.type() == Glow.eObjectType_GrowNode || o.type() ==
+                Glow.eObjectType_GrowGroup) &&
+              (e.object_type == Glow.eObjectType_NoObject || o != e.object)) {
               dyn = o.getUserData();
-              if (dyn !== null)
+              if (dyn !== null) {
                 dyn.action(o, event);
+              }
               var old_size = list.size();
               list = this.ctx.get_object_list();
               if (old_size != list.size())
               // Something is deleted
+              {
                 break;
+              }
             }
           }
         }
@@ -12067,8 +13001,9 @@ function Graph(appl) {
         if (e.object !== null) {
           var sts;
           dyn = e.object.getUserData();
-          if (dyn !== null)
+          if (dyn !== null) {
             sts = dyn.action(e.object, e);
+          }
         }
         break;
       case Glow.eEvent_MenuActivated:
@@ -12087,14 +13022,16 @@ function Graph(appl) {
             dyn = o.getUserData();
             if (dyn !== null) {
               sts = dyn.action(o, e);
-              if (sts == Glow.GLOW__TERMINATED)
+              if (sts == Glow.GLOW__TERMINATED) {
                 return;
+              }
 
               // Check if anything is deleted
               old_size = list.size();
               list = this.ctx.get_object_list();
-              if (old_size != list.size())
+              if (old_size != list.size()) {
                 break;
+              }
             }
           }
         }
@@ -12103,13 +13040,15 @@ function Graph(appl) {
       default:
         break;
     }
-    if (ctx_popped)
+    if (ctx_popped) {
       this.ctxPush();
+    }
   };
 
   this.ctxPop = function (nctx) {
-    if (this.ctx == nctx)
+    if (this.ctx == nctx) {
       return false;
+    }
 
     if (this.ctxStackCnt >= 10) {
       console.log("** Graph ctx stack overflow");
@@ -12134,8 +13073,9 @@ function Graph(appl) {
 
   this.setSubwindowSource = function (name, source, owner) {
     var ctx = this.ctx;
-    if (this.ctxStackCnt > 0)
+    if (this.ctxStackCnt > 0) {
       ctx = this.ctxStack[this.ctxStackCnt - 1];
+    }
     ctx.setSubwindowSource(name, source, owner);
   };
 
@@ -12150,52 +13090,75 @@ function Graph(appl) {
 
   this.stringToType = function (str) {
     var idx;
-    if ((idx = str.indexOf('#')) != -1)
+    if ((idx = str.indexOf('#')) != -1) {
       str = str.substring(0, idx);
-    if (str.toLowerCase() == "boolean")
+    }
+    if (str.toLowerCase() == "boolean") {
       return Pwr.eType_Boolean;
-    if (str.toLowerCase() == "float32")
+    }
+    if (str.toLowerCase() == "float32") {
       return Pwr.eType_Float32;
-    if (str.toLowerCase() == "float64")
+    }
+    if (str.toLowerCase() == "float64") {
       return Pwr.eType_Float64;
-    if (str.toLowerCase() == "char")
+    }
+    if (str.toLowerCase() == "char") {
       return Pwr.eType_Char;
-    if (str.toLowerCase() == "int8")
+    }
+    if (str.toLowerCase() == "int8") {
       return Pwr.eType_Int8;
-    if (str.toLowerCase() == "int16")
+    }
+    if (str.toLowerCase() == "int16") {
       return Pwr.eType_Int16;
-    if (str.toLowerCase() == "int32")
+    }
+    if (str.toLowerCase() == "int32") {
       return Pwr.eType_Int32;
-    if (str.toLowerCase() == "int64")
+    }
+    if (str.toLowerCase() == "int64") {
       return Pwr.eType_Int64;
-    if (str.toLowerCase() == "uint8")
+    }
+    if (str.toLowerCase() == "uint8") {
       return Pwr.eType_UInt8;
-    if (str.toLowerCase() == "uint16")
+    }
+    if (str.toLowerCase() == "uint16") {
       return Pwr.eType_UInt16;
-    if (str.toLowerCase() == "uint32")
+    }
+    if (str.toLowerCase() == "uint32") {
       return Pwr.eType_UInt32;
-    if (str.toLowerCase() == "uint64")
+    }
+    if (str.toLowerCase() == "uint64") {
       return Pwr.eType_UInt64;
-    if (str.toLowerCase() == "objid")
+    }
+    if (str.toLowerCase() == "objid") {
       return Pwr.eType_Objid;
-    if (str.toLowerCase() == "time")
+    }
+    if (str.toLowerCase() == "time") {
       return Pwr.eType_Time;
-    if (str.toLowerCase() == "deltatime")
+    }
+    if (str.toLowerCase() == "deltatime") {
       return Pwr.eType_DeltaTime;
-    if (str.toLowerCase() == "attrref")
+    }
+    if (str.toLowerCase() == "attrref") {
       return Pwr.eType_AttrRef;
-    if (str.toLowerCase() == "status")
+    }
+    if (str.toLowerCase() == "status") {
       return Pwr.eType_Status;
-    if (str.toLowerCase() == "netstatus")
+    }
+    if (str.toLowerCase() == "netstatus") {
       return Pwr.eType_NetStatus;
-    if (str.toLowerCase() == "enum")
+    }
+    if (str.toLowerCase() == "enum") {
       return Pwr.eType_Enum;
-    if (str.toLowerCase() == "mask")
+    }
+    if (str.toLowerCase() == "mask") {
       return Pwr.eType_Mask;
-    if (str.toLowerCase() == "bit")
+    }
+    if (str.toLowerCase() == "bit") {
       return GraphIfc.eType_Bit;
-    if (str.length >= 6 && str.substring(0, 6).toLowerCase() == "string")
+    }
+    if (str.length >= 6 && str.substring(0, 6).toLowerCase() == "string") {
       return Pwr.eType_String;
+    }
     return 0;
   };
 
@@ -12203,8 +13166,7 @@ function Graph(appl) {
     var idx1, idx2;
     var index;
 
-    if ((idx1 = str.indexOf('[')) != -1 &&
-      (idx2 = str.indexOf(']')) != -1 &&
+    if ((idx1 = str.indexOf('[')) != -1 && (idx2 = str.indexOf(']')) != -1 &&
       idx2 > idx1) {
       index = parseInt(str.substring(idx1 + 1, idx2), 10);
       if (isNaN(index)) {
@@ -12217,8 +13179,9 @@ function Graph(appl) {
   };
 
   this.parseAttrName = function (name) {
-    if (name === null)
+    if (name === null) {
       return null;
+    }
 
     var idx, tidx, eidx;
     var pname = new DynParsedAttrName();
@@ -12226,29 +13189,30 @@ function Graph(appl) {
     var str = name.trim();
 
     if ((idx = str.indexOf("$local.")) != -1) {
-      if ((tidx = str.indexOf('#')) == -1)
+      if ((tidx = str.indexOf('#')) == -1) {
         pname.name = str.substring(idx + 1);
-      else {
+      } else {
         pname.name = str.substring(idx + 7, tidx);
         var type = str.substring(tidx).toUpperCase();
-        if (type == "##FLOAT32")
+        if (type == "##FLOAT32") {
           pname.type = Pwr.eType_Float32;
-        else if (type == "##FLOAT64")
+        } else if (type == "##FLOAT64") {
           pname.type = Pwr.eType_Float64;
-        else if (type == "##INT32")
+        } else if (type == "##INT32") {
           pname.type = Pwr.eType_Int32;
-        else if (type == "##BOOLEAN")
+        } else if (type == "##BOOLEAN") {
           pname.type = Pwr.eType_Boolean;
-        else
+        } else {
           pname.type = Pwr.eType_String;
+        }
       }
       if (str.substring(0, 1) == "!") {
         str = str.substring(1);
         str = str.trim();
         pname.inverted = true;
-      }
-      else
+      } else {
         pname.inverted = false;
+      }
 
       pname.database = GraphIfc.eDatabase_Local;
       pname.tname = name;
@@ -12256,27 +13220,28 @@ function Graph(appl) {
     }
 
     if ((idx = str.indexOf("$ccm.")) != -1) {
-      if ((tidx = str.indexOf('#')) == -1)
+      if ((tidx = str.indexOf('#')) == -1) {
         pname.name = str.substring(idx + 1);
-      else {
+      } else {
         pname.name = str.substring(idx + 5, tidx);
         var type2 = str.substring(tidx).toUpperCase();
-        if (type2 == "##FLOAT32")
+        if (type2 == "##FLOAT32") {
           pname.type = Pwr.eType_Float32;
-        else if (type2 == "##INT32")
+        } else if (type2 == "##INT32") {
           pname.type = Pwr.eType_Int32;
-        else if (type2 == "##BOOLEAN")
+        } else if (type2 == "##BOOLEAN") {
           pname.type = Pwr.eType_Boolean;
-        else
+        } else {
           pname.type = Pwr.eType_String;
+        }
       }
       if (str.substring(0, 1) == "!") {
         str = str.substring(1);
         str = str.trim();
         pname.inverted = true;
-      }
-      else
+      } else {
         pname.inverted = false;
+      }
 
       pname.database = GraphIfc.eDatabase_Ccm;
       pname.tname = new String(pname.name);
@@ -12294,17 +13259,16 @@ function Graph(appl) {
     pname.tname = new String(str);
 
     if ((idx = str.indexOf('[')) == -1) {
-      if ((eidx = str.lastIndexOf('#')) != -1 &&
-        str.charAt(eidx - 1) != '#') {
+      if ((eidx = str.lastIndexOf('#')) != -1 && str.charAt(eidx - 1) != '#') {
         pname.elements = parseInt(str.substring(eidx + 1), 10);
-        if (isNaN(pname.elements))
+        if (isNaN(pname.elements)) {
           pname.elements = 1;
+        }
         str = str.substring(0, eidx);
-      }
-      else
+      } else {
         pname.elements = 1;
-    }
-    else {
+      }
+    } else {
       pname.index = this.stringToIndex(str);
       pname.elements = 1;
     }
@@ -12319,9 +13283,9 @@ function Graph(appl) {
 
       pname.type = this.stringToType(str.substring(tidx + 2));
       str = str.substring(0, tidx);
-    }
-    else
+    } else {
       pname.type = 0;
+    }
 
     if (str.substring(0, 1) == "!") {
       str = str.substring(1);
@@ -12329,9 +13293,9 @@ function Graph(appl) {
       pname.inverted = true;
       pname.tname = pname.tname.substring(1);
       pname.tname = pname.tname.trim();
-    }
-    else
+    } else {
       pname.inverted = false;
+    }
 
     pname.database = GraphIfc.eDatabase_Gdh;
     pname.name = str;
@@ -12353,12 +13317,14 @@ function Graph(appl) {
   this.traceConnect = function (object) {
     var ctx_popped = false;
 
-    if (object.ctx != this.ctx)
+    if (object.ctx != this.ctx) {
       ctx_popped = this.ctxPop(object.ctx);
+    }
 
     if (object.userdata == null) {
-      if (ctx_popped)
+      if (ctx_popped) {
         this.ctxPush();
+      }
       return;
     }
 
@@ -12377,10 +13343,13 @@ function Graph(appl) {
           dyn.merge(old_dyn);
           dyn.total_dyn_type1 |= DynC.mDynType1_HostObject;
           dyn.merge(nodeclass_dyn);
-          if (old_dyn.cycle != Glow.eCycle_Inherit)
+          if (old_dyn.cycle != Glow.eCycle_Inherit) {
             dyn.cycle = old_dyn.cycle;
-          if (!(old_dyn.action_type1 == DynC.mActionType1_Inherit && old_dyn.action_type2 == 0))
+          }
+          if (!(old_dyn.action_type1 == DynC.mActionType1_Inherit &&
+              old_dyn.action_type2 == 0)) {
             dyn.access = old_dyn.access;
+          }
           object.userdata = dyn;
           dyn.setTotal(object);
         }
@@ -12389,27 +13358,32 @@ function Graph(appl) {
 
     object.userdata.connect(object);
 
-    if (ctx_popped)
+    if (ctx_popped) {
       this.ctxPush();
+    }
   };
   this.traceDisconnect = function (o) {
-    if (o.userdata !== null)
+    if (o.userdata !== null) {
       o.userdata.disconnect(o);
+    }
   };
   this.traceScan = function (o) {
     if (o.userdata !== null) {
       var dyn = o.userdata;
 
-      if (dyn.cycle == Glow.eCycle_Inherit)
+      if (dyn.cycle == Glow.eCycle_Inherit) {
         return 1;
-      if (dyn.cycle == Glow.eCycle_Slow && this.slow_scan_cnt != 0
-        && !(dyn.total_dyn_type1 & DynC.mDynType1_Animation
-          || dyn.total_dyn_type2 & DynC.mDynType2_ScrollingText))
+      }
+      if (dyn.cycle == Glow.eCycle_Slow && this.slow_scan_cnt != 0 &&
+        !(dyn.total_dyn_type1 & DynC.mDynType1_Animation ||
+          dyn.total_dyn_type2 & DynC.mDynType2_ScrollingText)) {
         return 1;
-      if (dyn.cycle == Glow.eCycle_Fast && this.fast_scan_cnt != 0
-        && !(dyn.total_dyn_type1 & DynC.mDynType1_Animation
-          || dyn.total_dyn_type2 & DynC.mDynType2_ScrollingText))
+      }
+      if (dyn.cycle == Glow.eCycle_Fast && this.fast_scan_cnt != 0 &&
+        !(dyn.total_dyn_type1 & DynC.mDynType1_Animation ||
+          dyn.total_dyn_type2 & DynC.mDynType2_ScrollingText)) {
         return 1;
+      }
 
       o.userdata.scan(o);
     }
@@ -12417,13 +13391,15 @@ function Graph(appl) {
 
   this.openValueInputDialog = function (dyn, text, elem) {
     var value = prompt(text, "");
-    if (value !== null)
+    if (value !== null) {
       dyn.valueInputAction(elem, value);
+    }
   };
 
   this.openConfirmDialog = function (dyn, text, object) {
-    if (appl != null)
+    if (appl != null) {
       appl.openConfirmDialog(dyn, text, object);
+    }
   };
 
   this.getScanTime = function () {
@@ -12435,20 +13411,23 @@ function Graph(appl) {
   };
 
   this.getAnimationScanTime = function () {
-    if (this.scan_time < this.animation_scan_time)
+    if (this.scan_time < this.animation_scan_time) {
       return this.scan_time;
+    }
     return this.animation_scan_time;
   };
 
   this.command = function (cmd) {
-    if (this.appl != null)
+    if (this.appl != null) {
       return this.appl.command(cmd);
+    }
     return 0;
   };
 
   this.script = function (script) {
-    if (this.appl != null)
+    if (this.appl != null) {
       return this.appl.script(script);
+    }
     return 0;
   };
 
@@ -12530,8 +13509,7 @@ function GraphLocalDb() {
       this.subscriptions[id] = sub;
       this.subscriptionCount++;
       return id;
-    }
-    else {
+    } else {
       sub = this.subscriptions[id];
       sub.ref();
       return id;
@@ -12540,29 +13518,35 @@ function GraphLocalDb() {
 
   this.unrefObjectInfo = function (id) {
     var sub = this.subscriptions[id];
-    if (sub === null)
+    if (sub === null) {
       return;
+    }
     sub.unref();
-    if (sub.getRefCount() <= 0)
+    if (sub.getRefCount() <= 0) {
       this.subscriptions[id] = null;
+    }
   };
 
   this.getObjectRefInfo = function (id) {
     var sub = this.subscriptions[id];
-    if (sub === null)
+    if (sub === null) {
       return 0;
-    if (typeof sub.value == 'undefined')
+    }
+    if (typeof sub.value == 'undefined') {
       return 0;
+    }
     return sub.value;
   };
 
   this.getObjectInfo = function (owner, attributeName) {
     var name = this.getName(attributeName);
     var id = this.nameToId(owner, name);
-    if (id == -1)
+    if (id == -1) {
       return new CdhrNumber(0, 2);
-    if (typeof this.subscriptions[id].value == 'undefined')
+    }
+    if (typeof this.subscriptions[id].value == 'undefined') {
       return new CdhrNumber(0, 1);
+    }
     return new CdhrNumber(this.subscriptions[id].value, 1);
   };
 
@@ -12580,28 +13564,32 @@ function GraphLocalDb() {
   this.toggleObjectInfo = function (owner, attributeName) {
     var name = this.getName(attributeName);
     var id = this.nameToId(owner, name);
-    if (id == -1)
+    if (id == -1) {
       return new PwrtStatus(2);
-    this.subscriptions[id].value =
-      !this.subscriptions[id].value;
+    }
+    this.subscriptions[id].value = !this.subscriptions[id].value;
     return new PwrtStatus(1);
   };
 
   this.nameToId = function (owner, name) {
     for (var i = 0; i < this.subscriptions.length; i++) {
       var sub = this.subscriptions[i];
-      if (sub !== null && owner == sub.owner && name.toUpperCase() === sub.name.toUpperCase())
+      if (sub !== null && owner == sub.owner &&
+        name.toUpperCase() === sub.name.toUpperCase()) {
         return i;
+      }
     }
     return -1;
   };
 
   this.getName = function (attrName) {
-    if (attrName.substring(0, 7) == "$local.")
+    if (attrName.substring(0, 7) == "$local.") {
       attrName = attrName.substring(7);
+    }
     var idx1 = attrName.indexOf("##");
-    if (idx1 != -1)
+    if (idx1 != -1) {
       return attrName.substring(0, idx1);
+    }
     return attrName;
   };
 
@@ -12614,74 +13602,83 @@ function GraphLocalDb() {
 
     idx1 += 2;
     var idx2 = attrName.indexOf('#', idx1);
-    if (idx2 < 0)
+    if (idx2 < 0) {
       suffix = attrName.substring(idx1).toUpperCase();
-    else
+    } else {
       suffix = attrName.substring(idx1, idx2).toUpperCase();
+    }
     var idx2 = attrName.indexOf('#', idx1);
-    if (idx2 < 0)
+    if (idx2 < 0) {
       suffix = attrName.substring(idx1).toUpperCase();
-    else
+    } else {
       suffix = attrName.substring(idx1, idx2).toUpperCase();
-    if (suffix == "BOOLEAN")
+    }
+    if (suffix == "BOOLEAN") {
       return Pwr.eType_Boolean;
-    if (suffix == "FLOAT32")
+    }
+    if (suffix == "FLOAT32") {
       return Pwr.eType_Float32;
-    if (suffix == "INT32")
+    }
+    if (suffix == "INT32") {
       return Pwr.eType_Int32;
-    if (suffix == "UINT32")
+    }
+    if (suffix == "UINT32") {
       return Pwr.eType_UInt32;
-    if (suffix == "INT16")
+    }
+    if (suffix == "INT16") {
       return Pwr.eType_Int16;
-    if (suffix == "UINT16")
+    }
+    if (suffix == "UINT16") {
       return Pwr.eType_UInt16;
-    if (suffix == "INT8")
+    }
+    if (suffix == "INT8") {
       return Pwr.eType_Int8;
-    if (suffix == "UINT8")
+    }
+    if (suffix == "UINT8") {
       return Pwr.eType_UInt8;
-    if (suffix == "CHAR")
+    }
+    if (suffix == "CHAR") {
       return Pwr.eType_Char;
-    if (suffix == "FLOAT64")
+    }
+    if (suffix == "FLOAT64") {
       return Pwr.eType_Float64;
-    if (suffix == "OBJID")
+    }
+    if (suffix == "OBJID") {
       return Pwr.eType_Objid;
-    if (suffix == "STRING")
+    }
+    if (suffix == "STRING") {
       return Pwr.eType_String;
-    if (suffix == "TIME")
+    }
+    if (suffix == "TIME") {
       return Pwr.eType_Time;
-    if (suffix == "DELTATIME")
+    }
+    if (suffix == "DELTATIME") {
       return Pwr.eType_DeltaTime;
-    if (suffix == "ATTRREF")
+    }
+    if (suffix == "ATTRREF") {
       return Pwr.eType_AttrRef;
-    if (suffix.substring(0, 6) == "STRING")
+    }
+    if (suffix.substring(0, 6) == "STRING") {
       return Pwr.eType_String;
+    }
     return 0;
   };
 
 }
 
-var cliTable = [
-  new CliTable("OPEN",
-    ["cli_arg1", "cli_arg2", "/NAME",
-      "/FILE", "/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", "/NAVIGATOR",
-      "/CENTER", "/OBJECT", "/INSTANCE", "/NEW", "/CLASSGRAPH", "/ACCESS", "/PARENT"]),
-  new CliTable("EXIT", null),
+var cliTable = [new CliTable("OPEN",
+  ["cli_arg1", "cli_arg2", "/NAME", "/FILE", "/SCROLLBAR", "/WIDTH", "/HEIGHT",
+    "/MENU", "/NAVIGATOR", "/CENTER", "/OBJECT", "/INSTANCE", "/NEW",
+    "/CLASSGRAPH", "/ACCESS", "/PARENT"]), new CliTable("EXIT", null),
   new CliTable("HELP",
-    ["cli_arg1", "cli_arg2", "cli_arg3",
-      "cli_arg4", "/HELPFILE", "/POPNAVIGATOR", "/BOOKMARK", "/INDEX",
-      "/BASE", "/RETURNCOMMAND", "/WIDTH", "/HEIGHT", "/VERSION"]),
-  new CliTable("SET",
-    ["cli_arg1", "cli_arg2",
-      "/NAME", "/VALUE", "/BYPASS", "/SOURCE", "/OBJECT"]),
-  new CliTable("EXAMPLE",
-    ["/NAME", "/HIERARCHY"]),
-  new CliTable("CHECK",
-    ["cli_arg1", "/METHOD", "/OBJECT"]),
-  new CliTable("CALL",
-    ["cli_arg1", "/METHOD", "/OBJECT"]),
-  new CliTable("SET",
-    ["cli_arg1", "dcli_arg2", "/CONTINUE"])
-];
+    ["cli_arg1", "cli_arg2", "cli_arg3", "cli_arg4", "/HELPFILE",
+      "/POPNAVIGATOR", "/BOOKMARK", "/INDEX", "/BASE", "/RETURNCOMMAND",
+      "/WIDTH", "/HEIGHT", "/VERSION"]), new CliTable("SET",
+    ["cli_arg1", "cli_arg2", "/NAME", "/VALUE", "/BYPASS", "/SOURCE",
+      "/OBJECT"]), new CliTable("EXAMPLE", ["/NAME", "/HIERARCHY"]),
+  new CliTable("CHECK", ["cli_arg1", "/METHOD", "/OBJECT"]),
+  new CliTable("CALL", ["cli_arg1", "/METHOD", "/OBJECT"]),
+  new CliTable("SET", ["cli_arg1", "dcli_arg2", "/CONTINUE"])];
 
 function Appl() {
   this.graph = new Graph(this);
@@ -12717,8 +13714,7 @@ function Appl() {
             jgraph.substring(0, cli_arg1.length) == cli_arg1) {
             // Command is "OPEN JGRAPH"
             console.log("Command is not implemented, \"OPEN JGRAPH\"");
-          }
-          else if (graph.length >= cli_arg1.length &&
+          } else if (graph.length >= cli_arg1.length &&
             graph.substring(0, cli_arg1.length) == cli_arg1) {
             // Command is "OPEN GRAPH"
             var graphName = null;
@@ -12736,44 +13732,49 @@ function Appl() {
               var parent = cli.qualifierFound("/PARENT");
               if (parent) {
                 var idx = instanceValue.lastIndexOf('.');
-                if (idx != -1 && idx !== 0)
+                if (idx != -1 && idx !== 0) {
                   instanceValue = instanceValue.substring(0, idx);
+                }
                 console.log("open graph /parent: " + instanceValue);
               }
             }
             if (classGraph) {
               console.log("Cmd classGraph");
               var newwindow = window.open("", "_blank");
-              this.graph.gdh.getObjectFromName(instanceValue, GdhOp.GET_OP_METHOD_OBJECTGRAPH, this.open_objectgraph_cb, newwindow);
-            }
-            else {
+              this.graph.gdh.getObjectFromName(instanceValue,
+                GdhOp.GET_OP_METHOD_OBJECTGRAPH, this.open_objectgraph_cb,
+                newwindow);
+            } else {
               if (!cli.qualifierFound("cli_arg2")) {
                 console.log("Syntax error");
                 return 0;
               }
 
               graphName = cli.getQualValue("cli_arg2").toLowerCase();
-              if (graphName.charAt(".pwg") == -1)
+              if (graphName.charAt(".pwg") == -1) {
                 graphName = graphName + ".pwg";
+              }
 
               var href;
               if (this.graph.frame.nogdh) {
-                if (instanceValue === null)
+                if (instanceValue === null) {
                   href = "ge.html?graph=" + graphName + "&instance=no&gdh=no";
-                else
-                  href = "ge.html?graph=" + graphName + "&instance=" + instanceValue + "&gdh=no";
-              }
-              else {
-                if (instanceValue === null)
+                } else {
+                  href = "ge.html?graph=" + graphName + "&instance=" +
+                    instanceValue + "&gdh=no";
+                }
+              } else {
+                if (instanceValue === null) {
                   href = "ge.html?graph=" + graphName;
-                else
-                  href = "ge.html?graph=" + graphName + "&instance=" + instanceValue;
+                } else {
+                  href =
+                    "ge.html?graph=" + graphName + "&instance=" + instanceValue;
+                }
               }
               console.log("Cmd found: open graph", graphName, instanceValue);
               var newwindow = window.open(href, "_blank");
             }
-          }
-          else if (url.length >= cli_arg1.length &&
+          } else if (url.length >= cli_arg1.length &&
             url.substring(0, cli_arg1.length) == cli_arg1) {
             // Command is "OPEN URL"
             var newFrame = true;
@@ -12791,27 +13792,25 @@ function Appl() {
               urlValue.substring(0, 8) == "siemens_" ||
               urlValue.substring(0, 7) == "ssabox_")
             // Object reference manual
+            {
               urlValue = "$pwr_doc/" + getLang() + "/orm/" + urlValue;
+            }
 
             console.log("open url " + urlValue);
             this.openURL(urlValue, null);
-          }
-          else if (trend.length >= cli_arg1.length &&
+          } else if (trend.length >= cli_arg1.length &&
             trend.substring(0, cli_arg1.length) == (cli_arg1)) {
             // Command is "OPEN TREND"
             console.log("Cmd open trend");
-          }
-          else if (fast.length >= cli_arg1.length &&
+          } else if (fast.length >= cli_arg1.length &&
             fast.substring(0, cli_arg1.length) == (cli_arg1)) {
             // Command is "OPEN FAST"
             console.log("Cmd open fast");
-          }
-          else if (command == ("HELP")) {
+          } else if (command == ("HELP")) {
             console.log("Cmd help");
           }
         }
-      }
-      else if (command == ("SET")) {
+      } else if (command == ("SET")) {
         if (cli.qualifierFound("cli_arg1")) {
           var cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
           var subwindow = "SUBWINDOW";
@@ -12826,59 +13825,65 @@ function Appl() {
             var sts;
 
             local_cmd = true;
-            if (cli.qualifierFound("/NAME"))
+            if (cli.qualifierFound("/NAME")) {
               name = cli.getQualValue("/NAME");
-            else {
+            } else {
               console.log("Cmd: name is missing\n");
               return 0;
             }
-            if (cli.qualifierFound("/SOURCE"))
+            if (cli.qualifierFound("/SOURCE")) {
               source = cli.getQualValue("/SOURCE");
-            else {
+            } else {
               console.log("Cmd: source is missing\n");
               return 0;
             }
-            if (cli.qualifierFound("/OBJECT"))
+            if (cli.qualifierFound("/OBJECT")) {
               object = cli.getQualValue("/OBJECT");
-            else
+            } else {
               object = null;
-            if (cli.qualifierFound("cli_arg2"))
+            }
+            if (cli.qualifierFound("cli_arg2")) {
               graphstr = cli.getQualValue("cli_arg2").toLowerCase();
-            else {
+            } else {
               console.log("Syntax error");
               return 0;
             }
 
-            if (source.indexOf('.') == -1)
+            if (source.indexOf('.') == -1) {
               source = source + ".pwg";
+            }
 
             this.graph.setSubwindowSource(name, source, object);
           }
         }
-      }
-      else if (command == ("HELP")) {
+      } else if (command == ("HELP")) {
         var fileName = "xtt_help_";
         var bookmarkValue = null;
 
         if (cli.qualifierFound("/VERSION")) {
           fileName = this.pwrHost + "xtt_version_help_version.html";
           this.openURL(fileName, null);
-        }
-        else {
+        } else {
           if (cli.qualifierFound("/BASE"))
           // Not language dependent !! TODO
+          {
             fileName = this.pwrHost + "help/xtt_help_";
-          else
+          } else {
             fileName = "xtt_help_";
+          }
 
-          if (cli.qualifierFound("cli_arg1"))
+          if (cli.qualifierFound("cli_arg1")) {
             fileName += cli.getQualValue("cli_arg1").toLowerCase();
-          if (cli.qualifierFound("cli_arg2"))
+          }
+          if (cli.qualifierFound("cli_arg2")) {
             fileName += "_" + cli.getQualValue("cli_arg2").toLowerCase();
-          if (cli.qualifierFound("cli_arg3"))
+          }
+          if (cli.qualifierFound("cli_arg3")) {
             fileName += "_" + cli.getQualValue("cli_arg3").toLowerCase();
-          if (cli.qualifierFound("cli_arg4"))
+          }
+          if (cli.qualifierFound("cli_arg4")) {
             fileName += "_" + cli.getQualValue("cli_arg4").toLowerCase();
+          }
 
           if (fileName.substring(0, 5) == "pwrb_" ||
             fileName.substring(0, 5) == "pwrs_" ||
@@ -12891,18 +13896,20 @@ function Appl() {
             fileName.substring(0, 8) == "siemens_" ||
             fileName.substring(0, 7) == "ssabox_")
           // Object reference manual
+          {
             fileName = "$pwr_doc/orm/" + fileName;
+          }
 
-          if (cli.qualifierFound("/BOOKMARK"))
+          if (cli.qualifierFound("/BOOKMARK")) {
             bookmarkValue = cli.getQualValue("/BOOKMARK");
+          }
 
           fileName += ".html";
           console.log("Loading helpfile \"" + fileName + "\"");
           this.openURL(fileName, bookmarkValue);
         }
         local_cmd = true;
-      }
-      else if (command == ("CHECK")) {
+      } else if (command == ("CHECK")) {
         if (cli.qualifierFound("cli_arg1")) {
 
           var methodstr = "METHOD";
@@ -12914,35 +13921,33 @@ function Appl() {
             var method;
             var object;
 
-            if (cli.qualifierFound("/METHOD"))
+            if (cli.qualifierFound("/METHOD")) {
               method = cli.getQualValue("/METHOD");
-            else {
+            } else {
               console.log("Cmd: Method is missing\n");
               return 0;
             }
 
-            if (cli.qualifierFound("/OBJECT"))
+            if (cli.qualifierFound("/OBJECT")) {
               object = cli.getQualValue("/OBJECT");
-            else {
+            } else {
               console.log("Cmd: Object is missing\n");
               return 0;
             }
-          }
-          else if (isattributestr.length >= cli_arg1.length &&
+          } else if (isattributestr.length >= cli_arg1.length &&
             isattributestr.substring(0, cli_arg1.length) == (cli_arg1)) {
             // Command is "CHECK ISATTRIBUTE"
             var method;
             var object;
 
-            if (cli.qualifierFound("/OBJECT"))
+            if (cli.qualifierFound("/OBJECT")) {
               object = cli.getQualValue("/OBJECT");
-            else {
+            } else {
               console.log("Cmd: Object is missing\n");
               return 0;
             }
           }
-        }
-        else if (command == ("CALL")) {
+        } else if (command == ("CALL")) {
           if (cli.qualifierFound("cli_arg1")) {
 
             var parameter = "METHOD";
@@ -12953,28 +13958,26 @@ function Appl() {
               var method;
               var object;
 
-              if (cli.qualifierFound("/METHOD"))
+              if (cli.qualifierFound("/METHOD")) {
                 method = cli.getQualValue("/METHOD");
-              else {
+              } else {
                 console.log("Cmd: Method is missing\n");
                 return 0;
               }
 
-              if (cli.qualifierFound("/OBJECT"))
+              if (cli.qualifierFound("/OBJECT")) {
                 object = cli.getQualValue("/OBJECT");
-              else {
+              } else {
                 console.log("Cmd: Object is missing\n");
                 return 0;
               }
             }
 
           }
-        }
-        else if (command == ("SET")) {
+        } else if (command == ("SET")) {
           return 1;
         }
-      }
-      else {
+      } else {
         console.log("JopSpider: Parse error " + cli.getStsString());
         return 0;
       }
@@ -12990,17 +13993,19 @@ function Appl() {
   }
   this.openConfirmDialog = function (dyn, text, object) {
     var res = confirm(text);
-    if (res)
+    if (res) {
       dyn.confirmedAction(Glow.eEvent_MB1Click, object);
+    }
   };
   this.open_objectgraph_cb = function (id, data, sts, result) {
     if ((sts & 1) != 0) {
       console.log("param1", result.param1);
-      data.location.href = "ge.html?graph=" + result.param1 + "&instance=" + result.fullname;
+      data.location.href =
+        "ge.html?graph=" + result.param1 + "&instance=" + result.fullname;
       data.document.title = result.param1 + " " + result.fullname;
-    }
-    else
+    } else {
       data.document.write("Error status " + sts);
+    }
   };
 
 }
@@ -13033,30 +14038,31 @@ function GlowCFormat(key) {
     for (i = 0; i < tree_length; i++) {
       if (typeof this.parse_tree[i] === 'string') {
         output += this.parse_tree[i];
-      }
-      else if (typeof this.parse_tree[i] === 'object') {
+      } else if (typeof this.parse_tree[i] === 'object') {
         ph = this.parse_tree[i]; // convenience purposes only
         if (ph.keys) { // keyword argument
           arg = argv[cursor];
           for (k = 0; k < ph.keys.length; k++) {
             if (arg == undefined) {
-              throw new Error(sprintf('[sprintf] Cannot access property "%s" of undefined value "%s"', ph.keys[k], ph.keys[k - 1]));
+              throw new Error(sprintf(
+                '[sprintf] Cannot access property "%s" of undefined value "%s"',
+                ph.keys[k], ph.keys[k - 1]));
             }
             arg = arg[ph.keys[k]];
           }
-        }
-        else if (ph.param_no) { // positional argument (explicit)
+        } else if (ph.param_no) { // positional argument (explicit)
           arg = argv[ph.param_no];
-        }
-        else { // positional argument (implicit)
+        } else { // positional argument (implicit)
           arg = argv[cursor++];
         }
 
-        if (CFormatC.not_type.test(ph.type) && CFormatC.not_primitive.test(ph.type) && arg instanceof Function) {
+        if (CFormatC.not_type.test(ph.type) &&
+          CFormatC.not_primitive.test(ph.type) && arg instanceof Function) {
           arg = arg();
         }
 
-        if (CFormatC.numeric_arg.test(ph.type) && (typeof arg !== 'number' && isNaN(arg))) {
+        if (CFormatC.numeric_arg.test(ph.type) &&
+          (typeof arg !== 'number' && isNaN(arg))) {
           throw new TypeError("[sprintf] expecting number but found");
         }
 
@@ -13076,16 +14082,20 @@ function GlowCFormat(key) {
             arg = parseInt(arg, 10);
             break;
           case 'j':
-            arg = JSON.stringify(arg, null, ph.width ? parseInt(ph.width, 10) : 0);
+            arg =
+              JSON.stringify(arg, null, ph.width ? parseInt(ph.width, 10) : 0);
             break;
           case 'e':
-            arg = ph.precision ? parseFloat(arg).toExponential(ph.precision) : parseFloat(arg).toExponential();
+            arg = ph.precision ? parseFloat(arg).toExponential(ph.precision) :
+              parseFloat(arg).toExponential();
             break;
           case 'f':
-            arg = ph.precision ? parseFloat(arg).toFixed(ph.precision) : parseFloat(arg);
+            arg = ph.precision ? parseFloat(arg).toFixed(ph.precision) :
+              parseFloat(arg);
             break;
           case 'g':
-            arg = ph.precision ? String(Number(arg.toPrecision(ph.precision))) : parseFloat(arg);
+            arg = ph.precision ? String(Number(arg.toPrecision(ph.precision))) :
+              parseFloat(arg);
             break;
           case 'o':
             arg = (parseInt(arg, 10) >>> 0).toString(8);
@@ -13099,7 +14109,8 @@ function GlowCFormat(key) {
             arg = (ph.precision ? arg.substring(0, ph.precision) : arg);
             break;
           case 'T':
-            arg = Object.prototype.toString.call(arg).slice(8, -1).toLowerCase();
+            arg =
+              Object.prototype.toString.call(arg).slice(8, -1).toLowerCase();
             arg = (ph.precision ? arg.substring(0, ph.precision) : arg);
             break;
           case 'u':
@@ -13121,22 +14132,24 @@ function GlowCFormat(key) {
         }
         if (CFormatC.json.test(ph.type)) {
           output += arg;
-        }
-        else {
+        } else {
           if (CFormatC.number.test(ph.type) && (!is_positive || ph.sign)) {
             sign = is_positive ? '+' : '-';
             arg = arg.toString().replace(CFormatC.sign, '');
-          }
-          else {
+          } else {
             sign = '';
           }
-          pad_character = ph.pad_char ? ph.pad_char === '0' ? '0' : ph.pad_char.charAt(1) : ' ';
+          pad_character =
+            ph.pad_char ? ph.pad_char === '0' ? '0' : ph.pad_char.charAt(1) :
+              ' ';
           pad_length = ph.width - (sign + arg).length;
           var pad_rpt = '';
-          for (var i = 0; i < pad_length; i++)
+          for (var i = 0; i < pad_length; i++) {
             pad_rpt += pad_character;
+          }
           pad = ph.width ? (pad_length > 0 ? pad_rpt : '') : '';
-          output += ph.align ? sign + arg + pad : (pad_character === '0' ? sign + pad + arg : pad + sign + arg);
+          output += ph.align ? sign + arg + pad :
+            (pad_character === '0' ? sign + pad + arg : pad + sign + arg);
         }
       }
     }
@@ -13154,55 +14167,52 @@ function GlowCFormat(key) {
     while (_fmt) {
       if ((match = CFormatC.text.exec(_fmt)) !== null) {
         parse_tree.push(match[0]);
-      }
-      else if ((match = CFormatC.modulo.exec(_fmt)) !== null) {
+      } else if ((match = CFormatC.modulo.exec(_fmt)) !== null) {
         parse_tree.push('%');
-      }
-      else if ((match = CFormatC.placeholder.exec(_fmt)) !== null) {
+      } else if ((match = CFormatC.placeholder.exec(_fmt)) !== null) {
         if (match[2]) {
           arg_names |= 1;
           var field_list = [], replacement_field = match[2], field_match = [];
           if ((field_match = CFormatC.key.exec(replacement_field)) !== null) {
             field_list.push(field_match[1]);
-            while ((replacement_field = replacement_field.substring(field_match[0].length)) !== '') {
-              if ((field_match = CFormatC.key_access.exec(replacement_field)) !== null) {
+            while ((replacement_field =
+              replacement_field.substring(field_match[0].length)) !== '') {
+              if ((field_match =
+                  CFormatC.key_access.exec(replacement_field)) !== null) {
                 field_list.push(field_match[1]);
-              }
-              else if ((field_match = CFormatC.index_access.exec(replacement_field)) !== null) {
+              } else if ((field_match =
+                  CFormatC.index_access.exec(replacement_field)) !== null) {
                 field_list.push(field_match[1]);
-              }
-              else {
-                throw new SyntaxError('[sprintf] failed to parse named argument key');
+              } else {
+                throw new SyntaxError(
+                  '[sprintf] failed to parse named argument key');
               }
             }
-          }
-          else {
-            throw new SyntaxError('[sprintf] failed to parse named argument key');
+          } else {
+            throw new SyntaxError(
+              '[sprintf] failed to parse named argument key');
           }
           match[2] = field_list;
-        }
-        else {
+        } else {
           arg_names |= 2;
         }
         if (arg_names === 3) {
-          throw new Error('[sprintf] mixing positional and named placeholders is not (yet) supported');
+          throw new Error(
+            '[sprintf] mixing positional and named placeholders is not (yet) supported');
         }
 
-        parse_tree.push(
-          {
-            placeholder: match[0],
-            param_no: match[1],
-            keys: match[2],
-            sign: match[3],
-            pad_char: match[4],
-            align: match[5],
-            width: match[6],
-            precision: match[7],
-            type: match[8]
-          }
-        );
-      }
-      else {
+        parse_tree.push({
+          placeholder: match[0],
+          param_no: match[1],
+          keys: match[2],
+          sign: match[3],
+          pad_char: match[4],
+          align: match[5],
+          width: match[6],
+          precision: match[7],
+          type: match[8]
+        });
+      } else {
         throw new SyntaxError('[sprintf] unexpected placeholder');
       }
       _fmt = _fmt.substring(match[0].length);
@@ -13214,4 +14224,3 @@ function GlowCFormat(key) {
 }
 
 var appl = new Appl();
-
