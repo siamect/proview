@@ -5,27 +5,27 @@
  Based upon C source code written by Eric Young, eay@psych.uq.oz.au
  and the java version JCrypt by John Dumas.
  */
-function JopCrypt() {
-  this.ITERATIONS = 16;
+class JopCrypt {
+  static ITERATIONS = 16;
 
-  this.con_salt =
-    [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
-      0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x05, 0x06,
-      0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12,
-      0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E,
-      0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x20, 0x21, 0x22, 0x23, 0x24,
-      0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F, 0x30,
-      0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C,
-      0x3D, 0x3E, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00];
+  static con_salt =
+      [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
+        0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x05, 0x06,
+        0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12,
+        0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E,
+        0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x20, 0x21, 0x22, 0x23, 0x24,
+        0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F, 0x30,
+        0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C,
+        0x3D, 0x3E, 0x3F, 0x00, 0x00, 0x00, 0x00, 0x00];
 
-  this.shifts2 =
-    [false, false, true, true, true, true, true, true, false, true, true, true,
-      true, true, true, false];
+  static shifts2 =
+      [false, false, true, true, true, true, true, true, false, true, true, true,
+        true, true, true, false];
 
-  this.skb = [[/* for C bits (numbered as per FIPS 46) 1 2 3 4 5 6 */
+  static skb = [[/* for C bits (numbered as per FIPS 46) 1 2 3 4 5 6 */
     0x00000000, 0x00000010, 0x20000000, 0x20000010, 0x00010000, 0x00010010,
     0x20010000, 0x20010010, 0x00000800, 0x00000810, 0x20000800, 0x20000810,
     0x00010800, 0x00010810, 0x20010800, 0x20010810, 0x00000020, 0x00000030,
@@ -122,7 +122,7 @@ function JopCrypt() {
       0x00040822, 0x04040822, 0x00002820, 0x04002820, 0x00042820, 0x04042820,
       0x00002822, 0x04002822, 0x00042822, 0x04042822]];
 
-  this.SPtrans = [[/* nibble 0 */
+  static SPtrans = [[/* nibble 0 */
     0x00820200, 0x00020000, 0x80800000, 0x80820200, 0x00800000, 0x80020200,
     0x80020000, 0x80800000, 0x80020200, 0x00820200, 0x00820000, 0x80000200,
     0x80800200, 0x00800000, 0x00000000, 0x80020000, 0x00020000, 0x80000000,
@@ -212,40 +212,36 @@ function JopCrypt() {
     0x08008020, 0x08200000, 0x00000020, 0x08208000, 0x00208020, 0x00000000,
     0x08000000, 0x08200020, 0x00008000, 0x00208020]];
 
-  this.cov_2char =
-    [0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39,
-      0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C,
-      0x4D, 0x4E, 0x4F, 0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58,
-      0x59, 0x5A, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A,
-      0x6B, 0x6C, 0x6D, 0x6E, 0x6F, 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76,
-      0x77, 0x78, 0x79, 0x7A];
+  static cov_2char =
+      [0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39,
+        0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C,
+        0x4D, 0x4E, 0x4F, 0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58,
+        0x59, 0x5A, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A,
+        0x6B, 0x6C, 0x6D, 0x6E, 0x6F, 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76,
+        0x77, 0x78, 0x79, 0x7A];
 
-  this.byteToUnsigned = function (b) {
-    var value = Math.floor(b);
-
+  static byteToUnsigned(b) {
+    let value = Math.floor(b);
     return (value >= 0 ? value : value + 256);
-  };
+  }
 
-  this.fourBytesToInt = function (b, offset) {
-    var value;
-
-    value = this.byteToUnsigned(b[offset++]);
-    value |= (this.byteToUnsigned(b[offset++]) << 8);
-    value |= (this.byteToUnsigned(b[offset++]) << 16);
-    value |= (this.byteToUnsigned(b[offset++]) << 24);
-
+  fourBytesToInt(b, offset) {
+    let value = JopCrypt.byteToUnsigned(b[offset++]);
+    value |= (JopCrypt.byteToUnsigned(b[offset++]) << 8);
+    value |= (JopCrypt.byteToUnsigned(b[offset++]) << 16);
+    value |= (JopCrypt.byteToUnsigned(b[offset++]) << 24);
     return value;
-  };
+  }
 
-  this.intToFourBytes = function (iValue, b, offset) {
+  static intToFourBytes(iValue, b, offset) {
     b[offset++] = ((iValue) & 0xff);
     b[offset++] = ((iValue >>> 8) & 0xff);
     b[offset++] = ((iValue >>> 16) & 0xff);
     b[offset++] = ((iValue >>> 24) & 0xff);
-  };
+  }
 
-  this.PERM_OP = function (a, b, n, m, results) {
-    var t;
+  static PERM_OP(a, b, n, m, results) {
+    let t;
 
     t = ((a >>> n) ^ b) & m;
     a ^= t << n;
@@ -253,41 +249,41 @@ function JopCrypt() {
 
     results[0] = a;
     results[1] = b;
-  };
+  }
 
-  this.HPERM_OP = function (a, n, m) {
-    var t;
+  static HPERM_OP(a, n, m) {
+    let t;
 
     t = ((a << (16 - n)) ^ a) & m;
     a = a ^ t ^ (t >>> (16 - n));
 
     return (a);
-  };
+  }
 
-  this.des_set_key = function (key) {
-    var schedule = new Array(this.ITERATIONS * 2);
+  des_set_key(key) {
+    let schedule = new Array(JopCrypt.ITERATIONS * 2);
 
-    var c = this.fourBytesToInt(key, 0);
-    var d = this.fourBytesToInt(key, 4);
+    let c = this.fourBytesToInt(key, 0);
+    let d = this.fourBytesToInt(key, 4);
 
-    var results = new Array(2);
+    let results = new Array(2);
 
-    this.PERM_OP(d, c, 4, 0x0f0f0f0f, results);
+    JopCrypt.PERM_OP(d, c, 4, 0x0f0f0f0f, results);
     d = results[0];
     c = results[1];
 
-    c = this.HPERM_OP(c, -2, 0xcccc0000);
-    d = this.HPERM_OP(d, -2, 0xcccc0000);
+    c = JopCrypt.HPERM_OP(c, -2, 0xcccc0000);
+    d = JopCrypt.HPERM_OP(d, -2, 0xcccc0000);
 
-    this.PERM_OP(d, c, 1, 0x55555555, results);
+    JopCrypt.PERM_OP(d, c, 1, 0x55555555, results);
     d = results[0];
     c = results[1];
 
-    this.PERM_OP(c, d, 8, 0x00ff00ff, results);
+    JopCrypt.PERM_OP(c, d, 8, 0x00ff00ff, results);
     c = results[0];
     d = results[1];
 
-    this.PERM_OP(d, c, 1, 0x55555555, results);
+    JopCrypt.PERM_OP(d, c, 1, 0x55555555, results);
     d = results[0];
     c = results[1];
 
@@ -296,11 +292,11 @@ function JopCrypt() {
         ((c & 0xf0000000) >>> 4));
     c &= 0x0fffffff;
 
-    var s, t;
-    var j = 0;
+    let s, t;
+    let j = 0;
 
-    for (var i = 0; i < this.ITERATIONS; i++) {
-      if (this.shifts2[i]) {
+    for (let i = 0; i < JopCrypt.ITERATIONS; i++) {
+      if (JopCrypt.shifts2[i]) {
         c = (c >>> 2) | (c << 26);
         d = (d >>> 2) | (d << 26);
       } else {
@@ -311,16 +307,16 @@ function JopCrypt() {
       c &= 0x0fffffff;
       d &= 0x0fffffff;
 
-      s = this.skb[0][(c) & 0x3f] |
-        this.skb[1][((c >>> 6) & 0x03) | ((c >>> 7) & 0x3c)] |
-        this.skb[2][((c >>> 13) & 0x0f) | ((c >>> 14) & 0x30)] |
-        this.skb[3][((c >>> 20) & 0x01) | ((c >>> 21) & 0x06) |
+      s = JopCrypt.skb[0][(c) & 0x3f] |
+          JopCrypt.skb[1][((c >>> 6) & 0x03) | ((c >>> 7) & 0x3c)] |
+          JopCrypt.skb[2][((c >>> 13) & 0x0f) | ((c >>> 14) & 0x30)] |
+          JopCrypt.skb[3][((c >>> 20) & 0x01) | ((c >>> 21) & 0x06) |
         ((c >>> 22) & 0x38)];
 
-      t = this.skb[4][(d) & 0x3f] |
-        this.skb[5][((d >>> 7) & 0x03) | ((d >>> 8) & 0x3c)] |
-        this.skb[6][(d >>> 15) & 0x3f] |
-        this.skb[7][((d >>> 21) & 0x0f) | ((d >>> 22) & 0x30)];
+      t = JopCrypt.skb[4][(d) & 0x3f] |
+          JopCrypt.skb[5][((d >>> 7) & 0x03) | ((d >>> 8) & 0x3c)] |
+          JopCrypt.skb[6][(d >>> 15) & 0x3f] |
+          JopCrypt.skb[7][((d >>> 21) & 0x0f) | ((d >>> 22) & 0x30)];
 
       schedule[j++] = ((t << 16) | (s & 0x0000ffff)) & 0xffffffff;
       s = ((s >>> 16) | (t & 0xffff0000));
@@ -329,35 +325,35 @@ function JopCrypt() {
       schedule[j++] = s & 0xffffffff;
     }
     return schedule;
-  };
+  }
 
-  this.D_ENCRYPT = function (L, R, S, E0, E1, s) {
-    var t, u, v;
+  static D_ENCRYPT(L, R, S, E0, E1, s) {
+    let t, u, v;
 
     v = R ^ (R >>> 16);
     u = v & E0;
-    v = v & E1;
+    v &= E1;
     u = (u ^ (u << 16)) ^ R ^ s[S];
     t = (v ^ (v << 16)) ^ R ^ s[S + 1];
     t = (t >>> 4) | (t << 28);
 
-    L ^= this.SPtrans[1][(t) & 0x3f] | this.SPtrans[3][(t >>> 8) & 0x3f] |
-      this.SPtrans[5][(t >>> 16) & 0x3f] | this.SPtrans[7][(t >>> 24) & 0x3f] |
-      this.SPtrans[0][(u) & 0x3f] | this.SPtrans[2][(u >>> 8) & 0x3f] |
-      this.SPtrans[4][(u >>> 16) & 0x3f] | this.SPtrans[6][(u >>> 24) & 0x3f];
+    L ^= JopCrypt.SPtrans[1][(t) & 0x3f] | JopCrypt.SPtrans[3][(t >>> 8) & 0x3f] |
+        JopCrypt.SPtrans[5][(t >>> 16) & 0x3f] | JopCrypt.SPtrans[7][(t >>> 24) & 0x3f] |
+        JopCrypt.SPtrans[0][(u) & 0x3f] | JopCrypt.SPtrans[2][(u >>> 8) & 0x3f] |
+        JopCrypt.SPtrans[4][(u >>> 16) & 0x3f] | JopCrypt.SPtrans[6][(u >>> 24) & 0x3f];
 
     return L;
-  };
+  }
 
-  this.body = function (schedule, Eswap0, Eswap1) {
-    var left = 0;
-    var right = 0;
-    var t = 0;
+  body(schedule, Eswap0, Eswap1) {
+    let left = 0;
+    let right = 0;
+    let t = 0;
 
-    for (var j = 0; j < 25; j++) {
-      for (var i = 0; i < this.ITERATIONS * 2; i += 4) {
-        left = this.D_ENCRYPT(left, right, i, Eswap0, Eswap1, schedule);
-        right = this.D_ENCRYPT(right, left, i + 2, Eswap0, Eswap1, schedule);
+    for (let j = 0; j < 25; j++) {
+      for (let i = 0; i < JopCrypt.ITERATIONS * 2; i += 4) {
+        left = JopCrypt.D_ENCRYPT(left, right, i, Eswap0, Eswap1, schedule);
+        right = JopCrypt.D_ENCRYPT(right, left, i + 2, Eswap0, Eswap1, schedule);
       }
       t = left;
       left = right;
@@ -372,73 +368,73 @@ function JopCrypt() {
     left &= 0xffffffff;
     right &= 0xffffffff;
 
-    var results = new Array(2);
+    let results = new Array(2);
 
-    this.PERM_OP(right, left, 1, 0x55555555, results);
+    JopCrypt.PERM_OP(right, left, 1, 0x55555555, results);
     right = results[0];
     left = results[1];
 
-    this.PERM_OP(left, right, 8, 0x00ff00ff, results);
+    JopCrypt.PERM_OP(left, right, 8, 0x00ff00ff, results);
     left = results[0];
     right = results[1];
 
-    this.PERM_OP(right, left, 2, 0x33333333, results);
+    JopCrypt.PERM_OP(right, left, 2, 0x33333333, results);
     right = results[0];
     left = results[1];
 
-    this.PERM_OP(left, right, 16, 0x0000ffff, results);
+    JopCrypt.PERM_OP(left, right, 16, 0x0000ffff, results);
     left = results[0];
     right = results[1];
 
-    this.PERM_OP(right, left, 4, 0x0f0f0f0f, results);
+    JopCrypt.PERM_OP(right, left, 4, 0x0f0f0f0f, results);
     right = results[0];
     left = results[1];
 
-    var out = new Array(2);
+    let out = new Array(2);
 
     out[0] = left;
     out[1] = right;
 
     return (out);
-  };
+  }
 
-  this.crypt = function (salt, original) {
+  crypt(salt, original) {
     while (salt.length < 2) {
       salt += "A";
     }
 
-    var buffer;
-    var charZero = salt.charAt(0) + '';
-    var charOne = salt.charAt(1) + '';
-    var ccZ = charZero.charCodeAt(0);
-    var ccO = charOne.charCodeAt(0);
+    let buffer;
+    let charZero = salt.charAt(0) + '';
+    let charOne = salt.charAt(1) + '';
+    let ccZ = charZero.charCodeAt(0);
+    let ccO = charOne.charCodeAt(0);
     console.log("charZero", charZero, "charOne", charOne);
 
     buffer = charZero + charOne + " ";
 
     console.log("buffer \"" + buffer + "\"");
-    var Eswap0 = this.con_salt[ccZ];
-    var Eswap1 = this.con_salt[ccO] << 4;
+    let Eswap0 = JopCrypt.con_salt[ccZ];
+    let Eswap1 = JopCrypt.con_salt[ccO] << 4;
 
-    var key = new Array(0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0);
+    let key = [0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0];
 
-    for (var i = 0; i < key.length && i < original.length; i++) {
-      var iChar = original.charCodeAt(i);
+    for (let i = 0; i < key.length && i < original.length; i++) {
+      let iChar = original.charCodeAt(i);
 
       key[i] = iChar << 1;
     }
 
-    var schedule = this.des_set_key(key);
-    var out = this.body(schedule, Eswap0, Eswap1);
+    let schedule = this.des_set_key(key);
+    let out = this.body(schedule, Eswap0, Eswap1);
 
-    var b = new Array(9);
+    let b = new Array(9);
 
-    this.intToFourBytes(out[0], b, 0);
-    this.intToFourBytes(out[1], b, 4);
+    JopCrypt.intToFourBytes(out[0], b, 0);
+    JopCrypt.intToFourBytes(out[1], b, 4);
     b[8] = 0;
 
-    for (var i = 2, y = 0, u = 0x80; i < 13; i++) {
-      for (var j = 0, c = 0; j < 6; j++) {
+    for (let i = 2, y = 0, u = 0x80; i < 13; i++) {
+      for (let j = 0, c = 0; j < 6; j++) {
         c <<= 1;
 
         if ((b[y] & u) !== 0) {
@@ -452,12 +448,12 @@ function JopCrypt() {
           u = 0x80;
         }
         buffer =
-          buffer.substring(0, i) + String.fromCharCode(this.cov_2char[c]) +
+          buffer.substring(0, i) + String.fromCharCode(JopCrypt.cov_2char[c]) +
           buffer.substring(i + 1, buffer.length);
       }
     }
     return buffer;
-  };
+  }
 }
 
 /** Crypt end **/

@@ -1,6 +1,6 @@
 "use strict";
 
-var Bitmaps = {
+let Bitmaps = {
   leaf: 0,
   map: 2,
   openmap: 4,
@@ -72,85 +72,98 @@ var Bitmaps = {
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAPElEQVQokWNgYGD4jw3///8fqzgDPg04NOG3AUMTugA2hWhqiFKEzCeoAF2MRBvI8gNJoUT1eCBaAy4MAMhm5hr5iTaWAAAAAElFTkSuQmCC']
 };
 
+const DRAWOFFSET = 2;
+const TREE_INDENTATION = 1.0;
+const RELATIVE_POSITION = 1;
+const NEXT_RELATIVE_POSITION = 2;
 
-var Plow = {
-  DRAWOFFSET: 2,
-  DEST_INTOLAST: 0,
-  DEST_INTOFIRST: 1,
-  DEST_AFTER: 2,
-  DEST_BEFORE: 3,
-  TREE_INDENTATION: 1.0,
-  OPEN_ATTRIBUTES: 1,
-  OPEN_CHILDREN: 2,
-  OPEN_CROSSREFERENCES: 4,
-  OPEN_ALL: 7,
-  COLOR_BLACK: 1,
-  COLOR_RED: 2,
-  COLOR_GRAY: 3,
-  COLOR_DARKGRAY: 4,
-  COLOR_LIGHTGRAY: 5,
-  COLOR_WHITE: 6,
-  COLOR_YELLOW: 7,
-  COLOR_GREEN: 8,
-  COLOR_LIGHTBLUE: 9,
-  COLOR_BLUE: 10,
-  COLOR_VIOLET: 11,
-  eEvent_MB1Click: 0,
-  eEvent_MB1ClickShift: 1,
-  eEvent_Key_Up: 2,
-  eEvent_Key_Down: 3,
-  eEvent_Key_Right: 4,
-  eEvent_Key_Left: 5,
-  eEvent_Key_ShiftRight: 6,
-  eEvent_Key_CtrlR: 7,
-  eEvent_Key_CtrlL: 8,
-  eEvent_Key_CtrlG: 9,
-  eEvent_ObjectDeleted: 10,
-  RELATIVE_POSITION: 1,
-  NEXT_RELATIVE_POSITION: 2
-};
-
-function PlowGeometry() {
-  this.ll_x = 0;
-  this.ll_y = 0;
-  this.ur_x = 0;
-  this.ur_y = 0;
+enum Dest {
+  INTOLAST,
+  INTOFIRST,
+  AFTER,
+  BEFORE
 }
 
-function PlowNodeClass(ctx) {
+enum Open {
+  ATTRIBUTES = 1,
+  CHILDREN = 2,
+  CROSSREFERENCES = 4,
+  ALL = 7
+}
 
-  this.a = new PlowArray(ctx);
-  this.ctx = ctx;
-  this.nc_name = "";
-  this.group = 0;
-  this.node_open = 0;
+enum Color {
+  BLACK = 1,
+  RED,
+  GRAY,
+  DARKGRAY,
+  LIGHTGRAY,
+  WHITE,
+  YELLOW,
+  GREEN,
+  LIGHTBLUE,
+  BLUE,
+  VIOLET
+}
 
-  this.draw = function (g, p, node, highlight) {
+enum Event {
+  MB1Click,
+  MB1ClickShift,
+  Key_Up,
+  Key_Down,
+  Key_Right,
+  Key_Left,
+  Key_ShiftRight,
+  Key_CtrlR,
+  Key_CtrlL,
+  Key_CtrlG,
+  ObjectDeleted
+}
+
+class PlowNodeClass {
+  a: PlowArray;
+  ctx: PlowCtx;
+  nc_name: string;
+  group: number;
+  node_open: number;
+  constructor(ctx) {
+    this.a = new PlowArray(ctx);
+    this.ctx = ctx;
+    this.nc_name = "";
+    this.group = 0;
+    this.node_open = 0;
+  }
+
+  draw(g, p, node, highlight) {
     this.a.draw(g, p, node, highlight);
-  };
+  }
 
-  this.insert = function (elem) {
+  insert(elem) {
     this.a.add(elem);
   }
 }
 
-function PlowArray(ctx) {
-  this.a = [];
-  this.ctx = ctx;
+class PlowArray {
+  a: Array<PlowNode>;
+  ctx: PlowCtx;
+  constructor(ctx) {
+    this.a = [];
+    this.ctx = ctx;
+  }
 
-  this.add = function (elem) {
+  add(elem) {
     this.a.push(elem);
-  };
-  this.insertNode = function (elem, destination, code) {
-    var idx = this.find(elem);
+  }
+
+  insertNode(elem, destination, code) {
+    let idx = this.find(elem);
     if (idx !== -1) {
       return;
     }
 
-    if (destination == null) {
+    if (destination === null) {
       switch (code) {
-        case Plow.DEST_INTOLAST:
-        case Plow.DEST_AFTER:
+        case Dest.INTOLAST:
+        case Dest.AFTER:
           this.a.push(elem);
           elem.level = 0;
           break;
@@ -159,13 +172,13 @@ function PlowArray(ctx) {
           this.a.unshift(elem);
       }
     } else {
-      var dest_idx = this.find(destination);
+      let dest_idx = this.find(destination);
       if (dest_idx === -1) {
         return;
       }
 
       switch (code) {
-        case Plow.DEST_INTOFIRST:
+        case Dest.INTOFIRST:
           if (dest_idx === this.a.length - 1) {
             this.a.push(elem);
           } else {
@@ -173,12 +186,12 @@ function PlowArray(ctx) {
           }
           elem.level = destination.level + 1;
           break;
-        case Plow.DEST_INTOLAST: {
+        case Dest.INTOLAST:
           if (dest_idx === this.a.length - 1) {
             this.a.push(elem);
           } else {
             idx = this.a.length;
-            for (var i = dest_idx + 1; i < this.a.length; i++) {
+            for (let i = dest_idx + 1; i < this.a.length; i++) {
               if (this.a[i].level <= destination.level) {
                 idx = i;
                 break;
@@ -192,12 +205,11 @@ function PlowArray(ctx) {
           }
           elem.level = destination.level + 1;
           break;
-        }
-        case Plow.DEST_AFTER: {
+        case Dest.AFTER:
           if (dest_idx === this.a.length - 1) {
             this.a.push(elem);
           } else {
-            var i;
+            let i;
             for (i = idx; i < this.a.length; i++) {
               if (this.a[i].level < destination.level) {
                 break;
@@ -207,8 +219,7 @@ function PlowArray(ctx) {
           }
           elem.level = destination.level;
           break;
-        }
-        case Plow.DEST_BEFORE:
+        case Dest.BEFORE:
           if (idx > 0) {
             idx--;
           }
@@ -217,80 +228,86 @@ function PlowArray(ctx) {
           break;
       }
     }
-  };
+  }
 
-  this.remove = function (elem) {
-    var idx = this.find(elem);
+  remove(elem) {
+    let idx = this.find(elem);
     if (idx === -1) {
       return;
     }
-    this.ctx.event_cb(Plow.eEvent_ObjectDeleted, this.a[idx + 1], 0, 0);
+    this.ctx.event_cb(Event.ObjectDeleted, this.a[idx + 1], 0, 0);
     this.a.splice(idx, 1);
-  };
+  }
 
-  this.size = function () {
+  size() {
     return this.a.length;
-  };
-  this.get = function (idx) {
+  }
+
+  get(idx) {
     return this.a[idx];
-  };
-  this.draw = function (g, p, node, highlight) {
-    for (var i = 0; i < this.a.length; i++) {
+  }
+
+  draw(g, p, node, highlight) {
+    for (let i = 0; i < this.a.length; i++) {
       this.a[i].draw(g, p, node, highlight);
     }
-  };
-  this.set_borders = function (node) {
-    for (var i = 0; i < this.a.length; i++) {
+  }
+
+  set_borders(node) {
+    for (let i = 0; i < this.a.length; i++) {
       this.a[i].set_borders(node);
     }
-  };
-  this.configure = function () {
-    for (var i = 0; i < this.a.length; i++) {
-      this.a[i].pos.x = this.a[i].level * 1.0;
-      this.a[i].pos.y = i * 1.0;
+  }
+
+  configure() {
+    for (let i = 0; i < this.a.length; i++) {
+      this.a[i].pos.x = this.a[i].level;
+      this.a[i].pos.y = i;
     }
-  };
-  this.close_node = function (node) {
-    var idx = this.find(node);
+  }
+
+  close_node(node) {
+    let idx = this.find(node);
     if (idx === -1) {
       return;
     }
-    var level = node.level;
-    var i;
+    let level = node.level;
+    let i;
     for (i = idx + 1; i < this.a.length; i++) {
       if (this.a[i].level <= level) {
         break;
       }
     }
-    var next_idx = i;
+    let next_idx = i;
     if (next_idx === idx + 1) {
       return;
     }
     for (i = idx + 1; i < next_idx; i++) {
       // Event backcall
-      if (ctx.select_object === this.a[idx + 1]) {
-        ctx.select_object = null;
+      if (this.ctx.select_object === this.a[idx + 1]) {
+        this.ctx.select_object = null;
       }
-      this.ctx.event_cb(Plow.eEvent_ObjectDeleted, this.a[idx + 1], 0, 0);
+      this.ctx.event_cb(Event.ObjectDeleted, this.a[idx + 1], 0, 0);
       this.a.splice(idx + 1, 1);
     }
-  };
-  this.get_parent_object = function (node) {
-    var idx = this.find(node);
+  }
+
+  get_parent_object(node) {
+    let idx = this.find(node);
     if (idx === -1) {
       return null;
     }
 
-    for (var i = idx; i >= 0; i--) {
+    for (let i = idx; i >= 0; i--) {
       if (this.a[i].level < node.level) {
         return this.a[i];
       }
     }
     return null;
-  };
+  }
 
-  this.get_first_child = function (node) {
-    var idx = this.find(node);
+  get_first_child(node) {
+    let idx = this.find(node);
     if (idx === -1) {
       return null;
     }
@@ -303,11 +320,11 @@ function PlowArray(ctx) {
       return this.a[idx + 1];
     }
     return null;
-  };
+  }
 
-  this.get_next_sibling = function (node) {
-    var found = false;
-    for (var i = 0; i < this.a.length; i++) {
+  get_next_sibling(node) {
+    let found = false;
+    for (let i = 0; i < this.a.length; i++) {
       if (this.a[i] === node) {
         found = true;
         continue;
@@ -322,10 +339,10 @@ function PlowArray(ctx) {
       }
     }
     return null;
-  };
+  }
 
-  this.get_next_object = function (node) {
-    for (var i = 0; i < this.a.length; i++) {
+  get_next_object(node) {
+    for (let i = 0; i < this.a.length; i++) {
       if (this.a[i] === node) {
         if (i === this.a.length - 1) {
           return null;
@@ -334,9 +351,10 @@ function PlowArray(ctx) {
       }
     }
     return null;
-  };
-  this.get_previous_object = function (node) {
-    for (var i = 0; i < this.a.length; i++) {
+  }
+
+  get_previous_object(node) {
+    for (let i = 0; i < this.a.length; i++) {
       if (this.a[i] === node) {
         if (i === 0) {
           return null;
@@ -345,22 +363,24 @@ function PlowArray(ctx) {
       }
     }
     return null;
-  };
-  this.get_first_object = function () {
+  }
+
+  get_first_object() {
     if (this.a.length === 0) {
       return null;
     }
     return this.a[0];
-  };
-  this.get_last_object = function () {
+  }
+
+  get_last_object() {
     if (this.a.length === 0) {
       return null;
     }
     return this.a[this.a.length - 1];
-  };
+  }
 
-  this.find = function (elem) {
-    for (var i = 0; i < this.a.length; i++) {
+  find(elem) {
+    for (let i = 0; i < this.a.length; i++) {
       if (this.a[i] === elem) {
         return i;
       }
@@ -369,54 +389,83 @@ function PlowArray(ctx) {
   }
 }
 
-function PlowNode(ctx, nc, level) {
-  this.ctx = ctx;
-  this.userdata = null;
-  this.OFFSET = 2;
-  this.x_right = 0.0;
-  this.x_left = 0.0;
-  this.y_high = 0.0;
-  this.y_low = 0.0;
-  this.nc = nc;
-  this.pos = new PlowPoint(ctx, 0, 0);
-  this.n_name = "";
-  this.annotv = [];
-  this.annotsize = [];
-  this.pixmapv = [];
-  this.trace_object = "";
-  this.trace_attribute = "";
-  this.trace_attr_type = 0;
-  this.highlight = false;
-  this.select = false;
-  this.invert = false;
-  this.level = level;
-  this.node_open = false;
-  this.fill_color = 0;
-  this.p = 0;
-  this.old_value = 0;
-  this.first_scan = true;
-  this.relative_position = 0;
+class PlowNode {
+  ctx: PlowCtx;
+  userdata: object;
+  x_right: number;
+  x_left: number;
+  y_high: number;
+  y_low: number;
+  nc: PlowNodeClass;
+  pos: Point;
+  n_name: string;
+  annotv: Array;
+  annotsize: Array;
+  pixmapv: Array;
+  trace_object: string;
+  trace_attribute: string;
+  trace_attr_type: number;
+  highlight: boolean;
+  select: boolean;
+  invert: boolean;
+  level: number;
+  node_open: number;
+  fill_color: number;
+  p: number;
+  old_value: number;
+  first_scan: boolean;
+  relative_position: number;
+  constructor(ctx, nc, level) {
+    this.ctx = ctx;
+    this.userdata = null;
+    this.x_right = 0.0;
+    this.x_left = 0.0;
+    this.y_high = 0.0;
+    this.y_low = 0.0;
+    this.nc = nc;
+    this.pos = new Point();
+    this.n_name = "";
+    this.annotv = [];
+    this.annotsize = [];
+    this.pixmapv = [];
+    this.trace_object = "";
+    this.trace_attribute = "";
+    this.trace_attr_type = 0;
+    this.highlight = false;
+    this.select = false;
+    this.invert = false;
+    this.level = level;
+    this.node_open = 0;
+    this.fill_color = 0;
+    this.p = 0;
+    this.old_value = 0;
+    this.first_scan = true;
+    this.relative_position = 0;
+  }
 
-  this.set_annotation = function (number, text) {
+  set_annotation(number, text) {
     if (number >= 10) {
       return;
     }
     this.annotv[number] = text;
-  };
-  this.set_annotation_pixmap = function (number, pixmap) {
+  }
+
+  set_annotation_pixmap(number, pixmap) {
     if (number >= 10) {
       return;
     }
     this.pixmapv[number] = pixmap;
-  };
-  this.draw_object = function () {
+  }
+
+  draw_object() {
     this.draw(this.ctx.gdraw.gctx, null, null, false);
-  };
-  this.draw = function (g, p, node, highlight) {
-    var x = this.x_left * this.ctx.zoom_factor;
-    var y = this.y_low * this.ctx.zoom_factor - 1;
-    var width = (this.x_right - this.x_left) * this.ctx.zoom_factor;
-    var height = (this.y_high - this.y_low) * this.ctx.zoom_factor + 2;
+  }
+
+  draw(g, p, node, highlight) {
+    let x = this.x_left * this.ctx.zoom_factor;
+    let y = this.y_low * this.ctx.zoom_factor - 1;
+    let width = (this.x_right - this.x_left) * this.ctx.zoom_factor;
+    let height = (this.y_high - this.y_low) * this.ctx.zoom_factor + 2;
     g.fillStyle = "white";
     if (this.select) {
       g.fillStyle = "lightblue";
@@ -424,28 +473,29 @@ function PlowNode(ctx, nc, level) {
     g.fillRect(x, y, width, height);
 
     this.nc.draw(g, this.pos, this, this.highlight);
-  };
+  }
 
-  this.connect = function () {
+  connect() {
     if (this.trace_object === "" || this.trace_attribute === "") {
       return;
     }
 
-    var n = this.trace_attribute.indexOf('#');
+    let n = this.trace_attribute.indexOf('#');
     if (n !== -1) {
       this.trace_attribute = this.trace_attribute.substring(0, n);
     }
 
-    var o = this.trace_object + "." + this.trace_attribute;
-    this.p = ctx.gdh.refObjectInfo(o, this.trace_attr_type);
+    let o = this.trace_object + "." + this.trace_attribute;
+    this.p = this.ctx.gdh.refObjectInfo(o, this.trace_attr_type, null);
     console.log("connecting", o, this.p);
-  };
-  this.scan = function () {
+  }
+
+  scan() {
     if (this.p === 0) {
       return;
     }
-    var v1 = ctx.gdh.getRefObjectInfo(this.p);
-    var evaluate = true;
+    let v1 = this.ctx.gdh.getObjectRefInfo(this.p);
+    let evaluate = true;
     if (this.first_scan) {
       this.first_scan = false;
     } else if (v1 === this.old_value) {
@@ -456,28 +506,28 @@ function PlowNode(ctx, nc, level) {
 
     this.old_value = v1;
     this.draw_object();
-  };
+  }
 
-  this.set_borders = function () {
-    this.x_left = 1e37;
-    this.x_right = -1e37;
-    this.y_low = 1e37;
-    this.y_high = -1e37;
-    nc.a.set_borders(this);
-  };
+  set_borders(node) {
+    this.x_left = 1.0e37;
+    this.x_right = -1.0e37;
+    this.y_low = 1.0e37;
+    this.y_high = -1.0e37;
+    this.nc.a.set_borders(this);
+  }
 
-  this.event_handler = function (event, x, y) {
+  event_handler(event, x, y) {
     if ((x - this.ctx.offset_x) / this.ctx.zoom_factor >= this.x_left &&
       (x - this.ctx.offset_x) / this.ctx.zoom_factor <= this.x_right &&
       (y - this.ctx.offset_y) / this.ctx.zoom_factor >= this.y_low &&
       (y - this.ctx.offset_y) / this.ctx.zoom_factor <= this.y_high) {
-      ctx.event_object = this;
+      this.ctx.event_object = this;
       return 1;
     }
     return 0;
-  };
+  }
 
-  this.set_select = function (select) {
+  set_select(select) {
     if (select) {
       this.select = true;
       this.ctx.select_object = this;
@@ -490,59 +540,62 @@ function PlowNode(ctx, nc, level) {
     if (select !== this.select) {
       this.draw_object();
     }
-  };
-  this.set_invert = function (invert) {
+  }
+
+  set_invert(invert) {
     this.invert = invert;
     this.draw_object();
-  };
-  this.set_userdata = function (userdata) {
+  }
+
+  set_userdata(userdata) {
     this.userdata = userdata;
-  };
-  this.get_userdata = function () {
+  }
+
+  get_userdata() {
     return this.userdata;
-  };
-  this.in_icon = function (x, y) {
+  }
+
+  in_icon(x, y) {
     return x >= this.x_left * this.ctx.zoom_factor && x <=
       (this.x_left + 1.75) * this.ctx.zoom_factor;
+  }
 
-  };
-  this.measure = function () {
-    var geom = new PlowGeometry();
-    geom.ll_x = this.x_left * this.ctx.zoom_factor;
-    geom.ll_y = this.y_low * this.ctx.zoom_factor;
-    geom.ur_x = this.x_right * this.ctx.zoom_factor;
-    geom.ur_y = this.y_high * this.ctx.zoom_factor;
-
-    return geom;
+  measure() {
+    return new Rect(
+        this.x_left * this.ctx.zoom_factor,
+        this.y_low * this.ctx.zoom_factor,
+        (this.x_right - this.x_left) * this.ctx.zoom_factor,
+        (this.y_high - this.y_low) * this.ctx.zoom_factor);
   };
 }
 
+class PlowAnnot {
+  RELATIVE_OFFSET = 1;
+  ctx: PlowCtx;
+  p: Point;
+  draw_type: number;
+  text_size: number;
+  annot_type: number;
+  number: number;
+  constructor(ctx, x, y, text_size, text_color, annot_type, number) {
+    this.p = new Point(x, y);
+    this.draw_type = text_color;
+    this.text_size = text_size;
+    this.annot_type = annot_type;
+    this.number = number;
+    this.ctx = ctx;
+  }
 
-function PlowPoint(ctx, x, y) {
-  this.x = x;
-  this.y = y;
-  this.ctx = ctx;
-}
-
-function PlowAnnot(ctx, x, y, text_size, text_color, annot_type, number) {
-  this.RELATIVE_OFFSET = 1;
-  this.p = new PlowPoint(ctx, x, y);
-  this.draw_type = text_color;
-  this.text_size = text_size;
-  this.annot_type = annot_type;
-  this.number = number;
-  this.ctx = ctx;
-
-  this.draw = function (g, p0, node, highlight) {
-    if (node == null) {
+  draw(g, p0, node, highlight) {
+    if (node === null) {
       return;
     }
-    if (node.annotv[this.number] == null) {
+    if (node.annotv[this.number] === null) {
       return;
     }
 
-    var tsize = 0;
-    var idx = this.ctx.zoom_factor / this.ctx.base_zoom_factor *
+    let tsize = 0;
+    let idx = this.ctx.zoom_factor / this.ctx.base_zoom_factor *
       (this.text_size + 4) - 4;
     if (idx < 0) {
       return;
@@ -589,44 +642,50 @@ function PlowAnnot(ctx, x, y, text_size, text_color, annot_type, number) {
     }
     g.lineWidth = 0.5;
 
-    var x = (this.p.x + p0.x) * this.ctx.zoom_factor;
-    var y = (this.p.y + p0.y) * this.ctx.zoom_factor - tsize / 4;
+    let x = (this.p.x + p0.x) * this.ctx.zoom_factor;
+    let y = (this.p.y + p0.y) * this.ctx.zoom_factor - tsize / 4;
 
-    if ((this.annot_type & Plow.RELATIVE_POSITION) !== 0) {
-      var rel_x = (p0.x + node.relative_position + this.RELATIVE_OFFSET) *
+    if ((this.annot_type & RELATIVE_POSITION) !== 0) {
+      let rel_x = (p0.x + node.relative_position + this.RELATIVE_OFFSET) *
         this.ctx.zoom_factor;
       if (x < rel_x) {
         x = rel_x;
       }
     }
 
-    var tokens = node.annotv[this.number].split('\n');
-    for (var i = 0; i < tokens.length; i++) {
+    let tokens = node.annotv[this.number].split('\n');
+    for (let i = 0; i < tokens.length; i++) {
       g.fillText(tokens[i], x, y);
       y += tsize * 1.4;
     }
-    if ((this.annot_type & Plow.NEXT_RELATIVE_POSITION) !== 0 ||
-      (this.annot_type & Plow.RELATIVE_POSITION) !== 0) {
+    if ((this.annot_type & NEXT_RELATIVE_POSITION) !== 0 ||
+      (this.annot_type & RELATIVE_POSITION) !== 0) {
       node.relative_position =
         (x + g.measureText(node.annotv[this.number]).width) /
         this.ctx.zoom_factor - p0.x;
     }
-  };
-  this.set_borders = function (node) {
+  }
+
+  set_borders(node) {
   }
 }
 
-function PlowAnnotPixmap(ctx, x, y, number) {
-  this.p = new PlowPoint(ctx, x, y);
-  this.number = number;
-  this.ctx = ctx;
+class PlowAnnotPixmap {
+  ctx: PlowCtx;
+  p: Point;
+  number: number;
+  constructor(ctx, x, y, number) {
+    this.p = new Point(x, y);
+    this.number = number;
+    this.ctx = ctx;
+  }
 
-  this.draw = function (gctx, p0, node, highlight) {
-    var x = (this.p.x + p0.x) * this.ctx.zoom_factor;
-    var y = (this.p.y + p0.y) * this.ctx.zoom_factor;
+  draw(gctx, p0, node, highlight) {
+    let x = (this.p.x + p0.x) * this.ctx.zoom_factor;
+    let y = (this.p.y + p0.y) * this.ctx.zoom_factor;
 
-    var img;
-    var bix = node.pixmapv[this.number];
+    let img;
+    let bix = node.pixmapv[this.number];
     if (typeof bix === 'undefined' || bix === null) {
       return;
     }
@@ -635,15 +694,15 @@ function PlowAnnotPixmap(ctx, x, y, number) {
     }
 
     img = Bitmaps.img[bix];
-    if (img == null) {
-      var img = new Image();
+    if (img === null) {
+      let img = new Image();
       img.src = Bitmaps.images[bix];
       Bitmaps.img[bix] = img;
       Bitmaps.pending[bix] = [];
-      Bitmaps.pending[bix].push(new PlowPoint(this.ctx, x, y));
+      Bitmaps.pending[bix].push(new Point(x, y));
 
       img.onload = function () {
-        for (var i = 0; i < Bitmaps.pending[bix].length; i++) {
+        for (let i = 0; i < Bitmaps.pending[bix].length; i++) {
           gctx.drawImage(img, Bitmaps.pending[bix][i].x,
             Bitmaps.pending[bix][i].y);
         }
@@ -653,41 +712,48 @@ function PlowAnnotPixmap(ctx, x, y, number) {
       if (img.complete) {
         gctx.drawImage(img, x, y);
       } else {
-        Bitmaps.pending[bix].push(new PlowPoint(this.ctx, x, y));
+        Bitmaps.pending[bix].push(new Point(x, y));
       }
     }
+  }
 
-  };
-  this.set_borders = function (node) {
+  set_borders(node) {
   }
 }
 
-function PlowRect(ctx, x, y, width, height, fill_color, border_color, fill,
-                  fix_color) {
-  this.ll = new PlowPoint(ctx, x, y);
-  this.ur = new PlowPoint(ctx, x + width, y + height);
-  this.border_color = border_color;
-  this.fill_color = fill_color;
-  this.fill = fill;
-  this.fix_color = fix_color;
-  this.ctx = ctx;
+class PlowRect {
+  ctx: PlowCtx;
+  ll: Point;
+  ur: Point;
+  border_color: number;
+  fill_color: number;
+  fill: number;
+  fix_color: number;
+  constructor(ctx, x, y, width, height, fill_color, border_color, fill, fix_color) {
+    this.ll = new Point(x, y);
+    this.ur = new Point(x + width, y + height);
+    this.border_color = border_color;
+    this.fill_color = fill_color;
+    this.fill = fill;
+    this.fix_color = fix_color;
+    this.ctx = ctx;
+  }
 
-  this.draw = function (g, p, node, highlight) {
-
-    var x = (this.ll.x + p.x) * this.ctx.zoom_factor;
-    var y = (this.ll.y + p.y) * this.ctx.zoom_factor;
-    var width = (this.ur.x - this.ll.x) * this.ctx.zoom_factor;
-    var height = (this.ur.y - this.ll.y) * this.ctx.zoom_factor;
+  draw(g, p, node, highlight) {
+    let x = (this.ll.x + p.x) * this.ctx.zoom_factor;
+    let y = (this.ll.y + p.y) * this.ctx.zoom_factor;
+    let width = (this.ur.x - this.ll.x) * this.ctx.zoom_factor;
+    let height = (this.ur.y - this.ll.y) * this.ctx.zoom_factor;
 
     g.lineWidth = 1;
     switch (this.border_color) {
-      case Plow.COLOR_GRAY:
+      case Color.GRAY:
         g.strokeStyle = "grey";
         break;
-      case Plow.COLOR_RED:
+      case Color.RED:
         g.strokeStyle = "red";
         break;
-      case Plow.COLOR_WHITE:
+      case Color.WHITE:
         g.strokeStyle = "white";
         break;
       default:
@@ -700,19 +766,19 @@ function PlowRect(ctx, x, y, width, height, fill_color, border_color, fill,
 
     if (this.fill) {
       switch (this.fill_color) {
-        case Plow.COLOR_GRAY:
+        case Color.GRAY:
           g.fillStyle = "grey";
           break;
-        case Plow.COLOR_RED:
+        case Color.RED:
           g.fillStyle = "red";
           break;
-        case Plow.COLOR_YELLOW:
+        case Color.YELLOW:
           g.fillStyle = "yellow";
           break;
-        case Plow.COLOR_GREEN:
+        case Color.GREEN:
           g.fillStyle = "lightgreen";
           break;
-        case Plow.COLOR_WHITE:
+        case Color.WHITE:
           if (node.invert) {
             g.fillStyle = "black";
           } else {
@@ -728,8 +794,9 @@ function PlowRect(ctx, x, y, width, height, fill_color, border_color, fill,
       }
       g.fillRect(x, y, width, height);
     }
-  };
-  this.set_borders = function (node) {
+  }
+
+  set_borders(node) {
     if (this.ll.x + node.pos.x < node.x_left) {
       node.x_left = this.ll.x + node.pos.x;
     }
@@ -745,34 +812,60 @@ function PlowRect(ctx, x, y, width, height, fill_color, border_color, fill,
   }
 }
 
-function GDraw(ctx) {
-  this.ctx = ctx;
-  this.canvas = document.querySelector("canvas");
-  this.gctx = this.canvas.getContext("2d");
-  this.offset_top = this.canvas.offsetTop;
+class GDraw {
+  ctx: PlowCtx;
+  canvas: HTMLCanvasElement;
+  gctx: CanvasRenderingContext2D;
+  offset_top: number;
+  constructor(ctx) {
+    this.ctx = ctx;
+    this.canvas = document.querySelector("canvas");
+    this.gctx = this.canvas.getContext("2d");
+    this.offset_top = this.canvas.offsetTop;
+  }
 }
 
-function PlowCtx() {
-  this.gdh = 0;
-  this.debug = false;
-  this.nodraw = 0;
-  this.zoom_factor = 20.0;
-  this.base_zoom_factor = 20.0;
-  this.offset_x = 0;
-  this.offset_y = 0;
-  this.x_right = 0.0;
-  this.x_left = 0.0;
-  this.y_high = 0.0;
-  this.y_low = 0.0;
-  this.a = new PlowArray(this);
-  this.a_nc = new PlowArray(this);
-  this.name = "Claes context";
-  this.gdraw = new GDraw(this);
-  this.selct_object = null;
-  this.event_cb = null;
-  this.event_object = null;
+class PlowCtx {
+  gdh: Gdh;
+  debug: boolean;
+  nodraw: number;
+  zoom_factor: number;
+  base_zoom_factor: number;
+  offset_x: number;
+  offset_y: number;
+  x_right: number;
+  x_left: number;
+  y_high: number;
+  y_low: number;
+  a: PlowArray;
+  a_nc: PlowArray;
+  name: string;
+  gdraw: GDraw;
+  select_object: PlowNode;
+  event_cb: (event: object, object: PlowNode, x: number, y: number) => void;
+  event_object: PlowNode;
+  constructor() {
+    this.gdh = null;
+    this.debug = false;
+    this.nodraw = 0;
+    this.zoom_factor = 20.0;
+    this.base_zoom_factor = 20.0;
+    this.offset_x = 0;
+    this.offset_y = 0;
+    this.x_right = 0.0;
+    this.x_left = 0.0;
+    this.y_high = 0.0;
+    this.y_low = 0.0;
+    this.a = new PlowArray(this);
+    this.a_nc = new PlowArray(this);
+    this.name = "Claes context";
+    this.gdraw = new GDraw(this);
+    this.select_object = null;
+    this.event_cb = null;
+    this.event_object = null;
+  }
 
-  this.draw = function () {
+  draw() {
     if (this.nodraw > 0) {
       return;
     }
@@ -780,34 +873,39 @@ function PlowCtx() {
     this.gdraw.gctx.fillRect(0, 0, this.gdraw.canvas.width,
       this.gdraw.canvas.height);
     this.a.draw(this.gdraw.gctx, null, null, false);
-  };
+  }
 
-  this.connect = function () {
-    for (var i = 0; i < this.a.size(); i++) {
+  connect() {
+    for (let i = 0; i < this.a.size(); i++) {
       this.a.get(i).connect();
     }
-  };
-  this.scan = function () {
+  }
+
+  scan() {
     console.log("ctx scan", this.a.size());
-    for (var i = 0; i < this.a.size(); i++) {
+    for (let i = 0; i < this.a.size(); i++) {
       this.a.get(i).scan();
     }
-  };
-  this.set_nodraw = function () {
+  }
+
+  set_nodraw() {
     this.nodraw++;
-  };
-  this.reset_nodraw = function () {
+  }
+
+  reset_nodraw() {
     this.nodraw--;
-  };
-  this.size = function () {
+  }
+
+  size() {
     return this.a.size()
-  };
-  this.event_handler = function (event, x, y) {
-    var sts = 0;
+  }
+
+  event_handler(event, x, y) {
+    let sts = 0;
     switch (event) {
-      case Plow.eEvent_MB1Click:
-      case Plow.eEvent_MB1ClickShift:
-        for (var i = 0; i < this.a.size(); i++) {
+      case Event.MB1Click:
+      case Event.MB1ClickShift:
+        for (let i = 0; i < this.a.size(); i++) {
           if (this.a.get(i) instanceof PlowNode) {
             sts = this.a.get(i).event_handler(event, x, y);
             if (sts === 1) {
@@ -820,83 +918,96 @@ function PlowCtx() {
           this.draw();
         }
         break;
-      case Plow.eEvent_Key_Up:
-      case Plow.eEvent_Key_Down:
-      case Plow.eEvent_Key_Left:
-      case Plow.eEvent_Key_Right:
-      case Plow.eEvent_Key_ShiftRight:
-      case Plow.eEvent_Key_CtrlR:
-      case Plow.eEvent_Key_CtrlL:
-      case Plow.eEvent_Key_CtrlG:
+      case Event.Key_Up:
+      case Event.Key_Down:
+      case Event.Key_Left:
+      case Event.Key_Right:
+      case Event.Key_ShiftRight:
+      case Event.Key_CtrlR:
+      case Event.Key_CtrlL:
+      case Event.Key_CtrlG:
         this.event_cb(event, null, 0, 0);
         break;
     }
-  };
+  }
 
-  this.set_select = function (select) {
-    for (var i = 0; i < this.a.size(); i++) {
+  set_select(select) {
+    for (let i = 0; i < this.a.size(); i++) {
       if (this.a.get(i) instanceof PlowNode) {
         this.a.get(i).set_select(select);
       }
     }
-  };
-  this.set_invert = function (invert) {
-    for (var i = 0; i < this.a.size(); i++) {
+  }
+
+  set_invert(invert) {
+    for (let i = 0; i < this.a.size(); i++) {
       if (this.a.get(i) instanceof PlowNode) {
         this.a.get(i).set_invert(invert);
       }
     }
-  };
+  }
 
-  this.get_select = function () {
+  get_select() {
     return this.select_object;
-  };
-  this.insert = function (n, dest) {
+  }
+
+  insert(n, dest) {
     this.a.add(n);
-  };
-  this.insertNode = function (n, destination, destCode) {
+  }
+
+  insertNode(n, destination, destCode) {
     this.a.insertNode(n, destination, destCode);
-  };
-  this.remove = function (n) {
+  }
+
+  remove(n) {
     if (this.select_object === n) {
       this.select_object = null;
     }
     this.a.remove(n);
-  };
-  this.insert_nc = function (nc) {
+  }
+
+  insert_nc(nc) {
     this.a_nc.add(nc);
-  };
-  this.configure = function () {
+  }
+
+  configure() {
     this.a.configure();
-    this.a.set_borders();
-    this.gdraw.canvas.height = this.a.a.length * 1.0 * this.zoom_factor;
-  };
-  this.get_parent_object = function (o) {
+    this.a.set_borders(null);
+    this.gdraw.canvas.height = this.a.a.length * this.zoom_factor;
+  }
+
+  get_parent_object(o) {
     return this.a.get_parent_object(o);
-  };
-  this.get_next_object = function (o) {
+  }
+
+  get_next_object(o) {
     return this.a.get_next_object(o);
-  };
-  this.get_last_object = function () {
+  }
+
+  get_last_object() {
     return this.a.get_last_object();
-  };
-  this.get_first_object = function () {
+  }
+
+  get_first_object() {
     return this.a.get_first_object();
-  };
-  this.get_previous_object = function (o) {
+  }
+
+  get_previous_object(o) {
     return this.a.get_previous_object(o);
-  };
-  this.close_node = function (o) {
+  }
+
+  close_node(o) {
     this.a.close_node(o);
-  };
-  this.is_visible = function (o) {
+  }
+
+  is_visible(o) {
     return (o.y_high * this.zoom_factor <= window.pageYOffset +
       window.innerHeight - this.gdraw.offset_top) &&
       (o.y_low * this.zoom_factor >= window.pageYOffset -
         this.gdraw.offset_top);
+  }
 
-  };
-  this.scroll = function (y, factor) {
+  scroll(y, factor) {
     window.scrollTo(window.scrollX, y * this.zoom_factor - window.innerHeight *
       factor + this.gdraw.offset_top)
   };
