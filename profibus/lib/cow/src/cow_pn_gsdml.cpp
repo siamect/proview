@@ -2461,12 +2461,12 @@ int pn_gsdml::string_to_datavalue(gsdml_eValueDataType datatype, void* value,
   case gsdml_eValueDataType_Integer8:
     if (sscanf(str, "%hhd", (char*)value) != 1)
       return PB__SYNTAX;
-    value_reversed_endianess = value;
+    *(char*)value_reversed_endianess = *(char*)value;
     break;
   case gsdml_eValueDataType_Unsigned8:
     if (sscanf(str, "%hhu", (unsigned char*)value) != 1)
       return PB__SYNTAX;
-    value_reversed_endianess = value;
+    *(unsigned char*)value_reversed_endianess = *(unsigned char*)value;
     break;
   case gsdml_eValueDataType_Integer16:
   {
