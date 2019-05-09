@@ -14,6 +14,7 @@ let cliTable = [new CliTable("OPEN",
 
 class Appl {
   graph: Graph;
+
   constructor() {
     this.graph = new Graph(this);
   }

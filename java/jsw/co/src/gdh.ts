@@ -130,15 +130,13 @@ class GlowBarChartInfo {
 class GlowTableInfo {
   columns;
   rows;
-  column_size: Array;
-  constructor() {
-    this.column_size = new Array(30);
-  }
+  column_size: Array = new Array(30);
 }
 
 class PendingData {
   func_cb: (id: number, val: number, sts: number = 0, res: number = 0) => void;
   data: object;
+
   constructor(func_cb, data) {
     this.func_cb = func_cb;
     this.data = data;
@@ -227,6 +225,7 @@ enum Msg {
 class Uint8ArrayHelper {
   buf: Uint8Array;
   idx: number;
+
   constructor(size, tag) {
     this.buf = new Uint8Array(size);
     this.buf[0] = tag;
@@ -255,20 +254,15 @@ class Uint8ArrayHelper {
 
 class DataViewHelper {
   dv: DataView;
-  offset: number;
+  offset = 0;
+
   constructor(data: ArrayBuffer) {
     this.dv = new DataView(data);
-    this.offset = 0;
   }
 
   getUint8() {
     this.offset += 1;
     return this.dv.getUint8(this.offset - 1);
-  }
-
-  getInt16() {
-    this.offset += 2;
-    return this.dv.getInt16(this.offset - 2);
   }
 
   getUint16() {
@@ -302,32 +296,17 @@ class DataViewHelper {
 }
 
 class Gdh {
-  debug: boolean;
-  pending: Array;
-  sub: Array<Sub>;
-  PORT: number;
-  ws: WebSocket;
-  open_cb: () => void;
-  close_cb: () => void;
-  return_cb: () => void;
-  next_id: number;
-  subscriptionCount: number;
-  listSent: boolean;
-  constructor() {
-    this.debug = false;
-    this.pending = [];
-    this.sub = [];
-    this.PORT = 4448;
-    this.ws = null;
-    this.open_cb = null;
-    this.close_cb = null;
-    this.return_cb = null;
-    this.next_id = 1234;
-    this.subscriptionCount = 1;
-    this.listSent = false;
-  }
+  debug = false;
+  pending: Array = [];
+  sub: Array<Sub> = [];
+  static PORT = 4448;
+  ws: WebSocket = null;
+  return_cb: () => void = null;
+  next_id = 1234;
+  subscriptionCount = 1;
+  listSent = false;
 
-  init() {
+  constructor(open_cb, close_cb = null) {
     if (window.location.hostname === "") {
       this.ws = new WebSocket("ws:127.0.0.1:4448");
     } else {
@@ -336,8 +315,8 @@ class Gdh {
     this.ws.binaryType = "arraybuffer";
 
     this.ws.onopen = function (e) {
-      if (this.gdh.open_cb !== null) {
-        this.gdh.open_cb();
+      if (open_cb !== null) {
+        open_cb();
       }
     };
 
@@ -345,8 +324,8 @@ class Gdh {
       if (this.debug) {
         console.log("Socket closed");
       }
-      if (this.gdh.close_cb !== null) {
-        this.gdh.close_cb();
+      if (close_cb !== null) {
+        close_cb();
       }
     };
 
@@ -465,7 +444,7 @@ class Gdh {
                         let elements = esize;
                         if (elements !== sub.elements) {
                           console.log("Subscription size error", elements,
-                            sub.elements, eid);
+                              sub.elements, eid);
                         }
                         value = new Array(elements);
                         for (let k = 0; k < elements; k++) {
@@ -480,7 +459,7 @@ class Gdh {
                         let elements = esize / 4;
                         if (elements !== sub.elements) {
                           console.log("Subscription size error", elements,
-                            sub.elements, eid);
+                              sub.elements, eid);
                         }
                         value = new Array(elements);
                         for (let k = 0; k < elements; k++) {
@@ -505,7 +484,7 @@ class Gdh {
                         let elements = esize / 4;
                         if (elements !== sub.elements) {
                           console.log("Subscription size error", elements,
-                            sub.elements, eid);
+                              sub.elements, eid);
                         }
                         value = new Array(elements);
                         for (let k = 0; k < elements; k++) {
@@ -524,7 +503,7 @@ class Gdh {
                         let elements = sub.elements;
                         if (elements !== sub.elements) {
                           console.log("Subscription size error", elements,
-                            sub.elements, eid);
+                              sub.elements, eid);
                         }
                         value = new Array(elements);
                         for (let l = 0; l < elements; l++) {
@@ -827,7 +806,7 @@ class Gdh {
       helper.packString(sub.name);
 
       this.pending[this.next_id] =
-        new PendingData(this.refObjectInfoReply, null);
+          new PendingData(this.refObjectInfoReply, null);
       if (this.debug) {
         console.log("Sending RefObjectInfo", this.next_id, size);
       }
@@ -858,7 +837,7 @@ class Gdh {
     helper.pack32Bit(refid);
 
     this.pending[this.next_id] =
-      new PendingData(this.unrefObjectInfoReply, null);
+        new PendingData(this.unrefObjectInfoReply, null);
     if (this.debug) {
       console.log("Sending UnrefObjectInfo", this.next_id, size, refid);
     }
@@ -1037,7 +1016,7 @@ class Gdh {
     this.pending[this.next_id] = new PendingData(return_cb, data);
     if (this.debug) {
       console.log("Sending getAllClassAttributes", this.next_id, cid, oid.vid,
-        oid.oix);
+          oid.oix);
     }
     this.ws.send(helper.buf);
     this.next_id++;

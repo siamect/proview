@@ -3,6 +3,7 @@
 class XttOpenChildrenData {
   node: PlowNode;
   open_next: PlowNode;
+
   constructor(node, open_next) {
     this.node = node;
     this.open_next = open_next;
@@ -10,13 +11,13 @@ class XttOpenChildrenData {
 }
 
 class Xtt {
-  ncObject: PlowNodeClass;
+  ncObject: PlowNodeClass = null;
   scan_update: boolean;
   priv: number;
   ctx: PlowCtx;
-  timer: number;
+  timer = null;
+
   constructor() {
-    this.ncObject = null;
     this.priv = Number(sessionStorage.getItem("pwr_privilege"));
     console.log("pwr_privilege", this.priv);
 
@@ -25,9 +26,7 @@ class Xtt {
     this.ctx.event_cb = this.plow_event;
     this.createNodeClasses();
 
-    this.ctx.gdh = new Gdh();
-    this.ctx.gdh.open_cb = this.gdh_init_cb;
-    this.ctx.gdh.init();
+    this.ctx.gdh = new Gdh(this.gdh_init_cb);
 
     this.ctx.gdraw.canvas.addEventListener("click", function (event) {
       let y = event.pageY - this.ctx.gdraw.offset_top;
@@ -73,84 +72,84 @@ class Xtt {
       }
     });
     document.getElementById("toolitem1")
-      .addEventListener("click", function (event) {
-        let o = this.ctx.get_select();
-        if (o.userdata instanceof XttItemObject) {
-          let newwindow = window.open("", "_blank");
-          this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_GRAPH,
-            this.open_graph_cb, newwindow);
-        }
-        console.log("toolitem1 event");
-      });
-    document.getElementById("toolitem2")
-      .addEventListener("click", function (event) {
-        let o = this.ctx.get_select();
-        if (o.userdata instanceof XttItemObject) {
-          let newwindow = window.open("", "_blank");
-          this.ctx.gdh.getObject(o.userdata.objid,
-            GdhOp.GET_OP_METHOD_OBJECTGRAPH, this.open_objectgraph_cb,
-            newwindow);
-        }
-        console.log("toolitem2 event");
-      });
-    document.getElementById("toolitem3")
-      .addEventListener("click", function (event) {
-        console.log("toolitem1 event");
-        let o = this.ctx.get_select();
-        if (o.userdata instanceof XttItemObject) {
-          let newwindow = window.open("", "_blank");
-          this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC,
-            this.open_plc_cb, newwindow);
-        } else if (o.userdata instanceof XttItemCrr) {
-          let idx = o.userdata.name.lastIndexOf('-');
-          let ostring = "";
-          if (idx !== -1) {
-            ostring = "&obj=" + o.userdata.name.substring(idx + 1);
+        .addEventListener("click", function (event) {
+          let o = this.ctx.get_select();
+          if (o.userdata instanceof XttItemObject) {
+            let newwindow = window.open("", "_blank");
+            this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_GRAPH,
+                this.open_graph_cb, newwindow);
           }
-          console.log("flow.html?vid=" + o.userdata.objid.vid + "&oix=" +
-            o.userdata.objid.oix + ostring);
-          window.open("flow.html?vid=" + o.userdata.objid.vid + "&oix=" +
-            o.userdata.objid.oix + ostring);
-        }
-        console.log("toolitem3 event");
-      });
+          console.log("toolitem1 event");
+        });
+    document.getElementById("toolitem2")
+        .addEventListener("click", function (event) {
+          let o = this.ctx.get_select();
+          if (o.userdata instanceof XttItemObject) {
+            let newwindow = window.open("", "_blank");
+            this.ctx.gdh.getObject(o.userdata.objid,
+                GdhOp.GET_OP_METHOD_OBJECTGRAPH, this.open_objectgraph_cb,
+                newwindow);
+          }
+          console.log("toolitem2 event");
+        });
+    document.getElementById("toolitem3")
+        .addEventListener("click", function (event) {
+          console.log("toolitem1 event");
+          let o = this.ctx.get_select();
+          if (o.userdata instanceof XttItemObject) {
+            let newwindow = window.open("", "_blank");
+            this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC,
+                this.open_plc_cb, newwindow);
+          } else if (o.userdata instanceof XttItemCrr) {
+            let idx = o.userdata.name.lastIndexOf('-');
+            let ostring = "";
+            if (idx !== -1) {
+              ostring = "&obj=" + o.userdata.name.substring(idx + 1);
+            }
+            console.log("flow.html?vid=" + o.userdata.objid.vid + "&oix=" +
+                o.userdata.objid.oix + ostring);
+            window.open("flow.html?vid=" + o.userdata.objid.vid + "&oix=" +
+                o.userdata.objid.oix + ostring);
+          }
+          console.log("toolitem3 event");
+        });
     document.getElementById("toolitem4")
-      .addEventListener("click", function (event) {
-        console.log("toolitem4 event");
-      });
+        .addEventListener("click", function (event) {
+          console.log("toolitem4 event");
+        });
     document.getElementById("toolitem5")
-      .addEventListener("click", function (event) {
-        console.log("toolitem5 event");
-        let o = this.ctx.get_select();
-        if (o === null) {
-          return;
-        }
-        let item = o.userdata;
-        item.open_attributes(this);
-      });
+        .addEventListener("click", function (event) {
+          console.log("toolitem5 event");
+          let o = this.ctx.get_select();
+          if (o === null) {
+            return;
+          }
+          let item = o.userdata;
+          item.open_attributes(this);
+        });
     document.getElementById("toolitem6")
-      .addEventListener("click", function (event) {
-        let o = this.ctx.get_select();
-        this.ctx.gdh.crrSignal(o.userdata.objid, this.open_crr_cb, o);
-        console.log("toolitem6 event");
-      });
+        .addEventListener("click", function (event) {
+          let o = this.ctx.get_select();
+          this.ctx.gdh.crrSignal(o.userdata.objid, this.open_crr_cb, o);
+          console.log("toolitem6 event");
+        });
     document.getElementById("toolitem7")
-      .addEventListener("click", function (event) {
-        console.log("toolitem7 event");
-      });
+        .addEventListener("click", function (event) {
+          console.log("toolitem7 event");
+        });
     document.getElementById("toolitem8")
-      .addEventListener("click", function (event) {
-        console.log("toolitem8 event");
-        let o = this.ctx.get_select();
-        if (o === null) {
-          return;
-        }
-        if (o.userdata instanceof XttItemObject) {
-          let newwindow = window.open("", "_blank");
-          this.ctx.gdh.getObject(o.userdata.objid,
-            GdhOp.GET_OP_METHOD_HELPCLASS, this.open_helpclass_cb, newwindow);
-        }
-      });
+        .addEventListener("click", function (event) {
+          console.log("toolitem8 event");
+          let o = this.ctx.get_select();
+          if (o === null) {
+            return;
+          }
+          if (o.userdata instanceof XttItemObject) {
+            let newwindow = window.open("", "_blank");
+            this.ctx.gdh.getObject(o.userdata.objid,
+                GdhOp.GET_OP_METHOD_HELPCLASS, this.open_helpclass_cb, newwindow);
+          }
+        });
 
     window.addEventListener("storage", function (event) {
       if (event.newValue === "") {
@@ -172,7 +171,7 @@ class Xtt {
 
     let oid = new PwrtObjid(0, 0);
     this.ctx.gdh.getAllXttChildren(oid, this.open_children_cb,
-      new XttOpenChildrenData(null, null));
+        new XttOpenChildrenData(null, null));
 
     this.ctx.gdh.listSent = true;
     this.trace_cyclic();
@@ -195,7 +194,7 @@ class Xtt {
         new XttItemObject(this, result[i], null, Dest.AFTER);
       } else {
         result[i].full_name =
-          data.node.userdata.full_name + "-" + result[i].name;
+            data.node.userdata.full_name + "-" + result[i].name;
         new XttItemObject(this, result[i], data.node, Dest.INTOLAST);
       }
     }
@@ -291,10 +290,10 @@ class Xtt {
         param1 = "&obj=" + result.param1;
       }
       console.log("flow.html?vid=" + result.objid.vid + "&oix=" +
-        result.objid.oix + param1);
+          result.objid.oix + param1);
       data.location.href =
-        "flow.html?vid=" + result.objid.vid + "&oix=" + result.objid.oix +
-        param1;
+          "flow.html?vid=" + result.objid.vid + "&oix=" + result.objid.oix +
+          param1;
       data.document.title = "Trace " + result.fullname;
     }
   }
@@ -304,7 +303,7 @@ class Xtt {
       data.document.write("Error status " + sts);
     } else {
       data.location.href =
-        "ge.html?graph=" + result.param1 + "&instance=" + result.fullname;
+          "ge.html?graph=" + result.param1 + "&instance=" + result.fullname;
       data.document.title = result.fullname;
     }
   }
@@ -341,7 +340,7 @@ class Xtt {
     } else {
       console.log("open_helpclass", result.param1);
       data.location.href =
-        location.protocol + "//" + location.host + result.param1;
+          location.protocol + "//" + location.host + result.param1;
     }
   }
 
@@ -446,7 +445,7 @@ class Xtt {
         if (o.userdata instanceof XttItemObject) {
           let newwindow = window.open("", "_blank");
           this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC,
-            this.open_plc_cb, newwindow);
+              this.open_plc_cb, newwindow);
         } else if (o.userdata instanceof XttItemCrr) {
           let idx = o.userdata.name.lastIndexOf('-');
           let ostring = "";
@@ -454,7 +453,7 @@ class Xtt {
             ostring = "&obj=" + o.userdata.name.substring(idx + 1);
           }
           window.open("flow.html?vid=" + o.userdata.objid.vid + "&oix=" +
-            o.userdata.objid.oix + ostring);
+              o.userdata.objid.oix + ostring);
         }
         break;
       case Event.Key_CtrlG:
@@ -463,8 +462,8 @@ class Xtt {
           console.log("CtrlG", o.userdata.objid.vid, o.userdata.objid.oix);
           let newwindow = window.open("", "_blank");
           this.ctx.gdh.getObject(o.userdata.objid,
-            GdhOp.GET_OP_METHOD_OBJECTGRAPH, this.open_objectgraph_cb,
-            newwindow);
+              GdhOp.GET_OP_METHOD_OBJECTGRAPH, this.open_objectgraph_cb,
+              newwindow);
         }
         break;
       default:
@@ -474,13 +473,13 @@ class Xtt {
 
   createNodeClasses() {
     let r1 = new PlowRect(this.ctx, 0, 0, 50, 1.0, Color.WHITE,
-      Color.WHITE, true, false);
+        Color.WHITE, true, false);
     let a1 = new PlowAnnot(this.ctx, 3, 0.9, 4, Color.BLACK,
-      NEXT_RELATIVE_POSITION, 0);
+        NEXT_RELATIVE_POSITION, 0);
     let a11 = new PlowAnnot(this.ctx, 7.5, 0.9, 4, Color.BLACK,
-      RELATIVE_POSITION, 1);
+        RELATIVE_POSITION, 1);
     let a12 = new PlowAnnot(this.ctx, 12, 0.9, 4, Color.BLACK,
-      RELATIVE_POSITION, 2);
+        RELATIVE_POSITION, 2);
     let p1 = new PlowAnnotPixmap(this.ctx, 0.4, 0.2, 0);
 
     this.ncObject = new PlowNodeClass(this.ctx);
@@ -572,7 +571,7 @@ class Xtt {
 
   openValueInputDialog(item, text) {
     console.log("priv acc", this.priv, Access.RtWrite |
-      Access.System);
+        Access.System);
     if (this.is_authorized(Access.RtWrite | Access.System)) {
       let value = prompt(text, "");
       if (value !== null) {
@@ -591,6 +590,7 @@ class XttItemObject {
   full_name: string;
   has_children: boolean;
   node: PlowNode;
+
   constructor(xtt, object_info, destination, destCode) {
     this.objid = object_info.objid;
     this.cid = object_info.cid;
@@ -618,7 +618,7 @@ class XttItemObject {
       this.open_attributes(xtt, null);
     } else {
       xtt.ctx.gdh.getAllXttChildren(this.objid, xtt.open_children_cb,
-        new XttOpenChildrenData(this.node, open_next));
+          new XttOpenChildrenData(this.node, open_next));
       this.node.node_open |= Open.CHILDREN;
       this.node.set_annotation_pixmap(0, Bitmaps.openmap);
     }
@@ -627,7 +627,7 @@ class XttItemObject {
   open_attributes(xtt, open_next) {
     if (this.node.node_open === 0) {
       xtt.ctx.gdh.getAllClassAttributes(this.cid, this.objid,
-        xtt.open_attributes_cb, new XttOpenChildrenData(this.node, open_next));
+          xtt.open_attributes_cb, new XttOpenChildrenData(this.node, open_next));
 
       this.node.node_open |= Open.ATTRIBUTES;
       xtt.ctx.configure();
@@ -690,6 +690,7 @@ class XttItemAttr {
   firstScan: boolean;
   old_value: number;
   node: PlowNode;
+
   constructor(xtt, info, destination, destCode) {
     this.name = info.name;
     this.objid = info.objid;
@@ -807,6 +808,7 @@ class XttItemAttrArray {
   size: number;
   elements: number;
   node: PlowNode;
+
   constructor(xtt, info, destination, destCode) {
     this.name = info.name;
     this.objid = info.objid;
@@ -882,6 +884,7 @@ class XttItemAttrObject {
   flags: number;
   size: number;
   node: PlowNode;
+
   constructor(xtt, info, destination, destCode) {
     this.name = info.name;
     this.classname = info.classname;
@@ -905,7 +908,7 @@ class XttItemAttrObject {
   open_attributes(xtt, open_next) {
     if (this.node.node_open === 0) {
       xtt.ctx.gdh.getAllClassAttributes(this.cid, this.objid,
-        xtt.open_attributes_cb, new XttOpenChildrenData(this.node, open_next));
+          xtt.open_attributes_cb, new XttOpenChildrenData(this.node, open_next));
 
       this.node.node_open |= Open.ATTRIBUTES;
     } else {
@@ -941,6 +944,7 @@ class XttItemCrr {
   objid: PwrtObjid;
   type: number;
   node: PlowNode;
+
   constructor(xtt, info, destination, destCode) {
     this.name = info.name;
     this.classname = info.classname;

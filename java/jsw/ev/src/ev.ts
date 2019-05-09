@@ -15,14 +15,12 @@ class Ev {
   ncSuccess: PlowNodeClass;
   scan_update: boolean;
   priv: number;
-  mhSyncIdx: number;
-  maxEve: number;
+  mhSyncIdx = 0;
+  maxEve = 30;
   type: EvType;
   timer: number;
-  constructor() {
-    this.mhSyncIdx = 0;
-    this.maxEve = 30;
 
+  constructor() {
     this.type = this.get_type();
     switch (this.type) {
       case EvType.EventList:
@@ -39,9 +37,7 @@ class Ev {
     this.ctx.event_cb = this.plow_event;
     this.createNodeClasses();
 
-    this.ctx.gdh = new Gdh();
-    this.ctx.gdh.open_cb = this.gdh_init_cb;
-    this.ctx.gdh.init();
+    this.ctx.gdh = new Gdh(this.gdh_init_cb);
 
     this.ctx.gdraw.canvas.addEventListener("click", function (event) {
       let y = event.pageY - this.ctx.gdraw.offset_top;
@@ -88,122 +84,122 @@ class Ev {
     });
     // Ack
     document.getElementById("toolitem1")
-      .addEventListener("click", function (event) {
-        console.log("Ack");
-        this.ack();
-      });
+        .addEventListener("click", function (event) {
+          console.log("Ack");
+          this.ack();
+        });
     // Navigator sup object
     document.getElementById("toolitem2")
-      .addEventListener("click", function (event) {
-        let o = this.ctx.get_select();
-        if (o === null || typeof o === 'undefined') {
-          return;
-        }
-        console.log("toolitem2", o.userdata.e.supObject.vid,
-          o.userdata.e.supObject.oix);
-        this.ctx.gdh.getObjectFromAref(o.userdata.e.supObject,
-          GdhOp.GET_OP_SELF, this.open_navigator_cb, null);
-        console.log("toolitem2 event");
-      });
+        .addEventListener("click", function (event) {
+          let o = this.ctx.get_select();
+          if (o === null || typeof o === 'undefined') {
+            return;
+          }
+          console.log("toolitem2", o.userdata.e.supObject.vid,
+              o.userdata.e.supObject.oix);
+          this.ctx.gdh.getObjectFromAref(o.userdata.e.supObject,
+              GdhOp.GET_OP_SELF, this.open_navigator_cb, null);
+          console.log("toolitem2 event");
+        });
     // Trace sup object
     document.getElementById("toolitem3")
-      .addEventListener("click", function (event) {
-        console.log("toolitem5 event");
-        let o = this.ctx.get_select();
-        if (o === null) {
-          return;
-        }
-        let newwindow = window.open("", "_blank");
-        this.ctx.gdh.getObjectFromAref(o.userdata.e.supObject,
-          GdhOp.GET_OP_METHOD_PLC, this.open_plc_cb, newwindow);
-      });
+        .addEventListener("click", function (event) {
+          console.log("toolitem5 event");
+          let o = this.ctx.get_select();
+          if (o === null) {
+            return;
+          }
+          let newwindow = window.open("", "_blank");
+          this.ctx.gdh.getObjectFromAref(o.userdata.e.supObject,
+              GdhOp.GET_OP_METHOD_PLC, this.open_plc_cb, newwindow);
+        });
     // Graph event name
     document.getElementById("toolitem4")
-      .addEventListener("click", function (event) {
-        let o = this.ctx.get_select();
-        if (o.userdata instanceof EvItemAlarm) {
-          let newwindow = window.open("", "_blank");
-          this.ctx.gdh.getObjectFromName(o.userdata.e.eventName,
-            GdhOp.GET_OP_METHOD_GRAPH, this.open_graph_cb, newwindow);
-        }
-      });
+        .addEventListener("click", function (event) {
+          let o = this.ctx.get_select();
+          if (o.userdata instanceof EvItemAlarm) {
+            let newwindow = window.open("", "_blank");
+            this.ctx.gdh.getObjectFromName(o.userdata.e.eventName,
+                GdhOp.GET_OP_METHOD_GRAPH, this.open_graph_cb, newwindow);
+          }
+        });
     // Object raph event name
     document.getElementById("toolitem5")
-      .addEventListener("click", function (event) {
-        let o = this.ctx.get_select();
-        if (o.userdata instanceof EvItemAlarm) {
-          let newwindow = window.open("", "_blank");
-          this.ctx.gdh.getObjectFromName(o.userdata.e.eventName,
-            GdhOp.GET_OP_METHOD_OBJECTGRAPH, this.open_graph_cb, newwindow);
-        }
-      });
+        .addEventListener("click", function (event) {
+          let o = this.ctx.get_select();
+          if (o.userdata instanceof EvItemAlarm) {
+            let newwindow = window.open("", "_blank");
+            this.ctx.gdh.getObjectFromName(o.userdata.e.eventName,
+                GdhOp.GET_OP_METHOD_OBJECTGRAPH, this.open_graph_cb, newwindow);
+          }
+        });
     // Navigator event name
     document.getElementById("toolitem6")
-      .addEventListener("click", function (event) {
-        let o = this.ctx.get_select();
-        console.log("storage", localStorage.getItem("XttMethodNavigator"));
-        localStorage.setItem("XttMethodNavigator", o.userdata.e.eventName);
-        console.log("storage", localStorage.getItem("XttMethodNavigator"));
-        console.log("toolitem6 event window", window.opener);
-        window.opener.focus();
-      });
+        .addEventListener("click", function (event) {
+          let o = this.ctx.get_select();
+          console.log("storage", localStorage.getItem("XttMethodNavigator"));
+          localStorage.setItem("XttMethodNavigator", o.userdata.e.eventName);
+          console.log("storage", localStorage.getItem("XttMethodNavigator"));
+          console.log("toolitem6 event window", window.opener);
+          window.opener.focus();
+        });
     // Trace event name
     document.getElementById("toolitem7")
-      .addEventListener("click", function (event) {
-        let o = this.ctx.get_select();
-        if (o === null) {
-          return;
-        }
-        let newwindow = window.open("", "_blank");
-        this.ctx.gdh.getObjectFromName(o.userdata.e.eventName,
-          GdhOp.GET_OP_METHOD_PLC, this.open_plc_cb, newwindow);
-        console.log("toolitem7 event");
-      });
-    // History event name
-    document.getElementById("toolitem8")
-      .addEventListener("click", function (event) {
-        console.log("toolitem8 event");
-      });
-    // Object event name
-    document.getElementById("toolitem9")
-      .addEventListener("click", function (event) {
-        console.log("toolitem9 event");
-        let o = this.ctx.get_select();
-        if (o === null) {
-          return;
-        }
-        let item = o.userdata;
-        item.open_attributes(this);
-      });
-    // Crossref event name
-    document.getElementById("toolitem10")
-      .addEventListener("click", function (event) {
-        let o = this.ctx.get_select();
-        if (o === null) {
-          return;
-        }
-        this.ctx.gdh.crrSignal(o.userdata.e.eventName, this.open_crr_cb, o);
-        console.log("toolitem10 event");
-      });
-    // Help event name
-    document.getElementById("toolitem11")
-      .addEventListener("click", function (event) {
-        console.log("toolitem11 event");
-      });
-    // Class help event name
-    document.getElementById("toolitem12")
-      .addEventListener("click", function (event) {
-        console.log("toolitem12 event");
-        let o = this.ctx.get_select();
-        if (o === null) {
-          return;
-        }
-        if (o.userdata instanceof EvItemAlarm) {
+        .addEventListener("click", function (event) {
+          let o = this.ctx.get_select();
+          if (o === null) {
+            return;
+          }
           let newwindow = window.open("", "_blank");
           this.ctx.gdh.getObjectFromName(o.userdata.e.eventName,
-            GdhOp.GET_OP_METHOD_HELPCLASS, this.open_helpclass_cb, newwindow);
-        }
-      });
+              GdhOp.GET_OP_METHOD_PLC, this.open_plc_cb, newwindow);
+          console.log("toolitem7 event");
+        });
+    // History event name
+    document.getElementById("toolitem8")
+        .addEventListener("click", function (event) {
+          console.log("toolitem8 event");
+        });
+    // Object event name
+    document.getElementById("toolitem9")
+        .addEventListener("click", function (event) {
+          console.log("toolitem9 event");
+          let o = this.ctx.get_select();
+          if (o === null) {
+            return;
+          }
+          let item = o.userdata;
+          item.open_attributes(this);
+        });
+    // Crossref event name
+    document.getElementById("toolitem10")
+        .addEventListener("click", function (event) {
+          let o = this.ctx.get_select();
+          if (o === null) {
+            return;
+          }
+          this.ctx.gdh.crrSignal(o.userdata.e.eventName, this.open_crr_cb, o);
+          console.log("toolitem10 event");
+        });
+    // Help event name
+    document.getElementById("toolitem11")
+        .addEventListener("click", function (event) {
+          console.log("toolitem11 event");
+        });
+    // Class help event name
+    document.getElementById("toolitem12")
+        .addEventListener("click", function (event) {
+          console.log("toolitem12 event");
+          let o = this.ctx.get_select();
+          if (o === null) {
+            return;
+          }
+          if (o.userdata instanceof EvItemAlarm) {
+            let newwindow = window.open("", "_blank");
+            this.ctx.gdh.getObjectFromName(o.userdata.e.eventName,
+                GdhOp.GET_OP_METHOD_HELPCLASS, this.open_helpclass_cb, newwindow);
+          }
+        });
 
   }
 
@@ -316,7 +312,7 @@ class Ev {
          o = this.ctx.get_next_object(o)) {
       let item = o.get_userdata();
       if (item.e.eventId.nix === event_id.nix &&
-        item.e.eventId.idx === event_id.idx) {
+          item.e.eventId.idx === event_id.idx) {
         return item;
       }
     }
@@ -362,7 +358,7 @@ class Ev {
       data.document.write("Error status " + sts);
     } else {
       data.location.href =
-        "ge.html?graph=" + result.param1 + "&instance=" + result.fullname;
+          "ge.html?graph=" + result.param1 + "&instance=" + result.fullname;
       data.document.title = result.fullname;
     }
   }
@@ -397,10 +393,10 @@ class Ev {
         param1 = "&obj=" + result.param1;
       }
       console.log("flow.html?vid=" + result.objid.vid + "&oix=" +
-        result.objid.oix + param1);
+          result.objid.oix + param1);
       data.location.href =
-        "flow.html?vid=" + result.objid.vid + "&oix=" + result.objid.oix +
-        param1;
+          "flow.html?vid=" + result.objid.vid + "&oix=" + result.objid.oix +
+          param1;
       data.document.title = "Trace " + result.fullname;
     }
   }
@@ -425,7 +421,7 @@ class Ev {
       }
       let graphname = "pwr_c_" + classname;
       data.location.href =
-        "ge.html?graph=" + graphname + "&instance=" + result.fullname;
+          "ge.html?graph=" + graphname + "&instance=" + result.fullname;
       data.document.title = graphname + " " + result.fullname;
     }
   }
@@ -436,7 +432,7 @@ class Ev {
     } else {
       console.log("open_helpclass", result.param1);
       data.location.href =
-        location.protocol + "//" + location.host + result.param1;
+          location.protocol + "//" + location.host + result.param1;
     }
   }
 
@@ -471,15 +467,15 @@ class Ev {
 
   createNodeClasses() {
     let r1 = new PlowRect(this.ctx, 0, 0, 50, 1.0, Color.WHITE,
-      Color.WHITE, true, false);
+        Color.WHITE, true, false);
     let r2a = new PlowRect(this.ctx, 0.1, 0.15, 0.7, 0.7, Color.RED,
-      Color.BLACK, true, false);
+        Color.BLACK, true, false);
     let r2b = new PlowRect(this.ctx, 0.1, 0.15, 0.7, 0.7, Color.YELLOW,
-      Color.BLACK, true, false);
+        Color.BLACK, true, false);
     let r2info = new PlowRect(this.ctx, 0.1, 0.15, 0.7, 0.7, Color.WHITE,
-      Color.BLACK, true, false);
+        Color.BLACK, true, false);
     let r2success = new PlowRect(this.ctx, 0.1, 0.15, 0.7, 0.7,
-      Color.GREEN, Color.BLACK, true, false);
+        Color.GREEN, Color.BLACK, true, false);
     let a1 = new PlowAnnot(this.ctx, 1, 0.9, 4, Color.BLACK, 0, 0);
     let p1 = new PlowAnnotPixmap(this.ctx, 1.8, 0.2, 0);
     let p2 = new PlowAnnotPixmap(this.ctx, 2.4, 0.2, 1);
@@ -487,9 +483,9 @@ class Ev {
     let p4 = new PlowAnnotPixmap(this.ctx, 4.0, 0.2, 3);
     let a2 = new PlowAnnot(this.ctx, 4.8, 0.9, 4, Color.BLACK, 0, 1);
     let a3 = new PlowAnnot(this.ctx, 11.5, 0.9, 4, Color.BLACK,
-      NEXT_RELATIVE_POSITION, 2);
+        NEXT_RELATIVE_POSITION, 2);
     let a4 = new PlowAnnot(this.ctx, 22.5, 0.9, 4, Color.BLACK,
-      RELATIVE_POSITION, 3);
+        RELATIVE_POSITION, 3);
 
     // A alarm with red square
     this.ncAlarmA = new PlowNodeClass(this.ctx);
@@ -575,7 +571,7 @@ class Ev {
         break;
       case Event.MB1Click:
         if (item !== null && item.e.eventMoreText !== "" &&
-          x >= object.measure().ll_x + 70 && x <= object.measure().ll_x + 90) {
+            x >= object.measure().ll_x + 70 && x <= object.measure().ll_x + 90) {
           window.alert(item.e.eventMoreText);
         } else if (object.select) {
           object.set_select(false);
@@ -629,7 +625,7 @@ class Ev {
         if (o.userdata instanceof EvItemAlarm) {
           let newwindow = window.open("", "_blank");
           this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC,
-            this.open_plc_cb, newwindow);
+              this.open_plc_cb, newwindow);
         }
         break;
       case Event.Key_CtrlG:
@@ -637,7 +633,7 @@ class Ev {
         if (o.userdata instanceof EvItemAlarm) {
           let newwindow = window.open("", "_blank");
           this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC,
-            this.open_objectgraph_cb, newwindow);
+              this.open_objectgraph_cb, newwindow);
         }
         break;
       default:
@@ -671,6 +667,7 @@ class Ev {
 class EvItemAlarm {
   node: PlowNode;
   e: MhEvent;
+
   constructor(ev, e, destination, destCode) {
     this.e = e;
 

@@ -3,6 +3,7 @@
 class CliTable {
   command: string;
   qualifier: Array<string>;
+
   constructor(command, qualifier) {
     this.command = command;
     this.qualifier = qualifier;
@@ -32,19 +33,16 @@ enum State {
 }
 
 class Cli {
-  verb: Array;
-  qualifier: Array;
-  qualValue: Array;
+  verb: Array = new Array(CliC.VERB_VECT_SIZE);
+  qualifier: Array = new Array(30);
+  qualValue: Array = new Array(30);
   status: number;
   cliTableIndex: number;
-  cliQualifierIndex: Array;
+  cliQualifierIndex: Array = new Array(30);
   configuredVerbs: number;
   cliTable: Array<CliTable>;
+
   constructor(cliTable) {
-    this.verb = new Array(CliC.VERB_VECT_SIZE);
-    this.qualifier = new Array(30);
-    this.qualValue = new Array(30);
-    this.cliQualifierIndex = new Array(30);
     this.cliTable = cliTable;
   }
 
@@ -161,7 +159,7 @@ class Cli {
             state = State.SPACE;
           } else if (c === '/') {
             this.qualValue[this.qualifier.length - 1] =
-              cmd.substring(start_pos, i);
+                cmd.substring(start_pos, i);
             state = State.QUAL;
             start_pos = i;
           }
@@ -169,7 +167,7 @@ class Cli {
         case State.QUALVALUE_EXACT:
           if (c === '"') {
             this.qualValue[this.qualifier.length - 1] =
-              cmd.substring(start_pos, i);
+                cmd.substring(start_pos, i);
             state = State.SPACE;
           }
           break;
@@ -248,7 +246,7 @@ class Cli {
         continue;
       }
       if (this.verb[0] ===
-        (this.cliTable[i].command.substring(0, this.verb[0].length))) {
+          (this.cliTable[i].command.substring(0, this.verb[0].length))) {
         this.verb[0] = this.cliTable[i].command;
         found = true;
         break;
@@ -291,12 +289,12 @@ class Cli {
             break;
           }
           if (this.qualifier[j].length >
-            this.cliTable[this.cliTableIndex].qualifier[i].length) {
+              this.cliTable[this.cliTableIndex].qualifier[i].length) {
             continue;
           }
           if (this.qualifier[j] ===
-            (this.cliTable[this.cliTableIndex].qualifier[i].substring(0,
-              this.qualifier[j].length))) {
+              (this.cliTable[this.cliTableIndex].qualifier[i].substring(0,
+                  this.qualifier[j].length))) {
             this.cliQualifierIndex[j] = i;
             found = true;
             this.qualifier[j] = this.cliTable[this.cliTableIndex].qualifier[i];

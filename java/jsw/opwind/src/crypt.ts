@@ -288,8 +288,8 @@ class JopCrypt {
     c = results[1];
 
     d =
-      (((d & 0x000000ff) << 16) | (d & 0x0000ff00) | ((d & 0x00ff0000) >>> 16) |
-        ((c & 0xf0000000) >>> 4));
+        (((d & 0x000000ff) << 16) | (d & 0x0000ff00) | ((d & 0x00ff0000) >>> 16) |
+            ((c & 0xf0000000) >>> 4));
     c &= 0x0fffffff;
 
     let s, t;
@@ -311,7 +311,7 @@ class JopCrypt {
           JopCrypt.skb[1][((c >>> 6) & 0x03) | ((c >>> 7) & 0x3c)] |
           JopCrypt.skb[2][((c >>> 13) & 0x0f) | ((c >>> 14) & 0x30)] |
           JopCrypt.skb[3][((c >>> 20) & 0x01) | ((c >>> 21) & 0x06) |
-        ((c >>> 22) & 0x38)];
+          ((c >>> 22) & 0x38)];
 
       t = JopCrypt.skb[4][(d) & 0x3f] |
           JopCrypt.skb[5][((d >>> 7) & 0x03) | ((d >>> 8) & 0x3c)] |
@@ -448,8 +448,8 @@ class JopCrypt {
           u = 0x80;
         }
         buffer =
-          buffer.substring(0, i) + String.fromCharCode(JopCrypt.cov_2char[c]) +
-          buffer.substring(i + 1, buffer.length);
+            buffer.substring(0, i) + String.fromCharCode(JopCrypt.cov_2char[c]) +
+            buffer.substring(i + 1, buffer.length);
       }
     }
     return buffer;

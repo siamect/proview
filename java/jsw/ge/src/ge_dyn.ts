@@ -30,7 +30,7 @@ class Dyn {
   resetColor = false;
   ignoreBgColor = false;
   resetBgColor = false;
-  
+
   constructor(graph) {
     this.graph = graph;
   }
@@ -106,7 +106,7 @@ class Dyn {
       }
 
       let elem = null;
-      
+
       switch (key) {
         case DynSave.Dyn:
           break;
@@ -331,13 +331,13 @@ class Dyn {
           console.log("Syntax error in Dyn");
           break;
       }
-      
+
       if (elem !== null) {
         this.elements.push(elem);
         i = elem.open(lines, i + 1);
       }
     }
-    
+
     return i;
   }
 
@@ -1026,7 +1026,7 @@ class DynDigLowColor extends DynElem {
       if (this.dyn.debug) {
         console.log("DynDigLowColor : " + lines[i]);
       }
-      
+
       switch (key) {
         case DynSave.DigLowColor:
           break;
@@ -1147,7 +1147,7 @@ class DynDigColor extends DynElem {
       if (this.dyn.debug) {
         console.log("DynDigColor : " + lines[i]);
       }
-      
+
       switch (key) {
         case DynSave.DigColor:
           break;
@@ -1172,7 +1172,7 @@ class DynDigColor extends DynElem {
           break;
       }
     }
-    
+
     return i;
   }
 }
@@ -1260,7 +1260,7 @@ class DynDigWarning extends DynElem {
       if (this.dyn.debug) {
         console.log("DynDigWarning : " + lines[i]);
       }
-      
+
       switch (key) {
         case DynSave.DigWarning:
           break;
@@ -1279,7 +1279,7 @@ class DynDigWarning extends DynElem {
           break;
       }
     }
-    
+
     return i;
   }
 }
@@ -1367,7 +1367,7 @@ class DynDigError extends DynElem {
       if (this.dyn.debug) {
         console.log("DynDigError : " + lines[i]);
       }
-      
+
       switch (key) {
         case DynSave.DigError:
           break;
@@ -1386,7 +1386,7 @@ class DynDigError extends DynElem {
           break;
       }
     }
-    
+
     return i;
   }
 }
@@ -1495,7 +1495,7 @@ class DynDigFlash extends DynElem {
       if (this.dyn.debug) {
         console.log("DynDigError : " + lines[i]);
       }
-      
+
       switch (key) {
         case DynSave.DigFlash:
           break;
@@ -1626,7 +1626,7 @@ class DynInvisible extends DynElem {
       if (this.dyn.debug) {
         console.log("DynInvisible : " + lines[i]);
       }
-      
+
       switch (key) {
         case DynSave.Invisible:
           break;
@@ -1727,7 +1727,7 @@ class DynDigTextColor extends DynElem {
       if (this.dyn.debug) {
         console.log("DigTextColor : " + lines[i]);
       }
-      
+
       switch (key) {
         case DynSave.DigTextColor:
           break;
@@ -1823,7 +1823,7 @@ class DynDigText extends DynElem {
       if (this.dyn.debug) {
         console.log("DigText : " + lines[i]);
       }
-      
+
       switch (key) {
         case DynSave.DigText:
           break;
@@ -1850,7 +1850,7 @@ class DynDigText extends DynElem {
           break;
       }
     }
-    
+
     return i;
   }
 }
@@ -1919,7 +1919,7 @@ class DynDigBorder extends DynElem {
       if (this.dyn.debug) {
         console.log("DynBorder : " + lines[i]);
       }
-      
+
       switch (key) {
         case DynSave.DigBorder:
           break;
@@ -2190,7 +2190,7 @@ class DynValue extends DynElem {
       if (this.dyn.debug) {
         console.log("DynBorder : " + lines[i]);
       }
-      
+
       switch (key) {
         case DynSave.Value:
           break;
@@ -8319,6 +8319,7 @@ class DynInputFocus extends DynElem {
   action(o, e) {
     return 1;
   }
+
   open(lines, row) {
     let i;
     for (i = row; i < lines.length; i++) {

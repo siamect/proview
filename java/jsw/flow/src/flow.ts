@@ -1,43 +1,43 @@
 "use strict";
 
 enum ConType {
-    Straight,
-    Fixed,
-    AllFixed,
-    Routed,
-    StepDiv,
-    StepConv,
-    TransDiv,
-    TransConv,
-    StraightOneArrow,
-    Reference
+  Straight,
+  Fixed,
+  AllFixed,
+  Routed,
+  StepDiv,
+  StepConv,
+  TransDiv,
+  TransConv,
+  StraightOneArrow,
+  Reference
 }
 
 enum DrawType {
-    Line,
-    LineRed,
-    LineGray,
-    LineErase,
-    LineDashed,
-    LineDashedRed,
-    TextHelvetica,
-    TextHelveticaBold,
-    TextHelveticaErase,
-    TextHelveticaEraseBold,
-    _,
-    Green,
-    Yellow,
-    DarkGray,
-    Inherit = 9999
+  Line,
+  LineRed,
+  LineGray,
+  LineErase,
+  LineDashed,
+  LineDashedRed,
+  TextHelvetica,
+  TextHelveticaBold,
+  TextHelveticaErase,
+  TextHelveticaEraseBold,
+  _,
+  Green,
+  Yellow,
+  DarkGray,
+  Inherit = 9999
 }
 
 enum DisplayLevel {
-    One = 1 << 0,
-    Two = 1 << 2,
-    Three = 1 << 3,
-    Four = 1 << 4,
-    Five = 1 << 5,
-    Six = 1 << 6
+  One = 1 << 0,
+  Two = 1 << 2,
+  Three = 1 << 3,
+  Four = 1 << 4,
+  Five = 1 << 5,
+  Six = 1 << 6
 }
 
 enum NodeGroup {
@@ -220,6 +220,7 @@ class GDraw {
   gctx: CanvasRenderingContext2D;
   offset_top: number;
   offset_left: number;
+
   constructor(ctx: FlowCtx) {
     this.ctx = ctx;
     this.canvas = document.querySelector("canvas");
@@ -243,9 +244,9 @@ class GDraw {
 
 class FlowArray {
   ctx: FlowCtx;
-  a: Array<any>;
+  a = [];
+
   constructor(ctx: FlowCtx) {
-    this.a = [];
     this.ctx = ctx;
   }
 
@@ -335,7 +336,7 @@ class FlowArray {
           this.a.push(arrow);
           break;
         case Save.Point:
-          let point = new FlowPoint(this.ctx);
+          let point = new FlowPoint();
           i = point.open(lines, i + 1);
           this.a.push(point);
           break;
@@ -372,13 +373,12 @@ class FlowArray {
 class FlowNodeClass {
   ctx: FlowCtx;
   a: FlowArray;
-  nc_name: string;
-  group: number;
+  nc_name = "";
+  group = 0;
+
   constructor(ctx: FlowCtx) {
     this.a = new FlowArray(ctx);
     this.ctx = ctx;
-    this.nc_name = "";
-    this.group = 0;
   }
 
   draw(g, p, node, highlight) {
@@ -424,25 +424,17 @@ class FlowNodeClass {
 
 class FlowConClass {
   ctx: FlowCtx;
-  cc_name: string;
-  con_type: number;
-  corner: number;
-  draw_type: number;
-  line_width: number;
-  arrow_width: number;
-  arrow_length: number;
-  round_corner_amount: number;
-  group: number;
+  cc_name = "";
+  con_type = 0;
+  corner = 0;
+  draw_type = 0;
+  line_width = 0;
+  arrow_width = 0.0;
+  arrow_length = 0.0;
+  round_corner_amount = 0.0;
+  group = 0;
+
   constructor(ctx: FlowCtx) {
-    this.cc_name = "";
-    this.con_type = 0;
-    this.corner = 0;
-    this.draw_type = 0;
-    this.line_width = 0;
-    this.arrow_width = 0.0;
-    this.arrow_length = 0.0;
-    this.round_corner_amount = 0.0;
-    this.group = 0;
     this.ctx = ctx;
   }
 
@@ -498,24 +490,14 @@ class FlowConClass {
 }
 
 class FlowPoint {
-  ctx: FlowCtx;
-  x: number;
-  y: number;
-  constructor(ctx: FlowCtx) {
-    this.x = 0.0;
-    this.y = 0.0;
-    this.ctx = ctx;
-  }
+  x = 0.0;
+  y = 0.0;
 
   open(lines, row) {
     let i;
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0]);
-
-      if (this.ctx.debug) {
-        console.log("point : " + lines[i]);
-      }
 
       switch (key) {
         case Save.Point:
@@ -539,15 +521,12 @@ class FlowPoint {
 
 class FlowLine {
   ctx: FlowCtx;
-  p1: FlowPoint;
-  p2: FlowPoint;
-  draw_type: DrawType;
-  line_width: number;
+  p1 = new FlowPoint();
+  p2 = new FlowPoint();
+  draw_type: DrawType = 0;
+  line_width = 0;
+
   constructor(ctx: FlowCtx) {
-    this.p1 = new FlowPoint(ctx);
-    this.p2 = new FlowPoint(ctx);
-    this.draw_type = 0;
-    this.line_width = 0;
     this.ctx = ctx;
   }
 
@@ -558,7 +537,7 @@ class FlowLine {
     let y2 = (this.p2.y + p.y) * this.ctx.zoom_factor;
 
     g.lineWidth =
-      this.ctx.zoom_factor / this.ctx.base_zoom_factor * this.line_width;
+        this.ctx.zoom_factor / this.ctx.base_zoom_factor * this.line_width;
     if (g.lineWidth < 1) {
       g.lineWidth = 1;
     }
@@ -637,19 +616,14 @@ class FlowLine {
 
 class FlowRect {
   ctx: FlowCtx;
-  ll: FlowPoint;
-  ur: FlowPoint;
-  draw_type: DrawType;
-  line_width: number;
-  display_level: DisplayLevel;
-  fill: number;
+  ll = new FlowPoint();
+  ur = new FlowPoint();
+  draw_type: DrawType = 0;
+  line_width = 0;
+  display_level: DisplayLevel = 0;
+  fill = 0;
+
   constructor(ctx: FlowCtx) {
-    this.ll = new FlowPoint(ctx);
-    this.ur = new FlowPoint(ctx);
-    this.draw_type = 0;
-    this.line_width = 0;
-    this.display_level = 0;
-    this.fill = 0;
     this.ctx = ctx;
   }
 
@@ -705,7 +679,7 @@ class FlowRect {
     let height = (this.ur.y - this.ll.y) * this.ctx.zoom_factor;
 
     g.lineWidth =
-      this.ctx.zoom_factor / this.ctx.base_zoom_factor * this.line_width;
+        this.ctx.zoom_factor / this.ctx.base_zoom_factor * this.line_width;
     if (g.lineWidth < 1) {
       g.lineWidth = 1;
     }
@@ -731,19 +705,14 @@ class FlowRect {
 
 class FlowArc {
   ctx: FlowCtx;
-  ll: FlowPoint;
-  ur: FlowPoint;
-  angle1: number;
-  angle2: number;
-  draw_type: DrawType;
-  line_width: number;
+  ll = new FlowPoint();
+  ur = new FlowPoint();
+  angle1 = 0.0;
+  angle2 = 0.0;
+  draw_type: DrawType = 0;
+  line_width = 0;
+
   constructor(ctx: FlowCtx) {
-    this.ll = new FlowPoint(ctx);
-    this.ur = new FlowPoint(ctx);
-    this.angle1 = 0.0;
-    this.angle2 = 0.0;
-    this.draw_type = 0;
-    this.line_width = 0;
     this.ctx = ctx;
   }
 
@@ -759,7 +728,7 @@ class FlowArc {
     }
     let a2 = a1 + this.angle2 / 180 * Math.PI;
     g.lineWidth =
-      this.ctx.zoom_factor / this.ctx.base_zoom_factor * this.line_width;
+        this.ctx.zoom_factor / this.ctx.base_zoom_factor * this.line_width;
     if (g.lineWidth < 1) {
       g.lineWidth = 1;
     }
@@ -818,22 +787,19 @@ class FlowArc {
 
 class FlowText {
   ctx: FlowCtx;
-  p: FlowPoint;
-  draw_type: DrawType;
-  text_size: number;
-  text: string;
+  p = new FlowPoint();
+  draw_type: DrawType = 0;
+  text_size = 0;
+  text = "";
+
   constructor(ctx: FlowCtx) {
-    this.p = new FlowPoint(ctx);
-    this.draw_type = 0;
-    this.text_size = 0;
-    this.text = "";
     this.ctx = ctx;
   }
 
   draw(g, p0, node, highlight) {
     let tsize = 0;
     let idx = this.ctx.zoom_factor / this.ctx.base_zoom_factor *
-      (this.text_size + 4) - 4;
+        (this.text_size + 4) - 4;
     if (idx < 0) {
       return;
     }
@@ -917,21 +883,15 @@ class FlowText {
 
 class FlowArrow {
   ctx: FlowCtx;
-  p1: FlowPoint;
-  p2: FlowPoint;
-  p_dest: FlowPoint;
-  arrow_width: number;
-  arrow_length: number;
-  draw_type: DrawType;
-  line_width: number;
+  p1 = new FlowPoint();
+  p2 = new FlowPoint();
+  p_dest = new FlowPoint();
+  arrow_width = 0.0;
+  arrow_length = 0.0;
+  draw_type: DrawType = 0;
+  line_width = 0;
+
   constructor(ctx: FlowCtx) {
-    this.p1 = new FlowPoint(ctx);
-    this.p2 = new FlowPoint(ctx);
-    this.p_dest = new FlowPoint(ctx);
-    this.arrow_width = 0.0;
-    this.arrow_length = 0.0;
-    this.draw_type = 0;
-    this.line_width = 0;
     this.ctx = ctx;
   }
 
@@ -1012,6 +972,7 @@ class FlowArrow {
 
 class FlowTriangle extends FlowRect {
   ctx: FlowCtx;
+
   constructor(ctx: FlowCtx) {
     super(ctx);
   }
@@ -1091,18 +1052,14 @@ class FlowTriangle extends FlowRect {
 
 class FlowConPoint {
   ctx: FlowCtx;
-  p: FlowPoint;
-  number: number;
-  direction: number;
-  trace_attribute: string;
-  trace_attr_type: number;
+  p = new FlowPoint();
+  number = 0;
+  direction = 0;
+  trace_attribute = "";
+  trace_attr_type = 0;
+
   constructor(ctx: FlowCtx) {
     this.ctx = ctx;
-    this.p = new FlowPoint(ctx);
-    this.number = 0;
-    this.direction = 0;
-    this.trace_attribute = "";
-    this.trace_attr_type = 0;
   }
 
   draw(g, p, node, highlight) {
@@ -1149,19 +1106,14 @@ class FlowConPoint {
 
 class FlowAnnot {
   ctx: FlowCtx;
-  p: FlowPoint;
-  draw_type: DrawType;
-  text_size: number;
-  display_level: DisplayLevel;
-  annot_type: number;
-  number: number;
+  p = new FlowPoint();
+  draw_type: DrawType = 0;
+  text_size = 0
+  display_level: DisplayLevel = 0;
+  annot_type = 0;
+  number = 0;
+
   constructor(ctx: FlowCtx) {
-    this.p = new FlowPoint(ctx);
-    this.draw_type = 0;
-    this.text_size = 0;
-    this.display_level = 0;
-    this.annot_type = 0;
-    this.number = 0;
     this.ctx = ctx;
   }
 
@@ -1178,7 +1130,7 @@ class FlowAnnot {
 
     let tsize = 0;
     let idx = this.ctx.zoom_factor / this.ctx.base_zoom_factor *
-      (this.text_size + 4) - 4;
+        (this.text_size + 4) - 4;
     if (idx < 0) {
       return;
     }
@@ -1279,65 +1231,47 @@ class FlowAnnot {
 
 class FlowCon {
   ctx: FlowCtx;
-  x_right: number;
-  x_left: number;
-  y_high: number;
-  y_low: number;
-  cc: object;
-  p_num: number;
-  l_num: number;
-  a_num: number;
-  arrow_num: number;
-  ref_num: number;
   point_x: FlowArray;
   point_y: FlowArray;
   line_a: FlowArray;
   arc_a: FlowArray;
   arrow_a: FlowArray;
   ref_a: FlowArray;
-  c_name: string;
-  trace_object: string;
-  trace_attribute: string;
-  trace_attr_type: number;
-  temporary_ref: number;
-  highlight: boolean;
-  redraw: boolean;
+  x_right = 0.0;
+  x_left = 0.0;
+  y_high = 0.0;
+  y_low = 0.0;
+  cc = null;
+  p_num = 0;
+  l_num = 0;
+  a_num = 0;
+  arrow_num = 0;
+  ref_num = 0;
+  c_name = "";
+  trace_object = "";
+  trace_attribute = "";
+  trace_attr_type = 0;
+  temporary_ref = 0;
+  highlight = false;
+  redraw = true;
+
   constructor(ctx: FlowCtx) {
     this.ctx = ctx;
-    this.x_right = 0.0;
-    this.x_left = 0.0;
-    this.y_high = 0.0;
-    this.y_low = 0.0;
-    this.cc = null;
-    this.p_num = 0;
-    this.l_num = 0;
-    this.a_num = 0;
-    this.arrow_num = 0;
-    this.ref_num = 0;
     this.point_x = new FlowArray(ctx);
     this.point_y = new FlowArray(ctx);
     this.line_a = new FlowArray(ctx);
     this.arc_a = new FlowArray(ctx);
     this.arrow_a = new FlowArray(ctx);
     this.ref_a = new FlowArray(ctx);
-    this.c_name = "";
-    this.trace_object = "";
-    this.trace_attribute = "";
-    this.trace_attr_type = 0;
-    this.temporary_ref = 0;
-    this.highlight = false;
-    this.redraw = true;
   }
 
   draw(g, p0, node, highlight) {
     if (!this.redraw) {
       return;
     }
-    let p = new FlowPoint(this.ctx);
-    p.x = 0;
-    p.y = 0;
+    let p = new FlowPoint();
     if (this.temporary_ref !== 0 ||
-      this.cc.con_type === ConType.Reference) {
+        this.cc.con_type === ConType.Reference) {
       this.ref_a.draw(g, p, null, highlight);
     } else {
       this.line_a.draw(g, p, null, highlight);
@@ -1480,46 +1414,28 @@ class FlowCon {
 
 class FlowNode {
   ctx: FlowCtx;
-  x_right: number;
-  x_left: number;
-  y_high: number;
-  y_low: number;
-  nc: FlowNodeClass;
-  pos: FlowPoint;
-  n_name: string;
-  annotv: Array;
-  annotsize: Array;
-  trace_object: string;
-  trace_attribute: string;
-  trace_attr_type: number;
-  highlight: boolean;
-  select: boolean;
-  fill_color: number;
-  p: number;
-  old_value: number;
-  first_scan: boolean;
-  redraw: boolean;
+  x_right = 0.0;
+  x_left = 0.0;
+  y_high = 0.0;
+  y_low = 0.0;
+  nc: FlowNodeClass = null;
+  pos = new FlowPoint();
+  n_name = "";
+  annotv: Array = [];
+  annotsize: Array = [];
+  trace_object = "";
+  trace_attribute = "";
+  trace_attr_type = 0;
+  highlight = false;
+  select = false;
+  fill_color = 0;
+  p = 0;
+  old_value = 0;
+  first_scan = true;
+  redraw = true;
+
   constructor(ctx: FlowCtx) {
     this.ctx = ctx;
-    this.x_right = 0.0;
-    this.x_left = 0.0;
-    this.y_high = 0.0;
-    this.y_low = 0.0;
-    this.nc = null;
-    this.pos = new FlowPoint(ctx);
-    this.n_name = "";
-    this.annotv = [];
-    this.annotsize = [];
-    this.trace_object = "";
-    this.trace_attribute = "";
-    this.trace_attr_type = 0;
-    this.highlight = false;
-    this.select = false;
-    this.fill_color = 0;
-    this.p = 0;
-    this.old_value = 0;
-    this.first_scan = true;
-    this.redraw = true;
   }
 
   draw(g, p, node, highlight) {
@@ -1729,7 +1645,7 @@ class FlowNode {
     let zx = x / this.ctx.zoom_factor + this.ctx.x_left;
     let zy = y / this.ctx.zoom_factor + this.ctx.y_low;
     if (zx >= this.x_left && zx <= this.x_right && zy >= this.y_low &&
-      zy <= this.y_high) {
+        zy <= this.y_high) {
       console.log("Hit in node");
       if (this.select) {
         this.select = false;
@@ -1758,41 +1674,29 @@ class FlowNode {
 }
 
 class FlowCtx {
-  display_level: DisplayLevel;
-  gdh: Gdh;
-  debug: boolean;
-  zoom_factor: number;
-  base_zoom_factor: number;
-  offset_x: number;
-  offset_y: number;
-  x_right: number;
-  x_left: number;
-  y_high: number;
-  y_low: number;
   a: FlowArray;
   a_nc: FlowArray;
   a_cc: FlowArray;
-  name: string;
   gdraw: GDraw;
-  select_object: FlowNode;
+  display_level = DisplayLevel.One;
+  gdh: Gdh = null;
+  debug = false;
+  zoom_factor = 20.0;
+  base_zoom_factor = 20.0;
+  offset_x = 0;
+  offset_y = 0;
+  x_right = 0.0;
+  x_left = 0.0;
+  y_high = 0.0;
+  y_low = 0.0;
+  name = "Claes context";
+  select_object: FlowNode = null;
+
   constructor() {
-    this.display_level = DisplayLevel.One;
-    this.gdh = null;
-    this.debug = false;
-    this.zoom_factor = 20.0;
-    this.base_zoom_factor = 20.0;
-    this.offset_x = 0;
-    this.offset_y = 0;
-    this.x_right = 0.0;
-    this.x_left = 0.0;
-    this.y_high = 0.0;
-    this.y_low = 0.0;
     this.a = new FlowArray(this);
     this.a_nc = new FlowArray(this);
     this.a_cc = new FlowArray(this);
-    this.name = "Claes context";
     this.gdraw = new GDraw(this);
-    this.select_object = null;
   }
 
   draw() {
@@ -1926,26 +1830,24 @@ class FlowCtx {
 
   center_object(o) {
     console.log("center_object", o.pos.x * this.zoom_factor + this.offset_x,
-      window.innerWidth, o.pos.x * this.zoom_factor + this.offset_x -
-      window.innerWidth / 2);
+        window.innerWidth, o.pos.x * this.zoom_factor + this.offset_x -
+        window.innerWidth / 2);
     console.log("center_object", o.pos.y * this.zoom_factor + this.offset_y,
-      window.innerHeight, o.pos.y * this.zoom_factor + this.offset_y -
-      window.innerHeight / 2);
+        window.innerHeight, o.pos.y * this.zoom_factor + this.offset_y -
+        window.innerHeight / 2);
     window.scrollTo(o.pos.x * this.zoom_factor + this.offset_x -
-      window.innerWidth / 2, o.pos.y * this.zoom_factor + this.offset_y -
-      window.innerHeight / 2 + this.gdraw.offset_top);
+        window.innerWidth / 2, o.pos.y * this.zoom_factor + this.offset_y -
+        window.innerHeight / 2 + this.gdraw.offset_top);
   }
 }
 
 class FlowFrame {
   ctx: FlowCtx;
-  timer: number;
-  vars_object: string;
+  timer: number = null;
+  vars_object: string = null;
+
   constructor() {
     this.ctx = new FlowCtx();
-    this.timer = null;
-    console.log("ctx: ", this.ctx);
-    this.vars_object = null;
   }
 
   readFlowWeb(fname, read_cb) {
@@ -1976,44 +1878,39 @@ class FlowFrame {
       this.ctx.event_handler(x, y);
     });
     document.getElementById("toolitem1")
-      .addEventListener("click", function (event) {
-        console.log("toolitem3 event");
-      });
+        .addEventListener("click", function (event) {
+          console.log("toolitem3 event");
+        });
     document.getElementById("toolitem2")
-      .addEventListener("click", function (event) {
-        console.log("toolitem1 event, storage");
-        console.log("storage", localStorage.getItem("XttMethodNavigator"));
-        if (this.ctx.select_object !== null) {
-          localStorage.setItem("XttMethodNavigator",
-            this.ctx.select_object.trace_object);
-        }
-        console.log("storage", localStorage.getItem("XttMethodNavigator"));
-        console.log("toolitem2 event window", window.opener);
-        window.opener.focus();
-      });
+        .addEventListener("click", function (event) {
+          console.log("toolitem1 event, storage");
+          console.log("storage", localStorage.getItem("XttMethodNavigator"));
+          if (this.ctx.select_object !== null) {
+            localStorage.setItem("XttMethodNavigator",
+                this.ctx.select_object.trace_object);
+          }
+          console.log("storage", localStorage.getItem("XttMethodNavigator"));
+          console.log("toolitem2 event window", window.opener);
+          window.opener.focus();
+        });
     document.getElementById("toolitem3")
-      .addEventListener("click", function (event) {
-      });
+        .addEventListener("click", function (event) {
+        });
     document.getElementById("toolitem4")
-      .addEventListener("click", function (event) {
-      });
+        .addEventListener("click", function (event) {
+        });
 
     this.ctx.gdraw.canvas.width =
-      (this.ctx.x_right - this.ctx.x_left) * this.ctx.zoom_factor;
+        (this.ctx.x_right - this.ctx.x_left) * this.ctx.zoom_factor;
     this.ctx.gdraw.canvas.height =
-      (this.ctx.y_high - this.ctx.y_low) * this.ctx.zoom_factor;
+        (this.ctx.y_high - this.ctx.y_low) * this.ctx.zoom_factor;
     this.ctx.gdraw.gctx.translate(-this.ctx.x_left *
-      this.ctx.zoom_factor, -this.ctx.y_low * this.ctx.zoom_factor);
+        this.ctx.zoom_factor, -this.ctx.y_low * this.ctx.zoom_factor);
     this.ctx.offset_x -= this.ctx.x_left * this.ctx.zoom_factor;
     this.ctx.offset_y -= this.ctx.y_low * this.ctx.zoom_factor;
 
     this.ctx.draw();
-    console.log("New Gdh");
-    this.ctx.gdh = new Gdh();
-    this.ctx.gdh.open_cb = this.flow_open;
-    this.ctx.gdh.close_cb = this.flow_close;
-    console.log("ctx.gdh", this.ctx.gdh);
-    this.ctx.gdh.init();
+    this.ctx.gdh = new Gdh(this.flow_open, this.flow_close);
 
     if (this.vars_object !== null) {
       let o = this.ctx.search_object(this.vars_object);
@@ -2057,7 +1954,7 @@ class FlowFrame {
     console.log("query", query);
     let vars = query.split('&');
     console.log("vars", vars.length, vars[0].substring(4),
-      vars[1].substring(4));
+        vars[1].substring(4));
     let vid = parseInt(vars[0].substring(4));
     let oix = parseInt(vars[1].substring(4));
     let avid = [];
@@ -2082,7 +1979,7 @@ class FlowFrame {
     }
 
     let fname = "pwr_" + svid[3] + "_" + svid[2] + "_" + svid[1] + "_" +
-      svid[0] + "_" + soix + ".flw";
+        svid[0] + "_" + soix + ".flw";
     console.log(fname);
 
     if (vars.length > 2) {

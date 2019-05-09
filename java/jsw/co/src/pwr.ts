@@ -159,6 +159,7 @@ enum XttMntMethodsMask {
 class PwrtObjid {
   vid: number;
   oix: number;
+
   constructor(vid, oix) {
     this.oix = oix;
     this.vid = vid;
@@ -176,6 +177,7 @@ class PwrtAttrRef {
 class CdhrNumber {
   value: number;
   sts: number;
+
   constructor(value, sts) {
     this.value = value;
     this.sts = sts;
@@ -195,9 +197,11 @@ class UserdataCbReturn {
 class Point {
   x = 0;
   y = 0;
+
   constructor() {
   }
-  constructor(x: number, y:number) {
+
+  constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
   }
@@ -208,9 +212,11 @@ class Rect {
   y = 0;
   width = 0;
   height = 0;
+
   constructor() {
   }
-  constructor(x: number, y:number, width: number, height: number) {
+
+  constructor(x: number, y: number, width: number, height: number) {
     this.x = x;
     this.y = y;
     this.width = width;

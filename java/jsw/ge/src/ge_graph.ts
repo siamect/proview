@@ -27,9 +27,11 @@ class LocalSub {
   ref() {
     this.refCount++;
   }
+
   unref() {
     this.refCount--;
   }
+
   getRefCount() {
     return this.refCount;
   }
@@ -235,6 +237,7 @@ class Graph {
   priv = 0;
   timer: number;
   frame: GrowFrame;
+
   constructor(appl) {
     this.appl = appl;
     if (typeof InstallTrigger !== 'undefined') {
@@ -268,9 +271,7 @@ class Graph {
       this.ctx.traceConnect();
       this.trace_cyclic();
     } else {
-      this.gdh = new Gdh();
-      this.gdh.open_cb = this.gdh_init_cb;
-      this.gdh.init();
+      this.gdh = new Gdh(this.gdh_init_cb);
     }
   }
 
@@ -303,6 +304,7 @@ class Graph {
       this.gdh.getRefObjectInfoAll(this.trace_scan);
     }
   }
+
   trace_scan(id, sts) {
     this.scan_time = this.ctx.scantime;
     this.fast_scan_time = this.ctx.fast_scantime;
@@ -713,9 +715,11 @@ class Graph {
   getLdb() {
     return this.ldb;
   }
+
   getGdh() {
     return this.gdh;
   }
+
   isAuthorized(access) {
     return !!(this.priv & access);
     // return appl.isAuthorized( access);
@@ -769,11 +773,13 @@ class Graph {
       this.ctxPush();
     }
   }
+
   traceDisconnect(o) {
     if (o.userdata !== null) {
       o.userdata.disconnect(o);
     }
   }
+
   traceScan(o) {
     if (o.userdata !== null) {
       let dyn = o.userdata;

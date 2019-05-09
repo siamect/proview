@@ -1,24 +1,20 @@
 "use strict";
 
 class OpWindMenu {
-  priv: number;
-  user: string;
-  user_text: Text;
+  priv = 0;
+  user = "";
+  user_text: Text = null;
   host: string;
   gdh: Gdh;
   info: OpwindMenuInfo;
+
   constructor() {
-    this.priv = 0;
-    this.user = "";
-    this.user_text = null;
     this.host = window.location.hostname;
     if (this.host === "") {
       this.host = "localhost";
     }
 
-    this.gdh = new Gdh();
-    this.gdh.open_cb = this.gdh_init_cb;
-    this.gdh.init();
+    this.gdh = new Gdh(this.gdh_init_cb);
   }
 
   is_authorized(access) {
@@ -46,7 +42,7 @@ class OpWindMenu {
     button.type = "button";
     button.className = "leftmenu-button";
     button.value = text;
-    button.addEventListener('click', function() {
+    button.addEventListener('click', function () {
       menu.button_cb(button.value);
     });
     context.appendChild(button);
@@ -68,47 +64,47 @@ class OpWindMenu {
       context.appendChild(document.createElement("hr"));
 
       document.getElementById("login_button")
-        .addEventListener("click", function (event) {
-          if (document.getElementById("login_frame").style.visibility ===
-            'hidden') {
-            document.getElementById("login_user").innerHTML = "";
-            document.getElementById("login_passw").innerHTML = "";
-            document.getElementById("login_frame").style.visibility = 'visible';
-            document.getElementById("login_frame").style.height = '120px';
-            document.getElementById("login_user").focus();
-          } else {
+          .addEventListener("click", function (event) {
+            if (document.getElementById("login_frame").style.visibility ===
+                'hidden') {
+              document.getElementById("login_user").innerHTML = "";
+              document.getElementById("login_passw").innerHTML = "";
+              document.getElementById("login_frame").style.visibility = 'visible';
+              document.getElementById("login_frame").style.height = '120px';
+              document.getElementById("login_user").focus();
+            } else {
+              document.getElementById("login_frame").style.visibility = 'hidden';
+              document.getElementById("login_frame").style.height = '0px';
+            }
+          });
+      document.getElementById("apply_button")
+          .addEventListener("click", function (event) {
+            let user = document.getElementById("login_user").innerHTML;
+            let passwd = document.getElementById("login_passw").innerHTML;
+            if (user.trim() === "") {
+              return;
+            }
             document.getElementById("login_frame").style.visibility = 'hidden';
             document.getElementById("login_frame").style.height = '0px';
-          }
-        });
-      document.getElementById("apply_button")
-        .addEventListener("click", function (event) {
-          let user = document.getElementById("login_user").innerHTML;
-          let passwd = document.getElementById("login_passw").innerHTML;
-          if (user.trim() === "") {
-            return;
-          }
-          document.getElementById("login_frame").style.visibility = 'hidden';
-          document.getElementById("login_frame").style.height = '0px';
-          let c = new JopCrypt();
-          passwd = c.crypt("aa", passwd);
+            let c = new JopCrypt();
+            passwd = c.crypt("aa", passwd);
 
-          this.user = user;
-          this.gdh.login(user, passwd, this.login_cb, this);
-        });
+            this.user = user;
+            this.gdh.login(user, passwd, this.login_cb, this);
+          });
       document.getElementById("cancel_button")
-        .addEventListener("click", function (event) {
-          document.getElementById("login_frame").style.visibility = 'hidden';
-          document.getElementById("login_frame").style.height = '0px';
-        });
+          .addEventListener("click", function (event) {
+            document.getElementById("login_frame").style.visibility = 'hidden';
+            document.getElementById("login_frame").style.height = '0px';
+          });
       document.getElementById("logout_button")
-        .addEventListener("click", function (event) {
-          document.getElementById("login_frame").style.visibility = 'hidden';
-          document.getElementById("login_frame").style.height = '0px';
-          this.priv = 0;
-          this.user = "Default";
-          this.gdh.login("", "", this.login_cb, this);
-        });
+          .addEventListener("click", function (event) {
+            document.getElementById("login_frame").style.visibility = 'hidden';
+            document.getElementById("login_frame").style.height = '0px';
+            this.priv = 0;
+            this.user = "Default";
+            this.gdh.login("", "", this.login_cb, this);
+          });
 
       document.getElementById("login_user").innerHTML = "";
       document.getElementById("login_passw").innerHTML = "";
@@ -154,9 +150,9 @@ class OpWindMenu {
     } else if (this.info.enable_alarmlist && text === "AlarmList") {
       console.log("AlarmList activated");
       if (this.is_authorized(Access.RtRead | Access.RtWrite |
-          Access.AllOperators | Access.System |
-          Access.Maintenance | Access.Process |
-          Access.Instrument)) {
+              Access.AllOperators | Access.System |
+              Access.Maintenance | Access.Process |
+              Access.Instrument)) {
         window.open("ev.html?list=alarm", "_blank");
       } else {
         window.alert("Not authorized for this operation");
@@ -164,9 +160,9 @@ class OpWindMenu {
     } else if (this.info.enable_alarmlist && text === "EventList") {
       console.log("EventList activated");
       if (this.is_authorized(Access.RtRead | Access.RtWrite |
-          Access.AllOperators | Access.System |
-          Access.Maintenance | Access.Process |
-          Access.Instrument)) {
+              Access.AllOperators | Access.System |
+              Access.Maintenance | Access.Process |
+              Access.Instrument)) {
         window.open("ev.html?list=event", "_blank");
       } else {
         window.alert("Not authorized for this operation");
@@ -174,9 +170,9 @@ class OpWindMenu {
     } else if (this.info.enable_eventlog && text === "EventLog") {
       console.log("EventLog activated");
       if (this.is_authorized(Access.RtRead | Access.RtWrite |
-          Access.AllOperators | Access.System |
-          Access.Maintenance | Access.Process |
-          Access.Instrument)) {
+              Access.AllOperators | Access.System |
+              Access.Maintenance | Access.Process |
+              Access.Instrument)) {
         window.alert("Not yet implemented");
       } else {
         window.alert("Not authorized for this operation");
@@ -184,8 +180,8 @@ class OpWindMenu {
     } else if (this.info.enable_navigator && text === "Navigator") {
       console.log("Navigator activated");
       if (this.is_authorized(Access.RtNavigator | Access.System |
-          Access.Maintenance | Access.Process |
-          Access.Instrument)) {
+              Access.Maintenance | Access.Process |
+              Access.Instrument)) {
         window.open("xtt.html", "_blank");
       } else {
         window.alert("Not authorized for this operation");
@@ -198,9 +194,9 @@ class OpWindMenu {
       window.open("http://www.proview.se", "_blank");
     } else {
       if (this.is_authorized(Access.RtRead | Access.RtWrite |
-          Access.AllOperators | Access.System |
-          Access.Maintenance | Access.Process |
-          Access.Instrument)) {
+              Access.AllOperators | Access.System |
+              Access.Maintenance | Access.Process |
+              Access.Instrument)) {
         for (let i = 0; i < this.info.buttons.length; i++) {
           if (this.info.buttons[i].text === text) {
             console.log("Found", this.info.buttons[i].text);

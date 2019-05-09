@@ -122,15 +122,13 @@ enum Event {
 class PlowNodeClass {
   a: PlowArray;
   ctx: PlowCtx;
-  nc_name: string;
-  group: number;
-  node_open: number;
+  nc_name = "";
+  group = 0;
+  node_open = 0;
+
   constructor(ctx) {
     this.a = new PlowArray(ctx);
     this.ctx = ctx;
-    this.nc_name = "";
-    this.group = 0;
-    this.node_open = 0;
   }
 
   draw(g, p, node, highlight) {
@@ -143,10 +141,10 @@ class PlowNodeClass {
 }
 
 class PlowArray {
-  a: Array<PlowNode>;
+  a: Array = [];
   ctx: PlowCtx;
+
   constructor(ctx) {
-    this.a = [];
     this.ctx = ctx;
   }
 
@@ -391,56 +389,35 @@ class PlowArray {
 
 class PlowNode {
   ctx: PlowCtx;
-  userdata: object;
-  x_right: number;
-  x_left: number;
-  y_high: number;
-  y_low: number;
+  userdata: object = null;
+  x_right = 0.0;
+  x_left = 0.0;
+  y_high = 0.0;
+  y_low = 0.0;
   nc: PlowNodeClass;
-  pos: Point;
-  n_name: string;
-  annotv: Array;
-  annotsize: Array;
-  pixmapv: Array;
-  trace_object: string;
-  trace_attribute: string;
-  trace_attr_type: number;
-  highlight: boolean;
-  select: boolean;
-  invert: boolean;
+  pos = new Point();
+  n_name = "";
+  annotv = [];
+  annotsize = [];
+  pixmapv = [];
+  trace_object = "";
+  trace_attribute = "";
+  trace_attr_type = 0;
+  highlight = false;
+  select = false;
+  invert = false;
   level: number;
-  node_open: number;
-  fill_color: number;
-  p: number;
-  old_value: number;
-  first_scan: boolean;
-  relative_position: number;
+  node_open = 0;
+  fill_color = 0;
+  p = 0;
+  old_value = 0;
+  first_scan = true;
+  relative_position = 0;
+
   constructor(ctx, nc, level) {
     this.ctx = ctx;
-    this.userdata = null;
-    this.x_right = 0.0;
-    this.x_left = 0.0;
-    this.y_high = 0.0;
-    this.y_low = 0.0;
     this.nc = nc;
-    this.pos = new Point();
-    this.n_name = "";
-    this.annotv = [];
-    this.annotsize = [];
-    this.pixmapv = [];
-    this.trace_object = "";
-    this.trace_attribute = "";
-    this.trace_attr_type = 0;
-    this.highlight = false;
-    this.select = false;
-    this.invert = false;
     this.level = level;
-    this.node_open = 0;
-    this.fill_color = 0;
-    this.p = 0;
-    this.old_value = 0;
-    this.first_scan = true;
-    this.relative_position = 0;
   }
 
   set_annotation(number, text) {
@@ -518,9 +495,9 @@ class PlowNode {
 
   event_handler(event, x, y) {
     if ((x - this.ctx.offset_x) / this.ctx.zoom_factor >= this.x_left &&
-      (x - this.ctx.offset_x) / this.ctx.zoom_factor <= this.x_right &&
-      (y - this.ctx.offset_y) / this.ctx.zoom_factor >= this.y_low &&
-      (y - this.ctx.offset_y) / this.ctx.zoom_factor <= this.y_high) {
+        (x - this.ctx.offset_x) / this.ctx.zoom_factor <= this.x_right &&
+        (y - this.ctx.offset_y) / this.ctx.zoom_factor >= this.y_low &&
+        (y - this.ctx.offset_y) / this.ctx.zoom_factor <= this.y_high) {
       this.ctx.event_object = this;
       return 1;
     }
@@ -557,7 +534,7 @@ class PlowNode {
 
   in_icon(x, y) {
     return x >= this.x_left * this.ctx.zoom_factor && x <=
-      (this.x_left + 1.75) * this.ctx.zoom_factor;
+        (this.x_left + 1.75) * this.ctx.zoom_factor;
   }
 
   measure() {
@@ -570,13 +547,14 @@ class PlowNode {
 }
 
 class PlowAnnot {
-  RELATIVE_OFFSET = 1;
+  static RELATIVE_OFFSET = 1;
   ctx: PlowCtx;
   p: Point;
   draw_type: number;
   text_size: number;
   annot_type: number;
   number: number;
+
   constructor(ctx, x, y, text_size, text_color, annot_type, number) {
     this.p = new Point(x, y);
     this.draw_type = text_color;
@@ -596,7 +574,7 @@ class PlowAnnot {
 
     let tsize = 0;
     let idx = this.ctx.zoom_factor / this.ctx.base_zoom_factor *
-      (this.text_size + 4) - 4;
+        (this.text_size + 4) - 4;
     if (idx < 0) {
       return;
     }
@@ -646,8 +624,8 @@ class PlowAnnot {
     let y = (this.p.y + p0.y) * this.ctx.zoom_factor - tsize / 4;
 
     if ((this.annot_type & RELATIVE_POSITION) !== 0) {
-      let rel_x = (p0.x + node.relative_position + this.RELATIVE_OFFSET) *
-        this.ctx.zoom_factor;
+      let rel_x = (p0.x + node.relative_position + PlowAnnot.RELATIVE_OFFSET) *
+          this.ctx.zoom_factor;
       if (x < rel_x) {
         x = rel_x;
       }
@@ -659,10 +637,10 @@ class PlowAnnot {
       y += tsize * 1.4;
     }
     if ((this.annot_type & NEXT_RELATIVE_POSITION) !== 0 ||
-      (this.annot_type & RELATIVE_POSITION) !== 0) {
+        (this.annot_type & RELATIVE_POSITION) !== 0) {
       node.relative_position =
-        (x + g.measureText(node.annotv[this.number]).width) /
-        this.ctx.zoom_factor - p0.x;
+          (x + g.measureText(node.annotv[this.number]).width) /
+          this.ctx.zoom_factor - p0.x;
     }
   }
 
@@ -674,6 +652,7 @@ class PlowAnnotPixmap {
   ctx: PlowCtx;
   p: Point;
   number: number;
+
   constructor(ctx, x, y, number) {
     this.p = new Point(x, y);
     this.number = number;
@@ -704,7 +683,7 @@ class PlowAnnotPixmap {
       img.onload = function () {
         for (let i = 0; i < Bitmaps.pending[bix].length; i++) {
           gctx.drawImage(img, Bitmaps.pending[bix][i].x,
-            Bitmaps.pending[bix][i].y);
+              Bitmaps.pending[bix][i].y);
         }
         Bitmaps.pending[bix] = null;
       }
@@ -729,6 +708,7 @@ class PlowRect {
   fill_color: number;
   fill: number;
   fix_color: number;
+
   constructor(ctx, x, y, width, height, fill_color, border_color, fill, fix_color) {
     this.ll = new Point(x, y);
     this.ur = new Point(x + width, y + height);
@@ -817,6 +797,7 @@ class GDraw {
   canvas: HTMLCanvasElement;
   gctx: CanvasRenderingContext2D;
   offset_top: number;
+
   constructor(ctx) {
     this.ctx = ctx;
     this.canvas = document.querySelector("canvas");
@@ -826,43 +807,29 @@ class GDraw {
 }
 
 class PlowCtx {
-  gdh: Gdh;
-  debug: boolean;
-  nodraw: number;
-  zoom_factor: number;
-  base_zoom_factor: number;
-  offset_x: number;
-  offset_y: number;
-  x_right: number;
-  x_left: number;
-  y_high: number;
-  y_low: number;
+  gdh: Gdh = null;
+  debug = false;
+  nodraw = 0;
+  zoom_factor = 20.0;
+  base_zoom_factor = 20.0;
+  offset_x = 0;
+  offset_y = 0;
+  x_right = 0.0;
+  x_left = 0.0;
+  y_high = 0.0;
+  y_low = 0.0;
   a: PlowArray;
   a_nc: PlowArray;
-  name: string;
+  name = "Claes context";
   gdraw: GDraw;
-  select_object: PlowNode;
-  event_cb: (event: object, object: PlowNode, x: number, y: number) => void;
-  event_object: PlowNode;
+  select_object: PlowNode = null;
+  event_cb: (event: object, object: PlowNode, x: number, y: number) => void = null;
+  event_object: PlowNode = null;
+
   constructor() {
-    this.gdh = null;
-    this.debug = false;
-    this.nodraw = 0;
-    this.zoom_factor = 20.0;
-    this.base_zoom_factor = 20.0;
-    this.offset_x = 0;
-    this.offset_y = 0;
-    this.x_right = 0.0;
-    this.x_left = 0.0;
-    this.y_high = 0.0;
-    this.y_low = 0.0;
     this.a = new PlowArray(this);
     this.a_nc = new PlowArray(this);
-    this.name = "Claes context";
     this.gdraw = new GDraw(this);
-    this.select_object = null;
-    this.event_cb = null;
-    this.event_object = null;
   }
 
   draw() {
@@ -871,7 +838,7 @@ class PlowCtx {
     }
     this.gdraw.gctx.fillStyle = "white";
     this.gdraw.gctx.fillRect(0, 0, this.gdraw.canvas.width,
-      this.gdraw.canvas.height);
+        this.gdraw.canvas.height);
     this.a.draw(this.gdraw.gctx, null, null, false);
   }
 
@@ -1002,13 +969,13 @@ class PlowCtx {
 
   is_visible(o) {
     return (o.y_high * this.zoom_factor <= window.pageYOffset +
-      window.innerHeight - this.gdraw.offset_top) &&
-      (o.y_low * this.zoom_factor >= window.pageYOffset -
-        this.gdraw.offset_top);
+        window.innerHeight - this.gdraw.offset_top) &&
+        (o.y_low * this.zoom_factor >= window.pageYOffset -
+            this.gdraw.offset_top);
   }
 
   scroll(y, factor) {
     window.scrollTo(window.scrollX, y * this.zoom_factor - window.innerHeight *
-      factor + this.gdraw.offset_top)
+        factor + this.gdraw.offset_top)
   };
 }
