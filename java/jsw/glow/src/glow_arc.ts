@@ -19,14 +19,9 @@ class GlowArc {
 
   open(lines, row) {
     let i;
-
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GlowArc : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.Arc:
@@ -59,6 +54,7 @@ class GlowArc {
           break;
       }
     }
+
     return i;
   }
 
@@ -67,14 +63,13 @@ class GlowArc {
       return;
     }
 
-    let ll_x, ll_y, ur_x, ur_y;
-    ll_x = Math.floor(this.ll.x * this.ctx.mw.zoom_factor_x + 0.5) -
+    let ll_x = Math.floor(this.ll.x * this.ctx.mw.zoom_factor_x + 0.5) -
         this.ctx.mw.offset_x;
-    ll_y = Math.floor(this.ll.y * this.ctx.mw.zoom_factor_y + 0.5) -
+    let ll_y = Math.floor(this.ll.y * this.ctx.mw.zoom_factor_y + 0.5) -
         this.ctx.mw.offset_y;
-    ur_x = Math.floor(this.ur.x * this.ctx.mw.zoom_factor_x + 0.5) -
+    let ur_x = Math.floor(this.ur.x * this.ctx.mw.zoom_factor_x + 0.5) -
         this.ctx.mw.offset_x;
-    ur_y = Math.floor(this.ur.y * this.ctx.mw.zoom_factor_y + 0.5) -
+    let ur_y = Math.floor(this.ur.y * this.ctx.mw.zoom_factor_y + 0.5) -
         this.ctx.mw.offset_y;
 
     if (ll_x === ur_x && ll_y === ur_y) {
@@ -94,14 +89,13 @@ class GlowArc {
       return;
     }
 
-    let ll_x, ll_y, ur_x, ur_y;
-    ll_x = Math.floor(this.ll.x * this.ctx.mw.zoom_factor_x + 0.5) -
+    let ll_x = Math.floor(this.ll.x * this.ctx.mw.zoom_factor_x + 0.5) -
         this.ctx.mw.offset_x;
-    ll_y = Math.floor(this.ll.y * this.ctx.mw.zoom_factor_y + 0.5) -
+    let ll_y = Math.floor(this.ll.y * this.ctx.mw.zoom_factor_y + 0.5) -
         this.ctx.mw.offset_y;
-    ur_x = Math.floor(this.ur.x * this.ctx.mw.zoom_factor_x + 0.5) -
+    let ur_x = Math.floor(this.ur.x * this.ctx.mw.zoom_factor_x + 0.5) -
         this.ctx.mw.offset_x;
-    ur_y = Math.floor(this.ur.y * this.ctx.mw.zoom_factor_y + 0.5) -
+    let ur_y = Math.floor(this.ur.y * this.ctx.mw.zoom_factor_y + 0.5) -
         this.ctx.mw.offset_y;
     let idx = Math.floor(this.ctx.mw.zoom_factor_y /
         this.ctx.mw.base_zoom_factor * this.line_width - 1);

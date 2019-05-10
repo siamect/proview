@@ -88,7 +88,7 @@ class Appl {
 
               graphName = cli.getQualValue("cli_arg2").toLowerCase();
               if (graphName.charAt(".pwg") === -1) {
-                graphName = graphName + ".pwg";
+                graphName += ".pwg";
               }
 
               let href;
@@ -186,7 +186,7 @@ class Appl {
             }
 
             if (source.indexOf('.') === -1) {
-              source = source + ".pwg";
+              source += ".pwg";
             }
 
             this.graph.setSubwindowSource(name, source, object);

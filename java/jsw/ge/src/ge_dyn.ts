@@ -325,7 +325,6 @@ class Dyn {
             this.elements.push(elem);
             i = elem.open(lines, i + 1);
           }
-
           return i;
         default:
           console.log("Syntax error in Dyn");
@@ -2225,7 +2224,6 @@ class DynValue extends DynElem {
           if (this.format !== null) {
             this.cFormat = new GlowCFormat(this.format);
           }
-
           return i;
         default:
           console.log("Syntax error in DynValue");
@@ -2789,10 +2787,10 @@ class DynMove extends DynElem {
     if (!object.transformIsStored()) {
       object.storeTransform();
       let geom = object.measure();
-      this.x_orig = geom.x;
-      this.y_orig = geom.y;
-      this.width_orig = geom.width;
-      this.height_orig = geom.height;
+      this.x_orig = geom.ll_x;
+      this.y_orig = geom.ll_y;
+      this.width_orig = geom.width();
+      this.height_orig = geom.height();
     }
 
     return 1;
@@ -3362,13 +3360,10 @@ class DynScrollingText extends DynElem {
     }
 
     let geom = object.measure();
-    switch (this.direction) {
-      case Direction.Left:
-      case Direction.Right:
-        this.osize = geom.width;
-        break;
-      default:
-        this.osize = geom.height;
+    if (this.direction == Direction.Left || this.direction == Direction.Right) {
+      this.osize = geom.width();
+    } else {
+      this.osize = geom.height();
     }
 
     return 1;
@@ -6881,25 +6876,25 @@ class DynFillLevel extends DynElem {
           value =
               ((pvalue - this.min_value) / (this.max_value - this.min_value) *
                   (this.limit_max - this.limit_min) +
-                  (this.limit_min - geom.x)) / geom.width;
+                  (this.limit_min - geom.ll_x)) / geom.width();
           break;
         case Direction.Left:
           value =
               ((pvalue - this.min_value) / (this.max_value - this.min_value) *
                   (this.limit_max - this.limit_min) +
-                  (geom.width - geom.x - this.limit_max)) / geom.width;
+                  (geom.ur_x - this.limit_max)) / geom.width();
           break;
         case Direction.Up:
           value =
               ((pvalue - this.min_value) / (this.max_value - this.min_value) *
                   (this.limit_max - this.limit_min) +
-                  (this.limit_min - geom.y)) / geom.height;
+                  (this.limit_min - geom.ll_y)) / geom.height();
           break;
         case Direction.Down:
           value =
               ((pvalue - this.min_value) / (this.max_value - this.min_value) *
                   (this.limit_max - this.limit_min) +
-                  (geom.height - geom.y - this.limit_max)) / geom.height;
+                  (geom.ur_y - this.limit_max)) / geom.height();
           break;
         default:
       }
@@ -8465,7 +8460,7 @@ class DynSlider extends DynElem {
       let g = object.measure();
       let info = object.get_info();
       let b = this.dyn.graph.getCtx()
-          .getBackgroundObjectLimits(DynType1.SliderBackground, g.x + g.width / 2, g.y + g.height / 2);
+          .getBackgroundObjectLimits(DynType1.SliderBackground, (g.ll_x + g.ur_x) / 2, (g.ll_y + g.ur_y) / 2);
       if ((b.sts & 1) === 0) {
         this.direction = info.direction;
       } else {
@@ -9052,10 +9047,10 @@ class DynPulldownMenu extends DynElem {
           }
 
           let g = object.measure();
-          this.menu_object = new GrowMenu(this.dyn.graph.getCtx());
-          this.menu_object.init("__Menu", info, g.x, g.y + g.height, g.width,
-              DrawType.Line, 0, 1, 1, bg_color, text_size, text_drawtype,
-              text_color, DrawType.MediumGray, text_font);
+          this.menu_object = new GrowMenu(this.dyn.graph.getCtx(),
+              "__Menu", info, g.x, g.ur_y, g.width(),
+              DrawType.Line, 0, 1, 1, bg_color, text_size,
+              text_drawtype, text_color, DrawType.MediumGray, text_font);
           this.menu_object.set_scale(scale, scale, 0, 0,
               ScaleType.LowerLeft);
           this.dyn.graph.getCtx().insert(this.menu_object);
@@ -9605,10 +9600,10 @@ class DynOptionMenu extends DynElem {
           }
 
           let g = object.measure();
-          this.menu_object = new GrowMenu(this.dyn.graph.getCtx());
-          this.menu_object.init("__Menu", info, g.x, g.y + g.height, g.width,
-              DrawType.Line, 0, 1, 1, bg_color, tsize, text_drawtype,
-              text_color, DrawType.MediumGray, text_font);
+          this.menu_object = new GrowMenu(this.dyn.graph.getCtx(),
+              "__Menu", info, g.ll_x, g.ur_y, g.width(),
+              DrawType.Line, 0, 1, 1, bg_color, tsize,
+              text_drawtype, text_color, DrawType.MediumGray, text_font);
           this.menu_object.set_scale(scale, scale, 0, 0,
               ScaleType.LowerLeft);
           this.dyn.graph.getCtx().insert(this.menu_object);
@@ -10806,9 +10801,9 @@ class DynMethodPulldownMenu extends DynElem {
     }
 
     let g = this.o.measure();
-    this.menu_object = new GrowMenu(this.dyn.graph.getCtx());
-    this.menu_object.init("__Menu", info, g.x, g.y + g.height, g.width,
-        DrawType.Line, 0, 1, 1, bg_color, text_size, text_drawtype,
+    this.menu_object = new GrowMenu(this.dyn.graph.getCtx(),
+        "__Menu", info, g.ll_x, g.ur_y, g.width(), DrawType.Line,
+        0, 1, 1, bg_color, text_size, text_drawtype,
         text_color, DrawType.MediumGray, text_font);
     this.menu_object.set_scale(scale, scale, 0, 0, ScaleType.LowerLeft);
     this.dyn.graph.getCtx().insert(this.menu_object);

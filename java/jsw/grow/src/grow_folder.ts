@@ -24,14 +24,9 @@ class GrowFolder extends GrowWindow {
 
   open(lines, row) {
     let i;
-
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowFolder : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.GrowFolder:
@@ -374,15 +369,12 @@ class GrowFolder extends GrowWindow {
     return i;
   }
 
-  tdraw(t, highlight, hot, node, colornode) {
+  draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
     if (this.ctx.nodraw !== 0) {
       return;
     }
 
-    let idx;
-    let drawtype;
-
-    idx = Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
+    let idx = Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
         this.line_width - 1);
     idx += hot;
     idx = Math.max(0, idx);
@@ -394,32 +386,22 @@ class GrowFolder extends GrowWindow {
         (8 + 2 * this.text_size);
     text_idx = Math.min(text_idx, DRAW_TYPE_SIZE - 1);
 
-    let ll_x, ll_y, ur_x, ur_y;
-    let dx1, dy1, dx2, dy2;
-
-    if (t === null) {
-      dx1 = this.trf.x(this.ll.x, this.ll.y);
-      dy1 = this.trf.y(this.ll.x, this.ll.y);
-      dx2 = this.trf.x(this.ur.x, this.ur.y);
-      dy2 = this.trf.y(this.ur.x, this.ur.y);
-    } else {
-      dx1 = this.trf.x(t, this.ll.x, this.ll.y);
-      dy1 = this.trf.y(t, this.ll.x, this.ll.y);
-      dx2 = this.trf.x(t, this.ur.x, this.ur.y);
-      dy2 = this.trf.y(t, this.ur.x, this.ur.y);
-    }
+    let dx1 = this.trf.x(t, this.ll.x, this.ll.y);
+    let dy1 = this.trf.y(t, this.ll.x, this.ll.y);
+    let dx2 = this.trf.x(t, this.ur.x, this.ur.y);
+    let dy2 = this.trf.y(t, this.ur.x, this.ur.y);
     dx1 = Math.min(dx1, dx2);
     dx2 = Math.max(dx1, dx2);
     dy1 = Math.min(dy1, dy2);
     dy2 = Math.max(dy1, dy2);
 
-    ll_x = Math.floor(dx1 * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    ur_x = Math.floor(dx2 * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    ur_y = Math.floor((dy1 + this.y_low_offs) * this.ctx.mw.zoom_factor_y) -
+    let ll_x = Math.floor(dx1 * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let ur_x = Math.floor(dx2 * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let ur_y = Math.floor((dy1 + this.y_low_offs) * this.ctx.mw.zoom_factor_y) -
         this.ctx.mw.offset_y;
-    ll_y = Math.floor(dy1 * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let ll_y = Math.floor(dy1 * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
 
-    drawtype =
+    let drawtype =
         GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
             highlight, colornode, 0, 0);
     let drawtype_light = GlowColor.shift_drawtype(this.color_unselected, -2,
@@ -431,7 +413,7 @@ class GrowFolder extends GrowWindow {
     let h = ur_y - ll_y;
     let p = new Array(4);
     for (let j = 0; j < 4; j++) {
-      p[j] = new GlowPointX();
+      p[j] = new Point();
     }
     for (let i = this.folders - 1; i >= -1; i--) {
       if (i === this.current_folder) { // Draw this last
@@ -468,19 +450,11 @@ class GrowFolder extends GrowWindow {
           this.ctx.gdraw.line(p[0].x + 1, p[0].y, p[1].x + 1, p[1].y,
               drawtype_light, 0, 0);
           if (i !== 0) {
-            let ps = new Array(4);
-            for (let j = 0; j < 4; j++) {
-              ps[j] = new GlowPointX();
-            }
-
-            ps[0].x = x + h / 4;
-            ps[0].y = ll_y + h;
-            ps[1].x = x;
-            ps[1].y = ll_y + h / 2;
-            ps[2].x = x + h / 8;
-            ps[2].y = ll_y + h / 4;
-            ps[3].x = x + h / 2;
-            ps[3].y = ll_y + h;
+            let ps = [
+              new Point(x + h / 4, ll_y + h),
+              new Point(x, ll_y + h / 2),
+              new Point(x + h / 8, ll_y + h / 4),
+              new Point(x + h / 2, ll_y + h)];
 
             this.ctx.gdraw.fill_polyline(ps, 4, drawtype_dark, 0);
           }
@@ -508,7 +482,7 @@ class GrowFolder extends GrowWindow {
         break;
       }
     }
-    super.tdraw(t, highlight, hot, node, colornode);
+    super.draw(t, highlight, hot, node, colornode);
     this.ctx.gdraw.line(p[0].x + 1, p[0].y, p[3].x - 1, p[3].y,
         this.color_selected, idx, 0);
   }
@@ -517,10 +491,10 @@ class GrowFolder extends GrowWindow {
     let sts;
 
     if (event.event === Event.MB1Click) {
-      if (this.x_left <= fx && fx <= this.x_right && this.y_low <= fy &&
-          fy <= this.y_low + this.header_height) {
-        let w = (this.x_right - this.x_left) / this.folders;
-        let x = this.x_left + w;
+      if (this.ll_x <= fx && fx <= this.ur_x && this.ll_y <= fy &&
+          fy <= this.ll_y + this.header_height) {
+        let w = (this.ur_x - this.ll_x) / this.folders;
+        let x = this.ll_x + w;
         for (let i = 0; i < this.folders; i++) {
           if (fx <= x) {
             // Change file

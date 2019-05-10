@@ -9,7 +9,7 @@ class GlowText {
 
   constructor(ctx) {
     this.ctx = ctx;
-    this.p = new GlowPoint(ctx);
+    this.p = new GlowPoint();
   }
 
   open(lines, row) {
@@ -17,10 +17,6 @@ class GlowText {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GlowCon : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.Text:
@@ -47,6 +43,7 @@ class GlowText {
           break;
       }
     }
+
     return i;
   }
 

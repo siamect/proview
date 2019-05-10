@@ -11,14 +11,9 @@ class GrowSlider extends GrowNode {
 
   open(lines, row) {
     let i;
-
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowGroup : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.GrowSlider:
@@ -54,48 +49,37 @@ class GrowSlider extends GrowNode {
 
   get_origo(direction) {
     let t = new GlowTransform();
-    let g = new Rect();
-    g.x = 10.0e37;
-    g.y = 10.0e37;
-    g.width = 10.0e-37;
-    g.height = 10.0e-37;
-
-    let pos;
+    let g = new Rect(10.0e37, 10.0e37, -10.0e37, -10.0e37);
 
     // Get borders in the nodeclass coordinates
     this.nc.get_borders(t, g);
     switch (this.direction) {
       case Direction.Down:
       case Direction.Up:
-        if (Math.abs(g.height) < Number.MIN_VALUE) {
-          pos = this.y_low;
+        if (Math.abs(g.height()) < Number.MIN_VALUE) {
+          return this.ll_y;
         } else {
-          pos = (this.nc.y0 - g.y) * (this.y_high - this.y_low) / g.height;
+          return (this.nc.y0 - g.ll_y) * this.height() / g.height();
         }
-        break;
       case Direction.Left:
       case Direction.Right:
-        if (Math.abs(g.height) < Number.MIN_VALUE) {
-          pos = this.y_low;
+        if (Math.abs(g.height()) < Number.MIN_VALUE) {
+          return this.ll_y;
         } else {
-          pos = (this.nc.y0 - g.y) * (this.x_right - this.x_left) / g.height;
+          return (this.nc.y0 - g.ll_y) * this.width() / g.height();
         }
-        break;
       default:
-        pos = 0;
+        return 0;
     }
-    return pos;
   }
 
   get_info() {
     let info = new GlowSliderInfo();
-
     info.direction = this.direction;
     info.max_value = this.max_value;
     info.min_value = this.min_value;
     info.max_position = this.max_pos;
     info.min_position = this.min_pos;
-
     return info;
   }
 

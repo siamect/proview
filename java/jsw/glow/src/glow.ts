@@ -1699,11 +1699,6 @@ class GlowEventToolbar extends GlowEvent {
   idx = 0;
 }
 
-class GlowPointX {
-  x;
-  y;
-}
-
 class GlowSliderInfo {
   direction;
   max_value;
@@ -1719,7 +1714,7 @@ class MenuInfoItem {
 }
 
 class GlowMenuInfo {
-  item = Array(32);
+  item = Array<MenuInfoItem>(32);
 
   constructor() {
     for (let i = 0; i < 32; i++) {

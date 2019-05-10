@@ -433,7 +433,8 @@ class JopCrypt {
     JopCrypt.intToFourBytes(out[1], b, 4);
     b[8] = 0;
 
-    for (let i = 2, y = 0, u = 0x80; i < 13; i++) {
+    let y = 0;
+    for (let i = 2, u = 0x80; i < 13; i++) {
       for (let j = 0, c = 0; j < 6; j++) {
         c <<= 1;
 

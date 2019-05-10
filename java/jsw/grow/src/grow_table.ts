@@ -52,14 +52,9 @@ class GrowTable extends GrowRect {
 
   open(lines, row) {
     let i;
-
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowPie : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.GrowTable:
@@ -289,7 +284,8 @@ class GrowTable extends GrowRect {
   }
 
   configure() {
-    this.table_x0 = this.table_y0 = 0;
+    this.table_x0 = 0;
+    this.table_y0 = 0;
     this.table_x1 = 0;
     for (let i = 0; i < this.columns; i++) {
       if (this.header_column !== 0 && i === 0) {
@@ -299,43 +295,27 @@ class GrowTable extends GrowRect {
     }
     this.table_y1 = this.row_height * this.rows;
 
-    if (this.header_row === 0) {
-      this.y_low_offs = 0;
-    } else {
-      this.y_low_offs = this.header_row_height;
-    }
-
-    if (this.header_column === 0) {
-      this.x_left_offs = 0;
-    } else {
-      this.x_left_offs = this.column_width[0];
-    }
+    this.y_low_offs = (this.header_row === 0) ? 0 : this.header_row_height;
+    this.x_left_offs = (this.header_column === 0) ? 0 : this.column_width[0];
 
     this.cell_value = new Array(this.columns * this.rows);
   }
 
   configure_scrollbars() {
-    let x0, y0, width, height;
-
     if (this.vertical_scrollbar !== 0 && this.v_scrollbar === null) {
-      x0 = this.x_right - this.scrollbar_width;
-      y0 = this.y_low + this.y_low_offs;
-      width = this.scrollbar_width;
-      if (this.horizontal_scrollbar === 0) {
-        height = this.y_high - (this.y_low + this.y_low_offs);
-      } else {
-        height =
-            this.y_high - (this.y_low + this.y_low_offs) - this.scrollbar_width;
-      }
+      let x0 = this.ur_x - this.scrollbar_width;
+      let y0 = this.ll_y + this.y_low_offs;
+      let width = this.scrollbar_width;
+      let height = this.ur_y - (this.ll_y + this.y_low_offs) - this.scrollbar_width * this.horizontal_scrollbar;
 
-      this.v_scrollbar = new GrowScrollBar(this.ctx);
-      this.v_scrollbar.init("vScrollbar", x0, y0, width, height,
-          Dir.Vertical, DrawType.Line, 1, this.display_level,
-          this.scrollbar_bg_color, this.scrollbar_color, 1, this);
+      this.v_scrollbar = new GrowScrollBar(this.ctx, "vScrollbar", x0, y0,
+          width, height, Dir.Vertical, DrawType.Line, 1,
+          this.display_level, this.scrollbar_bg_color, this.scrollbar_color,
+          1, this);
       this.v_scrollbar.set_range(this.table_y0 *
           this.window_scale, this.table_y1 * this.window_scale);
       this.v_scrollbar.set_value(this.table_y0 *
-          this.window_scale, this.y_high - (this.y_low + this.y_low_offs) -
+          this.window_scale, this.ur_y - (this.ll_y + this.y_low_offs) -
           this.scrollbar_width * this.horizontal_scrollbar);
       this.v_scrollbar.set_shadow(this.shadow);
       this.v_value = this.table_y0 * this.window_scale;
@@ -347,7 +327,7 @@ class GrowTable extends GrowRect {
       this.v_scrollbar.set_range(this.table_y0 *
           this.window_scale, this.table_y1 * this.window_scale);
       this.v_scrollbar.set_value(this.table_y0 *
-          this.window_scale, this.y_high - (this.y_low + this.y_low_offs) -
+          this.window_scale, this.ur_y - (this.ll_y + this.y_low_offs) -
           this.scrollbar_width * this.horizontal_scrollbar);
       this.v_value = this.table_y0 * this.window_scale;
       this.v_scrollbar.set_shadow(this.shadow);
@@ -356,24 +336,19 @@ class GrowTable extends GrowRect {
     }
 
     if (this.horizontal_scrollbar !== 0 && this.h_scrollbar === null) {
-      x0 = this.x_left + this.x_left_offs;
-      y0 = this.y_high - this.scrollbar_width;
-      height = this.scrollbar_width;
-      if (this.vertical_scrollbar === 0) {
-        width = this.x_right - (this.x_left + this.x_left_offs);
-      } else {
-        width = this.x_right - (this.x_left + this.x_left_offs) -
-            this.scrollbar_width;
-      }
+      let x0 = this.ll_x + this.x_left_offs;
+      let y0 = this.ur_y - this.scrollbar_width;
+      let height = this.scrollbar_width;
+      let width = this.ur_x - (this.ll_x + this.x_left_offs) - this.scrollbar_width * this.vertical_scrollbar;
 
-      this.h_scrollbar = new GrowScrollBar(this.ctx);
-      this.h_scrollbar.init("hScrollbar", x0, y0, width, height,
-          Dir.Horizontal, DrawType.Line, 1, this.display_level,
-          this.scrollbar_bg_color, this.scrollbar_color, 1, this);
+      this.h_scrollbar = new GrowScrollBar(this.ctx, "hScrollbar", x0, y0,
+          width, height, Dir.Horizontal, DrawType.Line, 1,
+          this.display_level, this.scrollbar_bg_color, this.scrollbar_color,
+          1, this);
       this.h_scrollbar.set_range(this.table_x0 *
           this.window_scale, this.table_x1 * this.window_scale);
       this.h_scrollbar.set_value(this.table_x0 *
-          this.window_scale, this.x_right - (this.x_left + this.x_left_offs) -
+          this.window_scale, this.ur_x - (this.ll_x + this.x_left_offs) -
           this.scrollbar_width * this.vertical_scrollbar);
       this.h_scrollbar.set_shadow(this.shadow);
       this.h_value = this.table_x0 * this.window_scale;
@@ -383,7 +358,7 @@ class GrowTable extends GrowRect {
     } else if (this.h_scrollbar !== null) {
       // Reconfigure lenght and range
       this.h_scrollbar.set_value(this.table_x0 *
-          this.window_scale, this.x_right - (this.x_left + this.x_left_offs) -
+          this.window_scale, this.ur_x - (this.ll_x + this.x_left_offs) -
           this.scrollbar_width * this.vertical_scrollbar);
       this.h_value = this.table_x0 * this.window_scale;
       this.h_scrollbar.set_range(this.table_x0 *
@@ -394,19 +369,12 @@ class GrowTable extends GrowRect {
     }
   }
 
-  draw() {
-    this.tdraw(null, 0, 0, null, null);
-  }
-
-  tdraw(t, highlight, hot, node, colornode) {
+  draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
     if (this.ctx.nodraw !== 0) {
       return;
     }
 
-    let idx;
-    let drawtype;
-
-    idx = Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
+    let idx = Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
         this.line_width - 1);
     idx += hot;
     idx = Math.max(0, idx);
@@ -423,20 +391,10 @@ class GrowTable extends GrowRect {
     let header_tsize = this.ctx.mw.zoom_factor_y /
         this.ctx.mw.base_zoom_factor * (8 + 2 * this.header_text_size);
 
-    let ll_x, ll_y, ur_x, ur_y;
-    let dx1, dy1, dx2, dy2;
-
-    if (t === null) {
-      dx1 = this.trf.x(this.ll.x, this.ll.y);
-      dy1 = this.trf.y(this.ll.x, this.ll.y);
-      dx2 = this.trf.x(this.ur.x, this.ur.y);
-      dy2 = this.trf.y(this.ur.x, this.ur.y);
-    } else {
-      dx1 = this.trf.x(t, this.ll.x, this.ll.y);
-      dy1 = this.trf.y(t, this.ll.x, this.ll.y);
-      dx2 = this.trf.x(t, this.ur.x, this.ur.y);
-      dy2 = this.trf.y(t, this.ur.x, this.ur.y);
-    }
+    let dx1 = this.trf.x(t, this.ll.x, this.ll.y);
+    let dy1 = this.trf.y(t, this.ll.x, this.ll.y);
+    let dx2 = this.trf.x(t, this.ur.x, this.ur.y);
+    let dy2 = this.trf.y(t, this.ur.x, this.ur.y);
     dx1 = Math.min(dx1, dx2);
     dx2 = Math.max(dx1, dx2);
     dy1 = Math.min(dy1, dy2);
@@ -451,7 +409,7 @@ class GrowTable extends GrowRect {
             this.y_low_offs, this.scrollbar_width, dy2 - (dy1 + this.y_low_offs) -
             this.scrollbar_width);
       }
-      this.v_scrollbar.tdraw(null, 0, 0, null, null);
+      this.v_scrollbar.draw();
 
     }
     if (this.h_scrollbar !== null) {
@@ -464,29 +422,21 @@ class GrowTable extends GrowRect {
             this.scrollbar_width, dx2 - (dx1 + this.x_left_offs) -
             this.scrollbar_width, this.scrollbar_width);
       }
-      this.h_scrollbar.tdraw(null, 0, 0, null, null);
+      this.h_scrollbar.draw();
     }
 
-    drawtype =
+    let drawtype =
         GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
             highlight, colornode, 0, 0);
 
-    let light_drawtype;
-    let dark_drawtype;
-    let sel_drawtype;
+    let dark_drawtype = GlowColor.shift_drawtype(this.fill_drawtype, 2, null);
+    let light_drawtype = GlowColor.shift_drawtype(this.fill_drawtype, -2, null);
+    let sel_drawtype = (this.select_drawtype === DrawType.Inherit) ? dark_drawtype : this.select_drawtype;
 
-    dark_drawtype = GlowColor.shift_drawtype(this.fill_drawtype, 2, null);
-    light_drawtype = GlowColor.shift_drawtype(this.fill_drawtype, -2, null);
-    if (this.select_drawtype === DrawType.Inherit) {
-      sel_drawtype = dark_drawtype;
-    } else {
-      sel_drawtype = this.select_drawtype;
-    }
-
-    ll_x = Math.floor(dx1 * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    ll_y = Math.floor(dy1 * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    ur_x = Math.floor(dx2 * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    ur_y = Math.floor(dy2 * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let ll_x = Math.floor(dx1 * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let ll_y = Math.floor(dy1 * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let ur_x = Math.floor(dx2 * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let ur_y = Math.floor(dy2 * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
 
     let o_ll_x = Math.floor((dx1 + this.x_left_offs) *
         this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
@@ -502,13 +452,10 @@ class GrowTable extends GrowRect {
     let t_ur_x = t_ll_x + Math.floor(this.table_x1 * this.ctx.mw.zoom_factor_x);
     let t_ur_y = t_ll_y + Math.floor(this.table_y1 * this.ctx.mw.zoom_factor_y);
 
-    let x;
-    let y;
-    let offs;
-    let header_h = 0;
-    let header_w = 0;
     let text_offs = 10;
 
+    let header_h = 0;
+    let header_w = 0;
     if (this.header_row !== 0) {
       header_h = Math.floor(this.header_row_height * this.ctx.mw.zoom_factor_y);
     }
@@ -526,8 +473,7 @@ class GrowTable extends GrowRect {
           header_h);
 
       if (this.shadow !== 0) {
-        x = t_ll_x;
-        y = ll_y;
+        let x = t_ll_x;
         for (let i = this.header_column; i < this.columns + 1; i++) {
           if (x > ur_x) {
             break;
@@ -547,8 +493,7 @@ class GrowTable extends GrowRect {
         this.ctx.gdraw.line(ll_x, ll_y + header_h - 1, t_ur_x, ll_y + header_h -
             1, dark_drawtype, 1, 0);
       }
-      x = t_ll_x;
-      y = ll_y;
+      let x = t_ll_x;
 
       for (let i = this.header_column; i < this.columns + 1; i++) {
         if (x > ur_x) {
@@ -560,7 +505,6 @@ class GrowTable extends GrowRect {
       }
 
       x = t_ll_x;
-      y = ll_y;
 
       for (let i = this.header_column; i < this.columns; i++) {
         if (header_text_idx >= 0 && this.header_text[i] !== "") {
@@ -595,7 +539,6 @@ class GrowTable extends GrowRect {
       if (this.header_column !== 0) {
         // Draw header of header column header
         x = ll_x;
-        y = ll_y;
         if (header_text_idx >= 0 && this.header_text[0] !== "") {
           this.ctx.gdraw.text(Math.floor(x + text_offs),
               Math.floor(y + header_h - 4), this.header_text[0],
@@ -616,8 +559,8 @@ class GrowTable extends GrowRect {
 
       // Draw selected cell, if cell in header column
       if (this.selected_cell_row >= 0 && this.selected_cell_column === 0) {
-        x = ll_x;
-        y = t_ll_y + this.row_height * this.ctx.mw.zoom_factor_y *
+        let x = ll_x;
+        let y = t_ll_y + this.row_height * this.ctx.mw.zoom_factor_y *
             this.selected_cell_row;
         this.ctx.gdraw.fill_rect(Math.floor(x), Math.floor(y), header_w,
             Math.floor(this.row_height * this.ctx.mw.zoom_factor_y),
@@ -625,8 +568,7 @@ class GrowTable extends GrowRect {
       }
 
       if (this.shadow !== 0) {
-        x = ll_x;
-        y = t_ll_y;
+        let y = t_ll_y;
         for (let i = 0; i < this.rows + 1; i++) {
           if (y > ur_y) {
             break;
@@ -648,8 +590,8 @@ class GrowTable extends GrowRect {
         this.ctx.gdraw.line(ll_x + header_w - 1, ll_y + header_h, ll_x +
             header_w - 1, ur_y, dark_drawtype, 1, 0);
       }
-      x = ll_x;
-      y = t_ll_y;
+      let x = ll_x;
+      let y = t_ll_y;
 
       for (let i = 0; i < this.rows; i++) {
         y += this.row_height * this.ctx.mw.zoom_factor_y;
@@ -660,7 +602,7 @@ class GrowTable extends GrowRect {
           this.ctx.gdraw.line(ll_x, Math.floor(y), ll_x + header_w,
               Math.floor(y), drawtype, idx, 0);
 
-          offs = i;
+          let offs = i;
           if (text_idx >= 0 && this.cell_value[offs] !== null &&
               this.cell_value[offs] !== "") {
             let text_x = Math.floor(x) + text_offs;
@@ -668,10 +610,10 @@ class GrowTable extends GrowRect {
             if (this.column_adjustment[0] === Adjustment.Right ||
                 this.column_adjustment[0] === Adjustment.Center) {
               let width, height, descent;
-              let dim = this.ctx.gdraw.getTextExtent(this.cell_value[offs],
+              let p = this.ctx.gdraw.getTextExtent(this.cell_value[offs],
                   text_idx, this.font, this.text_drawtype);
-              width = dim.width;
-              height = dim.height;
+              width = p.x;
+              height = p.y;
               descent = height / 4;
 
               switch (this.column_adjustment[0]) {
@@ -708,22 +650,22 @@ class GrowTable extends GrowRect {
     if (this.selected_cell_row >= 0 &&
         !(this.header_column !== 0 && this.selected_cell_column === 0)) {
       // Draw selected cell, if cell not in header column
-      x = t_ll_x;
+      let x = t_ll_x;
       for (let i = this.header_column; i < this.selected_cell_column; i++) {
         x += this.column_width[i] * this.ctx.mw.zoom_factor_x;
       }
-      y = t_ll_y + this.row_height * this.ctx.mw.zoom_factor_y *
+      let y = t_ll_y + this.row_height * this.ctx.mw.zoom_factor_y *
           this.selected_cell_row;
       this.ctx.gdraw.fill_rect(Math.floor(x), Math.floor(y),
           Math.floor(this.column_width[this.selected_cell_column] *
               this.ctx.mw.zoom_factor_x),
           Math.floor(this.row_height * this.ctx.mw.zoom_factor_y),
-          this.sel_drawtype);
+          sel_drawtype);
     }
 
     if (this.shadow !== 0) {
-      x = t_ll_x;
-      y = t_ll_y;
+      let x = t_ll_x;
+      let y = t_ll_y;
 
       for (let i = this.header_column; i < this.columns + 1; i++) {
         if (x > ur_x) {
@@ -760,8 +702,8 @@ class GrowTable extends GrowRect {
       }
     }
 
-    x = t_ll_x;
-    y = t_ll_y;
+    let x = t_ll_x;
+    let y = t_ll_y;
 
     for (let i = this.header_column; i < this.columns + 1; i++) {
       if (x > ur_x) {
@@ -818,7 +760,7 @@ class GrowTable extends GrowRect {
           }
 
           if (y > ll_y) {
-            offs = column_offs + j;
+            let offs = column_offs + j;
             if (text_idx >= 0 && this.cell_value[offs] !== null &&
                 this.cell_value[offs] !== "") {
               let text_x = Math.floor(x) + text_offs;
@@ -826,10 +768,10 @@ class GrowTable extends GrowRect {
               if (this.column_adjustment[i] === Adjustment.Right ||
                   this.column_adjustment[i] === Adjustment.Center) {
                 let width, height, descent;
-                let dim = this.ctx.gdraw.getTextExtent(this.cell_value[offs],
+                let p = this.ctx.gdraw.getTextExtent(this.cell_value[offs],
                     text_idx, this.font, this.text_drawtype);
-                width = dim.width;
-                height = dim.height;
+                width = p.x;
+                height = p.y;
                 descent = height / 4;
 
                 switch (this.column_adjustment[i]) {
@@ -895,9 +837,8 @@ class GrowTable extends GrowRect {
   }
 
   event_handler(event, fx, fy) {
-    let sts, v_sts, h_sts;
-
-    v_sts = h_sts = 0;
+    let v_sts = 0;
+    let h_sts = 0;
     if (this.v_scrollbar !== null) {
       v_sts = this.v_scrollbar.event_handler(event, fx, fy);
     }
@@ -908,7 +849,7 @@ class GrowTable extends GrowRect {
       return 1;
     }
 
-    sts = super.event_handler(event, fx, fy);
+    let sts = super.event_handler(event, fx, fy);
     if (event.event === Event.ButtonMotion) {
       return 0;
     }
@@ -919,19 +860,17 @@ class GrowTable extends GrowRect {
         let row = -1;
 
         // Find out which cell
-        let o_ll_x = this.x_left + this.x_left_offs;
-        let o_ll_y = this.y_low + this.y_low_offs;
-        let o_ur_x = this.x_right - this.vertical_scrollbar *
-            this.scrollbar_width;
-        let o_ur_y = this.y_high - this.horizontal_scrollbar *
-            this.scrollbar_width;
+        let o_ll_x = this.ll_x + this.x_left_offs;
+        let o_ll_y = this.ll_y + this.y_low_offs;
+        let o_ur_x = this.ur_x - this.vertical_scrollbar * this.scrollbar_width;
+        let o_ur_y = this.ur_y - this.horizontal_scrollbar * this.scrollbar_width;
 
         let t_ll_x = o_ll_x - this.h_value;
         let t_ll_y = o_ll_y - this.v_value;
 
         if (o_ll_y <= fy && fy <= o_ur_y) {
-          if (this.header_column !== 0 && this.x_left <= fx &&
-              fx <= this.x_left + this.x_left_offs) {
+          if (this.header_column !== 0 && this.ll_x <= fx &&
+              fx <= this.ll_x + this.x_left_offs) {
             column = 0;
           } else if (o_ll_x <= fx && fx <= o_ur_x) {
             let column_x_right = t_ll_x;

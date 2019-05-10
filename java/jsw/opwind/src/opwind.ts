@@ -9,15 +9,14 @@ class OpWindMenu {
   info: OpwindMenuInfo;
 
   constructor() {
-    this.host = window.location.hostname;
-    if (this.host === "") {
-      this.host = "localhost";
-    }
-
+    this.host = window.location.hostname || "localhost";
     this.gdh = new Gdh(this.gdh_init_cb);
   }
 
   is_authorized(access) {
+    if (!(this.priv & access)) {
+      window.alert("Not authorized for this operation");
+    }
     return !!(this.priv & access);
   }
 
@@ -137,11 +136,7 @@ class OpWindMenu {
 
     context.appendChild(document.createElement("hr"));
 
-
-    let button;
-    for (let i = 0; i < result.buttons.length; i++) {
-      this.add_menu_button(context, result.buttons[i].text);
-    }
+    result.buttons.forEach(e => this.add_menu_button(context, e.text));
   }
 
   button_cb(text) {
@@ -154,8 +149,6 @@ class OpWindMenu {
               Access.Maintenance | Access.Process |
               Access.Instrument)) {
         window.open("ev.html?list=alarm", "_blank");
-      } else {
-        window.alert("Not authorized for this operation");
       }
     } else if (this.info.enable_alarmlist && text === "EventList") {
       console.log("EventList activated");
@@ -164,8 +157,6 @@ class OpWindMenu {
               Access.Maintenance | Access.Process |
               Access.Instrument)) {
         window.open("ev.html?list=event", "_blank");
-      } else {
-        window.alert("Not authorized for this operation");
       }
     } else if (this.info.enable_eventlog && text === "EventLog") {
       console.log("EventLog activated");
@@ -174,8 +165,6 @@ class OpWindMenu {
               Access.Maintenance | Access.Process |
               Access.Instrument)) {
         window.alert("Not yet implemented");
-      } else {
-        window.alert("Not authorized for this operation");
       }
     } else if (this.info.enable_navigator && text === "Navigator") {
       console.log("Navigator activated");
@@ -183,8 +172,6 @@ class OpWindMenu {
               Access.Maintenance | Access.Process |
               Access.Instrument)) {
         window.open("xtt.html", "_blank");
-      } else {
-        window.alert("Not authorized for this operation");
       }
     } else if (!this.info.disable_help && text === "Help") {
       console.log("Help activated");
@@ -197,22 +184,18 @@ class OpWindMenu {
               Access.AllOperators | Access.System |
               Access.Maintenance | Access.Process |
               Access.Instrument)) {
-        for (let i = 0; i < this.info.buttons.length; i++) {
-          if (this.info.buttons[i].text === text) {
-            console.log("Found", this.info.buttons[i].text);
-            let name = this.info.buttons[i].name;
-            let n = name.indexOf(".pwg");
-            if (n !== -1) {
-              name = name.substring(0, n);
-            }
-            let url = "ge.html?graph=" + name;
-            console.log("url", url);
-            window.open(url, "_blank");
-            return;
+        let button = this.info.buttons.find(e => e.text === text);
+        if (button) {
+          console.log("Found", button.text);
+          let name = button.name;
+          let n = name.indexOf(".pwg");
+          if (n !== -1) {
+            name = name.substring(0, n);
           }
+          let url = "ge.html?graph=" + name;
+          console.log("url", url);
+          window.open(url, "_blank");
         }
-      } else {
-        window.alert("Not authorized for this operation");
       }
     }
   }

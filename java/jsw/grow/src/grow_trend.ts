@@ -34,14 +34,9 @@ class GrowTrend extends GrowRect {
 
   open(lines, row) {
     let i;
-
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowTrend : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.GrowTrend:
@@ -142,14 +137,12 @@ class GrowTrend extends GrowRect {
     return i;
   }
 
-  tdraw(t, highlight, hot, node, colornode) {
+  draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
     if (this.ctx.nodraw !== 0) {
       return;
     }
-    let i;
-    let idx;
-    let drawtype;
 
+    let idx;
     if (node !== null && node.line_width !== 0) {
       idx =
           Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
@@ -163,32 +156,21 @@ class GrowTrend extends GrowRect {
 
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
-    let x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-    if (t === null) {
-      x1 = Math.floor(this.trf.x(this.ll.x, this.ll.y) *
+    let x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
           this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      y1 = Math.floor(this.trf.y(this.ll.x, this.ll.y) *
+    let y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
           this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-      x2 = Math.floor(this.trf.x(this.ur.x, this.ur.y) *
+    let x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
           this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      y2 = Math.floor(this.trf.y(this.ur.x, this.ur.y) *
+    let y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
           this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    } else {
-      x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-      x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    }
 
-    ll_x = Math.min(x1, x2);
-    ur_x = Math.max(x1, x2);
-    ll_y = Math.min(y1, y2);
-    ur_y = Math.max(y1, y2);
+    let ll_x = Math.min(x1, x2);
+    let ur_x = Math.max(x1, x2);
+    let ll_y = Math.min(y1, y2);
+    let ur_y = Math.max(y1, y2);
+
     if (this.fill !== 0) {
       let grad = this.gradient;
       if (this.gradient === Gradient.No &&
@@ -197,21 +179,16 @@ class GrowTrend extends GrowRect {
         grad = node.gradient;
       }
 
-      drawtype =
+      let drawtype =
           GlowColor.get_drawtype(this.fill_drawtype, DrawType.FillHighlight,
               highlight, colornode, 1, 0);
       if (grad === Gradient.No) {
         this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
             drawtype);
       } else {
-        let f1, f2;
-        let rotation;
+        let rotation = t ? this.trf.rot(t) : this.trf.rot();
 
-        if (t === null) {
-          rotation = this.trf.rot();
-        } else {
-          rotation = this.trf.rot(t);
-        }
+        let f1, f2;
         if (this.gradient_contrast >= 0) {
           f2 = GlowColor.shift_drawtype(drawtype, -this.gradient_contrast / 2,
               null);
@@ -227,89 +204,44 @@ class GrowTrend extends GrowRect {
             drawtype, f1, f2, this.ctx.gdraw.gradient_rotate(rotation, grad));
       }
     }
-    drawtype =
+    let drawtype =
         GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
             highlight, colornode, 0, 0);
+
+    let curvetmp = this.curve.slice(0, this.curve_cnt).filter(e => e !== null);
+
     if (this.fill_curve !== 0) {
-      for (i = 0; i < this.curve_cnt; i++) {
-        if (this.curve[i] !== null) {
-          this.curve[i].border = 0;
-        }
-      }
-      if (t === null) {
-        for (i = 0; i < this.curve_cnt; i++) {
-          if (this.curve[i] !== null) {
-            //for ( let j = 0; j < 10; j++)
-            //  console.log( "tdraw", i, this.curve[i].points[j].x, this.curve[i].points[j].y);
-            this.curve[i].tdraw(this.trf, highlight, hot, node, colornode);
-          }
-        }
-      } else {
-        let tmp1 = t.multiply(this.trf);
-        for (i = 0; i < this.curve_cnt; i++) {
-          if (this.curve[i] !== null) {
-            this.curve[i].tdraw(tmp1, highlight, hot, node, colornode);
-          }
-        }
-      }
-      for (i = 0; i < this.curve_cnt; i++) {
-        if (this.curve[i] !== null) {
-          this.curve[i].border = 1;
-        }
-      }
+      let tmp1 = t ? GlowTransform.multiply(t, this.trf) : this.trf;
+
+      curvetmp.forEach(e => e.border = 0);
+      curvetmp.forEach(e => e.draw(tmp1, highlight, hot, node, colornode));
+      curvetmp.forEach(e => e.border = 1);
     }
 
-    for (i = 0; i < this.vertical_lines; i++) {
+    for (let i = 0; i < this.vertical_lines; i++) {
       let x = Math.floor(ll_x + (ur_x - ll_x) / (this.vertical_lines + 1) *
           (i + 1));
       this.ctx.gdraw.line(x, ll_y, x, ur_y, drawtype, 0, 0);
     }
 
-    for (i = 0; i < this.horizontal_lines; i++) {
+    for (let i = 0; i < this.horizontal_lines; i++) {
       let y = Math.floor(ll_y + (ur_y - ll_y) / (this.horizontal_lines + 1) *
           (i + 1));
       this.ctx.gdraw.line(ll_x, y, ur_x, y, drawtype, 0, 0);
     }
 
     if (this.fill_curve !== 0) {
-      for (i = 0; i < this.curve_cnt; i++) {
-        if (this.curve[i] !== null) {
-          this.curve[i].fill = 0;
-        }
-      }
+      curvetmp.forEach(e => e.fill = 0);
     }
-    if (t === null) {
-      for (i = 0; i < this.curve_cnt; i++) {
-        if (this.curve[i] !== null) {
-          this.curve[i].tdraw(this.trf, highlight, hot, node, colornode);
-        }
-      }
-    } else {
-      let tmp2 = t.multiply(this.trf);
-      for (i = 0; i < this.curve_cnt; i++) {
-        if (this.curve[i] !== null) {
-          this.curve[i].tdraw(tmp2, highlight, hot, node, colornode);
-        }
-      }
-    }
-
+    let tmp2 = t ? GlowTransform.multiply(t, this.trf) : this.trf;
+    curvetmp.forEach(e => e.draw(tmp2, highlight, hot, node, colornode));
     if (this.fill_curve !== 0) {
-      for (i = 0; i < this.curve_cnt; i++) {
-        if (this.curve[i] !== null) {
-          this.curve[i].fill = 1;
-        }
-      }
+      curvetmp.forEach(e => e.fill = 1);
     }
 
     if (this.display_x_mark1 !== 0) {
-      let xm1;
-      if (t === null) {
-        xm1 = Math.floor(this.trf.x(this.x_mark1, this.ll.y) *
+      let xm1 = Math.floor(this.trf.x(t, this.x_mark1, this.ll.y) *
             this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      } else {
-        xm1 = Math.floor(this.trf.x(t, this.x_mark1, this.ll.y) *
-            this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      }
       if (xm1 >= ll_x && xm1 <= ur_x) {
         drawtype = this.mark1_color;
         if (drawtype === DrawType.Inherit) {
@@ -319,14 +251,8 @@ class GrowTrend extends GrowRect {
       }
     }
     if (this.display_x_mark2 !== 0) {
-      let xm2;
-      if (t === null) {
-        xm2 = Math.floor(this.trf.x(this.x_mark2, this.ll.y) *
+      let xm2 = Math.floor(this.trf.x(t, this.x_mark2, this.ll.y) *
             this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      } else {
-        xm2 = Math.floor(this.trf.x(t, this.x_mark2, this.ll.y) *
-            this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      }
       if (xm2 >= ll_x && xm2 <= ur_x) {
         drawtype = this.mark2_color;
         if (drawtype === DrawType.Inherit) {
@@ -386,26 +312,20 @@ class GrowTrend extends GrowRect {
   }
 
   configure_curves() {
-    let dt, dt_fill;
-    let points;
-    let pointarray = [];
-    let point_p = new GlowPoint();
-    let i;
-
     this.curve_cnt = 2;
 
     this.no_of_points = Math.max(2, this.no_of_points);
-    points = this.no_of_points;
+    let points = this.no_of_points;
     if (this.fill_curve !== 0) {
       points += 2;
     }
     this.curve_width =
         Math.min(DRAW_TYPE_SIZE, Math.max(1, this.curve_width));
 
-    pointarray = new Array(points);
-    for (i = 0; i < points; i++) {
+    let pointarray = new Array(points);
+    for (let i = 0; i < points; i++) {
       pointarray[i] = new GlowPoint();
-      point_p = pointarray[i];
+      let point_p = pointarray[i];
       if (this.fill_curve === 0) {
         point_p.y = this.ur.y;
         point_p.x = this.ur.x - i * (this.ur.x - this.ll.x) / (points - 1);
@@ -422,29 +342,15 @@ class GrowTrend extends GrowRect {
       }
     }
 
-    for (i = 0; i < this.curve_cnt; i++) {
-      if (this.curve[i] !== null) {
-        this.curve[i] = null;
-      }
-
-      if (this.curve_drawtype[i] === DrawType.Inherit) {
-        dt = this.draw_type;
-      } else {
-        dt = this.curve_drawtype[i];
-      }
-
-      if (this.curve_fill_drawtype[i] === DrawType.Inherit) {
-        dt_fill = this.draw_type;
-      } else {
-        dt_fill = this.curve_fill_drawtype[i];
-      }
+    for (let i = 0; i < this.curve_cnt; i++) {
+      let dt = (this.curve_drawtype[i] === DrawType.Inherit) ? this.draw_type : this.curve_drawtype[i];
+      let dt_fill = (this.curve_fill_drawtype[i] === DrawType.Inherit) ? this.draw_type : this.curve_fill_drawtype[i];
 
       this.ctx.nodraw++;
-      this.curve[i] = new GrowPolyline(this.ctx);
-      this.curve[i].init("", pointarray, points, dt, this.curve_width, 0,
-          this.fill_curve, 1, 0, dt_fill);
+      this.curve[i] = new GrowPolyline(this.ctx, "", pointarray, points,
+          dt, this.curve_width, 0, this.fill_curve, 1,
+          0, dt_fill);
       this.ctx.nodraw--;
-
     }
   }
 
@@ -453,16 +359,15 @@ class GrowTrend extends GrowRect {
       return;
     }
 
-    let mark;
     if (curve === 0) {
       if (this.display_y_mark1 !== 0) {
-        mark = this.y_min_value[0] - (this.y_mark1 - this.ur.y) *
+        let mark = this.y_min_value[0] - (this.y_mark1 - this.ur.y) *
             (this.y_max_value[0] - this.y_min_value[0]) / (this.ur.y - this.ll.y);
         this.y_mark1 =
             this.ur.y - (mark - min) / (max - min) * (this.ur.y - this.ll.y);
       }
       if (this.display_y_mark2 !== 0) {
-        mark = this.y_min_value[0] - (this.y_mark2 - this.ur.y) *
+        let mark = this.y_min_value[0] - (this.y_mark2 - this.ur.y) *
             (this.y_max_value[0] - this.y_min_value[0]) / (this.ur.y - this.ll.y);
         this.y_mark2 =
             this.ur.y - (mark - min) / (max - min) * (this.ur.y - this.ll.y);
@@ -475,10 +380,11 @@ class GrowTrend extends GrowRect {
   }
 
   add_value(value, idx) {
-    let curve_value = 0;
     if (idx >= this.curve_cnt) {
       return;
     }
+
+    let curve_value = 0;
     if (this.y_max_value[idx] !== this.y_min_value[idx]) {
       curve_value = this.ur.y - (value - this.y_min_value[idx]) /
           (this.y_max_value[idx] - this.y_min_value[idx]) *

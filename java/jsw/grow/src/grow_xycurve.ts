@@ -5,14 +5,9 @@ class GrowXYCurve extends GrowTrend {
 
   open(lines, row) {
     let i;
-
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowXYCurve : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.GrowXYCurve:
@@ -92,19 +87,12 @@ class GrowXYCurve extends GrowTrend {
   }
 
   set_xy_data(y_data, x_data, curve_idx, data_points) {
-    let dt, dt_fill;
-    let points;
-    let cpoints;
-    let pointarray;
-    let point_p;
-    let i, j, idx;
-
     if (curve_idx > TREND_MAX_CURVES || curve_idx < 0) {
       return;
     }
 
     this.no_of_points = Math.max(2, this.no_of_points);
-    points = cpoints = Math.min(this.no_of_points, data_points);
+    let cpoints = Math.min(this.no_of_points, data_points);
     if (this.fill_curve !== 0) {
       cpoints += 2;
     }
@@ -112,10 +100,12 @@ class GrowXYCurve extends GrowTrend {
     this.curve_width =
         Math.min(DRAW_TYPE_SIZE, Math.max(1, this.curve_width));
 
-    pointarray = new Array(cpoints);
-    j = curve_idx;
-    for (i = 0, idx = 0; i < cpoints; i++, idx++) {
-      point_p = pointarray[i] = new GlowPointX();
+    let pointarray = new Array(cpoints);
+    let j = curve_idx;
+    let idx = 0;
+    for (let i = 0; i < cpoints; i++) {
+      let point_p = new Point();
+      pointarray[i] = new Point();
       if (this.fill_curve === 0) {
         idx = i;
         if (this.y_max_value[j] !== this.y_min_value[j]) {
@@ -123,17 +113,14 @@ class GrowXYCurve extends GrowTrend {
               (this.y_max_value[j] - this.y_min_value[j]) *
               (this.ur.y - this.ll.y);
         }
-
-        point_p.y = Math.max(this.ll.y, Math.min(point_p.y, this.ur.y));
+        point_p.y = clamp(point_p.y, this.ll.y, this.ur.y);
 
         if (this.x_max_value[j] !== this.x_min_value[j]) {
           point_p.x = this.ll.x + (x_data[idx] - this.x_min_value[j]) /
               (this.x_max_value[j] - this.x_min_value[j]) *
               (this.ur.x - this.ll.x);
         }
-
-        point_p.x = Math.max(this.ll.x, Math.min(point_p.x, this.ur.x));
-
+        point_p.x = clamp(point_p.x, this.ll.x, this.ur.x);
       } else {
         if (i === 0) {
           if (this.x_max_value[j] !== this.x_min_value[j]) {
@@ -141,8 +128,8 @@ class GrowXYCurve extends GrowTrend {
                 (this.x_max_value[j] - this.x_min_value[j]) *
                 (this.ur.x - this.ll.x);
           }
+          point_p.x = clamp(point_p.x, this.ll.x, this.ur.x);
 
-          point_p.x = Math.max(this.ll.x, Math.min(point_p.x, this.ur.x));
           point_p.y = this.ur.y;
           idx--;
         } else if (i === cpoints - 1) {
@@ -151,8 +138,8 @@ class GrowXYCurve extends GrowTrend {
                 (this.x_max_value[j] - this.x_min_value[j]) *
                 (this.ur.x - this.ll.x);
           }
+          point_p.x = clamp(point_p.x, this.ll.x, this.ur.x);
 
-          point_p.x = Math.max(this.ll.x, Math.min(point_p.x, this.ur.x));
           point_p.y = this.ur.y;
         } else {
           if (this.y_max_value[j] !== this.y_min_value[j]) {
@@ -160,36 +147,26 @@ class GrowXYCurve extends GrowTrend {
                 (this.y_max_value[j] - this.y_min_value[j]) *
                 (this.ur.y - this.ll.y);
           }
-
-          point_p.y = Math.max(this.ll.y, Math.min(point_p.y, this.ur.y));
+          point_p.y = clamp(point_p.y, this.ll.y, this.ur.y);
 
           if (this.x_max_value[j] !== this.x_min_value[j]) {
             point_p.x = this.ll.x + (x_data[idx] - this.x_min_value[j]) /
                 (this.x_max_value[j] - this.x_min_value[j]) *
                 (this.ur.x - this.ll.x);
           }
-
-          point_p.x = Math.max(this.ll.x, Math.min(point_p.x, this.ur.x));
+          point_p.x = clamp(point_p.x, this.ll.x, this.ur.x);
         }
       }
+      idx++;
     }
 
-    if (this.curve_drawtype[j] === DrawType.Inherit) {
-      dt = this.draw_type;
-    } else {
-      dt = this.curve_drawtype[j];
-    }
-
-    if (this.curve_fill_drawtype[j] === DrawType.Inherit) {
-      dt_fill = this.draw_type;
-    } else {
-      dt_fill = this.curve_fill_drawtype[j];
-    }
+    let dt = (this.curve_drawtype[j] === DrawType.Inherit) ? this.draw_type : this.curve_drawtype[j];
+    let dt_fill = (this.curve_fill_drawtype[j] === DrawType.Inherit) ? this.draw_type : this.curve_fill_drawtype[j];
 
     this.ctx.nodraw++;
-    this.curve[j] = new GrowPolyline(this.ctx);
-    this.curve[j].init("", pointarray, cpoints, dt, this.curve_width, 0,
-        this.fill_curve, 1, 0, dt_fill);
+    this.curve[j] = new GrowPolyline(this.ctx, "", pointarray, cpoints,
+        dt, this.curve_width, 0, this.fill_curve, 1,
+        0, dt_fill);
     this.ctx.nodraw--;
     this.draw();
   }

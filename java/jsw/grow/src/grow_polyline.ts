@@ -1,12 +1,10 @@
-class GrowPolyline {
-  ctx: GrowCtx;
+class GrowPolyline extends GlowPolyline {
   trf: GlowTransform;
-  a_points: GlowArray;
   n_name = null;
-  x_right;
-  x_left;
-  y_high;
-  y_low;
+  ll_x: Number;
+  ll_y: Number;
+  ur_x: Number;
+  ur_y: Number;
   original_border_drawtype = 0;
   original_fill_drawtype = 0;
   fill_drawtype = 0;
@@ -29,20 +27,16 @@ class GrowPolyline {
   fill_eq_bgshadow = 0;
   fill_eq_background = 0;
   dynamicsize = 0;
-  points = [];
-  draw_type = 0;
-  line_width = 0;
-  fill = 0;
-  closed_line = 0;
 
   constructor(ctx) {
-    this.ctx = ctx;
+    super(ctx);
     this.trf = new GlowTransform();
-    this.a_points = new GlowArray(ctx);
   }
 
-  init(name, pointarray, point_cnt, border_d_type, line_w, fix_line_w, fill,
-       display_border, display_shadow, fill_d_type) {
+  constructor(ctx, name, pointarray, point_cnt, border_d_type, line_w,
+       fix_line_w, fill, display_border, display_shadow, fill_d_type) {
+    super(ctx);
+    this.trf = new GlowTransform();
     this.original_border_drawtype = border_d_type;
     this.fill_drawtype = fill_d_type;
     this.border = display_border;
@@ -66,20 +60,15 @@ class GrowPolyline {
     }
     this.points = new Array(this.a_points.size());
     for (let i = 0; i < this.a_points.size(); i++) {
-      this.points[i] = new GlowPointX();
+      this.points[i] = new Point();
     }
   }
 
   open(lines, row) {
     let i;
-
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowPolyline : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.GrowPolyLine:
@@ -90,16 +79,16 @@ class GrowPolyline {
           }
           break;
         case GlowSave.GrowPolyLine_x_right:
-          this.x_right = parseFloat(tokens[1]);
+          this.ur_x = parseFloat(tokens[1]);
           break;
         case GlowSave.GrowPolyLine_x_left:
-          this.x_left = parseFloat(tokens[1]);
+          this.ll_x = parseFloat(tokens[1]);
           break;
         case GlowSave.GrowPolyLine_y_high:
-          this.y_high = parseFloat(tokens[1]);
+          this.ur_y = parseFloat(tokens[1]);
           break;
         case GlowSave.GrowPolyLine_y_low:
-          this.y_low = parseFloat(tokens[1]);
+          this.ll_y = parseFloat(tokens[1]);
           break;
         case GlowSave.GrowPolyLine_original_border_drawtype:
           this.original_border_drawtype = parseInt(tokens[1], 10);
@@ -173,14 +162,14 @@ class GrowPolyline {
           }
           break;
         case GlowSave.GrowPolyLine_polyline_part:
-          i = this.glowpolyline_open(lines, i + 1);
+          i = super.open(lines, i + 1);
           break;
         case GlowSave.GrowPolyLine_trf:
           i = this.trf.open(lines, i + 1);
           break;
         case GlowSave.End:
           for (let j = 0; j < this.a_points.size(); j++) {
-            this.points[j] = new GlowPointX();
+            this.points[j] = new Point();
           }
           return i;
         default:
@@ -190,48 +179,9 @@ class GrowPolyline {
     }
 
     for (let j = 0; j < this.a_points.size(); j++) {
-      this.points[j] = new GlowPointX();
+      this.points[j] = new Point();
     }
 
-    return i;
-  }
-
-  glowpolyline_open(lines, row) {
-    let i;
-
-    for (i = row; i < lines.length; i++) {
-      let tokens = lines[i].split(' ');
-      let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowPolyline : " + lines[i]);
-      }
-
-      switch (key) {
-        case GlowSave.PolyLine:
-          break;
-        case GlowSave.PolyLine_draw_type:
-          this.draw_type = parseInt(tokens[1], 10);
-          break;
-        case GlowSave.PolyLine_line_width:
-          this.line_width = parseInt(tokens[1], 10);
-          break;
-        case GlowSave.PolyLine_fill:
-          this.fill = parseInt(tokens[1], 10);
-          break;
-        case GlowSave.PolyLine_closed_line:
-          this.closed_line = parseInt(tokens[1], 10);
-          break;
-        case GlowSave.PolyLine_a_points:
-          i = this.a_points.open(lines, i + 1);
-          break;
-        case GlowSave.End:
-          return i;
-        default:
-          console.log("Syntax error in GlowPolyline");
-          break;
-      }
-    }
     return i;
   }
 
@@ -239,11 +189,7 @@ class GrowPolyline {
     return 0;
   }
 
-  draw() {
-    this.tdraw(null, 0, 0, null, null);
-  }
-
-  tdraw(t, highlight, hot, node, colornode) {
+  draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
     if (this.ctx.nodraw !== 0) {
       return;
     }
@@ -260,14 +206,12 @@ class GrowPolyline {
         hot = 0;
       }
     }
-    let i;
-    let drawtype;
-    let idx;
 
     if (this.fixcolor !== 0) {
       colornode = null;
     }
 
+    let idx;
     if (node !== null && node.line_width !== 0) {
       idx =
           Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
@@ -280,21 +224,13 @@ class GrowPolyline {
     idx += hot;
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
-    let x1, y1;
 
-    for (i = 0; i < this.a_points.size(); i++) {
-      if (t === null) {
-        x1 = this.trf.x(this.a_points.get(i).x, this.a_points.get(i).y);
-        y1 = this.trf.y(this.a_points.get(i).x, this.a_points.get(i).y);
-      } else {
-        x1 = this.trf.x(t, this.a_points.get(i).x, this.a_points.get(i).y);
-        y1 = this.trf.y(t, this.a_points.get(i).x, this.a_points.get(i).y);
-      }
-      this.points[i].x =
-          Math.floor(x1 * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      this.points[i].y =
-          Math.floor(y1 * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-    }
+    this.a_points.forEach(function (e) {
+      let x1 = this.trf.x(t, e.x, e.y);
+      let y1 = this.trf.y(t, e.x, e.y);
+      e.x = Math.floor(x1 * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+      e.y = Math.floor(y1 * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+    });
     if (this.fill !== 0) {
       let grad = this.gradient;
       if (this.gradient === Gradient.No &&
@@ -303,6 +239,7 @@ class GrowPolyline {
         grad = node.gradient;
       }
 
+      let drawtype;
       if (this.fill_eq_border !== 0) {
         drawtype =
             GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
@@ -353,14 +290,9 @@ class GrowPolyline {
         this.ctx.gdraw.fill_polyline(this.points, this.a_points.size(),
             drawtype, 0);
       } else {
-        let f1, f2;
-        let rotation;
-        if (t === null) {
-          rotation = this.trf.rot();
-        } else {
-          rotation = this.trf.rot(t);
-        }
+        let rotation = t ? this.trf.rot(t) : this.trf.rot();
 
+        let f1, f2;
         if (this.gradient_contrast >= 0) {
           f2 = GlowColor.shift_drawtype(drawtype, -this.gradient_contrast / 2,
               null);
@@ -382,41 +314,27 @@ class GrowPolyline {
         0 && this.fill_eq_shadow === 0;
 
     if (display_shadow && this.shadow_width !== 0) {
-      let sp;
-      let p_num;
-
       let trf_scale = this.trf.vertical_scale(t);
       let ish = Math.floor(this.shadow_width / 100 * trf_scale *
-          Math.min((this.x_right - this.x_left) *
-              this.ctx.mw.zoom_factor_x, (this.y_high - this.y_low) *
-              this.ctx.mw.zoom_factor_y) + 0.5);
+          Math.min((this.ur_x - this.ll_x) * this.ctx.mw.zoom_factor_x,
+              (this.ur_y - this.ll_y) * this.ctx.mw.zoom_factor_y) + 0.5);
 
       if (ish >= 1) {
-        sp = this.calculate_shadow(ish, highlight, colornode, 0, chot);
-        p_num = sp.length;
-
-        let p = [];
-        p[0] = new GlowPointX();
-        p[1] = new GlowPointX();
-        p[2] = new GlowPointX();
-        p[3] = new GlowPointX();
-        for (i = 0; i < p_num - 1; i++) {
-          p[0].x = this.points[i].x;
-          p[0].y = this.points[i].y;
-          p[1].x = sp[i].x;
-          p[1].y = sp[i].y;
-          p[3].x = this.points[i + 1].x;
-          p[3].y = this.points[i + 1].y;
-          p[2].x = sp[i + 1].x;
-          p[2].y = sp[i + 1].y;
-
+        let sp = this.calculate_shadow(ish, highlight, colornode, 0, chot);
+        for (let i = 0; i < sp.length - 1; i++) {
+          let p = [
+            this.points[i],
+            sp[i],
+            sp[i + 1],
+            this.points[i + 1]
+          ];
           this.ctx.gdraw.fill_polyline(p, 4, sp[i].drawtype, 0);
         }
       }
     }
     if (this.border !== 0 ||
         !(this.fill !== 0 || (display_shadow && this.shadow_width !== 0))) {
-      drawtype =
+      let drawtype =
           GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
               highlight, colornode, 0, 0);
       this.ctx.gdraw.polyline(this.points, this.a_points.size(), drawtype, idx,
@@ -425,20 +343,13 @@ class GrowPolyline {
   }
 
   calculate_shadow(ish, highlight, colornode, javaexport, chot) {
-    let sp;
-    let x;
-    let pos01;
-    let pos12;
-    let i;
-    let light_drawtype;
-    let dark_drawtype;
-
     let p_num = this.a_points.size();
     if (this.points[0].x === this.points[p_num - 1].x &&
         this.points[0].y === this.points[p_num - 1].y) {
       p_num--;
     }
 
+    let sp;
     if (this.points[0].x === this.points[this.a_points.size() - 1].x &&
         this.points[0].y === this.points[this.a_points.size() - 1].y) {
       sp = new Array(p_num + 1);
@@ -453,19 +364,17 @@ class GrowPolyline {
     if (this.relief === Relief.Down) {
       drawtype_incr = -this.shadow_contrast;
     }
-    light_drawtype =
+    let light_drawtype =
         GlowColor.shift_drawtype(fillcolor, -drawtype_incr + chot, colornode);
-    dark_drawtype =
+    let dark_drawtype =
         GlowColor.shift_drawtype(fillcolor, drawtype_incr + chot, colornode);
 
-    pos01 = this.shadow_direction();
+    let pos01 = this.shadow_direction();
 
-    for (i = 0; i < p_num; i++) {
-      let sx0, sx1, sx2, sy0, sy1, sy2;
-      let k01, m01, k12, m12;
-
+    for (let i = 0; i < p_num; i++) {
       sp[i] = new GlowShadowInfo();
 
+      let sx0, sy0;
       if (i === 0) {
         sx0 = this.points[p_num - 1].x;
         sy0 = this.points[p_num - 1].y;
@@ -473,8 +382,9 @@ class GrowPolyline {
         sx0 = this.points[i - 1].x;
         sy0 = this.points[i - 1].y;
       }
-      sx1 = this.points[i].x;
-      sy1 = this.points[i].y;
+      let sx1 = this.points[i].x;
+      let sy1 = this.points[i].y;
+      let sx2, sy2;
       if (i === p_num - 1) {
         sx2 = this.points[0].x;
         sy2 = this.points[0].y;
@@ -483,7 +393,7 @@ class GrowPolyline {
         sy2 = this.points[i + 1].y;
       }
 
-      pos12 = pos01;
+      let pos12 = pos01;
       if (i !== -1) {
         if (Math.abs(sx0 - sx1) < Number.MIN_VALUE) {
           if (sx1 > sx2 && sy1 < sy0) {
@@ -506,32 +416,32 @@ class GrowPolyline {
 
       if (Math.abs(sx0 - sx1) < Number.MIN_VALUE) {
         if (Math.abs(sx1 - sx2) < Number.MIN_VALUE) {
-          x = sx1 + pos01 * ish;
+          let x = sx1 + pos01 * ish;
           sp[i].x = Math.floor(x + 0.5);
           sp[i].y = Math.floor(sy1 + 0.5);
         } else {
-          k12 = (sy2 - sy1) / (sx2 - sx1);
-          m12 = sy1 - sx1 * k12 + pos12 * ish /
+          let k12 = (sy2 - sy1) / (sx2 - sx1);
+          let m12 = sy1 - sx1 * k12 + pos12 * ish /
               Math.abs(Math.cos(Math.atan(k12)));
 
-          x = sx1 + pos01 * ish;
+          let x = sx1 + pos01 * ish;
           sp[i].x = Math.floor(x + 0.5);
           sp[i].y = Math.floor(k12 * x + m12 + 0.5);
         }
       } else if (Math.abs(sx1 - sx2) < Number.MIN_VALUE) {
-        k01 = (sy1 - sy0) / (sx1 - sx0);
-        m01 =
+        let k01 = (sy1 - sy0) / (sx1 - sx0);
+        let m01 =
             sy0 - sx0 * k01 + pos01 * ish / Math.abs(Math.cos(Math.atan(k01)));
 
-        x = sx1 + pos12 * ish;
+        let x = sx1 + pos12 * ish;
         sp[i].x = Math.floor(x + 0.5);
         sp[i].y = Math.floor(k01 * x + m01 + 0.5);
       } else {
-        k01 = (sy1 - sy0) / (sx1 - sx0);
-        k12 = (sy2 - sy1) / (sx2 - sx1);
-        m01 =
+        let k01 = (sy1 - sy0) / (sx1 - sx0);
+        let k12 = (sy2 - sy1) / (sx2 - sx1);
+        let m01 =
             sy0 - sx0 * k01 + pos01 * ish / Math.abs(Math.cos(Math.atan(k01)));
-        m12 =
+        let m12 =
             sy1 - sx1 * k12 + pos12 * ish / Math.abs(Math.cos(Math.atan(k12)));
         if (Math.abs(k01 - k12) < Number.MIN_VALUE) {
           // Identical lines
@@ -542,23 +452,19 @@ class GrowPolyline {
             k12 = -k12;
             m12 = sy2 - k12 * sx2;
 
-            x = (m12 - m01) / (k01 - k12);
+            let x = (m12 - m01) / (k01 - k12);
             sp[i].x = Math.floor(x + 0.5);
             sp[i].y = Math.floor(k12 * x + m12 + 0.5);
             k12 = k01;
             m12 = m01;
           }
         } else {
-          x = (m12 - m01) / (k01 - k12);
+          let x = (m12 - m01) / (k01 - k12);
           sp[i].x = Math.floor(x + 0.5);
           sp[i].y = Math.floor(k12 * x + m12 + 0.5);
         }
       }
-      if (pos12 === 1) {
-        sp[i].drawtype = light_drawtype;
-      } else {
-        sp[i].drawtype = dark_drawtype;
-      }
+      sp[i].drawtype = (pos12 === 1) ? light_drawtype : dark_drawtype;
       pos01 = pos12;
     }
     if (this.points[0].x === this.points[this.a_points.size() - 1].x &&
@@ -572,18 +478,17 @@ class GrowPolyline {
   }
 
   shadow_direction() {
-    let a1, a2, a1_old, a0_old;
-    let a_sum1 = 0;
-    let a_sum2 = 0;
     let p_num = this.a_points.size();
-    a1_old = 0;
-    a0_old = 0;
-
     if ((this.points[p_num - 1].x === this.points[0].x &&
             this.points[p_num - 1].y === this.points[0].y)) {
       p_num--;
     }
 
+    let a_sum1 = 0;
+    let a_sum2 = 0;
+    let a1_old = 0;
+    let a0_old = 0;
+    let a1, a2;
     for (let i = 0; i < p_num; i++) {
       if (i === p_num - 1) {
         if (this.points[0].x === this.points[i].x) {
@@ -637,7 +542,7 @@ class GrowPolyline {
       }
       a1_old = a1;
     }
-    let dir;
+
     let last_point;
     if (this.points[0].x === this.points[this.a_points.size() - 1].x &&
         this.points[0].y === this.points[this.a_points.size() - 1].y) {
@@ -646,29 +551,22 @@ class GrowPolyline {
       last_point = this.points[this.a_points.size() - 1];
     }
 
+    let dir = -1;
     if (a_sum2 - a_sum1 < 0) {
       if (this.points[0].x === last_point.x) {
         if (this.points[0].x < this.points[1].x) {
           dir = 1;
-        } else {
-          dir = -1;
         }
       } else if (this.points[0].x > last_point.x) {
         dir = 1;
-      } else {
-        dir = -1;
       }
     } else {
       if (this.points[0].x === last_point.x) {
         if (this.points[0].x < this.points[1].x) {
           dir = 1;
-        } else {
-          dir = -1;
         }
       } else if (this.points[0].x < last_point.x) {
         dir = 1;
-      } else {
-        dir = -1;
       }
     }
     return dir;
@@ -689,56 +587,19 @@ class GrowPolyline {
   }
 
   get_borders(t, g) {
-    let i;
-    let x1, y1, x2 = 0, y2 = 0;
+    let x2 = 0, y2 = 0;
+    for (let i = 0; i < this.a_points.size() - 1; i++) {
+      let e = this.a_points.get(i);
+      let x1 = x2;
+      let y1 = y2;
+      if (i === 0) {
+        x1 = this.trf.x(t, e.x, e.y);
+        y1 = this.trf.y(t, e.x, e.y);
+      }
+      x2 = this.trf.x(t, e.x, e.y);
+      y2 = this.trf.y(t, e.x, e.y);
 
-    for (i = 0; i < this.a_points.size() - 1; i++) {
-      if (t === null) {
-        if (i === 0) {
-          x1 = this.trf.x(this.a_points.get(i).x, this.a_points.get(i).y);
-          y1 = this.trf.y(this.a_points.get(i).x, this.a_points.get(i).y);
-        } else {
-          x1 = x2;
-          y1 = y2;
-        }
-        x2 = this.trf.x(this.a_points.get(i + 1).x, this.a_points.get(i + 1).y);
-        y2 = this.trf.y(this.a_points.get(i + 1).x, this.a_points.get(i + 1).y);
-      } else {
-        if (i === 0) {
-          x1 = this.trf.x(t, this.a_points.get(i).x, this.a_points.get(i).y);
-          y1 = this.trf.y(t, this.a_points.get(i).x, this.a_points.get(i).y);
-        } else {
-          x1 = x2;
-          y1 = y2;
-        }
-        x2 = this.trf.x(t, this.a_points.get(i).x, this.a_points.get(i).y);
-        y2 = this.trf.y(t, this.a_points.get(i).x, this.a_points.get(i).y);
-      }
-
-      if (x1 < g.ll_x) {
-        g.ll_x = x1;
-      }
-      if (x2 < g.ll_x) {
-        g.ll_x = x2;
-      }
-      if (x1 > g.ur_x) {
-        g.ur_x = x1;
-      }
-      if (x2 > g.ur_x) {
-        g.ur_x = x2;
-      }
-      if (y1 < g.ll_y) {
-        g.ll_y = y1;
-      }
-      if (y2 < g.ll_y) {
-        g.ll_y = y2;
-      }
-      if (y1 > g.ur_y) {
-        g.ur_y = y1;
-      }
-      if (y2 > g.ur_y) {
-        g.ur_y = y2;
-      }
+      g.set(Rect.union(g, new Rect(Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2), Math.max(y1, y2))));
     }
   }
 

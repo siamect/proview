@@ -22,11 +22,8 @@ class Ev {
 
   constructor() {
     this.type = this.get_type();
-    switch (this.type) {
-      case EvType.EventList:
-        document.title = "Event List";
-        break;
-      default:
+    if (this.type === EvType.EventList) {
+      document.title = "Event List";
     }
 
     this.priv = Number(sessionStorage.getItem("pwr_privilege"));
@@ -220,11 +217,7 @@ class Ev {
 
   login_cb(id, data, sts, result) {
     console.log("Login:", sts, result);
-    if (sts & 1) {
-      this.priv = result;
-    } else {
-      this.priv = 0;
-    }
+    this.priv = (sts & 1) ? result : 0;
   }
 
   sync_cb(id, data, sts, result) {
@@ -280,9 +273,7 @@ class Ev {
             }
             break;
         }
-        if (this.mhSyncIdx < result[i].syncIdx) {
-          this.mhSyncIdx = result[i].syncIdx;
-        }
+        this.mhSyncIdx = Math.max(this.mhSyncIdx, result[i].syncIdx);
       }
       this.ctx.configure();
       this.ctx.reset_nodraw();
@@ -297,9 +288,7 @@ class Ev {
         }
 
         new EvItemAlarm(this, e, null, Dest.BEFORE);
-        if (this.mhSyncIdx < result[i].syncIdx) {
-          this.mhSyncIdx = result[i].syncIdx;
-        }
+        this.mhSyncIdx = Math.max(this.mhSyncIdx, result[i].syncIdx);
       }
       this.ctx.configure();
       this.ctx.reset_nodraw();
@@ -491,69 +480,38 @@ class Ev {
     this.ncAlarmA = new PlowNodeClass(this.ctx);
     this.ncAlarmA.insert(r1);
     this.ncAlarmA.insert(r2a);
-    this.ncAlarmA.insert(a1);
-    this.ncAlarmA.insert(p1);
-    this.ncAlarmA.insert(p2);
-    this.ncAlarmA.insert(p3);
-    this.ncAlarmA.insert(p4);
-    this.ncAlarmA.insert(a2);
-    this.ncAlarmA.insert(a3);
-    this.ncAlarmA.insert(a4);
-    this.ctx.insert_nc(this.ncAlarmA);
 
     // A alarm with yellow square
     this.ncAlarmB = new PlowNodeClass(this.ctx);
     this.ncAlarmB.insert(r1);
     this.ncAlarmB.insert(r2b);
-    this.ncAlarmB.insert(a1);
-    this.ncAlarmB.insert(p1);
-    this.ncAlarmB.insert(p2);
-    this.ncAlarmB.insert(p3);
-    this.ncAlarmB.insert(p4);
-    this.ncAlarmB.insert(a2);
-    this.ncAlarmB.insert(a3);
-    this.ncAlarmB.insert(a4);
-    this.ctx.insert_nc(this.ncAlarmB);
 
     // D and C alarm with no square
     this.ncAlarm = new PlowNodeClass(this.ctx);
     this.ncAlarm.insert(r1);
-    this.ncAlarm.insert(a1);
-    this.ncAlarm.insert(p1);
-    this.ncAlarm.insert(p2);
-    this.ncAlarm.insert(p3);
-    this.ncAlarm.insert(p4);
-    this.ncAlarm.insert(a2);
-    this.ncAlarm.insert(a3);
-    this.ncAlarm.insert(a4);
-    this.ctx.insert_nc(this.ncAlarm);
 
     // Info with white square
     this.ncInfo = new PlowNodeClass(this.ctx);
     this.ncInfo.insert(r1);
     this.ncInfo.insert(r2info);
-    this.ncInfo.insert(a1);
-    this.ncInfo.insert(p1);
-    this.ncInfo.insert(p2);
-    this.ncInfo.insert(p3);
-    this.ncInfo.insert(p4);
-    this.ncInfo.insert(a2);
-    this.ncInfo.insert(a3);
-    this.ncInfo.insert(a4);
-    this.ctx.insert_nc(this.ncInfo);
 
     // InfoSuccess with green square
     this.ncSuccess = new PlowNodeClass(this.ctx);
     this.ncSuccess.insert(r1);
     this.ncSuccess.insert(r2success);
-    this.ncSuccess.insert(a1);
-    this.ncSuccess.insert(p1);
-    this.ncSuccess.insert(p2);
-    this.ncSuccess.insert(p3);
-    this.ncSuccess.insert(p4);
-    this.ncSuccess.insert(a2);
-    this.ncSuccess.insert(a3);
-    this.ncSuccess.insert(a4);
+
+    [a1, p1, p2, p3, p4, a2, a3, a4].forEach(function (a) {
+      this.ncAlarmA.insert(a);
+      this.ncAlarmB.insert(a);
+      this.ncAlarm.insert(a);
+      this.ncInfo.insert(a);
+      this.ncSuccess.insert(a);
+    });
+
+    this.ctx.insert_nc(this.ncAlarmA);
+    this.ctx.insert_nc(this.ncAlarmB);
+    this.ctx.insert_nc(this.ncAlarm);
+    this.ctx.insert_nc(this.ncInfo);
     this.ctx.insert_nc(this.ncSuccess);
   }
 
@@ -598,7 +556,7 @@ class Ev {
             next.set_select(true);
             next.set_invert(true);
             if (!this.ctx.is_visible(next)) {
-              this.ctx.scroll(next.y_low, 0.10);
+              this.ctx.scroll(next.ll_y, 0.10);
             }
           }
         }
@@ -615,7 +573,7 @@ class Ev {
             o.draw(this.ctx.gdraw.gctx, null, null, 0);
             next.draw(this.ctx.gdraw.gctx, null, null, 0);
             if (!this.ctx.is_visible(next)) {
-              this.ctx.scroll(next.y_low, 0.90);
+              this.ctx.scroll(next.ll_y, 0.90);
             }
           }
         }
@@ -644,7 +602,6 @@ class Ev {
   // Query 'list' = alarm/event/block. Alarm is default.
   get_type() {
     let query = window.location.search.substring(1);
-    let type;
 
     if (query === "") {
       return EvType.AlarmList;
@@ -653,14 +610,12 @@ class Ev {
     let vars = query.split('&');
     let typestr = vars[0].substring(5);
     if (typestr === "event") {
-      type = EvType.EventList;
+      return EvType.EventList;
     } else if (typestr === "block") {
-      type = EvType.BlockList;
+      return EvType.BlockList;
     } else {
-      type = EvType.AlarmList;
+      return EvType.AlarmList;
     }
-
-    return type;
   }
 }
 
@@ -684,19 +639,12 @@ class EvItemAlarm {
       case Event.Reblock:
       case Event.CancelBlock:
       case Event.Unblock:
-        switch (this.e.eventPrio) {
-          case EventPrio.A:
-            nodeclass = ev.ncAlarmA;
-            break;
-          case EventPrio.B:
-            nodeclass = ev.ncAlarmB;
-            break;
-          case EventPrio.C:
-            nodeclass = ev.ncAlarm;
-            break;
-          case EventPrio.D:
-            nodeclass = ev.ncAlarm;
-            break;
+        if (this.e.eventPrio === EventPrio.A) {
+          nodeclass = ev.ncAlarmA;
+        } else if (this.e.eventPrio === EventPrio.B) {
+          nodeclass = ev.ncAlarmB;
+        } else {
+          nodeclass = ev.ncAlarm;
         }
         break;
       case Event.Info:
@@ -722,20 +670,7 @@ class EvItemAlarm {
       case Event.Reblock:
       case Event.CancelBlock:
       case Event.Unblock:
-        switch (this.e.eventPrio) {
-          case EventPrio.A:
-            this.node.set_annotation(0, "A");
-            break;
-          case EventPrio.B:
-            this.node.set_annotation(0, "B");
-            break;
-          case EventPrio.C:
-            this.node.set_annotation(0, "C");
-            break;
-          case EventPrio.D:
-            this.node.set_annotation(0, "D");
-            break;
-        }
+        this.node.set_annotation(0, String.fromCharCode(132 - this.e.eventPrio));
         break;
     }
     switch (this.e.eventType) {

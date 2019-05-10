@@ -276,7 +276,7 @@ class Graph {
   }
 
   gdh_init_cb() {
-    if (this.priv == null) {
+    if (this.priv === null) {
       this.gdh.login("", "", this.login_cb, this);
     }
 
@@ -366,14 +366,13 @@ class Graph {
     let dyn;
     let o;
 
-    if (e.object_type !== ObjectType.NoObject && e.object !== null) {
+    if (e.object) {
       ctx_popped = this.ctxPop(e.object.ctx);
     }
 
     switch (e.event) {
       case Event.MB1Click:
-        if (e.object_type === ObjectType.NoObject ||
-            !(e.object instanceof GrowMenu)) {
+        if (!(e.object instanceof GrowMenu)) {
           // Close any open menu, if not click in menu
           let event = new GlowEventMenu();
           event.event = Event.MenuDelete;
@@ -383,8 +382,7 @@ class Graph {
           let list = this.ctx.get_object_list();
           for (let i = 0; i < list.size(); i++) {
             o = list.get(i);
-            if ((o instanceof GrowNode || o instanceof GrowGroup) &&
-                (e.object_type === ObjectType.NoObject || o !== e.object)) {
+            if ((o instanceof GrowNode || o instanceof GrowGroup) && o !== e.object) {
               dyn = o.getUserData();
               if (dyn !== null) {
                 dyn.action(o, event);
@@ -419,24 +417,20 @@ class Graph {
         break;
       case Event.MenuActivated:
       case Event.MenuCreate:
-      case Event.MenuDelete: {
-        let old_size;
-        let sts;
-
+      case Event.MenuDelete:
         let list = this.ctx.get_object_list();
-
         for (let i = 0; i < list.size(); i++) {
           o = list.get(i);
           if (o instanceof GrowNode || o instanceof GrowGroup) {
             dyn = o.getUserData();
             if (dyn !== null) {
-              sts = dyn.action(o, e);
+              let sts = dyn.action(o, e);
               if (sts === GLOW__TERMINATED) {
                 return;
               }
 
               // Check if anything is deleted
-              old_size = list.size();
+              let old_size = list.size();
               list = this.ctx.get_object_list();
               if (old_size !== list.size()) {
                 break;
@@ -445,7 +439,6 @@ class Graph {
           }
         }
         break;
-      }
       default:
         break;
     }
@@ -653,7 +646,7 @@ class Graph {
       }
 
       pname.database = Database.Ccm;
-      pname.tname = new String(pname.name);
+      pname.tname = String(pname.name);
       return pname;
     }
 
@@ -665,7 +658,7 @@ class Graph {
       }
     }
 
-    pname.tname = new String(str);
+    pname.tname = String(str);
 
     if ((idx = str.indexOf('[')) === -1) {
       if ((eidx = str.lastIndexOf('#')) !== -1 && str.charAt(eidx - 1) !== '#') {
@@ -732,7 +725,7 @@ class Graph {
       ctx_popped = this.ctxPop(object.ctx);
     }
 
-    if (object.userdata == null) {
+    if (object.userdata === null) {
       if (ctx_popped) {
         this.ctxPush();
       }
@@ -748,7 +741,7 @@ class Graph {
           (dyn.dyn_type1 & DynType1.HostObject) !== 0) {
         let nodeclass_dyn = object.getClassUserData();
         dyn.setTotal(null);
-        if (nodeclass_dyn != null) {
+        if (nodeclass_dyn !== null) {
           let old_dyn = dyn;
           dyn = new Dyn(this);
           dyn.merge(old_dyn);
@@ -810,7 +803,7 @@ class Graph {
   }
 
   openConfirmDialog(dyn, text, object) {
-    if (appl != null) {
+    if (appl !== null) {
       appl.openConfirmDialog(dyn, text, object);
     }
   }
@@ -831,14 +824,14 @@ class Graph {
   }
 
   command(cmd) {
-    if (this.appl != null) {
+    if (this.appl !== null) {
       return this.appl.command(cmd);
     }
     return 0;
   }
 
   script(script) {
-    if (this.appl != null) {
+    if (this.appl !== null) {
       return this.appl.script(script);
     }
     return 0;
@@ -853,7 +846,7 @@ class Graph {
     let idx;
 
     while ((idx = str.indexOf("$object")) !== -1) {
-      if (appl != null) {
+      if (appl !== null) {
         let oname = this.ctx.getOwner();
         str = str.substring(0, idx) + oname + str.substring(idx + 7);
       }

@@ -9,10 +9,6 @@ class GlowNodeGroup extends GlowNodeClass {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.ctx.debug) {
-        console.log("GlowNodeClass : " + lines[i]);
-      }
-
       switch (key) {
         case GlowSave.NodeGroup:
           break;
@@ -26,6 +22,7 @@ class GlowNodeGroup extends GlowNodeClass {
           break;
       }
     }
+
     return i;
   }
 }

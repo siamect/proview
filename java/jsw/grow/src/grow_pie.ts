@@ -13,14 +13,9 @@ class GrowPie extends GrowArc {
 
   open(lines, row) {
     let i;
-
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowPie : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.GrowPie:
@@ -125,18 +120,16 @@ class GrowPie extends GrowArc {
           break;
       }
     }
+
     return i;
   }
 
-  tdraw(t, highlight, hot, node, colornode) {
+  draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
     if (this.ctx.nodraw !== 0) {
       return;
     }
 
-    let drawtype;
-    let idx;
     let chot = 0;
-
     if (this.ctx.hot_indication === HotIndication.No) {
       hot = 0;
     } else if (this.ctx.hot_indication === HotIndication.DarkColor) {
@@ -151,6 +144,7 @@ class GrowPie extends GrowArc {
       colornode = null;
     }
 
+    let idx;
     if (node !== null && node.line_width !== 0) {
       idx =
           Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
@@ -163,34 +157,21 @@ class GrowPie extends GrowArc {
     idx += hot;
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
-    let x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y, rot;
 
-    if (t === null) {
-      x1 = Math.floor(this.trf.x(this.ll.x, this.ll.y) *
+    let x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
           this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      y1 = Math.floor(this.trf.y(this.ll.x, this.ll.y) *
+    let y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
           this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-      x2 = Math.floor(this.trf.x(this.ur.x, this.ur.y) *
+    let x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
           this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      y2 = Math.floor(this.trf.y(this.ur.x, this.ur.y) *
+    let y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
           this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-      rot = Math.floor(this.trf.rot());
-    } else {
-      x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-      x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-      rot = Math.floor(this.trf.rot(t));
-    }
+    let rot = Math.floor(this.trf.rot(t));
 
-    ll_x = Math.min(x1, x2);
-    ur_x = Math.max(x1, x2);
-    ll_y = Math.min(y1, y2);
-    ur_y = Math.max(y1, y2);
+    let ll_x = Math.min(x1, x2);
+    let ur_x = Math.max(x1, x2);
+    let ll_y = Math.min(y1, y2);
+    let ur_y = Math.max(y1, y2);
 
     let display_shadow = ((node !== null && node.shadow !== 0) ||
         this.shadow !== 0) && this.disable_shadow === 0;
@@ -234,11 +215,7 @@ class GrowPie extends GrowArc {
       }
 
       if (grad === Gradient.No || fillcolor === DrawType.ColorRed) {
-        if (chot === 0) {
-          drawtype = fillcolor;
-        } else {
-          drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
-        }
+        let drawtype = (chot === 0) ? fillcolor : GlowColor.shift_drawtype(fillcolor, chot, null);
         this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, ia1 - rot,
             ia2, drawtype);
       } else if (!display_shadow || this.shadow_width === 0) {
@@ -301,7 +278,7 @@ class GrowPie extends GrowArc {
     }
 
     if (this.border !== 0) {
-      drawtype =
+      let drawtype =
           GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
               highlight, colornode, 0, 0);
 

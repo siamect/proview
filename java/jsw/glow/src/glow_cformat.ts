@@ -125,8 +125,9 @@ class GlowCFormat {
           pad_character = ph.pad_char ? ph.pad_char === '0' ? '0' : ph.pad_char.charAt(1) : ' ';
           pad_length = ph.width - (sign + arg).length;
           let pad_rpt = '';
-          for (let i = 0; i < pad_length; i++)
+          for (let i = 0; i < pad_length; i++) {
             pad_rpt += pad_character;
+          }
           pad = ph.width ? (pad_length > 0 ? pad_rpt : '') : '';
           output += ph.align ? sign + arg + pad : (pad_character === '0' ? sign + pad + arg : pad + sign + arg);
         }
@@ -145,21 +146,23 @@ class GlowCFormat {
       } else if ((match = CFormatC.placeholder.exec(_fmt)) !== null) {
         if (match[2]) {
           arg_names |= 1;
-          let field_list = [], replacement_field = match[2], field_match = [];
-          if ((field_match = CFormatC.key.exec(replacement_field)) !== null) {
-            field_list.push(field_match[1]);
-            while ((replacement_field = replacement_field.substring(field_match[0].length)) !== '') {
-              if ((field_match = CFormatC.key_access.exec(replacement_field)) !== null) {
-                field_list.push(field_match[1]);
-              } else if ((field_match = CFormatC.index_access.exec(replacement_field)) !== null) {
-                field_list.push(field_match[1]);
-              } else {
-                throw new SyntaxError('[sprintf] failed to parse named argument key');
-              }
-            }
-          } else {
+          let replacement_field = match[2];
+          let field_match = CFormatC.key.exec(replacement_field);
+          if (field_match === null) {
             throw new SyntaxError('[sprintf] failed to parse named argument key');
           }
+
+          let field_list = [field_match[1]];
+          while ((replacement_field = replacement_field.substring(field_match[0].length)) !== '') {
+            if ((field_match = CFormatC.key_access.exec(replacement_field)) !== null) {
+              field_list.push(field_match[1]);
+            } else if ((field_match = CFormatC.index_access.exec(replacement_field)) !== null) {
+              field_list.push(field_match[1]);
+            } else {
+              throw new SyntaxError('[sprintf] failed to parse named argument key');
+            }
+          }
+
           match[2] = field_list;
         } else {
           arg_names |= 2;

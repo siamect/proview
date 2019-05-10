@@ -268,10 +268,6 @@ class FlowArray {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0]);
 
-      if (this.ctx.debug) {
-        console.log("array : " + lines[i]);
-      }
-
       switch (key) {
         case Save.Array:
           break;
@@ -347,26 +343,27 @@ class FlowArray {
           break;
       }
     }
+
     return i;
   }
 
   draw(g, p, node, highlight) {
-    for (let i = 0; i < this.a.length; i++) {
-      this.a[i].draw(g, p, node, highlight);
-    }
+    this.a.forEach(e => e.draw(g, p, node, highlight));
   }
 
   search_by_name(name) {
     let uname = name.toUpperCase();
-    for (let i = 0; i < this.a.length; i++) {
-      if (this.a[i] instanceof FlowNode) {
-        console.log("Search", this.a[i].n_name, name);
-        if (this.a[i].n_name.toUpperCase() === uname) {
-          return this.a[i];
+    return this.a.find(function (e) {
+      if (e instanceof FlowNode) {
+        if (e.n_name.toUpperCase() === uname) {
+          return true;
         }
       }
-    }
-    return null;
+    });
+  }
+
+  forEach(callback) {
+    this.a.forEach(callback);
   }
 }
 
@@ -390,11 +387,6 @@ class FlowNodeClass {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0]);
-
-      if (this.ctx.debug) {
-        console.log("nodeclass : " + lines[i]);
-      }
-
       switch (key) {
         case Save.NodeClass_nc_name:
           this.nc_name = tokens[1];
@@ -414,6 +406,7 @@ class FlowNodeClass {
           break;
       }
     }
+
     return i;
   }
 
@@ -443,10 +436,6 @@ class FlowConClass {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0]);
-
-      if (this.ctx.debug) {
-        console.log("conclass : " + lines[i]);
-      }
 
       switch (key) {
         case Save.ConClass:
@@ -485,6 +474,7 @@ class FlowConClass {
           break;
       }
     }
+
     return i;
   }
 }
@@ -515,6 +505,7 @@ class FlowPoint {
           break;
       }
     }
+
     return i;
   }
 }
@@ -542,11 +533,8 @@ class FlowLine {
       g.lineWidth = 1;
     }
 
-    switch (this.draw_type) {
-      case DrawType.LineDashed:
-      case DrawType.LineDashedRed:
-        g.setLineDash([8, 8]);
-        break;
+    if (this.draw_type == DrawType.LineDashed || this.draw_type == DrawType.LineDashedRed) {
+      g.setLineDash([8, 8]);
     }
 
     switch (this.draw_type) {
@@ -570,11 +558,8 @@ class FlowLine {
     g.lineTo(x2, y2);
     g.stroke();
 
-    switch (this.draw_type) {
-      case DrawType.LineDashed:
-      case DrawType.LineDashedRed:
-        g.setLineDash([]);
-        break;
+    if (this.draw_type == DrawType.LineDashed || this.draw_type == DrawType.LineDashedRed) {
+      g.setLineDash([]);
     }
   }
 
@@ -583,10 +568,6 @@ class FlowLine {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0]);
-
-      if (this.ctx.debug) {
-        console.log("line : " + lines[i]);
-      }
 
       switch (key) {
         case Save.Line:
@@ -610,6 +591,7 @@ class FlowLine {
           break;
       }
     }
+
     return i;
   }
 }
@@ -632,10 +614,6 @@ class FlowRect {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0]);
-
-      if (this.ctx.debug) {
-        console.log("rect : " + lines[i]);
-      }
 
       switch (key) {
         case Save.Rect:
@@ -665,6 +643,7 @@ class FlowRect {
           break;
       }
     }
+
     return i;
   }
 
@@ -727,16 +706,9 @@ class FlowArc {
       a1 = (this.angle1 - 90) / 180 * Math.PI;
     }
     let a2 = a1 + this.angle2 / 180 * Math.PI;
-    g.lineWidth =
-        this.ctx.zoom_factor / this.ctx.base_zoom_factor * this.line_width;
-    if (g.lineWidth < 1) {
-      g.lineWidth = 1;
-    }
+    g.lineWidth = Math.max(this.ctx.zoom_factor / this.ctx.base_zoom_factor * this.line_width, 1);
 
-    g.strokeStyle = "black";
-    if (highlight) {
-      g.strokeStyle = "red";
-    }
+    g.strokeStyle = highlight ? "red" : "black";
 
     g.beginPath();
     g.arc(x, y, r, a1, a2, false);
@@ -748,10 +720,6 @@ class FlowArc {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0]);
-
-      if (this.ctx.debug) {
-        console.log("arc : " + lines[i]);
-      }
 
       switch (key) {
         case Save.Arc:
@@ -781,6 +749,7 @@ class FlowArc {
           break;
       }
     }
+
     return i;
   }
 }
@@ -797,7 +766,6 @@ class FlowText {
   }
 
   draw(g, p0, node, highlight) {
-    let tsize = 0;
     let idx = this.ctx.zoom_factor / this.ctx.base_zoom_factor *
         (this.text_size + 4) - 4;
     if (idx < 0) {
@@ -807,41 +775,11 @@ class FlowText {
     let x = (this.p.x + p0.x) * this.ctx.zoom_factor;
     let y = (this.p.y + p0.y) * this.ctx.zoom_factor;
 
-    switch (idx) {
-      case 0:
-        tsize = 8;
-        break;
-      case 1:
-        tsize = 10;
-        break;
-      case 2:
-        tsize = 12;
-        break;
-      case 3:
-        tsize = 14;
-        break;
-      case 4:
-        tsize = 14;
-        break;
-      case 5:
-        tsize = 8;
-        break;
-      case 6:
-        tsize = 18;
-        break;
-      case 7:
-        tsize = 18;
-        break;
-      default:
-        tsize = 3 * idx;
-    }
+    let tsize = (idx < 0 || idx > 7) ? (idx * 3) : ([8, 10, 12, 14, 14, 18, 18, 18][idx]);
     g.font = tsize + "px Arial";
     g.lineWidth = 0.5;
 
-    g.fillStyle = "black";
-    if (highlight) {
-      g.fillStyle = "red";
-    }
+    g.fillStyle = highlight ? "red" : "black";
     g.fillText(this.text, x, y);
   }
 
@@ -850,10 +788,6 @@ class FlowText {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0]);
-
-      if (this.ctx.debug) {
-        console.log("text : " + lines[i]);
-      }
 
       switch (key) {
         case Save.Text:
@@ -877,6 +811,7 @@ class FlowText {
           break;
       }
     }
+
     return i;
   }
 }
@@ -931,10 +866,6 @@ class FlowArrow {
     for (let i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0]);
-
-      if (this.ctx.debug) {
-        console.log("arrow : " + lines[i]);
-      }
 
       switch (key) {
         case Save.Arrow:
@@ -1031,10 +962,6 @@ class FlowTriangle extends FlowRect {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0]);
 
-      if (this.ctx.debug) {
-        console.log("triangle : " + lines[i]);
-      }
-
       switch (key) {
         case Save.Triangle_rect_part:
           i = this.open(lines, i + 1);
@@ -1046,6 +973,7 @@ class FlowTriangle extends FlowRect {
           break;
       }
     }
+
     return i;
   }
 }
@@ -1070,10 +998,6 @@ class FlowConPoint {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0]);
-
-      if (this.ctx.debug) {
-        console.log("conpoint : " + lines[i]);
-      }
 
       switch (key) {
         case Save.ConPoint:
@@ -1100,6 +1024,7 @@ class FlowConPoint {
           break;
       }
     }
+
     return i;
   }
 }
@@ -1108,7 +1033,7 @@ class FlowAnnot {
   ctx: FlowCtx;
   p = new FlowPoint();
   draw_type: DrawType = 0;
-  text_size = 0
+  text_size = 0;
   display_level: DisplayLevel = 0;
   annot_type = 0;
   number = 0;
@@ -1128,53 +1053,18 @@ class FlowAnnot {
       return;
     }
 
-    let tsize = 0;
     let idx = this.ctx.zoom_factor / this.ctx.base_zoom_factor *
         (this.text_size + 4) - 4;
     if (idx < 0) {
       return;
     }
 
-    switch (idx) {
-      case 0:
-        tsize = 8;
-        break;
-      case 1:
-        tsize = 10;
-        break;
-      case 2:
-        tsize = 12;
-        break;
-      case 3:
-        tsize = 14;
-        break;
-      case 4:
-        tsize = 14;
-        break;
-      case 5:
-        tsize = 18;
-        break;
-      case 6:
-        tsize = 18;
-        break;
-      case 7:
-        tsize = 18;
-        break;
-      default:
-        tsize = idx * 3;
+    let tsize = (idx < 0 || idx > 7) ? (idx * 3) : ([8, 10, 12, 14, 14, 18, 18, 18][idx]);
+    g.font = tsize + "px Arial";
+    if (this.draw_type == DrawType.TextHelveticaBold) {
+      g.font = "bold " + g.font;
     }
-
-    switch (this.draw_type) {
-      case DrawType.TextHelveticaBold:
-        g.font = "bold " + tsize + "px Arial";
-        break;
-      default:
-        g.font = tsize + "px Arial";
-    }
-    g.fillStyle = "black";
-    if (highlight) {
-      g.fillStyle = "red";
-    }
+    g.fillStyle = highlight ? "red" : "black";
     g.lineWidth = 0.5;
 
     let x = (this.p.x + p0.x) * this.ctx.zoom_factor;
@@ -1192,10 +1082,6 @@ class FlowAnnot {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0]);
-
-      if (this.ctx.debug) {
-        console.log("annot : " + lines[i]);
-      }
 
       switch (key) {
         case Save.Annot:
@@ -1225,11 +1111,12 @@ class FlowAnnot {
           break;
       }
     }
+
     return i;
   }
 }
 
-class FlowCon {
+class FlowCon extends Rect {
   ctx: FlowCtx;
   point_x: FlowArray;
   point_y: FlowArray;
@@ -1237,10 +1124,6 @@ class FlowCon {
   arc_a: FlowArray;
   arrow_a: FlowArray;
   ref_a: FlowArray;
-  x_right = 0.0;
-  x_left = 0.0;
-  y_high = 0.0;
-  y_low = 0.0;
   cc = null;
   p_num = 0;
   l_num = 0;
@@ -1256,6 +1139,7 @@ class FlowCon {
   redraw = true;
 
   constructor(ctx: FlowCtx) {
+    super();
     this.ctx = ctx;
     this.point_x = new FlowArray(ctx);
     this.point_y = new FlowArray(ctx);
@@ -1287,10 +1171,6 @@ class FlowCon {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0]);
 
-      if (this.ctx.debug) {
-        console.log("con : " + lines[i]);
-      }
-
       switch (key) {
         case Save.Con:
           break;
@@ -1314,16 +1194,16 @@ class FlowCon {
           }
           break;
         case Save.Con_x_right:
-          this.x_right = parseFloat(tokens[1]);
+          this.ur_x = parseFloat(tokens[1]);
           break;
         case Save.Con_x_left:
-          this.x_left = parseFloat(tokens[1]);
+          this.ll_x = parseFloat(tokens[1]);
           break;
         case Save.Con_y_high:
-          this.y_high = parseFloat(tokens[1]);
+          this.ur_y = parseFloat(tokens[1]);
           break;
         case Save.Con_y_low:
-          this.y_low = parseFloat(tokens[1]);
+          this.ll_y = parseFloat(tokens[1]);
           break;
         case Save.Con_dest_node:
           i++;
@@ -1402,6 +1282,7 @@ class FlowCon {
           break;
       }
     }
+
     return i;
   }
 
@@ -1412,12 +1293,8 @@ class FlowCon {
   }
 }
 
-class FlowNode {
+class FlowNode extends Rect {
   ctx: FlowCtx;
-  x_right = 0.0;
-  x_left = 0.0;
-  y_high = 0.0;
-  y_low = 0.0;
   nc: FlowNodeClass = null;
   pos = new FlowPoint();
   n_name = "";
@@ -1435,6 +1312,7 @@ class FlowNode {
   redraw = true;
 
   constructor(ctx: FlowCtx) {
+    super();
     this.ctx = ctx;
   }
 
@@ -1444,14 +1322,11 @@ class FlowNode {
     }
 
     if (this.nc.group !== NodeGroup.Document) {
-      let x = this.x_left * this.ctx.zoom_factor;
-      let y = this.y_low * this.ctx.zoom_factor - 1;
-      let width = (this.x_right - this.x_left) * this.ctx.zoom_factor;
-      let height = (this.y_high - this.y_low) * this.ctx.zoom_factor + 2;
-      g.fillStyle = "white";
-      if (this.select) {
-        g.fillStyle = "lightblue";
-      }
+      let x = this.ll_x * this.ctx.zoom_factor;
+      let y = this.ll_y * this.ctx.zoom_factor - 1;
+      let width = this.width() * this.ctx.zoom_factor;
+      let height = this.height() * this.ctx.zoom_factor + 2;
+      g.fillStyle = (this.select) ? "lightblue" : "white";
       g.fillRect(x, y, width, height);
     }
 
@@ -1464,10 +1339,6 @@ class FlowNode {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0]);
-
-      if (this.ctx.debug) {
-        console.log("node : " + lines[i]);
-      }
 
       switch (key) {
         case Save.Node_nc:
@@ -1493,16 +1364,16 @@ class FlowNode {
           i += 32;
           break;
         case Save.Node_x_right:
-          this.x_right = parseFloat(tokens[1]);
+          this.ur_x = parseFloat(tokens[1]);
           break;
         case Save.Node_x_left:
-          this.x_left = parseFloat(tokens[1]);
+          this.ll_x = parseFloat(tokens[1]);
           break;
         case Save.Node_y_high:
-          this.y_high = parseFloat(tokens[1]);
+          this.ur_y = parseFloat(tokens[1]);
           break;
         case Save.Node_y_low:
-          this.y_low = parseFloat(tokens[1]);
+          this.ll_y = parseFloat(tokens[1]);
           break;
         case Save.Node_annotsize:
           for (let j = 0; j < 10; j++) {
@@ -1524,7 +1395,7 @@ class FlowNode {
 
               while (true) {
                 i++;
-                if (lines[i] == null) {
+                if (lines[i] === null) {
                   sb.push('\n');
                   continue;
                 }
@@ -1586,6 +1457,7 @@ class FlowNode {
           break;
       }
     }
+
     return i;
   }
 
@@ -1642,10 +1514,9 @@ class FlowNode {
   }
 
   event_handler(x, y) {
-    let zx = x / this.ctx.zoom_factor + this.ctx.x_left;
-    let zy = y / this.ctx.zoom_factor + this.ctx.y_low;
-    if (zx >= this.x_left && zx <= this.x_right && zy >= this.y_low &&
-        zy <= this.y_high) {
+    let zx = x / this.ctx.zoom_factor + this.ctx.ll_x;
+    let zy = y / this.ctx.zoom_factor + this.ctx.ll_y;
+    if (this.hit(new Point(zx, zy))) {
       console.log("Hit in node");
       if (this.select) {
         this.select = false;
@@ -1673,7 +1544,7 @@ class FlowNode {
   }
 }
 
-class FlowCtx {
+class FlowCtx extends Rect {
   a: FlowArray;
   a_nc: FlowArray;
   a_cc: FlowArray;
@@ -1685,14 +1556,11 @@ class FlowCtx {
   base_zoom_factor = 20.0;
   offset_x = 0;
   offset_y = 0;
-  x_right = 0.0;
-  x_left = 0.0;
-  y_high = 0.0;
-  y_low = 0.0;
   name = "Claes context";
   select_object: FlowNode = null;
 
   constructor() {
+    super();
     this.a = new FlowArray(this);
     this.a_nc = new FlowArray(this);
     this.a_cc = new FlowArray(this);
@@ -1708,10 +1576,6 @@ class FlowCtx {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0]);
-
-      if (this.debug) {
-        console.log("ctx : " + lines[i]);
-      }
 
       switch (key) {
         case Save.Ctx:
@@ -1734,16 +1598,16 @@ class FlowCtx {
         case Save.Ctx_nav_offset_y:
           break;
         case Save.Ctx_x_right:
-          this.x_right = parseFloat(tokens[1]);
+          this.ur_x = parseFloat(tokens[1]);
           break;
         case Save.Ctx_x_left:
-          this.x_left = parseFloat(tokens[1]);
+          this.ll_x = parseFloat(tokens[1]);
           break;
         case Save.Ctx_y_high:
-          this.y_high = parseFloat(tokens[1]);
+          this.ur_y = parseFloat(tokens[1]);
           break;
         case Save.Ctx_y_low:
-          this.y_low = parseFloat(tokens[1]);
+          this.ll_y = parseFloat(tokens[1]);
           break;
         case Save.Ctx_nav_rect_ll_x:
         case Save.Ctx_nav_rect_ll_y:
@@ -1780,20 +1644,16 @@ class FlowCtx {
           console.log("Syntax error in FlowCtx", key);
       }
     }
+
     return i;
   }
 
   connect() {
-    console.log("ctx connect", this.a.size());
-    for (let i = 0; i < this.a.size(); i++) {
-      this.a.get(i).connect();
-    }
+    this.a.forEach(e => e.connect());
   }
 
   scan() {
-    for (let i = 0; i < this.a.size(); i++) {
-      this.a.get(i).scan();
-    }
+    this.a.forEach(e => e.scan());
   }
 
   event_handler(x, y) {
@@ -1812,20 +1672,15 @@ class FlowCtx {
   }
 
   set_select(select) {
-    for (let i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i) instanceof FlowNode) {
-        this.a.get(i).set_select(select);
+    this.a.forEach(function (e) {
+      if (e instanceof FlowNode) {
+        e.set_select(select);
       }
-    }
+    });
   }
 
   search_object(name) {
-    console.log("Searching for ", name);
-    let node = this.a.search_by_name(name);
-    if (node !== null) {
-      console.log("Found", name);
-    }
-    return node;
+    return this.a.search_by_name(name);
   }
 
   center_object(o) {
@@ -1900,21 +1755,19 @@ class FlowFrame {
         .addEventListener("click", function (event) {
         });
 
-    this.ctx.gdraw.canvas.width =
-        (this.ctx.x_right - this.ctx.x_left) * this.ctx.zoom_factor;
-    this.ctx.gdraw.canvas.height =
-        (this.ctx.y_high - this.ctx.y_low) * this.ctx.zoom_factor;
-    this.ctx.gdraw.gctx.translate(-this.ctx.x_left *
-        this.ctx.zoom_factor, -this.ctx.y_low * this.ctx.zoom_factor);
-    this.ctx.offset_x -= this.ctx.x_left * this.ctx.zoom_factor;
-    this.ctx.offset_y -= this.ctx.y_low * this.ctx.zoom_factor;
+    this.ctx.gdraw.canvas.width = this.ctx.width() * this.ctx.zoom_factor;
+    this.ctx.gdraw.canvas.height = this.ctx.height() * this.ctx.zoom_factor;
+    this.ctx.gdraw.gctx.translate(-this.ctx.ll_x *
+        this.ctx.zoom_factor, -this.ctx.ll_y * this.ctx.zoom_factor);
+    this.ctx.offset_x -= this.ctx.ll_x * this.ctx.zoom_factor;
+    this.ctx.offset_y -= this.ctx.ll_y * this.ctx.zoom_factor;
 
     this.ctx.draw();
     this.ctx.gdh = new Gdh(this.flow_open, this.flow_close);
 
     if (this.vars_object !== null) {
       let o = this.ctx.search_object(this.vars_object);
-      if (o !== null) {
+      if (o) {
         this.ctx.center_object(o);
         this.ctx.set_select(false);
         o.set_select(true);

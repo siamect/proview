@@ -19,10 +19,6 @@ class GlowRect {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.ctx.debug) {
-        console.log("GlowCon : " + lines[i]);
-      }
-
       switch (key) {
         case GlowSave.Rect:
           break;

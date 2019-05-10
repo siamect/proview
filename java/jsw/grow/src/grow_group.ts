@@ -5,14 +5,9 @@ class GrowGroup extends GrowNode {
 
   open(lines, row) {
     let i;
-
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowGroup : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.GrowGroup:
@@ -36,12 +31,9 @@ class GrowGroup extends GrowNode {
   }
 
   get_object_group(object) {
-    let sts;
-    let group;
-
     for (let i = 0; i < this.nc.a.size(); i++) {
       if (this.nc.a.get(i) instanceof GrowGroup) {
-        group = this.nc.a.get(i).get_object_group(object);
+        let group = this.nc.a.get(i).get_object_group(object);
         if (group !== null) {
           return group;
         }

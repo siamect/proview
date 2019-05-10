@@ -1,37 +1,24 @@
-class GrowLine {
-  ctx: GrowCtx;
+class GrowLine extends GlowLine {
   trf: GlowTransform;
-  p1: GlowPoint;
-  p2: GlowPoint;
   n_name = null;
-  x_right = 0;
-  x_left = 0;
-  y_high = 0;
-  y_low = 0;
+  ll_x: Number;
+  ll_y: Number;
+  ur_x: Number;
+  ur_y: Number;
   line_type = 0;
   original_border_drawtype;
   dynamicsize = 0;
 
-  draw_type = 0;
-  line_width = 0;
-
   constructor(ctx) {
-    this.ctx = ctx;
+    super(ctx);
     this.trf = new GlowTransform();
-    this.p1 = new GlowPoint();
-    this.p2 = new GlowPoint();
   }
 
   open(lines, row) {
     let i;
-
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowLine : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.GrowLine:
@@ -42,16 +29,16 @@ class GrowLine {
           }
           break;
         case GlowSave.GrowLine_x_right:
-          this.x_right = parseFloat(tokens[1]);
+          this.ur_x = parseFloat(tokens[1]);
           break;
         case GlowSave.GrowLine_x_left:
-          this.x_left = parseFloat(tokens[1]);
+          this.ll_x = parseFloat(tokens[1]);
           break;
         case GlowSave.GrowLine_y_high:
-          this.y_high = parseFloat(tokens[1]);
+          this.ur_y = parseFloat(tokens[1]);
           break;
         case GlowSave.GrowLine_y_low:
-          this.y_low = parseFloat(tokens[1]);
+          this.ll_y = parseFloat(tokens[1]);
           break;
         case GlowSave.GrowLine_line_type:
           this.line_type = parseInt(tokens[1], 10);
@@ -66,7 +53,7 @@ class GrowLine {
           i += this.dynamicsize;
           break;
         case GlowSave.GrowLine_line_part:
-          i = this.glowline_open(lines, i + 1);
+          i = super.open(lines, i + 1);
           break;
         case GlowSave.GrowLine_trf:
           i = this.trf.open(lines, i + 1);
@@ -78,42 +65,7 @@ class GrowLine {
           break;
       }
     }
-    return i;
-  }
 
-  glowline_open(lines, row) {
-    let i;
-
-    for (i = row; i < lines.length; i++) {
-      let tokens = lines[i].split(' ');
-      let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowLine : " + lines[i]);
-      }
-
-      switch (key) {
-        case GlowSave.Line:
-          break;
-        case GlowSave.Line_draw_type:
-          this.draw_type = parseInt(tokens[1], 10);
-          break;
-        case GlowSave.Line_line_width:
-          this.line_width = parseInt(tokens[1], 10);
-          break;
-        case GlowSave.Line_p1:
-          i = this.p1.open(lines, i + 1);
-          break;
-        case GlowSave.Line_p2:
-          i = this.p2.open(lines, i + 1);
-          break;
-        case GlowSave.End:
-          return i;
-        default:
-          console.log("Syntax error in GlowLine");
-          break;
-      }
-    }
     return i;
   }
 
@@ -121,11 +73,7 @@ class GrowLine {
     return 0;
   }
 
-  draw() {
-    this.tdraw(null, 0, 0, null, null);
-  }
-
-  tdraw(t, highlight, hot, node, colornode) {
+  draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
     if (this.ctx.nodraw !== 0) {
       return;
     }
@@ -134,7 +82,6 @@ class GrowLine {
       hot = 0;
     }
 
-    let drawtype;
     let idx;
     if (node !== null && node.line_width !== 0) {
       idx =
@@ -148,31 +95,21 @@ class GrowLine {
     idx += hot;
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
-    let x1, y1, x2, y2;
 
-    if (t === null) {
-      x1 = Math.floor(this.trf.x(this.p1.x, this.p1.y) *
+    let x1 = Math.floor(this.trf.x(t, this.p1.x, this.p1.y) *
           this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      y1 = Math.floor(this.trf.y(this.p1.x, this.p1.y) *
+    let y1 = Math.floor(this.trf.y(t, this.p1.x, this.p1.y) *
           this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-      x2 = Math.floor(this.trf.x(this.p2.x, this.p2.y) *
+    let x2 = Math.floor(this.trf.x(t, this.p2.x, this.p2.y) *
           this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      y2 = Math.floor(this.trf.y(this.p2.x, this.p2.y) *
+    let y2 = Math.floor(this.trf.y(t, this.p2.x, this.p2.y) *
           this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-    } else {
-      x1 = Math.floor(this.trf.x(t, this.p1.x, this.p1.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      y1 = Math.floor(this.trf.y(t, this.p1.x, this.p1.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-      x2 = Math.floor(this.trf.x(t, this.p2.x, this.p2.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      y2 = Math.floor(this.trf.y(t, this.p2.x, this.p2.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-    }
+
     if (x1 === x2 && y1 === y2) {
       return;
     }
-    drawtype =
+
+    let drawtype =
         GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
             highlight, colornode, 0, 0);
 

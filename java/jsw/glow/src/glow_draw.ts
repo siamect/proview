@@ -3,10 +3,7 @@ class GlowDraw {
   canvas: HTMLCanvasElement;
   gctx: CanvasRenderingContext2D;
   offset_top: number;
-  clip_x1 = new Array(10);
-  clip_y1 = new Array(10);
-  clip_x2 = new Array(10);
-  clip_y2 = new Array(10);
+  clip = new Array<Rect>(10);
   clipCount = 0;
   CUSTOMCOLORS_STACK_SIZE = 10;
   customcolors = new Array(this.CUSTOMCOLORS_STACK_SIZE);
@@ -83,7 +80,7 @@ class GlowDraw {
     }
   }
 
-  arc(x, y, width, height, a1, a2, gc_type, idx, highlight) {
+  arc(x, y, width, height, a1, a2, gc_type, idx, highlight = 0) {
     this.gctx.strokeStyle = this.getColor(gc_type);
     this.gctx.lineWidth = idx + 1;
     this.gctx.beginPath();
@@ -114,9 +111,6 @@ class GlowDraw {
   }
 
   polyline(points, point_cnt, gc_type, idx, highlight) {
-    if (this.nodraw) {
-      return;
-    }
     if (points.length === 0) {
       return;
     }
@@ -133,10 +127,6 @@ class GlowDraw {
   }
 
   fill_polyline(points, point_cnt, gc_type, highlight) {
-    if (this.nodraw) {
-      return;
-    }
-
     this.gctx.fillStyle = this.getColor(gc_type);
 
     this.gctx.beginPath();
@@ -166,32 +156,20 @@ class GlowDraw {
         "," + Math.floor(255 * rgb.b) + ")";
   }
 
-  getTextExtent(text, idx, type, gc_type) {
-    let dim = new Rect();
-    let sizes = [8, 10, 12, 14, 14, 16, 18, 18];
-    let tsize = (idx <= 7) ? sizes[idx] : 3 * idx;
+  getTextExtent(text, idx, type, gc_type): Point {
+    let tsize = (idx < 0 || idx > 7) ? 3 * idx : [8, 10, 12, 14, 14, 16, 18, 18][idx];
 
     this.gctx.font = tsize + "px Arial";
-    dim.width = this.gctx.measureText(text).width;
-    dim.height = tsize;
-    return dim;
+    return new Point(this.gctx.measureText(text).width, tsize);
   }
 
   gradient_fill_rect(x, y, width, height, gc_type, f1, f2, gradient) {
-    if (this.nodraw) {
-      return;
-    }
-
     this.setGradient(gradient, f1, f2, x, y, width, height);
 
     this.gctx.fillRect(x, y, width, height);
   }
 
   gradient_fill_rectrounded(x, y, width, height, amount, gc_type, f1, f2, gradient) {
-    if (this.nodraw) {
-      return;
-    }
-
     this.setGradient(gradient, f1, f2, x, y, width, height);
 
     this.gctx.beginPath();
@@ -205,10 +183,6 @@ class GlowDraw {
   }
 
   gradient_fill_arc(x, y, width, height, a1, a2, gc_type, f1, f2, gradient) {
-    if (this.nodraw) {
-      return;
-    }
-
     this.setGradient(gradient, f1, f2, x, y, width, height);
 
     this.gctx.beginPath();
@@ -226,42 +200,24 @@ class GlowDraw {
   }
 
   gradient_fill_polyline(points, point_cnt, gc_type, f1, f2, gradient) {
-    if (this.nodraw) {
-      return;
-    }
     if (points.length === 0) {
       return;
     }
 
     let color = this.getColor(gc_type);
 
-    let x_low = Number.MAX_VALUE;
-    let x_high = -Number.MAX_VALUE;
-    let y_low = Number.MAX_VALUE;
-    let y_high = -Number.MAX_VALUE;
-
     // this.gctx.fillStyle = this.getColor( gc_type);
 
     this.gctx.beginPath();
     this.gctx.moveTo(points[0].x, points[0].y);
-    for (let i = 1; i < point_cnt; i++) {
-      this.gctx.lineTo(points[i].x, points[i].y);
-      if (points[i].x > x_high) {
-        x_high = points[i].x;
-      }
-      if (points[i].x < x_low) {
-        x_low = points[i].x;
-      }
-      if (points[i].y > y_high) {
-        y_high = points[i].y;
-      }
-      if (points[i].y < y_low) {
-        y_low = points[i].y;
-      }
-    }
+    let points2 = points.slice(0, point_cnt);
+    let ll_x = points2.reduce((a, b) => Math.min(a, b.x), Number.MAX_VALUE);
+    let ll_y = points2.reduce((a, b) => Math.min(a, b.y), Number.MAX_VALUE);
+    let ur_x = points2.reduce((a, b) => Math.max(a, b.x), -Number.MAX_VALUE);
+    let ur_y = points2.reduce((a, b) => Math.max(a, b.y), -Number.MAX_VALUE);
+    points2.slice(1).forEach(e => this.gctx.lineTo(e.x, e.y));
 
-    this.setGradient(gradient, f1, f2, x_low, y_low, x_high - x_low, y_high -
-        y_low);
+    this.setGradient(gradient, f1, f2, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y);
 
     this.gctx.fill();
   }
@@ -275,189 +231,93 @@ class GlowDraw {
   }
 
   setGradient(gradient, f1, f2, x, y, w, h) {
-    let gx0 = 0;
-    let gy0 = 0;
-    let gx1 = 0;
-    let gy1 = 0;
-    let gr = 0;
+    let gr = Math.sqrt(w * w + h * h);
+    if (gradient === Gradient.Globe || gradient === Gradient.RadialCenter) {
+      gr /= 4;
+    }
 
+    let grad;
     switch (gradient) {
       case Gradient.HorizontalUp:
-        gx0 = x;
-        gy0 = y;
-        gx1 = x;
-        gy1 = y + h;
-        break;
       case Gradient.HorizontalDown:
-        gx0 = x;
-        gy0 = y + h;
-        gx1 = x;
-        gy1 = y;
-        break;
       case Gradient.HorizontalTube1:
-        gx0 = x;
-        gy0 = y + h;
-        gx1 = x;
-        gy1 = y;
-        break;
       case Gradient.HorizontalTube2:
-        gx0 = x;
-        gy0 = y;
-        gx1 = x;
-        gy1 = y + h;
-        break;
-      case Gradient.VerticalLeft:
-        gx0 = x;
-        gy0 = y;
-        gx1 = x + w;
-        gy1 = y;
+        grad = this.gctx.createLinearGradient(x, y, x, y + h);
         break;
       case Gradient.VerticalRight:
-        gx0 = x + w;
-        gy0 = y;
-        gx1 = x;
-        gy1 = y;
-        break;
+      case Gradient.VerticalLeft:
       case Gradient.VerticalTube1:
-        gx0 = x + w;
-        gy0 = y;
-        gx1 = x;
-        gy1 = y;
-        break;
       case Gradient.VerticalTube2:
-        gx0 = x + w;
-        gy0 = y;
-        gx1 = x;
-        gy1 = y;
+        grad = this.gctx.createLinearGradient(x, y, x + w, y);
         break;
       case Gradient.DiagonalUpperLeft:
-        gx0 = x;
-        gy0 = y;
-        gx1 = x + w;
-        gy1 = y + h;
+        grad = this.gctx.createLinearGradient(x, y, x + w, y + h);
         break;
       case Gradient.DiagonalLowerLeft:
-        gx0 = x;
-        gy0 = y + h;
-        gx1 = x + w;
-        gy1 = y;
+        grad = this.gctx.createLinearGradient(x, y + h, x + w, y);
         break;
       case Gradient.DiagonalUpperRight:
-        gx0 = x + w;
-        gy0 = y;
-        gx1 = x;
-        gy1 = y + h;
+        grad = this.gctx.createLinearGradient(x + w, y, x, y + h);
         break;
       case Gradient.DiagonalLowerRight:
-        gx0 = x + w;
-        gy0 = y + h;
-        gx1 = x;
-        gy1 = y;
+        grad = this.gctx.createLinearGradient(x + w, y + h, x, y);
         break;
       case Gradient.DiagonalUpTube:
-        gx0 = x + w / 5;
-        gy0 = y + h / 5;
-        gx1 = x + w * 4 / 5;
-        gy1 = y + h * 4 / 5;
+        grad = this.gctx.createLinearGradient(x + w / 5, y + h / 5, x + w * 4 / 5, y + h * 4 / 5);
         break;
       case Gradient.DiagonalDownTube:
-        gx0 = x + w * 4 / 5;
-        gy0 = y + h / 5;
-        gx1 = x + w / 5;
-        gy1 = y + h * 4 / 5;
+        grad = this.gctx.createLinearGradient(x + w * 4 / 5, y + h / 5, x + w / 5, y + h * 4 / 5);
         break;
       case Gradient.Globe:
-        gx0 = x + 0.3 * w;
-        gy0 = y + 0.3 * h;
-        gx1 = x + w;
-        gy1 = y + h;
-        gr = Math.sqrt(w * w / 4 + h * h / 4);
+        grad = this.gctx.createRadialGradient(x + 0.3 * w, y + 0.3 * h, 1, x + w, y + h, gr);
         break;
       case Gradient.RadialCenter:
-        gx0 = x + 0.5 * w;
-        gy0 = y + 0.5 * h;
-        gx1 = x + w;
-        gy1 = y + h;
-        gr = Math.sqrt(w * w / 4 + h * h / 4);
+        grad = this.gctx.createRadialGradient(x + 0.5 * w, y + 0.5 * h, 1, x + w, y + h, gr);
         break;
       case Gradient.RadialUpperLeft:
-        gx0 = x;
-        gy0 = y;
-        gx1 = x + w;
-        gy1 = y + h;
-        gr = Math.sqrt(w * w + h * h);
+        grad = this.gctx.createRadialGradient(x, y, 1, x + w, y + h, gr);
         break;
       case Gradient.RadialLowerLeft:
-        gx0 = x;
-        gy0 = y + h;
-        gx1 = x + w;
-        gy1 = y;
-        gr = Math.sqrt(w * w + h * h);
+        grad = this.gctx.createRadialGradient(x, y + h, 1, x + w, y, gr);
         break;
       case Gradient.RadialUpperRight:
-        gx0 = x + w;
-        gy0 = y;
-        gx1 = x;
-        gy1 = y + h;
-        gr = Math.sqrt(w * w + h * h);
+        grad = this.gctx.createRadialGradient(x + w, y, 1, x, y + h, gr);
         break;
       case Gradient.RadialLowerRight:
-        gx0 = x + w;
-        gy0 = y + h;
-        gx1 = x;
-        gy1 = y;
-        gr = Math.sqrt(w * w + h * h);
+        grad = this.gctx.createRadialGradient(x + w, y + h, 1, x, y, gr);
         break;
       default:
-        break;
+        return;
     }
 
     switch (gradient) {
       case Gradient.HorizontalUp:
-      case Gradient.HorizontalDown:
       case Gradient.VerticalLeft:
-      case Gradient.VerticalRight:
       case Gradient.DiagonalUpperLeft:
       case Gradient.DiagonalLowerLeft:
-      case Gradient.DiagonalUpperRight:
-      case Gradient.DiagonalLowerRight:
-        let linear = this.gctx.createLinearGradient(gx0, gy0, gx1, gy1);
-        linear.addColorStop(0, this.getColor(f2));
-        linear.addColorStop(1, this.getColor(f1));
-        this.gctx.fillStyle = linear;
+        grad.addColorStop(0, this.getColor(f2));
+        grad.addColorStop(1, this.getColor(f1));
         break;
       case Gradient.HorizontalTube1:
       case Gradient.VerticalTube1:
       case Gradient.DiagonalUpTube:
       case Gradient.DiagonalDownTube:
-        let linear = this.gctx.createLinearGradient(gx0, gy0, gx1, gy1);
-        linear.addColorStop(0, this.getColor(f1));
-        linear.addColorStop(0.5, this.getColor(f2));
-        linear.addColorStop(1, this.getColor(f1));
-        this.gctx.fillStyle = linear;
+        grad.addColorStop(0, this.getColor(f1));
+        grad.addColorStop(0.5, this.getColor(f2));
+        grad.addColorStop(1, this.getColor(f1));
         break;
       case Gradient.HorizontalTube2:
       case Gradient.VerticalTube2:
-        let linear = this.gctx.createLinearGradient(gx0, gy0, gx1, gy1);
-        linear.addColorStop(0, this.getColor(f1));
-        linear.addColorStop(0.3, this.getColor(f2));
-        linear.addColorStop(0.95, this.getColor(f1));
-        this.gctx.fillStyle = linear;
-        break;
-      case Gradient.Globe:
-      case Gradient.RadialCenter:
-      case Gradient.RadialUpperLeft:
-      case Gradient.RadialLowerLeft:
-      case Gradient.RadialUpperRight:
-      case Gradient.RadialLowerRight:
-        let radial = this.gctx.createRadialGradient(gx0, gy0, 1, gx0, gy0, gr);
-        radial.addColorStop(0, this.getColor(f2));
-        radial.addColorStop(1, this.getColor(f1));
-        this.gctx.fillStyle = radial;
+        grad.addColorStop(0, this.getColor(f1));
+        grad.addColorStop(0.3, this.getColor(f2));
+        grad.addColorStop(0.95, this.getColor(f1));
         break;
       default:
+        grad.addColorStop(0, this.getColor(f1));
+        grad.addColorStop(1, this.getColor(f2));
         break;
     }
+    this.gctx.fillStyle = grad;
   }
 
   set_clip_rectangle(x1, y1, x2, y2) {
@@ -465,24 +325,13 @@ class GlowDraw {
       if (this.clipCount >= 10) {
         return 0;
       }
-      if (x1 < this.clip_x1[this.clipCount - 1]) {
-        x1 = this.clip_x1[this.clipCount - 1];
-      }
-      if (y1 < this.clip_y1[this.clipCount - 1]) {
-        y1 = this.clip_y1[this.clipCount - 1];
-      }
-      if (x2 > this.clip_x2[this.clipCount - 1]) {
-        x2 = this.clip_x2[this.clipCount - 1];
-      }
-      if (y2 > this.clip_y2[this.clipCount - 1]) {
-        y2 = this.clip_y2[this.clipCount - 1];
-      }
+      x1 = Math.min(x1, this.clip[this.clipCount - 1].ll_x);
+      y1 = Math.min(y1, this.clip[this.clipCount - 1].ll_y);
+      x2 = Math.max(x2, this.clip[this.clipCount - 1].ur_x);
+      y2 = Math.max(y2, this.clip[this.clipCount - 1].ur_y);
     }
 
-    this.clip_x1[this.clipCount] = x1;
-    this.clip_y1[this.clipCount] = y1;
-    this.clip_x2[this.clipCount] = x2;
-    this.clip_y2[this.clipCount] = y2;
+    this.clip[this.clipCount] = new Rect(x1, y1, x2, y2);
     this.clipCount++;
 
     this.gctx.restore();
@@ -504,10 +353,10 @@ class GlowDraw {
       this.gctx.restore();
       this.gctx.save();
       this.gctx.beginPath();
-      this.gctx.rect(this.clip_x1[this.clipCount - 1],
-          this.clip_y1[this.clipCount - 1],
-          (this.clip_x2[this.clipCount - 1] - this.clip_x1[this.clipCount - 1]),
-          (this.clip_y2[this.clipCount - 1] - this.clip_y1[this.clipCount - 1]));
+      this.gctx.rect(this.clip[this.clipCount - 1].ll_x,
+          this.clip[this.clipCount - 1].ll_y,
+          this.clip[this.clipCount - 1].width(),
+          this.clip[this.clipCount - 1].height());
       this.gctx.clip();
     } else {
       this.gctx.restore();
@@ -516,16 +365,7 @@ class GlowDraw {
   }
 
   get_clip_rectangle() {
-    if (this.clipCount === 0) {
-      return null;
-    }
-
-    let rect = new Rect();
-    rect.x = this.clip_x1[this.clipCount - 1];
-    rect.y = this.clip_y1[this.clipCount - 1];
-    rect.width = this.clip_x2[this.clipCount - 1];
-    rect.height = this.clip_y2[this.clipCount - 1];
-    return rect;
+    return this.clip[this.clipCount - 1] || null;
   }
 
   set_customcolors(cc) {

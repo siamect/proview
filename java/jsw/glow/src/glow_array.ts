@@ -11,13 +11,11 @@ class GlowArray {
   }
 
   remove(elem) {
-    for (let i = 0; i < this.a.length; i++) {
-      if (this.a[i] === elem) {
-        this.a.splice(i, 1);
-        return 1;
-      }
+    let idx = this.a.indexOf(elem);
+    if (idx != -1) {
+      this.a.splice(idx, 1);
     }
-    return 0;
+    return (idx != -1);
   }
 
   size() {
@@ -34,10 +32,6 @@ class GlowArray {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
       let o;
-
-      if (this.ctx.debug) {
-        console.log("GlowArray : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.Array:
@@ -233,10 +227,23 @@ class GlowArray {
           break;
       }
     }
+
     return i;
   }
 
   clear() {
     this.a.length = 0;
+  }
+
+  forEach(callback) {
+    this.a.forEach(callback);
+  }
+
+  slice(start, end) {
+    return this.a.slice(start, end);
+  }
+
+  find(callback) {
+    return this.a.find(callback);
   }
 }

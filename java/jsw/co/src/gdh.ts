@@ -71,7 +71,7 @@ class ObjectInfo {
   name;
   description;
   classname;
-  full_name;
+  fullname;
   param1;
 }
 
@@ -813,11 +813,8 @@ class Gdh {
       this.ws.send(helper.buf);
 
       this.next_id++;
-
-      return sub.refid;
-    } else {
-      return sub.refid;
     }
+    return sub.refid;
   }
 
   refObjectInfoReply(id, sts) {

@@ -40,34 +40,21 @@ class Xtt {
     document.addEventListener("keydown", function (event) {
       if (event.keyCode === 40) {
         this.ctx.event_handler(Event.Key_Down);
-        event.preventDefault();
       } else if (event.keyCode === 39) {
-        if (event.shiftKey) {
-          this.ctx.event_handler(Event.Key_ShiftRight);
-        } else {
-          this.ctx.event_handler(Event.Key_Right);
-        }
-        event.preventDefault();
+        this.ctx.event_handler(event.shiftKey ? Event.Key_ShiftRight : Event.Key_Right);
       } else if (event.keyCode === 37) {
         this.ctx.event_handler(Event.Key_Left);
-        event.preventDefault();
       } else if (event.keyCode === 38) {
         this.ctx.event_handler(Event.Key_Up);
-        event.preventDefault();
-      } else if (event.keyCode === 82) {
-        if (event.ctrlKey) {
-          this.ctx.event_handler(Event.Key_CtrlR);
-        }
-        event.preventDefault();
-      } else if (event.keyCode === 76) {
-        if (event.ctrlKey) {
+      } else if (event.keyCode === 82 && event.ctrlKey) {
+        this.ctx.event_handler(Event.Key_CtrlR);
+      } else if (event.keyCode === 76 && event.ctrlKey) {
           this.ctx.event_handler(Event.Key_CtrlL);
-        }
-        event.preventDefault();
-      } else if (event.keyCode === 71) {
-        if (event.ctrlKey) {
-          this.ctx.event_handler(Event.Key_CtrlG);
-        }
+      } else if (event.keyCode === 71 && event.ctrlKey) {
+        this.ctx.event_handler(Event.Key_CtrlG);
+      }
+
+      if ([37, 38, 39, 40, 71, 76, 82].indexOf(event.keyCode) != -1) {
         event.preventDefault();
       }
     });
@@ -179,11 +166,7 @@ class Xtt {
 
   login_cb(id, data, sts, result) {
     console.log("Login:", sts, result);
-    if (sts & 1) {
-      this.priv = result;
-    } else {
-      this.priv = 0;
-    }
+    this.priv = (sts & 1) ? result : 0;
   }
 
   open_children_cb(id, data, sts, result) {
@@ -212,7 +195,7 @@ class Xtt {
             child.set_select(true);
             child.set_invert(true);
             if (!this.ctx.is_visible(child)) {
-              this.ctx.scroll(child.y_low, 0.50);
+              this.ctx.scroll(child.ll_y, 0.50);
             }
             window.focus(); // Doesn't work
           } else {
@@ -262,7 +245,7 @@ class Xtt {
             child.set_select(true);
             child.set_invert(true);
             if (!this.ctx.is_visible(child)) {
-              this.ctx.scroll(child.y_low, 0.50);
+              this.ctx.scroll(child.ll_y, 0.50);
             }
             window.focus(); // Doesn't work
           } else {
@@ -279,7 +262,7 @@ class Xtt {
     this.ctx.draw();
   }
 
-  open_plc_cb(id, data, sts, result) {
+  open_plc_cb(id, data, sts, result: ObjectInfo) {
     if ((sts & 1) === 0) {
       data.document.write("Error status " + sts);
     } else {
@@ -298,7 +281,7 @@ class Xtt {
     }
   }
 
-  open_objectgraph_cb(id, data, sts, result) {
+  open_objectgraph_cb(id, data, sts, result: ObjectInfo) {
     if ((sts & 1) === 0) {
       data.document.write("Error status " + sts);
     } else {
@@ -308,7 +291,7 @@ class Xtt {
     }
   }
 
-  open_graph_cb(id, data, sts, result) {
+  open_graph_cb(id, data, sts, result: ObjectInfo) {
     if ((sts & 1) === 0) {
       data.document.write("Error status " + sts);
     } else {
@@ -334,7 +317,7 @@ class Xtt {
     node.userdata.open_crossreferences(this, crrdata);
   }
 
-  open_helpclass_cb(id, data, sts, result) {
+  open_helpclass_cb(id, data, sts, result: ObjectInfo) {
     if ((sts & 1) === 0) {
       data.document.write("Error status " + sts);
     } else {
@@ -391,7 +374,7 @@ class Xtt {
             next.set_select(true);
             next.set_invert(true);
             if (!this.ctx.is_visible(next)) {
-              this.ctx.scroll(next.y_low, 0.10);
+              this.ctx.scroll(next.ll_y, 0.10);
             }
           }
         }
@@ -408,7 +391,7 @@ class Xtt {
             o.draw(this.ctx.gdraw.gctx, null, null, 0);
             next.draw(this.ctx.gdraw.gctx, null, null, 0);
             if (!this.ctx.is_visible(next)) {
-              this.ctx.scroll(next.y_low, 0.90);
+              this.ctx.scroll(next.ll_y, 0.90);
             }
           }
         }
@@ -497,12 +480,11 @@ class Xtt {
 
   collapse() {
     this.ctx.set_nodraw();
-    for (let i = 0; i < this.ctx.a.size(); i++) {
-      let node = this.ctx.a.get(i);
-      if (node.level === 0) {
-        node.userdata.close(this);
+    this.ctx.a.forEach(function (e) {
+      if (e.level === 0) {
+        e.userdata.close(this);
       }
-    }
+    });
     this.ctx.reset_nodraw();
     this.ctx.draw();
   }
@@ -539,7 +521,7 @@ class Xtt {
           node.set_select(true);
           node.set_invert(true);
           if (!this.ctx.is_visible(node)) {
-            this.ctx.scroll(node.y_low, 0.50);
+            this.ctx.scroll(node.ll_y, 0.50);
           }
           window.focus(); // Doesn't work
         } else {
@@ -557,12 +539,13 @@ class Xtt {
 
   trace_scan(id, sts) {
     this.scan_update = false;
-    for (let i = 0; i < this.ctx.a.size(); i++) {
-      let item = this.ctx.a.get(i).userdata;
+    let self = this;
+    this.ctx.a.forEach(function (e) {
+      let item = e.userdata;
       if (item instanceof XttItemAttr) {
-        item.scan(this);
+        item.scan(self);
       }
-    }
+    });
     if (this.scan_update) {
       this.ctx.draw();
     }
@@ -604,11 +587,7 @@ class XttItemObject {
     this.node.set_annotation(2, object_info.description);
     this.node.set_annotation_pixmap(0, Bitmaps.map);
     xtt.ctx.insertNode(this.node, destination, destCode);
-    if (object_info.has_children) {
-      this.node.set_annotation_pixmap(0, Bitmaps.map);
-    } else {
-      this.node.set_annotation_pixmap(0, Bitmaps.leaf);
-    }
+    this.node.set_annotation_pixmap(0, object_info.has_children ? Bitmaps.map : Bitmaps.leaf);
   }
 
   open_children(xtt, open_next) {
@@ -955,18 +934,8 @@ class XttItemCrr {
     this.node.set_annotation(0, this.name);
     this.node.set_annotation(1, this.classname);
 
-    switch (this.type) {
-      case 0:
-        this.node.set_annotation_pixmap(0, Bitmaps.crrread);
-        break;
-      case 1:
-        this.node.set_annotation_pixmap(0, Bitmaps.crrwrite);
-        break;
-      case 2:
-        this.node.set_annotation_pixmap(0, Bitmaps.crrwrite);
-        // this.node.set_annotation_pixmap( 1, Bitmaps.crrread);
-        break;
-    }
+    let tmp = [Bitmaps.crrread, Bitmaps.crrwrite, Bitmaps.crrwrite];
+    this.node.set_annotation_pixmap(0, tmp[this.type]);
     xtt.ctx.insertNode(this.node, destination, destCode);
   }
 
