@@ -37,6 +37,31 @@ class LocalSub {
   }
 }
 
+const strToTypeId = {
+  "boolean": Type.Boolean,
+  "float32": Type.Float32,
+  "float64": Type.Float64,
+  "char": Type.Char,
+  "int8": Type.Int8,
+  "int16": Type.Int16,
+  "int32": Type.Int32,
+  "int64": Type.Int64,
+  "uint8": Type.UInt8,
+  "uint16": Type.UInt16,
+  "uint32": Type.UInt32,
+  "uint64": Type.UInt64,
+  "objid": Type.Objid,
+  "time": Type.Time,
+  "deltatime": Type.DeltaTime,
+  "attrref": Type.AttrRef,
+  "status": Type.Status,
+  "netstatus": Type.NetStatus,
+  "enum": Type.Enum,
+  "mask": Type.Mask,
+  "bit": Type.Bit,
+  "string": Type.String
+};
+
 class GraphLocalDb {
   subscriptions = [];
   subscriptionCount = 1;
@@ -58,37 +83,31 @@ class GraphLocalDb {
     if (id === -1) {
       id = this.subscriptionCount;
       sub = new LocalSub(owner, name, typeId, id);
-      sub.ref();
       this.subscriptions[id] = sub;
       this.subscriptionCount++;
-      return id;
     } else {
       sub = this.subscriptions[id];
-      sub.ref();
-      return id;
     }
+    sub.ref();
+    return id;
   }
 
   unrefObjectInfo(id) {
     let sub = this.subscriptions[id];
-    if (sub === null) {
-      return;
-    }
-    sub.unref();
-    if (sub.getRefCount() <= 0) {
-      this.subscriptions[id] = null;
+    if (sub) {
+      sub.unref();
+      if (sub.getRefCount() <= 0) {
+        this.subscriptions[id] = null;
+      }
     }
   }
 
   getObjectRefInfo(id) {
     let sub = this.subscriptions[id];
-    if (sub === null) {
-      return 0;
+    if (sub) {
+      return (sub.value || 0);
     }
-    if (typeof sub.value === 'undefined') {
-      return 0;
-    }
-    return sub.value;
+    return 0;
   }
 
   getObjectInfo(owner, attributeName) {
@@ -97,10 +116,7 @@ class GraphLocalDb {
     if (id === -1) {
       return new CdhrNumber(0, 2);
     }
-    if (typeof this.subscriptions[id].value === 'undefined') {
-      return new CdhrNumber(0, 1);
-    }
-    return new CdhrNumber(this.subscriptions[id].value, 1);
+    return new CdhrNumber(this.subscriptions[id].value || 0, 1);
   }
 
   setObjectInfo(owner, attributeName, value) {
@@ -125,14 +141,10 @@ class GraphLocalDb {
   }
 
   nameToId(owner, name) {
-    for (let i = 0; i < this.subscriptions.length; i++) {
-      let sub = this.subscriptions[i];
-      if (sub !== null && owner === sub.owner &&
-          name.toUpperCase() === sub.name.toUpperCase()) {
-        return i;
-      }
-    }
-    return -1;
+    return this.subscriptions.findIndex(function (sub) {
+      return (sub !== null && owner === sub.owner &&
+          name.toUpperCase() === sub.name.toUpperCase());
+    });
   }
 
   getName(attrName) {
@@ -166,52 +178,12 @@ class GraphLocalDb {
     } else {
       suffix = attrName.substring(idx1, idx2).toUpperCase();
     }
-    if (suffix === "BOOLEAN") {
-      return Type.Boolean;
+
+    suffix = suffix.toLowerCase();
+    if (strToTypeId.hasOwnProperty(suffix)) {
+      return strToTypeId[suffix];
     }
-    if (suffix === "FLOAT32") {
-      return Type.Float32;
-    }
-    if (suffix === "INT32") {
-      return Type.Int32;
-    }
-    if (suffix === "UINT32") {
-      return Type.UInt32;
-    }
-    if (suffix === "INT16") {
-      return Type.Int16;
-    }
-    if (suffix === "UINT16") {
-      return Type.UInt16;
-    }
-    if (suffix === "INT8") {
-      return Type.Int8;
-    }
-    if (suffix === "UINT8") {
-      return Type.UInt8;
-    }
-    if (suffix === "CHAR") {
-      return Type.Char;
-    }
-    if (suffix === "FLOAT64") {
-      return Type.Float64;
-    }
-    if (suffix === "OBJID") {
-      return Type.Objid;
-    }
-    if (suffix === "STRING") {
-      return Type.String;
-    }
-    if (suffix === "TIME") {
-      return Type.Time;
-    }
-    if (suffix === "DELTATIME") {
-      return Type.DeltaTime;
-    }
-    if (suffix === "ATTRREF") {
-      return Type.AttrRef;
-    }
-    if (suffix.substring(0, 6) === "STRING") {
+    if (suffix.startsWith("string")) {
       return Type.String;
     }
     return 0;
@@ -286,11 +258,7 @@ class Graph {
 
   login_cb(id, data, sts, result) {
     console.log("Login:", sts, result);
-    if (sts & 1) {
-      this.priv = result;
-    } else {
-      this.priv = 0;
-    }
+    this.priv = (sts & 1) ? result : 0;
   }
 
   trace_connected(id, sts) {
@@ -329,34 +297,20 @@ class Graph {
   }
 
   growUserdataOpen(lines, row, ctx, type) {
-    let dyn;
     let ret = new UserdataCbReturn();
 
-    switch (type) {
-      case UserdataCbType.Ctx:
-        if (lines[row] === "1") {
-          dyn = new Dyn(this);
-          dyn.userdata = this;
-          ret.userdata = dyn;
-          ret.row = dyn.open(lines, row);
-        } else {
-          ret.row = row - 1;
-          ret.userdata = null;
-        }
-        break;
-      case UserdataCbType.Node:
-        dyn = new Dyn(this);
+    if (type === UserdataCbType.Ctx || type === UserdataCbType.Node || type === UserdataCbType.NodeClass) {
+      if (type === UserdataCbType.Ctx && lines[row] !== "1") {
+        ret.row = row - 1;
+        ret.userdata = null;
+        return ret;
+      }
+      let dyn = new Dyn(this);
+      if (type !== UserdataCbType.NodeClass) {
         dyn.userdata = this;
-        ret.userdata = dyn;
-        ret.row = dyn.open(lines, row);
-        break;
-      case UserdataCbType.NodeClass:
-        dyn = new Dyn(this);
-        ret.row = dyn.open(lines, row);
-        ret.userdata = dyn;
-        break;
-      default:
-        break;
+      }
+      ret.userdata = dyn;
+      ret.row = dyn.open(lines, row);
     }
     return ret;
   }
@@ -389,9 +343,7 @@ class Graph {
               }
               let old_size = list.size();
               list = this.ctx.get_object_list();
-              if (old_size !== list.size())
-              // Something is deleted
-              {
+              if (old_size !== list.size()) { // Something is deleted
                 break;
               }
             }
@@ -495,70 +447,12 @@ class Graph {
     if ((idx = str.indexOf('#')) !== -1) {
       str = str.substring(0, idx);
     }
-    if (str.toLowerCase() === "boolean") {
-      return Type.Boolean;
+
+    str = str.toLowerCase();
+    if (strToTypeId.hasOwnProperty(str)) {
+      return strToTypeId[str];
     }
-    if (str.toLowerCase() === "float32") {
-      return Type.Float32;
-    }
-    if (str.toLowerCase() === "float64") {
-      return Type.Float64;
-    }
-    if (str.toLowerCase() === "char") {
-      return Type.Char;
-    }
-    if (str.toLowerCase() === "int8") {
-      return Type.Int8;
-    }
-    if (str.toLowerCase() === "int16") {
-      return Type.Int16;
-    }
-    if (str.toLowerCase() === "int32") {
-      return Type.Int32;
-    }
-    if (str.toLowerCase() === "int64") {
-      return Type.Int64;
-    }
-    if (str.toLowerCase() === "uint8") {
-      return Type.UInt8;
-    }
-    if (str.toLowerCase() === "uint16") {
-      return Type.UInt16;
-    }
-    if (str.toLowerCase() === "uint32") {
-      return Type.UInt32;
-    }
-    if (str.toLowerCase() === "uint64") {
-      return Type.UInt64;
-    }
-    if (str.toLowerCase() === "objid") {
-      return Type.Objid;
-    }
-    if (str.toLowerCase() === "time") {
-      return Type.Time;
-    }
-    if (str.toLowerCase() === "deltatime") {
-      return Type.DeltaTime;
-    }
-    if (str.toLowerCase() === "attrref") {
-      return Type.AttrRef;
-    }
-    if (str.toLowerCase() === "status") {
-      return Type.Status;
-    }
-    if (str.toLowerCase() === "netstatus") {
-      return Type.NetStatus;
-    }
-    if (str.toLowerCase() === "enum") {
-      return Type.Enum;
-    }
-    if (str.toLowerCase() === "mask") {
-      return Type.Mask;
-    }
-    if (str.toLowerCase() === "bit") {
-      return Type.Bit;
-    }
-    if (str.length >= 6 && str.substring(0, 6).toLowerCase() === "string") {
+    if (str.startsWith("string")) {
       return Type.String;
     }
     return 0;
@@ -566,11 +460,9 @@ class Graph {
 
   stringToIndex(str) {
     let idx1, idx2;
-    let index;
-
     if ((idx1 = str.indexOf('[')) !== -1 && (idx2 = str.indexOf(']')) !== -1 &&
         idx2 > idx1) {
-      index = parseInt(str.substring(idx1 + 1, idx2), 10);
+      let index = parseInt(str.substring(idx1 + 1, idx2), 10);
       if (isNaN(index)) {
         console.log("Element syntax error, " + str);
         return 1;
@@ -797,13 +689,13 @@ class Graph {
 
   openValueInputDialog(dyn, text, elem) {
     let value = prompt(text, "");
-    if (value !== null) {
+    if (value) {
       dyn.valueInputAction(elem, value);
     }
   }
 
   openConfirmDialog(dyn, text, object) {
-    if (appl !== null) {
+    if (appl) {
       appl.openConfirmDialog(dyn, text, object);
     }
   }
@@ -817,21 +709,18 @@ class Graph {
   }
 
   getAnimationScanTime() {
-    if (this.scan_time < this.animation_scan_time) {
-      return this.scan_time;
-    }
-    return this.animation_scan_time;
+    return Math.min(this.scan_time, this.animation_scan_time);
   }
 
   command(cmd) {
-    if (this.appl !== null) {
+    if (this.appl) {
       return this.appl.command(cmd);
     }
     return 0;
   }
 
   script(script) {
-    if (this.appl !== null) {
+    if (this.appl) {
       return this.appl.script(script);
     }
     return 0;
