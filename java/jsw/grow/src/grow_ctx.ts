@@ -13,7 +13,6 @@ class GrowCtxWindow {
 
 class GrowCtx extends Rect {
   appl = null;
-  debug = false;
   antiAliasing = 0;
   name = null;
   version = 0;
@@ -109,10 +108,6 @@ class GrowCtx extends Rect {
 
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.debug) {
-        console.log("ctx : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.Ctx:

@@ -296,7 +296,6 @@ class DataViewHelper {
 }
 
 class Gdh {
-  debug = false;
   pending: Array = [];
   sub: Array<Sub> = [];
   static PORT = 4448;
@@ -321,9 +320,6 @@ class Gdh {
     };
 
     this.ws.onclose = function () {
-      if (this.debug) {
-        console.log("Socket closed");
-      }
       if (close_cb !== null) {
         close_cb();
       }
@@ -331,7 +327,6 @@ class Gdh {
 
     this.ws.onmessage = function (e) {
       if (typeof e.data === "string") {
-        console.log("String message received", e, e.data);
       } else {
         if (e.data instanceof ArrayBuffer) {
           let dv = new DataViewHelper(e.data);
@@ -341,36 +336,24 @@ class Gdh {
 
           switch (type) {
             case Msg.GET_OBJECT_INFO_BOOLEAN:
-              if (this.gdh.debug) {
-                console.log("GetObjectInfoBoolean received");
-              }
               let value = dv.getUint8();
               let func_cb = this.gdh.pending[id].func_cb;
               func_cb(id, sts, value);
               delete this.gdh.pending[id];
               break;
             case Msg.GET_OBJECT_INFO_INT:
-              if (this.gdh.debug) {
-                console.log("GetObjectInfoInt received");
-              }
               let value = dv.getUint32();
               let pending_data = this.gdh.pending[id];
               pending_data.func_cb(id, pending_data.data, sts, value);
               delete this.gdh.pending[id];
               break;
             case Msg.GET_OBJECT_INFO_FLOAT:
-              if (this.gdh.debug) {
-                console.log("GetObjectInfoFloat received");
-              }
               let value = dv.getFloat32();
               let pending_data = this.gdh.pending[id];
               pending_data.func_cb(id, pending_data.data, sts, value);
               delete this.gdh.pending[id];
               break;
             case Msg.GET_OBJECT_INFO_FLOAT_ARRAY:
-              if (this.gdh.debug) {
-                console.log("GetObjectInfoFloatArray received");
-              }
               let asize = dv.getInt32();
               let value = new Array(asize);
               for (let i = 0; i < asize; i++) {
@@ -381,55 +364,28 @@ class Gdh {
               delete this.gdh.pending[id];
               break;
             case Msg.SET_OBJECT_INFO_BOOLEAN:
-              if (this.gdh.debug) {
-                console.log("SetObjectInfoBoolean received", id, sts);
-              }
               break;
             case Msg.SET_OBJECT_INFO_INT:
-              if (this.gdh.debug) {
-                console.log("SetObjectInfoInt received", id, sts);
-              }
               break;
             case Msg.SET_OBJECT_INFO_FLOAT:
-              if (this.gdh.debug) {
-                console.log("SetObjectInfoFloat received", id, sts);
-              }
               break;
             case Msg.SET_OBJECT_INFO_STRING:
-              if (this.gdh.debug) {
-                console.log("SetObjectInfoString received", id, sts);
-              }
               break;
             case Msg.TOGGLE_OBJECT_INFO:
-              if (this.gdh.debug) {
-                console.log("ToggleObjectInfo received", id, sts);
-              }
               break;
             case Msg.REF_OBJECT_INFO:
-              if (this.gdh.debug) {
-                console.log("RefObjectInfo received", id, sts);
-              }
               delete this.gdh.pending[id];
               break;
             case Msg.UNREF_OBJECT_INFO:
-              if (this.gdh.debug) {
-                console.log("UnrefObjectInfo received", id, sts);
-              }
               delete this.gdh.pending[id];
               break;
             case Msg.REF_OBJECT_INFO_LIST:
-              if (this.gdh.debug) {
-                console.log("RefObjectInfoList received", id, sts);
-              }
               let func_cb = this.gdh.pending[id].func_cb;
               func_cb(id, sts);
               delete this.gdh.pending[id];
               break;
             case Msg.GET_OBJECT_REF_INFO_ALL:
               let size = dv.getUint32();
-              if (this.gdh.debug) {
-                console.log("GetObjectRefInfoAll received", id, size);
-              }
               for (let i = 0; i < size; i++) {
                 let eid = dv.getUint32();
                 let esize = dv.getUint32();
@@ -528,10 +484,6 @@ class Gdh {
             case Msg.GET_ALL_XTT_CHILDREN:
               let result = [];
               let size = dv.getUint32();
-              if (this.gdh.debug) {
-                console.log("GetAllXttChildren received", id, size);
-              }
-              console.log("GetAllXttChildren received", sts, id, size);
               for (let i = 0; i < size; i++) {
                 let info = new ObjectInfo();
                 let vid = dv.getUint32();
@@ -551,9 +503,6 @@ class Gdh {
             case Msg.GET_ALL_CLASS_ATTRIBUTES:
               let result = [];
               let size = dv.getUint32();
-              if (this.gdh.debug) {
-                console.log("GetAllClassAttributes received", id, size);
-              }
               for (let i = 0; i < size; i++) {
                 let info = new AttributeInfo();
                 info.type = dv.getUint32();
@@ -571,9 +520,6 @@ class Gdh {
             case Msg.GET_OBJECT:
             case Msg.GET_OBJECT_FROM_AREF:
             case Msg.GET_OBJECT_FROM_NAME:
-              if (this.gdh.debug) {
-                console.log("GetObject received", id, sts);
-              }
               let info = null;
               if (odd(sts)) {
                 info = new ObjectInfo();
@@ -597,9 +543,6 @@ class Gdh {
               let result = [];
               if (odd(sts)) {
                 let size = dv.getUint16();
-                if (this.gdh.debug) {
-                  console.log("CrrSignal received", id, size);
-                }
                 for (let i = 0; i < size; i++) {
                   let info = new CrrInfo();
                   info.type = dv.getUint16();
@@ -617,10 +560,6 @@ class Gdh {
               break;
             case Msg.GET_OPWIND_MENU:
               let result = new OpwindMenuInfo();
-              if (this.gdh.debug) {
-                console.log("GetOpwindMenu received", id);
-              }
-              console.log("GetOpwindMenu received", sts, id);
 
               if (odd(sts)) {
                 result.title = dv.getString();
@@ -651,11 +590,6 @@ class Gdh {
               delete this.gdh.pending[id];
               break;
             case Msg.CHECK_USER:
-              if (this.gdh.debug) {
-                console.log("Check user received", id);
-              }
-              console.log("Check user received", sts, id);
-
               let priv = 0;
               if (odd(sts)) {
                 priv = dv.getUint32();
@@ -676,9 +610,6 @@ class Gdh {
             case Msg.MH_SYNC:
               let result = [];
               let size = dv.getUint32();
-              if (this.gdh.debug) {
-                console.log("MhSync received", id, size);
-              }
               for (let i = 0; i < size; i++) {
                 let e = new MhEvent();
                 e.eventTime = dv.getString();
@@ -762,6 +693,18 @@ class Gdh {
     this.next_id++;
   }
 
+  getObjectInfoIntArray(name, asize, return_cb, data) {
+    this.return_cb = return_cb;
+
+    let helper = new Uint8ArrayHelper(name.length + 10, Msg.GET_OBJECT_INFO_INT_ARRAY);
+    helper.pack32Bit(this.next_id);
+    helper.pack32Bit(asize);
+    helper.packString(name);
+    this.pending[this.next_id] = new PendingData(return_cb, data);
+    this.ws.send(helper.buf);
+    this.next_id++;
+  }
+
   getObjectInfoFloat(name, return_cb, data) {
     this.return_cb = return_cb;
 
@@ -798,18 +741,12 @@ class Gdh {
 
       let helper = new Uint8ArrayHelper(size + 10, Msg.REF_OBJECT_INFO);
       helper.pack32Bit(this.next_id);
-      if (this.debug) {
-        console.log("RefObjectInfo: ", sub.refid);
-      }
       helper.pack32Bit(sub.refid);
       helper.pack32Bit(sub.elements);
       helper.packString(sub.name);
 
       this.pending[this.next_id] =
           new PendingData(this.refObjectInfoReply, null);
-      if (this.debug) {
-        console.log("Sending RefObjectInfo", this.next_id, size);
-      }
       this.ws.send(helper.buf);
 
       this.next_id++;
@@ -818,9 +755,6 @@ class Gdh {
   }
 
   refObjectInfoReply(id, sts) {
-    if (this.debug) {
-      console.log("refObjectInfoReply", id, sts);
-    }
   }
 
   unrefObjectInfo(refid) {
@@ -828,16 +762,10 @@ class Gdh {
 
     let helper = new Uint8ArrayHelper(size + 10, Msg.UNREF_OBJECT_INFO);
     helper.pack32Bit(this.next_id);
-    if (this.debug) {
-      console.log("UnrefObjectInfo: ", refid);
-    }
     helper.pack32Bit(refid);
 
     this.pending[this.next_id] =
         new PendingData(this.unrefObjectInfoReply, null);
-    if (this.debug) {
-      console.log("Sending UnrefObjectInfo", this.next_id, size, refid);
-    }
     this.ws.send(helper.buf);
 
     this.next_id++;
@@ -845,9 +773,6 @@ class Gdh {
   }
 
   unrefObjectInfoReply(id, sts) {
-    if (this.debug) {
-      console.log("unrefObjectInfoReply", id, sts);
-    }
   }
 
   refObjectInfoList(return_cb) {
@@ -864,17 +789,11 @@ class Gdh {
     helper.pack32Bit(this.next_id);
     helper.pack32Bit(len);
     this.sub.slice(1).forEach(function (s) {
-      if (this.debug) {
-        console.log("RefObjectInfoList: ", s.refid);
-      }
       helper.pack32Bit(s.refid);
       helper.pack32Bit(s.elements);
       helper.packString(s.name);
     });
     this.pending[this.next_id] = new PendingData(return_cb, null);
-    if (this.debug) {
-      console.log("Sending RefObjectInfoList", this.next_id, size, this.next_id);
-    }
     this.ws.send(helper.buf);
 
     this.next_id++;
@@ -882,32 +801,20 @@ class Gdh {
   }
 
   refObjectInfoListReply(id, sts) {
-    if (this.debug) {
-      console.log("refObjectInfoListReply", id, sts);
-    }
   }
 
   getRefObjectInfoAll(return_cb) {
     let helper = new Uint8ArrayHelper(6, Msg.GET_OBJECT_REF_INFO_ALL);
     helper.pack32Bit(this.next_id);
     this.pending[this.next_id] = new PendingData(return_cb, null);
-    if (this.debug) {
-      console.log("Sending getRefObjectInfoAll", this.next_id);
-    }
     this.ws.send(helper.buf);
     this.next_id++;
   }
 
   getRefObjectInfoAllReply(id, sts) {
-    if (this.debug) {
-      console.log("getRefObjectInfoAllReply", id, sts);
-    }
   }
 
   getObjectRefInfo(id) {
-    if (this.debug) {
-      console.log("getObjectRefInfo", id, this.sub[id].value);
-    }
     return this.sub[id].value;
   }
 
@@ -917,9 +824,6 @@ class Gdh {
     helper.pack32Bit(value);
     helper.packString(name);
     this.ws.send(helper.buf);
-    if (this.debug) {
-      console.log("Sending setObjectInfoBoolean", this.next_id, name, value);
-    }
     this.next_id++;
 
     return 1;
@@ -932,9 +836,6 @@ class Gdh {
     helper.packString(name);
     // this.pending[this.next_id] = new PendingData( return_cb, null);
     this.ws.send(helper.buf);
-    if (this.debug) {
-      console.log("Sending setObjectInfoInt", this.next_id, name, value);
-    }
     this.next_id++;
 
     return 1;
@@ -954,9 +855,6 @@ class Gdh {
     helper.packString(name);
     // this.pending[this.next_id] = new PendingData( return_cb, null);
     this.ws.send(helper.buf);
-    if (this.debug) {
-      console.log("Sending setObjectInfoFloat", this.next_id, name, value);
-    }
     this.next_id++;
 
     return 1;
@@ -969,12 +867,21 @@ class Gdh {
     helper.packString(name);
     // this.pending[this.next_id] = new PendingData( return_cb, null);
     this.ws.send(helper.buf);
-    if (this.debug) {
-      console.log("Sending setObjectInfoString", this.next_id, name, value);
-    }
     this.next_id++;
 
     return 1;
+  }
+
+  setObjectInfo(name, value, type) {
+    if (type === Type.Boolean) {
+      this.setObjectInfoBoolean(name, value);
+    } else if (type === Type.Float32 || type === Type.Float64) {
+      this.setObjectInfoFloat(name, value);
+    } else if (type === Type.String) {
+      this.setObjectInfoString(name, value);
+    } else {
+      this.setObjectInfoInt(name, value);
+    }
   }
 
   toggleObjectInfo(name) {
@@ -983,9 +890,6 @@ class Gdh {
     helper.packString(name);
     // this.pending[this.next_id] = new PendingData( return_cb, null);
     this.ws.send(helper.buf);
-    if (this.debug) {
-      console.log("Sending toggleObjectInfo", this.next_id, name);
-    }
     this.next_id++;
 
     return 1;
@@ -997,9 +901,6 @@ class Gdh {
     helper.pack32Bit(oid.vid);
     helper.pack32Bit(oid.oix);
     this.pending[this.next_id] = new PendingData(return_cb, data);
-    if (this.debug) {
-      console.log("Sending getAllXttChildren", this.next_id);
-    }
     this.ws.send(helper.buf);
     this.next_id++;
   }
@@ -1011,10 +912,6 @@ class Gdh {
     helper.pack32Bit(oid.vid);
     helper.pack32Bit(oid.oix);
     this.pending[this.next_id] = new PendingData(return_cb, data);
-    if (this.debug) {
-      console.log("Sending getAllClassAttributes", this.next_id, cid, oid.vid,
-          oid.oix);
-    }
     this.ws.send(helper.buf);
     this.next_id++;
   }
@@ -1026,9 +923,6 @@ class Gdh {
     helper.pack32Bit(oid.vid);
     helper.pack32Bit(oid.oix);
     this.pending[this.next_id] = new PendingData(return_cb, data);
-    if (this.debug) {
-      console.log("Sending getObject", this.next_id, oid.vid, oid.oix);
-    }
     this.ws.send(helper.buf);
     this.next_id++;
   }
@@ -1044,9 +938,6 @@ class Gdh {
     helper.pack32Bit(aref.size);
     helper.pack32Bit(aref.flags);
     this.pending[this.next_id] = new PendingData(return_cb, data);
-    if (this.debug) {
-      console.log("Sending getObject", this.next_id, aref.objid.vid, aref.objid.oix);
-    }
     this.ws.send(helper.buf);
     this.next_id++;
   }
@@ -1057,9 +948,6 @@ class Gdh {
     helper.pack16Bit(op);
     helper.packString(name);
     this.pending[this.next_id] = new PendingData(return_cb, data);
-    if (this.debug) {
-      console.log("Sending getObjectFromName", this.next_id, name);
-    }
     this.ws.send(helper.buf);
     this.next_id++;
   }
@@ -1070,9 +958,6 @@ class Gdh {
     helper.pack32Bit(oid.vid);
     helper.pack32Bit(oid.oix);
     this.pending[this.next_id] = new PendingData(return_cb, data);
-    if (this.debug) {
-      console.log("Sending crrObject", this.next_id, oid.vid, oid.oix);
-    }
     this.ws.send(helper.buf);
     this.next_id++;
   }
@@ -1082,9 +967,6 @@ class Gdh {
     helper.pack32Bit(this.next_id);
     helper.packString(name);
     this.pending[this.next_id] = new PendingData(return_cb, data);
-    if (this.debug) {
-      console.log("Sending getOpwindMenu", this.next_id);
-    }
     this.ws.send(helper.buf);
     this.next_id++;
   }
@@ -1095,9 +977,6 @@ class Gdh {
     helper.packString(user);
     helper.packString(passwd);
     this.pending[this.next_id] = new PendingData(return_cb, data);
-    if (this.debug) {
-      console.log("Sending login", this.next_id);
-    }
     this.ws.send(helper.buf);
     this.next_id++;
   }
@@ -1108,9 +987,6 @@ class Gdh {
     helper.pack32Bit(value);
     this.pending[this.next_id] = new PendingData(return_cb, data);
     this.ws.send(helper.buf);
-    if (this.debug) {
-      console.log("Sending getMsg", this.next_id, value);
-    }
     this.next_id++;
   }
 
@@ -1119,9 +995,6 @@ class Gdh {
     helper.pack32Bit(this.next_id);
     helper.pack32Bit(sync);
     this.pending[this.next_id] = new PendingData(return_cb, data);
-    if (this.debug) {
-      console.log("Sending mhSync", this.next_id);
-    }
     this.ws.send(helper.buf);
     this.next_id++;
   }
@@ -1133,10 +1006,6 @@ class Gdh {
     helper.pack32Bit(event_id.idx);
     helper.packString(event_id.birthTime);
     this.pending[this.next_id] = new PendingData(return_cb, data);
-    if (this.debug) {
-      console.log("Sending mhAcknowledge", this.next_id);
-    }
-    console.log("Sending mhAcknowledge", this.next_id);
     this.ws.send(helper.buf);
     this.next_id++;
   }

@@ -470,10 +470,6 @@ class GrowTrend extends GrowRect {
     return null;
   }
 
-  getClassUserData() {
-    return this.nc.userdata;
-  }
-
   getUserData() {
     return this.userdata;
   }

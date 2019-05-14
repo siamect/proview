@@ -1551,7 +1551,6 @@ class FlowCtx extends Rect {
   gdraw: GDraw;
   display_level = DisplayLevel.One;
   gdh: Gdh = null;
-  debug = false;
   zoom_factor = 20.0;
   base_zoom_factor = 20.0;
   offset_x = 0;

@@ -86,7 +86,7 @@ class Appl {
               }
 
               graphName = graphName.toLowerCase();
-              if (graphName.charAt(".pwg") === -1) {
+              if (!graphName.endsWith(".pwg")) {
                 graphName += ".pwg";
               }
 

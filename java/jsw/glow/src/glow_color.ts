@@ -329,7 +329,6 @@ class GlowColor {
 }
 
 class GlowCustomColors {
-  debug = false;
   colors_size = DrawType.CustomColor__ - DrawType.CustomColor1;
   colors = new Array(this.colors_size);
   colortheme_lightness = 0;
@@ -380,10 +379,6 @@ class GlowCustomColors {
             this.colors[j][0] = parseFloat(tokens[0]);
             this.colors[j][1] = parseFloat(tokens[1]);
             this.colors[j][2] = parseFloat(tokens[2]);
-            if (this.debug) {
-              console.log(j, this.colors[j][0], this.colors[j][1],
-                  this.colors[j][2]);
-            }
           }
           break;
         case GlowSave.End:
