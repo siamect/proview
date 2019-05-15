@@ -249,31 +249,27 @@ class Graph {
 
   gdh_init_cb() {
     if (this.priv === null) {
-      this.gdh.login("", "", this.login_cb, this);
+      this.gdh.login("", "").then(this.login_cb);
     }
 
     this.ctx.traceConnect();
-    this.gdh.refObjectInfoList(this.trace_connected);
+    this.gdh.refObjectInfoList().then(e => this.trace_cyclic());
   }
 
-  login_cb(id, data, sts, result) {
-    console.log("Login:", sts, result);
-    this.priv = (sts & 1) ? result : 0;
-  }
-
-  trace_connected(id, sts) {
-    this.trace_cyclic();
+  login_cb(res) {
+    console.log("Login:", res.sts, res.value);
+    this.priv = (res.sts & 1) ? res.value : 0;
   }
 
   trace_cyclic() {
     if (this.frame.nogdh) {
-      this.trace_scan(0, 0);
+      this.trace_scan();
     } else {
       this.gdh.getRefObjectInfoAll(this.trace_scan);
     }
   }
 
-  trace_scan(id, sts) {
+  trace_scan() {
     this.scan_time = this.ctx.scantime;
     this.fast_scan_time = this.ctx.fast_scantime;
     this.animation_scan_time = this.ctx.animation_scantime;

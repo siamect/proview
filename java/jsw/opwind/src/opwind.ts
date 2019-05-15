@@ -32,8 +32,8 @@ class OpWindMenu {
   gdh_init_cb() {
     let oid = new PwrtObjid(0, 0);
     this.user = "Default";
-    this.gdh.login("", "", this.login_cb, this);
-    this.gdh.getOpwindMenu(this.get_opplace(), this.get_menu_cb, 999);
+    this.gdh.login("", "").then(this.login_cb);
+    this.gdh.getOpwindMenu(this.get_opplace()).then(this.get_menu_cb);
   }
 
   add_menu_button(context, text) {
@@ -49,9 +49,9 @@ class OpWindMenu {
     return button;
   }
 
-  get_menu_cb(id, data, sts, result) {
+  get_menu_cb(res) {
+    let result = res.value;
     this.info = result;
-    console.log("Menu received", sts, data, result.buttons.length);
     let context = document.getElementById("opwindmenu");
 
     document.getElementById("opwind_title").innerHTML = result.title;
@@ -89,7 +89,7 @@ class OpWindMenu {
             passwd = c.crypt("aa", passwd);
 
             this.user = user;
-            this.gdh.login(user, passwd, this.login_cb, this);
+            this.gdh.login(user, passwd).then(this.login_cb);
           });
       document.getElementById("cancel_button")
           .addEventListener("click", function (event) {
@@ -102,7 +102,7 @@ class OpWindMenu {
             document.getElementById("login_frame").style.height = '0px';
             this.priv = 0;
             this.user = "Default";
-            this.gdh.login("", "", this.login_cb, this);
+            this.gdh.login("", "").then(this.login_cb);
           });
 
       document.getElementById("login_user").innerHTML = "";
@@ -200,10 +200,9 @@ class OpWindMenu {
     }
   }
 
-  login_cb(id, data, sts, result) {
-    console.log("Login:", sts, result);
-    if (sts & 1) {
-      this.priv = result;
+  login_cb(res) {
+    if (res.sts & 1) {
+      this.priv = res.value;
       sessionStorage.setItem("pwr_privilege", String(this.priv));
       if (this.user_text !== null) {
         this.user_text.textContent = this.user + " on " + this.host;

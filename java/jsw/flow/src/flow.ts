@@ -1775,10 +1775,8 @@ class FlowFrame {
   }
 
   flow_open() {
-    console.log("flow_open");
-    console.log("ctx.gdh", this.ctx.gdh);
     this.ctx.connect();
-    this.ctx.gdh.refObjectInfoList(this.ctx.gdh.refObjectInfoListReply);
+    this.ctx.gdh.refObjectInfoList();
     this.timer = setTimeout(this.flow_cyclic, 1000);
   }
 
@@ -1793,7 +1791,6 @@ class FlowFrame {
   }
 
   flow_close() {
-    console.log("Close function", this.timer);
     clearTimeout(this.timer);
     for (let i in this.ctx.gdh.pending) {
       delete this.ctx.gdh.pending[i];

@@ -32,9 +32,9 @@ class Xtt {
       let y = event.pageY - this.ctx.gdraw.offset_top;
       let x = event.pageX;
       if (event.shiftKey) {
-        xtt.ctx.event_handler(Event.MB1ClickShift, x, y);
+        this.ctx.event_handler(Event.MB1ClickShift, x, y);
       } else {
-        xtt.ctx.event_handler(Event.MB1Click, x, y);
+        this.ctx.event_handler(Event.MB1Click, x, y);
       }
     });
     document.addEventListener("keydown", function (event) {
@@ -62,9 +62,7 @@ class Xtt {
         .addEventListener("click", function (event) {
           let o = this.ctx.get_select();
           if (o.userdata instanceof XttItemObject) {
-            let newwindow = window.open("", "_blank");
-            this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_GRAPH,
-                this.open_graph_cb, newwindow);
+            this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_GRAPH).then(this.open_graph_cb);
           }
           console.log("toolitem1 event");
         });
@@ -72,10 +70,7 @@ class Xtt {
         .addEventListener("click", function (event) {
           let o = this.ctx.get_select();
           if (o.userdata instanceof XttItemObject) {
-            let newwindow = window.open("", "_blank");
-            this.ctx.gdh.getObject(o.userdata.objid,
-                GdhOp.GET_OP_METHOD_OBJECTGRAPH, this.open_objectgraph_cb,
-                newwindow);
+            this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_OBJECTGRAPH).then(this.open_objectgraph_cb);
           }
           console.log("toolitem2 event");
         });
@@ -84,9 +79,7 @@ class Xtt {
           console.log("toolitem1 event");
           let o = this.ctx.get_select();
           if (o.userdata instanceof XttItemObject) {
-            let newwindow = window.open("", "_blank");
-            this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC,
-                this.open_plc_cb, newwindow);
+            this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC).then(this.open_plc_cb);
           } else if (o.userdata instanceof XttItemCrr) {
             let idx = o.userdata.name.lastIndexOf('-');
             let ostring = "";
@@ -117,7 +110,7 @@ class Xtt {
     document.getElementById("toolitem6")
         .addEventListener("click", function (event) {
           let o = this.ctx.get_select();
-          this.ctx.gdh.crrSignal(o.userdata.objid, this.open_crr_cb, o);
+          this.ctx.gdh.crrSignal(o.userdata.objid).then(this.open_crr_cb(o));
           console.log("toolitem6 event");
         });
     document.getElementById("toolitem7")
@@ -132,9 +125,8 @@ class Xtt {
             return;
           }
           if (o.userdata instanceof XttItemObject) {
-            let newwindow = window.open("", "_blank");
             this.ctx.gdh.getObject(o.userdata.objid,
-                GdhOp.GET_OP_METHOD_HELPCLASS, this.open_helpclass_cb, newwindow);
+                GdhOp.GET_OP_METHOD_HELPCLASS).then(this.open_helpclass_cb);
           }
         });
 
@@ -153,148 +145,151 @@ class Xtt {
 
   gdh_init_cb() {
     if (this.priv === null) {
-      this.ctx.gdh.login("", "", this.login_cb, this);
+      this.ctx.gdh.login("", "").then(this.login_cb);
     }
 
     let oid = new PwrtObjid(0, 0);
-    this.ctx.gdh.getAllXttChildren(oid, this.open_children_cb,
-        new XttOpenChildrenData(null, null));
+    this.ctx.gdh.getAllXttChildren(oid).then(this.open_children_cb(new XttOpenChildrenData(null, null)));
 
     this.ctx.gdh.listSent = true;
     this.trace_cyclic();
   }
 
-  login_cb(id, data, sts, result) {
-    console.log("Login:", sts, result);
-    this.priv = (sts & 1) ? result : 0;
+  login_cb(res) {
+    console.log("Login:", res.sts, res.value);
+    this.priv = (res.sts & 1) ? res.value : 0;
   }
 
-  open_children_cb(id, data, sts, result) {
-    this.ctx.set_nodraw();
-    for (let i = 0; i < result.length; i++) {
-      if (data.node === null) {
-        result[i].full_name = result[i].name;
-        new XttItemObject(this, result[i], null, Dest.AFTER);
-      } else {
-        result[i].full_name =
-            data.node.userdata.full_name + "-" + result[i].name;
-        new XttItemObject(this, result[i], data.node, Dest.INTOLAST);
+  open_children_cb(child) {
+    return function(res) {
+      let result = res.value;
+      this.ctx.set_nodraw();
+      for (let i = 0; i < result.length; i++) {
+        if (child.node === null) {
+          result[i].full_name = result[i].name;
+          new XttItemObject(this, result[i], null, Dest.AFTER);
+        } else {
+          result[i].full_name =
+              child.node.userdata.full_name + "-" + result[i].name;
+          new XttItemObject(this, result[i], child.node, Dest.INTOLAST);
+        }
       }
-    }
-    this.ctx.configure();
+      this.ctx.configure();
 
-    if (data.open_next !== null) {
-      if (data.open_next.length === 0) {
-        this.ctx.reset_nodraw();
-        return;
-      }
-      let child = this.ctx.a.get_first_child(data.node);
-      while (child !== null) {
-        if (child.userdata.name === data.open_next[0]) {
-          if (data.open_next.length === 1) {
-            child.set_select(true);
-            child.set_invert(true);
-            if (!this.ctx.is_visible(child)) {
-              this.ctx.scroll(child.ll_y, 0.50);
-            }
-            window.focus(); // Doesn't work
-          } else {
-            data.open_next.splice(0, 1);
-            if (data.open_next[0] === '.') {
-              data.open_next.splice(0, 1);
-              child.userdata.open_attributes(this, data.open_next);
+      if (child.open_next !== null) {
+        if (child.open_next.length === 0) {
+          this.ctx.reset_nodraw();
+          return;
+        }
+        let child = this.ctx.a.get_first_child(child.node);
+        while (child !== null) {
+          if (child.userdata.name === child.open_next[0]) {
+            if (child.open_next.length === 1) {
+              child.set_select(true);
+              child.set_invert(true);
+              if (!this.ctx.is_visible(child)) {
+                this.ctx.scroll(child.ll_y, 0.50);
+              }
+              window.focus(); // Doesn't work
             } else {
-              child.userdata.open_children(this, data.open_next);
+              child.open_next.splice(0, 1);
+              if (child.open_next[0] === '.') {
+                child.open_next.splice(0, 1);
+                child.userdata.open_attributes(this, child.open_next);
+              } else {
+                child.userdata.open_children(child.open_next);
+              }
             }
+            break;
           }
-          break;
+          child = this.ctx.a.get_next_sibling(child);
         }
-        child = this.ctx.a.get_next_sibling(child);
       }
-    }
 
-    this.ctx.reset_nodraw();
-    this.ctx.draw();
+      this.ctx.reset_nodraw();
+      this.ctx.draw();
+    }
   }
 
-  open_attributes_cb(id, data, sts, result) {
-    this.ctx.set_nodraw();
-    for (let i = 0; i < result.length; i++) {
-      result[i].objid = data.node.userdata.objid;
-      result[i].full_name = data.node.userdata.full_name + "." + result[i].name;
-      if ((result[i].flags & Adef.Array) !== 0) {
-        new XttItemAttrArray(this, result[i], data.node, Dest.INTOLAST);
-      } else if ((result[i].flags & Adef.Class) !== 0) {
-        new XttItemAttrObject(this, result[i], data.node, Dest.INTOLAST);
-      } else {
-        new XttItemAttr(this, result[i], data.node, Dest.INTOLAST);
+  open_attributes_cb(child) {
+    return function(res) {
+      let result = res.value;
+      this.ctx.set_nodraw();
+      for (let i = 0; i < result.length; i++) {
+        result[i].objid = child.node.userdata.objid;
+        result[i].full_name = child.node.userdata.full_name + "." + result[i].name;
+        if ((result[i].flags & Adef.Array) !== 0) {
+          new XttItemAttrArray(this, result[i], child.node, Dest.INTOLAST);
+        } else if ((result[i].flags & Adef.Class) !== 0) {
+          new XttItemAttrObject(this, result[i], child.node, Dest.INTOLAST);
+        } else {
+          new XttItemAttr(this, result[i], child.node, Dest.INTOLAST);
+        }
       }
-    }
 
-    this.ctx.configure();
+      this.ctx.configure();
 
-    if (data.open_next !== null) {
-      if (data.open_next.length === 0) {
-        this.ctx.reset_nodraw();
-        return;
-      }
-      let child = this.ctx.a.get_first_child(data.node);
-      while (child !== null) {
-        if (child.userdata.name === data.open_next[0]) {
-          if (data.open_next.length === 1) {
-            child.set_select(true);
-            child.set_invert(true);
-            if (!this.ctx.is_visible(child)) {
-              this.ctx.scroll(child.ll_y, 0.50);
+      if (child.open_next !== null) {
+        if (child.open_next.length === 0) {
+          this.ctx.reset_nodraw();
+          return;
+        }
+        let child2 = this.ctx.a.get_first_child(child.node);
+        while (child2 !== null) {
+          if (child2.userdata.name === child.open_next[0]) {
+            if (child.open_next.length === 1) {
+              child2.set_select(true);
+              child2.set_invert(true);
+              if (!this.ctx.is_visible(child2)) {
+                this.ctx.scroll(child2.ll_y, 0.50);
+              }
+              window.focus(); // Doesn't work
+            } else {
+              child.open_next.splice(0, 1);
+              child2.userdata.open_attributes(this, child.open_next);
             }
-            window.focus(); // Doesn't work
-          } else {
-            data.open_next.splice(0, 1);
-            child.userdata.open_attributes(this, data.open_next);
+            break;
           }
-          break;
+          child2 = this.ctx.a.get_next_sibling(child2);
         }
-        child = this.ctx.a.get_next_sibling(child);
       }
-    }
 
-    this.ctx.reset_nodraw();
-    this.ctx.draw();
-  }
-
-  open_plc_cb(id, data, sts, result: ObjectInfo) {
-    if ((sts & 1) === 0) {
-      data.document.write("Error status " + sts);
-    } else {
-      let param1;
-      if (result.param1 === "") {
-        param1 = "";
-      } else {
-        param1 = "&obj=" + result.param1;
-      }
-      console.log("flow.html?vid=" + result.objid.vid + "&oix=" +
-          result.objid.oix + param1);
-      data.location.href =
-          "flow.html?vid=" + result.objid.vid + "&oix=" + result.objid.oix +
-          param1;
-      data.document.title = "Trace " + result.fullname;
+      this.ctx.reset_nodraw();
+      this.ctx.draw();
     }
   }
 
-  open_objectgraph_cb(id, data, sts, result: ObjectInfo) {
-    if ((sts & 1) === 0) {
-      data.document.write("Error status " + sts);
+  open_plc_cb(res) {
+    let w = window.open("", "_blank");
+    if ((res.sts & 1) === 0) {
+      w.document.write("Error status " + res.sts);
     } else {
-      data.location.href =
+      let result = res.value;
+      let param1 = result.param1 ? ("&obj=" + result.param1) : "";
+      w.location.href = "flow.html?vid=" + result.objid.vid + "&oix=" +
+          result.objid.oix + param1;
+      w.document.title = "Trace " + result.fullname;
+    }
+  }
+
+  open_objectgraph_cb(res) {
+    let w = window.open("", "_blank");
+    if ((res.sts & 1) === 0) {
+      w.document.write("Error status " + res.sts);
+    } else {
+      let result = res.value;
+      w.location.href =
           "ge.html?graph=" + result.param1 + "&instance=" + result.fullname;
-      data.document.title = result.fullname;
+      w.document.title = result.fullname;
     }
   }
 
-  open_graph_cb(id, data, sts, result: ObjectInfo) {
-    if ((sts & 1) === 0) {
-      data.document.write("Error status " + sts);
+  open_graph_cb(res) {
+    let w = window.open("", "_blank");
+    if ((res.sts & 1) === 0) {
+      w.document.write("Error status " + res.sts);
     } else {
+      let result = res.value;
       let idx = result.param1.indexOf('.');
       if (idx !== -1) {
         result.param1 = result.param1.substring(0, idx);
@@ -305,25 +300,28 @@ class Xtt {
         instancestr = "&instance=" + result.fullname;
       }
 
-      data.location.href = "ge.html?graph=" + result.param1 + instancestr;
-      data.document.title = result.param1;
+      w.location.href = "ge.html?graph=" + result.param1 + instancestr;
+      w.document.title = result.param1;
     }
   }
 
-  open_crr_cb(id, node, sts, crrdata) {
-    if ((sts & 1) === 0) {
-      return;
+  open_crr_cb(node) {
+    return function(res) {
+      if ((res.sts & 1) === 0) {
+        return;
+      }
+      node.userdata.open_crossreferences(res.value);
     }
-    node.userdata.open_crossreferences(this, crrdata);
   }
 
-  open_helpclass_cb(id, data, sts, result: ObjectInfo) {
-    if ((sts & 1) === 0) {
-      data.document.write("Error status " + sts);
+  open_helpclass_cb(res) {
+    let w = window.open("", "_blank");
+    if ((res.sts & 1) === 0) {
+      w.document.write("Error status " + res.sts);
     } else {
-      console.log("open_helpclass", result.param1);
-      data.location.href =
-          location.protocol + "//" + location.host + result.param1;
+      console.log("open_helpclass", res.value.param1);
+      w.location.href =
+          location.protocol + "//" + location.host + res.value.param1;
     }
   }
 
@@ -336,12 +334,12 @@ class Xtt {
     switch (event) {
       case Event.ObjectDeleted:
         if (object.userdata instanceof XttItemAttr) {
-          object.userdata.scan_close(this);
+          object.userdata.scan_close();
         }
         break;
       case Event.MB1Click:
         if (object.in_icon(x, y)) {
-          item.open_children(this, null);
+          item.open_children(null);
         } else {
           if (object.select) {
             object.set_select(false);
@@ -400,7 +398,7 @@ class Xtt {
         let o = this.ctx.get_select();
         if (o !== null) {
           item = o.userdata;
-          item.open_children(this, null);
+          item.open_children(null);
         }
         break;
       case Event.Key_Left:
@@ -420,15 +418,13 @@ class Xtt {
       case Event.Key_CtrlR:
         let o = this.ctx.get_select();
         if (o !== null) {
-          this.ctx.gdh.crrSignal(o.userdata.objid, this.open_crr_cb, o);
+          this.ctx.gdh.crrSignal(o.userdata.objid).then(this.open_crr_cb(o));
         }
         break;
       case Event.Key_CtrlL:
         let o = this.ctx.get_select();
         if (o.userdata instanceof XttItemObject) {
-          let newwindow = window.open("", "_blank");
-          this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC,
-              this.open_plc_cb, newwindow);
+          this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC).then(this.open_plc_cb);
         } else if (o.userdata instanceof XttItemCrr) {
           let idx = o.userdata.name.lastIndexOf('-');
           let ostring = "";
@@ -443,10 +439,7 @@ class Xtt {
         let o = this.ctx.get_select();
         if (o.userdata instanceof XttItemObject) {
           console.log("CtrlG", o.userdata.objid.vid, o.userdata.objid.oix);
-          let newwindow = window.open("", "_blank");
-          this.ctx.gdh.getObject(o.userdata.objid,
-              GdhOp.GET_OP_METHOD_OBJECTGRAPH, this.open_objectgraph_cb,
-              newwindow);
+          this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_OBJECTGRAPH).then(this.open_objectgraph_cb);
         }
         break;
       default:
@@ -526,7 +519,7 @@ class Xtt {
           window.focus(); // Doesn't work
         } else {
           path.splice(0, 1);
-          (<XttItemObject> this.ctx.a.get(j).userdata).open_children(this, path);
+          (<XttItemObject> this.ctx.a.get(j).userdata).open_children(path);
         }
         break;
       }
@@ -537,13 +530,12 @@ class Xtt {
     this.ctx.gdh.getRefObjectInfoAll(this.trace_scan);
   }
 
-  trace_scan(id, sts) {
+  trace_scan() {
     this.scan_update = false;
-    let self = this;
     this.ctx.a.forEach(function (e) {
       let item = e.userdata;
       if (item instanceof XttItemAttr) {
-        item.scan(self);
+        item.scan();
       }
     });
     if (this.scan_update) {
@@ -567,6 +559,7 @@ class Xtt {
 }
 
 class XttItemObject {
+  xtt: Xtt;
   objid: PwrtObjid;
   cid: number;
   name: string;
@@ -575,6 +568,7 @@ class XttItemObject {
   node: PlowNode;
 
   constructor(xtt, object_info, destination, destCode) {
+    this.xtt = xtt;
     this.objid = object_info.objid;
     this.cid = object_info.cid;
     this.name = object_info.name;
@@ -590,67 +584,65 @@ class XttItemObject {
     this.node.set_annotation_pixmap(0, object_info.has_children ? Bitmaps.map : Bitmaps.leaf);
   }
 
-  open_children(xtt, open_next) {
+  open_children(open_next) {
     if (this.node.node_open !== 0) {
-      this.close(xtt);
+      this.close();
     } else if (!this.has_children) {
-      this.open_attributes(xtt, null);
+      this.open_attributes(null);
     } else {
-      xtt.ctx.gdh.getAllXttChildren(this.objid, xtt.open_children_cb,
-          new XttOpenChildrenData(this.node, open_next));
+      this.xtt.ctx.gdh.getAllXttChildren(this.objid).then(this.xtt.open_children_cb(new XttOpenChildrenData(this.node, open_next)));
       this.node.node_open |= Open.CHILDREN;
       this.node.set_annotation_pixmap(0, Bitmaps.openmap);
     }
   }
 
-  open_attributes(xtt, open_next) {
+  open_attributes(open_next) {
     if (this.node.node_open === 0) {
-      xtt.ctx.gdh.getAllClassAttributes(this.cid, this.objid,
-          xtt.open_attributes_cb, new XttOpenChildrenData(this.node, open_next));
+      this.xtt.ctx.gdh.getAllClassAttributes(this.cid, this.objid).then(this.xtt.open_attributes_cb(new XttOpenChildrenData(this.node, open_next)));
 
       this.node.node_open |= Open.ATTRIBUTES;
-      xtt.ctx.configure();
-      xtt.ctx.draw();
+      this.xtt.ctx.configure();
+      this.xtt.ctx.draw();
     } else {
-      this.close(xtt);
+      this.close();
     }
   }
 
-  open_crossreferences(xtt, crrdata) {
+  open_crossreferences(crrdata) {
     if (this.node.node_open === 0) {
       for (let i = 0; i < crrdata.length; i++) {
-        new XttItemCrr(xtt, crrdata[i], this.node, Dest.INTOLAST);
+        new XttItemCrr(this.xtt, crrdata[i], this.node, Dest.INTOLAST);
       }
 
       this.node.node_open |= Open.CROSSREFERENCES;
-      xtt.ctx.configure();
-      xtt.ctx.draw();
+      this.xtt.ctx.configure();
+      this.xtt.ctx.draw();
     } else {
-      this.close(xtt);
+      this.close();
     }
   }
 
-  close(xtt) {
+  close() {
     if (this.node.node_open & Open.CHILDREN) {
-      xtt.ctx.close_node(this.node);
+      this.xtt.ctx.close_node(this.node);
       this.node.node_open &= ~Open.CHILDREN;
       this.node.set_annotation_pixmap(0, Bitmaps.map);
-      xtt.ctx.configure();
-      xtt.ctx.draw();
+      this.xtt.ctx.configure();
+      this.xtt.ctx.draw();
     } else if (this.node.node_open & Open.ATTRIBUTES) {
-      xtt.ctx.close_node(this.node);
+      this.xtt.ctx.close_node(this.node);
       this.node.node_open &= ~Open.ATTRIBUTES;
-      xtt.ctx.configure();
-      xtt.ctx.draw();
+      this.xtt.ctx.configure();
+      this.xtt.ctx.draw();
     } else if (this.node.node_open & Open.CROSSREFERENCES) {
-      xtt.ctx.close_node(this.node);
+      this.xtt.ctx.close_node(this.node);
       this.node.node_open &= ~Open.CROSSREFERENCES;
-      xtt.ctx.configure();
-      xtt.ctx.draw();
+      this.xtt.ctx.configure();
+      this.xtt.ctx.draw();
     } else {
-      let parent = xtt.ctx.get_parent_object(this.node);
+      let parent = this.xtt.ctx.get_parent_object(this.node);
       if (parent !== null) {
-        parent.userdata.close(xtt);
+        parent.userdata.close();
         parent.set_select(true);
         parent.set_invert(true);
       }
@@ -659,6 +651,7 @@ class XttItemObject {
 }
 
 class XttItemAttr {
+  xtt: Xtt;
   name: string;
   objid: PwrtObjid;
   full_name: string;
@@ -671,6 +664,7 @@ class XttItemAttr {
   node: PlowNode;
 
   constructor(xtt, info, destination, destCode) {
+    this.xtt = xtt;
     this.name = info.name;
     this.objid = info.objid;
     this.full_name = info.full_name;
@@ -687,15 +681,15 @@ class XttItemAttr {
     this.refid = xtt.ctx.gdh.refObjectInfo(this.full_name, info.type, 1);
   }
 
-  open_children(xtt, open_next) {
-    xtt.openValueInputDialog(this, "Enter value");
+  open_children(open_next) {
+    this.xtt.openValueInputDialog(this, "Enter value");
   }
 
-  set_value(xtt, value) {
+  set_value(value) {
     switch (this.type) {
       case Type.Float32:
         let inputValue = parseFloat(value.trim());
-        xtt.ctx.gdh.setObjectInfoFloat(this.full_name, inputValue);
+        this.xtt.ctx.gdh.setObjectInfoFloat(this.full_name, inputValue);
         break;
       case Type.Int8:
       case Type.Int16:
@@ -708,37 +702,37 @@ class XttItemAttr {
       case Type.Enum:
       case Type.Boolean:
         let inputValue = parseInt(value.trim(), 10);
-        xtt.ctx.gdh.setObjectInfoInt(this.full_name, inputValue);
+        this.xtt.ctx.gdh.setObjectInfoInt(this.full_name, inputValue);
         break;
       case Type.String:
       case Type.Time:
       case Type.DeltaTime:
       case Type.AttrRef:
       case Type.Objid:
-        xtt.ctx.gdh.setObjectInfoString(this.full_name, value);
+        this.xtt.ctx.gdh.setObjectInfoString(this.full_name, value);
         break;
       default:
         break;
     }
   }
 
-  open_attributes(xtt, open_next) {
+  open_attributes(open_next) {
   }
 
-  close(xtt) {
-    let parent = xtt.ctx.get_parent_object(this.node);
+  close() {
+    let parent = this.xtt.ctx.get_parent_object(this.node);
     if (parent !== null) {
-      parent.userdata.close(xtt);
+      parent.userdata.close();
       parent.set_select(true);
       parent.set_invert(true);
     }
   }
 
-  scan(xtt) {
+  scan() {
     if (!this.refid) {
       return;
     }
-    let value = xtt.ctx.gdh.getObjectRefInfo(this.refid);
+    let value = this.xtt.ctx.gdh.getObjectRefInfo(this.refid);
     if (this.firstScan || value !== this.old_value) {
       let value_str;
 
@@ -768,17 +762,18 @@ class XttItemAttr {
 
       this.old_value = value;
       this.node.set_annotation(1, value_str);
-      xtt.scan_update = true;
+      this.xtt.scan_update = true;
     }
     this.firstScan = false;
   }
 
-  scan_close(xtt) {
-    xtt.ctx.gdh.unrefObjectInfo(this.refid);
+  scan_close() {
+    this.xtt.ctx.gdh.unrefObjectInfo(this.refid);
   }
 }
 
 class XttItemAttrArray {
+  xtt: Xtt;
   name: string;
   objid: PwrtObjid;
   full_name: string;
@@ -789,6 +784,7 @@ class XttItemAttrArray {
   node: PlowNode;
 
   constructor(xtt, info, destination, destCode) {
+    this.xtt = xtt;
     this.name = info.name;
     this.objid = info.objid;
     this.full_name = info.full_name;
@@ -803,11 +799,11 @@ class XttItemAttrArray {
     xtt.ctx.insertNode(this.node, destination, destCode);
   }
 
-  open_children(xtt, open_next) {
-    this.open_attributes(xtt, open_next);
+  open_children(open_next) {
+    this.open_attributes(open_next);
   }
 
-  open_attributes(xtt, open_next) {
+  open_attributes(open_next) {
     let info = new AttributeInfo();
 
     info.objid = this.objid;
@@ -819,34 +815,34 @@ class XttItemAttrArray {
     info.full_name = "";
     info.classname = "";
 
-    xtt.ctx.set_nodraw();
+    this.xtt.ctx.set_nodraw();
     for (let i = 0; i < this.elements; i++) {
       info.name = this.name + "[" + i + "]";
       info.full_name = this.full_name + "[" + i + "]";
       if ((info.flags & Adef.Array) !== 0) {
-        new XttItemAttrArray(xtt, info, this.node, Dest.INTOLAST);
+        new XttItemAttrArray(this.xtt, info, this.node, Dest.INTOLAST);
       } else if ((info.flags & Adef.Class) !== 0) {
-        new XttItemAttrObject(xtt, info, this.node, Dest.INTOLAST);
+        new XttItemAttrObject(this.xtt, info, this.node, Dest.INTOLAST);
       } else {
-        new XttItemAttr(xtt, info, this.node, Dest.INTOLAST);
+        new XttItemAttr(this.xtt, info, this.node, Dest.INTOLAST);
       }
     }
     this.node.node_open |= Open.ATTRIBUTES;
-    xtt.ctx.configure();
-    xtt.ctx.reset_nodraw();
-    xtt.ctx.draw();
+    this.xtt.ctx.configure();
+    this.xtt.ctx.reset_nodraw();
+    this.xtt.ctx.draw();
   }
 
-  close(xtt) {
+  close() {
     if (this.node.node_open & Open.ATTRIBUTES) {
-      xtt.ctx.close_node(this.node);
+      this.xtt.ctx.close_node(this.node);
       this.node.node_open &= ~Open.ATTRIBUTES;
-      xtt.ctx.configure();
-      xtt.ctx.draw();
+      this.xtt.ctx.configure();
+      this.xtt.ctx.draw();
     } else {
-      let parent = xtt.ctx.get_parent_object(this.node);
+      let parent = this.xtt.ctx.get_parent_object(this.node);
       if (parent !== null) {
-        parent.userdata.close(xtt);
+        parent.userdata.close();
         parent.set_select(true);
         parent.set_invert(true);
       }
@@ -855,6 +851,7 @@ class XttItemAttrArray {
 }
 
 class XttItemAttrObject {
+  xtt: Xtt;
   name: string;
   classname: string;
   objid: PwrtObjid;
@@ -865,6 +862,7 @@ class XttItemAttrObject {
   node: PlowNode;
 
   constructor(xtt, info, destination, destCode) {
+    this.xtt = Xtt;
     this.name = info.name;
     this.classname = info.classname;
     this.objid = info.objid;
@@ -880,36 +878,35 @@ class XttItemAttrObject {
     xtt.ctx.insertNode(this.node, destination, destCode);
   }
 
-  open_children(xtt, open_next) {
-    this.open_attributes(xtt, null);
+  open_children(open_next) {
+    this.open_attributes(null);
   }
 
-  open_attributes(xtt, open_next) {
+  open_attributes(open_next) {
     if (this.node.node_open === 0) {
-      xtt.ctx.gdh.getAllClassAttributes(this.cid, this.objid,
-          xtt.open_attributes_cb, new XttOpenChildrenData(this.node, open_next));
+      this.xtt.ctx.gdh.getAllClassAttributes(this.cid, this.objid).then(this.xtt.open_attributes_cb(new XttOpenChildrenData(this.node, open_next)));
 
       this.node.node_open |= Open.ATTRIBUTES;
     } else {
-      this.close(xtt);
+      this.close();
     }
   }
 
-  close(xtt) {
+  close() {
     if (this.node.node_open & Open.ATTRIBUTES) {
-      xtt.ctx.close_node(this.node);
+      this.xtt.ctx.close_node(this.node);
       this.node.node_open &= ~Open.ATTRIBUTES;
-      xtt.ctx.configure();
-      xtt.ctx.draw();
+      this.xtt.ctx.configure();
+      this.xtt.ctx.draw();
     } else if (this.node.node_open & Open.CROSSREFERENCES) {
-      xtt.ctx.close_node(this.node);
+      this.xtt.ctx.close_node(this.node);
       this.node.node_open &= ~Open.CROSSREFERENCES;
-      xtt.ctx.configure();
-      xtt.ctx.draw();
+      this.xtt.ctx.configure();
+      this.xtt.ctx.draw();
     } else {
-      let parent = xtt.ctx.get_parent_object(this.node);
+      let parent = this.xtt.ctx.get_parent_object(this.node);
       if (parent !== null) {
-        parent.userdata.close(xtt);
+        parent.userdata.close();
         parent.set_select(true);
         parent.set_invert(true);
       }
@@ -918,6 +915,7 @@ class XttItemAttrObject {
 }
 
 class XttItemCrr {
+  xtt: Xtt;
   name: string;
   classname: string;
   objid: PwrtObjid;
@@ -925,6 +923,7 @@ class XttItemCrr {
   node: PlowNode;
 
   constructor(xtt, info, destination, destCode) {
+    this.xtt = Xtt;
     this.name = info.name;
     this.classname = info.classname;
     this.objid = info.objid;
@@ -939,10 +938,10 @@ class XttItemCrr {
     xtt.ctx.insertNode(this.node, destination, destCode);
   }
 
-  close(xtt) {
-    let parent = xtt.ctx.get_parent_object(this.node);
+  close() {
+    let parent = this.xtt.ctx.get_parent_object(this.node);
     if (parent) {
-      parent.userdata.close(xtt);
+      parent.userdata.close();
       parent.set_select(true);
       parent.set_invert(true);
     }

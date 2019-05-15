@@ -1740,19 +1740,17 @@ class DynValue extends DynElem {
         return format;
     }
 
-    // TODO
-    return format; // TODO
-    let ret = this.dyn.graph.getGdh().getObjectInfoInt(pname.name);
-    if (even(ret)) {
+    let sts = this.dyn.graph.getGdh().getObjectInfoInt(pname.name);
+    if (even(sts)) {
       return format;
     }
 
-    decimals = Math.max(ret.value - decr, 0);
+    decimals = Math.max(sts - decr, 0);
     if (decimals >= 10) {
       return format;
     }
 
-    if (format === null) {
+    if (!format) {
       return "%." + decimals + "f";
     }
 
@@ -1764,7 +1762,7 @@ class DynValue extends DynElem {
       if (s < 2 || format.charAt(s - 2) !== '.') {
         return "%." + decimals + "f";
       } else {
-        return format.substring(0, s - 1) + decimals + format.substring(s);
+        return format.substring(0, format.indexOf('.') + 1) + decimals + "f";
       }
     }
   }
@@ -1866,10 +1864,7 @@ class DynValue extends DynElem {
             this.dyn.repaintNow = true;
           } else {
             if (this.a.database === Database.Gdh) {
-              let data = new Array(2);
-              data[0] = this;
-              data[1] = object;
-              this.dyn.graph.getGdh().getMsg(value0, DynValue.scan2, data);
+              this.dyn.graph.getGdh().getMsg(value0).then(this.scan2(object));
             }
           }
         }
@@ -1897,16 +1892,16 @@ class DynValue extends DynElem {
     }
   }
 
-  static scan2(id, data, sts, value) {
-    let self = data[0];
-    let object = data[1];
-    let annot_num = Dyn.instance_to_number(self.instance);
-    if (sts & 1 !== 0) {
-      object.setAnnotation(annot_num, value);
-    } else {
-      object.setAnnotation(annot_num, "Unknown message");
+  scan2(object) {
+    return function(res) {
+      let annot_num = Dyn.instance_to_number(this.instance);
+      if (res.sts & 1 !== 0) {
+        object.setAnnotation(annot_num, res.value);
+      } else {
+        object.setAnnotation(annot_num, "Unknown message");
+      }
+      this.dyn.repaintNow = true;
     }
-    self.dyn.repaintNow = true;
   }
 
   open(lines, row) {
@@ -3860,7 +3855,7 @@ class DynTrend extends DynElem {
         if (dt >= 0.001) {
           object.set_scan_time(dt);
           this.scan_time = dt;
-          if (this.cycle === Cycle.Slow) {
+          if (this.dyn.cycle === Cycle.Slow) {
             let current_graph_scan_time = this.dyn.graph.getScanTime();
             if (current_graph_scan_time > this.scan_time || this.scan_time <= this.orig_graph_scan_time) {
               this.dyn.graph.setScanTime(this.scan_time);
@@ -3932,7 +3927,7 @@ class DynTrend extends DynElem {
       this.firstScan = false;
     }
 
-    if (this.cycle === Cycle.Slow) {
+    if (this.dyn.cycle === Cycle.Slow) {
       this.acc_time += this.dyn.graph.getScanTime();
     } else {
       this.acc_time += this.dyn.graph.getFastScanTime();
@@ -4431,7 +4426,7 @@ class DynXY_Curve extends DynElem {
       switch (this.xAttrType) {
         case Type.Float32:
           this.dyn.graph.getGdh()
-              .getObjectInfoFloatArray(pname.name, size, DynXY_Curve.scan2, this);
+              .getObjectInfoFloatArray(pname.name, size).then(this.scan2);
           break;
         case Type.Int32:
         case Type.Int16:
@@ -4440,7 +4435,7 @@ class DynXY_Curve extends DynElem {
         case Type.UInt16:
         case Type.UInt8:
           this.dyn.graph.getGdh()
-              .getObjectInfoIntArray(pname.name, size, DynXY_Curve.scan2, this);
+              .getObjectInfoIntArray(pname.name, size).then(this.scan2);
           break;
         default:
           return;
@@ -4449,8 +4444,8 @@ class DynXY_Curve extends DynElem {
     this.firstScan = false;
   }
 
-  static scan2(id, self, sts, value) {
-    switch (self.xAttrType) {
+  scan2(res) {
+    switch (this.xAttrType) {
       case Type.Float32:
       case Type.Int32:
       case Type.Int16:
@@ -4458,31 +4453,31 @@ class DynXY_Curve extends DynElem {
       case Type.UInt32:
       case Type.UInt16:
       case Type.UInt8:
-        if (!(sts & 1)) {
+        if (!(res.sts & 1)) {
           return;
         }
-        switch (self.datatype) {
+        switch (this.datatype) {
           case CurveDataType.XYArrays:
-            self.curveX = value.slice(0, self.noOfPoints);
+            this.curveX = res.value.slice(0, this.noOfPoints);
             break;
           case CurveDataType.PointArray:
-            self.curveX = new Array(self.noOfPoints);
-            self.curveY = new Array(self.noOfPoints);
-            for (let i = 0; i < self.noOfPoints; i++) {
-              self.curveX[i] = value[2 * i];
-              self.curveY[i] = value[2 * i + 1];
+            this.curveX = new Array(this.noOfPoints);
+            this.curveY = new Array(this.noOfPoints);
+            for (let i = 0; i < this.noOfPoints; i++) {
+              this.curveX[i] = res.value[2 * i];
+              this.curveY[i] = res.value[2 * i + 1];
             }
-            self.dyn.repaintNow = true;
+            this.dyn.repaintNow = true;
             break;
           case CurveDataType.TableObject:
-            self.noOfPoints = Math.min(Math.floor(value[0]), self.noofpoints);
-            self.curveY = new Array(self.noOfPoints);
-            self.curveX = new Array(self.noOfPoints);
-            for (let i = 0; i < self.noOfPoints; i++) {
-              self.curveX[i] = value[2 * i + 1];
-              self.curveY[i] = value[2 * i + 2];
+            this.noOfPoints = Math.min(Math.floor(res.value[0]), this.noofpoints);
+            this.curveY = new Array(this.noOfPoints);
+            this.curveX = new Array(this.noOfPoints);
+            for (let i = 0; i < this.noOfPoints; i++) {
+              this.curveX[i] = res.value[2 * i + 1];
+              this.curveY[i] = res.value[2 * i + 2];
             }
-            self.dyn.repaintNow = true;
+            this.dyn.repaintNow = true;
             break;
         }
         break;
@@ -4491,18 +4486,17 @@ class DynXY_Curve extends DynElem {
     }
 
     // Read y-array
-    switch (self.datatype) {
+    switch (this.datatype) {
       case CurveDataType.XYArrays:
-        let pname = self.dyn.parseAttrName(self.y_attr);
-        self.noOfPoints = Math.min(self.noOfPoints, pname.elements);
-        self.yAttrType = pname.type;
-        self.curveY = new Array(self.noOfPoints);
+        let pname = this.dyn.parseAttrName(this.y_attr);
+        this.noOfPoints = Math.min(this.noOfPoints, pname.elements);
+        this.yAttrType = pname.type;
+        this.curveY = new Array(this.noOfPoints);
 
-        switch (self.yAttrType) {
+        switch (this.yAttrType) {
           case Type.Float32:
-            self.dyn.graph.getGdh()
-                .getObjectInfoFloatArray(pname.name, self.noOfPoints, self.scan3,
-                    self);
+            this.dyn.graph.getGdh()
+                .getObjectInfoFloatArray(pname.name, this.noOfPoints).then(this.scan3);
             break;
           case Type.Int32:
           case Type.Int16:
@@ -4510,9 +4504,8 @@ class DynXY_Curve extends DynElem {
           case Type.UInt32:
           case Type.UInt16:
           case Type.UInt8:
-            self.dyn.graph.getGdh()
-                .getObjectInfoIntArray(pname.name, self.noOfPoints, self.scan3,
-                    self);
+            this.dyn.graph.getGdh()
+                .getObjectInfoIntArray(pname.name, this.noOfPoints).then(this.scan3);
             break;
           default:
             return;
@@ -4521,14 +4514,14 @@ class DynXY_Curve extends DynElem {
     }
   }
 
-  static scan3(id, self, sts, value) {
-    if (!(sts & 1)) {
+  scan3(res) {
+    if (!(res.sts & 1)) {
       return;
     }
 
-    switch (self.datatype) {
+    switch (this.datatype) {
       case CurveDataType.XYArrays:
-        switch (self.yAttrType) {
+        switch (this.yAttrType) {
           case Type.Float32:
           case Type.Int32:
           case Type.Int16:
@@ -4536,8 +4529,8 @@ class DynXY_Curve extends DynElem {
           case Type.UInt32:
           case Type.UInt16:
           case Type.UInt8:
-            self.curveY = value.slice(0, self.noOfPoints);
-            self.dyn.repaintNow = true;
+            this.curveY = res.value.slice(0, this.noOfPoints);
+            this.dyn.repaintNow = true;
             break;
           default:
             return;
@@ -4545,8 +4538,8 @@ class DynXY_Curve extends DynElem {
         break;
     }
 
-    self.object.set_xy_data(self.curveY, self.curveX, self.curve_number - 1,
-        self.noOfPoints);
+    this.object.set_xy_data(this.curveY, this.curveX, this.curve_number - 1,
+        this.noOfPoints);
   }
 }
 
@@ -6674,16 +6667,16 @@ class DynIncrAnalog extends DynElem {
           case Database.Gdh:
             if (typeId === Type.Int32) {
               this.dyn.graph.getGdh()
-                  .getObjectInfoInt(pname.name, DynIncrAnalog.action2, this);
+                  .getObjectInfoInt(pname.name).then(this.action2);
             } else {
               this.dyn.graph.getGdh()
-                  .getObjectInfoFloat(pname.name, DynIncrAnalog.action2, this);
+                  .getObjectInfoFloat(pname.name).then(this.action2);
             }
             break;
           case Database.Local:
             let ret = this.dyn.graph.getLdb()
                 .getObjectInfo(this.dyn.graph, pname.name);
-            DynIncrAnalog.action2(0, this, 1, ret.value);
+            this.action2({id: 0, sts: 1, value: ret.value});
             break;
         }
         break;
@@ -6692,33 +6685,34 @@ class DynIncrAnalog extends DynElem {
     return 1;
   }
 
-  static action2(id, self, sts, value) {
-    if (!(sts & 1)) {
+  action2(res) {
+    if (!(res.sts & 1)) {
       return;
     }
 
-    let pname = self.dyn.parseAttrName(self.attribute);
+    let pname = this.dyn.parseAttrName(this.attribute);
     if (pname === null) {
       return 1;
     }
     let typeId = (pname.type < 0) ? Type.Float32 : pname.type;
-    value += self.increment;
-    if (!(self.min_value === 0 && self.max_value === 0)) {
+    let sts = res.sts;
+    let value = res.value + this.increment;
+    if (!(this.min_value === 0 && this.max_value === 0)) {
       if (typeId === Type.Int32) {
-        value = clamp(value, Math.floor(self.min_value), Math.floor(self.max_value));
+        value = clamp(value, Math.floor(this.min_value), Math.floor(this.max_value));
       } else {
-        value = clamp(value, self.min_value, self.max_value);
+        value = clamp(value, this.min_value, this.max_value);
       }
     }
 
     if (pname.database === Database.Gdh) {
       if (typeId === Type.Int32) {
-        sts = self.dyn.graph.getGdh().setObjectInfoInt(pname.name, value);
+        sts = this.dyn.graph.getGdh().setObjectInfoInt(pname.name, value);
       } else {
-        sts = self.dyn.graph.getGdh().setObjectInfoFloat(pname.name, value);
+        sts = this.dyn.graph.getGdh().setObjectInfoFloat(pname.name, value);
       }
     } else if (pname.database === Database.Local) {
-      sts = self.dyn.graph.getLdb().setObjectInfo(self.dyn.graph, pname.name, value);
+      sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, value);
     }
     if (even(sts)) {
       console.log("IncrAnalog " + pname.name);
@@ -8406,46 +8400,46 @@ class DynMethodToolbar extends DynElem {
     this.pname_name = pname.name;
 
     let parsed_name = this.pname_name + ".XttMethodsMask.Flags";
-    this.dyn.graph.getGdh().getObjectInfoInt(parsed_name, DynMethodToolbar.connect2, this);
+    this.dyn.graph.getGdh().getObjectInfoInt(parsed_name).then(this.connect2);
   }
 
-  static connect2(id, self, sts, value) {
-    if (sts & 1) {
-      self.xm_mask_flags = value;
+  connect2(res) {
+    if (res.sts & 1) {
+      this.xm_mask_flags = res.value;
 
-      if ((self.xm_mask_flags & XttMethodsFlagsMask.IsConfigured) === 0) {
-        self.mask_configure = 1;
-        self.mask_store = 1;
-        self.connect5();
+      if ((this.xm_mask_flags & XttMethodsFlagsMask.IsConfigured) === 0) {
+        this.mask_configure = 1;
+        this.mask_store = 1;
+        this.connect5();
       } else {
-        let parsed_name = self.pname_name + ".XttMethodsMask.OpMethods";
-        self.dyn.graph.getGdh().getObjectInfoInt(parsed_name, self.connect3, self);
+        let parsed_name = this.pname_name + ".XttMethodsMask.OpMethods";
+        this.dyn.graph.getGdh().getObjectInfoInt(parsed_name).then(this.connect3);
       }
     } else {
-      self.mask_configure = 1;
-      self.connect5();
+      this.mask_configure = 1;
+      this.connect5();
     }
   }
 
-  static connect3(id, self, sts, value) {
-    if (sts & 1) {
-      self.xm_mask_opmethods = value;
+  connect3(res) {
+    if (res.sts & 1) {
+      this.xm_mask_opmethods = res.value;
     } else {
-      console.log("DynMethodToolbar: " + self.pname_name);
-      self.mask_configure = 1;
+      console.log("DynMethodToolbar: " + this.pname_name);
+      this.mask_configure = 1;
     }
-    let parsed_name = self.pname_name + ".XttMethodsMask.MntMethods";
-    self.dyn.graph.getGdh().getObjectInfoInt(parsed_name, self.connect4, self);
+    let parsed_name = this.pname_name + ".XttMethodsMask.MntMethods";
+    this.dyn.graph.getGdh().getObjectInfoInt(parsed_name).then(this.connect4);
   }
 
-  static connect4(id, self, sts, value) {
-    if (sts & 1) {
-      self.xm_mask_mntmethods = value;
+  connect4(res) {
+    if (res.sts & 1) {
+      this.xm_mask_mntmethods = res.value;
     } else {
-      console.log("DynMethodToolbar: " + self.pname_name);
-      self.mask_configure = 1;
+      console.log("DynMethodToolbar: " + this.pname_name);
+      this.mask_configure = 1;
     }
-    self.connect5();
+    this.connect5();
   }
 
   connect5() {
@@ -8667,8 +8661,7 @@ class DynMethodPulldownMenu extends DynElem {
           this.pname_name = pname.name;
           let parsed_name = this.pname_name + ".XttMethodsMask.Flags";
 
-          this.dyn.graph.getGdh()
-              .getObjectInfoInt(parsed_name, DynMethodPulldownMenu.action2, this);
+          this.dyn.graph.getGdh().getObjectInfoInt(parsed_name).then(this.action2);
         }
 
         break;
@@ -8744,46 +8737,45 @@ class DynMethodPulldownMenu extends DynElem {
     return 1;
   }
 
-  static action2(id, self, sts, value) {
-    if (sts & 1) {
-      self.xm_mask_flags = value;
+  action2(res) {
+    if (res.sts & 1) {
+      this.xm_mask_flags = res.value;
 
-      if ((self.xm_mask_flags & XttMethodsFlagsMask.IsConfigured) === 0) {
-        self.mask_configure = 1;
-        self.mask_store = 1;
-        self.action5();
+      if ((this.xm_mask_flags & XttMethodsFlagsMask.IsConfigured) === 0) {
+        this.mask_configure = 1;
+        this.mask_store = 1;
+        this.action5();
       } else {
-        let parsed_name = self.pname_name + ".XttMethodsMask.OpMethods";
+        let parsed_name = this.pname_name + ".XttMethodsMask.OpMethods";
 
-        self.dyn.graph.getGdh()
-            .getObjectInfoInt(parsed_name, self.action3, self);
+        this.dyn.graph.getGdh().getObjectInfoInt(parsed_name).then(this.action3);
       }
     } else {
-      self.mask_configure = 1;
-      self.action5();
+      this.mask_configure = 1;
+      this.action5();
     }
   }
 
-  static action3(id, self, sts, value) {
-    if (sts & 1) {
-      self.xm_mask_opmethods = value;
+  action3(res) {
+    if (res.sts & 1) {
+      this.xm_mask_opmethods = res.value;
     } else {
-      console.log("DynMethodToolbar: " + self.pname_name);
-      self.mask_configure = 1;
+      console.log("DynMethodToolbar: " + this.pname_name);
+      this.mask_configure = 1;
     }
 
-    let parsed_name = self.pname_name + ".XttMethodsMask.MntMethods";
-    self.dyn.graph.getGdh().getObjectInfoInt(parsed_name, self.action4, self);
+    let parsed_name = this.pname_name + ".XttMethodsMask.MntMethods";
+    this.dyn.graph.getGdh().getObjectInfoInt(parsed_name).then(this.action4);
   }
 
-  static action4(id, self, sts, value) {
-    if (sts & 1) {
-      self.xm_mask_mntmethods = value;
+  action4(res) {
+    if (res.sts & 1) {
+      this.xm_mask_mntmethods = res.value;
     } else {
-      console.log("DynMethodToolbar: " + self.pname_name);
-      self.mask_configure = 1;
+      console.log("DynMethodToolbar: " + this.pname_name);
+      this.mask_configure = 1;
     }
-    self.action5();
+    this.action5();
   }
 
   action5() {
