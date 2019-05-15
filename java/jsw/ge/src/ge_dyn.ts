@@ -5992,6 +5992,97 @@ class DynFillLevel extends DynElem {
   }
 }
 
+class DynDigCommand extends DynElem {
+  command = "";
+  a = null;
+  first_scan = true;
+  level = 0;
+
+  constructor(dyn) {
+    super(dyn, DynPrio.DigCommand);
+    this.dyn_type1 = DynType1.DigCommand;
+  }
+
+  connect(object) {
+    this.a = new DynReference(this.dyn, this.attribute);
+    this.a.connect(this.dyn);
+    if (!this.a.sts) {
+      console.log("DigCommand: " + this.attribute);
+      return 1;
+    }
+
+    return 1;
+  }
+
+  disconnect() {
+    if (this.a) {
+      this.a.disconnect();
+    }
+  }
+
+  scan(object) {
+    if (this.a === null || !this.a.sts) {
+      return;
+    }
+
+    let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    value = (this.a.inverted) ? !value : value;
+
+    if (this.first_scan) {
+      this.a.oldValue = value;
+      this.first_scan = false;
+      return;
+    }
+
+    if ((!this.level && value && !this.a.oldValue) || (this.level && value)) {
+      let cmd = this.dyn.graph.getCommand(this.command);
+      this.dyn.graph.command(cmd);
+      return;
+    }
+
+    this.a.oldValue = value;
+  }
+
+  open(lines, row) {
+    let i;
+    for (i = row; i < lines.length; i++) {
+      let tokens = lines[i].split(' ');
+      let key = parseInt(tokens[0], 10);
+
+      switch (key) {
+        case DynSave.DigCommand:
+          break;
+        case DynSave.DigCommand_attribute:
+          if (tokens.length > 1) {
+            this.attribute = tokens[1];
+          }
+          break;
+        case DynSave.DigCommand_command:
+          if (tokens.length > 1) {
+            this.command = tokens[1];
+          }
+          break;
+        case DynSave.DigCommand_level:
+          this.level = parseInt(tokens[1], 10);
+          break;
+        case DynSave.DigCommand_instance:
+          this.instance = parseInt(tokens[1], 10);
+          break;
+        case DynSave.DigCommand_instance_mask:
+          this.instance_mask = parseInt(tokens[1], 10);
+          break;
+        case DynSave.End:
+          return i;
+        default:
+          console.log("Syntax error in DynDigCommand");
+          break;
+      }
+    }
+
+    return i;
+  }
+}
+
 class DynSetDig extends DynElem {
   constructor(dyn) {
     super(dyn, DynPrio.SetDig);
