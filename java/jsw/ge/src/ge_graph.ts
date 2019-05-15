@@ -75,7 +75,7 @@ class GraphLocalDb {
     let typeId = this.getTypeId(attributeName);
     let name = this.getName(attributeName);
     if (typeId === 0) {
-      return i;
+      return 0;
     }
 
     let id = this.nameToId(owner, name);
@@ -212,7 +212,7 @@ class Graph {
 
   constructor(appl) {
     this.appl = appl;
-    if (typeof InstallTrigger !== 'undefined') {
+    if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
       // Firefox is not os fast...
       this.scan_time = 1;
       this.fast_scan_time = 1;
@@ -249,31 +249,27 @@ class Graph {
 
   gdh_init_cb() {
     if (this.priv === null) {
-      this.gdh.login("", "", this.login_cb, this);
+      this.gdh.login("", "").then(this.login_cb);
     }
 
     this.ctx.traceConnect();
-    this.gdh.refObjectInfoList(this.trace_connected);
+    this.gdh.refObjectInfoList().then(e => this.trace_cyclic());
   }
 
-  login_cb(id, data, sts, result) {
-    console.log("Login:", sts, result);
-    this.priv = (sts & 1) ? result : 0;
-  }
-
-  trace_connected(id, sts) {
-    this.trace_cyclic();
+  login_cb(res) {
+    console.log("Login:", res.sts, res.value);
+    this.priv = (res.sts & 1) ? res.value : 0;
   }
 
   trace_cyclic() {
     if (this.frame.nogdh) {
-      this.trace_scan(0, 0);
+      this.trace_scan();
     } else {
       this.gdh.getRefObjectInfoAll(this.trace_scan);
     }
   }
 
-  trace_scan(id, sts) {
+  trace_scan() {
     this.scan_time = this.ctx.scantime;
     this.fast_scan_time = this.ctx.fast_scantime;
     this.animation_scan_time = this.ctx.animation_scantime;
@@ -306,9 +302,6 @@ class Graph {
         return ret;
       }
       let dyn = new Dyn(this);
-      if (type !== UserdataCbType.NodeClass) {
-        dyn.userdata = this;
-      }
       ret.userdata = dyn;
       ret.row = dyn.open(lines, row);
     }
@@ -354,7 +347,6 @@ class Graph {
       case Event.MB1Down:
       case Event.MB1DoubleClick:
       case Event.MB3Press:
-      case Event.ValueChanged:
       case Event.SliderMoveStart:
       case Event.SliderMoveEnd:
       case Event.SliderMoved:
@@ -712,6 +704,18 @@ class Graph {
     return Math.min(this.scan_time, this.animation_scan_time);
   }
 
+  setScanTime(scan_time) {
+    this.scan_time = scan_time;
+  }
+
+  setFastScanTime(fast_scan_time) {
+    this.fast_scan_time = fast_scan_time;
+  }
+
+  setAnimationScanTime(animation_scan_time) {
+    this.animation_scan_time = animation_scan_time;
+  }
+
   command(cmd) {
     if (this.appl) {
       return this.appl.command(cmd);
@@ -753,5 +757,10 @@ class Graph {
 
   loadCtx(file, read_cb) {
     return this.frame.readGrowWindow(file, read_cb);
+  }
+
+  getReferenceName(name) {
+    // TODO
+    return null;
   }
 }

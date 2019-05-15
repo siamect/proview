@@ -707,7 +707,6 @@ class GDraw {
 
 class PlowCtx {
   gdh: Gdh = null;
-  debug = false;
   nodraw = 0;
   zoom_factor = 20.0;
   base_zoom_factor = 20.0;

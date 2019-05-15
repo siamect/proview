@@ -95,7 +95,7 @@ class Ev {
           console.log("toolitem2", o.userdata.e.supObject.vid,
               o.userdata.e.supObject.oix);
           this.ctx.gdh.getObjectFromAref(o.userdata.e.supObject,
-              GdhOp.GET_OP_SELF, this.open_navigator_cb, null);
+              GdhOp.GET_OP_SELF).then(this.open_navigator_cb);
           console.log("toolitem2 event");
         });
     // Trace sup object
@@ -106,18 +106,16 @@ class Ev {
           if (o === null) {
             return;
           }
-          let newwindow = window.open("", "_blank");
           this.ctx.gdh.getObjectFromAref(o.userdata.e.supObject,
-              GdhOp.GET_OP_METHOD_PLC, this.open_plc_cb, newwindow);
+              GdhOp.GET_OP_METHOD_PLC).then(this.open_plc_cb);
         });
     // Graph event name
     document.getElementById("toolitem4")
         .addEventListener("click", function (event) {
           let o = this.ctx.get_select();
           if (o.userdata instanceof EvItemAlarm) {
-            let newwindow = window.open("", "_blank");
             this.ctx.gdh.getObjectFromName(o.userdata.e.eventName,
-                GdhOp.GET_OP_METHOD_GRAPH, this.open_graph_cb, newwindow);
+                GdhOp.GET_OP_METHOD_GRAPH).then(this.open_graph_cb);
           }
         });
     // Object raph event name
@@ -125,9 +123,8 @@ class Ev {
         .addEventListener("click", function (event) {
           let o = this.ctx.get_select();
           if (o.userdata instanceof EvItemAlarm) {
-            let newwindow = window.open("", "_blank");
             this.ctx.gdh.getObjectFromName(o.userdata.e.eventName,
-                GdhOp.GET_OP_METHOD_OBJECTGRAPH, this.open_graph_cb, newwindow);
+                GdhOp.GET_OP_METHOD_OBJECTGRAPH).then(this.open_graph_cb);
           }
         });
     // Navigator event name
@@ -147,9 +144,8 @@ class Ev {
           if (o === null) {
             return;
           }
-          let newwindow = window.open("", "_blank");
           this.ctx.gdh.getObjectFromName(o.userdata.e.eventName,
-              GdhOp.GET_OP_METHOD_PLC, this.open_plc_cb, newwindow);
+              GdhOp.GET_OP_METHOD_PLC).then(this.open_plc_cb);
           console.log("toolitem7 event");
         });
     // History event name
@@ -175,7 +171,7 @@ class Ev {
           if (o === null) {
             return;
           }
-          this.ctx.gdh.crrSignal(o.userdata.e.eventName, this.open_crr_cb, o);
+          this.ctx.gdh.crrSignal(o.userdata.e.eventName).then(this.open_crr_cb(o));
           console.log("toolitem10 event");
         });
     // Help event name
@@ -192,12 +188,10 @@ class Ev {
             return;
           }
           if (o.userdata instanceof EvItemAlarm) {
-            let newwindow = window.open("", "_blank");
             this.ctx.gdh.getObjectFromName(o.userdata.e.eventName,
-                GdhOp.GET_OP_METHOD_HELPCLASS, this.open_helpclass_cb, newwindow);
+                GdhOp.GET_OP_METHOD_HELPCLASS).then(this.open_helpclass_cb);
           }
         });
-
   }
 
   is_authorized(access) {
@@ -206,25 +200,26 @@ class Ev {
 
   gdh_init_cb() {
     if (!this.priv) {
-      this.ctx.gdh.login("", "", this.login_cb, this);
+      this.ctx.gdh.login("", "").then(this.login_cb);
     }
 
-    //this.ctx.gdh.mhSync( this.mhSyncIdx, this.sync_cb, this);
+    //this.ctx.gdh.mhSync(this.mhSyncIdx).then(this.sync_cb);
 
     this.ctx.gdh.listSent = true;
     this.trace_cyclic();
   }
 
-  login_cb(id, data, sts, result) {
-    console.log("Login:", sts, result);
-    this.priv = (sts & 1) ? result : 0;
+  login_cb(res) {
+    console.log("Login:", res.sts, res.value);
+    this.priv = (res.sts & 1) ? res.value : 0;
   }
 
-  sync_cb(id, data, sts, result) {
-    if (!(sts & 1)) {
+  sync_cb(res) {
+    if (!(res.sts & 1)) {
       return;
     }
 
+    let result = res.value;
     if (result.length === 0) {
       return;
     }
@@ -326,7 +321,7 @@ class Ev {
 
     let item = node.get_userdata();
     console.log("Ack", item.e.eventText);
-    this.ctx.gdh.mhAcknowledge(item.e.eventId, this.ack_cb, this);
+    this.ctx.gdh.mhAcknowledge(item.e.eventId).then(this.ack_cb);
 
     if (item.e.eventStatus & EventStatus.NotRet) {
       item.e.eventStatus &= ~EventStatus.NotAck;
@@ -338,24 +333,28 @@ class Ev {
     this.ctx.draw();
   }
 
-  ack_cb(id, data, sts) {
-    console.log("ack sts", sts);
+  ack_cb(res) {
+    console.log("ack sts", res.sts);
   }
 
-  open_objectgraph_cb(id, data, sts, result) {
-    if ((sts & 1) === 0) {
-      data.document.write("Error status " + sts);
+  open_objectgraph_cb(res) {
+    let w = window.open("", "_blank");
+    if ((res.sts & 1) === 0) {
+      w.document.write("Error status " + res.sts);
     } else {
-      data.location.href =
+      let result = res.value;
+      w.location.href =
           "ge.html?graph=" + result.param1 + "&instance=" + result.fullname;
-      data.document.title = result.fullname;
+      w.document.title = result.fullname;
     }
   }
 
-  open_graph_cb(id, data, sts, result) {
-    if ((sts & 1) === 0) {
-      data.document.write("Error status " + sts);
+  open_graph_cb(res) {
+    let w = window.open("", "_blank");
+    if ((res.sts & 1) === 0) {
+      w.document.write("Error status " + res.sts);
     } else {
+      let result = res.value;
       let idx = result.param1.indexOf('.');
       if (idx !== -1) {
         result.param1 = result.param1.substring(0, idx);
@@ -366,62 +365,61 @@ class Ev {
         instancestr = "&instance=" + result.fullname;
       }
 
-      data.location.href = "ge.html?graph=" + result.param1 + instancestr;
-      data.document.title = result.param1;
+      w.location.href = "ge.html?graph=" + result.param1 + instancestr;
+      w.document.title = result.param1;
     }
   }
 
-  open_plc_cb(id, data, sts, result) {
-    if ((sts & 1) === 0) {
-      data.document.write("Error status " + sts);
+  open_plc_cb(res) {
+    let w = window.open("", "_blank");
+    if ((res.sts & 1) === 0) {
+      w.document.write("Error status " + res.sts);
     } else {
-      let param1;
-      if (result.param1 === "") {
-        param1 = "";
-      } else {
-        param1 = "&obj=" + result.param1;
-      }
+      let result = res.value;
+      let param1 = result.param1 ? ("&obj=" + result.param1) : "";
       console.log("flow.html?vid=" + result.objid.vid + "&oix=" +
           result.objid.oix + param1);
-      data.location.href =
+      w.location.href =
           "flow.html?vid=" + result.objid.vid + "&oix=" + result.objid.oix +
           param1;
-      data.document.title = "Trace " + result.fullname;
+      w.document.title = "Trace " + result.fullname;
     }
   }
 
-  open_navigator_cb(id, data, sts, result) {
-    console.log("Open navigator", sts);
-    if ((sts & 1) === 0) {
-      console.log("Error status " + sts);
+  open_navigator_cb(res) {
+    console.log("Open navigator", res.sts);
+    if ((res.sts & 1) === 0) {
+      console.log("Error status " + res.sts);
     } else {
-      localStorage.setItem("XttMethodNavigator", result.fullname);
+      localStorage.setItem("XttMethodNavigator", res.value.fullname);
       console.log("storage", localStorage.getItem("XttMethodNavigator"));
     }
   }
 
-  open_objectgraph_cb(id, data, sts, result) {
-    if ((sts & 1) === 0) {
-      data.document.write("Error status " + sts);
+  open_objectgraph_cb(res) {
+    let w = window.open("", "_blank");
+    if ((res.sts & 1) === 0) {
+      w.document.write("Error status " + res.sts);
     } else {
-      let classname = result.classname.toLowerCase();
+      let classname = res.value.classname.toLowerCase();
       if (classname.substring(0, 1) === "$") {
         classname = classname.substring(1);
       }
       let graphname = "pwr_c_" + classname;
-      data.location.href =
-          "ge.html?graph=" + graphname + "&instance=" + result.fullname;
-      data.document.title = graphname + " " + result.fullname;
+      w.location.href =
+          "ge.html?graph=" + graphname + "&instance=" + res.value.fullname;
+      w.document.title = graphname + " " + res.value.fullname;
     }
   }
 
-  open_helpclass_cb(id, data, sts, result) {
-    if ((sts & 1) === 0) {
-      data.document.write("Error status " + sts);
+  open_helpclass_cb(res) {
+    let w = window.open("", "_blank");
+    if ((res.sts & 1) === 0) {
+      w.document.write("Error status " + res.sts);
     } else {
-      console.log("open_helpclass", result.param1);
-      data.location.href =
-          location.protocol + "//" + location.host + result.param1;
+      console.log("open_helpclass", res.value.param1);
+      w.location.href =
+          location.protocol + "//" + location.host + res.value.param1;
     }
   }
 
@@ -442,12 +440,12 @@ class Ev {
   }
 
   trace_cyclic() {
-    this.ctx.gdh.mhSync(this.mhSyncIdx, this.sync_cb, this);
+    this.ctx.gdh.mhSync(this.mhSyncIdx).then(this.sync_cb);
 
     this.timer = setTimeout(this.trace_cyclic, 1000);
   }
 
-  trace_scan(id, sts) {
+  trace_scan(res) {
     this.scan_update = false;
     if (this.scan_update) {
       this.ctx.draw();
@@ -581,17 +579,13 @@ class Ev {
       case Event.Key_CtrlL:
         let o = this.ctx.get_select();
         if (o.userdata instanceof EvItemAlarm) {
-          let newwindow = window.open("", "_blank");
-          this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC,
-              this.open_plc_cb, newwindow);
+          this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC).then(this.open_plc_cb);
         }
         break;
       case Event.Key_CtrlG:
         let o = this.ctx.get_select();
         if (o.userdata instanceof EvItemAlarm) {
-          let newwindow = window.open("", "_blank");
-          this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC,
-              this.open_objectgraph_cb, newwindow);
+          this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC).then(this.open_objectgraph_cb);
         }
         break;
       default:

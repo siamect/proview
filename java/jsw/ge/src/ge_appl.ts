@@ -74,10 +74,8 @@ class Appl {
             }
             if (classGraph) {
               console.log("Cmd classGraph");
-              let newwindow = window.open("", "_blank");
               this.graph.gdh.getObjectFromName(instanceValue,
-                  GdhOp.GET_OP_METHOD_OBJECTGRAPH, this.open_objectgraph_cb,
-                  newwindow);
+                  GdhOp.GET_OP_METHOD_OBJECTGRAPH).then(this.open_objectgraph_cb);
             } else {
               let graphName = cli.getQualValue("cli_arg2").toLowerCase();
               if (!graphName) {
@@ -86,7 +84,7 @@ class Appl {
               }
 
               graphName = graphName.toLowerCase();
-              if (graphName.charAt(".pwg") === -1) {
+              if (!graphName.endsWith(".pwg")) {
                 graphName += ".pwg";
               }
 
@@ -266,14 +264,16 @@ class Appl {
     }
   }
 
-  open_objectgraph_cb(id, data, sts, result) {
-    if ((sts & 1) === 0) {
-      data.document.write("Error status " + sts);
+  open_objectgraph_cb(res) {
+    let w = window.open("", "_blank");
+    if ((res.sts & 1) === 0) {
+      w.document.write("Error status " + res.sts);
     } else {
+      let result = res.value;
       console.log("param1", result.param1);
-      data.location.href =
+      w.location.href =
           "ge.html?graph=" + result.param1 + "&instance=" + result.fullname;
-      data.document.title = result.param1 + " " + result.fullname;
+      w.document.title = result.param1 + " " + result.fullname;
     }
   }
 }
