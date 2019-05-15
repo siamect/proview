@@ -8919,6 +8919,56 @@ class DynMethodPulldownMenu extends DynElem {
   }
 }
 
+class DynCatchSignal extends DynElem {
+  signal_name = "";
+
+  constructor(dyn) {
+    super(dyn, DynPrio.CatchSignal);
+    this.action_type1 = ActionType1.CatchSignal;
+  }
+
+  action(object, e) {
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
+      return 1;
+    }
+
+    if (e.event === Event.Signal && e.signal.signal_name === this.signal_name) {
+      let e = new GlowEvent();
+      e.event = Event.MB1Click;
+      e.object = object;
+      let sts = this.dyn.action(object, e);
+      if (sts === GLOW__NO_PROPAGATE || sts === GLOW__TERMINATED || sts === GLOW__SUBTERMINATED) {
+        return sts;
+      }
+    }
+
+    return 1;
+  }
+
+  open(lines, row) {
+    let i;
+    for (i = row; i < lines.length; i++) {
+      let tokens = lines[i].split(' ');
+      let key = parseInt(tokens[0], 10);
+
+      switch (key) {
+        case DynSave.CatchSignal:
+          break;
+        case DynSave.CatchSignal_signal_name:
+          this.signal_name = tokens[1];
+          break;
+        case DynSave.End:
+          return i;
+        default:
+          console.log("Syntax error in DynCatchSignal");
+          break;
+      }
+    }
+
+    return i;
+  }
+}
+
 class DynPopupMenu extends DynElem {
   ref_object;
 
