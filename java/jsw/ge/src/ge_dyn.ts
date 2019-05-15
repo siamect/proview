@@ -8969,6 +8969,68 @@ class DynCatchSignal extends DynElem {
   }
 }
 
+class DynEmitSignal extends DynElem {
+  signal_name = "";
+  global = 0;
+
+  constructor(dyn) {
+    super(dyn, DynPrio.EmitSignal);
+    this.action_type1 = ActionType1.EmitSignal;
+  }
+
+  action(object, e) {
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
+      return 1;
+    }
+
+    switch (e.event) {
+      case Event.MB1Down:
+        object.setColorInverse(1);
+        break;
+      case Event.MB1Up:
+        object.setColorInverse(0);
+        break;
+      case Event.Key_Return:
+      case Event.MB1Click:
+        if (this.global) {
+          let command = "emit signal/signalname=" + this.signal_name;
+          let cmd = this.dyn.graph.getCommand(command);
+          this.dyn.graph.command(cmd);
+        } else {
+          //TODO:
+          //this.dyn.graph.signalSend(this.signal_name);
+        }
+    }
+
+    return 1;
+  }
+
+  open(lines, row) {
+    let i;
+    for (i = row; i < lines.length; i++) {
+      let tokens = lines[i].split(' ');
+      let key = parseInt(tokens[0], 10);
+
+      switch (key) {
+        case DynSave.EmitSignal:
+          break;
+        case DynSave.EmitSignal_signal_name:
+          this.signal_name = tokens[1];
+          break;
+        case DynSave.EmitSignal_global:
+          this.global = Number(tokens[1]);
+        case DynSave.End:
+          return i;
+        default:
+          console.log("Syntax error in DynEmitSignal");
+          break;
+      }
+    }
+
+    return i;
+  }
+}
+
 class DynPopupMenu extends DynElem {
   ref_object;
 
