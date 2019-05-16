@@ -216,8 +216,8 @@ class GrowPie extends GrowArc {
 
       if (grad === Gradient.No || fillcolor === DrawType.ColorRed) {
         let drawtype = (chot === 0) ? fillcolor : GlowColor.shift_drawtype(fillcolor, chot, null);
-        this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, ia1 - rot,
-            ia2, drawtype);
+        this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, ia1 - rot,
+            ia2, drawtype, true, 0);
       } else if (!display_shadow || this.shadow_width === 0) {
         let f1, f2;
         if (this.gradient_contrast >= 0) {

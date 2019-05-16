@@ -183,8 +183,8 @@ class GrowTrend extends GrowRect {
           GlowColor.get_drawtype(this.fill_drawtype, DrawType.FillHighlight,
               highlight, colornode, 1, 0);
       if (grad === Gradient.No) {
-        this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-            drawtype);
+        this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+            drawtype, true, 0);
       } else {
         let rotation = t ? this.trf.rot(t) : this.trf.rot();
 
@@ -297,8 +297,7 @@ class GrowTrend extends GrowRect {
     }
 
     if (this.border !== 0) {
-      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx,
-          0);
+      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, false, idx);
     }
   }
 

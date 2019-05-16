@@ -77,7 +77,7 @@ class GrowCtx extends Rect {
   a: GlowArray;
   a_nc: GlowArray;
   a_cc: GlowArray;
-  gdraw: GlowDraw;
+  gdraw: Draw;
 
   constructor(ctx) {
     super();
@@ -90,7 +90,7 @@ class GrowCtx extends Rect {
     if (ctx) {
       this.gdraw = ctx.gdraw;
     } else {
-      this.gdraw = new GlowDraw(this);
+      this.gdraw = new Draw(this);
     }
   }
 
@@ -635,8 +635,8 @@ class GrowCtx extends Rect {
 
   draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
     // Draw background color
-    this.gdraw.fill_rect(0, 0, this.gdraw.canvas.width,
-        this.gdraw.canvas.height, this.background_color);
+    this.gdraw.rect(0, 0, this.gdraw.canvas.width,
+        this.gdraw.canvas.height, this.background_color, true, 0);
 
     // Draw connections
     this.a.forEach(function (e) {

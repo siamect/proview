@@ -222,7 +222,7 @@ class GrowRect extends GlowRect {
         new Point(ll_x, ur_y),
         new Point(ll_x, ll_y)
       ];
-      this.ctx.gdraw.fill_polyline(points, 7, drawtype, 0);
+      this.ctx.gdraw.polyline(points, 7, drawtype, true, 0);
 
       // Draw dark shadow
       drawtype =
@@ -237,14 +237,14 @@ class GrowRect extends GlowRect {
         new Point(ur_x, ll_y),
         new Point(ur_x, ur_y)
       ];
-      this.ctx.gdraw.fill_polyline(points, 7, drawtype, 0);
+      this.ctx.gdraw.polyline(points, 7, drawtype, true, 0);
     }
     if (this.fill !== 0) {
       if (display_shadow && ish !== 0) {
         if (grad === Gradient.No || fillcolor === DrawType.ColorRed) {
           let drawtype = (chot === 0) ? fillcolor : GlowColor.shift_drawtype(fillcolor, chot, null);
-          this.ctx.gdraw.fill_rect(ll_x + ish, ll_y + ish, ur_x - ll_x - 2 *
-              ish, ur_y - ll_y - 2 * ish, drawtype);
+          this.ctx.gdraw.rect(ll_x + ish, ll_y + ish, ur_x - ll_x - 2 *
+              ish, ur_y - ll_y - 2 * ish, drawtype, true, 0);
         } else {
           let rotationa = t ? this.trf.rot(t) : this.trf.rot();
 
@@ -273,14 +273,13 @@ class GrowRect extends GlowRect {
             fa0 = fillcolor;
           }
           this.ctx.gdraw.gradient_fill_rect(ll_x + ish, ll_y + ish, ur_x -
-              ll_x - 2 * ish, ur_y - ll_y - 2 * ish, fa0, fa1, fa2,
-              this.ctx.gdraw.gradient_rotate(rotationa, grad));
+              ll_x - 2 * ish, ur_y - ll_y - 2 * ish, fa0, fa1, fa2, this.ctx.gdraw.gradient_rotate(rotationa, grad));
         }
       } else {
         if (grad === Gradient.No || fillcolor === DrawType.ColorRed) {
           let drawtype = (chot === 0) ? fillcolor : GlowColor.shift_drawtype(fillcolor, chot, null);
-          this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-              drawtype);
+          this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+              drawtype, true, 0);
         } else {
           let rotationb = t ? this.trf.rot(t) : this.trf.rot();
 
@@ -309,8 +308,7 @@ class GrowRect extends GlowRect {
             fb0 = fillcolor;
           }
           this.ctx.gdraw.gradient_fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y -
-              ll_y, fb0, fb1, fb2,
-              this.ctx.gdraw.gradient_rotate(rotationb, grad));
+              ll_y, fb0, fb1, fb2, this.ctx.gdraw.gradient_rotate(rotationb, grad));
         }
       }
     }
@@ -319,8 +317,7 @@ class GrowRect extends GlowRect {
       let drawtype =
           GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
               highlight, colornode, 0, 0);
-      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx,
-          0);
+      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, false, idx);
     }
   }
 

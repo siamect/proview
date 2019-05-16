@@ -691,20 +691,6 @@ class PlowRect {
   }
 }
 
-class GDraw {
-  ctx: PlowCtx;
-  canvas: HTMLCanvasElement;
-  gctx: CanvasRenderingContext2D;
-  offset_top: number;
-
-  constructor(ctx) {
-    this.ctx = ctx;
-    this.canvas = document.querySelector("canvas");
-    this.gctx = this.canvas.getContext("2d");
-    this.offset_top = this.canvas.offsetTop;
-  }
-}
-
 class PlowCtx {
   gdh: Gdh = null;
   nodraw = 0;
@@ -716,7 +702,7 @@ class PlowCtx {
   a: PlowArray;
   a_nc: PlowArray;
   name = "Claes context";
-  gdraw: GDraw;
+  gdraw: Draw;
   select_object: PlowNode = null;
   event_cb: (event: object, object: PlowNode, x: number, y: number) => void = null;
   event_object: PlowNode = null;
@@ -724,7 +710,7 @@ class PlowCtx {
   constructor() {
     this.a = new PlowArray(this);
     this.a_nc = new PlowArray(this);
-    this.gdraw = new GDraw(this);
+    this.gdraw = new Draw(this);
     this.rect = new Rect();
   }
 

@@ -111,8 +111,8 @@ class GrowAnnot extends GlowAnnot {
         if (rot < 45 || rot >= 315) {
           if (node.annotv_inputmode[this.number] !== 0 &&
               node.input_selected !== 0) {
-            this.ctx.gdraw.fill_rect(x1, y1 - height + descent, width, height,
-                DrawType.MediumGray);
+            this.ctx.gdraw.rect(x1, y1 - height + descent, width, height,
+                DrawType.MediumGray, true, 0);
           }
         } else {
           // Text is rotated, adjust the coordinates
@@ -143,7 +143,7 @@ class GrowAnnot extends GlowAnnot {
         }
 
         this.ctx.gdraw.text(x1, y1, node.annotv[this.number], ldraw_type, color,
-            idx, highlight, 0, lfont, tsize, rot);
+            idx, highlight, lfont, tsize, rot);
         break;
       case AnnotType.MultiLine:
         break;
@@ -167,8 +167,8 @@ class GrowAnnot extends GlowAnnot {
     }
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    return this.ctx.gdraw.getTextExtent(node.annotv[this.number], idx,
-        this.font, this.draw_type);
+    return this.ctx.gdraw.getTextExtent(node.annotv[this.number], this.draw_type, idx,
+        this.font);
   }
 
   event_handler(event, fx, fy) {

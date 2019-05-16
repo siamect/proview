@@ -168,8 +168,8 @@ class GrowAxisArc extends GrowArc {
       } else {
         text = this.format_text(this.format, this.min_value + this.increment);
       }
-      let p = this.ctx.gdraw.getTextExtent(text, Math.max(0, text_idx),
-          Font.Helvetica, this.text_drawtype);
+      let p = this.ctx.gdraw.getTextExtent(text, this.text_drawtype, Math.max(0, text_idx),
+          Font.Helvetica);
       z_width = p.x;
       z_height = p.y;
       z_descent = z_height / 4;
@@ -209,8 +209,8 @@ class GrowAxisArc extends GrowArc {
                       (this.increment < 0 && i === 0)))) {
             text = this.format_text(this.format, this.min_value + i *
                 this.increment);
-            p = this.ctx.gdraw.getTextExtent(text, Math.max(0, text_idx),
-                Font.Helvetica, this.text_drawtype);
+            p = this.ctx.gdraw.getTextExtent(text, this.text_drawtype, Math.max(0, text_idx),
+                Font.Helvetica);
             z_width = p.x;
             z_height = p.y;
             z_descent = z_height / 4;
@@ -228,8 +228,7 @@ class GrowAxisArc extends GrowArc {
               xt -= z_width / 2;
             }
             this.ctx.gdraw.text(xt, yt, text, this.text_drawtype,
-                this.text_color_drawtype, text_idx, highlight, 0,
-                Font.Helvetica, tsize, 0);
+                this.text_color_drawtype, text_idx, highlight, Font.Helvetica, tsize, 0);
           }
         }
       }

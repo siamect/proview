@@ -113,12 +113,7 @@ class GrowLine extends GlowLine {
         GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
             highlight, colornode, 0, 0);
 
-    if (this.line_type === LineType.Solid) {
-      this.ctx.gdraw.line(x1, y1, x2, y2, drawtype, idx, 0);
-    } else {
-      this.ctx.gdraw.line_dashed(x1, y1, x2, y2, drawtype, idx, 0,
-          this.line_type);
-    }
+    this.ctx.gdraw.line(x1, y1, x2, y2, drawtype, idx, 0, this.line_type);
   }
 
   get_borders(t, g) {

@@ -67,8 +67,8 @@ class GrowMenu extends GrowRect {
     this.item_cnt = 0;
     this.info.item.forEach(function (e) {
       if (e.occupied) {
-        let p = this.ctx.gdraw.getTextExtent(e.text,
-            Math.max(0, text_idx), this.font, this.text_drawtype);
+        let p = this.ctx.gdraw.getTextExtent(e.text, this.text_drawtype,
+            Math.max(0, text_idx), this.font);
         z_width = p.x;
         z_height = p.y;
         z_descent = z_height / 4;
@@ -119,8 +119,8 @@ class GrowMenu extends GrowRect {
     this.get_node_borders();
 
     if (this.fill !== 0) {
-      this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-          this.fill_drawtype);
+      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+          this.fill_drawtype, true, 0);
     }
     this.item_height = tot_z_height / this.item_cnt;
 
@@ -135,17 +135,16 @@ class GrowMenu extends GrowRect {
           } else {
             drawtype = GlowColor.shift_drawtype(this.fill_drawtype, -2, null);
           }
-          this.ctx.gdraw.fill_rect(ll_x,
-              Math.floor(ll_y + item_idx * this.item_height), ur_x - ll_x,
-              Math.floor(this.item_height), drawtype);
+          this.ctx.gdraw.rect(ll_x, Math.floor(ll_y + item_idx * this.item_height), ur_x - ll_x,
+              Math.floor(this.item_height), drawtype, true, 0);
         }
         let x_text = ll_x + 3;
         if (e.type === MenuItem.ButtonDisabled) {
           this.ctx.gdraw.text(x_text, y_text, e.text, this.text_drawtype,
-              this.text_color_disabled, text_idx, highlight, 0, this.font, tsize, 0);
+              this.text_color_disabled, text_idx, highlight, this.font, tsize, 0);
         } else {
           this.ctx.gdraw.text(x_text, y_text, e.text, this.text_drawtype,
-              this.text_color, text_idx, highlight, 0, this.font, tsize, 0);
+              this.text_color, text_idx, highlight, this.font, tsize, 0);
         }
         if (e.type === MenuItem.PulldownMenu) {
           // Draw arrow
@@ -159,14 +158,14 @@ class GrowMenu extends GrowRect {
             new Point(ur_x - arrow_size - 2, Math.floor(ll_y + item_idx *
                 this.item_height + this.item_height / 2 - arrow_size / 2)),
           ];
-          this.ctx.gdraw.fill_polyline(p, 4, DrawType.MediumGray, 0);
+          this.ctx.gdraw.polyline(p, 4, DrawType.MediumGray, true, 0);
         }
         item_idx++;
       }
     });
     if (this.border !== 0) {
       this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, this.draw_type,
-          idx, 0);
+          false, idx);
     }
   }
 

@@ -127,8 +127,8 @@ class GrowBar extends GrowRect {
               highlight, colornode, 1, 0);
 
       if (grad === Gradient.No) {
-        this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-            drawtype);
+        this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+            drawtype, true, 0);
       } else {
         let rotation = (t) ? this.trf.rot(t) : this.trf.rot();
 
@@ -199,7 +199,7 @@ class GrowBar extends GrowRect {
       }
 
       if (grad === Gradient.No) {
-        this.ctx.gdraw.fill_rect(x0, y0, width, height, dt);
+        this.ctx.gdraw.rect(x0, y0, width, height, dt, true, 0);
       } else {
         rotation = (t) ? this.trf.rot(t) : this.trf.rot();
 
@@ -225,8 +225,7 @@ class GrowBar extends GrowRect {
     }
 
     if (this.border !== 0) {
-      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx,
-          0);
+      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, false, idx);
     }
   }
 

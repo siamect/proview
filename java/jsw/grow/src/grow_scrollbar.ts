@@ -68,7 +68,7 @@ class GrowScrollBar extends GrowRect {
         DrawType.LineHighlight, highlight, colornode, 0, 0);
     let shift_drawtype;
 
-    this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fdrawtype);
+    this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fdrawtype, true, 0);
     if (this.shadow !== 0) {
       shift_drawtype = GlowColor.shift_drawtype(this.fill_drawtype, 2, null); // Dark
       this.ctx.gdraw.line(ll_x + 1, ll_y + 1, ll_x + 1, ur_y - 1,
@@ -106,7 +106,7 @@ class GrowScrollBar extends GrowRect {
           y0 = ll_y;
           break;
       }
-      this.ctx.gdraw.fill_rect(x0, y0, width, height, this.bar_color);
+      this.ctx.gdraw.rect(x0, y0, width, height, this.bar_color, true, 0);
       if (this.shadow !== 0) {
         shift_drawtype = GlowColor.shift_drawtype(this.bar_color, -2, null); // Light
         this.ctx.gdraw.line(x0 + 1, y0 + 1, x0 + 1, y0 + height - 1,
@@ -119,11 +119,10 @@ class GrowScrollBar extends GrowRect {
         this.ctx.gdraw.line(x0 + width - 1, y0 + 1, x0 + width - 1, y0 +
             height - 1, shift_drawtype, 0, 0);
       }
-      this.ctx.gdraw.rect(x0, y0, width, height, bdrawtype, idx, 0);
+      this.ctx.gdraw.rect(x0, y0, width, height, bdrawtype, false, idx);
     }
 
-    this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, bdrawtype, idx,
-        0);
+    this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, bdrawtype, false, idx);
   }
 
   set_value(value, length) {

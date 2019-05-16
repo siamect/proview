@@ -579,13 +579,13 @@ class Ev {
       case Event.Key_CtrlL:
         let o = this.ctx.get_select();
         if (o.userdata instanceof EvItemAlarm) {
-          this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC).then(this.open_plc_cb);
+          this.ctx.gdh.getObjectFromAref(o.userdata.e.supObject, GdhOp.GET_OP_METHOD_PLC).then(this.open_plc_cb);
         }
         break;
       case Event.Key_CtrlG:
         let o = this.ctx.get_select();
         if (o.userdata instanceof EvItemAlarm) {
-          this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC).then(this.open_objectgraph_cb);
+          this.ctx.gdh.getObjectFromAref(o.userdata.e.supObject, GdhOp.GET_OP_METHOD_PLC).then(this.open_objectgraph_cb);
         }
         break;
       default:

@@ -287,8 +287,8 @@ class GrowPolyline extends GlowPolyline {
       }
 
       if (grad === Gradient.No || drawtype === DrawType.ColorRed) {
-        this.ctx.gdraw.fill_polyline(this.points, this.a_points.size(),
-            drawtype, 0);
+        this.ctx.gdraw.polyline(this.points, this.a_points.size(),
+            drawtype, true, 0);
       } else {
         let rotation = t ? this.trf.rot(t) : this.trf.rot();
 
@@ -328,7 +328,7 @@ class GrowPolyline extends GlowPolyline {
             sp[i + 1],
             this.points[i + 1]
           ];
-          this.ctx.gdraw.fill_polyline(p, 4, sp[i].drawtype, 0);
+          this.ctx.gdraw.polyline(p, 4, sp[i].drawtype, true, 0);
         }
       }
     }

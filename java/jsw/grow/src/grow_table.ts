@@ -465,8 +465,8 @@ class GrowTable extends GrowRect {
 
     if (this.header_row !== 0) {
       if (this.fill !== 0) {
-        this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, header_h,
-            this.fill_drawtype);
+        this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, header_h,
+            this.fill_drawtype, true, 0);
       }
 
       this.ctx.gdraw.set_clip_rectangle(ll_x + header_w, ll_y, ur_x, ll_y +
@@ -511,7 +511,7 @@ class GrowTable extends GrowRect {
           this.ctx.gdraw.text(Math.floor(x + text_offs),
               Math.floor(y + header_h - 4), this.header_text[i],
               this.header_text_drawtype, this.header_text_color, header_text_idx,
-              highlight, 0, this.font, header_tsize, 0);
+              highlight, this.font, header_tsize, 0);
         }
         x += this.column_width[i] * this.ctx.mw.zoom_factor_x;
         if (x > ur_x) {
@@ -534,7 +534,7 @@ class GrowTable extends GrowRect {
         this.ctx.gdraw.line(ll_x + header_w, ll_y, ll_x + header_w, ll_y +
             header_h, drawtype, idx, 0);
       }
-      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, header_h, drawtype, idx, 0);
+      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, header_h, drawtype, false, idx);
 
       if (this.header_column !== 0) {
         // Draw header of header column header
@@ -543,15 +543,15 @@ class GrowTable extends GrowRect {
           this.ctx.gdraw.text(Math.floor(x + text_offs),
               Math.floor(y + header_h - 4), this.header_text[0],
               this.header_text_drawtype, this.header_text_color, header_text_idx,
-              highlight, 0, this.font, tsize, 0);
+              highlight, this.font, tsize, 0);
         }
       }
     }
 
     if (this.header_column !== 0) {
       if (this.fill !== 0) {
-        this.ctx.gdraw.fill_rect(ll_x, ll_y + header_h, header_w, ur_y - ll_y -
-            header_h, this.fill_drawtype);
+        this.ctx.gdraw.rect(ll_x, ll_y + header_h, header_w, ur_y - ll_y -
+            header_h, this.fill_drawtype, true, 0);
       }
 
       this.ctx.gdraw.set_clip_rectangle(ll_x, ll_y + header_h, ll_x + header_w,
@@ -562,9 +562,9 @@ class GrowTable extends GrowRect {
         let x = ll_x;
         let y = t_ll_y + this.row_height * this.ctx.mw.zoom_factor_y *
             this.selected_cell_row;
-        this.ctx.gdraw.fill_rect(Math.floor(x), Math.floor(y), header_w,
+        this.ctx.gdraw.rect(Math.floor(x), Math.floor(y), header_w,
             Math.floor(this.row_height * this.ctx.mw.zoom_factor_y),
-            sel_drawtype);
+            sel_drawtype, true, 0);
       }
 
       if (this.shadow !== 0) {
@@ -610,8 +610,7 @@ class GrowTable extends GrowRect {
             if (this.column_adjustment[0] === Adjustment.Right ||
                 this.column_adjustment[0] === Adjustment.Center) {
               let width, height, descent;
-              let p = this.ctx.gdraw.getTextExtent(this.cell_value[offs],
-                  text_idx, this.font, this.text_drawtype);
+              let p = this.ctx.gdraw.getTextExtent(this.cell_value[offs], this.text_drawtype, text_idx, this.font);
               width = p.x;
               height = p.y;
               descent = height / 4;
@@ -629,20 +628,20 @@ class GrowTable extends GrowRect {
             }
             this.ctx.gdraw.text(text_x, Math.floor(y - 5),
                 this.cell_value[offs], this.text_drawtype,
-                this.text_color_drawtype, text_idx, highlight, 0, this.font,
+                this.text_color_drawtype, text_idx, highlight, this.font,
                 tsize, 0);
           }
         }
       }
       this.ctx.gdraw.reset_clip_rectangle();
       this.ctx.gdraw.rect(ll_x, ll_y + header_h - 1, header_w, ur_y - ll_y -
-          header_h + 1, drawtype, idx, 0);
+          header_h + 1, drawtype, false, idx);
     }
 
     // Draw table
     if (this.fill !== 0) {
-      this.ctx.gdraw.fill_rect(o_ll_x, o_ll_y, o_ur_x - o_ll_x, o_ur_y - o_ll_y,
-          this.fill_drawtype);
+      this.ctx.gdraw.rect(o_ll_x, o_ll_y, o_ur_x - o_ll_x, o_ur_y - o_ll_y,
+          this.fill_drawtype, true, 0);
     }
 
     this.ctx.gdraw.set_clip_rectangle(o_ll_x, o_ll_y, o_ur_x, o_ur_y);
@@ -656,11 +655,11 @@ class GrowTable extends GrowRect {
       }
       let y = t_ll_y + this.row_height * this.ctx.mw.zoom_factor_y *
           this.selected_cell_row;
-      this.ctx.gdraw.fill_rect(Math.floor(x), Math.floor(y),
+      this.ctx.gdraw.rect(Math.floor(x), Math.floor(y),
           Math.floor(this.column_width[this.selected_cell_column] *
               this.ctx.mw.zoom_factor_x),
           Math.floor(this.row_height * this.ctx.mw.zoom_factor_y),
-          sel_drawtype);
+          sel_drawtype, true, 0);
     }
 
     if (this.shadow !== 0) {
@@ -768,8 +767,7 @@ class GrowTable extends GrowRect {
               if (this.column_adjustment[i] === Adjustment.Right ||
                   this.column_adjustment[i] === Adjustment.Center) {
                 let width, height, descent;
-                let p = this.ctx.gdraw.getTextExtent(this.cell_value[offs],
-                    text_idx, this.font, this.text_drawtype);
+                let p = this.ctx.gdraw.getTextExtent(this.cell_value[offs], this.text_drawtype, text_idx, this.font);
                 width = p.x;
                 height = p.y;
                 descent = height / 4;
@@ -791,7 +789,7 @@ class GrowTable extends GrowRect {
 
               this.ctx.gdraw.text(text_x, Math.floor(y - 5),
                   this.cell_value[offs], this.text_drawtype,
-                  this.text_color_drawtype, text_idx, highlight, 0, this.font,
+                  this.text_color_drawtype, text_idx, highlight, this.font,
                   tsize, 0);
             }
           }
@@ -805,7 +803,7 @@ class GrowTable extends GrowRect {
 
     // Draw frame
     this.ctx.gdraw.rect(o_ll_x, o_ll_y, ur_x - o_ll_x, ur_y - o_ll_y, drawtype,
-        idx, 0);
+        false, idx);
     if (this.input_focus !== 0) {
       this.ctx.gdraw.line(ll_x - 2, ll_y - 2, ll_x - 2, ur_y + 2,
           DrawType.DarkGray, 0, 0);

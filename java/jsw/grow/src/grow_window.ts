@@ -180,8 +180,8 @@ class GrowWindow extends GrowRect {
       // window_ctx->draw_buffer_only = ctx->draw_buffer_only;
 
       if (this.fill !== 0) {
-        this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-            this.fill_drawtype);
+        this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+            this.fill_drawtype, true, 0);
       }
 
       this.ctx.gdraw.set_clip_rectangle(ll_x, ll_y, ur_x - 1, ur_y - 1);
@@ -203,7 +203,7 @@ class GrowWindow extends GrowRect {
     let drawtype =
         GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
             highlight, colornode, 0, 0);
-    this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx, 0);
+    this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, false, idx);
   }
 
   new_ctx() {

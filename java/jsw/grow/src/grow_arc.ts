@@ -230,8 +230,8 @@ class GrowArc extends GlowArc {
       if (!display_shadow || this.shadow_width === 0 || this.angle2 !== 360) {
         if (grad === Gradient.No || fillcolor === DrawType.ColorRed) {
           let drawtype = (chot === 0) ? fillcolor : GlowColor.shift_drawtype(fillcolor, chot, null);
-          this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y -
-              ll_y, this.angle1 - rot, this.angle2, drawtype);
+          this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y -
+              ll_y, this.angle1 - rot, this.angle2, drawtype, true, 0);
         } else {
           let fa1, fa2;
           if (this.gradient_contrast >= 0) {
@@ -265,15 +265,15 @@ class GrowArc extends GlowArc {
           let drawtype = GlowColor.shift_drawtype(fillcolor, -drawtype_incr + chot,
               colornode);
 
-          this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 35, 140,
-              drawtype);
+          this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 35, 140,
+              drawtype, true, 0);
 
           // Draw dark shadow
           drawtype = GlowColor.shift_drawtype(fillcolor, drawtype_incr + chot,
               colornode);
 
-          this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 215,
-              140, drawtype);
+          this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 215,
+              140, drawtype, true, 0);
 
           // Draw medium shadow and body
           if (chot === 0) {
@@ -282,14 +282,14 @@ class GrowArc extends GlowArc {
             drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
           }
 
-          this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, -5, 40,
-              drawtype);
-          this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 175, 40,
-              drawtype);
+          this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, -5, 40,
+              drawtype, true, 0);
+          this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 175, 40,
+              drawtype, true, 0);
 
-          this.ctx.gdraw.fill_arc(ll_x + ish, ll_y + ish, ur_x - ll_x - 2 *
+          this.ctx.gdraw.arc(ll_x + ish, ll_y + ish, ur_x - ll_x - 2 *
               ish, ur_y - ll_y - 2 * ish, this.angle1 - rot, this.angle2,
-              drawtype);
+              drawtype, true, 0);
         } else {
           // Draw shadow
           let fb1 = GlowColor.shift_drawtype(fillcolor, -drawtype_incr + chot,
@@ -328,7 +328,7 @@ class GrowArc extends GlowArc {
           GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
               highlight, colornode, 0, 0);
       this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, this.angle1 -
-          rot, this.angle2, drawtype, idx);
+          rot, this.angle2, drawtype, false, idx);
     }
   }
 

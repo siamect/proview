@@ -151,7 +151,6 @@ class GrowImage extends Rect {
     let ll_y = Math.min(y1, y2);
     let ur_y = Math.max(y1, y2);
 
-    // this.ctx.gdraw.rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, DrawType.Line, idx, 0);
     this.ctx.gdraw.image(this.image, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y);
   }
 
