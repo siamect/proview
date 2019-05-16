@@ -285,7 +285,7 @@ dcli_tCmdTable xnav_command_table[] = {
       } },
   { "TEST", &xnav_test_func, { "dcli_arg1", "dcli_arg2", "" } },
   { "LOGGING", &xnav_logging_func,
-      { "dcli_arg1", "dcli_arg2", "/FILE", "/TIME", "/ENTRY", "/TYPE",
+      { "dcli_arg1", "dcli_arg2", "/FILE", "/TIME", "/ENTRY", "/TYPE", "/FORMAT",
           "/PARAMETER", "/CONDITION", "/INSERT", "/BUFFER_SIZE", "/PRIORITY",
           "/STOP", "/NOSTOP", "/CREATE", "/ALL", "/LINE_SIZE", "/SHORTNAME",
           "/NOSHORTNAME", "" } },
@@ -6636,6 +6636,7 @@ static int xnav_logging_func(void* client_data, void* client_flag)
     int buffer_size;
     int nr;
     int logg_type = 0;
+    int logg_format = -1;
     int insert;
     int create;
     int shortname;
@@ -6717,6 +6718,14 @@ static int xnav_logging_func(void* client_data, void* client_flag)
     } else
       logg_type = 0;
 
+    if (ODD(dcli_get_qualifier("/FORMAT", str, sizeof(str)))) {
+      if (str_NoCaseStrncmp(str, "STD", strlen(str)) == 0)
+        logg_format = xtt_eLoggFormat_Std;
+      else if (str_NoCaseStrncmp(str, "PY", strlen(str)) == 0)
+        logg_format = xtt_eLoggFormat_Py;
+    } else
+      logg_format = -1;
+
     if (ODD(dcli_get_qualifier(
             "/PRIORITY", priority_str, sizeof(priority_str)))) {
       /* convert to integer */
@@ -6758,7 +6767,7 @@ static int xnav_logging_func(void* client_data, void* client_flag)
     }
 
     sts = xnav->logg[entry - 1].logging_set(logg_time, file_ptr, parameter_ptr,
-        condition_ptr, logg_type, insert, buffer_size, stop, priority, create,
+	condition_ptr, logg_type, logg_format, insert, buffer_size, stop, priority, create,
         line_size, shortname);
     return sts;
   }
@@ -6888,6 +6897,40 @@ static int xnav_logging_func(void* client_data, void* client_flag)
     }
 
     sts = xnav->logg[entry - 1].show();
+    return sts;
+  } else if (str_NoCaseStrncmp(arg1_str, "ANALYSE", strlen(arg1_str)) == 0) {
+    /* Command is "LOGGING ANALYSE" */
+
+    char entry_str[80];
+    int entry;
+    int nr;
+
+    if (ODD(dcli_get_qualifier("/ENTRY", entry_str, sizeof(entry_str)))) {
+      if (!str_NoCaseStrcmp(entry_str, "CURRENT")) {
+        if (xnav->current_logging_index == -1) {
+          xnav->message('E', "No current logging entry");
+          return XNAV__HOLDCOMMAND;
+        }
+        entry = xnav->current_logging_index + 1;
+      } else {
+        /* convert to integer */
+        nr = sscanf(entry_str, "%d", &entry);
+        if (nr != 1) {
+          xnav->message('E', "Entry syntax error");
+          return XNAV__HOLDCOMMAND;
+        }
+      }
+    } else {
+      xnav->message('E', "Enter entry");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    if (entry > XNAV_LOGG_MAX || entry < 1) {
+      xnav->message('E', "Entry out of range");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    sts = xnav->logg[entry - 1].analyse();
     return sts;
   } else if (str_NoCaseStrncmp(arg1_str, "STORE", strlen(arg1_str)) == 0) {
     /* Command is "LOGGING STORE" */
