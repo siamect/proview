@@ -3211,6 +3211,10 @@ int XNav::show_logging(int index)
   new ItemCommand(brow, Lng::translate("Show curve"), 0, NULL,
       flow_eDest_IntoLast, command, 0, brow->pixmap_action);
 
+  sprintf(command, "logging analyse/entry=current");
+  new ItemCommand(brow, Lng::translate("Analyse"), 0, NULL,
+      flow_eDest_IntoLast, command, 0, brow->pixmap_action);
+
   new ItemLocal(brow, Lng::translate("Scantime (ms)"), "logg_Time",
       pwr_eType_Float32, sizeof(logg[0].logg_time), 0, 100000, 0,
       (void*)&logg[index].logg_time, NULL, flow_eDest_IntoLast);
@@ -3219,6 +3223,9 @@ int XNav::show_logging(int index)
       (void*)logg[index].logg_filename, NULL, flow_eDest_IntoLast);
   new ItemLocal(brow, Lng::translate("Type"), "logg_Type", pwr_eType_Int32,
       sizeof(logg[0].logg_type), 0, 0, 0, (void*)&logg[index].logg_type, NULL,
+      flow_eDest_IntoLast);
+  new ItemLocal(brow, Lng::translate("Format"), "logg_Format", pwr_eType_Int32,
+      sizeof(logg[0].logg_type), 0, 0, 0, (void*)&logg[index].logg_format, NULL,
       flow_eDest_IntoLast);
   new ItemLocal(brow, Lng::translate("BufferSize"), "logg_BufferSize",
       pwr_eType_Int32, sizeof(logg[0].wanted_buffer_size), 0, 0, 0,
