@@ -42,7 +42,10 @@ from Tkinter import *
 import tkFileDialog
 import tkMessageBox
 import sys
+import math
 import time
+import getopt
+import os
 import pwrrt
 from datetime import datetime
 import statsmodels.api as am
@@ -51,6 +54,11 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
+from sklearn.linear_model import LinearRegression
+from scipy.interpolate import interp1d
+import matplotlib
+matplotlib.use('TkAgg')
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # adapted from http://matplotlib.org/examples/specialty_plots/hinton_demo.html
 def hinton(matrix, max_weight=None, ax=None):
@@ -204,8 +212,143 @@ def regr_action_cb():
     sns.regplot(x=cols[0],y=cols[1],data=plotdata)
     plt.show()
 
-# Clip reset callback
-def clipreset_action_cb():
+# Regression coefficients callback
+def regrcoef_action_cb(): 
+    global wd
+    global wdname
+
+    slr = LinearRegression()
+    
+    print "iloc 0:1 ", wd.iloc[:,0:1]
+    print "iloc 2:  ", wd.iloc[:,1:]
+
+    reg = slr.fit(wd.iloc[:,1:], wd.iloc[:,0:1])
+    print "coef ", slr.coef_
+    print "intercept ", slr.intercept_
+
+    w = Toplevel(window, bg=bgcolor)
+    w.title('Linear Regression Coefficients')
+    wframe = Frame(w, bg=bgcolor)
+
+    msg = 'Intercept'
+    label = Label(wframe, text=msg, bg=bgcolor)
+    label.grid(column=0, row=0, padx=20, pady=5, sticky=W)
+    msg = str(slr.intercept_[0])
+    label = Label(wframe, text=msg, bg=bgcolor)
+    label.grid(column=1, row=0, padx=20, pady=5, sticky=W)
+
+    i = 0
+    for name in wdname:
+        if i != 0:
+            label = Label(wframe, text=name, bg=bgcolor)
+            label.grid(column=0, row=i, padx=20, pady=5, sticky=W)
+            msg = str(slr.coef_[0][i-1])
+            label = Label(wframe, text=msg, bg=bgcolor)
+            label.grid(column=1, row=i, padx=20, pady=5, sticky=W)
+        i += 1
+
+    wframe.pack(side=TOP, fill=X)
+
+    res = pd.Series([slr.intercept_]*len(wd))
+    i = 0
+    for name in wdname:
+        if i != 0:
+            res += slr.coef_[0][i-1] * wd[wdcol[i]]
+        i += 1
+
+    diff = wd[wdcol[0]] - res
+
+    layo = 2 * 100 + 10
+
+    j = 0
+    fig = plt.figure()
+    plt.subplot(layo+j+1)
+    plt.plot(wdtime, wd[wdcol[0]])
+    #plt.legend(loc='center left', bbox_to_anchor=(1, 0.5));
+    #j = j + 1
+    #plt.subplot(layo+j+1)
+    plt.plot(wdtime, res, label='Result')
+    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5));
+    j = j + 1
+    plt.subplot(layo+j+1)
+    plt.plot(wdtime, diff, label='Diff')
+    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5));
+
+    #plt.show()
+    pframe = Frame(w, bg=bgcolor)
+    canvas = FigureCanvasTkAgg(fig, master=pframe)
+    plot_widget = canvas.get_tk_widget()
+    plot_widget.grid(column=0, row=0)
+    pframe.pack(side=BOTTOM, fill=X)
+
+# Move up callback
+def moveup_action_cb(): 
+    global wd
+    global wdcol
+    cix = []
+    i = 0;
+    for name in wdname:
+        if datasel[i].get():
+            cix.append(i)
+        i += 1
+                     
+    if len(cix) != 1:
+        tkMessageBox.showerror("Error", "Select one attributes")
+        return
+
+    if cix[0] == 0:
+        tkMessageBox.showerror("Error", "Can't move top object")
+        return
+    
+    cols = list(wd)
+    cols[cix[0]-1],cols[cix[0]] = cols[cix[0]],cols[cix[0]-1]
+    wdname[cix[0]-1],wdname[cix[0]] = wdname[cix[0]],wdname[cix[0]-1]
+    wd = wd.ix[:,cols]
+    wd.columns = wdcol
+    toolbar.pack_forget()
+    toolbar.destroy()
+    dataframe.pack_forget()
+    dataframe.destroy()
+    create_toolbar()
+    create_dataframe()
+    create_datamenu()
+    datasel[cix[0]-1].set(True)
+    
+# Move down callback
+def movedown_action_cb(): 
+    global wd
+    global wdcol
+    cix = []
+    i = 0;
+    for name in wdname:
+        if datasel[i].get():
+            cix.append(i)
+        i += 1
+                     
+    if len(cix) != 1:
+        tkMessageBox.showerror("Error", "Select one attributes")
+        return
+
+    if cix[0] == len(wdname) - 1:
+        tkMessageBox.showerror("Error", "Can't move bottom object")
+        return
+    
+    cols = list(wd)
+    cols[cix[0]],cols[cix[0]+1] = cols[cix[0]+1],cols[cix[0]]
+    wdname[cix[0]],wdname[cix[0]+1] = wdname[cix[0]+1],wdname[cix[0]]
+    wd = wd.ix[:,cols]
+    wd.columns = wdcol
+    toolbar.pack_forget()
+    toolbar.destroy()
+    dataframe.pack_forget()
+    dataframe.destroy()
+    create_toolbar()
+    create_dataframe()
+    create_datamenu()
+    datasel[cix[0]+1].set(True)
+
+# Revert callback
+def revert_action_cb():
     global wd
     global wdtime
     global wdcol
@@ -226,12 +369,13 @@ def clipreset_action_cb():
 
     wd.columns = wdcol
 
+    toolbar.pack_forget()
+    toolbar.destroy()
     dataframe.pack_forget()
     dataframe.destroy()
-    actionframe.pack_forget()
-    actionframe.destroy()
+    create_toolbar()
     create_dataframe()
-    create_actionframe()    
+    create_datamenu()    
 
 # Clip callback
 def clip_action_cb():
@@ -275,30 +419,479 @@ def clip_action_ok_cb():
     minvalue = int(minentry.get())
     maxvalue = int(maxentry.get())
     clipdia.destroy()
-    
-    i = 0
-    new_wdcol = []
-    new_wdname = []
-    cols = []
-    for name in wdname:
-        if datasel[i].get():
-            new_wdcol.append(wdcol[i])
-            new_wdname.append(wdname[i])
-        i += 1
-                     
-    if len(new_wdcol) != 0:
-        wd = wd[new_wdcol]
-        wdcol = new_wdcol
-        wdname = new_wdname
-        
+            
     wd = wd[minvalue:maxvalue]
     wdtime = wdtime[minvalue:maxvalue]
+    toolbar.pack_forget()
+    toolbar.destroy()
     dataframe.pack_forget()
     dataframe.destroy()
-    actionframe.pack_forget()
-    actionframe.destroy()
+    create_toolbar()
     create_dataframe()
-    create_actionframe()    
+    create_datamenu()    
+    
+# Delete column callback
+def deletecolumn_action_cb():
+    global wd
+    global wdtime
+    global wdname
+    global wdcol
+    global datasel
+
+    answer = tkMessageBox.askquestion('Delete columns', 'Do you want to delete the selected columns')
+    if answer == 'yes':
+        i = 0
+        new_wdcol = []
+        new_wdname = []
+        cols = []
+        for name in wdname:
+            if datasel[i].get() == 0:
+                new_wdcol.append(wdcol[i])
+                new_wdname.append(wdname[i])
+            i += 1
+                     
+        print new_wdname
+        if len(new_wdname) == len(wdname):
+            tkMessageBox.showerror("Error", "No columns selected")
+            return
+        
+        if len(new_wdcol) != 0:
+            wd = wd[new_wdcol]
+            wdcol = new_wdcol
+            wdname = new_wdname
+
+            i = 0
+            while i < wd.shape[1]:
+                colname = "A" + str(i+1)
+                wdcol[i] = colname
+                i += 1
+            print wdcol
+            wd.columns = wdcol
+        
+        toolbar.pack_forget()
+        toolbar.destroy()
+        dataframe.pack_forget()
+        dataframe.destroy()
+        create_toolbar()
+        create_dataframe()
+        create_datamenu()    
+    else:
+        print 'No'
+        
+# Convert column callback
+def convcolumn_action_cb():
+    global add_dia
+    global sel_copy
+    global sel_square
+    global sel_sqrt
+    global sel_exp
+    global sel_log
+    global sel_integral
+    global sel_derivate
+    global sel_add
+    global sel_sub
+    global sel_mul
+    global sel_div
+    global sel_curve
+    global sel_constant
+    global sel_shift
+    global fcurve
+    global constantentry
+    global shiftentry
+    global add_replace
+    
+    cix = []
+    i = 0;
+    for name in wdname:
+        if datasel[i].get():
+            cix.append(i)
+        i += 1
+                     
+    if len(cix) != 1:
+        tkMessageBox.showerror("Error", "Select one attribute")
+        return
+
+    add_replace = 1
+    add_dia = Toplevel(window, bg=bgcolor)
+    add_dia.title('Convert Column')
+
+    fcurve = None
+    sel_copy = IntVar()
+    sel_square = IntVar()
+    sel_sqrt = IntVar()
+    sel_exp = IntVar()
+    sel_log = IntVar()
+    sel_integral = IntVar()
+    sel_derivate = IntVar()
+    sel_add = IntVar()
+    sel_sub = IntVar()
+    sel_mul = IntVar()
+    sel_div = IntVar()
+    sel_curve = IntVar()
+    sel_constant = IntVar()
+    sel_shift = IntVar()
+
+    checkbox = Checkbutton(add_dia, text='Square', variable=sel_square,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=0, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Squareroot', variable=sel_sqrt,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=1, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Exp', variable=sel_exp,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=2, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Log', variable=sel_log,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=3, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Integral', variable=sel_integral,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=4, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Derivate', variable=sel_derivate,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=5, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Curve', variable=sel_curve,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=6, padx=20, pady=5, sticky=W)
+    button = Button(add_dia, text="Open curve file", command=addcol_action_curve_cb, bg=buttoncolor) 
+    button.grid(column=1, row=6, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Shift', variable=sel_shift,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=7, padx=20, pady=5, sticky=W)
+    shiftentry = Entry(add_dia, bg=bgcolor)
+    shiftentry.grid(column=1, row=7, padx=20, pady=5, sticky=W)
+
+    button = Button(add_dia, text="Apply", command=addcol_action_ok_cb, bg=buttoncolor);
+    button.grid(column=0, row=8, padx=60, pady=20, sticky=W)
+
+    button = Button(add_dia, text="Cancel", command=addcol_action_cancel_cb, bg=buttoncolor);
+    button.grid(column=1, row=8, padx=60, pady=20, sticky=W)
+
+# Add column callback
+def addcolumn_action_cb():
+    global add_dia
+    global sel_copy
+    global sel_square
+    global sel_sqrt
+    global sel_exp
+    global sel_log
+    global sel_integral
+    global sel_derivate
+    global sel_add
+    global sel_sub
+    global sel_mul
+    global sel_div
+    global sel_curve
+    global sel_constant
+    global sel_shift
+    global fcurve
+    global constantentry
+    global shiftentry
+    global add_replace
+    
+    add_replace = 0
+    
+    add_dia = Toplevel(window, bg=bgcolor)
+    add_dia.title('Add Column')
+
+    fcurve = None
+    sel_copy = IntVar()
+    sel_square = IntVar()
+    sel_sqrt = IntVar()
+    sel_exp = IntVar()
+    sel_log = IntVar()
+    sel_integral = IntVar()
+    sel_derivate = IntVar()
+    sel_add = IntVar()
+    sel_sub = IntVar()
+    sel_mul = IntVar()
+    sel_div = IntVar()
+    sel_curve = IntVar()
+    sel_constant = IntVar()
+    sel_shift = IntVar()
+    checkbox = Checkbutton(add_dia, text='Copy', variable=sel_copy,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=0, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Square', variable=sel_square,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=1, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Squareroot', variable=sel_sqrt,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=2, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Exp', variable=sel_exp,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=3, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Log', variable=sel_log,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=4, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Integral', variable=sel_integral,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=5, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Derivate', variable=sel_derivate,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=6, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Add', variable=sel_add,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=7, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Sub', variable=sel_sub,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=8, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Multiply', variable=sel_mul,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=9, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Divide', variable=sel_div,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=10, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Curve', variable=sel_curve,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=11, padx=20, pady=5, sticky=W)
+    button = Button(add_dia, text="Open curve file", command=addcol_action_curve_cb, bg=buttoncolor) 
+    button.grid(column=1, row=11, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Constant', variable=sel_constant,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=12, padx=20, pady=5, sticky=W)
+    constantentry = Entry(add_dia, bg=bgcolor)
+    constantentry.grid(column=1, row=12, padx=20, pady=5, sticky=W)
+
+    checkbox = Checkbutton(add_dia, text='Shift', variable=sel_shift,
+                           highlightthickness=0, bg=bgcolor)
+    checkbox.grid(column=0, row=13, padx=20, pady=5, sticky=W)
+    shiftentry = Entry(add_dia, bg=bgcolor)
+    shiftentry.grid(column=1, row=13, padx=20, pady=5, sticky=W)
+
+    button = Button(add_dia, text="Apply", command=addcol_action_ok_cb, bg=buttoncolor);
+    button.grid(column=0, row=14, padx=60, pady=20, sticky=W)
+
+    button = Button(add_dia, text="Cancel", command=addcol_action_cancel_cb, bg=buttoncolor);
+    button.grid(column=1, row=14, padx=60, pady=20, sticky=W)
+
+def addcol_action_curve_cb():
+    global fcurve
+    file = tkFileDialog.askopenfilename(initialdir='./', title='Open curve file',
+                                        filetypes=[('dat files','*.dat'),('all files','*.*')])
+    fcurve = None
+    if file != '':
+        curve = pd.read_csv(file, header=None)
+        fcurve = interp1d(curve.loc[:,0],curve.loc[:,1], fill_value='extrapolate')
+
+def addcol_action_cancel_cb():
+    add_dia.destroy()
+
+def addcol_action_ok_cb():
+    global wd
+    global wdtime
+    global wdcol
+    global wdname
+    global sel_copy
+    global sel_square
+    global sel_sqrt
+    global sel_exp
+    global sel_log
+    global sel_integral
+    global sel_derivate
+    global sel_add
+    global sel_sub
+    global sel_mul
+    global sel_div
+    global sel_curve
+    global sel_shift
+    global fcurve
+    global constantentry
+    global shiftentry
+    global add_replace
+    
+    cix = []
+    i = 0;
+    for name in wdname:
+        if datasel[i].get():
+            cix.append(i)
+        i += 1
+                     
+    if sel_constant.get():   
+        pass
+    elif sel_add.get() or sel_sub.get() or sel_mul.get() or sel_div.get():   
+        if len(cix) != 2:
+            tkMessageBox.showerror("Error", "Select two attributes")
+            return
+        ser = pd.Series(wd[wdcol[cix[0]]])
+    else:
+        if len(cix) != 1:
+            tkMessageBox.showerror("Error", "Select one attributes")
+            return
+        ser = pd.Series(wd[wdcol[cix[0]]])
+
+    if sel_copy.get():
+        colname = "Copy(" + wdname[cix[0]] + ")"
+    elif sel_square.get():
+        ser = np.square(ser)
+        colname = "Square(" + wdname[cix[0]] + ")"
+    elif sel_sqrt.get():
+        ser = np.sqrt(ser)
+        colname = "Sqrt(" + wdname[cix[0]] + ")"
+    elif sel_exp.get():
+        ser = np.exp(ser)
+        colname = "Exp(" + wdname[cix[0]] + ")"
+    elif sel_log.get():
+        ser = np.log(ser)
+        colname = "Log(" + wdname[cix[0]] + ")"
+    elif sel_integral.get():
+        igl = []
+        acc = 0
+        i = 0
+        dmean = ser.mean()
+
+        for val in ser.values:    
+            igl.append(acc)
+            if i != len(ser) - 1:
+                dt = wdtime[i+1]-wdtime[i]
+            else:
+                dt = old_dt
+            #acc += (val - dmean) * (dt.seconds + dt.microseconds/1000000.0)
+            acc += val * (dt.seconds + dt.microseconds/1000000.0)
+            print dt, dt.seconds + dt.microseconds/1000000.0, val
+            i += 1
+            old_dt = dt
+
+        ser = pd.Series(igl)
+        colname = "Integral(" + wdname[cix[0]] + ")"
+    elif sel_derivate.get():
+        der = []
+        old_val = 0
+        for val in ser.values:
+            der.append(val - old_val)
+            old_val = val
+        ser = pd.Series(der)
+        colname = "Derivate(" + wdname[cix[0]] + ")"
+    elif sel_add.get():
+        add = []
+        i = 0
+        print 'cix[1]', cix[1]
+        print wdname[2]
+        print wd[wdcol[2]][0]
+        for val in ser.values:
+            val2 = wd[wdcol[cix[1]]][i]
+            print 'val2', val2
+            add.append(val + val2)
+            i += 1
+        ser = pd.Series(add)
+        colname = "Add(" + wdname[cix[0]] + "," + wdname[cix[1]] + ")"
+    elif sel_sub.get():
+        sub = []
+        i = 0
+        print 'cix[1]', cix[1]
+        print wdname[2]
+        print wd[wdcol[2]][0]
+        for val in ser.values:
+            val2 = wd[wdcol[cix[1]]][i]
+            print 'val2', val2
+            sub.append(val - val2)
+            i += 1
+        ser = pd.Series(sub)
+        colname = "Sub(" + wdname[cix[0]] + "," + wdname[cix[1]] + ")"
+    elif sel_mul.get():
+        mul = []
+        i = 0
+        print 'cix[1]', cix[1]
+        print wdname[2]
+        print wd[wdcol[2]][0]
+        for val in ser.values:
+            val2 = wd[wdcol[cix[1]]][i]
+            print 'val2', val2
+            mul.append(val * val2)
+            i += 1
+        ser = pd.Series(mul)
+        colname = "Multiply(" + wdname[cix[0]] + "," + wdname[cix[1]] + ")"
+    elif sel_div.get():
+        div = []
+        i = 0
+        for val in ser.values:
+            cval = wd[wdcol[cix[1]]][i]
+            div.append(val/cval if cval else 0)
+            i += 1
+        ser = pd.Series(div)
+        colname = "Divide(" + wdname[cix[0]] + "," + wdname[cix[1]] + ")"
+
+    elif sel_curve.get():
+        if fcurve == None:
+            tkMessageBox.showerror("Error", "No curve file is selected")
+            return
+            
+        curve = []
+        i = 0
+        for val in ser.values:
+            curve.append(fcurve(val))
+            i += 1
+        ser = pd.Series(curve)
+        colname = "Curve(" + wdname[cix[0]] + ")"
+        print 'curve', ser
+
+    elif sel_constant.get():
+        value = float(constantentry.get())
+
+        const = [value] * len(wd)
+        ser = pd.Series(const)
+        colname = "Const(" + str(value) + ")"
+
+    elif sel_shift.get():
+        shiftvalue = int(shiftentry.get())
+
+        shift = []
+        i = 0
+        for val in ser.values:
+            if shiftvalue > 0:
+                if i < shiftvalue:
+                    val = 0
+                else:
+                    val = ser.values[i-shiftvalue]
+            else:
+                if i - shiftvalue >= len(wd):
+                    val = 0
+                else:
+                    val = ser.values[i-shiftvalue]
+            shift.append(val)
+            i += 1
+        ser = pd.Series(shift)
+        colname = "Shift(" + wdname[cix[0]] + "," + str(shiftvalue) + ")"
+    else:
+        tkMessageBox.showerror("Error", "No action is selected")
+        return
+
+    idx = len(wdname)
+
+    if add_replace == 1:
+        wd[wdcol[cix[0]]] = ser
+        wdname[cix[0]] = colname
+    else:
+        wdname.append(colname)
+        colname = "A" + str(idx+1)
+        wdcol.append(colname)
+        wd[wdcol[idx]] = ser
+    toolbar.pack_forget()
+    toolbar.destroy()
+    dataframe.pack_forget()
+    dataframe.destroy()
+    create_toolbar()
+    create_dataframe()
+    create_datamenu()
+    add_dia.destroy()
     
 def close_action_cb(arg=0):
     print 'Close action'
@@ -323,6 +916,16 @@ def savewd_action_cb():
 
 # Open from file
 def open_action_cb(arg=0): 
+    file = tkFileDialog.askopenfilename(initialdir='./', title='Open file',
+                                          filetypes=[('dat files','*.dat'),('all files','*.*')])
+    if file != '':
+        read_file(file)
+
+# Help callback
+def help_action_cb():
+    pass
+
+def read_file(file):
     global origdata
     global wd
     global wdtime
@@ -330,34 +933,32 @@ def open_action_cb(arg=0):
     global origcol
     global wdcol
     
-    file = tkFileDialog.askopenfilename(initialdir='./', title='Open file',
-                                          filetypes=[('dat files','*.dat'),('all files','*.*')])
-    if file != '':
-        origdata = pd.read_csv(file, parse_dates=[0])
-        origcol = origdata.columns
-        wd = origdata.loc[:,origcol[1]:]
-        wdtime = origdata.loc[:,origcol[0]]
+    origdata = pd.read_csv(file, parse_dates=[0])
+    origcol = origdata.columns
+    wd = origdata.loc[:,origcol[1]:]
+    wdtime = origdata.loc[:,origcol[0]]
 
-        wdcol = []
-        wdname = []
+    wdcol = []
+    wdname = []
 
-        i = 0
-        while i < wd.shape[1]:
-            colname = "A" + str(i+1)
-            wdcol.append(colname)
-            wdname.append(origcol[i+1])
-            i += 1
+    i = 0
+    while i < wd.shape[1]:
+        colname = "A" + str(i+1)
+        wdcol.append(colname)
+        wdname.append(origcol[i+1])
+        i += 1
 
-        wd.columns = wdcol
-        if 'dataframe' in globals():
-            dataframe.pack_forget()
-            dataframe.destroy()
-            actionframe.pack_forget()
-            actionframe.destroy()
+    wd.columns = wdcol
+    if 'dataframe' in globals():
+        toolbar.pack_forget()
+        toolbar.destroy()
+        dataframe.pack_forget()
+        dataframe.destroy()
             
-        create_dataframe()
-        create_actionframe()
-        
+    create_toolbar()
+    create_dataframe()
+    create_datamenu()
+
 def on_configure(event):
     size = iteminnerframe.winfo_reqwidth(), iteminnerframe.winfo_reqheight()
     canvas.config(scrollregion="0 0 %s %s" % size)
@@ -466,34 +1067,7 @@ def fetchitems_cb():
 
 
 # Create frame with action buttons
-def create_actionframe():
-    global actionframe
-    
-    actionframe = Frame(window, bg=bgcolor)
-
-    # Create plot button
-    plot_button = Button(actionframe, text="Plot", command=plot_action_cb, bg=buttoncolor) 
-    plot_button.grid(column=0, row=1, padx=10, pady=10, sticky='ew')
-
-    # Create plot button
-    plots_button = Button(actionframe, text="Plot2", command=indplot_action_cb, bg=buttoncolor) 
-    plots_button.grid(column=1, row=1, padx=0, pady=10, sticky='ew') 
-
-    # Create scatterplot button
-    scatter_button = Button(actionframe, text="ScatterPlot", command=scatter_action_cb, bg=buttoncolor) 
-    scatter_button.grid(column=0, row=2, padx=10, pady=10, sticky='ew') 
-
-    # Create correlation plot button
-    corr_button = Button(actionframe, text="CorrelationPlot", command=corr_action_cb, bg=buttoncolor) 
-    corr_button.grid(column=0, row=3, padx=10, pady=10, sticky='ew')
-
-    # Create correlation plot button
-    corr2_button = Button(actionframe, text="CorrelationPlot2", command=corr2_action_cb, bg=buttoncolor) 
-    corr2_button.grid(column=1, row=3, padx=10, pady=10, sticky='ew')
-
-    # Create linear regression plot button
-    regr_button = Button(actionframe, text="LinearRegressionPlot", command=regr_action_cb, bg=buttoncolor) 
-    regr_button.grid(column=0, row=4, padx=10, pady=10, sticky='ew')
+def create_datamenu():
 
     # Create menu
     menubar = Menu(window, bg=buttoncolor)
@@ -502,13 +1076,37 @@ def create_actionframe():
     filemenu.add_command(label='Import from server', command=create_filterframe)
     filemenu.add_command(label='Save', command=save_action_cb)
     filemenu.add_command(label='Save Work Data', command=savewd_action_cb)
-    filemenu.add_command(label='Clip', command=clip_action_cb)
-    filemenu.add_command(label='Clip Reset', command=clipreset_action_cb)
+    filemenu.add_command(label='Revert', command=revert_action_cb)
     filemenu.add_command(label='Close', command=close_action_cb, accelerator='Ctrl+W')
     menubar.add_cascade(label='File', menu=filemenu)
+
+    editmenu = Menu(menubar, bg=buttoncolor)
+    editmenu.add_command(label='Move up', command=moveup_action_cb)
+    editmenu.add_command(label='Move down', command=movedown_action_cb)
+    editmenu.add_command(label='Convert column', command=convcolumn_action_cb)
+    editmenu.add_command(label='Add column', command=addcolumn_action_cb)
+    editmenu.add_command(label='Delete column', command=deletecolumn_action_cb)
+    editmenu.add_command(label='Clip', command=clip_action_cb)
+    menubar.add_cascade(label='Edit', menu=editmenu)
+
+    viewmenu = Menu(menubar, bg=buttoncolor)
+    viewmenu.add_command(label='Plot common', command=plot_action_cb)
+    viewmenu.add_command(label='Plot separate', command=indplot_action_cb)
+    viewmenu.add_command(label='Scatterplot', command=scatter_action_cb)
+    viewmenu.add_command(label='Plot correlation', command=corr_action_cb)
+    viewmenu.add_command(label='Plot correlation heatmap', command=corr2_action_cb)
+    viewmenu.add_command(label='Plot linear regression', command=regr_action_cb)
+    menubar.add_cascade(label='View', menu=viewmenu)
+
+    functionmenu = Menu(menubar, bg=buttoncolor)
+    functionmenu.add_command(label='Linear regression', command=regrcoef_action_cb)
+    menubar.add_cascade(label='Functions', menu=functionmenu)
+
+    helpmenu = Menu(menubar, bg=buttoncolor)
+    helpmenu.add_command(label='Help', command=help_action_cb)
+    menubar.add_cascade(label='Help', menu=helpmenu)
     window.config(menu=menubar)
     
-    actionframe.pack(side=LEFT)
 
 # Read dataframe from sev database
 def readdata_cb():
@@ -562,10 +1160,75 @@ def readdata_cb():
     itemframe.pack_forget()
     itemframe.destroy()
 
+    create_toolbar()
     create_dataframe()
-    create_actionframe()
+    create_datamenu()
+
+def create_toolbar():
+    global toolbar
+    global toolbar_plot_img
+    global toolbar_indplot_img
+    global toolbar_scatterplot_img
+    global toolbar_lrplot_img
+    global toolbar_corrplot_img
+    global toolbar_corr2plot_img
+    global toolbar_up_img
+    global toolbar_down_img
+    global toolbar_conv_img
+    global toolbar_add_img
+    global toolbar_delete_img
+    
+    toolbar = Frame(window, bg=bgcolor, bd=1, relief=RAISED)
+
+    toolbar_plot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_plot.png")
+    button = Button(toolbar, image=toolbar_plot_img, command=plot_action_cb, bg=buttoncolor)
+    button.pack(side=LEFT, padx=2, pady=2)
+
+    toolbar_indplot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_indplot.png")
+    button = Button(toolbar, image=toolbar_indplot_img, command=indplot_action_cb, bg=buttoncolor)
+    button.pack(side=LEFT, padx=2, pady=2)
+
+    toolbar_scatterplot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_scatterplot.png")
+    button = Button(toolbar, image=toolbar_scatterplot_img, command=scatter_action_cb, bg=buttoncolor)
+    button.pack(side=LEFT, padx=2, pady=2)
+
+    toolbar_lrplot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_lrplot.png")
+    button = Button(toolbar, image=toolbar_lrplot_img, command=regr_action_cb, bg=buttoncolor)
+    button.pack(side=LEFT, padx=2, pady=2)
+
+    toolbar_corrplot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_corrplot.png")
+    button = Button(toolbar, image=toolbar_corrplot_img, command=corr_action_cb, bg=buttoncolor)
+    button.pack(side=LEFT, padx=2, pady=2)
+
+    toolbar_corr2plot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_corr2plot.png")
+    button = Button(toolbar, image=toolbar_corr2plot_img, command=corr2_action_cb, bg=buttoncolor)
+    button.pack(side=LEFT, padx=2, pady=2)
+
+    toolbar_up_img = PhotoImage(file=pwr_exe+"/mvtoolbar_up.png")
+    button = Button(toolbar, image=toolbar_up_img, command=moveup_action_cb, bg=buttoncolor)
+    button.pack(side=LEFT, padx=2, pady=2)
+
+    toolbar_down_img = PhotoImage(file=pwr_exe+"/mvtoolbar_down.png")
+    button = Button(toolbar, image=toolbar_down_img, command=movedown_action_cb, bg=buttoncolor)
+    button.pack(side=LEFT, padx=2, pady=2)
+
+    toolbar_conv_img = PhotoImage(file=pwr_exe+"/mvtoolbar_conv.png")
+    button = Button(toolbar, image=toolbar_conv_img, command=convcolumn_action_cb, bg=buttoncolor)
+    button.pack(side=LEFT, padx=2, pady=2)
+
+    toolbar_add_img = PhotoImage(file=pwr_exe+"/mvtoolbar_add.png")
+    button = Button(toolbar, image=toolbar_add_img, command=addcolumn_action_cb, bg=buttoncolor)
+    button.pack(side=LEFT, padx=2, pady=2)
+
+    toolbar_delete_img = PhotoImage(file=pwr_exe+"/mvtoolbar_delete.png")
+    button = Button(toolbar, image=toolbar_delete_img, command=deletecolumn_action_cb, bg=buttoncolor)
+    button.pack(side=LEFT, padx=2, pady=2)
+
+    toolbar.pack(side=TOP, fill=X)
+
 
 def create_dataframe():
+    global wd
     global datasel
     global dataframe
     global startframe
@@ -605,10 +1268,10 @@ def create_filterframe():
         itemframe.destroy()
 
     if 'dataframe' in globals():
+        toolbar.pack_forget()
+        toolbar.destroy()
         dataframe.pack_forget()
         dataframe.destroy()
-        actionframe.pack_forget()
-        actionframe.destroy()
         
     if 'startframe' in globals():    
         startframe.pack_forget()
@@ -639,6 +1302,24 @@ def create_filterframe():
     filterbutton.grid(column=2, row=1, padx=20, pady=5, sticky=W)
     filterframe.pack(side=LEFT, fill=X)
 
+file = ''
+try:
+    opts, args = getopt.getopt(sys.argv[1:], "f:", "file")
+except getopt.GetoptError:
+    print 'sev_analyse.py [-f <file>]'
+    sys.exit(2)
+
+for opt, arg in opts:
+    if opt == "-h":
+        print 'sev_analyse.py [-f <file>]'
+    if opt in ("-f", "--file"):
+        file = arg
+        
+if file != '':
+    print 'opening file', file
+
+pwr_exe = os.environ.get('pwr_exe')
+
 # Create window
 bgcolor = 'white'
 buttoncolor = '#F0F0F0'
@@ -657,12 +1338,16 @@ window.config(menu=menubar,bg=bgcolor)
 window.bind_all("<Control-w>", close_action_cb)
 window.bind_all("<Control-o>", open_action_cb)
 
-startframe = Frame(window, bg=bgcolor)
-canvas = Canvas(startframe, width=800, height=200, bg=bgcolor)
-canvas.pack()
-img = PhotoImage(file="/data0/x5-6-1/rls/os_linux/hw_x86_64/exp/exe/pwr_logga.png")
-canvas.create_image(400, 100, image=img)
-startframe.pack(side=LEFT, fill=X)
+
+if file != '':
+    read_file(file)
+else:
+    startframe = Frame(window, bg=bgcolor)
+    canvas = Canvas(startframe, width=800, height=200, bg=bgcolor)
+    canvas.pack()
+    img = PhotoImage(file=pwr_exe+"/pwr_logga.png")
+    canvas.create_image(400, 100, image=img)
+    startframe.pack(side=LEFT, fill=X)
 
 window.mainloop()
 
