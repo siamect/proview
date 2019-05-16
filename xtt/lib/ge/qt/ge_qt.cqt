@@ -63,6 +63,7 @@
 #include "wb_wnav_selformat.h"
 
 #include <QApplication>
+#include <QCloseEvent>
 #include <QFontDatabase>
 #include <QHBoxLayout>
 #include <QInputDialog>
@@ -1237,7 +1238,7 @@ void GeQt::update()
 void GeQtWidget::closeEvent(QCloseEvent* event)
 {
   ge->Ge::activate_exit();
-  QWidget::closeEvent(event);
+  event->ignore();
 }
 
 void GeQtWidget::focusInEvent(QFocusEvent* event)
@@ -1260,17 +1261,8 @@ void GeQtWidget::focusInEvent(QFocusEvent* event)
 
 GeQt::~GeQt()
 {
-  if (graph->is_modified()) {
-    open_yesnodia("Do you wan't to save changes", "Save", Ge::exit_save_cb,
-        Ge::exit_nosave_cb);
-  }
-
-  if (open_dialog) {
-    wow->DeleteList(open_dialog);
-  }
-
-  if (subgraphs_widget) {
-    subgraphs_widget->close();
+  if (subgraphs) {
+    delete subgraphs;
   }
   delete subpalette;
   delete recall_entry;
@@ -1288,7 +1280,7 @@ GeQt::~GeQt()
     delete objectnav;
   }
 
-  toplevel->close();
+  delete toplevel;
 
   if (exit_when_close) {
     exit(0);
@@ -1325,7 +1317,6 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
 
   toplevel->setMinimumSize(window_width, window_height);
   toplevel->setWindowTitle(fl(title));
-  toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
   CoWowQt::SetWindowIcon(toplevel);
 
@@ -1774,10 +1765,9 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   // Brightness
   addToolItem(toplevel, tools2, "Decrease brightness",
       SLOT(activate_decr_lightness()), "$pwr_exe/ge_arrowleft.png");
-  addToolItem(toplevel, tools2, "Increase brightness",
-      SLOT(activate_incr_lightness()), "$pwr_exe/ge_brightness.png");
-
   tools2->addWidget(new_image_label(tools2, "$pwr_exe/ge_brightness.png"));
+  addToolItem(toplevel, tools2, "Increase brightness",
+      SLOT(activate_incr_lightness()), "$pwr_exe/ge_arrowright.png");
 
   // Separator
   tools2->addSeparator();
@@ -1785,10 +1775,9 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   // Intensity
   addToolItem(toplevel, tools2, "Decrease color intensity",
       SLOT(activate_decr_intensity()), "$pwr_exe/ge_arrowleft.png");
+  tools2->addWidget(new_image_label(tools2, "$pwr_exe/ge_color.png"));
   addToolItem(toplevel, tools2, "Increase color intensity",
       SLOT(activate_incr_intensity()), "$pwr_exe/ge_arrowright.png");
-
-  tools2->addWidget(new_image_label(tools2, "$pwr_exe/ge_color.png"));
 
   // Separator
   tools2->addSeparator();
@@ -1796,10 +1785,9 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   // Shift
   addToolItem(toplevel, tools2, "Shift color", SLOT(activate_decr_shift()),
       "$pwr_exe/ge_arrowleft.png");
+  tools2->addWidget(new_image_label(tools2, "$pwr_exe/ge_colorshift.png"));
   addToolItem(toplevel, tools2, "Shift color", SLOT(activate_incr_shift()),
       "$pwr_exe/ge_arrowright.png");
-
-  tools2->addWidget(new_image_label(tools2, "$pwr_exe/ge_colorshift.png"));
 
   // Gradient option menu
   tools_gradient = addToolMenu(toplevel, tools2, SLOT(activate_gradient(int)));
@@ -1966,8 +1954,7 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   add_expanding(vpaned, palbox);
   vpaned->addWidget(colpal_main_widget);
 
-  ((GraphQt*)graph)->create_navigator();
-  vpaned->addWidget(((GraphQt*)graph)->nav_widget);
+  vpaned->addWidget(((GraphQt*)graph)->create_navigator());
 
   graph_list = new GeItemViewQt(this);
 

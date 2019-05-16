@@ -155,6 +155,8 @@ void WNavQt::set_inputfocus(int focus)
     brow_widget->setFocus();
   } else {
     modifyBackground(form_widget, QColor("White"));
+    brow_SelectClear(brow->ctx);
+    selection_owner = 0;
   }
 }
 
@@ -278,9 +280,6 @@ static void selection_data_set(
   clientConnection->write(block);
   clientConnection->flush();
   clientConnection->disconnectFromServer();
-
-  brow_SelectClear(wnav->brow->ctx);
-  wnav->selection_owner = 0;
 }
 
 void WNavQtTraceObject::sel_convert_cb()

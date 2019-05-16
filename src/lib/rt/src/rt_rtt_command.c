@@ -6112,7 +6112,8 @@ int rtt_menu_classort(rtt_t_menu* menulist, int redo)
         strcpy(menu_ptr->text, "000");
         strcat(menu_ptr->text, dummytxt);
       } else {
-        strcpy(menu_ptr->text, &menu_ptr->text[3]);
+	strcpy(dummytxt, &menu_ptr->text[3]);
+        strcpy(menu_ptr->text, dummytxt);
       }
     } else if (streq(classname, "pwrb:Class-PlcPgm")) {
       if (!redo) {
@@ -6120,7 +6121,8 @@ int rtt_menu_classort(rtt_t_menu* menulist, int redo)
         strcpy(menu_ptr->text, "001");
         strcat(menu_ptr->text, dummytxt);
       } else {
-        strcpy(menu_ptr->text, &(menu_ptr->text[3]));
+	strcpy(dummytxt, &menu_ptr->text[3]);
+        strcpy(menu_ptr->text, dummytxt);
       }
     }
     menu_ptr++;

@@ -58,10 +58,9 @@ public:
   int subwindow_x; //!< Subwindow x coordinate in pixel.
   int subwindow_y; //!< Subwindow y coordinate in pixel.
   double subwindow_scale; //!< Subwindow scale.
-  int clip_on = 0;
   int clip_cnt = 0;
 
-  virtual DrawWind* copy() = 0;
+  virtual DrawWind* copy() { return NULL; }
   virtual void update_buffer(DrawWind* w) {}
 };
 
@@ -82,6 +81,8 @@ public:
 
   virtual int begin(DrawWind* wind) = 0;
   virtual void end(bool flush = true) = 0;
+  virtual void start_redraw_timer() {}
+  virtual void cancel_redraw_timer() {}
 
   virtual void rect(int x, int y, int width, int height, glow_eDrawType gc_type,
       int fill, int idx, int highlight = 0) = 0;

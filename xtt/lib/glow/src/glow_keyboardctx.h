@@ -71,11 +71,9 @@ public:
   //! Constructor.
   /*!
     \param ctx_name	Name of the context.
-    \param zoom_fact	Initial zoomfactor.
   */
-  KeyboardCtx(const char* ctx_name, double zoom_fact = 100)
-      : GrowCtx(ctx_name, zoom_fact), type(default_type),
-        current_keymap(default_keymap)
+  KeyboardCtx(const char* ctx_name)
+    : GrowCtx(ctx_name), type(default_type), current_keymap(default_keymap)
   {
     ctx_type = glow_eCtxType_Keyboard;
     grid_on = 0;
@@ -95,9 +93,6 @@ public:
 
   //! Adjust the pixel coordinates to the current zoomfactor.
   void zoom(double factor);
-
-  //! Reset to base zoomfactor.
-  void unzoom();
 
   //! Event handler
   /*!

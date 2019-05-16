@@ -45,6 +45,7 @@
 #include "ge_attr_qt.h"
 #include "ge_subgraphs_qt.h"
 
+#include <QCloseEvent>
 #include <QMenuBar>
 #include <QTimer>
 #include <QVBoxLayout>
@@ -57,7 +58,7 @@ void SubGraphsQtWidget::closeEvent(QCloseEvent* event)
     trace_timerid->stop();
     delete subgraphs;
   }
-  QWidget::closeEvent(event);
+  event->ignore();
 }
 
 void SubGraphsQtWidget::focusInEvent(QFocusEvent* event)
@@ -119,7 +120,6 @@ SubGraphsQt::SubGraphsQt(void* xn_parent_ctx, const char* xn_name,
   toplevel = new SubGraphsQtWidget(this);
   toplevel->setMinimumSize(300, 500);
   toplevel->setWindowTitle(fl(name));
-  toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
   // Menu
   QMenuBar* menu_bar = new QMenuBar(toplevel);
@@ -171,6 +171,8 @@ SubGraphsQt::~SubGraphsQt()
   }
 
   delete brow;
+
+  delete toplevel;
 }
 
 void SubGraphsQt::trace_start()

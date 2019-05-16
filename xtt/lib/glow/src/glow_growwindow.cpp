@@ -919,12 +919,15 @@ void GrowWindow::new_ctx()
     strcat(fname, ".pwg");
   dcli_translate_filename(fname, fname);
 
-  window_ctx
-      = new GrowCtx("WindowComponent", ctx->mw->zoom_factor_x * window_scale);
+  window_ctx = new GrowCtx("WindowComponent");
   window_ctx->gdraw = ctx->gdraw;
   window_ctx->is_subwindow = 1;
   window_ctx->mw = ctx->mw->copy();
+  window_ctx->mw->zoom_factor_x = window_ctx->mw->zoom_factor_y =
+      window_ctx->mw->base_zoom_factor = ctx->mw->zoom_factor_x * window_scale;
   window_ctx->navw = ctx->navw->copy();
+  window_ctx->navw->zoom_factor_x = window_ctx->navw->zoom_factor_y =
+      window_ctx->navw->base_zoom_factor = ctx->mw->zoom_factor_x * window_scale;
   window_ctx->userdata_save_callback = ctx->userdata_save_callback;
   window_ctx->userdata_open_callback = ctx->userdata_open_callback;
   window_ctx->userdata_copy_callback = ctx->userdata_copy_callback;

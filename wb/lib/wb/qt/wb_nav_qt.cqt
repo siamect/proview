@@ -103,9 +103,6 @@ void NavQtTraceObject::sel_convert_cb()
   clientConnection->write(block);
   clientConnection->flush();
   clientConnection->disconnectFromServer();
-
-  brow_SelectClear(nav->brow_ctx);
-  nav->selection_owner = 0;
 }
 
 void NavQt::set_selection_owner(int set)
@@ -131,5 +128,7 @@ void NavQt::set_inputfocus(int focus)
     modifyBackground(form_widget, QColor("Black"));
   } else {
     modifyBackground(form_widget, QColor("White"));
+    brow_SelectClear(brow_ctx);
+    selection_owner = 0;
   }
 }

@@ -174,7 +174,7 @@ unique_ptr<QPainter> GlowDrawQt::get_painter(QPaintDevice* window,
     painter->setPen(QPen(painter->brush(), size + 1));
   }
 
-  if (w && w->clip_on) {
+  if (w && w->clip_cnt > 0) {
     painter->setClipRect(w->clip_rectangle[w->clip_cnt - 1]);
     painter->setClipping(true);
   }
@@ -239,8 +239,6 @@ void GlowDrawQt::init_nav(QWidget* nav_widget)
   assert(dynamic_cast<QtScrollWidgetGlow*>(nav_widget) != NULL);
   nav_wind.window = dynamic_cast<QtScrollWidgetGlow*>(nav_widget);
   nav_wind.buffer = &(dynamic_cast<QtScrollWidgetGlow*>(nav_widget)->image);
-  nav_wind.clip_cnt = 0;
-  nav_wind.clip_on = 0;
 
   QPalette pal;
   pal.setColor(QPalette::Background, background);
@@ -261,17 +259,17 @@ GlowDrawQt::GlowDrawQt(QWidget* toplevel, void** glow_ctx,
   memset(customcolors, 0, sizeof(customcolors));
 
   if (type == glow_eCtxType_Brow) {
-    ctx = (GlowCtx*)new BrowCtx("Claes context", 20);
+    ctx = (GlowCtx*)new BrowCtx("Claes context");
   } else if (type == glow_eCtxType_Grow) {
-    ctx = (GlowCtx*)new GrowCtx("Claes context", 20);
+    ctx = (GlowCtx*)new GrowCtx("Claes context");
   } else if (type == glow_eCtxType_ColPal) {
-    ctx = (GlowCtx*)new ColPalCtx("Claes context", 20);
+    ctx = (GlowCtx*)new ColPalCtx("Claes context");
   } else if (type == glow_eCtxType_Keyboard) {
-    ctx = (GlowCtx*)new KeyboardCtx("Claes context", 20);
+    ctx = (GlowCtx*)new KeyboardCtx("Claes context");
   } else if (type == glow_eCtxType_Curve) {
-    ctx = (GlowCtx*)new CurveCtx("Claes context", 20);
+    ctx = (GlowCtx*)new CurveCtx("Claes context");
   } else {
-    ctx = new GlowCtx("Claes context", 20);
+    ctx = new GlowCtx("Claes context");
   }
   *glow_ctx = (void*)ctx;
 
@@ -384,6 +382,7 @@ void GlowDrawQt::event_handler(QEvent* event, QWidget* target)
       }
       break;
     }
+    case QEvent::MouseButtonDblClick:
     case QEvent::MouseButtonPress: {
       QMouseEvent* mouseEvent = ((QMouseEvent*)event);
       switch (mouseEvent->button()) {
@@ -828,10 +827,6 @@ void GlowDrawQt::event_handler(QEvent* event, QWidget* target)
           glow_eEvent_ButtonRelease, mouseEvent->x(), mouseEvent->y());
       break;
     }
-    case QEvent::Show: {
-      sts = ctx->event_handler_nav(glow_eEvent_Exposure, 0, 0);
-      break;
-    }
     case QEvent::Paint:
     case QEvent::UpdateRequest: {
       sts = ctx->event_handler_nav(glow_eEvent_Exposure, 0, 0);
@@ -858,7 +853,6 @@ void GlowDrawQt::event_handler(QEvent* event, QWidget* target)
   }
 
   m_wind.window->update();
-  return;
 }
 
 void GlowDrawQt::enable_event(glow_eEvent event, glow_eEventType event_type,
@@ -1386,22 +1380,19 @@ int GlowDrawQt::set_clip_rectangle(
   int x1 = MAX(ll_x, ur_x);
   int y0 = MIN(ll_y, ur_y);
   int y1 = MAX(ll_y, ur_y);
-  if (w->clip_cnt != 0) {
+  if (w->clip_cnt > 0) {
     x0 = MAX(x0, w->clip_rectangle[w->clip_cnt - 1].x());
     x1 = MIN(x1, w->clip_rectangle[w->clip_cnt - 1].x()
             + w->clip_rectangle[w->clip_cnt - 1].width());
     y0 = MAX(y0, w->clip_rectangle[w->clip_cnt - 1].y());
     y1 = MIN(y1, w->clip_rectangle[w->clip_cnt - 1].y()
             + w->clip_rectangle[w->clip_cnt - 1].height());
-    x0 = (x0 > x1) ? x1 : x0;
-    y0 = (y0 > y1) ? y1 : y0;
   }
   w->clip_rectangle[w->clip_cnt].setX(x0);
   w->clip_rectangle[w->clip_cnt].setY(y0);
   w->clip_rectangle[w->clip_cnt].setWidth(x1 - x0);
   w->clip_rectangle[w->clip_cnt].setHeight(y1 - y0);
   w->clip_cnt++;
-  w->clip_on = 1;
   return 1;
 }
 

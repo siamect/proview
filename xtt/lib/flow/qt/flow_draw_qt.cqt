@@ -200,7 +200,7 @@ FlowDrawQt::FlowDrawQt(QWidget* x_toplevel, void** flow_ctx,
 
   assert(dynamic_cast<QtScrollWidgetFlow*>(toplevel) != NULL);
   m_wind.window = dynamic_cast<QtScrollWidgetFlow*>(toplevel);
-  m_wind.buffer = &(((QtScrollWidgetFlow*)m_wind.window)->image);
+  m_wind.buffer = &(dynamic_cast<QtScrollWidgetFlow*>(toplevel)->image);
 
   ctx->mw = &m_wind;
   ctx->navw = &nav_wind;
@@ -216,7 +216,7 @@ void FlowDrawQt::init_nav(QWidget* nav_widget, void* flow_ctx)
 {
   assert(dynamic_cast<QtScrollWidgetFlow*>(nav_widget) != NULL);
   nav_wind.window = dynamic_cast<QtScrollWidgetFlow*>(nav_widget);
-  nav_wind.buffer = &(((QtScrollWidgetFlow*)nav_wind.window)->image);
+  nav_wind.buffer = &(dynamic_cast<QtScrollWidgetFlow*>(nav_widget)->image);
 
   QPalette pal;
   pal.setColor(QPalette::Background, background);
@@ -307,6 +307,7 @@ void FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
       }
       break;
     }
+    case QEvent::MouseButtonDblClick:
     case QEvent::MouseButtonPress: {
       QMouseEvent* mouseEvent = ((QMouseEvent*)event);
       switch (mouseEvent->button()) {
@@ -685,9 +686,9 @@ void FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
     case QEvent::Wheel: {
       QWheelEvent* wheelEvent = ((QWheelEvent*)event);
       if (wheelEvent->delta() > 0) {
-        sts = ctx->event_handler(flow_eEvent_ScrollUp, 0, 0, 0, 0);
+        sts = ctx->event_handler(flow_eEvent_ScrollUp, wheelEvent->x(), wheelEvent->y(), 0, 0);
       } else if (wheelEvent->delta() < 0) {
-        sts = ctx->event_handler(flow_eEvent_ScrollDown, 0, 0, 0, 0);
+        sts = ctx->event_handler(flow_eEvent_ScrollDown, wheelEvent->x(), wheelEvent->y(), 0, 0);
       }
       break;
     }
@@ -743,18 +744,20 @@ void FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
       }
       break;
     }
-    case QEvent::Show: {
-      sts = ctx->event_handler_nav(flow_eEvent_Map, 0, 0);
+    case QEvent::Paint:
+    case QEvent::UpdateRequest: {
+      sts = ctx->event_handler_nav(flow_eEvent_Exposure, 0, 0);
+      nav_wind.window->update();
       break;
     }
     case QEvent::MouseMove: {
-      QPoint pos = QCursor::pos();
+      QMouseEvent* mouseEvent = ((QMouseEvent*)event);
       if (button1_pressed || button2_pressed || button3_pressed) {
         sts = ctx->event_handler_nav(
-            flow_eEvent_ButtonMotion, pos.x(), pos.y());
+            flow_eEvent_ButtonMotion, mouseEvent->x(), mouseEvent->y());
       } else {
         sts = ctx->event_handler_nav(
-            flow_eEvent_CursorMotion, pos.x(), pos.y());
+            flow_eEvent_CursorMotion, mouseEvent->x(), mouseEvent->y());
       }
       break;
     }
@@ -766,7 +769,7 @@ void FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
     return;
   }
 
-  toplevel->update();
+  m_wind.window->update();
 }
 
 void FlowDrawQt::enable_event(FlowCtx* ctx, flow_eEvent event, flow_eEventType event_type,
@@ -1027,7 +1030,7 @@ bool FlowDrawQt::draw_timer_cb()
 {
   draw_timer_id->stop();
   (draw_timer_callback_func)(ctx);
-  toplevel->update();
+  m_wind.window->update();
   return FALSE;
 }
 

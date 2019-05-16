@@ -61,14 +61,15 @@ CtxComment::CtxComment()
   memset(text, 0, sizeof(text));
 }
 
-GlowCtx::GlowCtx(const char* ctx_name, double zoom_fact, int offs_x, int offs_y)
-  : ctx_type(glow_eCtxType_Glow), print_zoom_factor(100), x_right(0),
-    x_left(0), y_high(0), y_low(0), nav_rect_ll_x(0), nav_rect_ll_y(0),
-    nav_rect_ur_x(0), nav_rect_ur_y(0), gdraw(0), node_movement_active(0),
-    node_movement_paste_active(0), node_movement_paste_pending(0),
-    nav_rect_movement_active(0), nav_rect_zoom_active(0), select_rect_active(0),
-    con_create_active(0), auto_scrolling_active(0), is_dirty(0), a_nc(20, 20),
-    a_cc(20, 20), a(50, 50), a_sel(20, 20), a_paste(20, 20), a_move(20, 20),
+GlowCtx::GlowCtx(const char* ctx_name, int offs_x, int offs_y)
+  : ctx_type(glow_eCtxType_Glow), mw(NULL), navw(NULL), print_zoom_factor(100),
+    x_right(0), x_left(0), y_high(0), y_low(0), nav_rect_ll_x(0),
+    nav_rect_ll_y(0), nav_rect_ur_x(0), nav_rect_ur_y(0), gdraw(0),
+    node_movement_active(0), node_movement_paste_active(0),
+    node_movement_paste_pending(0), nav_rect_movement_active(0),
+    nav_rect_zoom_active(0), select_rect_active(0), con_create_active(0),
+    auto_scrolling_active(0), is_dirty(0), a_nc(20, 20), a_cc(20, 20),
+    a(50, 50), a_sel(20, 20), a_paste(20, 20), a_move(20, 20),
     event_region_select(glow_eEvent_Null),
     event_region_add_select(glow_eEvent_Null),
     event_create_con(glow_eEvent_Null), event_create_node(glow_eEvent_Null),
@@ -177,6 +178,10 @@ int GlowCtx::save(char* filename, glow_eSaveMode mode)
   fp << int(glow_eSave_Ctx_x_left) << FSPACE << x_left << '\n';
   fp << int(glow_eSave_Ctx_y_high) << FSPACE << y_high << '\n';
   fp << int(glow_eSave_Ctx_y_low) << FSPACE << y_low << '\n';
+  fp << int(glow_eSave_Ctx_window_width) << FSPACE << mw->window_width << '\n';
+  fp << int(glow_eSave_Ctx_window_height) << FSPACE << mw->window_height << '\n';
+  fp << int(glow_eSave_Ctx_nav_window_width) << FSPACE << navw->window_width << '\n';
+  fp << int(glow_eSave_Ctx_nav_window_height) << FSPACE << navw->window_height << '\n';
   fp << int(glow_eSave_Ctx_nav_rect_ll_x) << FSPACE << nav_rect_ll_x << '\n';
   fp << int(glow_eSave_Ctx_nav_rect_ll_y) << FSPACE << nav_rect_ll_y << '\n';
   fp << int(glow_eSave_Ctx_nav_rect_ur_x) << FSPACE << nav_rect_ur_x << '\n';
@@ -291,6 +296,14 @@ int GlowCtx::open(char* filename, glow_eSaveMode mode)
   if (gdraw)
     gdraw->ctx->set_nodraw(); // Needed for growwindows
 
+  // If mw and navw have not been initialized, it means that we created a
+  // context only to call open() to obtain some variables from a pwg file.
+  DrawWind tmp_mw, tmp_navw;
+  if (!mw)
+    mw = &tmp_mw;
+  if (!navw)
+    navw = &tmp_navw;
+
   for (;;) {
     if (!fp.good()) {
       fp.clear();
@@ -344,6 +357,18 @@ int GlowCtx::open(char* filename, glow_eSaveMode mode)
       break;
     case glow_eSave_Ctx_y_low:
       fp >> y_low;
+      break;
+    case glow_eSave_Ctx_window_width:
+      fp >> mw->window_width;
+      break;
+    case glow_eSave_Ctx_window_height:
+      fp >> mw->window_height;
+      break;
+    case glow_eSave_Ctx_nav_window_width:
+      fp >> navw->window_width;
+      break;
+    case glow_eSave_Ctx_nav_window_height:
+      fp >> navw->window_height;
       break;
     case glow_eSave_Ctx_nav_rect_ll_x:
       fp >> nav_rect_ll_x;
@@ -647,6 +672,7 @@ void GlowCtx::get_borders()
 void GlowCtx::set_dirty()
 {
   is_dirty = 1;
+  gdraw->start_redraw_timer();
 }
 
 void GlowCtx::redraw_if_dirty()
@@ -656,6 +682,7 @@ void GlowCtx::redraw_if_dirty()
   }
   if (is_dirty) {
     is_dirty = 0;
+    gdraw->cancel_redraw_timer();
     gdraw->begin(mw);
     gdraw->clear();
     draw(mw, 0, 0, mw->window_width, mw->window_height);
@@ -667,7 +694,7 @@ void GlowCtx::redraw_if_dirty()
 
     gdraw->begin(navw);
     gdraw->clear();
-    draw(navw, nav_rect_ll_x, nav_rect_ll_y, nav_rect_ur_x, nav_rect_ur_y);
+    draw(navw, 0, 0, navw->window_width, navw->window_height);
     gdraw->end();
   }
 }
@@ -834,6 +861,7 @@ void GlowCtx::nav_zoom()
     return;
 
   if (a.size() > 0) {
+    set_dirty();
     get_borders();
     double x_nav_left = MIN(x_left, mw->offset_x / mw->zoom_factor_x);
     double x_nav_right
@@ -849,7 +877,6 @@ void GlowCtx::nav_zoom()
     navw->offset_x = int(x_nav_left * navw->zoom_factor_x);
     navw->offset_y = int(y_nav_low * navw->zoom_factor_y);
     a.nav_zoom();
-    set_dirty();
   }
 }
 
@@ -917,7 +944,6 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       if (sts)
         break;
     }
-  } else if (event == event_create_node) {
   } else if (event == event_move_node) {
     move_clear();
 

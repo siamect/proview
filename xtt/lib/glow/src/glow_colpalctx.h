@@ -67,14 +67,12 @@ public:
   //! Constructor.
   /*!
     \param ctx_name	Name of the context.
-    \param zoom_fact	Initial zoomfactor.
   */
-  ColPalCtx(const char* ctx_name, double zoom_fact = 100)
-      : GrowCtx(ctx_name, zoom_fact), columns(30),
-        current_fill(glow_eDrawType_LineGray),
-        current_border(glow_eDrawType_Line), current_text(glow_eDrawType_Line),
-        entry_width(0.3), entry_height(1), display_entry_width(3),
-        active(colpal_eActive_FillColor)
+  ColPalCtx(const char* ctx_name) : GrowCtx(ctx_name), columns(30),
+      current_fill(glow_eDrawType_LineGray),
+      current_border(glow_eDrawType_Line), current_text(glow_eDrawType_Line),
+      entry_width(0.3), entry_height(1), display_entry_width(3),
+      active(colpal_eActive_FillColor)
   {
     ctx_type = glow_eCtxType_ColPal;
     grid_on = 0;
@@ -95,9 +93,6 @@ public:
 
   //! Adjust the pixel coordinates to the current zoomfactor.
   void zoom(double factor);
-
-  //! Reset to base zoomfactor.
-  void unzoom();
 
   //! Not used.
   void print(char* filename);

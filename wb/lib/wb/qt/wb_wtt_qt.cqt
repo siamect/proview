@@ -65,6 +65,7 @@
 #include "wb_wpkg_qt.h"
 #include "wb_wtt_qt.h"
 
+#include <QApplication>
 #include <QCloseEvent>
 #include <QDialogButtonBox>
 #include <QInputDialog>
@@ -2291,6 +2292,11 @@ WttQt::WttQt(void* wt_parent_ctx, const char* wt_name, const char* iconname,
     CoLogin::reduce_privilege(
         pwr_mPrv_DevConfig | pwr_mPrv_DevPlc | pwr_mPrv_DevClass);
   }
+
+  // setFocus() doesn't work since QApplication has not entered its
+  // main loop yet. Instead, add an event to the event queue and let
+  // QApplication process it later when it enters the main loop.
+  QApplication::sendEvent(toplevel, new QFocusEvent(QEvent::FocusIn));
 
   *status = 1;
 }

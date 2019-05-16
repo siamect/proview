@@ -1066,3 +1066,356 @@ void CompCurvePolValueFo_exec(
   co->ActVal = o->ActVal;
   co->In = *o->InP;
 }
+
+/* MPC Model predictive contoller */
+typedef struct {
+  float acc;
+  float value;
+  float output;
+} t_vacc;
+
+/* Interpolation for Curve relations. */
+static float mpc_interpolate(float *curve, unsigned int c_len, float val)
+{
+  unsigned int i;
+  float ret;
+
+  if (val < curve[0]) {
+    ret = curve[1] - (curve[0] - val) * (curve[3]- curve[1]) / (curve[2] - curve[0]);
+    return ret;
+  }
+
+  for (i = 1; i  < c_len * 2; i++) {
+    if (val < curve[i*2]) {
+      ret = curve[i*2+1] + (val - curve[i*2]) * (curve[i*2+1] - curve[(i-1)*2+1]) / (curve[i*2] - curve[(i-1)*2]);
+      return ret;
+    }
+  }
+  
+  ret = curve[(c_len-1)*2+1] + (val - curve[(c_len-1)*2]) * (curve[(c_len-1)*2+1] - curve[(c_len-2)*2+1]) / (curve[(c_len-1)*2] - curve[(c_len-2)*2]);
+  return ret;
+}
+
+
+/* Calculation of linear regression model */
+static float mpc_model(pwr_sClass_CompMPC_Fo *o, pwr_sClass_CompMPC *co, 
+		       float out, float av0, float timestep)
+{
+  float av;
+  switch (co->Algorithm) {
+  case pwr_eMpcAlgorithm_None:
+    av = 0;
+    break;
+  case pwr_eMpcAlgorithm_FixTimeStep:
+  case pwr_eMpcAlgorithm_FixTimeStepModelCorr:
+  case pwr_eMpcAlgorithm_ProgressiveTimeStep:
+  case pwr_eMpcAlgorithm_ProgressiveTimeStepMC:
+  case pwr_eMpcAlgorithm_FirstScanTimeStep:
+  case pwr_eMpcAlgorithm_FirstScanTimeStepMC: {
+    int i, j;
+    pwr_tFloat32 val;
+    for (i = 0; i < co->NoOfAttr; i++) {
+      if (i == 0) {
+	if (co->BaseAttrRelation[0] == pwr_eMpcAttrRelation_Integral)
+	  av = av0;
+	else
+	  av = 0;
+	val = out;
+      }
+      else
+	val = **(pwr_tFloat32 **)((char *)&o->Attr2P + pwr_cInputOffset * (i - 1));
+      switch (co->BaseAttrRelation[i]) {
+      case pwr_eMpcAttrRelation_Integral: {
+	switch (co->TightAttrRelation[i]) {
+	case pwr_eMpcAttrRelation_Curve: {
+	  if ( i > 9)
+	    break;
+	  pwr_sClass_table *t = *(pwr_sClass_table **)
+	    ((char *)&o->Curve1P + pwr_cInputOffset * i);
+	  val = mpc_interpolate(&t->TabVect[1], t->TabVect[0], val);
+	  break;
+	}
+	}
+	for (j = i + 1; j < co->NoOfAttr; j++) {
+	  if (co->BaseAttrRelation[j] == pwr_eMpcAttrRelation_No) {
+	    pwr_tFloat32 tval = **(pwr_tFloat32 **)((char *)&o->Attr2P + pwr_cInputOffset * (j - 1));
+	    switch (co->TightAttrRelation[j]) {
+	    case pwr_eMpcAttrRelation_Sub:
+	      val -= co->AttrCoeff[j] * tval;
+	      break;
+	    case pwr_eMpcAttrRelation_Add:
+	      val += co->AttrCoeff[j] * tval;
+	      break;
+	    case pwr_eMpcAttrRelation_Multiply:
+	      val *= co->AttrCoeff[j] * tval;
+	      break;
+	    case pwr_eMpcAttrRelation_Divide:
+	      val /= co->AttrCoeff[j] * tval;
+	      break;
+	    }
+	  }
+	  else {
+	    j--;
+	    break;
+	  }
+	}
+	av += val * co->AttrCoeff[i] * timestep;
+	i = j;
+	break;
+      }
+      case pwr_eMpcAttrRelation_Linear:
+	av += val * co->AttrCoeff[i];
+	break;
+      case pwr_eMpcAttrRelation_Curve: {
+	if ( i > 9)
+	  break;
+	pwr_sClass_table *t = *(pwr_sClass_table **)
+	    ((char *)&o->Curve1P + pwr_cInputOffset * i);
+	float p = mpc_interpolate(&t->TabVect[1], t->TabVect[0], val);
+	av += p * co->AttrCoeff[i];
+	//printf("Curve %6.3f %6.2f\n", p, val);
+	break;
+      }
+      case pwr_eMpcAttrRelation_Multiply:
+	av = av * val * co->AttrCoeff[i];
+	break;
+      }
+    }
+
+    av += co->Coeff0;
+    break;
+  }
+  }
+  return av;
+} 
+
+/* Executes one predictive time scan */
+static void mpc_tscan(plc_sThread* tp, pwr_sClass_CompMPC_Fo* o, 
+		      pwr_sClass_CompMPC* co, int tix, int *vix, 
+		      int iter, float *iter_vout)
+{
+  if (tix == co->TSize)
+    return;
+
+  t_vacc **vacc = (t_vacc **)co->Vacc;
+  int i;
+  float t;
+  float out;
+  float av;
+  float av0; // Previous procvalue
+  float omin, omax, omiddle;
+  float timestep;
+
+  switch (co->Algorithm) {
+  case pwr_eMpcAlgorithm_ProgressiveTimeStep:
+  case pwr_eMpcAlgorithm_ProgressiveTimeStepMC:
+    t = 0;
+    timestep = co->TStep;
+    for (i = 1; i < tix; i++) {
+      t += timestep;
+      timestep *= co->TStepFactor;
+    }
+    break;
+  case pwr_eMpcAlgorithm_FirstScanTimeStep:
+  case pwr_eMpcAlgorithm_FirstScanTimeStepMC:
+    if (tix == 0) {
+      t = 0;
+      timestep = co->TStepFirst;
+    }
+    else {
+      t = co->TStepFirst + co->TStep * (tix - 1);
+      timestep = co->TStep;
+    }
+    break;
+  default:
+    t = (float)(co->TStep * tix);
+    timestep = co->TStep;
+  }
+
+  for (i = 0; i < co->SSize; i++) {
+    if (iter == 0) {
+      if (tix == 0)
+	omiddle = o->OutValue;
+      else
+	omiddle = vacc[tix-1][vix[tix-1]-1].output;
+      omax = MIN(omiddle + co->OutRamp * timestep, co->OutMax);
+      omin = MAX(omiddle - co->OutRamp * timestep, co->OutMin);
+    }
+    else {
+      if (tix == 0)
+	omiddle = iter_vout[tix];
+      else
+	omiddle = vacc[tix-1][vix[tix-1]-1].output + iter_vout[tix] - iter_vout[tix-1];
+      omax = MIN(omiddle + co->OutRamp * timestep/(iter*2), co->OutMax);
+      omin = MAX(omiddle - co->OutRamp * timestep/(iter*2), co->OutMin);
+    }
+    out = omin + (omax - omin)/(co->SSize - 1) * i;
+    if (tix == 0)
+      av0 = *o->ProcValueP;
+    else
+      av0 = vacc[tix-1][vix[tix]/co->SSize].value;
+
+    av = mpc_model(o, co, out, av0, timestep); 
+    vacc[tix][vix[tix]].output = out;
+    vacc[tix][vix[tix]].value = av;
+    if (tix > 0)
+      vacc[tix][vix[tix]].acc = vacc[tix-1][vix[tix-1]-1].acc;
+
+    switch (co->Algorithm) {
+    case pwr_eMpcAlgorithm_FixTimeStepModelCorr:
+    case pwr_eMpcAlgorithm_ProgressiveTimeStepMC:
+    case pwr_eMpcAlgorithm_FirstScanTimeStepMC:
+      vacc[tix][vix[tix]].acc += fabs(av - (co->SetValue + co->ModelCorr));
+      break;
+    default:
+      vacc[tix][vix[tix]].acc += fabs(av - co->SetValue);
+    }
+    // printf("acc[%2d][%2d] %7.2f     sp %7.2f out %7.2f\n", tix, vix[tix], vacc[tix][vix[tix]].acc, co->SetValue, out);      
+    vix[tix]++;  
+
+    mpc_tscan(tp, o, co, tix+1, vix, iter, iter_vout);
+  }
+}
+
+
+/*_*
+  CompMPC_Fo
+
+  @aref compmpc_fo CompMPC_Fo
+*/
+void CompMPC_Fo_init(pwr_sClass_CompMPC_Fo* o)
+{
+  t_vacc **vacc;
+  int size;
+  int i;
+  pwr_sClass_CompMPC *co;
+  pwr_tDlid dlid;
+  pwr_tStatus sts;
+
+  sts = gdh_DLRefObjectInfoAttrref(
+      &o->PlcConnect, (void**)&o->PlcConnectP, &dlid);
+  if (EVEN(sts))
+    o->PlcConnectP = 0;
+
+  co = (pwr_sClass_CompMPC *)o->PlcConnectP;
+  if (!co)
+    return;
+
+  co->NoOfPaths = 0;
+  co->Vacc = malloc(co->TSize * sizeof(float*));
+  vacc = (t_vacc **)co->Vacc;
+  for (i = 0; i < co->TSize; i++) {
+    size = pow(co->SSize, i+1);
+    vacc[i] = (t_vacc *)malloc(size * sizeof(t_vacc));
+    memset(vacc[i], 0,  size * sizeof(t_vacc));
+    co->NoOfPaths += size;
+  }
+}
+
+void CompMPC_Fo_exec(plc_sThread* tp, pwr_sClass_CompMPC_Fo* o)
+{
+  t_vacc **vacc;
+  int i, j;
+  int min_acc;
+  int *vix;
+  float *vout;
+  int idx;
+  int size;
+  pwr_sClass_CompMPC *co = (pwr_sClass_CompMPC *)o->PlcConnectP;
+
+  if (!co)
+    return;
+
+  co->ProcValue = o->ProcValue = *o->ProcValueP;
+  co->SetValue = o->SetValue = *o->SetValueP;
+  co->ForceValue = o->ForceValue = *o->ForceValueP;
+  co->Force = o->Force = *o->ForceP;
+
+  if (*o->ForceP) {
+    o->OutValue = *o->ForceValueP;
+    return;
+  }
+
+  /* SetValue correction */
+  switch (co->Algorithm) {
+  case pwr_eMpcAlgorithm_FixTimeStepModelCorr:
+  case pwr_eMpcAlgorithm_ProgressiveTimeStepMC:
+  case pwr_eMpcAlgorithm_FirstScanTimeStepMC:
+    if ( fabs(*o->SetValueP - *o->ProcValueP) < co->ModelCorrInterval)
+      co->ModelCorr += (*o->SetValueP - *o->ProcValueP) * (*o->ScanTime) / co->ModelCorrIntTime;
+    else
+      co->ModelCorr = 0;
+    break;
+  default:
+    co->ModelCorr = 0;
+  }
+
+  vacc = (t_vacc **)co->Vacc;
+  vix = (int *)calloc(1, co->TSize * sizeof(unsigned int));
+  mpc_tscan(tp, o, co, 0, vix, 0, 0);
+
+  min_acc = 0;
+  for (i = 0; i < pow(co->SSize, co->TSize); i++) {
+    if (vacc[co->TSize-1][i].acc < vacc[co->TSize-1][min_acc].acc)
+      min_acc = i;	
+    //printf( "%d acc %7.2f\n", i, vacc[co->TSize-1][i].acc);
+  }
+  // printf("min_acc %d\n", min_acc);
+
+  idx = min_acc;
+  for (i = co->TSize - 1; i >= 0; i--) {
+#if 0
+    printf("vacc[%d][%d] %7.2f %7.2f %7.2f\n", i, idx, vacc[i][idx].acc,
+	   vacc[i][idx].value, vacc[i][idx].output);
+#endif
+    idx = idx / co->SSize;
+  }
+
+  vout = (float *)malloc(co->TSize * sizeof(float));
+  for ( j = 0; j < 3; j++) {
+    idx = min_acc;
+    for (i = co->TSize - 1; i >= 0; i--) {
+      vout[i] = vacc[i][idx].output;
+      idx = idx / co->SSize;
+    }
+
+    for (i = 0; i < co->TSize; i++) {
+      size = pow(co->SSize, i+1);
+      memset(vacc[i], 0,  size * sizeof(t_vacc));
+    }
+    memset(vix, 0, co->TSize * sizeof(unsigned int));
+    mpc_tscan(tp, o, co, 0, vix, j+1, vout);
+
+    min_acc = 0;
+    for (i = 0; i < pow(co->SSize,co->TSize); i++) {
+      if (vacc[co->TSize-1][i].acc < vacc[co->TSize-1][min_acc].acc)
+	min_acc = i;	
+      // printf( "%d acc %7.2f\n", i, vacc[co->TSize-1][i].acc);
+    }
+
+    idx = min_acc;
+    for (i = co->TSize - 1; i >= 0; i--) {
+#if 0
+      printf("vacc[%d][%d] %7.2f %7.2f %7.2f\n", i, idx, vacc[i][idx].acc,
+	     vacc[i][idx].value, vacc[i][idx].output);
+#endif
+      if (i == 0)
+	break;
+      idx = idx / co->SSize;
+    }
+  }
+  free(vix);
+  free(vout);
+
+  co->CurrentPath = min_acc;
+  co->Error = *o->SetValueP - *o->ProcValueP;
+  switch (co->Algorithm) {
+  case pwr_eMpcAlgorithm_FirstScanTimeStep:
+    o->OutValue = vacc[0][idx].output;
+    break;
+  default:
+    o->OutValue += (vacc[0][idx].output - o->OutValue) * tp->f_scan_time / co->TStep * co->Gain;
+
+  }
+  co->OutValue = o->OutValue;
+}

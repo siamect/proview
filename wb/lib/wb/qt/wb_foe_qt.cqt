@@ -56,6 +56,7 @@
 #include "wb_watt_qt.h"
 #include "wb_watttext_qt.h"
 
+#include <QCloseEvent>
 #include <QHBoxLayout>
 #include <QMenu>
 #include <QMenuBar>
@@ -292,11 +293,12 @@ void WFoeQtWidget::activate_palette_con()
   if (sender() != foe->view_conpal) {
     foe->view_conpal->setChecked(true);
   }
-  bool set = foe->view_conpal->isChecked();
 
-  foe->con_palette->setVisible(set);
-  foe->con_palette_managed = set;
-  foe->con_palctx->set_inputfocus(set);
+  foe->nav_palette->setVisible(false);
+  foe->node_palette->setVisible(false);
+  foe->con_palette->setVisible(true);
+  foe->con_palette_managed = 1;
+  foe->con_palctx->set_inputfocus(1);
 }
 
 // Display or hide the connection palette.
@@ -305,11 +307,12 @@ void WFoeQtWidget::activate_palette_object()
   if (sender() != foe->view_objectpal) {
     foe->view_objectpal->setChecked(true);
   }
-  bool set = foe->view_objectpal->isChecked();
 
-  foe->node_palette->setVisible(set);
-  foe->node_palette_managed = set;
-  foe->node_palctx->set_inputfocus(set);
+  foe->con_palette->setVisible(false);
+  foe->nav_palette->setVisible(false);
+  foe->node_palette->setVisible(true);
+  foe->node_palette_managed = 1;
+  foe->node_palctx->set_inputfocus(1);
 }
 
 void WFoeQtWidget::activate_confeedback(bool set)
@@ -348,11 +351,12 @@ void WFoeQtWidget::activate_palette_plant()
   if (sender() != foe->view_plantpal) {
     foe->view_plantpal->setChecked(true);
   }
-  bool set = foe->view_plantpal->isChecked();
 
-  foe->nav_palette->setVisible(set);
-  foe->nav_palette_managed = set;
-  foe->navctx->set_inputfocus(set);
+  foe->con_palette->setVisible(false);
+  foe->node_palette->setVisible(false);
+  foe->nav_palette->setVisible(true);
+  foe->nav_palette_managed = 1;
+  foe->navctx->set_inputfocus(1);
 }
 
 void WFoeQtWidget::activate_refcon(bool set)
@@ -436,37 +440,33 @@ void WFoeQtWidget::activate_helpclass()
 // (and not directly by the user ) the event is 0.
 // These callbacks are use to determine in which mode the user works:
 // 	SG 01.05.91
-void WFoeQtWidget::activate_trace_togg(bool set)
+void WFoeQtWidget::activate_trace_togg()
 {
-  foe->activate_trace_togg(set);
+  foe->activate_trace_togg(true);
 }
 
 // Callbacks from the toggle buttons under the customize entry.
-void WFoeQtWidget::activate_simulate_togg(bool set)
+void WFoeQtWidget::activate_simulate_togg()
 {
-  foe->activate_simulate_togg(set);
+  foe->activate_simulate_togg(true);
 }
 
-void WFoeQtWidget::activate_view_togg(bool set)
+void WFoeQtWidget::activate_view_togg()
 {
   if (sender() != foe->view_togg) {
     foe->view_togg->setChecked(true);
   }
 
-  set = foe->view_togg->isChecked();
-
-  foe->activate_view_togg(set);
+  foe->activate_view_togg(true);
 }
 
-void WFoeQtWidget::activate_edit_togg(bool set)
+void WFoeQtWidget::activate_edit_togg()
 {
   if (sender() != foe->edit_togg) {
     foe->edit_togg->setChecked(true);
   }
 
-  set = foe->edit_togg->isChecked();
-
-  foe->activate_edit_togg(set);
+  foe->activate_edit_togg(true);
 }
 
 void WFoeQtWidget::valchanged_textinput()
@@ -579,7 +579,7 @@ void WFoeQt::destroy()
   delete navctx;
 
   /* Destroy the widget */
-  toplevel->close();
+  delete toplevel;
 
   // Yes, this is intentional, we want to call the destructor here.
   delete this;
@@ -726,7 +726,7 @@ void WFoeQt::pop()
 void WFoeQtWidget::closeEvent(QCloseEvent* event)
 {
   foe->activate_quit();
-  QWidget::closeEvent(event);
+  event->ignore();
 }
 
 // Create a new foe window
@@ -748,7 +748,6 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   pwr_tStatus sts;
 
   toplevel->setMinimumSize(1100, 1000);
-  toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
   CoWowQt::SetWindowIcon(toplevel);
 
@@ -757,7 +756,7 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   // File Entry
   QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   save = addMenuItem(
-      toplevel, file, "Save", SLOT(activate_save()), "", "document-save");
+      toplevel, file, "Save", SLOT(activate_save()), "CTRL+S", "document-save");
 
   // Submenu Print
   QMenu* file_print = file->addMenu(translate_utf8("&Print"));
@@ -949,14 +948,16 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
 
   // Mode entry
   QMenu* mode = menu_bar->addMenu(translate_utf8("&Mode"));
-  view_togg = addCheckableMenuItem(
-      toplevel, mode, "&View", SLOT(activate_view_togg(bool)));
-  edit_togg = addCheckableMenuItem(
-      toplevel, mode, "&Edit", SLOT(activate_edit_togg(bool)), "CTRL+E");
-  trace_togg = addCheckableMenuItem(
-      toplevel, mode, "&Trace", SLOT(activate_trace_togg(bool)));
-  simulate_togg = addCheckableMenuItem(
-      toplevel, mode, "&Simulate", SLOT(activate_simulate_togg(bool)));
+  QActionGroup* mode_group = new QActionGroup(toplevel);
+  view_togg = addMenuRadioItem(
+      toplevel, mode, "&View", SLOT(activate_view_togg()), mode_group);
+  edit_togg = addMenuRadioItem(
+      toplevel, mode, "&Edit", SLOT(activate_edit_togg()), mode_group);
+  edit_togg->setShortcut(fl("CTRL+E"));
+  trace_togg = addMenuRadioItem(
+      toplevel, mode, "&Trace", SLOT(activate_trace_togg()), mode_group);
+  simulate_togg = addMenuRadioItem(
+      toplevel, mode, "&Simulate", SLOT(activate_simulate_togg()), mode_group);
 
   // Menu Help
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
@@ -972,10 +973,10 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
       toplevel, tools, "Save", SLOT(activate_save()), "document-save");
   addToolItem(toplevel, tools, "Print documents", SLOT(activate_print()),
       "document-print");
-  addCheckableToolItem(toplevel, tools, "Set edit mode",
-      SLOT(activate_edit_togg(bool)), "$pwr_exe/foe_edit.png");
-  addCheckableToolItem(toplevel, tools, "Set view mode",
-      SLOT(activate_view_togg(bool)), "$pwr_exe/foe_view.png");
+  addToolItem(toplevel, tools, "Set edit mode", SLOT(activate_edit_togg()),
+      "$pwr_exe/foe_edit.png");
+  addToolItem(toplevel, tools, "Set view mode", SLOT(activate_view_togg()),
+      "$pwr_exe/foe_view.png");
   tools_build = addToolItem(
       toplevel, tools, "Build Program", SLOT(activate_compile()), "system-run");
   addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoomin()),
@@ -1032,7 +1033,6 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   statusbar->addWidget(label);
   add_expanding(statusbar, textinput);
 
-  subpane = new QSplitter(Qt::Vertical);
   QHBoxLayout* palbox = new QHBoxLayout();
   node_palctx = new PalQt(this, "Objects", ldhsession, "PlcEditorPalette",
       &node_palette, &sts);
@@ -1049,13 +1049,13 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   add_expanding(palbox, con_palette);
   add_expanding(palbox, nav_palette);
 
+  subpane = new QSplitter(Qt::Vertical);
   add_expanding(subpane, palbox);
 
   pane = new QSplitter(Qt::Horizontal);
   gre = new WGreQt(this, "Name");
 
-  ((WGreQt*)gre)->new_navigator(subpane);
-  subpane->addWidget(((WGreQt*)gre)->nav_widget);
+  subpane->addWidget(((WGreQt*)gre)->create_navigator());
 
   add_expanding(pane, ((WGreQt*)gre)->form_widget);
   pane->addWidget(subpane);

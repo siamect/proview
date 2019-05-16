@@ -53,8 +53,6 @@ void GlowDraw::reset_clip_rectangle(DrawWind* w)
     return;
   }
   w->clip_cnt--;
-  if (w->clip_cnt == 0)
-    w->clip_on = 0;
 }
 
 glow_eGradient GlowDraw::gradient_rotate(double rot, glow_eGradient gradient)

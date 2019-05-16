@@ -533,8 +533,7 @@ GlowDrawGtk::~GlowDrawGtk()
 {
   closing_down = 1;
 
-  if (redraw_timer)
-    g_source_remove(redraw_timer);
+  cancel_redraw_timer();
 
   ctx->set_nodraw();
   if (ctx->type() == glow_eCtxType_Grow)
@@ -563,8 +562,6 @@ void GlowDrawGtk::init_nav(GtkWidget* nav_widget)
 {
   nav_wind.window = nav_widget->window;
   create_buffer(&nav_wind);
-  nav_wind.clip_cnt = 0;
-  nav_wind.clip_on = 0;
 
   gtk_widget_modify_bg(nav_widget, GTK_STATE_NORMAL, &background);
 
@@ -583,17 +580,17 @@ GlowDrawGtk::GlowDrawGtk(GtkWidget* toplevel, void** glow_ctx,
   memset(customcolors, 0, sizeof(customcolors));
 
   if (type == glow_eCtxType_Brow)
-    ctx = (GlowCtx*)new BrowCtx("Claes context", 20);
+    ctx = (GlowCtx*)new BrowCtx("Claes context");
   else if (type == glow_eCtxType_Grow)
-    ctx = (GlowCtx*)new GrowCtx("Claes context", 20);
+    ctx = (GlowCtx*)new GrowCtx("Claes context");
   else if (type == glow_eCtxType_ColPal)
-    ctx = (GlowCtx*)new ColPalCtx("Claes context", 20);
+    ctx = (GlowCtx*)new ColPalCtx("Claes context");
   else if (type == glow_eCtxType_Keyboard)
-    ctx = (GlowCtx*)new KeyboardCtx("Claes context", 20);
+    ctx = (GlowCtx*)new KeyboardCtx("Claes context");
   else if (type == glow_eCtxType_Curve)
-    ctx = (GlowCtx*)new CurveCtx("Claes context", 20);
+    ctx = (GlowCtx*)new CurveCtx("Claes context");
   else
-    ctx = new GlowCtx("Claes context", 20);
+    ctx = new GlowCtx("Claes context");
   *glow_ctx = (void*)ctx;
 
   ctx->gdraw = this;
@@ -621,11 +618,8 @@ GlowDrawGtk::GlowDrawGtk(GtkWidget* toplevel, void** glow_ctx,
 
   glow_create_cursor(this);
 
-  get_window_size(ctx->mw, &ctx->mw->window_width, &ctx->mw->window_height);
   create_buffer(&m_wind);
   init_proc(toplevel, ctx, client_data);
-
-  redraw_timer = g_timeout_add(40, redraw_timer_cb, this);
 }
 
 void GlowDrawGtk::event_handler(GdkEvent event)
@@ -1643,8 +1637,24 @@ static void event_timer(GlowDrawGtk* draw_ctx, int time_ms)
 
 static gboolean redraw_timer_cb(void* data) {
   GlowDrawGtk* draw_ctx = (GlowDrawGtk*)data;
+  draw_ctx->redraw_timer = 0;
   draw_ctx->ctx->redraw_if_dirty();
-  return TRUE;
+  return FALSE;
+}
+
+void GlowDrawGtk::cancel_redraw_timer()
+{
+  if (redraw_timer) {
+    g_source_remove(redraw_timer);
+    redraw_timer = 0;
+  }
+}
+
+void GlowDrawGtk::start_redraw_timer()
+{
+  if (!redraw_timer) {
+    redraw_timer = g_timeout_add(40, redraw_timer_cb, this);
+  }
 }
 
 void GlowDrawGtk::set_timer(
@@ -1845,15 +1855,15 @@ void GlowDrawGtk::reset_background(DrawWind* wind)
 
 void GlowDrawGtk::set_clip(GdkGC* gc)
 {
-  if (((DrawWindGtk*)w)->clip_on) {
+  if (w->clip_cnt > 0) {
     gdk_gc_set_clip_rectangle(gc,
-        &((DrawWindGtk*)w)->clip_rectangle[((DrawWindGtk*)w)->clip_cnt - 1]);
+        &((DrawWindGtk*)w)->clip_rectangle[w->clip_cnt - 1]);
   }
 }
 
 void GlowDrawGtk::reset_clip(GdkGC* gc)
 {
-  if (((DrawWindGtk*)w)->clip_on) {
+  if (w->clip_cnt > 0) {
     gdk_gc_set_clip_rectangle(gc, NULL);
   }
 }
@@ -1870,22 +1880,19 @@ int GlowDrawGtk::set_clip_rectangle(
   int x1 = MAX(ll_x, ur_x);
   int y0 = MIN(ll_y, ur_y);
   int y1 = MAX(ll_y, ur_y);
-  if (w->clip_cnt != 0) {
+  if (w->clip_cnt > 0) {
     x0 = MAX(x0, w->clip_rectangle[w->clip_cnt - 1].x);
     x1 = MIN(x1, w->clip_rectangle[w->clip_cnt - 1].x
             + w->clip_rectangle[w->clip_cnt - 1].width);
     y0 = MAX(y0, w->clip_rectangle[w->clip_cnt - 1].y);
     y1 = MIN(y1, w->clip_rectangle[w->clip_cnt - 1].y
             + w->clip_rectangle[w->clip_cnt - 1].height);
-    x0 = (x0 > x1) ? x1 : x0;
-    y0 = (y0 > y1) ? y1 : y0;
   }
   w->clip_rectangle[w->clip_cnt].x = x0;
   w->clip_rectangle[w->clip_cnt].y = y0;
   w->clip_rectangle[w->clip_cnt].width = x1 - x0;
   w->clip_rectangle[w->clip_cnt].height = y1 - y0;
   w->clip_cnt++;
-  w->clip_on = 1;
   return 1;
 }
 
@@ -1946,6 +1953,7 @@ void GlowDrawGtk::create_buffer(DrawWindGtk* w)
   w->buffer = gdk_pixmap_new(w->window, window_width, window_height, -1);
   w->window_width = window_width;
   w->window_height = window_height;
+  ctx->set_dirty();
 }
 
 int GlowDrawGtk::export_image(char* filename)
@@ -2371,7 +2379,7 @@ void GlowDrawGtk::image_pixel_iter(glow_tImImage orig_image,
 
 void GlowDrawGtk::set_cairo_clip(cairo_t* cr)
 {
-  if (w->clip_on) {
+  if (w->clip_cnt > 0) {
     cairo_rectangle(cr, w->clip_rectangle[w->clip_cnt - 1].x,
         w->clip_rectangle[w->clip_cnt - 1].y,
         w->clip_rectangle[w->clip_cnt - 1].width,
@@ -2382,7 +2390,7 @@ void GlowDrawGtk::set_cairo_clip(cairo_t* cr)
 
 void GlowDrawGtk::reset_cairo_clip(cairo_t* cr)
 {
-  if (((DrawWindGtk*)w)->clip_on) {
+  if (w->clip_cnt > 0) {
     cairo_reset_clip(cr);
   }
 }

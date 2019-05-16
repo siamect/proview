@@ -72,9 +72,8 @@ public:
   //! Constructor
   /*!
     \param ctx_name	Name of context.
-    \param zoom_fact	Initial zoom factor.
   */
-  GrowCtx(const char* ctx_name, double zoom_fact = 100);
+  GrowCtx(const char* ctx_name);
 
   //! Destructor
   /*! Delete all objects. */

@@ -54,12 +54,12 @@ class DrawWindGtk : public DrawWind {
 public:
   DrawWindGtk()
   {
-    zoom_factor_x = zoom_factor_y = base_zoom_factor = 100;
+    zoom_factor_x = zoom_factor_y = base_zoom_factor = 20;
     offset_x = offset_y = 0;
     window_width = window_height = 0;
     subwindow_x = subwindow_y = 0;
     subwindow_scale = 1;
-    clip_cnt = clip_on = 0;
+    clip_cnt = 0;
     memset(clip_rectangle, 0, sizeof(clip_rectangle));
   }
   GdkWindow* window = NULL;
@@ -69,7 +69,6 @@ public:
 
   DrawWind* copy() {
     DrawWindGtk* tmp = new DrawWindGtk();
-    tmp->clip_on = this->clip_on;
     tmp->clip_cnt = this->clip_cnt;
     tmp->window = this->window;
     tmp->buffer = this->buffer;
@@ -121,6 +120,8 @@ public:
 
   int begin(DrawWind* wind);
   void end(bool flush = true);
+  void start_redraw_timer();
+  void cancel_redraw_timer();
 
   void get_window_size(DrawWind* w, int* width, int* height);
   void set_window_size(DrawWind* w, int width, int height);

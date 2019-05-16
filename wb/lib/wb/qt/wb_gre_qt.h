@@ -59,7 +59,7 @@ public:
   void trace_stop();
   void get_popup_position(int* x, int* y);
 
-  int new_navigator(QWidget* parent);
+  QWidget* create_navigator();
   int new_navigator_popup();
 
 private:

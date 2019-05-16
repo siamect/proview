@@ -41,15 +41,13 @@
 
 class CurveCtx : public GrowCtx {
 public:
-  CurveCtx(const char* ctx_name, double zoom_fact = 100)
-      : GrowCtx(ctx_name, zoom_fact), layout_adjusted(0)
+  CurveCtx(const char* ctx_name) : GrowCtx(ctx_name), layout_adjusted(0)
   {
     ctx_type = glow_eCtxType_Curve;
   }
   int layout_adjusted;
   void configure();
   void zoom(double factor);
-  void unzoom();
   void nav_zoom();
   void get_zoom(double* factor_x, double* factor_y);
   void get_prefered_zoom_y(int height, double* factor_y);
