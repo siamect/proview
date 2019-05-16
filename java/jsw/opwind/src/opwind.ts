@@ -22,11 +22,8 @@ class OpWindMenu {
 
   get_opplace() {
     let query = window.location.search.substring(1);
-
-    console.log("query", query);
-    let vars = query.split('&');
-    console.log("vars", vars.length, vars[0].substring(8));
-    return vars[0].substring(8);
+    let vars = query.split('&')[0];
+    return vars.substring(8);
   }
 
   gdh_init_cb() {
@@ -85,8 +82,7 @@ class OpWindMenu {
             }
             document.getElementById("login_frame").style.visibility = 'hidden';
             document.getElementById("login_frame").style.height = '0px';
-            let c = new JopCrypt();
-            passwd = c.crypt("aa", passwd);
+            passwd = Crypt.crypt("aa", passwd);
 
             this.user = user;
             this.gdh.login(user, passwd).then(this.login_cb);
