@@ -770,6 +770,8 @@ int RtTrace::flow_cb(FlowCtx* ctx, flow_tEvent event)
       if (streq(attr.attribute, ""))
         return 1;
 
+      attr.type = con.type;
+
       flow_CreateNode(ctx, name, tractx->trace_analyse_nc, event->object.x,
           event->object.y, NULL, &n1);
       flow_SetTraceAttr(n1, attr.object, attr.attribute, attr.type, 0);
