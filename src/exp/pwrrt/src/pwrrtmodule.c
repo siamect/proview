@@ -7,6 +7,7 @@
 #include "co_api_user.h"
 #include "co_msg.h"
 #include "co_time.h"
+#include "co_string.h"
 #include "rt_qcom.h"
 #include "rt_gdh.h"
 #include "rt_errh.h"
@@ -3490,13 +3491,14 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
   char *server, *fromstr, *tostr;
   pwr_tOName *oidvect;
   pwr_tOName *anamevect;
-  int oidcnt, anamecnt;
+  int *isobjectvect;
+  int oidcnt, anamecnt, isobjectcnt;
   pwr_tTime from, to;
   pwr_tDeltaTime fromdelta;
   float tdiff;
   pwr_tOid oid;
   pwr_tTime *ttbuf;
-  PyObject *oidobj, *anameobj;  
+  PyObject *oidobj, *anameobj, *isobjectobj;  
   pwr_tFloat32 *vbuf;
   int maxrows = 0;
   int rows;
@@ -3519,8 +3521,8 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
       return set_error(sts);
   }
 
-  if ( !PyArg_ParseTuple(args, "sOOssf|Is", &server, &oidobj, &anameobj, &fromstr, &tostr, &tdiff, 
-			 &maxrows, &time_format))
+  if ( !PyArg_ParseTuple(args, "sOOOssf|Is", &server, &oidobj, &anameobj, &isobjectobj, 
+			 &fromstr, &tostr, &tdiff, &maxrows, &time_format))
     return NULL;
 
   if ( time_format) {
@@ -3569,11 +3571,20 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
   else
     return set_error(GDH__ARGCOUNT);
 
-  if ( oidcnt <= 0 || anamecnt <= 0 || oidcnt != anamecnt)
+  if ( PyTuple_Check(isobjectobj))
+    isobjectcnt = PyTuple_Size(isobjectobj);
+  else if ( PyList_Check(isobjectobj))
+    isobjectcnt = PyList_Size(isobjectobj);
+  else
+    return set_error(GDH__ARGCOUNT);
+
+  if ( oidcnt <= 0 || anamecnt <= 0 || isobjectcnt <= 0 || 
+       oidcnt != anamecnt || oidcnt != isobjectcnt)
     return set_error(GDH__ARGCOUNT);
 
   oidvect = (pwr_tOName *)malloc(oidcnt * sizeof(pwr_tOName));
   anamevect = (pwr_tOName *)malloc(anamecnt * sizeof(pwr_tOName));
+  isobjectvect = (int *)malloc(isobjectcnt * sizeof(int));
 
   for ( i = 0; i < oidcnt; i++) {
     
@@ -3591,6 +3602,13 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
       pystr = PyList_GetItem(anameobj, i);
 
     strcpy( anamevect[i], PyString_AsString(pystr));
+
+    if ( PyTuple_Check(isobjectobj))
+      pystr = PyTuple_GetItem(isobjectobj, i);
+    else
+      pystr = PyList_GetItem(isobjectobj, i);
+    
+    isobjectvect[i] = PyInt_AsLong(pystr);
   }
 
   for ( i = 0; i < oidcnt; i++)
@@ -3606,40 +3624,105 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
     if ( EVEN(sts))
       return set_error(sts);
 
-    sevcli_get_itemdata( &sts, pwrrt_scctx, oid, anamevect[i], from, to, maxrows, &ttbuf, 
-			 (void **)&vbuf, &rows, &vtype, &vsize);
-    if ( sts == SEV__NOPOINTS)
-      Py_RETURN_NONE;
-    else if (EVEN(sts))
-      return set_error(sts);
 
-    /* Create data rows for panda with interpolation */
-    tbuf = malloc(rows * sizeof(float));
+    if (!isobjectvect[i]) {
+      sevcli_get_itemdata( &sts, pwrrt_scctx, oid, anamevect[i], from, to, maxrows, &ttbuf, 
+			   (void **)&vbuf, &rows, &vtype, &vsize);
+      if ( sts == SEV__NOPOINTS)
+	Py_RETURN_NONE;
+      else if (EVEN(sts))
+	return set_error(sts);
 
-    for ( j = 0; j < rows; j++) {
-      time_Adiff(&dt, &ttbuf[j], &from);
-      time_DToFloat(&tbuf[j], &dt);
+      /* Create data rows for panda with interpolation */
+      tbuf = malloc(rows * sizeof(float));
+
+      for ( j = 0; j < rows; j++) {
+	time_Adiff(&dt, &ttbuf[j], &from);
+	time_DToFloat(&tbuf[j], &dt);
+      }
+
+      vvect[i] = malloc(valcnt * sizeof(float));
+      k = 0;
+      for ( j = 0; j < valcnt; j++) {
+	if ( j*tdiff < tbuf[0])
+	  vvect[i][j] = vbuf[0];
+	else if ( j*tdiff > tbuf[rows - 1])
+	  vvect[i][j] = vbuf[rows-1]; 
+	else {
+	  while( tbuf[k] <= j*tdiff)
+	    k++;
+	  vvect[i][j] = vbuf[k-1] + (vbuf[k] - vbuf[k-1])/(tbuf[k] - tbuf[k-1]) * (j*tdiff - tbuf[k-1]);
+	}
+      }
+      free(ttbuf);
+      free(tbuf);
+      free(vbuf);
     }
+    else {
+      sevcli_sHistAttr *attrbuf;
+      int attrnum;
+      int l, m;
+      float *vp1, *vp2;
 
-    vvect[i] = malloc(valcnt * sizeof(float));
-    k = 0;
-    for ( j = 0; j < valcnt; j++) {
-      if ( j*tdiff < tbuf[0]) {
-	vvect[i][j] = vbuf[0] - (vbuf[1] - vbuf[0])/(tbuf[1] - tbuf[0]) * (tbuf[0] - j*tdiff);
+      sevcli_get_objectitemdata( &sts, pwrrt_scctx, oid, "", from, to, maxrows, &ttbuf, 
+				 (void **)&vbuf, &rows, &attrbuf, &attrnum);
+      if ( sts == SEV__NOPOINTS)
+	Py_RETURN_NONE;
+      else if (EVEN(sts))
+	return set_error(sts);
+
+
+      /* Create data rows for panda with interpolation */
+      tbuf = malloc(rows * sizeof(float));
+
+      for ( j = 0; j < rows; j++) {
+	time_Adiff(&dt, &ttbuf[j], &from);
+	time_DToFloat(&tbuf[j], &dt);
       }
-      else if ( j*tdiff > tbuf[rows - 1]) {
-	vvect[i][j] = vbuf[rows-1] + (vbuf[rows-1] - vbuf[rows-2]) / 
-	  (tbuf[rows-1] - tbuf[rows-2]) * (j*tdiff - tbuf[rows-1]); 
+
+      int linesize = 0;
+      for (j = 0; j < attrnum; j++)
+	linesize += attrbuf[j].size;
+
+      for ( l = i; l < oidcnt; l++) {
+	if ( !streq(oidvect[l], oidvect[i]))
+	  break;
+
+	for (m = 0; m < attrnum; m++) {
+	  if ( streq(anamevect[l], attrbuf[m].aname)) {
+	    int lineoffs = 0;
+	    for (j = 0; j < m; j++)
+	      lineoffs += attrbuf[j].size;
+	  
+	    vvect[l] = malloc(valcnt * sizeof(float));
+	    k = 0;
+	    for ( j = 0; j < valcnt; j++) {
+	      if ( j*tdiff < tbuf[0]) {
+		vp1 = (float *)(((char*)vbuf) + lineoffs);
+		vvect[l][j] = *vp1;
+	      }
+	      else if ( j*tdiff > tbuf[rows - 1]) {
+		vp1 = (float *)(((char*)vbuf) + (rows - 1)*linesize + lineoffs);
+		vvect[l][j] = *vp1;
+	      }
+	      else {
+		while( tbuf[k] <= j*tdiff)
+		  k++;
+		vp1 = (float *)(((char *)vbuf) + (k - 1)*linesize + lineoffs);
+		vp2 = (float *)(((char *)vp1) + linesize);
+		vvect[l][j] = *vp1 + (*vp2 - *vp1)/(tbuf[k] - tbuf[k-1]) * (j*tdiff - tbuf[k-1]);
+	      }
+	    }
+	    break;
+	  }
+	}
       }
-      else {
-	while( tbuf[k] <= j*tdiff)
-	  k++;
-	vvect[i][j] = vbuf[k-1] + (vbuf[k] - vbuf[k-1])/(tbuf[k] - tbuf[k-1]) * (j*tdiff - tbuf[k-1]);      
-      }
+      free(vbuf);
+      free(ttbuf);
+      free(tbuf);
+      free(attrbuf);
+      i = l;
     }
-    free(ttbuf);
-    free(tbuf);
-    free(vbuf);
   }
 
   free(oidvect);
@@ -3672,6 +3755,310 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
   return result;
 }
 
+static PyObject *pwrrt_getSevItemsDataFrameD(PyObject *self, PyObject *args)
+{
+  pwr_tStatus sts;
+  char *server, *fromstr, *tostr;
+  pwr_tOName *oidvect;
+  pwr_tOName *anamevect;
+  int *isobjectvect;
+  int oidcnt, anamecnt, isobjectcnt;
+  pwr_tTime from, to;
+  pwr_tDeltaTime fromdelta;
+  float tdiff;
+  pwr_tOid oid;
+  pwr_tTime *ttbuf, *tt0buf;
+  PyObject *oidobj, *anameobj, *isobjectobj;  
+  pwr_tFloat32 *vbuf;
+  int maxrows = 0;
+  int rows;
+  pwr_eType vtype;
+  unsigned int vsize;
+  PyObject *vtuple, *result;
+  int i, j, k;
+  PyObject *date;
+  time_t sec;
+  struct tm ts;
+  char *time_format = 0;
+  int valcnt;
+  pwr_tDeltaTime dt;
+  pwr_tFloat32 **vvect;
+  float *tbuf, *t0buf;
+  
+  if ( !pwrrt_scctx) {
+    sevcli_init( &sts, &pwrrt_scctx);
+    if ( EVEN(sts))
+      return set_error(sts);
+  }
+
+  if ( !PyArg_ParseTuple(args, "sOOOssf|Is", &server, &oidobj, &anameobj, &isobjectobj, 
+			 &fromstr, &tostr, &tdiff, &maxrows, &time_format))
+    return NULL;
+
+  if ( time_format) {
+    if ( strcmp(time_format, "string") == 0)
+      ;
+  }
+  if ( maxrows == 0)
+    maxrows = 1000;
+
+  sevcli_set_servernode( &sts, pwrrt_scctx, server);
+  if ( EVEN(sts))
+    return set_error(sts);
+
+  if ( strcmp(tostr, "now") == 0) {
+    /* fromstr is a deltatime */
+    sts = time_AsciiToD(fromstr, &fromdelta);
+    if ( EVEN(sts))
+      return set_error(sts);
+
+    time_GetTime(&to);
+    time_Asub(&from, &to, &fromdelta);
+  }
+  else {
+    sts = time_AsciiToA(fromstr, &from);
+    if ( EVEN(sts))
+      return set_error(sts);
+
+    sts = time_AsciiToA(tostr, &to);
+    if ( EVEN(sts))
+      return set_error(sts);
+  }
+  time_Adiff(&dt, &to, &from);
+
+  if ( PyTuple_Check(oidobj))
+    oidcnt = PyTuple_Size(oidobj);
+  else if ( PyList_Check(oidobj))
+    oidcnt = PyList_Size(oidobj);
+  else
+    return set_error(GDH__ARGCOUNT);
+
+  if ( PyTuple_Check(anameobj))
+    anamecnt = PyTuple_Size(anameobj);
+  else if ( PyList_Check(anameobj))
+    anamecnt = PyList_Size(anameobj);
+  else
+    return set_error(GDH__ARGCOUNT);
+
+  if ( PyTuple_Check(isobjectobj))
+    isobjectcnt = PyTuple_Size(isobjectobj);
+  else if ( PyList_Check(isobjectobj))
+    isobjectcnt = PyList_Size(isobjectobj);
+  else
+    return set_error(GDH__ARGCOUNT);
+
+  if ( oidcnt <= 0 || anamecnt <= 0 || isobjectcnt <= 0 || 
+       oidcnt != anamecnt || oidcnt != isobjectcnt)
+    return set_error(GDH__ARGCOUNT);
+
+  oidvect = (pwr_tOName *)malloc(oidcnt * sizeof(pwr_tOName));
+  anamevect = (pwr_tOName *)malloc(anamecnt * sizeof(pwr_tOName));
+  isobjectvect = (int *)malloc(isobjectcnt * sizeof(int));
+
+  for ( i = 0; i < oidcnt; i++) {
+    
+    PyObject *pystr;
+    if ( PyTuple_Check(oidobj))
+      pystr = PyTuple_GetItem(oidobj, i);
+    else
+      pystr = PyList_GetItem(oidobj, i);
+
+    strcpy( oidvect[i], PyString_AsString(pystr));
+
+    if ( PyTuple_Check(anameobj))
+      pystr = PyTuple_GetItem(anameobj, i);
+    else
+      pystr = PyList_GetItem(anameobj, i);
+
+    strcpy( anamevect[i], PyString_AsString(pystr));
+
+    if ( PyTuple_Check(isobjectobj))
+      pystr = PyTuple_GetItem(isobjectobj, i);
+    else
+      pystr = PyList_GetItem(isobjectobj, i);
+    
+    isobjectvect[i] = PyInt_AsLong(pystr);
+  }
+
+  for ( i = 0; i < oidcnt; i++)
+    printf("arg %s.%s\n", oidvect[i], anamevect[i]);
+
+  vvect = calloc(oidcnt, sizeof(float *));
+
+  for ( i = 0; i < oidcnt; i++) {
+    if ( strncmp("_O", oidvect[i], 2) == 0) 
+      sts = cdh_StringToObjid( oidvect[i], &oid);
+    else
+      sts = gdh_NameToObjid( oidvect[i], &oid);
+    if ( EVEN(sts))
+      return set_error(sts);
+
+    if (!isobjectvect[i]) {
+      sevcli_get_itemdata( &sts, pwrrt_scctx, oid, anamevect[i], from, to, maxrows, &ttbuf, 
+			   (void **)&vbuf, &rows, &vtype, &vsize);
+      if ( sts == SEV__NOPOINTS)
+	Py_RETURN_NONE;
+      else if (EVEN(sts))
+	return set_error(sts);
+
+      /* Create data rows for panda with interpolation */
+      tbuf = malloc(rows * sizeof(float));
+      
+      for ( j = 0; j < rows; j++) {
+	time_Adiff(&dt, &ttbuf[j], &from);
+	time_DToFloat(&tbuf[j], &dt);
+      }
+
+      if ( i == 0) {
+	valcnt = rows;
+	tt0buf = ttbuf;
+	t0buf = tbuf;
+      }
+
+      vvect[i] = malloc(valcnt * sizeof(float));
+      k = 0;
+      for ( j = 0; j < valcnt; j++) {
+	if ( i == 0)
+	  vvect[i][j] = vbuf[j];
+	else {
+
+	  if ( t0buf[j] < tbuf[0]) {
+	    vvect[i][j] = vbuf[0];
+	  }
+	  else if ( t0buf[j] > tbuf[rows - 1]) {
+	    vvect[i][j] = vbuf[rows-1]; 
+	  }
+	  else {
+	    while( tbuf[k] <= t0buf[j])
+	      k++;
+	    if ( fabs(t0buf[j] - tbuf[k-1]) < FLT_EPSILON)
+	      vvect[i][j] = vbuf[k-1];
+	    else
+	      vvect[i][j] = vbuf[k-1] + (vbuf[k] - vbuf[k-1])/(tbuf[k] - tbuf[k-1]) * (t0buf[j] - tbuf[k-1]);
+	  }
+	}
+      }
+      free(vbuf);
+      if ( i != 0) {
+	free(tbuf);
+	free(ttbuf);
+      }
+    } 
+    else {
+      sevcli_sHistAttr *attrbuf;
+      int attrnum;
+      int l, m;
+      float *vp1, *vp2;
+
+      sevcli_get_objectitemdata( &sts, pwrrt_scctx, oid, "", from, to, maxrows, &ttbuf, 
+				 (void **)&vbuf, &rows, &attrbuf, &attrnum);
+      if ( sts == SEV__NOPOINTS)
+	Py_RETURN_NONE;
+      else if (EVEN(sts))
+	return set_error(sts);
+
+      /* Create data rows for panda with interpolation */
+      tbuf = malloc(rows * sizeof(float));
+
+      for ( j = 0; j < rows; j++) {
+	time_Adiff(&dt, &ttbuf[j], &from);
+	time_DToFloat(&tbuf[j], &dt);
+      }
+
+      if ( i == 0) {
+	valcnt = rows;
+	tt0buf = ttbuf;
+	t0buf = tbuf;
+      }
+
+      int linesize = 0;
+      for (j = 0; j < attrnum; j++)
+	linesize += attrbuf[j].size;
+
+      for ( l = i; l < oidcnt; l++) {
+	if ( !streq(oidvect[l], oidvect[i]))
+	  break;
+
+	for (m = 0; m < attrnum; m++) {
+	  if ( streq(anamevect[l], attrbuf[m].aname)) {
+	    int lineoffs = 0;
+	    for (j = 0; j < m; j++)
+	      lineoffs += attrbuf[j].size;
+	  
+	    vvect[l] = malloc(valcnt * sizeof(float));
+	    k = 0;
+	    for ( j = 0; j < valcnt; j++) {
+	      if ( i == 0) {
+		vp1 = (float *)(((char*)vbuf) + j * linesize + lineoffs);
+		vvect[l][j] = *vp1;
+	      }
+	      else {
+		if ( t0buf[j] < tbuf[0]) {
+		  vp1 = (float *)(((char *)vbuf) + lineoffs);
+		  vvect[l][j] = *vp1;
+		}
+		else if ( t0buf[j] > tbuf[rows - 1]) {
+		  vp1 = (float *)(((char*)vbuf) + (rows - 1)*linesize + lineoffs);
+		  vvect[l][j] = *vp1;
+		}
+		else {
+		  while( tbuf[k] <= t0buf[j])
+		    k++;
+		  if (fabs(t0buf[j] - tbuf[k-1]) < FLT_EPSILON) {
+		    vp1 = (float *)(((char *)vbuf) + (k - 1)*linesize + lineoffs);
+		    vvect[l][j] = *vp1;
+		  }
+		  else {
+		    vp1 = (float *)(((char *)vbuf) + (k - 1)*linesize + lineoffs);
+		    vp2 = (float *)(((char *)vp1) + linesize);
+		    vvect[l][j] = *vp1 + (*vp2 - *vp1)/(tbuf[k] - tbuf[k-1]) * (t0buf[j] - tbuf[k-1]);
+		  }
+		}
+	      }
+	    }
+	    break;
+	  }
+	}
+      }
+      free(vbuf);
+      free(attrbuf);
+      if ( i != 0) {
+	free(ttbuf);
+	free(tbuf);
+      }
+      i = l - 1;
+    }
+  }
+
+  free(t0buf);
+  free(oidvect);
+  free(anamevect);
+
+  result = PyList_New(valcnt);
+  for ( i = 0; i < valcnt; i++) {
+    vtuple = PyTuple_New(oidcnt+1);
+
+    /* Time datetime object */
+    pwr_tTime t = tt0buf[i];
+    sec = (time_t)t.tv_sec;
+    localtime_r(&sec, &ts);
+    date = PyDateTime_FromDateAndTime(ts.tm_year+1900, ts.tm_mon+1, ts.tm_mday,
+				      ts.tm_hour, ts.tm_min, ts.tm_sec, 
+				      (int)t.tv_nsec/1000);
+    PyTuple_SetItem(vtuple, 0, date);
+
+    for ( j = 0; j < oidcnt; j++) {
+      PyTuple_SetItem(vtuple, j+1, PyFloat_FromDouble((double)vvect[j][i]));
+    }
+    PyList_SetItem(result, i, vtuple);
+  }
+
+  free(vvect);  
+  free(tt0buf);
+  
+  return result;
+}
+
 
 static PyMethodDef PwrrtMethods[] = {
   {"volume", pwrrt_volume, METH_VARARGS, pwrrt_volume_doc},
@@ -3687,6 +4074,7 @@ static PyMethodDef PwrrtMethods[] = {
   {"getSevItemList", pwrrt_getSevItemList, METH_VARARGS, "Get history item list"},
   {"getSevItemData", pwrrt_getSevItemData, METH_VARARGS, "Get history data"},
   {"getSevItemsDataFrame", pwrrt_getSevItemsDataFrame, METH_VARARGS, "Get history data frame"},
+  {"getSevItemsDataFrameD", pwrrt_getSevItemsDataFrameD, METH_VARARGS, "Get history data frame discrete"},
   {NULL, NULL, 0, NULL}};
 
 PyMODINIT_FUNC initpwrrt(void)
