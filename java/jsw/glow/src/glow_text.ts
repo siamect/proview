@@ -47,9 +47,10 @@ class GlowText {
     return i;
   }
 
-  draw(hightlight, hot) {
-  }
-
-  draw_shadow(border, shadow, hightlight, hot) {
+  draw(pos, hightlight = 0, hot = 0, node = null) {
+    let idx = clamp(this.text_size, 0, DRAW_TYPE_SIZE - 1);
+    this.ctx.gdraw.text(this.p.x + pos.x, this.p.y + pos.y, this.text,
+        this.draw_type, this.color_drawtype, idx, hightlight, Font.Helvetica,
+        (8 + 2 * this.text_size));
   }
 }

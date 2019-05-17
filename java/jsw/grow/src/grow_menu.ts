@@ -46,18 +46,14 @@ class GrowMenu extends GrowRect {
     if (this.ctx.nodraw !== 0) {
       return;
     }
-    let text_idx = Math.floor(this.trf.vertical_scale(t) *
-        this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
-        (this.text_size + 4) - 4);
-    let tsize = this.trf.vertical_scale(t) * this.ctx.mw.zoom_factor_y /
-        this.ctx.mw.base_zoom_factor * (8 + 2 * this.text_size);
-    text_idx = Math.min(text_idx, DRAW_TYPE_SIZE - 1);
-    text_idx = Math.max(0, text_idx);
+    let tsize = Matrix.multiply(this.trf, t).vertical_scale() *
+        this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor * (this.text_size + 4);
+    let text_idx = clamp(Math.floor(tsize - 4), 0, DRAW_TYPE_SIZE - 1);
+    tsize *= 2;
 
     let idx = Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
         this.line_width - 1);
-    idx += hot;
-    idx = clamp(idx, 0, DRAW_TYPE_SIZE-1);
+    idx = clamp(idx + hot, 0, DRAW_TYPE_SIZE-1);
 
     let z_width, z_descent;
     let z_height = 0;
@@ -118,7 +114,7 @@ class GrowMenu extends GrowRect {
         Math.floor(this.ll.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
     this.get_node_borders();
 
-    if (this.fill !== 0) {
+    if (this.fill) {
       this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
           this.fill_drawtype, true, 0);
     }
@@ -176,7 +172,7 @@ class GrowMenu extends GrowRect {
     let ur_y = Math.max(this.ll.y, this.ur.y);
 
     if (ll_x <= x && x <= ur_x && ll_y <= y && y <= ur_y) {
-      let vscale = this.trf.vertical_scale(null);
+      let vscale = this.trf.vertical_scale();
 
       let item = Math.floor((y - this.ll.y) /
           (this.item_height / vscale / this.ctx.mw.zoom_factor_y));

@@ -117,46 +117,45 @@ class GrowWindow extends GrowRect {
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    let dx1 = this.trf.x(t, this.ll.x, this.ll.y);
-    let dy1 = this.trf.y(t, this.ll.x, this.ll.y);
-    let dx2 = this.trf.x(t, this.ur.x, this.ur.y);
-    let dy2 = this.trf.y(t, this.ur.x, this.ur.y);
-    dx1 = Math.min(dx1, dx2);
-    dx2 = Math.max(dx1, dx2);
-    dy1 = Math.min(dy1, dy2);
-    dy2 = Math.max(dy1, dy2);
+    let tmp = Matrix.multiply(this.trf, t);
+    let d1 = tmp.apply(this.ll);
+    let d2 = tmp.apply(this.ur);
+    d1.x = Math.min(d1.x, d2.x);
+    d2.x = Math.max(d1.x, d2.x);
+    d1.y = Math.min(d1.y, d2.y);
+    d2.y = Math.max(d1.y, d2.y);
 
     if (this.v_scrollbar !== null) {
       if (this.h_scrollbar === null) {
-        this.v_scrollbar.set_position(dx2 - this.scrollbar_width, dy1 +
-            this.y_low_offs, this.scrollbar_width, dy2 - (dy1 + this.y_low_offs));
+        this.v_scrollbar.set_position(d2.x - this.scrollbar_width, d1.y +
+            this.y_low_offs, this.scrollbar_width, d2.y - (d1.y + this.y_low_offs));
       } else {
-        this.v_scrollbar.set_position(dx2 - this.scrollbar_width, dy1 +
-            this.y_low_offs, this.scrollbar_width, dy2 - (dy1 + this.y_low_offs) -
+        this.v_scrollbar.set_position(d2.x - this.scrollbar_width, d1.y +
+            this.y_low_offs, this.scrollbar_width, d2.y - (d1.y + this.y_low_offs) -
             this.scrollbar_width);
       }
       this.v_scrollbar.draw(null, 0, 0, null, null);
     }
     if (this.h_scrollbar !== null) {
       if (this.v_scrollbar === null) {
-        this.h_scrollbar.set_position(dx1, dy2 - this.scrollbar_width, dx2 -
-            dx1, this.scrollbar_width);
+        this.h_scrollbar.set_position(d1.x, d2.y - this.scrollbar_width, d2.x -
+            d1.x, this.scrollbar_width);
       } else {
-        this.h_scrollbar.set_position(dx1, dy2 - this.scrollbar_width, dx2 -
-            dx1 - this.scrollbar_width, this.scrollbar_width);
+        this.h_scrollbar.set_position(d1.x, d2.y - this.scrollbar_width, d2.x -
+            d1.x - this.scrollbar_width, this.scrollbar_width);
       }
       this.h_scrollbar.draw(null, 0, 0, null, null);
     }
 
-    let ll_x = Math.floor(dx1 * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let ll_y = Math.floor((dy1 + this.y_low_offs) * this.ctx.mw.zoom_factor_y) -
+    let ll_x = Math.floor(d1.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let ll_y = Math.floor((d1.y + this.y_low_offs) * this.ctx.mw.zoom_factor_y) -
         this.ctx.mw.offset_y;
 
     if (this.windowCtx !== null) {
-      let ur_x = Math.floor((dx2 - this.vertical_scrollbar * this.scrollbar_width) *
+      let ur_x = Math.floor((d2.x - this.vertical_scrollbar * this.scrollbar_width) *
           this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
       let ur_y =
-          Math.floor((dy2 - this.horizontal_scrollbar * this.scrollbar_width) *
+          Math.floor((d2.y - this.horizontal_scrollbar * this.scrollbar_width) *
               this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
 
       this.windowCtx.mw.window_width =
@@ -179,7 +178,7 @@ class GrowWindow extends GrowRect {
           this.windowCtx.mw.subwindow_scale * this.ctx.mw.zoom_factor_y;
       // window_ctx->draw_buffer_only = ctx->draw_buffer_only;
 
-      if (this.fill !== 0) {
+      if (this.fill) {
         this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
             this.fill_drawtype, true, 0);
       }
@@ -197,8 +196,8 @@ class GrowWindow extends GrowRect {
       this.ctx.gdraw.reset_clip_rectangle();
     }
 
-    let ur_x = Math.floor(dx2 * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let ur_y = Math.floor(dy2 * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let ur_x = Math.floor(d2.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let ur_y = Math.floor(d2.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
 
     let drawtype =
         GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
@@ -253,7 +252,7 @@ class GrowWindow extends GrowRect {
     if (this.windowCtx.background_color !== DrawType.Inherit) {
       this.fill_drawtype = this.windowCtx.background_color;
       this.original_fill_drawtype = this.fill_drawtype;
-      this.fill = 1;
+      this.fill = true;
     }
     if (this.windowCtx.x0 !== this.windowCtx.x1 &&
         this.windowCtx.y0 !== this.windowCtx.y1) {
@@ -547,7 +546,7 @@ class GrowWindow extends GrowRect {
         }
         this.fill_drawtype = DrawType.Inherit;
         this.original_fill_drawtype = this.fill_drawtype;
-        this.fill = 0;
+        this.fill = false;
       }
       this.file_name = this.input_file_name;
       this.new_ctx();

@@ -49,7 +49,7 @@ class GrowAnnot extends GlowAnnot {
       return;
     }
 
-    let trf_scale = this.trf.vertical_scale(t);
+    let trf_scale = Matrix.multiply(this.trf, t).vertical_scale();
     let idx = Math.floor(trf_scale * this.ctx.mw.zoom_factor_y /
         this.ctx.mw.base_zoom_factor * (this.text_size + 4) - 3);
     let tsize = trf_scale * this.ctx.mw.zoom_factor_y /
@@ -75,11 +75,15 @@ class GrowAnnot extends GlowAnnot {
       ldraw_type = this.draw_type;
     }
 
-    let x1 = Math.floor((this.trf.x(t, this.p.x, this.p.y) + offset_x) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let y1 = Math.floor((this.trf.y(t, this.p.x, this.p.y) + offset_y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    let rot = Math.floor(this.trf.rot(t));
+    let tmp = Matrix.multiply(this.trf, t);
+    let p = tmp.apply(this.p);
+
+    let x1 = Math.floor((p.x + offset_x) * this.ctx.mw.zoom_factor_x) -
+        this.ctx.mw.offset_x;
+    let y1 = Math.floor((p.y + offset_y) * this.ctx.mw.zoom_factor_y) -
+        this.ctx.mw.offset_y;
+    let rot = t ? this.trf.rotation + t.rotation : this.trf.rotation;
+    rot = Math.floor(rot);
     rot = rot < 0 ? rot % 360 + 360 : rot % 360;
 
     switch (this.annot_type) {
@@ -157,7 +161,7 @@ class GrowAnnot extends GlowAnnot {
       return new Point();
     }
 
-    let trf_scale = this.trf.vertical_scale(t);
+    let trf_scale = Matrix.multiply(this.trf, t).vertical_scale();
     let idx = Math.floor(trf_scale * this.ctx.mw.zoom_factor_y /
         this.ctx.mw.base_zoom_factor * (this.text_size + 4) - 4);
     let tsize = trf_scale * this.ctx.mw.zoom_factor_y /

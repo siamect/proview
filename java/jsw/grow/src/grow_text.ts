@@ -85,7 +85,7 @@ class GrowText extends GlowText {
     }
 
     let z_descent;
-    let trf_scale = this.trf.vertical_scale(t);
+    let trf_scale = Matrix.multiply(this.trf, t).vertical_scale();
     let idx = Math.floor(trf_scale * this.ctx.mw.zoom_factor_y /
         this.ctx.mw.base_zoom_factor * (this.text_size + 4) - 3);
     let tsize = trf_scale * this.ctx.mw.zoom_factor_y /
@@ -110,9 +110,12 @@ class GrowText extends GlowText {
     let ry1 = 0;
     let z_width = 0;
     let z_height = 0;
-    let x1 = Math.floor(this.trf.x(t, this.p.x, this.p.y) * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-    let y1 = Math.floor(this.trf.y(t, this.p.x, this.p.y) * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-    let rot = Math.floor(this.trf.rot(t));
+    let tmp = Matrix.multiply(this.trf, t);
+    let p = tmp.apply(this.p);
+    let x1 = Math.floor(p.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+    let rot = t ? this.trf.rotation + t.rotation : this.trf.rotation;
+    rot = Math.floor(rot);
     if (this.adjustment === Adjustment.Center) {
       rot = rot < 0 ? rot % 360 + 360 : rot % 360;
     } else {
