@@ -64,12 +64,11 @@
 #include "rt_io_pnak_locals.h"
 #include "rt_pn_iface.h"
 
-// static int count;
-
 static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap);
 static pwr_tStatus IoAgentRead(io_tCtx ctx, io_sAgent* ap);
 static pwr_tStatus IoAgentWrite(io_tCtx ctx, io_sAgent* ap);
 static pwr_tStatus IoAgentClose(io_tCtx ctx, io_sAgent* ap);
+static pwr_tStatus IoAgentSwap(io_tCtx ctx, io_sAgent* ap);
 
 /*----------------------------------------------------------------------------*\
    Init method for the Pb_profiboard agent
@@ -372,11 +371,26 @@ static pwr_tStatus IoAgentClose(io_tCtx ctx, io_sAgent* ap)
   return sts;
 }
 
+static pwr_tStatus IoAgentSwap(io_tCtx ctx, io_sAgent* ap, io_eEvent event)
+{
+  switch (event) {
+  case io_eEvent_EmergencyBreak:
+  case io_eEvent_IoCommEmergencyBreak:
+    errh_Fatal("Emergency break detected shutting down profinet");
+    IoAgentClose(ctx, ap);
+    break;
+  default:
+    break;
+  }
+
+  return IO__SUCCESS;
+}
+
 /*----------------------------------------------------------------------------*\
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/
 
-pwr_dExport pwr_BindIoMethods(PnControllerSoftingPNAK) = {
-    pwr_BindIoMethod(IoAgentInit), pwr_BindIoMethod(IoAgentRead),
-    pwr_BindIoMethod(IoAgentWrite), pwr_BindIoMethod(IoAgentClose),
-    pwr_NullMethod};
+pwr_dExport pwr_BindIoMethods(PnControllerSoftingPNAK)
+    = { pwr_BindIoMethod(IoAgentInit), pwr_BindIoMethod(IoAgentRead),
+        pwr_BindIoMethod(IoAgentWrite), pwr_BindIoMethod(IoAgentClose),
+        pwr_BindIoMethod(IoAgentSwap), pwr_NullMethod };
