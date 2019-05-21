@@ -43,7 +43,7 @@
 
 class GrowCtx;
 
-class GlowPoint : public GlowArrayElem {
+class GlowPoint : public GlowArrayElem, public glow_sPoint {
 public:
   GlowPoint(){}
   GlowPoint(GrowCtx* glow_ctx, double x1 = 0, double y1 = 0);
@@ -64,8 +64,6 @@ public:
     return glow_eObjectType_Point;
   }
   GrowCtx* ctx;
-  double x;
-  double y;
   int z_x;
   int z_y;
   int nav_z_x;

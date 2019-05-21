@@ -209,7 +209,7 @@ public:
   int event_handler(glow_eEvent event, int x, int y, double fx, double fy);
 
   //! Check if new filename
-  void update_attributes();
+  int update_attributes();
 
   //! Set text size
   /*!

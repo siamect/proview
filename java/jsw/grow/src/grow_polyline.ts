@@ -314,7 +314,7 @@ class GrowPolyline extends GlowPolyline {
         0 && this.fill_eq_shadow === 0;
 
     if (display_shadow && this.shadow_width !== 0) {
-      let trf_scale = Matrix.multiply(this.trf, t).vertical_scale();
+      let trf_scale = Matrix.multiply(t, this.trf).vertical_scale();
       let ish = Math.floor(this.shadow_width / 100 * trf_scale *
           Math.min((this.ur_x - this.ll_x) * this.ctx.mw.zoom_factor_x,
               (this.ur_y - this.ll_y) * this.ctx.mw.zoom_factor_y) + 0.5);
@@ -587,7 +587,7 @@ class GrowPolyline extends GlowPolyline {
   }
 
   get_borders(t, g) {
-    let tmp = Matrix.multiply(this.trf, t);
+    let tmp = Matrix.multiply(t, this.trf);
     let p2 = new Point();
     for (let i = 0; i < this.a_points.size() - 1; i++) {
       let e = this.a_points.get(i);

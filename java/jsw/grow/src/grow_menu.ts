@@ -46,7 +46,7 @@ class GrowMenu extends GrowRect {
     if (this.ctx.nodraw !== 0) {
       return;
     }
-    let tsize = Matrix.multiply(this.trf, t).vertical_scale() *
+    let tsize = Matrix.multiply(t, this.trf).vertical_scale() *
         this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor * (this.text_size + 4);
     let text_idx = clamp(Math.floor(tsize - 4), 0, DRAW_TYPE_SIZE - 1);
     tsize *= 2;

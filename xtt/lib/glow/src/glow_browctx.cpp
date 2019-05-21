@@ -137,7 +137,6 @@ void BrowCtx::zoom(double factor)
 
 void BrowCtx::print(char* filename)
 {
-  int i;
   double ll_x, ll_y, ur_x, ur_y;
   double width, height;
 
@@ -149,7 +148,7 @@ void BrowCtx::print(char* filename)
 
   print_ps = new GlowPscript(filename, this, 1);
 
-  for (i = 0;; i++) {
+  for (int i = 0;; i++) {
     ll_y = i * height;
     ur_y = ll_y + height;
     ll_x = 0;

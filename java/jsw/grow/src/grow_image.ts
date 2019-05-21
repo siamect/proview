@@ -137,7 +137,7 @@ class GrowImage extends Rect {
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    let tmp = Matrix.multiply(this.trf, t);
+    let tmp = Matrix.multiply(t, this.trf);
     let p1 = tmp.apply(this.ll);
     let p2 = tmp.apply(this.ur);
 
@@ -155,7 +155,7 @@ class GrowImage extends Rect {
   }
 
   get_borders(t, g) {
-    let tmp = Matrix.multiply(this.trf, t);
+    let tmp = Matrix.multiply(t, this.trf);
     let p1 = tmp.apply(this.ll);
     let p2 = tmp.apply(this.ur);
 

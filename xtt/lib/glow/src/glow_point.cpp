@@ -39,9 +39,10 @@
 #include "glow_draw.h"
 #include "glow_growctx.h"
 
-GlowPoint::GlowPoint(GrowCtx* glow_ctx, double x1, double y1)
-    : ctx(glow_ctx), x(x1), y(y1)
+GlowPoint::GlowPoint(GrowCtx* glow_ctx, double x1, double y1) : ctx(glow_ctx)
 {
+  x = x1;
+  y = y1;
   (*this).zoom();
 }
 

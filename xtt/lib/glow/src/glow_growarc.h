@@ -212,7 +212,7 @@ public:
   void draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
 
   //! Erase the object
-  void erase(DrawWind* w)
+  virtual void erase(DrawWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
   }
@@ -502,7 +502,8 @@ public:
   */
   void set_transform_from_stored(GlowTransform* t)
   {
-    trf.set_from_stored(t), get_node_borders();
+    trf.set(*t * trf.s);
+    get_node_borders();
   }
 
   //! Store the current transform

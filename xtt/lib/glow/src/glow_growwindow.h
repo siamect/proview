@@ -271,7 +271,7 @@ public:
   int event_handler(glow_eEvent event, int x, int y, double fx, double fy);
 
   //! Check if new filename
-  int update_attributes();
+  virtual int update_attributes();
 
   //! Create a new grow context
   void new_ctx();

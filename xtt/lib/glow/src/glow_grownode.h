@@ -90,7 +90,7 @@ public:
   void copy_from(const GrowNode& n);
 
   //! Erase the object
-  void erase(DrawWind* w)
+  virtual void erase(DrawWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
   }
@@ -773,7 +773,8 @@ public:
   */
   void set_transform_from_stored(GlowTransform* t)
   {
-    trf.set_from_stored(t), get_node_borders();
+    trf.set(*t * trf.s);
+    get_node_borders();
   }
 
   //! Get info for a connection point
@@ -940,7 +941,7 @@ public:
   /*! This function should be called when a group where the object is a member
    * is dissolved.
    */
-  void ungroup()
+  virtual void ungroup()
   {
     root_node = 0;
   }

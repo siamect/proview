@@ -654,7 +654,7 @@ class GrowNode extends GlowNode {
     this.get_borders(t, g);
     if (g.hit(new Point(x, y))) {
       // Hit, calculate max and min koordinates
-      let tmp = Matrix.multiply(this.trf, t);
+      let tmp = Matrix.multiply(t, this.trf);
       let p1 = tmp.apply(new Point(0, this.nc.y0));
       let p2 = tmp.apply(new Point(0, this.nc.y1));
 
@@ -872,7 +872,7 @@ class GrowNode extends GlowNode {
   }
 
   getAnnotationTextExtent(num) {
-    return this.nc.getAnnotationTextExtent(this.trf, this, num);
+    return this.nc.getAnnotationTextExtent(t, this.trfhis, num);
   }
 
   setColorThemeLightness() {

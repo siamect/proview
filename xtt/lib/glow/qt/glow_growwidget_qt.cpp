@@ -82,9 +82,8 @@ QWidget* scrolledgrowwidgetqt_new(
 {
   QtScrollWidgetGlow* w = new QtScrollWidgetGlow();
   *growwidget = w;
-  return (QWidget*)w->initScroll(
+  return w->initScroll(
       glow_eCtxType_Grow, init_proc, client_data, grow_init_proc);
-  ;
 }
 
 QWidget* grownavwidgetqt_new(QWidget* main_grow)

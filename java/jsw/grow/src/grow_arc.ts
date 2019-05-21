@@ -182,7 +182,7 @@ class GrowArc extends GlowArc {
     if (rot % 90 !== 0 &&
         Math.abs((this.ur.x - this.ll.x) - (this.ur.y - this.ll.y)) <
         Number.MIN_VALUE) {
-      let scale = tmp.vertical_scale();
+      let scale = Matrix.multiply(tmp, this.trf).vertical_scale();
       let x_c = ((p.x * this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x) +
             (p2.x * this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x)) / 2;
       let y_c = ((p.y * this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y) +
@@ -328,7 +328,7 @@ class GrowArc extends GlowArc {
   }
 
   get_borders(t, g) {
-    let tmp = Matrix.multiply(this.trf, t);
+    let tmp = Matrix.multiply(t, this.trf);
     let p1 = tmp.apply(this.ll);
     let p2 = tmp.apply(this.ur);
 

@@ -115,7 +115,7 @@ public:
 
     Saves the context with all nodeclasses, conclasses and objects.
   */
-  int save(char* filename, glow_eSaveMode mode);
+  virtual int save(char* filename, glow_eSaveMode mode);
 
   //! Open context from file.
   /*!
@@ -140,7 +140,7 @@ public:
 
   //! Remove an object.
   /*! \param element	Object to remove. */
-  void remove(GlowArrayElem* element)
+  virtual void remove(GlowArrayElem* element)
   {
     a.remove(element);
   }
@@ -487,7 +487,7 @@ public:
 
   //! Zoom with a specifed zoom factor.
   /*! \param factor	Zoom factor. */
-  void zoom(double factor);
+  virtual void zoom(double factor);
 
   //! Zoom in x direction with a specified zoom factor.
   /*! \param factor	Zoom factor in x direction. */
@@ -569,18 +569,18 @@ public:
   //! Update zoom of navigation window.
   /*! The zoomfactor of the navigation window is updated to match the extent of
    * the working space. */
-  void nav_zoom();
+  virtual void nav_zoom();
 
   //! Zoom to appropriate scale for postscript output.
   void print_zoom();
 
   //! Handle events.
   /*! Calls the event handler of GrowCtx. */
-  int event_handler(glow_eEvent event, int x, int y, int w, int h);
+  virtual int event_handler(glow_eEvent event, int x, int y, int w, int h);
 
   //! Handle events in the navigation window.
   /*! Handle the event for moving and scaling the navigation rectangle. */
-  int event_handler_nav(glow_eEvent event, int x, int y);
+  virtual int event_handler_nav(glow_eEvent event, int x, int y);
 
   //! Enable an event en register a backcall function for the event.
   /*!
@@ -945,7 +945,7 @@ public:
 
   //! Update the scroobars.
   /*! The scrollbar callback function is called to update the scrollbars. */
-  void change_scrollbar();
+  virtual void change_scrollbar();
 
   //! Find an object by name.
   /*!

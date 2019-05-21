@@ -261,22 +261,20 @@ static void glow_create_cursor(GlowDrawGtk* draw_ctx)
 
 static void draw_free_gc(GlowDrawGtk* draw_ctx)
 {
-  int i, j, k;
-
-  for (i = 1; i < glow_eDrawCursor__; i++)
+  for (int i = 1; i < glow_eDrawCursor__; i++)
     gdk_cursor_unref(draw_ctx->cursors[i]);
 
   gdk_gc_unref(draw_ctx->gc_inverse);
-  for (i = 0; i < glow_eDrawType_Color__; i++) {
-    for (j = 0; j < DRAW_TYPE_SIZE; j++) {
+  for (int i = 0; i < glow_eDrawType_Color__; i++) {
+    for (int j = 0; j < DRAW_TYPE_SIZE; j++) {
       if (draw_ctx->gcs[i][j])
         gdk_gc_unref(draw_ctx->gcs[i][j]);
     }
   }
 
-  for (i = 0; i < glow_eFont__; i++) {
-    for (j = 0; j < glow_eDrawFont__; j++) {
-      for (k = 0; k < DRAW_FONT_SIZE; k++) {
+  for (int i = 0; i < glow_eFont__; i++) {
+    for (int j = 0; j < glow_eDrawFont__; j++) {
+      for (int k = 0; k < DRAW_FONT_SIZE; k++) {
         if (draw_ctx->font[i][j][k])
           gdk_font_unref(draw_ctx->font[i][j][k]);
       }
@@ -1856,8 +1854,7 @@ void GlowDrawGtk::reset_background(DrawWind* wind)
 void GlowDrawGtk::set_clip(GdkGC* gc)
 {
   if (w->clip_cnt > 0) {
-    gdk_gc_set_clip_rectangle(gc,
-        &((DrawWindGtk*)w)->clip_rectangle[w->clip_cnt - 1]);
+    gdk_gc_set_clip_rectangle(gc, &w->clip_rectangle[w->clip_cnt - 1]);
   }
 }
 
@@ -1980,40 +1977,26 @@ int GlowDrawGtk::print(char* filename, double x0, double x1, int end)
 #define ps_cLeftMargin 100
 #define ps_cTopMargin 100
 
-  DrawWindGtk* w = &m_wind;
-  int width, height;
-  unsigned char* rgb;
-  int i, j, k;
-  int grey;
-  int red, blue, green;
-  double scalex = 0.71;
-  double scaley = 0.78;
-  double x, y;
-  bool colorimage = true;
-  static DrawPs* ps = 0;
-  bool new_file = false;
-  int rowstride;
-  int n_channels;
-  unsigned char* rgb_row;
-
-  x = ps_cLeftMargin;
-  y = ps_cPageHeight - ps_cTopMargin;
+  double x = ps_cLeftMargin;
+  double y = ps_cPageHeight - ps_cTopMargin;
 
   GdkPixbuf* image = gdk_pixbuf_get_from_drawable(
       NULL, w->buffer, 0, 0, 0, 0, 0, w->window_width, w->window_height);
-
   if (!image)
     return 0;
 
+  static DrawPs* ps = 0;
+  bool new_file = !ps;
   if (!ps) {
     ps = new DrawPs(filename);
-    new_file = true;
     ps->y = y;
   } else
     y = ps->y;
 
-  width = gdk_pixbuf_get_width(image);
-  height = gdk_pixbuf_get_height(image);
+  int width = gdk_pixbuf_get_width(image);
+  int height = gdk_pixbuf_get_height(image);
+  double scalex = 0.71;
+  double scaley = 0.78;
 
   if (!feq(x0, 0.0) || !feq(x1, 0.0)) {
     double total_width = width / (x1 - x0);
@@ -2056,10 +2039,7 @@ int GlowDrawGtk::print(char* filename, double x0, double x1, int end)
          << " " << width << " " << height << " 8 [" << width << " 0 0 -"
          << height << " 0 " << height << "]" << endl
          << " { currentfile oneline readhexstring pop }" << endl;
-  if (colorimage) {
-    ps->fp << "false 3" << endl << "colorimage" << endl;
-  } else
-    ps->fp << "image" << endl;
+  ps->fp << "false 3" << endl << "colorimage" << endl;
 
   ps->fp << "} def" << endl
          << x / scalex / width << " " << (y - height * scaley) / scaley / height
@@ -2069,46 +2049,30 @@ int GlowDrawGtk::print(char* filename, double x0, double x1, int end)
   ps->fp.flags(
       (ps->fp.flags() & ~ios_base::dec) | ios_base::hex | ios_base::uppercase);
   ps->fp.fill('0');
-  rgb = gdk_pixbuf_get_pixels(image);
-  rowstride = gdk_pixbuf_get_rowstride(image);
-  n_channels = gdk_pixbuf_get_n_channels(image);
-  j = 0;
-  rgb_row = rgb;
-  for (k = 0; k < height; k++) {
+  unsigned char* rgb = gdk_pixbuf_get_pixels(image);
+  int rowstride = gdk_pixbuf_get_rowstride(image);
+  int n_channels = gdk_pixbuf_get_n_channels(image);
+  int j = 0;
+  unsigned char* rgb_row = rgb;
+  for (int k = 0; k < height; k++) {
     rgb = rgb_row;
-    for (i = 0; i < width; i++) {
-      if (!colorimage) {
-        if (n_channels >= 4 && !(rgb + 3))
-          grey = 255;
-        else
-          grey = (int)((0.0 + *rgb + *(rgb + 1) + *(rgb + 2)) / 3 + 0.5);
-
-        rgb += n_channels;
-        ps->fp.width(2);
-        ps->fp << grey;
-        if (++j >= 40) {
-          j = 0;
-          ps->fp << endl;
-        }
-      } else {
-        if (n_channels >= 4 && !(rgb + 3))
-          red = blue = green = 255;
-        else {
-          red = *rgb;
-          green = *(rgb + 1);
-          blue = *(rgb + 2);
-        }
-        rgb += n_channels;
-        ps->fp.width(2);
-        ps->fp << red;
-        ps->fp.width(2);
-        ps->fp << green;
-        ps->fp.width(2);
-        ps->fp << blue;
-        if (++j >= 20) {
-          j = 0;
-          ps->fp << endl;
-        }
+    for (int i = 0; i < width; i++) {
+      int red = 255, green = 255, blue = 255;
+      if (n_channels < 4 || (rgb + 3)) {
+        red = *rgb;
+        green = *(rgb + 1);
+        blue = *(rgb + 2);
+      }
+      rgb += n_channels;
+      ps->fp.width(2);
+      ps->fp << red;
+      ps->fp.width(2);
+      ps->fp << green;
+      ps->fp.width(2);
+      ps->fp << blue;
+      if (++j >= 20) {
+        j = 0;
+        ps->fp << endl;
       }
     }
     rgb_row += rowstride;
@@ -2199,7 +2163,7 @@ int GlowDrawGtk::image_get_rowstride(glow_tImImage image)
 
 unsigned char* GlowDrawGtk::image_get_data(glow_tImImage image)
 {
-  return (unsigned char*)gdk_pixbuf_get_pixels((GdkPixbuf*)image);
+  return gdk_pixbuf_get_pixels((GdkPixbuf*)image);
 }
 
 void GlowDrawGtk::image_copy(glow_tImImage orig_image, glow_tImImage* image)
@@ -2281,7 +2245,7 @@ int GlowDrawGtk::image_scale(int width, int height, glow_tImImage orig_im,
     GdkPixbuf* im_old = (GdkPixbuf*)*im;
     *im = gdk_pixbuf_scale_simple(
         (GdkPixbuf*)*im, width, height, GDK_INTERP_NEAREST);
-    g_object_unref((GdkPixbuf*)im_old);
+    g_object_unref(im_old);
   } else {
     // Scale from orig_im
 

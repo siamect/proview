@@ -157,7 +157,7 @@ class GrowTrend extends GrowRect {
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    let tmp = Matrix.multiply(this.trf, t);
+    let tmp = Matrix.multiply(t, this.trf);
     let p1 = tmp.apply(this.ll);
     let p2 = tmp.apply(this.ur);
 
@@ -236,7 +236,7 @@ class GrowTrend extends GrowRect {
       curvetmp.forEach(e => e.fill = 1);
     }
 
-    let tmp = Matrix.multiply(this.trf, t);
+    let tmp = Matrix.multiply(t, this.trf);
 
     if (this.display_x_mark1 !== 0) {
       let p = tmp.apply(new Point(this.x_mark1, this.ll.y));

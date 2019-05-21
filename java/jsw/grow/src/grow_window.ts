@@ -117,7 +117,7 @@ class GrowWindow extends GrowRect {
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    let tmp = Matrix.multiply(this.trf, t);
+    let tmp = Matrix.multiply(t, this.trf);
     let d1 = tmp.apply(this.ll);
     let d2 = tmp.apply(this.ur);
     d1.x = Math.min(d1.x, d2.x);

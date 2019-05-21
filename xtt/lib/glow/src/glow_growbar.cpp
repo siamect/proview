@@ -264,24 +264,20 @@ void GrowBar::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   }
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-  if (!t) {
-    x1 = int(trf.x(ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int(trf.x(ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int(trf.y(ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  } else {
-    x1 = int(trf.x(t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int(trf.x(t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int(trf.y(t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  }
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
+  p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+  p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+  p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+  p2.y = p2.y * w->zoom_factor_y - w->offset_y;
 
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
+  int ll_x = int(MIN(p1.x, p2.x));
+  int ur_x = int(MAX(p1.x, p2.x));
+  int ll_y = int(MIN(p1.y, p2.y));
+  int ur_y = int(MAX(p1.y, p2.y));
+
   if (fill) {
     drawtype = ctx->get_drawtype(fill_drawtype, glow_eDrawType_FillHighlight,
         highlight, (GrowNode*)colornode, 1);
@@ -290,12 +286,6 @@ void GrowBar::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       ctx->gdraw->rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, 1, 0);
     else {
       glow_eDrawType f1, f2;
-      double rotation;
-
-      if (t)
-        rotation = trf.rot(t);
-      else
-        rotation = trf.rot();
       if (gradient_contrast >= 0) {
         f2 = GlowColor::shift_drawtype(drawtype, -gradient_contrast / 2, 0);
         f1 = GlowColor::shift_drawtype(
@@ -305,65 +295,46 @@ void GrowBar::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
             drawtype, -int(float(gradient_contrast) / 2 - 0.6), 0);
         f1 = GlowColor::shift_drawtype(drawtype, gradient_contrast / 2, 0);
       }
+
       ctx->gdraw->gradient_fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-          drawtype, f1, f2, ctx->gdraw->gradient_rotate(rotation, grad));
+          drawtype, f1, f2, ctx->gdraw->gradient_rotate(tmp.rotation, grad));
     }
   }
   drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
       highlight, (GrowNode*)colornode, 0);
 
   if (!feq(max_value, min_value)) {
-    double rotation;
-    int x0, y0, width, height, l_x0, l_y0, l_x1, l_y1;
+    int x0 = ll_x, y0 = ll_y, width = ur_x - ll_x, height = ur_y - ll_y;
+    int l_x0 = ll_x, l_y0 = ll_y, l_x1 = ur_x, l_y1 = ur_y;
 
-    if (t)
-      rotation = (trf.rot(t) / 360 - floor(trf.rot(t) / 360)) * 360;
-    else
-      rotation = (trf.rot() / 360 - floor(trf.rot() / 360)) * 360;
+    double rotation = (tmp.rotation / 360 - floor(tmp.rotation / 360)) * 360;
+
     if (45 >= rotation || rotation > 315) {
       height = int(
           (bar_value - min_value) / (max_value - min_value) * (ur_y - ll_y));
       height = MAX(0, MIN(height, ur_y - ll_y));
-      width = ur_x - ll_x;
-      x0 = ll_x;
       y0 = ur_y - height;
-      l_x0 = ll_x;
       l_y0 = ur_y - height;
-      l_x1 = ur_x;
       l_y1 = ur_y - height;
     } else if (45 < rotation && rotation <= 135) {
       width = int(
           (bar_value - min_value) / (max_value - min_value) * (ur_x - ll_x));
       width = MAX(0, MIN(width, ur_x - ll_x));
-      height = ur_y - ll_y;
-      x0 = ll_x;
-      y0 = ll_y;
       l_x0 = ll_x + width;
-      l_y0 = ll_y;
       l_x1 = ll_x + width;
-      l_y1 = ur_y;
     } else if (135 < rotation && rotation <= 225) {
       height = int(
           (bar_value - min_value) / (max_value - min_value) * (ur_y - ll_y));
       height = MAX(0, MIN(height, ur_y - ll_y));
-      width = ur_x - ll_x;
-      x0 = ll_x;
-      y0 = ll_y;
-      l_x0 = ll_x;
       l_y0 = ll_y + height;
-      l_x1 = ur_x;
       l_y1 = ll_y + height;
     } else { // if ( 225 < rotation && rotation <= 315)
       width = int(
           (bar_value - min_value) / (max_value - min_value) * (ur_x - ll_x));
       width = MAX(0, MIN(width, ur_x - ll_x));
-      height = ur_y - ll_y;
       x0 = ur_x - width;
-      y0 = ll_y;
       l_x0 = ur_x - width;
-      l_y0 = ll_y;
       l_x1 = ur_x - width;
-      l_y1 = ur_y;
     }
 
     glow_eDrawType dt = drawtype;
@@ -374,12 +345,6 @@ void GrowBar::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       ctx->gdraw->rect(x0, y0, width, height, dt, 1, 0);
     else {
       glow_eDrawType f1, f2;
-      double rotation;
-
-      if (t)
-        rotation = trf.rot(t);
-      else
-        rotation = trf.rot();
       if (gradient_contrast >= 0) {
         f2 = GlowColor::shift_drawtype(dt, -gradient_contrast / 2, 0);
         f1 = GlowColor::shift_drawtype(
@@ -389,8 +354,9 @@ void GrowBar::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
             dt, -int(float(gradient_contrast) / 2 - 0.6), 0);
         f1 = GlowColor::shift_drawtype(dt, gradient_contrast / 2, 0);
       }
+
       ctx->gdraw->gradient_fill_rect(x0, y0, width, height, dt, f1, f2,
-          ctx->gdraw->gradient_rotate(rotation, grad));
+          ctx->gdraw->gradient_rotate(tmp.rotation, grad));
     }
 
     dt = drawtype;
@@ -426,23 +392,19 @@ void GrowBar::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
   }
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-  if (!t) {
-    x1 = int(trf.x(ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int(trf.x(ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int(trf.y(ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  } else {
-    x1 = int(trf.x(t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int(trf.x(t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int(trf.y(t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  }
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
+  p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+  p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+  p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+  p2.y = p2.y * w->zoom_factor_y - w->offset_y;
+
+  int ll_x = int(MIN(p1.x, p2.x));
+  int ur_x = int(MAX(p1.x, p2.x));
+  int ll_y = int(MIN(p1.y, p2.y));
+  int ur_y = int(MAX(p1.y, p2.y));
 
   if (border)
     ctx->gdraw->rect(
@@ -544,30 +506,19 @@ void GrowBar::export_javabean(GlowTransform* t, void* node,
     glow_eExportPass pass, int* shape_cnt, int node_cnt, int in_nc,
     std::ofstream& fp)
 {
-  double x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
-  double rotation;
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
+  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
 
-  if (!t) {
-    x1 = trf.x(ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = trf.y(ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = trf.x(ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = trf.y(ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  } else {
-    x1 = trf.x(t, ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = trf.y(t, ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = trf.x(t, ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = trf.y(t, ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  }
-
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
-
-  if (t)
-    rotation = (trf.rot(t) / 360 - floor(trf.rot(t) / 360)) * 360;
-  else
-    rotation = (trf.rot() / 360 - floor(trf.rot() / 360)) * 360;
+  int ll_x = int(MIN(p1.x, p2.x));
+  int ur_x = int(MAX(p1.x, p2.x));
+  int ll_y = int(MIN(p1.y, p2.y));
+  int ur_y = int(MAX(p1.y, p2.y));
+  double rotation = (tmp.rotation / 360 - floor(tmp.rotation / 360)) * 360;
 
   ctx->export_jbean->bar(ll_x, ll_y, ur_x, ur_y, draw_type, fill_drawtype,
       bar_drawtype, bar_bordercolor, fill, border, min_value, max_value,

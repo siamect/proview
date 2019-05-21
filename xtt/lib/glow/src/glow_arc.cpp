@@ -175,70 +175,64 @@ void GlowArc::draw_shadow(DrawWind *w, int border, int shadow, int highlight, in
       ctx->gdraw->arc(ll_x - w->offset_x + idx / 2 - idx + offs,
           ll_y - w->offset_y + idx / 2 - idx + offs,
           ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2,
-          angle1 + 45, angle2 - 45,
-          ((GrowCtx*)ctx)->shift_drawtype(draw_type, -2, 0), 0, ish - 1,
-          highlight);
+          angle1 + 45, angle2 - 45, ctx->shift_drawtype(draw_type, -2, 0), 0,
+          ish - 1, highlight);
       ctx->gdraw->arc(ll_x - w->offset_x + idx / 2 - idx + offs,
           ll_y - w->offset_y + idx / 2 - idx + offs,
           ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2, angle1,
-          angle2 - 45, ((GrowCtx*)ctx)->shift_drawtype(draw_type, 2, 0), 0,
-          ish - 1, highlight);
+          angle2 - 45, ctx->shift_drawtype(draw_type, 2, 0), 0, ish - 1,
+          highlight);
       ctx->gdraw->arc(ll_x - w->offset_x + idx / 2 - offs,
           ll_y - w->offset_y + idx / 2 - offs,
           MAX(0, ur_x - ll_x - idx + offs * 2),
           MAX(0, ur_y - ll_y - idx + offs * 2), angle1 + 45, angle2 - 45,
-          ((GrowCtx*)ctx)->shift_drawtype(draw_type, 2, 0), 0, ish - 1, highlight);
+          ctx->shift_drawtype(draw_type, 2, 0), 0, ish - 1, highlight);
       ctx->gdraw->arc(ll_x - w->offset_x + idx / 2 - offs,
           ll_y - w->offset_y + idx / 2 - offs,
           MAX(0, ur_x - ll_x - idx + offs * 2),
           MAX(0, ur_y - ll_y - idx + offs * 2), angle1, angle2 - 45,
-          ((GrowCtx*)ctx)->shift_drawtype(draw_type, -2, 0), 0, ish - 1,
-          highlight);
+          ctx->shift_drawtype(draw_type, -2, 0), 0, ish - 1, highlight);
     } else if (angle1 == 90) {
       ctx->gdraw->arc(ll_x - w->offset_x + idx / 2 - idx + offs,
           ll_y - w->offset_y + idx / 2 - idx + offs,
           ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2, angle1,
-          angle2, ((GrowCtx*)ctx)->shift_drawtype(draw_type, -2, 0), 0, ish - 1,
-          highlight);
+          angle2, ctx->shift_drawtype(draw_type, -2, 0), 0, ish - 1, highlight);
       ctx->gdraw->arc(ll_x - w->offset_x + idx / 2 - offs,
           ll_y - w->offset_y + idx / 2 - offs,
           MAX(0, ur_x - ll_x - idx + offs * 2),
           MAX(0, ur_y - ll_y - idx + offs * 2), angle1, angle2,
-          ((GrowCtx*)ctx)->shift_drawtype(draw_type, 2, 0), 0, ish - 1, highlight);
+          ctx->shift_drawtype(draw_type, 2, 0), 0, ish - 1, highlight);
     } else if (angle1 == 180) {
       ctx->gdraw->arc(ll_x - w->offset_x + idx / 2 - idx + offs,
           ll_y - w->offset_y + idx / 2 - idx + offs,
           ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2,
           angle1 + 45, angle2 - 45,
-          ((GrowCtx*)ctx)->shift_drawtype(draw_type, 2, 0), 0, ish - 1, highlight);
+          ctx->shift_drawtype(draw_type, 2, 0), 0, ish - 1, highlight);
       ctx->gdraw->arc(ll_x - w->offset_x + idx / 2 - idx + offs,
           ll_y - w->offset_y + idx / 2 - idx + offs,
           ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2, angle1,
-          angle2 - 45, ((GrowCtx*)ctx)->shift_drawtype(draw_type, -2, 0), 0,
-          ish - 1, highlight);
+          angle2 - 45, ctx->shift_drawtype(draw_type, -2, 0), 0, ish - 1,
+          highlight);
       ctx->gdraw->arc(ll_x - w->offset_x + idx / 2 - offs,
           ll_y - w->offset_y + idx / 2 - offs,
           MAX(0, ur_x - ll_x - idx + offs * 2),
           MAX(0, ur_y - ll_y - idx + offs * 2), angle1 + 45, angle2 - 45,
-          ((GrowCtx*)ctx)->shift_drawtype(draw_type, -2, 0), 0, ish - 1,
-          highlight);
+          ctx->shift_drawtype(draw_type, -2, 0), 0, ish - 1, highlight);
       ctx->gdraw->arc(ll_x - w->offset_x + idx / 2 - offs,
           ll_y - w->offset_y + idx / 2 - offs,
           MAX(0, ur_x - ll_x - idx + offs * 2),
           MAX(0, ur_y - ll_y - idx + offs * 2), angle1, angle2 - 45,
-          ((GrowCtx*)ctx)->shift_drawtype(draw_type, 2, 0), 0, ish - 1, highlight);
+          ctx->shift_drawtype(draw_type, 2, 0), 0, ish - 1, highlight);
     } else if (angle1 == 270) {
       ctx->gdraw->arc(ll_x - w->offset_x + idx / 2 - idx + offs,
           ll_y - w->offset_y + idx / 2 - idx + offs,
           ur_x - ll_x + idx - offs * 2, ur_y - ll_y + idx - offs * 2, angle1,
-          angle2, ((GrowCtx*)ctx)->shift_drawtype(draw_type, 2, 0), 0, ish - 1,
-          highlight);
+          angle2, ctx->shift_drawtype(draw_type, 2, 0), 0, ish - 1, highlight);
       ctx->gdraw->arc(ll_x - w->offset_x + idx / 2 - offs,
           ll_y - w->offset_y + idx / 2 - offs,
           MAX(0, ur_x - ll_x - idx + offs * 2),
           MAX(0, ur_y - ll_y - idx + offs * 2), angle1, angle2,
-          ((GrowCtx*)ctx)->shift_drawtype(draw_type, -2, 0), 0, ish - 1,
-          highlight);
+          ctx->shift_drawtype(draw_type, -2, 0), 0, ish - 1, highlight);
     }
   }
   if (border) {
@@ -362,11 +356,10 @@ void GlowArc::export_javabean(GlowTransform* t, void* node,
       = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * line_width - 1);
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ((GrowCtx*)ctx)
-      ->export_jbean->arc(ll.z_x - ctx->mw->offset_x, ll.z_y - ctx->mw->offset_y,
-          ur.z_x - ll.z_x, ur.z_y - ll.z_y, angle1, angle2, fill, !fill,
-          draw_type, draw_type, idx, 0.0, 0, glow_eDrawType_No, 0,
-          glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
+  ctx->export_jbean->arc(ll.z_x - ctx->mw->offset_x, ll.z_y - ctx->mw->offset_y,
+      ur.z_x - ll.z_x, ur.z_y - ll.z_y, angle1, angle2, fill, !fill, draw_type,
+      draw_type, idx, 0.0, 0, glow_eDrawType_No, 0, glow_eGradient_No, 0, 0,
+      pass, shape_cnt, node_cnt, fp);
 }
 
 void GlowArc::export_javabean_shadow(GlowTransform* t, void* node,
@@ -383,133 +376,106 @@ void GlowArc::export_javabean_shadow(GlowTransform* t, void* node,
 
   if (shadow) {
     if (angle1 == 0) {
-      ((GrowCtx*)ctx)
-          ->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - idx + offs,
-              ll.z_y - ctx->mw->offset_y + idx / 2 - idx + offs,
-              ur.z_x - ll.z_x + idx - offs * 2,
-              ur.z_y - ll.z_y + idx - offs * 2, angle1 + 45, angle2 - 45, 0, 1,
-              glow_eDrawType_No,
-              ((GrowCtx*)ctx)->shift_drawtype(draw_type, -2, 0), ish - 1, 0.0,
-              0, glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
-              node_cnt, fp);
-      ((GrowCtx*)ctx)
-          ->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - idx + offs,
-              ll.z_y - ctx->mw->offset_y + idx / 2 - idx + offs,
-              ur.z_x - ll.z_x + idx - offs * 2,
-              ur.z_y - ll.z_y + idx - offs * 2, angle1, angle2 - 45, 0, 1,
-              glow_eDrawType_No,
-              ((GrowCtx*)ctx)->shift_drawtype(draw_type, 2, 0), ish - 1, 0.0, 0,
-              glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
-              node_cnt, fp);
-      ((GrowCtx*)ctx)
-          ->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - offs,
-              ll.z_y - ctx->mw->offset_y + idx / 2 - offs,
-              MAX(0, ur.z_x - ll.z_x - idx + offs * 2),
-              MAX(0, ur.z_y - ll.z_y - idx + offs * 2), angle1 + 45,
-              angle2 - 45, 0, 1, glow_eDrawType_No,
-              ((GrowCtx*)ctx)->shift_drawtype(draw_type, 2, 0), ish - 1, 0.0, 0,
-              glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
-              node_cnt, fp);
-      ((GrowCtx*)ctx)
-          ->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - offs,
-              ll.z_y - ctx->mw->offset_y + idx / 2 - offs,
-              MAX(0, ur.z_x - ll.z_x - idx + offs * 2),
-              MAX(0, ur.z_y - ll.z_y - idx + offs * 2), angle1, angle2 - 45, 0,
-              1, glow_eDrawType_No,
-              ((GrowCtx*)ctx)->shift_drawtype(draw_type, -2, 0), ish - 1, 0.0,
-              0, glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
-              node_cnt, fp);
+      ctx->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - idx + offs,
+          ll.z_y - ctx->mw->offset_y + idx / 2 - idx + offs,
+          ur.z_x - ll.z_x + idx - offs * 2, ur.z_y - ll.z_y + idx - offs * 2,
+          angle1 + 45, angle2 - 45, 0, 1, glow_eDrawType_No,
+          ctx->shift_drawtype(draw_type, -2, 0), ish - 1, 0.0, 0,
+          glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
+          node_cnt, fp);
+      ctx->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - idx + offs,
+          ll.z_y - ctx->mw->offset_y + idx / 2 - idx + offs,
+          ur.z_x - ll.z_x + idx - offs * 2, ur.z_y - ll.z_y + idx - offs * 2,
+          angle1, angle2 - 45, 0, 1, glow_eDrawType_No,
+          ctx->shift_drawtype(draw_type, 2, 0), ish - 1, 0.0, 0,
+          glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
+          node_cnt, fp);
+      ctx->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - offs,
+          ll.z_y - ctx->mw->offset_y + idx / 2 - offs,
+          MAX(0, ur.z_x - ll.z_x - idx + offs * 2),
+          MAX(0, ur.z_y - ll.z_y - idx + offs * 2), angle1 + 45, angle2 - 45,
+          0, 1, glow_eDrawType_No, ctx->shift_drawtype(draw_type, 2, 0),
+          ish - 1, 0.0, 0, glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass,
+          shape_cnt, node_cnt, fp);
+      ctx->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - offs,
+          ll.z_y - ctx->mw->offset_y + idx / 2 - offs,
+          MAX(0, ur.z_x - ll.z_x - idx + offs * 2),
+          MAX(0, ur.z_y - ll.z_y - idx + offs * 2), angle1, angle2 - 45, 0, 1,
+          glow_eDrawType_No, ctx->shift_drawtype(draw_type, -2, 0), ish - 1,
+          0.0, 0, glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass,
+          shape_cnt, node_cnt, fp);
     } else if (angle1 == 90) {
-      ((GrowCtx*)ctx)
-          ->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - idx + offs,
-              ll.z_y - ctx->mw->offset_y + idx / 2 - idx + offs,
-              ur.z_x - ll.z_x + idx - offs * 2,
-              ur.z_y - ll.z_y + idx - offs * 2, angle1, angle2, 0, 1,
-              glow_eDrawType_No,
-              ((GrowCtx*)ctx)->shift_drawtype(draw_type, -2, 0), ish - 1, 0.0,
-              0, glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
-              node_cnt, fp);
-      ((GrowCtx*)ctx)
-          ->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - offs,
-              ll.z_y - ctx->mw->offset_y + idx / 2 - offs,
-              MAX(0, ur.z_x - ll.z_x - idx + offs * 2),
-              MAX(0, ur.z_y - ll.z_y - idx + offs * 2), angle1, angle2, 0, 1,
-              glow_eDrawType_No,
-              ((GrowCtx*)ctx)->shift_drawtype(draw_type, 2, 0), ish - 1, 0.0, 0,
-              glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
-              node_cnt, fp);
+      ctx->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - idx + offs,
+          ll.z_y - ctx->mw->offset_y + idx / 2 - idx + offs,
+          ur.z_x - ll.z_x + idx - offs * 2, ur.z_y - ll.z_y + idx - offs * 2,
+          angle1, angle2, 0, 1, glow_eDrawType_No,
+          ctx->shift_drawtype(draw_type, -2, 0), ish - 1, 0.0, 0,
+          glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
+          node_cnt, fp);
+      ctx->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - offs,
+          ll.z_y - ctx->mw->offset_y + idx / 2 - offs,
+          MAX(0, ur.z_x - ll.z_x - idx + offs * 2),
+          MAX(0, ur.z_y - ll.z_y - idx + offs * 2), angle1, angle2, 0, 1,
+          glow_eDrawType_No, ctx->shift_drawtype(draw_type, 2, 0), ish - 1,
+          0.0, 0, glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass,
+          shape_cnt, node_cnt, fp);
     } else if (angle1 == 180) {
-      ((GrowCtx*)ctx)
-          ->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - idx + offs,
-              ll.z_y - ctx->mw->offset_y + idx / 2 - idx + offs,
-              ur.z_x - ll.z_x + idx - offs * 2,
-              ur.z_y - ll.z_y + idx - offs * 2, angle1 + 45, angle2 - 45, 0, 1,
-              glow_eDrawType_No,
-              ((GrowCtx*)ctx)->shift_drawtype(draw_type, 2, 0), ish - 1, 0.0, 0,
-              glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
-              node_cnt, fp);
-      ((GrowCtx*)ctx)
-          ->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - idx + offs,
-              ll.z_y - ctx->mw->offset_y + idx / 2 - idx + offs,
-              ur.z_x - ll.z_x + idx - offs * 2,
-              ur.z_y - ll.z_y + idx - offs * 2, angle1, angle2 - 45, 0, 1,
-              glow_eDrawType_No,
-              ((GrowCtx*)ctx)->shift_drawtype(draw_type, -2, 0), ish - 1, 0.0,
-              0, glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
-              node_cnt, fp);
-      ((GrowCtx*)ctx)
-          ->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - offs,
-              ll.z_y - ctx->mw->offset_y + idx / 2 - offs,
-              MAX(0, ur.z_x - ll.z_x - idx + offs * 2),
-              MAX(0, ur.z_y - ll.z_y - idx + offs * 2), angle1 + 45,
-              angle2 - 45, 0, 1, glow_eDrawType_No,
-              ((GrowCtx*)ctx)->shift_drawtype(draw_type, -2, 0), ish - 1, 0.0,
-              0, glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
-              node_cnt, fp);
-      ((GrowCtx*)ctx)
-          ->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - offs,
-              ll.z_y - ctx->mw->offset_y + idx / 2 - offs,
-              MAX(0, ur.z_x - ll.z_x - idx + offs * 2),
-              MAX(0, ur.z_y - ll.z_y - idx + offs * 2), angle1, angle2 - 45, 0,
-              1, glow_eDrawType_No,
-              ((GrowCtx*)ctx)->shift_drawtype(draw_type, 2, 0), ish - 1, 0.0, 0,
-              glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
-              node_cnt, fp);
+      ctx->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - idx + offs,
+          ll.z_y - ctx->mw->offset_y + idx / 2 - idx + offs,
+          ur.z_x - ll.z_x + idx - offs * 2, ur.z_y - ll.z_y + idx - offs * 2,
+          angle1 + 45, angle2 - 45, 0, 1, glow_eDrawType_No,
+          ctx->shift_drawtype(draw_type, 2, 0), ish - 1, 0.0, 0,
+          glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
+          node_cnt, fp);
+      ctx->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - idx + offs,
+          ll.z_y - ctx->mw->offset_y + idx / 2 - idx + offs,
+          ur.z_x - ll.z_x + idx - offs * 2, ur.z_y - ll.z_y + idx - offs * 2,
+          angle1, angle2 - 45, 0, 1, glow_eDrawType_No,
+          ctx->shift_drawtype(draw_type, -2, 0), ish - 1, 0.0, 0,
+          glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
+          node_cnt, fp);
+      ctx->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - offs,
+          ll.z_y - ctx->mw->offset_y + idx / 2 - offs,
+          MAX(0, ur.z_x - ll.z_x - idx + offs * 2),
+          MAX(0, ur.z_y - ll.z_y - idx + offs * 2), angle1 + 45, angle2 - 45,
+          0, 1, glow_eDrawType_No, ctx->shift_drawtype(draw_type, -2, 0),
+          ish - 1, 0.0, 0, glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass,
+          shape_cnt, node_cnt, fp);
+      ctx->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - offs,
+          ll.z_y - ctx->mw->offset_y + idx / 2 - offs,
+          MAX(0, ur.z_x - ll.z_x - idx + offs * 2),
+          MAX(0, ur.z_y - ll.z_y - idx + offs * 2), angle1, angle2 - 45, 0, 1,
+          glow_eDrawType_No, ctx->shift_drawtype(draw_type, 2, 0), ish - 1,
+          0.0, 0, glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass,
+          shape_cnt, node_cnt, fp);
     } else if (angle1 == 270) {
-      ((GrowCtx*)ctx)
-          ->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - idx + offs,
-              ll.z_y - ctx->mw->offset_y + idx / 2 - idx + offs,
-              ur.z_x - ll.z_x + idx - offs * 2,
-              ur.z_y - ll.z_y + idx - offs * 2, angle1, angle2, 0, 1,
-              glow_eDrawType_No,
-              ((GrowCtx*)ctx)->shift_drawtype(draw_type, 2, 0), ish - 1, 0.0, 0,
-              glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
-              node_cnt, fp);
-      ((GrowCtx*)ctx)
-          ->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - offs,
-              ll.z_y - ctx->mw->offset_y + idx / 2 - offs,
-              MAX(0, ur.z_x - ll.z_x - idx + offs * 2),
-              MAX(0, ur.z_y - ll.z_y - idx + offs * 2), angle1, angle2, 0, 1,
-              glow_eDrawType_No,
-              ((GrowCtx*)ctx)->shift_drawtype(draw_type, -2, 0), ish - 1, 0.0,
-              0, glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
-              node_cnt, fp);
+      ctx->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - idx + offs,
+          ll.z_y - ctx->mw->offset_y + idx / 2 - idx + offs,
+          ur.z_x - ll.z_x + idx - offs * 2, ur.z_y - ll.z_y + idx - offs * 2,
+          angle1, angle2, 0, 1, glow_eDrawType_No,
+          ctx->shift_drawtype(draw_type, 2, 0), ish - 1, 0.0, 0,
+          glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
+          node_cnt, fp);
+      ctx->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - offs,
+          ll.z_y - ctx->mw->offset_y + idx / 2 - offs,
+          MAX(0, ur.z_x - ll.z_x - idx + offs * 2),
+          MAX(0, ur.z_y - ll.z_y - idx + offs * 2), angle1, angle2, 0, 1,
+          glow_eDrawType_No, ctx->shift_drawtype(draw_type, -2, 0), ish - 1,
+          0.0, 0, glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass,
+          shape_cnt, node_cnt, fp);
     }
   }
   if (border) {
-    ((GrowCtx*)ctx)
-        ->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - idx,
-            ll.z_y - ctx->mw->offset_y + idx / 2 - idx, ur.z_x - ll.z_x + idx,
-            ur.z_y - ll.z_y + idx, angle1, angle2, 0, 1, glow_eDrawType_No,
-            glow_eDrawType_Line, 0, 0.0, 0, glow_eDrawType_No, 0,
-            glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
-    ((GrowCtx*)ctx)
-        ->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2,
-            ll.z_y - ctx->mw->offset_y + idx / 2, MAX(0, ur.z_x - ll.z_x - idx),
-            MAX(0, ur.z_y - ll.z_y - idx), angle1, angle2, 0, 1,
-            glow_eDrawType_No, glow_eDrawType_Line, 0, 0.0, 0,
-            glow_eDrawType_No, 0, glow_eGradient_No, 0, 0, pass, shape_cnt,
-            node_cnt, fp);
+    ctx->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2 - idx,
+        ll.z_y - ctx->mw->offset_y + idx / 2 - idx, ur.z_x - ll.z_x + idx,
+        ur.z_y - ll.z_y + idx, angle1, angle2, 0, 1, glow_eDrawType_No,
+        glow_eDrawType_Line, 0, 0.0, 0, glow_eDrawType_No, 0, glow_eGradient_No,
+        0, 0, pass, shape_cnt, node_cnt, fp);
+    ctx->export_jbean->arc(ll.z_x - ctx->mw->offset_x + idx / 2,
+        ll.z_y - ctx->mw->offset_y + idx / 2, MAX(0, ur.z_x - ll.z_x - idx),
+        MAX(0, ur.z_y - ll.z_y - idx), angle1, angle2, 0, 1, glow_eDrawType_No,
+        glow_eDrawType_Line, 0, 0.0, 0, glow_eDrawType_No, 0,
+        glow_eGradient_No, 0, 0, pass, shape_cnt, node_cnt, fp);
   }
 }
 

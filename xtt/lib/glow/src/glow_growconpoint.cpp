@@ -128,11 +128,11 @@ int GrowConPoint::event_handler(glow_eEvent event, int x, int y, double fx, doub
 {
   int sts;
   GlowPoint p1(p);
-  p1.x = trf.x(p.x, p.y);
-  p1.y = trf.y(p.x, p.y);
+  glow_sPoint ptmp = trf * p;
+  p1.x = ptmp.x;
+  p1.y = ptmp.y;
   p1.zoom();
 
-  sts = 0;
   if (event == ctx->event_move_node) {
     sts = arc.event_handler((void*)&p1, event, x, y, NULL);
     if (sts) {
@@ -141,8 +141,7 @@ int GrowConPoint::event_handler(glow_eEvent event, int x, int y, double fx, doub
     }
     return sts;
   }
-  switch (event) {
-  case glow_eEvent_CursorMotion: {
+  if (event == glow_eEvent_CursorMotion) {
     if (ctx->hot_found)
       sts = 0;
     else {
@@ -161,9 +160,7 @@ int GrowConPoint::event_handler(glow_eEvent event, int x, int y, double fx, doub
       hot = 0;
       ctx->set_dirty();
     }
-    break;
-  }
-  default:
+  } else {
     sts = arc.event_handler((void*)&p1, event, x, y, NULL);
   }
   if (sts)
@@ -340,14 +337,12 @@ void GrowConPoint::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     return;
   }
 
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint ptmp = tmp * p;
+
   GlowPoint p1(p);
-  if (t) {
-    p1.x = trf.x(t, p.x, p.y);
-    p1.y = trf.y(t, p.x, p.y);
-  } else {
-    p1.x = trf.x(p.x, p.y);
-    p1.y = trf.y(p.x, p.y);
-  }
+  p1.x = ptmp.x;
+  p1.y = ptmp.y;
   p1.zoom();
   arc.draw(w, (void*)&p1, highlight, hot, NULL);
 }
@@ -356,21 +351,19 @@ void GrowConPoint::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 {
   hot = (w == ctx->navw) ? 0 : hot;
 
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint ptmp = tmp * p;
+
   GlowPoint p1(p);
-  if (t) {
-    p1.x = trf.x(t, p.x, p.y);
-    p1.y = trf.y(t, p.x, p.y);
-  } else {
-    p1.x = trf.x(p.x, p.y);
-    p1.y = trf.y(p.x, p.y);
-  }
+  p1.x = ptmp.x;
+  p1.y = ptmp.y;
   p1.zoom();
   arc.erase(w, (void*)&p1, hot, NULL);
 }
 
 void GrowConPoint::set_transform(GlowTransform* t)
 {
-  trf = *t * trf;
+  trf.set(*t * trf);
   get_node_borders();
 }
 
@@ -419,38 +412,21 @@ void GrowConPoint::align(double x, double y, glow_eAlignDirection direction)
 void GrowConPoint::get_node_borders(GlowTransform* t, double* x_right,
     double* x_left, double* y_high, double* y_low)
 {
-  GlowPoint p1(p);
-  if (t) {
-    p1.x = trf.x(t, p.x, p.y);
-    p1.y = trf.y(t, p.x, p.y);
-  } else {
-    p1.x = trf.x(p.x, p.y);
-    p1.y = trf.y(p.x, p.y);
-  }
-  arc.get_borders(p1.x, p1.y, x_right, x_left, y_high, y_low, NULL);
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p = tmp * this->p;
+  arc.get_borders(p.x, p.y, x_right, x_left, y_high, y_low, NULL);
 }
 
 void GrowConPoint::get_borders(GlowTransform* t, double* x_right,
     double* x_left, double* y_high, double* y_low)
 {
-  double x1, y1;
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p = tmp * this->p;
 
-  if (t) {
-    x1 = trf.x(t, p.x, p.y);
-    y1 = trf.y(t, p.x, p.y);
-  } else {
-    x1 = trf.x(p.x, p.y);
-    y1 = trf.y(p.x, p.y);
-  }
-
-  if (x1 < *x_left)
-    *x_left = x1;
-  if (x1 > *x_right)
-    *x_right = x1;
-  if (y1 < *y_low)
-    *y_low = y1;
-  if (y1 > *y_high)
-    *y_high = y1;
+  *x_left = MIN(*x_left, p.x);
+  *x_right = MAX(*x_right, p.x);
+  *y_low = MIN(*y_low, p.y);
+  *y_high = MAX(*y_high, p.y);
 }
 
 void GrowConPoint::export_flow(GlowExportFlow* ef)

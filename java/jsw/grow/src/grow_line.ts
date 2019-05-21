@@ -96,7 +96,7 @@ class GrowLine extends GlowLine {
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    let tmp = Matrix.multiply(this.trf, t);
+    let tmp = Matrix.multiply(t, this.trf);
     let p1 = tmp.apply(this.p1);
     let p2 = tmp.apply(this.p2);
 

@@ -391,7 +391,7 @@ class GrowTable extends GrowRect {
     let header_tsize = this.ctx.mw.zoom_factor_y /
         this.ctx.mw.base_zoom_factor * (8 + 2 * this.header_text_size);
 
-    let tmp = Matrix.multiply(this.trf, t);
+    let tmp = Matrix.multiply(t, this.trf);
     let d1 = tmp.apply(this.ll);
     let d2 = tmp.apply(this.ur);
     d1.x = Math.min(d1.x, d2.x);

@@ -76,7 +76,7 @@ GrowImage::GrowImage(GrowCtx* glow_ctx, const char* name, double x, double y,
   strcpy(image_filename, "");
   strcpy(filename, "");
   strcpy(last_group, "");
-  imlib = ((GlowDraw*)ctx->gdraw)->imlib;
+  imlib = ctx->gdraw->imlib;
   if (imagefile)
     insert_image(imagefile);
 
@@ -149,8 +149,8 @@ int GrowImage::insert_image(const char* imagefile)
 
   if (!found) {
     // Add some search path
-    for (int i = 0; i < ((GrowCtx*)ctx)->path_cnt; i++) {
-      strcpy(filename, ((GrowCtx*)ctx)->path[i]);
+    for (int i = 0; i < ctx->path_cnt; i++) {
+      strcpy(filename, ctx->path[i]);
       strcat(filename, imagename);
       dcli_translate_filename(filename, filename);
       if (check_file(filename)) {
@@ -319,24 +319,18 @@ int GrowImage::local_event_handler(glow_eEvent event, double x, double y)
 
 int GrowImage::event_handler(glow_eEvent event, double fx, double fy)
 {
-  double x, y;
-
-  trf.reverse(fx, fy, &x, &y);
-  return local_event_handler(event, x, y);
+  glow_sPoint p = trf.reverse(fx, fy);
+  return local_event_handler(event, p.x, p.y);
 }
 
 int GrowImage::event_handler(glow_eEvent event, int x, int y, double fx, double fy)
 {
-  int sts;
-
-  double rx, ry;
-
   // Convert koordinates to local koordinates
-  trf.reverse(fx, fy, &rx, &ry);
+  glow_sPoint r = trf.reverse(fx, fy);
 
-  sts = 0;
+  int sts = 0;
   if (event == ctx->event_move_node) {
-    sts = local_event_handler(event, rx, ry);
+    sts = local_event_handler(event, r.x, r.y);
     if (sts) {
       /* Register node for potential movement */
       ctx->move_insert(this);
@@ -350,7 +344,7 @@ int GrowImage::event_handler(glow_eEvent event, int x, int y, double fx, double 
     else if (ctx->hot_found)
       sts = 0;
     else {
-      sts = local_event_handler(event, rx, ry);
+      sts = local_event_handler(event, r.x, r.y);
       if (sts)
         ctx->hot_found = 1;
     }
@@ -369,7 +363,7 @@ int GrowImage::event_handler(glow_eEvent event, int x, int y, double fx, double 
     break;
   }
   default:
-    sts = local_event_handler(event, rx, ry);
+    sts = local_event_handler(event, r.x, r.y);
   }
   if (sts)
     ctx->register_callback_object(glow_eObjectType_Node, this);
@@ -620,7 +614,7 @@ void GrowImage::set_dynamic(char* code, int size)
 void GrowImage::exec_dynamic()
 {
   if (dynamicsize && !streq(dynamic, ""))
-    ((GrowCtx*)ctx)->dynamic_cb(this, dynamic, glow_eDynamicType_Object);
+    ctx->dynamic_cb(this, dynamic, glow_eDynamicType_Object);
 }
 
 void GrowImage::set_position(double x, double y)
@@ -638,9 +632,9 @@ void GrowImage::set_scale(
 {
   double old_x_left, old_x_right, old_y_low, old_y_high;
 
-  if (trf.s_a11 && trf.s_a22
-      && fabs(scale_x - trf.a11 / trf.s_a11) < FLT_EPSILON
-      && fabs(scale_y - trf.a22 / trf.s_a22) < FLT_EPSILON)
+  if (trf.s.a11 && trf.s.a22
+      && fabs(scale_x - trf.a11 / trf.s.a11) < FLT_EPSILON
+      && fabs(scale_y - trf.a22 / trf.s.a22) < FLT_EPSILON)
     return;
 
   switch (type) {
@@ -707,7 +701,7 @@ void GrowImage::set_scale(
 void GrowImage::set_rotation(
     double angle, double x0, double y0, glow_eRotationPoint type)
 {
-  if (fabs(angle - trf.rotation + trf.s_rotation) < FLT_EPSILON)
+  if (fabs(angle - trf.rotation + trf.s.rotation) < FLT_EPSILON)
     return;
 
   switch (type) {
@@ -744,36 +738,26 @@ void GrowImage::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
 {
   if (!(display_level & ctx->display_level))
     return;
+
   hot = (w == ctx->navw) ? 0 : hot;
 
-  double x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
 
-  if (!t) {
-    x1 = (trf.x(ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = (trf.y(ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = (trf.x(ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = (trf.y(ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  } else {
-    x1 = (trf.x(t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = (trf.y(t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = (trf.x(t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = (trf.y(t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  }
-
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
+  p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+  p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+  p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+  p2.y = p2.y * w->zoom_factor_y - w->offset_y;
+  double ll_x = MIN(p1.x, p2.x);
+  double ur_x = MAX(p1.x, p2.x);
+  double ll_y = MIN(p1.y, p2.y);
+  double ur_y = MAX(p1.y, p2.y);
 
   if (feq(ll_x, ur_x) || feq(ll_y, ur_y))
     return;
 
-  double rot;
-
-  if (t)
-    rot = (trf.rot(t) / 360 - floor(trf.rot(t) / 360)) * 360;
-  else
-    rot = (trf.rot() / 360 - floor(trf.rot() / 360)) * 360;
+  double rot = (tmp.rotation / 360 - floor(tmp.rotation / 360)) * 360;
 
   rotation = int((rot + 45) / 90) * 90;
 
@@ -908,24 +892,21 @@ void GrowImage::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
-  hot = (w == ctx->navw) ? 0 : hot;
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-  if (!t) {
-    x1 = int(trf.x(ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int(trf.x(ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int(trf.y(ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  } else {
-    x1 = int(trf.x(t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int(trf.x(t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int(trf.y(t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  }
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
+  hot = (w == ctx->navw) ? 0 : hot;
+
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
+
+  p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+  p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+  p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+  p2.y = p2.y * w->zoom_factor_y - w->offset_y;
+  int ll_x = int(MIN(p1.x, p2.x));
+  int ur_x = int(MAX(p1.x, p2.x));
+  int ll_y = int(MIN(p1.y, p2.y));
+  int ur_y = int(MAX(p1.y, p2.y));
 
   ctx->gdraw->rect(
       ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase, 1, 0);
@@ -934,40 +915,22 @@ void GrowImage::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 void GrowImage::get_borders(GlowTransform* t, double* x_right, double* x_left,
     double* y_high, double* y_low)
 {
-  double ll_x, ur_x, ll_y, ur_y, x1, x2, y1, y2;
-
-  if (t) {
-    x1 = trf.x(t, ll.x, ll.y);
-    x2 = trf.x(t, ur.x, ur.y);
-    y1 = trf.y(t, ll.x, ll.y);
-    y2 = trf.y(t, ur.x, ur.y);
-  } else {
-    x1 = trf.x(ll.x, ll.y);
-    x2 = trf.x(ur.x, ur.y);
-    y1 = trf.y(ll.x, ll.y);
-    y2 = trf.y(ur.x, ur.y);
-  }
-
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
-
   if (display_level != glow_mDisplayLevel_1)
     return;
-  if (ll_x < *x_left)
-    *x_left = ll_x;
-  if (ur_x > *x_right)
-    *x_right = ur_x;
-  if (ll_y < *y_low)
-    *y_low = ll_y;
-  if (ur_y > *y_high)
-    *y_high = ur_y;
+
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
+
+  *x_left = MIN(*x_left, MIN(p1.x, p2.x));
+  *x_right = MAX(*x_right, MAX(p1.x, p2.x));
+  *y_low = MIN(*y_low, MIN(p1.y, p2.y));
+  *y_high = MAX(*y_high, MAX(p1.y, p2.y));
 }
 
 void GrowImage::set_transform(GlowTransform* t)
 {
-  trf = *t * trf;
+  trf.set(*t * trf);
   get_node_borders();
 }
 
@@ -1022,34 +985,25 @@ void GrowImage::export_javabean(GlowTransform* t, void* node,
 {
   if (!(display_level & ctx->display_level))
     return;
-  double x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
-  double rot;
-  int transparent = 0;
 
-  if (!t) {
-    x1 = trf.x(ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = trf.y(ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = trf.x(ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = trf.y(ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    rot = trf.rot();
-  } else {
-    x1 = trf.x(t, ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = trf.y(t, ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = trf.x(t, ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = trf.y(t, ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    rot = trf.rot(t);
-  }
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
 
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
-  if (clip_mask)
-    transparent = 1;
+  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  double ll_x = MIN(p1.x, p2.x);
+  double ur_x = MAX(p1.x, p2.x);
+  double ll_y = MIN(p1.y, p2.y);
+  double ur_y = MAX(p1.y, p2.y);
+
+  int transparent = (clip_mask) ? 1 : 0;
 
   ctx->export_jbean->image(ll_x, ll_y, ur_x, ur_y, image_filename, transparent,
-      color_tone, color_lightness, color_intensity, color_shift, rot, pass,
-      shape_cnt, node_cnt, in_nc, fp);
+      color_tone, color_lightness, color_intensity, color_shift, tmp.rotation,
+      pass, shape_cnt, node_cnt, in_nc, fp);
 }
 
 int GrowImage::set_image_color(glow_tImImage om, void* n)
@@ -1580,8 +1534,8 @@ int grow_image_to_pixmap(GrowCtx* ctx, char* imagefile, int width, int height,
 
   if (!found) {
     // Add some search path
-    for (int i = 0; i < ((GrowCtx*)ctx)->path_cnt; i++) {
-      strcpy(filename, ((GrowCtx*)ctx)->path[i]);
+    for (int i = 0; i < ctx->path_cnt; i++) {
+      strcpy(filename, ctx->path[i]);
       strcat(filename, imagename);
       dcli_translate_filename(filename, filename);
       if (check_file(filename)) {

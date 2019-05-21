@@ -95,7 +95,6 @@ GrowConGlue::~GrowConGlue()
 
 void GrowConGlue::configure(GlowCon* con)
 {
-  int i;
   GlowCon* c;
   int max_width = -1;
   int lw_up, lw_down, lw_left, lw_right;
@@ -161,7 +160,7 @@ void GrowConGlue::configure(GlowCon* con)
     }
   }
 
-  for (i = 0; i < ctx->a.a_size; i++) {
+  for (int i = 0; i < ctx->a.a_size; i++) {
     if (ctx->a.a[i]->type() == glow_eObjectType_Con) {
       if (((GlowCon*)ctx->a.a[i])->source() == this) {
         c = (GlowCon*)ctx->a.a[i];
@@ -371,27 +370,25 @@ void GrowConGlue::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
 
   idx = int(w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
-  double x1, y1, x2, y2;
-  int ll_x, ll_y, ur_x, ur_y, m_x, m_y;
 
-  if (!t) {
-    x1 = x_left * w->zoom_factor_x - w->offset_x;
-    y1 = y_low * w->zoom_factor_y - w->offset_y;
-    x2 = x_right * w->zoom_factor_x - w->offset_x;
-    y2 = y_high * w->zoom_factor_y - w->offset_y;
-  } else {
-    x1 = t->x(x_left, y_low) * w->zoom_factor_x - w->offset_x;
-    y1 = t->y(x_left, y_low) * w->zoom_factor_y - w->offset_y;
-    x2 = t->x(x_right, y_high) * w->zoom_factor_x - w->offset_x;
-    y2 = t->y(x_right, y_high) * w->zoom_factor_y - w->offset_y;
+  glow_sPoint p1 = {x_left, y_low};
+  glow_sPoint p2 = {x_right, y_high};
+  if (t) {
+    p1 = *t * p1;
+    p2 = *t * p2;
   }
 
-  ll_x = int(MIN(x1, x2) + 0.5);
-  ur_x = int(MAX(x1, x2) + 0.5);
-  ll_y = int(MIN(y1, y2) + 0.5);
-  ur_y = int(MAX(y1, y2) + 0.5);
-  m_x = int((x1 + x2) / 2 + 0.5);
-  m_y = int((y1 + y2) / 2 + 0.5);
+  p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+  p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+  p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+  p2.y = p2.y * w->zoom_factor_y - w->offset_y;
+
+  int ll_x = int(MIN(p1.x, p2.x) + 0.5);
+  int ur_x = int(MAX(p1.x, p2.x) + 0.5);
+  int ll_y = int(MIN(p1.y, p2.y) + 0.5);
+  int ur_y = int(MAX(p1.y, p2.y) + 0.5);
+  int m_x = int((p1.x + p2.x) / 2 + 0.5);
+  int m_y = int((p1.y + p2.y) / 2 + 0.5);
 
   drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
       highlight, (GrowNode*)colornode, 0);
@@ -1203,24 +1200,22 @@ void GrowConGlue::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
 
 void GrowConGlue::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 {
-  double x1, y1, x2, y2;
-  int ll_x, ll_y, ur_x, ur_y;
-
-  if (!t) {
-    x1 = x_left * w->zoom_factor_x - w->offset_x;
-    y1 = y_low * w->zoom_factor_y - w->offset_y;
-    x2 = x_right * w->zoom_factor_x - w->offset_x;
-    y2 = y_high * w->zoom_factor_y - w->offset_y;
-  } else {
-    x1 = t->x(x_left, y_low) * w->zoom_factor_x - w->offset_x;
-    y1 = t->y(x_left, y_low) * w->zoom_factor_y - w->offset_y;
-    x2 = t->x(x_right, y_high) * w->zoom_factor_x - w->offset_x;
-    y2 = t->y(x_right, y_high) * w->zoom_factor_y - w->offset_y;
+  glow_sPoint p1 = {x_left, y_low};
+  glow_sPoint p2 = {x_right, y_high};
+  if (t) {
+    p1 = *t * p1;
+    p2 = *t * p2;
   }
-  ll_x = int(MIN(x1, x2) + 0.5);
-  ur_x = int(MAX(x1, x2) + 0.5);
-  ll_y = int(MIN(y1, y2) + 0.5);
-  ur_y = int(MAX(y1, y2) + 0.5);
+
+  p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+  p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+  p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+  p2.y = p2.y * w->zoom_factor_y - w->offset_y;
+
+  int ll_x = int(MIN(p1.x, p2.x) + 0.5);
+  int ur_x = int(MAX(p1.x, p2.x) + 0.5);
+  int ll_y = int(MIN(p1.y, p2.y) + 0.5);
+  int ur_y = int(MAX(p1.y, p2.y) + 0.5);
 
   ctx->gdraw->rect(ll_x, ll_y, ur_x - ll_x + 1, ur_y - ll_y + 1,
       glow_eDrawType_LineErase, 1, 0);
@@ -1272,55 +1267,48 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
     glow_eExportPass pass, int* shape_cnt, int node_cnt, int in_nc,
     std::ofstream& fp)
 {
-  double x1, y1, x2, y2;
-  double ll_x, ll_y, ur_x, ur_y, m_x, m_y;
-  glow_eDrawType drawtype, shift_drawtype;
-  int idx_up, idx_down, idx_left, idx_right;
-
   int idx
       = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * line_width - 1);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
 
-  if (!t) {
-    x1 = x_left * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = y_low * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = x_right * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = y_high * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  } else {
-    x1 = t->x(x_left, y_low) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = t->y(x_left, y_low) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = t->x(x_right, y_high) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = t->y(x_right, y_high) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  glow_sPoint p1 = {x_left, y_low};
+  glow_sPoint p2 = {x_right, y_high};
+  if (t) {
+    p1 = *t * p1;
+    p2 = *t * p2;
   }
-  ll_x = int(MIN(x1, x2) + 0.5);
-  ur_x = int(MAX(x1, x2) + 0.5);
-  ll_y = int(MIN(y1, y2) + 0.5);
-  ur_y = int(MAX(y1, y2) + 0.5);
 
-  m_x = int((x1 + x2) / 2 + 0.5);
-  m_y = int((y1 + y2) / 2 + 0.5);
+  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
 
-  drawtype = ctx->get_drawtype(
+  int ll_x = int(MIN(p1.x, p2.x) + 0.5);
+  int ur_x = int(MAX(p1.x, p2.x) + 0.5);
+  int ll_y = int(MIN(p1.y, p2.y) + 0.5);
+  int ur_y = int(MAX(p1.y, p2.y) + 0.5);
+  int m_x = int((p1.x + p2.x) / 2 + 0.5);
+  int m_y = int((p1.y + p2.y) / 2 + 0.5);
+
+  glow_eDrawType drawtype = ctx->get_drawtype(
       draw_type, glow_eDrawType_LineHighlight, highlight, 0, 0);
 
-  int lw_up, lw_down, lw_left, lw_right;
+  int lw_down = line_width_down;
+  int lw_right = line_width_right;
+  int lw_up = line_width_up;
+  int lw_left = line_width_left;
 
-  lw_down = line_width_down;
-  lw_right = line_width_right;
-  lw_up = line_width_up;
-  lw_left = line_width_left;
-
-  idx_up = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * lw_up - 1);
-  idx_up += hot;
-  idx_down
-      = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * lw_down - 1);
-  idx_down += hot;
-  idx_left
-      = int(ctx->mw->zoom_factor_x / ctx->mw->base_zoom_factor * lw_left - 1);
-  idx_left += hot;
-  idx_right
-      = int(ctx->mw->zoom_factor_x / ctx->mw->base_zoom_factor * lw_right - 1);
-  idx_right += hot;
+  int idx_up =
+      int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * lw_up - 1) + hot;
+  int idx_down =
+      int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * lw_down - 1) +
+      hot;
+  int idx_left =
+      int(ctx->mw->zoom_factor_x / ctx->mw->base_zoom_factor * lw_left - 1) +
+      hot;
+  int idx_right =
+      int(ctx->mw->zoom_factor_x / ctx->mw->base_zoom_factor * lw_right - 1) +
+      hot;
 
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
@@ -1344,7 +1332,7 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
         m_y++;
       }
 
-      shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
+      glow_eDrawType shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
       ctx->export_jbean->line(m_x + idx_up / 2, m_y, m_x + idx_up / 2, ur_y,
           shift_drawtype, 0, pass, shape_cnt, node_cnt, fp);
       (*shape_cnt)++;
@@ -1385,7 +1373,7 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
         m_y--;
       }
 
-      shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
+      glow_eDrawType shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
       ctx->export_jbean->line(m_x + idx_down / 2, ll_y, m_x + idx_down / 2, m_y,
           shift_drawtype, 0, pass, shape_cnt, node_cnt, fp);
       (*shape_cnt)++;
@@ -1428,7 +1416,7 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
         m_x++;
       }
 
-      shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
+      glow_eDrawType shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
       ctx->export_jbean->line(m_x, m_y + idx_right / 2, ur_x,
           m_y + idx_right / 2, shift_drawtype, 0, pass, shape_cnt, node_cnt,
           fp);
@@ -1473,7 +1461,7 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
         m_x--;
       }
 
-      shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
+      glow_eDrawType shift_drawtype = ctx->shift_drawtype(draw_type, 2, 0); // Dark
       ctx->export_jbean->line(ll_x, m_y + idx_left / 2, m_x, m_y + idx_left / 2,
           shift_drawtype, 0, pass, shape_cnt, node_cnt, fp);
       (*shape_cnt)++;
@@ -1518,7 +1506,7 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
         idx_up -= 2;
         idx_down -= 2;
       }
-      shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
+      glow_eDrawType shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
       ctx->export_jbean->line(m_x - idx_down + idx_down / 2, ll_y,
           m_x - idx_down + idx_down / 2, m_y, shift_drawtype, 0, pass,
           shape_cnt, node_cnt, fp);
@@ -1577,7 +1565,7 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
         idx_left -= 2;
         idx_right -= 2;
       }
-      shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
+      glow_eDrawType shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
       ctx->export_jbean->line(ll_x, m_y - idx_left + idx_left / 2, m_x,
           m_y - idx_left + idx_left / 2, shift_drawtype, 0, pass, shape_cnt,
           node_cnt, fp);
@@ -1641,7 +1629,7 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
         idx_left -= 2;
         idx_up -= 2;
       }
-      shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
+      glow_eDrawType shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
       ctx->export_jbean->line(ll_x, m_y - idx_left + idx_left / 2,
           m_x + idx_up / 2, m_y - idx_left + idx_left / 2, shift_drawtype, 0,
           pass, shape_cnt, node_cnt, fp);
@@ -1698,7 +1686,7 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
         idx_right -= 2;
         idx_up -= 2;
       }
-      shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
+      glow_eDrawType shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
       ctx->export_jbean->line(m_x - idx_up + idx_up / 2,
           m_y - idx_right + idx_right / 2, ur_x,
           m_y - idx_right + idx_right / 2, shift_drawtype, 0, pass, shape_cnt,
@@ -1756,7 +1744,7 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
         idx_right -= 2;
         idx_down -= 2;
       }
-      shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
+      glow_eDrawType shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
       ctx->export_jbean->line(m_x + idx_down / 2,
           m_y - idx_right + idx_right / 2, ur_x,
           m_y - idx_right + idx_right / 2, shift_drawtype, 0, pass, shape_cnt,
@@ -1813,7 +1801,7 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
         idx_left -= 2;
         idx_down -= 2;
       }
-      shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
+      glow_eDrawType shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
       ctx->export_jbean->line(ll_x, m_y - idx_left + idx_left / 2,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           shift_drawtype, 0, pass, shape_cnt, node_cnt, fp);
@@ -1871,7 +1859,7 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
         idx_right -= 2;
         idx_down -= 2;
       }
-      shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
+      glow_eDrawType shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
       ctx->export_jbean->line(ll_x, m_y - idx_left + idx_left / 2,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           shift_drawtype, 0, pass, shape_cnt, node_cnt, fp);
@@ -1991,7 +1979,7 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
         idx_right -= 2;
         idx_up -= 2;
       }
-      shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
+      glow_eDrawType shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
       ctx->export_jbean->line(m_x - idx_up + idx_up / 2, m_y + idx_left / 2,
           m_x - idx_up + idx_up / 2, ur_y, shift_drawtype, 0, pass, shape_cnt,
           node_cnt, fp);
@@ -2124,7 +2112,7 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
         idx_down -= 2;
         idx_up -= 2;
       }
-      shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
+      glow_eDrawType shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
       ctx->export_jbean->line(ll_x, m_y - idx_left + idx_left / 2,
           m_x - idx_down + idx_down / 2, m_y - idx_left + idx_left / 2,
           shift_drawtype, 0, pass, shape_cnt, node_cnt, fp);
@@ -2249,7 +2237,7 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
         idx_down -= 2;
         idx_up -= 2;
       }
-      shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
+      glow_eDrawType shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
       ctx->export_jbean->line(m_x + idx_down / 2,
           m_y - idx_right + idx_right / 2, ur_x,
           m_y - idx_right + idx_right / 2, shift_drawtype, 0, pass, shape_cnt,
@@ -2381,7 +2369,7 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
         idx_down -= 2;
         idx_up -= 2;
       }
-      shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
+      glow_eDrawType shift_drawtype = ctx->shift_drawtype(draw_type, -2, 0); // Light
       ctx->export_jbean->line(m_x + idx_down / 2,
           m_y - idx_right + idx_right / 2, ur_x,
           m_y - idx_right + idx_right / 2, shift_drawtype, 0, pass, shape_cnt,
@@ -2482,7 +2470,7 @@ void GrowConGlue::set_transform(GlowTransform* t)
 
 glow_eDirection GrowConGlue::conpoint_to_direction(int point)
 {
-  double rotation = (trf.rot() / 360 - floor(trf.rot() / 360)) * 360;
+  double rotation = (trf.rotation / 360 - floor(trf.rotation / 360)) * 360;
 
   if (rotation < 45 || rotation > 315) {
     switch (point) {

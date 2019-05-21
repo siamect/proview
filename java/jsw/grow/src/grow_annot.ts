@@ -49,7 +49,7 @@ class GrowAnnot extends GlowAnnot {
       return;
     }
 
-    let trf_scale = Matrix.multiply(this.trf, t).vertical_scale();
+    let trf_scale = Matrix.multiply(t, this.trf).vertical_scale();
     let idx = Math.floor(trf_scale * this.ctx.mw.zoom_factor_y /
         this.ctx.mw.base_zoom_factor * (this.text_size + 4) - 3);
     let tsize = trf_scale * this.ctx.mw.zoom_factor_y /
@@ -75,7 +75,7 @@ class GrowAnnot extends GlowAnnot {
       ldraw_type = this.draw_type;
     }
 
-    let tmp = Matrix.multiply(this.trf, t);
+    let tmp = Matrix.multiply(t, this.trf);
     let p = tmp.apply(this.p);
 
     let x1 = Math.floor((p.x + offset_x) * this.ctx.mw.zoom_factor_x) -
@@ -161,7 +161,7 @@ class GrowAnnot extends GlowAnnot {
       return new Point();
     }
 
-    let trf_scale = Matrix.multiply(this.trf, t).vertical_scale();
+    let trf_scale = Matrix.multiply(t, this.trf).vertical_scale();
     let idx = Math.floor(trf_scale * this.ctx.mw.zoom_factor_y /
         this.ctx.mw.base_zoom_factor * (this.text_size + 4) - 4);
     let tsize = trf_scale * this.ctx.mw.zoom_factor_y /

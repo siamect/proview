@@ -74,7 +74,7 @@ class GrowSubAnnot extends GlowAnnot {
   draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
     let p = new Point();
     if (t) {
-      p = Matrix.multiply(this.trf, t).apply(this.p);
+      p = Matrix.multiply(t, this.trf).apply(this.p);
       let p2 = this.trf.apply(this.p);
       p.x -= p2.x;
       p.y -= p2.y;
