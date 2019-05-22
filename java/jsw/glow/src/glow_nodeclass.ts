@@ -36,10 +36,6 @@ class GlowNodeClass {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.ctx.debug) {
-        console.log("GlowNodeClass : " + lines[i]);
-      }
-
       switch (key) {
         case GlowSave.NodeClass:
           break;
@@ -179,6 +175,7 @@ class GlowNodeClass {
         this.next_nc.prev_nc = this;
       }
     }
+
     return i;
   }
 
@@ -192,10 +189,8 @@ class GlowNodeClass {
     return 0;
   }
 
-  tdraw(t, highlight, hot, node, colornode) {
-    for (let i = 0; i < this.a.size(); i++) {
-      this.a.get(i).tdraw(t, highlight, hot, node, colornode);
-    }
+  draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
+    this.a.forEach(e => e.draw(t, highlight, hot, node, colornode));
   }
 
   get_borders(t, g) {
@@ -208,41 +203,18 @@ class GlowNodeClass {
             Math.abs(base.y0 - base.y1) < Number.MIN_VALUE)) {
       // Borders are given i x0, y0, x1, y1
       // Will not work in rotated nodes
-      let ll_x, ur_x, ll_y, ur_y, kx1, kx2, ky1, ky2;
+      let k1 = new Point(base.x0, base.y0);
+      let k2 = new Point(base.x1, base.y1);
 
-      if (t === null) {
-        kx1 = base.x0;
-        kx2 = base.x1;
-        ky1 = base.y0;
-        ky2 = base.y1;
-      } else {
-        kx1 = t.x(base.x0, base.y0);
-        kx2 = t.x(base.x1, base.y1);
-        ky1 = t.y(base.x0, base.y0);
-        ky2 = t.y(base.x1, base.y1);
+      if (t !== null) {
+        k1 = t.apply(k1);
+        k2 = t.apply(k2);
       }
 
-      ll_x = Math.min(kx1, kx2);
-      ur_x = Math.max(kx1, kx2);
-      ll_y = Math.min(ky1, ky2);
-      ur_y = Math.max(ky1, ky2);
-
-      if (ll_x < g.ll_x) {
-        g.ll_x = ll_x;
-      }
-      if (ur_x > g.ur_x) {
-        g.ur_x = ur_x;
-      }
-      if (ll_y < g.ll_y) {
-        g.ll_y = ll_y;
-      }
-      if (ur_y > g.ur_y) {
-        g.ur_y = ur_y;
-      }
+      g.set(Rect.union(g, new Rect(Math.min(k1.x, k2.x), Math.min(k1.y, k2.y),
+          Math.max(k1.x, k2.x), Math.max(k1.y, k2.y))));
     } else {
-      for (let i = 0; i < this.a.size(); i++) {
-        this.a.get(i).get_borders(t, g);
-      }
+      this.a.forEach(e => e.get_borders(t, g));
     }
   }
 
@@ -257,10 +229,10 @@ class GlowNodeClass {
     for (let i = 0; i < this.a.size(); i++) {
       if (this.a.get(i) instanceof GrowAnnot &&
           this.a.get(i).getNumber() === num) {
-        let d = this.a.get(i).getTextExtent(t, node);
-        d.width /= this.ctx.mw.zoom_factor_x;
-        d.height /= this.ctx.mw.zoom_factor_y;
-        return d;
+        let p = this.a.get(i).getTextExtent(t, node);
+        p.x /= this.ctx.mw.zoom_factor_x;
+        p.y /= this.ctx.mw.zoom_factor_y;
+        return p;
       }
     }
     return null;

@@ -12966,9 +12966,15 @@ int gcg_comp_m58(gcg_ctx gcgctx, vldh_t_node node)
       return sts;
     free((char*)windbuffer);
 
-    /* Save the session, otherwise no compilation is done */
-    // sts = ldh_SaveSession( ldhses);
-    // if ( EVEN(sts)) return sts;
+    // Set window modification time, this is reset by the post copy method
+    sts = ldh_SetObjectPar(ldhses, window_objid, "DevBody", "Modified",
+			   (char*)template_time, sizeof(template_time));
+    if (EVEN(sts))
+      return sts;
+
+    /* Save the session */
+    sts = ldh_SaveSession( ldhses);
+    if ( EVEN(sts)) return sts;
 
     gcg_pending_compile_add(gcgctx, window_objid);
 

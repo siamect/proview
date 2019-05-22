@@ -1653,20 +1653,93 @@ enum EventType {
 }
 
 enum Event {
+  Null,
   MB1Click,
-  MB1Up = 2,
-  MB1Down,
   MB1DoubleClick,
-  CursorMotion,
-  ButtonMotion,
-  ValueChanged,
-  MenuCreate,
-  MenuActivated,
-  MenuDelete,
-  SliderMoveStart,
-  SliderMoved,
-  SliderMoveEnd,
+  MB1Press,
+  MB2Click,
+  MB2DoubleClick,
+  MB2Press,
+  MB1ClickShift,
+  MB1DoubleClickShift,
+  MB1PressShift,
+  MB2ClickShift,
+  MB2DoubleClickShift,
+  MB2PressShift,
+  MB1ClickCtrl,
+  MB1DoubleClickCtrl,
+  MB1PressCtrl,
+  MB2ClickCtrl,
+  MB2DoubleClickCtrl,
+  MB2PressCtrl,
+  MB1ClickShiftCtrl,
+  MB1DoubleClickShiftCtrl,
+  MB1PressShiftCtrl,
+  MB2ClickShiftCtrl,
+  MB2DoubleClickShiftCtrl,
+  MB2PressShiftCtrl,
+  MB3Click,
   MB3Press,
+  ButtonRelease,
+  ButtonMotion,
+  Exposure,
+  Enter,
+  Leave,
+  CursorMotion,
+  Init,
+  PasteSequenceStart,
+  PasteSequenceEnd,
+  VisibilityUnobscured,
+  VisibilityObscured,
+  SelectClear,
+  ObjectMoved,
+  ObjectDeleted,
+  AnnotationInput,
+  Radiobutton,
+  Key_Return,
+  Key_Up,
+  Key_Down,
+  Key_Right,
+  Key_Left,
+  Key_PageUp,
+  Key_PageDown,
+  Key_BackSpace,
+  Key_PF1,
+  Key_PF2,
+  Key_PF3,
+  Key_PF4,
+  CreateGrowObject,
+  GrowDynamics,
+  SliderMoveStart,
+  SliderMoveEnd,
+  SliderMoved,
+  HotRequest,
+  MB1Down,
+  MB1Up,
+  MB2Down,
+  MB2Up,
+  MB3Down,
+  MB3Up,
+  Key_Tab,
+  Map,
+  Unmap,
+  Resized,
+  Translate,
+  TipText,
+  Key_Ascii,
+  InputFocusLost,
+  InputFocusGained,
+  InputFocusInit,
+  Key_CtrlAscii,
+  Key_ShiftTab,
+  Key_Escape,
+  MenuActivated,
+  MenuCreate,
+  MenuDelete,
+  ScrollUp,
+  ScrollDown,
+  AnteUndo,
+  PostUndo,
   Signal
 }
 
@@ -1699,11 +1772,6 @@ class GlowEventToolbar extends GlowEvent {
   idx = 0;
 }
 
-class GlowPointX {
-  x;
-  y;
-}
-
 class GlowSliderInfo {
   direction;
   max_value;
@@ -1719,7 +1787,7 @@ class MenuInfoItem {
 }
 
 class GlowMenuInfo {
-  item = Array(32);
+  item = Array<MenuInfoItem>(32);
 
   constructor() {
     for (let i = 0; i < 32; i++) {

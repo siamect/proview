@@ -250,8 +250,7 @@ void GlowArray::copy_from(const GlowArray& array)
       n->highlight = 0;
       n->hot = 0;
       // Fix, This should be done in the copy constructor !!!
-      sprintf(
-          n->n_name, "O%d", ((GrowCtx*)(n->ctx))->get_next_objectname_num());
+      sprintf(n->n_name, "O%d", n->ctx->get_next_objectname_num());
       insert(n);
       break;
     }
@@ -833,7 +832,7 @@ void GlowArray::open(GrowCtx* ctx, std::ifstream& fp)
       break;
     }
     case glow_eSave_Arc: {
-      GlowArc* n = new GlowArc((GrowCtx*)ctx);
+      GlowArc* n = new GlowArc(ctx);
       n->open(fp);
       insert(n);
       break;
@@ -982,7 +981,7 @@ void GlowArray::open(GrowCtx* ctx, std::ifstream& fp)
       break;
     }
     case glow_eSave_GrowArc: {
-      GrowArc* a = new GrowArc((GrowCtx*)ctx, "");
+      GrowArc* a = new GrowArc(ctx, "");
       a->open(fp);
       insert(a);
       break;

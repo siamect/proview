@@ -9,7 +9,7 @@ class GlowText {
 
   constructor(ctx) {
     this.ctx = ctx;
-    this.p = new GlowPoint(ctx);
+    this.p = new GlowPoint();
   }
 
   open(lines, row) {
@@ -17,10 +17,6 @@ class GlowText {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GlowCon : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.Text:
@@ -47,12 +43,14 @@ class GlowText {
           break;
       }
     }
+
     return i;
   }
 
-  draw(hightlight, hot) {
-  }
-
-  draw_shadow(border, shadow, hightlight, hot) {
+  draw(pos, hightlight = 0, hot = 0, node = null) {
+    let idx = clamp(this.text_size, 0, DRAW_TYPE_SIZE - 1);
+    this.ctx.gdraw.text(this.p.x + pos.x, this.p.y + pos.y, this.text,
+        this.draw_type, this.color_drawtype, idx, hightlight, Font.Helvetica,
+        (8 + 2 * this.text_size));
   }
 }

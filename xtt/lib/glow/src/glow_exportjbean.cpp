@@ -242,7 +242,6 @@ void GlowExportJBean::nodeclass(GlowNodeClass* nc, glow_eExportPass pass,
     std::ofstream& fp, int page, int pages)
 {
   double dim_x0, dim_x1, dim_y0, dim_y1;
-  int i;
 
   switch (pass) {
   case glow_eExportPass_Declare:
@@ -300,7 +299,7 @@ void GlowExportJBean::nodeclass(GlowNodeClass* nc, glow_eExportPass pass,
           "  public void paintComponent(Graphics g1) {\n";
       if (pages > page) {
         fp << "    switch ( page) {\n";
-        for (i = 2; i <= pages; i++) {
+        for (int i = 2; i <= pages; i++) {
           fp << "      case " << i << " :\n"
              << "        paintComponent_p" << i << "(g1);\n"
              << "        return;\n";
@@ -456,7 +455,6 @@ void GlowExportJBean::polyline(glow_sPoint* points, int point_cnt, int fill,
     int sp_num, int fixcolor, glow_eGradient gradient, int gc1, int gc2,
     glow_eExportPass pass, int* shape_cnt, int node_cnt, std::ofstream& fp)
 {
-  int i;
   double dim_x0, dim_x1, dim_y0, dim_y1;
   double x, y;
   double x0, y0, x1, y1, width, height;
@@ -475,14 +473,14 @@ void GlowExportJBean::polyline(glow_sPoint* points, int point_cnt, int fill,
         || (feq(points[0].x, points[point_cnt - 1].x)
                && feq(points[0].y, points[point_cnt - 1].y))) {
       fp << "    new Polygon( new int[] { ";
-      for (i = 0; i < point_cnt; i++) {
+      for (int i = 0; i < point_cnt; i++) {
         x = points[i].x - dim_x0 + glow_cJBean_Offset;
         fp << int(x + 0.5);
         if (i != point_cnt - 1)
           fp << ", ";
       }
       fp << "}, new int[] {";
-      for (i = 0; i < point_cnt; i++) {
+      for (int i = 0; i < point_cnt; i++) {
         y = points[i].y - dim_y0 + glow_cJBean_Offset;
         fp << int(y + 0.5);
         if (i != point_cnt - 1)
@@ -492,24 +490,24 @@ void GlowExportJBean::polyline(glow_sPoint* points, int point_cnt, int fill,
     } else {
       // Java polygon i always closed, go back int your own footprints
       fp << "    new Polygon( new int[] { ";
-      for (i = 0; i < point_cnt; i++) {
+      for (int i = 0; i < point_cnt; i++) {
         x = points[i].x - dim_x0 + glow_cJBean_Offset;
         fp << int(x + 0.5);
         fp << ", ";
       }
-      for (i = point_cnt - 2; i >= 1; i--) {
+      for (int i = point_cnt - 2; i >= 1; i--) {
         x = points[i].x - dim_x0 + glow_cJBean_Offset;
         fp << int(x + 0.5);
         if (i != 1)
           fp << ", ";
       }
       fp << "}, new int[] {";
-      for (i = 0; i < point_cnt; i++) {
+      for (int i = 0; i < point_cnt; i++) {
         y = points[i].y - dim_y0 + glow_cJBean_Offset;
         fp << int(y + 0.5);
         fp << ", ";
       }
-      for (i = point_cnt - 2; i >= 1; i--) {
+      for (int i = point_cnt - 2; i >= 1; i--) {
         y = points[i].y - dim_y0 + glow_cJBean_Offset;
         fp << int(y + 0.5);
         if (i != 1)
@@ -518,7 +516,7 @@ void GlowExportJBean::polyline(glow_sPoint* points, int point_cnt, int fill,
       fp << "}, " << 2 * point_cnt - 2 << "),\n";
     }
     if (print_shadow) {
-      for (i = 0; i < sp_num; i++) {
+      for (int i = 0; i < sp_num; i++) {
         fp << "    new Polygon( new int[] { ";
         fp << int(points[i].x - dim_x0 + glow_cJBean_Offset + 0.5) << ", "
            << int(sp[i].x - dim_x0 + glow_cJBean_Offset + 0.5) << ", "
@@ -549,7 +547,7 @@ void GlowExportJBean::polyline(glow_sPoint* points, int point_cnt, int fill,
     // Get position, width and height
     x0 = y0 = 1e37;
     x1 = y1 = -1e37;
-    for (i = 0; i < point_cnt; i++) {
+    for (int i = 0; i < point_cnt; i++) {
       if (points[i].y < y0)
         y0 = points[i].y;
       if (points[i].x < x0)
@@ -790,7 +788,7 @@ void GlowExportJBean::polyline(glow_sPoint* points, int point_cnt, int fill,
           }
           if (!shadow)
             fp << "    if ( shadow != 0) {\n";
-          for (i = 0; i < sp_num - 1; i++) {
+          for (int i = 0; i < sp_num - 1; i++) {
             fp << "    g.setColor(GeColor.shiftColor( fcolor, "
                << (int)sp[i].drawtype << ", colorInverse));\n";
             if (page <= 1)
@@ -899,7 +897,7 @@ void GlowExportJBean::polyline(glow_sPoint* points, int point_cnt, int fill,
                << '\n';
           if (!shadow)
             fp << "    if ( shadow != 0) {\n";
-          for (i = 0; i < sp_num - 1; i++) {
+          for (int i = 0; i < sp_num - 1; i++) {
             fp << "    g.setColor(GeColor.shiftColor( fcolor, "
                << (int)sp[i].drawtype << ", colorInverse));\n";
             if (page <= 1)
@@ -1002,7 +1000,7 @@ void GlowExportJBean::polyline(glow_sPoint* points, int point_cnt, int fill,
             fp << "    g.setColor(GeColor.getColor( fcolor));\n"
                << "    g.fill( shapes[" << *shape_cnt << "]);\n";
           }
-          for (i = 0; i < sp_num - 1; i++) {
+          for (int i = 0; i < sp_num - 1; i++) {
             fp << "    g.setColor(GeColor.shiftColor( fcolor, "
                << (int)sp[i].drawtype << ", colorInverse));\n"
                << "    g.fill( shapes[" << *shape_cnt + 1 + i << "]);\n";
@@ -1034,7 +1032,7 @@ void GlowExportJBean::polyline(glow_sPoint* points, int point_cnt, int fill,
                << "	 colorShift, colorIntensity, colorBrightness, "
                   "colorInverse, fillColor, dimmed);"
                << '\n';
-          for (i = 0; i < sp_num - 1; i++) {
+          for (int i = 0; i < sp_num - 1; i++) {
             fp << "    g.setColor(GeColor.shiftColor( fcolor, "
                << (int)sp[i].drawtype << ", colorInverse));\n"
                << "    g.fill( shapes[" << *shape_cnt + 1 + i << "]);\n";

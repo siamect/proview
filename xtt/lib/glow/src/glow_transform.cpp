@@ -40,102 +40,82 @@
 
 #include "glow_transform.h"
 
-double GlowTransform::x(double x1, double y1)
-{
-  return x1 * a11 + y1 * a12 + a13;
+Matrix& Matrix::set(const Matrix& m) {
+  a11 = m.a11;
+  a12 = m.a12;
+  a13 = m.a13;
+  a21 = m.a21;
+  a22 = m.a22;
+  a23 = m.a23;
+  rotation = m.rotation;
+  return *this;
 }
 
-double GlowTransform::y(double x1, double y1)
-{
-  return x1 * a21 + y1 * a22 + a23;
+double Matrix::vertical_scale() {
+  return sqrt(a12 * a12 + a22 * a22);
 }
 
-GlowTransform GlowTransform::operator*(const GlowTransform p)
+Matrix operator*(const Matrix &a, const Matrix &b)
 {
-  static GlowTransform tmp;
-  tmp.a11 = a11 * p.a11 + a12 * p.a21;
-  tmp.a12 = a11 * p.a12 + a12 * p.a22;
-  tmp.a13 = a11 * p.a13 + a12 * p.a23 + a13;
-  tmp.a21 = a21 * p.a11 + a22 * p.a21;
-  tmp.a22 = a21 * p.a12 + a22 * p.a22;
-  tmp.a23 = a21 * p.a13 + a22 * p.a23 + a23;
-  tmp.rotation = rotation + p.rotation;
+  Matrix tmp;
+  tmp.a11 = a.a11 * b.a11 + a.a12 * b.a21;
+  tmp.a12 = a.a11 * b.a12 + a.a12 * b.a22;
+  tmp.a13 = a.a11 * b.a13 + a.a12 * b.a23 + a.a13;
+  tmp.a21 = a.a21 * b.a11 + a.a22 * b.a21;
+  tmp.a22 = a.a21 * b.a12 + a.a22 * b.a22;
+  tmp.a23 = a.a21 * b.a13 + a.a22 * b.a23 + a.a23;
+  tmp.rotation = a.rotation + b.rotation;
   return tmp;
 }
 
-void GlowTransform::set_from_stored(GlowTransform* t)
+glow_sPoint operator*(const Matrix &m, const glow_sPoint &p)
 {
-  a11 = t->a11 * s_a11 + t->a12 * s_a21;
-  a12 = t->a11 * s_a12 + t->a12 * s_a22;
-  a13 = t->a11 * s_a13 + t->a12 * s_a23 + t->a13;
-  a21 = t->a21 * s_a11 + t->a22 * s_a21;
-  a22 = t->a21 * s_a12 + t->a22 * s_a22;
-  a23 = t->a21 * s_a13 + t->a22 * s_a23 + t->a23;
-  rotation = s_rotation + t->rotation;
+  return {
+      p.x * m.a11 + p.y * m.a12 + m.a13,
+      p.x * m.a21 + p.y * m.a22 + m.a23
+  };
 }
 
 void GlowTransform::scale(double sx, double sy, double x0, double y0)
 {
-  a13 = a13 * sx + x0 * (1 - sx);
-  a23 = a23 * sy + y0 * (1 - sy);
-  a11 *= sx;
-  a12 *= sx;
-  a21 *= sy;
-  a22 *= sy;
-}
+  Matrix s;
+  s.a11 = sx;
+  s.a22 = sy;
+  set(s * *this);
 
-void GlowTransform::scale_from_stored(
-    double sx, double sy, double x0, double y0)
-{
-  a13 = s_a13 * sx + x0 * (1 - sx);
-  a23 = s_a23 * sy + y0 * (1 - sy);
-  a11 = s_a11 * sx;
-  a12 = s_a12 * sx;
-  a21 = s_a21 * sy;
-  a22 = s_a22 * sy;
+  // In order to scale at a point (x0, y0), we need to
+  // 1. Translate the object (-x0, -y0) such that origo is located at (x0, y0)
+  // 2. Apply the scaling
+  // 3. Translate it back (x0, y0)
+  // The lines below is the result of multiplying the matrices inv(t) * s * t
+  a13 += x0 * (1 - sx);
+  a23 += y0 * (1 - sy);
 }
 
 void GlowTransform::rotate(double angle, double x0, double y0)
 {
-  double sin_a;
-  double cos_a;
-  GlowTransform tmp(*this);
-  if (-90.01 < angle && angle < -89.99) {
-    sin_a = -1.0;
-    cos_a = 0.0;
-  } else {
+  double sin_a = -1;
+  double cos_a = 0;
+  if (!(-90.01 < angle && angle < -89.99)) {
     sin_a = sin(angle / 180 * 3.14159);
     cos_a = cos(angle / 180 * 3.14159);
   }
 
-  a11 = tmp.a11 * cos_a - tmp.a21 * sin_a;
-  a12 = tmp.a12 * cos_a - tmp.a22 * sin_a;
-  a13 = tmp.a13 * cos_a - tmp.a23 * sin_a + x0 * (1 - cos_a) + y0 * sin_a;
-  a21 = tmp.a11 * sin_a + tmp.a21 * cos_a;
-  a22 = tmp.a21 * sin_a + tmp.a22 * cos_a;
-  a23 = tmp.a13 * sin_a + tmp.a23 * cos_a + y0 * (1 - cos_a) - x0 * sin_a;
-  rotation += angle;
-}
+  Matrix r;
+  r.a11 = cos_a;
+  r.a12 = -sin_a;
+  r.a21 = sin_a;
+  r.a22 = cos_a;
+  r.rotation = angle;
+  set(r * *this);
 
-void GlowTransform::rotate_from_stored(double angle, double x0, double y0)
-{
-  double sin_a;
-  double cos_a;
-  if (-90.01 < s_rotation + angle && s_rotation + angle < -89.99) {
-    sin_a = -1.0;
-    cos_a = 0.0;
-  } else {
-    sin_a = sin((s_rotation + angle) / 180 * 3.14159);
-    cos_a = cos((s_rotation + angle) / 180 * 3.14159);
-  }
-
-  a11 = s_a11 * cos_a - s_a21 * sin_a;
-  a12 = s_a12 * cos_a - s_a22 * sin_a;
-  a13 = s_a13 * cos_a - s_a23 * sin_a + x0 * (1 - cos_a) + y0 * sin_a;
-  a21 = s_a11 * sin_a + s_a21 * cos_a;
-  a22 = s_a21 * sin_a + s_a22 * cos_a;
-  a23 = s_a13 * sin_a + s_a23 * cos_a + y0 * (1 - cos_a) - x0 * sin_a;
-  rotation = s_rotation + angle;
+  // In order to rotate around a point (x0, y0), we need to
+  // 1. Translate the object (-x0, -y0) such that origo is located at (x0, y0)
+  // 2. Apply the rotation
+  // 3. Translate it back (x0, y0)
+  // The lines below is the result of multiplying the matrices inv(t) * r * t
+  a13 += x0 * (1 - cos_a) + y0 * sin_a;
+  a23 += y0 * (1 - cos_a) - x0 * sin_a;
 }
 
 void GlowTransform::move(double x0, double y0)
@@ -146,8 +126,8 @@ void GlowTransform::move(double x0, double y0)
 
 void GlowTransform::move_from_stored(double x0, double y0)
 {
-  a13 = s_a13 + x0;
-  a23 = s_a23 + y0;
+  a13 = s.a13 + x0;
+  a23 = s.a23 + y0;
 }
 
 void GlowTransform::posit(double x0, double y0)
@@ -156,45 +136,19 @@ void GlowTransform::posit(double x0, double y0)
   a23 = y0;
 }
 
-double GlowTransform::x(GlowTransform* t, double x1, double y1)
-{
-  GlowTransform tmp = *t * *this;
-
-  return tmp.x(x1, y1);
-}
-
-double GlowTransform::y(GlowTransform* t, double x1, double y1)
-{
-  GlowTransform tmp = *t * *this;
-
-  return tmp.y(x1, y1);
-}
-
-bool GlowTransform::reverse(double x, double y, double* rx, double* ry)
+glow_sPoint GlowTransform::reverse(double x, double y)
 {
   if (feq(a11, 0.0) || feq(a12 * a21 - a11 * a22, 0.0)) {
     if (feq(a11, 0.0) && feq(a22, 0.0) && !feq(a12, 0.0) && !feq(a21, 0.0)) {
-      *ry = (x - a13) / a12;
-      *rx = (y - a23) / a21;
-      return true;
+      return {(x - a13) / a12, (y - a23) / a21};
     } else {
-      *ry = *rx = 0;
-      return false;
+      return {0, 0};
     }
   }
-  *ry = (a11 * (a23 - y) - a21 * (a13 - x)) / (a12 * a21 - a11 * a22);
-  *rx = (x - a12 * *ry - a13) / a11;
-  return true;
-}
-
-double GlowTransform::vertical_scale(GlowTransform* t)
-{
-  if (!t)
-    return sqrt(a12 * a12 + a22 * a22);
-
-  GlowTransform tmp = *t * *this;
-
-  return sqrt(tmp.a12 * tmp.a12 + tmp.a22 * tmp.a22);
+  glow_sPoint r;
+  r.y = (a11 * (a23 - y) - a21 * (a13 - x)) / (a12 * a21 - a11 * a22);
+  r.x = (x - a12 * r.y - a13) / a11;
+  return r;
 }
 
 void GlowTransform::save(std::ofstream& fp, glow_eSaveMode mode)

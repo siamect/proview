@@ -16,13 +16,10 @@ class GrowMenu extends GrowRect {
   font;			//!< Text font.
   hot;
 
-  constructor(ctx) {
+  constructor(ctx, n_name, menu_info, x, y, min_w, draw_type, line_width, fill,
+              border, fill_drawtype, text_size, text_drawtype, text_color,
+              text_color_disabled, text_font) {
     super(ctx);
-  }
-
-  init(n_name, menu_info, x, y, min_w, draw_type, line_width, fill, border,
-       fill_drawtype, text_size, text_drawtype, text_color, text_color_disabled,
-       text_font) {
     this.ll.x = x;
     this.ll.y = y;
     this.ur.x = x + 10;
@@ -42,68 +39,57 @@ class GrowMenu extends GrowRect {
     this.text_color_disabled = text_color_disabled;
     this.font = text_font;
 
-    this.tdraw(null, 0, 0, null, null);
+    this.draw();
   }
 
-  tdraw(t, highlight, hot, node, colornode) {
+  draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
     if (this.ctx.nodraw !== 0) {
       return;
     }
-    let idx;
-    let text_idx = Math.floor(this.trf.vertical_scale(t) *
-        this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
-        (this.text_size + 4) - 4);
-    let tsize = this.trf.vertical_scale(t) * this.ctx.mw.zoom_factor_y /
-        this.ctx.mw.base_zoom_factor * (8 + 2 * this.text_size);
-    text_idx = Math.min(text_idx, DRAW_TYPE_SIZE - 1);
-    text_idx = Math.max(0, text_idx);
+    let tsize = Matrix.multiply(t, this.trf).vertical_scale() *
+        this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor * (this.text_size + 4);
+    let text_idx = clamp(Math.floor(tsize - 4), 0, DRAW_TYPE_SIZE - 1);
+    tsize *= 2;
 
-    idx = Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
+    let idx = Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
         this.line_width - 1);
-    idx += hot;
-
-    idx = Math.max(0, idx);
-    idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
-    let ll_x, ll_y, ur_x, ur_y;
+    idx = clamp(idx + hot, 0, DRAW_TYPE_SIZE-1);
 
     let z_width, z_descent;
     let z_height = 0;
     let max_z_width = 0;
     let tot_z_height = 0;
-    let i;
     let pulldown_found = 0;
     this.item_cnt = 0;
-    for (i = 0; i < this.info.item.length; i++) {
-      if (this.info.item[i].occupied) {
-        let dim = this.ctx.gdraw.getTextExtent(this.info.item[i].text,
-            Math.max(0, text_idx), this.font, this.text_drawtype);
-        z_width = dim.width;
-        z_height = dim.height;
+    this.info.item.forEach(function (e) {
+      if (e.occupied) {
+        let p = this.ctx.gdraw.getTextExtent(e.text, this.text_drawtype,
+            Math.max(0, text_idx), this.font);
+        z_width = p.x;
+        z_height = p.y;
         z_descent = z_height / 4;
-        if (z_width > max_z_width) {
-          max_z_width = z_width;
-        }
+        max_z_width = Math.max(max_z_width, z_width);
         tot_z_height += Math.floor(1.6 * z_height);
-        if (this.info.item[i].type === MenuItem.PulldownMenu) {
+        if (e.type === MenuItem.PulldownMenu) {
           pulldown_found = 1;
         }
         this.item_cnt++;
       }
-    }
+    });
     if (this.item_cnt === 0) {
       return;
     }
 
     let arrow_size = z_height * 4 / 5;
-    ll_x =
+    let ll_x =
         Math.floor(this.ll.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    ll_y =
+    let ll_y =
         Math.floor(this.ll.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    ur_x = ll_x + max_z_width + 15 + Math.floor(pulldown_found * arrow_size);
+    let ur_x = ll_x + max_z_width + 15 + Math.floor(pulldown_found * arrow_size);
     if (ur_x - ll_x < Math.floor(this.min_width * this.ctx.mw.zoom_factor_x)) {
       ur_x = ll_x + Math.floor(this.min_width * this.ctx.mw.zoom_factor_x);
     }
-    ur_y = ll_y + Math.floor(tot_z_height);
+    let ur_y = ll_y + Math.floor(tot_z_height);
 
     if (ur_y > this.ctx.getHeight() + this.ctx.mw.subwindow_y) {
       // Outside window border
@@ -128,100 +114,75 @@ class GrowMenu extends GrowRect {
         Math.floor(this.ll.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
     this.get_node_borders();
 
-    if (this.fill !== 0) {
-      this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-          this.fill_drawtype);
+    if (this.fill) {
+      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+          this.fill_drawtype, true, 0);
     }
     this.item_height = tot_z_height / this.item_cnt;
-    let x_text = ll_x + 3;
-    let y_text;
-    let drawtype;
 
     let item_idx = 0;
-    for (i = 0; i < this.info.item.length; i++) {
-      if (this.info.item[i].occupied) {
-        y_text = ll_y + Math.floor(this.item_height * item_idx + z_height + 1);
+    this.info.item.forEach(function (e, i) {
+      if (e.occupied) {
+        let y_text = ll_y + Math.floor(this.item_height * item_idx + z_height + 1);
         if (i === this.current_item) {
+          let drawtype;
           if (this.fill_drawtype % 10 < 7) {
             drawtype = GlowColor.shift_drawtype(this.fill_drawtype, 2, null);
           } else {
             drawtype = GlowColor.shift_drawtype(this.fill_drawtype, -2, null);
           }
-          this.ctx.gdraw.fill_rect(ll_x,
-              Math.floor(ll_y + item_idx * this.item_height), ur_x - ll_x,
-              Math.floor(this.item_height), drawtype);
+          this.ctx.gdraw.rect(ll_x, Math.floor(ll_y + item_idx * this.item_height), ur_x - ll_x,
+              Math.floor(this.item_height), drawtype, true, 0);
         }
-        if (this.info.item[i].type === MenuItem.ButtonDisabled) {
-          this.ctx.gdraw.text(x_text, y_text, this.info.item[i].text,
-              this.text_drawtype, this.text_color_disabled, text_idx, highlight,
-              0, this.font, tsize, 0);
+        let x_text = ll_x + 3;
+        if (e.type === MenuItem.ButtonDisabled) {
+          this.ctx.gdraw.text(x_text, y_text, e.text, this.text_drawtype,
+              this.text_color_disabled, text_idx, highlight, this.font, tsize, 0);
         } else {
-          this.ctx.gdraw.text(x_text, y_text, this.info.item[i].text,
-              this.text_drawtype, this.text_color, text_idx, highlight, 0,
-              this.font, tsize, 0);
+          this.ctx.gdraw.text(x_text, y_text, e.text, this.text_drawtype,
+              this.text_color, text_idx, highlight, this.font, tsize, 0);
         }
-        if (this.info.item[i].type === MenuItem.PulldownMenu) {
+        if (e.type === MenuItem.PulldownMenu) {
           // Draw arrow
-          let p = new Array(4);
-          for (let j = 0; j < 4; j++) {
-            p[j] = new GlowPointX();
-          }
-          p[0].x = ur_x - arrow_size - 2;
-          p[0].y =
-              Math.floor(ll_y + item_idx * this.item_height + this.item_height /
-                  2 - arrow_size / 2);
-          p[1].x = ur_x - 2;
-          p[1].y =
-              Math.floor(ll_y + item_idx * this.item_height + this.item_height /
-                  2);
-          p[2].x = ur_x - arrow_size - 2;
-          p[2].y =
-              Math.floor(ll_y + item_idx * this.item_height + this.item_height /
-                  2 + arrow_size / 2);
-          p[3].x = ur_x - arrow_size - 2;
-          p[3].y =
-              Math.floor(ll_y + item_idx * this.item_height + this.item_height /
-                  2 - arrow_size / 2);
-
-          this.ctx.gdraw.fill_polyline(p, 4, DrawType.MediumGray, 0);
+          let p = [
+            new Point(ur_x - arrow_size - 2, Math.floor(ll_y + item_idx *
+                this.item_height + this.item_height / 2 - arrow_size / 2)),
+            new Point(ur_x - 2, Math.floor(ll_y + item_idx *
+                this.item_height + this.item_height / 2)),
+            new Point(ur_x - arrow_size - 2, Math.floor(ll_y + item_idx *
+                this.item_height + this.item_height / 2 + arrow_size / 2)),
+            new Point(ur_x - arrow_size - 2, Math.floor(ll_y + item_idx *
+                this.item_height + this.item_height / 2 - arrow_size / 2)),
+          ];
+          this.ctx.gdraw.polyline(p, 4, DrawType.MediumGray, true, 0);
         }
         item_idx++;
       }
-    }
+    });
     if (this.border !== 0) {
       this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, this.draw_type,
-          idx, 0);
+          false, idx);
     }
   }
 
   local_event_handler(event, x, y) {
-    let ll_x, ur_x, ll_y, ur_y;
-
-    ll_x = Math.min(this.ll.x, this.ur.x);
-    ur_x = Math.max(this.ll.x, this.ur.x);
-    ll_y = Math.min(this.ll.y, this.ur.y);
-    ur_y = Math.max(this.ll.y, this.ur.y);
+    let ll_x = Math.min(this.ll.x, this.ur.x);
+    let ur_x = Math.max(this.ll.x, this.ur.x);
+    let ll_y = Math.min(this.ll.y, this.ur.y);
+    let ur_y = Math.max(this.ll.y, this.ur.y);
 
     if (ll_x <= x && x <= ur_x && ll_y <= y && y <= ur_y) {
-      let item;
-      let vscale = this.trf.vertical_scale(null);
+      let vscale = this.trf.vertical_scale();
 
-      item = Math.floor((y - this.ll.y) /
+      let item = Math.floor((y - this.ll.y) /
           (this.item_height / vscale / this.ctx.mw.zoom_factor_y));
-      if (item > this.item_cnt - 1) {
-        item = this.item_cnt - 1;
-      }
-      if (item < 0) {
-        item = 0;
-      }
-      if (item === this.current_idx) {
-        this.new_item = 0;
-        this.old_item = this.current_item;
-      } else {
-        this.new_item = 1;
-        this.old_item = this.current_item;
+      item = clamp(item, 0, this.item_cnt-1);
+      this.new_item = Number(item !== this.current_idx);
+      this.old_item = this.current_item;
+      if (this.new_item) {
         this.current_idx = item;
-        for (let i = 0, item_idx = 0; i < 32; i++) {
+        let item_idx = 0;
+        for (let i = 0; i < 32; i++) {
           if (!this.info.item[i].occupied) {
             continue;
           }
@@ -240,15 +201,12 @@ class GrowMenu extends GrowRect {
   }
 
   event_handler(event, fx, fy) {
-    let sts;
     let csts;
-
-    let rx, ry;
 
     // Convert coordinates to local coordinates
     let rp = this.trf.reverse(fx, fy);
 
-    sts = 0;
+    let sts = 0;
     switch (event.event) {
       case Event.CursorMotion:
         let redraw = 0;

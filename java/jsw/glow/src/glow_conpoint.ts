@@ -15,14 +15,9 @@ class GlowConPoint {
 
   open(lines, row) {
     let i;
-
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowPolyline : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.ConPoint:
@@ -54,13 +49,11 @@ class GlowConPoint {
           break;
       }
     }
+
     return i;
   }
 
   draw() {
-  }
-
-  tdraw(t, highlight, hot, node, colornode) {
   }
 
   event_handler(event, fx, fy) {

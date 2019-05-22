@@ -13,14 +13,9 @@ class GrowBar extends GrowRect {
 
   open(lines, row) {
     let i;
-
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowBar : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.GrowBar:
@@ -77,17 +72,15 @@ class GrowBar extends GrowRect {
           break;
       }
     }
+
     return i;
   }
 
-  tdraw(t, highlight, hot, node, colornode) {
+  draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
     if (this.ctx.nodraw !== 0) {
       return;
     }
 
-    let idx;
-    let drawtype;
-    let rotation;
     let grad = this.gradient;
     if (this.gradient === Gradient.No &&
         (node !== null && node.gradient !== Gradient.No) &&
@@ -100,6 +93,7 @@ class GrowBar extends GrowRect {
     bar_border_idx =
         Math.min(DRAW_TYPE_SIZE - 1, Math.max(0, bar_border_idx));
 
+    let idx;
     if (node !== null && node.line_width !== 0) {
       idx =
           Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
@@ -113,48 +107,32 @@ class GrowBar extends GrowRect {
 
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
-    let x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-    if (t === null) {
-      x1 = Math.floor(this.trf.x(this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      y1 = Math.floor(this.trf.y(this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-      x2 = Math.floor(this.trf.x(this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      y2 = Math.floor(this.trf.y(this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    } else {
-      x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-      x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    }
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
 
-    ll_x = Math.min(x1, x2);
-    ur_x = Math.max(x1, x2);
-    ll_y = Math.min(y1, y2);
-    ur_y = Math.max(y1, y2);
-    if (this.fill !== 0) {
-      drawtype =
+    let x1 = Math.floor(p1.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p1.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+
+    let ll_x = Math.min(x1, x2);
+    let ur_x = Math.max(x1, x2);
+    let ll_y = Math.min(y1, y2);
+    let ur_y = Math.max(y1, y2);
+    if (this.fill) {
+      let drawtype =
           GlowColor.get_drawtype(this.fill_drawtype, DrawType.FillHighlight,
               highlight, colornode, 1, 0);
 
       if (grad === Gradient.No) {
-        this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-            drawtype);
+        this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+            drawtype, true, 0);
       } else {
-        let fa1, fa2;
+        let rotation = (t) ? this.trf.rotation + t.rotation : this.trf.rotation;
 
-        if (t === null) {
-          rotation = this.trf.rot();
-        } else {
-          rotation = this.trf.rot(t);
-        }
+        let fa1, fa2;
         if (this.gradient_contrast >= 0) {
           fa2 = GlowColor.shift_drawtype(drawtype, -this.gradient_contrast / 2,
               null);
@@ -170,64 +148,49 @@ class GrowBar extends GrowRect {
             drawtype, fa1, fa2, this.ctx.gdraw.gradient_rotate(rotation, grad));
       }
     }
-    drawtype =
+    let drawtype =
         GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
             highlight, colornode, 0, 0);
 
     if (this.max_value !== this.min_value) {
       let x0, y0, width, height, l_x0, l_y0, l_x1, l_y1;
 
-      if (t === null) {
-        rotation =
-            (this.trf.rot() / 360 - Math.floor(this.trf.rot() / 360)) * 360;
-      } else {
-        rotation =
-            (this.trf.rot(t) / 360 - Math.floor(this.trf.rot(t) / 360)) * 360;
-      }
-      if (45 >= rotation || rotation > 315) {
+      let rotation = (t) ? this.trf.rotation + t.rotation : this.trf.rotation;
+      rotation = (rotation / 360 - Math.floor(rotation / 360)) * 360;
+      x0 = ll_x;
+      y0 = ll_y;
+      width = ur_x - ll_x;
+      height = ur_y - ll_y;
+      l_x0 = ll_x;
+      l_y0 = ll_y;
+      l_x1 = ur_x;
+      l_y1 = ur_y;
+      if (rotation <= 45 || rotation > 315) {
         height = Math.floor((this.bar_value - this.min_value) /
             (this.max_value - this.min_value) * (ur_y - ll_y));
         height = Math.max(0, Math.min(height, ur_y - ll_y));
-        width = ur_x - ll_x;
-        x0 = ll_x;
         y0 = ur_y - height;
-        l_x0 = ll_x;
         l_y0 = ur_y - height;
-        l_x1 = ur_x;
         l_y1 = ur_y - height;
-      } else if (45 < rotation && rotation <= 135) {
+      } else if (rotation > 45 && rotation <= 135) {
         width = Math.floor((this.bar_value - this.min_value) /
             (this.max_value - this.min_value) * (ur_x - ll_x));
         width = Math.max(0, Math.min(width, ur_x - ll_x));
-        height = ur_y - ll_y;
-        x0 = ll_x;
-        y0 = ll_y;
         l_x0 = ll_x + width;
-        l_y0 = ll_y;
         l_x1 = ll_x + width;
-        l_y1 = ur_y;
-      } else if (135 < rotation && rotation <= 225) {
+      } else if (rotation > 135 && rotation <= 225) {
         height = Math.floor((this.bar_value - this.min_value) /
             (this.max_value - this.min_value) * (ur_y - ll_y));
         height = Math.max(0, Math.min(height, ur_y - ll_y));
-        width = ur_x - ll_x;
-        x0 = ll_x;
-        y0 = ll_y;
-        l_x0 = ll_x;
         l_y0 = ll_y + height;
-        l_x1 = ur_x;
         l_y1 = ll_y + height;
       } else { // if ( 225 < rotation && rotation <= 315)
         width = Math.floor((this.bar_value - this.min_value) /
             (this.max_value - this.min_value) * (ur_x - ll_x));
         width = Math.max(0, Math.min(width, ur_x - ll_x));
-        height = ur_y - ll_y;
         x0 = ur_x - width;
-        y0 = ll_y;
         l_x0 = ur_x - width;
-        l_y0 = ll_y;
         l_x1 = ur_x - width;
-        l_y1 = ur_y;
       }
 
       let dt = drawtype;
@@ -236,15 +199,11 @@ class GrowBar extends GrowRect {
       }
 
       if (grad === Gradient.No) {
-        this.ctx.gdraw.fill_rect(x0, y0, width, height, dt);
+        this.ctx.gdraw.rect(x0, y0, width, height, dt, true, 0);
       } else {
-        let fb1, fb2;
+        rotation = (t) ? this.trf.rotation + t.rotation : this.trf.rotation;
 
-        if (t === null) {
-          rotation = this.trf.rot();
-        } else {
-          rotation = this.trf.rot(t);
-        }
+        let fb1, fb2;
         if (this.gradient_contrast >= 0) {
           fb2 = GlowColor.shift_drawtype(dt, -this.gradient_contrast / 2, null);
           fb1 = GlowColor.shift_drawtype(dt,
@@ -266,8 +225,7 @@ class GrowBar extends GrowRect {
     }
 
     if (this.border !== 0) {
-      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx,
-          0);
+      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, false, idx);
     }
   }
 

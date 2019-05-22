@@ -9,32 +9,28 @@ class OpWindMenu {
   info: OpwindMenuInfo;
 
   constructor() {
-    this.host = window.location.hostname;
-    if (this.host === "") {
-      this.host = "localhost";
-    }
-
+    this.host = window.location.hostname || "localhost";
     this.gdh = new Gdh(this.gdh_init_cb);
   }
 
   is_authorized(access) {
+    if (!(this.priv & access)) {
+      window.alert("Not authorized for this operation");
+    }
     return !!(this.priv & access);
   }
 
   get_opplace() {
     let query = window.location.search.substring(1);
-
-    console.log("query", query);
-    let vars = query.split('&');
-    console.log("vars", vars.length, vars[0].substring(8));
-    return vars[0].substring(8);
+    let vars = query.split('&')[0];
+    return vars.substring(8);
   }
 
   gdh_init_cb() {
     let oid = new PwrtObjid(0, 0);
     this.user = "Default";
-    this.gdh.login("", "", this.login_cb, this);
-    this.gdh.getOpwindMenu(this.get_opplace(), this.get_menu_cb, 999);
+    this.gdh.login("", "").then(this.login_cb);
+    this.gdh.getOpwindMenu(this.get_opplace()).then(this.get_menu_cb);
   }
 
   add_menu_button(context, text) {
@@ -50,9 +46,9 @@ class OpWindMenu {
     return button;
   }
 
-  get_menu_cb(id, data, sts, result) {
+  get_menu_cb(res) {
+    let result = res.value;
     this.info = result;
-    console.log("Menu received", sts, data, result.buttons.length);
     let context = document.getElementById("opwindmenu");
 
     document.getElementById("opwind_title").innerHTML = result.title;
@@ -86,11 +82,10 @@ class OpWindMenu {
             }
             document.getElementById("login_frame").style.visibility = 'hidden';
             document.getElementById("login_frame").style.height = '0px';
-            let c = new JopCrypt();
-            passwd = c.crypt("aa", passwd);
+            passwd = Crypt.crypt("aa", passwd);
 
             this.user = user;
-            this.gdh.login(user, passwd, this.login_cb, this);
+            this.gdh.login(user, passwd).then(this.login_cb);
           });
       document.getElementById("cancel_button")
           .addEventListener("click", function (event) {
@@ -103,7 +98,7 @@ class OpWindMenu {
             document.getElementById("login_frame").style.height = '0px';
             this.priv = 0;
             this.user = "Default";
-            this.gdh.login("", "", this.login_cb, this);
+            this.gdh.login("", "").then(this.login_cb);
           });
 
       document.getElementById("login_user").innerHTML = "";
@@ -137,11 +132,7 @@ class OpWindMenu {
 
     context.appendChild(document.createElement("hr"));
 
-
-    let button;
-    for (let i = 0; i < result.buttons.length; i++) {
-      this.add_menu_button(context, result.buttons[i].text);
-    }
+    result.buttons.forEach(e => this.add_menu_button(context, e.text));
   }
 
   button_cb(text) {
@@ -154,8 +145,6 @@ class OpWindMenu {
               Access.Maintenance | Access.Process |
               Access.Instrument)) {
         window.open("ev.html?list=alarm", "_blank");
-      } else {
-        window.alert("Not authorized for this operation");
       }
     } else if (this.info.enable_alarmlist && text === "EventList") {
       console.log("EventList activated");
@@ -164,8 +153,6 @@ class OpWindMenu {
               Access.Maintenance | Access.Process |
               Access.Instrument)) {
         window.open("ev.html?list=event", "_blank");
-      } else {
-        window.alert("Not authorized for this operation");
       }
     } else if (this.info.enable_eventlog && text === "EventLog") {
       console.log("EventLog activated");
@@ -174,8 +161,6 @@ class OpWindMenu {
               Access.Maintenance | Access.Process |
               Access.Instrument)) {
         window.alert("Not yet implemented");
-      } else {
-        window.alert("Not authorized for this operation");
       }
     } else if (this.info.enable_navigator && text === "Navigator") {
       console.log("Navigator activated");
@@ -183,8 +168,6 @@ class OpWindMenu {
               Access.Maintenance | Access.Process |
               Access.Instrument)) {
         window.open("xtt.html", "_blank");
-      } else {
-        window.alert("Not authorized for this operation");
       }
     } else if (!this.info.disable_help && text === "Help") {
       console.log("Help activated");
@@ -197,30 +180,25 @@ class OpWindMenu {
               Access.AllOperators | Access.System |
               Access.Maintenance | Access.Process |
               Access.Instrument)) {
-        for (let i = 0; i < this.info.buttons.length; i++) {
-          if (this.info.buttons[i].text === text) {
-            console.log("Found", this.info.buttons[i].text);
-            let name = this.info.buttons[i].name;
-            let n = name.indexOf(".pwg");
-            if (n !== -1) {
-              name = name.substring(0, n);
-            }
-            let url = "ge.html?graph=" + name;
-            console.log("url", url);
-            window.open(url, "_blank");
-            return;
+        let button = this.info.buttons.find(e => e.text === text);
+        if (button) {
+          console.log("Found", button.text);
+          let name = button.name;
+          let n = name.indexOf(".pwg");
+          if (n !== -1) {
+            name = name.substring(0, n);
           }
+          let url = "ge.html?graph=" + name;
+          console.log("url", url);
+          window.open(url, "_blank");
         }
-      } else {
-        window.alert("Not authorized for this operation");
       }
     }
   }
 
-  login_cb(id, data, sts, result) {
-    console.log("Login:", sts, result);
-    if (sts & 1) {
-      this.priv = result;
+  login_cb(res) {
+    if (res.sts & 1) {
+      this.priv = res.value;
       sessionStorage.setItem("pwr_privilege", String(this.priv));
       if (this.user_text !== null) {
         this.user_text.textContent = this.user + " on " + this.host;

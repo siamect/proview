@@ -87,8 +87,8 @@ void GrowSubAnnot::move(double delta_x, double delta_y, int grid)
     double x_grid, y_grid;
 
     /* Move to closest grid point */
-    ctx->find_grid(x_left + double(delta_x) / ctx->mw->zoom_factor_x,
-        y_low + double(delta_y) / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid(x_left + delta_x / ctx->mw->zoom_factor_x,
+        y_low + delta_y / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
     trf.move(x_grid - x_left, y_grid - y_low);
     get_node_borders();
   } else {
@@ -100,10 +100,9 @@ void GrowSubAnnot::move(double delta_x, double delta_y, int grid)
     y_high += dy;
     y_low += dy;
   }
-  double x1 = trf.x(p.x, p.y);
-  double y1 = trf.y(p.x, p.y);
-  rect.move((void*)&pzero, x1, y1 - ctx->draw_delta, highlight, hot);
-  text.move((void*)&pzero, x1, y1, highlight, hot);
+  glow_sPoint p = trf * this->p;
+  rect.move((void*)&pzero, p.x, p.y - ctx->draw_delta, highlight, hot);
+  text.move((void*)&pzero, p.x, p.y, highlight, hot);
   ctx->set_dirty();
 }
 
@@ -126,10 +125,9 @@ void GrowSubAnnot::move_noerase(int delta_x, int delta_y, int grid)
     y_high += dy;
     y_low += dy;
   }
-  double x1 = trf.x(p.x, p.y);
-  double y1 = trf.y(p.x, p.y);
-  rect.move((void*)&pzero, x1, y1 - ctx->draw_delta, highlight, hot);
-  text.move((void*)&pzero, x1, y1, highlight, hot);
+  glow_sPoint p = trf * this->p;
+  rect.move((void*)&pzero, p.x, p.y - ctx->draw_delta, highlight, hot);
+  text.move((void*)&pzero, p.x, p.y, highlight, hot);
   ctx->set_dirty();
 }
 
@@ -373,9 +371,8 @@ void GrowSubAnnot::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   }
   if (t) {
     GlowPoint p1(p);
-
-    p1.x = trf.x(t, p.x, p.y) - trf.x(p.x, p.y);
-    p1.y = trf.y(t, p.x, p.y) - trf.y(p.x, p.y);
+    p1.x = (*t * trf * p).x - (trf * p).x;
+    p1.y = (*t * trf * p).y - (trf * p).y;
     p1.zoom();
     rect.draw(w, (void*)&p1, highlight, hot, NULL);
     text.draw(w, (void*)&p1, highlight, hot, NULL);
@@ -390,9 +387,8 @@ void GrowSubAnnot::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
   hot = (w == ctx->navw) ? 0 : hot;
   if (t) {
     GlowPoint p1(p);
-
-    p1.x = trf.x(t, p.x, p.y) - trf.x(p.x, p.y);
-    p1.y = trf.y(t, p.x, p.y) - trf.y(p.x, p.y);
+    p1.x = (*t * trf * p).x - (trf * p).x;
+    p1.y = (*t * trf * p).y - (trf * p).y;
     p1.zoom();
     rect.erase(w, (void*)&p1, hot, NULL);
     text.erase(w, (void*)&p1, hot, NULL);
@@ -404,21 +400,18 @@ void GrowSubAnnot::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 
 void GrowSubAnnot::set_transform(GlowTransform* t)
 {
-  double x1, y1;
+  trf.set(*t * trf);
 
-  trf = *t * trf;
-
-  x1 = trf.x(p.x, p.y);
-  y1 = trf.y(p.x, p.y);
-  rect.move((void*)&pzero, x1, y1 - ctx->draw_delta, highlight, hot);
-  text.move((void*)&pzero, x1, y1, highlight, hot);
+  glow_sPoint p1 = trf * p;
+  rect.move((void*)&pzero, p1.x, p1.y - ctx->draw_delta, highlight, hot);
+  text.move((void*)&pzero, p1.x, p1.y, highlight, hot);
 
   get_node_borders();
 }
 
 void GrowSubAnnot::align(double x, double y, glow_eAlignDirection direction)
 {
-  double dx, dy, x1, y1;
+  double dx, dy;
 
   ctx->set_dirty();
   switch (direction) {
@@ -457,39 +450,31 @@ void GrowSubAnnot::align(double x, double y, glow_eAlignDirection direction)
   y_high += dy;
   y_low += dy;
 
-  x1 = trf.x(p.x, p.y);
-  y1 = trf.y(p.x, p.y);
-  rect.move((void*)&pzero, x1, y1 - ctx->draw_delta, highlight, hot);
-  text.move((void*)&pzero, x1, y1, highlight, hot);
+  glow_sPoint p1 = trf * p;
+  rect.move((void*)&pzero, p1.x, p1.y - ctx->draw_delta, highlight, hot);
+  text.move((void*)&pzero, p1.x, p1.y, highlight, hot);
 }
 
 void GrowSubAnnot::export_javabean(GlowTransform* t, void* node,
     glow_eExportPass pass, int* shape_cnt, int node_cnt, int in_nc,
     std::ofstream& fp)
 {
-  int x1, y1;
-  int bold;
-
-  double trf_scale = trf.vertical_scale(t);
-  int idx = int(trf_scale * ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor
-          * (text_size + 4)
-      - 4);
+  Matrix tmp = t ? (*t * trf) : trf;
+  int idx = int(tmp.vertical_scale() * ctx->mw->zoom_factor_y /
+                    ctx->mw->base_zoom_factor * (text_size + 4) - 4);
   if (idx < 0)
     return;
+
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
 
-  if (!t) {
-    x1 = int(trf.x(p.x, p.y) * ctx->mw->zoom_factor_x) - ctx->mw->offset_x;
-    y1 = int(trf.y(p.x, p.y) * ctx->mw->zoom_factor_y) - ctx->mw->offset_y;
-  } else {
-    x1 = int(trf.x(t, p.x, p.y) * ctx->mw->zoom_factor_x) - ctx->mw->offset_x;
-    y1 = int(trf.y(t, p.x, p.y) * ctx->mw->zoom_factor_y) - ctx->mw->offset_y;
-  }
+  glow_sPoint p1 = tmp * p;
+  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
 
-  bold = (draw_type == glow_eDrawType_TextHelveticaBold);
+  int bold = (draw_type == glow_eDrawType_TextHelveticaBold);
 
-  ctx->export_jbean->annot(x1, y1, number, draw_type, color_drawtype, bold,
-      adjustment, idx, pass, shape_cnt, node_cnt, fp);
+  ctx->export_jbean->annot((int)p1.x, (int)p1.y, number, draw_type,
+      color_drawtype, bold, adjustment, idx, pass, shape_cnt, node_cnt, fp);
   (*shape_cnt)++;
 }
 

@@ -86,46 +86,34 @@ void GrowScrollBar::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
 
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
-  int x0, y0, width, height;
 
-  if (!t) {
-    x1 = int(trf.x(ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int(trf.x(ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int(trf.y(ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  } else {
-    x1 = int(trf.x(t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int(trf.x(t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int(trf.y(t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  }
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
 
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
+  p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+  p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+  p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+  p2.y = p2.y * w->zoom_factor_y - w->offset_y;
+  int ll_x = int(MIN(p1.x, p2.x));
+  int ur_x = int(MAX(p1.x, p2.x));
+  int ll_y = int(MIN(p1.y, p2.y));
+  int ur_y = int(MAX(p1.y, p2.y));
 
-  glow_eDrawType fdrawtype
-      = ((GrowCtx*)ctx)
-            ->get_drawtype(fill_drawtype, glow_eDrawType_FillHighlight,
-                highlight, (GrowNode*)colornode, 1);
-  glow_eDrawType bdrawtype
-      = ((GrowCtx*)ctx)
-            ->get_drawtype(draw_type, glow_eDrawType_LineHighlight, highlight,
-                (GrowNode*)colornode, 0);
+  glow_eDrawType fdrawtype = ctx->get_drawtype(fill_drawtype,
+      glow_eDrawType_FillHighlight, highlight, (GrowNode*)colornode, 1);
+  glow_eDrawType bdrawtype = ctx->get_drawtype(draw_type,
+      glow_eDrawType_LineHighlight, highlight, (GrowNode*)colornode, 0);
   glow_eDrawType shift_drawtype;
 
   ctx->gdraw->rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fdrawtype, 1, 0);
   if (shadow) {
-    shift_drawtype
-        = ((GrowCtx*)ctx)->shift_drawtype(fill_drawtype, 2, 0); // Dark
+    shift_drawtype = ctx->shift_drawtype(fill_drawtype, 2, 0); // Dark
     ctx->gdraw->line(
         ll_x + 1, ll_y + 1, ll_x + 1, ur_y - 1, shift_drawtype, 0, 0);
     ctx->gdraw->line(
         ll_x + 1, ll_y + 1, ur_x - 1, ll_y + 1, shift_drawtype, 0, 0);
-    shift_drawtype
-        = ((GrowCtx*)ctx)->shift_drawtype(fill_drawtype, -2, 0); // Light
+    shift_drawtype = ctx->shift_drawtype(fill_drawtype, -2, 0); // Light
     ctx->gdraw->line(
         ll_x + 1, ur_y - 1, ur_x - 1, ur_y - 1, shift_drawtype, 0, 0);
     ctx->gdraw->line(
@@ -133,6 +121,8 @@ void GrowScrollBar::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   }
 
   if (!feq(max_value, min_value)) {
+    int x0, y0, width, height;
+
     switch (direction) {
     case glow_eDir_Vertical:
       height = int(bar_length / (max_value - min_value) * (ur_y - ll_y));
@@ -154,13 +144,12 @@ void GrowScrollBar::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
 
     ctx->gdraw->rect(x0, y0, width, height, bar_color, 1, 0);
     if (shadow) {
-      shift_drawtype
-          = ((GrowCtx*)ctx)->shift_drawtype(bar_color, -2, 0); // Light
+      shift_drawtype = ctx->shift_drawtype(bar_color, -2, 0); // Light
       ctx->gdraw->line(
           x0 + 1, y0 + 1, x0 + 1, y0 + height - 1, shift_drawtype, 0, 0);
       ctx->gdraw->line(
           x0 + 1, y0 + 1, x0 + width - 1, y0 + 1, shift_drawtype, 0, 0);
-      shift_drawtype = ((GrowCtx*)ctx)->shift_drawtype(bar_color, 2, 0); // Dark
+      shift_drawtype = ctx->shift_drawtype(bar_color, 2, 0); // Dark
       ctx->gdraw->line(x0 + 1, y0 + height - 1, x0 + width - 1,
           y0 + height - 1, shift_drawtype, 0, 0);
       ctx->gdraw->line(x0 + width - 1, y0 + 1, x0 + width - 1,
@@ -184,23 +173,19 @@ void GrowScrollBar::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-  if (!t) {
-    x1 = int(trf.x(ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int(trf.x(ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int(trf.y(ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  } else {
-    x1 = int(trf.x(t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int(trf.x(t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int(trf.y(t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  }
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
+
+  p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+  p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+  p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+  p2.y = p2.y * w->zoom_factor_y - w->offset_y;
+  int ll_x = int(MIN(p1.x, p2.x));
+  int ur_x = int(MAX(p1.x, p2.x));
+  int ll_y = int(MIN(p1.y, p2.y));
+  int ur_y = int(MAX(p1.y, p2.y));
 
   ctx->gdraw->rect(
       ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase, 0, idx);

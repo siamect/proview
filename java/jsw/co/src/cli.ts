@@ -264,20 +264,10 @@ class Cli {
         if (this.cliTable[this.cliTableIndex].qualifier[i] === null) {
           break;
         }
-        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg1")) {
-          this.configuredVerbs++;
-        }
-        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg2")) {
-          this.configuredVerbs++;
-        }
-        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg3")) {
-          this.configuredVerbs++;
-        }
-        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg4")) {
-          this.configuredVerbs++;
-        }
-        if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg5")) {
-          this.configuredVerbs++;
+        for (let i = 1; i <= 5; i++) {
+          if (this.cliTable[this.cliTableIndex].qualifier[i] === ("cli_arg" + String(i))) {
+            this.configuredVerbs++;
+          }
         }
       }
 
@@ -318,17 +308,10 @@ class Cli {
    * @return Returns true if the qualifier is present.
    */
   qualifierFound(qual) {
-    if (qual === ("cli_arg1")) {
-      return !(this.verb.length < 2 || this.configuredVerbs < 1);
-    }
-    if (qual === ("cli_arg2")) {
-      return !(this.verb.length < 3 || this.configuredVerbs < 2);
-    }
-    if (qual === ("cli_arg3")) {
-      return !(this.verb.length < 4 || this.configuredVerbs < 3);
-    }
-    if (qual === ("cli_arg4")) {
-      return !(this.verb.length < 5 || this.configuredVerbs < 4);
+    for (let i = 1; i < 6; i++) {
+      if (qual == ("cli_arg" + String(i))) {
+        return !(this.verb.length < (i+1) || this.configuredVerbs < i);
+      }
     }
     for (let i = 0; i < this.qualifier.length; i++) {
       if (qual === (this.qualifier[i])) {
@@ -344,28 +327,13 @@ class Cli {
    * @return Returns the value of the qualifier.
    */
   getQualValue(qual) {
-    if (qual === ("cli_arg1")) {
-      if (this.verb.length < 2 || this.configuredVerbs < 1) {
-        return "";
+    for (let i = 1; i < 6; i++) {
+      if (qual == ("cli_arg" + String(i))) {
+        if (this.verb.length < (i+1) || this.configuredVerbs < i) {
+          return ""
+        }
+        return this.verb[i];
       }
-      return this.verb[1];
-    }
-    if (qual === ("cli_arg2")) {
-      if (this.verb.length < 3 || this.configuredVerbs < 2) {
-        return "";
-      }
-      return this.verb[2];
-    }
-    if (qual === ("cli_arg3")) {
-      if (this.verb.length < 4 || this.configuredVerbs < 3) {
-        return this.verb[3];
-      }
-    }
-    if (qual === ("cli_arg4")) {
-      if (this.verb.length < 5 || this.configuredVerbs < 4) {
-        return "";
-      }
-      return this.verb[4];
     }
     for (let i = 0; i < this.qualifier.length; i++) {
       if (qual === (this.qualifier[i])) {

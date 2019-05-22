@@ -7,8 +7,8 @@ class GlowLine {
 
   constructor(ctx) {
     this.ctx = ctx;
-    this.p1 = new GlowPoint(ctx);
-    this.p2 = new GlowPoint(ctx);
+    this.p1 = new GlowPoint();
+    this.p2 = new GlowPoint();
   }
 
   open(lines, row) {
@@ -16,10 +16,6 @@ class GlowLine {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GlowCon : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.Line:
@@ -47,22 +43,18 @@ class GlowLine {
     return i;
   }
 
-  tdraw(t, highlight, hot, node, colornode) {
-  }
-
   draw(highlight, hot) {
     if (this.ctx.nodraw !== 0) {
       return;
     }
 
-    let p1_x, p1_y, p2_x, p2_y;
-    p1_x = Math.floor(this.p1.x * this.ctx.mw.zoom_factor_x + 0.5) -
+    let p1_x = Math.floor(this.p1.x * this.ctx.mw.zoom_factor_x + 0.5) -
         this.ctx.mw.offset_x;
-    p1_y = Math.floor(this.p1.y * this.ctx.mw.zoom_factor_y + 0.5) -
+    let p1_y = Math.floor(this.p1.y * this.ctx.mw.zoom_factor_y + 0.5) -
         this.ctx.mw.offset_y;
-    p2_x = Math.floor(this.p2.x * this.ctx.mw.zoom_factor_x + 0.5) -
+    let p2_x = Math.floor(this.p2.x * this.ctx.mw.zoom_factor_x + 0.5) -
         this.ctx.mw.offset_x;
-    p2_y = Math.floor(this.p2.y * this.ctx.mw.zoom_factor_y + 0.5) -
+    let p2_y = Math.floor(this.p2.y * this.ctx.mw.zoom_factor_y + 0.5) -
         this.ctx.mw.offset_y;
 
     if (p1_x === p2_x && p1_y === p2_y) {
@@ -81,14 +73,13 @@ class GlowLine {
       return;
     }
 
-    let p1_x, p1_y, p2_x, p2_y;
-    p1_x = Math.floor(this.p1.x * this.ctx.mw.zoom_factor_x + 0.5) -
+    let p1_x = Math.floor(this.p1.x * this.ctx.mw.zoom_factor_x + 0.5) -
         this.ctx.mw.offset_x;
-    p1_y = Math.floor(this.p1.y * this.ctx.mw.zoom_factor_y + 0.5) -
+    let p1_y = Math.floor(this.p1.y * this.ctx.mw.zoom_factor_y + 0.5) -
         this.ctx.mw.offset_y;
-    p2_x = Math.floor(this.p2.x * this.ctx.mw.zoom_factor_x + 0.5) -
+    let p2_x = Math.floor(this.p2.x * this.ctx.mw.zoom_factor_x + 0.5) -
         this.ctx.mw.offset_x;
-    p2_y = Math.floor(this.p2.y * this.ctx.mw.zoom_factor_y + 0.5) -
+    let p2_y = Math.floor(this.p2.y * this.ctx.mw.zoom_factor_y + 0.5) -
         this.ctx.mw.offset_y;
 
     if (p1_x === p2_x && p1_y === p2_y) {

@@ -1,7 +1,4 @@
-class GlowPoint {
-  x = 0.0;
-  y = 0.0;
-
+class GlowPoint extends Point {
   open(lines, row) {
     let i;
     for (i = row; i < lines.length; i++) {
@@ -24,6 +21,7 @@ class GlowPoint {
           break;
       }
     }
+
     return i;
   }
 

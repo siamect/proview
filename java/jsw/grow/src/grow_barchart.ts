@@ -19,14 +19,9 @@ class GrowBarChart extends GrowRect {
 
   open(lines, row) {
     let i;
-
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowPie : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.GrowBarChart:
@@ -107,18 +102,16 @@ class GrowBarChart extends GrowRect {
           break;
       }
     }
+
     return i;
   }
 
-  tdraw(t, highlight, hot, node, colornode) {
+  draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
     if (this.ctx.nodraw !== 0) {
       return;
     }
 
-    let drawtype;
-    let idx;
     let chot = 0;
-
     if (this.ctx.hot_indication === HotIndication.No) {
       hot = 0;
     } else if (this.ctx.hot_indication === HotIndication.DarkColor) {
@@ -129,6 +122,7 @@ class GrowBarChart extends GrowRect {
       hot = 0;
     }
 
+    let idx;
     if (node !== null && node.line_width !== 0) {
       idx =
           Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
@@ -141,34 +135,23 @@ class GrowBarChart extends GrowRect {
     idx += hot;
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
-    let x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y, rot;
 
-    if (t === null) {
-      x1 = Math.floor(this.trf.x(this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      y1 = Math.floor(this.trf.y(this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-      x2 = Math.floor(this.trf.x(this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      y2 = Math.floor(this.trf.y(this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-      rot = Math.floor(this.trf.rot());
-    } else {
-      x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-      x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-      rot = Math.floor(this.trf.rot(t));
-    }
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
 
-    ll_x = Math.min(x1, x2);
-    ur_x = Math.max(x1, x2);
-    ll_y = Math.min(y1, y2);
-    ur_y = Math.max(y1, y2);
+    let x1 = Math.floor(p1.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p1.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+
+    let rot = t ? this.trf.rotation + t.rotation : this.trf.rotation;
+    rot = Math.floor(rot);
+
+    let ll_x = Math.min(x1, x2);
+    let ur_x = Math.max(x1, x2);
+    let ll_y = Math.min(y1, y2);
+    let ur_y = Math.max(y1, y2);
 
     let grad = this.gradient;
     if (this.gradient === Gradient.No &&
@@ -177,22 +160,16 @@ class GrowBarChart extends GrowRect {
       grad = node.gradient;
     }
 
-    let skip;
-    let bar_ll_x, bar_ur_x;
-    let bar_up_ll_y, bar_up_ur_y;
-    let f_bar_up_ll_y;
-    let bar_down_ll_y, bar_down_ur_y, border_bar_down_ur_y;
-    let f_bar_down_ur_y;
-    let width;
+    let border_bar_down_ur_y;
     let brect_ll_x = 0;
     let brect_ll_y = 0;
     let brect_width = 0;
     let brect_height = 0;
 
-    width = (ur_x - ll_x) / this.bars;
-    bar_ur_x = ll_x;
+    let width = (ur_x - ll_x) / this.bars;
+    let bar_ur_x = ll_x;
     for (let j = 0; j < this.bars; j++) {
-      bar_ll_x = bar_ur_x;
+      let bar_ll_x = bar_ur_x;
 
       if (j === this.bars - 1) {
         bar_ur_x = ur_x;
@@ -200,13 +177,11 @@ class GrowBarChart extends GrowRect {
         bar_ur_x = ll_x + (j + 1) * width;
       }
 
-      if (this.min_value >= 0) {
-        bar_up_ll_y = ur_y;
-        f_bar_up_ll_y = ur_y;
-
-      } else {
-        bar_up_ll_y = ur_y + this.min_value * (ur_y - ll_y) /
-            (this.max_value - this.min_value);
+      let bar_up_ll_y = ur_y;
+      let f_bar_up_ll_y = ur_y;
+      let bar_down_ur_y, f_bar_down_ur_y;
+      if (this.min_value < 0) {
+        bar_up_ll_y += this.min_value * (ur_y - ll_y) / (this.max_value - this.min_value);
         f_bar_up_ll_y = bar_up_ll_y;
         bar_down_ur_y = ur_y + this.min_value * (ur_y - ll_y) /
             (this.max_value - this.min_value);
@@ -220,8 +195,8 @@ class GrowBarChart extends GrowRect {
         let fillcolor = 0;
 
         if (this.min_value > 0 || this.bar_values[i * this.bars + j] > 0) {
-          skip = 0;
-          bar_up_ur_y = bar_up_ll_y;
+          let skip = 0;
+          let bar_up_ur_y = bar_up_ll_y;
 
           if (i === this.barsegments) {
             if (bar_up_ll_y <= ll_y) {
@@ -257,8 +232,8 @@ class GrowBarChart extends GrowRect {
               } else {
                 drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
               }
-              this.ctx.gdraw.fill_rect(bar_ll_x, bar_up_ll_y, bar_ur_x -
-                  bar_ll_x, bar_up_ur_y - bar_up_ll_y, drawtype);
+              this.ctx.gdraw.rect(bar_ll_x, bar_up_ll_y, bar_ur_x -
+                  bar_ll_x, bar_up_ur_y - bar_up_ll_y, drawtype, true, 0);
             } else {
               let f1, f2;
               if (this.gradient_contrast >= 0) {
@@ -283,8 +258,8 @@ class GrowBarChart extends GrowRect {
           }
         } else {
           // negative value, draw bar downwards
-          skip = 0;
-          bar_down_ll_y = bar_down_ur_y;
+          let skip = 0;
+          let bar_down_ll_y = bar_down_ur_y;
 
           if (i === this.barsegments) {
             border_bar_down_ur_y = bar_down_ur_y;
@@ -317,13 +292,9 @@ class GrowBarChart extends GrowRect {
           if (!skip) {
             if (grad === Gradient.No ||
                 fillcolor === DrawType.ColorRed || i === this.barsegments) {
-              if (chot === 0) {
-                drawtype = fillcolor;
-              } else {
-                drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
-              }
-              this.ctx.gdraw.fill_rect(bar_ll_x, bar_down_ll_y, bar_ur_x -
-                  bar_ll_x, bar_down_ur_y - bar_down_ll_y, drawtype);
+              let drawtype = (chot === 0) ? fillcolor : GlowColor.shift_drawtype(fillcolor, chot, null);
+              this.ctx.gdraw.rect(bar_ll_x, bar_down_ll_y, bar_ur_x -
+                  bar_ll_x, bar_down_ur_y - bar_down_ll_y, drawtype, true, 0);
             } else {
               let f1, f2;
               if (this.gradient_contrast >= 0) {
@@ -351,11 +322,11 @@ class GrowBarChart extends GrowRect {
         if (this.border !== 0 && i === this.barsegments) {
           // Draw previous bar border
           if (j > 0) {
-            drawtype = GlowColor.get_drawtype(this.draw_type,
+            let drawtype = GlowColor.get_drawtype(this.draw_type,
                 DrawType.LineHighlight, highlight, colornode, 0, 0);
 
             this.ctx.gdraw.rect(brect_ll_x, brect_ll_y, brect_width,
-                brect_height, drawtype, idx, 0);
+                brect_height, drawtype, false, idx);
           }
           if (this.min_value >= 0) {
             brect_ll_x = bar_ll_x;
@@ -371,21 +342,21 @@ class GrowBarChart extends GrowRect {
           }
           if (j === this.bars - 1) {
             // Draw last bar border
-            drawtype = GlowColor.get_drawtype(this.draw_type,
+            let drawtype = GlowColor.get_drawtype(this.draw_type,
                 DrawType.LineHighlight, highlight, colornode, 0, 0);
 
             this.ctx.gdraw.rect(brect_ll_x, brect_ll_y, brect_width,
-                brect_height, drawtype, idx, 0);
+                brect_height, drawtype, false, idx);
           }
 
           // Draw negative bar border
           if (this.min_value < 0) {
             if (j > 0) {
-              drawtype = GlowColor.get_drawtype(this.draw_type,
+              let drawtype = GlowColor.get_drawtype(this.draw_type,
                   DrawType.LineHighlight, highlight, colornode, 0, 0);
 
               this.ctx.gdraw.rect(brect_ll_x, brect_ll_y, brect_width,
-                  brect_height, drawtype, idx, 0);
+                  brect_height, drawtype, false, idx);
             }
             brect_ll_x = bar_ll_x;
             brect_ll_y = ur_y + this.min_value * (ur_y - ll_y) /
@@ -394,18 +365,18 @@ class GrowBarChart extends GrowRect {
             brect_height = border_bar_down_ur_y - brect_ll_y;
             if (j === this.bars - 1) {
               // Draw last bar border
-              drawtype = GlowColor.get_drawtype(this.draw_type,
+              let drawtype = GlowColor.get_drawtype(this.draw_type,
                   DrawType.LineHighlight, highlight, colornode, 0, 0);
 
               this.ctx.gdraw.rect(brect_ll_x, brect_ll_y, brect_width,
-                  brect_height, drawtype, idx, 0);
+                  brect_height, drawtype, false, idx);
             }
           }
         }
       }
     }
 
-    drawtype =
+    let drawtype =
         GlowColor.get_drawtype(this.line_color, DrawType.LineHighlight,
             highlight, colornode, 0, 0);
 
@@ -425,8 +396,7 @@ class GrowBarChart extends GrowRect {
       drawtype =
           GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
               highlight, colornode, 0, 0);
-      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx,
-          0);
+      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, false, idx);
     }
   }
 
@@ -457,79 +427,16 @@ class GrowBarChart extends GrowRect {
 
   set_values(values1, values2, values3, values4, values5, values6, values7,
              values8, values9, values10, values11, values12) {
-    let i;
     let j = 0;
-    if (j < this.barsegments && values1 !== null) {
-      for (i = 0; i < this.bars; i++) {
-        this.bar_values[j * this.bars + i] = values1[i];
+    [values1, values2, values3, values4, values5, values6, values7, values8,
+      values9, values10, values11, values12].forEach(function (values) {
+      if (j < this.barsegments && values !== null) {
+        for (let i = 0; i < this.bars; i++) {
+          this.bar_values[j * this.bars + i] = values[i];
+        }
       }
-    }
-    j++;
-    if (j < this.barsegments && values2 !== null) {
-      for (i = 0; i < this.bars; i++) {
-        this.bar_values[j * this.bars + i] = values2[i];
-      }
-    }
-    j++;
-    if (j < this.barsegments && values3 !== null) {
-      for (i = 0; i < this.bars; i++) {
-        this.bar_values[j * this.bars + i] = values3[i];
-      }
-    }
-    j++;
-    if (j < this.barsegments && values4 !== null) {
-      for (i = 0; i < this.bars; i++) {
-        this.bar_values[j * this.bars + i] = values4[i];
-      }
-    }
-    j++;
-    if (j < this.barsegments && values5 !== null) {
-      for (i = 0; i < this.bars; i++) {
-        this.bar_values[j * this.bars + i] = values5[i];
-      }
-    }
-    j++;
-    if (j < this.barsegments && values6 !== null) {
-      for (i = 0; i < this.bars; i++) {
-        this.bar_values[j * this.bars + i] = values6[i];
-      }
-    }
-    j++;
-    if (j < this.barsegments && values7 !== null) {
-      for (i = 0; i < this.bars; i++) {
-        this.bar_values[j * this.bars + i] = values7[i];
-      }
-    }
-    j++;
-    if (j < this.barsegments && values8 !== null) {
-      for (i = 0; i < this.bars; i++) {
-        this.bar_values[j * this.bars + i] = values8[i];
-      }
-    }
-    j++;
-    if (j < this.barsegments && values9 !== null) {
-      for (i = 0; i < this.bars; i++) {
-        this.bar_values[j * this.bars + i] = values9[i];
-      }
-    }
-    j++;
-    if (j < this.barsegments && values10 !== null) {
-      for (i = 0; i < this.bars; i++) {
-        this.bar_values[j * this.bars + i] = values10[i];
-      }
-    }
-    j++;
-    if (j < this.barsegments && values11 !== null) {
-      for (i = 0; i < this.bars; i++) {
-        this.bar_values[j * this.bars + i] = values11[i];
-      }
-    }
-    j++;
-    if (j < this.barsegments && values12 !== null) {
-      for (i = 0; i < this.bars; i++) {
-        this.bar_values[j * this.bars + i] = values12[i];
-      }
-    }
+      j++;
+    });
   }
 
   getUserData() {

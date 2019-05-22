@@ -48,10 +48,8 @@ GlowPolyLine::GlowPolyLine(GrowCtx* glow_ctx, glow_sPoint* pointarray,
       line_width(line_w), fix_line_width(fix_line_w), fill(line_fill),
       closed_line(closed)
 {
-  int i;
-
   points = (glow_sPointX*)calloc(point_cnt, sizeof(glow_sPointX));
-  for (i = 0; i < point_cnt; i++) {
+  for (int i = 0; i < point_cnt; i++) {
     GlowPoint* p = new GlowPoint(ctx, pointarray[i].x, pointarray[i].y);
     a_points.insert(p);
   }

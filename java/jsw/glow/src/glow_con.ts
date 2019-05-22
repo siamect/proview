@@ -1,4 +1,4 @@
-class GlowCon {
+class GlowCon extends Rect {
   static MAX_POINT = 8;
   ctx: GrowCtx;
   line_a: GlowArray;
@@ -8,10 +8,6 @@ class GlowCon {
   cc_name;
   cc;
   c_name;
-  x_right;
-  x_left;
-  y_high;
-  y_low;
   dest_node;
   source_node;
   dest_conpoint;
@@ -37,6 +33,7 @@ class GlowCon {
   hot = 0;
 
   constructor(ctx) {
+    super();
     this.ctx = ctx;
     this.line_a = new GlowArray(ctx);
     this.arc_a = new GlowArray(ctx);
@@ -50,10 +47,6 @@ class GlowCon {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GlowCon : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.Con:
@@ -72,16 +65,16 @@ class GlowCon {
           }
           break;
         case GlowSave.Con_x_right:
-          this.x_right = parseFloat(tokens[1]);
+          this.ur_x = parseFloat(tokens[1]);
           break;
         case GlowSave.Con_x_left:
-          this.x_left = parseFloat(tokens[1]);
+          this.ll_x = parseFloat(tokens[1]);
           break;
         case GlowSave.Con_y_high:
-          this.y_high = parseFloat(tokens[1]);
+          this.ur_y = parseFloat(tokens[1]);
           break;
         case GlowSave.Con_y_low:
-          this.y_low = parseFloat(tokens[1]);
+          this.ll_y = parseFloat(tokens[1]);
           break;
         case GlowSave.Con_dest_node:
           if (tokens.length > 1) {
@@ -187,43 +180,29 @@ class GlowCon {
           break;
       }
     }
+
     return i;
   }
 
-  draw() {
-    this.tdraw(null, this.highlight, this.hot, null, null);
-  }
-
-  tdraw(t, highlight, hot, node, colornode) {
+  draw(t = null, highlight = this.highlight, hot = this.hot, node = null, colornode = null) {
     if (this.ctx.nodraw !== 0) {
       return;
     }
-
-    let tmp;
-    let i;
 
     if (this.temporary_ref !== 0 ||
         this.cc.con_type === ConType.Reference) {
       // ref_a.draw( w, &cc->zero, highlight, hot, NULL);
     } else {
-      for (i = 0; i < this.l_num; i++) {
-        this.line_a.get(i).draw(highlight, hot);
-      }
-      for (i = 0; i < this.a_num; i++) {
-        this.arc_a.get(i).draw(highlight, hot);
-      }
+      let ltmp = this.line_a.slice(0, this.l_num);
+      let atmp = this.arc_a.slice(0, this.a_num);
+      ltmp.forEach(e => e.draw(highlight, hot));
+      atmp.forEach(e => e.draw(highlight, hot));
       // arrow_a.draw( highlight, hot);
       if ((this.shadow !== 0 || this.border !== 0) &&
           this.cc.con_type === ConType.Routed &&
           this.cc.corner === Corner.Rounded) {
-        for (i = 0; i < this.l_num; i++) {
-          this.line_a.get(i)
-              .draw_shadow(this.border, this.shadow, highlight, hot);
-        }
-        for (i = 0; i < this.a_num; i++) {
-          this.arc_a.get(i)
-              .draw_shadow(this.border, this.shadow, highlight, hot);
-        }
+        ltmp.forEach(e => e.draw_shadow(this.border, this.shadow, highlight, hot));
+        atmp.forEach(e => e.draw_shadow(this.border, this.shadow, highlight, hot));
       }
     }
   }

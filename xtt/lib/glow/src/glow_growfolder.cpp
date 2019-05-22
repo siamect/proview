@@ -514,29 +514,18 @@ void GrowFolder::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   double tsize = w->zoom_factor_y / w->base_zoom_factor * (8 + 2 * text_size);
   text_idx = MIN(text_idx, DRAW_TYPE_SIZE - 1);
 
-  int ll_x, ll_y, ur_x, ur_y;
-  double dx1, dy1, dx2, dy2;
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint d1 = tmp * ll;
+  glow_sPoint d2 = tmp * ur;
+  d1.x = MIN(d1.x, d2.x);
+  d2.x = MAX(d1.x, d2.x);
+  d1.y = MIN(d1.y, d2.y);
+  d2.y = MAX(d1.y, d2.y);
 
-  if (!t) {
-    dx1 = trf.x(ll.x, ll.y);
-    dy1 = trf.y(ll.x, ll.y);
-    dx2 = trf.x(ur.x, ur.y);
-    dy2 = trf.y(ur.x, ur.y);
-  } else {
-    dx1 = trf.x(t, ll.x, ll.y);
-    dy1 = trf.y(t, ll.x, ll.y);
-    dx2 = trf.x(t, ur.x, ur.y);
-    dy2 = trf.y(t, ur.x, ur.y);
-  }
-  dx1 = MIN(dx1, dx2);
-  dx2 = MAX(dx1, dx2);
-  dy1 = MIN(dy1, dy2);
-  dy2 = MAX(dy1, dy2);
-
-  ll_x = int(dx1 * w->zoom_factor_x) - w->offset_x;
-  ur_x = int(dx2 * w->zoom_factor_x) - w->offset_x;
-  ur_y = int((dy1 + y_low_offs) * w->zoom_factor_y) - w->offset_y;
-  ll_y = int(dy1 * w->zoom_factor_y) - w->offset_y;
+  int ll_x = int(d1.x * w->zoom_factor_x) - w->offset_x;
+  int ur_x = int(d2.x * w->zoom_factor_x) - w->offset_x;
+  int ur_y = int((d1.y + y_low_offs) * w->zoom_factor_y) - w->offset_y;
+  int ll_y = int(d1.y * w->zoom_factor_y) - w->offset_y;
 
   drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
       highlight, (GrowNode*)colornode, 0);
@@ -598,9 +587,8 @@ void GrowFolder::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
 
     if (shadow) {
       if (i == current_folder) {
-        drawtype_light
-            = ((GrowCtx*)ctx)
-                  ->shift_drawtype(color_selected, -2, (GrowNode*)colornode);
+        drawtype_light = ctx->shift_drawtype(color_selected, -2,
+            (GrowNode*)colornode);
         ctx->gdraw->line(
             p[0].x + 1, p[0].y, p[1].x + 1, p[1].y, drawtype_light, 0, 0);
       }
@@ -626,30 +614,26 @@ void GrowFolder::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
+
   hot = (w == ctx->navw) ? 0 : hot;
-  int idx;
-  idx = int(w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
+  int idx = int(w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
 
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-  if (!t) {
-    x1 = int(trf.x(ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int(trf.x(ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int(trf.y(ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  } else {
-    x1 = int(trf.x(t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int(trf.x(t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int(trf.y(t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  }
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
+
+  p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+  p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+  p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+  p2.y = p2.y * w->zoom_factor_y - w->offset_y;
+  int ll_x = int(MIN(p1.x, p2.x));
+  int ur_x = int(MAX(p1.x, p2.x));
+  int ll_y = int(MIN(p1.y, p2.y));
+  int ur_y = int(MAX(p1.y, p2.y));
 
   ctx->gdraw->rect(
       ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase, 0, idx);
@@ -661,24 +645,18 @@ void GrowFolder::export_javabean(GlowTransform* t, void* node,
     glow_eExportPass pass, int* shape_cnt, int node_cnt, int in_nc,
     std::ofstream& fp)
 {
-  double x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
 
-  if (!t) {
-    x1 = trf.x(ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = trf.y(ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = trf.x(ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = trf.y(ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  } else {
-    x1 = trf.x(t, ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = trf.y(t, ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = trf.x(t, ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = trf.y(t, ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  }
-
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
+  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  double ll_x = MIN(p1.x, p2.x);
+  double ur_x = MAX(p1.x, p2.x);
+  double ll_y = MIN(p1.y, p2.y);
+  double ur_y = MAX(p1.y, p2.y);
 
   ctx->export_jbean->folder(ll_x, ll_y, ur_x, ur_y, folders,
       (char*)folder_file_names, (char*)folder_text, (int*)folder_v_scrollbar,
@@ -726,7 +704,7 @@ int GrowFolder::event_handler(glow_eEvent event, int x, int y, double fx, double
   return sts;
 }
 
-void GrowFolder::update_attributes()
+int GrowFolder::update_attributes()
 {
   y_low_offs = header_height;
 
@@ -741,6 +719,7 @@ void GrowFolder::update_attributes()
     strcpy(owner, folder_owner[current_folder]);
     GrowWindow::update_attributes();
   }
+  return 1;
 }
 
 void GrowFolder::set_textsize(int size)

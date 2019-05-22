@@ -136,52 +136,44 @@ class PlowNodeClass {
   }
 
   insert(elem) {
-    this.a.add(elem);
+    this.a.push(elem);
   }
 }
 
 class PlowArray {
-  a: Array = [];
+  a: Array<PlowNode> = [];
   ctx: PlowCtx;
 
   constructor(ctx) {
     this.ctx = ctx;
   }
 
-  add(elem) {
+  push(elem) {
     this.a.push(elem);
   }
 
   insertNode(elem, destination, code) {
-    let idx = this.find(elem);
+    let idx = this.a.indexOf(elem);
     if (idx !== -1) {
       return;
     }
 
     if (destination === null) {
-      switch (code) {
-        case Dest.INTOLAST:
-        case Dest.AFTER:
-          this.a.push(elem);
-          elem.level = 0;
-          break;
-        default:
-          elem.level = 0;
-          this.a.unshift(elem);
+      elem.level = 0;
+      if (code == Dest.INTOLAST || code == Dest.AFTER) {
+        this.a.push(elem);
+      } else {
+        this.a.unshift(elem);
       }
     } else {
-      let dest_idx = this.find(destination);
+      let dest_idx = this.a.indexOf(destination);
       if (dest_idx === -1) {
         return;
       }
 
       switch (code) {
         case Dest.INTOFIRST:
-          if (dest_idx === this.a.length - 1) {
-            this.a.push(elem);
-          } else {
-            this.a.splice(dest_idx + 1, 0, elem);
-          }
+          this.a.splice(dest_idx + 1, 0, elem);
           elem.level = destination.level + 1;
           break;
         case Dest.INTOLAST:
@@ -195,11 +187,7 @@ class PlowArray {
                 break;
               }
             }
-            if (idx === this.a.length) {
-              this.a.push(elem);
-            } else {
-              this.a.splice(idx, 0, elem);
-            }
+            this.a.splice(idx, 0, elem);
           }
           elem.level = destination.level + 1;
           break;
@@ -229,7 +217,7 @@ class PlowArray {
   }
 
   remove(elem) {
-    let idx = this.find(elem);
+    let idx = this.a.indexOf(elem);
     if (idx === -1) {
       return;
     }
@@ -246,15 +234,11 @@ class PlowArray {
   }
 
   draw(g, p, node, highlight) {
-    for (let i = 0; i < this.a.length; i++) {
-      this.a[i].draw(g, p, node, highlight);
-    }
+    this.a.forEach(e => e.draw(g, p, node, highlight));
   }
 
   set_borders(node) {
-    for (let i = 0; i < this.a.length; i++) {
-      this.a[i].set_borders(node);
-    }
+    this.a.forEach(e => e.set_borders(node));
   }
 
   configure() {
@@ -265,7 +249,7 @@ class PlowArray {
   }
 
   close_node(node) {
-    let idx = this.find(node);
+    let idx = this.a.indexOf(node);
     if (idx === -1) {
       return;
     }
@@ -291,7 +275,7 @@ class PlowArray {
   }
 
   get_parent_object(node) {
-    let idx = this.find(node);
+    let idx = this.a.indexOf(node);
     if (idx === -1) {
       return null;
     }
@@ -305,7 +289,7 @@ class PlowArray {
   }
 
   get_first_child(node) {
-    let idx = this.find(node);
+    let idx = this.a.indexOf(node);
     if (idx === -1) {
       return null;
     }
@@ -340,60 +324,35 @@ class PlowArray {
   }
 
   get_next_object(node) {
-    for (let i = 0; i < this.a.length; i++) {
-      if (this.a[i] === node) {
-        if (i === this.a.length - 1) {
-          return null;
-        }
-        return this.a[i + 1];
-      }
-    }
-    return null;
+    let idx = this.a.indexOf(node);
+    return this.a[idx + 1] || null;
   }
 
   get_previous_object(node) {
-    for (let i = 0; i < this.a.length; i++) {
-      if (this.a[i] === node) {
-        if (i === 0) {
-          return null;
-        }
-        return this.a[i - 1];
-      }
-    }
-    return null;
+    let idx = this.a.indexOf(node);
+    return this.a[idx - 1] || null;
   }
 
   get_first_object() {
-    if (this.a.length === 0) {
-      return null;
-    }
-    return this.a[0];
+    return this.a[0] || null;
   }
 
   get_last_object() {
-    if (this.a.length === 0) {
-      return null;
-    }
-    return this.a[this.a.length - 1];
+    return this.a[this.a.length - 1] || null;
   }
 
-  find(elem) {
-    for (let i = 0; i < this.a.length; i++) {
-      if (this.a[i] === elem) {
-        return i;
-      }
-    }
-    return -1;
+  indexOf(elem) {
+    return this.a.indexOf(elem);
+  }
+
+  forEach(callback) {
+    this.a.forEach(callback);
   }
 }
 
-class PlowNode {
+class PlowNode extends Rect {
   ctx: PlowCtx;
   userdata: object = null;
-  x_right = 0.0;
-  x_left = 0.0;
-  y_high = 0.0;
-  y_low = 0.0;
   nc: PlowNodeClass;
   pos = new Point();
   n_name = "";
@@ -415,6 +374,7 @@ class PlowNode {
   relative_position = 0;
 
   constructor(ctx, nc, level) {
+    super();
     this.ctx = ctx;
     this.nc = nc;
     this.level = level;
@@ -439,14 +399,11 @@ class PlowNode {
   }
 
   draw(g, p, node, highlight) {
-    let x = this.x_left * this.ctx.zoom_factor;
-    let y = this.y_low * this.ctx.zoom_factor - 1;
-    let width = (this.x_right - this.x_left) * this.ctx.zoom_factor;
-    let height = (this.y_high - this.y_low) * this.ctx.zoom_factor + 2;
-    g.fillStyle = "white";
-    if (this.select) {
-      g.fillStyle = "lightblue";
-    }
+    let x = this.ll_x * this.ctx.zoom_factor;
+    let y = this.ll_y * this.ctx.zoom_factor - 1;
+    let width = this.width() * this.ctx.zoom_factor;
+    let height = this.height() * this.ctx.zoom_factor + 2;
+    g.fillStyle = (this.select) ? "lightblue" : "white";
     g.fillRect(x, y, width, height);
 
     this.nc.draw(g, this.pos, this, this.highlight);
@@ -486,18 +443,15 @@ class PlowNode {
   }
 
   set_borders(node) {
-    this.x_left = 1.0e37;
-    this.x_right = -1.0e37;
-    this.y_low = 1.0e37;
-    this.y_high = -1.0e37;
+    this.set(new Rect(1.0e37, 1.0e37, -1.0e37, -1.0e37));
     this.nc.a.set_borders(this);
   }
 
   event_handler(event, x, y) {
-    if ((x - this.ctx.offset_x) / this.ctx.zoom_factor >= this.x_left &&
-        (x - this.ctx.offset_x) / this.ctx.zoom_factor <= this.x_right &&
-        (y - this.ctx.offset_y) / this.ctx.zoom_factor >= this.y_low &&
-        (y - this.ctx.offset_y) / this.ctx.zoom_factor <= this.y_high) {
+    let p = new Point(
+        (x - this.ctx.offset_x) / this.ctx.zoom_factor,
+        (y - this.ctx.offset_y) / this.ctx.zoom_factor);
+    if (this.hit(p)) {
       this.ctx.event_object = this;
       return 1;
     }
@@ -533,16 +487,12 @@ class PlowNode {
   }
 
   in_icon(x, y) {
-    return x >= this.x_left * this.ctx.zoom_factor && x <=
-        (this.x_left + 1.75) * this.ctx.zoom_factor;
+    return x >= this.ll_x * this.ctx.zoom_factor &&
+        x <= (this.ll_x + 1.75) * this.ctx.zoom_factor;
   }
 
   measure() {
-    return new Rect(
-        this.x_left * this.ctx.zoom_factor,
-        this.y_low * this.ctx.zoom_factor,
-        (this.x_right - this.x_left) * this.ctx.zoom_factor,
-        (this.y_high - this.y_low) * this.ctx.zoom_factor);
+    return this;
   };
 }
 
@@ -572,51 +522,19 @@ class PlowAnnot {
       return;
     }
 
-    let tsize = 0;
     let idx = this.ctx.zoom_factor / this.ctx.base_zoom_factor *
         (this.text_size + 4) - 4;
     if (idx < 0) {
       return;
     }
 
-    switch (idx) {
-      case 0:
-        tsize = 8;
-        break;
-      case 1:
-        tsize = 10;
-        break;
-      case 2:
-        tsize = 12;
-        break;
-      case 3:
-        tsize = 14;
-        break;
-      case 4:
-        tsize = 14;
-        break;
-      case 5:
-        tsize = 18;
-        break;
-      case 6:
-        tsize = 18;
-        break;
-      case 7:
-        tsize = 18;
-        break;
-      default:
-        tsize = idx * 3;
-    }
-
+    let tsize = (idx < 0 || idx > 7) ? (idx * 3) : ([8, 10, 12, 14, 14, 18, 18, 18][idx]);
 
     g.font = tsize + "px Arial";
-    if (node.invert) {
-      g.fillStyle = "white";
-    } else {
-      g.fillStyle = "black";
-    }
     if (highlight) {
       g.fillStyle = "red";
+    } else {
+      g.fillStyle = (node.invert) ? "white" : "black";
     }
     g.lineWidth = 0.5;
 
@@ -759,69 +677,32 @@ class PlowRect {
           g.fillStyle = "lightgreen";
           break;
         case Color.WHITE:
-          if (node.invert) {
-            g.fillStyle = "black";
-          } else {
-            g.fillStyle = "white";
-          }
+          g.fillStyle = (node.invert) ? "black" : "white";
           break;
         default:
-          if (node.invert) {
-            g.fillStyle = "white";
-          } else {
-            g.fillStyle = "black";
-          }
+          g.fillStyle = (node.invert) ? "white" : "black";
       }
       g.fillRect(x, y, width, height);
     }
   }
 
   set_borders(node) {
-    if (this.ll.x + node.pos.x < node.x_left) {
-      node.x_left = this.ll.x + node.pos.x;
-    }
-    if (this.ur.x + node.pos.x > node.x_right) {
-      node.x_right = this.ur.x + node.pos.x;
-    }
-    if (this.ll.y + node.pos.y < node.y_low) {
-      node.y_low = this.ll.y + node.pos.y;
-    }
-    if (this.ur.y + node.pos.y > node.y_high) {
-      node.y_high = this.ur.y + node.pos.y;
-    }
-  }
-}
-
-class GDraw {
-  ctx: PlowCtx;
-  canvas: HTMLCanvasElement;
-  gctx: CanvasRenderingContext2D;
-  offset_top: number;
-
-  constructor(ctx) {
-    this.ctx = ctx;
-    this.canvas = document.querySelector("canvas");
-    this.gctx = this.canvas.getContext("2d");
-    this.offset_top = this.canvas.offsetTop;
+    node.set(Rect.union(node, new Rect(this.ll.x + node.pos.x, this.ll.y + node.pos.y, this.ur.x + node.pos.x, this.ur.y + node.pos.y)));
   }
 }
 
 class PlowCtx {
   gdh: Gdh = null;
-  debug = false;
   nodraw = 0;
   zoom_factor = 20.0;
   base_zoom_factor = 20.0;
   offset_x = 0;
   offset_y = 0;
-  x_right = 0.0;
-  x_left = 0.0;
-  y_high = 0.0;
-  y_low = 0.0;
+  rect: Rect;
   a: PlowArray;
   a_nc: PlowArray;
   name = "Claes context";
-  gdraw: GDraw;
+  gdraw: Draw;
   select_object: PlowNode = null;
   event_cb: (event: object, object: PlowNode, x: number, y: number) => void = null;
   event_object: PlowNode = null;
@@ -829,7 +710,8 @@ class PlowCtx {
   constructor() {
     this.a = new PlowArray(this);
     this.a_nc = new PlowArray(this);
-    this.gdraw = new GDraw(this);
+    this.gdraw = new Draw(this);
+    this.rect = new Rect();
   }
 
   draw() {
@@ -919,7 +801,7 @@ class PlowCtx {
   }
 
   insert(n, dest) {
-    this.a.add(n);
+    this.a.push(n);
   }
 
   insertNode(n, destination, destCode) {
@@ -934,7 +816,7 @@ class PlowCtx {
   }
 
   insert_nc(nc) {
-    this.a_nc.add(nc);
+    this.a_nc.push(nc);
   }
 
   configure() {
@@ -968,9 +850,9 @@ class PlowCtx {
   }
 
   is_visible(o) {
-    return (o.y_high * this.zoom_factor <= window.pageYOffset +
+    return (o.ur_y * this.zoom_factor <= window.pageYOffset +
         window.innerHeight - this.gdraw.offset_top) &&
-        (o.y_low * this.zoom_factor >= window.pageYOffset -
+        (o.ll_y * this.zoom_factor >= window.pageYOffset -
             this.gdraw.offset_top);
   }
 

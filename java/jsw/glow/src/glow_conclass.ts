@@ -20,10 +20,6 @@ class GlowConClass {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.ctx.debug) {
-        console.log("GlowConClass : " + lines[i]);
-      }
-
       switch (key) {
         case GlowSave.ConClass:
           break;
@@ -64,6 +60,7 @@ class GlowConClass {
           break;
       }
     }
+
     return i;
   }
 }

@@ -84,8 +84,6 @@ class GlowColor {
   }
 
   static shift_drawtype(dt, shift, node) {
-    let incr;
-    let base_drawtype;
     let drawtype;
 
     if (node !== null && node.getColorInverse() !== 0) {
@@ -93,8 +91,8 @@ class GlowColor {
     }
 
     if (this.is_shiftable(dt)) {
-      base_drawtype = Math.floor(dt / 10) * 10;
-      incr = shift + dt - base_drawtype;
+      let base_drawtype = Math.floor(dt / 10) * 10;
+      let incr = shift + dt - base_drawtype;
 
       if (incr < 0) { // White
         drawtype = DrawType.Color4;
@@ -123,15 +121,8 @@ class GlowColor {
   static get_drawtype(local_drawtype, highlight_drawtype, highlight, node, fill,
                       highlight_disabled) {
     let drawtype;
-    let base_drawtype;
-    let incr;
-    let lightness = 0;
-    let intensity = 0;
-
-    if (node !== null) {
-      lightness = node.getColorLightness();
-      intensity = node.getColorIntensity();
-    }
+    let lightness = (node === null) ? 0 : node.getColorLightness();
+    let intensity = (node === null) ? 0 : node.getColorIntensity();
 
     if (highlight !== 0 && highlight_disabled === 0) {
       drawtype = highlight_drawtype;
@@ -189,8 +180,8 @@ class GlowColor {
 
       if (node !== null && lightness !== 0) {
         if (local_drawtype >= 30 && drawtype < 300) {
-          base_drawtype = Math.floor(drawtype / 10) * 10;
-          incr = -lightness + drawtype - base_drawtype;
+          let base_drawtype = Math.floor(drawtype / 10) * 10;
+          let incr = -lightness + drawtype - base_drawtype;
           if (incr < 0) { // White
             drawtype = DrawType.Color4;
           } else if (incr >= 10) { // DarkGrey
@@ -202,8 +193,8 @@ class GlowColor {
       }
       if (node !== null && intensity !== 0) {
         if (drawtype >= 60) {
-          base_drawtype = Math.floor(drawtype / 30) * 30;
-          incr = drawtype - base_drawtype;
+          let base_drawtype = Math.floor(drawtype / 30) * 30;
+          let incr = drawtype - base_drawtype;
           drawtype =
               (drawtype + Math.min(2 - Math.floor(incr / 10), intensity) * 10);
           if (drawtype < base_drawtype) {
@@ -213,7 +204,7 @@ class GlowColor {
       }
       if (node !== null && node.getColorShift() !== 0) {
         if (drawtype >= 60 && drawtype < 300) {
-          incr =
+          let incr =
               node.getColorShift() - Math.floor(node.getColorShift() / 8) * 8;
           if (incr < 0) {
             incr += 8;
@@ -270,34 +261,19 @@ class GlowColor {
   }
 
   static rgb_color(idx, customcolors) {
-    let h1, i1, s1;
-    let i, j, k;
-    let r = 0;
-    let g = 0;
-    let b = 0;
-
     if (idx === 300) {
       idx = 31;
     }
 
     if (idx === 3) { // White
-      r = 1.0;
-      g = 1.0;
-      b = 1.0;
+      return new Rgb(1, 1, 1);
     } else if (idx === 2) { // Gray
-      r = 0.75;
-      g = 0.75;
-      b = 0.75;
+      return new Rgb(0.75, 0.75, 0.75);
     } else if (idx === 1) { // Red
-      r = 1.0;
-      g = 0;
-      b = 0;
+      return new Rgb(1, 0, 0);
     } else if (idx < 20) {
       // Sixteen colors of different hue
-      h1 = 360.0 * (idx - 4) / 16;
-      s1 = 1.5;
-      i1 = 1;
-      return this.his_to_rgb(h1, i1, s1);
+      return this.his_to_rgb(360.0 * (idx - 4) / 16, 1, 1.5);
     } else if (idx < 60) {
       // Four sets of gray
       let i0 = GlowColor.gray_i0;
@@ -306,25 +282,22 @@ class GlowColor {
         i0 = 0.25;
       }
 
-      r = i0 + (GlowColor.gray_i1 - i0) * Math.pow((9 - idx % 10) / 9, 0.9);
-      g = r;
-      b = r;
+      let r = i0 + (GlowColor.gray_i1 - i0) * Math.pow((9 - idx % 10) / 9, 0.9);
+      return new Rgb(r, r, r);
     } else if (idx < 300) {
-      i = Math.floor((idx - 60) / 30);
-      j = Math.floor((idx - 60 - i * 30) / 10);
-      k = 9 - (idx - 60 - i * 30 - j * 10);
+      let i = Math.floor((idx - 60) / 30);
+      let j = Math.floor((idx - 60 - i * 30) / 10);
+      let k = 9 - (idx - 60 - i * 30 - j * 10);
 
       if ((i === 0 && j === 2) || (i === 2 && j === 2 && k > 5)) {
         // Formula doesn't work for yellow...
-        r = this.rgbtab[i * 10 + k].r;
-        g = this.rgbtab[i * 10 + k].g;
-        b = this.rgbtab[i * 10 + k].b;
+        return new Rgb(this.rgbtab[i * 10 + k].r, this.rgbtab[i * 10 + k].g, this.rgbtab[i * 10 + k].b);
       } else {
-        s1 = this.ctab[i].s[j].s;
-        i1 = this.ctab[i].s[j].i_min +
+        let s1 = this.ctab[i].s[j].s;
+        let i1 = this.ctab[i].s[j].i_min +
             (this.ctab[i].s[j].i_max - this.ctab[i].s[j].i_min) *
             Math.pow(k / 9, this.ctab[i].s[j].a);
-        h1 = this.ctab[i].h + this.ctab[i].hk * k / 9;
+        let h1 = this.ctab[i].h + this.ctab[i].hk * k / 9;
 
         return this.his_to_rgb(h1, i1, s1);
       }
@@ -336,7 +309,7 @@ class GlowColor {
         return customcolors.get_color(idx);
       }
     }
-    return new Rgb(r, g, b);
+    return new Rgb(0, 0, 0);
   }
 
   static his_to_rgb(h, i, s) {
@@ -356,7 +329,6 @@ class GlowColor {
 }
 
 class GlowCustomColors {
-  debug = false;
   colors_size = DrawType.CustomColor__ - DrawType.CustomColor1;
   colors = new Array(this.colors_size);
   colortheme_lightness = 0;
@@ -388,10 +360,6 @@ class GlowCustomColors {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.debug) {
-        console.log("GlowCustomColors : " + lines[i]);
-      }
-
       switch (key) {
         case GlowSave.CustomColors:
           break;
@@ -411,10 +379,6 @@ class GlowCustomColors {
             this.colors[j][0] = parseFloat(tokens[0]);
             this.colors[j][1] = parseFloat(tokens[1]);
             this.colors[j][2] = parseFloat(tokens[2]);
-            if (this.debug) {
-              console.log(j, this.colors[j][0], this.colors[j][1],
-                  this.colors[j][2]);
-            }
           }
           break;
         case GlowSave.End:
@@ -424,6 +388,7 @@ class GlowCustomColors {
           break;
       }
     }
+
     return i;
   }
 

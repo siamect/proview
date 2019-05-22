@@ -10,8 +10,7 @@ class DynParsedAttrName {
 }
 
 class Dyn {
-  debug = false;
-  elements = [];
+  elements: Array<DynElem> = [];
   graph: Graph;
   object = null;
   dyn_type1: DynType1 = 0;
@@ -36,63 +35,33 @@ class Dyn {
   }
 
   static getColor1(object, color) {
-    if (color === DrawType.Inherit) {
-      return object.getClassTraceColor1();
-    }
-    return color;
+    return (color === DrawType.Inherit) ? object.getClassTraceColor1() : color;
   }
 
   static getColor2(object, color) {
-    if (color === DrawType.Inherit) {
-      return object.getClassTraceColor2();
-    }
-    return color;
+    return (color === DrawType.Inherit) ? object.getClassTraceColor2() : color;
   }
 
   merge(x) {
-    let elem, xelem;
-    let e;
-
     this.dyn_type1 |= x.dyn_type1;
     this.total_dyn_type1 |= x.total_dyn_type1;
     this.action_type1 |= x.action_type1;
     this.total_action_type1 |= x.total_action_type1;
 
-    for (let i = 0; i < x.elements.length; i++) {
-      xelem = x.elements[i];
-
-      for (let j = 0; j < this.elements.length; j++) {
-        elem = this.elements[j];
-        if (elem.dyn_type1 === xelem.dyn_type1 &&
-            elem.dyn_type2 === xelem.dyn_type2 &&
-            elem.action_type1 === xelem.action_type1 &&
-            elem.action_type2 === xelem.action_type2) {
-          // Element exists in both, use element in x, i.e. remove current element
-          if (typeof elem.instance === 'undefined' ||
-              (typeof elem.instance !== 'undefined' && elem.instance ===
-                  xelem.instance)) {
-            this.elements.splice(j, 1);
-            break;
-          }
-        }
-      }
+    x.elements.forEach(function (xelem) {
+      this.elements.filter(function (elem) {
+        let arrTmp = ["dyn_type1", "dyn_type2", "action_type1", "action_type2"];
+        // If element exists in both, use element in x, i.e. filter element
+        return (arrTmp.some(e => elem[e] !== xelem[e]) ||
+            (elem.instance !== undefined && elem.instance !== xelem.instance));
+      });
       // Insert copy of x element
-      e = Dyn.copy_element(xelem);
-      if (e !== null) {
+      let e = <DynElem>Object.assign({}, xelem);
+      if (e) {
         e.dyn = this;
         this.elements.push(e);
       }
-    }
-  }
-
-  static copy_element(x) {
-    let e = {};
-    for (let attr in x) {
-      if (x.hasOwnProperty(attr)) {
-        e[attr] = x[attr];
-      }
-    }
-    return e;
+    });
   }
 
   open(lines, row) {
@@ -100,10 +69,6 @@ class Dyn {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.debug) {
-        console.log("Dyn : " + lines[i]);
-      }
 
       let elem = null;
 
@@ -321,18 +286,17 @@ class Dyn {
           elem = new DynEmitSignal(this);
           break;
         case DynSave.End:
-          if (elem !== null) {
+          if (elem) {
             this.elements.push(elem);
             i = elem.open(lines, i + 1);
           }
-
           return i;
         default:
           console.log("Syntax error in Dyn");
           break;
       }
 
-      if (elem !== null) {
+      if (elem) {
         this.elements.push(elem);
         i = elem.open(lines, i + 1);
       }
@@ -368,17 +332,13 @@ class Dyn {
         this.cycle = Cycle.Slow;
       }
     }
-    for (let i = 0; i < this.elements.length; i++) {
-      this.elements[i].connect(object);
-    }
+    this.elements.forEach(e => e.connect(object));
 
     return 1;
   }
 
   disconnect() {
-    for (let i = 0; i < this.elements.length; i++) {
-      this.elements[i].disconnect();
-    }
+    this.elements.forEach(e => e.disconnect());
   }
 
   scan(object) {
@@ -388,18 +348,15 @@ class Dyn {
     this.ignoreBgColor = false;
     this.resetBgColor = false;
 
-    for (let i = 0; i < this.elements.length; i++) {
-      this.elements[i].scan(object);
-    }
+    this.elements.forEach(e => e.scan(object));
     if (this.repaintNow) {
       object.draw();
     }
   }
 
   action(object, event) {
-    let sts;
     for (let i = 0; i < this.elements.length; i++) {
-      sts = this.elements[i].action(object, event);
+      let sts = this.elements[i].action(object, event);
       if (sts === DYN__NO_PROPAGATE || sts === GLOW__TERMINATED ||
           sts === GLOW__SUBTERMINATED) {
         return sts;
@@ -455,80 +412,35 @@ class Dyn {
   }
 
   getHostObject() {
-    for (let i = 0; i < this.elements.length; i++) {
-      if ((this.elements[i].dyn_type1 & DynType1.HostObject) !== 0) {
-        return this.elements[i].hostobject;
-      }
-    }
-    return "";
+    let elem = <DynHostObject>this.elements.find(e => (e.dyn_type1 & DynType1.HostObject) !== 0);
+    return elem ? elem.hostobject : "";
   }
 
-  getDig(p, a_typeid, bitmask, db) {
+  getDig(p, a_typeid, bitmask, db): Boolean {
+    let getObjectRefInfo = function(p) {
+      if (db === Database.Gdh) {
+        return this.graph.getGdh().getObjectRefInfo(p);
+      } else if (db === Database.Local) {
+        return this.graph.getLdb().getObjectRefInfo(p);
+      }
+      return 0;
+    };
     switch (a_typeid) {
       case Type.Boolean:
-        let bvalue = false;
-        switch (db) {
-          case Database.Gdh:
-            bvalue = this.graph.getGdh().getObjectRefInfo(p);
-            break;
-          case Database.Local:
-            bvalue = this.graph.getLdb().getObjectRefInfo(p);
-            break;
-          default:
-            break;
-        }
-        return bvalue;
+        return Boolean(getObjectRefInfo(p));
       case Type.Int32:
       case Type.UInt32:
       case Type.Int64:
       case Type.UInt64:
-        let ivalue = 0;
-        switch (db) {
-          case Database.Gdh:
-            ivalue = this.graph.getGdh().getObjectRefInfo(p);
-            break;
-          case Database.Local:
-            ivalue = this.graph.getLdb().getObjectRefInfo(p);
-            break;
-          default:
-            break;
-        }
-
-        return ivalue !== 0;
+        return Boolean(getObjectRefInfo(p));
       case Type.Bit:
-        let tvalue = 0;
-        switch (db) {
-          case Database.Gdh:
-            tvalue = this.graph.getGdh().getObjectRefInfo(p);
-            break;
-          case Database.Local:
-            tvalue = this.graph.getLdb().getObjectRefInfo(p);
-            break;
-          default:
-            break;
-        }
-        return (tvalue & bitmask) !== 0;
+        return (getObjectRefInfo(p) & bitmask) !== 0;
       case Type.Float32:
       case Type.Float64:
-        let fvalue = 0;
-        switch (db) {
-          case Database.Gdh:
-            fvalue = this.graph.getGdh().getObjectRefInfo(p);
-            break;
-          case Database.Local:
-            fvalue = this.graph.getLdb().getObjectRefInfo(p);
-            break;
-          default:
-            break;
-        }
-        return fvalue > Number.MIN_VALUE;
+        return getObjectRefInfo(p) > Number.MIN_VALUE;
       case Type.String:
-        switch (db) {
-          case Database.Gdh:
-            let svalue = this.graph.getGdh().getObjectRefInfo(p);
-            return !(svalue === "");
-          default:
-            break;
+        if (db === Database.Gdh) {
+          return this.graph.getGdh().getObjectRefInfo(p) !== "";
         }
         return false;
       default:
@@ -545,9 +457,7 @@ class Dyn {
     e.event = event;
     e.object = object;
     this.action_type1 &= ~ActionType1.Confirm;
-    for (let i = 0; i < this.elements.length; i++) {
-      this.elements[i].action(object, e);
-    }
+    this.elements.forEach(el => el.action(object, e));
     this.action_type1 |= ActionType1.Confirm;
   }
 
@@ -578,7 +488,7 @@ class Dyn {
       minval = e.min_value;
     } else {
       let pname = e.dyn.parseAttrName(e.minvalue_attr);
-      if (pname !== null && pname.type === Type.Float32) {
+      if (pname && pname.type === Type.Float32) {
         /** TODO
          CdhrFloat ret = e.dyn.graph.getGdh().getObjectInfoFloat( pname.name);
          if (even(ret)) {
@@ -616,6 +526,23 @@ class Dyn {
       }
     }
 
+    let setObjectInfo = function(pname, inputValue, type: Type) {
+      let sts = 0;
+      if (pname.database === Database.Gdh) {
+        sts = e.dyn.graph.getGdh().setObjectInfo(pname.name, inputValue, type);
+      } else if (pname.database === Database.Local) {
+        sts = e.dyn.graph.getLdb().setObjectInfo(this.graph, pname.name, inputValue);
+      }
+
+      if (odd(sts)) {
+        return ValueInput.Success;
+      }
+
+      console.log("setObjectInfoError " + sts);
+      return ValueInput.Error;
+    };
+
+    sts = 0;
     switch (e.a_typeid) {
       case Type.Float32:
         let inputValue = parseFloat(str.trim());
@@ -637,28 +564,7 @@ class Dyn {
           break;
         }
 
-        switch (pname.database) {
-          case Database.Gdh:
-            sts =
-                e.dyn.graph.getGdh().setObjectInfoFloat(pname.name, inputValue);
-            break;
-          case Database.Local:
-            sts =
-                e.dyn.graph.getLdb().setObjectInfo(this.graph, pname.name, inputValue);
-            break;
-          default:
-            if (ctx_popped) {
-              e.dyn.graph.ctxPush();
-            }
-            return ValueInput.Error;
-        }
-        if (even(sts)) {
-          console.log("setObjectInfoError " + sts);
-          if (ctx_popped) {
-            e.dyn.graph.ctxPush();
-          }
-          return ValueInput.Error;
-        }
+        sts = setObjectInfo(pname, inputValue, e.a_typeid);
         break;
       case Type.Int32:
       case Type.UInt32:
@@ -685,36 +591,11 @@ class Dyn {
           break;
         }
 
-        switch (pname.database) {
-          case Database.Gdh:
-            sts = e.dyn.graph.getGdh().setObjectInfoInt(pname.name, inputValue);
-            break;
-          case Database.Local:
-            sts =
-                e.dyn.graph.getLdb().setObjectInfo(this.graph, pname.name, inputValue);
-            break;
-          default:
-            if (ctx_popped) {
-              e.dyn.graph.ctxPush();
-            }
-            return ValueInput.Error;
-        }
-        if (even(sts)) {
-          console.log("setObjectInfoError " + sts);
-          if (ctx_popped) {
-            e.dyn.graph.ctxPush();
-          }
-          return ValueInput.Error;
-        }
+        sts = setObjectInfo(pname, inputValue, e.a_typeid);
         break;
       case Type.Boolean:
         let inputValueInt = parseInt(str.trim(), 10);
-        let inputValue;
-        if (inputValueInt === 0) {
-          inputValue = false;
-        } else if (inputValueInt === 1) {
-          inputValue = true;
-        } else {
+        if (inputValueInt !== 0 && inputValueInt !== 1) {
           break;
         }
 
@@ -725,25 +606,7 @@ class Dyn {
           break;
         }
 
-        switch (pname.database) {
-          case Database.Gdh:
-            sts =
-                e.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, inputValue);
-            break;
-          case Database.Local:
-            sts =
-                e.dyn.graph.getLdb().setObjectInfo(this.graph, pname.name, inputValue);
-            break;
-          default:
-            return ValueInput.Error;
-        }
-        if (even(sts)) {
-          console.log("setObjectInfoError " + sts);
-          if (ctx_popped) {
-            e.dyn.graph.ctxPush();
-          }
-          return ValueInput.Error;
-        }
+        sts = setObjectInfo(pname, Boolean(inputValueInt), e.a_typeid);
         break;
       case Type.String:
         // valueElement.oldValueS = str;
@@ -753,81 +616,46 @@ class Dyn {
           break;
         }
 
-        switch (pname.database) {
-          case Database.Gdh:
-            sts = e.dyn.graph.getGdh().setObjectInfoString(pname.name, str);
-            break;
-          case Database.Local:
-            sts = e.dyn.graph.getLdb().setObjectInfo(this.graph, pname.name, str);
-            break;
-          default:
-            if (ctx_popped) {
-              e.dyn.graph.ctxPush();
-            }
-            return ValueInput.Error;
-        }
-        if (even(sts)) {
-          console.log("setObjectInfoError " + sts);
-          if (ctx_popped) {
-            e.dyn.graph.ctxPush();
-          }
-          return ValueInput.Error;
-        }
+        sts = setObjectInfo(pname, inputValue, e.a_typeid);
         break;
     }
     if (ctx_popped) {
       e.dyn.graph.ctxPush();
     }
 
+    if (sts === ValueInput.Error) {
+      return sts;
+    }
+
     return ValueInput.Success;
   }
 
   static value_to_msg(value) {
-    let str;
     if (value === 0) {
-      str = "";
+      return "";
     } else {
-      switch (value & 7) {
-        case 3:
-        case 1:
-          str = "MSG-SUCCESS, ";
-          break;
-        case 0:
-          str = "MSG-WARNING, ";
-          break;
-        case 2:
-          str = "MSG-ERROR, ";
-          break;
-        case 4:
-          str = "MSG-FATAL, ";
-          break;
-        default:
-          str = "MSG-NO, ";
+      let str = "NO";
+      if (value & 7 < 5) {
+        str = ["WARNING", "SUCCESS", "ERROR", "SUCCESS", "FATAL"][value & 7];
       }
+      str = "MSG-" + str + ", ";
       switch (value) {
         case 134512649:
-          str += "Success";
-          break;
+          return str + "Success";
         case 134512659:
-          str += "Proview startup pu";
-          break;
+          return str + "Proview startup pu";
         case 134512665:
-          str += "Proview running";
-          break;
+          return str + "Proview running";
         case 134512731:
-          str += "Server running";
-          break;
+          return str + "Server running";
         case 134512795:
-          str += "Application running";
-          break;
+          return str + "Application running";
         case 134512820:
-          str += "Process timeout";
-          break;
+          return str + "Process timeout";
         default:
-          str += "Message number " + value;
+          return str + "Message number " + value;
       }
     }
-    return str;
   }
 }
 
@@ -896,16 +724,13 @@ class DynReference {
   }
 
   get_ref_value(dyn) {
-    let value = null;
     switch (this.database) {
       case Database.Gdh:
-        value = dyn.graph.getGdh().getObjectRefInfo(this.p);
-        break;
+        return dyn.graph.getGdh().getObjectRefInfo(this.p);
       case Database.Local:
-        value = dyn.graph.getLdb().getObjectRefInfo(this.p);
-        break;
+        return dyn.graph.getLdb().getObjectRefInfo(this.p);
     }
-    return value;
+    return null;
   }
 }
 
@@ -915,6 +740,7 @@ class DynElem {
   dyn_type2: DynType2 = 0;
   action_type1: ActionType1 = 0;
   action_type2: ActionType2 = 0;
+  attribute;
   prio: DynPrio;
   instance_mask = 0;
   instance: Instance = 0;
@@ -941,7 +767,6 @@ class DynElem {
 
 class DynDigLowColor extends DynElem {
   a = null;
-  attribute;
   color;
   firstScan = true;
 
@@ -967,7 +792,7 @@ class DynDigLowColor extends DynElem {
   }
 
   disconnect() {
-    if (this.a !== null) {
+    if (this.a) {
       this.a.disconnect(this.dyn);
     }
   }
@@ -980,9 +805,7 @@ class DynDigLowColor extends DynElem {
     let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
         this.a.database);
 
-    if (this.a.inverted) {
-      value = !value;
-    }
+    value = (this.a.inverted) ? !value : value;
 
     if (this.firstScan) {
       this.firstScan = false;
@@ -1023,10 +846,6 @@ class DynDigLowColor extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynDigLowColor : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.DigLowColor:
           break;
@@ -1052,7 +871,6 @@ class DynDigLowColor extends DynElem {
 
 class DynDigColor extends DynElem {
   a = null;
-  attribute;
   color;
   firstScan = true;
 
@@ -1078,7 +896,7 @@ class DynDigColor extends DynElem {
   }
 
   disconnect() {
-    if (this.a !== null) {
+    if (this.a) {
       this.a.disconnect(this.dyn);
     }
   }
@@ -1090,9 +908,7 @@ class DynDigColor extends DynElem {
     let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
         this.a.database);
 
-    if (this.a.inverted) {
-      value = !value;
-    }
+    value = (this.a.inverted) ? !value : value;
 
     if (this.firstScan) {
       this.firstScan = false;
@@ -1144,10 +960,6 @@ class DynDigColor extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynDigColor : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.DigColor:
           break;
@@ -1179,7 +991,6 @@ class DynDigColor extends DynElem {
 
 class DynDigWarning extends DynElem {
   a;
-  attribute;
   use_colortheme;
   firstScan = true;
 
@@ -1210,9 +1021,7 @@ class DynDigWarning extends DynElem {
     let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
         this.a.database);
 
-    if (this.a.inverted) {
-      value = !value;
-    }
+    value = (this.a.inverted) ? !value : value;
 
     if (this.firstScan) {
       this.firstScan = false;
@@ -1257,10 +1066,6 @@ class DynDigWarning extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynDigWarning : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.DigWarning:
           break;
@@ -1286,7 +1091,6 @@ class DynDigWarning extends DynElem {
 
 class DynDigError extends DynElem {
   a;
-  attribute;
   use_colortheme;
   firstScan = true;
 
@@ -1317,9 +1121,7 @@ class DynDigError extends DynElem {
     let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
         this.a.database);
 
-    if (this.a.inverted) {
-      value = !value;
-    }
+    value = (this.a.inverted) ? !value : value;
 
     if (this.firstScan) {
       this.firstScan = false;
@@ -1364,10 +1166,6 @@ class DynDigError extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynDigError : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.DigError:
           break;
@@ -1393,7 +1191,6 @@ class DynDigError extends DynElem {
 
 class DynDigFlash extends DynElem {
   a;
-  attribute;
   color;
   color2;
   firstScan = true;
@@ -1409,7 +1206,6 @@ class DynDigFlash extends DynElem {
     this.a.connect(this.dyn);
     if (!this.a.sts) {
       console.log("DigFlash: " + this.attribute);
-      return 1;
     }
 
     return 1;
@@ -1426,9 +1222,7 @@ class DynDigFlash extends DynElem {
     let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
         this.a.database);
 
-    if (this.a.inverted) {
-      value = !value;
-    }
+    value = (this.a.inverted) ? !value : value;
 
     if (this.firstScan) {
       this.firstScan = false;
@@ -1492,10 +1286,6 @@ class DynDigFlash extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynDigError : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.DigFlash:
           break;
@@ -1524,7 +1314,6 @@ class DynDigFlash extends DynElem {
 
 class DynInvisible extends DynElem {
   a;
-  attribute;
   dimmed;
   firstScan = true;
   cmd;
@@ -1536,7 +1325,7 @@ class DynInvisible extends DynElem {
   }
 
   connect(object) {
-    if (this.attribute !== null &&
+    if (this.attribute &&
         this.attribute.toLowerCase().substring(0, 5) === "$cmd(") {
       this.cmd = true;
       let idx = this.attribute.lastIndexOf(')');
@@ -1589,9 +1378,7 @@ class DynInvisible extends DynElem {
       value = !value;
     }
 
-    if (this.a.inverted) {
-      value = !value;
-    }
+    value = (this.a.inverted) ? !value : value;
 
     if (this.firstScan) {
       this.firstScan = false;
@@ -1622,10 +1409,6 @@ class DynInvisible extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynInvisible : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.Invisible:
@@ -1658,7 +1441,6 @@ class DynInvisible extends DynElem {
 
 class DynDigTextColor extends DynElem {
   a = null;
-  attribute;
   color;
   firstScan = true;
 
@@ -1677,14 +1459,13 @@ class DynDigTextColor extends DynElem {
     this.a.connect(this.dyn);
     if (!this.a.sts) {
       console.log("DigTextColor: " + this.attribute);
-      return 1;
     }
 
     return 1;
   }
 
   disconnect() {
-    if (this.a !== null) {
+    if (this.a) {
       this.a.disconnect(this.dyn);
     }
   }
@@ -1696,9 +1477,7 @@ class DynDigTextColor extends DynElem {
     let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
         this.a.database);
 
-    if (this.a.inverted) {
-      value = !value;
-    }
+    value = (this.a.inverted) ? !value : value;
 
     if (this.firstScan) {
       this.firstScan = false;
@@ -1723,10 +1502,6 @@ class DynDigTextColor extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DigTextColor : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.DigTextColor:
@@ -1753,7 +1528,6 @@ class DynDigTextColor extends DynElem {
 
 class DynDigText extends DynElem {
   a;
-  attribute;
   low_text;
   high_text;
   firstScan = true;
@@ -1793,9 +1567,7 @@ class DynDigText extends DynElem {
     let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
         this.a.database);
 
-    if (this.a.inverted) {
-      value = !value;
-    }
+    value = (this.a.inverted) ? !value : value;
 
     if (this.firstScan) {
       this.firstScan = false;
@@ -1819,10 +1591,6 @@ class DynDigText extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DigText : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.DigText:
@@ -1857,7 +1625,6 @@ class DynDigText extends DynElem {
 
 class DynDigBorder extends DynElem {
   a;
-  attribute;
   color;
   firstScan = true;
 
@@ -1888,9 +1655,7 @@ class DynDigBorder extends DynElem {
     let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
         this.a.database);
 
-    if (this.a.inverted) {
-      value = !value;
-    }
+    value = (this.a.inverted) ? !value : value;
 
     if (this.firstScan) {
       this.firstScan = false;
@@ -1915,10 +1680,6 @@ class DynDigBorder extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynBorder : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.DigBorder:
@@ -1945,7 +1706,6 @@ class DynDigBorder extends DynElem {
 
 class DynValue extends DynElem {
   a;
-  attribute;
   format = null;
   zero_blank;
   decimals_attr;
@@ -1980,22 +1740,17 @@ class DynValue extends DynElem {
         return format;
     }
 
-    // TODO
-    return format; // TODO
-    let ret = this.dyn.graph.getGdh().getObjectInfoInt(pname.name);
-    if (even(ret)) {
+    let sts = this.dyn.graph.getGdh().getObjectInfoInt(pname.name);
+    if (even(sts)) {
       return format;
     }
 
-    decimals = ret.value - decr;
-    if (decimals < 0) {
-      decimals = 0;
-    }
+    decimals = Math.max(sts - decr, 0);
     if (decimals >= 10) {
       return format;
     }
 
-    if (format === null) {
+    if (!format) {
       return "%." + decimals + "f";
     }
 
@@ -2007,33 +1762,26 @@ class DynValue extends DynElem {
       if (s < 2 || format.charAt(s - 2) !== '.') {
         return "%." + decimals + "f";
       } else {
-        return format.substring(0, s - 1) + decimals + format.substring(s);
+        return format.substring(0, format.indexOf('.') + 1) + decimals + "f";
       }
     }
   }
 
   connect(object) {
-    if (this.format === null && this.decimals_attr === null) {
-      return 1;
-    }
-
-    if (typeof this.decimals_attr !== 'undefined' &&
-        this.decimals_attr !== null && !(this.decimals_attr === "")) {
+    if (this.decimals_attr) {
       this.format =
           this.read_decimals(this.dyn, this.decimals_attr, this.decimals_decr,
               this.format);
       console.log("read_decimals " + this.format);
     }
-    if (this.format === null) {
-      return 1;
-    }
-    this.cFormat = new GlowCFormat(this.format);
+    if (this.format) {
+      this.cFormat = new GlowCFormat(this.format);
 
-    this.a = new DynReference(this.dyn, this.attribute);
-    this.a.connect(this.dyn);
-    if (!this.a.sts) {
-      console.log("Value: " + this.attribute);
-      return 1;
+      this.a = new DynReference(this.dyn, this.attribute);
+      this.a.connect(this.dyn);
+      if (!this.a.sts) {
+        console.log("Value: " + this.attribute);
+      }
     }
 
     return 1;
@@ -2050,15 +1798,15 @@ class DynValue extends DynElem {
 
     let annot_num = Dyn.instance_to_number(this.instance);
 
+    let value0 = this.a.get_ref_value(this.dyn);
+    if (value0 === undefined) {
+      return;
+    }
+
     switch (this.a.typeid) {
       case Type.Float32:
-        let value0 = this.a.get_ref_value(this.dyn);
-        if (typeof value0 === 'undefined') {
-          return;
-        }
-
         if (value0 !== this.oldValueF || this.firstScan) {
-          if (this.cFormat !== null) {
+          if (this.cFormat) {
             let sb = this.cFormat.format(value0);
             object.setAnnotation(annot_num, sb);
           }
@@ -2072,13 +1820,8 @@ class DynValue extends DynElem {
       case Type.UInt16:
       case Type.Int8:
       case Type.UInt8:
-        let value0 = this.a.get_ref_value(this.dyn);
-        if (typeof value0 === 'undefined') {
-          return;
-        }
-
         if (value0 !== this.oldValueI || this.firstScan) {
-          if (this.cFormat !== null) {
+          if (this.cFormat) {
             let sb = this.cFormat.format(value0);
             object.setAnnotation(annot_num, sb);
           }
@@ -2087,13 +1830,8 @@ class DynValue extends DynElem {
         }
         break;
       case Type.Boolean:
-        let value0 = this.a.get_ref_value(this.dyn);
-        if (typeof value0 === 'undefined') {
-          return;
-        }
-
         if (value0 !== this.oldValueB || this.firstScan) {
-          if (this.cFormat !== null) {
+          if (this.cFormat) {
             let sb = this.cFormat.format(value0);
             object.setAnnotation(annot_num, sb);
           }
@@ -2105,19 +1843,12 @@ class DynValue extends DynElem {
       case Type.Objid:
       case Type.Time:
       case Type.DeltaTime:
-        let value0 = this.a.get_ref_value(this.dyn);
-        if (typeof value0 === 'undefined') {
-          return;
-        }
-
         if (this.firstScan || !(value0 === this.oldValueS)) {
-          if (this.cFormat !== null) {
-            if (this.a_typeid === Type.String) {
+          if (this.cFormat) {
+            if (this.a.typeid === Type.String) {
               let sb = this.cFormat.format(value0);
               object.setAnnotation(annot_num, sb);
-            } else
-            // TODO time format
-            {
+            } else { // TODO time format
               object.setAnnotation(annot_num, value0);
             }
           }
@@ -2127,21 +1858,13 @@ class DynValue extends DynElem {
         break;
       case Type.Status:
       case Type.NetStatus:
-        let value0 = this.a.get_ref_value(this.dyn);
-        if (typeof value0 === 'undefined') {
-          return;
-        }
-
         if (value0 !== this.oldValueI || this.firstScan) {
           if (value0 === 0) {
             object.setAnnotation(annot_num, "");
             this.dyn.repaintNow = true;
           } else {
             if (this.a.database === Database.Gdh) {
-              let data = new Array(2);
-              data[0] = this;
-              data[1] = object;
-              this.dyn.graph.getGdh().getMsg(value0, DynValue.scan2, data);
+              this.dyn.graph.getGdh().getMsg(value0).then(this.scan2(object));
             }
           }
         }
@@ -2169,16 +1892,16 @@ class DynValue extends DynElem {
     }
   }
 
-  static scan2(id, data, sts, value) {
-    let self = data[0];
-    let object = data[1];
-    let annot_num = Dyn.instance_to_number(self.instance);
-    if (sts & 1 !== 0) {
-      object.setAnnotation(annot_num, value);
-    } else {
-      object.setAnnotation(annot_num, "Unknown message");
+  scan2(object) {
+    return function(res) {
+      let annot_num = Dyn.instance_to_number(this.instance);
+      if (res.sts & 1 !== 0) {
+        object.setAnnotation(annot_num, res.value);
+      } else {
+        object.setAnnotation(annot_num, "Unknown message");
+      }
+      this.dyn.repaintNow = true;
     }
-    self.dyn.repaintNow = true;
   }
 
   open(lines, row) {
@@ -2186,10 +1909,6 @@ class DynValue extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynBorder : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.Value:
@@ -2222,10 +1941,9 @@ class DynValue extends DynElem {
           this.decimals_decr = parseInt(tokens[1], 10);
           break;
         case DynSave.End:
-          if (this.format !== null) {
+          if (this.format) {
             this.cFormat = new GlowCFormat(this.format);
           }
-
           return i;
         default:
           console.log("Syntax error in DynValue");
@@ -2233,7 +1951,7 @@ class DynValue extends DynElem {
       }
     }
 
-    if (this.format !== null) {
+    if (this.format) {
       this.cFormat = new GlowCFormat(this.format);
     }
 
@@ -2242,7 +1960,6 @@ class DynValue extends DynElem {
 }
 
 class DynValueInput extends DynElem {
-  attribute;
   min_value;
   max_value;
   clear;
@@ -2263,14 +1980,12 @@ class DynValueInput extends DynElem {
 
   connect(object) {
     // Get the Value element
-    this.value_element = null;
-    for (let j = 0; j < this.dyn.elements.length; j++) {
-      if (this.dyn.elements[j].dyn_type1 === DynType1.Value) {
-        this.value_element = this.dyn.elements[j];
+    this.value_element = this.dyn.elements.find(function (e) {
+      if (e.dyn_type1 === DynType1.Value) {
         this.a_typeid = this.value_element.a.typeid;
-        break;
+        return true;
       }
-    }
+    }) || null;
 
     return 1;
   }
@@ -2295,10 +2010,6 @@ class DynValueInput extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynValueInput : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.ValueInput:
@@ -2358,7 +2069,6 @@ class DynValueInput extends DynElem {
 
 class DynAnalogColor extends DynElem {
   a = null;
-  attribute;
   limit;
   limit_type;
   color;
@@ -2385,7 +2095,7 @@ class DynAnalogColor extends DynElem {
       }
     }
 
-    if (mainInstance !== null) {
+    if (mainInstance) {
       if (mainInstance.a === null || !mainInstance.a.attrFound) {
         mainInstance.a = new DynReference(this.dyn, mainInstance.attribute);
         mainInstance.a.connect(this.dyn);
@@ -2557,10 +2267,6 @@ class DynAnalogColor extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynAnalogColor : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.AnalogColor:
           break;
@@ -2604,7 +2310,6 @@ class DynAnalogColor extends DynElem {
 
 class DynRotate extends DynElem {
   a;
-  attribute;
   x0;
   y0;
   factor;
@@ -2660,10 +2365,6 @@ class DynRotate extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynRotate : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.Rotate:
@@ -2724,75 +2425,45 @@ class DynMove extends DynElem {
   connect(object) {
     this.move_x_a = new DynReference(this.dyn, this.move_x_attribute);
     this.move_x_a.connect(this.dyn);
-    if (this.move_x_a.sts) {
-      switch (this.move_x_a.typeid) {
-        case Type.Float32:
-        case Type.Float64:
-        case Type.Int32:
-        case Type.UInt32:
-          break;
-        default:
-          this.move_x_a.disconnect(this.dyn);
-          console.log("Move: " + this.move_x_attribute);
-          return 1;
-      }
+
+    let tmp = [Type.Float32, Type.Float64, Type.Int32, Type.UInt32];
+    if (this.move_x_a.sts && tmp.indexOf(this.move_x_a.typeid) === -1) {
+      this.move_x_a.disconnect(this.dyn);
+      console.log("Move: " + this.move_x_attribute);
+      return 1;
     }
 
     this.move_y_a = new DynReference(this.dyn, this.move_y_attribute);
     this.move_y_a.connect(this.dyn);
-    if (this.move_y_a.sts) {
-      switch (this.move_y_a.typeid) {
-        case Type.Float32:
-        case Type.Float64:
-        case Type.Int32:
-        case Type.UInt32:
-          break;
-        default:
-          this.move_y_a.disconnect(this.dyn);
-          console.log("Move: " + this.move_y_attribute);
-          return 1;
-      }
+    if (this.move_y_a.sts && tmp.indexOf(this.move_y_a.typeid) === -1) {
+      this.move_y_a.disconnect(this.dyn);
+      console.log("Move: " + this.move_y_attribute);
+      return 1;
     }
 
     this.scale_x_a = new DynReference(this.dyn, this.scale_x_attribute);
     this.scale_x_a.connect(this.dyn);
-    if (this.scale_x_a.sts) {
-      switch (this.scale_x_a.typeid) {
-        case Type.Float32:
-        case Type.Float64:
-        case Type.Int32:
-        case Type.UInt32:
-          break;
-        default:
-          this.scale_x_a.disconnect(this.dyn);
-          console.log("Move: " + this.scale_x_attribute);
-          return 1;
-      }
+    if (this.scale_x_a.sts && tmp.indexOf(this.scale_x_a.typeid) === -1) {
+      this.scale_x_a.disconnect(this.dyn);
+      console.log("Move: " + this.scale_x_attribute);
+      return 1;
     }
 
     this.scale_y_a = new DynReference(this.dyn, this.scale_y_attribute);
     this.scale_y_a.connect(this.dyn);
-    if (this.scale_y_a.sts) {
-      switch (this.scale_y_a.typeid) {
-        case Type.Float32:
-        case Type.Float64:
-        case Type.Int32:
-        case Type.UInt32:
-          break;
-        default:
-          this.scale_y_a.disconnect(this.dyn);
-          console.log("Move: " + this.scale_y_attribute);
-          return 1;
-      }
+    if (this.scale_y_a.sts && tmp.indexOf(this.scale_y_a.typeid) === -1) {
+      this.scale_y_a.disconnect(this.dyn);
+      console.log("Move: " + this.scale_y_attribute);
+      return 1;
     }
 
     if (!object.transformIsStored()) {
       object.storeTransform();
       let geom = object.measure();
-      this.x_orig = geom.x;
-      this.y_orig = geom.y;
-      this.width_orig = geom.width;
-      this.height_orig = geom.height;
+      this.x_orig = geom.ll_x;
+      this.y_orig = geom.ll_y;
+      this.width_orig = geom.width();
+      this.height_orig = geom.height();
     }
 
     return 1;
@@ -2846,7 +2517,6 @@ class DynMove extends DynElem {
       if (!update) {
         return;
       }
-
     }
 
     let move_x = 0;
@@ -2960,10 +2630,6 @@ class DynMove extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynMove : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.Move:
           break;
@@ -3022,7 +2688,6 @@ class DynMove extends DynElem {
 
 class DynAnalogShift extends DynElem {
   a;
-  attribute;
   firstScan = true;
   oldValueF;
   oldValueI;
@@ -3057,7 +2722,6 @@ class DynAnalogShift extends DynElem {
     switch (this.a.typeid) {
       case Type.Float32:
         let value = this.a.get_ref_value(this.dyn);
-        let i;
 
         if (this.firstScan) {
           this.firstScan = false;
@@ -3073,7 +2737,6 @@ class DynAnalogShift extends DynElem {
         break;
       case Type.Int32:
         let value = this.a.get_ref_value(this.dyn);
-        let i;
 
         if (this.firstScan) {
           this.firstScan = false;
@@ -3097,10 +2760,6 @@ class DynAnalogShift extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynAnalogShift : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.AnalogShift:
           break;
@@ -3123,7 +2782,6 @@ class DynAnalogShift extends DynElem {
 
 class DynDigShift extends DynElem {
   a;
-  attribute;
   firstScan = true;
 
   constructor(dyn) {
@@ -3153,9 +2811,7 @@ class DynDigShift extends DynElem {
     let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
         this.a.database);
 
-    if (this.a.inverted) {
-      value = !value;
-    }
+    value = (this.a.inverted) ? !value : value;
 
     if (this.firstScan) {
       this.firstScan = false;
@@ -3178,10 +2834,6 @@ class DynDigShift extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynDigShift : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.DigShift:
@@ -3259,15 +2911,9 @@ class DynDigFourShift extends DynElem {
     let value3 = this.dyn.getDig(this.a3.p, this.a3.typeid, this.a3.bitmask,
         this.a3.database);
 
-    if (this.a1.inverted) {
-      value1 = !value1;
-    }
-    if (this.a2.inverted) {
-      value2 = !value2;
-    }
-    if (this.a3.inverted) {
-      value3 = !value3;
-    }
+    value1 = (this.a1.inverted) ? !value1 : value1;
+    value2 = (this.a2.inverted) ? !value2 : value2;
+    value3 = (this.a3.inverted) ? !value3 : value3;
 
     if (this.firstScan) {
       this.firstScan = false;
@@ -3297,10 +2943,6 @@ class DynDigFourShift extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynDigFourShift : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.DigFourShift:
@@ -3334,7 +2976,6 @@ class DynDigFourShift extends DynElem {
 
 class DynScrollingText extends DynElem {
   a;
-  attribute;
   direction;
   speed;
   bounce;
@@ -3362,13 +3003,10 @@ class DynScrollingText extends DynElem {
     }
 
     let geom = object.measure();
-    switch (this.direction) {
-      case Direction.Left:
-      case Direction.Right:
-        this.osize = geom.width;
-        break;
-      default:
-        this.osize = geom.height;
+    if (this.direction == Direction.Left || this.direction == Direction.Right) {
+      this.osize = geom.width();
+    } else {
+      this.osize = geom.height();
     }
 
     return 1;
@@ -3476,10 +3114,6 @@ class DynScrollingText extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynScrollingText : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.ScrollingText:
           break;
@@ -3526,10 +3160,6 @@ class DynColorThemeLightness extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynColorThemeLightness : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.ColorThemeLightness:
           break;
@@ -3547,7 +3177,6 @@ class DynColorThemeLightness extends DynElem {
 
 class DynDigBackgroundColor extends DynElem {
   a = null;
-  attribute;
   color;
   firstScan = true;
 
@@ -3572,7 +3201,7 @@ class DynDigBackgroundColor extends DynElem {
   }
 
   disconnect() {
-    if (this.a !== null) {
+    if (this.a) {
       this.a.disconnect(this.dyn);
     }
   }
@@ -3584,9 +3213,7 @@ class DynDigBackgroundColor extends DynElem {
     let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
         this.a.database);
 
-    if (this.a.inverted) {
-      value = !value;
-    }
+    value = (this.a.inverted) ? !value : value;
 
     if (this.firstScan) {
       this.firstScan = false;
@@ -3616,10 +3243,6 @@ class DynDigBackgroundColor extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynDigBackgroundColor : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.DigBackgroundColor:
@@ -3652,7 +3275,6 @@ class DynDigBackgroundColor extends DynElem {
 
 class DynDigSwap extends DynElem {
   a;
-  attribute;
   reset_value;
   firstScan = true;
 
@@ -3689,9 +3311,7 @@ class DynDigSwap extends DynElem {
       return;
     }
 
-    if (this.a.inverted) {
-      value = !value;
-    }
+    value = (this.a.inverted) ? !value : value;
 
     if (this.a.oldValue === value) {
       // No change since last time
@@ -3711,10 +3331,6 @@ class DynDigSwap extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynDigSwap : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.DigSwap:
@@ -3741,7 +3357,6 @@ class DynDigSwap extends DynElem {
 
 class DynAnimation extends DynElem {
   a;
-  attribute;
   sequence;
   firstScan = true;
   animation_count;
@@ -3781,9 +3396,7 @@ class DynAnimation extends DynElem {
 
     let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
         this.a.database);
-    if (this.a.inverted) {
-      value = !value;
-    }
+    value = (this.a.inverted) ? !value : value;
 
     if (this.firstScan) {
       this.animation_count = 0;
@@ -3801,12 +3414,11 @@ class DynAnimation extends DynElem {
       if (this.a.oldValue !== value) {
         // Start animation
         if (value) {
-          this.animation_count = 0;
           this.animation_direction = 1;
         } else if (!value) {
           this.animation_direction = 2;
-          this.animation_count = 0;
         }
+        this.animation_count = 0;
       }
 
       if (this.animation_direction !== 0) {
@@ -3816,21 +3428,17 @@ class DynAnimation extends DynElem {
           // Shift nodeclass
           if (this.animation_direction === 1) {
             // Shift forward
-
             sts = object.set_next_nodeclass();
             if ((sts & 1) === 0) {
               // End of animation
-              this.animation_count = 0;
               this.animation_direction = 0;
             }
             this.animation_count = 0;
           } else {
             // Shift backward
-
             sts = object.set_previous_nodeclass();
             if ((sts & 1) === 0) {
               // End of animation
-              this.animation_count = 0;
               this.animation_direction = 0;
             }
             this.animation_count = 0;
@@ -3893,10 +3501,6 @@ class DynAnimation extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("Animation : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.Animation:
           break;
@@ -3931,10 +3535,6 @@ class DynVideo extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("Video : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.Video:
@@ -4001,10 +3601,9 @@ class DynBar extends DynElem {
       return;
     }
 
-    let minval, maxval;
     if (this.maxvalue_a.sts && this.minvalue_a.sts) {
-      minval = this.minvalue_a.get_ref_value(this.dyn);
-      maxval = this.maxvalue_a.get_ref_value(this.dyn);
+      let minval = this.minvalue_a.get_ref_value(this.dyn);
+      let maxval = this.maxvalue_a.get_ref_value(this.dyn);
       if (minval !== this.minvalue_a.oldValue ||
           maxval !== this.maxvalue_a.oldValue) {
         object.set_range(minval, maxval);
@@ -4020,9 +3619,7 @@ class DynBar extends DynElem {
         if (this.firstScan) {
           this.firstScan = false;
         } else {
-          if (Math.abs(this.old_value - value) < Number.MIN_VALUE)
-          // No change since last time
-          {
+          if (Math.abs(this.old_value - value) < Number.MIN_VALUE) { // No change since last time
             return;
           }
         }
@@ -4036,9 +3633,7 @@ class DynBar extends DynElem {
         if (this.firstScan) {
           this.firstScan = false;
         } else {
-          if (this.old_ivalue === value)
-          // No change since last time
-          {
+          if (this.old_ivalue === value) { // No change since last time
             return;
           }
         }
@@ -4054,10 +3649,6 @@ class DynBar extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynBar : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.Bar:
@@ -4207,7 +3798,7 @@ class DynTrend extends DynElem {
           this.dyn.graph.getAnimationScanTime();
     }
 
-    if (this.mark1_attr !== null && this.mark1_attr.trim() !== "") {
+    if (this.mark1_attr && this.mark1_attr.trim() !== "") {
       this.mark1_a = new DynReference(this.dyn, this.mark1_attr);
       this.mark1_a.connect(this.dyn);
       if (!this.mark1_a.sts) {
@@ -4216,7 +3807,7 @@ class DynTrend extends DynElem {
       }
     }
 
-    if (this.mark2_attr !== null && this.mark2_attr.trim() !== "") {
+    if (this.mark2_attr && this.mark2_attr.trim() !== "") {
       this.mark2_a = new DynReference(this.dyn, this.mark2_attr);
       this.mark2_a.connect(this.dyn);
       if (!this.mark2_a.sts) {
@@ -4234,34 +3825,13 @@ class DynTrend extends DynElem {
   }
 
   disconnect() {
-    this.a1.disconnect(this.dyn);
-    if (this.a2 !== null) {
-      this.a2.disconnect(this.dyn);
-    }
-    if (this.minvalue_a1 !== null) {
-      this.minvalue_a1.disconnect(this.dyn);
-    }
-    if (this.maxvalue_a1 !== null) {
-      this.maxvalue_a1.disconnect(this.dyn);
-    }
-    if (this.minvalue_a2 !== null) {
-      this.minvalue_a2.disconnect(this.dyn);
-    }
-    if (this.maxvalue_a2 !== null) {
-      this.maxvalue_a2.disconnect(this.dyn);
-    }
-    if (this.hold_a !== null) {
-      this.hold_a.disconnect(this.dyn);
-    }
-    if (this.timerange_a !== null) {
-      this.timerange_a.disconnect(this.dyn);
-    }
-    if (this.mark1_a !== null) {
-      this.mark1_a.disconnect(this.dyn);
-    }
-    if (this.mark2_a !== null) {
-      this.mark2_a.disconnect(this.dyn);
-    }
+    [this.a1, this.a2, this.minvalue_a1, this.maxvalue_a1,
+      this.minvalue_a2, this.maxvalue_a2, this.hold_a, this.timerange_a,
+      this.mark1_a, this.mark2_a].forEach(function (e) {
+      if (e) {
+        e.disconnect(this.dyn);
+      }
+    });
   }
 
   scan(object) {
@@ -4269,14 +3839,14 @@ class DynTrend extends DynElem {
       return;
     }
 
-    if (this.hold_a !== null) {
+    if (this.hold_a) {
       let holdval = this.hold_a.get_ref_value(this.dyn);
       if (holdval) {
         return;
       }
     }
 
-    if (this.timerange_a !== null) {
+    if (this.timerange_a) {
       let timerangeval = this.timerange_a.get_ref_value(this.dyn);
       if (Math.abs(timerangeval - this.timerange_a.oldValue) >
           Number.MIN_VALUE) {
@@ -4285,71 +3855,34 @@ class DynTrend extends DynElem {
         if (dt >= 0.001) {
           object.set_scan_time(dt);
           this.scan_time = dt;
-          if (this.cycle === Cycle.Slow) {
+          if (this.dyn.cycle === Cycle.Slow) {
             let current_graph_scan_time = this.dyn.graph.getScanTime();
-            let current_graph_fast_scan_time = this.dyn.graph.getFastScanTime();
-            let current_graph_animation_scan_time = this.dyn.graph.getAnimationScanTime();
-            if (current_graph_scan_time > this.scan_time) {
+            if (current_graph_scan_time > this.scan_time || this.scan_time <= this.orig_graph_scan_time) {
               this.dyn.graph.setScanTime(this.scan_time);
             } else {
-              if (this.scan_time > this.orig_graph_scan_time) {
-                this.dyn.graph.setScanTime(this.orig_graph_scan_time);
-              } else {
-                this.dyn.graph.setScanTime(this.scan_time);
-              }
+              this.dyn.graph.setScanTime(this.orig_graph_scan_time);
             }
-            if (current_graph_fast_scan_time > this.scan_time) {
-              this.dyn.graph.setFastScanTime(this.scan_time);
-            } else {
-              if (this.scan_time > this.orig_graph_fast_scan_time) {
-                this.dyn.graph.setFastScanTime(this.orig_graph_fast_scan_time);
-              } else {
-                this.dyn.graph.setFastScanTime(this.scan_time);
-              }
-            }
-            if (current_graph_animation_scan_time > this.scan_time) {
-              this.dyn.graph.setAnimationScanTime(this.scan_time);
-            } else {
-              if (this.scan_time > this.orig_graph_animation_scan_time) {
-                this.dyn.graph.setAnimationScanTime(
-                    this.orig_graph_animation_scan_time);
-              } else {
-                this.dyn.graph.setAnimationScanTime(this.scan_time);
-              }
-            }
+          }
+          let current_graph_fast_scan_time = this.dyn.graph.getFastScanTime();
+          let current_graph_animation_scan_time = this.dyn.graph.getAnimationScanTime();
+          if (current_graph_fast_scan_time > this.scan_time || this.scan_time <= this.orig_graph_fast_scan_time) {
+            this.dyn.graph.setFastScanTime(this.scan_time);
           } else {
-            // Fast cycle
-            let current_graph_fast_scan_time = this.dyn.graph.getFastScanTime();
-            let current_graph_animation_scan_time = this.dyn.graph.getAnimationScanTime();
-            if (current_graph_fast_scan_time > this.scan_time) {
-              this.dyn.graph.setFastScanTime(this.scan_time);
-            } else {
-              if (this.scan_time > this.orig_graph_fast_scan_time) {
-                this.dyn.graph.setFastScanTime(this.orig_graph_fast_scan_time);
-              } else {
-                this.dyn.graph.setFastScanTime(this.scan_time);
-              }
-            }
-            if (current_graph_animation_scan_time > this.scan_time) {
-              this.dyn.graph.setAnimationScanTime(this.scan_time);
-            } else {
-              if (this.scan_time > this.orig_graph_animation_scan_time) {
-                this.dyn.graph.setAnimationScanTime(
-                    this.orig_graph_animation_scan_time);
-              } else {
-                this.dyn.graph.setAnimationScanTime(this.scan_time);
-              }
-            }
+            this.dyn.graph.setFastScanTime(this.orig_graph_fast_scan_time);
+          }
+          if (current_graph_animation_scan_time > this.scan_time || this.scan_time <= this.orig_graph_animation_scan_time) {
+            this.dyn.graph.setAnimationScanTime(this.scan_time);
+          } else {
+            this.dyn.graph.setAnimationScanTime(this.orig_graph_animation_scan_time);
           }
         }
         this.timerange_a.oldValue = timerangeval;
       }
     }
 
-    let minval, maxval;
-    if (this.maxvalue_a1 !== null && this.minvalue_a1 !== null) {
-      minval = this.minvalue_a1.get_ref_value(this.dyn);
-      maxval = this.maxvalue_a1.get_ref_value(this.dyn);
+    if (this.maxvalue_a1 && this.minvalue_a1) {
+      let minval = this.minvalue_a1.get_ref_value(this.dyn);
+      let maxval = this.maxvalue_a1.get_ref_value(this.dyn);
       if (minval !== this.minvalue_a1.oldValue ||
           maxval !== this.maxvalue_a1.oldValue) {
         if (Math.abs(maxval - minval) > Number.MIN_VALUE) {
@@ -4360,9 +3893,9 @@ class DynTrend extends DynElem {
       }
     }
 
-    if (this.maxvalue_a2 !== null && this.minvalue_a2 !== null) {
-      minval = this.minvalue_a2.get_ref_value(this.dyn);
-      maxval = this.maxvalue_a2.get_ref_value(this.dyn);
+    if (this.maxvalue_a2 && this.minvalue_a2) {
+      let minval = this.minvalue_a2.get_ref_value(this.dyn);
+      let maxval = this.maxvalue_a2.get_ref_value(this.dyn);
       if (minval !== this.minvalue_a2.oldValue ||
           maxval !== this.maxvalue_a2.oldValue) {
         if (Math.abs(maxval - minval) > Number.MIN_VALUE) {
@@ -4373,7 +3906,7 @@ class DynTrend extends DynElem {
       }
     }
 
-    if (this.mark1_a !== null) {
+    if (this.mark1_a) {
       let mark1val = this.mark1_a.get_ref_value(this.dyn);
       if (this.firstScan ||
           Math.abs(mark1val - this.mark1_a.oldValue) > Number.MIN_VALUE) {
@@ -4381,7 +3914,7 @@ class DynTrend extends DynElem {
         this.mark1_a.oldValue = mark1val;
       }
     }
-    if (this.mark2_a !== null) {
+    if (this.mark2_a) {
       let mark2val = this.mark2_a.get_ref_value(this.dyn);
       if (this.firstScan ||
           Math.abs(mark2val - this.mark2_a.oldValue) > Number.MIN_VALUE) {
@@ -4394,52 +3927,34 @@ class DynTrend extends DynElem {
       this.firstScan = false;
     }
 
-    if (this.cycle === Cycle.Slow) {
+    if (this.dyn.cycle === Cycle.Slow) {
       this.acc_time += this.dyn.graph.getScanTime();
     } else {
       this.acc_time += this.dyn.graph.getFastScanTime();
     }
     if (this.acc_time + Number.MIN_VALUE >= this.scan_time) {
-      if (this.p1 !== 0) {
+      if (this.a1 !== 0) {
         switch (this.a1.typeid) {
           case Type.Boolean:
-            let value = this.a1.get_ref_value(this.dyn);
-            if (value) {
-              object.add_value(1, 0);
-            } else {
-              object.add_value(0, 0);
-            }
+            object.add_value(Boolean(this.a1.get_ref_value(this.dyn)), 0);
             break;
           case Type.Float32:
-            let value = this.a1.get_ref_value(this.dyn);
-            object.add_value(value, 0);
-            break;
           case Type.Int32:
           case Type.UInt32:
-            let value = this.a1.get_ref_value(this.dyn);
-            object.add_value(value, 0);
+            object.add_value(this.a1.get_ref_value(this.dyn), 0);
             break;
           default:
         }
       }
-      if (this.a2 !== null && this.a2.sts) {
+      if (this.a2 && this.a2.sts) {
         switch (this.a2.typeid) {
           case Type.Boolean:
-            let value = this.a2.get_ref_value(this.dyn);
-            if (value) {
-              object.add_value(1, 1);
-            } else {
-              object.add_value(0, 1);
-            }
+            object.add_value(Boolean(this.a2.get_ref_value(this.dyn)), 0);
             break;
           case Type.Float32:
-            let value = this.a2.get_ref_value(this.dyn);
-            object.add_value(value, 1);
-            break;
           case Type.Int32:
           case Type.UInt32:
-            let value = this.a2.get_ref_value(this.dyn);
-            object.add_value(value, 1);
+            object.add_value(this.a2.get_ref_value(this.dyn), 0);
             break;
           default:
             break;
@@ -4455,10 +3970,6 @@ class DynTrend extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynTrend : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.Trend:
@@ -4587,10 +4098,6 @@ class DynXY_Curve extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynXYCurve : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.XY_Curve:
           break;
@@ -4706,77 +4213,27 @@ class DynXY_Curve extends DynElem {
       return 1;
     }
 
-    if (this.update_attr.trim() !== "") {
-      this.update_a = new DynReference(this.dyn, this.update_attr);
-      this.update_a.connect(this.dyn);
-      if (!this.update_a.sts) {
-        console.log("XYCurve: " + this.update_attr);
-        this.update_a = null;
+    let createRef = function(field) {
+      let attr = this[field + "_attr"];
+      field += "_a";
+      if (attr.trim() !== "") {
+        this[field] = new DynReference(this.dyn, attr);
+        this[field].connect(this.dyn);
+        if (!this[field].sts) {
+          console.log("XYCurve: " + attr);
+          this[field] = null;
+        }
       }
-    }
+    };
 
-    if (this.noofpoints_attr.trim() !== "") {
-      this.noofpoints_a = new DynReference(this.dyn, this.noofpoints_attr);
-      this.noofpoints_a.connect(this.dyn);
-      if (!this.noofpoints_a.sts) {
-        console.log("XYCurve: " + this.noofpoints_attr);
-        this.noofpoints_a = null;
-      }
-    }
-
-    if (this.y_minvalue_attr.trim() !== "") {
-      this.y_minvalue_a = new DynReference(this.dyn, this.y_minvalue_attr);
-      this.y_minvalue_a.connect(this.dyn);
-      if (!this.y_minvalue_a.sts) {
-        console.log("XYCurve: " + this.y_minvalue_attr);
-        this.y_minvalue_a = null;
-      }
-    }
-
-    if (this.y_maxvalue_attr.trim() !== "") {
-      this.y_maxvalue_a = new DynReference(this.dyn, this.y_maxvalue_attr);
-      this.y_maxvalue_a.connect(this.dyn);
-      if (!this.y_maxvalue_a.sts) {
-        console.log("XYCurve: " + this.y_maxvalue_attr);
-        this.y_maxvalue_a = null;
-      }
-    }
-
-    if (this.x_minvalue_attr.trim() !== "") {
-      this.x_minvalue_a = new DynReference(this.dyn, this.x_minvalue_attr);
-      this.x_minvalue_a.connect(this.dyn);
-      if (!this.x_minvalue_a.sts) {
-        console.log("XYCurve: " + this.x_minvalue_attr);
-        this.x_minvalue_a = null;
-      }
-    }
-
-    if (this.x_maxvalue_attr.trim() !== "") {
-      this.x_maxvalue_a = new DynReference(this.dyn, this.x_maxvalue_attr);
-      this.x_maxvalue_a.connect(this.dyn);
-      if (!this.x_maxvalue_a.sts) {
-        console.log("XYCurve: " + this.x_maxvalue_attr);
-        this.x_maxvalue_a = null;
-      }
-    }
-
-    if (this.y_mark1_attr.trim() !== "") {
-      this.y_mark1_a = new DynReference(this.dyn, this.y_mark1_attr);
-      this.y_mark1_a.connect(this.dyn);
-      if (!this.y_mark1_a.sts) {
-        console.log("XYCurve: " + this.y_mark1_attr);
-        this.y_mark1_a = null;
-      }
-    }
-
-    if (this.y_mark2_attr.trim() !== "") {
-      this.y_mark2_a = new DynReference(this.dyn, this.y_mark2_attr);
-      this.y_mark2_a.connect(this.dyn);
-      if (!this.y_mark2_a.sts) {
-        console.log("XYCurve: " + this.y_mark2_attr);
-        this.y_mark2_a = null;
-      }
-    }
+    createRef("update");
+    createRef("noofpoints");
+    createRef("y_minvalue");
+    createRef("y_maxvalue");
+    createRef("x_minvalue");
+    createRef("x_maxvalue");
+    createRef("y_mark1");
+    createRef("y_mark2");
 
     // Get curve number
     this.curve_number = 0;
@@ -4817,36 +4274,13 @@ class DynXY_Curve extends DynElem {
   }
 
   disconnect() {
-    if (this.update_a !== null) {
-      this.update_a.disconnect(this.dyn);
-    }
-    if (this.noofpoints_a !== null) {
-      this.noofpoints_a.disconnect(this.dyn);
-    }
-    if (this.y_minvalue_a !== null) {
-      this.y_minvalue_a.disconnect(this.dyn);
-    }
-    if (this.y_maxvalue_a !== null) {
-      this.y_maxvalue_a.disconnect(this.dyn);
-    }
-    if (this.x_minvalue_a !== null) {
-      this.x_minvalue_a.disconnect(this.dyn);
-    }
-    if (this.x_maxvalue_a !== null) {
-      this.x_maxvalue_a.disconnect(this.dyn);
-    }
-    if (this.x_mark1_a !== null) {
-      this.x_mark1_a.disconnect(this.dyn);
-    }
-    if (this.x_mark2_a !== null) {
-      this.x_mark2_a.disconnect(this.dyn);
-    }
-    if (this.y_mark1_a !== null) {
-      this.y_mark1_a.disconnect(this.dyn);
-    }
-    if (this.y_mark2_a !== null) {
-      this.y_mark2_a.disconnect(this.dyn);
-    }
+    [this.update_a, this.noofpoints_a, this.y_minvalue_a, this.y_maxvalue_a,
+      this.x_minvalue_a, this.x_maxvalue_a, this.x_mark1_a, this.x_mark2_a,
+      this.y_mark1_a, this.y_mark2_a].forEach(function (e) {
+      if (e) {
+        e.disconnect(this.dyn);
+      }
+    });
   }
 
   scan(object) {
@@ -4865,7 +4299,7 @@ class DynXY_Curve extends DynElem {
       update = true;
     }
 
-    if (this.update_a !== null) {
+    if (this.update_a) {
       let value = this.update_a.get_ref_value(this.dyn);
       if (value && !this.update_a.oldValue) {
         update = true;
@@ -4873,7 +4307,7 @@ class DynXY_Curve extends DynElem {
       this.update_a.oldValue = value;
     }
 
-    if (this.noofpoints_a !== null) {
+    if (this.noofpoints_a) {
       let value = this.noofpoints_a.get_ref_value(this.dyn);
       if (value !== this.noofpoints_a.oldValue) {
         update = true;
@@ -4883,7 +4317,7 @@ class DynXY_Curve extends DynElem {
       }
     }
 
-    if (this.y_minvalue_a !== null) {
+    if (this.y_minvalue_a) {
       let value = this.y_minvalue_a.get_ref_value(this.dyn);
       if (value !== this.y_min_value) {
         this.y_min_value = value;
@@ -4894,7 +4328,7 @@ class DynXY_Curve extends DynElem {
         update = true;
       }
     }
-    if (this.y_maxvalue_a !== null) {
+    if (this.y_maxvalue_a) {
       let value = this.y_maxvalue_a.get_ref_value(this.dyn);
       if (value !== this.y_max_value) {
         this.y_max_value = value;
@@ -4906,7 +4340,7 @@ class DynXY_Curve extends DynElem {
       }
     }
 
-    if (this.x_minvalue_a !== null) {
+    if (this.x_minvalue_a) {
       let value = this.x_minvalue_a.get_ref_value(this.dyn);
       if (value !== this.x_min_value) {
         this.x_min_value = value;
@@ -4917,7 +4351,7 @@ class DynXY_Curve extends DynElem {
         update = true;
       }
     }
-    if (this.x_maxvalue_a !== null) {
+    if (this.x_maxvalue_a) {
       let value = this.x_maxvalue_a.get_ref_value(this.dyn);
       if (value !== this.x_max_value) {
         this.x_max_value = value;
@@ -4929,7 +4363,7 @@ class DynXY_Curve extends DynElem {
       }
     }
 
-    if (this.x_mark1_a !== null) {
+    if (this.x_mark1_a) {
       let mark1val = this.x_mark1_a.get_ref_value(this.dyn);
       if (this.firstScan ||
           Math.abs(mark1val - this.x_mark1_a.oldValue) > Number.MIN_VALUE) {
@@ -4937,7 +4371,7 @@ class DynXY_Curve extends DynElem {
         this.x_mark1_a.oldValue = mark1val;
       }
     }
-    if (this.x_mark2_a !== null) {
+    if (this.x_mark2_a) {
       let mark2val = this.x_mark2_a.get_ref_value(this.dyn);
       if (this.firstScan ||
           Math.abs(mark2val - this.x_mark2_a.oldValue) > Number.MIN_VALUE) {
@@ -4945,7 +4379,7 @@ class DynXY_Curve extends DynElem {
         this.x_mark2_a.oldValue = mark2val;
       }
     }
-    if (this.y_mark1_a !== null) {
+    if (this.y_mark1_a) {
       let mark1val = this.y_mark1_a.get_ref_value(this.dyn);
       if (this.firstScan ||
           Math.abs(mark1val - this.y_mark1_a.oldValue) > Number.MIN_VALUE) {
@@ -4953,7 +4387,7 @@ class DynXY_Curve extends DynElem {
         this.y_mark1_a.oldValue = mark1val;
       }
     }
-    if (this.y_mark2_a !== null) {
+    if (this.y_mark2_a) {
       let mark2val = this.y_mark2_a.get_ref_value(this.dyn);
       if (this.firstScan ||
           Math.abs(mark2val - this.y_mark2_a.oldValue) > Number.MIN_VALUE) {
@@ -4992,7 +4426,7 @@ class DynXY_Curve extends DynElem {
       switch (this.xAttrType) {
         case Type.Float32:
           this.dyn.graph.getGdh()
-              .getObjectInfoFloatArray(pname.name, size, DynXY_Curve.scan2, this);
+              .getObjectInfoFloatArray(pname.name, size).then(this.scan2);
           break;
         case Type.Int32:
         case Type.Int16:
@@ -5001,7 +4435,7 @@ class DynXY_Curve extends DynElem {
         case Type.UInt16:
         case Type.UInt8:
           this.dyn.graph.getGdh()
-              .getObjectInfoIntArray(pname.name, size, DynXY_Curve.scan2, this);
+              .getObjectInfoIntArray(pname.name, size).then(this.scan2);
           break;
         default:
           return;
@@ -5010,87 +4444,40 @@ class DynXY_Curve extends DynElem {
     this.firstScan = false;
   }
 
-  static scan2(id, self, sts, value) {
-    switch (self.xAttrType) {
+  scan2(res) {
+    switch (this.xAttrType) {
       case Type.Float32:
-        if (!(sts & 1)) {
-          return;
-        }
-
-        switch (self.datatype) {
-          case CurveDataType.XYArrays:
-            self.curveX = new Array(self.noOfPoints);
-            for (let i = 0; i < self.noOfPoints; i++) {
-              self.curveX[i] = value[i];
-            }
-            break;
-          case CurveDataType.PointArray:
-            self.curveX = new Array(self.noOfPoints);
-            self.curveY = new Array(self.noOfPoints);
-            for (let i = 0; i < self.noOfPoints; i++) {
-              self.curveX[i] = value[2 * i];
-              self.curveY[i] = value[2 * i + 1];
-            }
-            self.dyn.repaintNow = true;
-            break;
-          case CurveDataType.TableObject:
-            self.noOfPoints = Math.floor(value[0]);
-            if (self.noOfPoints > self.noofpoints) {
-              self.noOfPoints = self.noofpoints;
-            }
-            if (attrSize < self.noOfPoints) {
-              self.noOfPoints = attrSize;
-            }
-            self.curveY = new Array(self.noOfPoints);
-            self.curveX = new Array(self.noOfPoints);
-            for (let i = 0; i < self.noOfPoints; i++) {
-              self.curveX[i] = value[2 * i + 1];
-              self.curveY[i] = value[2 * i + 2];
-            }
-            self.dyn.repaintNow = true;
-            break;
-        }
-        break;
       case Type.Int32:
       case Type.Int16:
       case Type.Int8:
       case Type.UInt32:
       case Type.UInt16:
       case Type.UInt8:
-        if (!(sts & 1)) {
+        if (!(res.sts & 1)) {
           return;
         }
-        switch (self.datatype) {
+        switch (this.datatype) {
           case CurveDataType.XYArrays:
-            self.curveX = new Array(self.noOfPoints);
-            for (let i = 0; i < self.noOfPoints; i++) {
-              self.curveX[i] = value[i];
-            }
+            this.curveX = res.value.slice(0, this.noOfPoints);
             break;
           case CurveDataType.PointArray:
-            self.curveX = new Array(self.noOfPoints);
-            self.curveY = new Array(self.noOfPoints);
-            for (let i = 0; i < self.noOfPoints; i++) {
-              self.curveX[i] = value[2 * i];
-              self.curveY[i] = value[2 * i + 1];
+            this.curveX = new Array(this.noOfPoints);
+            this.curveY = new Array(this.noOfPoints);
+            for (let i = 0; i < this.noOfPoints; i++) {
+              this.curveX[i] = res.value[2 * i];
+              this.curveY[i] = res.value[2 * i + 1];
             }
-            self.dyn.repaintNow = true;
+            this.dyn.repaintNow = true;
             break;
           case CurveDataType.TableObject:
-            self.noOfPoints = Math.floor(value[0]);
-            if (self.noOfPoints > self.noofpoints) {
-              self.noOfPoints = self.noofpoints;
+            this.noOfPoints = Math.min(Math.floor(res.value[0]), this.noofpoints);
+            this.curveY = new Array(this.noOfPoints);
+            this.curveX = new Array(this.noOfPoints);
+            for (let i = 0; i < this.noOfPoints; i++) {
+              this.curveX[i] = res.value[2 * i + 1];
+              this.curveY[i] = res.value[2 * i + 2];
             }
-            if (attrSize < self.noOfPoints) {
-              self.noOfPoints = attrSize;
-            }
-            self.curveY = new Array(self.noOfPoints);
-            self.curveX = new Array(self.noOfPoints);
-            for (let i = 0; i < self.noOfPoints; i++) {
-              self.curveX[i] = value[2 * i + 1];
-              self.curveY[i] = value[2 * i + 2];
-            }
-            self.dyn.repaintNow = true;
+            this.dyn.repaintNow = true;
             break;
         }
         break;
@@ -5099,20 +4486,17 @@ class DynXY_Curve extends DynElem {
     }
 
     // Read y-array
-    switch (self.datatype) {
+    switch (this.datatype) {
       case CurveDataType.XYArrays:
-        let pname = self.dyn.parseAttrName(self.y_attr);
-        if (pname.elements < self.noOfPoints) {
-          self.noOfPoints = pname.elements;
-        }
-        self.yAttrType = pname.type;
-        self.curveY = new Array(self.noOfPoints);
+        let pname = this.dyn.parseAttrName(this.y_attr);
+        this.noOfPoints = Math.min(this.noOfPoints, pname.elements);
+        this.yAttrType = pname.type;
+        this.curveY = new Array(this.noOfPoints);
 
-        switch (self.yAttrType) {
+        switch (this.yAttrType) {
           case Type.Float32:
-            self.dyn.graph.getGdh()
-                .getObjectInfoFloatArray(pname.name, self.noOfPoints, self.scan3,
-                    self);
+            this.dyn.graph.getGdh()
+                .getObjectInfoFloatArray(pname.name, this.noOfPoints).then(this.scan3);
             break;
           case Type.Int32:
           case Type.Int16:
@@ -5120,9 +4504,8 @@ class DynXY_Curve extends DynElem {
           case Type.UInt32:
           case Type.UInt16:
           case Type.UInt8:
-            self.dyn.graph.getGdh()
-                .getObjectInfoIntArray(pname.name, self.noOfPoints, self.scan3,
-                    self);
+            this.dyn.graph.getGdh()
+                .getObjectInfoIntArray(pname.name, this.noOfPoints).then(this.scan3);
             break;
           default:
             return;
@@ -5131,32 +4514,23 @@ class DynXY_Curve extends DynElem {
     }
   }
 
-  static scan3(id, self, sts, value) {
-    if (!(sts & 1)) {
+  scan3(res) {
+    if (!(res.sts & 1)) {
       return;
     }
 
-    switch (self.datatype) {
+    switch (this.datatype) {
       case CurveDataType.XYArrays:
-        switch (self.yAttrType) {
+        switch (this.yAttrType) {
           case Type.Float32:
-            for (let i = 0; i < self.noOfPoints; i++) {
-              self.curveY[i] = value[i];
-            }
-            self.dyn.repaintNow = true;
-            break;
           case Type.Int32:
           case Type.Int16:
           case Type.Int8:
           case Type.UInt32:
           case Type.UInt16:
           case Type.UInt8:
-            for (let i = 0; i < self.noOfPoints; i++) {
-              self.curveY[i] = value[i];
-            }
-
-            self.dyn.repaintNow = true;
-
+            this.curveY = res.value.slice(0, this.noOfPoints);
+            this.dyn.repaintNow = true;
             break;
           default:
             return;
@@ -5164,13 +4538,13 @@ class DynXY_Curve extends DynElem {
         break;
     }
 
-    self.object.set_xy_data(self.curveY, self.curveX, self.curve_number - 1,
-        self.noOfPoints);
+    this.object.set_xy_data(this.curveY, this.curveX, this.curve_number - 1,
+        this.noOfPoints);
   }
 }
 
 class DynPie extends DynElem {
-  a;
+  a: Array<DynReference>;
   attribute = new Array(GrowPie.PIE_MAX_SECTORS);
   sectors;
   min_value;
@@ -5190,10 +4564,6 @@ class DynPie extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynPie : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.Pie:
@@ -5308,11 +4678,11 @@ class DynPie extends DynElem {
     if (!this.connected) {
       return;
     }
-    for (let i = 0; i < this.sectors; i++) {
-      if (this.a[i] !== null) {
-        this.a[i].disconnect(this.dyn);
+    this.a.slice(0, this.sectors).forEach(function (e) {
+      if (e) {
+        e.disconnect(this.dyn);
       }
-    }
+    });
   }
 
   scan(object) {
@@ -5322,10 +4692,7 @@ class DynPie extends DynElem {
 
     switch (this.attr_type) {
       case Type.Float32:
-        let val = new Array(GrowPie.PIE_MAX_SECTORS);
-        for (let i = 0; i < this.sectors; i++) {
-          val[i] = this.a[i].get_ref_value(this.dyn);
-        }
+        let val = this.a.slice(0, this.sectors).map(e => e.get_ref_value(this.dyn));
 
         if (this.firstScan) {
           this.firstScan = false;
@@ -5379,7 +4746,7 @@ class DynPie extends DynElem {
 }
 
 class DynBarChart extends DynElem {
-  a;
+  a: Array<DynReference>;
   attribute = new Array(GrowBarChart.BARCHART_MAX_BARSEGMENTS);
   bars;
   barsegments;
@@ -5405,81 +4772,16 @@ class DynBarChart extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynBarChart : " + lines[i]);
-      }
-
-      switch (key) {
-        case DynSave.BarChart:
-          break;
-        case DynSave.BarChart_fix_range:
-          this.fix_range = parseInt(tokens[1], 10);
-          break;
-        case DynSave.BarChart_attribute1:
-          if (tokens.length > 1) {
-            this.attribute[0] = tokens[1];
-          }
-          break;
-        case DynSave.BarChart_attribute2:
-          if (tokens.length > 1) {
-            this.attribute[1] = tokens[1];
-          }
-          break;
-        case DynSave.BarChart_attribute3:
-          if (tokens.length > 1) {
-            this.attribute[2] = tokens[1];
-          }
-          break;
-        case DynSave.BarChart_attribute4:
-          if (tokens.length > 1) {
-            this.attribute[3] = tokens[1];
-          }
-          break;
-        case DynSave.BarChart_attribute5:
-          if (tokens.length > 1) {
-            this.attribute[4] = tokens[1];
-          }
-          break;
-        case DynSave.BarChart_attribute6:
-          if (tokens.length > 1) {
-            this.attribute[5] = tokens[1];
-          }
-          break;
-        case DynSave.BarChart_attribute7:
-          if (tokens.length > 1) {
-            this.attribute[6] = tokens[1];
-          }
-          break;
-        case DynSave.BarChart_attribute8:
-          if (tokens.length > 1) {
-            this.attribute[7] = tokens[1];
-          }
-          break;
-        case DynSave.BarChart_attribute9:
-          if (tokens.length > 1) {
-            this.attribute[8] = tokens[1];
-          }
-          break;
-        case DynSave.BarChart_attribute10:
-          if (tokens.length > 1) {
-            this.attribute[9] = tokens[1];
-          }
-          break;
-        case DynSave.BarChart_attribute11:
-          if (tokens.length > 1) {
-            this.attribute[10] = tokens[1];
-          }
-          break;
-        case DynSave.BarChart_attribute12:
-          if (tokens.length > 1) {
-            this.attribute[11] = tokens[1];
-          }
-          break;
-        case DynSave.End:
-          return i;
-        default:
-          console.log("Syntax error in DynBarChart");
-          break;
+      if (key === DynSave.End) {
+        return i;
+      } else if (key === DynSave.BarChart_fix_range) {
+        this.fix_range = parseInt(tokens[1], 10);
+      } else if (key >= DynSave.BarChart_attribute1 && key <= DynSave.BarChart_attribute12) {
+        if (tokens.length > 1) {
+          this.attribute[key - DynSave.BarChart_attribute1] = tokens[1];
+        }
+      } else {
+        console.log("Syntax error in DynBarChart");
       }
     }
 
@@ -5536,9 +4838,7 @@ class DynBarChart extends DynElem {
     if (!this.connected) {
       return;
     }
-    for (let i = 0; i < this.barsegments; i++) {
-      this.a[i].disconnect(this.dyn);
-    }
+    this.a.slice(0, this.barsegments).forEach(e => e.disconnect(this.dyn));
   }
 
   scan(object) {
@@ -5561,12 +4861,8 @@ class DynBarChart extends DynElem {
           this.firstScan = false;
         } else {
           let update = 0;
-          if (this.oldValueF !== null) {
-            for (let i = 0; i < this.barsegments && this.valueF[i] !== null;
-                 i++) {
-              if (this.oldValueF[i] === null || this.valueF[i] === null) {
-                break;
-              }
+          if (this.oldValueF) {
+            for (let i = 0; i < this.barsegments && this.valueF[i]; i++) {
               for (let j = 0; j < this.bars; j++) {
                 if (Math.abs(this.oldValueF[i][j] - this.valueF[i][j]) >
                     Number.MIN_VALUE) {
@@ -5636,198 +4932,22 @@ class DynTable extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynTable : " + lines[i]);
-      }
-
-      switch (key) {
-        case DynSave.Table:
-          break;
-        case DynSave.Table_attribute1:
-          if (tokens.length > 1) {
-            this.attribute[0] = tokens[1];
-          }
-          break;
-        case DynSave.Table_format1:
-          if (tokens.length > 1) {
-            this.format[0] = tokens[1];
-          }
-          break;
-        case DynSave.Table_sel_attribute1:
-          if (tokens.length > 1) {
-            this.sel_attribute[0] = tokens[1];
-          }
-          break;
-        case DynSave.Table_attribute2:
-          if (tokens.length > 1) {
-            this.attribute[1] = tokens[1];
-          }
-          break;
-        case DynSave.Table_format2:
-          if (tokens.length > 1) {
-            this.format[1] = tokens[1];
-          }
-          break;
-        case DynSave.Table_sel_attribute2:
-          if (tokens.length > 1) {
-            this.sel_attribute[1] = tokens[1];
-          }
-          break;
-        case DynSave.Table_attribute3:
-          if (tokens.length > 1) {
-            this.attribute[2] = tokens[1];
-          }
-          break;
-        case DynSave.Table_format3:
-          if (tokens.length > 1) {
-            this.format[2] = tokens[1];
-          }
-          break;
-        case DynSave.Table_sel_attribute3:
-          if (tokens.length > 1) {
-            this.sel_attribute[2] = tokens[1];
-          }
-          break;
-        case DynSave.Table_attribute4:
-          if (tokens.length > 1) {
-            this.attribute[3] = tokens[1];
-          }
-          break;
-        case DynSave.Table_format4:
-          if (tokens.length > 1) {
-            this.format[3] = tokens[1];
-          }
-          break;
-        case DynSave.Table_sel_attribute4:
-          if (tokens.length > 1) {
-            this.sel_attribute[3] = tokens[1];
-          }
-          break;
-        case DynSave.Table_attribute5:
-          if (tokens.length > 1) {
-            this.attribute[4] = tokens[1];
-          }
-          break;
-        case DynSave.Table_format5:
-          if (tokens.length > 1) {
-            this.format[4] = tokens[1];
-          }
-          break;
-        case DynSave.Table_sel_attribute5:
-          if (tokens.length > 1) {
-            this.sel_attribute[4] = tokens[1];
-          }
-          break;
-        case DynSave.Table_attribute6:
-          if (tokens.length > 1) {
-            this.attribute[5] = tokens[1];
-          }
-          break;
-        case DynSave.Table_format6:
-          if (tokens.length > 1) {
-            this.format[5] = tokens[1];
-          }
-          break;
-        case DynSave.Table_sel_attribute6:
-          if (tokens.length > 1) {
-            this.sel_attribute[5] = tokens[1];
-          }
-          break;
-        case DynSave.Table_attribute7:
-          if (tokens.length > 1) {
-            this.attribute[6] = tokens[1];
-          }
-          break;
-        case DynSave.Table_format7:
-          if (tokens.length > 1) {
-            this.format[6] = tokens[1];
-          }
-          break;
-        case DynSave.Table_sel_attribute7:
-          if (tokens.length > 1) {
-            this.sel_attribute[6] = tokens[1];
-          }
-          break;
-        case DynSave.Table_attribute8:
-          if (tokens.length > 1) {
-            this.attribute[7] = tokens[1];
-          }
-          break;
-        case DynSave.Table_format8:
-          if (tokens.length > 1) {
-            this.format[7] = tokens[1];
-          }
-          break;
-        case DynSave.Table_sel_attribute8:
-          if (tokens.length > 1) {
-            this.sel_attribute[7] = tokens[1];
-          }
-          break;
-        case DynSave.Table_attribute9:
-          if (tokens.length > 1) {
-            this.attribute[8] = tokens[1];
-          }
-          break;
-        case DynSave.Table_format9:
-          if (tokens.length > 1) {
-            this.format[8] = tokens[1];
-          }
-          break;
-        case DynSave.Table_sel_attribute9:
-          if (tokens.length > 1) {
-            this.sel_attribute[8] = tokens[1];
-          }
-          break;
-        case DynSave.Table_attribute10:
-          if (tokens.length > 1) {
-            this.attribute[9] = tokens[1];
-          }
-          break;
-        case DynSave.Table_format10:
-          if (tokens.length > 1) {
-            this.format[9] = tokens[1];
-          }
-          break;
-        case DynSave.Table_sel_attribute10:
-          if (tokens.length > 1) {
-            this.sel_attribute[9] = tokens[1];
-          }
-          break;
-        case DynSave.Table_attribute11:
-          if (tokens.length > 1) {
-            this.attribute[10] = tokens[1];
-          }
-          break;
-        case DynSave.Table_format11:
-          if (tokens.length > 1) {
-            this.format[10] = tokens[1];
-          }
-          break;
-        case DynSave.Table_sel_attribute11:
-          if (tokens.length > 1) {
-            this.sel_attribute[10] = tokens[1];
-          }
-          break;
-        case DynSave.Table_attribute12:
-          if (tokens.length > 1) {
-            this.attribute[11] = tokens[1];
-          }
-          break;
-        case DynSave.Table_format12:
-          if (tokens.length > 1) {
-            this.format[11] = tokens[1];
-          }
-          break;
-        case DynSave.Table_sel_attribute12:
-          if (tokens.length > 1) {
-            this.sel_attribute[11] = tokens[1];
-          }
-          break;
-        case DynSave.End:
-          return i;
-        default:
-          console.log("Syntax error in DynTable");
-          break;
+      if (key === DynSave.End) {
+        return i;
+      } else if (key >= DynSave.Table_attribute1 && key <= DynSave.Table_attribute12) {
+        if (tokens.length > 1) {
+          this.attribute[key - DynSave.Table_attribute1] = tokens[1];
+        }
+      } else if (key >= DynSave.Table_format1 && key <= DynSave.Table_format12) {
+        if (tokens.length > 1) {
+          this.format[key - DynSave.Table_format1] = tokens[1];
+        }
+      } else if (key >= DynSave.Table_sel_attribute1 && key <= DynSave.Table_sel_attribute12) {
+        if (tokens.length > 1) {
+          this.sel_attribute[key - DynSave.Table_sel_attribute1] = tokens[1];
+        }
+      } else {
+        console.log("Syntax error in DynTable");
       }
     }
 
@@ -5958,11 +5078,7 @@ class DynTable extends DynElem {
       // Connect select array
       this.sel_p[i] = 0;
       pname = this.dyn.parseAttrName(this.sel_attribute[i]);
-      if (pname === null || pname.name === "") {
-        continue;
-      }
-
-      if (pname.type !== Type.Boolean) {
+      if (pname === null || pname.name === "" || pname.type !== Type.Boolean) {
         continue;
       }
 
@@ -5971,18 +5087,14 @@ class DynTable extends DynElem {
           this.sel_p[i] = this.dyn.graph.getGdh()
               .refObjectInfo(pname.tname, pname.type, pname.elements);
           if (this.sel_p[i] !== 0) {
-            if (ret.getElements() === 0) {
+            if (pname.elements === 0) {
               break;
             }
-            this.sel_elements[i] = pname.elements;
-            if (this.sel_elements[i] > this.elements[i]) {
-              this.sel_elements[i] = this.elements[i];
-            }
+            this.sel_elements[i] = Math.min(pname.elements, this.elements[i]);
           }
           break;
         default:
       }
-
     }
     object.setTableInfo(info);
 
@@ -6007,13 +5119,13 @@ class DynTable extends DynElem {
       }
       switch (this.type_id[i]) {
         case Type.Float32:
-          if (this.oldValueF[i] !== null) {
+          if (this.oldValueF[i]) {
             this.oldValueF[i] = null;
           }
           break;
         case Type.Boolean:
         case Type.Bit:
-          if (this.oldValueB[i] !== null) {
+          if (this.oldValueB[i]) {
             this.oldValueB[i] = null;
           }
           break;
@@ -6023,7 +5135,7 @@ class DynTable extends DynElem {
         case Type.UInt32:
         case Type.UInt16:
         case Type.UInt8:
-          if (this.oldValueI[i] !== null) {
+          if (this.oldValueI[i]) {
             this.oldValueI[i] = null;
           }
           break;
@@ -6032,7 +5144,7 @@ class DynTable extends DynElem {
         case Type.AttrRef:
         case Type.Time:
         case Type.DeltaTime:
-          if (this.oldValueS[i] !== null) {
+          if (this.oldValueS[i]) {
             this.oldValueS[i] = null;
           }
           break;
@@ -6060,11 +5172,7 @@ class DynTable extends DynElem {
           switch (this.type_id[i]) {
             case Type.Float32:
               let val = this.dyn.graph.getGdh().getObjectRefInfo(this.hp[i][j]);
-              if (typeof val === 'undefined') {
-                break;
-              }
-
-              if (this.oldValueF[i][j] !== val || this.firstScan) {
+              if (val !== undefined && (this.oldValueF[i][j] !== val || this.firstScan)) {
                 let sb = this.cFormat[i].format(val);
                 object.setValue(sb, i, j);
                 this.oldValueF[i][j] = val;
@@ -6072,17 +5180,12 @@ class DynTable extends DynElem {
               break;
             case Type.Boolean:
               let val = this.dyn.graph.getGdh().getObjectRefInfo(this.hp[i][j]);
-              if (typeof val === 'undefined') {
-                break;
-              }
-
-              if (this.firstScan || this.oldValueB[i][j] !== val) {
+              if (val !== undefined && (this.firstScan || this.oldValueB[i][j] !== val)) {
                 if (val) {
                   object.setValue("1", i, j);
                 } else {
                   object.setValue("0", i, j);
                 }
-                object.setValue(sb, i, j);
                 this.oldValueB[i][j] = val;
               }
               break;
@@ -6093,11 +5196,7 @@ class DynTable extends DynElem {
             case Type.UInt16:
             case Type.UInt8:
               let val = this.dyn.graph.getGdh().getObjectRefInfo(this.hp[i][j]);
-              if (typeof val === 'undefined') {
-                break;
-              }
-
-              if (this.oldValueI[i][j] !== val || this.firstScan) {
+              if (val !== undefined && (this.oldValueI[i][j] !== val || this.firstScan)) {
                 let sb = this.cFormat[i].format(val);
                 object.setValue(sb, i, j);
                 this.oldValueI[i][j] = val;
@@ -6109,28 +5208,23 @@ class DynTable extends DynElem {
             case Type.Time:
             case Type.DeltaTime:
               let val = this.dyn.graph.getGdh().getObjectRefInfo(this.hp[i][j]);
-              if (typeof val === 'undefined') {
-                break;
-              }
-              if (this.firstScan || this.oldValueS[i][j] !== val) {
+              if (val !== undefined && (this.firstScan || this.oldValueS[i][j] !== val)) {
                 object.setValue(val, i, j);
                 this.oldValueS[i][j] = val;
               }
               break;
             case Type.Bit:
               let val = this.dyn.graph.getGdh().getObjectRefInfo(this.hp[i][j]);
-              if (typeof val === 'undefined') {
-                break;
-              }
-
-              let bitval = ((this.bitmask[i] & val) !== 0);
-              if (this.oldValueB[i][j] !== bitval || this.firstScan) {
-                if (bitval) {
-                  object.setValue("1", i, j);
-                } else {
-                  object.setValue("0", i, j);
+              if (val !== undefined) {
+                let bitval = ((this.bitmask[i] & val) !== 0);
+                if (this.oldValueB[i][j] !== bitval || this.firstScan) {
+                  if (bitval) {
+                    object.setValue("1", i, j);
+                  } else {
+                    object.setValue("0", i, j);
+                  }
+                  this.oldValueB[i][j] = bitval;
                 }
-                this.oldValueB[i][j] = bitval;
               }
               break;
           }
@@ -6275,25 +5369,21 @@ class DynTable extends DynElem {
 
     switch (e.event) {
       case Event.MB1Click:
-        let column, row;
-        let value;
-
         if (e.type !== EventType.Table) {
           break;
         }
 
         let event = e;
-        row = object.getSelectedCellRow();
-        column = object.getSelectedCellColumn();
+        let row = object.getSelectedCellRow();
+        let column = object.getSelectedCellColumn();
         if (row >= 0 && this.sel_p[column] !== 0) {
           // Reset previously selected
           let pname = this.dyn.parseAttrName(this.sel_attribute[column]);
           if (pname === null || pname.name === "") {
             break;
           }
-          value = false;
           let aname = pname.name + "[" + row + "]";
-          this.dyn.graph.getGdh().setObjectInfoBoolean(aname, value);
+          this.dyn.graph.getGdh().setObjectInfoBoolean(aname, false);
         }
         if (this.sel_p[event.column] !== 0 &&
             !(event.column === column && event.row === row)) {
@@ -6302,9 +5392,8 @@ class DynTable extends DynElem {
           if (pname === null || pname.name === "") {
             break;
           }
-          value = true;
           let aname = pname.name + "[" + event.row + "]";
-          this.dyn.graph.getGdh().setObjectInfoBoolean(aname, value);
+          this.dyn.graph.getGdh().setObjectInfoBoolean(aname, true);
           object.setSelectedCell(event.column, event.row);
         }
         break;
@@ -6316,7 +5405,6 @@ class DynTable extends DynElem {
 
 class DynStatusColor extends DynElem {
   a;
-  attribute;
   nostatus_color;
   use_colortheme;
   firstScan = true;
@@ -6356,34 +5444,17 @@ class DynStatusColor extends DynElem {
     let value = this.a.get_ref_value(this.dyn);
 
     if (!this.firstScan && this.oldStatus !== PwrStatus.Fatal) {
-      if (this.a.oldValue === value && this.dyn.resetColor)
-      // No change since last time
-      {
+      if (this.a.oldValue === value && this.dyn.resetColor) { // No change since last time
         return;
       }
     }
 
     this.a.oldValue = value;
-    if (value === 0) {
-      value = PwrStatus.No;
+    if (value !== 0 && value & 7 < 5) {
+        value = [PwrStatus.Warning, PwrStatus.Success, PwrStatus.Error,
+        PwrStatus.Success, PwrStatus.Fatal][value & 7];
     } else {
-      switch (value & 7) {
-        case 3:
-        case 1:
-          value = PwrStatus.Success;
-          break;
-        case 0:
-          value = PwrStatus.Warning;
-          break;
-        case 2:
-          value = PwrStatus.Error;
-          break;
-        case 4:
-          value = PwrStatus.Fatal;
-          break;
-        default:
-          value = PwrStatus.No;
-      }
+      value = PwrStatus.No;
     }
     if (!this.firstScan && this.oldStatus === value &&
         this.oldStatus !== PwrStatus.Fatal) {
@@ -6467,10 +5538,6 @@ class DynStatusColor extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynStatusColor : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.StatusColor:
           break;
@@ -6516,10 +5583,6 @@ class DynAxis extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynAxis : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.Axis:
@@ -6618,9 +5681,7 @@ class DynAxis extends DynElem {
           return;
         }
 
-        if (o instanceof GrowAxis) {
-          o.set_range(min_value, max_value, this.keep_settings);
-        } else if (o instanceof GrowAxisArc) {
+        if (o instanceof GrowAxis || o instanceof GrowAxisArc) {
           o.set_range(min_value, max_value, this.keep_settings);
         }
         break;
@@ -6643,10 +5704,6 @@ class DynTimeoutColor extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynTimeoutColor : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.TimeoutColor:
@@ -6683,10 +5740,6 @@ class DynHostObject extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynHostObject : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.HostObject:
           break;
@@ -6708,7 +5761,6 @@ class DynHostObject extends DynElem {
 }
 
 class DynDigSound extends DynElem {
-  attribute;
   soundobject;
   level;
   interval;
@@ -6723,10 +5775,6 @@ class DynDigSound extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynDigSound : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.DigSound:
@@ -6769,7 +5817,6 @@ class DynFillLevel extends DynElem {
   a = null;
   minvalue_a;
   maxvalue_a;
-  attribute;
   color;
   direction;
   max_value;
@@ -6861,9 +5908,7 @@ class DynFillLevel extends DynElem {
     if (this.firstScan) {
       this.firstScan = false;
     } else {
-      if (Math.abs(this.a.oldValue - pvalue) < Number.MIN_VALUE)
-      // No change since last time
-      {
+      if (Math.abs(this.a.oldValue - pvalue) < Number.MIN_VALUE) { // No change since last time
         return;
       }
     }
@@ -6872,39 +5917,28 @@ class DynFillLevel extends DynElem {
       return;
     }
 
-    let value = 0;
+    let value = (pvalue - this.min_value) / (this.max_value - this.min_value);
     if (this.limits_found) {
       let geom = object.measure();
 
+      value *= (this.limit_max - this.limit_min);
+
       switch (this.direction) {
         case Direction.Right:
-          value =
-              ((pvalue - this.min_value) / (this.max_value - this.min_value) *
-                  (this.limit_max - this.limit_min) +
-                  (this.limit_min - geom.x)) / geom.width;
+          value = (value + (this.limit_min - geom.ll_x)) / geom.width();
           break;
         case Direction.Left:
-          value =
-              ((pvalue - this.min_value) / (this.max_value - this.min_value) *
-                  (this.limit_max - this.limit_min) +
-                  (geom.width - geom.x - this.limit_max)) / geom.width;
+          value = (value + (geom.ur_x - this.limit_max)) / geom.width();
           break;
         case Direction.Up:
-          value =
-              ((pvalue - this.min_value) / (this.max_value - this.min_value) *
-                  (this.limit_max - this.limit_min) +
-                  (this.limit_min - geom.y)) / geom.height;
+          value = (value + (this.limit_min - geom.ll_y)) / geom.height();
           break;
         case Direction.Down:
-          value =
-              ((pvalue - this.min_value) / (this.max_value - this.min_value) *
-                  (this.limit_max - this.limit_min) +
-                  (geom.height - geom.y - this.limit_max)) / geom.height;
+          value = (value + (geom.ur_y - this.limit_max)) / geom.height();
           break;
         default:
+          value = 0;
       }
-    } else {
-      value = (pvalue - this.min_value) / (this.max_value - this.min_value);
     }
     object.setFillLevel(value);
     this.a.oldValue = pvalue;
@@ -6915,10 +5949,6 @@ class DynFillLevel extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynFillLevel : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.FillLevel:
@@ -6962,9 +5992,181 @@ class DynFillLevel extends DynElem {
   }
 }
 
-class DynSetDig extends DynElem {
-  attribute;
+class DynDigCommand extends DynElem {
+  command = "";
+  a = null;
+  first_scan = true;
+  level = 0;
 
+  constructor(dyn) {
+    super(dyn, DynPrio.DigCommand);
+    this.dyn_type1 = DynType1.DigCommand;
+  }
+
+  connect(object) {
+    this.a = new DynReference(this.dyn, this.attribute);
+    this.a.connect(this.dyn);
+    if (!this.a.sts) {
+      console.log("DigCommand: " + this.attribute);
+      return 1;
+    }
+
+    return 1;
+  }
+
+  disconnect() {
+    if (this.a) {
+      this.a.disconnect();
+    }
+  }
+
+  scan(object) {
+    if (this.a === null || !this.a.sts) {
+      return;
+    }
+
+    let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    value = (this.a.inverted) ? !value : value;
+
+    if (this.first_scan) {
+      this.a.oldValue = value;
+      this.first_scan = false;
+      return;
+    }
+
+    if ((!this.level && value && !this.a.oldValue) || (this.level && value)) {
+      let cmd = this.dyn.graph.getCommand(this.command);
+      this.dyn.graph.command(cmd);
+      return;
+    }
+
+    this.a.oldValue = value;
+  }
+
+  open(lines, row) {
+    let i;
+    for (i = row; i < lines.length; i++) {
+      let tokens = lines[i].split(' ');
+      let key = parseInt(tokens[0], 10);
+
+      switch (key) {
+        case DynSave.DigCommand:
+          break;
+        case DynSave.DigCommand_attribute:
+          if (tokens.length > 1) {
+            this.attribute = tokens[1];
+          }
+          break;
+        case DynSave.DigCommand_command:
+          if (tokens.length > 1) {
+            this.command = tokens[1];
+          }
+          break;
+        case DynSave.DigCommand_level:
+          this.level = parseInt(tokens[1], 10);
+          break;
+        case DynSave.DigCommand_instance:
+          this.instance = parseInt(tokens[1], 10);
+          break;
+        case DynSave.DigCommand_instance_mask:
+          this.instance_mask = parseInt(tokens[1], 10);
+          break;
+        case DynSave.End:
+          return i;
+        default:
+          console.log("Syntax error in DynDigCommand");
+          break;
+      }
+    }
+
+    return i;
+  }
+}
+
+class DynDigScript extends DynElem {
+  script = "";
+  a = null;
+  first_scan = true;
+  level = 0;
+
+  constructor(dyn) {
+    super(dyn, DynPrio.DigScript);
+    this.dyn_type2 = DynType2.DigScript;
+  }
+
+  connect(object) {
+    this.a = new DynReference(this.dyn, this.attribute);
+    this.a.connect(this.dyn);
+    if (!this.a.sts) {
+      console.log("DigScript: " + this.attribute);
+      return 1;
+    }
+
+    return 1;
+  }
+
+  disconnect() {
+    if (this.a) {
+      this.a.disconnect();
+    }
+  }
+
+  scan(object) {
+    if (this.a === null || !this.a.sts) {
+      return;
+    }
+
+    let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    value = (this.a.inverted) ? !value : value;
+
+    if (this.first_scan) {
+      this.a.oldValue = value;
+      this.first_scan = false;
+      return;
+    }
+
+    if ((!this.level && value && !this.a.oldValue) || (this.level && value)) {
+      this.dyn.graph.script(this.script);
+    }
+
+    this.a.oldValue = value;
+  }
+
+  open(lines, row) {
+    let i;
+    for (i = row; i < lines.length; i++) {
+      let tokens = lines[i].split(' ');
+      let key = parseInt(tokens[0], 10);
+
+      switch (key) {
+        case DynSave.DigScript:
+          break;
+        case DynSave.DigScript_attribute:
+          if (tokens.length > 1) {
+            this.attribute = tokens[1];
+          }
+          break;
+        case DynSave.DigScript_level:
+          this.level = parseInt(tokens[1], 10);
+          break;
+        case DynSave.DigScript_script_len:
+          break;
+        case DynSave.DigScript_script:
+          this.script = lines.join("\n").split(/[^\\]"/)[0];
+          break;
+        case DynSave.End:
+          return i;
+        default:
+          console.log("Syntax error in DynDigScript");
+          break;
+      }
+    }
+
+    return i;
+  }
+}
+
+class DynSetDig extends DynElem {
   constructor(dyn) {
     super(dyn, DynPrio.SetDig);
     this.action_type1 = ActionType1.SetDig;
@@ -6977,11 +6179,8 @@ class DynSetDig extends DynElem {
 
     switch (e.event) {
       case Event.MB1Down:
-        object.setColorInverse(1);
-        this.dyn.repaintNow = true;
-        break;
       case Event.MB1Up:
-        object.setColorInverse(0);
+        object.setColorInverse(event === Event.MB1Down);
         this.dyn.repaintNow = true;
         break;
       case Event.MB1Click:
@@ -7023,10 +6222,6 @@ class DynSetDig extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynSetDig : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.SetDig:
           break;
@@ -7054,8 +6249,6 @@ class DynSetDig extends DynElem {
 }
 
 class DynResetDig extends DynElem {
-  attribute;
-
   constructor(dyn) {
     super(dyn, DynPrio.ResetDig);
     this.action_type1 = ActionType1.ResetDig;
@@ -7068,11 +6261,8 @@ class DynResetDig extends DynElem {
 
     switch (e.event) {
       case Event.MB1Down:
-        object.setColorInverse(1);
-        this.dyn.repaintNow = true;
-        break;
       case Event.MB1Up:
-        object.setColorInverse(0);
+        object.setColorInverse(event === Event.MB1Down);
         this.dyn.repaintNow = true;
         break;
       case Event.MB1Click:
@@ -7114,10 +6304,6 @@ class DynResetDig extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynResetDig : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.ResetDig:
           break;
@@ -7145,8 +6331,6 @@ class DynResetDig extends DynElem {
 }
 
 class DynToggleDig extends DynElem {
-  attribute;
-
   constructor(dyn) {
     super(dyn, DynPrio.ToggleDig);
     this.action_type1 = ActionType1.ToggleDig;
@@ -7159,14 +6343,10 @@ class DynToggleDig extends DynElem {
 
     switch (e.event) {
       case Event.MB1Down:
-        object.setColorInverse(1);
-        this.dyn.repaintNow = true;
-        this.dyn.graph.setClickActive(1);
-        break;
       case Event.MB1Up:
-        object.setColorInverse(0);
+        object.setColorInverse(e.event === Event.MB1Down);
         this.dyn.repaintNow = true;
-        this.dyn.graph.setClickActive(0);
+        this.dyn.graph.setClickActive(e.event === Event.MB1Down);
         break;
       case Event.MB1Click:
         if ((this.dyn.action_type1 & ActionType1.Confirm) !== 0) {
@@ -7202,10 +6382,6 @@ class DynToggleDig extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynToggleDig : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.ToggleDig:
           break;
@@ -7227,8 +6403,6 @@ class DynToggleDig extends DynElem {
 }
 
 class DynStoDig extends DynElem {
-  attribute;
-
   constructor(dyn) {
     super(dyn, DynPrio.StoDig);
     this.action_type1 = ActionType1.StoDig;
@@ -7241,31 +6415,8 @@ class DynStoDig extends DynElem {
 
     switch (e.event) {
       case Event.MB1Down:
-        object.setColorInverse(1);
-        this.dyn.repaintNow = true;
-
-        if ((this.dyn.action_type1 & ActionType1.Confirm) !== 0) {
-          break;
-        }
-
-        let pname = this.dyn.parseAttrName(this.attribute);
-        let sts = null;
-        switch (pname.database) {
-          case Database.Gdh:
-            sts =
-                this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, true);
-            break;
-          case Database.Local:
-            sts = this.dyn.graph.getLdb()
-                .setObjectInfo(this.dyn.graph, pname.name, true);
-            break;
-        }
-        if (even(sts)) {
-          console.log("StoDig: " + pname.name);
-        }
-        break;
       case Event.MB1Up:
-        object.setColorInverse(0);
+        object.setColorInverse(e.event === Event.MB1Down);
         this.dyn.repaintNow = true;
 
         if ((this.dyn.action_type1 & ActionType1.Confirm) !== 0) {
@@ -7277,11 +6428,11 @@ class DynStoDig extends DynElem {
         switch (pname.database) {
           case Database.Gdh:
             sts =
-                this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, false);
+                this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, e.event === Event.MB1Down);
             break;
           case Database.Local:
             sts = this.dyn.graph.getLdb()
-                .setObjectInfo(this.dyn.graph, pname.name, false);
+                .setObjectInfo(this.dyn.graph, pname.name, e.event === Event.MB1Down);
             break;
         }
         if (even(sts)) {
@@ -7298,10 +6449,6 @@ class DynStoDig extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynToggleDig : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.StoDig:
@@ -7338,11 +6485,8 @@ class DynCommand extends DynElem {
 
     switch (e.event) {
       case Event.MB1Down:
-        object.setColorInverse(1);
-        this.dyn.repaintNow = true;
-        break;
       case Event.MB1Up:
-        object.setColorInverse(0);
+        object.setColorInverse(e.event === Event.MB1Down);
         this.dyn.repaintNow = true;
         break;
       case Event.MB1Click:
@@ -7357,13 +6501,13 @@ class DynCommand extends DynElem {
         let cmd = this.dyn.graph.getCommand(this.command);
 
         let r = this.dyn.graph.ctx.gdraw.get_clip_rectangle();
-        if (r !== null) {
+        if (r) {
           this.dyn.graph.ctx.gdraw.reset_clip_rectangle();
         }
 
         this.dyn.graph.command(cmd);
 
-        if (r !== null) {
+        if (r) {
           this.dyn.graph.ctx.gdraw.set_clip_rectangle(r.x1, r.y1, r.x2, r.y2);
         }
 
@@ -7378,10 +6522,6 @@ class DynCommand extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynCommand : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.Command:
@@ -7419,11 +6559,8 @@ class DynScript extends DynElem {
 
     switch (e.event) {
       case Event.MB1Down:
-        object.setColorInverse(1);
-        this.dyn.repaintNow = true;
-        break;
       case Event.MB1Up:
-        object.setColorInverse(0);
+        object.setColorInverse(e.event === Event.MB1Down);
         this.dyn.repaintNow = true;
         break;
       case Event.MB1Click:
@@ -7447,10 +6584,6 @@ class DynScript extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynScript : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.Script:
@@ -7520,14 +6653,11 @@ class DynCommandDoubleClick extends DynElem {
 
     switch (e.event) {
       case Event.MB1Down:
-        object.setColorInverse(1);
-        this.dyn.repaintNow = true;
-        break;
       case Event.MB1Up:
-        object.setColorInverse(0);
+        object.setColorInverse(e.event === Event.MB1Down);
         this.dyn.repaintNow = true;
         break;
-      case Event.MB1ClickDoubleClick:
+      case Event.MB1DoubleClick:
         if ((this.dyn.action_type1 & ActionType1.Confirm) !== 0) {
           break;
         }
@@ -7550,10 +6680,6 @@ class DynCommandDoubleClick extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynCommandDoubleClick : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.CommandDC:
@@ -7597,20 +6723,17 @@ class DynConfirm extends DynElem {
     switch (e.event) {
       case Event.MB1Down:
         break;
+      case Event.Key_Return:
       case Event.MB1Click:
-      case Event.ValueChanged:
-
         let skip = 0;
         if (((this.on_set !== 0 && this.on_reset === 0) ||
                 (this.on_reset !== 0 && this.on_set === 0)) &&
             (this.dyn.total_action_type1 & ActionType1.ToggleDig) !== 0) {
           for (let j = 0; j < this.dyn.elements.length; j++) {
-            if (this.dyn.elements.get(j).action_type1 ===
-                ActionType1.ToggleDig) {
-              let pname = this.dyn.parseAttrName(
-                  this.dyn.elements.get(j).attribute);
+            if (this.dyn.elements[j].action_type1 === ActionType1.ToggleDig) {
+              let pname = this.dyn.parseAttrName(this.dyn.elements[j].attribute);
               if (pname.name.substring(0, 1) === "&") {
-                pname.name = this.dyn.graph.get_reference_name(pname.name);
+                pname.name = this.dyn.graph.getReferenceName(pname.name);
               }
 
               switch (pname.database) {
@@ -7654,10 +6777,6 @@ class DynConfirm extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynConfirm : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.Confirm:
           break;
@@ -7685,7 +6804,6 @@ class DynConfirm extends DynElem {
 }
 
 class DynIncrAnalog extends DynElem {
-  attribute;
   increment;
   min_value;
   max_value;
@@ -7702,11 +6820,8 @@ class DynIncrAnalog extends DynElem {
 
     switch (e.event) {
       case Event.MB1Down:
-        object.setColorInverse(1);
-        this.dyn.repaintNow = true;
-        break;
       case Event.MB1Up:
-        object.setColorInverse(0);
+        object.setColorInverse(e.event === Event.MB1Down);
         this.dyn.repaintNow = true;
         break;
       case Event.MB1Click:
@@ -7722,32 +6837,21 @@ class DynIncrAnalog extends DynElem {
         if (pname.type < 0) {
           typeId = Type.Float32;
         }
-        switch (typeId) {
-          case Type.Int32:
-            switch (pname.database) {
-              case Database.Gdh:
-                this.dyn.graph.getGdh()
-                    .getObjectInfoInt(pname.name, DynIncrAnalog.action2, this);
-                break;
-              case Database.Local:
-                let ret = this.dyn.graph.getLdb()
-                    .getObjectInfo(this.dyn.graph, pname.name);
-                DynIncrAnalog.action2(0, this, 1, ret.value);
-                break;
+        switch (pname.database) {
+          case Database.Gdh:
+            if (typeId === Type.Int32) {
+              this.dyn.graph.getGdh()
+                  .getObjectInfoInt(pname.name).then(this.action2);
+            } else {
+              this.dyn.graph.getGdh()
+                  .getObjectInfoFloat(pname.name).then(this.action2);
             }
             break;
-          default:
-            switch (pname.database) {
-              case Database.Gdh:
-                this.dyn.graph.getGdh()
-                    .getObjectInfoFloat(pname.name, DynIncrAnalog.action2, this);
-                break;
-              case Database.Local:
-                let ret = this.dyn.graph.getLdb()
-                    .getObjectInfo(this.dyn.graph, pname.name);
-                DynIncrAnalog.action2(0, this, 1, ret.value);
-                break;
-            }
+          case Database.Local:
+            let ret = this.dyn.graph.getLdb()
+                .getObjectInfo(this.dyn.graph, pname.name);
+            this.action2({id: 0, sts: 1, value: ret.value});
+            break;
         }
         break;
     }
@@ -7755,68 +6859,37 @@ class DynIncrAnalog extends DynElem {
     return 1;
   }
 
-  static action2(id, self, sts, value) {
-    if (!(sts & 1)) {
+  action2(res) {
+    if (!(res.sts & 1)) {
       return;
     }
 
-    let pname = self.dyn.parseAttrName(self.attribute);
+    let pname = this.dyn.parseAttrName(this.attribute);
     if (pname === null) {
       return 1;
     }
-    let typeId = pname.type;
-    if (pname.type < 0) {
-      typeId = Type.Float32;
+    let typeId = (pname.type < 0) ? Type.Float32 : pname.type;
+    let sts = res.sts;
+    let value = res.value + this.increment;
+    if (!(this.min_value === 0 && this.max_value === 0)) {
+      if (typeId === Type.Int32) {
+        value = clamp(value, Math.floor(this.min_value), Math.floor(this.max_value));
+      } else {
+        value = clamp(value, this.min_value, this.max_value);
+      }
     }
-    switch (typeId) {
-      case Type.Int32:
-        value += self.increment;
-        if (!(self.min_value === 0 && self.max_value === 0)) {
-          if (value < self.min_value) {
-            value = Math.floor(self.min_value);
-          }
-          if (value > self.max_value) {
-            value = Math.floor(self.max_value);
-          }
-        }
 
-        let sts;
-        switch (pname.database) {
-          case Database.Gdh:
-            sts = self.dyn.graph.getGdh().setObjectInfoInt(pname.name, value);
-            break;
-          case Database.Local:
-            sts = self.dyn.graph.getLdb()
-                .setObjectInfo(self.dyn.graph, pname.name, value);
-            break;
-        }
-        if (even(sts)) {
-          console.log("IncrAnalog " + pname.name);
-        }
-        break;
-      default:
-        value += self.increment;
-        if (!(self.min_value === 0 && self.max_value === 0)) {
-          if (value < self.min_value) {
-            value = self.min_value;
-          }
-          if (value > self.max_value) {
-            value = self.max_value;
-          }
-        }
-        let sts;
-        switch (pname.database) {
-          case Database.Gdh:
-            sts = self.dyn.graph.getGdh().setObjectInfoFloat(pname.name, value);
-            break;
-          case Database.Local:
-            sts = self.dyn.graph.getLdb()
-                .setObjectInfo(self.dyn.graph, pname.name, value);
-            break;
-        }
-        if (even(sts)) {
-          console.log("IncrAnalog " + pname.name);
-        }
+    if (pname.database === Database.Gdh) {
+      if (typeId === Type.Int32) {
+        sts = this.dyn.graph.getGdh().setObjectInfoInt(pname.name, value);
+      } else {
+        sts = this.dyn.graph.getGdh().setObjectInfoFloat(pname.name, value);
+      }
+    } else if (pname.database === Database.Local) {
+      sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, value);
+    }
+    if (even(sts)) {
+      console.log("IncrAnalog " + pname.name);
     }
 
     return 1;
@@ -7827,10 +6900,6 @@ class DynIncrAnalog extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynConfirm : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.IncrAnalog:
@@ -7863,7 +6932,6 @@ class DynIncrAnalog extends DynElem {
 
 class DynRadioButton extends DynElem {
   a;
-  attribute;
   firstScan = true;
 
   constructor(dyn) {
@@ -7892,9 +6960,7 @@ class DynRadioButton extends DynElem {
     }
     let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask,
         this.a.database);
-    if (this.a.inverted) {
-      value = !value;
-    }
+    value = (this.a.inverted) ? !value : value;
 
     if (this.firstScan) {
       this.firstScan = false;
@@ -7919,11 +6985,8 @@ class DynRadioButton extends DynElem {
 
     switch (e.event) {
       case Event.MB1Down:
-        object.setColorInverse(1);
-        this.dyn.repaintNow = true;
-        break;
       case Event.MB1Up:
-        object.setColorInverse(0);
+        object.setColorInverse(e.event === Event.MB1Down);
         this.dyn.repaintNow = true;
         break;
       case Event.MB1Click:
@@ -7936,6 +6999,16 @@ class DynRadioButton extends DynElem {
         if (group === null) {
           break;
         }
+
+        let setObjectInfo = function(pname, value) {
+          if (pname.database === Database.Gdh) {
+            this.dyn.graph.getGdh()
+                .setObjectInfoBoolean(pname.name, value);
+          } else if (pname.database === Database.Local) {
+            this.dyn.graph.getLdb()
+                .setObjectInfo(this.dyn.graph, pname.name, value);
+          }
+        };
 
         let list = group.get_object_list();
 
@@ -7953,23 +7026,9 @@ class DynRadioButton extends DynElem {
                   let pname = this.dyn.parseAttrName(
                       gm_dyn.elements[j].attribute);
                   if (pname.name.substring(0, 1) === "&") {
-                    pname.name = this.dyn.graph.get_reference_name(pname.name);
+                    pname.name = this.dyn.graph.getReferenceName(pname.name);
                   }
-                  let sts;
-                  switch (pname.database) {
-                    case Database.Gdh:
-                      sts = this.dyn.graph.getGdh()
-                          .setObjectInfoBoolean(pname.name, value);
-                      break;
-                    case Database.Local:
-                      sts = this.dyn.graph.getLdb()
-                          .setObjectInfo(this.dyn.graph, pname.name, value);
-                      break;
-                    case Database.Ccm:
-                      // TODO
-                      break;
-                    default:
-                  }
+                  setObjectInfo(pname, value);
                 }
               }
             }
@@ -7978,25 +7037,11 @@ class DynRadioButton extends DynElem {
 
         let pname = this.dyn.parseAttrName(this.attribute);
         if (pname.name.substring(0, 1) === "&") {
-          pname.name = this.dyn.graph.get_reference_name(pname.name);
+          pname.name = this.dyn.graph.getReferenceName(pname.name);
         }
 
         value = true;
-        let sts;
-        switch (pname.database) {
-          case Database.Gdh:
-            sts =
-                this.dyn.graph.getGdh().setObjectInfoBoolean(pname.name, value);
-            break;
-          case Database.Local:
-            sts = this.dyn.graph.getLdb()
-                .setObjectInfo(this.dyn.graph, pname.name, value);
-            break;
-          case Database.Ccm:
-            // TODO
-            break;
-          default:
-        }
+        setObjectInfo(pname, value);
         break;
     }
 
@@ -8008,10 +7053,6 @@ class DynRadioButton extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynRadioButton : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.RadioButton:
@@ -8046,10 +7087,6 @@ class DynTipText extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynTipText : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.TipText:
@@ -8087,11 +7124,8 @@ class DynHelp extends DynElem {
 
     switch (e.event) {
       case Event.MB1Down:
-        object.setColorInverse(1);
-        this.dyn.repaintNow = true;
-        break;
       case Event.MB1Up:
-        object.setColorInverse(0);
+        object.setColorInverse(event === Event.MB1Down);
         this.dyn.repaintNow = true;
         break;
       case Event.MB1Click:
@@ -8099,11 +7133,9 @@ class DynHelp extends DynElem {
           break;
         }
 
-        let command;
-        if (this.bookmark !== null && this.bookmark !== "") {
-          command = "help " + this.topic + " /bookmark=" + this.bookmark;
-        } else {
-          command = "help " + this.topic;
+        let command = "help " + this.topic;
+        if (this.bookmark) {
+          command += " /bookmark=" + this.bookmark;
         }
 
         this.dyn.graph.command(command);
@@ -8118,10 +7150,6 @@ class DynHelp extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynHelp : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.Help:
@@ -8163,47 +7191,31 @@ class DynOpenGraph extends DynElem {
 
     switch (e.event) {
       case Event.MB1Down:
-        o.setColorInverse(1);
-        this.dyn.repaintNow = true;
-        break;
       case Event.MB1Up:
-        o.setColorInverse(0);
+        o.setColorInverse(event === Event.MB1Down);
         this.dyn.repaintNow = true;
         break;
       case Event.MB1Click:
         if ((this.dyn.action_type1 & ActionType1.Confirm) !== 0) {
           break;
         }
-        let command = null;
         if (this.graph_object === null || this.graph_object === "") {
           // Open classgraph for popup menu object
-          if ((this.dyn.total_action_type1 & ActionType1.PopupMenu) !==
-              0) {
-            for (let i = 0; i < this.dyn.elements.length; i++) {
-              if (this.dyn.elements[i].action_type1 ===
-                  ActionType1.PopupMenu) {
-                command = "open graph/class/instance=" +
-                    this.dyn.elements[i].ref_object;
-                break;
-              }
+          if ((this.dyn.total_action_type1 & ActionType1.PopupMenu) !== 0) {
+            let obj = <DynPopupMenu>this.dyn.elements.find(e => e.action_type1 === ActionType1.PopupMenu);
+            if (obj) {
+              this.dyn.graph.command("open graph/class/instance=" + obj.ref_object);
             }
-          } else if ((this.dyn.total_dyn_type1 & DynType1.HostObject) !==
-              0) {
-            for (let i = 0; i < this.dyn.elements.length; i++) {
-              if (this.dyn.elements.get(i).dyn_type1 ===
-                  DynType1.HostObject) {
-                command = "open graph/class/instance=" +
-                    this.dyn.elements[i].hostobject;
-                break;
-              }
+          } else if ((this.dyn.total_dyn_type1 & DynType1.HostObject) !== 0) {
+            let obj = <DynHostObject>this.dyn.elements.find(e => e.dyn_type1 === DynType1.HostObject);
+            if (obj) {
+              this.dyn.graph.command("open graph/class/instance=" + obj.hostobject);
             }
           }
         } else {
-          command = "open graph/object=" + this.graph_object;
+          this.dyn.graph.command("open graph/object=" + this.graph_object);
         }
-
-        this.dyn.graph.command(command);
-        break;
+        return 1;
     }
 
     return 1;
@@ -8214,10 +7226,6 @@ class DynOpenGraph extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynOpenGraph : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.OpenGraph:
@@ -8254,11 +7262,8 @@ class DynOpenURL extends DynElem {
 
     switch (e.event) {
       case Event.MB1Down:
-        object.setColorInverse(1);
-        this.dyn.repaintNow = true;
-        break;
       case Event.MB1Up:
-        object.setColorInverse(0);
+        object.setColorInverse(event === Event.MB1Down);
         this.dyn.repaintNow = true;
         break;
       case Event.MB1Click:
@@ -8266,9 +7271,7 @@ class DynOpenURL extends DynElem {
           break;
         }
 
-        let command = "open url \"" + this.url + "\"";
-
-        this.dyn.graph.command(command);
+        this.dyn.graph.command("open url \"" + this.url + "\"");
         break;
     }
 
@@ -8280,10 +7283,6 @@ class DynOpenURL extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynOpenURL : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.OpenURL:
@@ -8325,10 +7324,6 @@ class DynInputFocus extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynInputFocus : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.InputFocus:
@@ -8376,11 +7371,8 @@ class DynCloseGraph extends DynElem {
 
     switch (e.event) {
       case Event.MB1Down:
-        object.setColorInverse(1);
-        this.dyn.repaintNow = true;
-        break;
       case Event.MB1Up:
-        object.setColorInverse(0);
+        object.setColorInverse(event === Event.MB1Down);
         this.dyn.repaintNow = true;
         break;
       case Event.MB1Click:
@@ -8400,10 +7392,6 @@ class DynCloseGraph extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynCloseGraph : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.CloseGraph:
@@ -8456,21 +7444,17 @@ class DynSlider extends DynElem {
     }
 
     // Get min and max position from slider background
-    let max_value, min_value, max_pos, min_pos;
-    let background;
-    let origo;
-
     if (!object.transformIsStored()) {
       object.storeTransform();
       let g = object.measure();
       let info = object.get_info();
       let b = this.dyn.graph.getCtx()
-          .getBackgroundObjectLimits(DynType1.SliderBackground, g.x + g.width / 2, g.y + g.height / 2);
+          .getBackgroundObjectLimits(DynType1.SliderBackground, (g.ll_x + g.ur_x) / 2, (g.ll_y + g.ur_y) / 2);
       if ((b.sts & 1) === 0) {
         this.direction = info.direction;
       } else {
         this.direction = b.direction;
-        origo = object.get_origo(info.direction);
+        let origo = object.get_origo(info.direction);
 
         switch (this.direction) {
           case Direction.Down:
@@ -8538,20 +7522,20 @@ class DynSlider extends DynElem {
     switch (this.a.typeid) {
       case Type.Float32:
         value = this.a.get_ref_value(this.dyn);
-        if (typeof value === 'undefined') {
+        if (value === undefined) {
           value = 0;
         }
         break;
       case Type.Int32:
         ivalue = this.a.get_ref_value(this.dyn);
-        if (typeof ivalue === 'undefined') {
+        if (ivalue === undefined) {
           ivalue = 0;
         }
         break;
       case Type.Boolean:
         let b;
         b = this.a.get_ref_value(this.dyn);
-        if (typeof b === 'undefined') {
+        if (b === undefined) {
           b = false;
         }
         ivalue = b ? 1 : 0;
@@ -8585,9 +7569,7 @@ class DynSlider extends DynElem {
     } else {
       switch (this.a.typeid) {
         case Type.Float32:
-          if (Math.abs(this.old_value - value) < Number.MIN_VALUE)
-          // No change since last time
-          {
+          if (Math.abs(this.old_value - value) < Number.MIN_VALUE) { // No change since last time
             return;
           }
           break;
@@ -8622,8 +7604,6 @@ class DynSlider extends DynElem {
     if (info.min_position !== info.max_position) {
       if (this.dyn.graph.getCurrentSlider() !== object &&
           this.max_value !== this.min_value) {
-        let pos_x, pos_y;
-
         switch (this.a.typeid) {
           case Type.Float32:
             break;
@@ -8632,57 +7612,21 @@ class DynSlider extends DynElem {
             break;
         }
 
-        switch (this.direction) {
-          case Direction.Down:
-            pos_y =
-                (this.max_value - value) / (this.max_value - this.min_value) *
-                (info.max_position - info.min_position);
-            if (pos_y < 0) {
-              pos_y = 0;
-            } else if (pos_y > info.max_position - info.min_position) {
-              pos_y = info.max_position - info.min_position;
-            }
-            pos_x = 0;
-            break;
-          case Direction.Right:
-            pos_x =
-                info.max_position - info.min_position - (value - this.min_value) /
-                (this.max_value - this.min_value) *
-                (info.max_position - info.min_position);
-            if (pos_x < 0) {
-              pos_x = 0;
-            } else if (pos_x > info.max_position - info.min_position) {
-              pos_x = info.max_position - info.min_position;
-            }
-            pos_y = 0;
-            break;
-          case Direction.Left:
-            pos_x =
-                info.max_position - info.min_position - (this.max_value - value) /
-                (this.max_value - this.min_value) *
-                (info.max_position - info.min_position);
-            if (pos_x < 0) {
-              pos_x = 0;
-            } else if (pos_x > info.max_position - info.min_position) {
-              pos_x = info.max_position - info.min_position;
-            }
-            pos_y = 0;
-            break;
-          default:   // Up
-            pos_y =
-                (value - this.min_value) / (this.max_value - this.min_value) *
-                (info.max_position - info.min_position);
-            if (pos_y < 0) {
-              pos_y = 0;
-            } else if (pos_y > info.max_position - info.min_position) {
-              pos_y = info.max_position - info.min_position;
-            }
-            pos_x = 0;
+        let diff = info.max_position - info.min_position;
+
+        let pos = this.max_value - value;
+        if (this.direction === Direction.Right || this.direction === Direction.Up) {
+          pos = value - this.min_value;
         }
-        object.set_position(pos_x, pos_y);
+
+        pos = pos / (this.max_value - this.min_value) * diff;
+        if (this.direction === Direction.Right || this.direction === Direction.Left) {
+          object.set_position(clamp(diff - pos, 0, diff), 0);
+        } else {
+          object.set_position(0, clamp(pos, 0, diff));
+        }
       }
     }
-
   }
 
   action(object, e) {
@@ -8742,7 +7686,7 @@ class DynSlider extends DynElem {
 
         let info = object.get_info();
         if (info.min_position !== info.max_position) {
-          if (!(this.max_value_p !== 0 && this.min_value_p !== 0 &&
+          if (!(this.max_value !== 0 && this.min_value !== 0 &&
                   this.max_value !== this.min_value)) {
             this.max_value = info.max_value;
             this.min_value = info.min_value;
@@ -8751,77 +7695,47 @@ class DynSlider extends DynElem {
 
           switch (this.direction) {
             case Direction.Down:
-              value = ((info.max_position - g.y) /
-                  (info.max_position - info.min_position) *
-                  (this.max_value - this.min_value) + this.min_value);
+              value = info.max_position - g.y;
               break;
             case Direction.Right:
-              value = ((info.max_position - g.x) /
-                  (info.max_position - info.min_position) *
-                  (this.max_value - this.min_value) + this.min_value);
+              value = info.max_position - g.x;
               break;
             case Direction.Left:
-              value = ((g.x - info.min_position) /
-                  (info.max_position - info.min_position) *
-                  (this.max_value - this.min_value) + this.min_value);
+              value = g.x - info.min_position;
               break;
             default:
-              value = ((g.y - info.min_position) /
-                  (info.max_position - info.min_position) *
-                  (this.max_value - this.min_value) + this.min_value);
+              value = g.y - info.min_position;
           }
-          if (value > this.max_value) {
-            value = this.max_value;
-          }
-          if (value < this.min_value) {
-            value = this.min_value;
-          }
+          value = value / (info.max_position - info.min_position) *
+              (this.max_value - this.min_value) + this.min_value;
+          value = clamp(value, this.min_value, this.max_value);
 
           let pname = this.dyn.parseAttrName(this.attribute);
           if (pname === null || pname.name === "") {
             return 1;
           }
 
+          let setObjectInfo = function(pname, value, type) {
+            if (pname.database === Database.Gdh) {
+              return this.dyn.graph.getGdh().setObjectInfo(pname.name, value, type);
+            } else if (pname.database === Database.Local) {
+              return this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, value);
+            } else {
+              return 1;
+            }
+          };
+
           let sts;
           switch (pname.type) {
             case Type.Float32:
-              switch (pname.database) {
-                case Database.Gdh:
-                  sts = this.dyn.graph.getGdh()
-                      .setObjectInfoFloat(pname.name, value);
-                  break;
-                case Database.Local:
-                  sts = this.dyn.graph.getLdb()
-                      .setObjectInfo(this.dyn.graph, pname.name, value);
-                  break;
-              }
+              sts = setObjectInfo(pname, value, pname.type);
               break;
             case Type.Boolean:
-              let bvalue = (value > 0.5);
-              switch (pname.database) {
-                case Database.Gdh:
-                  sts = this.dyn.graph.getGdh()
-                      .setObjectInfoBoolean(pname.name, bvalue);
-                  break;
-                case Database.Local:
-                  sts = this.dyn.graph.getLdb()
-                      .setObjectInfo(this.dyn.graph, pname.name, bvalue);
-                  break;
-              }
+              sts = setObjectInfo(pname, (value > 0.5), pname.type);
               break;
             default:
               let ivalue = Math.floor(value > 0 ? value + 0.5 : value - 0.5);
-              switch (pname.database) {
-                case Database.Gdh:
-                  sts = this.dyn.graph.getGdh()
-                      .setObjectInfoInt(pname.name, ivalue);
-                  break;
-                case Database.Local:
-                  console.log("Set ivalue", ivalue, pname.name);
-                  sts = this.dyn.graph.getLdb()
-                      .setObjectInfo(this.dyn.graph, pname.name, ivalue);
-                  break;
-              }
+              sts = setObjectInfo(pname, ivalue, pname.type);
           }
           if (even(sts)) {
             console.log("Slider error: " + this.attribute);
@@ -8839,10 +7753,6 @@ class DynSlider extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynSlider : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.Slider:
@@ -8900,10 +7810,6 @@ class DynFastCurve extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynSlider : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.FastCurve:
           break;
@@ -8952,18 +7858,17 @@ class DynPulldownMenu extends DynElem {
 
     switch (e.event) {
       case Event.MB1Click:
-        if (this.menu_object !== null) {
+        if (this.menu_object) {
           // Close, delete this menu and all childmenues
           for (let j = 0; j < 32; j++) {
-            if (this.items_dyn[j] !== null && (this.items_dyn[j].action_type1 &
+            if (this.items_dyn[j] && (this.items_dyn[j].action_type1 &
                     ActionType1.PulldownMenu) !== 0) {
               this.items_dyn[j].action(null, e);
             }
           }
           this.dyn.graph.getCtx().remove(this.menu_object);
           this.menu_object = null;
-        } else if (object !== null) {
-          let ll_x, ll_y, ur_x, ur_y;
+        } else if (object) {
           let info = new GlowMenuInfo();
 
           let b_mask = 1;
@@ -8992,10 +7897,10 @@ class DynPulldownMenu extends DynElem {
                         invis_element = this.dyn.elements[j];
                       }
                     }
-                    if (invis_element !== null) {
+                    if (invis_element) {
                       let pname = this.dyn.parseAttrName(
                           invis_element.attribute);
-                      if ((pname !== null) && pname.name !== "") {
+                      if (pname && pname.name !== "") {
                         if (pname.name.substring(0, 5) === "$cmd(") {
                           let idx = pname.name.lastIndexOf(")");
                           if (idx !== -1) {
@@ -9052,10 +7957,10 @@ class DynPulldownMenu extends DynElem {
           }
 
           let g = object.measure();
-          this.menu_object = new GrowMenu(this.dyn.graph.getCtx());
-          this.menu_object.init("__Menu", info, g.x, g.y + g.height, g.width,
-              DrawType.Line, 0, 1, 1, bg_color, text_size, text_drawtype,
-              text_color, DrawType.MediumGray, text_font);
+          this.menu_object = new GrowMenu(this.dyn.graph.getCtx(),
+              "__Menu", info, g.x, g.ur_y, g.width(),
+              DrawType.Line, 0, 1, 1, bg_color, text_size,
+              text_drawtype, text_color, DrawType.MediumGray, text_font);
           this.menu_object.set_scale(scale, scale, 0, 0,
               ScaleType.LowerLeft);
           this.dyn.graph.getCtx().insert(this.menu_object);
@@ -9069,14 +7974,14 @@ class DynPulldownMenu extends DynElem {
           break;
         }
         if (e.object === this.menu_object) {
-          if (this.items_dyn[e.item] !== null) {
+          if (this.items_dyn[e.item]) {
             let event = new GlowEvent();
             event.event = Event.MB1Click;
             return this.items_dyn[e.item].action(e.object, event);
           }
         } else {
           for (let j = 0; j < 32; j++) {
-            if (this.items_dyn[j] !== null &&
+            if (this.items_dyn[j] &&
                 (this.items_dyn[j].action_type1 & ActionType1.PulldownMenu) !==
                 0) {
               this.items_dyn[j].action(null, e);
@@ -9107,309 +8012,19 @@ class DynPulldownMenu extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("DynPulldownMenu : " + lines[i]);
-      }
-
-      switch (key) {
-        case DynSave.PulldownMenu:
-          break;
-        case DynSave.PulldownMenu_button_mask:
-          this.button_mask = parseInt(tokens[1], 10);
-          break;
-        case DynSave.PulldownMenu_items_text0:
-          if (tokens.length > 1) {
-            this.items_text[0] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text1:
-          if (tokens.length > 1) {
-            this.items_text[1] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text2:
-          if (tokens.length > 1) {
-            this.items_text[2] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text3:
-          if (tokens.length > 1) {
-            this.items_text[3] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text4:
-          if (tokens.length > 1) {
-            this.items_text[4] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text5:
-          if (tokens.length > 1) {
-            this.items_text[5] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text6:
-          if (tokens.length > 1) {
-            this.items_text[6] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text7:
-          if (tokens.length > 1) {
-            this.items_text[7] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text8:
-          if (tokens.length > 1) {
-            this.items_text[8] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text9:
-          if (tokens.length > 1) {
-            this.items_text[9] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text10:
-          if (tokens.length > 1) {
-            this.items_text[10] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text11:
-          if (tokens.length > 1) {
-            this.items_text[11] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text12:
-          if (tokens.length > 1) {
-            this.items_text[12] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text13:
-          if (tokens.length > 1) {
-            this.items_text[13] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text14:
-          if (tokens.length > 1) {
-            this.items_text[14] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text15:
-          if (tokens.length > 1) {
-            this.items_text[15] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text16:
-          if (tokens.length > 1) {
-            this.items_text[16] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text17:
-          if (tokens.length > 1) {
-            this.items_text[17] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text18:
-          if (tokens.length > 1) {
-            this.items_text[18] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text19:
-          if (tokens.length > 1) {
-            this.items_text[19] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text20:
-          if (tokens.length > 1) {
-            this.items_text[20] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text21:
-          if (tokens.length > 1) {
-            this.items_text[21] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text22:
-          if (tokens.length > 1) {
-            this.items_text[22] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text23:
-          if (tokens.length > 1) {
-            this.items_text[23] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text24:
-          if (tokens.length > 1) {
-            this.items_text[24] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text25:
-          if (tokens.length > 1) {
-            this.items_text[25] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text26:
-          if (tokens.length > 1) {
-            this.items_text[26] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text27:
-          if (tokens.length > 1) {
-            this.items_text[27] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text28:
-          if (tokens.length > 1) {
-            this.items_text[28] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text29:
-          if (tokens.length > 1) {
-            this.items_text[29] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text30:
-          if (tokens.length > 1) {
-            this.items_text[30] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_text31:
-          if (tokens.length > 1) {
-            this.items_text[31] = tokens[1];
-          }
-          break;
-        case DynSave.PulldownMenu_items_dyn0:
-          this.items_dyn[0] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[0].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn1:
-          this.items_dyn[1] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[1].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn2:
-          this.items_dyn[2] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[2].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn3:
-          this.items_dyn[3] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[3].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn4:
-          this.items_dyn[4] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[4].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn5:
-          this.items_dyn[5] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[5].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn6:
-          this.items_dyn[6] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[6].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn7:
-          this.items_dyn[7] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[7].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn8:
-          this.items_dyn[8] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[8].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn9:
-          this.items_dyn[9] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[9].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn10:
-          this.items_dyn[10] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[10].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn11:
-          this.items_dyn[11] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[11].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn12:
-          this.items_dyn[12] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[12].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn13:
-          this.items_dyn[13] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[13].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn14:
-          this.items_dyn[14] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[14].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn15:
-          this.items_dyn[15] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[15].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn16:
-          this.items_dyn[16] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[16].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn17:
-          this.items_dyn[17] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[17].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn18:
-          this.items_dyn[18] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[18].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn19:
-          this.items_dyn[19] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[19].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn20:
-          this.items_dyn[20] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[20].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn21:
-          this.items_dyn[21] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[21].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn22:
-          this.items_dyn[22] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[22].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn23:
-          this.items_dyn[23] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[23].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn24:
-          this.items_dyn[24] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[24].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn25:
-          this.items_dyn[25] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[25].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn26:
-          this.items_dyn[26] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[26].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn27:
-          this.items_dyn[27] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[27].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn28:
-          this.items_dyn[28] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[28].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn29:
-          this.items_dyn[29] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[29].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn30:
-          this.items_dyn[30] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[30].open(lines, i + 1);
-          break;
-        case DynSave.PulldownMenu_items_dyn31:
-          this.items_dyn[31] = new Dyn(this.dyn.graph);
-          i = this.items_dyn[31].open(lines, i + 1);
-          break;
-        case DynSave.End:
-          return i;
-        default:
-          console.log("Syntax error in DynPulldownMenu");
-          break;
+      if (key === DynSave.End) {
+        return i;
+      } else if (key === DynSave.PulldownMenu_button_mask) {
+        this.button_mask = parseInt(tokens[1], 10);
+      } else if (key >= DynSave.PulldownMenu_items_text0 && key <= DynSave.PulldownMenu_items_text31) {
+        if (tokens.length > 1) {
+          this.items_text[key - DynSave.PulldownMenu_items_text0] = tokens[1];
+        }
+      } else if (key >= DynSave.PulldownMenu_items_dyn0 && key <= DynSave.PulldownMenu_items_dyn31) {
+        this.items_dyn[key - DynSave.PulldownMenu_items_dyn0] = new Dyn(this.dyn.graph);
+        i = this.items_dyn[key - DynSave.PulldownMenu_items_dyn0].open(lines, i + 1);
+      } else {
+        console.log("Syntax error in DynPulldownMenu");
       }
     }
 
@@ -9420,7 +8035,6 @@ class DynPulldownMenu extends DynElem {
 class DynOptionMenu extends DynElem {
   a;
   update_a = null;
-  attribute;
   text_attribute;
   size_attribute;
   update_attribute;
@@ -9447,8 +8061,7 @@ class DynOptionMenu extends DynElem {
       return 1;
     }
 
-    if (this.text_attribute !== null && this.text_attribute !== "" &&
-        this.update_attribute !== null && this.update_attribute !== "") {
+    if (this.text_attribute && this.update_attribute) {
       this.update_a = new DynReference(this.dyn, this.update_attribute);
       this.update_a.connect(this.dyn);
       if (!this.update_a.sts) {
@@ -9462,7 +8075,7 @@ class DynOptionMenu extends DynElem {
 
   disconnect() {
     this.a.disconnect(this.dyn);
-    if (this.update_a !== null) {
+    if (this.update_a) {
       this.update_a.disconnect(this.dyn);
     }
   }
@@ -9473,13 +8086,11 @@ class DynOptionMenu extends DynElem {
     }
 
     let update_texts = false;
-    if (this.update_a !== null && this.update_a.sts) {
+    if (this.update_a && this.update_a.sts) {
       let value = this.dyn.getDig(this.update_a.p, this.update_a.typeid,
           this.update_a.bitmask, this.update_a.database);
 
-      if (this.update_a.inverted) {
-        value = !value;
-      }
+      value = (this.update_a.inverted) ? !value : value;
 
       if (this.firstScan) {
         update_texts = false;
@@ -9498,7 +8109,6 @@ class DynOptionMenu extends DynElem {
     switch (this.a.typeid) {
       case Type.Float32:
         let value = this.a.get_ref_value(this.dyn);
-        let i;
 
         if (this.firstScan) {
           this.firstScan = false;
@@ -9515,7 +8125,6 @@ class DynOptionMenu extends DynElem {
       case Type.UInt32:
       case Type.Int32:
         let value = this.a.get_ref_value(this.dyn);
-        let i;
 
         if (this.firstScan) {
           this.firstScan = false;
@@ -9534,17 +8143,8 @@ class DynOptionMenu extends DynElem {
     }
 
     if (this.update_a === null || !this.update_a.sts) {
-      let found = false;
-      for (let i = 0; i < 32; i++) {
-        if (this.items_enum[i] === enum_value) {
-          object.setAnnotation(1, this.items_text[i]);
-          found = true;
-          break;
-        }
-      }
-      if (!found) {
-        object.setAnnotation(1, "");
-      }
+      let found = this.items_enum.slice(0, 32).find(e => e === enum_value);
+      object.setAnnotation(1, found || "");
     }
   }
 
@@ -9556,16 +8156,13 @@ class DynOptionMenu extends DynElem {
     switch (e.event) {
       case Event.MB1Click:
         if (this.menu_object === null) {
-          let ll_x, ll_y, ur_x, ur_y;
           let info = new GlowMenuInfo();
 
           if (this.update_a === null || !this.update_a.sts) {
             let b_mask = 1;
             for (let i = 0; i < 32; i++) {
-              if ((b_mask & this.button_mask) === 0) {
-                info.item[i].occupied = false;
-              } else {
-                info.item[i].occupied = true;
+              info.item[i].occupied = ((b_mask & this.button_mask) !== 0);
+              if (info.item[i].occupied) {
                 info.item[i].text = this.items_text[i];
 
                 // Check access
@@ -9578,10 +8175,8 @@ class DynOptionMenu extends DynElem {
               if (i < this.text_size) {
                 info.item[i].text = this.items_text[i];
                 info.item[i].type = MenuItem.Button;
-                info.item[i].occupied = true;
-              } else {
-                info.item[i].occupied = false;
               }
+              info.item[i].occupied = (i < this.text_size);
             }
           }
 
@@ -9605,10 +8200,10 @@ class DynOptionMenu extends DynElem {
           }
 
           let g = object.measure();
-          this.menu_object = new GrowMenu(this.dyn.graph.getCtx());
-          this.menu_object.init("__Menu", info, g.x, g.y + g.height, g.width,
-              DrawType.Line, 0, 1, 1, bg_color, tsize, text_drawtype,
-              text_color, DrawType.MediumGray, text_font);
+          this.menu_object = new GrowMenu(this.dyn.graph.getCtx(),
+              "__Menu", info, g.ll_x, g.ur_y, g.width(),
+              DrawType.Line, 0, 1, 1, bg_color, tsize,
+              text_drawtype, text_color, DrawType.MediumGray, text_font);
           this.menu_object.set_scale(scale, scale, 0, 0,
               ScaleType.LowerLeft);
           this.dyn.graph.getCtx().insert(this.menu_object);
@@ -9632,11 +8227,11 @@ class DynOptionMenu extends DynElem {
 
           let sts = null;
 
+          let value = this.items_enum[e.item];
           switch (pname.database) {
             case Database.Gdh:
               switch (pname.type) {
                 case Type.Float32:
-                  let value = this.items_enum[e.item];
                   sts = this.dyn.graph.getGdh()
                       .setObjectInfoFloat(pname.name, value);
                   break;
@@ -9656,17 +8251,12 @@ class DynOptionMenu extends DynElem {
             case Database.Local:
               switch (pname.type) {
                 case Type.Float32:
-                  let value = this.items_enum[e.item];
-                  sts = this.dyn.graph.getLdb()
-                      .setObjectInfo(this.dyn.graph, pname.name, value);
-                  break;
                 case Type.Int32:
                 case Type.UInt32:
                 case Type.Int16:
                 case Type.UInt16:
                 case Type.Int8:
                 case Type.UInt8:
-                  let value = this.items_enum[e.item];
                   sts = this.dyn.graph.getLdb()
                       .setObjectInfo(this.dyn.graph, pname.name, value);
                   break;
@@ -9709,8 +8299,14 @@ class DynOptionMenu extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("OptionsMenu : " + lines[i]);
+      if (key >= DynSave.OptionMenu_items_text0 && key <= DynSave.OptionMenu_items_text31) {
+        if (tokens.length > 1) {
+          this.items_text[key - DynSave.OptionMenu_items_text0] = lines[i].substring(5);
+        }
+        continue;
+      } else if (key >= DynSave.OptionMenu_items_enum0 && key <= DynSave.OptionMenu_items_enum31) {
+        this.items_enum[key - DynSave.OptionMenu_items_enum0] = parseInt(tokens[1], 10);
+        continue;
       }
 
       switch (key) {
@@ -9742,262 +8338,6 @@ class DynOptionMenu extends DynElem {
         case DynSave.OptionMenu_button_mask:
           this.button_mask = parseInt(tokens[1], 10);
           break;
-        case DynSave.OptionMenu_items_text0:
-          if (tokens.length > 1) {
-            this.items_text[0] = tokens[1];
-          }
-          break;
-        case DynSave.OptionMenu_items_text1:
-          if (tokens.length > 1) {
-            this.items_text[1] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text2:
-          if (tokens.length > 1) {
-            this.items_text[2] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text3:
-          if (tokens.length > 1) {
-            this.items_text[3] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text4:
-          if (tokens.length > 1) {
-            this.items_text[4] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text5:
-          if (tokens.length > 1) {
-            this.items_text[5] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text6:
-          if (tokens.length > 1) {
-            this.items_text[6] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text7:
-          if (tokens.length > 1) {
-            this.items_text[7] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text8:
-          if (tokens.length > 1) {
-            this.items_text[8] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text9:
-          if (tokens.length > 1) {
-            this.items_text[9] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text10:
-          if (tokens.length > 1) {
-            this.items_text[10] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text11:
-          if (tokens.length > 1) {
-            this.items_text[11] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text12:
-          if (tokens.length > 1) {
-            this.items_text[12] = tokens[1];
-          }
-          break;
-        case DynSave.OptionMenu_items_text13:
-          if (tokens.length > 1) {
-            this.items_text[13] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text14:
-          if (tokens.length > 1) {
-            this.items_text[14] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text15:
-          if (tokens.length > 1) {
-            this.items_text[15] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text16:
-          if (tokens.length > 1) {
-            this.items_text[16] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text17:
-          if (tokens.length > 1) {
-            this.items_text[17] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text18:
-          if (tokens.length > 1) {
-            this.items_text[18] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text19:
-          if (tokens.length > 1) {
-            this.items_text[19] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text20:
-          if (tokens.length > 1) {
-            this.items_text[20] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text21:
-          if (tokens.length > 1) {
-            this.items_text[21] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text22:
-          if (tokens.length > 1) {
-            this.items_text[22] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text23:
-          if (tokens.length > 1) {
-            this.items_text[23] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text24:
-          if (tokens.length > 1) {
-            this.items_text[24] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text25:
-          if (tokens.length > 1) {
-            this.items_text[25] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text26:
-          if (tokens.length > 1) {
-            this.items_text[26] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text27:
-          if (tokens.length > 1) {
-            this.items_text[27] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text28:
-          if (tokens.length > 1) {
-            this.items_text[28] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text29:
-          if (tokens.length > 1) {
-            this.items_text[29] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text30:
-          if (tokens.length > 1) {
-            this.items_text[30] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_text31:
-          if (tokens.length > 1) {
-            this.items_text[31] = lines[i].substring(5);
-          }
-          break;
-        case DynSave.OptionMenu_items_enum0:
-          this.items_enum[0] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum1:
-          this.items_enum[1] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum2:
-          this.items_enum[2] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum3:
-          this.items_enum[3] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum4:
-          this.items_enum[4] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum5:
-          this.items_enum[5] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum6:
-          this.items_enum[6] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum7:
-          this.items_enum[7] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum8:
-          this.items_enum[8] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum9:
-          this.items_enum[9] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum10:
-          this.items_enum[10] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum11:
-          this.items_enum[11] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum12:
-          this.items_enum[12] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum13:
-          this.items_enum[13] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum14:
-          this.items_enum[14] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum15:
-          this.items_enum[15] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum16:
-          this.items_enum[16] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum17:
-          this.items_enum[17] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum18:
-          this.items_enum[18] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum19:
-          this.items_enum[19] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum20:
-          this.items_enum[20] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum21:
-          this.items_enum[21] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum22:
-          this.items_enum[22] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum23:
-          this.items_enum[23] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum24:
-          this.items_enum[24] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum25:
-          this.items_enum[25] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum26:
-          this.items_enum[26] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum27:
-          this.items_enum[27] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum28:
-          this.items_enum[28] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum29:
-          this.items_enum[29] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum30:
-          this.items_enum[30] = parseInt(tokens[1], 10);
-          break;
-        case DynSave.OptionMenu_items_enum31:
-          this.items_enum[31] = parseInt(tokens[1], 10);
-          break;
         case DynSave.End:
           return i;
         default:
@@ -10027,10 +8367,6 @@ class DynAnalogText extends DynOptionMenu {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("AnalogText : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.AnalogText:
           break;
@@ -10050,7 +8386,6 @@ class DynAnalogText extends DynOptionMenu {
 }
 
 class DynSetValue extends DynElem {
-  attribute;
   value;
 
   constructor(dyn) {
@@ -10063,10 +8398,6 @@ class DynSetValue extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("AnalogText : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.SetValue:
@@ -10105,10 +8436,8 @@ class DynSetValue extends DynElem {
 
     switch (e.event) {
       case Event.MB1Down:
-        object.setColorInverse(1);
-        break;
       case Event.MB1Up:
-        object.setColorInverse(0);
+        object.setColorInverse(event === Event.MB1Down);
         break;
       case Event.MB1Click:
         let sts;
@@ -10119,24 +8448,25 @@ class DynSetValue extends DynElem {
 
         let pname = this.dyn.parseAttrName(this.attribute);
 
+        let setObjectInfo = function(pname, value, type) {
+          let sts = 0;
+          if (pname.database === Database.Gdh) {
+            sts = this.dyn.graph.getGdh().setObjectInfo(pname.name, value, type);
+          } else if (pname.database === Database.Local) {
+            sts = this.dyn.graph.getLdb().setObjectInfo(this.dyn.graph, pname.name, value);
+          }
+
+          if (even(sts)) {
+            console.log("setObjectInfoError " + sts);
+            return 0;
+          }
+        };
+
         switch (pname.type) {
           case Type.Float32:
             let inputValue = parseFloat(this.value.trim());
-
-            switch (pname.database) {
-              case Database.Gdh:
-                sts = this.dyn.graph.getGdh()
-                    .setObjectInfoFloat(pname.name, inputValue);
-                break;
-              case Database.Local:
-                sts = this.dyn.graph.getLdb()
-                    .setObjectInfo(this.dyn.graph, pname.name, inputValue);
-                break;
-              default:
-                return 0;
-            }
+            sts = setObjectInfo(pname, inputValue, pname.type);
             if (even(sts)) {
-              console.log("setObjectInfoError " + sts);
               return 0;
             }
             break;
@@ -10149,22 +8479,8 @@ class DynSetValue extends DynElem {
           case Type.Mask:
           case Type.Enum:
             let inputValue = parseInt(this.value.trim(), 10);
-
-            switch (pname.database) {
-              case Database.Gdh:
-                console.log("SetValue", pname.name, inputValue);
-                sts = this.dyn.graph.getGdh()
-                    .setObjectInfoInt(pname.name, inputValue);
-                break;
-              case Database.Local:
-                sts = this.dyn.graph.getLdb()
-                    .setObjectInfo(this.dyn.graph, pname.name, inputValue);
-                break;
-              default:
-                return 0;
-            }
+            sts = setObjectInfo(pname, inputValue, pname.type);
             if (even(sts)) {
-              console.log("setObjectInfoError " + sts);
               return 0;
             }
             break;
@@ -10179,38 +8495,14 @@ class DynSetValue extends DynElem {
               break;
             }
 
-            switch (pname.database) {
-              case Database.Gdh:
-                sts = this.dyn.graph.getGdh()
-                    .setObjectInfoBoolean(pname.name, inputValue);
-                break;
-              case Database.Local:
-                sts = this.dyn.graph.getLdb()
-                    .setObjectInfo(this.dyn.graph, pname.name, inputValue);
-                break;
-              default:
-                return 0;
-            }
+            sts = setObjectInfo(pname, inputValue, pname.type);
             if (even(sts)) {
-              console.log("setObjectInfoError " + sts);
               return 0;
             }
             break;
           case Type.String:
-            switch (pname.database) {
-              case Database.Gdh:
-                sts = this.dyn.graph.getGdh()
-                    .setObjectInfoString(pname.name, this.value);
-                break;
-              case Database.Local:
-                sts = this.dyn.graph.getLdb()
-                    .setObjectInfo(this.dyn.graph, pname.name, this.value);
-                break;
-              default:
-                return 0;
-            }
+            sts = setObjectInfo(pname, inputValue, pname.type);
             if (even(sts)) {
-              console.log("setObjectInfoError " + sts);
               return 0;
             }
             break;
@@ -10230,7 +8522,7 @@ class DynMethodToolbar extends DynElem {
   method_object;
   toolbar_type;
 
-  pname;
+  pname_name;
   xm_mask_flags = 0;
   xm_mask_opmethods = 0;
   xm_mask_mntmethods = 0;
@@ -10248,10 +8540,6 @@ class DynMethodToolbar extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("MethodToolbar : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.MethodToolbar:
@@ -10286,46 +8574,46 @@ class DynMethodToolbar extends DynElem {
     this.pname_name = pname.name;
 
     let parsed_name = this.pname_name + ".XttMethodsMask.Flags";
-    this.dyn.graph.getGdh().getObjectInfoInt(parsed_name, DynMethodToolbar.connect2, this);
+    this.dyn.graph.getGdh().getObjectInfoInt(parsed_name).then(this.connect2);
   }
 
-  static connect2(id, self, sts, value) {
-    if (sts & 1) {
-      self.xm_mask_flags = value;
+  connect2(res) {
+    if (res.sts & 1) {
+      this.xm_mask_flags = res.value;
 
-      if ((self.xm_mask_flags & XttMethodsFlagsMask.IsConfigured) === 0) {
-        self.mask_configure = 1;
-        self.mask_store = 1;
-        self.connect5();
+      if ((this.xm_mask_flags & XttMethodsFlagsMask.IsConfigured) === 0) {
+        this.mask_configure = 1;
+        this.mask_store = 1;
+        this.connect5();
       } else {
-        let parsed_name = self.pname_name + ".XttMethodsMask.OpMethods";
-        self.dyn.graph.getGdh().getObjectInfoInt(parsed_name, self.connect3, self);
+        let parsed_name = this.pname_name + ".XttMethodsMask.OpMethods";
+        this.dyn.graph.getGdh().getObjectInfoInt(parsed_name).then(this.connect3);
       }
     } else {
-      self.mask_configure = 1;
-      self.connect5();
+      this.mask_configure = 1;
+      this.connect5();
     }
   }
 
-  static connect3(id, self, sts, value) {
-    if (sts & 1) {
-      self.xm_mask_opmethods = value;
+  connect3(res) {
+    if (res.sts & 1) {
+      this.xm_mask_opmethods = res.value;
     } else {
-      console.log("DynMethodToolbar: " + self.pname_name);
-      self.mask_configure = 1;
+      console.log("DynMethodToolbar: " + this.pname_name);
+      this.mask_configure = 1;
     }
-    let parsed_name = self.pname_name + ".XttMethodsMask.MntMethods";
-    self.dyn.graph.getGdh().getObjectInfoInt(parsed_name, self.connect4, self);
+    let parsed_name = this.pname_name + ".XttMethodsMask.MntMethods";
+    this.dyn.graph.getGdh().getObjectInfoInt(parsed_name).then(this.connect4);
   }
 
-  static connect4(id, self, sts, value) {
-    if (sts & 1) {
-      self.xm_mask_mntmethods = value;
+  connect4(res) {
+    if (res.sts & 1) {
+      this.xm_mask_mntmethods = res.value;
     } else {
-      console.log("DynMethodToolbar: " + self.pname_name);
-      self.mask_configure = 1;
+      console.log("DynMethodToolbar: " + this.pname_name);
+      this.mask_configure = 1;
     }
-    self.connect5();
+    this.connect5();
   }
 
   connect5() {
@@ -10440,10 +8728,8 @@ class DynMethodToolbar extends DynElem {
 
     switch (e.event) {
       case Event.MB1Down:
-        object.setColorInverse(1);
-        break;
       case Event.MB1Up:
-        object.setColorInverse(0);
+        object.setColorInverse(event === Event.MB1Down);
         break;
       case Event.MB1Click:
         let sts;
@@ -10506,10 +8792,6 @@ class DynMethodPulldownMenu extends DynElem {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
 
-      if (this.dyn.debug) {
-        console.log("MethodToolbar : " + lines[i]);
-      }
-
       switch (key) {
         case DynSave.MethodPulldownMenu:
           break;
@@ -10540,24 +8822,20 @@ class DynMethodPulldownMenu extends DynElem {
     this.o = object;
     switch (e.event) {
       case Event.MB1Click:
-        if (this.menu_object !== null) {
+        if (this.menu_object) {
           // Close, delete this menu
           this.dyn.graph.getCtx().remove(this.menu_object);
           this.menu_object = null;
-        } else if (object !== null) {
-          let ll_x, ll_y, ur_x, ur_y;
-          let parsed_name;
-
+        } else if (object) {
           let pname = this.dyn.parseAttrName(this.method_object);
           if (pname === null || pname.name === "") {
             return 1;
           }
 
           this.pname_name = pname.name;
-          parsed_name = this.pname_name + ".XttMethodsMask.Flags";
+          let parsed_name = this.pname_name + ".XttMethodsMask.Flags";
 
-          this.dyn.graph.getGdh()
-              .getObjectInfoInt(parsed_name, DynMethodPulldownMenu.action2, this);
+          this.dyn.graph.getGdh().getObjectInfoInt(parsed_name).then(this.action2);
         }
 
         break;
@@ -10567,7 +8845,6 @@ class DynMethodPulldownMenu extends DynElem {
         }
         if (e.object === this.menu_object) {
           let sts;
-          let command;
           let idx = 0;
           let found = 0;
 
@@ -10584,7 +8861,7 @@ class DynMethodPulldownMenu extends DynElem {
               idx++;
             }
             if (e.item + 1 === idx) {
-              command =
+              let command =
                   "call method/method=\"" + MethodToolbarOp.Methods[i] +
                   "\"/object=" + this.method_object;
               command = this.dyn.graph.getCommand(command);
@@ -10605,7 +8882,7 @@ class DynMethodPulldownMenu extends DynElem {
                 idx++;
               }
               if (e.item + 1 === idx) {
-                command =
+                let command =
                     "call method/method=\"" + MethodToolbarMnt.Methods[i] +
                     "\"/object=" + this.method_object;
                 command = this.dyn.graph.getCommand(command);
@@ -10634,46 +8911,45 @@ class DynMethodPulldownMenu extends DynElem {
     return 1;
   }
 
-  static action2(id, self, sts, value) {
-    if (sts & 1) {
-      self.xm_mask_flags = value;
+  action2(res) {
+    if (res.sts & 1) {
+      this.xm_mask_flags = res.value;
 
-      if ((self.xm_mask_flags & XttMethodsFlagsMask.IsConfigured) === 0) {
-        self.mask_configure = 1;
-        self.mask_store = 1;
-        self.action5();
+      if ((this.xm_mask_flags & XttMethodsFlagsMask.IsConfigured) === 0) {
+        this.mask_configure = 1;
+        this.mask_store = 1;
+        this.action5();
       } else {
-        let parsed_name = self.pname_name + ".XttMethodsMask.OpMethods";
+        let parsed_name = this.pname_name + ".XttMethodsMask.OpMethods";
 
-        self.dyn.graph.getGdh()
-            .getObjectInfoInt(parsed_name, self.action3, self);
+        this.dyn.graph.getGdh().getObjectInfoInt(parsed_name).then(this.action3);
       }
     } else {
-      self.mask_configure = 1;
-      self.action5();
+      this.mask_configure = 1;
+      this.action5();
     }
   }
 
-  static action3(id, self, sts, value) {
-    if (sts & 1) {
-      self.xm_mask_opmethods = value;
+  action3(res) {
+    if (res.sts & 1) {
+      this.xm_mask_opmethods = res.value;
     } else {
-      console.log("DynMethodToolbar: " + self.pname_name);
-      self.mask_configure = 1;
+      console.log("DynMethodToolbar: " + this.pname_name);
+      this.mask_configure = 1;
     }
 
-    let parsed_name = self.pname_name + ".XttMethodsMask.MntMethods";
-    self.dyn.graph.getGdh().getObjectInfoInt(parsed_name, self.action4, self);
+    let parsed_name = this.pname_name + ".XttMethodsMask.MntMethods";
+    this.dyn.graph.getGdh().getObjectInfoInt(parsed_name).then(this.action4);
   }
 
-  static action4(id, self, sts, value) {
-    if (sts & 1) {
-      self.xm_mask_mntmethods = value;
+  action4(res) {
+    if (res.sts & 1) {
+      this.xm_mask_mntmethods = res.value;
     } else {
-      console.log("DynMethodToolbar: " + self.pname_name);
-      self.mask_configure = 1;
+      console.log("DynMethodToolbar: " + this.pname_name);
+      this.mask_configure = 1;
     }
-    self.action5();
+    this.action5();
   }
 
   action5() {
@@ -10806,14 +9082,126 @@ class DynMethodPulldownMenu extends DynElem {
     }
 
     let g = this.o.measure();
-    this.menu_object = new GrowMenu(this.dyn.graph.getCtx());
-    this.menu_object.init("__Menu", info, g.x, g.y + g.height, g.width,
-        DrawType.Line, 0, 1, 1, bg_color, text_size, text_drawtype,
+    this.menu_object = new GrowMenu(this.dyn.graph.getCtx(),
+        "__Menu", info, g.ll_x, g.ur_y, g.width(), DrawType.Line,
+        0, 1, 1, bg_color, text_size, text_drawtype,
         text_color, DrawType.MediumGray, text_font);
     this.menu_object.set_scale(scale, scale, 0, 0, ScaleType.LowerLeft);
     this.dyn.graph.getCtx().insert(this.menu_object);
 
     // grow_SetMenuInputFocus( menu_object, 1);
+  }
+}
+
+class DynCatchSignal extends DynElem {
+  signal_name = "";
+
+  constructor(dyn) {
+    super(dyn, DynPrio.CatchSignal);
+    this.action_type1 = ActionType1.CatchSignal;
+  }
+
+  action(object, e) {
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
+      return 1;
+    }
+
+    if (e.event === Event.Signal && e.signal.signal_name === this.signal_name) {
+      let e = new GlowEvent();
+      e.event = Event.MB1Click;
+      e.object = object;
+      let sts = this.dyn.action(object, e);
+      if (sts === GLOW__NO_PROPAGATE || sts === GLOW__TERMINATED || sts === GLOW__SUBTERMINATED) {
+        return sts;
+      }
+    }
+
+    return 1;
+  }
+
+  open(lines, row) {
+    let i;
+    for (i = row; i < lines.length; i++) {
+      let tokens = lines[i].split(' ');
+      let key = parseInt(tokens[0], 10);
+
+      switch (key) {
+        case DynSave.CatchSignal:
+          break;
+        case DynSave.CatchSignal_signal_name:
+          this.signal_name = tokens[1];
+          break;
+        case DynSave.End:
+          return i;
+        default:
+          console.log("Syntax error in DynCatchSignal");
+          break;
+      }
+    }
+
+    return i;
+  }
+}
+
+class DynEmitSignal extends DynElem {
+  signal_name = "";
+  global = 0;
+
+  constructor(dyn) {
+    super(dyn, DynPrio.EmitSignal);
+    this.action_type1 = ActionType1.EmitSignal;
+  }
+
+  action(object, e) {
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
+      return 1;
+    }
+
+    switch (e.event) {
+      case Event.MB1Down:
+        object.setColorInverse(1);
+        break;
+      case Event.MB1Up:
+        object.setColorInverse(0);
+        break;
+      case Event.Key_Return:
+      case Event.MB1Click:
+        if (this.global) {
+          let command = "emit signal/signalname=" + this.signal_name;
+          let cmd = this.dyn.graph.getCommand(command);
+          this.dyn.graph.command(cmd);
+        } else {
+          //TODO:
+          //this.dyn.graph.signalSend(this.signal_name);
+        }
+    }
+
+    return 1;
+  }
+
+  open(lines, row) {
+    let i;
+    for (i = row; i < lines.length; i++) {
+      let tokens = lines[i].split(' ');
+      let key = parseInt(tokens[0], 10);
+
+      switch (key) {
+        case DynSave.EmitSignal:
+          break;
+        case DynSave.EmitSignal_signal_name:
+          this.signal_name = tokens[1];
+          break;
+        case DynSave.EmitSignal_global:
+          this.global = Number(tokens[1]);
+        case DynSave.End:
+          return i;
+        default:
+          console.log("Syntax error in DynEmitSignal");
+          break;
+      }
+    }
+
+    return i;
   }
 }
 
@@ -10845,10 +9233,6 @@ class DynPopupMenu extends DynElem {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.dyn.debug) {
-        console.log("DynResetDig : " + lines[i]);
-      }
 
       switch (key) {
         case DynSave.PopupMenu:

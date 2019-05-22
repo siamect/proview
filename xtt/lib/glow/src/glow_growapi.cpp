@@ -1261,12 +1261,9 @@ static int grow_name_validation_cb(void* ctx, void* value)
 int grow_GetObjectAttrInfo(
     grow_tObject object, char* transtab, grow_sAttrInfo** info, int* attr_cnt)
 {
-  grow_sAttrInfo* attrinfo;
-  int i, j;
+  grow_sAttrInfo* attrinfo = (grow_sAttrInfo*)calloc(100, sizeof(grow_sAttrInfo));
 
-  attrinfo = (grow_sAttrInfo*)calloc(100, sizeof(grow_sAttrInfo));
-
-  i = 0;
+  int i = 0;
   switch (((GrowRect*)object)->type()) {
   case glow_eObjectType_GrowRect: {
     GrowRect* op = (GrowRect*)object;
@@ -3018,7 +3015,7 @@ int grow_GetObjectAttrInfo(
       attrinfo[i++].size = sizeof(op->nc->n_name);
     }
 
-    for (j = 0; j < 10; j++) {
+    for (int j = 0; j < 10; j++) {
       if (op->nc->check_annotation(j)) {
         sprintf(annot_name, "A%d", j);
         if ((name = growapi_translate(transtab, annot_name))) {
@@ -3044,7 +3041,7 @@ int grow_GetObjectAttrInfo(
       }
     }
 
-    for (j = 0; j < op->nc->arg_cnt; j++) {
+    for (int j = 0; j < op->nc->arg_cnt; j++) {
       strcpy(attrinfo[i].name, op->nc->argname[j]);
       attrinfo[i].value_p = malloc(80);
       attrinfo[i].type = glow_eType_String;
@@ -3129,7 +3126,7 @@ int grow_GetObjectAttrInfo(
       attrinfo[i++].size = sizeof(op->min_pos);
     }
 
-    for (j = 0; j < 10; j++) {
+    for (int j = 0; j < 10; j++) {
       if (op->nc->check_annotation(j)) {
         sprintf(annot_name, "A%d", j);
         if ((name = growapi_translate(transtab, annot_name))) {
@@ -3145,7 +3142,7 @@ int grow_GetObjectAttrInfo(
       }
     }
 
-    for (j = 0; j < op->nc->arg_cnt; j++) {
+    for (int j = 0; j < op->nc->arg_cnt; j++) {
       strcpy(attrinfo[i].name, op->nc->argname[j]);
       attrinfo[i].value_p = malloc(80);
       attrinfo[i].type = glow_eType_String;
@@ -3224,7 +3221,7 @@ int grow_GetObjectAttrInfo(
     attrinfo[i].type = glow_eType_Cycle;
     attrinfo[i++].size = sizeof(op->cycle);
 
-    for (j = 0; j < op->arg_cnt; j++) {
+    for (int j = 0; j < op->arg_cnt; j++) {
       sprintf(attrinfo[i].name, "Arg%d", j + 1);
       attrinfo[i].value_p = &op->argname[j];
       attrinfo[i].type = glow_eType_String;
@@ -3243,15 +3240,13 @@ int grow_GetObjectAttrInfo(
 int grow_GetSubGraphAttrInfo(
     grow_tCtx ctx, char* transtab, grow_sAttrInfo** info, int* attr_cnt)
 {
-  grow_sAttrInfo* attrinfo;
-  int i;
   char* dynamic;
   int dynsize;
   char* name;
 
-  attrinfo = (grow_sAttrInfo*)calloc(40, sizeof(grow_sAttrInfo));
+  grow_sAttrInfo* attrinfo = (grow_sAttrInfo*)calloc(40, sizeof(grow_sAttrInfo));
 
-  i = 0;
+  int i = 0;
 
   if ((name = growapi_translate(transtab, "DynType1"))) {
     strcpy(attrinfo[i].name, name);
@@ -3405,12 +3400,9 @@ int grow_GetSubGraphAttrInfo(
 
 int grow_GetGraphAttrInfo(grow_tCtx ctx, grow_sAttrInfo** info, int* attr_cnt)
 {
-  grow_sAttrInfo* attrinfo;
-  int i;
+  grow_sAttrInfo* attrinfo = (grow_sAttrInfo*)calloc(40, sizeof(grow_sAttrInfo));
 
-  attrinfo = (grow_sAttrInfo*)calloc(40, sizeof(grow_sAttrInfo));
-
-  i = 0;
+  int i = 0;
 
   strcpy(attrinfo[i].name, "subgraph");
   attrinfo[i].value_p = &ctx->subgraph;

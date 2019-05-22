@@ -346,12 +346,14 @@ public:
   {
     node_open &= ~mask;
   }
-  void open_annotation_input(int num);
+
+  virtual void open_annotation_input(int num) {}
   int annotation_input_is_open(int num)
   {
     return annotv_inputmode[num];
   }
-  void close_annotation_input(int num);
+
+  virtual void close_annotation_input(int num) {}
   int level;
   int node_open;
   int relative_annot_pos;

@@ -1446,35 +1446,27 @@ int GlowDrawQt::print(char* filename, double x0, double x1, int end)
 #define ps_cLeftMargin 100
 #define ps_cTopMargin 100
 
-  int width, height;
-  int i, j, k;
-  int grey;
-  int red, blue, green;
-  double scalex = 0.71;
-  double scaley = 0.78;
-  double x, y;
-  bool colorimage = true;
-  static DrawPs* ps = 0;
-  bool new_file = false;
-
-  x = ps_cLeftMargin;
-  y = ps_cPageHeight - ps_cTopMargin;
+  double x = ps_cLeftMargin;
+  double y = ps_cPageHeight - ps_cTopMargin;
 
   QImage* image = m_wind.buffer;
   if (image->isNull()) {
     return 0;
   }
 
+  static DrawPs* ps = 0;
+  bool new_file = !ps;
   if (!ps) {
     ps = new DrawPs(filename);
-    new_file = true;
     ps->y = y;
   } else {
     y = ps->y;
   }
 
-  width = image->width();
-  height = image->height();
+  int width = image->width();
+  int height = image->height();
+  double scalex = 0.71;
+  double scaley = 0.78;
 
   if (!feq(x0, 0.0) || !feq(x1, 0.0)) {
     double total_width = width / (x1 - x0);
@@ -1518,12 +1510,8 @@ int GlowDrawQt::print(char* filename, double x0, double x1, int end)
          << " " << width << " " << height << " 8 [" << width << " 0 0 -"
          << height << " 0 " << height << "]\n"
          << " { currentfile oneline readhexstring pop }\n";
-  if (colorimage) {
-    ps->fp << "false 3\n"
-           << "colorimage\n";
-  } else {
-    ps->fp << "image\n";
-  }
+  ps->fp << "false 3\n"
+         << "colorimage\n";
 
   ps->fp << "} def\n"
          << x / scalex / width << " " << (y - height * scaley) / scaley / height
@@ -1533,42 +1521,25 @@ int GlowDrawQt::print(char* filename, double x0, double x1, int end)
   ps->fp.flags((ps->fp.flags() & ~std::ios_base::dec) | std::ios_base::hex
       | std::ios_base::uppercase);
   ps->fp.fill('0');
-  j = 0;
-  for (k = 0; k < height; k++) {
-    for (i = 0; i < width; i++) {
+  int j = 0;
+  for (int k = 0; k < height; k++) {
+    for (int i = 0; i < width; i++) {
       QColor pixel = QColor(image->pixel(i, k));
-      if (!colorimage) {
-        if (!pixel.alpha()) {
-          grey = 255;
-        } else {
-          grey = (int)((0.0 + pixel.red() + pixel.green() + pixel.blue()) / 3
-              + 0.5);
-        }
-
-        ps->fp.width(2);
-        ps->fp << grey;
-        if (++j >= 40) {
-          j = 0;
-          ps->fp << '\n';
-        }
-      } else {
-        if (!pixel.alpha()) {
-          red = blue = green = 255;
-        } else {
-          red = pixel.red();
-          green = pixel.green();
-          blue = pixel.blue();
-        }
-        ps->fp.width(2);
-        ps->fp << red;
-        ps->fp.width(2);
-        ps->fp << green;
-        ps->fp.width(2);
-        ps->fp << blue;
-        if (++j >= 20) {
-          j = 0;
-          ps->fp << '\n';
-        }
+      int red = 255, green = 255, blue = 255;
+      if (pixel.alpha()) {
+        red = pixel.red();
+        green = pixel.green();
+        blue = pixel.blue();
+      }
+      ps->fp.width(2);
+      ps->fp << red;
+      ps->fp.width(2);
+      ps->fp << green;
+      ps->fp.width(2);
+      ps->fp << blue;
+      if (++j >= 20) {
+        j = 0;
+        ps->fp << '\n';
       }
     }
   }
@@ -2011,7 +1982,7 @@ void GlowDrawQt::event_exec(void* event, unsigned int size)
     return;
   }
 
-  memcpy((void*)&e, (void*)event, size);
+  memcpy((void*)&e, event, size);
 
   if (e.type() == QEvent::Show) {
     QWidget* parent = m_wind.window->window();

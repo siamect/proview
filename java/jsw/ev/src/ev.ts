@@ -22,11 +22,8 @@ class Ev {
 
   constructor() {
     this.type = this.get_type();
-    switch (this.type) {
-      case EvType.EventList:
-        document.title = "Event List";
-        break;
-      default:
+    if (this.type === EvType.EventList) {
+      document.title = "Event List";
     }
 
     this.priv = Number(sessionStorage.getItem("pwr_privilege"));
@@ -98,7 +95,7 @@ class Ev {
           console.log("toolitem2", o.userdata.e.supObject.vid,
               o.userdata.e.supObject.oix);
           this.ctx.gdh.getObjectFromAref(o.userdata.e.supObject,
-              GdhOp.GET_OP_SELF, this.open_navigator_cb, null);
+              GdhOp.GET_OP_SELF).then(this.open_navigator_cb);
           console.log("toolitem2 event");
         });
     // Trace sup object
@@ -109,18 +106,16 @@ class Ev {
           if (o === null) {
             return;
           }
-          let newwindow = window.open("", "_blank");
           this.ctx.gdh.getObjectFromAref(o.userdata.e.supObject,
-              GdhOp.GET_OP_METHOD_PLC, this.open_plc_cb, newwindow);
+              GdhOp.GET_OP_METHOD_PLC).then(this.open_plc_cb);
         });
     // Graph event name
     document.getElementById("toolitem4")
         .addEventListener("click", function (event) {
           let o = this.ctx.get_select();
           if (o.userdata instanceof EvItemAlarm) {
-            let newwindow = window.open("", "_blank");
             this.ctx.gdh.getObjectFromName(o.userdata.e.eventName,
-                GdhOp.GET_OP_METHOD_GRAPH, this.open_graph_cb, newwindow);
+                GdhOp.GET_OP_METHOD_GRAPH).then(this.open_graph_cb);
           }
         });
     // Object raph event name
@@ -128,9 +123,8 @@ class Ev {
         .addEventListener("click", function (event) {
           let o = this.ctx.get_select();
           if (o.userdata instanceof EvItemAlarm) {
-            let newwindow = window.open("", "_blank");
             this.ctx.gdh.getObjectFromName(o.userdata.e.eventName,
-                GdhOp.GET_OP_METHOD_OBJECTGRAPH, this.open_graph_cb, newwindow);
+                GdhOp.GET_OP_METHOD_OBJECTGRAPH).then(this.open_graph_cb);
           }
         });
     // Navigator event name
@@ -150,9 +144,8 @@ class Ev {
           if (o === null) {
             return;
           }
-          let newwindow = window.open("", "_blank");
           this.ctx.gdh.getObjectFromName(o.userdata.e.eventName,
-              GdhOp.GET_OP_METHOD_PLC, this.open_plc_cb, newwindow);
+              GdhOp.GET_OP_METHOD_PLC).then(this.open_plc_cb);
           console.log("toolitem7 event");
         });
     // History event name
@@ -178,7 +171,7 @@ class Ev {
           if (o === null) {
             return;
           }
-          this.ctx.gdh.crrSignal(o.userdata.e.eventName, this.open_crr_cb, o);
+          this.ctx.gdh.crrSignal(o.userdata.e.eventName).then(this.open_crr_cb(o));
           console.log("toolitem10 event");
         });
     // Help event name
@@ -195,12 +188,10 @@ class Ev {
             return;
           }
           if (o.userdata instanceof EvItemAlarm) {
-            let newwindow = window.open("", "_blank");
             this.ctx.gdh.getObjectFromName(o.userdata.e.eventName,
-                GdhOp.GET_OP_METHOD_HELPCLASS, this.open_helpclass_cb, newwindow);
+                GdhOp.GET_OP_METHOD_HELPCLASS).then(this.open_helpclass_cb);
           }
         });
-
   }
 
   is_authorized(access) {
@@ -209,29 +200,26 @@ class Ev {
 
   gdh_init_cb() {
     if (!this.priv) {
-      this.ctx.gdh.login("", "", this.login_cb, this);
+      this.ctx.gdh.login("", "").then(this.login_cb);
     }
 
-    //this.ctx.gdh.mhSync( this.mhSyncIdx, this.sync_cb, this);
+    //this.ctx.gdh.mhSync(this.mhSyncIdx).then(this.sync_cb);
 
     this.ctx.gdh.listSent = true;
     this.trace_cyclic();
   }
 
-  login_cb(id, data, sts, result) {
-    console.log("Login:", sts, result);
-    if (sts & 1) {
-      this.priv = result;
-    } else {
-      this.priv = 0;
-    }
+  login_cb(res) {
+    console.log("Login:", res.sts, res.value);
+    this.priv = (res.sts & 1) ? res.value : 0;
   }
 
-  sync_cb(id, data, sts, result) {
-    if (!(sts & 1)) {
+  sync_cb(res) {
+    if (!(res.sts & 1)) {
       return;
     }
 
+    let result = res.value;
     if (result.length === 0) {
       return;
     }
@@ -280,9 +268,7 @@ class Ev {
             }
             break;
         }
-        if (this.mhSyncIdx < result[i].syncIdx) {
-          this.mhSyncIdx = result[i].syncIdx;
-        }
+        this.mhSyncIdx = Math.max(this.mhSyncIdx, result[i].syncIdx);
       }
       this.ctx.configure();
       this.ctx.reset_nodraw();
@@ -297,9 +283,7 @@ class Ev {
         }
 
         new EvItemAlarm(this, e, null, Dest.BEFORE);
-        if (this.mhSyncIdx < result[i].syncIdx) {
-          this.mhSyncIdx = result[i].syncIdx;
-        }
+        this.mhSyncIdx = Math.max(this.mhSyncIdx, result[i].syncIdx);
       }
       this.ctx.configure();
       this.ctx.reset_nodraw();
@@ -337,7 +321,7 @@ class Ev {
 
     let item = node.get_userdata();
     console.log("Ack", item.e.eventText);
-    this.ctx.gdh.mhAcknowledge(item.e.eventId, this.ack_cb, this);
+    this.ctx.gdh.mhAcknowledge(item.e.eventId).then(this.ack_cb);
 
     if (item.e.eventStatus & EventStatus.NotRet) {
       item.e.eventStatus &= ~EventStatus.NotAck;
@@ -349,24 +333,28 @@ class Ev {
     this.ctx.draw();
   }
 
-  ack_cb(id, data, sts) {
-    console.log("ack sts", sts);
+  ack_cb(res) {
+    console.log("ack sts", res.sts);
   }
 
-  open_objectgraph_cb(id, data, sts, result) {
-    if ((sts & 1) === 0) {
-      data.document.write("Error status " + sts);
+  open_objectgraph_cb(res) {
+    let w = window.open("", "_blank");
+    if ((res.sts & 1) === 0) {
+      w.document.write("Error status " + res.sts);
     } else {
-      data.location.href =
+      let result = res.value;
+      w.location.href =
           "ge.html?graph=" + result.param1 + "&instance=" + result.fullname;
-      data.document.title = result.fullname;
+      w.document.title = result.fullname;
     }
   }
 
-  open_graph_cb(id, data, sts, result) {
-    if ((sts & 1) === 0) {
-      data.document.write("Error status " + sts);
+  open_graph_cb(res) {
+    let w = window.open("", "_blank");
+    if ((res.sts & 1) === 0) {
+      w.document.write("Error status " + res.sts);
     } else {
+      let result = res.value;
       let idx = result.param1.indexOf('.');
       if (idx !== -1) {
         result.param1 = result.param1.substring(0, idx);
@@ -377,62 +365,61 @@ class Ev {
         instancestr = "&instance=" + result.fullname;
       }
 
-      data.location.href = "ge.html?graph=" + result.param1 + instancestr;
-      data.document.title = result.param1;
+      w.location.href = "ge.html?graph=" + result.param1 + instancestr;
+      w.document.title = result.param1;
     }
   }
 
-  open_plc_cb(id, data, sts, result) {
-    if ((sts & 1) === 0) {
-      data.document.write("Error status " + sts);
+  open_plc_cb(res) {
+    let w = window.open("", "_blank");
+    if ((res.sts & 1) === 0) {
+      w.document.write("Error status " + res.sts);
     } else {
-      let param1;
-      if (result.param1 === "") {
-        param1 = "";
-      } else {
-        param1 = "&obj=" + result.param1;
-      }
+      let result = res.value;
+      let param1 = result.param1 ? ("&obj=" + result.param1) : "";
       console.log("flow.html?vid=" + result.objid.vid + "&oix=" +
           result.objid.oix + param1);
-      data.location.href =
+      w.location.href =
           "flow.html?vid=" + result.objid.vid + "&oix=" + result.objid.oix +
           param1;
-      data.document.title = "Trace " + result.fullname;
+      w.document.title = "Trace " + result.fullname;
     }
   }
 
-  open_navigator_cb(id, data, sts, result) {
-    console.log("Open navigator", sts);
-    if ((sts & 1) === 0) {
-      console.log("Error status " + sts);
+  open_navigator_cb(res) {
+    console.log("Open navigator", res.sts);
+    if ((res.sts & 1) === 0) {
+      console.log("Error status " + res.sts);
     } else {
-      localStorage.setItem("XttMethodNavigator", result.fullname);
+      localStorage.setItem("XttMethodNavigator", res.value.fullname);
       console.log("storage", localStorage.getItem("XttMethodNavigator"));
     }
   }
 
-  open_objectgraph_cb(id, data, sts, result) {
-    if ((sts & 1) === 0) {
-      data.document.write("Error status " + sts);
+  open_objectgraph_cb(res) {
+    let w = window.open("", "_blank");
+    if ((res.sts & 1) === 0) {
+      w.document.write("Error status " + res.sts);
     } else {
-      let classname = result.classname.toLowerCase();
+      let classname = res.value.classname.toLowerCase();
       if (classname.substring(0, 1) === "$") {
         classname = classname.substring(1);
       }
       let graphname = "pwr_c_" + classname;
-      data.location.href =
-          "ge.html?graph=" + graphname + "&instance=" + result.fullname;
-      data.document.title = graphname + " " + result.fullname;
+      w.location.href =
+          "ge.html?graph=" + graphname + "&instance=" + res.value.fullname;
+      w.document.title = graphname + " " + res.value.fullname;
     }
   }
 
-  open_helpclass_cb(id, data, sts, result) {
-    if ((sts & 1) === 0) {
-      data.document.write("Error status " + sts);
+  open_helpclass_cb(res) {
+    let w = window.open("", "_blank");
+    if ((res.sts & 1) === 0) {
+      w.document.write("Error status " + res.sts);
     } else {
-      console.log("open_helpclass", result.param1);
-      data.location.href =
-          location.protocol + "//" + location.host + result.param1;
+      console.log("open_helpclass", res.value.param1);
+      w.location.href =
+          location.protocol + "//" + location.host + res.value.param1;
     }
   }
 
@@ -453,12 +440,12 @@ class Ev {
   }
 
   trace_cyclic() {
-    this.ctx.gdh.mhSync(this.mhSyncIdx, this.sync_cb, this);
+    this.ctx.gdh.mhSync(this.mhSyncIdx).then(this.sync_cb);
 
     this.timer = setTimeout(this.trace_cyclic, 1000);
   }
 
-  trace_scan(id, sts) {
+  trace_scan(res) {
     this.scan_update = false;
     if (this.scan_update) {
       this.ctx.draw();
@@ -491,69 +478,38 @@ class Ev {
     this.ncAlarmA = new PlowNodeClass(this.ctx);
     this.ncAlarmA.insert(r1);
     this.ncAlarmA.insert(r2a);
-    this.ncAlarmA.insert(a1);
-    this.ncAlarmA.insert(p1);
-    this.ncAlarmA.insert(p2);
-    this.ncAlarmA.insert(p3);
-    this.ncAlarmA.insert(p4);
-    this.ncAlarmA.insert(a2);
-    this.ncAlarmA.insert(a3);
-    this.ncAlarmA.insert(a4);
-    this.ctx.insert_nc(this.ncAlarmA);
 
     // A alarm with yellow square
     this.ncAlarmB = new PlowNodeClass(this.ctx);
     this.ncAlarmB.insert(r1);
     this.ncAlarmB.insert(r2b);
-    this.ncAlarmB.insert(a1);
-    this.ncAlarmB.insert(p1);
-    this.ncAlarmB.insert(p2);
-    this.ncAlarmB.insert(p3);
-    this.ncAlarmB.insert(p4);
-    this.ncAlarmB.insert(a2);
-    this.ncAlarmB.insert(a3);
-    this.ncAlarmB.insert(a4);
-    this.ctx.insert_nc(this.ncAlarmB);
 
     // D and C alarm with no square
     this.ncAlarm = new PlowNodeClass(this.ctx);
     this.ncAlarm.insert(r1);
-    this.ncAlarm.insert(a1);
-    this.ncAlarm.insert(p1);
-    this.ncAlarm.insert(p2);
-    this.ncAlarm.insert(p3);
-    this.ncAlarm.insert(p4);
-    this.ncAlarm.insert(a2);
-    this.ncAlarm.insert(a3);
-    this.ncAlarm.insert(a4);
-    this.ctx.insert_nc(this.ncAlarm);
 
     // Info with white square
     this.ncInfo = new PlowNodeClass(this.ctx);
     this.ncInfo.insert(r1);
     this.ncInfo.insert(r2info);
-    this.ncInfo.insert(a1);
-    this.ncInfo.insert(p1);
-    this.ncInfo.insert(p2);
-    this.ncInfo.insert(p3);
-    this.ncInfo.insert(p4);
-    this.ncInfo.insert(a2);
-    this.ncInfo.insert(a3);
-    this.ncInfo.insert(a4);
-    this.ctx.insert_nc(this.ncInfo);
 
     // InfoSuccess with green square
     this.ncSuccess = new PlowNodeClass(this.ctx);
     this.ncSuccess.insert(r1);
     this.ncSuccess.insert(r2success);
-    this.ncSuccess.insert(a1);
-    this.ncSuccess.insert(p1);
-    this.ncSuccess.insert(p2);
-    this.ncSuccess.insert(p3);
-    this.ncSuccess.insert(p4);
-    this.ncSuccess.insert(a2);
-    this.ncSuccess.insert(a3);
-    this.ncSuccess.insert(a4);
+
+    [a1, p1, p2, p3, p4, a2, a3, a4].forEach(function (a) {
+      this.ncAlarmA.insert(a);
+      this.ncAlarmB.insert(a);
+      this.ncAlarm.insert(a);
+      this.ncInfo.insert(a);
+      this.ncSuccess.insert(a);
+    });
+
+    this.ctx.insert_nc(this.ncAlarmA);
+    this.ctx.insert_nc(this.ncAlarmB);
+    this.ctx.insert_nc(this.ncAlarm);
+    this.ctx.insert_nc(this.ncInfo);
     this.ctx.insert_nc(this.ncSuccess);
   }
 
@@ -598,7 +554,7 @@ class Ev {
             next.set_select(true);
             next.set_invert(true);
             if (!this.ctx.is_visible(next)) {
-              this.ctx.scroll(next.y_low, 0.10);
+              this.ctx.scroll(next.ll_y, 0.10);
             }
           }
         }
@@ -615,7 +571,7 @@ class Ev {
             o.draw(this.ctx.gdraw.gctx, null, null, 0);
             next.draw(this.ctx.gdraw.gctx, null, null, 0);
             if (!this.ctx.is_visible(next)) {
-              this.ctx.scroll(next.y_low, 0.90);
+              this.ctx.scroll(next.ll_y, 0.90);
             }
           }
         }
@@ -623,17 +579,13 @@ class Ev {
       case Event.Key_CtrlL:
         let o = this.ctx.get_select();
         if (o.userdata instanceof EvItemAlarm) {
-          let newwindow = window.open("", "_blank");
-          this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC,
-              this.open_plc_cb, newwindow);
+          this.ctx.gdh.getObjectFromAref(o.userdata.e.supObject, GdhOp.GET_OP_METHOD_PLC).then(this.open_plc_cb);
         }
         break;
       case Event.Key_CtrlG:
         let o = this.ctx.get_select();
         if (o.userdata instanceof EvItemAlarm) {
-          let newwindow = window.open("", "_blank");
-          this.ctx.gdh.getObject(o.userdata.objid, GdhOp.GET_OP_METHOD_PLC,
-              this.open_objectgraph_cb, newwindow);
+          this.ctx.gdh.getObjectFromAref(o.userdata.e.supObject, GdhOp.GET_OP_METHOD_PLC).then(this.open_objectgraph_cb);
         }
         break;
       default:
@@ -644,7 +596,6 @@ class Ev {
   // Query 'list' = alarm/event/block. Alarm is default.
   get_type() {
     let query = window.location.search.substring(1);
-    let type;
 
     if (query === "") {
       return EvType.AlarmList;
@@ -653,14 +604,12 @@ class Ev {
     let vars = query.split('&');
     let typestr = vars[0].substring(5);
     if (typestr === "event") {
-      type = EvType.EventList;
+      return EvType.EventList;
     } else if (typestr === "block") {
-      type = EvType.BlockList;
+      return EvType.BlockList;
     } else {
-      type = EvType.AlarmList;
+      return EvType.AlarmList;
     }
-
-    return type;
   }
 }
 
@@ -684,19 +633,12 @@ class EvItemAlarm {
       case Event.Reblock:
       case Event.CancelBlock:
       case Event.Unblock:
-        switch (this.e.eventPrio) {
-          case EventPrio.A:
-            nodeclass = ev.ncAlarmA;
-            break;
-          case EventPrio.B:
-            nodeclass = ev.ncAlarmB;
-            break;
-          case EventPrio.C:
-            nodeclass = ev.ncAlarm;
-            break;
-          case EventPrio.D:
-            nodeclass = ev.ncAlarm;
-            break;
+        if (this.e.eventPrio === EventPrio.A) {
+          nodeclass = ev.ncAlarmA;
+        } else if (this.e.eventPrio === EventPrio.B) {
+          nodeclass = ev.ncAlarmB;
+        } else {
+          nodeclass = ev.ncAlarm;
         }
         break;
       case Event.Info:
@@ -722,20 +664,7 @@ class EvItemAlarm {
       case Event.Reblock:
       case Event.CancelBlock:
       case Event.Unblock:
-        switch (this.e.eventPrio) {
-          case EventPrio.A:
-            this.node.set_annotation(0, "A");
-            break;
-          case EventPrio.B:
-            this.node.set_annotation(0, "B");
-            break;
-          case EventPrio.C:
-            this.node.set_annotation(0, "C");
-            break;
-          case EventPrio.D:
-            this.node.set_annotation(0, "D");
-            break;
-        }
+        this.node.set_annotation(0, String.fromCharCode(132 - this.e.eventPrio));
         break;
     }
     switch (this.e.eventType) {

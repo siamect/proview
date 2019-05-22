@@ -33,14 +33,9 @@ class GrowAxisArc extends GrowArc {
 
   open(lines, row) {
     let i;
-
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowAxisArc : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.GrowAxisArc:
@@ -108,27 +103,22 @@ class GrowAxisArc extends GrowArc {
     return i;
   }
 
-  tdraw(t, highlight, hot, node, colornode) {
+  draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
     if (this.ctx.nodraw !== 0) {
       return;
     }
-    let i;
     let draw_text = (Math.abs(this.increment) > Number.MIN_VALUE);
-    let idx;
-    let x, y;
-    let text;
     let line_length;
-    let x_text, y_text;
+    let x_text;
     let z_height = 0, z_width, z_descent = 0;
     let max_z_width = 0;
-    let rotation;
-    let drawtype;
     let text_idx = Math.floor(this.ctx.mw.zoom_factor_y /
         this.ctx.mw.base_zoom_factor * (this.text_size + 4) - 4);
     let tsize = this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
         (8 + 2 * this.text_size);
     text_idx = Math.min(text_idx, DRAW_TYPE_SIZE - 1);
 
+    let idx;
     if (node !== null && node.line_width !== 0) {
       idx =
           Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
@@ -142,37 +132,24 @@ class GrowAxisArc extends GrowArc {
 
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
-    let x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y, xt, yt;
 
-    if (t === null) {
-      x1 = Math.floor(this.trf.x(this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      y1 = Math.floor(this.trf.y(this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-      x2 = Math.floor(this.trf.x(this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      y2 = Math.floor(this.trf.y(this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-      rotation =
-          (this.trf.rot() / 360 - Math.floor(this.trf.rot() / 360)) * 360;
-    } else {
-      x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-      x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-      rotation =
-          (this.trf.rot(t) / 360 - Math.floor(this.trf.rot(t) / 360)) * 360;
-    }
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
 
-    ll_x = Math.min(x1, x2);
-    ur_x = Math.max(x1, x2);
-    ll_y = Math.min(y1, y2);
-    ur_y = Math.max(y1, y2);
-    drawtype =
+    let x1 = Math.floor(p1.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p1.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+
+    let rotation = t ? this.trf.rotation + t.rotation : this.trf.rotation;
+    rotation = (rotation / 360 - Math.floor(rotation / 360)) * 360;
+
+    let ll_x = Math.min(x1, x2);
+    let ur_x = Math.max(x1, x2);
+    let ll_y = Math.min(y1, y2);
+    let ur_y = Math.max(y1, y2);
+    let drawtype =
         GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
             highlight, colornode, 0, 0);
 
@@ -185,23 +162,24 @@ class GrowAxisArc extends GrowArc {
         return;
       }
 
+      let text;
       if (this.increment > 0) {
         text = this.format_text(this.format, this.min_value + (this.lines - 2) *
             this.increment);
       } else {
         text = this.format_text(this.format, this.min_value + this.increment);
       }
-      let d = this.ctx.gdraw.getTextExtent(text, Math.max(0, text_idx),
-          Font.Helvetica, this.text_drawtype);
-      z_width = d.width;
-      z_height = d.height;
+      let p = this.ctx.gdraw.getTextExtent(text, this.text_drawtype, Math.max(0, text_idx),
+          Font.Helvetica);
+      z_width = p.x;
+      z_height = p.y;
       z_descent = z_height / 4;
       if (max_z_width < z_width) {
         max_z_width = z_width;
       }
 
       let line_angle = this.angle2 / (this.lines - 1);
-      for (i = 0; i < this.lines; i++) {
+      for (let i = 0; i < this.lines; i++) {
         let sin1 = Math.sin((this.angle1 + i * line_angle) / 180 * Math.PI);
         let cos1 = Math.cos((this.angle1 + i * line_angle) / 180 * Math.PI);
         y1 = Math.floor((ur_y - ll_y) / 2 * (-sin1 + 1) + ll_y);
@@ -217,10 +195,10 @@ class GrowAxisArc extends GrowArc {
           x2 = Math.floor((ur_x - ll_x) / 2 *
               (cos1 * (1.0 - this.linelength / 2) + 1) + ll_x);
         }
-        yt =
+        let yt =
             Math.floor((ur_y - ll_y) / 2 * (-sin1 * (1.0 - this.linelength) + 1) +
                 ll_y + sin1 * (z_height - z_descent) / 2);
-        xt =
+        let xt =
             Math.floor((ur_x - ll_x) / 2 * (cos1 * (1.0 - this.linelength) + 1) +
                 ll_x - cos1 * z_width / 2);
 
@@ -232,10 +210,10 @@ class GrowAxisArc extends GrowArc {
                       (this.increment < 0 && i === 0)))) {
             text = this.format_text(this.format, this.min_value + i *
                 this.increment);
-            d = this.ctx.gdraw.getTextExtent(text, Math.max(0, text_idx),
-                Font.Helvetica, this.text_drawtype);
-            z_width = d.width;
-            z_height = d.height;
+            p = this.ctx.gdraw.getTextExtent(text, this.text_drawtype, Math.max(0, text_idx),
+                Font.Helvetica);
+            z_width = p.x;
+            z_height = p.y;
             z_descent = z_height / 4;
             if (max_z_width < z_width) {
               max_z_width = z_width;
@@ -243,16 +221,15 @@ class GrowAxisArc extends GrowArc {
 
             if (i === this.lines - 1 && this.angle1 === 0 &&
                 this.angle2 === 180) {
-              xt = xt - z_width / 2;
+              xt -= z_width / 2;
             } else if (i === 0 && this.angle1 === 0 && this.angle2 !== 360) {
-              xt = xt - z_width / 2;
+              xt -= z_width / 2;
             } else {
-              yt = yt + (z_height - z_descent) / 2;
-              xt = xt - z_width / 2;
+              yt += (z_height - z_descent) / 2;
+              xt -= z_width / 2;
             }
             this.ctx.gdraw.text(xt, yt, text, this.text_drawtype,
-                this.text_color_drawtype, text_idx, highlight, 0,
-                Font.Helvetica, tsize, 0);
+                this.text_color_drawtype, text_idx, highlight, Font.Helvetica, tsize, 0);
           }
         }
       }
@@ -274,41 +251,30 @@ class GrowAxisArc extends GrowArc {
     this.max_value = maxval;
     this.min_value = minval;
 
-    let x1 = Math.floor(this.trf.x(this.ll.x, this.ll.y) *
-        this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let y1 = Math.floor(this.trf.y(this.ll.x, this.ll.y) *
-        this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    let x2 = Math.floor(this.trf.x(this.ur.x, this.ur.y) *
-        this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let y2 = Math.floor(this.trf.y(this.ur.x, this.ur.y) *
-        this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    let rotation = (this.trf.rot() / 360 - Math.floor(this.trf.rot() / 360)) *
+    let p1 = this.trf.apply(this.ll);
+    let p2 = this.trf.apply(this.ur);
+
+    let x1 = Math.floor(p1.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p1.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+
+    let rotation = (this.trf.rotation / 360 - Math.floor(this.trf.rotation / 360)) *
         360;
 
     if (keep_settings === 0) {
-      let len;
-      let lix;
-      let di;
       let horizontal = (rotation < 45 || (rotation > 135 && rotation < 225) ||
           rotation > 315) ? 0 : 1;
-      if (horizontal === 0) {
-        len = Math.abs(y2 - y1);
-      } else {
-        len = Math.abs(x2 - x1);
-      }
+      let len = (horizontal === 0) ? Math.abs(y2 - y1) : Math.abs(x2 - x1);
 
-      if (len < 150) {
-        lix = 0;
-      } else {
-        lix = 1;
-      }
+      let lix = Number(!(len < 150));
 
       let d = Math.abs(maxval - minval);
       if (d < 5) {
         d = 1000 * d;
       }
 
-      di = Math.floor(d + 0.5);
+      let di = Math.floor(d + 0.5);
       while (di >= 25) {
         di /= 10;
       }
@@ -324,51 +290,24 @@ class GrowAxisArc extends GrowArc {
       }
 
       let m = Math.max(Math.abs(maxval), Math.abs(minval));
-      switch (lix) {
-        case 0:
-          if (m < 0.01) {
-            this.format = "%g";
-          } else if (m < 0.1) {
-            this.format = "%5.3f";
-          } else if (m < 1) {
-            this.format = "%4.2f";
-          } else if (m < 3) {
-            this.format = "%3.1f";
-          } else if (m <= 20) {
-            this.format = "%2.0f";
-          } else if (m <= 200) {
-            this.format = "%3.0f";
-          } else if (m < 2000) {
-            this.format = "%4.0f";
-          } else if (m < 20000) {
-            this.format = "%5.0f";
-          } else {
-            this.format = "%g";
-          }
-          break;
-        case 1:
-          if (m < 0.01) {
-            this.format = "%g";
-          } else if (m < 0.1) {
-            this.format = "%5.3f";
-          } else if (m < 1) {
-            this.format = "%4.2f";
-          } else if (m <= 4) {
-            this.format = "%3.1f";
-          } else if (m <= 20) {
-            this.format = "%2.0f";
-          } else if (m <= 200) {
-            this.format = "%3.0f";
-          } else if (m < 2000) {
-            this.format = "%4.0f";
-          } else if (m < 20000) {
-            this.format = "%5.0f";
-          } else {
-            this.format = "%g";
-          }
-          break;
-        default:
-          break;
+      if (m < 0.01) {
+        this.format = "%g";
+      } else if (m < 0.1) {
+        this.format = "%5.3f";
+      } else if (m < 1) {
+        this.format = "%4.2f";
+      } else if ((lix === 0 && m < 3) || (lix === 1 && m <= 4)) {
+        this.format = "%3.1f";
+      } else if (m <= 20) {
+        this.format = "%2.0f";
+      } else if (m <= 200) {
+        this.format = "%3.0f";
+      } else if (m < 2000) {
+        this.format = "%4.0f";
+      } else if (m < 20000) {
+        this.format = "%5.0f";
+      } else {
+        this.format = "%g";
       }
     }
     this.configure();

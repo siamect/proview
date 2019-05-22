@@ -1,8 +1,5 @@
-class GrowNode {
-  MAX_CONPOINTS = 32;
-  ctx: GrowCtx;
+class GrowNode extends GlowNode {
   trf: GlowTransform;
-  pos: GlowPoint;
   original_border_drawtype = DrawType.No;
   border_drawtype = 0;
   background_drawtype = DrawType.No;
@@ -33,23 +30,8 @@ class GrowNode {
   text_type = DrawType.TextHelvetica;
   text_font = Font.No;
   disable_cb = 0;
-  nc_name = null;
-  nc = null;
-  nc_root = null;
-  n_name = null;
-  x_right = 0;
-  x_left = 0;
-  y_high = 0;
-  y_low = 0;
-  annotsize = new Array(10);
-  annotv = new Array(10);
-  access = 0;
-  cycle = 0;
-  ref_object = null;
   userdata = null;
   visible = 1;
-  highlight = 0;
-  hot = 0;
   input_selected = 0;
   annotv_inputmode = [];
   fill_level = 1;
@@ -61,24 +43,15 @@ class GrowNode {
   annot_offset_y = 0;
 
   constructor(ctx) {
-    this.ctx = ctx;
+    super(ctx);
     this.trf = new GlowTransform();
-    this.pos = new GlowPoint();
-    for (let i = 0; i < 10; i++) {
-      this.annotv[i] = null;
-    }
   }
 
   open(lines, row) {
     let i;
-
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowNode : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.GrowNode:
@@ -149,7 +122,7 @@ class GrowNode {
           }
           break;
         case GlowSave.GrowNode_node_part:
-          i = this.glownode_open(lines, i + 1);
+          i = super.open(lines, i + 1);
           break;
         case GlowSave.GrowNode_trf:
           i = this.trf.open(lines, i + 1);
@@ -196,114 +169,7 @@ class GrowNode {
           break;
       }
     }
-    return i;
-  }
 
-  glownode_open(lines, row) {
-    let i, j;
-
-    for (i = row; i < lines.length; i++) {
-      let tokens = lines[i].split(' ');
-      let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GrowNode : " + lines[i]);
-      }
-
-      switch (key) {
-        case GlowSave.Node:
-          break;
-        case GlowSave.Node_nc:
-          this.nc_name = tokens[1];
-          if (!(this instanceof GrowGroup)) {
-            this.nc = this.ctx.get_nodeclass_from_name(this.nc_name);
-            this.nc_root = this.nc;
-            if (this.nc === null) {
-              console.log("GlowNode : ", lines[i], ", node class not found: ",
-                  this.nc_name);
-            }
-          }
-          break;
-        case GlowSave.Node_n_name:
-          if (tokens.length > 1) {
-            this.n_name = tokens[1];
-          }
-          break;
-        case GlowSave.Node_refcon_cnt:
-          i += this.MAX_CONPOINTS;
-          break;
-        case GlowSave.Node_x_right:
-          this.x_right = parseFloat(tokens[1]);
-          break;
-        case GlowSave.Node_x_left:
-          this.x_left = parseFloat(tokens[1]);
-          break;
-        case GlowSave.Node_y_high:
-          this.y_high = parseFloat(tokens[1]);
-          break;
-        case GlowSave.Node_y_low:
-          this.y_low = parseFloat(tokens[1]);
-          break;
-        case GlowSave.Node_obst_x_right:
-        case GlowSave.Node_obst_x_left:
-        case GlowSave.Node_obst_y_high:
-        case GlowSave.Node_obst_y_low:
-          break;
-        case GlowSave.Node_annotsize:
-          for (j = 0; j < 10; j++) {
-            i++;
-            this.annotsize[j] = parseInt(lines[i], 10);
-            if (this.ctx.debug) {
-              console.log("GlowNode  annotsize: ", this.annotsize[j]);
-            }
-          }
-          break;
-        case GlowSave.Node_annotv:
-          for (j = 0; j < 10; j++) {
-            if (this.annotsize[j] !== 0) {
-              i++;
-              this.annotv[j] = lines[i].substring(1, lines[i].length - 1);
-              if (this.ctx.debug) {
-                console.log("GrowNode  annotv: ", this.annotv[j]);
-              }
-            }
-          }
-          break;
-        case GlowSave.Node_pos:
-          i = this.pos.open(lines, i + 1);
-          break;
-        case GlowSave.Node_trace_data1:
-        case GlowSave.Node_trace_data2:
-        case GlowSave.Node_trace_data3:
-        case GlowSave.Node_trace_data4:
-        case GlowSave.Node_trace_data5:
-        case GlowSave.Node_trace_data6:
-        case GlowSave.Node_trace_data7:
-        case GlowSave.Node_trace_data8:
-        case GlowSave.Node_trace_data9:
-        case GlowSave.Node_trace_data10:
-        case GlowSave.Node_trace_attr_type:
-        case GlowSave.Node_trace_color:
-        case GlowSave.Node_trace_color2:
-          break;
-        case GlowSave.Node_access:
-          this.access = parseInt(tokens[1], 10); // TODO, Can be unsigned
-          break;
-        case GlowSave.Node_cycle:
-          this.cycle = parseInt(tokens[1], 10);
-          break;
-        case GlowSave.Node_ref_object:
-          if (tokens.length > 1) {
-            this.ref_object = tokens[1];
-          }
-          break;
-        case GlowSave.End:
-          return i;
-        default:
-          console.log("Syntax error in GlowNode");
-          break;
-      }
-    }
     return i;
   }
 
@@ -312,11 +178,8 @@ class GrowNode {
       return 0;
     }
 
-    switch (event.event) {
-      case Event.CursorMotion:
-        return 0;
-      default:
-        break;
+    if (event.event === Event.CursorMotion) {
+      return 0;
     }
 
     let rp = this.trf.reverse(fx, fy);
@@ -330,47 +193,28 @@ class GrowNode {
     return 0;
   }
 
-  draw() {
-    if (this.visible !== 0) {
-      this.tdraw(null, this.highlight, this.hot, null, null);
-    }
-  }
+  draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
+    node = node || this;
+    colornode = colornode || this;
 
-  tdraw(t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw !== 0) {
-      return;
-    }
-
-    if (node === null) {
-      node = this;
-    }
-    if (colornode === null) {
-      colornode = this;
-    } else if (colornode.fill_drawtype === DrawType.No &&
-        colornode.color_tone === DrawTone.No) {
-      colornode = this;
-    }
-
-    if (node.invisible !== 0 || this.invisible !== 0) {
+    if (this.visible === 0 || node.invisible !== 0) {
       return;
     }
 
     if (this.annot_scrollingtext !== -1) {
-      this.ctx.gdraw.set_clip_rectangle(this.x_left *
-          this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x, this.y_low *
-          this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y, this.x_right *
-          this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x, this.y_high *
+      this.ctx.gdraw.set_clip_rectangle(this.ll_x *
+          this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x, this.ll_y *
+          this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y, this.ur_x *
+          this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x, this.ur_y *
           this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y);
     }
 
-    let trf_tot;
     if (this.fill_level === 1) {
       if (t === null) {
-        this.nc.tdraw(this.trf, highlight, hot, node, node);
+        this.nc.draw(this.trf, highlight, hot, node, node);
       } else {
-        trf_tot = t.multiply(this.trf);
-
-        this.nc.tdraw(trf_tot, highlight, hot, this, this);
+        let trf_tot = Matrix.multiply(t, this.trf);
+        this.nc.draw(trf_tot, highlight, hot, this, this);
       }
     } else {
       let x1, x2, y1, y2;
@@ -381,24 +225,24 @@ class GrowNode {
       let old_fill_drawtype = 0;
 
       if (t === null) {
-        x1 = Math.floor(this.x_left * this.ctx.mw.zoom_factor_x + 0.5) -
+        x1 = Math.floor(this.ll_x * this.ctx.mw.zoom_factor_x + 0.5) -
             this.ctx.mw.offset_x;
-        y1 = Math.floor(this.y_low * this.ctx.mw.zoom_factor_y + 0.5) -
+        y1 = Math.floor(this.ll_y * this.ctx.mw.zoom_factor_y + 0.5) -
             this.ctx.mw.offset_y;
-        x2 = Math.floor(this.x_right * this.ctx.mw.zoom_factor_x + 0.5) -
+        x2 = Math.floor(this.ur_x * this.ctx.mw.zoom_factor_x + 0.5) -
             this.ctx.mw.offset_x;
-        y2 = Math.floor(this.y_high * this.ctx.mw.zoom_factor_y + 0.5) -
+        y2 = Math.floor(this.ur_y * this.ctx.mw.zoom_factor_y + 0.5) -
             this.ctx.mw.offset_y;
       } else {
-        x1 = Math.floor(t.x(this.x_left, this.y_low) * this.ctx.mw.zoom_factor_x + 0.5) -
+        x1 = Math.floor(t.x(this.ll_x, this.ll_y) * this.ctx.mw.zoom_factor_x + 0.5) -
             this.ctx.mw.offset_x;
-        y1 = Math.floor(t.y(this.x_left, this.y_low) * this.ctx.mw.zoom_factor_y + 0.5) -
+        y1 = Math.floor(t.y(this.ll_x, this.ll_y) * this.ctx.mw.zoom_factor_y + 0.5) -
             this.ctx.mw.offset_y;
         x2 =
-            Math.floor(t.x(this.x_right, this.y_high) * this.ctx.mw.zoom_factor_x + 0.5) -
+            Math.floor(t.x(this.ur_x, this.ur_y) * this.ctx.mw.zoom_factor_x + 0.5) -
             this.ctx.mw.offset_x;
         y2 =
-            Math.floor(t.y(this.x_right, this.y_high) * this.ctx.mw.zoom_factor_y + 0.5) -
+            Math.floor(t.y(this.ur_x, this.ur_y) * this.ctx.mw.zoom_factor_y + 0.5) -
             this.ctx.mw.offset_y;
       }
       switch (this.level_direction) {
@@ -445,12 +289,11 @@ class GrowNode {
       }
 
       if (t === null) {
-        this.nc.tdraw(this.trf, highlight, hot, node, node);
+        this.nc.draw(this.trf, highlight, hot, node, node);
       } else {
-        trf_tot = t.multiply(this.trf);
-
+        let trf_tot = Matrix.multiply(t, this.trf);
         // If this node has a trace pointer, use colors for this node
-        this.nc.tdraw(trf_tot, highlight, hot, this, this);
+        this.nc.draw(trf_tot, highlight, hot, this, this);
       }
       if ((clip_sts & 1) !== 0) {
         this.ctx.gdraw.reset_clip_rectangle();
@@ -506,12 +349,11 @@ class GrowNode {
       }
 
       if (t === null) {
-        this.nc.tdraw(this.trf, highlight, hot, node, node);
+        this.nc.draw(this.trf, highlight, hot, node, node);
       } else {
-        trf_tot = t.multiply(this.trf);
-
+        let trf_tot = Matrix.multiply(t, this.trf);
         // If this node has a trace pointer, use colors for this node
-        this.nc.tdraw(trf_tot, highlight, hot, this, this);
+        this.nc.draw(trf_tot, highlight, hot, this, this);
       }
       if ((clip_sts & 1) !== 0) {
         this.ctx.gdraw.reset_clip_rectangle();
@@ -547,52 +389,32 @@ class GrowNode {
   }
 
   set_position(x, y) {
-    let old_x_left, old_x_right, old_y_low, old_y_high;
-
-    if (this.trf.a13 === this.trf.s_a13 + x &&
-        this.trf.a23 === this.trf.s_a23 + y) {
+    if (this.trf.a13 === this.trf.s.a13 + x &&
+        this.trf.a23 === this.trf.s.a23 + y) {
       return;
     }
-    old_x_left = this.x_left;
-    old_x_right = this.x_right;
-    old_y_low = this.y_low;
-    old_y_high = this.y_high;
     this.trf.move_from_stored(x, y);
     this.get_node_borders();
     this.ctx.draw();
   }
 
   move(x, y) {
-    let old_x_left = this.x_left;
-    let old_x_right = this.x_right;
-    let old_y_low = this.y_low;
-    let old_y_high = this.y_high;
-
     this.trf.move(x, y);
     this.get_node_borders();
-
     this.ctx.draw();
   }
 
   move_to(x, y) {
-    this.trf.move(x - this.x_left, y - this.y_low);
+    this.trf.move(x - this.ll_x, y - this.ll_y);
     this.get_node_borders();
-
     this.ctx.draw();
   }
 
   set_scale_pos(x, y, scale_x, scale_y, x0, y0, type) {
-    let old_x_left, old_x_right, old_y_low, old_y_high;
-
-    old_x_left = this.x_left;
-    old_x_right = this.x_right;
-    old_y_low = this.y_low;
-    old_y_high = this.y_high;
-
     this.ctx.setNodraw();
     this.set_scale(scale_x, scale_y, x0, y0, type);
     this.ctx.resetNodraw();
-    this.trf.move(x - this.x_left, y - this.y_low);
+    this.trf.move(x - this.ll_x, y - this.ll_y);
     this.get_node_borders();
   }
 
@@ -608,104 +430,88 @@ class GrowNode {
       }
     }
 
-    if (this.trf.s_a11 !== 0 && this.trf.s_a22 !== 0 &&
-        Math.abs(scale_x - this.trf.a11 / this.trf.s_a11) < Number.MIN_VALUE &&
-        Math.abs(scale_y - this.trf.a22 / this.trf.s_a22) < Number.MIN_VALUE) {
+    if (this.trf.s.a11 !== 0 && this.trf.s.a22 !== 0 &&
+        Math.abs(scale_x - this.trf.a11 / this.trf.s.a11) < Number.MIN_VALUE &&
+        Math.abs(scale_y - this.trf.a22 / this.trf.s.a22) < Number.MIN_VALUE) {
       return;
     }
 
     switch (type) {
       case ScaleType.LowerLeft:
-        x0 = this.x_left;
-        y0 = this.y_low;
+        x0 = this.ll_x;
+        y0 = this.ll_y;
         break;
       case ScaleType.LowerRight:
-        x0 = this.x_right;
-        y0 = this.y_low;
+        x0 = this.ur_x;
+        y0 = this.ll_y;
         break;
       case ScaleType.UpperRight:
-        x0 = this.x_right;
-        y0 = this.y_high;
+        x0 = this.ur_x;
+        y0 = this.ur_y;
         break;
       case ScaleType.UpperLeft:
-        x0 = this.x_left;
-        y0 = this.y_high;
+        x0 = this.ll_x;
+        y0 = this.ur_y;
         break;
       case ScaleType.FixPoint:
         break;
       case ScaleType.Center:
-        x0 = (this.x_left + this.x_right) / 2;
-        y0 = (this.y_low + this.y_high) / 2;
+        x0 = (this.ll_x + this.ur_x) / 2;
+        y0 = (this.ll_y + this.ur_y) / 2;
         break;
       default:
     }
 
-    old_x_left = this.x_left;
-    old_x_right = this.x_right;
-    old_y_low = this.y_low;
-    old_y_high = this.y_high;
-    this.trf.scale_from_stored(scale_x, scale_y, x0, y0);
+    old_x_left = this.ll_x;
+    old_x_right = this.ur_x;
+    old_y_low = this.ll_y;
+    old_y_high = this.ur_y;
+    this.trf.revert();
+    this.trf.scale(scale_x, scale_y, x0, y0);
     this.get_node_borders();
 
-    this.ctx.rdraw(old_x_left * this.ctx.mw.zoom_factor_x -
-        this.ctx.mw.offset_x - DRAW_MP, old_y_low *
-        this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y -
-        DRAW_MP, old_x_right * this.ctx.mw.zoom_factor_x -
-        this.ctx.mw.offset_x + DRAW_MP, old_y_high *
-        this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y + DRAW_MP);
-    this.ctx.rdraw(this.x_left * this.ctx.mw.zoom_factor_x -
-        this.ctx.mw.offset_x - DRAW_MP, this.y_low *
-        this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y -
-        DRAW_MP, this.x_right * this.ctx.mw.zoom_factor_x -
-        this.ctx.mw.offset_x + DRAW_MP, this.y_high *
-        this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y + DRAW_MP);
+    this.ctx.draw();
+    this.ctx.draw();
   }
 
   setRotation(angel, x0, y0, type) {
-    let old_x_left, old_x_right, old_y_low, old_y_high;
-    let t = new GlowTransform();
-
-    if (Math.abs(angel - this.trf.rotation + this.trf.s_rotation) <
+    if (Math.abs(angel - this.trf.rotation + this.trf.s.rotation) <
         Number.MIN_VALUE) {
       return;
     }
 
     switch (type) {
       case RotationPoint.LowerLeft:
-        x0 = this.x_left;
-        y0 = this.y_low;
+        x0 = this.ll_x;
+        y0 = this.ll_y;
         break;
       case RotationPoint.LowerRight:
-        x0 = this.x_right;
-        y0 = this.y_low;
+        x0 = this.ur_x;
+        y0 = this.ll_y;
         break;
       case RotationPoint.UpperRight:
-        x0 = this.x_right;
-        y0 = this.y_high;
+        x0 = this.ur_x;
+        y0 = this.ur_y;
         break;
       case RotationPoint.UpperLeft:
-        x0 = this.x_left;
-        y0 = this.y_high;
+        x0 = this.ll_x;
+        y0 = this.ur_y;
         break;
       case RotationPoint.Center:
-        x0 = (this.x_left + this.x_right) / 2;
-        y0 = (this.y_high + this.y_low) / 2;
+        x0 = (this.ll_x + this.ur_x) / 2;
+        y0 = (this.ur_y + this.ll_y) / 2;
         break;
       case RotationPoint.Zero:
-        x0 = this.trf.s_a13;
-        y0 = this.trf.s_a23;
+        x0 = this.trf.s.a13;
+        y0 = this.trf.s.a23;
         break;
       default:
         break;
     }
 
-    old_x_left = this.x_left;
-    old_x_right = this.x_right;
-    old_y_low = this.y_low;
-    old_y_high = this.y_high;
-
+    let t = new GlowTransform();
     t.rotate(angel, x0, y0);
-    this.trf.set_from_stored(t);
+    this.trf.set(Matrix.multiply(t, this.trf.s));
     this.get_node_borders();
   }
 
@@ -778,30 +584,13 @@ class GrowNode {
   }
 
   set_nodeclass(new_nc) {
-    let old_x_left, old_x_right, old_y_low, old_y_high;
-
-    old_x_left = this.x_left;
-    old_x_right = this.x_right;
-    old_y_low = this.y_low;
-    old_y_high = this.y_high;
-
     this.nc = new_nc;
-
     this.get_node_borders();
-    old_x_left = Math.min(old_x_left, this.x_left);
-    old_x_right = Math.max(old_x_right, this.x_right);
-    old_y_low = Math.min(old_y_low, this.y_low);
-    old_y_high = Math.max(old_y_high, this.y_high);
     this.ctx.draw();
-  }
-
-  measure() {
-    return new Rect(this.x_left, this.y_low, this.x_right - this.x_left, this.y_high - this.y_low);
   }
 
   getLimits() {
     let limits = new GlowFillLevelLimits();
-
     if (this.nc.y0 === 0 && this.nc.y1 === 0) {
       limits.status = 0;
       return limits;
@@ -811,69 +600,49 @@ class GrowNode {
       return limits;
     }
 
-    let x1, x2, y1, y2;
-    let rotation;
-
     // Calculate max and min coordinates
+    let p1 = this.trf.apply(new Point(0, this.nc.y0));
+    let p2 = this.trf.apply(new Point(0, this.nc.y1));
 
-    x1 = this.trf.x(0, this.nc.y0);
-    y1 = this.trf.y(0, this.nc.y0);
-    x2 = this.trf.x(0, this.nc.y1);
-    y2 = this.trf.y(0, this.nc.y1);
+    let rotation = (this.trf.rotation / 360 - Math.floor(this.trf.rotation / 360)) * 360;
 
-    rotation = (this.trf.rot() / 360 - Math.floor(this.trf.rot() / 360)) * 360;
-
-    if (45 >= rotation || rotation > 315) {
+    if (rotation <= 45 || rotation > 315) {
       limits.direction = Direction.Down;
-      limits.min = y1;
-      limits.max = y2;
-    } else if (45 < rotation && rotation <= 135) {
+      limits.min = p1.y;
+      limits.max = p2.y;
+    } else if (rotation > 45 && rotation <= 135) {
       limits.direction = Direction.Right;
-      limits.min = x2;
-      limits.max = x1;
-    } else if (135 < rotation && rotation <= 225) {
+      limits.min = p2.x;
+      limits.max = p1.x;
+    } else if (rotation > 135 && rotation <= 225) {
       limits.direction = Direction.Up;
-      limits.min = y2;
-      limits.max = y1;
-    } else if (225 < rotation && rotation <= 315) {
+      limits.min = p2.y;
+      limits.max = p1.y;
+    } else if (rotation > 225 && rotation <= 315) {
       limits.direction = Direction.Left;
-      limits.min = x1;
-      limits.max = x2;
+      limits.min = p1.x;
+      limits.max = p2.x;
     }
     limits.status = 1;
     return limits;
   }
 
   get_node_borders() {
-    let g = new Rect();
-
-    g.x = 10.0e37;
-    g.y = 10.0e37;
-    g.width = 10.0e-37;
-    g.height = 10.0e-37;
-
+    let g = new Rect(10.0e37, 10.0e37, -10.0e37, -10.0e37);
     this.nc.get_borders(this.trf, g);
-    this.x_left = g.x;
-    this.x_right = g.x + g.width;
-    this.y_low = g.y;
-    this.y_high = g.y + g.height;
+    this.set(g);
   }
 
   get_borders(t, g) {
-    if (t === null) {
-      this.nc.get_borders(this.trf, g);
-    } else {
-      let t2 = t.multiply(this.trf);
-      this.nc.get_borders(t2, g);
-    }
+    let t2 = (t) ? Matrix.multiply(t, this.trf) : this.trf;
+    this.nc.get_borders(t2, g);
   }
 
   get_background_object_limits(t, type, x, y, bo) {
-    let dyn_type;
     let b = bo;
     let base_nc = this.nc.get_base_nc();
-    dyn_type = base_nc.dyn_type1;
 
+    let dyn_type = base_nc.dyn_type1;
     if ((type & dyn_type) === 0) {
       return 0;
     }
@@ -881,60 +650,32 @@ class GrowNode {
       return 0;
     }
 
-    let x1, x2, y1, y2;
-    let rotation;
-    let g = new Rect();
-
-    g.x = 10.0e37;
-    g.y = 10.0e37;
-    g.width = 10.0e-37;
-    g.height = 10.0e-37;
-
+    let g = new Rect(10.0e37, 10.0e37, -10.0e37, -10.0e37);
     this.get_borders(t, g);
-    let x1_right = g.x + g.width;
-    let x1_left = g.x;
-    let y1_high = g.y + g.height;
-    let y1_low = g.y;
-
-    if (x <= x1_right && x >= x1_left && y <= y1_high && y >= y1_low) {
+    if (g.hit(new Point(x, y))) {
       // Hit, calculate max and min koordinates
+      let tmp = Matrix.multiply(t, this.trf);
+      let p1 = tmp.apply(new Point(0, this.nc.y0));
+      let p2 = tmp.apply(new Point(0, this.nc.y1));
 
-      if (t === null) {
-        x1 = this.trf.x(0, this.nc.y0);
-        y1 = this.trf.y(0, this.nc.y0);
-        x2 = this.trf.x(0, this.nc.y1);
-        y2 = this.trf.y(0, this.nc.y1);
-      } else {
-        x1 = this.trf.x(t, 0, this.nc.y0);
-        y1 = this.trf.y(t, 0, this.nc.y0);
-        x2 = this.trf.x(t, 0, this.nc.y1);
-        y2 = this.trf.y(t, 0, this.nc.y1);
-      }
+      let rotation = (tmp.rotation / 360 - Math.floor(tmp.rotation / 360)) * 360;
 
-      if (t === null) {
-        rotation =
-            (this.trf.rot() / 360 - Math.floor(this.trf.rot() / 360)) * 360;
-      } else {
-        rotation =
-            (this.trf.rot(t) / 360 - Math.floor(this.trf.rot(t) / 360)) * 360;
-      }
-
-      if (45 >= rotation || rotation > 315) {
+      if (rotation <= 45 || rotation > 315) {
         b.direction = Direction.Down;
-        b.min = y1;
-        b.max = y2;
-      } else if (45 < rotation && rotation <= 135) {
+        b.min = p1.y;
+        b.max = p2.y;
+      } else if (rotation > 45 && rotation <= 135) {
         b.direction = Direction.Left;
-        b.min = x2;
-        b.max = x1;
-      } else if (135 < rotation && rotation <= 225) {
+        b.min = p2.x;
+        b.max = p1.x;
+      } else if (rotation > 135 && rotation <= 225) {
         b.direction = Direction.Up;
-        b.min = y2;
-        b.max = y1;
-      } else if (225 < rotation && rotation <= 315) {
+        b.min = p2.y;
+        b.max = p1.y;
+      } else if (rotation > 225 && rotation <= 315) {
         b.direction = Direction.Right;
-        b.min = x1;
-        b.max = x2;
+        b.min = p1.x;
+        b.max = p2.x;
       }
       b.background = this;
 
@@ -1098,23 +839,17 @@ class GrowNode {
   }
 
   setVisibility(visibility) {
-    switch (visibility) {
-      case Vis.Visible:
-        this.visible = 1;
-        this.dimmed = 0;
-        break;
-      case Vis.Invisible:
-        this.visible = 0;
-        this.dimmed = 0;
-        this.draw();
-        break;
-      case Vis.Dimmed:
-        this.visible = 1;
-        this.dimmed = 1;
-        this.draw();
-        break;
-      default:
-        break;
+    if (visibility === Vis.Visible) {
+      this.visible = 1;
+      this.dimmed = 0;
+    } else if (visibility === Vis.Invisible) {
+      this.visible = 0;
+      this.dimmed = 0;
+      this.draw();
+    } else if (visibility === Vis.Dimmed) {
+      this.visible = 1;
+      this.dimmed = 1;
+      this.draw();
     }
   }
 
@@ -1137,7 +872,7 @@ class GrowNode {
   }
 
   getAnnotationTextExtent(num) {
-    return this.nc.getAnnotationTextExtent(this.trf, this, num);
+    return this.nc.getAnnotationTextExtent(t, this.trfhis, num);
   }
 
   setColorThemeLightness() {

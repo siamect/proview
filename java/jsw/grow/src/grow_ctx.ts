@@ -11,15 +11,9 @@ class GrowCtxWindow {
   subwindow_scale = 1;
 }
 
-class GrowCtx {
+class GrowCtx extends Rect {
   appl = null;
-  debug = false;
   antiAliasing = 0;
-
-  x_right = 0;
-  x_left = 0;
-  y_high = 0;
-  y_low = 0;
   name = null;
   version = 0;
   background_color = 0;
@@ -83,9 +77,10 @@ class GrowCtx {
   a: GlowArray;
   a_nc: GlowArray;
   a_cc: GlowArray;
-  gdraw: GlowDraw;
+  gdraw: Draw;
 
   constructor(ctx) {
+    super();
     this.mw = new GrowCtxWindow();
     this.customcolors = new GlowCustomColors();
     this.a = new GlowArray(this);
@@ -95,7 +90,7 @@ class GrowCtx {
     if (ctx) {
       this.gdraw = ctx.gdraw;
     } else {
-      this.gdraw = new GlowDraw(this);
+      this.gdraw = new Draw(this);
     }
   }
 
@@ -113,10 +108,6 @@ class GrowCtx {
 
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.debug) {
-        console.log("ctx : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.Ctx:
@@ -144,16 +135,16 @@ class GrowCtx {
         case GlowSave.Ctx_nav_offset_y:
           break;
         case GlowSave.Ctx_x_right:
-          this.x_right = parseFloat(tokens[1]);
+          this.ur_x = parseFloat(tokens[1]);
           break;
         case GlowSave.Ctx_x_left:
-          this.x_left = parseFloat(tokens[1]);
+          this.ll_x = parseFloat(tokens[1]);
           break;
         case GlowSave.Ctx_y_high:
-          this.y_high = parseFloat(tokens[1]);
+          this.ur_y = parseFloat(tokens[1]);
           break;
         case GlowSave.Ctx_y_low:
-          this.y_low = parseFloat(tokens[1]);
+          this.ll_y = parseFloat(tokens[1]);
           break;
         case GlowSave.Ctx_nav_rect_ll_x:
         case GlowSave.Ctx_nav_rect_ll_y:
@@ -246,6 +237,7 @@ class GrowCtx {
         break;
       }
     }
+
     return i;
   }
 
@@ -255,10 +247,6 @@ class GrowCtx {
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.debug) {
-        console.log("ctx : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.GrowCtx:
@@ -430,21 +418,11 @@ class GrowCtx {
   }
 
   get_nodeclass_from_name(nc_name) {
-    for (let i = 0; i < this.a_nc.size(); i++) {
-      if (nc_name === this.a_nc.get(i).nc_name) {
-        return this.a_nc.get(i);
-      }
-    }
-    return null;
+    return this.a_nc.find(e => e.nc_name == nc_name);
   }
 
   get_conclass_from_name(cc_name) {
-    for (let i = 0; i < this.a_cc.size(); i++) {
-      if (cc_name === this.a_cc.get(i).cc_name) {
-        return this.a_cc.get(i);
-      }
-    }
-    return null;
+    return this.a_cc.find(e => e.cc_name == cc_name);
   }
 
   event_handler(e) {
@@ -458,13 +436,10 @@ class GrowCtx {
 
     for (let i = this.a.size() - 1; i >= 0; i--) {
       sts = this.a.get(i).event_handler(e, e.x, e.y);
-      if (sts === GLOW__NO_PROPAGATE) {
-        break;
-      }
       if (sts === GLOW__TERMINATED) {
         return sts;
       }
-      if (sts === 1) {
+      if (sts === 1 || sts === GLOW__NO_PROPAGATE) {
         break;
       }
     }
@@ -515,12 +490,10 @@ class GrowCtx {
         break;
       case Event.ButtonMotion:
         if (this.sliderActive && this.restriction_object !== null) {
-          let move_x, move_y;
-          let cursor_y, cursor_x;
-
           switch (this.move_restriction) {
             case MoveRestriction.VerticalSlider:
-              cursor_y = e.y;
+              let cursor_y = e.y;
+              let move_y;
               if (cursor_y + this.slider_cursor_offset >
                   this.restriction_max_limit) {
                 if (this.node_move_last_y + this.slider_cursor_offset >
@@ -571,7 +544,8 @@ class GrowCtx {
               this.node_move_last_y = e.y;
               break;
             case MoveRestriction.HorizontalSlider:
-              cursor_x = e.x;
+              let cursor_x = e.x;
+              let move_x;
               if (cursor_x + this.slider_cursor_offset >
                   this.restriction_max_limit) {
                 if (this.node_move_last_x + this.slider_cursor_offset >
@@ -659,155 +633,124 @@ class GrowCtx {
     return this.nodraw;
   }
 
-  draw() {
-    this.tdraw(null, 0, 0, null, null);
-  }
-
-  rdraw(ll_x, ll_y, ur_x, ur_y) {
-    // TODO
-    if (this.drawing) {
-      return;
-    }
-
-    let i;
-
-    for (i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i) instanceof GlowCon) {
-        this.a.get(i).draw();
-      }
-    }
-    for (i = 0; i < this.a.size(); i++) {
-      if (!(this.a.get(i) instanceof GlowCon)) {
-        this.a.get(i).draw();
-      }
-    }
-  }
-
-  tdraw(t, highlight, hot, color, colornode) {
-    let drawing = true;
-    let i;
-
+  draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
     // Draw background color
-    this.gdraw.fill_rect(0, 0, this.gdraw.canvas.width,
-        this.gdraw.canvas.height, this.background_color);
+    this.gdraw.rect(0, 0, this.gdraw.canvas.width,
+        this.gdraw.canvas.height, this.background_color, true, 0);
+
     // Draw connections
-    for (i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i) instanceof GlowCon) {
-        this.a.get(i).draw();
+    this.a.forEach(function (e) {
+      if (e instanceof GlowCon) {
+        e.draw();
       }
-    }
+    });
     // Draw nodes
-    for (i = 0; i < this.a.size(); i++) {
-      if (!(this.a.get(i) instanceof GlowCon)) {
-        this.a.get(i).draw();
+    this.a.forEach(function (e) {
+      if (!(e instanceof GlowCon)) {
+        e.draw();
       }
-    }
-    drawing = false;
+    });
   }
 
   traceConnect() {
-    let sts;
     this.nodraw++;
-    for (let i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i) instanceof GrowNode ||
-          this.a.get(i) instanceof GrowGroup ||
-          this.a.get(i) instanceof GrowBar ||
-          this.a.get(i) instanceof GrowBarArc ||
-          this.a.get(i) instanceof GrowTrend ||
-          this.a.get(i) instanceof GrowTable ||
-          this.a.get(i) instanceof GrowSlider ||
-          this.a.get(i) instanceof GrowWindow ||
-          this.a.get(i) instanceof GrowFolder ||
-          this.a.get(i) instanceof GrowXYCurve ||
-          this.a.get(i) instanceof GrowPie ||
-          this.a.get(i) instanceof GrowBarChart ||
-          this.a.get(i) instanceof GrowToolbar ||
-          this.a.get(i) instanceof GrowAxis ||
-          this.a.get(i) instanceof GrowAxisArc) {
-        this.appl.traceConnect(this.a.get(i));
-        if (this.a.get(i) instanceof GrowGroup) {
-          for (let j = 0; j < this.a.get(i).nc.a.size(); j++) {
-            if (this.a.get(i).nc.a.get(j) instanceof GrowNode ||
-                this.a.get(i).nc.a.get(j) instanceof GrowGroup) {
-              this.appl.traceConnect(this.a.get(i).nc.a.get(j));
+    let appl = this.appl;
+    this.a.forEach(function (e) {
+      if (e instanceof GrowNode ||
+          e instanceof GrowGroup ||
+          e instanceof GrowBar ||
+          e instanceof GrowBarArc ||
+          e instanceof GrowTrend ||
+          e instanceof GrowTable ||
+          e instanceof GrowSlider ||
+          e instanceof GrowWindow ||
+          e instanceof GrowFolder ||
+          e instanceof GrowXYCurve ||
+          e instanceof GrowPie ||
+          e instanceof GrowBarChart ||
+          e instanceof GrowToolbar ||
+          e instanceof GrowAxis ||
+          e instanceof GrowAxisArc) {
+        appl.traceConnect(e);
+        if (e instanceof GrowGroup) {
+          e.nc.a.forEach(function (f) {
+            if (f instanceof GrowNode || f instanceof GrowGroup) {
+              appl.traceConnect(f);
             }
-          }
-        } else if (this.a.get(i) instanceof GrowWindow ||
-            this.a.get(i) instanceof GrowFolder) {
-          this.a.get(i).traceConnect();
+          });
+        } else if (e instanceof GrowWindow ||
+            e instanceof GrowFolder) {
+          e.traceConnect();
         }
       }
-    }
+    });
     this.nodraw--;
     this.trace_started = true;
   }
 
   traceDisconnect() {
-    let sts;
     this.trace_started = false;
-    for (let i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i) instanceof GrowNode ||
-          this.a.get(i) instanceof GrowGroup ||
-          this.a.get(i) instanceof GrowBar ||
-          this.a.get(i) instanceof GrowBarArc ||
-          this.a.get(i) instanceof GrowTrend ||
-          this.a.get(i) instanceof GrowTable ||
-          this.a.get(i) instanceof GrowSlider ||
-          this.a.get(i) instanceof GrowWindow ||
-          this.a.get(i) instanceof GrowFolder ||
-          this.a.get(i) instanceof GrowXYCurve ||
-          this.a.get(i) instanceof GrowPie ||
-          this.a.get(i) instanceof GrowBarChart ||
-          this.a.get(i) instanceof GrowAxis ||
-          this.a.get(i) instanceof GrowAxisArc) {
-        this.appl.traceDisconnect(this.a.get(i));
-        if (this.a.get(i) instanceof GrowGroup) {
-          for (let j = 0; j < this.a.get(i).nc.a.size(); j++) {
-            if (this.a.get(i).nc.a.get(j) instanceof GrowNode ||
-                this.a.get(i).nc.a.get(j) instanceof GrowGroup) {
-              this.appl.traceDisconnect(this.a.get(i).nc.a.get(j));
+    let appl = this.appl;
+    this.a.forEach(function (e) {
+      if (e instanceof GrowNode ||
+          e instanceof GrowGroup ||
+          e instanceof GrowBar ||
+          e instanceof GrowBarArc ||
+          e instanceof GrowTrend ||
+          e instanceof GrowTable ||
+          e instanceof GrowSlider ||
+          e instanceof GrowWindow ||
+          e instanceof GrowFolder ||
+          e instanceof GrowXYCurve ||
+          e instanceof GrowPie ||
+          e instanceof GrowBarChart ||
+          e instanceof GrowAxis ||
+          e instanceof GrowAxisArc) {
+        appl.traceDisconnect(e);
+        if (e instanceof GrowGroup) {
+          e.nc.a.forEach(function (f) {
+            if (f instanceof GrowNode || f instanceof GrowGroup) {
+              appl.traceDisconnect(f);
             }
-          }
-        } else if (this.a.get(i) instanceof GrowWindow ||
-            this.a.get(i) instanceof GrowFolder) {
-          this.a.get(i).traceDisconnect();
+          });
+        } else if (e instanceof GrowWindow ||
+            e instanceof GrowFolder) {
+          e.traceDisconnect();
         }
       }
-    }
+    });
   }
 
   traceScan() {
-    let sts;
-
-    for (let i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i) instanceof GrowNode ||
-          this.a.get(i) instanceof GrowGroup ||
-          this.a.get(i) instanceof GrowBar ||
-          this.a.get(i) instanceof GrowBarArc ||
-          this.a.get(i) instanceof GrowTrend ||
-          this.a.get(i) instanceof GrowTable ||
-          this.a.get(i) instanceof GrowSlider ||
-          this.a.get(i) instanceof GrowWindow ||
-          this.a.get(i) instanceof GrowFolder ||
-          this.a.get(i) instanceof GrowXYCurve ||
-          this.a.get(i) instanceof GrowPie ||
-          this.a.get(i) instanceof GrowBarChart ||
-          this.a.get(i) instanceof GrowAxis ||
-          this.a.get(i) instanceof GrowAxisArc) {
-        this.appl.traceScan(this.a.get(i));
-        if (this.a.get(i) instanceof GrowGroup) {
-          for (let j = 0; j < this.a.get(i).nc.a.size(); j++) {
-            if (this.a.get(i).nc.a.get(j) instanceof GrowNode ||
-                this.a.get(i).nc.a.get(j) instanceof GrowGroup) {
-              this.appl.traceScan(this.a.get(i).nc.a.get(j));
+    let appl = this.appl;
+    this.a.forEach(function (e) {
+      if (e instanceof GrowNode ||
+          e instanceof GrowGroup ||
+          e instanceof GrowBar ||
+          e instanceof GrowBarArc ||
+          e instanceof GrowTrend ||
+          e instanceof GrowTable ||
+          e instanceof GrowSlider ||
+          e instanceof GrowWindow ||
+          e instanceof GrowFolder ||
+          e instanceof GrowXYCurve ||
+          e instanceof GrowPie ||
+          e instanceof GrowBarChart ||
+          e instanceof GrowAxis ||
+          e instanceof GrowAxisArc) {
+        appl.traceScan(e);
+        if (e instanceof GrowGroup) {
+          e.nc.a.forEach(function (f) {
+            if (f instanceof GrowNode || f instanceof GrowGroup) {
+              appl.traceScan(f);
             }
-          }
-        } else if (this.a.get(i) instanceof GrowWindow ||
-            this.a.get(i) instanceof GrowFolder) {
-          this.a.get(i).traceScan();
+          });
+        } else if (e instanceof GrowWindow ||
+            e instanceof GrowFolder) {
+          e.traceScan();
         }
       }
-    }
+    });
   }
 
   traceStarted() {
@@ -815,29 +758,11 @@ class GrowCtx {
   }
 
   get_node_from_name(name) {
-    for (let i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i) instanceof GrowNode) {
-        if (name === this.a.get(i).n_name) {
-          return this.a.get(i);
-        }
-      }
-    }
-    return null;
+    return this.a.find(e => (e instanceof GrowNode && name === e.n_name));
   }
 
   get_object_group(object) {
-    let sts;
-    let group;
-
-    for (let i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i) instanceof GrowGroup) {
-        group = this.a.get(i).get_object_group(object);
-        if (group !== null) {
-          return group;
-        }
-      }
-    }
-    return null;
+    return this.a.find(e => (e instanceof GrowGroup && e.get_object_group(object) !== null));
   }
 
   insert(e) {
@@ -935,12 +860,7 @@ class GrowCtx {
 
   findByName(name) {
     let uname = name.toUpperCase();
-    for (let i = 0; i < this.a.size(); i++) {
-      if (this.a.get(i).n_name.toUpperCase() === uname) {
-        return this.a.get(i);
-      }
-    }
-    return null;
+    return this.a.find(e => e.n_name.toUpperCase() === uname);
   }
 
   setSubwindowSource(name, source, owner) {

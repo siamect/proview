@@ -208,18 +208,46 @@ class Point {
 }
 
 class Rect {
-  x = 0;
-  y = 0;
-  width = 0;
-  height = 0;
+  ll_x = 0;
+  ll_y = 0;
+  ur_x = 0;
+  ur_y = 0;
 
   constructor() {
   }
 
-  constructor(x: number, y: number, width: number, height: number) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
+  constructor(x: number, y: number, x2: number, y2: number) {
+    this.ll_x = x;
+    this.ll_y = y;
+    this.ur_x = x2;
+    this.ur_y = y2;
+  }
+
+  set(r: Rect) {
+    this.ll_x = r.ll_x;
+    this.ll_y = r.ll_y;
+    this.ur_x = r.ur_x;
+    this.ur_y = r.ur_y;
+  }
+
+  width() {
+    return this.ur_x - this.ll_x;
+  }
+
+  height() {
+    return this.ur_y - this.ll_y;
+  }
+
+  hit(p: Point) {
+    return (p.x >= this.ll_x && p.x <= this.ur_x && p.y >= this.ll_y && p.y <= this.ur_y);
+  }
+
+  static union(r1: Rect, r2: Rect) {
+    return new Rect(
+        Math.min(r1.ll_x, r2.ll_x),
+        Math.min(r1.ll_y, r2.ll_y),
+        Math.max(r1.ur_x, r2.ur_x),
+        Math.max(r1.ur_y, r2.ur_y),
+    );
   }
 }

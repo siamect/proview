@@ -156,24 +156,18 @@ int GrowRect::local_event_handler(glow_eEvent event, double x, double y)
 
 int GrowRect::event_handler(glow_eEvent event, double fx, double fy)
 {
-  double x, y;
-
-  trf.reverse(fx, fy, &x, &y);
-  return local_event_handler(event, x, y);
+  glow_sPoint p = trf.reverse(fx, fy);
+  return local_event_handler(event, p.x, p.y);
 }
 
 int GrowRect::event_handler(glow_eEvent event, int x, int y, double fx, double fy)
 {
-  int sts;
-
-  double rx, ry;
-
   // Convert koordinates to local koordinates
-  trf.reverse(fx, fy, &rx, &ry);
+  glow_sPoint r = trf.reverse(fx, fy);
 
-  sts = 0;
+  int sts = 0;
   if (event == ctx->event_move_node) {
-    sts = local_event_handler(event, rx, ry);
+    sts = local_event_handler(event, r.x, r.y);
     if (sts) {
       /* Register node for potential movement */
       ctx->move_insert(this);
@@ -187,7 +181,7 @@ int GrowRect::event_handler(glow_eEvent event, int x, int y, double fx, double f
     else if (ctx->hot_found)
       sts = 0;
     else {
-      sts = local_event_handler(event, rx, ry);
+      sts = local_event_handler(event, r.x, r.y);
       if (sts)
         ctx->hot_found = 1;
     }
@@ -207,7 +201,7 @@ int GrowRect::event_handler(glow_eEvent event, int x, int y, double fx, double f
     break;
   }
   default:
-    sts = local_event_handler(event, rx, ry);
+    sts = local_event_handler(event, r.x, r.y);
   }
   if (sts)
     ctx->register_callback_object(glow_eObjectType_Node, this);
@@ -524,11 +518,9 @@ void GrowRect::set_position(double x, double y)
 void GrowRect::set_scale(
     double scale_x, double scale_y, double x0, double y0, glow_eScaleType type)
 {
-  double old_x_left, old_x_right, old_y_low, old_y_high;
-
-  if (trf.s_a11 && trf.s_a22
-      && fabs(scale_x - trf.a11 / trf.s_a11) < FLT_EPSILON
-      && fabs(scale_y - trf.a22 / trf.s_a22) < FLT_EPSILON)
+  if (trf.s.a11 && trf.s.a22
+      && fabs(scale_x - trf.a11 / trf.s.a11) < FLT_EPSILON
+      && fabs(scale_y - trf.a22 / trf.s.a22) < FLT_EPSILON)
     return;
 
   switch (type) {
@@ -557,10 +549,10 @@ void GrowRect::set_scale(
   default:;
   }
 
-  old_x_left = x_left;
-  old_x_right = x_right;
-  old_y_low = y_low;
-  old_y_high = y_high;
+  double old_x_left = x_left;
+  double old_x_right = x_right;
+  double old_y_low = y_low;
+  double old_y_high = y_high;
   trf.scale_from_stored(scale_x, scale_y, x0, y0);
   get_node_borders();
 
@@ -595,7 +587,7 @@ void GrowRect::set_scale(
 void GrowRect::set_rotation(
     double angle, double x0, double y0, glow_eRotationPoint type)
 {
-  if (fabs(angle - trf.rotation + trf.s_rotation) < FLT_EPSILON)
+  if (fabs(angle - trf.rotation + trf.s.rotation) < FLT_EPSILON)
     return;
 
   switch (type) {
@@ -670,24 +662,19 @@ void GrowRect::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   }
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-  if (!t) {
-    x1 = int(trf.x(ll.x, ll.y) * w->zoom_factor_x + 0.5) - w->offset_x;
-    y1 = int(trf.y(ll.x, ll.y) * w->zoom_factor_y + 0.5) - w->offset_y;
-    x2 = int(trf.x(ur.x, ur.y) * w->zoom_factor_x + 0.5) - w->offset_x;
-    y2 = int(trf.y(ur.x, ur.y) * w->zoom_factor_y + 0.5) - w->offset_y;
-  } else {
-    x1 = int(trf.x(t, ll.x, ll.y) * w->zoom_factor_x + 0.5) - w->offset_x;
-    y1 = int(trf.y(t, ll.x, ll.y) * w->zoom_factor_y + 0.5) - w->offset_y;
-    x2 = int(trf.x(t, ur.x, ur.y) * w->zoom_factor_x + 0.5) - w->offset_x;
-    y2 = int(trf.y(t, ur.x, ur.y) * w->zoom_factor_y + 0.5) - w->offset_y;
-  }
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
 
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
+  p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+  p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+  p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+  p2.y = p2.y * w->zoom_factor_y - w->offset_y;
+  int ll_x = int(MIN(p1.x, p2.x));
+  int ur_x = int(MAX(p1.x, p2.x));
+  int ll_y = int(MIN(p1.y, p2.y));
+  int ur_y = int(MAX(p1.y, p2.y));
 
   int ish = int(shadow_width / 100 * MIN(ur_x - ll_x, ur_y - ll_y) + 0.5);
   int display_shadow
@@ -759,15 +746,11 @@ void GrowRect::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
           drawtype = GlowColor::shift_drawtype(fillcolor, chot, 0);
         else
           drawtype = fillcolor;
+
         ctx->gdraw->rect(ll_x + ish, ll_y + ish, ur_x - ll_x - 2 * ish,
             ur_y - ll_y - 2 * ish, drawtype, 1, 0);
       } else {
         glow_eDrawType f0, f1, f2;
-        double rotation;
-        if (t)
-          rotation = trf.rot(t);
-        else
-          rotation = trf.rot();
 
         if (bgcolor_gradient && background_drawtype != glow_eDrawType_No) {
           f2 = fillcolor;
@@ -787,9 +770,10 @@ void GrowRect::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
               fillcolor, gradient_contrast / 2 + chot, 0);
           f0 = fillcolor;
         }
+
         ctx->gdraw->gradient_fill_rect(ll_x + ish, ll_y + ish,
             ur_x - ll_x - 2 * ish, ur_y - ll_y - 2 * ish, f0, f1, f2,
-            ctx->gdraw->gradient_rotate(rotation, grad));
+            ctx->gdraw->gradient_rotate(tmp.rotation, grad));
       }
     } else {
       if (grad == glow_eGradient_No || fillcolor == glow_eDrawType_ColorRed) {
@@ -800,11 +784,6 @@ void GrowRect::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
         ctx->gdraw->rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, 1, 0);
       } else {
         glow_eDrawType f1, f2, f0;
-        double rotation;
-        if (t)
-          rotation = trf.rot(t);
-        else
-          rotation = trf.rot();
         if (bgcolor_gradient && background_drawtype != glow_eDrawType_No) {
           f2 = fillcolor;
           f1 = ctx->get_drawtype(background_drawtype,
@@ -822,8 +801,9 @@ void GrowRect::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
           f1 = GlowColor::shift_drawtype(fillcolor, gradient_contrast / 2, 0);
           f0 = fillcolor;
         }
+
         ctx->gdraw->gradient_fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-            f0, f1, f2, ctx->gdraw->gradient_rotate(rotation, grad));
+            f0, f1, f2, ctx->gdraw->gradient_rotate(tmp.rotation, grad));
       }
     }
   }
@@ -862,23 +842,19 @@ void GrowRect::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
   }
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-  if (!t) {
-    x1 = int(trf.x(ll.x, ll.y) * w->zoom_factor_x + 0.5) - w->offset_x;
-    y1 = int(trf.y(ll.x, ll.y) * w->zoom_factor_y + 0.5) - w->offset_y;
-    x2 = int(trf.x(ur.x, ur.y) * w->zoom_factor_x + 0.5) - w->offset_x;
-    y2 = int(trf.y(ur.x, ur.y) * w->zoom_factor_y + 0.5) - w->offset_y;
-  } else {
-    x1 = int(trf.x(t, ll.x, ll.y) * w->zoom_factor_x + 0.5) - w->offset_x;
-    y1 = int(trf.y(t, ll.x, ll.y) * w->zoom_factor_y + 0.5) - w->offset_y;
-    x2 = int(trf.x(t, ur.x, ur.y) * w->zoom_factor_x + 0.5) - w->offset_x;
-    y2 = int(trf.y(t, ur.x, ur.y) * w->zoom_factor_y + 0.5) - w->offset_y;
-  }
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
+
+  p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+  p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+  p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+  p2.y = p2.y * w->zoom_factor_y - w->offset_y;
+  int ll_x = int(MIN(p1.x, p2.x));
+  int ur_x = int(MAX(p1.x, p2.x));
+  int ll_y = int(MIN(p1.y, p2.y));
+  int ur_y = int(MAX(p1.y, p2.y));
 
   int display_shadow
       = ((node && ((GrowNode*)node)->shadow) || shadow) && !disable_shadow;
@@ -894,40 +870,22 @@ void GrowRect::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 void GrowRect::get_borders(GlowTransform* t, double* x_right, double* x_left,
     double* y_high, double* y_low)
 {
-  double ll_x, ur_x, ll_y, ur_y, x1, x2, y1, y2;
-
-  if (t) {
-    x1 = trf.x(t, ll.x, ll.y);
-    x2 = trf.x(t, ur.x, ur.y);
-    y1 = trf.y(t, ll.x, ll.y);
-    y2 = trf.y(t, ur.x, ur.y);
-  } else {
-    x1 = trf.x(ll.x, ll.y);
-    x2 = trf.x(ur.x, ur.y);
-    y1 = trf.y(ll.x, ll.y);
-    y2 = trf.y(ur.x, ur.y);
-  }
-
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
-
   if (display_level != glow_mDisplayLevel_1)
     return;
-  if (ll_x < *x_left)
-    *x_left = ll_x;
-  if (ur_x > *x_right)
-    *x_right = ur_x;
-  if (ll_y < *y_low)
-    *y_low = ll_y;
-  if (ur_y > *y_high)
-    *y_high = ur_y;
+
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
+
+  *x_left = MIN(*x_left, MIN(p1.x, p2.x));
+  *x_right = MAX(*x_right, MAX(p1.x, p2.x));
+  *y_low = MIN(*y_low, MIN(p1.y, p2.y));
+  *y_high = MAX(*y_high, MAX(p1.y, p2.y));
 }
 
 void GrowRect::set_transform(GlowTransform* t)
 {
-  trf = *t * trf;
+  trf.set(*t * trf);
   get_node_borders();
 }
 
@@ -1041,24 +999,19 @@ void GrowRect::export_javabean(GlowTransform* t, void* node,
   }
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  double x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-  if (!t) {
-    x1 = trf.x(ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = trf.y(ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = trf.x(ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = trf.y(ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  } else {
-    x1 = trf.x(t, ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = trf.y(t, ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = trf.x(t, ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = trf.y(t, ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  }
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
 
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
+  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  double ll_x = MIN(p1.x, p2.x);
+  double ur_x = MAX(p1.x, p2.x);
+  double ll_y = MIN(p1.y, p2.y);
+  double ur_y = MAX(p1.y, p2.y);
 
   double ish;
   if (!disable_shadow)

@@ -1,14 +1,10 @@
-class GrowImage {
+class GrowImage extends Rect {
   ctx: GrowCtx;
   trf: GlowTransform;
   ll: GlowPoint;
   ur: GlowPoint;
   image: HTMLImageElement;
   n_name;
-  x_right;
-  x_left;
-  y_high;
-  y_low;
   image_filename = null;
   dynamicsize;
   color_lightness;
@@ -19,6 +15,7 @@ class GrowImage {
   display_level;
 
   constructor(ctx) {
+    super();
     this.ctx = ctx;
     this.trf = new GlowTransform();
     this.ll = new GlowPoint();
@@ -32,14 +29,9 @@ class GrowImage {
 
   open(lines, row) {
     let i;
-
     for (i = row; i < lines.length; i++) {
       let tokens = lines[i].split(' ');
       let key = parseInt(tokens[0], 10);
-
-      if (this.ctx.debug) {
-        console.log("GlowImage : " + lines[i]);
-      }
 
       switch (key) {
         case GlowSave.GrowImage:
@@ -58,16 +50,16 @@ class GrowImage {
           }
           break;
         case GlowSave.GrowImage_x_right:
-          this.x_right = parseFloat(tokens[1]);
+          this.ur_x = parseFloat(tokens[1]);
           break;
         case GlowSave.GrowImage_x_left:
-          this.x_left = parseFloat(tokens[1]);
+          this.ll_x = parseFloat(tokens[1]);
           break;
         case GlowSave.GrowImage_y_high:
-          this.y_high = parseFloat(tokens[1]);
+          this.ur_y = parseFloat(tokens[1]);
           break;
         case GlowSave.GrowImage_y_low:
-          this.y_low = parseFloat(tokens[1]);
+          this.ll_y = parseFloat(tokens[1]);
           break;
         case GlowSave.GrowImage_dynamicsize:
           this.dynamicsize = parseInt(tokens[1], 10);
@@ -116,39 +108,21 @@ class GrowImage {
   }
 
   event_handler(event, fx, fy) {
-    let rp;
-
-    switch (event.event) {
-      case Event.CursorMotion:
-        return 0;
-      default:
-    }
-
-    rp = this.trf.reverse(fx, fy);
-    if (this.ll.x <= rp.x && rp.x <= this.ur.x && this.ll.y <= rp.y &&
-        rp.y <= this.ur.y) {
-      console.log("Event handler: Hit in image");
-      return 1;
-    } else {
+    if (event.event == Event.CursorMotion) {
       return 0;
     }
+
+    let rp = this.trf.reverse(fx, fy);
+    return (this.ll.x <= rp.x && rp.x <= this.ur.x && this.ll.y <= rp.y &&
+        rp.y <= this.ur.y);
   }
 
-  draw() {
-    if (this.image.naturalWidth !== 0) {
-      this.tdraw(null, 0, 0, null, null);
-    }
-  }
-
-  tdraw(t, highlight, hot, node, colornode) {
-    if (this.ctx.nodraw !== 0) {
+  draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
+    if (this.ctx.nodraw !== 0 || this.image.naturalWidth === 0) {
       return;
     }
 
-    let chot = 0;
     let idx;
-    let drawtype;
-
     if (node !== null && node.line_width !== 0) {
       idx =
           Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
@@ -162,148 +136,102 @@ class GrowImage {
 
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
-    let x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-    if (t === null) {
-      x1 = Math.floor(this.trf.x(this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      y1 = Math.floor(this.trf.y(this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-      x2 = Math.floor(this.trf.x(this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      y2 = Math.floor(this.trf.y(this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-    } else {
-      x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-      x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-      y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-    }
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
 
-    ll_x = Math.min(x1, x2);
-    ur_x = Math.max(x1, x2);
-    ll_y = Math.min(y1, y2);
-    ur_y = Math.max(y1, y2);
+    let x1 = Math.floor(p1.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p1.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
 
-    // this.ctx.gdraw.rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, DrawType.Line, idx, 0);
+    let ll_x = Math.min(x1, x2);
+    let ur_x = Math.max(x1, x2);
+    let ll_y = Math.min(y1, y2);
+    let ur_y = Math.max(y1, y2);
+
     this.ctx.gdraw.image(this.image, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y);
   }
 
   get_borders(t, g) {
-    let ll_x, ur_x, ll_y, ur_y, x1, x2, y1, y2;
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
 
-    if (t === null) {
-      x1 = this.trf.x(this.ll.x, this.ll.y);
-      x2 = this.trf.x(this.ur.x, this.ur.y);
-      y1 = this.trf.y(this.ll.x, this.ll.y);
-      y2 = this.trf.y(this.ur.x, this.ur.y);
-    } else {
-      x1 = this.trf.x(t, this.ll.x, this.ll.y);
-      x2 = this.trf.x(t, this.ur.x, this.ur.y);
-      y1 = this.trf.y(t, this.ll.x, this.ll.y);
-      y2 = this.trf.y(t, this.ur.x, this.ur.y);
-    }
-
-    ll_x = Math.min(x1, x2);
-    ur_x = Math.max(x1, x2);
-    ll_y = Math.min(y1, y2);
-    ur_y = Math.max(y1, y2);
-
-    if (ll_x < g.ll_x) {
-      g.ll_x = ll_x;
-    }
-    if (ur_x > g.ur_x) {
-      g.ur_x = ur_x;
-    }
-    if (ll_y < g.ll_y) {
-      g.ll_y = ll_y;
-    }
-    if (ur_y > g.ur_y) {
-      g.ur_y = ur_y;
-    }
+    g.set(Rect.union(g, new Rect(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y),
+        Math.max(p1.x, p2.x), Math.max(p1.y, p2.y))));
   }
 
   get_node_borders() {
-    let g = new Rect();
-    g.x = 1.0e37;
-    g.y = 1.0e37;
-    g.width = -1.0e37;
-    g.height = -1.0e37;
+    let g = new Rect(1.0e37, 1.0e37, -1.0e37, -1.0e37);
     this.get_borders(null, g);
-    this.x_left = g.x;
-    this.x_right = g.x + g.width;
-    this.y_low = g.y;
-    this.y_high = g.y + g.height;
+    this.set(g);
   }
 
   set_scale(scale_x, scale_y, x0, y0, type) {
-    let old_x_left, old_x_right, old_y_low, old_y_high;
-
-    if (this.trf.s_a11 !== 0 && this.trf.s_a22 !== 0 &&
-        Math.abs(scale_x - this.trf.a11 / this.trf.s_a11) < Number.MIN_VALUE &&
-        Math.abs(scale_y - this.trf.a22 / this.trf.s_a22) < Number.MIN_VALUE) {
+    if (this.trf.s.a11 !== 0 && this.trf.s.a22 !== 0 &&
+        Math.abs(scale_x - this.trf.a11 / this.trf.s.a11) < Number.MIN_VALUE &&
+        Math.abs(scale_y - this.trf.a22 / this.trf.s.a22) < Number.MIN_VALUE) {
       return;
     }
 
     switch (type) {
       case ScaleType.LowerLeft:
-        x0 = this.x_left;
-        y0 = this.y_low;
+        x0 = this.ll_x;
+        y0 = this.ll_y;
         break;
       case ScaleType.LowerRight:
-        x0 = this.x_right;
-        y0 = this.y_low;
+        x0 = this.ur_x;
+        y0 = this.ll_y;
         break;
       case ScaleType.UpperRight:
-        x0 = this.x_right;
-        y0 = this.y_high;
+        x0 = this.ur_x;
+        y0 = this.ur_y;
         break;
       case ScaleType.UpperLeft:
-        x0 = this.x_left;
-        y0 = this.y_high;
+        x0 = this.ll_x;
+        y0 = this.ur_y;
         break;
       case ScaleType.FixPoint:
         break;
       case ScaleType.Center:
-        x0 = (this.x_left + this.x_right) / 2;
-        y0 = (this.y_low + this.y_high) / 2;
+        x0 = (this.ll_x + this.ur_x) / 2;
+        y0 = (this.ll_y + this.ur_y) / 2;
         break;
       default:
     }
 
-    old_x_left = this.x_left;
-    old_x_right = this.x_right;
-    old_y_low = this.y_low;
-    old_y_high = this.y_high;
-    this.trf.scale_from_stored(scale_x, scale_y, x0, y0);
+    let old_x_left = this.ll_x;
+    let old_x_right = this.ur_x;
+    let old_y_low = this.ll_y;
+    let old_y_high = this.ur_y;
+    this.trf.revert();
+    this.trf.scale(scale_x, scale_y, x0, y0);
     this.get_node_borders();
 
     switch (type) {
       case ScaleType.LowerLeft:
-        this.x_left = old_x_left;
-        this.y_low = old_y_low;
+        this.ll_x = old_x_left;
+        this.ll_y = old_y_low;
         break;
       case ScaleType.LowerRight:
-        this.x_right = old_x_right;
-        this.y_low = old_y_low;
+        this.ur_x = old_x_right;
+        this.ll_y = old_y_low;
         break;
       case ScaleType.UpperRight:
-        this.x_right = old_x_right;
-        this.y_high = old_y_high;
+        this.ur_x = old_x_right;
+        this.ur_y = old_y_high;
         break;
       case ScaleType.UpperLeft:
-        this.x_left = old_x_left;
-        this.y_high = old_y_high;
+        this.ll_x = old_x_left;
+        this.ur_y = old_y_high;
         break;
       case ScaleType.FixPoint:
         break;
       case ScaleType.Center:
-        x0 = (this.x_left + this.x_right) / 2;
-        y0 = (this.y_low + this.y_high) / 2;
+        x0 = (this.ll_x + this.ur_x) / 2;
+        y0 = (this.ll_y + this.ur_y) / 2;
         break;
       default:
     }

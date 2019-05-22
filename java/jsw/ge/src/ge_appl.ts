@@ -21,7 +21,6 @@ class Appl {
 
   command(cmd) {
     console.log("Command: " + cmd);
-    let local_cmd = false;
 
     if (!this.graph.isAuthorized(Access.AllRt)) {
       console.log("Not authorized");
@@ -37,15 +36,17 @@ class Appl {
     let cli = new Cli(cliTable);
     let command = cli.parse(cmd);
     if (odd(cli.status)) {
-      if (command === ("OPEN")) {
-        if (cli.qualifierFound("cli_arg1")) {
+      let getQualIfExists = (qual) => (cli.qualifierFound(qual)) ? cli.getQualValue(qual) : null;
 
+      if (command === ("OPEN")) {
+        let cli_arg1 = getQualIfExists("cli_arg1");
+        if (cli_arg1) {
           let jgraph = "JGRAPH";
           let graph = "GRAPH";
           let url = "URL";
           let trend = "TREND";
           let fast = "FAST";
-          let cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
+          cli_arg1 = cli_arg1.toUpperCase();
           if (jgraph.length >= cli_arg1.length &&
               jgraph.substring(0, cli_arg1.length) === cli_arg1) {
             // Command is "OPEN JGRAPH"
@@ -53,17 +54,14 @@ class Appl {
           } else if (graph.length >= cli_arg1.length &&
               graph.substring(0, cli_arg1.length) === cli_arg1) {
             // Command is "OPEN GRAPH"
-            let graphName = null;
-            let instanceValue = null;
-            let classGraph = false;
-            let objectValue = null;
-
-            if (cli.qualifierFound("/OBJECT")) {
-              objectValue = cli.getQualValue("/OBJECT");
+            let objectValue = getQualIfExists("/OBJECT");
+            if (objectValue) {
               return 1;
             }
-            if (cli.qualifierFound("/INSTANCE")) {
-              instanceValue = cli.getQualValue("/INSTANCE");
+
+            let instanceValue = getQualIfExists("/INSTANCE");
+            let classGraph = false;
+            if (instanceValue) {
               classGraph = cli.qualifierFound("/CLASSGRAPH");
               let parent = cli.qualifierFound("/PARENT");
               if (parent) {
@@ -76,36 +74,26 @@ class Appl {
             }
             if (classGraph) {
               console.log("Cmd classGraph");
-              let newwindow = window.open("", "_blank");
               this.graph.gdh.getObjectFromName(instanceValue,
-                  GdhOp.GET_OP_METHOD_OBJECTGRAPH, this.open_objectgraph_cb,
-                  newwindow);
+                  GdhOp.GET_OP_METHOD_OBJECTGRAPH).then(this.open_objectgraph_cb);
             } else {
-              if (!cli.qualifierFound("cli_arg2")) {
+              let graphName = cli.getQualValue("cli_arg2").toLowerCase();
+              if (!graphName) {
                 console.log("Syntax error");
                 return 0;
               }
 
-              graphName = cli.getQualValue("cli_arg2").toLowerCase();
-              if (graphName.charAt(".pwg") === -1) {
-                graphName = graphName + ".pwg";
+              graphName = graphName.toLowerCase();
+              if (!graphName.endsWith(".pwg")) {
+                graphName += ".pwg";
               }
 
-              let href;
+              let href = "ge.html?graph=" + graphName;
+              if (instanceValue) {
+                href += "&instance=" + instanceValue
+              }
               if (this.graph.frame.nogdh) {
-                if (instanceValue === null) {
-                  href = "ge.html?graph=" + graphName + "&instance=no&gdh=no";
-                } else {
-                  href = "ge.html?graph=" + graphName + "&instance=" +
-                      instanceValue + "&gdh=no";
-                }
-              } else {
-                if (instanceValue === null) {
-                  href = "ge.html?graph=" + graphName;
-                } else {
-                  href =
-                      "ge.html?graph=" + graphName + "&instance=" + instanceValue;
-                }
+                href += "&gdh=no";
               }
               console.log("Cmd found: open graph", graphName, instanceValue);
               let newwindow = window.open(href, "_blank");
@@ -117,19 +105,10 @@ class Appl {
             let frameName = null;
             let urlValue = cli.getQualValue("cli_arg2");
 
-            if (urlValue.substring(0, 5) === "pwrb_" ||
-                urlValue.substring(0, 5) === "pwrs_" ||
-                urlValue.substring(0, 5) === "nmps_" ||
-                urlValue.substring(0, 9) === "profibus_" ||
-                urlValue.substring(0, 8) === "otherio_" ||
-                urlValue.substring(0, 4) === "opc_" ||
-                urlValue.substring(0, 14) === "basecomponent_" ||
-                urlValue.substring(0, 4) === "abb_" ||
-                urlValue.substring(0, 8) === "siemens_" ||
-                urlValue.substring(0, 7) === "ssabox_")
-            // Object reference manual
-            {
-              urlValue = "$pwr_doc/" + getLang() + "/orm/" + urlValue;
+            let arrTmp = ["pwrb", "pwrs", "nmps", "profibus", "otherio", "opc",
+              "basecomponent", "abb", "siemens", "ssabox"];
+            if (arrTmp.some(e => urlValue.startsWith(e + "_"))) { // Object reference manual
+              urlValue = "$pwr_doc/en_us/orm/" + urlValue;
             }
 
             console.log("open url " + urlValue);
@@ -147,168 +126,117 @@ class Appl {
           }
         }
       } else if (command === ("SET")) {
-        if (cli.qualifierFound("cli_arg1")) {
-          let cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
+        let cli_arg1 = getQualIfExists("cli_arg1");
+        if (cli_arg1) {
+          let cli_arg1 = cli_arg1.toUpperCase();
           let subwindow = "SUBWINDOW";
           if (subwindow.length >= cli_arg1.length &&
               subwindow.substring(0, cli_arg1.length) === (cli_arg1)) {
             // Command is "SET SUBWINDOW"
-
-            let name;
-            let graphstr;
-            let source;
-            let object;
-            let sts;
-
-            local_cmd = true;
-            if (cli.qualifierFound("/NAME")) {
-              name = cli.getQualValue("/NAME");
-            } else {
-              console.log("Cmd: name is missing\n");
+            let name = getQualIfExists("/NAME");
+            if (!name) {
+              console.log("Cmd: Name is missing\n");
               return 0;
             }
-            if (cli.qualifierFound("/SOURCE")) {
-              source = cli.getQualValue("/SOURCE");
-            } else {
+            let source = getQualIfExists("/SOURCE");
+            if (!source) {
               console.log("Cmd: source is missing\n");
               return 0;
             }
-            if (cli.qualifierFound("/OBJECT")) {
-              object = cli.getQualValue("/OBJECT");
-            } else {
-              object = null;
-            }
-            if (cli.qualifierFound("cli_arg2")) {
-              graphstr = cli.getQualValue("cli_arg2").toLowerCase();
+            let object = getQualIfExists("/OBJECT");
+            let graphstr = getQualIfExists("cli_arg2");
+            if (graphstr) {
+              graphstr = graphstr.toLowerCase();
             } else {
               console.log("Syntax error");
               return 0;
             }
 
             if (source.indexOf('.') === -1) {
-              source = source + ".pwg";
+              source += ".pwg";
             }
 
             this.graph.setSubwindowSource(name, source, object);
           }
         }
       } else if (command === ("HELP")) {
-        let fileName = "xtt_help_";
+        let fileName = "/pwrp_web/xtt_help_";
         let bookmarkValue = null;
 
         if (cli.qualifierFound("/VERSION")) {
-          fileName = this.pwrHost + "xtt_version_help_version.html";
+          fileName = window.location.hostname + "/pwr_doc/xtt_version_help_version.html";
           this.openURL(fileName, null);
         } else {
-          if (cli.qualifierFound("/BASE"))
-          // Not language dependent !! TODO
-          {
-            fileName = this.pwrHost + "help/xtt_help_";
-          } else {
-            fileName = "xtt_help_";
+          if (cli.qualifierFound("/BASE")) { // Not language dependent !! TODO
+            fileName = "/pwr_doc/help/xtt_help_";
           }
 
-          if (cli.qualifierFound("cli_arg1")) {
-            fileName += cli.getQualValue("cli_arg1").toLowerCase();
-          }
-          if (cli.qualifierFound("cli_arg2")) {
-            fileName += "_" + cli.getQualValue("cli_arg2").toLowerCase();
-          }
-          if (cli.qualifierFound("cli_arg3")) {
-            fileName += "_" + cli.getQualValue("cli_arg3").toLowerCase();
-          }
-          if (cli.qualifierFound("cli_arg4")) {
-            fileName += "_" + cli.getQualValue("cli_arg4").toLowerCase();
+          for (let i = 0; i < 4; i++) {
+            let tmp = getQualIfExists("cli_arg" + String(i+1));
+            fileName += tmp ? tmp.toLowerCase() : "";
           }
 
-          if (fileName.substring(0, 5) === "pwrb_" ||
-              fileName.substring(0, 5) === "pwrs_" ||
-              fileName.substring(0, 5) === "nmps_" ||
-              fileName.substring(0, 9) === "profibus_" ||
-              fileName.substring(0, 8) === "otherio_" ||
-              fileName.substring(0, 4) === "opc_" ||
-              fileName.substring(0, 14) === "basecomponent_" ||
-              fileName.substring(0, 4) === "abb_" ||
-              fileName.substring(0, 8) === "siemens_" ||
-              fileName.substring(0, 7) === "ssabox_")
-          // Object reference manual
-          {
-            fileName = "$pwr_doc/orm/" + fileName;
+          let arrTmp = ["pwrb", "pwrs", "nmps", "profibus", "otherio", "opc",
+            "basecomponent", "abb", "siemens", "ssabox"];
+          if (arrTmp.some(e => fileName.startsWith(e + "_"))) { // Object reference manual
+            fileName = "/pwr_doc/orm/" + fileName;
           }
 
-          if (cli.qualifierFound("/BOOKMARK")) {
-            bookmarkValue = cli.getQualValue("/BOOKMARK");
-          }
+          bookmarkValue = getQualIfExists("/BOOKMARK");
 
           fileName += ".html";
           console.log("Loading helpfile \"" + fileName + "\"");
-          this.openURL(fileName, bookmarkValue);
+          this.openURL(window.location.hostname + fileName, bookmarkValue);
         }
-        local_cmd = true;
       } else if (command === ("CHECK")) {
-        if (cli.qualifierFound("cli_arg1")) {
-
+        let cli_arg1 = getQualIfExists("cli_arg1");
+        if (cli_arg1) {
           let methodstr = "METHOD";
           let isattributestr = "ISATTRIBUTE";
-          let cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
+          cli_arg1 = cli_arg1.toUpperCase();
           if (methodstr.length >= cli_arg1.length &&
               methodstr.substring(0, cli_arg1.length) === (cli_arg1)) {
             // Command is "CHECK METHOD"
-            let method;
-            let object;
-
-            if (cli.qualifierFound("/METHOD")) {
-              method = cli.getQualValue("/METHOD");
-            } else {
+            let method = getQualIfExists("/METHOD");
+            if (!method) {
               console.log("Cmd: Method is missing\n");
               return 0;
             }
 
-            if (cli.qualifierFound("/OBJECT")) {
-              object = cli.getQualValue("/OBJECT");
-            } else {
+            let object = getQualIfExists("/OBJECT");
+            if (!object) {
               console.log("Cmd: Object is missing\n");
               return 0;
             }
           } else if (isattributestr.length >= cli_arg1.length &&
               isattributestr.substring(0, cli_arg1.length) === (cli_arg1)) {
             // Command is "CHECK ISATTRIBUTE"
-            let method;
-            let object;
-
-            if (cli.qualifierFound("/OBJECT")) {
-              object = cli.getQualValue("/OBJECT");
-            } else {
+            let object = getQualIfExists("/OBJECT");
+            if (!object) {
               console.log("Cmd: Object is missing\n");
               return 0;
             }
           }
         } else if (command === ("CALL")) {
-          if (cli.qualifierFound("cli_arg1")) {
-
+          let cli_arg1 = getQualIfExists("cli_arg1");
+          if (cli_arg1) {
             let parameter = "METHOD";
-            let cli_arg1 = cli.getQualValue("cli_arg1").toUpperCase();
+            cli_arg1 = cli_arg1.toUpperCase();
             if (parameter.length >= cli_arg1.length &&
                 parameter.substring(0, cli_arg1.length) === (cli_arg1)) {
               // Command is "CHECK METHOD"
-              let method;
-              let object;
-
-              if (cli.qualifierFound("/METHOD")) {
-                method = cli.getQualValue("/METHOD");
-              } else {
+              let method = getQualIfExists("/METHOD");
+              if (!method) {
                 console.log("Cmd: Method is missing\n");
                 return 0;
               }
 
-              if (cli.qualifierFound("/OBJECT")) {
-                object = cli.getQualValue("/OBJECT");
-              } else {
+              let object = getQualIfExists("/OBJECT");
+              if (!object) {
                 console.log("Cmd: Object is missing\n");
                 return 0;
               }
             }
-
           }
         } else if (command === ("SET")) {
           return 1;
@@ -331,20 +259,21 @@ class Appl {
   }
 
   openConfirmDialog(dyn, text, object) {
-    let res = confirm(text);
-    if (res) {
+    if (confirm(text)) {
       dyn.confirmedAction(Event.MB1Click, object);
     }
   }
 
-  open_objectgraph_cb(id, data, sts, result) {
-    if ((sts & 1) === 0) {
-      data.document.write("Error status " + sts);
+  open_objectgraph_cb(res) {
+    let w = window.open("", "_blank");
+    if ((res.sts & 1) === 0) {
+      w.document.write("Error status " + res.sts);
     } else {
+      let result = res.value;
       console.log("param1", result.param1);
-      data.location.href =
+      w.location.href =
           "ge.html?graph=" + result.param1 + "&instance=" + result.fullname;
-      data.document.title = result.param1 + " " + result.fullname;
+      w.document.title = result.param1 + " " + result.fullname;
     }
   }
 }

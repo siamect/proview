@@ -13,19 +13,16 @@ class GrowScrollBar extends GrowRect {
   hot;
   highlight;
 
-  constructor(ctx) {
-    super(ctx);
-  }
-
-  init(name, x, y, w, h, dir, border_d_type, line_width, display_lev,
+  constructor(ctx, name, x, y, w, h, dir, border_d_type, line_width, display_lev,
        fill_d_type, bar_d_type, nodraw, parent) {
+    super(ctx);
     this.ll.x = x;
     this.ll.y = y;
     this.ur.x = x + w;
     this.ur.y = y + h;
     this.draw_type = border_d_type;
     this.line_width = line_width;
-    this.fill = 1;
+    this.fill = true;
     this.border = 1;
     this.shadow = 0;
     this.fill_drawtype = fill_d_type;
@@ -39,46 +36,31 @@ class GrowScrollBar extends GrowRect {
     }
   }
 
-  tdraw(t, highlight, hot, node, colornode) {
+  draw(t = null, highlight = 0, hot = 0, node = null, colornode = null) {
     if (this.ctx.nodraw !== 0) {
       return;
     }
 
-    let idx;
-
-    idx = Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
+    let idx = Math.floor(this.ctx.mw.zoom_factor_y / this.ctx.mw.base_zoom_factor *
         this.line_width - 1);
     idx += hot;
 
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
-    let x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
-    let x0 = 0, y0 = 0, width = 0, height = 0;
 
-    if (t === null) {
-      x1 = Math.floor(this.trf.x(this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      y1 = Math.floor(this.trf.y(this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-      x2 = (this.trf.x(this.ur.x, this.ur.y) * this.ctx.mw.zoom_factor_x) -
-          this.ctx.mw.offset_x;
-      y2 = Math.floor(this.trf.y(this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    } else {
-      x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-      x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-      y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    }
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
 
-    ll_x = Math.min(x1, x2);
-    ur_x = Math.max(x1, x2);
-    ll_y = Math.min(y1, y2);
-    ur_y = Math.max(y1, y2);
+    let x1 = Math.floor(p1.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p1.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+
+    let ll_x = Math.min(x1, x2);
+    let ur_x = Math.max(x1, x2);
+    let ll_y = Math.min(y1, y2);
+    let ur_y = Math.max(y1, y2);
 
     let fdrawtype = GlowColor.get_drawtype(this.fill_drawtype,
         DrawType.FillHighlight, highlight, colornode, 1, 0);
@@ -86,7 +68,7 @@ class GrowScrollBar extends GrowRect {
         DrawType.LineHighlight, highlight, colornode, 0, 0);
     let shift_drawtype;
 
-    this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fdrawtype);
+    this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fdrawtype, true, 0);
     if (this.shadow !== 0) {
       shift_drawtype = GlowColor.shift_drawtype(this.fill_drawtype, 2, null); // Dark
       this.ctx.gdraw.line(ll_x + 1, ll_y + 1, ll_x + 1, ur_y - 1,
@@ -101,6 +83,7 @@ class GrowScrollBar extends GrowRect {
     }
 
     if (this.max_value !== this.min_value) {
+      let x0, y0, width, height;
       switch (this.direction) {
         case Dir.Vertical:
           height =
@@ -123,7 +106,7 @@ class GrowScrollBar extends GrowRect {
           y0 = ll_y;
           break;
       }
-      this.ctx.gdraw.fill_rect(x0, y0, width, height, this.bar_color);
+      this.ctx.gdraw.rect(x0, y0, width, height, this.bar_color, true, 0);
       if (this.shadow !== 0) {
         shift_drawtype = GlowColor.shift_drawtype(this.bar_color, -2, null); // Light
         this.ctx.gdraw.line(x0 + 1, y0 + 1, x0 + 1, y0 + height - 1,
@@ -136,11 +119,10 @@ class GrowScrollBar extends GrowRect {
         this.ctx.gdraw.line(x0 + width - 1, y0 + 1, x0 + width - 1, y0 +
             height - 1, shift_drawtype, 0, 0);
       }
-      this.ctx.gdraw.rect(x0, y0, width, height, bdrawtype, idx, 0);
+      this.ctx.gdraw.rect(x0, y0, width, height, bdrawtype, false, idx);
     }
 
-    this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, bdrawtype, idx,
-        0);
+    this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, bdrawtype, false, idx);
   }
 
   set_value(value, length) {
@@ -150,24 +132,17 @@ class GrowScrollBar extends GrowRect {
       this.bar_length = length;
     }
 
-    if (this.bar_value < this.min_value) {
-      this.bar_value = this.min_value;
-    }
-    if (this.bar_value > this.max_value) {
-      this.bar_value = this.max_value;
-    }
+    this.bar_value = clamp(this.bar_value, this.min_value, this.max_value);
 
     this.draw();
     return this.bar_value;
   }
 
   event_handler(event, fx, fy) {
-    let ll_x, ur_x, ll_y, ur_y;
-
-    ll_x = Math.min(this.ll.x, this.ur.x);
-    ur_x = Math.max(this.ll.x, this.ur.x);
-    ll_y = Math.min(this.ll.y, this.ur.y);
-    ur_y = Math.max(this.ll.y, this.ur.y);
+    let ll_x = Math.min(this.ll.x, this.ur.x);
+    let ur_x = Math.max(this.ll.x, this.ur.x);
+    let ll_y = Math.min(this.ll.y, this.ur.y);
+    let ur_y = Math.max(this.ll.y, this.ur.y);
 
     if (this.movement_active === 0 &&
         !(ll_x <= fx && fx <= ur_x && ll_y <= fy && fy <= ur_y)) {

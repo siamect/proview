@@ -132,7 +132,8 @@ public:
   void set_transform(GlowTransform* t);
   void set_transform_from_stored(GlowTransform* t)
   {
-    trf.set_from_stored(t), get_node_borders();
+    trf.set(*t * trf.s);
+    get_node_borders();
   }
   void store_transform()
   {
