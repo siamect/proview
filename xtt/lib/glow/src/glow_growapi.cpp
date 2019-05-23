@@ -674,7 +674,6 @@ void grow_GetZoom(grow_tCtx ctx, double* zoom_factor)
 void grow_Scroll(grow_tCtx ctx, double x, double y)
 {
   ctx->scroll(x, y);
-  ;
 }
 
 void grow_SetAttributes(

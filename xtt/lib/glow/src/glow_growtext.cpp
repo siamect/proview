@@ -224,9 +224,6 @@ void GrowText::open(std::ifstream& fp)
   int end_found = 0;
   char dummy[40];
   int tmp;
-  int j;
-  char c;
-  char* new_text;
 
   for (;;) {
     if (!fp.good()) {
@@ -275,7 +272,8 @@ void GrowText::open(std::ifstream& fp)
       if (dynamicsize) {
         dynamic = (char*)calloc(1, dynamicsize);
         fp.get();
-        for (j = 0; j < dynamicsize; j++) {
+        for (int j = 0; j < dynamicsize; j++) {
+          char c;
           if ((c = fp.get()) == '"') {
             if (dynamic[j - 1] == '\\')
               j--;
@@ -308,6 +306,7 @@ void GrowText::open(std::ifstream& fp)
 
   // Translate the text to current language
   if (ctx->translate_on && ctx->event_callback[glow_eEvent_Translate]) {
+    char* new_text;
     if (ctx->translate_cb(this, text, &new_text)) {
       free(text);
       text = (char*)malloc(strlen(new_text) + 1);

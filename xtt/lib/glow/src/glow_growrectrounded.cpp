@@ -264,8 +264,6 @@ void GrowRectRounded::open(std::ifstream& fp)
   int end_found = 0;
   char dummy[40];
   int tmp;
-  int j;
-  char c;
 
   for (;;) {
     if (!fp.good()) {
@@ -349,7 +347,8 @@ void GrowRectRounded::open(std::ifstream& fp)
       if (dynamicsize) {
         dynamic = (char*)calloc(1, dynamicsize);
         fp.get();
-        for (j = 0; j < dynamicsize; j++) {
+        for (int j = 0; j < dynamicsize; j++) {
+          char c;
           if ((c = fp.get()) == '"') {
             if (dynamic[j - 1] == '\\')
               j--;

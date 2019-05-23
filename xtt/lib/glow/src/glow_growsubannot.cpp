@@ -134,8 +134,6 @@ void GrowSubAnnot::move_noerase(int delta_x, int delta_y, int grid)
 int GrowSubAnnot::event_handler(glow_eEvent event, int x, int y, double fx, double fy)
 {
   int sts;
-
-  sts = 0;
   if (event == ctx->event_move_node) {
     sts = rect.event_handler((void*)&pzero, event, x, y, NULL);
     if (sts) {

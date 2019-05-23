@@ -209,9 +209,6 @@ void FlowNode::print(double ll_x, double ll_y, double ur_x, double ur_y)
 
 void FlowNode::save(std::ofstream& fp, flow_eSaveMode mode)
 {
-  int i;
-  char* s;
-
   if ((mode == flow_eSaveMode_Trace && nc->group != flow_eNodeGroup_Trace)
       || (mode == flow_eSaveMode_Edit && nc->group == flow_eNodeGroup_Trace))
     return;
@@ -220,7 +217,7 @@ void FlowNode::save(std::ofstream& fp, flow_eSaveMode mode)
   fp << int(flow_eSave_Node_nc) << FSPACE << nc->nc_name << '\n';
   fp << int(flow_eSave_Node_n_name) << FSPACE << n_name << '\n';
   fp << int(flow_eSave_Node_refcon_cnt) << '\n';
-  for (i = 0; i < MAX_CONPOINTS; i++)
+  for (int i = 0; i < MAX_CONPOINTS; i++)
     fp << refcon_cnt[i] << '\n';
   fp << int(flow_eSave_Node_x_right) << FSPACE << x_right << '\n';
   fp << int(flow_eSave_Node_x_left) << FSPACE << x_left << '\n';
@@ -231,13 +228,13 @@ void FlowNode::save(std::ofstream& fp, flow_eSaveMode mode)
   fp << int(flow_eSave_Node_obst_y_high) << FSPACE << obst_y_high << '\n';
   fp << int(flow_eSave_Node_obst_y_low) << FSPACE << obst_y_low << '\n';
   fp << int(flow_eSave_Node_annotsize) << '\n';
-  for (i = 0; i < 10; i++)
+  for (int i = 0; i < 10; i++)
     fp << annotsize[i] << '\n';
   fp << int(flow_eSave_Node_annotv) << '\n';
-  for (i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++) {
     if (annotsize[i]) {
       fp << "\"";
-      for (s = annotv[i]; *s; s++) {
+      for (char* s = annotv[i]; *s; s++) {
         if (*s == '"')
           fp << "\\";
         fp << *s;
@@ -258,15 +255,13 @@ void FlowNode::save(std::ofstream& fp, flow_eSaveMode mode)
 
 void FlowNode::open(std::ifstream& fp)
 {
-  int type;
   int end_found = 0;
   char dummy[40];
   char nc_name[80];
-  int i, j;
-  char c;
   int tmp;
 
   for (;;) {
+    int type;
     fp >> type;
     switch (type) {
     case flow_eSave_Node:
@@ -283,7 +278,7 @@ void FlowNode::open(std::ifstream& fp)
       fp.getline(n_name, sizeof(n_name));
       break;
     case flow_eSave_Node_refcon_cnt:
-      for (i = 0; i < MAX_CONPOINTS; i++)
+      for (int i = 0; i < MAX_CONPOINTS; i++)
         fp >> refcon_cnt[i];
       break;
     case flow_eSave_Node_x_right:
@@ -311,16 +306,17 @@ void FlowNode::open(std::ifstream& fp)
       fp >> obst_y_low;
       break;
     case flow_eSave_Node_annotsize:
-      for (i = 0; i < 10; i++)
+      for (int i = 0; i < 10; i++)
         fp >> annotsize[i];
       break;
     case flow_eSave_Node_annotv:
       fp.getline(dummy, sizeof(dummy));
-      for (i = 0; i < 10; i++) {
+      for (int i = 0; i < 10; i++) {
         if (annotsize[i]) {
           annotv[i] = (char*)calloc(1, annotsize[i]);
           fp.get();
-          for (j = 0; j < annotsize[i]; j++) {
+          for (int j = 0; j < annotsize[i]; j++) {
+            char c;
             if ((c = fp.get()) == '"') {
               if (j > 0 && annotv[i][j - 1] == '\\')
                 j--;

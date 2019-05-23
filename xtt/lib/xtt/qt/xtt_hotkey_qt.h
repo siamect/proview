@@ -37,8 +37,6 @@
 #ifndef xtt_hotkey_qt_h
 #define xtt_hotkey_qt_h
 
-#if defined OS_LINUX
-
 #include <vector>
 
 #include <QEvent>
@@ -77,25 +75,5 @@ public:
   int read_file();
   static int event_handler(QEvent* xevent, QObject* obj);
 };
-
-#else
-// Dummy for other platforms than OS_LINUX
-
-class XttHotkey {
-public:
-  XttHotkey(const char* filename) {}
-
-  ~XttHotkey() {}
-
-  void register_action(
-      const char* name, void (*action)(char*, void*), void* userdata) {}
-
-  static int event_handler(QEvent* xevent, QObject* obj)
-  {
-    return 1;
-  }
-};
-
-#endif
 
 #endif

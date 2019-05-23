@@ -418,8 +418,6 @@ void GrowImage::open(std::ifstream& fp)
   int end_found = 0;
   char dummy[40];
   int tmp;
-  int j;
-  char c;
 
   for (;;) {
     if (!fp.good()) {
@@ -460,7 +458,8 @@ void GrowImage::open(std::ifstream& fp)
       if (dynamicsize) {
         dynamic = (char*)calloc(1, dynamicsize);
         fp.get();
-        for (j = 0; j < dynamicsize; j++) {
+        for (int j = 0; j < dynamicsize; j++) {
+          char c;
           if ((c = fp.get()) == '"') {
             if (dynamic[j - 1] == '\\')
               j--;
@@ -767,11 +766,6 @@ void GrowImage::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   } else {
     if (pixmap || image) {
       int sts = 0;
-      int sts_rotate = 0;
-      int sts_color = 0;
-      int sts_flip_vert = 0;
-      int sts_flip_horiz = 0;
-      int sts_scale = 0;
       int flip_vert, flip_horiz;
       glow_tImImage om = original_image;
 
@@ -787,13 +781,11 @@ void GrowImage::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
 
       if (int(ur_x - ll_x + 0.5) != current_width
           || int(ur_y - ll_y + 0.5) != current_height) {
-        sts_scale = 1;
         sts = 1;
       }
 
       if (rotation != current_rotation) {
         current_rotation = rotation;
-        sts_rotate = 1;
         sts = 1;
       }
 
@@ -812,18 +804,15 @@ void GrowImage::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
                         && current_color_intensity == color_intensity
                         && current_color_shift == color_shift
                         && current_color_inverse == color_inverse))) {
-        sts_color = 1;
         sts = 1;
       }
 
       if (flip_vert != current_flip_vertical) {
         current_flip_vertical = flip_vert;
-        sts_flip_vert = 1;
         sts = 1;
       }
       if (flip_horiz != current_flip_horizontal) {
         current_flip_horizontal = flip_horiz;
-        sts_flip_horiz = 1;
         sts = 1;
       }
 
@@ -870,7 +859,6 @@ void GrowImage::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
           ctx->gdraw->image_flip_vertical(&image);
         else if (flip_horiz)
           ctx->gdraw->image_flip_horizontal(&image);
-        om = 0;
         current_width = ctx->gdraw->image_get_width(image);
         current_height = ctx->gdraw->image_get_height(image);
       }

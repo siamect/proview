@@ -259,7 +259,7 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   int x, y;
   char text[20];
   int line_length;
-  int x_text, y_text;
+  int y_text;
   int z_height = 0, z_width, z_descent = 0;
   int max_z_width = 0;
   int text_idx
@@ -323,12 +323,10 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
             max_z_width = z_width;
         }
       }
-      x_text = ll_x + max_z_width;
       line_length = ur_x - ll_x - max_z_width;
       if (line_length < 3)
         line_length = 3;
     } else {
-      x_text = ll_x;
       line_length = ur_x - ll_x;
     }
 
@@ -388,6 +386,7 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
             &z_descent, tsize, 0);
 
         if (text_idx >= 0 && z_height < ur_y - ll_y) {
+          int x_text;
           if (i == lines - 1)
             x_text = x;
           else if (i == 0)
@@ -406,6 +405,7 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     ctx->gdraw->line(ll_x, ll_y, ll_x, ur_y, drawtype, idx, 0);
 
     // Calculate max value text width
+    int x_text = ur_x;
     if (draw_text) {
       for (int i = 0; i < lines; i++) {
         if (i % valuequotient == 0) {
@@ -417,12 +417,11 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
             max_z_width = z_width;
         }
       }
-      x_text = ur_x - max_z_width;
+      x_text -= max_z_width;
       line_length = ur_x - ll_x - max_z_width;
       if (line_length < 3)
         line_length = 3;
     } else {
-      x_text = ur_x;
       line_length = ur_x - ll_x;
     }
 
@@ -479,6 +478,7 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
             &z_descent, tsize, 0);
 
         if (text_idx >= 0 && z_height - z_descent < ur_y - ll_y) {
+          int x_text;
           if (i == lines - 1)
             x_text = x - z_width;
           else if (i == 0)

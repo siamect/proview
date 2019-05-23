@@ -548,7 +548,6 @@ void GrowTable::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
 
   int t_ll_x = o_ll_x - int(h_value * w->zoom_factor_x);
   int t_ll_y = o_ll_y - int(v_value * w->zoom_factor_y);
-  ;
   int t_ur_x = t_ll_x + int(table_x1 * w->zoom_factor_x);
   int t_ur_y = t_ll_y + int(table_y1 * w->zoom_factor_y);
 
@@ -573,7 +572,6 @@ void GrowTable::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
 
     if (shadow) {
       x = t_ll_x;
-      y = ll_y;
       for (int i = header_column; i < columns + 1; i++) {
         if (x > ur_x)
           break;
@@ -590,7 +588,6 @@ void GrowTable::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
           dark_drawtype, 1, 0);
     }
     x = t_ll_x;
-    y = ll_y;
 
     for (int i = header_column; i < columns + 1; i++) {
       if (x > ur_x)
@@ -659,7 +656,6 @@ void GrowTable::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     }
 
     if (shadow) {
-      x = ll_x;
       y = t_ll_y;
       for (int i = 0; i < rows + 1; i++) {
         if (y > ur_y)
@@ -949,10 +945,7 @@ int GrowTable::trace_scan()
 
 int GrowTable::trace_init()
 {
-  int sts = 1;
-
-  sts = ctx->trace_connect_func((void*)this, &trace);
-  return sts;
+  return ctx->trace_connect_func((void*)this, &trace);
 }
 
 void GrowTable::trace_close()

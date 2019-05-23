@@ -179,24 +179,17 @@ void FlowRadiobutton::nav_erase(void* pos, void* node)
 int FlowRadiobutton::event_handler(
     void* pos, flow_eEvent event, int x, int y, void* node)
 {
-  FlowPoint* p;
-  int sts;
-
-  p = (FlowPoint*)pos;
   if (ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x <= x
       && x <= ur.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x
       && ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y <= y
       && y <= ur.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y) {
-    switch (event) {
-    case flow_eEvent_MB1Click:
-      //        std::cout << "Event handler: Hit in radiobutton\n";
+    if (event == flow_eEvent_MB1Click) {
       // Call backcall function
-      sts = ctx->radiobutton_cb(
+      int sts = ctx->radiobutton_cb(
           (FlowArrayElem*)node, number, ((FlowNode*)node)->rbuttonv[number]);
       if (sts == FLOW__DESTROYED)
         return sts;
       return FLOW__NO_PROPAGATE;
-    default:;
     }
     return 1;
   } else

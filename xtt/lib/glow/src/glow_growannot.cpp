@@ -552,14 +552,9 @@ void GrowAnnot::export_javabean_font(
     return;
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
 
-  glow_eFont lfont;
-  glow_eDrawType ldraw_type;
+  glow_eDrawType ldraw_type = draw_type;
   if (node && ((GrowNode*)node)->text_font != glow_eFont_No) {
-    lfont = ((GrowNode*)node)->text_font;
     ldraw_type = ((GrowNode*)node)->text_type;
-  } else {
-    lfont = font;
-    ldraw_type = draw_type;
   }
 
   glow_eDrawType background;

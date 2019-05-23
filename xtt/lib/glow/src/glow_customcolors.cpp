@@ -74,7 +74,6 @@ int GlowCustomColors::set_color(
   colors[idx + 1][0] = MAX(r - 0.12, 0);
   colors[idx + 1][1] = MAX(g - 0.12, 0);
   colors[idx + 1][2] = MAX(b - 0.12, 0);
-  ;
 
   // Light
   double mv = (r + g + b) / 3;

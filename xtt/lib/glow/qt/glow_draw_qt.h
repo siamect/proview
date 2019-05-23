@@ -157,7 +157,6 @@ public:
       void** id);
   void remove_timer(void* id);
   void init_nav(QWidget* nav_widget);
-  unique_ptr<QPoint[]> points_to_qt_points(glow_sPointX* points, int point_cnt);
   unique_ptr<QPoint[]> points_to_qt_points_curve(
       glow_sPointX* points, int point_cnt, int* cnt);
   int image_get_width(glow_tImImage image);

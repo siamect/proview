@@ -671,11 +671,7 @@ void GlowArray::brow_remove(void* ctx, GlowArrayElem* element)
 void GlowArray::brow_close(void* ctx, GlowArrayElem* element)
 {
   int idx = 0, next_idx;
-  int found;
-  int level;
-  GlowArrayElem* e;
-
-  found = 0;
+  int found = 0;
   int i;
   for (i = 0; i < a_size; i++) {
     if (*(a + i) == element) {
@@ -687,7 +683,7 @@ void GlowArray::brow_close(void* ctx, GlowArrayElem* element)
     return;
 
   // Find next element with the same level
-  level = ((GlowNode*)a[idx])->get_level();
+  int level = ((GlowNode*)a[idx])->get_level();
   for (i = idx + 1; i < a_size; i++) {
     if (((GlowNode*)a[i])->get_level() <= level)
       break;
@@ -697,7 +693,6 @@ void GlowArray::brow_close(void* ctx, GlowArrayElem* element)
     return;
 
   for (i = idx + 1; i < next_idx; i++) {
-    e = a[i];
     ((GlowCtx*)ctx)->delete_object(a[i]);
     i--;
     next_idx--;

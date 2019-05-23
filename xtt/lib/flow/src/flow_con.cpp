@@ -120,23 +120,19 @@ FlowCon::FlowCon(FlowCtx* flow_ctx, const char* name, FlowConClass* con_class,
       highlight(0), dimmed(0), movement_type(flow_eMoveType_Route),
       trace_attr_type(flow_eTraceType_Boolean), trace_p(NULL)
 {
-  double src_x, src_y, dest_x, dest_y;
-  FlowLine* l1;
-  FlowArc* a1;
-  FlowArrow* arrow;
-  int i;
-
   if (!cc)
     return;
 
   strcpy(trace_object, "");
   strcpy(trace_attribute, "");
   if (x_vect && y_vect) {
-    for (i = 0; i < point_num; i++) {
+    for (int i = 0; i < point_num; i++) {
       point_x[i] = x_vect[i];
       point_y[i] = y_vect[i];
     }
   }
+
+  double src_x, src_y, dest_x, dest_y;
   *rsts = source->get_conpoint(source_cp, &src_x, &src_y, &source_direction);
   if (EVEN(*rsts))
     return;
@@ -145,42 +141,47 @@ FlowCon::FlowCon(FlowCtx* flow_ctx, const char* name, FlowConClass* con_class,
     return;
 
   switch (cc->con_type) {
-  case flow_eConType_Straight:
-    l1 = new FlowLine(
+  case flow_eConType_Straight: {
+    FlowLine* l1 = new FlowLine(
         ctx, src_x, src_y, dest_x, dest_y, cc->draw_type, cc->line_width);
     line_a.insert(l1);
     l_num = 1;
     nav_zoom();
     break;
-  case flow_eConType_StraightOneArrow:
-    l1 = new FlowLine(
+  }
+  case flow_eConType_StraightOneArrow: {
+    FlowLine* l1 = new FlowLine(
         ctx, src_x, src_y, dest_x, dest_y, cc->draw_type, cc->line_width);
     line_a.insert(l1);
     l_num = 1;
-    arrow = new FlowArrow(ctx, src_x, src_y, dest_x, dest_y, cc->arrow_width,
+    FlowArrow* arrow = new FlowArrow(ctx, src_x, src_y, dest_x, dest_y, cc->arrow_width,
         cc->arrow_length, cc->draw_type);
     arrow_a.insert(arrow);
     arrow_num = 1;
     nav_zoom();
     break;
+  }
   case flow_eConType_StepDiv:
   case flow_eConType_StepConv:
   case flow_eConType_TransDiv:
-  case flow_eConType_TransConv:
-    for (i = 0; i < MAX_POINT - 1; i++) {
-      l1 = new FlowLine(ctx, 0, 0, 0, 0, cc->draw_type, cc->line_width);
+  case flow_eConType_TransConv: {
+    for (int i = 0; i < MAX_POINT - 1; i++) {
+      FlowLine* l1 = new FlowLine(ctx, 0, 0, 0, 0, cc->draw_type,
+          cc->line_width);
       line_a.insert(l1);
     }
     break;
-  case flow_eConType_Fixed:
+  }
+  case flow_eConType_Fixed: {
+    int i;
     if (!point_num) {
-      l1 = new FlowLine(
+      FlowLine* l1 = new FlowLine(
           ctx, src_x, src_y, dest_x, dest_y, cc->draw_type, cc->line_width);
       line_a.insert(l1);
       i = 1;
       l_num = 1;
     } else {
-      l1 = new FlowLine(ctx, src_x, src_y, point_x[0], point_y[0],
+      FlowLine* l1 = new FlowLine(ctx, src_x, src_y, point_x[0], point_y[0],
           cc->draw_type, cc->line_width);
       line_a.insert(l1);
       for (i = 0; i < point_num; i++) {
@@ -195,7 +196,8 @@ FlowCon::FlowCon(FlowCtx* flow_ctx, const char* name, FlowConClass* con_class,
       l_num = p_num - 1;
     }
     for (; i < 8; i++) {
-      l1 = new FlowLine(ctx, 0, 0, 0, 0, cc->draw_type, cc->line_width);
+      FlowLine* l1 = new FlowLine(ctx, 0, 0, 0, 0, cc->draw_type,
+          cc->line_width);
       line_a.insert(l1);
     }
     if (!nodraw) {
@@ -205,6 +207,7 @@ FlowCon::FlowCon(FlowCtx* flow_ctx, const char* name, FlowConClass* con_class,
         draw_routed(p_num, point_x, point_y);
     }
     break;
+  }
   case flow_eConType_AllFixed:
     if (!nodraw) {
       if (cc->corner == flow_eCorner_Rounded)
@@ -213,14 +216,14 @@ FlowCon::FlowCon(FlowCtx* flow_ctx, const char* name, FlowConClass* con_class,
         draw_routed(p_num, point_x, point_y);
     }
     break;
-  case flow_eConType_Routed:
-    for (i = 0; i < MAX_POINT - 1; i++) {
-      l1 = new FlowLine(ctx, 0, 0, 0, 0, cc->draw_type, cc->line_width);
+  case flow_eConType_Routed: {
+    for (int i = 0; i < MAX_POINT - 1; i++) {
+      FlowLine* l1 = new FlowLine(ctx, 0, 0, 0, 0, cc->draw_type, cc->line_width);
       line_a.insert(l1);
     }
     if (cc->corner == flow_eCorner_Rounded) {
-      for (i = 0; i < MAX_POINT - 2; i++) {
-        a1 = new FlowArc(ctx, 0, 0, 0, 0, 0, 0, cc->draw_type, cc->line_width);
+      for (int i = 0; i < MAX_POINT - 2; i++) {
+        FlowArc* a1 = new FlowArc(ctx, 0, 0, 0, 0, 0, 0, cc->draw_type, cc->line_width);
         arc_a.insert(a1);
       }
     }
@@ -234,13 +237,14 @@ FlowCon::FlowCon(FlowCtx* flow_ctx, const char* name, FlowConClass* con_class,
           draw_routed(p_num, point_x, point_y);
       } else {
         *rsts = con_route(
-          src_x, src_y, source_direction, dest_x, dest_y, dest_direction);
+            src_x, src_y, source_direction, dest_x, dest_y, dest_direction);
         if (EVEN(*rsts) && *rsts != 0)
           return;
         temporary_ref = (*rsts == 0);
       }
     }
     break;
+  }
   case flow_eConType_Reference:
     break;
   }
@@ -400,11 +404,9 @@ void FlowCon::select_region_insert(
 
 void FlowCon::zoom()
 {
-  int i;
-
-  for (i = 0; i < l_num; i++)
+  for (int i = 0; i < l_num; i++)
     ((FlowLine*)line_a[i])->zoom();
-  for (i = 0; i < a_num; i++)
+  for (int i = 0; i < a_num; i++)
     ((FlowLine*)arc_a[i])->zoom();
   arrow_a.zoom();
   ref_a.zoom();
@@ -412,11 +414,9 @@ void FlowCon::zoom()
 
 void FlowCon::nav_zoom()
 {
-  int i;
-
-  for (i = 0; i < l_num; i++)
+  for (int i = 0; i < l_num; i++)
     ((FlowLine*)line_a[i])->nav_zoom();
-  for (i = 0; i < a_num; i++)
+  for (int i = 0; i < a_num; i++)
     ((FlowLine*)arc_a[i])->nav_zoom();
   arrow_a.nav_zoom();
   ref_a.nav_zoom();
@@ -424,11 +424,9 @@ void FlowCon::nav_zoom()
 
 void FlowCon::print_zoom()
 {
-  int i;
-
-  for (i = 0; i < l_num; i++)
+  for (int i = 0; i < l_num; i++)
     ((FlowLine*)line_a[i])->print_zoom();
-  for (i = 0; i < a_num; i++)
+  for (int i = 0; i < a_num; i++)
     ((FlowLine*)arc_a[i])->print_zoom();
   arrow_a.print_zoom();
   ref_a.print_zoom();
@@ -451,8 +449,6 @@ int FlowCon::delete_node_cons(void* node)
 
 void FlowCon::get_con_borders()
 {
-  int i;
-
   x_right = -1e10;
   x_left = 1e10;
   y_high = -1e10;
@@ -460,34 +456,31 @@ void FlowCon::get_con_borders()
   if (temporary_ref || cc->con_type == flow_eConType_Reference)
     ref_a.get_borders(0, 0, &x_right, &x_left, &y_high, &y_low, NULL);
   else {
-    for (i = 0; i < l_num; i++)
+    for (int i = 0; i < l_num; i++)
       line_a[i]->get_borders(0, 0, &x_right, &x_left, &y_high, &y_low, NULL);
-    for (i = 0; i < a_num; i++)
+    for (int i = 0; i < a_num; i++)
       arc_a[i]->get_borders(0, 0, &x_right, &x_left, &y_high, &y_low, NULL);
   }
 }
 
 void FlowCon::move(int delta_x, int delta_y, int grid)
 {
-  double x, y;
-  int i;
-
-  x = delta_x / ctx->zoom_factor;
-  y = delta_y / ctx->zoom_factor;
+  double x = delta_x / ctx->zoom_factor;
+  double y = delta_y / ctx->zoom_factor;
 
   if (movement_type == flow_eMoveType_Route || grid)
     reconfigure();
   else {
-    for (i = 0; i < p_num; i++) {
+    for (int i = 0; i < p_num; i++) {
       point_x[i] += x;
       point_y[i] += y;
     }
     if (temporary_ref || cc->con_type == flow_eConType_Reference)
       ref_a.shift(&cc->zero, x, y, highlight, dimmed, hot);
     else {
-      for (i = 0; i < l_num; i++)
+      for (int i = 0; i < l_num; i++)
         ((FlowLine*)line_a[i])->shift(&cc->zero, x, y, highlight, dimmed, hot);
-      for (i = 0; i < a_num; i++)
+      for (int i = 0; i < a_num; i++)
         ((FlowArc*)arc_a[i])->shift(&cc->zero, x, y, highlight, dimmed, hot);
       arrow_a.shift(&cc->zero, x, y, highlight, dimmed, hot);
     }
@@ -498,11 +491,8 @@ void FlowCon::move(int delta_x, int delta_y, int grid)
 
 void FlowCon::move_noerase(int delta_x, int delta_y, int grid)
 {
-  double x, y;
-  int i;
-
-  x = delta_x / ctx->zoom_factor;
-  y = delta_y / ctx->zoom_factor;
+  double x = delta_x / ctx->zoom_factor;
+  double y = delta_y / ctx->zoom_factor;
 
   if (cc->con_type != flow_eConType_Routed
       || movement_type == flow_eMoveType_Route || grid || p_num == 0) {
@@ -510,7 +500,7 @@ void FlowCon::move_noerase(int delta_x, int delta_y, int grid)
     reconfigure();
     ctx->reset_nodraw();
   } else {
-    for (i = 0; i < p_num; i++) {
+    for (int i = 0; i < p_num; i++) {
       point_x[i] += x;
       point_y[i] += y;
     }
@@ -527,8 +517,6 @@ void FlowCon::move_noerase(int delta_x, int delta_y, int grid)
 void FlowCon::reconfigure()
 {
   double x1, y1, x2, y2;
-  FlowLine* l1;
-  FlowArrow* arrow;
   flow_eDirection dir1, dir2;
   int sts = source_node->get_conpoint(source_conpoint, &x1, &y1, &dir1);
   if (EVEN(sts)) {
@@ -542,20 +530,22 @@ void FlowCon::reconfigure()
   }
 
   switch (cc->con_type) {
-  case flow_eConType_Straight:
-    l1 = (FlowLine*)line_a[0];
+  case flow_eConType_Straight: {
+    FlowLine* l1 = (FlowLine *) line_a[0];
     l1->move(&cc->zero, x1, y1, x2, y2, highlight, dimmed, hot);
     break;
+  }
   case flow_eConType_Reference: {
     move_ref(x1, y1, x2, y2);
     break;
   }
-  case flow_eConType_StraightOneArrow:
-    l1 = (FlowLine*)line_a[0];
+  case flow_eConType_StraightOneArrow: {
+    FlowLine* l1 = (FlowLine *) line_a[0];
     l1->move(&cc->zero, x1, y1, x2, y2, highlight, dimmed, hot);
-    arrow = (FlowArrow*)arrow_a[0];
+    FlowArrow* arrow = (FlowArrow *) arrow_a[0];
     arrow->move(&cc->zero, x1, y1, x2, y2, highlight, dimmed, hot);
     break;
+  }
   case flow_eConType_StepDiv:
   case flow_eConType_StepConv:
   case flow_eConType_TransDiv:
@@ -564,10 +554,10 @@ void FlowCon::reconfigure()
     break;
   case flow_eConType_Fixed:
     if (!p_num) {
-      l1 = (FlowLine*)line_a[0];
+      FlowLine* l1 = (FlowLine*)line_a[0];
       l1->move(&cc->zero, x1, y1, x2, y2, highlight, dimmed, hot);
     } else {
-      l1 = (FlowLine*)line_a[0];
+      FlowLine* l1 = (FlowLine*)line_a[0];
       l1->move(
           &cc->zero, x1, y1, point_x[0], point_y[0], highlight, dimmed, hot);
       l1 = (FlowLine*)line_a[p_num];
@@ -601,8 +591,6 @@ void FlowCon::reconfigure()
 void FlowCon::print(double ll_x, double ll_y, double ur_x, double ur_y)
 {
   double tmp;
-  int i;
-
   if (ll_x > ur_x) {
     /* Shift */
     tmp = ll_x;
@@ -620,9 +608,9 @@ void FlowCon::print(double ll_x, double ll_y, double ur_x, double ur_y)
     if (temporary_ref || cc->con_type == flow_eConType_Reference)
       ref_a.print(&cc->zero, NULL, highlight);
     else {
-      for (i = 0; i < l_num; i++)
+      for (int i = 0; i < l_num; i++)
         ((FlowLine*)line_a[i])->print(&cc->zero, NULL, highlight);
-      for (i = 0; i < a_num; i++)
+      for (int i = 0; i < a_num; i++)
         ((FlowArc*)arc_a[i])->print(&cc->zero, NULL, highlight);
       arrow_a.print(&cc->zero, NULL, highlight);
     }
@@ -631,8 +619,6 @@ void FlowCon::print(double ll_x, double ll_y, double ur_x, double ur_y)
 
 void FlowCon::save(std::ofstream& fp, flow_eSaveMode mode)
 {
-  int i;
-
   if ((mode == flow_eSaveMode_Trace && cc->group != flow_eConGroup_Trace)
       || (mode == flow_eSaveMode_Edit && cc->group == flow_eConGroup_Trace))
     return;
@@ -667,10 +653,10 @@ void FlowCon::save(std::ofstream& fp, flow_eSaveMode mode)
   fp << int(flow_eSave_Con_arrow_num) << FSPACE << arrow_num << '\n';
   fp << int(flow_eSave_Con_ref_num) << FSPACE << ref_num << '\n';
   fp << int(flow_eSave_Con_point_x) << '\n';
-  for (i = 0; i < p_num; i++)
+  for (int i = 0; i < p_num; i++)
     fp << point_x[i] << '\n';
   fp << int(flow_eSave_Con_point_y) << '\n';
-  for (i = 0; i < p_num; i++)
+  for (int i = 0; i < p_num; i++)
     fp << point_y[i] << '\n';
   fp << int(flow_eSave_Con_source_ref_cnt) << FSPACE << source_ref_cnt << '\n';
   fp << int(flow_eSave_Con_dest_ref_cnt) << FSPACE << dest_ref_cnt << '\n';
@@ -686,14 +672,13 @@ void FlowCon::save(std::ofstream& fp, flow_eSaveMode mode)
 
 void FlowCon::open(std::ifstream& fp)
 {
-  int type;
   int end_found = 0;
   char dummy[40];
   char name[80];
-  int i;
   int tmp;
 
   for (;;) {
+    int type;
     fp >> type;
     switch (type) {
     case flow_eSave_Con:
@@ -777,11 +762,11 @@ void FlowCon::open(std::ifstream& fp)
       fp >> ref_num;
       break;
     case flow_eSave_Con_point_x:
-      for (i = 0; i < p_num; i++)
+      for (int i = 0; i < p_num; i++)
         fp >> point_x[i];
       break;
     case flow_eSave_Con_point_y:
-      for (i = 0; i < p_num; i++)
+      for (int i = 0; i < p_num; i++)
         fp >> point_y[i];
       break;
     case flow_eSave_Con_source_ref_cnt:
@@ -820,8 +805,6 @@ void FlowCon::open(std::ifstream& fp)
 void FlowCon::draw(int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
-  int i;
-
   if (ll_x > ur_x) {
     /* Shift */
     tmp = ll_x;
@@ -842,9 +825,9 @@ void FlowCon::draw(int ll_x, int ll_y, int ur_x, int ur_y)
     if (temporary_ref || cc->con_type == flow_eConType_Reference)
       ref_a.draw(&cc->zero, highlight, dimmed, hot, NULL);
     else {
-      for (i = 0; i < l_num; i++)
+      for (int i = 0; i < l_num; i++)
         ((FlowLine*)line_a[i])->draw(&cc->zero, highlight, dimmed, hot, NULL);
-      for (i = 0; i < a_num; i++)
+      for (int i = 0; i < a_num; i++)
         ((FlowArc*)arc_a[i])->draw(&cc->zero, highlight, dimmed, hot, NULL);
       arrow_a.draw(&cc->zero, highlight, dimmed, hot, NULL);
     }
@@ -854,8 +837,6 @@ void FlowCon::draw(int ll_x, int ll_y, int ur_x, int ur_y)
 void FlowCon::nav_draw(int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
-  int i;
-
   if (ll_x > ur_x) {
     /* Shift */
     tmp = ll_x;
@@ -876,9 +857,9 @@ void FlowCon::nav_draw(int ll_x, int ll_y, int ur_x, int ur_y)
     if (temporary_ref || cc->con_type == flow_eConType_Reference)
       ref_a.nav_draw(&cc->zero, highlight, NULL);
     else {
-      for (i = 0; i < l_num; i++)
+      for (int i = 0; i < l_num; i++)
         ((FlowLine*)line_a[i])->nav_draw(&cc->zero, highlight, NULL);
-      for (i = 0; i < a_num; i++)
+      for (int i = 0; i < a_num; i++)
         ((FlowArc*)arc_a[i])->nav_draw(&cc->zero, highlight, NULL);
       arrow_a.nav_draw(&cc->zero, highlight, NULL);
     }
@@ -890,12 +871,12 @@ int FlowCon::con_route_noobstacle(double src_x, double src_y,
     flow_eDirection dest_dir)
 {
   double x[8], y[8];
-  int point = 0;
-  route_eState state = eState_No;
 
   x[0] = src_x;
   y[0] = src_y;
-  point++;
+  int point = 1;
+
+  route_eState state = eState_No;
   if (src_dir == flow_eDirection_Right && dest_dir == flow_eDirection_Left)
     state = eState_RightToLeft;
   else if (src_dir == flow_eDirection_Left && dest_dir == flow_eDirection_Right)
@@ -1115,117 +1096,82 @@ int FlowCon::con_route_grafcet(flow_eConType con_type, double src_x,
     double src_y, double dest_x, double dest_y)
 {
   double x[8], y[8];
-  int point;
-  int i;
 
   switch (con_type) {
-  case flow_eConType_StepDiv:
+  case flow_eConType_StepDiv: {
+    int point = 0;
+    x[point] = src_x;
+    y[point++] = src_y;
+    x[point] = src_x;
+    y[point++] = src_y + ctx->grafcet_con_delta;
     if (src_y + ctx->grafcet_con_delta < dest_y) {
-      point = 0;
-      x[point] = src_x;
-      y[point++] = src_y;
-      x[point] = src_x;
-      y[point++] = src_y + ctx->grafcet_con_delta;
       x[point] = dest_x;
       y[point++] = src_y + ctx->grafcet_con_delta;
-      x[point] = dest_x;
-      y[point++] = dest_y;
     } else if (src_x > dest_x) {
-      point = 0;
-      x[point] = src_x;
-      y[point++] = src_y;
-      x[point] = src_x;
-      y[point++] = src_y + ctx->grafcet_con_delta;
       x[point] = dest_x + 2 * ctx->grafcet_con_delta;
       y[point++] = src_y + ctx->grafcet_con_delta;
       x[point] = dest_x + 2 * ctx->grafcet_con_delta;
       y[point++] = dest_y - ctx->grafcet_con_delta;
       x[point] = dest_x;
       y[point++] = dest_y - ctx->grafcet_con_delta;
-      x[point] = dest_x;
-      y[point++] = dest_y;
     } else {
-      point = 0;
-      x[point] = src_x;
-      y[point++] = src_y;
-      x[point] = src_x;
-      y[point++] = src_y + ctx->grafcet_con_delta;
       x[point] = dest_x - 2 * ctx->grafcet_con_delta;
       y[point++] = src_y + ctx->grafcet_con_delta;
       x[point] = dest_x - 2 * ctx->grafcet_con_delta;
       y[point++] = dest_y - ctx->grafcet_con_delta;
       x[point] = dest_x;
       y[point++] = dest_y - ctx->grafcet_con_delta;
-      x[point] = dest_x;
-      y[point++] = dest_y;
     }
+    x[point] = dest_x;
+    y[point++] = dest_y;
     p_num = point;
     draw_routed(point, x, y);
     break;
-  case flow_eConType_StepConv:
+  }
+  case flow_eConType_StepConv: {
+    int point = 0;
+    x[point] = dest_x;
+    y[point++] = dest_y;
+    x[point] = dest_x;
+    y[point++] = dest_y - ctx->grafcet_con_delta;
     if (dest_y - ctx->grafcet_con_delta > src_y) {
-      point = 0;
-      x[point] = dest_x;
-      y[point++] = dest_y;
-      x[point] = dest_x;
-      y[point++] = dest_y - ctx->grafcet_con_delta;
       x[point] = src_x;
       y[point++] = dest_y - ctx->grafcet_con_delta;
-      x[point] = src_x;
-      y[point++] = src_y;
     } else if (dest_x > src_x) {
-      point = 0;
-      x[point] = dest_x;
-      y[point++] = dest_y;
-      x[point] = dest_x;
-      y[point++] = dest_y - ctx->grafcet_con_delta;
       x[point] = src_x + 2 * ctx->grafcet_con_delta;
       y[point++] = dest_y - ctx->grafcet_con_delta;
       x[point] = src_x + 2 * ctx->grafcet_con_delta;
       y[point++] = src_y + ctx->grafcet_con_delta;
       x[point] = src_x;
       y[point++] = src_y + ctx->grafcet_con_delta;
-      x[point] = src_x;
-      y[point++] = src_y;
     } else {
-      point = 0;
-      x[point] = dest_x;
-      y[point++] = dest_y;
-      x[point] = dest_x;
-      y[point++] = dest_y - ctx->grafcet_con_delta;
       x[point] = src_x - 2 * ctx->grafcet_con_delta;
       y[point++] = dest_y - ctx->grafcet_con_delta;
       x[point] = src_x - 2 * ctx->grafcet_con_delta;
       y[point++] = src_y + ctx->grafcet_con_delta;
       x[point] = src_x;
       y[point++] = src_y + ctx->grafcet_con_delta;
-      x[point] = src_x;
-      y[point++] = src_y;
     }
+    x[point] = src_x;
+    y[point++] = src_y;
     p_num = point;
     draw_routed(point, x, y);
     break;
-  case flow_eConType_TransDiv:
+  }
+  case flow_eConType_TransDiv: {
+    int point = 0;
+    x[point] = src_x;
+    y[point++] = src_y;
+    x[point] = src_x;
+    y[point++] = src_y + 0.8 * ctx->grafcet_con_delta;
     if (src_y + ctx->grafcet_con_delta < dest_y) {
-      point = 0;
-      x[point] = src_x;
-      y[point++] = src_y;
-      x[point] = src_x;
-      y[point++] = src_y + 0.8 * ctx->grafcet_con_delta;
       x[point] = dest_x;
       y[point++] = src_y + 0.8 * ctx->grafcet_con_delta;
       x[point] = src_x;
       y[point++] = src_y + 1.2 * ctx->grafcet_con_delta;
       x[point] = dest_x;
       y[point++] = src_y + 1.2 * ctx->grafcet_con_delta;
-      x[point] = dest_x;
-      y[point++] = dest_y;
     } else if (src_x > dest_x) {
-      point = 0;
-      x[point] = src_x;
-      y[point++] = src_y;
-      x[point] = src_x;
-      y[point++] = src_y + 0.8 * ctx->grafcet_con_delta;
       x[point] = dest_x + 2 * ctx->grafcet_con_delta;
       y[point++] = src_y + 0.8 * ctx->grafcet_con_delta;
       x[point] = dest_x + 2 * ctx->grafcet_con_delta;
@@ -1237,14 +1183,7 @@ int FlowCon::con_route_grafcet(flow_eConType con_type, double src_x,
       y[point++] = dest_y - ctx->grafcet_con_delta;
       x[point] = dest_x;
       y[point++] = dest_y - ctx->grafcet_con_delta;
-      x[point] = dest_x;
-      y[point++] = dest_y;
     } else {
-      point = 0;
-      x[point] = src_x;
-      y[point++] = src_y;
-      x[point] = src_x;
-      y[point++] = src_y + 0.8 * ctx->grafcet_con_delta;
       x[point] = dest_x - 2 * ctx->grafcet_con_delta;
       y[point++] = src_y + 0.8 * ctx->grafcet_con_delta;
       x[point] = dest_x - 2 * ctx->grafcet_con_delta;
@@ -1256,33 +1195,27 @@ int FlowCon::con_route_grafcet(flow_eConType con_type, double src_x,
       y[point++] = dest_y - ctx->grafcet_con_delta;
       x[point] = dest_x;
       y[point++] = dest_y - ctx->grafcet_con_delta;
-      x[point] = dest_x;
-      y[point++] = dest_y;
     }
+    x[point] = dest_x;
+    y[point++] = dest_y;
     p_num = point;
     draw_routed_trans(point, x, y);
     break;
-  case flow_eConType_TransConv:
+  }
+  case flow_eConType_TransConv: {
+    int point = 0;
+    x[point] = dest_x;
+    y[point++] = dest_y;
+    x[point] = dest_x;
+    y[point++] = dest_y - 0.8 * ctx->grafcet_con_delta;
     if (dest_y - ctx->grafcet_con_delta > src_y) {
-      point = 0;
-      x[point] = dest_x;
-      y[point++] = dest_y;
-      x[point] = dest_x;
-      y[point++] = dest_y - 0.8 * ctx->grafcet_con_delta;
       x[point] = src_x;
       y[point++] = dest_y - 0.8 * ctx->grafcet_con_delta;
       x[point] = dest_x;
       y[point++] = dest_y - 1.2 * ctx->grafcet_con_delta;
       x[point] = src_x;
       y[point++] = dest_y - 1.2 * ctx->grafcet_con_delta;
-      x[point] = src_x;
-      y[point++] = src_y;
     } else if (dest_x > src_x) {
-      point = 0;
-      x[point] = dest_x;
-      y[point++] = dest_y;
-      x[point] = dest_x;
-      y[point++] = dest_y - 0.8 * ctx->grafcet_con_delta;
       x[point] = src_x + 2 * ctx->grafcet_con_delta;
       y[point++] = dest_y - 0.8 * ctx->grafcet_con_delta;
       x[point] = dest_x;
@@ -1293,14 +1226,7 @@ int FlowCon::con_route_grafcet(flow_eConType con_type, double src_x,
       y[point++] = src_y + ctx->grafcet_con_delta;
       x[point] = src_x;
       y[point++] = src_y + ctx->grafcet_con_delta;
-      x[point] = src_x;
-      y[point++] = src_y;
     } else {
-      point = 0;
-      x[point] = dest_x;
-      y[point++] = dest_y;
-      x[point] = dest_x;
-      y[point++] = dest_y - 0.8 * ctx->grafcet_con_delta;
       x[point] = src_x - 2 * ctx->grafcet_con_delta;
       y[point++] = dest_y - 0.8 * ctx->grafcet_con_delta;
       x[point] = src_x - 2 * ctx->grafcet_con_delta;
@@ -1312,15 +1238,16 @@ int FlowCon::con_route_grafcet(flow_eConType con_type, double src_x,
       y[point++] = src_y + ctx->grafcet_con_delta;
       x[point] = src_x;
       y[point++] = src_y + ctx->grafcet_con_delta;
-      x[point] = src_x;
-      y[point++] = src_y;
     }
+    x[point] = src_x;
+    y[point++] = src_y;
     p_num = point;
     draw_routed_trans(point, x, y);
     break;
+  }
   default:;
   }
-  for (i = 0; i < p_num; i++) {
+  for (int i = 0; i < p_num; i++) {
     point_x[i] = x[i];
     point_y[i] = y[i];
   }
@@ -1330,19 +1257,15 @@ int FlowCon::con_route_grafcet(flow_eConType con_type, double src_x,
 int FlowCon::con_route(double src_x, double src_y, flow_eDirection src_dir,
     double dest_x, double dest_y, flow_eDirection dest_dir)
 {
-  int sts;
-  double ll_x, ur_x, ll_y, ur_y;
-  double doc_ll_x, doc_ur_x, doc_ll_y, doc_ur_y;
-  FlowNode* doc;
-
-  ll_x = MIN(source_node->x_left, dest_node->x_left) - 10 * ctx->draw_delta;
-  ur_x = MAX(source_node->x_right, dest_node->x_right) + 10 * ctx->draw_delta;
-  ll_y = MIN(source_node->y_low, dest_node->y_low) - 10 * ctx->draw_delta;
-  ur_y = MAX(source_node->y_high, dest_node->y_high) + 10 * ctx->draw_delta;
+  double ll_x = MIN(source_node->x_left, dest_node->x_left) - 10 * ctx->draw_delta;
+  double ur_x = MAX(source_node->x_right, dest_node->x_right) + 10 * ctx->draw_delta;
+  double ll_y = MIN(source_node->y_low, dest_node->y_low) - 10 * ctx->draw_delta;
+  double ur_y = MAX(source_node->y_high, dest_node->y_high) + 10 * ctx->draw_delta;
 
   /* Find the document node */
-  doc = (FlowNode*)ctx->get_document(src_x, src_y);
+  FlowNode* doc = (FlowNode*)ctx->get_document(src_x, src_y);
   if (doc) {
+    double doc_ll_x, doc_ur_x, doc_ll_y, doc_ur_y;
     doc->measure(&doc_ll_x, &doc_ll_y, &doc_ur_x, &doc_ur_y);
     ll_x = MAX(ll_x, doc_ll_x);
     ur_x = MIN(ur_x, doc_ur_x);
@@ -1355,26 +1278,16 @@ int FlowCon::con_route(double src_x, double src_y, flow_eDirection src_dir,
       return 0;
   }
 
-  sts = con_route_area(ll_x, ll_y, ur_x, ur_y);
-  return sts;
+  return con_route_area(ll_x, ll_y, ur_x, ur_y);
 }
 
 int FlowCon::con_route_area(
     double wind_ll_x, double wind_ll_y, double wind_ur_x, double wind_ur_y)
 {
+  /* Get the objects in this area */
   FlowNode* nodelist = 0;
   FlowCon* conlist = 0;
-  FlowNode* node_p;
-  int i, j, sts;
-  flow_eDirection dest_dir, src_dir;
-  double dest_x, dest_y;
-  double src_x, src_y;
-  double x[8], y[8];
-  int point;
-  int found;
-
-  /* Get the objects in this area */
-  for (i = 0; i < ctx->a.size(); i++) {
+  for (int i = 0; i < ctx->a.size(); i++) {
     if (ctx->a[i]->in_area(wind_ll_x, wind_ll_y, wind_ur_x, wind_ur_y)) {
       if (ctx->a[i]->type() == flow_eObjectType_Node)
         ctx->a[i]->link_insert((FlowArrayElem**)&nodelist);
@@ -1386,21 +1299,24 @@ int FlowCon::con_route_area(
   if (!nodelist)
     return 0;
 
-  sts = dest_node->get_conpoint(dest_conpoint, &dest_x, &dest_y, &dest_dir);
+  double src_x, src_y, dest_x, dest_y;
+  flow_eDirection src_dir, dest_dir;
+  int sts = dest_node->get_conpoint(dest_conpoint, &dest_x, &dest_y, &dest_dir);
   if (EVEN(sts))
     return sts;
   sts = source_node->get_conpoint(source_conpoint, &src_x, &src_y, &src_dir);
   if (EVEN(sts))
     return sts;
 
+  double x[8], y[8];
   /* Find straight line between source and destination */
   if (fabs(dest_y - src_y) < CON_EPSILON
       && ((dest_dir == flow_eDirection_Right && src_dir == flow_eDirection_Left
               && dest_x <= src_x)
              || (dest_dir == flow_eDirection_Left
                     && src_dir == flow_eDirection_Right && dest_x >= src_x))) {
-    found = 0;
-    for (node_p = nodelist; node_p; node_p = node_p->link) {
+    int found = 0;
+    for (FlowNode* node_p = nodelist; node_p; node_p = node_p->link) {
       if (node_p->in_horiz_line(dest_y,
               MIN(dest_x, src_x) + ctx->draw_delta + CON_EPSILON,
               MAX(dest_x, src_x) - ctx->draw_delta - CON_EPSILON)) {
@@ -1417,7 +1333,7 @@ int FlowCon::con_route_area(
       point_y[0] = y[0] = dest_y;
       point_x[1] = x[1] = src_x;
       point_y[1] = y[1] = src_y;
-      point = p_num = 2;
+      int point = p_num = 2;
       if (cc->corner == flow_eCorner_Rounded)
         draw_routed_roundcorner(point, x, y);
       else
@@ -1429,8 +1345,8 @@ int FlowCon::con_route_area(
               && dest_y <= src_y)
              || (dest_dir == flow_eDirection_Down
                     && src_dir == flow_eDirection_Up && dest_y >= src_y))) {
-    found = 0;
-    for (node_p = nodelist; node_p; node_p = node_p->link) {
+    int found = 0;
+    for (FlowNode* node_p = nodelist; node_p; node_p = node_p->link) {
       if (node_p->in_vert_line(dest_x,
               MIN(dest_y, src_y) + ctx->draw_delta + CON_EPSILON,
               MAX(dest_y, src_y) - ctx->draw_delta - CON_EPSILON)) {
@@ -1447,7 +1363,7 @@ int FlowCon::con_route_area(
       point_y[0] = y[0] = dest_y;
       point_x[1] = x[1] = src_x;
       point_y[1] = y[1] = src_y;
-      point = p_num = 2;
+      int point = p_num = 2;
       if (cc->corner == flow_eCorner_Rounded)
         draw_routed_roundcorner(point, x, y);
       else
@@ -1458,18 +1374,18 @@ int FlowCon::con_route_area(
 
   /* Find vertical routing lines */
   vert_line_cnt = 0;
-  sts = find_vert_line_right(wind_ll_x, wind_ll_y, wind_ur_y, nodelist,
+  find_vert_line_right(wind_ll_x, wind_ll_y, wind_ur_y, nodelist,
       nodelist, conlist, conlist, wind_ll_y, wind_ur_y);
-  sts = find_vert_line_left(wind_ur_x, wind_ll_y, wind_ur_y, nodelist, nodelist,
+  find_vert_line_left(wind_ur_x, wind_ll_y, wind_ur_y, nodelist, nodelist,
       conlist, conlist, wind_ll_y, wind_ur_y);
 
-  for (node_p = nodelist; node_p; node_p = node_p->link) {
+  for (FlowNode* node_p = nodelist; node_p; node_p = node_p->link) {
     if (node_p->obst_x_right < wind_ur_x)
-      sts = find_vert_line_right(node_p->obst_x_right, node_p->obst_y_low,
+      find_vert_line_right(node_p->obst_x_right, node_p->obst_y_low,
           node_p->obst_y_high, nodelist, node_p->link, conlist, conlist,
           wind_ll_y, wind_ur_y);
     if (node_p->obst_x_left > wind_ll_x)
-      sts = find_vert_line_left(node_p->obst_x_left, node_p->obst_y_low,
+      find_vert_line_left(node_p->obst_x_left, node_p->obst_y_low,
           node_p->obst_y_high, nodelist, node_p->link, conlist, conlist,
           wind_ll_y, wind_ur_y);
     if (vert_line_cnt > HV_LINE_ARRAY_SIZE - 3)
@@ -1478,18 +1394,18 @@ int FlowCon::con_route_area(
 
   /* Find horizontal routing lines */
   horiz_line_cnt = 0;
-  sts = find_horiz_line_up(wind_ll_y, wind_ll_x, wind_ur_x, nodelist, nodelist,
+  find_horiz_line_up(wind_ll_y, wind_ll_x, wind_ur_x, nodelist, nodelist,
       conlist, conlist, wind_ll_x, wind_ur_x);
-  sts = find_horiz_line_down(wind_ur_y, wind_ll_x, wind_ur_x, nodelist,
+  find_horiz_line_down(wind_ur_y, wind_ll_x, wind_ur_x, nodelist,
       nodelist, conlist, conlist, wind_ll_x, wind_ur_x);
 
-  for (node_p = nodelist; node_p; node_p = node_p->link) {
+  for (FlowNode* node_p = nodelist; node_p; node_p = node_p->link) {
     if (node_p->obst_y_high < wind_ur_y)
-      sts = find_horiz_line_up(node_p->obst_y_high, node_p->obst_x_left,
+      find_horiz_line_up(node_p->obst_y_high, node_p->obst_x_left,
           node_p->obst_x_right, nodelist, node_p->link, conlist, conlist,
           wind_ll_x, wind_ur_x);
     if (node_p->obst_y_low > wind_ll_y)
-      sts = find_horiz_line_down(node_p->obst_y_low, node_p->obst_x_left,
+      find_horiz_line_down(node_p->obst_y_low, node_p->obst_x_left,
           node_p->obst_x_right, nodelist, node_p->link, conlist, conlist,
           wind_ll_x, wind_ur_x);
     if (horiz_line_cnt > HV_LINE_ARRAY_SIZE - 3)
@@ -1617,7 +1533,7 @@ int FlowCon::con_route_area(
     line_table[0].vert_cnt = 0;
     line_table[0].complete = 0;
     line_table[0].start_type = eLineType_Horiz;
-    sts = find_horiz_line_next_line(&horiz_line[horiz_line_cnt - 1]);
+    find_horiz_line_next_line(&horiz_line[horiz_line_cnt - 1]);
     break;
   case flow_eDirection_Left:
     horiz_line[horiz_line_cnt].y = src_y;
@@ -1634,7 +1550,7 @@ int FlowCon::con_route_area(
     line_table[0].vert_cnt = 0;
     line_table[0].complete = 0;
     line_table[0].start_type = eLineType_Horiz;
-    sts = find_horiz_line_next_line(&horiz_line[horiz_line_cnt - 1]);
+    find_horiz_line_next_line(&horiz_line[horiz_line_cnt - 1]);
     break;
   case flow_eDirection_Up:
     vert_line[vert_line_cnt].x = src_x;
@@ -1651,7 +1567,7 @@ int FlowCon::con_route_area(
     line_table[0].horiz_cnt = 0;
     line_table[0].complete = 0;
     line_table[0].start_type = eLineType_Vert;
-    sts = find_vert_line_next_line(&vert_line[vert_line_cnt - 1]);
+    find_vert_line_next_line(&vert_line[vert_line_cnt - 1]);
     break;
   case flow_eDirection_Down:
     vert_line[vert_line_cnt].x = src_x;
@@ -1668,7 +1584,7 @@ int FlowCon::con_route_area(
     line_table[0].horiz_cnt = 0;
     line_table[0].complete = 0;
     line_table[0].start_type = eLineType_Vert;
-    sts = find_vert_line_next_line(&vert_line[vert_line_cnt - 1]);
+    find_vert_line_next_line(&vert_line[vert_line_cnt - 1]);
     break;
   case flow_eDirection_Center:
     break;
@@ -1677,7 +1593,7 @@ int FlowCon::con_route_area(
   /* Select the shortest */
   int min_idx = 0;
   int min_cnt = 10000;
-  for (i = 0; i < line_table_cnt; i++) {
+  for (int i = 0; i < line_table_cnt; i++) {
     if (line_table[i].complete) {
       if (line_table[i].start_type == eLineType_Horiz) {
         if (min_cnt > line_table[i].horiz_cnt) {
@@ -1698,9 +1614,9 @@ int FlowCon::con_route_area(
     return 0;
 
   /* Draw the con */
+  int point = 0;
   if (line_table[min_idx].start_type == eLineType_Horiz) {
-    point = 0;
-    for (j = 0; j < line_table[min_idx].horiz_cnt; j++) {
+    for (int j = 0; j < line_table[min_idx].horiz_cnt; j++) {
       point_x[point] = x[point] = line_table[min_idx].horiz_x[j];
       point_y[point] = y[point] = line_table[min_idx].horiz_y[j];
       point++;
@@ -1711,8 +1627,7 @@ int FlowCon::con_route_area(
       }
     }
   } else {
-    point = 0;
-    for (j = 0; j < line_table[min_idx].vert_cnt; j++) {
+    for (int j = 0; j < line_table[min_idx].vert_cnt; j++) {
       point_x[point] = x[point] = line_table[min_idx].vert_x[j];
       point_y[point] = y[point] = line_table[min_idx].vert_y[j];
       point++;
@@ -1724,7 +1639,6 @@ int FlowCon::con_route_area(
     }
   }
   if (point > MAX_POINT - 1)
-
     return 0;
 
   point_x[point] = x[point] = dest_x;
@@ -1742,16 +1656,15 @@ int FlowCon::con_route_area(
 
 void print_line()
 {
-  int j;
   printf("Line nr %d, ", line_table_cnt);
   if (line_table[line_table_cnt].start_type == eLineType_Horiz) {
-    for (j = 0; j < line_table[line_table_cnt].horiz_cnt; j++) {
+    for (int j = 0; j < line_table[line_table_cnt].horiz_cnt; j++) {
       printf("%ld ", long(line_table[line_table_cnt].horiz[j]));
       if (j < line_table[line_table_cnt].vert_cnt)
         printf("%ld ", long(line_table[line_table_cnt].vert[j]));
     }
   } else {
-    for (j = 0; j < line_table[line_table_cnt].vert_cnt; j++) {
+    for (int j = 0; j < line_table[line_table_cnt].vert_cnt; j++) {
       printf("%ld ", long(line_table[line_table_cnt].vert[j]));
       if (j < line_table[line_table_cnt].horiz_cnt)
         printf("%ld ", long(line_table[line_table_cnt].horiz[j]));
@@ -1951,11 +1864,6 @@ int FlowCon::sort_lines(double dest_x, double dest_y, flow_eDirection dest_dir,
 
 int FlowCon::find_horiz_line_next_line(con_tHorizLines* h_line)
 {
-  int horiz_cnt;
-  int vert_cnt;
-  int i, j, found;
-  int sts;
-
   loop_cnt++;
   if (loop_cnt > ROUTE_LOOP_MAX)
     return 0;
@@ -1963,7 +1871,7 @@ int FlowCon::find_horiz_line_next_line(con_tHorizLines* h_line)
     return 0;
 
   /* Find vertical lines that intercept */
-  for (i = 0; i < vert_line_cnt; i++) {
+  for (int i = 0; i < vert_line_cnt; i++) {
     if (h_line->l_x <= vert_line[i].x && vert_line[i].x <= h_line->u_x
         && vert_line[i].l_y <= h_line->y && h_line->y <= vert_line[i].u_y) {
       if (vert_line[i].dest) {
@@ -1998,8 +1906,8 @@ int FlowCon::find_horiz_line_next_line(con_tHorizLines* h_line)
                        + line_table[line_table_cnt].horiz_cnt
                    < MAX_POINT - 1)) {
           /* Check that the line is not already inserted */
-          found = 0;
-          for (j = 0; j < line_table[line_table_cnt].vert_cnt; j++) {
+          int found = 0;
+          for (int j = 0; j < line_table[line_table_cnt].vert_cnt; j++) {
             if (line_table[line_table_cnt].vert[j] == &vert_line[i]) {
               found = 1;
               break;
@@ -2009,8 +1917,8 @@ int FlowCon::find_horiz_line_next_line(con_tHorizLines* h_line)
             /* Try this line  */
 
             /* Store the counters */
-            vert_cnt = line_table[line_table_cnt].vert_cnt;
-            horiz_cnt = line_table[line_table_cnt].horiz_cnt;
+            int vert_cnt = line_table[line_table_cnt].vert_cnt;
+            int horiz_cnt = line_table[line_table_cnt].horiz_cnt;
 
             line_table[line_table_cnt].vert[line_table[line_table_cnt].vert_cnt]
                 = &vert_line[i];
@@ -2026,10 +1934,8 @@ int FlowCon::find_horiz_line_next_line(con_tHorizLines* h_line)
             //		&vert_line[i], line_table[line_table_cnt].vert_cnt,
             //		line_table[line_table_cnt].horiz_cnt, i);
             //	    print_line();
-            sts = find_vert_line_next_line(&vert_line[i]);
-            if (sts == CON__ROUTE_FOUND)
-              return sts;
-            else if (EVEN(sts))
+            int sts = find_vert_line_next_line(&vert_line[i]);
+            if (sts == CON__ROUTE_FOUND || EVEN(sts))
               return sts;
 
             /* Restore the counters */
@@ -2045,11 +1951,6 @@ int FlowCon::find_horiz_line_next_line(con_tHorizLines* h_line)
 
 int FlowCon::find_vert_line_next_line(con_tVertLines* v_line)
 {
-  int horiz_cnt;
-  int vert_cnt;
-  int i, j, found;
-  int sts;
-
   loop_cnt++;
   if (loop_cnt > ROUTE_LOOP_MAX)
     return 0;
@@ -2057,7 +1958,7 @@ int FlowCon::find_vert_line_next_line(con_tVertLines* v_line)
     return 0;
 
   /* Find horizontal lines that intercept */
-  for (i = 0; i < horiz_line_cnt; i++) {
+  for (int i = 0; i < horiz_line_cnt; i++) {
     if (v_line->l_y <= horiz_line[i].y && horiz_line[i].y <= v_line->u_y
         && horiz_line[i].l_x <= v_line->x && v_line->x <= horiz_line[i].u_x) {
       if (horiz_line[i].dest) {
@@ -2092,8 +1993,8 @@ int FlowCon::find_vert_line_next_line(con_tVertLines* v_line)
             && (line_table[line_table_cnt].vert_cnt
                        + line_table[line_table_cnt].horiz_cnt
                    < MAX_POINT - 1)) {
-          found = 0;
-          for (j = 0; j < line_table[line_table_cnt].horiz_cnt; j++) {
+          int found = 0;
+          for (int j = 0; j < line_table[line_table_cnt].horiz_cnt; j++) {
             if (line_table[line_table_cnt].horiz[j] == &horiz_line[i]) {
               found = 1;
               break;
@@ -2103,8 +2004,8 @@ int FlowCon::find_vert_line_next_line(con_tVertLines* v_line)
             /* Try this line  */
 
             /* Store the counters */
-            vert_cnt = line_table[line_table_cnt].vert_cnt;
-            horiz_cnt = line_table[line_table_cnt].horiz_cnt;
+            int vert_cnt = line_table[line_table_cnt].vert_cnt;
+            int horiz_cnt = line_table[line_table_cnt].horiz_cnt;
 
             line_table[line_table_cnt]
                 .horiz[line_table[line_table_cnt].horiz_cnt]
@@ -2121,10 +2022,8 @@ int FlowCon::find_vert_line_next_line(con_tVertLines* v_line)
             //		&horiz_line[i], line_table[line_table_cnt].vert_cnt,
             //		line_table[line_table_cnt].horiz_cnt, i);
             //	    print_line();
-            sts = find_horiz_line_next_line(&horiz_line[i]);
-            if (sts == CON__ROUTE_FOUND)
-              return sts;
-            else if (EVEN(sts))
+            int sts = find_horiz_line_next_line(&horiz_line[i]);
+            if (sts == CON__ROUTE_FOUND || EVEN(sts))
               return sts;
 
             /* Restore the counters */
@@ -2142,14 +2041,9 @@ int FlowCon::find_horiz_line_up(double check_y, double check_l_x,
     double check_u_x, FlowNode* nodelist, FlowNode* next_node, FlowCon* conlist,
     FlowCon* next_con, double wind_ll_x, double wind_ur_x)
 {
-  FlowNode *node_p, *node_p2;
-  FlowCon* con_p;
-  int found, i, j;
-  double check_wind_l_x, check_wind_u_x;
-  double l_x, u_x;
-
-  for (node_p = next_node; node_p; node_p = node_p->link) {
+  for (FlowNode* node_p = next_node; node_p; node_p = node_p->link) {
     if (node_p->obst_y_low > check_y) {
+      double check_wind_l_x, check_wind_u_x;
       if (node_p->obst_x_left > check_u_x) {
         check_wind_u_x = node_p->obst_x_left;
         check_wind_l_x = check_u_x;
@@ -2160,8 +2054,8 @@ int FlowCon::find_horiz_line_up(double check_y, double check_l_x,
         check_wind_l_x = MAX(check_l_x, node_p->obst_x_left);
         check_wind_u_x = MIN(check_u_x, node_p->obst_x_right);
       }
-      found = 0;
-      for (node_p2 = nodelist; node_p2; node_p2 = node_p2->link) {
+      int found = 0;
+      for (FlowNode* node_p2 = nodelist; node_p2; node_p2 = node_p2->link) {
         if (node_p2 != node_p
             && node_p2->in_area_exact(check_wind_l_x, check_y, check_wind_u_x,
                    node_p->obst_y_low)) {
@@ -2173,7 +2067,7 @@ int FlowCon::find_horiz_line_up(double check_y, double check_l_x,
         /* Create a line */
         double horiz_line_y = (check_y + node_p->obst_y_low) / 2;
         found = 0;
-        for (j = 0; j < horiz_line_cnt; j++) {
+        for (int j = 0; j < horiz_line_cnt; j++) {
           if (fabs(horiz_line[j].y - horiz_line_y) < ctx->draw_delta) {
             found = 1;
             break;
@@ -2195,28 +2089,20 @@ int FlowCon::find_horiz_line_up(double check_y, double check_l_x,
       }
     }
   }
-  for (con_p = next_con; con_p; con_p = con_p->link) {
+  for (FlowCon* con_p = next_con; con_p; con_p = con_p->link) {
     if (con_p == this)
       continue;
 
     /* Check vertical lines in the con */
     if (cc->con_type == flow_eConType_Routed) {
-      if (con_p->source_direction == flow_eDirection_Right
-          || con_p->source_direction == flow_eDirection_Left)
-        i = 0;
-      else
-        i = 1;
+      int i = !(con_p->source_direction == flow_eDirection_Right
+          || con_p->source_direction == flow_eDirection_Left);
 
       for (; i < con_p->p_num - 1; i += 2) {
         if (con_p->point_y[i] < check_y) {
-          if (con_p->point_x[i] < con_p->point_x[i + 1]) {
-            l_x = con_p->point_x[i];
-            u_x = con_p->point_x[i + 1];
-          } else {
-            l_x = con_p->point_x[i + 1];
-            u_x = con_p->point_x[i];
-          }
-
+          double l_x = MIN(con_p->point_x[i], con_p->point_x[i + 1]);
+          double u_x = MAX(con_p->point_x[i], con_p->point_x[i + 1]);
+          double check_wind_l_x, check_wind_u_x;
           if (l_x > check_u_x) {
             check_wind_u_x = l_x;
             check_wind_l_x = check_u_x;
@@ -2227,8 +2113,8 @@ int FlowCon::find_horiz_line_up(double check_y, double check_l_x,
             check_wind_l_x = MAX(check_l_x, l_x);
             check_wind_u_x = MIN(check_u_x, u_x);
           }
-          found = 0;
-          for (node_p2 = nodelist; node_p2; node_p2 = node_p2->link) {
+          int found = 0;
+          for (FlowNode* node_p2 = nodelist; node_p2; node_p2 = node_p2->link) {
             if (node_p2->in_area_exact(check_wind_l_x, con_p->point_y[i],
                     check_wind_u_x, check_y)) {
               found = 1;
@@ -2239,7 +2125,7 @@ int FlowCon::find_horiz_line_up(double check_y, double check_l_x,
             /* Create a line */
             double horiz_line_y = (check_y + con_p->point_y[i]) / 2;
             found = 0;
-            for (j = 0; j < horiz_line_cnt; j++) {
+            for (int j = 0; j < horiz_line_cnt; j++) {
               if (fabs(horiz_line[j].y - horiz_line_y) < ctx->draw_delta) {
                 found = 1;
                 break;
@@ -2272,14 +2158,9 @@ int FlowCon::find_horiz_line_down(double check_y, double check_l_x,
     double check_u_x, FlowNode* nodelist, FlowNode* next_node, FlowCon* conlist,
     FlowCon* next_con, double wind_ll_x, double wind_ur_x)
 {
-  FlowNode *node_p, *node_p2;
-  FlowCon* con_p;
-  int found, i, j;
-  double check_wind_l_x, check_wind_u_x;
-  double l_x, u_x;
-
-  for (node_p = next_node; node_p; node_p = node_p->link) {
+  for (FlowNode* node_p = next_node; node_p; node_p = node_p->link) {
     if (node_p->obst_y_high < check_y) {
+      double check_wind_l_x, check_wind_u_x;
       if (node_p->obst_x_left > check_u_x) {
         check_wind_u_x = node_p->obst_x_left;
         check_wind_l_x = check_u_x;
@@ -2290,8 +2171,8 @@ int FlowCon::find_horiz_line_down(double check_y, double check_l_x,
         check_wind_l_x = MAX(check_l_x, node_p->obst_x_left);
         check_wind_u_x = MIN(check_u_x, node_p->obst_x_right);
       }
-      found = 0;
-      for (node_p2 = nodelist; node_p2; node_p2 = node_p2->link) {
+      int found = 0;
+      for (FlowNode* node_p2 = nodelist; node_p2; node_p2 = node_p2->link) {
         if (node_p2 != node_p
             && node_p2->in_area_exact(check_wind_l_x, node_p->obst_y_high,
                    check_wind_u_x, check_y)) {
@@ -2303,7 +2184,7 @@ int FlowCon::find_horiz_line_down(double check_y, double check_l_x,
         /* Create a line */
         double horiz_line_y = (check_y + node_p->obst_y_high) / 2;
         found = 0;
-        for (j = 0; j < horiz_line_cnt; j++) {
+        for (int j = 0; j < horiz_line_cnt; j++) {
           if (fabs(horiz_line[j].y - horiz_line_y) < ctx->draw_delta) {
             found = 1;
             break;
@@ -2325,28 +2206,20 @@ int FlowCon::find_horiz_line_down(double check_y, double check_l_x,
       }
     }
   }
-  for (con_p = next_con; con_p; con_p = con_p->link) {
+  for (FlowCon* con_p = next_con; con_p; con_p = con_p->link) {
     if (con_p == this)
       continue;
 
     /* Check vertical lines in the con */
     if (cc->con_type == flow_eConType_Routed) {
-      if (con_p->source_direction == flow_eDirection_Right
-          || con_p->source_direction == flow_eDirection_Left)
-        i = 0;
-      else
-        i = 1;
+      int i = !(con_p->source_direction == flow_eDirection_Right
+          || con_p->source_direction == flow_eDirection_Left);
 
       for (; i < con_p->p_num - 1; i += 2) {
         if (con_p->point_y[i] < check_y) {
-          if (con_p->point_x[i] < con_p->point_x[i + 1]) {
-            l_x = con_p->point_x[i];
-            u_x = con_p->point_x[i + 1];
-          } else {
-            l_x = con_p->point_x[i + 1];
-            u_x = con_p->point_x[i];
-          }
-
+          double l_x = MIN(con_p->point_x[i], con_p->point_x[i + 1]);
+          double u_x = MAX(con_p->point_x[i], con_p->point_x[i + 1]);
+          double check_wind_l_x, check_wind_u_x;
           if (l_x > check_u_x) {
             check_wind_u_x = l_x;
             check_wind_l_x = check_u_x;
@@ -2357,8 +2230,8 @@ int FlowCon::find_horiz_line_down(double check_y, double check_l_x,
             check_wind_l_x = MAX(check_l_x, l_x);
             check_wind_u_x = MIN(check_u_x, u_x);
           }
-          found = 0;
-          for (node_p2 = nodelist; node_p2; node_p2 = node_p2->link) {
+          int found = 0;
+          for (FlowNode* node_p2 = nodelist; node_p2; node_p2 = node_p2->link) {
             if (node_p2->in_area_exact(check_wind_l_x, con_p->point_y[i],
                     check_wind_u_x, check_y)) {
               found = 1;
@@ -2369,7 +2242,7 @@ int FlowCon::find_horiz_line_down(double check_y, double check_l_x,
             /* Create a line */
             double horiz_line_y = (check_y + con_p->point_y[i]) / 2;
             found = 0;
-            for (j = 0; j < horiz_line_cnt; j++) {
+            for (int j = 0; j < horiz_line_cnt; j++) {
               if (fabs(horiz_line[j].y - horiz_line_y) < ctx->draw_delta) {
                 found = 1;
                 break;
@@ -2402,14 +2275,9 @@ int FlowCon::find_vert_line_right(double check_x, double check_l_y,
     double check_u_y, FlowNode* nodelist, FlowNode* next_node, FlowCon* conlist,
     FlowCon* next_con, double wind_ll_y, double wind_ur_y)
 {
-  FlowNode *node_p, *node_p2;
-  FlowCon* con_p;
-  int found, i, j;
-  double check_wind_l_y, check_wind_u_y;
-  double l_y, u_y;
-
-  for (node_p = next_node; node_p; node_p = node_p->link) {
+  for (FlowNode* node_p = next_node; node_p; node_p = node_p->link) {
     if (node_p->obst_x_left > check_x) {
+      double check_wind_l_y, check_wind_u_y;
       if (node_p->obst_y_low > check_u_y) {
         check_wind_u_y = node_p->obst_y_low;
         check_wind_l_y = check_u_y;
@@ -2420,8 +2288,8 @@ int FlowCon::find_vert_line_right(double check_x, double check_l_y,
         check_wind_l_y = MAX(check_l_y, node_p->obst_y_low);
         check_wind_u_y = MIN(check_u_y, node_p->obst_y_high);
       }
-      found = 0;
-      for (node_p2 = nodelist; node_p2; node_p2 = node_p2->link) {
+      int found = 0;
+      for (FlowNode* node_p2 = nodelist; node_p2; node_p2 = node_p2->link) {
         if (node_p2 != node_p
             && node_p2->in_area_exact(check_x, check_wind_l_y,
                    node_p->obst_x_left, check_wind_u_y)) {
@@ -2433,7 +2301,7 @@ int FlowCon::find_vert_line_right(double check_x, double check_l_y,
         /* Create a line */
         double vert_line_x = (check_x + node_p->obst_x_left) / 2;
         found = 0;
-        for (j = 0; j < vert_line_cnt; j++) {
+        for (int j = 0; j < vert_line_cnt; j++) {
           if (fabs(vert_line[j].x - vert_line_x) < ctx->draw_delta) {
             found = 1;
             break;
@@ -2456,28 +2324,20 @@ int FlowCon::find_vert_line_right(double check_x, double check_l_y,
     }
   }
 
-  for (con_p = next_con; con_p; con_p = con_p->link) {
+  for (FlowCon* con_p = next_con; con_p; con_p = con_p->link) {
     if (con_p == this)
       continue;
 
     /* Check vertical lines in the con */
     if (con_p->cc->con_type == flow_eConType_Routed && !con_p->temporary_ref) {
-      if (con_p->source_direction == flow_eDirection_Right
-          || con_p->source_direction == flow_eDirection_Left)
-        i = 1;
-      else
-        i = 0;
+      int i = (con_p->source_direction == flow_eDirection_Right
+          || con_p->source_direction == flow_eDirection_Left);
 
       for (; i < con_p->p_num - 1; i += 2) {
         if (con_p->point_x[i] > check_x) {
-          if (con_p->point_y[i] < con_p->point_y[i + 1]) {
-            l_y = con_p->point_y[i];
-            u_y = con_p->point_y[i + 1];
-          } else {
-            l_y = con_p->point_y[i + 1];
-            u_y = con_p->point_y[i];
-          }
-
+          double l_y = MIN(con_p->point_y[i], con_p->point_y[i + 1]);
+          double u_y = MAX(con_p->point_y[i], con_p->point_y[i + 1]);
+          double check_wind_l_y, check_wind_u_y;
           if (l_y > check_u_y) {
             check_wind_u_y = l_y;
             check_wind_l_y = check_u_y;
@@ -2488,8 +2348,8 @@ int FlowCon::find_vert_line_right(double check_x, double check_l_y,
             check_wind_l_y = MAX(check_l_y, l_y);
             check_wind_u_y = MIN(check_u_y, u_y);
           }
-          found = 0;
-          for (node_p2 = nodelist; node_p2; node_p2 = node_p2->link) {
+          int found = 0;
+          for (FlowNode* node_p2 = nodelist; node_p2; node_p2 = node_p2->link) {
             if (node_p2->in_area_exact(check_x, check_wind_l_y,
                     con_p->point_x[i], check_wind_u_y)) {
               found = 1;
@@ -2501,7 +2361,7 @@ int FlowCon::find_vert_line_right(double check_x, double check_l_y,
             /* Create a line */
             double vert_line_x = (check_x + con_p->point_x[i]) / 2;
             found = 0;
-            for (j = 0; j < vert_line_cnt; j++) {
+            for (int j = 0; j < vert_line_cnt; j++) {
               if (fabs(vert_line[j].x - vert_line_x) < ctx->draw_delta) {
                 found = 1;
                 break;
@@ -2534,14 +2394,9 @@ int FlowCon::find_vert_line_left(double check_x, double check_l_y,
     double check_u_y, FlowNode* nodelist, FlowNode* next_node, FlowCon* conlist,
     FlowCon* next_con, double wind_ll_y, double wind_ur_y)
 {
-  int found, i, j;
-  FlowNode *node_p, *node_p2;
-  FlowCon* con_p;
-  double check_wind_l_y, check_wind_u_y;
-  double l_y, u_y;
-
-  for (node_p = next_node; node_p; node_p = node_p->link) {
+  for (FlowNode* node_p = next_node; node_p; node_p = node_p->link) {
     if (node_p->obst_x_right < check_x) {
+      double check_wind_l_y, check_wind_u_y;
       if (node_p->obst_y_low > check_u_y) {
         check_wind_u_y = node_p->obst_y_low;
         check_wind_l_y = check_u_y;
@@ -2552,8 +2407,8 @@ int FlowCon::find_vert_line_left(double check_x, double check_l_y,
         check_wind_l_y = MAX(check_l_y, node_p->obst_y_low);
         check_wind_u_y = MIN(check_u_y, node_p->obst_y_high);
       }
-      found = 0;
-      for (node_p2 = nodelist; node_p2; node_p2 = node_p2->link) {
+      int found = 0;
+      for (FlowNode* node_p2 = nodelist; node_p2; node_p2 = node_p2->link) {
         if (node_p2 != node_p
             && node_p2->in_area_exact(node_p->obst_x_right, check_wind_l_y,
                    check_x, check_wind_u_y)) {
@@ -2565,7 +2420,7 @@ int FlowCon::find_vert_line_left(double check_x, double check_l_y,
         /* Create a line */
         double vert_line_x = (check_x + node_p->obst_x_right) / 2;
         found = 0;
-        for (j = 0; j < vert_line_cnt; j++) {
+        for (int j = 0; j < vert_line_cnt; j++) {
           if (fabs(vert_line[j].x - vert_line_x) < ctx->draw_delta) {
             found = 1;
             break;
@@ -2587,28 +2442,20 @@ int FlowCon::find_vert_line_left(double check_x, double check_l_y,
       }
     }
   }
-  for (con_p = next_con; con_p; con_p = con_p->link) {
+  for (FlowCon* con_p = next_con; con_p; con_p = con_p->link) {
     if (con_p == this)
       continue;
 
     /* Check vertical lines in the con */
     if (con_p->cc->con_type == flow_eConType_Routed && !con_p->temporary_ref) {
-      if (con_p->source_direction == flow_eDirection_Right
-          || con_p->source_direction == flow_eDirection_Left)
-        i = 1;
-      else
-        i = 0;
+      int i = (con_p->source_direction == flow_eDirection_Right
+          || con_p->source_direction == flow_eDirection_Left);
 
       for (; i < con_p->p_num - 1; i += 2) {
         if (con_p->point_x[i] < check_x) {
-          if (con_p->point_y[i] < con_p->point_y[i + 1]) {
-            l_y = con_p->point_y[i];
-            u_y = con_p->point_y[i + 1];
-          } else {
-            l_y = con_p->point_y[i + 1];
-            u_y = con_p->point_y[i];
-          }
-
+          double l_y = MIN(con_p->point_y[i], con_p->point_y[i + 1]);
+          double u_y = MAX(con_p->point_y[i], con_p->point_y[i + 1]);
+          double check_wind_l_y, check_wind_u_y;
           if (l_y > check_u_y) {
             check_wind_u_y = l_y;
             check_wind_l_y = check_u_y;
@@ -2619,8 +2466,8 @@ int FlowCon::find_vert_line_left(double check_x, double check_l_y,
             check_wind_l_y = MAX(check_l_y, l_y);
             check_wind_u_y = MIN(check_u_y, u_y);
           }
-          found = 0;
-          for (node_p2 = nodelist; node_p2; node_p2 = node_p2->link) {
+          int found = 0;
+          for (FlowNode* node_p2 = nodelist; node_p2; node_p2 = node_p2->link) {
             if (node_p2->in_area_exact(con_p->point_x[i], check_wind_l_y,
                     check_x, check_wind_u_y)) {
               found = 1;
@@ -2631,7 +2478,7 @@ int FlowCon::find_vert_line_left(double check_x, double check_l_y,
             /* Create a line */
             double vert_line_x = (check_x + con_p->point_x[i]) / 2;
             found = 0;
-            for (j = 0; j < vert_line_cnt; j++) {
+            for (int j = 0; j < vert_line_cnt; j++) {
               if (fabs(vert_line[j].x - vert_line_x) < ctx->draw_delta) {
                 found = 1;
                 break;
@@ -2663,18 +2510,13 @@ int FlowCon::find_vert_line_left(double check_x, double check_l_y,
 void FlowCon::find_horiz_line_right_border(double y, double start_x,
     double start_x_con, double* border_x, FlowNode* nodelist, FlowCon* conlist)
 {
-  FlowNode* node_p;
-  FlowCon* con_p;
-  double l_x;
-  int i;
-
-  for (node_p = nodelist; node_p; node_p = node_p->link) {
+  for (FlowNode* node_p = nodelist; node_p; node_p = node_p->link) {
     if (node_p->in_horiz_line(y, start_x, *border_x))
       if (node_p->obst_x_left < *border_x
           && node_p->obst_x_left >= start_x - CON_EPSILON)
         *border_x = node_p->obst_x_left;
   }
-  for (con_p = conlist; con_p; con_p = con_p->link) {
+  for (FlowCon* con_p = conlist; con_p; con_p = con_p->link) {
     if (con_p == this)
       continue;
     if ((con_p->source_node == source_node
@@ -2689,17 +2531,11 @@ void FlowCon::find_horiz_line_right_border(double y, double start_x,
 
     /* Check horizontal lines in the con */
     if (con_p->cc->con_type == flow_eConType_Routed && !con_p->temporary_ref) {
-      if (con_p->source_direction == flow_eDirection_Right
-          || con_p->source_direction == flow_eDirection_Left)
-        i = 0;
-      else
-        i = 1;
+      int i = !(con_p->source_direction == flow_eDirection_Right
+          || con_p->source_direction == flow_eDirection_Left);
 
       for (; i < con_p->p_num - 1; i += 2) {
-        if (con_p->point_x[i] < con_p->point_x[i + 1])
-          l_x = con_p->point_x[i];
-        else
-          l_x = con_p->point_x[i + 1];
+        double l_x = MIN(con_p->point_x[i], con_p->point_x[i + 1]);
         if (con_p->point_y[i] - ctx->draw_delta < y
             && y < con_p->point_y[i] + ctx->draw_delta) {
           if (l_x < *border_x && l_x >= start_x_con - CON_EPSILON)
@@ -2713,18 +2549,13 @@ void FlowCon::find_horiz_line_right_border(double y, double start_x,
 void FlowCon::find_horiz_line_left_border(double y, double start_x,
     double start_x_con, double* border_x, FlowNode* nodelist, FlowCon* conlist)
 {
-  FlowNode* node_p;
-  FlowCon* con_p;
-  double u_x;
-  int i;
-
-  for (node_p = nodelist; node_p; node_p = node_p->link) {
+  for (FlowNode* node_p = nodelist; node_p; node_p = node_p->link) {
     if (node_p->in_horiz_line(y, *border_x, start_x))
       if (node_p->obst_x_right > *border_x
           && node_p->obst_x_right <= start_x + CON_EPSILON)
         *border_x = node_p->obst_x_right;
   }
-  for (con_p = conlist; con_p; con_p = con_p->link) {
+  for (FlowCon* con_p = conlist; con_p; con_p = con_p->link) {
     if (con_p == this)
       continue;
     if ((con_p->source_node == source_node
@@ -2739,17 +2570,11 @@ void FlowCon::find_horiz_line_left_border(double y, double start_x,
 
     /* Check horizontal lines in the con */
     if (con_p->cc->con_type == flow_eConType_Routed && !con_p->temporary_ref) {
-      if (con_p->source_direction == flow_eDirection_Right
-          || con_p->source_direction == flow_eDirection_Left)
-        i = 0;
-      else
-        i = 1;
+      int i = !(con_p->source_direction == flow_eDirection_Right
+          || con_p->source_direction == flow_eDirection_Left);
 
       for (; i < con_p->p_num - 1; i += 2) {
-        if (con_p->point_x[i] < con_p->point_x[i + 1])
-          u_x = con_p->point_x[i + 1];
-        else
-          u_x = con_p->point_x[i];
+        double u_x = MAX(con_p->point_x[i], con_p->point_x[i + 1]);
         if (con_p->point_y[i] - ctx->draw_delta < y
             && y < con_p->point_y[i] + ctx->draw_delta) {
           if (u_x > *border_x && u_x <= start_x_con + CON_EPSILON)
@@ -2763,18 +2588,13 @@ void FlowCon::find_horiz_line_left_border(double y, double start_x,
 void FlowCon::find_vert_line_high_border(double x, double start_y,
     double start_y_con, double* border_y, FlowNode* nodelist, FlowCon* conlist)
 {
-  FlowNode* node_p;
-  FlowCon* con_p;
-  double l_y;
-  int i;
-
-  for (node_p = nodelist; node_p; node_p = node_p->link) {
+  for (FlowNode* node_p = nodelist; node_p; node_p = node_p->link) {
     if (node_p->in_vert_line(x, start_y, *border_y))
       if (node_p->obst_y_low < *border_y
           && node_p->obst_y_low >= start_y - CON_EPSILON)
         *border_y = node_p->obst_y_low;
   }
-  for (con_p = conlist; con_p; con_p = con_p->link) {
+  for (FlowCon* con_p = conlist; con_p; con_p = con_p->link) {
     if (con_p == this)
       continue;
     if ((con_p->source_node == source_node
@@ -2789,17 +2609,11 @@ void FlowCon::find_vert_line_high_border(double x, double start_y,
 
     /* Check vertical lines in the con */
     if (con_p->cc->con_type == flow_eConType_Routed && !con_p->temporary_ref) {
-      if (con_p->source_direction == flow_eDirection_Right
-          || con_p->source_direction == flow_eDirection_Left)
-        i = 1;
-      else
-        i = 0;
+      int i = (con_p->source_direction == flow_eDirection_Right
+          || con_p->source_direction == flow_eDirection_Left);
 
       for (; i < con_p->p_num - 1; i += 2) {
-        if (con_p->point_y[i] < con_p->point_y[i + 1])
-          l_y = con_p->point_y[i];
-        else
-          l_y = con_p->point_y[i + 1];
+        double l_y = MIN(con_p->point_y[i], con_p->point_y[i + 1]);
         if (con_p->point_x[i] - ctx->draw_delta < x
             && x < con_p->point_x[i] + ctx->draw_delta) {
           if (l_y < *border_y && l_y >= start_y_con - CON_EPSILON)
@@ -2813,18 +2627,13 @@ void FlowCon::find_vert_line_high_border(double x, double start_y,
 void FlowCon::find_vert_line_low_border(double x, double start_y,
     double start_y_con, double* border_y, FlowNode* nodelist, FlowCon* conlist)
 {
-  FlowNode* node_p;
-  FlowCon* con_p;
-  double u_y;
-  int i;
-
-  for (node_p = nodelist; node_p; node_p = node_p->link) {
+  for (FlowNode* node_p = nodelist; node_p; node_p = node_p->link) {
     if (node_p->in_vert_line(x, *border_y, start_y))
       if (node_p->obst_y_high > *border_y
           && node_p->obst_y_high <= start_y + CON_EPSILON)
         *border_y = node_p->obst_y_high;
   }
-  for (con_p = conlist; con_p; con_p = con_p->link) {
+  for (FlowCon* con_p = conlist; con_p; con_p = con_p->link) {
     if (con_p == this)
       continue;
     if ((con_p->source_node == source_node
@@ -2839,18 +2648,11 @@ void FlowCon::find_vert_line_low_border(double x, double start_y,
 
     /* Check vertical lines in the con */
     if (con_p->cc->con_type == flow_eConType_Routed && !con_p->temporary_ref) {
-      if (con_p->source_direction == flow_eDirection_Right
-          || con_p->source_direction == flow_eDirection_Left)
-        i = 1;
-      else
-        i = 0;
+      int i = (con_p->source_direction == flow_eDirection_Right
+           || con_p->source_direction == flow_eDirection_Left);
 
       for (; i < con_p->p_num - 1; i += 2) {
-        if (con_p->point_y[i] < con_p->point_y[i + 1])
-          u_y = con_p->point_y[i + 1];
-        else
-          u_y = con_p->point_y[i];
-
+        double u_y = MAX(con_p->point_y[i], con_p->point_y[i + 1]);
         if (con_p->point_x[i] - ctx->draw_delta < x
             && x < con_p->point_x[i] + ctx->draw_delta) {
           if (u_y > *border_y && u_y <= start_y_con + CON_EPSILON)
@@ -2864,12 +2666,11 @@ void FlowCon::find_vert_line_low_border(double x, double start_y,
 int FlowCon::event_handler(flow_eEvent event, int x, int y)
 {
   int sts = 0;
-  switch (event) {
-  case flow_eEvent_CursorMotion:
-    if (temporary_ref || cc->con_type == flow_eConType_Reference)
-      sts = ref_a.event_handler(&cc->zero, event, x, y, ref_a.size());
-    else
-      sts = line_a.event_handler(&cc->zero, event, x, y, l_num);
+  if (temporary_ref || cc->con_type == flow_eConType_Reference)
+    sts = ref_a.event_handler(&cc->zero, event, x, y, ref_a.size());
+  else
+    sts = line_a.event_handler(&cc->zero, event, x, y, l_num);
+  if (event == flow_eEvent_CursorMotion) {
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
       ctx->fdraw->set_cursor(ctx->mw, draw_eCursor_CrossHair);
@@ -2881,12 +2682,6 @@ int FlowCon::event_handler(flow_eEvent event, int x, int y)
       hot = 0;
       ctx->set_dirty();
     }
-    break;
-  default:
-    if (temporary_ref || cc->con_type == flow_eConType_Reference)
-      sts = ref_a.event_handler(&cc->zero, event, x, y, ref_a.size());
-    else
-      sts = line_a.event_handler(&cc->zero, event, x, y, l_num);
   }
   if (sts)
     ctx->register_callback_object(flow_eObjectType_Con, this);
@@ -2929,17 +2724,11 @@ void FlowCon::draw_routed_trans(int points, double* x, double* y)
 
 void FlowCon::draw_routed_roundcorner(int points, double* x, double* y)
 {
-  int i;
-  double r = cc->round_corner_amount;
-  double line_x1[8], line_y1[8], line_x2[8], line_y2[8];
-  double arc_ll_x[8], arc_ll_y[8], arc_ur_x[8], arc_ur_y[8];
-  int arc_angle1[8], arc_angle2[8];
   con_eCorner corner_type[8];
-  FlowLine* l;
-  FlowArc* a;
   double r_x[8], r_y[8];
+  for (int i = 1; i < points - 1; i++) {
+    double r = cc->round_corner_amount;
 
-  for (i = 1; i < points - 1; i++) {
     if (i == 1 && fabs(y[0] - y[1]) < DBL_EPSILON
         && fabs(x[0] - x[1]) < DBL_EPSILON) {
       /* First line is a Null line */
@@ -3011,9 +2800,12 @@ void FlowCon::draw_routed_roundcorner(int points, double* x, double* y)
     } else
       corner_type[i - 1] = eCorner_Sharp;
   }
+  double line_x1[8], line_y1[8], line_x2[8], line_y2[8];
+  double arc_ll_x[8], arc_ll_y[8], arc_ur_x[8], arc_ur_y[8];
+  int arc_angle1[8], arc_angle2[8];
   line_x1[0] = x[0];
   line_y1[0] = y[0];
-  for (i = 1; i < points - 1; i++) {
+  for (int i = 1; i < points - 1; i++) {
     switch (corner_type[i - 1]) {
     case eCorner_RightToUp:
     case eCorner_RightToDown: {
@@ -3146,13 +2938,13 @@ void FlowCon::draw_routed_roundcorner(int points, double* x, double* y)
   line_x2[points - 2] = x[points - 1];
   line_y2[points - 2] = y[points - 1];
 
-  for (i = 0; i < points - 1; i++) {
-    l = (FlowLine*)line_a[i];
+  for (int i = 0; i < points - 1; i++) {
+    FlowLine* l = (FlowLine*)line_a[i];
     l->move(&cc->zero, line_x1[i], line_y1[i], line_x2[i], line_y2[i],
         highlight, dimmed, hot);
   }
-  for (i = 0; i < points - 2; i++) {
-    a = (FlowArc*)arc_a[i];
+  for (int i = 0; i < points - 2; i++) {
+    FlowArc* a = (FlowArc*)arc_a[i];
     a->move(&cc->zero, arc_ll_x[i], arc_ll_y[i], arc_ur_x[i], arc_ur_y[i],
         arc_angle1[i], arc_angle2[i], highlight, dimmed, hot);
   }
@@ -3164,11 +2956,8 @@ void FlowCon::draw_routed_roundcorner(int points, double* x, double* y)
 
 void FlowCon::set_movement_type(FlowArrayElem** a, int a_size)
 {
-  int i;
-  int source_found = 0;
-  int dest_found = 0;
-
-  for (i = 0; i < a_size; i++) {
+  int source_found = 0, dest_found = 0;
+  for (int i = 0; i < a_size; i++) {
     if (a[i] == (FlowArrayElem*)source_node)
       source_found = 1;
     if (a[i] == (FlowArrayElem*)dest_node)
@@ -3184,50 +2973,41 @@ void FlowCon::set_movement_type(FlowArrayElem** a, int a_size)
 
 void FlowCon::move_ref(double x1, double y1, double x2, double y2)
 {
-  FlowText *t1, *t2;
-  FlowRect *r1, *r2;
-  double text_x, text_y, rect_x, rect_y;
-  int new_ref;
-  char reftext[20];
-
-  new_ref = (ref_a.size() == 0);
-
+  double rect_x = x1 - ctx->refcon_width / 2;
+  double rect_y = y1 - ctx->refcon_height / 2;
   switch (source_direction) {
   case flow_eDirection_Center:
-    rect_x = x1 - ctx->refcon_width / 2;
     rect_y = y1 - (source_ref_cnt - 0.5) * ctx->refcon_height;
     break;
   case flow_eDirection_Right:
     rect_x = x1 + source_ref_cnt * ctx->refcon_width;
-    rect_y = y1 - ctx->refcon_height / 2;
     break;
   case flow_eDirection_Left:
     rect_x = x1 - (source_ref_cnt + 1) * ctx->refcon_width;
-    rect_y = y1 - ctx->refcon_height / 2;
     break;
   case flow_eDirection_Up:
-    rect_x = x1 - ctx->refcon_width / 2;
     rect_y = y1 + source_ref_cnt * ctx->refcon_height;
     break;
   case flow_eDirection_Down:
-    rect_x = x1 - ctx->refcon_width / 2;
     rect_y = y1 - (source_ref_cnt + 1) * ctx->refcon_height;
     break;
   }
-  text_x = rect_x + 0.2 * ctx->refcon_width;
-  text_y = rect_y + 0.8 * ctx->refcon_height;
+  double text_x = rect_x + 0.2 * ctx->refcon_width;
+  double text_y = rect_y + 0.8 * ctx->refcon_height;
 
+  char reftext[20];
+  int new_ref = (ref_a.size() == 0);
   if (new_ref) {
     sprintf(reftext, "R%d", ctx->refcon_cnt++);
-    r1 = new FlowRect(ctx, rect_x, rect_y, ctx->refcon_width,
+    FlowRect* r1 = new FlowRect(ctx, rect_x, rect_y, ctx->refcon_width,
         ctx->refcon_height, flow_eDrawType_Line, ctx->refcon_linewidth);
-    t1 = new FlowText(ctx, reftext, text_x, text_y,
+    FlowText* t1 = new FlowText(ctx, reftext, text_x, text_y,
         flow_eDrawType_TextHelveticaBold, ctx->refcon_textsize);
     ref_a.insert(r1);
     ref_a.insert(t1);
   } else {
-    r1 = (FlowRect*)ref_a[0];
-    t1 = (FlowText*)ref_a[1];
+    FlowRect* r1 = (FlowRect*)ref_a[0];
+    FlowText* t1 = (FlowText*)ref_a[1];
     r1->move(&cc->zero, rect_x, rect_y, highlight, dimmed, hot);
     t1->move(&cc->zero, text_x, text_y, highlight, dimmed, hot);
   }
@@ -3256,15 +3036,15 @@ void FlowCon::move_ref(double x1, double y1, double x2, double y2)
   text_x = rect_x + 0.2 * ctx->refcon_width;
   text_y = rect_y + 0.8 * ctx->refcon_height;
   if (new_ref) {
-    r2 = new FlowRect(ctx, rect_x, rect_y, ctx->refcon_width,
+    FlowRect* r2 = new FlowRect(ctx, rect_x, rect_y, ctx->refcon_width,
         ctx->refcon_height, flow_eDrawType_Line, ctx->refcon_linewidth);
-    t2 = new FlowText(ctx, reftext, text_x, text_y,
+    FlowText* t2 = new FlowText(ctx, reftext, text_x, text_y,
         flow_eDrawType_TextHelveticaBold, ctx->refcon_textsize);
     ref_a.insert(r2);
     ref_a.insert(t2);
   } else {
-    r2 = (FlowRect*)ref_a[2];
-    t2 = (FlowText*)ref_a[3];
+    FlowRect* r2 = (FlowRect*)ref_a[2];
+    FlowText* t2 = (FlowText*)ref_a[3];
     r2->move(&cc->zero, rect_x, rect_y, highlight, dimmed, hot);
     t2->move(&cc->zero, text_x, text_y, highlight, dimmed, hot);
   }
@@ -3319,31 +3099,23 @@ FlowTraceAttr FlowCon::get_trace_attr()
 
 void FlowCon::trace_scan()
 {
-  int on;
-
   if (!trace_p)
     return;
-  switch (trace_attr_type) {
-  case flow_eTraceType_Boolean:
-    on = *(unsigned int*)trace_p;
+
+  if (trace_attr_type == flow_eTraceType_Boolean) {
+    int on = *(unsigned int*)trace_p;
     if (highlight != on)
       set_highlight(on);
-    break;
-  default:
-    break;
   }
 }
 
 int FlowCon::trace_init()
 {
-  int sts;
-
   if (streq(trace_object, ""))
     return 1;
 
-  sts = ctx->trace_connect_func(
+  return ctx->trace_connect_func(
       (void*)this, trace_object, trace_attribute, trace_attr_type, &trace_p);
-  return sts;
 }
 
 void FlowCon::trace_close()

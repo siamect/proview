@@ -109,7 +109,7 @@ GrowCtx::GrowCtx(const char* ctx_name) : GlowCtx(ctx_name),
   memset(argtype, 0, sizeof(argtype));
   memset(dyn_color, 0, sizeof(dyn_color));
   memset(dyn_attr, 0, sizeof(dyn_attr));
-};
+}
 
 GrowCtx::~GrowCtx()
 {
@@ -954,16 +954,9 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
             y, fx, fy);
       }
     } else if (select_rect_active && edit_mode != grow_eMode_Scale) {
-      int draw_ll_x;
-      int draw_ll_y;
-      int draw_ur_x;
-      int draw_ur_y;
-
       if (scale_equal
           && (edit_mode == grow_eMode_Circle || edit_mode == grow_eMode_Rect
-                 || edit_mode == grow_eMode_RectRounded))
-
-      {
+                 || edit_mode == grow_eMode_RectRounded)) {
         int delta_x, delta_y;
         delta_y = delta_x
             = MAX(ABS(x - select_rect_start_x), ABS(y - select_rect_start_y));
@@ -971,15 +964,6 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           delta_x = -delta_x;
         if (y < select_rect_start_y)
           delta_y = -delta_y;
-
-        draw_ll_x = MIN(select_rect_ll_x,
-            MIN(select_rect_start_x, select_rect_start_x + delta_x));
-        draw_ll_y = MIN(select_rect_ll_y,
-            MIN(select_rect_start_y, select_rect_start_y + delta_y));
-        draw_ur_x = MAX(select_rect_ur_x,
-            MAX(select_rect_start_x, select_rect_start_x + delta_x));
-        draw_ur_y = MAX(select_rect_ur_y,
-            MAX(select_rect_start_y, select_rect_start_y + delta_y));
 
         select_rect_ll_x
             = MIN(select_rect_start_x, select_rect_start_x + delta_x);
@@ -990,11 +974,6 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         select_rect_ur_y
             = MAX(select_rect_start_y, select_rect_start_y + delta_y);
       } else {
-        draw_ll_x = MIN(MIN(x, select_rect_start_x), select_rect_ll_x);
-        draw_ll_y = MIN(MIN(y, select_rect_start_y), select_rect_ll_y);
-        draw_ur_x = MAX(MAX(x, select_rect_start_x), select_rect_ur_x);
-        draw_ur_y = MAX(MAX(y, select_rect_start_y), select_rect_ur_y);
-
         select_rect_ll_x = MIN(x, select_rect_start_x);
         select_rect_ll_y = MIN(y, select_rect_start_y);
         select_rect_ur_x = MAX(x, select_rect_start_x);

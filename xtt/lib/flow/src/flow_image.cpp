@@ -102,8 +102,7 @@ void FlowImage::print(void* pos, void* node, int highlight)
     return;
   int idx
       = int(ctx->print_zoom_factor / ctx->base_zoom_factor * line_width - 1);
-  idx = MAX(0, idx);
-  idx = MIN(idx, DRAW_TYPE_SIZE - 1);
+  idx = CLAMP(idx, 0, DRAW_TYPE_SIZE - 1);
   ctx->current_print->image(ll.print_z_x + ((FlowPoint*)pos)->print_z_x,
       ll.print_z_y + ((FlowPoint*)pos)->print_z_y, ur.print_z_x - ll.print_z_x,
       ur.print_z_y - ll.print_z_y, image, draw_type);
@@ -212,17 +211,10 @@ void FlowImage::nav_erase(void* pos, void* node)
 int FlowImage::event_handler(
     void* pos, flow_eEvent event, int x, int y, void* node)
 {
-  FlowPoint* p;
-
-  p = (FlowPoint*)pos;
-  if (ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x <= x
+  return (ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x <= x
       && x <= ur.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x
       && ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y <= y
-      && y <= ur.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y) {
-    //    std::cout << "Event handler: Hit in rect\n";
-    return 1;
-  } else
-    return 0;
+      && y <= ur.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y);
 }
 
 void FlowImage::get_borders(double pos_x, double pos_y, double* x_right,

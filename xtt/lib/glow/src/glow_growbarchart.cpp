@@ -213,10 +213,7 @@ int GrowBarChart::trace_scan()
 
 int GrowBarChart::trace_init()
 {
-  int sts = 1;
-
-  sts = ctx->trace_connect_func((void*)this, &trace);
-  return sts;
+  return ctx->trace_connect_func((void*)this, &trace);
 }
 
 void GrowBarChart::trace_close()
