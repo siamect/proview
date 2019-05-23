@@ -68,7 +68,7 @@ static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap);
 static pwr_tStatus IoAgentRead(io_tCtx ctx, io_sAgent* ap);
 static pwr_tStatus IoAgentWrite(io_tCtx ctx, io_sAgent* ap);
 static pwr_tStatus IoAgentClose(io_tCtx ctx, io_sAgent* ap);
-static pwr_tStatus IoAgentSwap(io_tCtx ctx, io_sAgent* ap);
+static pwr_tStatus IoAgentSwap(io_tCtx ctx, io_sAgent* ap, io_eEvent event);
 
 /*----------------------------------------------------------------------------*\
    Init method for the Pb_profiboard agent
