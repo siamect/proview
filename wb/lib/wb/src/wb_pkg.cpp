@@ -222,6 +222,8 @@ void wb_pkg::readConfig()
         n.push_back(pboot);
 
         // Read bootfile, get plc and volumes
+	vollist = 0;
+	volnamelist = 0;
         sts = lfu_ReadBootFile(fname, &date, systemname, systemgroup, &vollist,
             &volnamelist, &volcount, &plclist, &plccount);
         if (EVEN(sts))
@@ -294,8 +296,10 @@ void wb_pkg::readConfig()
           }
         }
 
-        free(volnamelist);
-        free(vollist);
+	if (volnamelist)
+	  free(volnamelist);
+	if (vollist)
+	  free(vollist);
 
       } catch (wb_error& e) {
         if (e.what() == std::string("No such node"))
