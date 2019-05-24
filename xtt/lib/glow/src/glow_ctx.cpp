@@ -1344,28 +1344,19 @@ int GlowCtx::event_handler_nav(glow_eEvent event, int x, int y)
 
       change_scrollbar();
     } else if (nav_rect_zoom_active) {
-      int delta_x, delta_y;
-      double zoom_f;
-      double center_x, center_y;
-      double center_dist, center_dist_last;
-
       set_dirty();
 
-      delta_x = x - nav_rect_move_last_x;
-      delta_y = y - nav_rect_move_last_y;
-
-      center_x = 0.5 * (nav_rect_ur_x + nav_rect_ll_x);
-      center_y = 0.5 * (nav_rect_ur_y + nav_rect_ll_y);
-      center_dist_last = sqrt(
+      double center_x = 0.5 * (nav_rect_ur_x + nav_rect_ll_x);
+      double center_y = 0.5 * (nav_rect_ur_y + nav_rect_ll_y);
+      double center_dist_last = sqrt(
           (nav_rect_move_last_x - center_x) * (nav_rect_move_last_x - center_x)
           + (nav_rect_move_last_y - center_y)
               * (nav_rect_move_last_y - center_y));
-      center_dist = sqrt(
+      double center_dist = sqrt(
           (x - center_x) * (x - center_x) + (y - center_y) * (y - center_y));
       if (center_dist < DBL_EPSILON)
         return 1;
-      zoom_f = center_dist_last / center_dist;
-      zoom(zoom_f);
+      zoom(center_dist_last / center_dist);
       nav_rect_move_last_x = x;
       nav_rect_move_last_y = y;
     }
@@ -1506,16 +1497,14 @@ int GlowCtx::trace_init(int (*connect_func)(void*, GlowTraceData*),
     int (*disconnect_func)(void*), int (*scan_func)(void*, void*),
     int (*ctrl_func)(int, void*))
 {
-  int sts;
-
   trace_connect_func = connect_func;
   trace_disconnect_func = disconnect_func;
   trace_scan_func = scan_func;
   trace_ctrl_func = ctrl_func;
 
-  sts = a.trace_init();
+  a.trace_init();
 
-  sts = trace_connect_func(this, 0);
+  int sts = trace_connect_func(this, 0);
 
   trace_started = 1;
   return sts;

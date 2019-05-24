@@ -124,39 +124,28 @@ void GrowLine::move_noerase(int delta_x, int delta_y, int grid)
   ctx->set_dirty();
 }
 
-int GrowLine::local_event_handler(glow_eEvent event, double x, double y)
-{
-  double x1, x2, y1, y2;
+int GrowLine::local_event_handler(glow_eEvent event, double x, double y) {
+  glow_sPoint tmp2 = trf.reverse(0.05 * line_width, 0.05 * line_width);
+  glow_sPoint tmp1 = trf.reverse(0, 0);
+  double dx = fabs(tmp2.x - tmp1.x);
+  double dy = fabs(tmp2.y - tmp1.y);
 
-  trf.reverse(0.05 * line_width, 0.05 * line_width, &x2, &y2);
-  trf.reverse(0, 0, &x1, &y1);
-  double dx = fabs(x2 - x1);
-  double dy = fabs(y2 - y1);
-
-  x1 = p1.x;
-  x2 = p2.x;
-  y1 = p1.y;
-  y2 = p2.y;
-
-  if ((feq(x1, x2) && y1 < y2 && // Vertical
-          fabs(x1 - x) < dx && y1 < y && y < y2)
-      || (feq(x1, x2) && y1 > y2 && // Vertical
-             fabs(x1 - x) < dx && y2 < y && y < y1)
-      || (feq(y1, y2) && x1 < x2 && // Horizontal
-             fabs(y1 - y) < dy && x1 < x && x < x2)
-      || (feq(y1, y2) && x1 > x2 && // Horizontal
-             fabs(y1 - y) < dy && x2 < x && x < x1)) {
-    //  std::cout << "Event handler: Hit in line\n";
+  if ((feq(p1.x, p2.x) && p1.y < p2.y && // Vertical
+       fabs(p1.x - x) < dx && p1.y < y && y < p2.y)
+      || (feq(p1.x, p2.x) && p1.y > p2.y && // Vertical
+          fabs(p1.x - x) < dx && p2.y < y && y < p1.y)
+      || (feq(p1.y, p2.y) && p1.x < p2.x && // Horizontal
+          fabs(p1.y - y) < dy && p1.x < x && x < p2.x)
+      || (feq(p1.y, p2.y) && p1.x > p2.x && // Horizontal
+          fabs(p1.y - y) < dy && p2.x < x && x < p1.x)) {
     return 1;
-  } else if ((!(feq(x1, x2) || feq(y1, y2)) && x1 < x2 && x1 <= x && x <= x2
-                 && fabs(y - (y2 - y1) / (x2 - x1) * x - y1
-                        + (y2 - y1) / (x2 - x1) * x1)
-                     < dx)
-      || (!(feq(x1, x2) || feq(y1, y2)) && x1 > x2 && x2 <= x && x <= x1
-             && fabs(y - (y2 - y1) / (x2 - x1) * x - y1
-                    + (y2 - y1) / (x2 - x1) * x1)
-                 < dx)) {
-    //    std::cout << "Event handler: Hit in line\n";
+  } else if (
+      (!(feq(p1.x, p2.x) || feq(p1.y, p2.y)) && p1.x < p2.x && p1.x <= x &&
+       x <= p2.x && fabs(y - (p2.y - p1.y) / (p2.x - p1.x) * x - p1.y +
+                         (p2.y - p1.y) / (p2.x - p1.x) * p1.x) < dx) ||
+      (!(feq(p1.x, p2.x) || feq(p1.y, p2.y)) && p1.x > p2.x && p2.x <= x &&
+       x <= p1.x && fabs(y - (p2.y - p1.y) / (p2.x - p1.x) * x - p1.y +
+                         (p2.y - p1.y) / (p2.x - p1.x) * p1.x) < dx)) {
     return 1;
   }
   return 0;
@@ -164,24 +153,19 @@ int GrowLine::local_event_handler(glow_eEvent event, double x, double y)
 
 int GrowLine::event_handler(glow_eEvent event, double fx, double fy)
 {
-  double x, y;
-
-  trf.reverse(fx, fy, &x, &y);
-  return local_event_handler(event, x, y);
+  glow_sPoint p = trf.reverse(fx, fy);
+  return local_event_handler(event, p.x, p.y);
 }
 
 int GrowLine::event_handler(glow_eEvent event, int x, int y, double fx,
     double fy)
 {
-  int sts;
-  double rx, ry;
-
   // Convert koordinates to local koordinates
-  trf.reverse(fx, fy, &rx, &ry);
+  glow_sPoint r = trf.reverse(fx, fy);
 
-  sts = 0;
+  int sts = 0;
   if (event == ctx->event_move_node) {
-    sts = local_event_handler(event, rx, ry);
+    sts = local_event_handler(event, r.x, r.y);
     if (sts) {
       /* Register node for potential movement */
       ctx->move_insert(this);
@@ -195,7 +179,7 @@ int GrowLine::event_handler(glow_eEvent event, int x, int y, double fx,
     else if (ctx->hot_found)
       sts = 0;
     else {
-      sts = local_event_handler(event, rx, ry);
+      sts = local_event_handler(event, r.x, r.y);
       if (sts)
         ctx->hot_found = 1;
     }
@@ -214,7 +198,7 @@ int GrowLine::event_handler(glow_eEvent event, int x, int y, double fx,
     break;
   }
   default:
-    sts = local_event_handler(event, rx, ry);
+    sts = local_event_handler(event, r.x, r.y);
   }
   if (sts)
     ctx->register_callback_object(glow_eObjectType_Node, this);
@@ -370,36 +354,14 @@ void GrowLine::set_highlight(int on)
 void GrowLine::get_borders(GlowTransform* t, double* x_right, double* x_left,
     double* y_high, double* y_low)
 {
-  double x1, y1, x2, y2;
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * this->p1;
+  glow_sPoint p2 = tmp * this->p2;
 
-  if (!t) {
-    x1 = trf.x(p1.x, p1.y);
-    y1 = trf.y(p1.x, p1.y);
-    x2 = trf.x(p2.x, p2.y);
-    y2 = trf.y(p2.x, p2.y);
-  } else {
-    x1 = trf.x(t, p1.x, p1.y);
-    y1 = trf.y(t, p1.x, p1.y);
-    x2 = trf.x(t, p2.x, p2.y);
-    y2 = trf.y(t, p2.x, p2.y);
-  }
-
-  if (x1 < *x_left)
-    *x_left = x1;
-  if (x2 < *x_left)
-    *x_left = x2;
-  if (x1 > *x_right)
-    *x_right = x1;
-  if (x2 > *x_right)
-    *x_right = x2;
-  if (y1 < *y_low)
-    *y_low = y1;
-  if (y2 < *y_low)
-    *y_low = y2;
-  if (y1 > *y_high)
-    *y_high = y1;
-  if (y2 > *y_high)
-    *y_high = y2;
+  *x_left = MIN(*x_left, MIN(p1.x, p2.x));
+  *x_right = MAX(*x_right, MAX(p1.x, p2.x));
+  *y_low = MIN(*y_low, MIN(p1.y, p2.y));
+  *y_high = MAX(*y_high, MAX(p1.y, p2.y));
 }
 
 void GrowLine::select_region_insert(double ll_x, double ll_y, double ur_x,
@@ -452,9 +414,9 @@ void GrowLine::set_position(double x, double y)
 void GrowLine::set_scale(
     double scale_x, double scale_y, double x0, double y0, glow_eScaleType type)
 {
-  if (trf.s_a11 && trf.s_a22
-      && fabs(scale_x - trf.a11 / trf.s_a11) < FLT_EPSILON
-      && fabs(scale_y - trf.a22 / trf.s_a22) < FLT_EPSILON)
+  if (trf.s.a11 && trf.s.a22
+      && fabs(scale_x - trf.a11 / trf.s.a11) < FLT_EPSILON
+      && fabs(scale_y - trf.a22 / trf.s.a22) < FLT_EPSILON)
     return;
 
   switch (type) {
@@ -521,7 +483,7 @@ void GrowLine::set_scale(
 void GrowLine::set_rotation(
     double angle, double x0, double y0, glow_eRotationPoint type)
 {
-  if (fabs(angle - trf.rotation + trf.s_rotation) < FLT_EPSILON)
+  if (fabs(angle - trf.rotation + trf.s.rotation) < FLT_EPSILON)
     return;
 
   switch (type) {
@@ -561,7 +523,6 @@ void GrowLine::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       && ctx->hot_indication != glow_eHotIndication_LineWidth)
     hot = 0;
 
-  glow_eDrawType drawtype;
   int idx;
   if (node && ((GrowNode*)node)->line_width)
     idx = int(
@@ -572,25 +533,24 @@ void GrowLine::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   idx += hot;
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  int x1, y1, x2, y2;
 
-  if (!t) {
-    x1 = int(trf.x(p1.x, p1.y) * w->zoom_factor_x + 0.5) - w->offset_x;
-    y1 = int(trf.y(p1.x, p1.y) * w->zoom_factor_y + 0.5) - w->offset_y;
-    x2 = int(trf.x(p2.x, p2.y) * w->zoom_factor_x + 0.5) - w->offset_x;
-    y2 = int(trf.y(p2.x, p2.y) * w->zoom_factor_y + 0.5) - w->offset_y;
-  } else {
-    x1 = int(trf.x(t, p1.x, p1.y) * w->zoom_factor_x + 0.5) - w->offset_x;
-    y1 = int(trf.y(t, p1.x, p1.y) * w->zoom_factor_y + 0.5) - w->offset_y;
-    x2 = int(trf.x(t, p2.x, p2.y) * w->zoom_factor_x + 0.5) - w->offset_x;
-    y2 = int(trf.y(t, p2.x, p2.y) * w->zoom_factor_y + 0.5) - w->offset_y;
-  }
-  if (x1 == x2 && y1 == y2)
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * this->p1;
+  glow_sPoint p2 = tmp * this->p2;
+
+  p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+  p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+  p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+  p2.y = p2.y * w->zoom_factor_y - w->offset_y;
+
+  if (feq(p1.x, p2.x) && feq(p1.y, p2.y))
     return;
-  drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
+
+  glow_eDrawType drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
       highlight, (GrowNode*)colornode, 0);
 
-  ctx->gdraw->line(x1, y1, x2, y2, drawtype, idx, 0, line_type);
+  ctx->gdraw->line((int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y, drawtype, idx,
+      0, line_type);
 }
 
 void GrowLine::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
@@ -610,28 +570,26 @@ void GrowLine::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
   idx += hot;
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  int x1, y1, x2, y2;
 
-  if (!t) {
-    x1 = int(trf.x(p1.x, p1.y) * w->zoom_factor_x + 0.5) - w->offset_x;
-    y1 = int(trf.y(p1.x, p1.y) * w->zoom_factor_y + 0.5) - w->offset_y;
-    x2 = int(trf.x(p2.x, p2.y) * w->zoom_factor_x + 0.5) - w->offset_x;
-    y2 = int(trf.y(p2.x, p2.y) * w->zoom_factor_y + 0.5) - w->offset_y;
-  } else {
-    x1 = int(trf.x(t, p1.x, p1.y) * w->zoom_factor_x + 0.5) - w->offset_x;
-    y1 = int(trf.y(t, p1.x, p1.y) * w->zoom_factor_y + 0.5) - w->offset_y;
-    x2 = int(trf.x(t, p2.x, p2.y) * w->zoom_factor_x + 0.5) - w->offset_x;
-    y2 = int(trf.y(t, p2.x, p2.y) * w->zoom_factor_y + 0.5) - w->offset_y;
-  }
-  if (x1 == x2 && y1 == y2)
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * this->p1;
+  glow_sPoint p2 = tmp * this->p2;
+
+  p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+  p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+  p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+  p2.y = p2.y * w->zoom_factor_y - w->offset_y;
+
+  if (feq(p1.x, p2.x) && feq(p1.y, p2.y))
     return;
 
-  ctx->gdraw->line(x1, y1, x2, y2, glow_eDrawType_LineErase, idx);
+  ctx->gdraw->line((int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y,
+      glow_eDrawType_LineErase, idx);
 }
 
 void GrowLine::set_transform(GlowTransform* t)
 {
-  trf = *t * trf;
+  trf.set(*t * trf);
   get_node_borders();
 }
 
@@ -692,23 +650,21 @@ void GrowLine::export_javabean(GlowTransform* t, void* node,
   idx += hot;
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  double x1, y1, x2, y2;
 
-  if (!t) {
-    x1 = trf.x(p1.x, p1.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = trf.y(p1.x, p1.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = trf.x(p2.x, p2.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = trf.y(p2.x, p2.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  } else {
-    x1 = trf.x(t, p1.x, p1.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = trf.y(t, p1.x, p1.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = trf.x(t, p2.x, p2.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = trf.y(t, p2.x, p2.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  }
-  if (feq(x1, x2) && feq(y1, y2))
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * this->p1;
+  glow_sPoint p2 = tmp * this->p2;
+
+  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+
+  if (feq(p1.x, p2.x) && feq(p1.y, p2.y))
     return;
-  ctx->export_jbean->line(
-      x1, y1, x2, y2, draw_type, idx, pass, shape_cnt, node_cnt, fp);
+
+  ctx->export_jbean->line(p1.x, p1.y, p2.x, p2.y, draw_type, idx, pass,
+      shape_cnt, node_cnt, fp);
   (*shape_cnt)++;
 }
 

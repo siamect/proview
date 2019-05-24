@@ -391,22 +391,21 @@ class GrowTable extends GrowRect {
     let header_tsize = this.ctx.mw.zoom_factor_y /
         this.ctx.mw.base_zoom_factor * (8 + 2 * this.header_text_size);
 
-    let dx1 = this.trf.x(t, this.ll.x, this.ll.y);
-    let dy1 = this.trf.y(t, this.ll.x, this.ll.y);
-    let dx2 = this.trf.x(t, this.ur.x, this.ur.y);
-    let dy2 = this.trf.y(t, this.ur.x, this.ur.y);
-    dx1 = Math.min(dx1, dx2);
-    dx2 = Math.max(dx1, dx2);
-    dy1 = Math.min(dy1, dy2);
-    dy2 = Math.max(dy1, dy2);
+    let tmp = Matrix.multiply(t, this.trf);
+    let d1 = tmp.apply(this.ll);
+    let d2 = tmp.apply(this.ur);
+    d1.x = Math.min(d1.x, d2.x);
+    d2.x = Math.max(d1.x, d2.x);
+    d1.y = Math.min(d1.y, d2.y);
+    d2.y = Math.max(d1.y, d2.y);
 
     if (this.v_scrollbar !== null) {
       if (this.h_scrollbar === null) {
-        this.v_scrollbar.set_position(dx2 - this.scrollbar_width, dy1 +
-            this.y_low_offs, this.scrollbar_width, dy2 - (dy1 + this.y_low_offs));
+        this.v_scrollbar.set_position(d2.x - this.scrollbar_width, d1.y +
+            this.y_low_offs, this.scrollbar_width, d2.y - (d1.y + this.y_low_offs));
       } else {
-        this.v_scrollbar.set_position(dx2 - this.scrollbar_width, dy1 +
-            this.y_low_offs, this.scrollbar_width, dy2 - (dy1 + this.y_low_offs) -
+        this.v_scrollbar.set_position(d2.x - this.scrollbar_width, d1.y +
+            this.y_low_offs, this.scrollbar_width, d2.y - (d1.y + this.y_low_offs) -
             this.scrollbar_width);
       }
       this.v_scrollbar.draw();
@@ -414,12 +413,12 @@ class GrowTable extends GrowRect {
     }
     if (this.h_scrollbar !== null) {
       if (this.v_scrollbar === null) {
-        this.h_scrollbar.set_position(dx1 + this.x_left_offs, dy2 -
-            this.scrollbar_width, dx2 - (dx1 + this.x_left_offs),
+        this.h_scrollbar.set_position(d1.x + this.x_left_offs, d2.y -
+            this.scrollbar_width, d2.x - (d1.x + this.x_left_offs),
             this.scrollbar_width);
       } else {
-        this.h_scrollbar.set_position(dx1 + this.x_left_offs, dy2 -
-            this.scrollbar_width, dx2 - (dx1 + this.x_left_offs) -
+        this.h_scrollbar.set_position(d1.x + this.x_left_offs, d2.y -
+            this.scrollbar_width, d2.x - (d1.x + this.x_left_offs) -
             this.scrollbar_width, this.scrollbar_width);
       }
       this.h_scrollbar.draw();
@@ -433,18 +432,18 @@ class GrowTable extends GrowRect {
     let light_drawtype = GlowColor.shift_drawtype(this.fill_drawtype, -2, null);
     let sel_drawtype = (this.select_drawtype === DrawType.Inherit) ? dark_drawtype : this.select_drawtype;
 
-    let ll_x = Math.floor(dx1 * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let ll_y = Math.floor(dy1 * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    let ur_x = Math.floor(dx2 * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let ur_y = Math.floor(dy2 * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let ll_x = Math.floor(d1.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let ll_y = Math.floor(d1.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let ur_x = Math.floor(d2.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let ur_y = Math.floor(d2.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
 
-    let o_ll_x = Math.floor((dx1 + this.x_left_offs) *
+    let o_ll_x = Math.floor((d1.x + this.x_left_offs) *
         this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let o_ll_y = Math.floor((dy1 + this.y_low_offs) *
+    let o_ll_y = Math.floor((d1.y + this.y_low_offs) *
         this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    let o_ur_x = Math.floor((dx2 - this.vertical_scrollbar *
+    let o_ur_x = Math.floor((d2.x - this.vertical_scrollbar *
         this.scrollbar_width) * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let o_ur_y = Math.floor((dy2 - this.horizontal_scrollbar *
+    let o_ur_y = Math.floor((d2.y - this.horizontal_scrollbar *
         this.scrollbar_width) * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
 
     let t_ll_x = o_ll_x - Math.floor(this.h_value * this.ctx.mw.zoom_factor_x);
@@ -464,9 +463,9 @@ class GrowTable extends GrowRect {
     }
 
     if (this.header_row !== 0) {
-      if (this.fill !== 0) {
-        this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, header_h,
-            this.fill_drawtype);
+      if (this.fill) {
+        this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, header_h,
+            this.fill_drawtype, true, 0);
       }
 
       this.ctx.gdraw.set_clip_rectangle(ll_x + header_w, ll_y, ur_x, ll_y +
@@ -511,7 +510,7 @@ class GrowTable extends GrowRect {
           this.ctx.gdraw.text(Math.floor(x + text_offs),
               Math.floor(y + header_h - 4), this.header_text[i],
               this.header_text_drawtype, this.header_text_color, header_text_idx,
-              highlight, 0, this.font, header_tsize, 0);
+              highlight, this.font, header_tsize, 0);
         }
         x += this.column_width[i] * this.ctx.mw.zoom_factor_x;
         if (x > ur_x) {
@@ -534,7 +533,7 @@ class GrowTable extends GrowRect {
         this.ctx.gdraw.line(ll_x + header_w, ll_y, ll_x + header_w, ll_y +
             header_h, drawtype, idx, 0);
       }
-      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, header_h, drawtype, idx, 0);
+      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, header_h, drawtype, false, idx);
 
       if (this.header_column !== 0) {
         // Draw header of header column header
@@ -543,15 +542,15 @@ class GrowTable extends GrowRect {
           this.ctx.gdraw.text(Math.floor(x + text_offs),
               Math.floor(y + header_h - 4), this.header_text[0],
               this.header_text_drawtype, this.header_text_color, header_text_idx,
-              highlight, 0, this.font, tsize, 0);
+              highlight, this.font, tsize, 0);
         }
       }
     }
 
     if (this.header_column !== 0) {
-      if (this.fill !== 0) {
-        this.ctx.gdraw.fill_rect(ll_x, ll_y + header_h, header_w, ur_y - ll_y -
-            header_h, this.fill_drawtype);
+      if (this.fill) {
+        this.ctx.gdraw.rect(ll_x, ll_y + header_h, header_w, ur_y - ll_y -
+            header_h, this.fill_drawtype, true, 0);
       }
 
       this.ctx.gdraw.set_clip_rectangle(ll_x, ll_y + header_h, ll_x + header_w,
@@ -562,9 +561,9 @@ class GrowTable extends GrowRect {
         let x = ll_x;
         let y = t_ll_y + this.row_height * this.ctx.mw.zoom_factor_y *
             this.selected_cell_row;
-        this.ctx.gdraw.fill_rect(Math.floor(x), Math.floor(y), header_w,
+        this.ctx.gdraw.rect(Math.floor(x), Math.floor(y), header_w,
             Math.floor(this.row_height * this.ctx.mw.zoom_factor_y),
-            sel_drawtype);
+            sel_drawtype, true, 0);
       }
 
       if (this.shadow !== 0) {
@@ -610,8 +609,7 @@ class GrowTable extends GrowRect {
             if (this.column_adjustment[0] === Adjustment.Right ||
                 this.column_adjustment[0] === Adjustment.Center) {
               let width, height, descent;
-              let p = this.ctx.gdraw.getTextExtent(this.cell_value[offs],
-                  text_idx, this.font, this.text_drawtype);
+              let p = this.ctx.gdraw.getTextExtent(this.cell_value[offs], this.text_drawtype, text_idx, this.font);
               width = p.x;
               height = p.y;
               descent = height / 4;
@@ -629,20 +627,20 @@ class GrowTable extends GrowRect {
             }
             this.ctx.gdraw.text(text_x, Math.floor(y - 5),
                 this.cell_value[offs], this.text_drawtype,
-                this.text_color_drawtype, text_idx, highlight, 0, this.font,
+                this.text_color_drawtype, text_idx, highlight, this.font,
                 tsize, 0);
           }
         }
       }
       this.ctx.gdraw.reset_clip_rectangle();
       this.ctx.gdraw.rect(ll_x, ll_y + header_h - 1, header_w, ur_y - ll_y -
-          header_h + 1, drawtype, idx, 0);
+          header_h + 1, drawtype, false, idx);
     }
 
     // Draw table
-    if (this.fill !== 0) {
-      this.ctx.gdraw.fill_rect(o_ll_x, o_ll_y, o_ur_x - o_ll_x, o_ur_y - o_ll_y,
-          this.fill_drawtype);
+    if (this.fill) {
+      this.ctx.gdraw.rect(o_ll_x, o_ll_y, o_ur_x - o_ll_x, o_ur_y - o_ll_y,
+          this.fill_drawtype, true, 0);
     }
 
     this.ctx.gdraw.set_clip_rectangle(o_ll_x, o_ll_y, o_ur_x, o_ur_y);
@@ -656,11 +654,11 @@ class GrowTable extends GrowRect {
       }
       let y = t_ll_y + this.row_height * this.ctx.mw.zoom_factor_y *
           this.selected_cell_row;
-      this.ctx.gdraw.fill_rect(Math.floor(x), Math.floor(y),
+      this.ctx.gdraw.rect(Math.floor(x), Math.floor(y),
           Math.floor(this.column_width[this.selected_cell_column] *
               this.ctx.mw.zoom_factor_x),
           Math.floor(this.row_height * this.ctx.mw.zoom_factor_y),
-          sel_drawtype);
+          sel_drawtype, true, 0);
     }
 
     if (this.shadow !== 0) {
@@ -768,8 +766,7 @@ class GrowTable extends GrowRect {
               if (this.column_adjustment[i] === Adjustment.Right ||
                   this.column_adjustment[i] === Adjustment.Center) {
                 let width, height, descent;
-                let p = this.ctx.gdraw.getTextExtent(this.cell_value[offs],
-                    text_idx, this.font, this.text_drawtype);
+                let p = this.ctx.gdraw.getTextExtent(this.cell_value[offs], this.text_drawtype, text_idx, this.font);
                 width = p.x;
                 height = p.y;
                 descent = height / 4;
@@ -791,7 +788,7 @@ class GrowTable extends GrowRect {
 
               this.ctx.gdraw.text(text_x, Math.floor(y - 5),
                   this.cell_value[offs], this.text_drawtype,
-                  this.text_color_drawtype, text_idx, highlight, 0, this.font,
+                  this.text_color_drawtype, text_idx, highlight, this.font,
                   tsize, 0);
             }
           }
@@ -805,7 +802,7 @@ class GrowTable extends GrowRect {
 
     // Draw frame
     this.ctx.gdraw.rect(o_ll_x, o_ll_y, ur_x - o_ll_x, ur_y - o_ll_y, drawtype,
-        idx, 0);
+        false, idx);
     if (this.input_focus !== 0) {
       this.ctx.gdraw.line(ll_x - 2, ll_y - 2, ll_x - 2, ur_y + 2,
           DrawType.DarkGray, 0, 0);

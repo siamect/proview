@@ -63,8 +63,11 @@ static FlowCtx* last_ctx;
 static QMouseEvent* last_event;
 static QWidget* last_target;
 
-static QColor flow_allocate_color(
-    FlowDrawQt* draw_ctx, const char* named_color);
+static QColor flow_allocate_color(const char* named_color)
+{
+  QColor color(named_color);
+  return color.isValid() ? color : Qt::black;
+}
 
 static QColor draw_type_to_color(FlowDrawQt* draw_ctx, int painter_type)
 {
@@ -80,17 +83,17 @@ static QColor draw_type_to_color(FlowDrawQt* draw_ctx, int painter_type)
     return draw_ctx->background;
   case flow_eDrawType_LineRed:
   case flow_eDrawType_LineDashedRed:
-    return flow_allocate_color(draw_ctx, "red");
+    return flow_allocate_color("red");
   case flow_eDrawType_LineGray:
-    return flow_allocate_color(draw_ctx, "gray");
+    return flow_allocate_color("gray");
   case flow_eDrawType_Green:
-    return flow_allocate_color(draw_ctx, "green");
+    return flow_allocate_color("green");
   case flow_eDrawType_Yellow:
-    return flow_allocate_color(draw_ctx, "yellow");
+    return flow_allocate_color("yellow");
   case flow_eDrawType_DarkGray:
-    return flow_allocate_color(draw_ctx, "gray28");
+    return flow_allocate_color("gray28");
   default:
-    return flow_allocate_color(draw_ctx, "black");
+    return flow_allocate_color("black");
   }
 }
 
@@ -105,16 +108,6 @@ static QFont get_font(int painter_type, double size, const char* fontstr = "Luci
     res.setBold(true);
   }
   return res;
-}
-
-static QColor flow_allocate_color(FlowDrawQt* draw_ctx, const char* named_color)
-{
-  QColor color(named_color);
-  if (!color.isValid()) {
-    color = Qt::black;
-  }
-
-  return color;
 }
 
 FlowDrawQt::~FlowDrawQt()
@@ -205,7 +198,7 @@ FlowDrawQt::FlowDrawQt(QWidget* x_toplevel, void** flow_ctx,
   ctx->mw = &m_wind;
   ctx->navw = &nav_wind;
 
-  foreground = flow_allocate_color(this, "black");
+  foreground = flow_allocate_color("black");
 
   set_white_background();
 
@@ -224,6 +217,14 @@ void FlowDrawQt::init_nav(QWidget* nav_widget, void* flow_ctx)
   nav_widget->setPalette(pal);
 
   ((FlowCtx*)flow_ctx)->no_nav = 0;
+}
+
+static void cancel_event_timer(FlowCtx* ctx)
+{
+  FlowDrawQt* draw_ctx = (FlowDrawQt*)ctx->fdraw;
+  if (draw_ctx->timer_id) {
+    draw_ctx->timer_id->stop();
+  }
 }
 
 void FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
@@ -610,15 +611,15 @@ void FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
           button1_pressed = 1;
           if ((mouseEvent->modifiers() & Qt::ShiftModifier)
               && !(mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = ctx->event_handler(
+            ctx->event_handler(
                 flow_eEvent_MB1PressShift, pos.x(), pos.y(), 0, 0);
           } else if (!(mouseEvent->modifiers() & Qt::ShiftModifier)
               && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = ctx->event_handler(
+            ctx->event_handler(
                 flow_eEvent_MB1PressCtrl, pos.x(), pos.y(), 0, 0);
           } else if ((mouseEvent->modifiers() & Qt::ShiftModifier)
               && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = ctx->event_handler(
+            ctx->event_handler(
                 flow_eEvent_MB1PressShiftCtrl, pos.x(), pos.y(), 0, 0);
           } else {
             ctx->event_handler(
@@ -629,24 +630,24 @@ void FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
           button2_pressed = 1;
           if ((mouseEvent->modifiers() & Qt::ShiftModifier)
               && !(mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = ctx->event_handler(
+            ctx->event_handler(
                 flow_eEvent_MB2PressShift, pos.x(), pos.y(), 0, 0);
           } else if (!(mouseEvent->modifiers() & Qt::ShiftModifier)
               && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = ctx->event_handler(
+            ctx->event_handler(
                 flow_eEvent_MB2PressShift, pos.x(), pos.y(), 0, 0);
           } else if ((mouseEvent->modifiers() & Qt::ShiftModifier)
               && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = ctx->event_handler(
+            ctx->event_handler(
                 flow_eEvent_MB2PressShiftCtrl, pos.x(), pos.y(), 0, 0);
           } else {
-            sts = ctx->event_handler(
+            ctx->event_handler(
                 flow_eEvent_MB2Press, pos.x(), pos.y(), 0, 0);
           }
           break;
         case Qt::RightButton: // Button3
           button3_pressed = 1;
-          sts = ctx->event_handler(
+          ctx->event_handler(
               flow_eEvent_MB3Press, pos.x(), pos.y(), 0, 0);
           break;
         }
@@ -926,7 +927,7 @@ void FlowDrawQt::text(int x, int y, char* text, int len, flow_eDrawType painter_
 {
   unique_ptr<QPainter> painter = get_painter(painter_type, idx);
   if (dimmed) {
-    painter->setBrush(QBrush(flow_allocate_color(this, "gray")));
+    painter->setBrush(QBrush(flow_allocate_color("gray")));
     painter->setPen(QPen(painter->brush(), size+1));
   }
 
@@ -954,7 +955,7 @@ void FlowDrawQt::pixmaps_create(
   for (int i = 0; i < DRAW_PIXMAP_SIZE; i++) {
     if (i == 0 || (i > 0 && pdata->bits != prev_pdata->bits)) {
       pms->pixmap[i] = QBitmap::fromData(QSize(pdata->width, pdata->height),
-          (uchar*)pdata->bits, QImage::Format_MonoLSB);
+          pdata->bits, QImage::Format_MonoLSB);
     } else {
       pms->pixmap[i] = pms->pixmap[i - 1];
     }
@@ -1041,14 +1042,6 @@ bool FlowDrawQt::event_timer_cb()
   return FALSE;
 }
 
-void FlowDrawQt::cancel_event_timer(FlowCtx* ctx)
-{
-  FlowDrawQt* draw_ctx = (FlowDrawQt*)ctx->fdraw;
-  if (draw_ctx->timer_id) {
-    draw_ctx->timer_id->stop();
-  }
-}
-
 void FlowDrawQt::event_timer(FlowCtx* ctx, QMouseEvent* event, QWidget *target)
 {
   if (last_event) {
@@ -1123,7 +1116,7 @@ void FlowDrawQt::set_click_sensitivity(int value)
 
 void FlowDrawQt::set_white_background()
 {
-  background = flow_allocate_color(this, "white");
+  background = flow_allocate_color("white");
 
   QPalette pal;
   pal.setColor(QPalette::Background, background);

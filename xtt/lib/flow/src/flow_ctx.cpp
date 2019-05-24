@@ -120,12 +120,9 @@ FlowCtx::~FlowCtx()
 
 void FlowCtx::delete_all()
 {
-  int i;
-  FlowArrayElem* element;
-
   set_nodraw();
-  for (i = 0; i < a.a_size; i++) {
-    element = a.a[i];
+  for (int i = 0; i < a.a_size; i++) {
+    FlowArrayElem* element = a.a[i];
     remove(element);
     select_remove(element);
     move_remove(element);
@@ -396,18 +393,14 @@ void FlowCtx::conpoint_select_clear()
 
 void FlowCtx::redraw_node_cons(void* node)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     a.a[i]->redraw_node_cons(node);
   }
 }
 
 void FlowCtx::delete_node_cons(void* node)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     i -= a.a[i]->delete_node_cons(node);
   }
 }
@@ -551,9 +544,7 @@ void FlowCtx::redraw_if_dirty()
 
 void FlowCtx::print(double ll_x, double ll_y, double ur_x, double ur_y)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     a.a[i]->print(ll_x, ll_y, ur_x, ur_y);
   }
 }
@@ -573,16 +564,17 @@ void FlowCtx::draw(int ll_x, int ll_y, int ur_x, int ur_y)
 
 void FlowCtx::cut()
 {
-  int i;
-
   if (!a_sel.size())
     return;
+
   paste_clear();
   a_paste.copy_from(a_sel);
-  for (i = 0; i < a_sel.size(); i++) {
+
+  for (int i = 0; i < a_sel.size(); i++) {
     remove(a_sel[i]);
     a_sel[i]->remove_notify();
   }
+
   select_clear();
   nav_zoom();
 }
@@ -605,10 +597,6 @@ void FlowCtx::paste()
 
 void FlowCtx::paste_execute()
 {
-  int i;
-  double ll_x, ll_y, ur_x, ur_y;
-  int delta_x, delta_y;
-
   if (node_movement_paste_active)
     return;
 
@@ -620,14 +608,14 @@ void FlowCtx::paste_execute()
     move_clear();
     a_move.copy_from(a_paste);
   }
-  for (i = 0; i < a_move.size(); i++) {
+  for (int i = 0; i < a_move.size(); i++) {
     if (a_move[i]->type() == flow_eObjectType_Con)
       ((FlowCon*)a_move[i])->set_movement_type(flow_eMoveType_Frozen);
   }
 
   select_clear();
 
-  for (i = 0; i < a_move.size(); i++) {
+  for (int i = 0; i < a_move.size(); i++) {
     a.insert(a_move[i]);
   }
   if (application_paste)
@@ -635,14 +623,11 @@ void FlowCtx::paste_execute()
   else
     a_sel.copy_from(a_move);
 
-  ur_x = -1e10;
-  ll_x = 1e10;
-  ur_y = -1e10;
-  ll_y = 1e10;
+  double ll_x = 1e10, ll_y = 1e10, ur_x = -1e10, ur_y = -1e10;
   a_move.get_borders(&ur_x, &ll_x, &ur_y, &ll_y);
 
-  delta_x = int((ur_x + ll_x) / 2 * zoom_factor - offset_x - cursor_x);
-  delta_y = int((ur_y + ll_y) / 2 * zoom_factor - offset_y - cursor_y);
+  int delta_x = int((ur_x + ll_x) / 2 * zoom_factor - offset_x - cursor_x);
+  int delta_y = int((ur_y + ll_y) / 2 * zoom_factor - offset_y - cursor_y);
   node_movement_paste_active = 1;
 
   a_move.move_noerase(-delta_x, -delta_y, 0);
@@ -730,29 +715,26 @@ int FlowCtx::print_pdf_region(
 void FlowCtx::print_draw_page(void* context, const char* title, int page,
     flow_eOrientation orientation, double scale)
 {
-  double ll_x, ll_y, ur_x, ur_y;
-  int sts;
-
   if (a.size() == 0)
     return;
 
   int doc_cnt = 0;
-  int found = 0;
   int page_idx = 0;
   for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Node
         && ((FlowNode*)a.a[i])->nc->group == flow_eNodeGroup_Document) {
       doc_cnt++;
       if (doc_cnt == page + 1) {
-        found = 1;
         page_idx = i;
         break;
       }
     }
   }
 
+  double ll_x, ll_y, ur_x, ur_y;
   ((FlowNode*)a[page_idx])->measure(&ll_x, &ll_y, &ur_x, &ur_y);
 
+  int sts;
   current_print
       = (FlowPrint*)fdraw->print_draw_new(context, title, page, this, 1, &sts);
   if (EVEN(sts))
@@ -846,28 +828,24 @@ void FlowCtx::find_grid(double x, double y, double* x_grid, double* y_grid)
 int FlowCtx::event_handler(flow_eEvent event, int x, int y, int w, int h)
 {
   int sts = 0;
-  int i;
-  FlowCtx* ctx;
   int node_move_event = 0;
 
   if (event < flow_eEvent_Null || event >= flow_eEvent__)
     return 0;
-
-  ctx = this;
 
   callback_object_type = flow_eObjectType_NoObject;
   callback_object = 0;
 
   if (event == event_create_con) {
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[i]->event_handler(event, x, y);
       if (sts)
         break;
     }
   } else if (event == event_select_conpoint) {
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[i]->event_handler(event, x, y);
       if (sts)
         break;
@@ -877,14 +855,12 @@ int FlowCtx::event_handler(flow_eEvent event, int x, int y, int w, int h)
     move_clear();
 
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[i]->event_handler(event, x, y);
       if (sts)
         break;
     }
     if (sts) {
-      int j, node_cnt;
-
       // If trace is started, move only tracenodes
       if (trace_started && a_move.size() > 0
           && a_move[0]->type() == flow_eObjectType_Node
@@ -896,7 +872,7 @@ int FlowCtx::event_handler(flow_eEvent event, int x, int y, int w, int h)
         move_clear();
 
         /* Insert nodes first and then all connections connected to the nodes */
-        for (i = 0; i < a_sel.size(); i++) {
+        for (int i = 0; i < a_sel.size(); i++) {
           if (a_sel[i]->type() == flow_eObjectType_Node)
             move_insert(a_sel[i]);
         }
@@ -910,9 +886,9 @@ int FlowCtx::event_handler(flow_eEvent event, int x, int y, int w, int h)
       node_move_last_y = y;
 
       /* Insert all connnected cons for movement */
-      node_cnt = a_move.size();
-      for (i = 0; i < node_cnt; i++) {
-        for (j = 0; j < a.size(); j++) {
+      int node_cnt = a_move.size();
+      for (int i = 0; i < node_cnt; i++) {
+        for (int j = 0; j < a.size(); j++) {
           if (a[j]->type() == flow_eObjectType_Con
               && ((FlowCon*)a[j])->is_connected_to((FlowNode*)a_move[i])) {
             if (move_insert(a[j]))
@@ -965,7 +941,7 @@ int FlowCtx::event_handler(flow_eEvent event, int x, int y, int w, int h)
         e.any.y_pixel = y;
         e.any.x = 1.0 * (x + offset_x) / zoom_factor;
         e.any.y = 1.0 * (y + offset_y) / zoom_factor;
-        for (i = 0; i < a_move.size(); i++) {
+        for (int i = 0; i < a_move.size(); i++) {
           e.object.object = a_move[i];
           e.object.object_type = a_move[i]->type();
           event_callback[event_move_node](this, &e);
@@ -995,7 +971,7 @@ int FlowCtx::event_handler(flow_eEvent event, int x, int y, int w, int h)
       break;
     tiptext->remove();
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[i]->event_handler(event, x, y);
       if (sts == FLOW__DESTROYED)
         return sts;
@@ -1008,13 +984,13 @@ int FlowCtx::event_handler(flow_eEvent event, int x, int y, int w, int h)
     int width, height;
     int size_changed = 0;
 
-    ctx->fdraw->get_window_size(mw, &width, &height);
+    fdraw->get_window_size(mw, &width, &height);
     if (window_width != width || window_height != height) {
       window_width = width;
       window_height = height;
       if (type() == flow_eCtxType_Brow)
         // Get FlowFrame borders
-        ((BrowCtx*)ctx)->frame_x_right
+        ((BrowCtx*)this)->frame_x_right
             = MAX(x_right, 1.0 * (window_width + offset_x) / zoom_factor);
       size_changed = 1;
 
@@ -1041,7 +1017,7 @@ int FlowCtx::event_handler(flow_eEvent event, int x, int y, int w, int h)
       node_move_last_y = y;
     }
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[i]->event_handler(event, x, y);
     }
     break;
@@ -1054,7 +1030,7 @@ int FlowCtx::event_handler(flow_eEvent event, int x, int y, int w, int h)
     } else if (con_create_active) {
       con_create_last_x = x;
       con_create_last_y = y;
-      for (i = 0; i < a.a_size; i++) {
+      for (int i = 0; i < a.a_size; i++) {
         sts = a.a[i]->event_handler(flow_eEvent_CursorMotion, x, y);
       }
       set_dirty();
@@ -1091,7 +1067,7 @@ int FlowCtx::event_handler(flow_eEvent event, int x, int y, int w, int h)
         e.any.y_pixel = y;
         e.any.x = 1.0 * (x + offset_x) / zoom_factor;
         e.any.y = 1.0 * (y + offset_y) / zoom_factor;
-        for (i = 0; i < a_move.size(); i++) {
+        for (int i = 0; i < a_move.size(); i++) {
           e.object.object = a_move[i];
           e.object.object_type = a_move[i]->type();
           event_callback[event_move_node](this, &e);
@@ -1144,7 +1120,7 @@ int FlowCtx::event_handler(flow_eEvent event, int x, int y, int w, int h)
       set_dirty();
 
       /* Find the destination node */
-      for (i = 0; i < a.a_size; i++) {
+      for (int i = 0; i < a.a_size; i++) {
         sts = a.a[i]->event_handler(event, x, y);
         if (sts)
           break;
@@ -1185,11 +1161,11 @@ int FlowCtx::event_handler(flow_eEvent event, int x, int y, int w, int h)
     cursor_present = 0;
     if (node_movement_active || con_create_active || select_rect_active
         || node_movement_paste_active) {
-      if (x < 0 || x >= ctx->window_width || y < 0 || y >= window_height) {
+      if (x < 0 || x >= window_width || y < 0 || y >= window_height) {
         /* Start auto scrolling */
         auto_scrolling(this);
       }
-    } else if (x < 0 || x > ctx->window_width || y < 0 || y > window_height)
+    } else if (x < 0 || x > window_width || y < 0 || y > window_height)
       a.set_hot(0);
     tiptext->remove();
     break;
@@ -1228,30 +1204,22 @@ int FlowCtx::event_handler(flow_eEvent event, int x, int y, int w, int h)
 
 int FlowCtx::event_handler_nav(flow_eEvent event, int x, int y)
 {
-  FlowCtx* ctx;
-
-  ctx = this;
-
   switch (event) {
-  case flow_eEvent_MB1ClickShift:
-    int delta_x, delta_y, mainwind_delta_x, mainwind_delta_y;
-
-    delta_x = x - (nav_rect_ur_x + nav_rect_ll_x) / 2;
-    delta_y = y - (nav_rect_ur_y + nav_rect_ll_y) / 2;
-    ;
+  case flow_eEvent_MB1ClickShift: {
+    int delta_x = x - (nav_rect_ur_x + nav_rect_ll_x) / 2;
+    int delta_y = y - (nav_rect_ur_y + nav_rect_ll_y) / 2;
     nav_rect_ll_x += delta_x;
     nav_rect_ur_x += delta_x;
     nav_rect_ll_y += delta_y;
     nav_rect_ur_y += delta_y;
 
-    mainwind_delta_x = int(-zoom_factor / nav_zoom_factor * delta_x);
-    mainwind_delta_y = int(-zoom_factor / nav_zoom_factor * delta_y);
-    offset_x -= mainwind_delta_x;
-    offset_y -= mainwind_delta_y;
+    offset_x -= int(-zoom_factor / nav_zoom_factor * delta_x);
+    offset_y -= int(-zoom_factor / nav_zoom_factor * delta_y);
 
     set_dirty();
     change_scrollbar();
     break;
+  }
   case flow_eEvent_MB1Press:
     if (nav_rect_ll_x < x && x < nav_rect_ur_x && nav_rect_ll_y < y
         && y < nav_rect_ur_y) {
@@ -1260,7 +1228,6 @@ int FlowCtx::event_handler_nav(flow_eEvent event, int x, int y)
       nav_rect_move_last_y = y;
     }
     break;
-
   case flow_eEvent_MB2Press:
     if (nav_rect_ll_x < x && x < nav_rect_ur_x && nav_rect_ll_y < y
         && y < nav_rect_ur_y) {
@@ -1269,7 +1236,6 @@ int FlowCtx::event_handler_nav(flow_eEvent event, int x, int y)
       nav_rect_move_last_y = y;
     }
     break;
-
   case flow_eEvent_CursorMotion:
     if (nav_rect_ll_x < x && x < nav_rect_ur_x && nav_rect_ll_y < y
         && y < nav_rect_ur_y) {
@@ -1290,10 +1256,8 @@ int FlowCtx::event_handler_nav(flow_eEvent event, int x, int y)
     break;
   case flow_eEvent_ButtonMotion:
     if (nav_rect_movement_active) {
-      int delta_x, delta_y, mainwind_delta_x, mainwind_delta_y;
-
-      delta_x = x - nav_rect_move_last_x;
-      delta_y = y - nav_rect_move_last_y;
+      int delta_x = x - nav_rect_move_last_x;
+      int delta_y = y - nav_rect_move_last_y;
       nav_rect_ll_x += delta_x;
       nav_rect_ur_x += delta_x;
       nav_rect_ll_y += delta_y;
@@ -1301,37 +1265,26 @@ int FlowCtx::event_handler_nav(flow_eEvent event, int x, int y)
       nav_rect_move_last_x = x;
       nav_rect_move_last_y = y;
 
-      mainwind_delta_x = int(-zoom_factor / nav_zoom_factor * delta_x);
-      mainwind_delta_y = int(-zoom_factor / nav_zoom_factor * delta_y);
-      offset_x -= mainwind_delta_x;
-      offset_y -= mainwind_delta_y;
+      offset_x -= int(-zoom_factor / nav_zoom_factor * delta_x);
+      offset_y -= int(-zoom_factor / nav_zoom_factor * delta_y);
 
       set_dirty();
 
       change_scrollbar();
     } else if (nav_rect_zoom_active) {
-      int delta_x, delta_y;
-      double zoom_f;
-      double center_x, center_y;
-      double center_dist, center_dist_last;
-
       set_dirty();
 
-      delta_x = x - nav_rect_move_last_x;
-      delta_y = y - nav_rect_move_last_y;
-
-      center_x = 0.5 * (nav_rect_ur_x + nav_rect_ll_x);
-      center_y = 0.5 * (nav_rect_ur_y + nav_rect_ll_y);
-      center_dist_last = sqrt(
+      double center_x = 0.5 * (nav_rect_ur_x + nav_rect_ll_x);
+      double center_y = 0.5 * (nav_rect_ur_y + nav_rect_ll_y);
+      double center_dist_last = sqrt(
           (nav_rect_move_last_x - center_x) * (nav_rect_move_last_x - center_x)
           + (nav_rect_move_last_y - center_y)
               * (nav_rect_move_last_y - center_y));
-      center_dist = sqrt(
+      double center_dist = sqrt(
           (x - center_x) * (x - center_x) + (y - center_y) * (y - center_y));
       if (center_dist < DBL_EPSILON)
         return 1;
-      zoom_f = center_dist_last / center_dist;
-      zoom(zoom_f);
+      zoom(center_dist_last / center_dist);
       nav_rect_move_last_x = x;
       nav_rect_move_last_y = y;
     }
@@ -1425,9 +1378,7 @@ void FlowCtx::tiptext_event(FlowArrayElem* object, int x, int y)
 
 FlowArrayElem* FlowCtx::get_node_from_name(char* name)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Node
         && streq(((FlowNode*)a.a[i])->n_name, name))
       return a.a[i];
@@ -1437,9 +1388,7 @@ FlowArrayElem* FlowCtx::get_node_from_name(char* name)
 
 FlowArrayElem* FlowCtx::get_nodeclass_from_name(char* name)
 {
-  int i;
-
-  for (i = 0; i < a_nc.a_size; i++) {
+  for (int i = 0; i < a_nc.a_size; i++) {
     if (streq(((FlowNodeClass*)a_nc.a[i])->nc_name, name))
       return a_nc.a[i];
   }
@@ -1448,9 +1397,7 @@ FlowArrayElem* FlowCtx::get_nodeclass_from_name(char* name)
 
 FlowArrayElem* FlowCtx::get_conclass_from_name(char* name)
 {
-  int i;
-
-  for (i = 0; i < a_cc.a_size; i++) {
+  for (int i = 0; i < a_cc.a_size; i++) {
     if (streq(((FlowConClass*)a_cc.a[i])->cc_name, name))
       return a_cc.a[i];
   }
@@ -1459,9 +1406,7 @@ FlowArrayElem* FlowCtx::get_conclass_from_name(char* name)
 
 void FlowCtx::remove_trace_objects()
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Node
         && ((FlowNode*)a.a[i])->nc->group == flow_eNodeGroup_Trace) {
       remove(a.a[i]);
@@ -1477,13 +1422,13 @@ void FlowCtx::remove_trace_objects()
       i--;
     }
   }
-  for (i = 0; i < a_nc.a_size; i++) {
+  for (int i = 0; i < a_nc.a_size; i++) {
     if (((FlowNodeClass*)a_nc.a[i])->group == flow_eNodeGroup_Trace) {
       a_nc.remove(a_nc.a[i]);
       i--;
     }
   }
-  for (i = 0; i < a_cc.a_size; i++) {
+  for (int i = 0; i < a_cc.a_size; i++) {
     if (((FlowConClass*)a_cc.a[i])->group == flow_eConGroup_Trace) {
       a_cc.remove(a_cc.a[i]);
       i--;
@@ -1497,13 +1442,11 @@ int FlowCtx::trace_init(
     int (*connect_func)(void*, char*, char*, flow_eTraceType, void**),
     int (*disconnect_func)(void*), int (*scan_func)(void*, void*))
 {
-  int i, sts;
-
   trace_connect_func = connect_func;
   trace_disconnect_func = disconnect_func;
   trace_scan_func = scan_func;
-  sts = 1;
-  for (i = 0; i < a.a_size; i++) {
+  int sts = 1;
+  for (int i = 0; i < a.a_size; i++) {
     sts = a.a[i]->trace_init();
     if (!sts)
       break;
@@ -1514,21 +1457,17 @@ int FlowCtx::trace_init(
 
 void FlowCtx::trace_close()
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++)
+  for (int i = 0; i < a.a_size; i++)
     a.a[i]->trace_close();
   trace_started = 0;
 }
 
 void FlowCtx::trace_scan()
 {
-  int i;
-
   if (nodraw)
     return;
 
-  for (i = 0; i < a.a_size; i++)
+  for (int i = 0; i < a.a_size; i++)
     a.a[i]->trace_scan();
 
   redraw_if_dirty();
@@ -1536,13 +1475,11 @@ void FlowCtx::trace_scan()
 
 void FlowCtx::get_selected_nodes(FlowArrayElem*** nodes, int* num)
 {
-  int i;
-
   *num = 0;
   if (a_sel.size() == 0)
     return;
   *nodes = (FlowArrayElem**)calloc(a_sel.size(), sizeof(nodes));
-  for (i = 0; i < a_sel.size(); i++) {
+  for (int i = 0; i < a_sel.size(); i++) {
     if (a_sel[i]->type() == flow_eObjectType_Node) {
       (*nodes)[*num] = a_sel[i];
       (*num)++;
@@ -1554,11 +1491,9 @@ void FlowCtx::get_selected_nodes(FlowArrayElem*** nodes, int* num)
 
 void FlowCtx::get_selected_cons(FlowArrayElem*** cons, int* num)
 {
-  int i;
-
   *num = 0;
   *cons = (FlowArrayElem**)calloc(a_sel.size(), sizeof(cons));
-  for (i = 0; i < a_sel.size(); i++) {
+  for (int i = 0; i < a_sel.size(); i++) {
     if (a_sel[i]->type() == flow_eObjectType_Con) {
       (*cons)[*num] = a_sel[i];
       (*num)++;
@@ -1588,9 +1523,7 @@ void FlowCtx::center_object(FlowArrayElem* object)
 
 FlowArrayElem* FlowCtx::get_document(double x, double y)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Node
         && ((FlowNode*)a.a[i])->nc->group == flow_eNodeGroup_Document
         && ((FlowNode*)a.a[i])->x_left < x && ((FlowNode*)a.a[i])->x_right > x
@@ -1602,15 +1535,13 @@ FlowArrayElem* FlowCtx::get_document(double x, double y)
 
 void FlowCtx::reconfigure()
 {
-  int i;
-  flow_sEvent e;
-
   set_nodraw();
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Node) {
       if (grid_on) {
         ((FlowNode*)a.a[i])->move(0, 0, 1);
         if (event_callback[flow_eEvent_ObjectMoved]) {
+          flow_sEvent e;
           e.event = flow_eEvent_ObjectMoved;
           e.any.type = flow_eEventType_Object;
           e.any.x_pixel = 0;
@@ -1624,10 +1555,11 @@ void FlowCtx::reconfigure()
       }
     }
   }
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Con) {
       ((FlowCon*)a.a[i])->reconfigure();
       if (event_callback[flow_eEvent_ObjectMoved]) {
+        flow_sEvent e;
         e.event = flow_eEvent_ObjectMoved;
         e.any.type = flow_eEventType_Object;
         e.any.x_pixel = 0;

@@ -126,9 +126,6 @@ GlowCon::GlowCon(GrowCtx* glow_ctx, const char* name, GlowConClass* con_class,
   GlowLine* l1;
   GlowArc* a1;
   GlowArrow* arrow;
-  int i;
-  int sts;
-  bool created = false;
 
   if (!cc)
     return;
@@ -136,7 +133,7 @@ GlowCon::GlowCon(GrowCtx* glow_ctx, const char* name, GlowConClass* con_class,
   strcpy(trace_object, "");
   strcpy(trace_attribute, "");
   if (x_vect && y_vect) {
-    for (i = 0; i < point_num; i++) {
+    for (int i = 0; i < point_num; i++) {
       point_x[i] = x_vect[i];
       point_y[i] = y_vect[i];
     }
@@ -166,7 +163,7 @@ GlowCon::GlowCon(GrowCtx* glow_ctx, const char* name, GlowConClass* con_class,
   case glow_eConType_StepConv:
   case glow_eConType_TransDiv:
   case glow_eConType_TransConv:
-    for (i = 0; i < MAX_POINT - 1; i++) {
+    for (int i = 0; i < MAX_POINT - 1; i++) {
       l1 = new GlowLine(ctx, 0, 0, 0, 0, cc->draw_type, cc->line_width);
       line_a.insert(l1);
     }
@@ -175,7 +172,8 @@ GlowCon::GlowCon(GrowCtx* glow_ctx, const char* name, GlowConClass* con_class,
       break;
     con_route_grafcet(cc->con_type, src_x, src_y, dest_x, dest_y);
     break;
-  case glow_eConType_Fixed:
+  case glow_eConType_Fixed: {
+    int i;
     if (!point_num) {
       l1 = new GlowLine(
           ctx, src_x, src_y, dest_x, dest_y, cc->draw_type, cc->line_width);
@@ -208,6 +206,7 @@ GlowCon::GlowCon(GrowCtx* glow_ctx, const char* name, GlowConClass* con_class,
     else
       draw_routed(p_num, point_x, point_y);
     break;
+  }
   case glow_eConType_AllFixed:
     if (nodraw)
       break;
@@ -217,12 +216,12 @@ GlowCon::GlowCon(GrowCtx* glow_ctx, const char* name, GlowConClass* con_class,
       draw_routed(p_num, point_x, point_y);
     break;
   case glow_eConType_Routed:
-    for (i = 0; i < MAX_POINT - 1; i++) {
+    for (int i = 0; i < MAX_POINT - 1; i++) {
       l1 = new GlowLine(ctx, 0, 0, 0, 0, cc->draw_type, cc->line_width);
       line_a.insert(l1);
     }
     if (cc->corner == glow_eCorner_Rounded) {
-      for (i = 0; i < MAX_POINT - 2; i++) {
+      for (int i = 0; i < MAX_POINT - 2; i++) {
         a1 = new GlowArc(ctx, 0, 0, 0, 0, 0, 0, cc->draw_type, cc->line_width);
         arc_a.insert(a1);
       }
@@ -237,17 +236,13 @@ GlowCon::GlowCon(GrowCtx* glow_ctx, const char* name, GlowConClass* con_class,
       else
         draw_routed(p_num, point_x, point_y);
     } else {
-      created = true;
-      sts = con_route(
+      int sts = con_route(
           src_x, src_y, source_direction, dest_x, dest_y, dest_direction);
       if (EVEN(sts) && sts != 0) {
         std::cout << "GlowCon:no such conpoint\n";
         return;
       }
-      if (sts == 0)
-        temporary_ref = 1;
-      else
-        temporary_ref = 0;
+      temporary_ref = (sts == 0);
     }
 
     break;
@@ -407,11 +402,9 @@ void GlowCon::select_region_insert(
 
 void GlowCon::zoom()
 {
-  int i;
-
-  for (i = 0; i < l_num; i++)
+  for (int i = 0; i < l_num; i++)
     ((GlowLine*)line_a[i])->zoom();
-  for (i = 0; i < a_num; i++)
+  for (int i = 0; i < a_num; i++)
     ((GlowLine*)arc_a[i])->zoom();
   arrow_a.zoom();
   ref_a.zoom();
@@ -419,11 +412,9 @@ void GlowCon::zoom()
 
 void GlowCon::nav_zoom()
 {
-  int i;
-
-  for (i = 0; i < l_num; i++)
+  for (int i = 0; i < l_num; i++)
     ((GlowLine*)line_a[i])->nav_zoom();
-  for (i = 0; i < a_num; i++)
+  for (int i = 0; i < a_num; i++)
     ((GlowLine*)arc_a[i])->nav_zoom();
   arrow_a.nav_zoom();
   ref_a.nav_zoom();
@@ -446,8 +437,6 @@ int GlowCon::delete_node_cons(void* node)
 
 void GlowCon::get_con_borders()
 {
-  int i;
-
   x_right = -1e10;
   x_left = 1e10;
   y_high = -1e10;
@@ -455,9 +444,9 @@ void GlowCon::get_con_borders()
   if (temporary_ref || cc->con_type == glow_eConType_Reference)
     ref_a.get_borders(0, 0, &x_right, &x_left, &y_high, &y_low, NULL);
   else {
-    for (i = 0; i < l_num; i++)
+    for (int i = 0; i < l_num; i++)
       line_a[i]->get_borders(0, 0, &x_right, &x_left, &y_high, &y_low, NULL);
-    for (i = 0; i < a_num; i++)
+    for (int i = 0; i < a_num; i++)
       arc_a[i]->get_borders(0, 0, &x_right, &x_left, &y_high, &y_low, NULL);
   }
   x_right += (cc->line_width + 1) * ctx->mw->zoom_factor_x / 2;
@@ -653,7 +642,6 @@ void GlowCon::open(std::ifstream& fp)
   int end_found = 0;
   char dummy[40];
   char name[80];
-  int i;
   int tmp;
 
   for (;;) {
@@ -746,11 +734,11 @@ void GlowCon::open(std::ifstream& fp)
       fp >> ref_num;
       break;
     case glow_eSave_Con_point_x:
-      for (i = 0; i < p_num; i++)
+      for (int i = 0; i < p_num; i++)
         fp >> point_x[i];
       break;
     case glow_eSave_Con_point_y:
-      for (i = 0; i < p_num; i++)
+      for (int i = 0; i < p_num; i++)
         fp >> point_y[i];
       break;
     case glow_eSave_Con_source_ref_cnt:
@@ -795,7 +783,6 @@ void GlowCon::open(std::ifstream& fp)
 void GlowCon::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
-  int i;
 
   if (ll_x > ur_x) {
     /* Shift */
@@ -817,17 +804,17 @@ void GlowCon::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
     if (temporary_ref || cc->con_type == glow_eConType_Reference)
       ref_a.draw(w, &cc->zero, highlight, hot, NULL);
     else {
-      for (i = 0; i < l_num; i++)
+      for (int i = 0; i < l_num; i++)
         ((GlowLine*)line_a[i])->draw(w, &cc->zero, highlight, hot, NULL);
-      for (i = 0; i < a_num; i++)
+      for (int i = 0; i < a_num; i++)
         ((GlowArc*)arc_a[i])->draw(w, &cc->zero, highlight, hot, NULL);
       arrow_a.draw(w, &cc->zero, highlight, hot, NULL);
       if ((shadow || border) && cc->con_type == glow_eConType_Routed
           && cc->corner == glow_eCorner_Rounded) {
-        for (i = 0; i < l_num; i++)
+        for (int i = 0; i < l_num; i++)
           ((GlowLine*)line_a[i])
               ->draw_shadow(w, border, shadow, highlight, hot);
-        for (i = 0; i < a_num; i++)
+        for (int i = 0; i < a_num; i++)
           ((GlowArc*)arc_a[i])->draw_shadow(w, border, shadow, highlight, hot);
       }
     }
@@ -837,7 +824,6 @@ void GlowCon::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 void GlowCon::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
-  int i;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
   int obj_ll_x = int(x_left * w->zoom_factor_x) - w->offset_x;
   int obj_ur_y = int(y_high * w->zoom_factor_y) - w->offset_y;
@@ -861,17 +847,17 @@ void GlowCon::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
     if (temporary_ref || cc->con_type == glow_eConType_Reference)
       ref_a.draw(w, &cc->zero, highlight, hot, NULL);
     else {
-      for (i = 0; i < l_num; i++)
+      for (int i = 0; i < l_num; i++)
         ((GlowLine*)line_a[i])->draw(w, &cc->zero, highlight, hot, NULL);
-      for (i = 0; i < a_num; i++)
+      for (int i = 0; i < a_num; i++)
         ((GlowArc*)arc_a[i])->draw(w, &cc->zero, highlight, hot, NULL);
       arrow_a.draw(w, &cc->zero, highlight, hot, NULL);
       if ((shadow || border) && cc->con_type == glow_eConType_Routed
           && cc->corner == glow_eCorner_Rounded) {
-        for (i = 0; i < l_num; i++)
+        for (int i = 0; i < l_num; i++)
           ((GlowLine*)line_a[i])
               ->draw_shadow(w, border, shadow, highlight, hot);
-        for (i = 0; i < a_num; i++)
+        for (int i = 0; i < a_num; i++)
           ((GlowArc*)arc_a[i])->draw_shadow(w, border, shadow, highlight, hot);
       }
     }
@@ -1120,7 +1106,6 @@ int GlowCon::con_route_grafcet(glow_eConType con_type, double src_x,
 {
   double x[8], y[8];
   int point;
-  int i;
 
   switch (con_type) {
   case glow_eConType_StepDiv:
@@ -1328,7 +1313,7 @@ int GlowCon::con_route_grafcet(glow_eConType con_type, double src_x,
     break;
   default:;
   }
-  for (i = 0; i < p_num; i++) {
+  for (int i = 0; i < p_num; i++) {
     point_x[i] = x[i];
     point_y[i] = y[i];
   }
@@ -1365,47 +1350,45 @@ int GlowCon::con_route(double src_x, double src_y, glow_eDirection src_dir,
 int GlowCon::con_route_area(
     double wind_ll_x, double wind_ll_y, double wind_ur_x, double wind_ur_y)
 {
-  GlowNode* nodelist = 0;
-  GlowCon* conlist = 0;
-  GlowNode* node_p;
-  int i, j, sts;
-  glow_eDirection dest_dir, src_dir;
-  double dest_x, dest_y;
-  double src_x, src_y;
-  double x[8], y[8];
-  int point;
-  int found;
-
   /* Get the objects in this area */
-  for (i = 0; i < ctx->a.size(); i++) {
+  GlowCon* conlist = 0;
+  for (int i = 0; i < ctx->a.size(); i++) {
     if (ctx->a[i]->in_area(wind_ll_x, wind_ll_y, wind_ur_x, wind_ur_y)) {
       if (ctx->a[i]->type() == glow_eObjectType_Con
           && ctx->a[i] != (GlowArrayElem*)this)
         ctx->a[i]->link_insert((void**)&conlist);
     }
   }
+
+  GlowNode* nodelist = 0;
   dest_node->link_insert((void**)&nodelist);
   if (dest_node != source_node)
     source_node->link_insert((void**)&nodelist);
   if (!nodelist)
     return 0;
 
-  sts = dest_node->get_conpoint(dest_conpoint, &dest_x, &dest_y, &dest_dir);
+  double dest_x, dest_y;
+  glow_eDirection dest_dir;
+  int sts = dest_node->get_conpoint(dest_conpoint, &dest_x, &dest_y, &dest_dir);
   if (EVEN(sts))
     return sts;
+
+  double src_x, src_y;
+  glow_eDirection src_dir;
   sts = source_node->get_conpoint(source_conpoint, &src_x, &src_y, &src_dir);
   if (EVEN(sts))
     return sts;
 
   /* Find straight line between source and destination */
+  double x[8], y[8];
   if (fabs(dest_y - src_y) < CON_EPSILON
       && ((dest_dir == glow_eDirection_Right && src_dir == glow_eDirection_Left
               && dest_x <= src_x)
              || (dest_dir == glow_eDirection_Left
                     && src_dir == glow_eDirection_Right && dest_x >= src_x))) {
-    found = 0;
+    int found = 0;
     if (fabs(dest_x - src_x) > 3 * ctx->draw_delta) {
-      for (node_p = nodelist; node_p; node_p = node_p->link) {
+      for (GlowNode* node_p = nodelist; node_p; node_p = node_p->link) {
         if (node_p == dest_node || node_p == source_node)
           continue;
         if (node_p->in_horiz_line(dest_y,
@@ -1421,7 +1404,7 @@ int GlowCon::con_route_area(
       point_y[0] = y[0] = src_y;
       point_x[1] = x[1] = src_x;
       point_y[1] = y[1] = src_y;
-      point = p_num = 2;
+      int point = p_num = 2;
       if (cc->corner == glow_eCorner_Rounded)
         draw_routed_roundcorner(point, x, y);
       else
@@ -1433,9 +1416,9 @@ int GlowCon::con_route_area(
               && dest_y <= src_y)
              || (dest_dir == glow_eDirection_Down
                     && src_dir == glow_eDirection_Up && dest_y >= src_y))) {
-    found = 0;
+    int found = 0;
     if (fabs(dest_y - src_y) > 3 * ctx->draw_delta) {
-      for (node_p = nodelist; node_p; node_p = node_p->link) {
+      for (GlowNode* node_p = nodelist; node_p; node_p = node_p->link) {
         if (node_p == dest_node || node_p == source_node)
           continue;
         if (node_p->in_vert_line(dest_x,
@@ -1451,7 +1434,7 @@ int GlowCon::con_route_area(
       point_y[0] = y[0] = dest_y;
       point_x[1] = x[1] = src_x;
       point_y[1] = y[1] = src_y;
-      point = p_num = 2;
+      int point = p_num = 2;
       if (cc->corner == glow_eCorner_Rounded)
         draw_routed_roundcorner(point, x, y);
       else
@@ -1462,18 +1445,18 @@ int GlowCon::con_route_area(
 
   /* Find vertical routing lines */
   vert_line_cnt = 0;
-  sts = find_vert_line_right(wind_ll_x, wind_ll_y, wind_ur_y, nodelist,
-      nodelist, conlist, conlist, wind_ll_y, wind_ur_y);
-  sts = find_vert_line_left(wind_ur_x, wind_ll_y, wind_ur_y, nodelist, nodelist,
+  find_vert_line_right(wind_ll_x, wind_ll_y, wind_ur_y, nodelist, nodelist,
+      conlist, conlist, wind_ll_y, wind_ur_y);
+  find_vert_line_left(wind_ur_x, wind_ll_y, wind_ur_y, nodelist, nodelist,
       conlist, conlist, wind_ll_y, wind_ur_y);
 
-  for (node_p = nodelist; node_p; node_p = node_p->link) {
+  for (GlowNode* node_p = nodelist; node_p; node_p = node_p->link) {
     if (node_p->obst_x_right < wind_ur_x)
-      sts = find_vert_line_right(node_p->obst_x_right, node_p->obst_y_low,
+      find_vert_line_right(node_p->obst_x_right, node_p->obst_y_low,
           node_p->obst_y_high, nodelist, node_p->link, conlist, conlist,
           wind_ll_y, wind_ur_y);
     if (node_p->obst_x_left > wind_ll_x)
-      sts = find_vert_line_left(node_p->obst_x_left, node_p->obst_y_low,
+      find_vert_line_left(node_p->obst_x_left, node_p->obst_y_low,
           node_p->obst_y_high, nodelist, node_p->link, conlist, conlist,
           wind_ll_y, wind_ur_y);
     if (vert_line_cnt > HV_LINE_ARRAY_SIZE - 3)
@@ -1482,18 +1465,18 @@ int GlowCon::con_route_area(
 
   /* Find horizontal routing lines */
   horiz_line_cnt = 0;
-  sts = find_horiz_line_up(wind_ll_y, wind_ll_x, wind_ur_x, nodelist, nodelist,
+  find_horiz_line_up(wind_ll_y, wind_ll_x, wind_ur_x, nodelist, nodelist,
       conlist, conlist, wind_ll_x, wind_ur_x);
-  sts = find_horiz_line_down(wind_ur_y, wind_ll_x, wind_ur_x, nodelist,
-      nodelist, conlist, conlist, wind_ll_x, wind_ur_x);
+  find_horiz_line_down(wind_ur_y, wind_ll_x, wind_ur_x, nodelist, nodelist,
+      conlist, conlist, wind_ll_x, wind_ur_x);
 
-  for (node_p = nodelist; node_p; node_p = node_p->link) {
+  for (GlowNode* node_p = nodelist; node_p; node_p = node_p->link) {
     if (node_p->obst_y_high < wind_ur_y)
-      sts = find_horiz_line_up(node_p->obst_y_high, node_p->obst_x_left,
+      find_horiz_line_up(node_p->obst_y_high, node_p->obst_x_left,
           node_p->obst_x_right, nodelist, node_p->link, conlist, conlist,
           wind_ll_x, wind_ur_x);
     if (node_p->obst_y_low > wind_ll_y)
-      sts = find_horiz_line_down(node_p->obst_y_low, node_p->obst_x_left,
+      find_horiz_line_down(node_p->obst_y_low, node_p->obst_x_left,
           node_p->obst_x_right, nodelist, node_p->link, conlist, conlist,
           wind_ll_x, wind_ur_x);
     if (horiz_line_cnt > HV_LINE_ARRAY_SIZE - 3)
@@ -1621,7 +1604,7 @@ int GlowCon::con_route_area(
     line_table[0].vert_cnt = 0;
     line_table[0].complete = 0;
     line_table[0].start_type = eLineType_Horiz;
-    sts = find_horiz_line_next_line(&horiz_line[horiz_line_cnt - 1]);
+    find_horiz_line_next_line(&horiz_line[horiz_line_cnt - 1]);
     break;
   case glow_eDirection_Left:
     horiz_line[horiz_line_cnt].y = src_y;
@@ -1638,7 +1621,7 @@ int GlowCon::con_route_area(
     line_table[0].vert_cnt = 0;
     line_table[0].complete = 0;
     line_table[0].start_type = eLineType_Horiz;
-    sts = find_horiz_line_next_line(&horiz_line[horiz_line_cnt - 1]);
+    find_horiz_line_next_line(&horiz_line[horiz_line_cnt - 1]);
     break;
   case glow_eDirection_Up:
     vert_line[vert_line_cnt].x = src_x;
@@ -1655,7 +1638,7 @@ int GlowCon::con_route_area(
     line_table[0].horiz_cnt = 0;
     line_table[0].complete = 0;
     line_table[0].start_type = eLineType_Vert;
-    sts = find_vert_line_next_line(&vert_line[vert_line_cnt - 1]);
+    find_vert_line_next_line(&vert_line[vert_line_cnt - 1]);
     break;
   case glow_eDirection_Down:
     vert_line[vert_line_cnt].x = src_x;
@@ -1672,7 +1655,7 @@ int GlowCon::con_route_area(
     line_table[0].horiz_cnt = 0;
     line_table[0].complete = 0;
     line_table[0].start_type = eLineType_Vert;
-    sts = find_vert_line_next_line(&vert_line[vert_line_cnt - 1]);
+    find_vert_line_next_line(&vert_line[vert_line_cnt - 1]);
     break;
   case glow_eDirection_Center:
     break;
@@ -1681,7 +1664,7 @@ int GlowCon::con_route_area(
   /* Select the shortest */
   int min_idx = 0;
   int min_cnt = 10000;
-  for (i = 0; i < line_table_cnt; i++) {
+  for (int i = 0; i < line_table_cnt; i++) {
     if (line_table[i].complete) {
       if (line_table[i].start_type == eLineType_Horiz) {
         if (min_cnt > line_table[i].horiz_cnt) {
@@ -1702,9 +1685,9 @@ int GlowCon::con_route_area(
     return 0;
 
   /* Draw the con */
+  int point = 0;
   if (line_table[min_idx].start_type == eLineType_Horiz) {
-    point = 0;
-    for (j = 0; j < line_table[min_idx].horiz_cnt; j++) {
+    for (int j = 0; j < line_table[min_idx].horiz_cnt; j++) {
       point_x[point] = x[point] = line_table[min_idx].horiz_x[j];
       point_y[point] = y[point] = line_table[min_idx].horiz_y[j];
       point++;
@@ -1715,8 +1698,7 @@ int GlowCon::con_route_area(
       }
     }
   } else {
-    point = 0;
-    for (j = 0; j < line_table[min_idx].vert_cnt; j++) {
+    for (int j = 0; j < line_table[min_idx].vert_cnt; j++) {
       point_x[point] = x[point] = line_table[min_idx].vert_x[j];
       point_y[point] = y[point] = line_table[min_idx].vert_y[j];
       point++;
@@ -1728,7 +1710,6 @@ int GlowCon::con_route_area(
     }
   }
   if (point > MAX_POINT - 1)
-
     return 0;
 
   point_x[point] = x[point] = dest_x;
@@ -1935,11 +1916,6 @@ int GlowCon::sort_lines(double dest_x, double dest_y, glow_eDirection dest_dir,
 
 int GlowCon::find_horiz_line_next_line(con_tHorizLines* h_line)
 {
-  int horiz_cnt;
-  int vert_cnt;
-  int i, j, found;
-  int sts;
-
   loop_cnt++;
   if (loop_cnt > ROUTE_LOOP_MAX)
     return 0;
@@ -1947,7 +1923,7 @@ int GlowCon::find_horiz_line_next_line(con_tHorizLines* h_line)
     return 0;
 
   /* Find vertical lines that intercept */
-  for (i = 0; i < vert_line_cnt; i++) {
+  for (int i = 0; i < vert_line_cnt; i++) {
     if (h_line->l_x <= vert_line[i].x && vert_line[i].x <= h_line->u_x
         && vert_line[i].l_y <= h_line->y && h_line->y <= vert_line[i].u_y) {
       if (vert_line[i].dest) {
@@ -1982,8 +1958,8 @@ int GlowCon::find_horiz_line_next_line(con_tHorizLines* h_line)
                        + line_table[line_table_cnt].horiz_cnt
                    < MAX_POINT - 1)) {
           /* Check that the line is not already inserted */
-          found = 0;
-          for (j = 0; j < line_table[line_table_cnt].vert_cnt; j++) {
+          int found = 0;
+          for (int j = 0; j < line_table[line_table_cnt].vert_cnt; j++) {
             if (line_table[line_table_cnt].vert[j] == &vert_line[i]) {
               found = 1;
               break;
@@ -1993,8 +1969,8 @@ int GlowCon::find_horiz_line_next_line(con_tHorizLines* h_line)
             /* Try this line  */
 
             /* Store the counters */
-            vert_cnt = line_table[line_table_cnt].vert_cnt;
-            horiz_cnt = line_table[line_table_cnt].horiz_cnt;
+            int vert_cnt = line_table[line_table_cnt].vert_cnt;
+            int horiz_cnt = line_table[line_table_cnt].horiz_cnt;
 
             line_table[line_table_cnt].vert[line_table[line_table_cnt].vert_cnt]
                 = &vert_line[i];
@@ -2005,12 +1981,8 @@ int GlowCon::find_horiz_line_next_line(con_tHorizLines* h_line)
                 .vert_y[line_table[line_table_cnt].vert_cnt]
                 = h_line->y;
             line_table[line_table_cnt].vert_cnt++;
-            //            printf( "Trying vert: %d, vert_cnt %d, horiz_cnt %d nr
-            //            %d\n",
-            //		&vert_line[i], line_table[line_table_cnt].vert_cnt,
-            //		line_table[line_table_cnt].horiz_cnt, i);
-            //	    print_line();
-            sts = find_vert_line_next_line(&vert_line[i]);
+
+            int sts = find_vert_line_next_line(&vert_line[i]);
             if (sts == CON__ROUTE_FOUND)
               return sts;
             else if (EVEN(sts))
@@ -2029,11 +2001,6 @@ int GlowCon::find_horiz_line_next_line(con_tHorizLines* h_line)
 
 int GlowCon::find_vert_line_next_line(con_tVertLines* v_line)
 {
-  int horiz_cnt;
-  int vert_cnt;
-  int i, j, found;
-  int sts;
-
   loop_cnt++;
   if (loop_cnt > ROUTE_LOOP_MAX)
     return 0;
@@ -2041,7 +2008,7 @@ int GlowCon::find_vert_line_next_line(con_tVertLines* v_line)
     return 0;
 
   /* Find horizontal lines that intercept */
-  for (i = 0; i < horiz_line_cnt; i++) {
+  for (int i = 0; i < horiz_line_cnt; i++) {
     if (v_line->l_y <= horiz_line[i].y && horiz_line[i].y <= v_line->u_y
         && horiz_line[i].l_x <= v_line->x && v_line->x <= horiz_line[i].u_x) {
       if (horiz_line[i].dest) {
@@ -2076,8 +2043,8 @@ int GlowCon::find_vert_line_next_line(con_tVertLines* v_line)
             && (line_table[line_table_cnt].vert_cnt
                        + line_table[line_table_cnt].horiz_cnt
                    < MAX_POINT - 1)) {
-          found = 0;
-          for (j = 0; j < line_table[line_table_cnt].horiz_cnt; j++) {
+          int found = 0;
+          for (int j = 0; j < line_table[line_table_cnt].horiz_cnt; j++) {
             if (line_table[line_table_cnt].horiz[j] == &horiz_line[i]) {
               found = 1;
               break;
@@ -2087,8 +2054,8 @@ int GlowCon::find_vert_line_next_line(con_tVertLines* v_line)
             /* Try this line  */
 
             /* Store the counters */
-            vert_cnt = line_table[line_table_cnt].vert_cnt;
-            horiz_cnt = line_table[line_table_cnt].horiz_cnt;
+            int vert_cnt = line_table[line_table_cnt].vert_cnt;
+            int horiz_cnt = line_table[line_table_cnt].horiz_cnt;
 
             line_table[line_table_cnt]
                 .horiz[line_table[line_table_cnt].horiz_cnt]
@@ -2100,12 +2067,8 @@ int GlowCon::find_vert_line_next_line(con_tVertLines* v_line)
                 .horiz_x[line_table[line_table_cnt].horiz_cnt]
                 = v_line->x;
             line_table[line_table_cnt].horiz_cnt++;
-            //            printf( "Trying horiz: %d, vert_cnt %d, horiz_cnt %d
-            //            nr %d\n",
-            //		&horiz_line[i], line_table[line_table_cnt].vert_cnt,
-            //		line_table[line_table_cnt].horiz_cnt, i);
-            //	    print_line();
-            sts = find_horiz_line_next_line(&horiz_line[i]);
+
+            int sts = find_horiz_line_next_line(&horiz_line[i]);
             if (sts == CON__ROUTE_FOUND)
               return sts;
             else if (EVEN(sts))
@@ -2650,7 +2613,6 @@ void GlowCon::find_horiz_line_right_border(double y, double start_x,
   GlowNode* node_p;
   GlowCon* con_p;
   double l_x;
-  int i;
 
   for (node_p = nodelist; node_p; node_p = node_p->link) {
     if (node_p->in_horiz_line(y, start_x, *border_x))
@@ -2673,11 +2635,8 @@ void GlowCon::find_horiz_line_right_border(double y, double start_x,
 
     /* Check horizontal lines in the con */
     if (con_p->cc->con_type == glow_eConType_Routed && !con_p->temporary_ref) {
-      if (con_p->source_direction == glow_eDirection_Right
-          || con_p->source_direction == glow_eDirection_Left)
-        i = 0;
-      else
-        i = 1;
+      int i = !(con_p->source_direction == glow_eDirection_Right
+          || con_p->source_direction == glow_eDirection_Left);
 
       for (; i < con_p->p_num - 1; i += 2) {
         if (con_p->point_x[i] < con_p->point_x[i + 1])
@@ -2700,7 +2659,6 @@ void GlowCon::find_horiz_line_left_border(double y, double start_x,
   GlowNode* node_p;
   GlowCon* con_p;
   double u_x;
-  int i;
 
   for (node_p = nodelist; node_p; node_p = node_p->link) {
     if (node_p->in_horiz_line(y, *border_x, start_x))
@@ -2723,11 +2681,8 @@ void GlowCon::find_horiz_line_left_border(double y, double start_x,
 
     /* Check horizontal lines in the con */
     if (con_p->cc->con_type == glow_eConType_Routed && !con_p->temporary_ref) {
-      if (con_p->source_direction == glow_eDirection_Right
-          || con_p->source_direction == glow_eDirection_Left)
-        i = 0;
-      else
-        i = 1;
+      int i = !(con_p->source_direction == glow_eDirection_Right
+          || con_p->source_direction == glow_eDirection_Left);
 
       for (; i < con_p->p_num - 1; i += 2) {
         if (con_p->point_x[i] < con_p->point_x[i + 1])
@@ -2750,7 +2705,6 @@ void GlowCon::find_vert_line_high_border(double x, double start_y,
   GlowNode* node_p;
   GlowCon* con_p;
   double l_y;
-  int i;
 
   for (node_p = nodelist; node_p; node_p = node_p->link) {
     if (node_p->in_vert_line(x, start_y, *border_y))
@@ -2773,11 +2727,8 @@ void GlowCon::find_vert_line_high_border(double x, double start_y,
 
     /* Check vertical lines in the con */
     if (con_p->cc->con_type == glow_eConType_Routed && !con_p->temporary_ref) {
-      if (con_p->source_direction == glow_eDirection_Right
-          || con_p->source_direction == glow_eDirection_Left)
-        i = 1;
-      else
-        i = 0;
+      int i = (con_p->source_direction == glow_eDirection_Right
+          || con_p->source_direction == glow_eDirection_Left);
 
       for (; i < con_p->p_num - 1; i += 2) {
         if (con_p->point_y[i] < con_p->point_y[i + 1])
@@ -2800,7 +2751,6 @@ void GlowCon::find_vert_line_low_border(double x, double start_y,
   GlowNode* node_p;
   GlowCon* con_p;
   double u_y;
-  int i;
 
   for (node_p = nodelist; node_p; node_p = node_p->link) {
     if (node_p->in_vert_line(x, *border_y, start_y))
@@ -2823,11 +2773,8 @@ void GlowCon::find_vert_line_low_border(double x, double start_y,
 
     /* Check vertical lines in the con */
     if (con_p->cc->con_type == glow_eConType_Routed && !con_p->temporary_ref) {
-      if (con_p->source_direction == glow_eDirection_Right
-          || con_p->source_direction == glow_eDirection_Left)
-        i = 1;
-      else
-        i = 0;
+      int i = (con_p->source_direction == glow_eDirection_Right
+          || con_p->source_direction == glow_eDirection_Left);
 
       for (; i < con_p->p_num - 1; i += 2) {
         if (con_p->point_y[i] < con_p->point_y[i + 1])
@@ -2934,7 +2881,6 @@ void GlowCon::draw_routed_trans(int points, double* x, double* y)
 
 void GlowCon::draw_routed_roundcorner(int points, double* x, double* y)
 {
-  int i;
   double r = cc->round_corner_amount;
   double line_x1[8], line_y1[8], line_x2[8], line_y2[8];
   double arc_ll_x[8], arc_ll_y[8], arc_ur_x[8], arc_ur_y[8];
@@ -2944,7 +2890,7 @@ void GlowCon::draw_routed_roundcorner(int points, double* x, double* y)
   GlowArc* a;
   double r_x[8], r_y[8];
 
-  for (i = 1; i < points - 1; i++) {
+  for (int i = 1; i < points - 1; i++) {
     if (i == 1 && fabs(y[0] - y[1]) < DBL_EPSILON
         && fabs(x[0] - x[1]) < DBL_EPSILON) {
       /* First line is a Null line */
@@ -3022,7 +2968,7 @@ void GlowCon::draw_routed_roundcorner(int points, double* x, double* y)
   }
   line_x1[0] = x[0];
   line_y1[0] = y[0];
-  for (i = 1; i < points - 1; i++) {
+  for (int i = 1; i < points - 1; i++) {
     switch (corner_type[i - 1]) {
     case eCorner_RightToUp:
     case eCorner_RightToDown: {
@@ -3155,7 +3101,7 @@ void GlowCon::draw_routed_roundcorner(int points, double* x, double* y)
   line_x2[points - 2] = x[points - 1];
   line_y2[points - 2] = y[points - 1];
 
-  for (i = 0; i < points - 1; i++) {
+  for (int i = 0; i < points - 1; i++) {
     l = (GlowLine*)line_a[i];
     if (i < l_num)
       l->move(&cc->zero, line_x1[i], line_y1[i], line_x2[i], line_y2[i],
@@ -3164,7 +3110,7 @@ void GlowCon::draw_routed_roundcorner(int points, double* x, double* y)
       l->move_noerase(&cc->zero, line_x1[i], line_y1[i], line_x2[i], line_y2[i],
           highlight, hot);
   }
-  for (i = 0; i < points - 2; i++) {
+  for (int i = 0; i < points - 2; i++) {
     a = (GlowArc*)arc_a[i];
     if (i < a_num)
       a->move(&cc->zero, arc_ll_x[i], arc_ll_y[i], arc_ur_x[i], arc_ur_y[i],
@@ -3181,11 +3127,10 @@ void GlowCon::draw_routed_roundcorner(int points, double* x, double* y)
 
 void GlowCon::set_movement_type(GlowArrayElem** a, int a_size)
 {
-  int i;
   int source_found = 0;
   int dest_found = 0;
 
-  for (i = 0; i < a_size; i++) {
+  for (int i = 0; i < a_size; i++) {
     if (a[i] == (GlowArrayElem*)source_node)
       source_found = 1;
     if (a[i] == (GlowArrayElem*)dest_node)
@@ -3384,22 +3329,20 @@ void GlowCon::export_javabean(GlowTransform* t, void* node,
     glow_eExportPass pass, int* shape_cnt, int node_cnt, int in_nc,
     std::ofstream& fp)
 {
-  int i;
-
   if (!(temporary_ref || cc->con_type == glow_eConType_Reference)) {
-    for (i = 0; i < l_num; i++)
+    for (int i = 0; i < l_num; i++)
       ((GlowLine*)line_a[i])
           ->export_javabean(t, node, pass, shape_cnt, node_cnt, in_nc, fp);
-    for (i = 0; i < a_num; i++)
+    for (int i = 0; i < a_num; i++)
       ((GlowArc*)arc_a[i])
           ->export_javabean(t, node, pass, shape_cnt, node_cnt, in_nc, fp);
     if ((shadow || border) && cc->con_type == glow_eConType_Routed
         && cc->corner == glow_eCorner_Rounded) {
-      for (i = 0; i < l_num; i++)
+      for (int i = 0; i < l_num; i++)
         ((GlowLine*)line_a[i])
             ->export_javabean_shadow(
                 t, node, pass, shape_cnt, node_cnt, in_nc, fp, shadow, border);
-      for (i = 0; i < a_num; i++)
+      for (int i = 0; i < a_num; i++)
         ((GlowArc*)arc_a[i])
             ->export_javabean_shadow(
                 t, node, pass, shape_cnt, node_cnt, in_nc, fp, border, shadow);

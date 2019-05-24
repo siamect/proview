@@ -49,6 +49,10 @@
 #define RTT_LOGG_LINE_DEFSIZE 512
 
 typedef enum { xtt_LoggType_Cont = 1, xtt_LoggType_Mod = 2 } xtt_LoggType;
+typedef enum { 
+  xtt_eLoggFormat_Std, 
+  xtt_eLoggFormat_Py
+} xtt_eLoggFormat;
 
 class XttLogging {
 public:
@@ -62,6 +66,7 @@ public:
   int stop_logg;
   int logg_type;
   int logg_priority;
+  xtt_eLoggFormat logg_format;
   pwr_tAName parameterstr[RTT_LOGG_MAXPAR];
   pwr_tAName shortname[RTT_LOGG_MAXPAR];
   char* parameter_ptr[RTT_LOGG_MAXPAR];
@@ -88,10 +93,11 @@ public:
 
   void init(int logg_index, void* logg_xnav);
   int logging_set(float logg_time, char* filename, char* parameterstr,
-      char* conditionstr, int logg_type, int insert, int buffer_size, int stop,
+      char* conditionstr, int logg_type, int logg_format, int insert, int buffer_size, int stop,
       int priority, int create, int line_size, int shortname);
   int show();
   int show_entry(char* buff, int* buff_cnt);
+  int analyse();
   int store(char* filename);
   int start();
   int stop();

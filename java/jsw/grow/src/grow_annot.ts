@@ -49,7 +49,7 @@ class GrowAnnot extends GlowAnnot {
       return;
     }
 
-    let trf_scale = this.trf.vertical_scale(t);
+    let trf_scale = Matrix.multiply(t, this.trf).vertical_scale();
     let idx = Math.floor(trf_scale * this.ctx.mw.zoom_factor_y /
         this.ctx.mw.base_zoom_factor * (this.text_size + 4) - 3);
     let tsize = trf_scale * this.ctx.mw.zoom_factor_y /
@@ -75,11 +75,15 @@ class GrowAnnot extends GlowAnnot {
       ldraw_type = this.draw_type;
     }
 
-    let x1 = Math.floor((this.trf.x(t, this.p.x, this.p.y) + offset_x) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let y1 = Math.floor((this.trf.y(t, this.p.x, this.p.y) + offset_y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    let rot = Math.floor(this.trf.rot(t));
+    let tmp = Matrix.multiply(t, this.trf);
+    let p = tmp.apply(this.p);
+
+    let x1 = Math.floor((p.x + offset_x) * this.ctx.mw.zoom_factor_x) -
+        this.ctx.mw.offset_x;
+    let y1 = Math.floor((p.y + offset_y) * this.ctx.mw.zoom_factor_y) -
+        this.ctx.mw.offset_y;
+    let rot = t ? this.trf.rotation + t.rotation : this.trf.rotation;
+    rot = Math.floor(rot);
     rot = rot < 0 ? rot % 360 + 360 : rot % 360;
 
     switch (this.annot_type) {
@@ -111,8 +115,8 @@ class GrowAnnot extends GlowAnnot {
         if (rot < 45 || rot >= 315) {
           if (node.annotv_inputmode[this.number] !== 0 &&
               node.input_selected !== 0) {
-            this.ctx.gdraw.fill_rect(x1, y1 - height + descent, width, height,
-                DrawType.MediumGray);
+            this.ctx.gdraw.rect(x1, y1 - height + descent, width, height,
+                DrawType.MediumGray, true, 0);
           }
         } else {
           // Text is rotated, adjust the coordinates
@@ -143,7 +147,7 @@ class GrowAnnot extends GlowAnnot {
         }
 
         this.ctx.gdraw.text(x1, y1, node.annotv[this.number], ldraw_type, color,
-            idx, highlight, 0, lfont, tsize, rot);
+            idx, highlight, lfont, tsize, rot);
         break;
       case AnnotType.MultiLine:
         break;
@@ -157,7 +161,7 @@ class GrowAnnot extends GlowAnnot {
       return new Point();
     }
 
-    let trf_scale = this.trf.vertical_scale(t);
+    let trf_scale = Matrix.multiply(t, this.trf).vertical_scale();
     let idx = Math.floor(trf_scale * this.ctx.mw.zoom_factor_y /
         this.ctx.mw.base_zoom_factor * (this.text_size + 4) - 4);
     let tsize = trf_scale * this.ctx.mw.zoom_factor_y /
@@ -167,8 +171,8 @@ class GrowAnnot extends GlowAnnot {
     }
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    return this.ctx.gdraw.getTextExtent(node.annotv[this.number], idx,
-        this.font, this.draw_type);
+    return this.ctx.gdraw.getTextExtent(node.annotv[this.number], this.draw_type, idx,
+        this.font);
   }
 
   event_handler(event, fx, fy) {

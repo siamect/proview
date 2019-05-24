@@ -120,14 +120,14 @@ class GrowRectRounded extends GrowRect {
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    let x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-    let y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-    let x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-    let y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
+
+    let x1 = Math.floor(p1.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p1.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
 
     let ll_x = Math.min(x1, x2);
     let ur_x = Math.max(x1, x2);
@@ -135,7 +135,7 @@ class GrowRectRounded extends GrowRect {
     let ur_y = Math.max(y1, y2);
     let amount = Math.floor(this.round_amount / 100 *
         Math.min(ur_x - ll_x, ur_y - ll_y) + 0.5);
-    if (this.fill !== 0) {
+    if (this.fill) {
       let ish = Math.floor(this.shadow_width / 100 *
           Math.min(ur_x - ll_x, ur_y - ll_y) + 0.5);
       let display_shadow = ((node !== null && node.shadow !== 0) ||
@@ -154,22 +154,22 @@ class GrowRectRounded extends GrowRect {
         if (grad === Gradient.No) {
           let drawtype = (chot === 0) ? fillcolor : GlowColor.shift_drawtype(fillcolor, chot, null);
 
-          this.ctx.gdraw.fill_rect(ll_x, ll_y + amount, ur_x - ll_x, ur_y -
-              ll_y - 2 * amount, drawtype);
-          this.ctx.gdraw.fill_rect(ll_x + amount, ll_y, ur_x - ll_x - 2 *
-              amount, amount, drawtype);
-          this.ctx.gdraw.fill_rect(ll_x + amount, ur_y - amount, ur_x - ll_x -
-              2 * amount, amount, drawtype);
-          this.ctx.gdraw.fill_arc(ll_x, ll_y, 2 * amount, 2 * amount, 90, 90,
-              drawtype);
-          this.ctx.gdraw.fill_arc(ll_x, ur_y - 2 * amount, 2 * amount, 2 *
-              amount, 180, 90, drawtype);
-          this.ctx.gdraw.fill_arc(ur_x - 2 * amount, ur_y - 2 * amount, 2 *
-              amount, 2 * amount, 270, 90, drawtype);
-          this.ctx.gdraw.fill_arc(ur_x - 2 * amount, ll_y, 2 * amount, 2 *
-              amount, 0, 90, drawtype);
+          this.ctx.gdraw.rect(ll_x, ll_y + amount, ur_x - ll_x, ur_y -
+              ll_y - 2 * amount, drawtype, true, 0);
+          this.ctx.gdraw.rect(ll_x + amount, ll_y, ur_x - ll_x - 2 *
+              amount, amount, drawtype, true, 0);
+          this.ctx.gdraw.rect(ll_x + amount, ur_y - amount, ur_x - ll_x -
+              2 * amount, amount, drawtype, true, 0);
+          this.ctx.gdraw.arc(ll_x, ll_y, 2 * amount, 2 * amount, 90, 90,
+              drawtype, true, 0);
+          this.ctx.gdraw.arc(ll_x, ur_y - 2 * amount, 2 * amount, 2 *
+              amount, 180, 90, drawtype, true, 0);
+          this.ctx.gdraw.arc(ur_x - 2 * amount, ur_y - 2 * amount, 2 *
+              amount, 2 * amount, 270, 90, drawtype, true, 0);
+          this.ctx.gdraw.arc(ur_x - 2 * amount, ll_y, 2 * amount, 2 *
+              amount, 0, 90, drawtype, true, 0);
         } else {
-          let rotationa = t ? this.trf.rot(t) : this.trf.rot();
+          let rotationa = t ? this.trf.rotation + t.rotation : this.trf.rotation;
 
           let fa1, fa2;
           if (this.gradient_contrast >= 0) {
@@ -188,8 +188,7 @@ class GrowRectRounded extends GrowRect {
                     chot, null);
           }
           this.ctx.gdraw.gradient_fill_rectrounded(ll_x, ll_y, ur_x -
-              ll_x, ur_y - ll_y, amount, fillcolor, fa1, fa2,
-              this.ctx.gdraw.gradient_rotate(rotationa, grad));
+              ll_x, ur_y - ll_y, amount, fillcolor, fa1, fa2, this.ctx.gdraw.gradient_rotate(rotationa, grad));
         }
       } else {
         let drawtype_incr = (this.relief === Relief.Down) ? -this.shadow_contrast : this.shadow_contrast;
@@ -197,55 +196,55 @@ class GrowRectRounded extends GrowRect {
         // Draw light shadow
         let drawtype =
             GlowColor.shift_drawtype(fillcolor, -drawtype_incr + chot, colornode);
-        this.ctx.gdraw.fill_rect(ll_x + amount, ll_y, ur_x - ll_x - 2 * amount,
-            ish, drawtype);
-        this.ctx.gdraw.fill_rect(ll_x, ll_y + amount, ish, ur_y - ll_y - 2 *
-            amount, drawtype);
-        this.ctx.gdraw.fill_arc(ll_x, ll_y, 2 * amount, 2 * amount, 90, 90,
-            drawtype);
-        this.ctx.gdraw.fill_arc(ll_x, ur_y - 2 * amount, 2 * amount, 2 * amount,
-            180, 45, drawtype);
-        this.ctx.gdraw.fill_arc(ur_x - 2 * amount, ll_y, 2 * amount, 2 * amount,
-            45, 45, drawtype);
+        this.ctx.gdraw.rect(ll_x + amount, ll_y, ur_x - ll_x - 2 * amount,
+            ish, drawtype, true, 0);
+        this.ctx.gdraw.rect(ll_x, ll_y + amount, ish, ur_y - ll_y - 2 *
+            amount, drawtype, true, 0);
+        this.ctx.gdraw.arc(ll_x, ll_y, 2 * amount, 2 * amount, 90, 90,
+            drawtype, true, 0);
+        this.ctx.gdraw.arc(ll_x, ur_y - 2 * amount, 2 * amount, 2 * amount,
+            180, 45, drawtype, true, 0);
+        this.ctx.gdraw.arc(ur_x - 2 * amount, ll_y, 2 * amount, 2 * amount,
+            45, 45, drawtype, true, 0);
         // Draw dark shadow
         drawtype =
             GlowColor.shift_drawtype(fillcolor, drawtype_incr + chot, colornode);
-        this.ctx.gdraw.fill_rect(ll_x + amount, ur_y - ish, ur_x - ll_x - 2 *
-            amount, ish, drawtype);
-        this.ctx.gdraw.fill_rect(ur_x - ish, ll_y + amount, ish, ur_y - ll_y -
-            2 * amount, drawtype);
-        this.ctx.gdraw.fill_arc(ll_x, ur_y - 2 * amount, 2 * amount, 2 * amount,
-            225, 45, drawtype);
-        this.ctx.gdraw.fill_arc(ur_x - 2 * amount, ll_y, 2 * amount, 2 * amount,
-            0, 45, drawtype);
-        this.ctx.gdraw.fill_arc(ur_x - 2 * amount, ur_y - 2 * amount, 2 *
-            amount, 2 * amount, 270, 90, drawtype);
+        this.ctx.gdraw.rect(ll_x + amount, ur_y - ish, ur_x - ll_x - 2 *
+            amount, ish, drawtype, true, 0);
+        this.ctx.gdraw.rect(ur_x - ish, ll_y + amount, ish, ur_y - ll_y -
+            2 * amount, drawtype, true, 0);
+        this.ctx.gdraw.arc(ll_x, ur_y - 2 * amount, 2 * amount, 2 * amount,
+            225, 45, drawtype, true, 0);
+        this.ctx.gdraw.arc(ur_x - 2 * amount, ll_y, 2 * amount, 2 * amount,
+            0, 45, drawtype, true, 0);
+        this.ctx.gdraw.arc(ur_x - 2 * amount, ur_y - 2 * amount, 2 *
+            amount, 2 * amount, 270, 90, drawtype, true, 0);
 
         if (grad === Gradient.No) {
           let drawtype = (chot === 0) ? fillcolor : GlowColor.shift_drawtype(fillcolor, chot, null);
 
           if (amount > ish) {
-            this.ctx.gdraw.fill_rect(ll_x + ish, ll_y + amount, ur_x - ll_x -
-                2 * ish, ur_y - ll_y - 2 * amount, drawtype);
-            this.ctx.gdraw.fill_rect(ll_x + amount, ll_y + ish, ur_x - ll_x -
-                2 * amount, amount - ish, drawtype);
-            this.ctx.gdraw.fill_rect(ll_x + amount, ur_y - amount, ur_x - ll_x -
-                2 * amount, amount - ish, drawtype);
-            this.ctx.gdraw.fill_arc(ll_x + ish, ll_y + ish, 2 * amount - 2 *
-                ish, 2 * amount - 2 * ish, 90, 90, drawtype);
-            this.ctx.gdraw.fill_arc(ll_x + ish, ur_y - 2 * amount + ish, 2 *
-                amount - 2 * ish, 2 * amount - 2 * ish, 180, 90, drawtype);
-            this.ctx.gdraw.fill_arc(ur_x - 2 * amount + ish, ur_y - 2 * amount +
+            this.ctx.gdraw.rect(ll_x + ish, ll_y + amount, ur_x - ll_x -
+                2 * ish, ur_y - ll_y - 2 * amount, drawtype, true, 0);
+            this.ctx.gdraw.rect(ll_x + amount, ll_y + ish, ur_x - ll_x -
+                2 * amount, amount - ish, drawtype, true, 0);
+            this.ctx.gdraw.rect(ll_x + amount, ur_y - amount, ur_x - ll_x -
+                2 * amount, amount - ish, drawtype, true, 0);
+            this.ctx.gdraw.arc(ll_x + ish, ll_y + ish, 2 * amount - 2 *
+                ish, 2 * amount - 2 * ish, 90, 90, drawtype, true, 0);
+            this.ctx.gdraw.arc(ll_x + ish, ur_y - 2 * amount + ish, 2 *
+                amount - 2 * ish, 2 * amount - 2 * ish, 180, 90, drawtype, true, 0);
+            this.ctx.gdraw.arc(ur_x - 2 * amount + ish, ur_y - 2 * amount +
                 ish, 2 * amount - 2 * ish, 2 * amount - 2 * ish, 270, 90,
-                drawtype);
-            this.ctx.gdraw.fill_arc(ur_x - 2 * amount + ish, ll_y + ish, 2 *
-                amount - 2 * ish, 2 * amount - 2 * ish, 0, 90, drawtype);
+                drawtype, true, 0);
+            this.ctx.gdraw.arc(ur_x - 2 * amount + ish, ll_y + ish, 2 *
+                amount - 2 * ish, 2 * amount - 2 * ish, 0, 90, drawtype, true, 0);
           } else {
-            this.ctx.gdraw.fill_rect(ll_x + amount, ll_y + amount, ur_x - ll_x -
-                2 * amount, ur_y - ll_y - 2 * amount, drawtype);
+            this.ctx.gdraw.rect(ll_x + amount, ll_y + amount, ur_x - ll_x -
+                2 * amount, ur_y - ll_y - 2 * amount, drawtype, true, 0);
           }
         } else {
-          let rotationb  = t ? this.trf.rot(t) : this.trf.rot();
+          let rotationb  = t ? this.trf.rotation + t.rotation : this.trf.rotation;
 
           let fb1, fb2;
           if (this.gradient_contrast >= 0) {
@@ -265,12 +264,11 @@ class GrowRectRounded extends GrowRect {
           }
           this.ctx.gdraw.gradient_fill_rectrounded(ll_x + ish, ll_y +
               ish, ur_x - ll_x - 2 * ish, ur_y - ll_y - 2 * ish, amount - ish,
-              fillcolor, fb1, fb2,
-              this.ctx.gdraw.gradient_rotate(rotationb, grad));
+              fillcolor, fb1, fb2, this.ctx.gdraw.gradient_rotate(rotationb, grad));
         }
       }
     }
-    if (this.border !== 0 || this.fill === 0) {
+    if (this.border !== 0 || !this.fill) {
       let drawtype =
           GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
               highlight, colornode, 0, 0);

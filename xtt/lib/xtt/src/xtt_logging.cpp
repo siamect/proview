@@ -102,8 +102,8 @@ static int logccm_getd_func(void* filectx, ccm_sArg* arg_list, int arg_count,
 
 XttLogging::XttLogging()
     : xnav(0), index(0), active(0), intern(0), stop_logg(0),
-      logg_type(xtt_LoggType_Cont), logg_priority(0), condition_ptr(0),
-      logg_time(200), logg_file(0), line_size(10000), parameter_count(0),
+      logg_type(xtt_LoggType_Cont), logg_priority(0), logg_format(xtt_eLoggFormat_Std), 
+      condition_ptr(0), logg_time(200), logg_file(0), line_size(10000), parameter_count(0),
       print_shortname(0), buffer_size(100), wanted_buffer_size(100),
       buffer_count(0), buffer_ptr(0), cond_ccm_ctx(0)
 {
@@ -144,7 +144,7 @@ XttLogging::~XttLogging()
 **************************************************************************/
 
 int XttLogging::logging_set(float a_logg_time, char* filename, char* parameter,
-    char* condition, int a_logg_type, int insert, int a_buffer_size, int stop,
+    char* condition, int a_logg_type, int a_logg_format, int insert, int a_buffer_size, int stop,
     int priority, int create, int a_line_size, int shortname)
 {
   int i, sts;
@@ -237,6 +237,9 @@ int XttLogging::logging_set(float a_logg_time, char* filename, char* parameter,
 
   if (a_logg_type != 0)
     logg_type = a_logg_type;
+
+  if (a_logg_format >= 0)
+    logg_format = (xtt_eLoggFormat)a_logg_format;
 
   if (priority < -1 || priority > 32) {
     message('E', "Priority out of range");
@@ -422,6 +425,33 @@ int XttLogging::show_entry(char* buff, int* buff_cnt)
 
 /*************************************************************************
 *
+* Name:		rtt_logging_analyse()
+*
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+*
+* Description:
+*	Analyse an entry.
+*
+**************************************************************************/
+
+int XttLogging::analyse()
+{
+  pwr_tCmd cmd;
+
+  if (logg_format != xtt_eLoggFormat_Py) {
+    message('E', "File format has to be \"Py\"");
+    return XNAV__HOLDCOMMAND;
+  }
+
+  sprintf( cmd, "sev_analyse.py -f %s &", logg_filename);
+  system(cmd);
+  return 1;
+}
+
+/*************************************************************************
+*
 * Name:		rtt_logging_store_entry()
 *
 * Type		int
@@ -438,6 +468,7 @@ int XttLogging::store(char* filename)
   int i;
   pwr_tFileName filename_str;
   FILE* outfile;
+  char msg[270];
   int found_parameter;
 
   found_parameter = 0;
@@ -478,6 +509,11 @@ int XttLogging::store(char* filename)
   else if (logg_type == xtt_LoggType_Cont)
     fprintf(outfile, "logging set/entry=current/type=cont\n");
 
+  if (logg_format == xtt_eLoggFormat_Std)
+    fprintf(outfile, "logging set/entry=current/format=std\n");
+  else if (logg_format == xtt_eLoggFormat_Py)
+    fprintf(outfile, "logging set/entry=current/format=py\n");
+
   for (i = 0; i < RTT_LOGG_MAXPAR; i++) {
     if (parameterstr[i][0] != 0)
       fprintf(outfile, "logging set/entry=current/parameter=\"%s\"\n",
@@ -508,7 +544,6 @@ int XttLogging::store(char* filename)
   dcli_fgetname(outfile, filename_str, filename_str);
   fclose(outfile);
 
-  char msg[sizeof(filename_str) + 8 + 1];
   sprintf(msg, "%s created", filename_str);
   message('I', msg);
   return XNAV__SUCCESS;
@@ -620,9 +655,7 @@ int XttLogging::start()
   if (logg_filename[0] != 0) {
     logg_file = fopen(logg_filename, "w");
     if (logg_file == 0) {
-      char tmp[280];
-      snprintf(tmp, sizeof(tmp), "Unable to open file \"%s\"", logg_filename);
-      message('E', tmp);
+      message('E', "Unable to open file");
       return XNAV__HOLDCOMMAND;
     }
   } else {
@@ -815,8 +848,15 @@ static void* xtt_logproc(void* arg)
 
   switch (logg->logg_type) {
   case xtt_LoggType_Cont:
-    if (logg->logg_file)
-      fprintf(logg->logg_file, "\"%s\"", time_str);
+    switch (logg->logg_format) {
+    case xtt_eLoggFormat_Py:
+      if (logg->logg_file)
+	char_cnt += fprintf(logg->logg_file, "Time");
+      break;
+    default:
+      if (logg->logg_file)
+	char_cnt += fprintf(logg->logg_file, "\"%s\"", time_str);
+    }    
     /* Find a unique shortname for each parameter */
     for (i = 0; i < RTT_LOGG_MAXPAR; i++) {
       if (logg->print_shortname) {
@@ -857,11 +897,17 @@ static void* xtt_logproc(void* arg)
     for (i = 0; i < RTT_LOGG_MAXPAR; i++) {
       if (logg->parameterstr[i][0] != 0) {
         if (logg->logg_file) {
-          char_cnt += fprintf(logg->logg_file, "	%s", logg->shortname[i]);
-          if (char_cnt + 120 > logg->line_size) {
-            fprintf(logg->logg_file, "\n");
-            char_cnt = 0;
-          }
+	  switch (logg->logg_format) {
+	  case xtt_eLoggFormat_Py:
+	    char_cnt += fprintf(logg->logg_file, ",%s", logg->shortname[i]);
+	    break;
+	  default:
+	    char_cnt += fprintf(logg->logg_file, "	%s", logg->shortname[i]);
+	    if (char_cnt + 120 > logg->line_size) {
+	      fprintf(logg->logg_file, "\n");
+	      char_cnt = 0;	      
+	    }
+	  }
         }
       }
     }
@@ -930,51 +976,136 @@ static void* xtt_logproc(void* arg)
       if (first_scan)
         time_float = 0.;
       /* Print time and the value of the parameter on the file */
-      char_cnt += logg->log_print("%12.4f", time_float);
+      switch (logg->logg_format) {
+      case xtt_eLoggFormat_Py:
+	time_AtoAscii(&time, time_eFormat_NumDateAndTime, time_str, sizeof(time_str));	
+	char_cnt += logg->log_print("%s", time_str);
+	break;
+      default:
+	char_cnt += logg->log_print("%12.4f", time_float);
+      }
       for (i = 0; i < RTT_LOGG_MAXPAR; i++) {
         if (logg->parameterstr[i][0] != 0) {
           value_ptr = logg->parameter_ptr[i];
           switch (logg->parameter_type[i]) {
           case pwr_eType_Float32:
-            char_cnt += logg->log_print("	%f", *(pwr_tFloat32*)value_ptr);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%f", *(pwr_tFloat32*)value_ptr);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%f", *(pwr_tFloat32*)value_ptr);
+	    }
             break;
 
           case pwr_eType_Float64:
-            char_cnt += logg->log_print("	%f", *(pwr_tFloat64*)value_ptr);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%f", *(pwr_tFloat64*)value_ptr);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%f", *(pwr_tFloat64*)value_ptr);
+	    }
             break;
 
           case pwr_eType_UInt8:
-            char_cnt += logg->log_print("	%d", *(pwr_tUInt8*)value_ptr);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%d", *(pwr_tUInt8*)value_ptr);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%d", *(pwr_tUInt8*)value_ptr);
+	    }
             break;
           case pwr_eType_Boolean:
-            char_cnt += logg->log_print("	%d", *(pwr_tBoolean*)value_ptr);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%d", *(pwr_tBoolean*)value_ptr);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%d", *(pwr_tBoolean*)value_ptr);
+	    }
             break;
           case pwr_eType_Char:
-            char_cnt += logg->log_print("	%c", *(pwr_tChar*)value_ptr);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%c", *(pwr_tChar*)value_ptr);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%c", *(pwr_tChar*)value_ptr);
+	    }
             break;
           case pwr_eType_Int8:
-            char_cnt += logg->log_print("	%d", *(pwr_tInt8*)value_ptr);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%d", *(pwr_tInt8*)value_ptr);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%d", *(pwr_tInt8*)value_ptr);
+	    }
             break;
           case pwr_eType_Int16:
-            char_cnt += logg->log_print("	%d", *(pwr_tInt16*)value_ptr);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%d", *(pwr_tInt16*)value_ptr);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%d", *(pwr_tInt16*)value_ptr);
+	    }
             break;
           case pwr_eType_UInt16:
-            char_cnt += logg->log_print("	%d", *(pwr_tUInt16*)value_ptr);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%d", *(pwr_tUInt16*)value_ptr);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%d", *(pwr_tUInt16*)value_ptr);
+	    }
             break;
           case pwr_eType_Int32:
-            char_cnt += logg->log_print("	%d", *(pwr_tInt32*)value_ptr);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%d", *(pwr_tInt32*)value_ptr);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%d", *(pwr_tInt32*)value_ptr);
+	    }
             break;
           case pwr_eType_UInt32:
-            char_cnt += logg->log_print("	%d", *(pwr_tUInt32*)value_ptr);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%d", *(pwr_tUInt32*)value_ptr);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%d", *(pwr_tUInt32*)value_ptr);
+	    }
             break;
           case pwr_eType_Int64:
-            char_cnt += logg->log_print("	%lld", *(pwr_tInt64*)value_ptr);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%lld", *(pwr_tInt64*)value_ptr);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%lld", *(pwr_tInt64*)value_ptr);
+	    }
             break;
           case pwr_eType_UInt64:
-            char_cnt += logg->log_print("	%llu", *(pwr_tUInt64*)value_ptr);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%llu", *(pwr_tUInt64*)value_ptr);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%llu", *(pwr_tUInt64*)value_ptr);
+	    }
             break;
           case pwr_eType_String:
-            char_cnt += logg->log_print("	%s", value_ptr);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%s", value_ptr);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%s", value_ptr);
+	    }
             break;
           case pwr_eType_Objid:
             objid = *(pwr_tObjid*)value_ptr;
@@ -986,7 +1117,13 @@ static void* xtt_logproc(void* arg)
                   objid, hiername, sizeof(hiername), cdh_mNName);
             if (EVEN(sts))
               strcpy(hiername, "** Unknown objid");
-            char_cnt += logg->log_print("	%s", hiername);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%s", hiername);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%s", hiername);
+	    }
             break;
           case pwr_eType_AttrRef:
             attrref = (pwr_sAttrRef*)value_ptr;
@@ -994,28 +1131,57 @@ static void* xtt_logproc(void* arg)
                 attrref, hiername, sizeof(hiername), cdh_mNName);
             if (EVEN(sts))
               strcpy(hiername, "** Unknown attrref");
-            char_cnt += logg->log_print("	%s", hiername);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%s", hiername);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%s", hiername);
+	    }
             break;
           case pwr_eType_Time:
             sts = time_AtoAscii((pwr_tTime*)value_ptr, time_eFormat_DateAndTime,
                 timstr, sizeof(timstr));
             if (EVEN(sts))
               strcpy(timstr, "Undefined time");
-            char_cnt += logg->log_print("	%s", timstr);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%s", timstr);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%s", timstr);
+	    }
             break;
           case pwr_eType_DeltaTime:
             sts = time_DtoAscii(
                 (pwr_tDeltaTime*)value_ptr, 1, timstr, sizeof(timstr));
             if (EVEN(sts))
               strcpy(timstr, "Undefined time");
-            char_cnt += logg->log_print("	%s", timstr);
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%s", timstr);
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%s", timstr);
+	    }
             break;
           default:
-            char_cnt += logg->log_print("	%s", "Type error");
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      char_cnt += logg->log_print(",%s", "Type error");
+	      break;
+	    default:
+	      char_cnt += logg->log_print("	%s", "Type error");
+	    }
           }
           if (char_cnt + 10 > logg->line_size) {
-            logg->log_print("\n");
-            char_cnt = 0;
+	    switch (logg->logg_format) {
+	    case xtt_eLoggFormat_Py:
+	      break;
+	    default:
+	      logg->log_print("\n");
+	      char_cnt = 0;
+	    }
           }
         }
       }

@@ -136,15 +136,17 @@ class GrowBarChart extends GrowRect {
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    let x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-    let y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-    let x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-    let y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-    let rot = Math.floor(this.trf.rot(t));
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
+
+    let x1 = Math.floor(p1.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p1.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+
+    let rot = t ? this.trf.rotation + t.rotation : this.trf.rotation;
+    rot = Math.floor(rot);
 
     let ll_x = Math.min(x1, x2);
     let ur_x = Math.max(x1, x2);
@@ -230,8 +232,8 @@ class GrowBarChart extends GrowRect {
               } else {
                 drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
               }
-              this.ctx.gdraw.fill_rect(bar_ll_x, bar_up_ll_y, bar_ur_x -
-                  bar_ll_x, bar_up_ur_y - bar_up_ll_y, drawtype);
+              this.ctx.gdraw.rect(bar_ll_x, bar_up_ll_y, bar_ur_x -
+                  bar_ll_x, bar_up_ur_y - bar_up_ll_y, drawtype, true, 0);
             } else {
               let f1, f2;
               if (this.gradient_contrast >= 0) {
@@ -291,8 +293,8 @@ class GrowBarChart extends GrowRect {
             if (grad === Gradient.No ||
                 fillcolor === DrawType.ColorRed || i === this.barsegments) {
               let drawtype = (chot === 0) ? fillcolor : GlowColor.shift_drawtype(fillcolor, chot, null);
-              this.ctx.gdraw.fill_rect(bar_ll_x, bar_down_ll_y, bar_ur_x -
-                  bar_ll_x, bar_down_ur_y - bar_down_ll_y, drawtype);
+              this.ctx.gdraw.rect(bar_ll_x, bar_down_ll_y, bar_ur_x -
+                  bar_ll_x, bar_down_ur_y - bar_down_ll_y, drawtype, true, 0);
             } else {
               let f1, f2;
               if (this.gradient_contrast >= 0) {
@@ -324,7 +326,7 @@ class GrowBarChart extends GrowRect {
                 DrawType.LineHighlight, highlight, colornode, 0, 0);
 
             this.ctx.gdraw.rect(brect_ll_x, brect_ll_y, brect_width,
-                brect_height, drawtype, idx, 0);
+                brect_height, drawtype, false, idx);
           }
           if (this.min_value >= 0) {
             brect_ll_x = bar_ll_x;
@@ -344,7 +346,7 @@ class GrowBarChart extends GrowRect {
                 DrawType.LineHighlight, highlight, colornode, 0, 0);
 
             this.ctx.gdraw.rect(brect_ll_x, brect_ll_y, brect_width,
-                brect_height, drawtype, idx, 0);
+                brect_height, drawtype, false, idx);
           }
 
           // Draw negative bar border
@@ -354,7 +356,7 @@ class GrowBarChart extends GrowRect {
                   DrawType.LineHighlight, highlight, colornode, 0, 0);
 
               this.ctx.gdraw.rect(brect_ll_x, brect_ll_y, brect_width,
-                  brect_height, drawtype, idx, 0);
+                  brect_height, drawtype, false, idx);
             }
             brect_ll_x = bar_ll_x;
             brect_ll_y = ur_y + this.min_value * (ur_y - ll_y) /
@@ -367,7 +369,7 @@ class GrowBarChart extends GrowRect {
                   DrawType.LineHighlight, highlight, colornode, 0, 0);
 
               this.ctx.gdraw.rect(brect_ll_x, brect_ll_y, brect_width,
-                  brect_height, drawtype, idx, 0);
+                  brect_height, drawtype, false, idx);
             }
           }
         }
@@ -394,8 +396,7 @@ class GrowBarChart extends GrowRect {
       drawtype =
           GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
               highlight, colornode, 0, 0);
-      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx,
-          0);
+      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, false, idx);
     }
   }
 

@@ -64,14 +64,24 @@
 static QMouseEvent* last_event;
 static QWidget* last_target;
 
-static QColor glow_allocate_named_color(
-    GlowDrawQt* draw_ctx, const char* named_color);
+static QColor glow_allocate_named_color(const char* named_color)
+{
+  QColor color = QColor(named_color);
+  return color.isValid() ? color : Qt::black;
+}
 
-static QColor glow_allocate_color(
-    GlowDrawQt* draw_ctx, int rgb_red, int rgb_green, int rgb_blue);
+static QColor glow_allocate_custom_color(GlowDrawQt *draw_ctx,
+    glow_eDrawType drawtype, int r, int g, int b)
+{
+  if (!draw_ctx->get_customcolors()) {
+    return QColor();
+  }
 
-static QColor glow_allocate_custom_color(GlowDrawQt* draw_ctx,
-    glow_eDrawType drawtype, int rgb_red, int rgb_green, int rgb_blue);
+  QColor color(r, g, b);
+  draw_ctx->get_customcolors()->color_vect[drawtype -
+                                           glow_eDrawType_CustomColor1] = color;
+  return color;
+}
 
 static unique_ptr<QColor[]> glow_read_color_file(
     const char* filename, int* size, int* sts);
@@ -84,16 +94,16 @@ static QColor draw_type_to_color(
   case glow_eDrawType_LineDashed:
   case glow_eDrawType_TextHelvetica:
   case glow_eDrawType_TextHelveticaBold:
-    return glow_allocate_named_color(draw_ctx, "black");
+    return glow_allocate_named_color("black");
   case glow_eDrawType_LineErase:
   case glow_eDrawType_TextHelveticaErase:
   case glow_eDrawType_TextHelveticaEraseBold:
     return draw_ctx->background;
   case glow_eDrawType_LineRed:
   case glow_eDrawType_LineDashedRed:
-    return glow_allocate_named_color(draw_ctx, "red");
+    return glow_allocate_named_color("red");
   case glow_eDrawType_LineGray:
-    return glow_allocate_named_color(draw_ctx, "gray");
+    return glow_allocate_named_color("gray");
   default: {
     if (painter_type >= glow_eDrawType_Color4
         && painter_type <= glow_eDrawType_Color300) {
@@ -102,8 +112,8 @@ static QColor draw_type_to_color(
           "/home/claes/test/ge_colors.dat", &size, &sts);
       if (ODD(sts)) {
         QColor color_p = color_array[painter_type - glow_eDrawType_Color4];
-        QColor color = glow_allocate_color(
-            draw_ctx, color_p.red(), color_p.green(), color_p.blue());
+        QColor color = QColor::fromRgb(
+            color_p.red(), color_p.green(), color_p.blue());
         return color;
       }
     }
@@ -116,8 +126,7 @@ static QColor draw_type_to_color(
       return glow_allocate_custom_color(draw_ctx, (glow_eDrawType)painter_type,
           int(r * 255), int(g * 255), int(b * 255));
     } else {
-      return glow_allocate_color(
-          draw_ctx, int(r * 255), int(g * 255), int(b * 255));
+      return QColor::fromRgb(int(r * 255), int(g * 255), int(b * 255));
     }
   }
   }
@@ -179,39 +188,6 @@ unique_ptr<QPainter> GlowDrawQt::get_painter(QPaintDevice* window,
     painter->setClipping(true);
   }
   return painter;
-}
-
-static QColor glow_allocate_named_color(
-    GlowDrawQt* draw_ctx, const char* named_color)
-{
-  QColor color;
-
-  color = QColor(named_color);
-  if (!color.isValid()) {
-    color = Qt::black;
-  }
-
-  return color;
-}
-
-static QColor glow_allocate_color(
-    GlowDrawQt* draw_ctx, int rgb_red, int rgb_green, int rgb_blue)
-{
-  return QColor::fromRgb(rgb_red, rgb_green, rgb_blue);
-}
-
-static QColor glow_allocate_custom_color(GlowDrawQt* draw_ctx,
-    glow_eDrawType drawtype, int rgb_red, int rgb_green, int rgb_blue)
-{
-  if (!draw_ctx->get_customcolors()) {
-    return QColor();
-  }
-
-  QColor color(rgb_red, rgb_green, rgb_blue);
-
-  draw_ctx->get_customcolors()->color_vect[drawtype - glow_eDrawType_CustomColor1] = color;
-
-  return color;
 }
 
 GlowDrawQt::~GlowDrawQt()
@@ -412,7 +388,7 @@ void GlowDrawQt::event_handler(QEvent* event, QWidget* target)
         if (click_sensitivity & glow_mSensitivity_MB3Press
             && !(click_sensitivity & glow_mSensitivity_MB3DoubleClick)
             && !(click_sensitivity & glow_mSensitivity_MB3Click)) {
-          sts = ctx->event_handler(
+          ctx->event_handler(
               glow_eEvent_MB3Press, mouseEvent->x(), mouseEvent->y(), 0, 0);
           click_sensitivity = 0;
           return;
@@ -697,44 +673,41 @@ void GlowDrawQt::event_handler(QEvent* event, QWidget* target)
           button1_pressed = 1;
           if ((mouseEvent->modifiers() & Qt::ShiftModifier)
               && !(mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = ctx->event_handler(
+            ctx->event_handler(
                 glow_eEvent_MB1PressShift, pos.x(), pos.y(), 0, 0);
           } else if (!(mouseEvent->modifiers() & Qt::ShiftModifier)
               && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = ctx->event_handler(
+            ctx->event_handler(
                 glow_eEvent_MB1PressCtrl, pos.x(), pos.y(), 0, 0);
           } else if ((mouseEvent->modifiers() & Qt::ShiftModifier)
               && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = ctx->event_handler(
+            ctx->event_handler(
                 glow_eEvent_MB1PressShiftCtrl, pos.x(), pos.y(), 0, 0);
           } else {
-            sts = ctx->event_handler(
-                glow_eEvent_MB1Press, pos.x(), pos.y(), 0, 0);
+            ctx->event_handler(glow_eEvent_MB1Press, pos.x(), pos.y(), 0, 0);
           }
           break;
         case Qt::MidButton: // Button2
           button2_pressed = 1;
           if ((mouseEvent->modifiers() & Qt::ShiftModifier)
               && !(mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = ctx->event_handler(
+            ctx->event_handler(
                 glow_eEvent_MB2PressShift, pos.x(), pos.y(), 0, 0);
           } else if (!(mouseEvent->modifiers() & Qt::ShiftModifier)
               && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = ctx->event_handler(
+            ctx->event_handler(
                 glow_eEvent_MB2PressShift, pos.x(), pos.y(), 0, 0);
           } else if ((mouseEvent->modifiers() & Qt::ShiftModifier)
               && (mouseEvent->modifiers() & Qt::ControlModifier)) {
-            sts = ctx->event_handler(
+            ctx->event_handler(
                 glow_eEvent_MB2PressShiftCtrl, pos.x(), pos.y(), 0, 0);
           } else {
-            sts = ctx->event_handler(
-                glow_eEvent_MB2Press, pos.x(), pos.y(), 0, 0);
+            ctx->event_handler(glow_eEvent_MB2Press, pos.x(), pos.y(), 0, 0);
           }
           break;
         case Qt::RightButton: // Button3
           button3_pressed = 1;
-          sts = ctx->event_handler(
-              glow_eEvent_MB3Press, pos.x(), pos.y(), 0, 0);
+          ctx->event_handler(glow_eEvent_MB3Press, pos.x(), pos.y(), 0, 0);
           break;
         }
         button_pressed = 0;
@@ -998,6 +971,16 @@ void GlowDrawQt::line(int x1, int y1, int x2, int y2,
   }
 
   painter->drawLine(x1, y1, x2, y2);
+}
+
+static unique_ptr<QPoint[]> points_to_qt_points(glow_sPointX* points, int point_cnt)
+{
+  unique_ptr<QPoint[]> qpoints(new QPoint[point_cnt]);
+  for (int i = 0; i < point_cnt; i++) {
+    qpoints[i].setX(points[i].x);
+    qpoints[i].setY(points[i].y);
+  }
+  return qpoints;
 }
 
 void GlowDrawQt::polyline(glow_sPointX* points, int point_cnt,
@@ -1346,8 +1329,7 @@ void GlowDrawQt::set_background(DrawWind* wind, glow_eDrawType drawtype,
   }
 
   GlowColor::rgb_color((int)drawtype, &r, &g, &b, get_customcolors());
-  background
-      = glow_allocate_color(this, int(r * 255), int(g * 255), int(b * 255));
+  background = QColor::fromRgb(int(r * 255), int(g * 255), int(b * 255));
 
   if (image) {
     if (w->background_pixmap) {
@@ -1446,35 +1428,27 @@ int GlowDrawQt::print(char* filename, double x0, double x1, int end)
 #define ps_cLeftMargin 100
 #define ps_cTopMargin 100
 
-  int width, height;
-  int i, j, k;
-  int grey;
-  int red, blue, green;
-  double scalex = 0.71;
-  double scaley = 0.78;
-  double x, y;
-  bool colorimage = true;
-  static DrawPs* ps = 0;
-  bool new_file = false;
-
-  x = ps_cLeftMargin;
-  y = ps_cPageHeight - ps_cTopMargin;
+  double x = ps_cLeftMargin;
+  double y = ps_cPageHeight - ps_cTopMargin;
 
   QImage* image = m_wind.buffer;
   if (image->isNull()) {
     return 0;
   }
 
+  static DrawPs* ps = 0;
+  bool new_file = !ps;
   if (!ps) {
     ps = new DrawPs(filename);
-    new_file = true;
     ps->y = y;
   } else {
     y = ps->y;
   }
 
-  width = image->width();
-  height = image->height();
+  int width = image->width();
+  int height = image->height();
+  double scalex = 0.71;
+  double scaley = 0.78;
 
   if (!feq(x0, 0.0) || !feq(x1, 0.0)) {
     double total_width = width / (x1 - x0);
@@ -1518,12 +1492,8 @@ int GlowDrawQt::print(char* filename, double x0, double x1, int end)
          << " " << width << " " << height << " 8 [" << width << " 0 0 -"
          << height << " 0 " << height << "]\n"
          << " { currentfile oneline readhexstring pop }\n";
-  if (colorimage) {
-    ps->fp << "false 3\n"
-           << "colorimage\n";
-  } else {
-    ps->fp << "image\n";
-  }
+  ps->fp << "false 3\n"
+         << "colorimage\n";
 
   ps->fp << "} def\n"
          << x / scalex / width << " " << (y - height * scaley) / scaley / height
@@ -1533,42 +1503,25 @@ int GlowDrawQt::print(char* filename, double x0, double x1, int end)
   ps->fp.flags((ps->fp.flags() & ~std::ios_base::dec) | std::ios_base::hex
       | std::ios_base::uppercase);
   ps->fp.fill('0');
-  j = 0;
-  for (k = 0; k < height; k++) {
-    for (i = 0; i < width; i++) {
+  int j = 0;
+  for (int k = 0; k < height; k++) {
+    for (int i = 0; i < width; i++) {
       QColor pixel = QColor(image->pixel(i, k));
-      if (!colorimage) {
-        if (!pixel.alpha()) {
-          grey = 255;
-        } else {
-          grey = (int)((0.0 + pixel.red() + pixel.green() + pixel.blue()) / 3
-              + 0.5);
-        }
-
-        ps->fp.width(2);
-        ps->fp << grey;
-        if (++j >= 40) {
-          j = 0;
-          ps->fp << '\n';
-        }
-      } else {
-        if (!pixel.alpha()) {
-          red = blue = green = 255;
-        } else {
-          red = pixel.red();
-          green = pixel.green();
-          blue = pixel.blue();
-        }
-        ps->fp.width(2);
-        ps->fp << red;
-        ps->fp.width(2);
-        ps->fp << green;
-        ps->fp.width(2);
-        ps->fp << blue;
-        if (++j >= 20) {
-          j = 0;
-          ps->fp << '\n';
-        }
+      int red = 255, green = 255, blue = 255;
+      if (pixel.alpha()) {
+        red = pixel.red();
+        green = pixel.green();
+        blue = pixel.blue();
+      }
+      ps->fp.width(2);
+      ps->fp << red;
+      ps->fp.width(2);
+      ps->fp << green;
+      ps->fp.width(2);
+      ps->fp << blue;
+      if (++j >= 20) {
+        j = 0;
+        ps->fp << '\n';
       }
     }
   }
@@ -1586,16 +1539,6 @@ int GlowDrawQt::print(char* filename, double x0, double x1, int end)
   }
 
   return 1;
-}
-
-unique_ptr<QPoint[]> GlowDrawQt::points_to_qt_points(glow_sPointX* points, int point_cnt)
-{
-  unique_ptr<QPoint[]> qpoints(new QPoint[point_cnt]);
-  for (int i = 0; i < point_cnt; i++) {
-    qpoints[i].setX(points[i].x);
-    qpoints[i].setY(points[i].y);
-  }
-  return qpoints;
 }
 
 //
@@ -2011,7 +1954,7 @@ void GlowDrawQt::event_exec(void* event, unsigned int size)
     return;
   }
 
-  memcpy((void*)&e, (void*)event, size);
+  memcpy((void*)&e, event, size);
 
   if (e.type() == QEvent::Show) {
     QWidget* parent = m_wind.window->window();

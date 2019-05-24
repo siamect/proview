@@ -371,9 +371,6 @@ int FlowPscript::text(double x, double y, char* text, int len,
 int FlowPscript::pixmap(
     double x, double y, flow_sPixmapDataElem* data, flow_eDrawType type)
 {
-  int i, j;
-  int bit_cnt;
-  unsigned char* char_p;
   double scale_factor = 0.8;
 
   fprintf(file, "/picstr %d string def\n", data->width);
@@ -385,10 +382,10 @@ int FlowPscript::pixmap(
   fprintf(file, "[%d 0 0 %d 0 %d]\n", data->width, -data->height, data->height);
   fprintf(file, "{ currentfile picstr readhexstring pop }\n");
   fprintf(file, "image\n\n");
-  char_p = data->bits;
-  for (i = 0; i < data->height; i++) {
-    bit_cnt = 0;
-    for (j = 0; j < data->width; j++) {
+  unsigned char* char_p = data->bits;
+  for (int i = 0; i < data->height; i++) {
+    int bit_cnt = 0;
+    for (int j = 0; j < data->width; j++) {
       if (bit_cnt == 8) {
         bit_cnt = 0;
         char_p++;

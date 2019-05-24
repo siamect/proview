@@ -331,10 +331,7 @@ void FlowArray::brow_close(void* ctx, FlowArrayElem* element)
 {
   int i;
   int idx = 0;
-  int found;
-  FlowArrayElem* e;
-
-  found = 0;
+  int found = 0;
   for (i = 0; i < a_size; i++) {
     if (*(a + i) == element) {
       idx = i;
@@ -355,7 +352,6 @@ void FlowArray::brow_close(void* ctx, FlowArrayElem* element)
     return;
 
   for (i = idx + 1; i < next_idx; i++) {
-    e = a[i];
     ((FlowCtx*)ctx)->delete_object(a[i]);
     i--;
     next_idx--;

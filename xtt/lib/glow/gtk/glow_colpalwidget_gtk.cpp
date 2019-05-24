@@ -403,7 +403,7 @@ GtkWidget* scrolledcolpalwidgetgtk_new(
   gtk_container_add(GTK_CONTAINER(viewport), GTK_WIDGET(w));
   gtk_container_add(GTK_CONTAINER(form), GTK_WIDGET(viewport));
 
-  return (GtkWidget*)form;
+  return form;
 }
 
 GtkWidget* colpalnavwidgetgtk_new(GtkWidget* main_colpal)

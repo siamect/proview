@@ -169,29 +169,24 @@ class GrowArc extends GlowArc {
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    let x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-    let y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-    let x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-    let y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-    let rot = Math.floor(this.trf.rot(t));
+    let tmp = Matrix.multiply(t, this.trf);
+    let p = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
+
+    let x1 = Math.floor(p.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+    let rot = Math.floor(tmp.rotation);
 
     if (rot % 90 !== 0 &&
         Math.abs((this.ur.x - this.ll.x) - (this.ur.y - this.ll.y)) <
         Number.MIN_VALUE) {
-      let tmp = t ? GlowTransform.multiply(t, this.trf) : this.trf;
-      let scale = this.trf.vertical_scale(tmp);
-      let x_c = ((this.trf.x(t, this.ll.x, this.ll.y) * this.ctx.mw.zoom_factor_x -
-            this.ctx.mw.offset_x) +
-            (this.trf.x(t, this.ur.x, this.ur.y) * this.ctx.mw.zoom_factor_x -
-                this.ctx.mw.offset_x)) / 2;
-      let y_c = ((this.trf.y(t, this.ll.x, this.ll.y) * this.ctx.mw.zoom_factor_y -
-            this.ctx.mw.offset_y) +
-            (this.trf.y(t, this.ur.x, this.ur.y) * this.ctx.mw.zoom_factor_y -
-                this.ctx.mw.offset_y)) / 2;
+      let scale = Matrix.multiply(tmp, this.trf).vertical_scale();
+      let x_c = ((p.x * this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x) +
+            (p2.x * this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x)) / 2;
+      let y_c = ((p.y * this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y) +
+            (p2.y * this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y)) / 2;
 
       x1 = Math.floor(-scale *
           ((this.ur.x - this.ll.x) / 2 * this.ctx.mw.zoom_factor_x) + x_c + 0.5);
@@ -230,8 +225,8 @@ class GrowArc extends GlowArc {
       if (!display_shadow || this.shadow_width === 0 || this.angle2 !== 360) {
         if (grad === Gradient.No || fillcolor === DrawType.ColorRed) {
           let drawtype = (chot === 0) ? fillcolor : GlowColor.shift_drawtype(fillcolor, chot, null);
-          this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y -
-              ll_y, this.angle1 - rot, this.angle2, drawtype);
+          this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y -
+              ll_y, this.angle1 - rot, this.angle2, drawtype, true, 0);
         } else {
           let fa1, fa2;
           if (this.gradient_contrast >= 0) {
@@ -265,15 +260,15 @@ class GrowArc extends GlowArc {
           let drawtype = GlowColor.shift_drawtype(fillcolor, -drawtype_incr + chot,
               colornode);
 
-          this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 35, 140,
-              drawtype);
+          this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 35, 140,
+              drawtype, true, 0);
 
           // Draw dark shadow
           drawtype = GlowColor.shift_drawtype(fillcolor, drawtype_incr + chot,
               colornode);
 
-          this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 215,
-              140, drawtype);
+          this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 215,
+              140, drawtype, true, 0);
 
           // Draw medium shadow and body
           if (chot === 0) {
@@ -282,14 +277,14 @@ class GrowArc extends GlowArc {
             drawtype = GlowColor.shift_drawtype(fillcolor, chot, null);
           }
 
-          this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, -5, 40,
-              drawtype);
-          this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 175, 40,
-              drawtype);
+          this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, -5, 40,
+              drawtype, true, 0);
+          this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 175, 40,
+              drawtype, true, 0);
 
-          this.ctx.gdraw.fill_arc(ll_x + ish, ll_y + ish, ur_x - ll_x - 2 *
+          this.ctx.gdraw.arc(ll_x + ish, ll_y + ish, ur_x - ll_x - 2 *
               ish, ur_y - ll_y - 2 * ish, this.angle1 - rot, this.angle2,
-              drawtype);
+              drawtype, true, 0);
         } else {
           // Draw shadow
           let fb1 = GlowColor.shift_drawtype(fillcolor, -drawtype_incr + chot,
@@ -328,17 +323,17 @@ class GrowArc extends GlowArc {
           GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
               highlight, colornode, 0, 0);
       this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, this.angle1 -
-          rot, this.angle2, drawtype, idx);
+          rot, this.angle2, drawtype, false, idx);
     }
   }
 
   get_borders(t, g) {
-    let x1 = this.trf.x(t, this.ll.x, this.ll.y);
-    let x2 = this.trf.x(t, this.ur.x, this.ur.y);
-    let y1 = this.trf.y(t, this.ll.x, this.ll.y);
-    let y2 = this.trf.y(t, this.ur.x, this.ur.y);
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
 
-    g.set(Rect.union(g, new Rect(Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2), Math.max(y1, y2))));
+    g.set(Rect.union(g, new Rect(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y),
+        Math.max(p1.x, p2.x), Math.max(p1.y, p2.y))));
   }
 
   get_background_object_limits(t, type, x, y, bo) {

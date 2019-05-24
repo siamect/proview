@@ -214,34 +214,6 @@ enum Save {
   Triangle_rect_part = 2000
 }
 
-class GDraw {
-  ctx: FlowCtx;
-  canvas: HTMLCanvasElement;
-  gctx: CanvasRenderingContext2D;
-  offset_top: number;
-  offset_left: number;
-
-  constructor(ctx: FlowCtx) {
-    this.ctx = ctx;
-    this.canvas = document.querySelector("canvas");
-    this.gctx = this.canvas.getContext("2d");
-    this.offset_top = this.canvas.offsetTop;
-    this.offset_left = this.canvas.offsetTop;
-    console.log("offset_top", this.offset_top, "offset_left", this.offset_left);
-  }
-
-  rect(x, y, width, height) {
-    this.gctx.strokeRect(x, y, width, height);
-  }
-
-  line(x1, y1, x2, y2) {
-    this.gctx.beginPath();
-    this.gctx.moveTo(x1, y1);
-    this.gctx.lineTo(x2, y2);
-    this.gctx.stroke();
-  }
-}
-
 class FlowArray {
   ctx: FlowCtx;
   a = [];
@@ -1548,7 +1520,7 @@ class FlowCtx extends Rect {
   a: FlowArray;
   a_nc: FlowArray;
   a_cc: FlowArray;
-  gdraw: GDraw;
+  gdraw: Draw;
   display_level = DisplayLevel.One;
   gdh: Gdh = null;
   zoom_factor = 20.0;
@@ -1563,7 +1535,7 @@ class FlowCtx extends Rect {
     this.a = new FlowArray(this);
     this.a_nc = new FlowArray(this);
     this.a_cc = new FlowArray(this);
-    this.gdraw = new GDraw(this);
+    this.gdraw = new Draw(this);
   }
 
   draw() {

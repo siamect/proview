@@ -85,7 +85,7 @@ class GrowText extends GlowText {
     }
 
     let z_descent;
-    let trf_scale = this.trf.vertical_scale(t);
+    let trf_scale = Matrix.multiply(t, this.trf).vertical_scale();
     let idx = Math.floor(trf_scale * this.ctx.mw.zoom_factor_y /
         this.ctx.mw.base_zoom_factor * (this.text_size + 4) - 3);
     let tsize = trf_scale * this.ctx.mw.zoom_factor_y /
@@ -110,9 +110,12 @@ class GrowText extends GlowText {
     let ry1 = 0;
     let z_width = 0;
     let z_height = 0;
-    let x1 = Math.floor(this.trf.x(t, this.p.x, this.p.y) * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-    let y1 = Math.floor(this.trf.y(t, this.p.x, this.p.y) * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-    let rot = Math.floor(this.trf.rot(t));
+    let tmp = Matrix.multiply(t, this.trf);
+    let p = tmp.apply(this.p);
+    let x1 = Math.floor(p.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+    let rot = t ? this.trf.rotation + t.rotation : this.trf.rotation;
+    rot = Math.floor(rot);
     if (this.adjustment === Adjustment.Center) {
       rot = rot < 0 ? rot % 360 + 360 : rot % 360;
     } else {
@@ -122,8 +125,8 @@ class GrowText extends GlowText {
     if (this.text !== "") {
       if (highl !== 0 || (hot !== 0 && node === null) ||
           this.adjustment !== Adjustment.Left) {
-        let p = this.ctx.gdraw.getTextExtent(this.text, Math.max(0, idx),
-            lfont, ldraw_type);
+        let p = this.ctx.gdraw.getTextExtent(this.text, ldraw_type, Math.max(0, idx),
+            lfont);
         z_width = p.x;
         z_height = p.y;
         z_descent = z_height / 4;
@@ -165,26 +168,25 @@ class GrowText extends GlowText {
       }
 
       if (highl !== 0) {
-        this.ctx.gdraw.rect(rx1, ry1, z_width, z_height,
-            DrawType.FillHighlight, Math.max(1, Math.min(idx + hot, 2)), 0);
+        this.ctx.gdraw.rect(rx1, ry1, z_width, z_height, DrawType.FillHighlight,
+            false, Math.max(1, Math.min(idx + hot, 2)));
       } else if (hot !== 0 && node === null) {
-        this.ctx.gdraw.rect(rx1, ry1, z_width, z_height,
-            DrawType.LineGray, Math.max(Math.min(idx, 2), 1), 0);
+        this.ctx.gdraw.rect(rx1, ry1, z_width, z_height, DrawType.LineGray,
+            false, Math.max(Math.min(idx, 2), 1));
       }
       if (idx >= 0) {
         let color = GlowColor.get_drawtype(this.color_drawtype,
             DrawType.LineHighlight, highlight, colornode, 2, 0);
         this.ctx.gdraw.text(x1, y1, this.text, ldraw_type, color, idx,
-            highlight, 0, lfont, tsize, rot);
+            highlight, lfont, tsize, rot);
       }
     } else if (idx >= 0) {
-      let p2 = this.ctx.gdraw.getTextExtent("A", Math.max(0, idx), lfont,
-          ldraw_type);
+      let p2 = this.ctx.gdraw.getTextExtent("A", ldraw_type, Math.max(0, idx), lfont);
       z_width = p2.x;
       z_height = p2.y;
       z_descent = z_height / 4;
       this.ctx.gdraw.rect(x1, y1 - (z_height - z_descent), z_width, z_height,
-          DrawType.LineGray, idx, 0);
+          DrawType.LineGray, false, idx);
     }
   }
 

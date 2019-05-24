@@ -137,31 +137,30 @@ class GrowImage extends Rect {
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    let x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-    let y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-    let x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-    let y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
+
+    let x1 = Math.floor(p1.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p1.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
 
     let ll_x = Math.min(x1, x2);
     let ur_x = Math.max(x1, x2);
     let ll_y = Math.min(y1, y2);
     let ur_y = Math.max(y1, y2);
 
-    // this.ctx.gdraw.rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, DrawType.Line, idx, 0);
     this.ctx.gdraw.image(this.image, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y);
   }
 
   get_borders(t, g) {
-    let x1 = this.trf.x(t, this.ll.x, this.ll.y);
-    let x2 = this.trf.x(t, this.ur.x, this.ur.y);
-    let y1 = this.trf.y(t, this.ll.x, this.ll.y);
-    let y2 = this.trf.y(t, this.ur.x, this.ur.y);
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
 
-    g.set(Rect.union(g, new Rect(Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2), Math.max(y1, y2))));
+    g.set(Rect.union(g, new Rect(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y),
+        Math.max(p1.x, p2.x), Math.max(p1.y, p2.y))));
   }
 
   get_node_borders() {
@@ -207,7 +206,8 @@ class GrowImage extends Rect {
     let old_x_right = this.ur_x;
     let old_y_low = this.ll_y;
     let old_y_high = this.ur_y;
-    this.trf.scale_from_stored(scale_x, scale_y, x0, y0);
+    this.trf.revert();
+    this.trf.scale(scale_x, scale_y, x0, y0);
     this.get_node_borders();
 
     switch (type) {

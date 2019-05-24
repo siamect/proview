@@ -110,8 +110,8 @@ class GrowConGlue extends GrowNode {
 
     if (lw_up !== -1 && lw_down === -1 && lw_right === -1 && lw_left === -1) {
       // Up termination
-      this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y, idx_up +
-          1, ur_y - m_y, drawtype);
+      this.ctx.gdraw.rect(m_x - idx_up + idx_up / 2, m_y, idx_up +
+          1, ur_y - m_y, drawtype, true, 0);
       if (this.shadow !== 0 && idx_up > 2) {
         if (this.border !== 0) {
           idx_up -= 2;
@@ -143,8 +143,8 @@ class GrowConGlue extends GrowNode {
     } else if (lw_up === -1 && lw_down !== -1 && lw_right === -1 &&
         lw_left === -1) {
       // Down termination
-      this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
-          1, m_y - ll_y, drawtype);
+      this.ctx.gdraw.rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
+          1, m_y - ll_y, drawtype, true, 0);
       if (this.shadow !== 0 && idx_down > 2) {
         if (this.border !== 0) {
           idx_down -= 2;
@@ -176,8 +176,8 @@ class GrowConGlue extends GrowNode {
     } else if (lw_up === -1 && lw_down === -1 && lw_right !== -1 &&
         lw_left === -1) {
       // Right termination
-      this.ctx.gdraw.fill_rect(m_x, m_y - idx_right + idx_right / 2, ur_x -
-          m_x, idx_right + 1, drawtype);
+      this.ctx.gdraw.rect(m_x, m_y - idx_right + idx_right / 2, ur_x -
+          m_x, idx_right + 1, drawtype, true, 0);
       if (this.shadow !== 0 && idx_right > 2) {
         if (this.border !== 0) {
           idx_right -= 2;
@@ -209,8 +209,8 @@ class GrowConGlue extends GrowNode {
     } else if (lw_up === -1 && lw_down === -1 && lw_right === -1 &&
         lw_left !== -1) {
       // Left termination
-      this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x -
-          ll_x, idx_left + 1, drawtype);
+      this.ctx.gdraw.rect(ll_x, m_y - idx_left + idx_left / 2, m_x -
+          ll_x, idx_left + 1, drawtype, true, 0);
       if (this.shadow !== 0 && idx_left > 2) {
         if (this.border !== 0) {
           idx_left -= 2;
@@ -242,10 +242,10 @@ class GrowConGlue extends GrowNode {
     } else if (lw_up !== -1 && lw_down !== -1 && lw_right === -1 &&
         lw_left === -1) {
       // Vertical glue
-      this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y, idx_up +
-          1, ur_y - m_y, drawtype);
-      this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
-          1, m_y - ll_y, drawtype);
+      this.ctx.gdraw.rect(m_x - idx_up + idx_up / 2, m_y, idx_up +
+          1, ur_y - m_y, drawtype, true, 0);
+      this.ctx.gdraw.rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
+          1, m_y - ll_y, drawtype, true, 0);
 
       if (this.shadow !== 0 && idx_down > 2) {
         if (this.border !== 0) {
@@ -286,10 +286,10 @@ class GrowConGlue extends GrowNode {
     } else if (lw_left !== -1 && lw_right !== -1 && lw_up === -1 &&
         lw_down === -1) {
       // Horizontal glue
-      this.ctx.gdraw.fill_rect(m_x, m_y - idx_right + idx_right / 2, ur_x -
-          m_x, idx_right + 1, drawtype);
-      this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x -
-          ll_x, idx_left + 1, drawtype);
+      this.ctx.gdraw.rect(m_x, m_y - idx_right + idx_right / 2, ur_x -
+          m_x, idx_right + 1, drawtype, true, 0);
+      this.ctx.gdraw.rect(ll_x, m_y - idx_left + idx_left / 2, m_x -
+          ll_x, idx_left + 1, drawtype, true, 0);
       if (this.shadow !== 0 && (idx_left > 2 || idx_right > 2)) {
         if (this.border !== 0) {
           idx_left -= 2;
@@ -329,10 +329,10 @@ class GrowConGlue extends GrowNode {
     } else if (lw_left !== -1 && lw_right === -1 && lw_up !== -1 &&
         lw_down === -1) {
       // Left up corner
-      this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y + idx_left /
-          2, idx_up + 1, ur_y - (m_y + idx_left / 2), drawtype);
-      this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x +
-          idx_up / 2 - ll_x + 1, idx_left + 1, drawtype);
+      this.ctx.gdraw.rect(m_x - idx_up + idx_up / 2, m_y + idx_left /
+          2, idx_up + 1, ur_y - (m_y + idx_left / 2), drawtype, true, 0);
+      this.ctx.gdraw.rect(ll_x, m_y - idx_left + idx_left / 2, m_x +
+          idx_up / 2 - ll_x + 1, idx_left + 1, drawtype, true, 0);
       if (this.shadow !== 0 && (idx_left > 2 || idx_up > 2)) {
         if (this.border !== 0) {
           idx_left -= 2;
@@ -366,11 +366,11 @@ class GrowConGlue extends GrowNode {
     } else if (lw_left === -1 && lw_right !== -1 && lw_up !== -1 &&
         lw_down === -1) {
       // Right up corner
-      this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y - idx_right +
+      this.ctx.gdraw.rect(m_x - idx_up + idx_up / 2, m_y - idx_right +
           idx_right / 2, idx_up + 1, ur_y - (m_y - idx_right + idx_right / 2),
-          drawtype);
-      this.ctx.gdraw.fill_rect(m_x + idx_up / 2, m_y - idx_right + idx_right /
-          2, ur_x - (m_x + idx_up / 2), idx_right + 1, drawtype);
+          drawtype, true, 0);
+      this.ctx.gdraw.rect(m_x + idx_up / 2, m_y - idx_right + idx_right /
+          2, ur_x - (m_x + idx_up / 2), idx_right + 1, drawtype, true, 0);
       if (this.shadow !== 0 && (idx_right > 2 || idx_up > 2)) {
         if (this.border !== 0) {
           idx_right -= 2;
@@ -407,11 +407,11 @@ class GrowConGlue extends GrowNode {
     } else if (lw_left === -1 && lw_right !== -1 && lw_up === -1 &&
         lw_down !== -1) {
       // Right down corner
-      this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
-          1, m_y - idx_right + idx_right / 2 - ll_y, drawtype);
-      this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, m_y - idx_right +
+      this.ctx.gdraw.rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
+          1, m_y - idx_right + idx_right / 2 - ll_y, drawtype, true, 0);
+      this.ctx.gdraw.rect(m_x - idx_down + idx_down / 2, m_y - idx_right +
           idx_right / 2, ur_x - (m_x - idx_down + idx_down / 2), idx_right + 1,
-          drawtype);
+          drawtype, true, 0);
       if (this.shadow !== 0 && (idx_right > 2 || idx_down > 2)) {
         if (this.border !== 0) {
           idx_right -= 2;
@@ -446,10 +446,10 @@ class GrowConGlue extends GrowNode {
     } else if (lw_left !== -1 && lw_right === -1 && lw_up === -1 &&
         lw_down !== -1) {
       // Left down corner
-      this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
-          1, m_y + idx_left / 2 - ll_y + 1, drawtype);
-      this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x -
-          idx_down + idx_down / 2 - ll_x, idx_left + 1, drawtype);
+      this.ctx.gdraw.rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
+          1, m_y + idx_left / 2 - ll_y + 1, drawtype, true, 0);
+      this.ctx.gdraw.rect(ll_x, m_y - idx_left + idx_left / 2, m_x -
+          idx_down + idx_down / 2 - ll_x, idx_left + 1, drawtype, true, 0);
       if (this.shadow !== 0 && (idx_left > 2 || idx_down > 2)) {
         if (this.border !== 0) {
           idx_left -= 2;
@@ -487,13 +487,13 @@ class GrowConGlue extends GrowNode {
     } else if (lw_left !== -1 && lw_right !== -1 && lw_up === -1 &&
         lw_down !== -1) {
       // Left right down threeway
-      this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
-          1, m_y - ll_y + 1, drawtype);
-      this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x +
-          idx_down / 2 - ll_x, idx_left + 1, drawtype);
-      this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, m_y - idx_right +
+      this.ctx.gdraw.rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
+          1, m_y - ll_y + 1, drawtype, true, 0);
+      this.ctx.gdraw.rect(ll_x, m_y - idx_left + idx_left / 2, m_x +
+          idx_down / 2 - ll_x, idx_left + 1, drawtype, true, 0);
+      this.ctx.gdraw.rect(m_x - idx_down + idx_down / 2, m_y - idx_right +
           idx_right / 2, ur_x - (m_x - idx_down + idx_down / 2), idx_right + 1,
-          drawtype);
+          drawtype, true, 0);
       if (this.shadow !== 0 && (idx_left > 2 || idx_right > 2 || idx_down > 2)) {
         if (this.border !== 0) {
           idx_left -= 2;
@@ -566,13 +566,13 @@ class GrowConGlue extends GrowNode {
     } else if (lw_left !== -1 && lw_right !== -1 && lw_up !== -1 &&
         lw_down === -1) {
       // Left right up threeway
-      this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y, idx_up +
-          1, ur_y - m_y, drawtype);
-      this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x +
-          idx_up / 2 - ll_x, idx_left + 1, drawtype);
-      this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y - idx_right +
+      this.ctx.gdraw.rect(m_x - idx_up + idx_up / 2, m_y, idx_up +
+          1, ur_y - m_y, drawtype, true, 0);
+      this.ctx.gdraw.rect(ll_x, m_y - idx_left + idx_left / 2, m_x +
+          idx_up / 2 - ll_x, idx_left + 1, drawtype, true, 0);
+      this.ctx.gdraw.rect(m_x - idx_up + idx_up / 2, m_y - idx_right +
           idx_right / 2, ur_x - (m_x - idx_up + idx_up / 2), idx_right + 1,
-          drawtype);
+          drawtype, true, 0);
       if (this.shadow !== 0 && (idx_left > 2 || idx_right > 2 || idx_up > 2)) {
         if (this.border !== 0) {
           idx_left -= 2;
@@ -653,13 +653,13 @@ class GrowConGlue extends GrowNode {
     } else if (lw_left !== -1 && lw_right === -1 && lw_up !== -1 &&
         lw_down !== -1) {
       // Left up down threeway
-      this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x -
-          ll_x, idx_left + 1, drawtype);
-      this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y - idx_left +
+      this.ctx.gdraw.rect(ll_x, m_y - idx_left + idx_left / 2, m_x -
+          ll_x, idx_left + 1, drawtype, true, 0);
+      this.ctx.gdraw.rect(m_x - idx_up + idx_up / 2, m_y - idx_left +
           idx_left / 2, idx_up + 1, ur_y - (m_y - idx_left + idx_left / 2),
-          drawtype);
-      this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
-          1, m_y + idx_left / 2 - ll_y, drawtype);
+          drawtype, true, 0);
+      this.ctx.gdraw.rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
+          1, m_y + idx_left / 2 - ll_y, drawtype, true, 0);
       if (this.shadow !== 0 && (idx_left > 2 || idx_down > 2 || idx_up > 2)) {
         if (this.border !== 0) {
           idx_left -= 2;
@@ -739,13 +739,13 @@ class GrowConGlue extends GrowNode {
     } else if (lw_left === -1 && lw_right !== -1 && lw_up !== -1 &&
         lw_down !== -1) {
       // Right up down threeway
-      this.ctx.gdraw.fill_rect(m_x, m_y - idx_right + idx_right / 2, ur_x -
-          m_x, idx_right + 1, drawtype);
-      this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y - idx_right +
+      this.ctx.gdraw.rect(m_x, m_y - idx_right + idx_right / 2, ur_x -
+          m_x, idx_right + 1, drawtype, true, 0);
+      this.ctx.gdraw.rect(m_x - idx_up + idx_up / 2, m_y - idx_right +
           idx_right / 2, idx_up + 1, ur_y - (m_y - idx_right + idx_right / 2),
-          drawtype);
-      this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
-          1, m_y + idx_right / 2 - ll_y, drawtype);
+          drawtype, true, 0);
+      this.ctx.gdraw.rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
+          1, m_y + idx_right / 2 - ll_y, drawtype, true, 0);
       if (this.shadow !== 0 && (idx_right > 2 || idx_down > 2 || idx_up > 2)) {
         if (this.border !== 0) {
           idx_right -= 2;
@@ -826,14 +826,14 @@ class GrowConGlue extends GrowNode {
     } else if (lw_left !== -1 && lw_right !== -1 && lw_up !== -1 &&
         lw_down !== -1) {
       // Right left up down fourway
-      this.ctx.gdraw.fill_rect(m_x, m_y - idx_right + idx_right / 2, ur_x -
-          m_x, idx_right + 1, drawtype);
-      this.ctx.gdraw.fill_rect(ll_x, m_y - idx_left + idx_left / 2, m_x -
-          ll_x, idx_left + 1, drawtype);
-      this.ctx.gdraw.fill_rect(m_x - idx_up + idx_up / 2, m_y, idx_up +
-          1, ur_y - m_y, drawtype);
-      this.ctx.gdraw.fill_rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
-          1, m_y - ll_y, drawtype);
+      this.ctx.gdraw.rect(m_x, m_y - idx_right + idx_right / 2, ur_x -
+          m_x, idx_right + 1, drawtype, true, 0);
+      this.ctx.gdraw.rect(ll_x, m_y - idx_left + idx_left / 2, m_x -
+          ll_x, idx_left + 1, drawtype, true, 0);
+      this.ctx.gdraw.rect(m_x - idx_up + idx_up / 2, m_y, idx_up +
+          1, ur_y - m_y, drawtype, true, 0);
+      this.ctx.gdraw.rect(m_x - idx_down + idx_down / 2, ll_y, idx_down +
+          1, m_y - ll_y, drawtype, true, 0);
       if (this.shadow !== 0 &&
           (idx_left > 2 || idx_right > 2 || idx_down > 2 || idx_up > 2)) {
         if (this.border !== 0) {

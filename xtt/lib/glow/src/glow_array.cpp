@@ -250,8 +250,7 @@ void GlowArray::copy_from(const GlowArray& array)
       n->highlight = 0;
       n->hot = 0;
       // Fix, This should be done in the copy constructor !!!
-      sprintf(
-          n->n_name, "O%d", ((GrowCtx*)(n->ctx))->get_next_objectname_num());
+      sprintf(n->n_name, "O%d", n->ctx->get_next_objectname_num());
       insert(n);
       break;
     }
@@ -672,11 +671,7 @@ void GlowArray::brow_remove(void* ctx, GlowArrayElem* element)
 void GlowArray::brow_close(void* ctx, GlowArrayElem* element)
 {
   int idx = 0, next_idx;
-  int found;
-  int level;
-  GlowArrayElem* e;
-
-  found = 0;
+  int found = 0;
   int i;
   for (i = 0; i < a_size; i++) {
     if (*(a + i) == element) {
@@ -688,7 +683,7 @@ void GlowArray::brow_close(void* ctx, GlowArrayElem* element)
     return;
 
   // Find next element with the same level
-  level = ((GlowNode*)a[idx])->get_level();
+  int level = ((GlowNode*)a[idx])->get_level();
   for (i = idx + 1; i < a_size; i++) {
     if (((GlowNode*)a[i])->get_level() <= level)
       break;
@@ -698,7 +693,6 @@ void GlowArray::brow_close(void* ctx, GlowArrayElem* element)
     return;
 
   for (i = idx + 1; i < next_idx; i++) {
-    e = a[i];
     ((GlowCtx*)ctx)->delete_object(a[i]);
     i--;
     next_idx--;
@@ -833,7 +827,7 @@ void GlowArray::open(GrowCtx* ctx, std::ifstream& fp)
       break;
     }
     case glow_eSave_Arc: {
-      GlowArc* n = new GlowArc((GrowCtx*)ctx);
+      GlowArc* n = new GlowArc(ctx);
       n->open(fp);
       insert(n);
       break;
@@ -982,7 +976,7 @@ void GlowArray::open(GrowCtx* ctx, std::ifstream& fp)
       break;
     }
     case glow_eSave_GrowArc: {
-      GrowArc* a = new GrowArc((GrowCtx*)ctx, "");
+      GrowArc* a = new GrowArc(ctx, "");
       a->open(fp);
       insert(a);
       break;

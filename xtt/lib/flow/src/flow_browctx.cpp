@@ -44,17 +44,10 @@
 int BrowCtx::insert(FlowArrayElem* element, FlowArrayElem* destination,
     flow_eDest destination_code)
 {
-  int sts;
-  double y;
-
-  sts = a.brow_insert(element, destination, destination_code);
+  int sts = a.brow_insert(element, destination, destination_code);
   if (!sts)
     return sts;
 
-  if (destination)
-    y = ((FlowNode*)destination)->y_low;
-  else
-    y = 0;
   configure();
   return 1;
 }
@@ -143,30 +136,27 @@ void BrowCtx::zoom(double factor)
 
 int BrowCtx::print(char* filename)
 {
-  int i;
-  double ll_x, ll_y, ur_x, ur_y;
-  double width, height;
-  int sts;
-
   if (a.size() == 0)
     return 0;
 
+  double ll_x, ll_y, ur_x, ur_y;
   ((FlowNode*)a[0])->measure(&ll_x, &ll_y, &ur_x, &ur_y);
-  height = 60 * (ur_y - ll_y);
-  width = 0.70 * height;
+  double height = 60 * (ur_y - ll_y);
+  double width = 0.70 * height;
   if (width < ur_x - ll_x) {
     // Portrait
     height = 40 * (ur_y - ll_y);
     width = height / 0.70;
   }
 
+  int sts;
   current_print = new FlowPscript(filename, this, 1, &sts);
   if (EVEN(sts)) {
     delete current_print;
     return 0;
   }
 
-  for (i = 0;; i++) {
+  for (int i = 0;; i++) {
     ll_y = i * height;
     ur_y = ll_y + height;
     ll_x = 0;
@@ -218,21 +208,17 @@ void BrowCtx::print_draw_page(void* context, const char* title, int page,
 void BrowCtx::print_get_pages(
     flow_eOrientation orientation, double scale, int* pages)
 {
-  double ll_x, ll_y, ur_x, ur_y;
-  double width, height;
-
   if (a.size() == 0) {
     *pages = 0;
     return;
   }
 
+  double ll_x, ll_y, ur_x, ur_y;
   ((FlowNode*)a[0])->measure(&ll_x, &ll_y, &ur_x, &ur_y);
-  height = 60 * (ur_y - ll_y) * scale;
-  width = 0.70 * height;
+  double height = 60 * (ur_y - ll_y) * scale;
   if (orientation == flow_eOrientation_Landscape) {
     // Portrait
     height = 35 * (ur_y - ll_y) * scale;
-    width = height / 0.70;
   }
 
   *pages = int(y_high / height + 1);
@@ -292,14 +278,11 @@ void BrowCtx::center_object(FlowArrayElem* object, double factor)
 
 int BrowCtx::get_first_visible(FlowArrayElem** element)
 {
-  double ll_x, ll_y, ur_x, ur_y;
-  double window_low, window_high;
-  int i;
+  double window_low = double(offset_y) / zoom_factor;
+  double window_high = double(offset_y + window_height) / zoom_factor;
 
-  window_low = double(offset_y) / zoom_factor;
-  window_high = double(offset_y + window_height) / zoom_factor;
-
-  for (i = 0; i < a.size(); i++) {
+  for (int i = 0; i < a.size(); i++) {
+    double ll_x, ll_y, ur_x, ur_y;
     ((FlowNode*)a[i])->measure(&ll_x, &ll_y, &ur_x, &ur_y);
     if (ll_y >= window_low || ur_y >= window_high) {
       *element = a[i];
@@ -311,14 +294,11 @@ int BrowCtx::get_first_visible(FlowArrayElem** element)
 
 int BrowCtx::get_last_visible(FlowArrayElem** element)
 {
-  double ll_x, ll_y, ur_x, ur_y;
-  double window_low, window_high;
-  int i;
+  double window_low = double(offset_y) / zoom_factor;
+  double window_high = double(offset_y + window_height) / zoom_factor;
 
-  window_low = double(offset_y) / zoom_factor;
-  window_high = double(offset_y + window_height) / zoom_factor;
-
-  for (i = a.size() - 1; i >= 0; i--) {
+  for (int i = a.size() - 1; i >= 0; i--) {
+    double ll_x, ll_y, ur_x, ur_y;
     ((FlowNode*)a[i])->measure(&ll_x, &ll_y, &ur_x, &ur_y);
     if (ur_y <= window_high || ll_y <= window_low) {
       *element = a[i];

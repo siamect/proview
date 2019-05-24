@@ -5,7 +5,7 @@
  Based upon C source code written by Eric Young, eay@psych.uq.oz.au
  and the java version JCrypt by John Dumas.
  */
-class JopCrypt {
+class Crypt {
   static ITERATIONS = 16;
 
   static con_salt =
@@ -225,78 +225,53 @@ class JopCrypt {
     return (value >= 0 ? value : value + 256);
   }
 
-  fourBytesToInt(b, offset) {
-    let value = JopCrypt.byteToUnsigned(b[offset++]);
-    value |= (JopCrypt.byteToUnsigned(b[offset++]) << 8);
-    value |= (JopCrypt.byteToUnsigned(b[offset++]) << 16);
-    value |= (JopCrypt.byteToUnsigned(b[offset++]) << 24);
+  static fourBytesToInt(b, offset) {
+    let value = Crypt.byteToUnsigned(b[offset++]);
+    value |= (Crypt.byteToUnsigned(b[offset++]) << 8);
+    value |= (Crypt.byteToUnsigned(b[offset++]) << 16);
+    value |= (Crypt.byteToUnsigned(b[offset]) << 24);
     return value;
   }
 
-  static intToFourBytes(iValue, b, offset) {
-    b[offset++] = ((iValue) & 0xff);
-    b[offset++] = ((iValue >>> 8) & 0xff);
-    b[offset++] = ((iValue >>> 16) & 0xff);
-    b[offset++] = ((iValue >>> 24) & 0xff);
+  static intToFourBytes(iValue, b) {
+    b.push((iValue) & 0xff);
+    b.push((iValue >>> 8) & 0xff);
+    b.push((iValue >>> 16) & 0xff);
+    b.push((iValue >>> 24) & 0xff);
   }
 
-  static PERM_OP(a, b, n, m, results) {
-    let t;
-
-    t = ((a >>> n) ^ b) & m;
+  static PERM_OP(a, b, n, m) {
+    let t = ((a >>> n) ^ b) & m;
     a ^= t << n;
     b ^= t;
-
-    results[0] = a;
-    results[1] = b;
+    return [a, b];
   }
 
   static HPERM_OP(a, n, m) {
-    let t;
-
-    t = ((a << (16 - n)) ^ a) & m;
-    a = a ^ t ^ (t >>> (16 - n));
-
-    return (a);
+    let t = ((a << (16 - n)) ^ a) & m;
+    return a ^ t ^ (t >>> (16 - n));
   }
 
-  des_set_key(key) {
-    let schedule = new Array(JopCrypt.ITERATIONS * 2);
+  static des_set_key(key) {
+    let schedule = new Array(Crypt.ITERATIONS * 2);
 
-    let c = this.fourBytesToInt(key, 0);
-    let d = this.fourBytesToInt(key, 4);
+    let c = Crypt.fourBytesToInt(key, 0);
+    let d = Crypt.fourBytesToInt(key, 4);
 
-    let results = new Array(2);
+    [d, c] = Crypt.PERM_OP(d, c, 4, 0x0f0f0f0f);
+    c = Crypt.HPERM_OP(c, -2, 0xcccc0000);
+    d = Crypt.HPERM_OP(d, -2, 0xcccc0000);
+    [d, c] = Crypt.PERM_OP(d, c, 1, 0x55555555);
+    [c, d] = Crypt.PERM_OP(c, d, 8, 0x00ff00ff);
+    [d, c] = Crypt.PERM_OP(d, c, 1, 0x55555555);
 
-    JopCrypt.PERM_OP(d, c, 4, 0x0f0f0f0f, results);
-    d = results[0];
-    c = results[1];
-
-    c = JopCrypt.HPERM_OP(c, -2, 0xcccc0000);
-    d = JopCrypt.HPERM_OP(d, -2, 0xcccc0000);
-
-    JopCrypt.PERM_OP(d, c, 1, 0x55555555, results);
-    d = results[0];
-    c = results[1];
-
-    JopCrypt.PERM_OP(c, d, 8, 0x00ff00ff, results);
-    c = results[0];
-    d = results[1];
-
-    JopCrypt.PERM_OP(d, c, 1, 0x55555555, results);
-    d = results[0];
-    c = results[1];
-
-    d =
-        (((d & 0x000000ff) << 16) | (d & 0x0000ff00) | ((d & 0x00ff0000) >>> 16) |
-            ((c & 0xf0000000) >>> 4));
+    d = (((d & 0x000000ff) << 16) | (d & 0x0000ff00) |
+        ((d & 0x00ff0000) >>> 16) | ((c & 0xf0000000) >>> 4));
     c &= 0x0fffffff;
 
-    let s, t;
     let j = 0;
-
-    for (let i = 0; i < JopCrypt.ITERATIONS; i++) {
-      if (JopCrypt.shifts2[i]) {
+    for (let i = 0; i < Crypt.ITERATIONS; i++) {
+      if (Crypt.shifts2[i]) {
         c = (c >>> 2) | (c << 26);
         d = (d >>> 2) | (d << 26);
       } else {
@@ -307,16 +282,16 @@ class JopCrypt {
       c &= 0x0fffffff;
       d &= 0x0fffffff;
 
-      s = JopCrypt.skb[0][(c) & 0x3f] |
-          JopCrypt.skb[1][((c >>> 6) & 0x03) | ((c >>> 7) & 0x3c)] |
-          JopCrypt.skb[2][((c >>> 13) & 0x0f) | ((c >>> 14) & 0x30)] |
-          JopCrypt.skb[3][((c >>> 20) & 0x01) | ((c >>> 21) & 0x06) |
+      let s = Crypt.skb[0][(c) & 0x3f] |
+          Crypt.skb[1][((c >>> 6) & 0x03) | ((c >>> 7) & 0x3c)] |
+          Crypt.skb[2][((c >>> 13) & 0x0f) | ((c >>> 14) & 0x30)] |
+          Crypt.skb[3][((c >>> 20) & 0x01) | ((c >>> 21) & 0x06) |
           ((c >>> 22) & 0x38)];
 
-      t = JopCrypt.skb[4][(d) & 0x3f] |
-          JopCrypt.skb[5][((d >>> 7) & 0x03) | ((d >>> 8) & 0x3c)] |
-          JopCrypt.skb[6][(d >>> 15) & 0x3f] |
-          JopCrypt.skb[7][((d >>> 21) & 0x0f) | ((d >>> 22) & 0x30)];
+      let t = Crypt.skb[4][(d) & 0x3f] |
+          Crypt.skb[5][((d >>> 7) & 0x03) | ((d >>> 8) & 0x3c)] |
+          Crypt.skb[6][(d >>> 15) & 0x3f] |
+          Crypt.skb[7][((d >>> 21) & 0x0f) | ((d >>> 22) & 0x30)];
 
       schedule[j++] = ((t << 16) | (s & 0x0000ffff)) & 0xffffffff;
       s = ((s >>> 16) | (t & 0xffff0000));
@@ -337,23 +312,23 @@ class JopCrypt {
     t = (v ^ (v << 16)) ^ R ^ s[S + 1];
     t = (t >>> 4) | (t << 28);
 
-    L ^= JopCrypt.SPtrans[1][(t) & 0x3f] | JopCrypt.SPtrans[3][(t >>> 8) & 0x3f] |
-        JopCrypt.SPtrans[5][(t >>> 16) & 0x3f] | JopCrypt.SPtrans[7][(t >>> 24) & 0x3f] |
-        JopCrypt.SPtrans[0][(u) & 0x3f] | JopCrypt.SPtrans[2][(u >>> 8) & 0x3f] |
-        JopCrypt.SPtrans[4][(u >>> 16) & 0x3f] | JopCrypt.SPtrans[6][(u >>> 24) & 0x3f];
+    L ^= Crypt.SPtrans[1][(t) & 0x3f] | Crypt.SPtrans[3][(t >>> 8) & 0x3f] |
+        Crypt.SPtrans[5][(t >>> 16) & 0x3f] | Crypt.SPtrans[7][(t >>> 24) & 0x3f] |
+        Crypt.SPtrans[0][(u) & 0x3f] | Crypt.SPtrans[2][(u >>> 8) & 0x3f] |
+        Crypt.SPtrans[4][(u >>> 16) & 0x3f] | Crypt.SPtrans[6][(u >>> 24) & 0x3f];
 
     return L;
   }
 
-  body(schedule, Eswap0, Eswap1) {
+  static body(schedule, Eswap0, Eswap1) {
     let left = 0;
     let right = 0;
     let t = 0;
 
     for (let j = 0; j < 25; j++) {
-      for (let i = 0; i < JopCrypt.ITERATIONS * 2; i += 4) {
-        left = JopCrypt.D_ENCRYPT(left, right, i, Eswap0, Eswap1, schedule);
-        right = JopCrypt.D_ENCRYPT(right, left, i + 2, Eswap0, Eswap1, schedule);
+      for (let i = 0; i < Crypt.ITERATIONS * 2; i += 4) {
+        left = Crypt.D_ENCRYPT(left, right, i, Eswap0, Eswap1, schedule);
+        right = Crypt.D_ENCRYPT(right, left, i + 2, Eswap0, Eswap1, schedule);
       }
       t = left;
       left = right;
@@ -368,37 +343,16 @@ class JopCrypt {
     left &= 0xffffffff;
     right &= 0xffffffff;
 
-    let results = new Array(2);
+    [right, left] = Crypt.PERM_OP(right, left, 1, 0x55555555);
+    [left, right] = Crypt.PERM_OP(left, right, 8, 0x00ff00ff);
+    [right, left] = Crypt.PERM_OP(right, left, 2, 0x33333333);
+    [left, right] = Crypt.PERM_OP(left, right, 16, 0x0000ffff);
+    [right, left] = Crypt.PERM_OP(right, left, 4, 0x0f0f0f0f);
 
-    JopCrypt.PERM_OP(right, left, 1, 0x55555555, results);
-    right = results[0];
-    left = results[1];
-
-    JopCrypt.PERM_OP(left, right, 8, 0x00ff00ff, results);
-    left = results[0];
-    right = results[1];
-
-    JopCrypt.PERM_OP(right, left, 2, 0x33333333, results);
-    right = results[0];
-    left = results[1];
-
-    JopCrypt.PERM_OP(left, right, 16, 0x0000ffff, results);
-    left = results[0];
-    right = results[1];
-
-    JopCrypt.PERM_OP(right, left, 4, 0x0f0f0f0f, results);
-    right = results[0];
-    left = results[1];
-
-    let out = new Array(2);
-
-    out[0] = left;
-    out[1] = right;
-
-    return (out);
+    return [left, right];
   }
 
-  crypt(salt, original) {
+  static crypt(salt, original) {
     while (salt.length < 2) {
       salt += "A";
     }
@@ -408,13 +362,11 @@ class JopCrypt {
     let charOne = salt.charAt(1) + '';
     let ccZ = charZero.charCodeAt(0);
     let ccO = charOne.charCodeAt(0);
-    console.log("charZero", charZero, "charOne", charOne);
 
     buffer = charZero + charOne + " ";
 
-    console.log("buffer \"" + buffer + "\"");
-    let Eswap0 = JopCrypt.con_salt[ccZ];
-    let Eswap1 = JopCrypt.con_salt[ccO] << 4;
+    let Eswap0 = Crypt.con_salt[ccZ];
+    let Eswap1 = Crypt.con_salt[ccO] << 4;
 
     let key = [0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0];
 
@@ -424,14 +376,13 @@ class JopCrypt {
       key[i] = iChar << 1;
     }
 
-    let schedule = this.des_set_key(key);
-    let out = this.body(schedule, Eswap0, Eswap1);
+    let schedule = Crypt.des_set_key(key);
+    let out = Crypt.body(schedule, Eswap0, Eswap1);
 
     let b = new Array(9);
-
-    JopCrypt.intToFourBytes(out[0], b, 0);
-    JopCrypt.intToFourBytes(out[1], b, 4);
-    b[8] = 0;
+    Crypt.intToFourBytes(out[0], b);
+    Crypt.intToFourBytes(out[1], b);
+    b.push(0);
 
     let y = 0;
     for (let i = 2, u = 0x80; i < 13; i++) {
@@ -449,7 +400,7 @@ class JopCrypt {
           u = 0x80;
         }
         buffer =
-            buffer.substring(0, i) + String.fromCharCode(JopCrypt.cov_2char[c]) +
+            buffer.substring(0, i) + String.fromCharCode(Crypt.cov_2char[c]) +
             buffer.substring(i + 1, buffer.length);
       }
     }

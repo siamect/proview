@@ -108,7 +108,7 @@ class Appl {
             let arrTmp = ["pwrb", "pwrs", "nmps", "profibus", "otherio", "opc",
               "basecomponent", "abb", "siemens", "ssabox"];
             if (arrTmp.some(e => urlValue.startsWith(e + "_"))) { // Object reference manual
-              urlValue = "$pwr_doc/" + getLang() + "/orm/" + urlValue;
+              urlValue = "$pwr_doc/en_us/orm/" + urlValue;
             }
 
             console.log("open url " + urlValue);
@@ -160,15 +160,15 @@ class Appl {
           }
         }
       } else if (command === ("HELP")) {
-        let fileName = "xtt_help_";
+        let fileName = "/pwrp_web/xtt_help_";
         let bookmarkValue = null;
 
         if (cli.qualifierFound("/VERSION")) {
-          fileName = this.pwrHost + "xtt_version_help_version.html";
+          fileName = window.location.hostname + "/pwr_doc/xtt_version_help_version.html";
           this.openURL(fileName, null);
         } else {
           if (cli.qualifierFound("/BASE")) { // Not language dependent !! TODO
-            fileName = this.pwrHost + "help/xtt_help_";
+            fileName = "/pwr_doc/help/xtt_help_";
           }
 
           for (let i = 0; i < 4; i++) {
@@ -179,14 +179,14 @@ class Appl {
           let arrTmp = ["pwrb", "pwrs", "nmps", "profibus", "otherio", "opc",
             "basecomponent", "abb", "siemens", "ssabox"];
           if (arrTmp.some(e => fileName.startsWith(e + "_"))) { // Object reference manual
-            fileName = "$pwr_doc/orm/" + fileName;
+            fileName = "/pwr_doc/orm/" + fileName;
           }
 
           bookmarkValue = getQualIfExists("/BOOKMARK");
 
           fileName += ".html";
           console.log("Loading helpfile \"" + fileName + "\"");
-          this.openURL(fileName, bookmarkValue);
+          this.openURL(window.location.hostname + fileName, bookmarkValue);
         }
       } else if (command === ("CHECK")) {
         let cli_arg1 = getQualIfExists("cli_arg1");

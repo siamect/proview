@@ -140,7 +140,6 @@ private:
   unique_ptr<QPainter> get_painter(int painter_type, int size);
 
   void event_timer(FlowCtx* ctx, QMouseEvent *event, QWidget *target);
-  void cancel_event_timer(FlowCtx* ctx);
 
   void (*draw_timer_callback_func)(FlowCtx* ctx);
   QTimer* draw_timer_id;

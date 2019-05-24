@@ -5992,6 +5992,180 @@ class DynFillLevel extends DynElem {
   }
 }
 
+class DynDigCommand extends DynElem {
+  command = "";
+  a = null;
+  first_scan = true;
+  level = 0;
+
+  constructor(dyn) {
+    super(dyn, DynPrio.DigCommand);
+    this.dyn_type1 = DynType1.DigCommand;
+  }
+
+  connect(object) {
+    this.a = new DynReference(this.dyn, this.attribute);
+    this.a.connect(this.dyn);
+    if (!this.a.sts) {
+      console.log("DigCommand: " + this.attribute);
+      return 1;
+    }
+
+    return 1;
+  }
+
+  disconnect() {
+    if (this.a) {
+      this.a.disconnect();
+    }
+  }
+
+  scan(object) {
+    if (this.a === null || !this.a.sts) {
+      return;
+    }
+
+    let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    value = (this.a.inverted) ? !value : value;
+
+    if (this.first_scan) {
+      this.a.oldValue = value;
+      this.first_scan = false;
+      return;
+    }
+
+    if ((!this.level && value && !this.a.oldValue) || (this.level && value)) {
+      let cmd = this.dyn.graph.getCommand(this.command);
+      this.dyn.graph.command(cmd);
+      return;
+    }
+
+    this.a.oldValue = value;
+  }
+
+  open(lines, row) {
+    let i;
+    for (i = row; i < lines.length; i++) {
+      let tokens = lines[i].split(' ');
+      let key = parseInt(tokens[0], 10);
+
+      switch (key) {
+        case DynSave.DigCommand:
+          break;
+        case DynSave.DigCommand_attribute:
+          if (tokens.length > 1) {
+            this.attribute = tokens[1];
+          }
+          break;
+        case DynSave.DigCommand_command:
+          if (tokens.length > 1) {
+            this.command = tokens[1];
+          }
+          break;
+        case DynSave.DigCommand_level:
+          this.level = parseInt(tokens[1], 10);
+          break;
+        case DynSave.DigCommand_instance:
+          this.instance = parseInt(tokens[1], 10);
+          break;
+        case DynSave.DigCommand_instance_mask:
+          this.instance_mask = parseInt(tokens[1], 10);
+          break;
+        case DynSave.End:
+          return i;
+        default:
+          console.log("Syntax error in DynDigCommand");
+          break;
+      }
+    }
+
+    return i;
+  }
+}
+
+class DynDigScript extends DynElem {
+  script = "";
+  a = null;
+  first_scan = true;
+  level = 0;
+
+  constructor(dyn) {
+    super(dyn, DynPrio.DigScript);
+    this.dyn_type2 = DynType2.DigScript;
+  }
+
+  connect(object) {
+    this.a = new DynReference(this.dyn, this.attribute);
+    this.a.connect(this.dyn);
+    if (!this.a.sts) {
+      console.log("DigScript: " + this.attribute);
+      return 1;
+    }
+
+    return 1;
+  }
+
+  disconnect() {
+    if (this.a) {
+      this.a.disconnect();
+    }
+  }
+
+  scan(object) {
+    if (this.a === null || !this.a.sts) {
+      return;
+    }
+
+    let value = this.dyn.getDig(this.a.p, this.a.typeid, this.a.bitmask, this.a.database);
+    value = (this.a.inverted) ? !value : value;
+
+    if (this.first_scan) {
+      this.a.oldValue = value;
+      this.first_scan = false;
+      return;
+    }
+
+    if ((!this.level && value && !this.a.oldValue) || (this.level && value)) {
+      this.dyn.graph.script(this.script);
+    }
+
+    this.a.oldValue = value;
+  }
+
+  open(lines, row) {
+    let i;
+    for (i = row; i < lines.length; i++) {
+      let tokens = lines[i].split(' ');
+      let key = parseInt(tokens[0], 10);
+
+      switch (key) {
+        case DynSave.DigScript:
+          break;
+        case DynSave.DigScript_attribute:
+          if (tokens.length > 1) {
+            this.attribute = tokens[1];
+          }
+          break;
+        case DynSave.DigScript_level:
+          this.level = parseInt(tokens[1], 10);
+          break;
+        case DynSave.DigScript_script_len:
+          break;
+        case DynSave.DigScript_script:
+          this.script = lines.join("\n").split(/[^\\]"/)[0];
+          break;
+        case DynSave.End:
+          return i;
+        default:
+          console.log("Syntax error in DynDigScript");
+          break;
+      }
+    }
+
+    return i;
+  }
+}
+
 class DynSetDig extends DynElem {
   constructor(dyn) {
     super(dyn, DynPrio.SetDig);
@@ -8916,6 +9090,118 @@ class DynMethodPulldownMenu extends DynElem {
     this.dyn.graph.getCtx().insert(this.menu_object);
 
     // grow_SetMenuInputFocus( menu_object, 1);
+  }
+}
+
+class DynCatchSignal extends DynElem {
+  signal_name = "";
+
+  constructor(dyn) {
+    super(dyn, DynPrio.CatchSignal);
+    this.action_type1 = ActionType1.CatchSignal;
+  }
+
+  action(object, e) {
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
+      return 1;
+    }
+
+    if (e.event === Event.Signal && e.signal.signal_name === this.signal_name) {
+      let e = new GlowEvent();
+      e.event = Event.MB1Click;
+      e.object = object;
+      let sts = this.dyn.action(object, e);
+      if (sts === GLOW__NO_PROPAGATE || sts === GLOW__TERMINATED || sts === GLOW__SUBTERMINATED) {
+        return sts;
+      }
+    }
+
+    return 1;
+  }
+
+  open(lines, row) {
+    let i;
+    for (i = row; i < lines.length; i++) {
+      let tokens = lines[i].split(' ');
+      let key = parseInt(tokens[0], 10);
+
+      switch (key) {
+        case DynSave.CatchSignal:
+          break;
+        case DynSave.CatchSignal_signal_name:
+          this.signal_name = tokens[1];
+          break;
+        case DynSave.End:
+          return i;
+        default:
+          console.log("Syntax error in DynCatchSignal");
+          break;
+      }
+    }
+
+    return i;
+  }
+}
+
+class DynEmitSignal extends DynElem {
+  signal_name = "";
+  global = 0;
+
+  constructor(dyn) {
+    super(dyn, DynPrio.EmitSignal);
+    this.action_type1 = ActionType1.EmitSignal;
+  }
+
+  action(object, e) {
+    if (!this.dyn.graph.isAuthorized(this.dyn.access)) {
+      return 1;
+    }
+
+    switch (e.event) {
+      case Event.MB1Down:
+        object.setColorInverse(1);
+        break;
+      case Event.MB1Up:
+        object.setColorInverse(0);
+        break;
+      case Event.Key_Return:
+      case Event.MB1Click:
+        if (this.global) {
+          let command = "emit signal/signalname=" + this.signal_name;
+          let cmd = this.dyn.graph.getCommand(command);
+          this.dyn.graph.command(cmd);
+        } else {
+          //TODO:
+          //this.dyn.graph.signalSend(this.signal_name);
+        }
+    }
+
+    return 1;
+  }
+
+  open(lines, row) {
+    let i;
+    for (i = row; i < lines.length; i++) {
+      let tokens = lines[i].split(' ');
+      let key = parseInt(tokens[0], 10);
+
+      switch (key) {
+        case DynSave.EmitSignal:
+          break;
+        case DynSave.EmitSignal_signal_name:
+          this.signal_name = tokens[1];
+          break;
+        case DynSave.EmitSignal_global:
+          this.global = Number(tokens[1]);
+        case DynSave.End:
+          return i;
+        default:
+          console.log("Syntax error in DynEmitSignal");
+          break;
+      }
+    }
+
+    return i;
   }
 }
 

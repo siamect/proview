@@ -5,7 +5,7 @@ class GlowRect {
   draw_type;
   line_width;
   display_level;
-  fill;
+  fill: boolean;
 
   constructor(ctx) {
     this.ctx = ctx;
@@ -32,7 +32,7 @@ class GlowRect {
           this.display_level = parseInt(tokens[1], 10);
           break;
         case GlowSave.Rect_fill:
-          this.fill = parseInt(tokens[1], 10);
+          this.fill = Boolean(parseInt(tokens[1], 10));
           break;
         case GlowSave.Rect_ll:
           i = this.ll.open(lines, i + 1);
@@ -51,9 +51,11 @@ class GlowRect {
     return i;
   }
 
-  draw(highlight, hot) {
-  }
-
-  draw_shadow(border, shadow, highlight, hot) {
+  draw(pos, highlight = 0, hot = 0, node = null) {
+    let idx = this.line_width + hot;
+    idx = clamp(idx, 0, DRAW_TYPE_SIZE - 1);
+    this.ctx.gdraw.rect(this.ll.x + pos.x, this.ll.y + pos.y,
+        this.ur.x - this.ll.x, this.ur.y - this.ll.y,
+        this.draw_type, this.fill, idx * this.fill, highlight);
   }
 }

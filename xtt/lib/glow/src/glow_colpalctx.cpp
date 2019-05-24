@@ -53,7 +53,6 @@ void ColPalCtx::configure()
   GrowText* text;
   GrowRect* rect;
   double x, y = 0.0;
-  int i;
   double d = 0.02;
 
   if (nodraw)
@@ -62,11 +61,11 @@ void ColPalCtx::configure()
   display_fill = new GrowRect(this, "FillRect", d, 0,
       display_entry_width - 2 * d, entry_height, glow_eDrawType_Color37, 1, 0,
       glow_mDisplayLevel_1, 1, 1, 0, current_fill);
-  insert((GlowArrayElem*)display_fill);
+  insert(display_fill);
   active_fill = new GrowRect(this, "FillRectActive", d, 0,
       display_entry_width - 2 * d, entry_height, glow_eDrawType_Line, 1, 0,
       glow_mDisplayLevel_1, 0, 1, 1, current_fill);
-  insert((GlowArrayElem*)active_fill);
+  insert(active_fill);
   ((GrowRect*)active_fill)->shadow_width = 15;
   ((GrowRect*)active_fill)->relief = glow_eRelief_Down;
   text_fill
@@ -77,11 +76,11 @@ void ColPalCtx::configure()
   display_border = new GrowRect(this, "BorderRect", display_entry_width + d, 0,
       display_entry_width - 2 * d, entry_height, glow_eDrawType_Color37, 1, 0,
       glow_mDisplayLevel_1, 1, 1, 0, current_border);
-  insert((GlowArrayElem*)display_border);
+  insert(display_border);
   active_border = new GrowRect(this, "BorderRectActive",
       display_entry_width + d, 0, display_entry_width - 2 * d, entry_height,
       glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 1, 1, current_border);
-  insert((GlowArrayElem*)active_border);
+  insert(active_border);
   ((GrowRect*)active_border)->shadow_width = 15;
   ((GrowRect*)active_border)->relief = glow_eRelief_Down;
   ((GrowRect*)active_border)->display_level = glow_mDisplayLevel_2;
@@ -93,21 +92,21 @@ void ColPalCtx::configure()
   display_text = new GrowRect(this, "TextRect", display_entry_width * 2 + d, 0,
       display_entry_width - 2 * d, entry_height, glow_eDrawType_Color37, 1, 0,
       glow_mDisplayLevel_1, 1, 1, 0, current_text);
-  insert((GlowArrayElem*)display_text);
+  insert(display_text);
   active_text = new GrowRect(this, "TextRectActive",
       display_entry_width * 2 + d, 0, display_entry_width - 2 * d, entry_height,
       glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 1, 1, current_text);
   ((GrowRect*)active_text)->shadow_width = 15;
   ((GrowRect*)active_text)->relief = glow_eRelief_Down;
   ((GrowRect*)active_text)->display_level = glow_mDisplayLevel_2;
-  insert((GlowArrayElem*)active_text);
+  insert(active_text);
   ((GrowRect*)active_text)->display_level = glow_mDisplayLevel_2;
   text_text = new GrowText(this, "TextText", "Text",
       display_entry_width * 2 + 0.3, entry_height / 2 + 0.2,
       glow_eDrawType_TextHelvetica, glow_eDrawType_Color4, 2);
   insert(text_text);
 
-  for (i = glow_eDrawType_Line; i <= glow_eDrawType_Color300; i++) {
+  for (int i = glow_eDrawType_Line; i <= glow_eDrawType_Color300; i++) {
     x = entry_width * (double(i) / columns - floor(double(i) / columns))
         * columns;
     y = entry_height * (1 + floor(i / columns + DBL_EPSILON));
@@ -120,7 +119,7 @@ void ColPalCtx::configure()
   int custom_columns = 15;
   double custom_entry_width = 2 * entry_width;
   double dw;
-  for (i = glow_eDrawType_CustomColor1; i <= glow_eDrawType_CustomColor90;
+  for (int i = glow_eDrawType_CustomColor1; i <= glow_eDrawType_CustomColor90;
        i += 4) {
     int i_pos = glow_eDrawType_CustomColor1
         + (i - glow_eDrawType_CustomColor1) / 4 - 10;
@@ -185,7 +184,7 @@ void ColPalCtx::configure()
   insert((GlowArrayElem*)text);
 
   x = 0;
-  for (i = glow_eDrawTone_No + 1; i < glow_eDrawTone_GrayHighSaturation; i++) {
+  for (int i = glow_eDrawTone_No + 1; i < glow_eDrawTone_GrayHighSaturation; i++) {
     char name[16];
     glow_eDrawType drawtype;
 
@@ -258,7 +257,6 @@ void ColPalCtx::zoom(double factor)
 
 void ColPalCtx::print(char* filename)
 {
-  int i;
   double ll_x, ll_y, ur_x, ur_y;
   double width, height;
 
@@ -270,7 +268,7 @@ void ColPalCtx::print(char* filename)
 
   print_ps = new GlowPscript(filename, this, 1);
 
-  for (i = 0;; i++) {
+  for (int i = 0;; i++) {
     ll_y = i * height;
     ur_y = ll_y + height;
     ll_x = 0;
@@ -312,7 +310,6 @@ void colpal_scroll_vertical(ColPalCtx* ctx, int value, int bottom)
 int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 {
   int sts = 0;
-  int i;
   GlowCtx* ctx;
   double fx, fy;
   int callback = 0;
@@ -330,7 +327,7 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   switch (event) {
   case glow_eEvent_MB1Down: {
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[i]->event_handler(event, x, y, fx, fy);
       if (sts == GLOW__NO_PROPAGATE)
         break;
@@ -360,7 +357,7 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   case glow_eEvent_MB1ClickShift:
   case glow_eEvent_MB2Click:
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[i]->event_handler(event, x, y, fx, fy);
       if (sts == GLOW__NO_PROPAGATE)
         break;
@@ -493,7 +490,7 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
   case glow_eEvent_MB1ClickShiftCtrl:
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[i]->event_handler(event, x, y, fx, fy);
       if (sts == GLOW__NO_PROPAGATE)
         break;
@@ -559,7 +556,7 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
   case glow_eEvent_MB1DoubleClick:
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[i]->event_handler(event, x, y, fx, fy);
       if (sts == GLOW__NO_PROPAGATE)
         break;
@@ -622,7 +619,7 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     sts = 0;
 
     hot_found = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[i]->event_handler(event, x, y, fx, fy);
       if (sts == GLOW__NO_PROPAGATE)
         break;

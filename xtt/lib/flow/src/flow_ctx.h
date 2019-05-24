@@ -91,7 +91,7 @@ public:
   {
     return a.insert(element);
   }
-  void remove(FlowArrayElem* element)
+  virtual void remove(FlowArrayElem* element)
   {
     a.remove(element);
   }
@@ -255,8 +255,8 @@ public:
   int auto_scrolling_active;
   void* auto_scrolling_id;
   void auto_scrolling_stop();
-  void zoom(double factor);
-  void zoom_absolute(double factor);
+  virtual void zoom(double factor);
+  virtual void zoom_absolute(double factor);
   void traverse(int x, int y);
   void get_borders();
   void set_default_conclass(void* cc)
@@ -325,9 +325,9 @@ public:
       double ll_x, double ll_y, double ur_x, double ur_y, char* filename);
   int print_pdf_region(
       double ll_x, double ll_y, double ur_x, double ur_y, char* filename);
-  void print_draw_page(void* context, const char* title, int page,
+  virtual void print_draw_page(void* context, const char* title, int page,
       flow_eOrientation orientation, double scale);
-  void print_get_pages(flow_eOrientation orientation, double scale, int* pages);
+  virtual void print_get_pages(flow_eOrientation orientation, double scale, int* pages);
   void print_get_orientation(int page_nr, flow_eOrientation* orientation);
 
   double draw_delta;
@@ -433,7 +433,7 @@ public:
     scroll_data = data;
     scroll_callback = callback;
   }
-  void change_scrollbar();
+  virtual void change_scrollbar();
   int find_by_name(char* name, FlowArrayElem** element)
   {
     return a.find_by_name(name, element);
@@ -450,7 +450,7 @@ public:
       FlowArrayElem* object, flow_eDirection dir, FlowArrayElem** next);
   int get_next_conpoint(FlowArrayElem* object, int cp_num, flow_eDirection dir,
       FlowArrayElem** next, int* next_cp_num);
-  int is_visible(FlowArrayElem* element, flow_eVisible type);
+  virtual int is_visible(FlowArrayElem* element, flow_eVisible type);
   void move_selected_nodes(double delta_x, double delta_y, int grid);
   int paste_stop();
   int get_paste_active()
@@ -480,7 +480,7 @@ public:
   {
     text_coding = coding;
   }
-  ~FlowCtx();
+  virtual ~FlowCtx();
 
 private:
   void draw(int ll_x, int ll_y, int ur_x, int ur_y);

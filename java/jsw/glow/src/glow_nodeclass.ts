@@ -203,21 +203,16 @@ class GlowNodeClass {
             Math.abs(base.y0 - base.y1) < Number.MIN_VALUE)) {
       // Borders are given i x0, y0, x1, y1
       // Will not work in rotated nodes
-      let kx1, kx2, ky1, ky2;
+      let k1 = new Point(base.x0, base.y0);
+      let k2 = new Point(base.x1, base.y1);
 
-      if (t === null) {
-        kx1 = base.x0;
-        kx2 = base.x1;
-        ky1 = base.y0;
-        ky2 = base.y1;
-      } else {
-        kx1 = t.x(base.x0, base.y0);
-        kx2 = t.x(base.x1, base.y1);
-        ky1 = t.y(base.x0, base.y0);
-        ky2 = t.y(base.x1, base.y1);
+      if (t !== null) {
+        k1 = t.apply(k1);
+        k2 = t.apply(k2);
       }
 
-      g.set(Rect.union(g, new Rect(Math.min(kx1, kx2), Math.min(ky1, ky2), Math.max(kx1, kx2), Math.max(ky1, ky2))));
+      g.set(Rect.union(g, new Rect(Math.min(k1.x, k2.x), Math.min(k1.y, k2.y),
+          Math.max(k1.x, k2.x), Math.max(k1.y, k2.y))));
     } else {
       this.a.forEach(e => e.get_borders(t, g));
     }

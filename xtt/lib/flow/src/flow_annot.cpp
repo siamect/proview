@@ -915,20 +915,6 @@ void FlowAnnot::nav_erase(void* pos, void* node)
 int FlowAnnot::event_handler(
     void* pos, flow_eEvent event, int x, int y, void* node)
 {
-  FlowPoint* p;
-
-  p = (FlowPoint*)pos;
-  /**
-    if ( p1.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x < x &&
-         x < p2.z_x  + ((FlowPoint *)pos)->z_x - ctx->offset_x &&
-         p1.z_y  + ((FlowPoint *)pos)->z_y - ctx->offset_y < y &&
-         y < p2.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y)
-    {
-      std::cout << "Event handler: Hit in text\n";
-      return 1;
-    }
-    else
-  ***/
   return 0;
 }
 
@@ -1109,8 +1095,7 @@ void FlowAnnot::open_annotation_input(void* pos, void* node)
   int x, width_pix, height_pix;
   double width, height;
   int idx = int(ctx->zoom_factor / ctx->base_zoom_factor * (text_size + 4) - 4);
-  idx = MAX(0, idx);
-  idx = MIN(idx, DRAW_TYPE_SIZE - 1);
+  idx = CLAMP(idx, 0, DRAW_TYPE_SIZE - 1);
   switch (annot_type) {
   case flow_eAnnotType_OneLine:
     measure_annot(((FlowNode*)node)->annotv[number], &width, &height);

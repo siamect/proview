@@ -123,7 +123,7 @@ public:
     Compares the coordinates of the event with the borders of the object.
     If the event is inside the borders, 1 is returned, otherwise 0 is returned.
   */
-  int local_event_handler(glow_eEvent event, double x, double y);
+  virtual int local_event_handler(glow_eEvent event, double x, double y);
 
   //! Calculate the border for a set of objects or for a parent node.
   /*!
@@ -206,7 +206,7 @@ public:
   void draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
 
   //! Erase the object
-  void erase(DrawWind* w)
+  virtual void erase(DrawWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
   }
@@ -517,7 +517,8 @@ public:
   */
   void set_transform_from_stored(GlowTransform* t)
   {
-    trf.set_from_stored(t), get_node_borders();
+    trf.set(*t * trf.s);
+    get_node_borders();
   }
 
   //! Store the current transform

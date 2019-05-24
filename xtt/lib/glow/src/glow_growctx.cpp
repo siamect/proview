@@ -109,7 +109,7 @@ GrowCtx::GrowCtx(const char* ctx_name) : GlowCtx(ctx_name),
   memset(argtype, 0, sizeof(argtype));
   memset(dyn_color, 0, sizeof(dyn_color));
   memset(dyn_attr, 0, sizeof(dyn_attr));
-};
+}
 
 GrowCtx::~GrowCtx()
 {
@@ -165,7 +165,6 @@ void GrowCtx::set_mode(grow_eMode grow_mode)
 
 int GrowCtx::subw_event_handler(glow_eEvent event, int x, int y, int w, int h)
 {
-  int i;
   int sts;
 
   double fx = double(x + mw->offset_x) / mw->zoom_factor_x;
@@ -173,7 +172,7 @@ int GrowCtx::subw_event_handler(glow_eEvent event, int x, int y, int w, int h)
 
   if (has_subwindows == -1) {
     // Initialize
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       if (a[i]->type() == glow_eObjectType_GrowWindow
           || a[i]->type() == glow_eObjectType_GrowFolder
           || a[i]->type() == glow_eObjectType_GrowTable) {
@@ -187,7 +186,7 @@ int GrowCtx::subw_event_handler(glow_eEvent event, int x, int y, int w, int h)
     }
   }
 
-  for (i = a.a_size - 1; i >= 0; i--) {
+  for (int i = a.a_size - 1; i >= 0; i--) {
     if (a[i]->type() == glow_eObjectType_GrowWindow
         || a[i]->type() == glow_eObjectType_GrowFolder
         || a[i]->type() == glow_eObjectType_GrowTable) {
@@ -254,7 +253,6 @@ int GrowCtx::subw_event_handler(glow_eEvent event, int x, int y, int w, int h)
 int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 {
   int sts = 0;
-  int i;
   int node_move_event = 0;
 
   double fx = double(x + mw->offset_x) / mw->zoom_factor_x;
@@ -300,7 +298,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
   // Check if any menue is active
   if (a.a_size && a[a.a_size - 1]->type() == glow_eObjectType_GrowMenu) {
-    for (i = a.a_size - 1; i >= 0; i--) {
+    for (int i = a.a_size - 1; i >= 0; i--) {
       if (a[i]->type() != glow_eObjectType_GrowMenu)
         break;
       switch (event) {
@@ -348,7 +346,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
   if (event == event_create_con && edit_mode == grow_eMode_Edit) {
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[a.a_size - i - 1]->event_handler(event, x, y, fx, fy);
       if (sts)
         break;
@@ -358,21 +356,19 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     move_clear();
 
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[a.a_size - i - 1]->event_handler(event, x, y, fx, fy);
       if (sts)
         break;
     }
     if (sts) {
-      int j, node_cnt;
-
       modified = 1;
       if (a_sel.size() > 1 && select_find(a_move[0])) {
         /* Move all selected nodes */
         move_clear();
 
         /* Insert nodes first and then all connections connected to the nodes */
-        for (i = 0; i < a_sel.size(); i++) {
+        for (int i = 0; i < a_sel.size(); i++) {
           if (a_sel[i]->type() != glow_eObjectType_Con)
             move_insert(a_sel[i]);
         }
@@ -386,9 +382,9 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       node_move_last_y = y;
 
       /* Insert all connnected cons for movement */
-      node_cnt = a_move.size();
-      for (i = 0; i < node_cnt; i++) {
-        for (j = 0; j < a.size(); j++) {
+      int node_cnt = a_move.size();
+      for (int i = 0; i < node_cnt; i++) {
+        for (int j = 0; j < a.size(); j++) {
           if (a[j]->type() == glow_eObjectType_Con
               && ((GlowCon*)a[j])->is_connected_to((GlowNode*)a_move[i])) {
             if (move_insert(a[j]))
@@ -452,7 +448,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     move_clear();
 
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[a.a_size - i - 1]->event_handler(event, x, y, fx, fy);
       if (sts)
         break;
@@ -618,7 +614,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         e.any.y_pixel = y;
         e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
         e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
-        for (i = 0; i < a_move.size(); i++) {
+        for (int i = 0; i < a_move.size(); i++) {
           e.object.object = a_move[i];
           e.object.object_type = a_move[i]->type();
           event_callback[event_move_node](this, &e);
@@ -649,7 +645,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   case glow_eEvent_ScrollDown:
     tiptext->remove();
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[i]->event_handler(event, x, y, fx, fy);
       if (sts == GLOW__NO_PROPAGATE)
         break;
@@ -778,7 +774,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       }
       sts = 0;
       hot_found = (hot_mode == glow_eHotMode_Disabled);
-      for (i = 0; i < a.a_size; i++) {
+      for (int i = 0; i < a.a_size; i++) {
         sts = a.a[a.a_size - i - 1]->event_handler(event, x, y, fx, fy);
       }
     }
@@ -953,21 +949,14 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       con_create_last_x = x;
       con_create_last_y = y;
       hot_found = (hot_mode == glow_eHotMode_Disabled);
-      for (i = 0; i < a.a_size; i++) {
+      for (int i = 0; i < a.a_size; i++) {
         sts = a.a[a.a_size - i - 1]->event_handler(glow_eEvent_CursorMotion, x,
             y, fx, fy);
       }
     } else if (select_rect_active && edit_mode != grow_eMode_Scale) {
-      int draw_ll_x;
-      int draw_ll_y;
-      int draw_ur_x;
-      int draw_ur_y;
-
       if (scale_equal
           && (edit_mode == grow_eMode_Circle || edit_mode == grow_eMode_Rect
-                 || edit_mode == grow_eMode_RectRounded))
-
-      {
+                 || edit_mode == grow_eMode_RectRounded)) {
         int delta_x, delta_y;
         delta_y = delta_x
             = MAX(ABS(x - select_rect_start_x), ABS(y - select_rect_start_y));
@@ -975,15 +964,6 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           delta_x = -delta_x;
         if (y < select_rect_start_y)
           delta_y = -delta_y;
-
-        draw_ll_x = MIN(select_rect_ll_x,
-            MIN(select_rect_start_x, select_rect_start_x + delta_x));
-        draw_ll_y = MIN(select_rect_ll_y,
-            MIN(select_rect_start_y, select_rect_start_y + delta_y));
-        draw_ur_x = MAX(select_rect_ur_x,
-            MAX(select_rect_start_x, select_rect_start_x + delta_x));
-        draw_ur_y = MAX(select_rect_ur_y,
-            MAX(select_rect_start_y, select_rect_start_y + delta_y));
 
         select_rect_ll_x
             = MIN(select_rect_start_x, select_rect_start_x + delta_x);
@@ -994,11 +974,6 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         select_rect_ur_y
             = MAX(select_rect_start_y, select_rect_start_y + delta_y);
       } else {
-        draw_ll_x = MIN(MIN(x, select_rect_start_x), select_rect_ll_x);
-        draw_ll_y = MIN(MIN(y, select_rect_start_y), select_rect_ll_y);
-        draw_ur_x = MAX(MAX(x, select_rect_start_x), select_rect_ur_x);
-        draw_ur_y = MAX(MAX(y, select_rect_start_y), select_rect_ur_y);
-
         select_rect_ll_x = MIN(x, select_rect_start_x);
         select_rect_ll_y = MIN(y, select_rect_start_y);
         select_rect_ur_x = MAX(x, select_rect_start_x);
@@ -1047,8 +1022,8 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         if (grid_on) {
           double fx, fy;
-          find_grid((double)(x2 + mw->offset_x) / mw->zoom_factor_x,
-              (double)(y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
+          find_grid((x2 + mw->offset_x) / mw->zoom_factor_x,
+              (y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
           x2 = fx * mw->zoom_factor_x - mw->offset_x;
           y2 = fy * mw->zoom_factor_y - mw->offset_y;
 
@@ -1073,8 +1048,8 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         if (grid_on) {
           double fx, fy;
-          find_grid((double)(x2 + mw->offset_x) / mw->zoom_factor_x,
-              (double)(y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
+          find_grid((x2 + mw->offset_x) / mw->zoom_factor_x,
+              (y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
           y2 = fy * mw->zoom_factor_y - mw->offset_y;
 
           scale_y = (y2 - select_rect_stored_ll_y)
@@ -1110,8 +1085,8 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         if (grid_on) {
           double fx, fy;
-          find_grid((double)(x2 + mw->offset_x) / mw->zoom_factor_x,
-              (double)(y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
+          find_grid((x2 + mw->offset_x) / mw->zoom_factor_x,
+              (y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
           x2 = fx * mw->zoom_factor_x - mw->offset_x;
           y2 = fy * mw->zoom_factor_y - mw->offset_y;
 
@@ -1136,8 +1111,8 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         if (grid_on) {
           double fx, fy;
-          find_grid((double)(x2 + mw->offset_x) / mw->zoom_factor_x,
-              (double)(y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
+          find_grid((x2 + mw->offset_x) / mw->zoom_factor_x,
+              (y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
           x2 = fx * mw->zoom_factor_x - mw->offset_x;
 
           scale_x = (x2 - select_rect_stored_ll_x)
@@ -1159,8 +1134,8 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         if (grid_on) {
           double fx, fy;
-          find_grid((double)(x2 + mw->offset_x) / mw->zoom_factor_x,
-              (double)(y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
+          find_grid((x2 + mw->offset_x) / mw->zoom_factor_x,
+              (y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
           x2 = fx * mw->zoom_factor_x - mw->offset_x;
 
           scale_x = -(x2 - select_rect_stored_ur_x)
@@ -1196,8 +1171,8 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         if (grid_on) {
           double fx, fy;
-          find_grid((double)(x2 + mw->offset_x) / mw->zoom_factor_x,
-              (double)(y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
+          find_grid((x2 + mw->offset_x) / mw->zoom_factor_x,
+              (y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
           x2 = fx * mw->zoom_factor_x - mw->offset_x;
           y2 = fy * mw->zoom_factor_y - mw->offset_y;
 
@@ -1222,8 +1197,8 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         if (grid_on) {
           double fx, fy;
-          find_grid((double)(x2 + mw->offset_x) / mw->zoom_factor_x,
-              (double)(y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
+          find_grid((x2 + mw->offset_x) / mw->zoom_factor_x,
+              (y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
           y2 = fy * mw->zoom_factor_y - mw->offset_y;
 
           scale_y = -(y2 - select_rect_stored_ur_y)
@@ -1259,8 +1234,8 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         if (grid_on) {
           double fx, fy;
-          find_grid((double)(x2 + mw->offset_x) / mw->zoom_factor_x,
-              (double)(y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
+          find_grid((x2 + mw->offset_x) / mw->zoom_factor_x,
+              (y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
           x2 = fx * mw->zoom_factor_x - mw->offset_x;
           y2 = fy * mw->zoom_factor_y - mw->offset_y;
 
@@ -1371,7 +1346,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           e.any.y_pixel = y;
           e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
           e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
-          for (i = 0; i < a_move.size(); i++) {
+          for (int i = 0; i < a_move.size(); i++) {
             e.object.object = a_move[i];
             e.object.object_type = a_move[i]->type();
             event_callback[event_move_node](this, &e);
@@ -1696,7 +1671,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           polyline_not_first = 1;
       } else {
         /* Find the destination node */
-        for (i = 0; i < a.a_size; i++) {
+        for (int i = 0; i < a.a_size; i++) {
           sts = a.a[a.a_size - i - 1]->event_handler(event, x, y, fx, fy);
           if (sts)
             break;
@@ -1827,17 +1802,16 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 int GrowCtx::save(char* filename, glow_eSaveMode mode)
 {
   // Remove unused nodeclasses
-  int found, i, j;
   GlowArrayElem* element;
 
-  for (i = 0; i < a_nc.a_size; i++) {
-    found = a.find_nc(a_nc[i]);
+  for (int i = 0; i < a_nc.a_size; i++) {
+    int found = a.find_nc(a_nc[i]);
     if (!found)
       found = a_paste.find_nc(a_nc[i]);
     if (!found)
       found = a_nc.find_nc(a_nc[i]);
     if (!found) {
-      for (j = 0; j < a_nc.a_size; j++) {
+      for (int j = 0; j < a_nc.a_size; j++) {
         if (((GlowNodeClass*)a_nc[j])->next_nc == a_nc[i]) {
           found = 1;
           break;
@@ -1852,8 +1826,8 @@ int GrowCtx::save(char* filename, glow_eSaveMode mode)
     }
   }
   // Remove unused conclasses
-  for (i = 0; i < a_cc.a_size; i++) {
-    found = a.find_cc(a_cc[i]);
+  for (int i = 0; i < a_cc.a_size; i++) {
+    int found = a.find_cc(a_cc[i]);
     if (!found)
       found = a_paste.find_cc(a_cc[i]);
     if (!found) {
@@ -1869,7 +1843,6 @@ int GrowCtx::save(char* filename, glow_eSaveMode mode)
 
 void GrowCtx::save_grow(std::ofstream& fp, glow_eSaveMode mode)
 {
-  int i;
   char* s;
 
   fp << int(glow_eSave_GrowCtx) << '\n';
@@ -1893,10 +1866,10 @@ void GrowCtx::save_grow(std::ofstream& fp, glow_eSaveMode mode)
   }
   fp << int(glow_eSave_GrowCtx_arg_cnt) << FSPACE << arg_cnt << '\n';
   fp << int(glow_eSave_GrowCtx_argname) << '\n';
-  for (i = 0; i < arg_cnt; i++)
+  for (int i = 0; i < arg_cnt; i++)
     fp << argname[i] << '\n';
   fp << int(glow_eSave_GrowCtx_argtype) << '\n';
-  for (i = 0; i < arg_cnt; i++)
+  for (int i = 0; i < arg_cnt; i++)
     fp << argtype[i] << '\n';
   fp << int(glow_eSave_GrowCtx_x0) << FSPACE << x0 << '\n';
   fp << int(glow_eSave_GrowCtx_y0) << FSPACE << y0 << '\n';
@@ -1904,7 +1877,7 @@ void GrowCtx::save_grow(std::ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowCtx_y1) << FSPACE << y1 << '\n';
   fp << int(glow_eSave_GrowCtx_path_cnt) << FSPACE << path_cnt << '\n';
   fp << int(glow_eSave_GrowCtx_path) << '\n';
-  for (i = 0; i < path_cnt; i++)
+  for (int i = 0; i < path_cnt; i++)
     fp << path[i] << '\n';
   fp << int(glow_eSave_GrowCtx_dyn_type1) << FSPACE << dyn_type1 << '\n';
   fp << int(glow_eSave_GrowCtx_dyn_type2) << FSPACE << dyn_type2 << '\n';
@@ -1920,10 +1893,10 @@ void GrowCtx::save_grow(std::ofstream& fp, glow_eSaveMode mode)
      << '\n';
   fp << int(glow_eSave_GrowCtx_dyn_color4) << FSPACE << int(dyn_color[3])
      << '\n';
-  fp << int(glow_eSave_GrowCtx_dyn_attr1) << FSPACE << int(dyn_attr[0]) << '\n';
-  fp << int(glow_eSave_GrowCtx_dyn_attr2) << FSPACE << int(dyn_attr[1]) << '\n';
-  fp << int(glow_eSave_GrowCtx_dyn_attr3) << FSPACE << int(dyn_attr[2]) << '\n';
-  fp << int(glow_eSave_GrowCtx_dyn_attr4) << FSPACE << int(dyn_attr[3]) << '\n';
+  fp << int(glow_eSave_GrowCtx_dyn_attr1) << FSPACE << dyn_attr[0] << '\n';
+  fp << int(glow_eSave_GrowCtx_dyn_attr2) << FSPACE << dyn_attr[1] << '\n';
+  fp << int(glow_eSave_GrowCtx_dyn_attr3) << FSPACE << dyn_attr[2] << '\n';
+  fp << int(glow_eSave_GrowCtx_dyn_attr4) << FSPACE << dyn_attr[3] << '\n';
   fp << int(glow_eSave_GrowCtx_no_con_obstacle) << FSPACE << no_con_obstacle
      << '\n';
   fp << int(glow_eSave_GrowCtx_slider) << FSPACE << slider << '\n';
@@ -2018,7 +1991,6 @@ void GrowCtx::open_grow(std::ifstream& fp)
   int end_found = 0;
   char dummy[40];
   int tmp;
-  int i, j;
   char c;
   int double_buffered = 0;
 
@@ -2055,7 +2027,7 @@ void GrowCtx::open_grow(std::ifstream& fp)
       if (dynamicsize) {
         dynamic = (char*)calloc(1, dynamicsize);
         fp.get();
-        for (j = 0; j < dynamicsize; j++) {
+        for (int j = 0; j < dynamicsize; j++) {
           if ((c = fp.get()) == '"') {
             if (dynamic[j - 1] == '\\')
               j--;
@@ -2074,12 +2046,12 @@ void GrowCtx::open_grow(std::ifstream& fp)
       break;
     case glow_eSave_GrowCtx_argname:
       fp.get();
-      for (i = 0; i < arg_cnt; i++) {
+      for (int i = 0; i < arg_cnt; i++) {
         fp.getline(argname[i], sizeof(argname[0]));
       }
       break;
     case glow_eSave_GrowCtx_argtype:
-      for (i = 0; i < arg_cnt; i++)
+      for (int i = 0; i < arg_cnt; i++)
         fp >> argtype[i];
       break;
     case glow_eSave_GrowCtx_x0:
@@ -2102,7 +2074,7 @@ void GrowCtx::open_grow(std::ifstream& fp)
       break;
     case glow_eSave_GrowCtx_path:
       fp.get();
-      for (i = 0; i < path_cnt; i++) {
+      for (int i = 0; i < path_cnt; i++) {
         fp.getline(path[i], sizeof(path[0]));
       }
       break;
@@ -2252,7 +2224,6 @@ int GrowCtx::save_subgraph(char* filename, glow_eSaveMode mode)
   std::ofstream fp;
   char nc_name[80];
   char* s;
-  int i;
 
   if ((s = strrchr(filename, ':')))
     strcpy(nc_name, s + 1);
@@ -2279,10 +2250,10 @@ int GrowCtx::save_subgraph(char* filename, glow_eSaveMode mode)
      << '\n';
   fp << int(glow_eSave_NodeClass_arg_cnt) << FSPACE << arg_cnt << '\n';
   fp << int(glow_eSave_NodeClass_argname) << '\n';
-  for (i = 0; i < arg_cnt; i++)
+  for (int i = 0; i < arg_cnt; i++)
     fp << argname[i] << '\n';
   fp << int(glow_eSave_NodeClass_argtype) << '\n';
-  for (i = 0; i < arg_cnt; i++)
+  for (int i = 0; i < arg_cnt; i++)
     fp << argtype[i] << '\n';
   fp << int(glow_eSave_NodeClass_dynamicsize) << FSPACE << dynamicsize << '\n';
   fp << int(glow_eSave_NodeClass_dynamic) << '\n';
@@ -2309,14 +2280,10 @@ int GrowCtx::save_subgraph(char* filename, glow_eSaveMode mode)
      << '\n';
   fp << int(glow_eSave_NodeClass_dyn_color4) << FSPACE << int(dyn_color[3])
      << '\n';
-  fp << int(glow_eSave_NodeClass_dyn_attr1) << FSPACE << int(dyn_attr[0])
-     << '\n';
-  fp << int(glow_eSave_NodeClass_dyn_attr2) << FSPACE << int(dyn_attr[1])
-     << '\n';
-  fp << int(glow_eSave_NodeClass_dyn_attr3) << FSPACE << int(dyn_attr[2])
-     << '\n';
-  fp << int(glow_eSave_NodeClass_dyn_attr4) << FSPACE << int(dyn_attr[3])
-     << '\n';
+  fp << int(glow_eSave_NodeClass_dyn_attr1) << FSPACE << dyn_attr[0] << '\n';
+  fp << int(glow_eSave_NodeClass_dyn_attr2) << FSPACE << dyn_attr[1] << '\n';
+  fp << int(glow_eSave_NodeClass_dyn_attr3) << FSPACE << dyn_attr[2] << '\n';
+  fp << int(glow_eSave_NodeClass_dyn_attr4) << FSPACE << dyn_attr[3] << '\n';
   fp << int(glow_eSave_NodeClass_no_con_obstacle) << FSPACE << no_con_obstacle
      << '\n';
   fp << int(glow_eSave_NodeClass_slider) << FSPACE << slider << '\n';
@@ -2332,8 +2299,8 @@ int GrowCtx::save_subgraph(char* filename, glow_eSaveMode mode)
   fp << int(glow_eSave_NodeClass_x1) << FSPACE << x1 << '\n';
   fp << int(glow_eSave_NodeClass_input_focus_mark) << FSPACE
      << int(input_focus_mark) << '\n';
-  fp << int(glow_eSave_NodeClass_recursive_trace) << FSPACE
-     << int(recursive_trace) << '\n';
+  fp << int(glow_eSave_NodeClass_recursive_trace) << FSPACE << recursive_trace
+     << '\n';
   if (user_data && userdata_save_callback) {
     fp << int(glow_eSave_NodeClass_userdata_cb) << '\n';
     (userdata_save_callback)(&fp, this, glow_eUserdataCbType_Ctx);
@@ -2418,7 +2385,6 @@ int GrowCtx::open_subgraph(char* filename, glow_eSaveMode mode)
 
 void GrowCtx::clear_all(int keep_paste)
 {
-  int i;
   GlowArrayElem* element;
 
   delete_all();
@@ -2452,7 +2418,7 @@ void GrowCtx::clear_all(int keep_paste)
   mw->offset_y = 0;
 
   if (!keep_paste) {
-    for (i = a_nc.a_size - 1; i >= 0; i--) {
+    for (int i = a_nc.a_size - 1; i >= 0; i--) {
       element = a_nc.a[i];
       a_nc.remove(element);
       delete element;
@@ -2460,11 +2426,9 @@ void GrowCtx::clear_all(int keep_paste)
     a_paste.a_size = 0;
   } else {
     // Remove all nodeclasses except for nodes in pastebuffer
-    int found, i, j;
-
-    for (i = a_nc.a_size - 1; i >= 0; i--) {
-      found = 0;
-      for (j = 0; j < a_paste.a_size; j++) {
+    for (int i = a_nc.a_size - 1; i >= 0; i--) {
+      int found = 0;
+      for (int j = 0; j < a_paste.a_size; j++) {
         if (a_paste[j]->type() == glow_eObjectType_GrowNode
             || a_paste[j]->type() == glow_eObjectType_GrowSlider
             || a_paste[j]->type() == glow_eObjectType_GrowGroup
@@ -2967,7 +2931,6 @@ void GrowCtx::set_move_restrictions(glow_eMoveRestriction restriction,
 
 void GrowCtx::align_select(glow_eAlignDirection direction)
 {
-  int i;
   double object_x = 0.0, object_y = 0.0;
   double ll_x, ll_y, ur_x, ur_y;
 
@@ -2978,7 +2941,7 @@ void GrowCtx::align_select(glow_eAlignDirection direction)
   case glow_eAlignDirection_Left:
     // Find the object with the lowest y-koord
     object_y = 1e37;
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->measure(&ll_x, &ll_y, &ur_x, &ur_y);
       if (ll_y < object_y) {
         object_y = ll_y;
@@ -2991,7 +2954,7 @@ void GrowCtx::align_select(glow_eAlignDirection direction)
   case glow_eAlignDirection_Right:
     // Find the object with the lowest y-koord
     object_y = 1e37;
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->measure(&ll_x, &ll_y, &ur_x, &ur_y);
       if (ll_y < object_y) {
         object_y = ll_y;
@@ -3004,7 +2967,7 @@ void GrowCtx::align_select(glow_eAlignDirection direction)
   case glow_eAlignDirection_Up:
     // Find the object with the lowest x-koord
     object_x = 1e37;
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->measure(&ll_x, &ll_y, &ur_x, &ur_y);
       if (ll_x < object_x) {
         object_y = ur_y;
@@ -3017,7 +2980,7 @@ void GrowCtx::align_select(glow_eAlignDirection direction)
   case glow_eAlignDirection_Down:
     // Find the object with the lowest x-koord
     object_x = 1e37;
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->measure(&ll_x, &ll_y, &ur_x, &ur_y);
       if (ll_x < object_x) {
         object_y = ll_y;
@@ -3030,7 +2993,7 @@ void GrowCtx::align_select(glow_eAlignDirection direction)
   case glow_eAlignDirection_CenterHoriz:
     // Find the object with the lowest x-koord
     object_x = 1e37;
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->measure(&ll_x, &ll_y, &ur_x, &ur_y);
       if (ll_x < object_x) {
         object_y = (ll_y + ur_y) / 2;
@@ -3043,7 +3006,7 @@ void GrowCtx::align_select(glow_eAlignDirection direction)
   case glow_eAlignDirection_CenterVert:
     // Find the object with the lowest x-koord
     object_y = 1e37;
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->measure(&ll_x, &ll_y, &ur_x, &ur_y);
       if (ll_y < object_y) {
         object_y = ll_y;
@@ -3066,7 +3029,6 @@ void GrowCtx::align_select(glow_eAlignDirection direction)
 
 void GrowCtx::equidistance_select(glow_eAlignDirection direction)
 {
-  int i, j;
   double dx, dy;
   double ll_x1, ll_y1, ur_x1, ur_y1;
   double ll_x2, ll_y2, ur_x2, ur_y2;
@@ -3078,8 +3040,8 @@ void GrowCtx::equidistance_select(glow_eAlignDirection direction)
   switch (direction) {
   case glow_eAlignDirection_Down:
     // Order in y-koord
-    for (i = a_sel.size() - 1; i > 0; i--) {
-      for (j = 0; j < i; j++) {
+    for (int i = a_sel.size() - 1; i > 0; i--) {
+      for (int j = 0; j < i; j++) {
         a_sel[j + 1]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
         a_sel[j]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
         if (ll_y1 < ll_y2) {
@@ -3092,14 +3054,14 @@ void GrowCtx::equidistance_select(glow_eAlignDirection direction)
     a_sel[0]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
     a_sel[a_sel.size() - 1]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
     dy = (ll_y2 - ll_y1) / (a_sel.size() - 1);
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->align(0, ll_y1 + i * dy, direction);
     }
     break;
   case glow_eAlignDirection_Up:
     // Order in y-koord
-    for (i = a_sel.size() - 1; i > 0; i--) {
-      for (j = 0; j < i; j++) {
+    for (int i = a_sel.size() - 1; i > 0; i--) {
+      for (int j = 0; j < i; j++) {
         a_sel[j + 1]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
         a_sel[j]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
         if (ur_y1 < ur_y2) {
@@ -3112,14 +3074,14 @@ void GrowCtx::equidistance_select(glow_eAlignDirection direction)
     a_sel[0]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
     a_sel[a_sel.size() - 1]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
     dy = (ur_y2 - ur_y1) / (a_sel.size() - 1);
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->align(0, ur_y1 + i * dy, direction);
     }
     break;
   case glow_eAlignDirection_CenterVert:
     // Order in y-koord
-    for (i = a_sel.size() - 1; i > 0; i--) {
-      for (j = 0; j < i; j++) {
+    for (int i = a_sel.size() - 1; i > 0; i--) {
+      for (int j = 0; j < i; j++) {
         a_sel[j + 1]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
         a_sel[j]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
         if ((ur_y1 + ll_y1) / 2 < (ur_y2 + ll_y2) / 2) {
@@ -3132,15 +3094,15 @@ void GrowCtx::equidistance_select(glow_eAlignDirection direction)
     a_sel[0]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
     a_sel[a_sel.size() - 1]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
     dy = ((ur_y2 + ll_y2) / 2 - (ur_y1 + ll_y1) / 2) / (a_sel.size() - 1);
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->align(
           0, (ur_y1 + ll_y1) / 2 + i * dy, glow_eAlignDirection_CenterHoriz);
     }
     break;
   case glow_eAlignDirection_Left:
     // Order in x-koord
-    for (i = a_sel.size() - 1; i > 0; i--) {
-      for (j = 0; j < i; j++) {
+    for (int i = a_sel.size() - 1; i > 0; i--) {
+      for (int j = 0; j < i; j++) {
         a_sel[j + 1]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
         a_sel[j]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
         if (ll_x1 < ll_x2) {
@@ -3153,14 +3115,14 @@ void GrowCtx::equidistance_select(glow_eAlignDirection direction)
     a_sel[0]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
     a_sel[a_sel.size() - 1]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
     dx = (ll_x2 - ll_x1) / (a_sel.size() - 1);
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->align(ll_x1 + i * dx, 0, direction);
     }
     break;
   case glow_eAlignDirection_Right:
     // Order in x-koord
-    for (i = a_sel.size() - 1; i > 0; i--) {
-      for (j = 0; j < i; j++) {
+    for (int i = a_sel.size() - 1; i > 0; i--) {
+      for (int j = 0; j < i; j++) {
         a_sel[j + 1]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
         a_sel[j]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
         if (ur_x1 < ur_x2) {
@@ -3173,14 +3135,14 @@ void GrowCtx::equidistance_select(glow_eAlignDirection direction)
     a_sel[0]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
     a_sel[a_sel.size() - 1]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
     dx = (ur_x2 - ur_x1) / (a_sel.size() - 1);
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->align(ur_x1 + i * dx, 0, direction);
     }
     break;
   case glow_eAlignDirection_CenterHoriz:
     // Order in x-koord
-    for (i = a_sel.size() - 1; i > 0; i--) {
-      for (j = 0; j < i; j++) {
+    for (int i = a_sel.size() - 1; i > 0; i--) {
+      for (int j = 0; j < i; j++) {
         a_sel[j + 1]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
         a_sel[j]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
         if ((ur_x1 + ll_x1) / 2 < (ur_x2 + ll_x2) / 2) {
@@ -3193,7 +3155,7 @@ void GrowCtx::equidistance_select(glow_eAlignDirection direction)
     a_sel[0]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
     a_sel[a_sel.size() - 1]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
     dx = ((ur_x2 + ll_x2) / 2 - (ur_x1 + ll_x1) / 2) / (a_sel.size() - 1);
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->align(
           (ur_x1 + ll_x1) / 2 + i * dx, 0, glow_eAlignDirection_CenterVert);
     }
@@ -3254,7 +3216,6 @@ void GrowCtx::set_javaframe(double* pix_x_right, double* pix_x_left,
 
 void GrowCtx::export_javabean(std::ofstream& fp, int components)
 {
-  int i;
   int shape_cnt;
 
   export_jbean = new GlowExportJBean(this);
@@ -3262,7 +3223,7 @@ void GrowCtx::export_javabean(std::ofstream& fp, int components)
   if (components == 1) {
     // Declare components and set compoinent attirbutes
     shape_cnt = 0;
-    for (i = 0; i < a.size(); i++) {
+    for (int i = 0; i < a.size(); i++) {
       a[i]->export_javabean((GlowTransform*)NULL, NULL,
           glow_eExportPass_Declare, &shape_cnt, i, 0, fp);
     }
@@ -3270,7 +3231,7 @@ void GrowCtx::export_javabean(std::ofstream& fp, int components)
   } else if (components == 2) {
     // Attribute pass
     shape_cnt = 0;
-    for (i = 0; i < a.size(); i++) {
+    for (int i = 0; i < a.size(); i++) {
       a[i]->export_javabean((GlowTransform*)NULL, NULL,
           glow_eExportPass_Attributes, &shape_cnt, i, 0, fp);
     }
@@ -3280,7 +3241,7 @@ void GrowCtx::export_javabean(std::ofstream& fp, int components)
 
     // Init pass
     shape_cnt = 0;
-    for (i = 0; i < a.size(); i++) {
+    for (int i = 0; i < a.size(); i++) {
       a[i]->export_javabean((GlowTransform*)NULL, NULL, glow_eExportPass_Init,
           &shape_cnt, i, 0, fp);
     }
@@ -3288,7 +3249,7 @@ void GrowCtx::export_javabean(std::ofstream& fp, int components)
 
     // Shape pass
     shape_cnt = 0;
-    for (i = 0; i < a.size(); i++) {
+    for (int i = 0; i < a.size(); i++) {
       a[i]->export_javabean((GlowTransform*)NULL, NULL, glow_eExportPass_Shape,
           &shape_cnt, i, 0, fp);
     }
@@ -3297,7 +3258,7 @@ void GrowCtx::export_javabean(std::ofstream& fp, int components)
     // Draw pass
     export_jbean->growctx(glow_eExportPass_Draw, fp);
     shape_cnt = 0;
-    for (i = 0; i < a.size(); i++) {
+    for (int i = 0; i < a.size(); i++) {
       a[i]->export_javabean((GlowTransform*)NULL, NULL, glow_eExportPass_Draw,
           &shape_cnt, i, 0, fp);
     }
@@ -3312,7 +3273,6 @@ void GrowCtx::export_javabean(std::ofstream& fp, int components)
 void GrowCtx::export_nodeclass_javabean(
     GlowArrayElem* nc, std::ofstream& fp, int components)
 {
-  int i;
   int shape_cnt;
   int page;
   int pages;
@@ -3330,7 +3290,7 @@ void GrowCtx::export_nodeclass_javabean(
   if (components == 1) {
     // Declare components and set component attributes
     shape_cnt = 0;
-    for (i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
+    for (int i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
       ((GlowNodeClass*)nc)
           ->a[i]
           ->export_javabean((GlowTransform*)NULL, NULL,
@@ -3345,9 +3305,8 @@ void GrowCtx::export_nodeclass_javabean(
         export_jbean->nc = next_nc;
         export_jbean->page = page;
 
-        for (i = 0; i < ((GlowNodeClass*)next_nc)->a.size(); i++) {
-          if (((GlowNodeClass*)next_nc)->a[i]->type()
-              == glow_eObjectType_GrowAnnot)
+        for (int i = 0; i < next_nc->a.size(); i++) {
+          if (next_nc->a[i]->type() == glow_eObjectType_GrowAnnot)
             continue;
           next_nc->a[i]->export_javabean((GlowTransform*)NULL, NULL,
               glow_eExportPass_Declare, &shape_cnt, i, 1, fp);
@@ -3359,7 +3318,7 @@ void GrowCtx::export_nodeclass_javabean(
   } else if (components == 2) {
     // Attribute pass
     shape_cnt = 0;
-    for (i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
+    for (int i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
       ((GlowNodeClass*)nc)
           ->a[i]
           ->export_javabean((GlowTransform*)NULL, NULL,
@@ -3374,9 +3333,8 @@ void GrowCtx::export_nodeclass_javabean(
         export_jbean->nc = next_nc;
         export_jbean->page = page;
 
-        for (i = 0; i < ((GlowNodeClass*)next_nc)->a.size(); i++) {
-          if (((GlowNodeClass*)next_nc)->a[i]->type()
-              == glow_eObjectType_GrowAnnot)
+        for (int i = 0; i < next_nc->a.size(); i++) {
+          if (next_nc->a[i]->type() == glow_eObjectType_GrowAnnot)
             continue;
           next_nc->a[i]->export_javabean((GlowTransform*)NULL, NULL,
               glow_eExportPass_Attributes, &shape_cnt, i, 1, fp);
@@ -3393,7 +3351,7 @@ void GrowCtx::export_nodeclass_javabean(
 
     // Init pass
     shape_cnt = 0;
-    for (i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
+    for (int i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
       ((GlowNodeClass*)nc)
           ->a[i]
           ->export_javabean((GlowTransform*)NULL, NULL, glow_eExportPass_Init,
@@ -3404,7 +3362,7 @@ void GrowCtx::export_nodeclass_javabean(
 
     // Shape pass
     shape_cnt = 0;
-    for (i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
+    for (int i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
       ((GlowNodeClass*)nc)
           ->a[i]
           ->export_javabean((GlowTransform*)NULL, NULL, glow_eExportPass_Shape,
@@ -3422,9 +3380,8 @@ void GrowCtx::export_nodeclass_javabean(
         export_jbean->nc = next_nc;
         export_jbean->page = page;
         shape_cnt = 0;
-        for (i = 0; i < ((GlowNodeClass*)next_nc)->a.size(); i++) {
-          if (((GlowNodeClass*)next_nc)->a[i]->type()
-              == glow_eObjectType_GrowAnnot)
+        for (int i = 0; i < next_nc->a.size(); i++) {
+          if (next_nc->a[i]->type() == glow_eObjectType_GrowAnnot)
             continue;
           next_nc->a[i]->export_javabean((GlowTransform*)NULL, NULL,
               glow_eExportPass_Init, &shape_cnt, i, 1, fp);
@@ -3433,9 +3390,8 @@ void GrowCtx::export_nodeclass_javabean(
         export_jbean->nodeclass(
             next_nc, glow_eExportPass_Init, fp, page, pages);
         shape_cnt = 0;
-        for (i = 0; i < ((GlowNodeClass*)next_nc)->a.size(); i++) {
-          if (((GlowNodeClass*)next_nc)->a[i]->type()
-              == glow_eObjectType_GrowAnnot)
+        for (int i = 0; i < next_nc->a.size(); i++) {
+          if (next_nc->a[i]->type() == glow_eObjectType_GrowAnnot)
             continue;
           next_nc->a[i]->export_javabean((GlowTransform*)NULL, NULL,
               glow_eExportPass_Shape, &shape_cnt, i, 1, fp);
@@ -3451,7 +3407,7 @@ void GrowCtx::export_nodeclass_javabean(
     export_jbean->nodeclass(
         (GlowNodeClass*)nc, glow_eExportPass_Draw, fp, 1, pages);
     shape_cnt = 0;
-    for (i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
+    for (int i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
       ((GlowNodeClass*)nc)
           ->a[i]
           ->export_javabean((GlowTransform*)NULL, NULL, glow_eExportPass_Draw,
@@ -3476,9 +3432,8 @@ void GrowCtx::export_nodeclass_javabean(
             next_nc, glow_eExportPass_Draw, fp, page, pages);
 
         shape_cnt = 0;
-        for (i = 0; i < ((GlowNodeClass*)next_nc)->a.size(); i++) {
-          if (((GlowNodeClass*)next_nc)->a[i]->type()
-              == glow_eObjectType_GrowAnnot)
+        for (int i = 0; i < next_nc->a.size(); i++) {
+          if (next_nc->a[i]->type() == glow_eObjectType_GrowAnnot)
             continue;
           next_nc->a[i]->export_javabean((GlowTransform*)NULL, NULL,
               glow_eExportPass_Draw, &shape_cnt, i, 1, fp);
@@ -3498,8 +3453,6 @@ void GrowCtx::export_nodeclass_javabean(
 void GrowCtx::export_nc_javabean_font(
     GlowArrayElem* nc, std::ofstream& fp, int components)
 {
-  int i;
-
   export_jbean = new GlowExportJBean(this, (GlowNodeClass*)nc);
 
   if (components == 1) {
@@ -3510,7 +3463,7 @@ void GrowCtx::export_nc_javabean_font(
     // Paint
 
     // Init pass
-    for (i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
+    for (int i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
       if (((GlowNodeClass*)nc)->a[i]->type() == glow_eObjectType_GrowAnnot) {
         ((GrowAnnot*)((GlowNodeClass*)nc)->a[i])
             ->export_javabean_font(
@@ -3540,12 +3493,9 @@ int GrowCtx::get_java_name(char* jname)
 
 void GrowCtx::get_annotation_numbers(int** numbers, int* cnt)
 {
-  int i;
-  int* p;
-
   *cnt = 0;
-  p = (int*)calloc(10, sizeof(int));
-  for (i = 0; i < a.a_size; i++) {
+  int* p = (int*)calloc(10, sizeof(int));
+  for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == glow_eObjectType_GrowSubAnnot) {
       if (*cnt >= 10)
         break;
@@ -3689,14 +3639,13 @@ void GrowCtx::get_text_extent(char* text, int len, glow_eDrawType draw_type,
 int GrowCtx::group_select(GlowArrayElem** group, char* last_group)
 {
   char name[20];
-  int i, j;
   GlowArray a_group(20, 20);
 
   if (a_sel.size() == 0)
     return GLOW__NOSELECT;
 
   // Connections, windows and tables in a group are not allowed
-  for (i = 0; i < a_sel.size(); i++) {
+  for (int i = 0; i < a_sel.size(); i++) {
     if (a_sel[i]->type() == glow_eObjectType_Con
         || a_sel[i]->type() == glow_eObjectType_GrowWindow
         || a_sel[i]->type() == glow_eObjectType_GrowFolder
@@ -3710,8 +3659,8 @@ int GrowCtx::group_select(GlowArrayElem** group, char* last_group)
   sprintf(name, "Grp%d_", objectname_cnt++);
 
   // The objects i the group has to be in the same order as a
-  for (i = 0; i < a.size(); i++) {
-    for (j = 0; j < a_sel.size(); j++) {
+  for (int i = 0; i < a.size(); i++) {
+    for (int j = 0; j < a_sel.size(); j++) {
       if (a[i] == a_sel[j]) {
         a_group.insert(a[i]);
         break;
@@ -3724,7 +3673,7 @@ int GrowCtx::group_select(GlowArrayElem** group, char* last_group)
   a_group.clear();
 
   // Remove objects
-  for (i = 0; i < a_sel.size(); i++)
+  for (int i = 0; i < a_sel.size(); i++)
     a.remove(a_sel.a[i]);
   a_sel.clear();
 
@@ -3735,22 +3684,19 @@ int GrowCtx::group_select(GlowArrayElem** group, char* last_group)
 
 int GrowCtx::ungroup_select()
 {
-  int i;
-  GrowGroup* group;
-
   // Groups in group can't be ungrouped
-  for (i = 0; i < a_sel.size(); i++) {
+  for (int i = 0; i < a_sel.size(); i++) {
     if (a_sel[i]->type() == glow_eObjectType_GrowGroup) {
-      group = (GrowGroup*)a_sel[i];
+      GrowGroup* group = (GrowGroup*)a_sel[i];
       if (group->parent)
         return 0;
     }
   }
 
   a_sel.set_highlight(0);
-  for (i = 0; i < a_sel.size(); i++) {
+  for (int i = 0; i < a_sel.size(); i++) {
     if (a_sel[i]->type() == glow_eObjectType_GrowGroup) {
-      group = (GrowGroup*)a_sel[i];
+      GrowGroup* group = (GrowGroup*)a_sel[i];
       group->set_rootnode(0);
       group->ungroup();
       a.remove(group);

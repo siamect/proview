@@ -202,16 +202,17 @@ class GrowAxis extends GrowRect {
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    let x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    let x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    let rotation =
-          (this.trf.rot(t) / 360 - Math.floor(this.trf.rot(t) / 360)) * 360;
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
+
+    let x1 = Math.floor(p1.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p1.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+
+    let rotation = t ? this.trf.rotation + t.rotation : this.trf.rotation;
+    rotation = (rotation / 360 - Math.floor(rotation / 360)) * 360;
 
     let ll_x = Math.min(x1, x2);
     let ur_x = Math.max(x1, x2);
@@ -232,8 +233,8 @@ class GrowAxis extends GrowRect {
           if (i % this.valuequotient === 0) {
             let text = this.format_text(this.format, this.max_value - i *
                 this.increment);
-            let p = this.ctx.gdraw.getTextExtent(text, Math.max(0, text_idx),
-                Font.Helvetica, this.text_drawtype);
+            let p = this.ctx.gdraw.getTextExtent(text, this.text_drawtype, Math.max(0, text_idx),
+                Font.Helvetica);
             z_width = p.x;
             z_height = p.y;
             z_descent = z_height / 4;
@@ -275,8 +276,7 @@ class GrowAxis extends GrowRect {
               y_text = y + (z_height - z_descent) / 2;
             }
             this.ctx.gdraw.text(ll_x, y_text, text, this.text_drawtype,
-                this.text_color_drawtype, text_idx, highlight, 0,
-                Font.Helvetica, tsize, 0);
+                this.text_color_drawtype, text_idx, highlight, Font.Helvetica, tsize, 0);
           }
         }
       }
@@ -287,8 +287,8 @@ class GrowAxis extends GrowRect {
 
       // Calculate max value text height
       if (draw_text) {
-        let p2 = this.ctx.gdraw.getTextExtent("0", Math.max(0, text_idx),
-            Font.Helvetica, this.text_drawtype);
+        let p2 = this.ctx.gdraw.getTextExtent("0", this.text_drawtype, Math.max(0, text_idx),
+            Font.Helvetica);
 
         z_width = p2.x;
         z_height = p2.y;
@@ -314,8 +314,8 @@ class GrowAxis extends GrowRect {
         if (draw_text && i % this.valuequotient === 0) {
           let text =
               this.format_text(this.format, this.max_value - i * this.increment);
-          let p3 = this.ctx.gdraw.getTextExtent(text, Math.max(0, text_idx),
-              Font.Helvetica, this.text_drawtype);
+          let p3 = this.ctx.gdraw.getTextExtent(text, this.text_drawtype, Math.max(0, text_idx),
+              Font.Helvetica);
           z_width = p3.x;
           z_height = p3.y;
           z_descent = z_height / 4;
@@ -330,7 +330,7 @@ class GrowAxis extends GrowRect {
             }
             this.ctx.gdraw.text(x_text, ll_y + z_height - z_descent, text,
                 this.text_drawtype, this.text_color_drawtype, text_idx, highlight,
-                0, Font.Helvetica, tsize, 0);
+                Font.Helvetica, tsize, 0);
           }
         }
       }
@@ -345,8 +345,8 @@ class GrowAxis extends GrowRect {
           if (i % this.valuequotient === 0) {
             let text = this.format_text(this.format, this.max_value - i *
                 this.increment);
-            let p4 = this.ctx.gdraw.getTextExtent(text, Math.max(0, text_idx),
-                Font.Helvetica, this.text_drawtype);
+            let p4 = this.ctx.gdraw.getTextExtent(text, this.text_drawtype, Math.max(0, text_idx),
+                Font.Helvetica);
             z_width = p4.x;
             z_height = p4.y;
             z_descent = z_height / 4;
@@ -388,8 +388,7 @@ class GrowAxis extends GrowRect {
             y_text = y + (z_height - z_descent) / 2;
           }
           this.ctx.gdraw.text(x_text, y_text, text, this.text_drawtype,
-              this.text_color_drawtype, text_idx, highlight, 0,
-              Font.Helvetica, tsize, 0);
+              this.text_color_drawtype, text_idx, highlight, Font.Helvetica, tsize, 0);
         }
       }
     } else { // if ( 225 < rotation && rotation <= 315)
@@ -399,8 +398,8 @@ class GrowAxis extends GrowRect {
 
       // Calculate max value text height
       if (draw_text) {
-        let p5 = this.ctx.gdraw.getTextExtent("0", Math.max(0, text_idx),
-            Font.Helvetica, this.text_drawtype);
+        let p5 = this.ctx.gdraw.getTextExtent("0", this.text_drawtype, Math.max(0, text_idx),
+            Font.Helvetica);
 
         z_width = p5.x;
         z_height = p5.y;
@@ -424,8 +423,8 @@ class GrowAxis extends GrowRect {
         if (draw_text && i % this.valuequotient === 0) {
           let text =
               this.format_text(this.format, this.max_value - i * this.increment);
-          let p6 = this.ctx.gdraw.getTextExtent(text, Math.max(0, text_idx),
-              Font.Helvetica, this.text_drawtype);
+          let p6 = this.ctx.gdraw.getTextExtent(text, this.text_drawtype, Math.max(0, text_idx),
+              Font.Helvetica);
           z_width = p6.x;
           z_height = p6.y;
           z_descent = z_height / 4;
@@ -439,8 +438,7 @@ class GrowAxis extends GrowRect {
               x_text = x - (z_width) / 2;
             }
             this.ctx.gdraw.text(x_text, ur_y, text, this.text_drawtype,
-                this.text_color_drawtype, text_idx, highlight, 0,
-                Font.Helvetica, tsize, 0);
+                this.text_color_drawtype, text_idx, highlight, Font.Helvetica, tsize, 0);
           }
         }
       }
@@ -462,15 +460,15 @@ class GrowAxis extends GrowRect {
     this.max_value = maxval;
     this.min_value = minval;
 
-    let x1 = Math.floor(this.trf.x(this.ll.x, this.ll.y) *
-        this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let y1 = Math.floor(this.trf.y(this.ll.x, this.ll.y) *
-        this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    let x2 = Math.floor(this.trf.x(this.ur.x, this.ur.y) *
-        this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let y2 = Math.floor(this.trf.y(this.ur.x, this.ur.y) *
-        this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    let rotation = (this.trf.rot() / 360 - Math.floor(this.trf.rot() / 360)) *
+    let p1 = this.trf.apply(this.ll);
+    let p2 = this.trf.apply(this.ur);
+
+    let x1 = Math.floor(p1.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p1.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+
+    let rotation = (this.trf.rotation / 360 - Math.floor(this.trf.rotation / 360)) *
         360;
 
     if (keep_settings === 0) {

@@ -154,8 +154,9 @@ void GlowConPoint::conpoint_select(
 void GlowConPoint::conpoint_select(GlowTransform* t, int x, int y,
     double* distance, void** cp, int* pix_x, int* pix_y)
 {
-  int px = int(trf.x(t, p.x, p.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x);
-  int py = int(trf.y(t, p.x, p.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y);
+  glow_sPoint p = *t * trf * this->p;
+  int px = int(p.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x);
+  int py = int(p.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y);
 
   double dist = sqrt(1.0 * (x - px) * (x - px) + 1.0 * (y - py) * (y - py));
   if (dist < *distance) {
@@ -181,16 +182,16 @@ int GlowConPoint::get_conpoint(
 int GlowConPoint::get_conpoint(GlowTransform* t, int num, bool flip_horizontal,
     bool flip_vertical, double* x, double* y, glow_eDirection* dir)
 {
-  double rotation;
-
   if (number == num) {
-    *x = trf.x(t, p.x, p.y);
-    *y = trf.y(t, p.x, p.y);
+    Matrix tmp = *t * trf;
+    glow_sPoint p = tmp * this->p;
+    *x = p.x;
+    *y = p.y;
     if (direction == glow_eDirection_Center) {
       *dir = direction;
       return 1;
     }
-    rotation = (trf.rot(t) / 360 - floor(trf.rot(t) / 360)) * 360;
+    double rotation = (tmp.rotation / 360 - floor(tmp.rotation / 360)) * 360;
     if (45 >= rotation || rotation > 315) {
       *dir = direction;
     } else if (45 < rotation && rotation <= 135) {

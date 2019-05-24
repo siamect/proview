@@ -182,9 +182,6 @@ void FlowLine::nav_erase(void* pos, void* node)
 int FlowLine::event_handler(
     void* pos, flow_eEvent event, int x, int y, void* node)
 {
-  FlowPoint* p;
-
-  p = (FlowPoint*)pos;
   int x1 = p1.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x;
   int x2 = p2.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x;
   int y1 = p1.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y;
@@ -198,7 +195,6 @@ int FlowLine::event_handler(
              ABS(y1 - y) < 3 && x1 < x && x < x2)
       || (y1 == y2 && x1 > x2 && // Horizontal
              ABS(y1 - y) < 3 && x2 < x && x < x1)) {
-    //    std::cout << "Event handler: Hit in line\n";
     return 1;
   } else if ((!(x1 == x2 || y1 == y2) && x1 < x2 && x1 <= x && x <= x2
                  && fabs(y - 1.0 * (y2 - y1) / (x2 - x1) * x - y1
@@ -208,7 +204,6 @@ int FlowLine::event_handler(
              && fabs(y - 1.0 * (y2 - y1) / (x2 - x1) * x - y1
                     + 1.0 * (y2 - y1) / (x2 - x1) * x1)
                  < 3)) {
-    //    std::cout << "Event handler: Hit in line\n";
     return 1;
   } else
     return 0;

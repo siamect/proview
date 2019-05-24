@@ -126,24 +126,14 @@ void FlowFrame::get_borders(double pos_x, double pos_y, double* x_right,
 int FlowFrame::event_handler(
     void* pos, flow_eEvent event, int x, int y, void* node)
 {
-  FlowPoint* p;
-
-  p = (FlowPoint*)pos;
   if (ctx->type() == flow_eCtxType_Brow) {
-    if (ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x <= x
+    return (ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x <= x
         && ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y <= y
-        && y <= ur.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y)
-      return 1;
-    else
-      return 0;
+        && y <= ur.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y);
   } else {
-    if (ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x <= x
+    return (ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x <= x
         && x <= ur.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x
         && ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y <= y
-        && y <= ur.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y)
-      //    std::cout << "Event handler: Hit in rect\n";
-      return 1;
-    else
-      return 0;
+        && y <= ur.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y);
   }
 }

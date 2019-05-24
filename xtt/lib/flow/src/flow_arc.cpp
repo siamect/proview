@@ -170,16 +170,10 @@ void FlowArc::nav_erase(void* pos, void* node)
 int FlowArc::event_handler(
     void* pos, flow_eEvent event, int x, int y, void* node)
 {
-  FlowPoint* p;
-
-  p = (FlowPoint*)pos;
-  if (angle2 == 360 && ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x <= x
+  return (angle2 == 360 && ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x <= x
       && x <= ur.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x
       && ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y <= y
-      && y <= ur.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y) {
-    return 1;
-  } else
-    return 0;
+      && y <= ur.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y);
 }
 
 void FlowArc::get_borders(double pos_x, double pos_y, double* x_right,

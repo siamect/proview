@@ -57,8 +57,6 @@
     <Key>F10 			: SetDig(Test-Dv2.ActualValue)
     <Key>F12 			: Command (open graph gtest)
  */
-#if defined OS_LINUX
-
 #include <stdio.h>
 
 #include "co_cdh.h"
@@ -123,19 +121,13 @@ XttHotkey::XttHotkey(const char* filename)
 
 int XttHotkey::read_file()
 {
-  FILE* fp;
-  char line[200];
-  int row = 0;
-  char p1[2][200];
-  char p2[10][200];
-  int i, n;
-  char* s;
-
   dcli_translate_filename(m_filename, m_filename);
-  fp = fopen(m_filename, "r");
+  FILE* fp = fopen(m_filename, "r");
   if (!fp)
     return 0;
 
+  int row = 0;
+  char line[200];
   while (dcli_read_line(line, sizeof(line), fp)) {
     int mod = 0;
     char keystr[20] = "";
@@ -148,7 +140,8 @@ int XttHotkey::read_file()
     if (line[0] == 0 || line[0] == '#')
       continue;
 
-    n = dcli_parse(
+    char p1[2][200];
+    int n = dcli_parse(
         line, ":", "", (char*)p1, sizeof(p1) / sizeof(p1[0]), sizeof(p1[0]), 0);
     if (n != 2) {
       printf("Syntax error, %s, row %d\n", m_filename, row);
@@ -157,13 +150,14 @@ int XttHotkey::read_file()
     str_trim(p1[0], p1[0]);
     str_trim(p1[1], p1[1]);
 
+    char p2[10][200];
     n = dcli_parse(p1[0], " 	", "", (char*)p2, sizeof(p2) / sizeof(p2[0]),
         sizeof(p2[0]), 0);
     if (n < 1) {
       printf("Syntax error, %s, row %d\n", m_filename, row);
       continue;
     }
-    for (i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
       if (str_NoCaseStrcmp(p2[i], "Control") == 0)
         mod |= Qt::ControlModifier;
       else if (str_NoCaseStrcmp(p2[i], "Shift") == 0)
@@ -188,6 +182,7 @@ int XttHotkey::read_file()
     strcpy(action_name, p2[0]);
     str_trim(action_name, action_name);
     strcpy(action_arg, p2[1]);
+    char* s;
     if ((s = strrchr(action_arg, ')')))
       *s = 0;
     else {
@@ -230,5 +225,3 @@ int XttHotkey::event_handler(QEvent* event, QObject* data)
   }
   return 0;
 }
-
-#endif

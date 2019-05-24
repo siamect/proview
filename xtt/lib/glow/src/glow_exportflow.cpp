@@ -79,10 +79,8 @@ int GlowExportFlow::export_flow(char* filename)
 
 void GlowExportFlow::array(GlowArray* o)
 {
-  int i;
-
   fp << int(flow_eSave_Array) << '\n';
-  for (i = 0; i < o->a_size; i++) {
+  for (int i = 0; i < o->a_size; i++) {
     if (o->a[i]->type() != glow_eObjectType_Con)
       o->a[i]->export_flow(this);
   }
@@ -207,11 +205,9 @@ void GlowExportFlow::arc(GrowArc* o)
 
 void GlowExportFlow::point(GlowPoint* o, GlowTransform* trf)
 {
-  double x = trf->x(o->x, o->y) * FLOW_SCALE;
-  double y = trf->y(o->x, o->y) * FLOW_SCALE;
-
+  glow_sPoint p = *trf * *o;
   fp << int(flow_eSave_Point) << '\n';
-  fp << int(flow_eSave_Point_x) << FSPACE << x << '\n';
-  fp << int(flow_eSave_Point_y) << FSPACE << y << '\n';
+  fp << int(flow_eSave_Point_x) << FSPACE << (p.x * FLOW_SCALE) << '\n';
+  fp << int(flow_eSave_Point_y) << FSPACE << (p.y * FLOW_SCALE) << '\n';
   fp << int(flow_eSave_End) << '\n';
 }

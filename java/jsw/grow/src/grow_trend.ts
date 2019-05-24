@@ -157,21 +157,21 @@ class GrowTrend extends GrowRect {
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    let x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    let x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
+
+    let x1 = Math.floor(p1.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p1.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
 
     let ll_x = Math.min(x1, x2);
     let ur_x = Math.max(x1, x2);
     let ll_y = Math.min(y1, y2);
     let ur_y = Math.max(y1, y2);
 
-    if (this.fill !== 0) {
+    if (this.fill) {
       let grad = this.gradient;
       if (this.gradient === Gradient.No &&
           (node !== null && node.gradient !== Gradient.No) &&
@@ -183,10 +183,10 @@ class GrowTrend extends GrowRect {
           GlowColor.get_drawtype(this.fill_drawtype, DrawType.FillHighlight,
               highlight, colornode, 1, 0);
       if (grad === Gradient.No) {
-        this.ctx.gdraw.fill_rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-            drawtype);
+        this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+            drawtype, true, 0);
       } else {
-        let rotation = t ? this.trf.rot(t) : this.trf.rot();
+        let rotation = t ? this.trf.rotation + t.rotation : this.trf.rotation;
 
         let f1, f2;
         if (this.gradient_contrast >= 0) {
@@ -211,10 +211,8 @@ class GrowTrend extends GrowRect {
     let curvetmp = this.curve.slice(0, this.curve_cnt).filter(e => e !== null);
 
     if (this.fill_curve !== 0) {
-      let tmp1 = t ? GlowTransform.multiply(t, this.trf) : this.trf;
-
       curvetmp.forEach(e => e.border = 0);
-      curvetmp.forEach(e => e.draw(tmp1, highlight, hot, node, colornode));
+      curvetmp.forEach(e => e.draw(Matrix.multiply(t, this.trf), highlight, hot, node, colornode));
       curvetmp.forEach(e => e.border = 1);
     }
 
@@ -233,15 +231,16 @@ class GrowTrend extends GrowRect {
     if (this.fill_curve !== 0) {
       curvetmp.forEach(e => e.fill = 0);
     }
-    let tmp2 = t ? GlowTransform.multiply(t, this.trf) : this.trf;
-    curvetmp.forEach(e => e.draw(tmp2, highlight, hot, node, colornode));
+    curvetmp.forEach(e => e.draw(Matrix.multiply(t, this.trf), highlight, hot, node, colornode));
     if (this.fill_curve !== 0) {
       curvetmp.forEach(e => e.fill = 1);
     }
 
+    let tmp = Matrix.multiply(t, this.trf);
+
     if (this.display_x_mark1 !== 0) {
-      let xm1 = Math.floor(this.trf.x(t, this.x_mark1, this.ll.y) *
-            this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+      let p = tmp.apply(new Point(this.x_mark1, this.ll.y));
+      let xm1 = Math.floor(p.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
       if (xm1 >= ll_x && xm1 <= ur_x) {
         drawtype = this.mark1_color;
         if (drawtype === DrawType.Inherit) {
@@ -251,8 +250,8 @@ class GrowTrend extends GrowRect {
       }
     }
     if (this.display_x_mark2 !== 0) {
-      let xm2 = Math.floor(this.trf.x(t, this.x_mark2, this.ll.y) *
-            this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+      let p = tmp.apply(new Point(this.x_mark2, this.ll.y));
+      let xm2 = Math.floor(p.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
       if (xm2 >= ll_x && xm2 <= ur_x) {
         drawtype = this.mark2_color;
         if (drawtype === DrawType.Inherit) {
@@ -262,14 +261,8 @@ class GrowTrend extends GrowRect {
       }
     }
     if (this.display_y_mark1 !== 0) {
-      let ym1;
-      if (t === null) {
-        ym1 = Math.floor(this.trf.y(this.ll.x, this.y_mark1) *
-            this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-      } else {
-        ym1 = Math.floor(this.trf.y(t, this.ll.x, this.y_mark1) *
-            this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-      }
+      let p = tmp.apply(new Point(this.ll.x, this.y_mark1));
+      let ym1 = Math.floor(p.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
       if (ym1 >= ll_y && ym1 <= ur_y) {
         drawtype = this.mark1_color;
         if (drawtype === DrawType.Inherit) {
@@ -279,14 +272,8 @@ class GrowTrend extends GrowRect {
       }
     }
     if (this.display_y_mark2 !== 0) {
-      let ym2;
-      if (t === null) {
-        ym2 = Math.floor(this.trf.y(this.ll.x, this.y_mark2) *
-            this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-      } else {
-        ym2 = Math.floor(this.trf.y(t, this.ll.x, this.y_mark2) *
-            this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-      }
+      let p = tmp.apply(new Point(this.ll.x, this.y_mark2));
+      let ym2 = Math.floor(p.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
       if (ym2 >= ll_y && ym2 <= ur_y) {
         drawtype = this.mark2_color;
         if (drawtype === DrawType.Inherit) {
@@ -297,8 +284,7 @@ class GrowTrend extends GrowRect {
     }
 
     if (this.border !== 0) {
-      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx,
-          0);
+      this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, false, idx);
     }
   }
 

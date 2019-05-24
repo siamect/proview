@@ -92,16 +92,17 @@ class GrowBarArc extends GrowArc {
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    let x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    let x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    let rotation =
-          (this.trf.rot(t) / 360 - Math.floor(this.trf.rot(t) / 360)) * 360;
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
+
+    let x1 = Math.floor(p1.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p1.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+
+    let rotation = t ? this.trf.rotation + t.rotation : this.trf.rotation;
+    rotation = (rotation / 360 - Math.floor(rotation / 360)) * 360;
 
     let ll_x = Math.min(x1, x2);
     let ur_x = Math.max(x1, x2);
@@ -118,12 +119,12 @@ class GrowBarArc extends GrowArc {
     let bg_drawtype = (this.background_drawtype === DrawType.No) ? this.ctx.background_color : this.background_drawtype;
 
     // Draw circle background
-    this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 0, 360,
-        bg_drawtype);
+    this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 0, 360,
+        bg_drawtype, true, 0);
 
     // Draw bar background
-    this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, this.angle1 -
-        Math.floor(rotation), this.angle2, drawtype);
+    this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, this.angle1 -
+        Math.floor(rotation), this.angle2, drawtype, true, 0);
 
     // Draw bar
     let ang = this.angle1 - rotation;
@@ -132,9 +133,8 @@ class GrowBarArc extends GrowArc {
     }
 
     if (this.gradient === Gradient.No) {
-      this.ctx.gdraw.fill_arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-          ang, this.angle2 * (value - this.min_value) /
-          (this.max_value - this.min_value), this.bar_drawtype);
+      this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, ang,
+          this.angle2 * (value - this.min_value) / (this.max_value - this.min_value), this.bar_drawtype, true, 0);
     } else {
       let f1, f2;
       if (this.gradient_contrast >= 0) {
@@ -157,8 +157,8 @@ class GrowBarArc extends GrowArc {
     }
 
     // Draw inner circle background
-    this.ctx.gdraw.fill_arc(ll_x + width, ll_y + yscale * width, ur_x - ll_x -
-        2 * width, ur_y - ll_y - yscale * 2 * width, 0, 360, bg_drawtype);
+    this.ctx.gdraw.arc(ll_x + width, ll_y + yscale * width, ur_x - ll_x -
+        2 * width, ur_y - ll_y - yscale * 2 * width, 0, 360, bg_drawtype, true, 0);
 
     if (this.bar_direction === 0) {
       ang = Math.PI *
@@ -181,11 +181,11 @@ class GrowBarArc extends GrowArc {
           DrawType.LineHighlight, highlight, colornode, 0, 0);
 
       this.ctx.gdraw.arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, this.angle1 -
-          Math.floor(rotation), this.angle2, bordercolor, idx);
+          Math.floor(rotation), this.angle2, bordercolor, false, idx);
 
       this.ctx.gdraw.arc(ll_x + width, ll_y + yscale * width, ur_x - ll_x - 2 *
           width, ur_y - ll_y - yscale * 2 * width, this.angle1 -
-          Math.floor(rotation), this.angle2, bordercolor, idx);
+          Math.floor(rotation), this.angle2, bordercolor, false, idx);
 
       ang = Math.PI * (this.angle1 - rotation) / 180;
       this.ctx.gdraw.line((ur_x + ll_x) / 2 + (ur_x - ll_x) / 2 *

@@ -201,20 +201,6 @@ void FlowText::nav_erase(void* pos, void* node)
 int FlowText::event_handler(
     void* pos, flow_eEvent event, int x, int y, void* node)
 {
-  FlowPoint* p;
-
-  p = (FlowPoint*)pos;
-  /**
-    if ( p1.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x < x &&
-         x < p2.z_x  + ((FlowPoint *)pos)->z_x - ctx->offset_x &&
-         p1.z_y  + ((FlowPoint *)pos)->z_y - ctx->offset_y < y &&
-         y < p2.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y)
-    {
-      std::cout << "Event handler: Hit in text\n";
-      return 1;
-    }
-    else
-  ***/
   return 0;
 }
 

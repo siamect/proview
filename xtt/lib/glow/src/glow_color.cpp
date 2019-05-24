@@ -131,9 +131,6 @@ void GlowColor::his_to_rgb(
 void GlowColor::rgb_color(
     int idx, double* r, double* g, double* b, GlowCustomColors* customcolors)
 {
-  double h1, i1, s1;
-  int i, j, k;
-
   if (idx == 3) // White
     *r = *g = *b = 1.0;
   else if (idx == 2) // Gray
@@ -145,10 +142,8 @@ void GlowColor::rgb_color(
     *r = *g = *b = 0;
   else if (idx < 20) {
     // Sixteen colors of different hue
-    h1 = 360. * (idx - 4) / 16;
-    s1 = 1.5;
-    i1 = 1;
-    his_to_rgb(r, g, b, h1, i1, s1);
+    double h1 = 360. * (idx - 4) / 16;
+    his_to_rgb(r, g, b, h1, 1, 1.5);
   } else if (idx < 60) {
     // Four sets of gray
     double i0 = gray_i0;
@@ -158,9 +153,9 @@ void GlowColor::rgb_color(
 
     *r = *g = *b = i0 + (gray_i1 - i0) * pow(double(9 - idx % 10) / 9, 0.9);
   } else if (idx < 300) {
-    i = (idx - 60) / 30;
-    j = (idx - 60 - i * 30) / 10;
-    k = 9 - (idx - 60 - i * 30 - j * 10);
+    int i = (idx - 60) / 30;
+    int j = (idx - 60 - i * 30) / 10;
+    int k = 9 - (idx - 60 - i * 30 - j * 10);
 
     if ((i == 0 && j == 2) || (i == 2 && j == 2 && k > 5)) {
       // Formula doesn't work for yellow...
@@ -168,11 +163,11 @@ void GlowColor::rgb_color(
       *g = rgbtab[i * 10 + k].g;
       *b = rgbtab[i * 10 + k].b;
     } else {
-      s1 = ctab[i].s[j].s;
-      i1 = ctab[i].s[j].i_min
+      double s1 = ctab[i].s[j].s;
+      double i1 = ctab[i].s[j].i_min
           + (ctab[i].s[j].i_max - ctab[i].s[j].i_min)
               * pow(double(k) / 9, ctab[i].s[j].a);
-      h1 = ctab[i].h + ctab[i].hk * k / 9;
+      double h1 = ctab[i].h + ctab[i].hk * k / 9;
 
       his_to_rgb(r, g, b, h1, i1, s1);
     }
@@ -189,35 +184,32 @@ void GlowColor::rgb_color(
 glow_eDrawType GlowColor::shift_drawtype(
     glow_eDrawType dt, int shift, void* node)
 {
-  int incr;
-  glow_eDrawType base_drawtype;
-  glow_eDrawType drawtype;
-
   if (node && ((GrowNode*)node)->color_inverse)
     shift = -shift;
 
   if (is_shiftable(dt)) {
-    base_drawtype = (glow_eDrawType)(dt / 10 * 10);
-    incr = shift + dt - base_drawtype;
-    if (incr < 0)
-      drawtype = glow_eDrawType_Color4; // White
-    else if (incr >= 10)
-      drawtype = glow_eDrawType_Color30; // DarkGrey
-    else
-      drawtype = (glow_eDrawType)(base_drawtype + incr);
+    glow_eDrawType base_drawtype = (glow_eDrawType)(dt / 10 * 10);
+    int incr = shift + dt - base_drawtype;
+    if (incr < 0) {
+      return glow_eDrawType_Color4; // White
+    } else if (incr >= 10) {
+      return glow_eDrawType_Color30; // DarkGrey
+    } else {
+      return (glow_eDrawType) (base_drawtype + incr);
+    }
   } else if (is_custom(dt)) {
-    if (shift == -1)
-      drawtype = (glow_eDrawType)(dt + 3);
-    else if (shift < 0)
-      drawtype = (glow_eDrawType)(dt + 2);
-    else if (shift > 0)
-      drawtype = (glow_eDrawType)(dt + 1);
-    else
-      drawtype = dt;
-  } else
-    drawtype = dt;
-
-  return drawtype;
+    if (shift == -1) {
+      return (glow_eDrawType) (dt + 3);
+    } else if (shift < 0) {
+      return (glow_eDrawType) (dt + 2);
+    } else if (shift > 0) {
+      return (glow_eDrawType) (dt + 1);
+    } else {
+      return dt;
+    }
+  } else {
+    return dt;
+  }
 }
 
 glow_eDrawType GlowColor::get_drawtype(glow_eDrawType local_drawtype,

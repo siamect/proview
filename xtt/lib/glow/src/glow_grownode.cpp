@@ -44,6 +44,7 @@
 #include "glow_draw.h"
 #include "glow_conpoint.h"
 #include "glow_growgroup.h"
+#include "glow.h"
 
 GrowNode::GrowNode(GrowCtx* glow_ctx, const char* name,
     GlowNodeClass* node_class, double x1, double y1, int nodraw,
@@ -122,9 +123,6 @@ void GrowNode::copy_from(const GrowNode& n)
 
 void GrowNode::save(std::ofstream& fp, glow_eSaveMode mode)
 {
-  char* s;
-  int i;
-
   fp << int(glow_eSave_GrowNode) << '\n';
   fp << int(glow_eSave_GrowNode_original_border_drawtype) << FSPACE
      << int(original_border_drawtype) << '\n';
@@ -165,7 +163,7 @@ void GrowNode::save(std::ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowNode_dynamic) << '\n';
   if (dynamic) {
     fp << "\"";
-    for (s = dynamic; *s; s++) {
+    for (char* s = dynamic; *s; s++) {
       if (*s == '"')
         fp << "\\";
       fp << *s;
@@ -178,13 +176,13 @@ void GrowNode::save(std::ofstream& fp, glow_eSaveMode mode)
   trf.save(fp, mode);
   fp << int(glow_eSave_GrowNode_arg_cnt) << FSPACE << nc->arg_cnt << '\n';
   fp << int(glow_eSave_GrowNode_argsize) << '\n';
-  for (i = 0; i < nc->arg_cnt; i++)
+  for (int i = 0; i < nc->arg_cnt; i++)
     fp << argsize[i] << '\n';
   fp << int(glow_eSave_GrowNode_argv) << '\n';
-  for (i = 0; i < nc->arg_cnt; i++) {
+  for (int i = 0; i < nc->arg_cnt; i++) {
     if (argsize[i]) {
       fp << "\"";
-      for (s = argv[i]; *s; s++) {
+      for (char* s = argv[i]; *s; s++) {
         if (*s == '"')
           fp << "\\";
         fp << *s;
@@ -213,8 +211,6 @@ void GrowNode::open(std::ifstream& fp)
   int end_found = 0;
   char dummy[40];
   int tmp;
-  int i, j;
-  char c;
   int arg_cnt = 0;
   char* new_text;
 
@@ -304,7 +300,8 @@ void GrowNode::open(std::ifstream& fp)
       if (dynamicsize) {
         dynamic = (char*)calloc(1, dynamicsize);
         fp.get();
-        for (j = 0; j < dynamicsize; j++) {
+        for (int j = 0; j < dynamicsize; j++) {
+          char c;
           if ((c = fp.get()) == '"') {
             if (dynamic[j - 1] == '\\')
               j--;
@@ -328,16 +325,17 @@ void GrowNode::open(std::ifstream& fp)
       fp >> arg_cnt;
       break;
     case glow_eSave_GrowNode_argsize:
-      for (i = 0; i < arg_cnt; i++)
+      for (int i = 0; i < arg_cnt; i++)
         fp >> argsize[i];
       break;
     case glow_eSave_GrowNode_argv:
       fp.getline(dummy, sizeof(dummy));
-      for (i = 0; i < arg_cnt; i++) {
+      for (int i = 0; i < arg_cnt; i++) {
         if (argsize[i]) {
           argv[i] = (char*)calloc(1, argsize[i]);
           fp.get();
-          for (j = 0; j < argsize[i]; j++) {
+          for (int j = 0; j < argsize[i]; j++) {
+            char c;
             if ((c = fp.get()) == '"') {
               if (argv[i][j - 1] == '\\')
                 j--;
@@ -395,7 +393,7 @@ void GrowNode::open(std::ifstream& fp)
 
   // Translate the annotation to current language
   if (ctx->translate_on && ctx->event_callback[glow_eEvent_Translate]) {
-    for (i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) {
       if (annotsize[i] && annotv[i]) {
         if (ctx->translate_cb(this, annotv[i], &new_text))
           set_annotation(i, new_text, strlen(new_text), 1);
@@ -467,14 +465,11 @@ void GrowNode::set_highlight(int on)
 
 int GrowNode::event_handler(glow_eEvent event, double fx, double fy)
 {
-  double x, y;
-  int sts;
-
   if (invisible || dimmed)
     return 0;
 
-  trf.reverse(fx, fy, &x, &y);
-  sts = nc->event_handler(event, x, y);
+  glow_sPoint p = trf.reverse(fx, fy);
+  int sts = nc->event_handler(event, p.x, p.y);
   if (ctx->trace_started && sts) {
     // Register group members with click action
     if (is_sensitive())
@@ -485,13 +480,6 @@ int GrowNode::event_handler(glow_eEvent event, double fx, double fy)
 
 int GrowNode::event_handler(glow_eEvent event, int x, int y, double fx, double fy)
 {
-  int sts;
-  double distance;
-  GlowConPoint* conpoint;
-  int hot_type;
-
-  double rx, ry;
-
   if (invisible || dimmed)
     return 0;
 
@@ -513,11 +501,11 @@ int GrowNode::event_handler(glow_eEvent event, int x, int y, double fx, double f
   }
 
   // Convert koordinates to local koordinates
-  trf.reverse(fx, fy, &rx, &ry);
+  glow_sPoint r = trf.reverse(fx, fy);
 
-  sts = 0;
+  int sts = 0;
   if (event == ctx->event_move_node) {
-    sts = nc->event_handler(event, rx, ry);
+    sts = nc->event_handler(event, r.x, r.y);
     if (sts) {
       /* Register node for potential movement */
       ctx->move_insert(this);
@@ -525,13 +513,13 @@ int GrowNode::event_handler(glow_eEvent event, int x, int y, double fx, double f
     }
     return sts;
   } else if (event == ctx->event_create_con) {
-    sts = nc->event_handler(event, rx, ry);
+    sts = nc->event_handler(event, r.x, r.y);
     if (sts) {
       int px, py;
 
       /* Find closest conpoint */
-      distance = 1e10;
-      conpoint = 0;
+      double distance = 1e10;
+      GlowConPoint* conpoint = 0;
       nc->a.conpoint_select(&trf, x, y, &distance, (void**)&conpoint, &px, &py);
       if (conpoint) {
         ctx->con_create_source(this, conpoint->number, px, py);
@@ -542,13 +530,13 @@ int GrowNode::event_handler(glow_eEvent event, int x, int y, double fx, double f
   switch (event) {
   case glow_eEvent_ButtonRelease:
     if (ctx->con_create_active) {
-      sts = nc->event_handler(event, rx, ry);
+      sts = nc->event_handler(event, r.x, r.y);
       if (sts) {
         int px, py;
 
         /* Find closest conpoint */
-        distance = 1e10;
-        conpoint = 0;
+        double distance = 1e10;
+        GlowConPoint* conpoint = 0;
         nc->a.conpoint_select(
             &trf, x, y, &distance, (void**)&conpoint, &px, &py);
         if (conpoint) {
@@ -564,12 +552,12 @@ int GrowNode::event_handler(glow_eEvent event, int x, int y, double fx, double f
       else {
         if (!is_sensitive()) {
           if (type() == glow_eObjectType_GrowGroup || nc->recursive_trace) {
-            sts = nc->a.event_handler(event, x, y, rx, ry);
+            sts = nc->a.event_handler(event, x, y, r.x, r.y);
             sts = 0;
           } else
             sts = 0;
         } else {
-          sts = nc->event_handler(event, rx, ry);
+          sts = nc->event_handler(event, r.x, r.y);
           if (sts)
             ctx->hot_found = 1;
         }
@@ -578,13 +566,14 @@ int GrowNode::event_handler(glow_eEvent event, int x, int y, double fx, double f
       if (ctx->hot_found)
         sts = 0;
       else {
-        sts = nc->event_handler(event, rx, ry);
+        sts = nc->event_handler(event, r.x, r.y);
         if (sts)
           ctx->hot_found = 1;
       }
     }
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
+      int hot_type;
       if ((hot_type = ctx->send_hot_request(this))) {
         if (!ctx->trace_started) {
           ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
@@ -614,7 +603,7 @@ int GrowNode::event_handler(glow_eEvent event, int x, int y, double fx, double f
     break;
   }
   default:
-    sts = nc->event_handler(event, rx, ry);
+    sts = nc->event_handler(event, r.x, r.y);
   }
   if (sts) {
     if ((ctx->trace_started && type() == glow_eObjectType_GrowGroup)
@@ -667,7 +656,7 @@ void GrowNode::exec_dynamic()
 
 void GrowNode::set_position(double x, double y)
 {
-  if (feq(trf.a13, trf.s_a13 + x) && feq(trf.a23, trf.s_a23 + y))
+  if (feq(trf.a13, trf.s.a13 + x) && feq(trf.a23, trf.s.a23 + y))
     return;
 
   trf.move_from_stored(x, y);
@@ -691,8 +680,6 @@ void GrowNode::set_scale_pos(double x, double y, double scale_x, double scale_y,
 void GrowNode::set_scale(
     double scale_x, double scale_y, double x0, double y0, glow_eScaleType type)
 {
-  double old_x_left, old_x_right, old_y_low, old_y_high;
-
   if (!((feq(scale_x, -1.0) && feq(scale_y, 1.0)) || (feq(scale_x, 1.0) && feq(scale_y, -1.0)))) {
     if (scale_x < 0)
       scale_x = 0;
@@ -700,9 +687,9 @@ void GrowNode::set_scale(
       scale_y = 0;
   }
 
-  if (trf.s_a11 && trf.s_a22
-      && fabs(scale_x - trf.a11 / trf.s_a11) < FLT_EPSILON
-      && fabs(scale_y - trf.a22 / trf.s_a22) < FLT_EPSILON)
+  if (trf.s.a11 && trf.s.a22
+      && fabs(scale_x - trf.a11 / trf.s.a11) < FLT_EPSILON
+      && fabs(scale_y - trf.a22 / trf.s.a22) < FLT_EPSILON)
     return;
 
   switch (type) {
@@ -731,10 +718,10 @@ void GrowNode::set_scale(
   default:;
   }
 
-  old_x_left = x_left;
-  old_x_right = x_right;
-  old_y_low = y_low;
-  old_y_high = y_high;
+  double old_x_left = x_left;
+  double old_x_right = x_right;
+  double old_y_low = y_low;
+  double old_y_high = y_high;
   trf.scale_from_stored(scale_x, scale_y, x0, y0);
   get_node_borders();
 
@@ -776,7 +763,7 @@ void GrowNode::set_rotation(
 {
   GlowTransform t;
 
-  if (fabs(angel - trf.rotation + trf.s_rotation) < FLT_EPSILON)
+  if (fabs(angel - trf.rotation + trf.s.rotation) < FLT_EPSILON)
     return;
 
   switch (type) {
@@ -801,14 +788,14 @@ void GrowNode::set_rotation(
     y0 = (y_high + y_low) / 2;
     break;
   case glow_eRotationPoint_Zero:
-    x0 = trf.s_a13;
-    y0 = trf.s_a23;
+    x0 = trf.s.a13;
+    y0 = trf.s.a23;
     break;
   default:;
   }
 
   t.rotate(angel, x0, y0);
-  trf.set_from_stored(&t);
+  trf.set(t * trf.s);
   get_node_borders();
   call_redraw_node_cons();
   ctx->set_dirty();
@@ -905,37 +892,30 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     return;
 
   if (input_focus) {
-    GlowNodeClass* base_nc = nc->get_base_nc();
-
-    switch (base_nc->input_focus_mark) {
+    switch (nc->get_base_nc()->input_focus_mark) {
     case glow_eInputFocusMark_Relief: {
       hot = 1;
 
-      int x1, x2, y1, y2;
-      glow_eDrawType drawtype;
-
-      if (!t) {
-        x1 = int(x_left * w->zoom_factor_x + 0.5) - w->offset_x - 2;
-        y1 = int(y_low * w->zoom_factor_y + 0.5) - w->offset_y - 2;
-        x2 = int(x_right * w->zoom_factor_x + 0.5) - w->offset_x + 2;
-        y2 = int(y_high * w->zoom_factor_y + 0.5) - w->offset_y + 2;
-      } else {
-        x1 = int(t->x(x_left, y_low) * w->zoom_factor_x + 0.5) - w->offset_x
-            - 2;
-        y1 = int(t->y(x_left, y_low) * w->zoom_factor_y + 0.5) - w->offset_y
-            - 2;
-        x2 = int(t->x(x_right, y_high) * w->zoom_factor_x + 0.5) - w->offset_x
-            + 2;
-        y2 = int(t->y(x_right, y_high) * w->zoom_factor_y + 0.5) - w->offset_y
-            + 2;
+      glow_sPoint p1 = {x_left, y_low};
+      glow_sPoint p2 = {x_right, y_high};
+      if (t) {
+        p1 = *t * p1;
+        p2 = *t * p2;
       }
 
-      drawtype = glow_eDrawType_DarkGray;
-      ctx->gdraw->line(x1, y1, x1, y2, drawtype, 0, 0);
-      ctx->gdraw->line(x1, y1, x2, y1, drawtype, 0, 0);
-      drawtype = glow_eDrawType_LightGray;
-      ctx->gdraw->line(x2, y1, x2, y2, drawtype, 0, 0);
-      ctx->gdraw->line(x1, y2, x2, y2, drawtype, 0, 0);
+      p1.x = p1.x * w->zoom_factor_x - w->offset_x - 2;
+      p1.y = p1.y * w->zoom_factor_y - w->offset_y - 2;
+      p2.x = p2.x * w->zoom_factor_x - w->offset_x + 2;
+      p2.y = p2.y * w->zoom_factor_y - w->offset_y + 2;
+
+      ctx->gdraw->line((int)p1.x, (int)p1.y, (int)p1.x, (int)p2.y,
+          glow_eDrawType_DarkGray, 0, 0);
+      ctx->gdraw->line((int)p1.x, (int)p1.y, (int)p2.x, (int)p1.y,
+          glow_eDrawType_DarkGray, 0, 0);
+      ctx->gdraw->line((int)p2.x, (int)p1.y, (int)p2.x, (int)p2.y,
+          glow_eDrawType_LightGray, 0, 0);
+      ctx->gdraw->line((int)p1.x, (int)p2.y, (int)p2.x, (int)p2.y,
+          glow_eDrawType_LightGray, 0, 0);
       break;
     }
     default:;
@@ -943,16 +923,16 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   }
 
   // If group member with click action, set hot
-  if (ctx->trace_started && this->hot && root_node
-      && ((((GrowNode*)root_node)->type() == glow_eObjectType_GrowGroup
-              && is_sensitive())
-             || ((GrowNode*)root_node)->type() == glow_eObjectType_GrowToolbar)
-      && !((GrowGroup*)root_node)->hot)
+  if (ctx->trace_started && this->hot && root_node &&
+      ((root_node->type() == glow_eObjectType_GrowGroup && is_sensitive()) ||
+       root_node->type() == glow_eObjectType_GrowToolbar) &&
+      !((GrowGroup *) root_node)->hot)
     hot = 1;
 
   if (feq(fill_level, 1.0)) {
     if (t) {
-      GlowTransform trf_tot = *t * trf;
+      GlowTransform trf_tot;
+      trf_tot.set(*t * trf);
 
       if (!trace.p)
         nc->draw(w, &trf_tot, highlight, hot, (void*)this, colornode);
@@ -962,33 +942,30 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     } else
       nc->draw(w, &trf, highlight, hot, node, node);
   } else {
-    int x1, x2, y1, y2, x_level = 0, y_level = 0;
+    double x_level = 0, y_level = 0;
     int clip_sts = 0;
     glow_eDrawTone old_color_tone = glow_eDrawTone_No;
     glow_eDrawType old_fill_drawtype = glow_eDrawType_No;
 
-    if (!t) {
-      x1 = int(x_left * w->zoom_factor_x + 0.5) - w->offset_x;
-      y1 = int(y_low * w->zoom_factor_y + 0.5) - w->offset_y;
-      x2 = int(x_right * w->zoom_factor_x + 0.5) - w->offset_x;
-      y2 = int(y_high * w->zoom_factor_y + 0.5) - w->offset_y;
-    } else {
-      x1 = int(t->x(x_left, y_low) * w->zoom_factor_x + 0.5) - w->offset_x;
-      y1 = int(t->y(x_left, y_low) * w->zoom_factor_y + 0.5) - w->offset_y;
-      x2 = int(t->x(x_right, y_high) * w->zoom_factor_x + 0.5) - w->offset_x;
-      y2 = int(t->y(x_right, y_high) * w->zoom_factor_y + 0.5) - w->offset_y;
-    }
+    Matrix tmp = t ? (*t * trf) : trf;
+    glow_sPoint p1 = tmp * glow_sPoint({x_left, y_low});
+    glow_sPoint p2 = tmp * glow_sPoint({x_right, y_high});
+
+    p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+    p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+    p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+    p2.y = p2.y * w->zoom_factor_y - w->offset_y;
 
     switch (level_direction) {
     case glow_eDirection_Right:
-      x_level = int(fill_level * (x2 - x1) + 0.5);
+      x_level = fill_level * (p2.x - p1.x);
       clip_sts = ctx->gdraw->set_clip_rectangle(
-          w, x1 - 1, y1 - 1, x1 + x_level, y2 + 1);
+          w, (int)p1.x - 1, (int)p1.y - 1, (int)(p1.x + x_level), (int)p2.y + 1);
       break;
     case glow_eDirection_Left:
-      x_level = int((1 - fill_level) * (x2 - x1) + 0.5);
+      x_level = (1 - fill_level) * (p2.x - p1.x);
       clip_sts = ctx->gdraw->set_clip_rectangle(
-          w, x1 - 1, y1 - 1, x1 + x_level, y2 + 1);
+          w, (int)p1.x - 1, (int)p1.y - 1, (int)(p1.x + x_level), (int)p2.y + 1);
       if (level_color_tone != glow_eDrawTone_No) {
         old_color_tone = color_tone;
         color_tone = level_color_tone;
@@ -998,14 +975,14 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       }
       break;
     case glow_eDirection_Up:
-      y_level = int(fill_level * (y2 - y1) + 0.5);
+      y_level = fill_level * (p2.y - p1.y);
       clip_sts = ctx->gdraw->set_clip_rectangle(
-          w, x1 - 1, y1 - 1, x2 + 1, y1 + y_level);
+          w, (int)p1.x - 1, (int)p1.y - 1, (int)p2.x + 1, (int)(p1.y + y_level));
       break;
     case glow_eDirection_Down:
-      y_level = int((1 - fill_level) * (y2 - y1) + 0.5);
+      y_level = (1 - fill_level) * (p2.y - p1.y);
       clip_sts = ctx->gdraw->set_clip_rectangle(
-          w, x1 - 1, y1 - 1, x2 + 1, y1 + y_level);
+          w, (int)p1.x - 1, (int)p1.y - 1, (int)p2.x + 1, (int)(p1.y + y_level));
       if (level_color_tone != glow_eDrawTone_No) {
         old_color_tone = color_tone;
         color_tone = level_color_tone;
@@ -1018,7 +995,8 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     }
 
     if (t) {
-      GlowTransform trf_tot = *t * trf;
+      GlowTransform trf_tot;
+      trf_tot.set(*t * trf);
 
       if (!trace.p)
         nc->draw(w, &trf_tot, highlight, hot, (void*)this, colornode);
@@ -1041,7 +1019,7 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
         fill_drawtype = level_fill_drawtype;
       }
       clip_sts = ctx->gdraw->set_clip_rectangle(
-          w, x1 + x_level, y1 - 1, x2 + 1, y2 + 1);
+          w, (int)(p1.x + x_level), (int)p1.y - 1, (int)p2.x + 1, (int)p2.y + 1);
       break;
     case glow_eDirection_Left:
       if (level_color_tone != glow_eDrawTone_No)
@@ -1049,7 +1027,7 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       else if (level_fill_drawtype != glow_eDrawType_No)
         fill_drawtype = old_fill_drawtype;
       clip_sts = ctx->gdraw->set_clip_rectangle(
-          w, x1 + x_level, y1 - 1, x2 + 1, y2 + 1);
+          w, (int)(p1.x + x_level), (int)p1.y - 1, (int)p2.x + 1, (int)p2.y + 1);
       break;
     case glow_eDirection_Up:
       if (level_color_tone != glow_eDrawTone_No) {
@@ -1060,7 +1038,7 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
         fill_drawtype = level_fill_drawtype;
       }
       clip_sts = ctx->gdraw->set_clip_rectangle(
-          w, x1 - 1, y1 + y_level, x2 + 1, y2 + 1);
+          w, (int)p1.x - 1, (int)(p1.y + y_level), (int)p2.x + 1, (int)p2.y + 1);
       break;
     case glow_eDirection_Down:
       if (level_color_tone != glow_eDrawTone_No)
@@ -1068,13 +1046,14 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       else if (level_fill_drawtype != glow_eDrawType_No)
         fill_drawtype = old_fill_drawtype;
       clip_sts = ctx->gdraw->set_clip_rectangle(
-          w, x1 - 1, y1 + y_level, x2 + 1, y2 + 1);
+          w, (int)p1.x - 1, (int)(p1.y + y_level), (int)p2.x + 1, (int)p2.y + 1);
       break;
     default:;
     }
 
     if (t) {
-      GlowTransform trf_tot = *t * trf;
+      GlowTransform trf_tot;
+      trf_tot.set(*t * trf);
 
       if (!trace.p)
         nc->draw(w, &trf_tot, highlight, hot, (void*)this, colornode);
@@ -1114,34 +1093,27 @@ void GrowNode::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
   hot = (w == ctx->navw) ? 0 : hot;
 
   if (input_focus) {
-    GlowNodeClass* base_nc = nc->get_base_nc();
-
-    switch (base_nc->input_focus_mark) {
+    switch (nc->get_base_nc()->input_focus_mark) {
     case glow_eInputFocusMark_Relief: {
       hot = 1;
 
-      int x1, x2, y1, y2;
+      Matrix tmp = t ? (*t * trf) : trf;
+      glow_sPoint p1 = tmp * glow_sPoint({x_left, y_low});
+      glow_sPoint p2 = tmp * glow_sPoint({x_right, y_high});
 
-      if (!t) {
-        x1 = int(x_left * w->zoom_factor_x + 0.5) - w->offset_x - 2;
-        y1 = int(y_low * w->zoom_factor_y + 0.5) - w->offset_y - 2;
-        x2 = int(x_right * w->zoom_factor_x + 0.5) - w->offset_x + 2;
-        y2 = int(y_high * w->zoom_factor_y + 0.5) - w->offset_y + 2;
-      } else {
-        x1 = int(t->x(x_left, y_low) * w->zoom_factor_x + 0.5) - w->offset_x
-            - 2;
-        y1 = int(t->y(x_left, y_low) * w->zoom_factor_y + 0.5) - w->offset_y
-            - 2;
-        x2 = int(t->x(x_right, y_high) * w->zoom_factor_x + 0.5) - w->offset_x
-            + 2;
-        y2 = int(t->y(x_right, y_high) * w->zoom_factor_y + 0.5) - w->offset_y
-            + 2;
-      }
+      p1.x = p1.x * w->zoom_factor_x - w->offset_x - 2;
+      p1.y = p1.y * w->zoom_factor_y - w->offset_y - 2;
+      p2.x = p2.x * w->zoom_factor_x - w->offset_x + 2;
+      p2.y = p2.y * w->zoom_factor_y - w->offset_y + 2;
 
-      ctx->gdraw->line(x1, y1, x1, y2, glow_eDrawType_LineErase, 0);
-      ctx->gdraw->line(x1, y1, x2, y1, glow_eDrawType_LineErase, 0);
-      ctx->gdraw->line(x2, y1, x2, y2, glow_eDrawType_LineErase, 0);
-      ctx->gdraw->line(x1, y2, x2, y2, glow_eDrawType_LineErase, 0);
+      ctx->gdraw->line((int)p1.x, (int)p1.y, (int)p1.x, (int)p2.y,
+          glow_eDrawType_LineErase, 0);
+      ctx->gdraw->line((int)p1.x, (int)p1.y, (int)p2.x, (int)p1.y,
+          glow_eDrawType_LineErase, 0);
+      ctx->gdraw->line((int)p2.x, (int)p1.y, (int)p2.x, (int)p2.y,
+          glow_eDrawType_LineErase, 0);
+      ctx->gdraw->line((int)p1.x, (int)p2.y, (int)p2.x, (int)p2.y,
+          glow_eDrawType_LineErase, 0);
       break;
     }
     default:;
@@ -1157,8 +1129,8 @@ void GrowNode::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
     node = (void*)this;
 
   if (t) {
-    GlowTransform trf_tot = *t * trf;
-
+    GlowTransform trf_tot;
+    trf_tot.set(*t * trf);
     nc->erase(w, &trf_tot, hot, node);
   } else
     nc->erase(w, &trf, hot, node);
@@ -1166,7 +1138,7 @@ void GrowNode::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 
 void GrowNode::set_transform(GlowTransform* t)
 {
-  trf = *t * trf;
+  trf.set(*t * trf);
   get_node_borders();
   call_redraw_node_cons();
 }
@@ -1216,7 +1188,8 @@ void GrowNode::get_borders(GlowTransform* t, double* x1_right, double* x1_left,
     double* y1_high, double* y1_low)
 {
   if (t) {
-    GlowTransform t2 = *t * trf;
+    GlowTransform t2;
+    t2.set(*t * trf);
     nc->get_borders(&t2, x1_right, x1_left, y1_high, y1_low);
   } else
     nc->get_borders(&trf, x1_right, x1_left, y1_high, y1_low);
@@ -1324,28 +1297,28 @@ void GrowNode::export_javabean(GlowTransform* t, void* node,
     glow_eExportPass pass, int* shape_cnt, int node_cnt, int in_nc,
     std::ofstream& fp)
 {
-  double x1, y1, x2, y2, rot;
   char java_name[40];
 
   get_node_borders();
-  if (!t) {
-    x1 = x_left * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = y_low * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = x_right * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = y_high * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    rot = trf.rot();
-  } else {
-    x1 = t->x(x_left, y_low) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = t->y(x_left, y_low) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = t->x(x_right, y_high) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = t->y(x_right, y_high) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    rot = trf.rot(t);
+
+  glow_sPoint p1 = {x_left, y_low};
+  glow_sPoint p2 = {x_right, y_high};
+  Matrix tmp = t ? (*t * trf) : trf;
+  if (t) {
+    p1 = tmp * p1;
+    p2 = tmp * p2;
   }
 
+  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+
   nc->get_java_name(java_name);
-  ctx->export_jbean->node(x1, y1, x2, y2, java_name, draw_type, fill_drawtype,
-      text_drawtype, color_tone, color_lightness, color_intensity, color_shift,
-      line_width, rot, shadow, gradient, pass, shape_cnt, node_cnt, in_nc, fp);
+  ctx->export_jbean->node(p1.x, p1.y, p2.x, p2.y, java_name, draw_type,
+      fill_drawtype, text_drawtype, color_tone, color_lightness,
+      color_intensity, color_shift, line_width, tmp.rotation, shadow, gradient,
+      pass, shape_cnt, node_cnt, in_nc, fp);
 }
 
 int GrowNode::set_next_nodeclass()
@@ -1369,11 +1342,8 @@ void GrowNode::set_last_nodeclass()
 
 int GrowNode::set_nodeclass_by_index(int idx)
 {
-  GlowArrayElem* next;
-  int i;
-
-  next = nc_root;
-  for (i = 0; i < idx; i++) {
+  GlowArrayElem* next = nc_root;
+  for (int i = 0; i < idx; i++) {
     if (!((GlowNodeClass*)next)->next_nc)
       return 0;
     next = ((GlowNodeClass*)next)->next_nc;
@@ -1454,37 +1424,30 @@ int GrowNode::get_limits(double* min, double* max, glow_eDirection* direction)
 {
   if (feq(nc->y0, 0.0) && feq(nc->y1, 0.0))
     return 0;
+
   if (!(feq(nc->x0, 0.0) && feq(nc->x1, 0.0)))
     return 0;
 
-  double x1, x2, y1, y2;
-  double rotation;
-
-  // Calculate max and min koordinates
-
-  x1 = trf.x(0, nc->y0);
-  y1 = trf.y(0, nc->y0);
-  x2 = trf.x(0, nc->y1);
-  y2 = trf.y(0, nc->y1);
-
-  rotation = (trf.rot() / 360 - floor(trf.rot() / 360)) * 360;
+  glow_sPoint p1 = trf * glow_sPoint({0, nc->y0});
+  glow_sPoint p2 = trf * glow_sPoint({0, nc->y1});
+  double rotation = (trf.rotation / 360 - floor(trf.rotation / 360)) * 360;
 
   if (45 >= rotation || rotation > 315) {
     *direction = glow_eDirection_Down;
-    *min = y1;
-    *max = y2;
+    *min = p1.y;
+    *max = p2.y;
   } else if (45 < rotation && rotation <= 135) {
     *direction = glow_eDirection_Right;
-    *min = x2;
-    *max = x1;
+    *min = p2.x;
+    *max = p1.x;
   } else if (135 < rotation && rotation <= 225) {
     *direction = glow_eDirection_Up;
-    *min = y2;
-    *max = y1;
+    *min = p2.y;
+    *max = p1.y;
   } else if (225 < rotation && rotation <= 315) {
     *direction = glow_eDirection_Left;
-    *min = x1;
-    *max = x2;
+    *min = p1.x;
+    *max = p2.x;
   }
   return 1;
 }
@@ -1494,58 +1457,36 @@ int GrowNode::get_limits_pixel(
 {
   if (feq(nc->y0, 0.0) && feq(nc->y1, 0.0))
     return 0;
+
   if (!(feq(nc->x0, 0.0) && feq(nc->x1, 0.0)))
     return 0;
 
-  double x1, x2, y1, y2, nc_x_right, nc_x_left, nc_y_high, nc_y_low, x0, y0;
-  double rotation;
-
   // Calculate max and min koordinates
-  nc_x_left = nc_y_low = 1e37;
-  nc_x_right = nc_y_high = -1e37;
+  double nc_x_right = -1e37, nc_x_left = 1e37, nc_y_high = -1e37, nc_y_low = 1e37;
   nc->get_borders(0, &nc_x_right, &nc_x_left, &nc_y_high, &nc_y_low);
 
-  x1 = trf.x(0, nc->y0);
-  y1 = trf.y(0, nc->y0);
-  x2 = trf.x(0, nc->y1);
-  y2 = trf.y(0, nc->y1);
-  x0 = trf.x(0, nc_y_low);
-  y0 = trf.y(0, nc_y_low);
-
-  rotation = (trf.rot() / 360 - floor(trf.rot() / 360)) * 360;
-  double min = 0.0, max = 0.0;
-
+  glow_sPoint p0 = trf * glow_sPoint({0, nc_y_low});
+  glow_sPoint p1 = trf * glow_sPoint({0, nc->y0});
+  glow_sPoint p2 = trf * glow_sPoint({0, nc->y1});
+  double rotation = (trf.rotation / 360 - floor(trf.rotation / 360)) * 360;
   if (45 >= rotation || rotation > 315) {
     *direction = glow_eDirection_Down;
-    min = y1 - y0;
-    max = y2 - y0;
+    *pix_max = (p2.y - p0.y) * ctx->mw->zoom_factor_y;
+    *pix_min = (p1.y - p0.y) * ctx->mw->zoom_factor_y;
   } else if (45 < rotation && rotation <= 135) {
     *direction = glow_eDirection_Right;
-    min = x0 - x1;
-    max = x0 - x2;
+    *pix_max = (p0.x - p2.x) * ctx->mw->zoom_factor_x;
+    *pix_min = (p0.x - p1.x) * ctx->mw->zoom_factor_x;
   } else if (135 < rotation && rotation <= 225) {
     *direction = glow_eDirection_Up;
-    min = y0 - y1;
-    max = y0 - y2;
+    *pix_max = (p0.y - p2.y) * ctx->mw->zoom_factor_y;
+    *pix_min = (p0.y - p1.y) * ctx->mw->zoom_factor_y;
   } else if (225 < rotation && rotation <= 315) {
     *direction = glow_eDirection_Left;
-    min = x1 - x0;
-    max = x2 - x0;
+    *pix_max = (p2.x - p0.x) * ctx->mw->zoom_factor_x;
+    *pix_min = (p1.x - p0.x) * ctx->mw->zoom_factor_x;
   }
 
-  switch (*direction) {
-  case glow_eDirection_Up:
-  case glow_eDirection_Down:
-    *pix_max = max * ctx->mw->zoom_factor_y;
-    *pix_min = min * ctx->mw->zoom_factor_y;
-    break;
-  case glow_eDirection_Left:
-  case glow_eDirection_Right:
-    *pix_max = max * ctx->mw->zoom_factor_x;
-    *pix_min = min * ctx->mw->zoom_factor_x;
-    break;
-  default:;
-  }
   return 1;
 }
 
@@ -1553,58 +1494,38 @@ int GrowNode::get_background_object_limits(GlowTransform* t,
     glow_eTraceType type, double x, double y, GlowArrayElem** background,
     double* min, double* max, glow_eDirection* direction)
 {
-  int dyn_type;
-  GlowNodeClass* base_nc = nc->get_base_nc();
-  dyn_type = base_nc->dyn_type1;
+  int dyn_type = nc->get_base_nc()->dyn_type1;
 
   if (!((int)type & dyn_type))
     return 0;
   if (feq(nc->y0, 0.0) && feq(nc->y1, 0.0))
     return 0;
 
-  double x1, x2, y1, y2;
-  double rotation;
-  double x1_right = 10e-37;
-  double x1_left = 10e37;
-  double y1_high = 10e-37;
-  double y1_low = 10e37;
+  double x1_left = 10e37, y1_low = 10e37, x1_right = 10e-37, y1_high = 10e-37;
   get_borders(t, &x1_right, &x1_left, &y1_high, &y1_low);
 
   if (x <= x1_right && x >= x1_left && y <= y1_high && y >= y1_low) {
     // Hit, calculate max and min koordinates
-
-    if (!t) {
-      x1 = trf.x(0, nc->y0);
-      y1 = trf.y(0, nc->y0);
-      x2 = trf.x(0, nc->y1);
-      y2 = trf.y(0, nc->y1);
-    } else {
-      x1 = trf.x(t, 0, nc->y0);
-      y1 = trf.y(t, 0, nc->y0);
-      x2 = trf.x(t, 0, nc->y1);
-      y2 = trf.y(t, 0, nc->y1);
-    }
-
-    if (t)
-      rotation = (trf.rot(t) / 360 - floor(trf.rot(t) / 360)) * 360;
-    else
-      rotation = (trf.rot() / 360 - floor(trf.rot() / 360)) * 360;
+    Matrix tmp = t ? (*t * trf) : trf;
+    glow_sPoint p1 = tmp * glow_sPoint({0, nc->y0});
+    glow_sPoint p2 = tmp * glow_sPoint({0, nc->y1});
+    double rotation = (tmp.rotation / 360 - floor(tmp.rotation / 360)) * 360;
     if (45 >= rotation || rotation > 315) {
       *direction = glow_eDirection_Down;
-      *min = y1;
-      *max = y2;
+      *min = p1.y;
+      *max = p2.y;
     } else if (45 < rotation && rotation <= 135) {
       *direction = glow_eDirection_Left;
-      *min = x2;
-      *max = x1;
+      *min = p2.x;
+      *max = p1.x;
     } else if (135 < rotation && rotation <= 225) {
       *direction = glow_eDirection_Up;
-      *min = y2;
-      *max = y1;
+      *min = p2.y;
+      *max = p1.y;
     } else if (225 < rotation && rotation <= 315) {
       *direction = glow_eDirection_Right;
-      *min = x1;
-      *max = x2;
+      *min = p1.x;
+      *max = p2.x;
     }
     *background = this;
     return 1;
@@ -1615,7 +1536,8 @@ int GrowNode::get_background_object_limits(GlowTransform* t,
 void GrowNode::get_nodeclass_origo(GlowTransform* t, double* x, double* y)
 {
   if (t) {
-    GlowTransform t2 = *t * trf;
+    GlowTransform t2;
+    t2.set(*t * trf);
     nc->get_origo(&t2, x, y);
   } else
     nc->get_origo(&trf, x, y);
@@ -1750,11 +1672,8 @@ void GrowNode::set_annotation_selection(int selection)
 
 void GrowNode::annot_input_event(glow_eEvent event, int keycode)
 {
-  int i;
   int idx = 0;
-  char* s;
-
-  for (i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++) {
     if (annotv_inputmode[i]) {
       idx = i;
       break;
@@ -1784,6 +1703,7 @@ void GrowNode::annot_input_event(glow_eEvent event, int keycode)
       annotv[idx][0] = 0;
       input_position = 0;
     } else {
+      char* s;
       for (s = &annotv[idx][input_position]; *s; s++)
         *(s - 1) = *s;
       *(s - 1) = 0;
@@ -1806,7 +1726,7 @@ void GrowNode::annot_input_event(glow_eEvent event, int keycode)
       free(tmp);
       annotsize[idx]++;
     }
-    for (i = strlen(annotv[idx]); i >= input_position; i--)
+    for (int i = strlen(annotv[idx]); i >= input_position; i--)
       annotv[idx][i + 1] = annotv[idx][i];
     annotv[idx][input_position] = (char)keycode;
     input_position++;
@@ -1835,7 +1755,7 @@ int GrowNode::get_annotation_info(int num, int* t_size,
 
   sts = nc->get_annotation_info(
       (void*)this, num, t_size, t_drawtype, t_color, t_font, t_type);
-  *scale = trf.vertical_scale(0);
+  *scale = trf.vertical_scale();
   return sts;
 }
 

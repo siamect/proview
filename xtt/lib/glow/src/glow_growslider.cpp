@@ -259,25 +259,24 @@ void GrowSlider::export_javabean(GlowTransform* t, void* node,
     glow_eExportPass pass, int* shape_cnt, int node_cnt, int in_nc,
     std::ofstream& fp)
 {
-  double x1, y1, x2, y2, rot;
   char java_name[40];
 
-  if (!t) {
-    x1 = x_left * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = y_low * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = x_right * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = y_high * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    rot = trf.rot();
-  } else {
-    x1 = t->x(x_left, y_low) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = t->y(x_left, y_low) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = t->x(x_right, y_high) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = t->y(x_right, y_high) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    rot = trf.rot(t);
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = {x_left, y_low};
+  glow_sPoint p2 = {x_right, y_high};
+  if (t) {
+    p1 = *t * p1;
+    p2 = *t * p2;
   }
 
+  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+
   nc->get_java_name(java_name);
-  ctx->export_jbean->slider(x1, y1, x2, y2, java_name, draw_type, fill_drawtype,
-      text_drawtype, color_tone, color_lightness, color_intensity, color_shift,
-      line_width, rot, shadow, gradient, pass, shape_cnt, node_cnt, in_nc, fp);
+  ctx->export_jbean->slider(p1.x, p1.y, p2.x, p2.y, java_name, draw_type,
+      fill_drawtype, text_drawtype, color_tone, color_lightness,
+      color_intensity, color_shift, line_width, tmp.rotation, shadow, gradient,
+      pass, shape_cnt, node_cnt, in_nc, fp);
 }
