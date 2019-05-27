@@ -111,7 +111,6 @@ public:
   int closing_down;
   GlowCustomColorsGtk* customcolors[CUSTOMCOLORS_STACK_SIZE];
   int customcolors_cnt;
-  guint redraw_timer;
 
   void event_handler(GdkEvent event);
   void enable_event(glow_eEvent event, glow_eEventType event_type,
@@ -120,8 +119,6 @@ public:
 
   int begin(DrawWind* wind);
   void end(bool flush = true);
-  void start_redraw_timer();
-  void cancel_redraw_timer();
 
   void get_window_size(DrawWind* w, int* width, int* height);
   void set_window_size(DrawWind* w, int width, int height);

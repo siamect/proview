@@ -75,7 +75,6 @@ public:
   GdkColor color_vect[20];
   int color_vect_cnt;
   int closing_down;
-  guint redraw_timer;
 
   FlowDrawGtk(GtkWidget* toplevel, void** flow_ctx,
       int (*init_proc)(GtkWidget* w, FlowCtx* ctx, void* client_data),
@@ -93,8 +92,6 @@ public:
 
   int begin(DrawWind *wind);
   void end();
-  void start_redraw_timer();
-  void cancel_redraw_timer();
 
   void rect(int x, int y, int width, int height, flow_eDrawType gc_type,
       int fill, int idx, int highlight = 0, int dimmed = 0);

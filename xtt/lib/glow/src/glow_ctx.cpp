@@ -672,7 +672,6 @@ void GlowCtx::get_borders()
 void GlowCtx::set_dirty()
 {
   is_dirty = 1;
-  gdraw->start_redraw_timer();
 }
 
 void GlowCtx::redraw_if_dirty()
@@ -682,7 +681,6 @@ void GlowCtx::redraw_if_dirty()
   }
   if (is_dirty) {
     is_dirty = 0;
-    gdraw->cancel_redraw_timer();
     gdraw->begin(mw);
     gdraw->clear();
     draw(mw, 0, 0, mw->window_width, mw->window_height);

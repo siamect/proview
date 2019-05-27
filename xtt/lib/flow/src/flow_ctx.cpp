@@ -515,7 +515,6 @@ void FlowCtx::get_borders()
 void FlowCtx::set_dirty()
 {
   is_dirty = 1;
-  fdraw->start_redraw_timer();
 }
 
 void FlowCtx::redraw_if_dirty()
@@ -525,7 +524,6 @@ void FlowCtx::redraw_if_dirty()
   }
   if (is_dirty) {
     is_dirty = 0;
-    fdraw->cancel_redraw_timer();
     fdraw->begin(mw);
     fdraw->clear();
     draw(0, 0, window_width, window_height);
