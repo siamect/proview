@@ -731,6 +731,10 @@ void GlowCtx::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
         select_rect_ur_x - select_rect_ll_x,
         select_rect_ur_y - select_rect_ll_y, glow_eDrawType_Line, 0, 0);
     }
+    if (con_create_active) {
+      gdraw->line(con_create_conpoint_x, con_create_conpoint_y,
+        con_create_last_x, con_create_last_y, glow_eDrawType_Line, 0);
+    }
     if (show_grid)
       draw_grid(mw, ll_x, ll_y, ur_x, ur_y);
   } else if (w == navw) {

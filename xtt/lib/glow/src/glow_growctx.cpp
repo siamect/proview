@@ -2483,16 +2483,22 @@ void GrowCtx::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
   gdraw->reset_clip_rectangle(w);
 
-  if (w == mw && select_rect_active) {
-    if (edit_mode == grow_eMode_Circle)
-      gdraw->arc(select_rect_ll_x, select_rect_ll_y,
-          select_rect_ur_x - select_rect_ll_x,
-          select_rect_ur_y - select_rect_ll_y, 0, 360, glow_eDrawType_Line, 0,
-          0);
-    else
-      gdraw->rect(select_rect_ll_x, select_rect_ll_y,
-          select_rect_ur_x - select_rect_ll_x,
-          select_rect_ur_y - select_rect_ll_y, glow_eDrawType_Line, 0, 0);
+  if (w == mw) {
+    if (select_rect_active) {
+      if (edit_mode == grow_eMode_Circle)
+        gdraw->arc(select_rect_ll_x, select_rect_ll_y,
+            select_rect_ur_x - select_rect_ll_x,
+            select_rect_ur_y - select_rect_ll_y, 0, 360, glow_eDrawType_Line, 0,
+            0);
+      else
+        gdraw->rect(select_rect_ll_x, select_rect_ll_y,
+            select_rect_ur_x - select_rect_ll_x,
+            select_rect_ur_y - select_rect_ll_y, glow_eDrawType_Line, 0, 0);
+    }
+    if (con_create_active) {
+      gdraw->line(con_create_conpoint_x, con_create_conpoint_y,
+        con_create_last_x, con_create_last_y, glow_eDrawType_Line, 0);
+    }
   } else if (w == navw) {
     nav_rect_ll_x = int(
         navw->zoom_factor_x * mw->offset_x / mw->zoom_factor_x - navw->offset_x);
