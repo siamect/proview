@@ -251,7 +251,10 @@ void QtScrollWidgetFlow::handleEvent(QEvent* event)
       if (event->type() == QEvent::MouseMove) {
         drawer->m_wind.window->update();
       }
-      drawer->event_handler((FlowCtx*)parent_ctx, event, this);
+      if (event->type() == QEvent::Resize || event->type() == QEvent::Show) {
+        ctx->set_dirty();
+      }
+      drawer->event_handler(ctx, event, this);
     }
   }
 }
