@@ -575,31 +575,6 @@ GrowPolyLine::~GrowPolyLine()
     ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
 }
 
-void GrowPolyLine::move_noerase(int delta_x, int delta_y, int grid)
-{
-  if (fixposition)
-    return;
-
-  if (grid) {
-    double x_grid, y_grid;
-
-    /* Move to closest grid point */
-    ctx->find_grid(x_left + double(delta_x) / ctx->mw->zoom_factor_x,
-        y_low + double(delta_y) / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
-    trf.move(x_grid - x_left, y_grid - y_low);
-    get_node_borders();
-  } else {
-    double dx = double(delta_x) / ctx->mw->zoom_factor_x;
-    double dy = double(delta_y) / ctx->mw->zoom_factor_y;
-    trf.move(dx, dy);
-    x_right += dx;
-    x_left += dx;
-    y_high += dy;
-    y_low += dy;
-  }
-  ctx->set_dirty();
-}
-
 int GrowPolyLine::local_event_handler(glow_eEvent event, double x, double y)
 {
   if (ctx->edit_mode == grow_eMode_EditPolyLine && ctx->a_sel[0] == this) {

@@ -322,20 +322,6 @@ void GlowArc::move(void* pos, double x1, double y1, double x2, double y2,
   ctx->set_dirty();
 }
 
-void GlowArc::move_noerase(void* pos, double x1, double y1, double x2,
-    double y2, int ang1, int ang2, int highlight, int hot)
-{
-  ll.x = x1;
-  ll.y = y1;
-  ur.x = x2;
-  ur.y = y2;
-  angle1 = ang1;
-  angle2 = ang2;
-  zoom();
-  nav_zoom();
-  ctx->set_dirty();
-}
-
 void GlowArc::shift(
     void* pos, double delta_x, double delta_y, int highlight, int hot)
 {

@@ -304,18 +304,6 @@ void GlowLine::move(void* pos, double x1, double y1, double x2, double y2,
   ctx->set_dirty();
 }
 
-void GlowLine::move_noerase(void* pos, double x1, double y1, double x2,
-    double y2, int highlight, int hot)
-{
-  p1.x = x1;
-  p1.y = y1;
-  p2.x = x2;
-  p2.y = y2;
-  zoom();
-  nav_zoom();
-  ctx->set_dirty();
-}
-
 void GlowLine::shift(
     void* pos, double delta_x, double delta_y, int highlight, int hot)
 {

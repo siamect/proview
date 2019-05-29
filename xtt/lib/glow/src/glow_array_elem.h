@@ -113,7 +113,9 @@ public:
   virtual void erase(DrawWind *w, GlowTransform* t, int hot, void* node){}
   virtual void draw_inverse(void* pos, int hot, void* node){}
   virtual void move(double delta_x, double delta_y, int grid){}
-  virtual void move_noerase(int delta_x, int delta_y, int grid){}
+  virtual void move_noerase(int delta_x, int delta_y, int grid) {
+    move(double(delta_x), double(delta_y), grid);
+  }
   virtual void shift(
       void* pos, double delta_x, double delta_y, int highlight, int hot){}
   virtual void conpoint_select(

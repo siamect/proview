@@ -100,30 +100,6 @@ void GrowConPoint::move(double delta_x, double delta_y, int grid)
   ctx->set_dirty();
 }
 
-void GrowConPoint::move_noerase(int delta_x, int delta_y, int grid)
-{
-  if (grid) {
-    double x, y, x_grid, y_grid;
-
-    /* Move to closest grid point */
-    x = (x_right + x_left) / 2;
-    y = (y_high + y_low) / 2;
-    ctx->find_grid(x + double(delta_x) / ctx->mw->zoom_factor_x,
-        y + double(delta_y) / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
-    trf.move(x_grid - x, y_grid - y);
-    get_node_borders();
-  } else {
-    double dx = double(delta_x) / ctx->mw->zoom_factor_x;
-    double dy = double(delta_y) / ctx->mw->zoom_factor_y;
-    trf.move(dx, dy);
-    x_right += dx;
-    x_left += dx;
-    y_high += dy;
-    y_low += dy;
-  }
-  ctx->set_dirty();
-}
-
 int GrowConPoint::event_handler(glow_eEvent event, int x, int y, double fx, double fy)
 {
   int sts;

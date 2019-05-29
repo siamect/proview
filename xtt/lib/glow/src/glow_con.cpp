@@ -2851,11 +2851,7 @@ void GlowCon::draw_routed(int points, double* x, double* y)
 {
   for (int i = 0; i < points - 1; i++) {
     GlowLine* l = (GlowLine*)line_a[i];
-    if (i < l_num)
-      l->move(&cc->zero, x[i], y[i], x[i + 1], y[i + 1], highlight, hot);
-    else
-      l->move_noerase(
-          &cc->zero, x[i], y[i], x[i + 1], y[i + 1], highlight, hot);
+    l->move(&cc->zero, x[i], y[i], x[i + 1], y[i + 1], highlight, hot);
   }
 
   ctx->set_dirty();
@@ -3103,21 +3099,13 @@ void GlowCon::draw_routed_roundcorner(int points, double* x, double* y)
 
   for (int i = 0; i < points - 1; i++) {
     l = (GlowLine*)line_a[i];
-    if (i < l_num)
-      l->move(&cc->zero, line_x1[i], line_y1[i], line_x2[i], line_y2[i],
-          highlight, hot);
-    else
-      l->move_noerase(&cc->zero, line_x1[i], line_y1[i], line_x2[i], line_y2[i],
+    l->move(&cc->zero, line_x1[i], line_y1[i], line_x2[i], line_y2[i],
           highlight, hot);
   }
   for (int i = 0; i < points - 2; i++) {
     a = (GlowArc*)arc_a[i];
-    if (i < a_num)
-      a->move(&cc->zero, arc_ll_x[i], arc_ll_y[i], arc_ur_x[i], arc_ur_y[i],
+    a->move(&cc->zero, arc_ll_x[i], arc_ll_y[i], arc_ur_x[i], arc_ur_y[i],
           arc_angle1[i], arc_angle2[i], highlight, hot);
-    else
-      a->move_noerase(&cc->zero, arc_ll_x[i], arc_ll_y[i], arc_ur_x[i],
-          arc_ur_y[i], arc_angle1[i], arc_angle2[i], highlight, hot);
   }
   ctx->set_dirty();
   l_num = points - 1;

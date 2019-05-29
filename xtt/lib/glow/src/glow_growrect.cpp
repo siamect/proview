@@ -113,31 +113,6 @@ void GrowRect::move(double delta_x, double delta_y, int grid)
   ctx->set_dirty();
 }
 
-void GrowRect::move_noerase(int delta_x, int delta_y, int grid)
-{
-  if (fixposition)
-    return;
-
-  if (grid) {
-    double x_grid, y_grid;
-
-    /* Move to closest grid point */
-    ctx->find_grid(x_left + double(delta_x) / ctx->mw->zoom_factor_x,
-        y_low + double(delta_y) / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
-    trf.move(x_grid - x_left, y_grid - y_low);
-    get_node_borders();
-  } else {
-    double dx = double(delta_x) / ctx->mw->zoom_factor_x;
-    double dy = double(delta_y) / ctx->mw->zoom_factor_y;
-    trf.move(dx, dy);
-    x_right += dx;
-    x_left += dx;
-    y_high += dy;
-    y_low += dy;
-  }
-  ctx->set_dirty();
-}
-
 int GrowRect::local_event_handler(glow_eEvent event, double x, double y)
 {
   double ll_x, ur_x, ll_y, ur_y;

@@ -75,7 +75,6 @@ public:
     rect.erase(w, (void*)&pzero, hot, NULL);
   }
   void move(double delta_x, double delta_y, int grid);
-  void move_noerase(int delta_x, int delta_y, int grid);
   void set_highlight(int on);
   int get_highlight()
   {

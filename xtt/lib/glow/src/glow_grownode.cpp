@@ -437,24 +437,12 @@ void GrowNode::move(double delta_x, double delta_y, int grid)
 
 void GrowNode::move_noerase(int delta_x, int delta_y, int grid)
 {
-  if (grid) {
-    double x_grid, y_grid;
-
-    /* Move to closest grid point */
-    ctx->find_grid(x_left + double(delta_x) / ctx->mw->zoom_factor_x,
-        y_low + double(delta_y) / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
-    trf.move(x_grid - x_left, y_grid - y_low);
-    get_node_borders();
-  } else {
-    double dx = double(delta_x) / ctx->mw->zoom_factor_x;
-    double dy = double(delta_y) / ctx->mw->zoom_factor_y;
-    trf.move(dx, dy);
-    x_right += dx;
-    x_left += dx;
-    y_high += dy;
-    y_low += dy;
-  }
-  ctx->set_dirty();
+  double x1 = obst_x_left, y1 = obst_y_low, x2 = obst_x_right, y2 = obst_y_high;
+  move(double(delta_x), double(delta_y), grid);
+  obst_x_left = x1;
+  obst_y_low = y1;
+  obst_x_right = x2;
+  obst_y_high = y2;
 }
 
 void GrowNode::set_highlight(int on)

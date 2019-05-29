@@ -202,14 +202,6 @@ public:
   */
   void move(double delta_x, double delta_y, int grid);
 
-  //! Move the object without erase.
-  /*!
-    \param delta_x	Moved distance in x direction.
-    \param delta_y	Moved distance in y direction.
-    \param grid		Position object on grid point.
-  */
-  void move_noerase(int delta_x, int delta_y, int grid);
-
   //! Set object highlight.
   /*!
     \param on	If 1, set highlight. If 0, reset highlight.

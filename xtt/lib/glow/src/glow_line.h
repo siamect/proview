@@ -179,22 +179,6 @@ public:
   void move(void* pos, double x1, double y1, double x2, double y2,
       int highlight, int hot);
 
-  //! Move the line to the specified coordinates without erase.
-  /*!
-    \param pos		Position. Should be zero.
-    \param x1		x coordinate of first point.
-    \param y1		y coordinate of first point.
-    \param x2		x coordinate of second point.
-    \param y2		y coordinate of second point.
-    \param highlight	Draw with highlight colors.
-    \param hot		Draw as hot, with larger line width.
-
-    Both endpoints are given new coordinates, so the direction and length of the
-    line can be entirely different.
-  */
-  void move_noerase(void* pos, double x1, double y1, double x2, double y2,
-      int highlight, int hot);
-
   //! Move the line.
   /*!
     \param pos		Position. Should be zero.
