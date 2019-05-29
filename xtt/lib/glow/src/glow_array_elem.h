@@ -167,7 +167,6 @@ public:
     return 0;
   }
   virtual void conpoint_refcon_redraw(void* node, int conpoint){}
-  virtual void conpoint_refcon_erase(void* node, int conpoint){}
   virtual void remove_notify(){}
   virtual void set_user_data(void* data){}
   virtual void get_user_data(void** data){}

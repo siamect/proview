@@ -264,7 +264,6 @@ public:
   void conpoint_refcon_reconfig(int conpoint);
 
   void conpoint_refcon_redraw(void* node, int conpoint){}
-  void conpoint_refcon_erase(void* node, int conpoint){}
   void remove_notify();
 
   void* user_data; //!< User data.

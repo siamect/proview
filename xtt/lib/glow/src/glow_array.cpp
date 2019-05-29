@@ -1250,13 +1250,6 @@ void GlowArray::conpoint_refcon_redraw(void* node, int conpoint)
   }
 }
 
-void GlowArray::conpoint_refcon_erase(void* node, int conpoint)
-{
-  for (int i = 0; i < a_size; i++) {
-    a[i]->conpoint_refcon_redraw(node, conpoint);
-  }
-}
-
 void GlowArray::set_inverse(int on)
 {
   for (int i = 0; i < a_size; i++) {

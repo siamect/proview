@@ -177,7 +177,6 @@ public:
   void move(double delta_x, double delta_y, int grid);
   void move_noerase(int delta_x, int delta_y, int grid);
   void conpoint_refcon_redraw(void* node, int conpoint);
-  void conpoint_refcon_erase(void* node, int conpoint);
   void set_inverse(int on);
   void configure();
   int brow_insert(

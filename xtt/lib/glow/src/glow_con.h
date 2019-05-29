@@ -259,7 +259,6 @@ public:
       double src_x, double src_y, glow_eDirection src_dir);
   void move_ref(double x1, double y1, double x2, double y2);
   void conpoint_refcon_redraw(void* node, int conpoint);
-  void conpoint_refcon_erase(void* node, int conpoint);
   void remove_notify();
   int ideal_line_cnt;
   int current_line_cnt;

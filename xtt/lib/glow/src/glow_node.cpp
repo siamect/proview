@@ -383,7 +383,6 @@ void GlowNode::get_annotation(int num, char* text, int size)
 
 void GlowNode::conpoint_refcon_reconfig(int conpoint)
 {
-  //  ctx->conpoint_refcon_erase( this, conpoint);
   refcon_cnt[conpoint] = 0;
   ctx->conpoint_refcon_redraw(this, conpoint);
 }

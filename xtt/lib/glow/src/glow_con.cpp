@@ -3222,11 +3222,6 @@ void GlowCon::move_ref(double x1, double y1, double x2, double y2)
   }
 }
 
-void GlowCon::conpoint_refcon_erase(void* node, int conpoint)
-{
-  ctx->set_dirty();
-}
-
 void GlowCon::conpoint_refcon_redraw(void* node, int conpoint)
 {
   double x1, y1, x2, y2;

@@ -709,16 +709,6 @@ public:
     a.conpoint_refcon_redraw(node, conpoint);
   }
 
-  //! Erase the reference connections for a specific node and connection point.
-  /*!
-    \param node		Node.
-    \param conpoint	Connection point number.
-  */
-  void conpoint_refcon_erase(void* node, int conpoint)
-  {
-    a.conpoint_refcon_erase(node, conpoint);
-  }
-
   //! Get object from name.
   /*!
     \param name		Object name.
