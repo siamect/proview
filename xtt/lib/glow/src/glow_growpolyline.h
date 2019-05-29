@@ -321,8 +321,10 @@ public:
   */
   void set_shadow(int shadowval)
   {
-    shadow = shadowval;
-    ctx->set_dirty();
+    if (shadow != shadowval) {
+      shadow = shadowval;
+      ctx->set_dirty();
+    }
   }
 
   //! Set shadow width.
@@ -331,8 +333,10 @@ public:
   */
   void set_shadow_width(double width)
   {
-    shadow_width = width;
-    ctx->set_dirty();
+    if (shadow_width != width) {
+      shadow_width = width;
+      ctx->set_dirty();
+    }
   }
 
   //! Set Gradient.
@@ -341,8 +345,10 @@ public:
   */
   void set_gradient(glow_eGradient gradientval)
   {
-    gradient = gradientval;
-    ctx->set_dirty();
+    if (gradient != gradientval) {
+      gradient = gradientval;
+      ctx->set_dirty();
+    }
   }
 
   //! todo
@@ -510,15 +516,16 @@ public:
   */
   void set_fill_color(glow_eDrawType drawtype)
   {
-    fill_drawtype = drawtype;
-    ctx->set_dirty();
+    if (fill_drawtype != drawtype) {
+      fill_drawtype = drawtype;
+      ctx->set_dirty();
+    }
   }
 
   //! Reset the fill color to the original fill color.
   void reset_fill_color()
   {
-    fill_drawtype = original_fill_drawtype;
-    ctx->set_dirty();
+    set_fill_color(original_fill_drawtype);
   }
 
   //! Set the border color.
@@ -527,15 +534,13 @@ public:
   */
   void set_border_color(glow_eDrawType drawtype)
   {
-    draw_type = drawtype;
-    ctx->set_dirty();
+    set_drawtype(drawtype);
   }
 
   //! Reset the border color to the original border color.
   void reset_border_color()
   {
-    draw_type = original_border_drawtype;
-    ctx->set_dirty();
+    set_drawtype(original_border_drawtype);
   }
 
   //! Set the original fill color.
@@ -564,8 +569,10 @@ public:
   */
   void set_original_background_color(glow_eDrawType color)
   {
-    background_drawtype = color;
-    ctx->set_dirty();
+    if (background_drawtype != color) {
+      background_drawtype = color;
+      ctx->set_dirty();
+    }
   }
 
   //! Draw the object.

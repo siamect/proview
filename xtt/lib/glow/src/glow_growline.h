@@ -365,15 +365,13 @@ public:
   */
   void set_border_color(glow_eDrawType drawtype)
   {
-    draw_type = drawtype;
-    ctx->set_dirty();
+    set_drawtype(drawtype);
   }
 
   //! Reset the border color to the original border color.
   void reset_border_color()
   {
-    draw_type = original_border_drawtype;
-    ctx->set_dirty();
+    set_drawtype(original_border_drawtype);
   }
 
   //! Set the original border color.
@@ -441,13 +439,6 @@ public:
   {
     trf.store();
   }
-
-  //! Set the linewidth.
-  /*!
-    \param linewidth	Linewidth in range 0 to 8. 0 gives a linewidth of 1
-    pixel at original zoom. 1 -> 2 pixel etc.
-  */
-  void set_linewidth(int linewidth);
 
   void get_ctx(void** c)
   {
@@ -523,8 +514,10 @@ public:
   */
   void set_linetype(glow_eLineType type)
   {
-    line_type = type;
-    ctx->set_dirty();
+    if (line_type != type) {
+      line_type = type;
+      ctx->set_dirty();
+    }
   }
 
   void export_flow(GlowExportFlow* ef);

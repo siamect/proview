@@ -78,6 +78,9 @@ GrowConPoint::~GrowConPoint()
 
 void GrowConPoint::move(double delta_x, double delta_y, int grid)
 {
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
   if (grid) {
     double x, y, x_grid, y_grid;
 
@@ -97,7 +100,6 @@ void GrowConPoint::move(double delta_x, double delta_y, int grid)
     y_high += dy;
     y_low += dy;
   }
-  ctx->set_dirty();
 }
 
 int GrowConPoint::event_handler(glow_eEvent event, int x, int y, double fx, double fy)
@@ -128,13 +130,11 @@ int GrowConPoint::event_handler(glow_eEvent event, int x, int y, double fx, doub
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
       ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
-      hot = 1;
-      ctx->set_dirty();
+      set_hot(1);
     }
     if (!sts && hot) {
       ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
-      hot = 0;
-      ctx->set_dirty();
+      set_hot(0);
     }
   } else {
     sts = arc.event_handler((void*)&p1, event, x, y, NULL);
@@ -278,8 +278,10 @@ void GrowConPoint::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 
 void GrowConPoint::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 void GrowConPoint::select_region_insert(double ll_x, double ll_y, double ur_x,
@@ -347,7 +349,6 @@ void GrowConPoint::align(double x, double y, glow_eAlignDirection direction)
 {
   double dx, dy;
 
-  ctx->set_dirty();
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -377,6 +378,9 @@ void GrowConPoint::align(double x, double y, glow_eAlignDirection direction)
     dx = 0;
     dy = y - y_low;
     break;
+  }
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
   }
   trf.move(dx, dy);
   x_right += dx;

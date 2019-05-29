@@ -234,25 +234,28 @@ void GlowRect::get_borders(double pos_x, double pos_y, double* x_right,
 
 void GlowRect::move(void* pos, double x, double y, int highlight, int hot)
 {
-  double width = ur.x - ll.x;
-  double height = ur.y - ll.y;
+  if (!feq(ll.x, x) || !feq(ll.y, y) || !feq(ur.x, x + ur.x - ll.x)
+      || !feq(ur.y, y + ur.y - ll.y)) {
+    ctx->set_dirty();
+  }
+  ur.x = x + ur.x - ll.x;
+  ur.y = y + ur.y - ll.y;
   ll.x = x;
   ll.y = y;
-  ur.x = x + width;
-  ur.y = y + height;
   zoom();
   nav_zoom();
-  ctx->set_dirty();
 }
 
 void GlowRect::shift(
     void* pos, double delta_x, double delta_y, int highlight, int hot)
 {
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
   ll.x += delta_x;
   ll.y += delta_y;
   ur.x += delta_x;
   ur.y += delta_y;
   zoom();
   nav_zoom();
-  ctx->set_dirty();
 }

@@ -225,6 +225,7 @@ void GlowArrow::erase(DrawWind *w, void* pos, int hot, void* node)
 void GlowArrow::move(void* pos, double x1, double y1, double x2, double y2,
     int highlight, int hot)
 {
+  double p1x = p1.x, p1y = p1.y, p2x = p2.x, p2y = p2.y;
   if (fabs(x2 - x1) < DBL_EPSILON) {
     p1.x = x2 + arrow_width / 2;
     p2.x = x2 - arrow_width / 2;
@@ -254,17 +255,22 @@ void GlowArrow::move(void* pos, double x1, double y1, double x2, double y2,
     p2.x = x2 + (x1 - x2) * arrow_length / d - (y1 - y2) * arrow_width / d / 2;
     p2.y = y2 + (y1 - y2) * arrow_length / d + (x1 - x2) * arrow_width / d / 2;
   }
+  if (!feq(p1.x, p1x) || !feq(p1.y, p1y) || !feq(p2.x, p2x) || !feq(p2.y, p2y)
+      || !feq(p_dest.x, x2) || !feq(p_dest.y, y2)) {
+    ctx->set_dirty();
+  }
   p_dest.x = x2;
   p_dest.y = y2;
   zoom();
   nav_zoom();
-
-  ctx->set_dirty();
 }
 
 void GlowArrow::shift(
     void* pos, double delta_x, double delta_y, int highlight, int hot)
 {
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
   p_dest.x += delta_x;
   p_dest.y += delta_y;
   p1.x += delta_x;
@@ -273,8 +279,6 @@ void GlowArrow::shift(
   p2.y += delta_y;
   zoom();
   nav_zoom();
-
-  ctx->set_dirty();
 }
 
 int GlowArrow::event_handler(

@@ -459,8 +459,10 @@ void GrowTable::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 
 void GrowTable::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 void GrowTable::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
@@ -958,7 +960,6 @@ void GrowTable::align(double x, double y, glow_eAlignDirection direction)
 {
   double dx, dy;
 
-  ctx->set_dirty();
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -988,6 +989,9 @@ void GrowTable::align(double x, double y, glow_eAlignDirection direction)
     dx = 0;
     dy = y - y_low;
     break;
+  }
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
   }
   trf.move(dx, dy);
   x_right += dx;
@@ -1288,8 +1292,10 @@ void GrowTable::h_value_changed_cb(void* o, double value)
 
 void GrowTable::set_textsize(int size)
 {
-  text_size = size;
-  ctx->set_dirty();
+  if (text_size != size) {
+    text_size = size;
+    ctx->set_dirty();
+  }
 }
 
 void GrowTable::set_textbold(int bold)
@@ -1307,8 +1313,10 @@ void GrowTable::set_textbold(int bold)
 
 void GrowTable::set_textfont(glow_eFont textfont)
 {
-  font = textfont;
-  ctx->set_dirty();
+  if (font != textfont) {
+    font = textfont;
+    ctx->set_dirty();
+  }
 }
 
 void GrowTable::get_table_info(glow_sTableInfo* info)
@@ -1421,15 +1429,13 @@ int GrowTable::make_cell_visible(int column, int row)
   if (!feq(scroll_x, 0.0) && horizontal_scrollbar) {
     h_value += scroll_x;
     h_value = h_scrollbar->set_value(h_value);
+    ctx->set_dirty();
   }
   if (!feq(scroll_y, 0.0) && vertical_scrollbar) {
     v_value += scroll_y;
     v_value = v_scrollbar->set_value(v_value);
-  }
-  if ((!feq(scroll_x, 0.0) && horizontal_scrollbar)
-      || (!feq(scroll_y, 0.0) && vertical_scrollbar)) {
     ctx->set_dirty();
-    return 1;
   }
-  return 0;
+  return ((!feq(scroll_x, 0.0) && horizontal_scrollbar)
+      || (!feq(scroll_y, 0.0) && vertical_scrollbar));
 }

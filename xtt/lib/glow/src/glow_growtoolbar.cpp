@@ -312,7 +312,6 @@ int GrowToolbar::event_handler(glow_eEvent event, int x, int y, double fx, doubl
           sts = nc_event_handler(event, r.x, r.y, &idx);
           if (sts) {
             ((GrowNode*)nc->a.a[idx])->set_hot(1);
-            ctx->set_dirty();
             ctx->hot_found = 1;
           }
         }
@@ -332,8 +331,7 @@ int GrowToolbar::event_handler(glow_eEvent event, int x, int y, double fx, doubl
       if ((hot_type = ctx->send_hot_request(this))) {
         if (!ctx->trace_started) {
           ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
-          hot = 1;
-          ctx->set_dirty();
+          set_hot(1);
           ctx->tiptext_event(this, x, y);
         } else if (hot_type & glow_mHotType_CursorCrossHair) {
           ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
@@ -342,7 +340,6 @@ int GrowToolbar::event_handler(glow_eEvent event, int x, int y, double fx, doubl
           int lsts = get_mask_index(idx, &category, &mask_idx);
           if (ODD(lsts))
             ctx->tiptext_toolbar_event(this, x, y, category, mask_idx);
-          ctx->set_dirty();
         } else if (hot_type & glow_mHotType_CursorHand) {
           ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Hand);
           hot_tool = idx + 1;
@@ -350,7 +347,6 @@ int GrowToolbar::event_handler(glow_eEvent event, int x, int y, double fx, doubl
           int lsts = get_mask_index(idx, &category, &mask_idx);
           if (ODD(lsts))
             ctx->tiptext_toolbar_event(this, x, y, category, mask_idx);
-          ctx->set_dirty();
         }
       }
     }
@@ -361,8 +357,7 @@ int GrowToolbar::event_handler(glow_eEvent event, int x, int y, double fx, doubl
       if (hot_tool)
         ((GrowNode*)nc->a.a[hot_tool - 1])->set_hot(0);
       hot_tool = 0;
-      hot = 0;
-      ctx->set_dirty();
+      set_hot(0);
       ctx->tiptext->remove_text(this);
     }
     break;

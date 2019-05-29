@@ -107,7 +107,9 @@ void GrowRectRounded::move(double delta_x, double delta_y, int grid)
     y_high += dy;
     y_low += dy;
   }
-  ctx->set_dirty();
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
 }
 
 int GrowRectRounded::local_event_handler(glow_eEvent event, double x, double y)
@@ -160,14 +162,12 @@ int GrowRectRounded::event_handler(glow_eEvent event, int x, int y, double fx, d
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
       ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
-      hot = 1;
-      ctx->set_dirty();
+      set_hot(1);
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
         ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
-      hot = 0;
-      ctx->set_dirty();
+      set_hot(0);
     }
     break;
   }
@@ -420,8 +420,10 @@ void GrowRectRounded::draw(
 
 void GrowRectRounded::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 void GrowRectRounded::select_region_insert(double ll_x, double ll_y,
@@ -863,20 +865,12 @@ void GrowRectRounded::set_transform(GlowTransform* t)
   get_node_borders();
 }
 
-void GrowRectRounded::set_linewidth(int linewidth)
-{
-  GlowRect::set_linewidth(linewidth);
-}
-
-void GrowRectRounded::set_fill(int fillval)
-{
-  GlowRect::set_fill(fillval);
-}
-
 void GrowRectRounded::set_border(int borderval)
 {
-  border = borderval;
-  ctx->set_dirty();
+  if (border != borderval) {
+    border = borderval;
+    ctx->set_dirty();
+  }
 }
 
 int GrowRectRounded::draw_annot_background(
@@ -902,12 +896,10 @@ int GrowRectRounded::get_annot_background(
 
 void GrowRectRounded::align(double x, double y, glow_eAlignDirection direction)
 {
-  double dx, dy;
-
   if (fixposition)
     return;
 
-  ctx->set_dirty();
+  double dx, dy;
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -937,6 +929,9 @@ void GrowRectRounded::align(double x, double y, glow_eAlignDirection direction)
     dx = 0;
     dy = y - y_low;
     break;
+  }
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
   }
   trf.move(dx, dy);
   x_right += dx;

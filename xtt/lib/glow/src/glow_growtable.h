@@ -317,9 +317,11 @@ public:
   }
   void set_shadow(int shadowval)
   {
-    shadow = shadowval;
-    configure_scrollbars();
-    ctx->set_dirty();
+    if (shadow != shadowval) {
+      shadow = shadowval;
+      configure_scrollbars();
+      ctx->set_dirty();
+    }
   }
 
   //! Set text size
@@ -346,8 +348,10 @@ public:
   */
   void set_original_text_color(glow_eDrawType drawtype)
   {
-    text_color_drawtype = drawtype;
-    ctx->set_dirty();
+    if (text_color_drawtype != drawtype) {
+      text_color_drawtype = drawtype;
+      ctx->set_dirty();
+    }
   }
 
   //! Get parameters for the table.

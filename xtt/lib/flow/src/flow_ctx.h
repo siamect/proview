@@ -238,6 +238,7 @@ public:
   int select_rect_ll_y;
   int select_rect_ur_x;
   int select_rect_ur_y;
+  void expand_select_rect(int x, int y);
   double select_area_ll_x;
   double select_area_ll_y;
   double select_area_ur_x;

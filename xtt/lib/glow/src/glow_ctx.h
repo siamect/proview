@@ -1022,6 +1022,8 @@ public:
   //! Set colorthem lightness.
   void set_colortheme_is_default(int isdefault);
 
+  void expand_select_rect(int x, int y);
+
   //! Destructor
   /*! Delete all objects in the context. */
   virtual ~GlowCtx();

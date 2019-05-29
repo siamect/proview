@@ -376,8 +376,10 @@ GlowCon::GlowCon(const GlowCon& c, GlowNode* source, GlowNode* dest)
 
 void GlowCon::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 void GlowCon::set_hot(int on)
@@ -460,6 +462,10 @@ void GlowCon::move(double delta_x, double delta_y, int grid)
   double x = delta_x / ctx->mw->zoom_factor_x;
   double y = delta_y / ctx->mw->zoom_factor_y;
 
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
+
   if (movement_type == glow_eMoveType_Route || grid) {
     reconfigure();
   } else {
@@ -478,13 +484,16 @@ void GlowCon::move(double delta_x, double delta_y, int grid)
     }
     get_con_borders();
   }
-  ctx->set_dirty();
 }
 
 void GlowCon::move_noerase(int delta_x, int delta_y, int grid)
 {
   double x = delta_x / ctx->mw->zoom_factor_x;
   double y = delta_y / ctx->mw->zoom_factor_y;
+
+  if (delta_x != 0 || delta_y != 0) {
+    ctx->set_dirty();
+  }
 
   if (cc->con_type != glow_eConType_Routed
       || movement_type == glow_eMoveType_Route || grid || p_num == 0) {
@@ -503,7 +512,6 @@ void GlowCon::move_noerase(int delta_x, int delta_y, int grid)
       draw_routed(p_num, point_x, point_y);
     get_con_borders();
   }
-  ctx->set_dirty();
 }
 
 void GlowCon::reconfigure()
@@ -578,7 +586,6 @@ void GlowCon::reconfigure()
   }
   }
   get_con_borders();
-  ctx->set_dirty();
 }
 
 void GlowCon::save(std::ofstream& fp, glow_eSaveMode mode)
@@ -2819,15 +2826,11 @@ int GlowCon::event_handler(glow_eEvent event, int x, int y)
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
       ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
-      hot = 1;
-
-      ctx->set_dirty();
+      set_hot(1);
     }
     if (!sts && hot) {
       ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
-      hot = 0;
-
-      ctx->set_dirty();
+      set_hot(0);
     }
     break;
   default:
@@ -2854,9 +2857,11 @@ void GlowCon::draw_routed(int points, double* x, double* y)
     l->move(&cc->zero, x[i], y[i], x[i + 1], y[i + 1], highlight, hot);
   }
 
-  ctx->set_dirty();
-  l_num = points - 1;
   p_num = points;
+  if (l_num != points - 1) {
+    ctx->set_dirty();
+    l_num = points - 1;
+  }
 }
 
 void GlowCon::draw_routed_trans(int points, double* x, double* y)
@@ -2870,9 +2875,11 @@ void GlowCon::draw_routed_trans(int points, double* x, double* y)
     j++;
   }
 
-  ctx->set_dirty();
-  l_num = j;
   p_num = points;
+  if (l_num != j) {
+    ctx->set_dirty();
+    l_num = j;
+  }
 }
 
 void GlowCon::draw_routed_roundcorner(int points, double* x, double* y)
@@ -3107,10 +3114,12 @@ void GlowCon::draw_routed_roundcorner(int points, double* x, double* y)
     a->move(&cc->zero, arc_ll_x[i], arc_ll_y[i], arc_ur_x[i], arc_ur_y[i],
           arc_angle1[i], arc_angle2[i], highlight, hot);
   }
-  ctx->set_dirty();
-  l_num = points - 1;
   p_num = points;
-  a_num = points - 2;
+  if (l_num != points - 1 || a_num != points - 2) {
+    ctx->set_dirty();
+    l_num = points - 1;
+    a_num = points - 2;
+  }
 }
 
 void GlowCon::set_movement_type(GlowArrayElem** a, int a_size)
@@ -3304,7 +3313,6 @@ void GlowCon::change_conclass(GlowConClass* conclass)
 
   con_modified();
 
-  // Draw
   ctx->set_dirty();
 }
 
@@ -3347,20 +3355,24 @@ void GlowCon::convert(glow_eConvert version)
 
 void GlowCon::set_border(int borderval)
 {
-  border = borderval;
+  if (border != borderval) {
+    border = borderval;
+    ctx->set_dirty();
+  }
   arc_a.set_border(border);
   line_a.set_border(border);
   con_modified();
-  ctx->set_dirty();
 }
 
 void GlowCon::set_shadow(int shadowval)
 {
-  shadow = shadowval;
+  if (shadow != shadowval) {
+    shadow = shadowval;
+    ctx->set_dirty();
+  }
   arc_a.set_shadow(shadow);
   line_a.set_shadow(shadow);
   con_modified();
-  ctx->set_dirty();
 }
 
 void GlowCon::con_modified()

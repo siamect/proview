@@ -110,7 +110,9 @@ void GrowRect::move(double delta_x, double delta_y, int grid)
     y_high += dy;
     y_low += dy;
   }
-  ctx->set_dirty();
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
 }
 
 int GrowRect::local_event_handler(glow_eEvent event, double x, double y)
@@ -164,14 +166,12 @@ int GrowRect::event_handler(glow_eEvent event, int x, int y, double fx, double f
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)
         && ctx->hot_mode != glow_eHotMode_Disabled) {
       ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
-      hot = 1;
-      ctx->set_dirty();
+      set_hot(1);
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
         ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
-      hot = 0;
-      ctx->set_dirty();
+      set_hot(0);
     }
     break;
   }
@@ -444,8 +444,10 @@ void GrowRect::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 
 void GrowRect::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 void GrowRect::select_region_insert(double ll_x, double ll_y, double ur_x,
@@ -863,20 +865,12 @@ void GrowRect::set_transform(GlowTransform* t)
   get_node_borders();
 }
 
-void GrowRect::set_linewidth(int linewidth)
-{
-  GlowRect::set_linewidth(linewidth);
-}
-
-void GrowRect::set_fill(int fillval)
-{
-  GlowRect::set_fill(fillval);
-}
-
 void GrowRect::set_border(int borderval)
 {
-  border = borderval;
-  ctx->set_dirty();
+  if (border != borderval) {
+    border = borderval;
+    ctx->set_dirty();
+  }
 }
 
 int GrowRect::draw_annot_background(
@@ -902,12 +896,10 @@ int GrowRect::get_annot_background(
 
 void GrowRect::align(double x, double y, glow_eAlignDirection direction)
 {
-  double dx, dy;
-
   if (fixposition)
     return;
 
-  ctx->set_dirty();
+  double dx, dy;
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -937,6 +929,9 @@ void GrowRect::align(double x, double y, glow_eAlignDirection direction)
     dx = 0;
     dy = y - y_low;
     break;
+  }
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
   }
   trf.move(dx, dy);
   x_right += dx;

@@ -280,8 +280,10 @@ public:
   */
   void set_original_text_color(glow_eDrawType drawtype)
   {
-    text_color_drawtype = drawtype;
-    ctx->set_dirty();
+    if (text_color_drawtype != drawtype) {
+      text_color_drawtype = drawtype;
+      ctx->set_dirty();
+    }
   }
 
   //! Format axis text.

@@ -148,9 +148,11 @@ public:
   void convert(glow_eConvert version);
   void set_original_text_color(glow_eDrawType drawtype)
   {
-    color_drawtype = drawtype;
-    text.color_drawtype = drawtype;
-    ctx->set_dirty();
+    if (color_drawtype != drawtype || text.color_drawtype != drawtype) {
+      color_drawtype = drawtype;
+      text.color_drawtype = drawtype;
+      ctx->set_dirty();
+    }
   }
   void set_textbold(int bold);
   void export_flow(GlowExportFlow* ef);

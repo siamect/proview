@@ -97,21 +97,16 @@ FlowNode::~FlowNode()
     trace_close();
 
   ctx->object_deleted(this);
-  if (ctx->nodraw) {
-    for (int i = 0; i < 10; i++) {
-      if (annotv_inputmode[i])
-        close_annotation_input(i);
-      if (annotsize[i] > 0)
-        free(annotv[i]);
-    }
-    return;
-  }
 
   for (int i = 0; i < 10; i++) {
     if (annotv_inputmode[i])
       close_annotation_input(i);
     if (annotsize[i] > 0)
       free(annotv[i]);
+  }
+
+  if (ctx->nodraw) {
+    return;
   }
 
   ctx->delete_node_cons(this);
@@ -160,7 +155,9 @@ void FlowNode::move(int delta_x, int delta_y, int grid)
     obst_y_high += 1.0 * delta_y / ctx->zoom_factor;
     obst_y_low += 1.0 * delta_y / ctx->zoom_factor;
   }
-  ctx->set_dirty();
+  if (delta_x != 0 || delta_y != 0) {
+    ctx->set_dirty();
+  }
 }
 
 void FlowNode::move_noerase(int delta_x, int delta_y, int grid)
@@ -183,7 +180,9 @@ void FlowNode::move_noerase(int delta_x, int delta_y, int grid)
     pos.posit(x, y);
     get_borders();
   }
-  ctx->set_dirty();
+  if (delta_x != 0 || delta_y != 0) {
+    ctx->set_dirty();
+  }
 }
 
 void FlowNode::print(double ll_x, double ll_y, double ur_x, double ur_y)
@@ -480,14 +479,18 @@ void FlowNode::nav_erase()
 
 void FlowNode::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 void FlowNode::set_dimmed(int on)
 {
-  dimmed = on;
-  ctx->set_dirty();
+  if (dimmed != on) {
+    dimmed = on;
+    ctx->set_dirty();
+  }
 }
 
 void FlowNode::set_hot(int on)
@@ -500,8 +503,10 @@ void FlowNode::set_hot(int on)
 
 void FlowNode::set_inverse(int on)
 {
-  inverse = on;
-  ctx->set_dirty();
+  if (inverse != on) {
+    inverse = on;
+    ctx->set_dirty();
+  }
 }
 
 void FlowNode::select_region_insert(
@@ -590,14 +595,14 @@ void FlowNode::measure_annotation(
 
 void FlowNode::set_annot_pixmap(int num, flow_sAnnotPixmap* pixmap, int nodraw)
 {
+  if (!nodraw && annotpixmapv[num] != pixmap) {
+    ctx->set_dirty();
+  }
   annotpixmapv[num] = pixmap;
   if (relative_annot_pos) {
     relative_annot_x = 0;
     nc->configure_annotations(&pos, (void*)this);
   }
-
-  if (!nodraw)
-    ctx->set_dirty();
 }
 
 void FlowNode::get_annot_pixmap(int num, flow_sAnnotPixmap** pixmap)
@@ -607,17 +612,18 @@ void FlowNode::get_annot_pixmap(int num, flow_sAnnotPixmap** pixmap)
 
 void FlowNode::remove_annot_pixmap(int num)
 {
-  annotpixmapv[num] = 0;
-
-  ctx->set_dirty();
+  if (annotpixmapv[num] != 0) {
+    annotpixmapv[num] = 0;
+    ctx->set_dirty();
+  }
 }
 
 void FlowNode::set_radiobutton(int num, int value, int nodraw)
 {
-  rbuttonv[num] = value;
-
-  if (!nodraw)
+  if (!nodraw && rbuttonv[num] != value) {
     ctx->set_dirty();
+  }
+  rbuttonv[num] = value;
 }
 
 void FlowNode::get_radiobutton(int num, int* value)
@@ -694,14 +700,12 @@ int FlowNode::event_handler(flow_eEvent event, int x, int y)
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
       ctx->fdraw->set_cursor(ctx->mw, draw_eCursor_CrossHair);
-      hot = 1;
-      ctx->set_dirty();
+      set_hot(1);
       ctx->tiptext_event(this, x, y);
     }
     if (!sts && hot) {
       ctx->fdraw->set_cursor(ctx->mw, draw_eCursor_Normal);
-      hot = 0;
-      ctx->set_dirty();
+      set_hot(0);
       ctx->tiptext->remove_text(this);
     }
     break;
@@ -862,19 +866,23 @@ void FlowNode::get_borders()
 
 void FlowNode::set_fillcolor(flow_eDrawType color)
 {
-  fill_color = color;
-  ctx->set_dirty();
+  if (fill_color != color) {
+    fill_color = color;
+    ctx->set_dirty();
+  }
 }
 
 void FlowNode::conpoint_select(int num)
 {
   if (sel_conpoint1 == num || sel_conpoint2 == num)
     return;
-  if (sel_conpoint1 == -1)
+  if (sel_conpoint1 == -1) {
     sel_conpoint1 = num;
-  else if (sel_conpoint2 == -1)
+    ctx->set_dirty();
+  } else if (sel_conpoint2 == -1) {
     sel_conpoint2 = num;
-  ctx->set_dirty();
+    ctx->set_dirty();
+  }
 }
 
 void FlowNode::conpoint_select_clear(int num)
@@ -906,6 +914,8 @@ int FlowNode::get_next_conpoint(
 
 void FlowNode::change_nodeclass(FlowNodeClass* new_nc)
 {
-  nc = new_nc;
-  ctx->set_dirty();
+  if (nc != new_nc) {
+    nc = new_nc;
+    ctx->set_dirty();
+  }
 }

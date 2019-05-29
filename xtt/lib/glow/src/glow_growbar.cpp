@@ -224,8 +224,10 @@ void GrowBar::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 
 void GrowBar::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 void GrowBar::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
@@ -441,7 +443,6 @@ void GrowBar::align(double x, double y, glow_eAlignDirection direction)
 {
   double dx, dy;
 
-  ctx->set_dirty();
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -472,6 +473,9 @@ void GrowBar::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
+  }
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
@@ -497,9 +501,11 @@ void GrowBar::get_range(double *min, double *max)
 
 void GrowBar::set_range(double min, double max)
 {
+  if (!feq(max_value, max) || !feq(min_value, min)) {
+    ctx->set_dirty();
+  }
   max_value = max;
   min_value = min;
-  ctx->set_dirty();
 }
 
 void GrowBar::export_javabean(GlowTransform* t, void* node,

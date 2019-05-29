@@ -491,8 +491,10 @@ void GrowFolder::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 
 void GrowFolder::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 void GrowFolder::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
@@ -724,8 +726,10 @@ int GrowFolder::update_attributes()
 
 void GrowFolder::set_textsize(int size)
 {
-  text_size = size;
-  ctx->set_dirty();
+  if (text_size != size) {
+    text_size = size;
+    ctx->set_dirty();
+  }
 }
 
 void GrowFolder::set_textbold(int bold)

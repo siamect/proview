@@ -106,7 +106,9 @@ void GrowText::move(double delta_x, double delta_y, int grid)
     y_high += dy;
     y_low += dy;
   }
-  ctx->set_dirty();
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
 }
 
 int GrowText::local_event_handler(glow_eEvent event, double x, double y)
@@ -144,14 +146,12 @@ int GrowText::event_handler(glow_eEvent event, int x, int y, double fx, double f
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
       ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
-      hot = 1;
-      ctx->set_dirty();
+      set_hot(1);
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
         ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
-      hot = 0;
-      ctx->set_dirty();
+      set_hot(0);
     }
     break;
   }
@@ -358,8 +358,10 @@ void GrowText::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 
 void GrowText::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 void GrowText::select_region_insert(double ll_x, double ll_y, double ur_x,
@@ -799,9 +801,11 @@ void GrowText::set_text(char* new_text)
 
 void GrowText::set_textsize(int size)
 {
-  text_size = size;
-  get_node_borders();
-  ctx->set_dirty();
+  if (text_size != size) {
+    text_size = size;
+    get_node_borders();
+    ctx->set_dirty();
+  }
 }
 
 void GrowText::set_textbold(int bold)
@@ -820,9 +824,11 @@ void GrowText::set_textbold(int bold)
 
 void GrowText::set_textfont(glow_eFont textfont)
 {
-  font = textfont;
-  get_node_borders();
-  ctx->set_dirty();
+  if (font != textfont) {
+    font = textfont;
+    get_node_borders();
+    ctx->set_dirty();
+  }
 }
 
 void GrowText::export_javabean(GlowTransform* t, void* node,
@@ -909,8 +915,6 @@ void GrowText::flip(double x0, double y0, glow_eFlipDirection dir)
 void GrowText::align(double x, double y, glow_eAlignDirection direction)
 {
   double dx, dy;
-
-  ctx->set_dirty();
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -940,6 +944,9 @@ void GrowText::align(double x, double y, glow_eAlignDirection direction)
     dx = 0;
     dy = y - y_low;
     break;
+  }
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
   }
   trf.move(dx, dy);
   x_right += dx;

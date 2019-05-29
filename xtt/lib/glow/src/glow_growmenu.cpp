@@ -367,20 +367,17 @@ int GrowMenu::event_handler(glow_eEvent event, int x, int y, double fx, double f
       sts = local_event_handler(event, rx, ry);
       if (sts) {
         ctx->hot_found = 1;
-        ctx->set_dirty();
       }
     }
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
       ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
-      hot = 1;
-      ctx->set_dirty();
+      set_hot(1);
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
         ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
-      hot = 0;
-      ctx->set_dirty();
+      set_hot(0);
     }
     if (old_item != current_item && old_item != -1) {
       if (info.item[old_item].type == glow_eMenuItem_PulldownMenu) {

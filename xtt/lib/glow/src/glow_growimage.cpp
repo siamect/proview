@@ -217,13 +217,8 @@ int GrowImage::insert_image(const char* imagefile)
 int GrowImage::update()
 {
   struct stat info;
-  int sts;
-
-  sts = stat(filename, &info);
-  if (sts == -1)
-    return 0;
-
-  if (date == info.st_ctime)
+  int sts = stat(filename, &info);
+  if (sts == -1 || date == info.st_ctime)
     return 0;
 
   ctx->gdraw->image_load(filename, &original_image, &image, &image_data);
@@ -236,7 +231,6 @@ int GrowImage::update()
   ctx->gdraw->image_scale(current_width, current_height, original_image, &image,
       &image_data, &pixmap, &clip_mask);
 
-  ctx->set_dirty();
   return 1;
 }
 
@@ -274,7 +268,9 @@ void GrowImage::move(double delta_x, double delta_y, int grid)
     y_high += dy;
     y_low += dy;
   }
-  ctx->set_dirty();
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
 }
 
 int GrowImage::local_event_handler(glow_eEvent event, double x, double y)
@@ -326,14 +322,12 @@ int GrowImage::event_handler(glow_eEvent event, int x, int y, double fx, double 
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
       ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
-      hot = 1;
-      ctx->set_dirty();
+      set_hot(1);
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
         ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
-      ctx->set_dirty();
-      hot = 0;
+      set_hot(0);
     }
     break;
   }
@@ -556,8 +550,10 @@ void GrowImage::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 
 void GrowImage::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 void GrowImage::select_region_insert(double ll_x, double ll_y, double ur_x,
@@ -604,8 +600,6 @@ void GrowImage::set_position(double x, double y)
 void GrowImage::set_scale(
     double scale_x, double scale_y, double x0, double y0, glow_eScaleType type)
 {
-  double old_x_left, old_x_right, old_y_low, old_y_high;
-
   if (trf.s.a11 && trf.s.a22
       && fabs(scale_x - trf.a11 / trf.s.a11) < FLT_EPSILON
       && fabs(scale_y - trf.a22 / trf.s.a22) < FLT_EPSILON)
@@ -637,10 +631,8 @@ void GrowImage::set_scale(
   default:;
   }
 
-  old_x_left = x_left;
-  old_x_right = x_right;
-  old_y_low = y_low;
-  old_y_high = y_high;
+  double old_x_left = x_left, old_y_low = y_low;
+  double old_x_right = x_right, old_y_high = y_high;
   trf.scale_from_stored(scale_x, scale_y, x0, y0);
   get_node_borders();
 
@@ -899,12 +891,10 @@ void GrowImage::set_transform(GlowTransform* t)
 
 void GrowImage::align(double x, double y, glow_eAlignDirection direction)
 {
-  double dx, dy;
-
   if (fixposition)
     return;
 
-  ctx->set_dirty();
+  double dx, dy;
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -934,6 +924,9 @@ void GrowImage::align(double x, double y, glow_eAlignDirection direction)
     dx = 0;
     dy = y - y_low;
     break;
+  }
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
   }
   trf.move(dx, dy);
   x_right += dx;

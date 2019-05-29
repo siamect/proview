@@ -404,9 +404,11 @@ void GrowNode::open(std::ifstream& fp)
 
 void GrowNode::move_to(double x, double y)
 {
+  if (!feq(x_left, x) || !feq(y_low, y)) {
+    ctx->set_dirty();
+  }
   trf.move(x - x_left, y - y_low);
   get_node_borders();
-  ctx->set_dirty();
 }
 
 void GrowNode::move(double delta_x, double delta_y, int grid)
@@ -432,7 +434,9 @@ void GrowNode::move(double delta_x, double delta_y, int grid)
     obst_y_high += dy;
     obst_y_low += dy;
   }
-  ctx->set_dirty();
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
 }
 
 void GrowNode::move_noerase(int delta_x, int delta_y, int grid)
@@ -447,8 +451,10 @@ void GrowNode::move_noerase(int delta_x, int delta_y, int grid)
 
 void GrowNode::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 int GrowNode::event_handler(glow_eEvent event, double fx, double fy)
@@ -565,27 +571,23 @@ int GrowNode::event_handler(glow_eEvent event, int x, int y, double fx, double f
       if ((hot_type = ctx->send_hot_request(this))) {
         if (!ctx->trace_started) {
           ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
-          hot = 1;
-          ctx->set_dirty();
+          set_hot(1);
           ctx->tiptext_event(this, x, y);
         } else if (hot_type & glow_mHotType_CursorCrossHair) {
           ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
-          hot = 1;
+          set_hot(1);
           ctx->tiptext_event(this, x, y);
-          ctx->set_dirty();
         } else if (hot_type & glow_mHotType_CursorHand) {
           ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Hand);
-          hot = 1;
+          set_hot(1);
           ctx->tiptext_event(this, x, y);
-          ctx->set_dirty();
         }
       }
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
         ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
-      hot = 0;
-      ctx->set_dirty();
+      set_hot(0);
       ctx->tiptext->remove_text(this);
     }
     break;
@@ -659,10 +661,7 @@ void GrowNode::set_scale_pos(double x, double y, double scale_x, double scale_y,
   ctx->set_nodraw();
   set_scale(scale_x, scale_y, x0, y0, type);
   ctx->reset_nodraw();
-  trf.move(x - x_left, y - y_low);
-  get_node_borders();
-
-  ctx->set_dirty();
+  move_to(x, y);
 }
 
 void GrowNode::set_scale(
@@ -1214,8 +1213,10 @@ int GrowNode::set_argument(int num, char* arg, int size)
 
 void GrowNode::set_linewidth(int linewidth)
 {
-  line_width = linewidth;
-  ctx->set_dirty();
+  if (line_width != linewidth) {
+    line_width = linewidth;
+    ctx->set_dirty();
+  }
 }
 
 void GrowNode::get_node_borders()
@@ -1239,7 +1240,6 @@ void GrowNode::align(double x, double y, glow_eAlignDirection direction)
 {
   double dx, dy;
 
-  ctx->set_dirty();
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -1269,6 +1269,9 @@ void GrowNode::align(double x, double y, glow_eAlignDirection direction)
     dx = 0;
     dy = y - y_low;
     break;
+  }
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
   }
   trf.move(dx, dy);
   x_right += dx;
@@ -1358,9 +1361,11 @@ void GrowNode::set_root_nodeclass()
 
 void GrowNode::set_nodeclass(GlowNodeClass* new_nc)
 {
-  nc = new_nc;
-  get_node_borders();
-  ctx->set_dirty();
+  if (nc != new_nc) {
+    nc = new_nc;
+    get_node_borders();
+    ctx->set_dirty();
+  }
 }
 
 void GrowNode::trace_close()
@@ -1725,7 +1730,8 @@ void GrowNode::annot_input_event(glow_eEvent event, int keycode)
     ctx->annotation_input_cb(this, idx, annotv[idx]);
     input_selected = 0;
     break;
-  default:;
+  default:
+    return;
   }
   ctx->set_dirty();
 }
@@ -1798,6 +1804,8 @@ void GrowNode::set_visibility(glow_eVis visibility)
     dimmed = 1;
     invisible = 0;
     break;
+  default:
+    return;
   }
   ctx->set_dirty();
 }
@@ -1818,9 +1826,11 @@ void GrowNode::set_textbold(int bold)
 
 void GrowNode::set_textfont(glow_eFont textfont)
 {
-  text_font = textfont;
-  get_node_borders();
-  ctx->set_dirty();
+  if (text_font != textfont) {
+    text_font = textfont;
+    get_node_borders();
+    ctx->set_dirty();
+  }
 }
 
 void GrowNode::set_colortheme_lightness()

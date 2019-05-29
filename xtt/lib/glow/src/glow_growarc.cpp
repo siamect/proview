@@ -90,7 +90,10 @@ void GrowArc::move(double delta_x, double delta_y, int grid)
 {
   if (fixposition)
     return;
-  ctx->set_dirty();
+
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
 
   if (grid) {
     double x_grid, y_grid;
@@ -160,14 +163,12 @@ int GrowArc::event_handler(glow_eEvent event, int x, int y, double fx, double fy
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
       ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
-      hot = 1;
-      ctx->set_dirty();
+      set_hot(1);
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
         ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
-      hot = 0;
-      ctx->set_dirty();
+      set_hot(0);
     }
     break;
   }
@@ -425,8 +426,10 @@ void GrowArc::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 
 void GrowArc::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 void GrowArc::select_region_insert(double ll_x, double ll_y, double ur_x,
@@ -473,8 +476,6 @@ void GrowArc::set_position(double x, double y)
 void GrowArc::set_scale(
     double scale_x, double scale_y, double x0, double y0, glow_eScaleType type)
 {
-  double old_x_left, old_x_right, old_y_low, old_y_high;
-
   if (trf.s.a11 && trf.s.a22
       && fabs(scale_x - trf.a11 / trf.s.a11) < FLT_EPSILON
       && fabs(scale_y - trf.a22 / trf.s.a22) < FLT_EPSILON)
@@ -506,10 +507,8 @@ void GrowArc::set_scale(
   default:;
   }
 
-  old_x_left = x_left;
-  old_x_right = x_right;
-  old_y_low = y_low;
-  old_y_high = y_high;
+  double old_x_left = x_left, old_y_low = y_low;
+  double old_x_right = x_right, old_y_high = y_high;
   trf.scale_from_stored(scale_x, scale_y, x0, y0);
   get_node_borders();
 
@@ -836,32 +835,20 @@ void GrowArc::set_transform(GlowTransform* t)
   get_node_borders();
 }
 
-void GrowArc::set_linewidth(int linewidth)
-{
-  GlowArc::set_linewidth(linewidth);
-  ctx->set_dirty();
-}
-
-void GrowArc::set_fill(int fillval)
-{
-  GlowArc::set_fill(fillval);
-  ctx->set_dirty();
-}
-
 void GrowArc::set_border(int borderval)
 {
-  border = borderval;
-  ctx->set_dirty();
+  if (border != borderval) {
+    border = borderval;
+    ctx->set_dirty();
+  }
 }
 
 void GrowArc::align(double x, double y, glow_eAlignDirection direction)
 {
-  double dx, dy;
-
   if (fixposition)
     return;
 
-  ctx->set_dirty();
+  double dx, dy;
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -891,6 +878,9 @@ void GrowArc::align(double x, double y, glow_eAlignDirection direction)
     dx = 0;
     dy = y - y_low;
     break;
+  }
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
   }
   trf.move(dx, dy);
   x_right += dx;

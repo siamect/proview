@@ -639,6 +639,9 @@ void GlowCtx::select_clear()
 
 void GlowCtx::traverse(int x, int y)
 {
+  if (x == 0 && y == 0)
+    return;
+
   mw->offset_x -= x;
   mw->offset_y -= y;
   if (con_create_active) {
@@ -671,7 +674,9 @@ void GlowCtx::get_borders()
 
 void GlowCtx::set_dirty()
 {
-  is_dirty = 1;
+  if (!nodraw) {
+    is_dirty = 1;
+  }
 }
 
 void GlowCtx::redraw_if_dirty()
@@ -863,7 +868,6 @@ void GlowCtx::nav_zoom()
     return;
 
   if (a.size() > 0) {
-    set_dirty();
     get_borders();
     double x_nav_left = MIN(x_left, mw->offset_x / mw->zoom_factor_x);
     double x_nav_right
@@ -878,6 +882,7 @@ void GlowCtx::nav_zoom()
     navw->zoom_factor_y = navw->zoom_factor_x;
     navw->offset_x = int(x_nav_left * navw->zoom_factor_x);
     navw->offset_y = int(y_nav_low * navw->zoom_factor_y);
+    set_dirty();
     a.nav_zoom();
   }
 }
@@ -1077,7 +1082,6 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     cursor_x = x;
     cursor_y = y;
     if (node_movement_paste_active) {
-      set_dirty();
       a_move.move(x - node_move_last_x, y - node_move_last_y, 0);
       node_move_last_x = x;
       node_move_last_y = y;
@@ -1089,7 +1093,6 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     break;
   case glow_eEvent_ButtonMotion:
     if (node_movement_active) {
-      set_dirty();
       a_move.move(x - node_move_last_x, y - node_move_last_y, 0);
       node_move_last_x = x;
       node_move_last_y = y;
@@ -1101,14 +1104,7 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         sts = a.a[i]->event_handler(glow_eEvent_CursorMotion, x, y);
       }
     } else if (select_rect_active) {
-
-      select_rect_ll_x = MIN(x, select_rect_start_x);
-      select_rect_ll_y = MIN(y, select_rect_start_y);
-      select_rect_ur_x = MAX(x, select_rect_start_x);
-      select_rect_ur_y = MAX(y, select_rect_start_y);
-
-      set_dirty();
-
+      expand_select_rect(x, y);
       select_rect_last_x = x;
       select_rect_last_y = y;
     }
@@ -1152,14 +1148,10 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         policy = ctx->select_policy;
 
       select_rect_active = 0;
+      set_dirty();
       select_rect_last_x = x;
       select_rect_last_y = y;
-      select_rect_ll_x = MIN(x, select_rect_start_x);
-      select_rect_ll_y = MIN(y, select_rect_start_y);
-      select_rect_ur_x = MAX(x, select_rect_start_x);
-      select_rect_ur_y = MAX(y, select_rect_start_y);
-
-      set_dirty();
+      expand_select_rect(x, y);
 
       /* Save the final select area */
       select_area_ll_x = (select_rect_ll_x + mw->offset_x) / mw->zoom_factor_x;
@@ -1194,8 +1186,6 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         event_callback[select_rect_event](this, &e);
       }
     } else if (con_create_active) {
-      set_dirty();
-
       /* Find the destination node */
       for (int i = 0; i < a.a_size; i++) {
         sts = a.a[i]->event_handler(event, x, y);
@@ -1221,6 +1211,7 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         }
       }
       con_create_active = 0;
+      set_dirty();
     }
     break;
   case glow_eEvent_Enter:
@@ -1326,28 +1317,30 @@ int GlowCtx::event_handler_nav(glow_eEvent event, int x, int y)
     if (nav_rect_movement_active) {
       int delta_x = x - nav_rect_move_last_x;
       int delta_y = y - nav_rect_move_last_y;
-      nav_rect_ll_x += delta_x;
-      nav_rect_ur_x += delta_x;
-      nav_rect_ll_y += delta_y;
-      nav_rect_ur_y += delta_y;
+      if (delta_x != 0 || delta_y != 0) {
+        nav_rect_ll_x += delta_x;
+        nav_rect_ur_x += delta_x;
+        nav_rect_ll_y += delta_y;
+        nav_rect_ur_y += delta_y;
+        set_dirty();
+      }
       nav_rect_move_last_x = x;
       nav_rect_move_last_y = y;
 
       int mainwind_delta_x = int(-mw->zoom_factor_x / navw->zoom_factor_x * delta_x);
       int mainwind_delta_y = int(-mw->zoom_factor_y / navw->zoom_factor_y * delta_y);
-      mw->offset_x -= mainwind_delta_x;
-      mw->offset_y -= mainwind_delta_y;
+      if (ABS(mainwind_delta_x) > 0 || ABS(mainwind_delta_y) > 0) {
+        mw->offset_x -= mainwind_delta_x;
+        mw->offset_y -= mainwind_delta_y;
+        set_dirty();
+      }
       if (ctx_type == glow_eCtxType_Grow) {
         ((GrowCtx*)this)->polyline_last_end_x += mainwind_delta_x;
         ((GrowCtx*)this)->polyline_last_end_y += mainwind_delta_y;
       }
 
-      set_dirty();
-
       change_scrollbar();
     } else if (nav_rect_zoom_active) {
-      set_dirty();
-
       double center_x = 0.5 * (nav_rect_ur_x + nav_rect_ll_x);
       double center_y = 0.5 * (nav_rect_ur_y + nav_rect_ll_y);
       double center_dist_last = sqrt(
@@ -1846,6 +1839,9 @@ void GlowCtx::scroll(double x, double y)
 
 void GlowCtx::scroll(int delta_x, int delta_y)
 {
+  if (delta_x == 0 && delta_y == 0)
+    return;
+
   mw->offset_x -= delta_x;
   mw->offset_y -= delta_y;
 
@@ -1892,8 +1888,10 @@ void GlowCtx::draw_grid(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 
 void GlowCtx::set_show_grid(int show)
 {
-  show_grid = show;
-  set_dirty();
+  if (show_grid != show) {
+    show_grid = show;
+    set_dirty();
+  }
 }
 
 void GlowCtx::set_colortheme_lightness(int lightness)
@@ -1961,6 +1959,20 @@ void glow_scroll_vertical(GlowCtx* ctx, int value, int bottom)
   y_pix = int(-value * ctx->scroll_size * ctx->mw->zoom_factor_y
       + (ctx->mw->offset_y - ctx->y_low * ctx->mw->zoom_factor_y));
   ctx->scroll(0, y_pix);
+}
+
+void GlowCtx::expand_select_rect(int x, int y) {
+  int srx1 = select_rect_ll_x, sry1 = select_rect_ll_y;
+  int srx2 = select_rect_ur_x, sry2 = select_rect_ur_y;
+  select_rect_ll_x = MIN(x, select_rect_start_x);
+  select_rect_ll_y = MIN(y, select_rect_start_y);
+  select_rect_ur_x = MAX(x, select_rect_start_x);
+  select_rect_ur_y = MAX(y, select_rect_start_y);
+
+  if (select_rect_ll_x != srx1 || select_rect_ll_y != sry1
+      || select_rect_ur_x != srx2 || select_rect_ur_y != sry2) {
+    set_dirty();
+  }
 }
 
 // Fix because of bug in the cc-compiler on VMS

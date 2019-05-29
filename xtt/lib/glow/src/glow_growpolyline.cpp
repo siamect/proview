@@ -544,7 +544,9 @@ void GrowPolyLine::move(double delta_x, double delta_y, int grid)
     y_high += dy;
     y_low += dy;
   }
-  ctx->set_dirty();
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
 }
 
 void GrowPolyLine::move_current_point(int delta_x, int delta_y, int grid)
@@ -564,7 +566,9 @@ void GrowPolyLine::move_current_point(int delta_x, int delta_y, int grid)
   ((GlowPoint*)a_points[current_point])->y = tmp.y;
   zoom();
   get_node_borders();
-  ctx->set_dirty();
+  if (delta_x != 0 || delta_y != 0) {
+    ctx->set_dirty();
+  }
 }
 
 GrowPolyLine::~GrowPolyLine()
@@ -663,14 +667,12 @@ int GrowPolyLine::event_handler(glow_eEvent event, int x, int y, double fx, doub
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
       ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
-      hot = 1;
-      ctx->set_dirty();
+      set_hot(1);
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
         ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
-      hot = 0;
-      ctx->set_dirty();
+      set_hot(0);
     }
     break;
   }
@@ -958,8 +960,10 @@ void GrowPolyLine::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 
 void GrowPolyLine::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 void GrowPolyLine::get_borders(GlowTransform* t, double* x_right,
@@ -1017,8 +1021,10 @@ void GrowPolyLine::set_fill(int fillval)
 
 void GrowPolyLine::set_border(int borderval)
 {
-  border = borderval;
-  ctx->set_dirty();
+  if (border != borderval) {
+    border = borderval;
+    ctx->set_dirty();
+  }
 }
 
 void GrowPolyLine::set_drawtype(glow_eDrawType drawtype)
@@ -1230,12 +1236,10 @@ void GrowPolyLine::add_and_shift_y_values_filled(
 
 void GrowPolyLine::align(double x, double y, glow_eAlignDirection direction)
 {
-  double dx, dy;
-
   if (fixposition)
     return;
 
-  ctx->set_dirty();
+  double dx, dy;
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -1265,6 +1269,9 @@ void GrowPolyLine::align(double x, double y, glow_eAlignDirection direction)
     dx = 0;
     dy = y - y_low;
     break;
+  }
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
   }
   trf.move(dx, dy);
   x_right += dx;

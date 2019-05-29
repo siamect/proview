@@ -239,8 +239,10 @@ void GrowWindow::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 
 void GrowWindow::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 void GrowWindow::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
@@ -479,8 +481,6 @@ void GrowWindow::trace_close()
 void GrowWindow::align(double x, double y, glow_eAlignDirection direction)
 {
   double dx, dy;
-
-  ctx->set_dirty();
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -510,6 +510,9 @@ void GrowWindow::align(double x, double y, glow_eAlignDirection direction)
     dx = 0;
     dy = y - y_low;
     break;
+  }
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
   }
   trf.move(dx, dy);
   x_right += dx;
@@ -587,7 +590,6 @@ int GrowWindow::event_handler(glow_eEvent event, int x, int y, double fx, double
         v_value -= (wctx_y1 - wctx_y0) * window_scale / 50;
         if (v_value < wctx_y0 * window_scale)
           v_value = wctx_y0 * window_scale;
-        ctx->set_dirty();
         v_scrollbar->set_value(v_value, y_high - (y_low + y_low_offs)
                 - scrollbar_width * horizontal_scrollbar);
         return 1;
@@ -610,7 +612,6 @@ int GrowWindow::event_handler(glow_eEvent event, int x, int y, double fx, double
           v_value = wctx_y1 * window_scale
               - ((y_high - (y_low + y_low_offs)
                     - scrollbar_width * horizontal_scrollbar));
-        ctx->set_dirty();
         v_scrollbar->set_value(v_value, y_high - (y_low + y_low_offs)
                 - scrollbar_width * horizontal_scrollbar);
         return 1;
@@ -851,17 +852,19 @@ void GrowWindow::configure_scrollbars()
 void GrowWindow::v_value_changed_cb(void* o, double value)
 {
   GrowWindow* gw = (GrowWindow*)o;
-
-  gw->v_value = value;
-  gw->ctx->set_dirty();
+  if (gw->v_value != value) {
+    gw->v_value = value;
+    gw->ctx->set_dirty();
+  }
 }
 
 void GrowWindow::h_value_changed_cb(void* o, double value)
 {
   GrowWindow* gw = (GrowWindow*)o;
-
-  gw->h_value = value;
-  gw->ctx->set_dirty();
+  if (gw->h_value != value) {
+    gw->h_value = value;
+    gw->ctx->set_dirty();
+  }
 }
 
 void GrowWindow::new_ctx()

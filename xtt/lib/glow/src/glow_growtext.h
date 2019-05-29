@@ -417,15 +417,16 @@ public:
   */
   void set_text_color(glow_eDrawType drawtype)
   {
-    color_drawtype = drawtype;
-    ctx->set_dirty();
+    if (color_drawtype != drawtype) {
+      color_drawtype = drawtype;
+      ctx->set_dirty();
+    }
   }
 
   //! Reset the text color to the original text color.
   void reset_text_color()
   {
-    color_drawtype = original_color_drawtype;
-    ctx->set_dirty();
+    set_text_color(original_color_drawtype);
   }
 
   //! Set the original text color.

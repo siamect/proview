@@ -302,9 +302,11 @@ public:
   void draw_background();
   void set_shadow(int shadowval)
   {
-    shadow = shadowval;
-    configure_scrollbars();
-    ctx->set_dirty();
+    if (shadow != shadowval) {
+      shadow = shadowval;
+      configure_scrollbars();
+      ctx->set_dirty();
+    }
   }
   void zoom();
   int get_background_object_limits(GlowTransform* t, glow_eTraceType type,

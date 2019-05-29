@@ -476,10 +476,7 @@ public:
   //! Reset color lightness to original color lightness.
   void reset_color_lightness()
   {
-    if (color_lightness == original_color_lightness)
-      return;
-    color_lightness = original_color_lightness;
-    ctx->set_dirty();
+    set_color_lightness(original_color_lightness);
   }
 
   //! Set the original color intensity.
@@ -521,10 +518,7 @@ public:
   //! Reset the color intensity to original color intensity.
   void reset_color_intensity()
   {
-    if (color_intensity == original_color_intensity)
-      return;
-    color_intensity = original_color_intensity;
-    ctx->set_dirty();
+    set_color_intensity(original_color_intensity);
   }
 
   //! Set the original color shift.
@@ -553,10 +547,7 @@ public:
   */
   void incr_color_shift(int shift)
   {
-    if (!shift)
-      return;
-    color_shift += shift;
-    ctx->set_dirty();
+    set_color_shift(color_shift + shift);
   }
 
   //! Set the original color shift.
@@ -574,10 +565,7 @@ public:
   //! Reset the color shift to original color shift.
   void reset_color_shift()
   {
-    if (color_shift == original_color_shift)
-      return;
-    color_shift = original_color_shift;
-    ctx->set_dirty();
+    set_color_shift(original_color_shift);
   }
 
   //! Set the color inverse.
@@ -586,8 +574,10 @@ public:
   */
   void set_color_inverse(int inverse)
   {
-    color_inverse = inverse;
-    ctx->set_dirty();
+    if (color_inverse != inverse) {
+      color_inverse = inverse;
+      ctx->set_dirty();
+    }
   }
 
   //! Set the original background color.
@@ -606,17 +596,16 @@ public:
   */
   void set_background_color(glow_eDrawType color)
   {
-    background_drawtype = color;
-    ctx->set_dirty();
+    if (background_drawtype != color) {
+      background_drawtype = color;
+      ctx->set_dirty();
+    }
   }
 
   //! Reset the background color to the original background color.
   void reset_background_color()
   {
-    if (background_drawtype == original_background_drawtype)
-      return;
-    background_drawtype = original_background_drawtype;
-    ctx->set_dirty();
+    set_background_color(original_background_drawtype);
   }
 
   //! Set the level fill color.
@@ -643,8 +632,10 @@ public:
   */
   void set_fill_level(double level)
   {
-    fill_level = level;
-    ctx->set_dirty();
+    if (!feq(fill_level, level)) {
+      fill_level = level;
+      ctx->set_dirty();
+    }
   }
 
   //! Set the level direction.
@@ -1065,8 +1056,10 @@ public:
   */
   void set_shadow(int shadowval)
   {
-    shadow = shadowval;
-    ctx->set_dirty();
+    if (shadow != shadowval) {
+      shadow = shadowval;
+      ctx->set_dirty();
+    }
   }
 
   //! Set Gradient.
@@ -1075,8 +1068,10 @@ public:
   */
   void set_gradient(glow_eGradient gradientval)
   {
-    gradient = gradientval;
-    ctx->set_dirty();
+    if (gradient != gradientval) {
+      gradient = gradientval;
+      ctx->set_dirty();
+    }
   }
 
   //! Set root node.

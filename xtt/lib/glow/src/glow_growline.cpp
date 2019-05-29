@@ -82,7 +82,9 @@ GrowLine::~GrowLine()
 
 void GrowLine::move(double delta_x, double delta_y, int grid)
 {
-  ctx->set_dirty();
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
   if (grid) {
     double x_grid, y_grid;
 
@@ -164,14 +166,12 @@ int GrowLine::event_handler(glow_eEvent event, int x, int y, double fx,
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
       ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
-      hot = 1;
-      ctx->set_dirty();
+      set_hot(1);
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
         ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
-      hot = 0;
-      ctx->set_dirty();
+      set_hot(0);
     }
     break;
   }
@@ -325,8 +325,10 @@ void GrowLine::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 
 void GrowLine::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 void GrowLine::get_borders(GlowTransform* t, double* x_right, double* x_left,
@@ -352,12 +354,6 @@ void GrowLine::select_region_insert(double ll_x, double ll_y, double ur_x,
     if (x_right > ll_x && x_left < ur_x && y_low < ur_y && y_high > ll_y)
       ctx->select_insert(this);
   }
-}
-
-void GrowLine::set_linewidth(int linewidth)
-{
-  GlowLine::set_linewidth(linewidth);
-  ctx->set_dirty();
 }
 
 void GrowLine::set_dynamic(char* code, int size)
@@ -423,10 +419,8 @@ void GrowLine::set_scale(
   default:;
   }
 
-  double old_x_left = x_left;
-  double old_x_right = x_right;
-  double old_y_low = y_low;
-  double old_y_high = y_high;
+  double old_x_left = x_left, old_y_low = y_low;
+  double old_x_right = x_right, old_y_high = y_high;
   trf.scale_from_stored(scale_x, scale_y, x0, y0);
   get_node_borders();
 
@@ -575,7 +569,6 @@ void GrowLine::align(double x, double y, glow_eAlignDirection direction)
 {
   double dx, dy;
 
-  ctx->set_dirty();
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -605,6 +598,9 @@ void GrowLine::align(double x, double y, glow_eAlignDirection direction)
     dx = 0;
     dy = y - y_low;
     break;
+  }
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
   }
   trf.move(dx, dy);
   x_right += dx;

@@ -69,8 +69,10 @@ void GrowScrollBar::open(std::ifstream& fp)
 
 void GrowScrollBar::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 void GrowScrollBar::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
@@ -195,24 +197,25 @@ void GrowScrollBar::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 
 double GrowScrollBar::set_value(double value, double length)
 {
+  double old_val = bar_value;
   bar_value = value;
   if (!feq(length, 0.0))
     bar_length = length;
 
-  if (bar_value < min_value)
-    bar_value = min_value;
-  if (bar_value > max_value - bar_length)
-    bar_value = max_value - bar_length;
-
-  ctx->set_dirty();
+  bar_value = CLAMP(bar_value, min_value, max_value - bar_length);
+  if (!feq(bar_value, old_val)) {
+    ctx->set_dirty();
+  }
   return bar_value;
 }
 
 void GrowScrollBar::set_range(double min, double max)
 {
+  if (!feq(max_value, max) || !feq(min_value, min)) {
+    ctx->set_dirty();
+  }
   max_value = max;
   min_value = min;
-  ctx->set_dirty();
 }
 
 void GrowScrollBar::export_javabean(GlowTransform* t, void* node,

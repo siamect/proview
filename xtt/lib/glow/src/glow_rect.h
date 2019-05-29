@@ -204,7 +204,10 @@ public:
   */
   void set_linewidth(int linewidth)
   {
-    line_width = linewidth;
+    if (line_width != linewidth) {
+      line_width = linewidth;
+      ctx->set_dirty();
+    }
   }
 
   //! Set fill.
@@ -214,7 +217,22 @@ public:
   */
   void set_fill(int fillval)
   {
-    fill = fillval;
+    if (fill != fillval) {
+      fill = fillval;
+      ctx->set_dirty();
+    }
+  }
+
+  //! Set the border color.
+  /*!
+    \param drawtype	Border color.
+  */
+  void set_drawtype(glow_eDrawType drawtype)
+  {
+    if (draw_type != drawtype) {
+      draw_type = drawtype;
+      ctx->set_dirty();
+    }
   }
 
   GlowPoint ll; //!< Lower left point of rectangle.

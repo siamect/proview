@@ -471,8 +471,10 @@ void GrowTrend::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 */
 void GrowTrend::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
 //! Draw the object.
@@ -804,8 +806,6 @@ void GrowTrend::add_value(double value, int idx)
 void GrowTrend::align(double x, double y, glow_eAlignDirection direction)
 {
   double dx, dy;
-
-  ctx->set_dirty();
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -835,6 +835,9 @@ void GrowTrend::align(double x, double y, glow_eAlignDirection direction)
     dx = 0;
     dy = y - y_low;
     break;
+  }
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
   }
   trf.move(dx, dy);
   x_right += dx;
@@ -1079,11 +1082,14 @@ void GrowTrend::set_data(double* data[3], int data_curves, int data_points)
 */
 void GrowTrend::set_x_mark1(double mark)
 {
-  display_x_mark1 = 1;
+  double old_mark = x_mark1;
   x_mark1 = ll.x
       + (mark - x_min_value[0]) / (x_max_value[0] - x_min_value[0])
           * (ur.x - ll.x);
-  ctx->set_dirty();
+  if (!display_x_mark1 || !feq(x_mark1, old_mark)) {
+    display_x_mark1 = 1;
+    ctx->set_dirty();
+  }
 }
 
 //! Set vertical mark 2.
@@ -1092,11 +1098,14 @@ void GrowTrend::set_x_mark1(double mark)
 */
 void GrowTrend::set_x_mark2(double mark)
 {
-  display_x_mark2 = 1;
+  double old_mark = x_mark2;
   x_mark2 = ll.x
       + (mark - x_min_value[0]) / (x_max_value[0] - x_min_value[0])
           * (ur.x - ll.x);
-  ctx->set_dirty();
+  if (!display_x_mark2 || !feq(x_mark2, old_mark)) {
+    display_x_mark2 = 1;
+    ctx->set_dirty();
+  }
 }
 
 //! Set horizontal mark 1.
@@ -1105,11 +1114,14 @@ void GrowTrend::set_x_mark2(double mark)
 */
 void GrowTrend::set_y_mark1(double mark)
 {
-  display_y_mark1 = 1;
+  double old_mark = y_mark1;
   y_mark1 = ur.y
       - (mark - y_min_value[0]) / (y_max_value[0] - y_min_value[0])
           * (ur.y - ll.y);
-  ctx->set_dirty();
+  if (!display_y_mark1 || !feq(y_mark1, old_mark)) {
+    display_y_mark1 = 1;
+    ctx->set_dirty();
+  }
 }
 
 //! Set horizontal mark 2.
@@ -1118,11 +1130,14 @@ void GrowTrend::set_y_mark1(double mark)
 */
 void GrowTrend::set_y_mark2(double mark)
 {
-  display_y_mark2 = 1;
+  double old_mark = y_mark2;
   y_mark2 = ur.y
       - (mark - y_min_value[0]) / (y_max_value[0] - y_min_value[0])
           * (ur.y - ll.y);
-  ctx->set_dirty();
+  if (!display_y_mark2 || !feq(y_mark2, old_mark)) {
+    display_y_mark2 = 1;
+    ctx->set_dirty();
+  }
 }
 
 void GrowTrend::set_mark_color(glow_eDrawType m1color, glow_eDrawType m2color)

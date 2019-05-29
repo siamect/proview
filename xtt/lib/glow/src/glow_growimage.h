@@ -515,12 +515,7 @@ public:
   */
   void incr_original_color_lightness(int lightness)
   {
-    color_lightness += lightness;
-    if (color_lightness > 5)
-      color_lightness = 5;
-    if (color_lightness < -5)
-      color_lightness = -5;
-    ctx->set_dirty();
+    set_color_lightness(CLAMP(color_lightness + lightness, -5, 5));
   }
 
   //! Set the color lightness.
@@ -550,12 +545,7 @@ public:
   */
   void incr_original_color_intensity(int intensity)
   {
-    color_intensity += intensity;
-    if (color_intensity > 5)
-      color_intensity = 5;
-    if (color_intensity < -5)
-      color_intensity = -5;
-    ctx->set_dirty();
+    set_color_lightness(CLAMP(color_intensity + intensity, -5, 5));
   }
 
   //! Set the color intensity.
@@ -594,10 +584,7 @@ public:
   */
   void incr_color_shift(int shift)
   {
-    if (!shift)
-      return;
-    color_shift += shift;
-    ctx->set_dirty();
+    set_color_shift(color_shift + shift);
   }
 
   //! Set the original color shift.
@@ -618,8 +605,10 @@ public:
   */
   void set_color_inverse(int inverse)
   {
-    color_inverse = inverse;
-    ctx->set_dirty();
+    if (color_inverse != inverse) {
+      color_inverse = inverse;
+      ctx->set_dirty();
+    }
   }
 
   //! Calculate the color of the image dependent on the color tone, brightness,

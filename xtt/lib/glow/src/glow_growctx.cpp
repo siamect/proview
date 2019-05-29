@@ -130,7 +130,7 @@ GrowCtx::~GrowCtx()
 
 void GrowCtx::set_mode(grow_eMode grow_mode)
 {
-  if (edit_mode == grow_eMode_Scale) {
+  if (edit_mode == grow_eMode_Scale && select_rect_active) {
     // Erase scale rectangle
     select_rect_active = 0;
     set_dirty();
@@ -757,7 +757,6 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       cursor_x = x;
       cursor_y = y;
       if (node_movement_paste_active) {
-        set_dirty();
         switch (move_restriction) {
         case glow_eMoveRestriction_Vertical:
           a_move.move(0, y - node_move_last_y, 0);
@@ -789,19 +788,16 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       modified = 1;
       switch (move_restriction) {
       case glow_eMoveRestriction_No:
-        set_dirty();
         a_move.move(x - node_move_last_x, y - node_move_last_y, 0);
         node_move_last_x = x;
         node_move_last_y = y;
         break;
       case glow_eMoveRestriction_Vertical:
-        set_dirty();
         a_move.move(0, y - node_move_last_y, 0);
         node_move_last_x = x;
         node_move_last_y = y;
         break;
       case glow_eMoveRestriction_Horizontal:
-        set_dirty();
         a_move.move(x - node_move_last_x, 0, 0);
         node_move_last_x = x;
         node_move_last_y = y;
@@ -848,7 +844,6 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         }
         if (!move_y)
           break;
-        set_dirty();
         a_move.move(0, move_y, 0);
         if (restriction_object && event_callback[glow_eEvent_SliderMoved]
             && a_move.size() == 1
@@ -911,7 +906,6 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         }
         if (!move_x)
           break;
-        set_dirty();
         a_move.move(move_x, 0, 0);
         if (restriction_object && event_callback[glow_eEvent_SliderMoved]
             && a_move.size() == 1
@@ -1301,7 +1295,6 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       case glow_eMoveRestriction_No:
       case glow_eMoveRestriction_Vertical:
       case glow_eMoveRestriction_Horizontal:
-        set_dirty();
         if (!grid_on || a_move.a_size == 1) {
           if (move_restriction == glow_eMoveRestriction_No)
             a_move.move(x - node_move_last_x, y - node_move_last_y, grid_on);
@@ -1615,8 +1608,6 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       }
     } else if (select_rect_active && edit_mode == grow_eMode_Scale) {
     } else if (con_create_active) {
-      set_dirty();
-
       if (edit_mode == grow_eMode_Line || edit_mode == grow_eMode_PolyLine) {
         switch (move_restriction) {
         case glow_eMoveRestriction_Vertical:
@@ -1696,6 +1687,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         }
       }
       con_create_active = 0;
+      set_dirty();
     }
     break;
   case glow_eEvent_Enter:
@@ -2676,8 +2668,10 @@ void GrowCtx::set_background(glow_eDrawType color)
     if (!no_nav)
       gdraw->set_background(navw, color, 0, 0, 0, 0);
   }
-  background_color = color;
-  set_dirty();
+  if (background_color != color) {
+    background_color = color;
+    set_dirty();
+  }
 }
 
 int GrowCtx::get_background_image_size(int* width, int* height)
@@ -2718,8 +2712,10 @@ void GrowCtx::get_background_image(char* image)
 void GrowCtx::reset_background()
 {
   gdraw->reset_background(mw);
-  background_color = glow_eDrawType_LineErase;
-  set_dirty();
+  if (background_color != glow_eDrawType_LineErase) {
+    background_color = glow_eDrawType_LineErase;
+    set_dirty();
+  }
 }
 
 void GrowCtx::set_dynamic(char* code, int size)
@@ -3030,7 +3026,6 @@ void GrowCtx::align_select(glow_eAlignDirection direction)
     a_sel.align(0, object_y, direction);
     break;
   }
-  set_dirty();
 }
 
 void GrowCtx::equidistance_select(glow_eAlignDirection direction)
@@ -3168,7 +3163,6 @@ void GrowCtx::equidistance_select(glow_eAlignDirection direction)
     break;
   default:;
   }
-  set_dirty();
 }
 
 void GrowCtx::measure_javabean(double* pix_x_right, double* pix_x_left,
@@ -4313,8 +4307,7 @@ int GrowCtx::set_custom_color(
   if (!customcolors)
     return 0;
 
-  int sts;
-  sts = customcolors->set_color(color, red, green, blue);
+  int sts = customcolors->set_color(color, red, green, blue);
   if (ODD(sts)) {
     gdraw->update_color(color);
     if (color == background_color)
