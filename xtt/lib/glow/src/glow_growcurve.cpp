@@ -778,7 +778,7 @@ void GrowCurve::add_points(glow_sCurveData* data, unsigned int* no_of_points)
           y_value = MAX(ll.y, MIN(y_value, ur.y));
         }
         if (!fill)
-          erase(ctx->mw);
+          erase(&ctx->mw);
 
         if (!fill_curve)
           curve[idx]->add_and_shift_y_value(y_value);
@@ -808,7 +808,7 @@ void GrowCurve::add_points(glow_sCurveData* data, unsigned int* no_of_points)
           }
         }
         if (!fill)
-          erase(ctx->mw);
+          erase(&ctx->mw);
 
         if (!fill_curve)
           curve[idx]->add_and_shift_y_values(y_values, no_of_points[0]);

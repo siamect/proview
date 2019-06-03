@@ -325,10 +325,10 @@ void GrowPolyLine::calculate_shadow(glow_sShadowInfo** s, int* num, int ish,
   *num = p_num;
 }
 
-void GrowPolyLine::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowPolyLine::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int chot = 0;
   if (hot && ctx->environment != glow_eEnv_Development) {
     if (ctx->hot_indication == glow_eHotIndication_No)
@@ -487,9 +487,9 @@ void GrowPolyLine::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   }
 }
 
-void GrowPolyLine::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowPolyLine::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   if (hot && ctx->environment != glow_eEnv_Development
       && ctx->hot_indication != glow_eHotIndication_LineWidth)
     hot = 0;
@@ -531,13 +531,13 @@ void GrowPolyLine::move(double delta_x, double delta_y, int grid)
     double x_grid, y_grid;
 
     /* Move to closest grid point */
-    ctx->find_grid(x_left + delta_x / ctx->mw->zoom_factor_x,
-        y_low + delta_y / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid(x_left + delta_x / ctx->mw.zoom_factor_x,
+        y_low + delta_y / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
     trf.move(x_grid - x_left, y_grid - y_low);
     get_node_borders();
   } else {
-    double dx = delta_x / ctx->mw->zoom_factor_x;
-    double dy = delta_y / ctx->mw->zoom_factor_y;
+    double dx = delta_x / ctx->mw.zoom_factor_x;
+    double dy = delta_y / ctx->mw.zoom_factor_y;
     trf.move(dx, dy);
     x_right += dx;
     x_left += dx;
@@ -552,8 +552,8 @@ void GrowPolyLine::move(double delta_x, double delta_y, int grid)
 void GrowPolyLine::move_current_point(int delta_x, int delta_y, int grid)
 {
   glow_sPoint p = trf * (*((GlowPoint*)a_points[current_point]));
-  p.x += double(delta_x) / ctx->mw->zoom_factor_x;
-  p.y += double(delta_y) / ctx->mw->zoom_factor_y;
+  p.x += double(delta_x) / ctx->mw.zoom_factor_x;
+  p.y += double(delta_y) / ctx->mw.zoom_factor_y;
 
   if (grid) {
     double x_grid, y_grid;
@@ -576,7 +576,7 @@ GrowPolyLine::~GrowPolyLine()
   ctx->object_deleted(this);
   ctx->set_dirty();
   if (hot)
-    ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 }
 
 int GrowPolyLine::local_event_handler(glow_eEvent event, double x, double y)
@@ -586,14 +586,14 @@ int GrowPolyLine::local_event_handler(glow_eEvent event, double x, double y)
     int dy = 4;
 
     glow_sPoint c = trf * glow_sPoint({x, y});
-    c.x = c.x * ctx->mw->zoom_factor_x + ctx->mw->offset_x;
-    c.y = c.y * ctx->mw->zoom_factor_y + ctx->mw->offset_y;
+    c.x = c.x * ctx->mw.zoom_factor_x + ctx->mw.offset_x;
+    c.y = c.y * ctx->mw.zoom_factor_y + ctx->mw.offset_y;
 
     glow_sPoint p1;
     for (int i = 0; i < a_points.a_size; i++) {
       p1 = trf * (*((GlowPoint*)a_points[i]));
-      p1.x = p1.x * ctx->mw->zoom_factor_x + ctx->mw->offset_x;
-      p1.y = p1.y * ctx->mw->zoom_factor_y + ctx->mw->offset_y;
+      p1.x = p1.x * ctx->mw.zoom_factor_x + ctx->mw.offset_x;
+      p1.y = p1.y * ctx->mw.zoom_factor_y + ctx->mw.offset_y;
 
       if (ABS(p1.x - c.x) < dx && ABS(p1.y - c.y) < dy) {
         current_point = i;
@@ -666,12 +666,12 @@ int GrowPolyLine::event_handler(glow_eEvent event, int x, int y, double fx, doub
     }
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
-      ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
+      ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_CrossHair);
       set_hot(1);
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
-        ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+        ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
       set_hot(0);
     }
     break;
@@ -896,7 +896,7 @@ void GrowPolyLine::open(std::ifstream& fp)
   }
 }
 
-void GrowPolyLine::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowPolyLine::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -921,7 +921,7 @@ void GrowPolyLine::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowPolyLine::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowPolyLine::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -1286,12 +1286,12 @@ void GrowPolyLine::export_javabean(GlowTransform* t, void* node,
 {
   int idx;
   if (node && ((GrowNode*)node)->line_width)
-    idx = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor
+    idx = int(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor
             * ((GrowNode*)node)->line_width
         - 1);
   else
     idx = int(
-        ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * line_width - 1);
+        ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
   idx += hot;
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
@@ -1303,8 +1303,8 @@ void GrowPolyLine::export_javabean(GlowTransform* t, void* node,
   Matrix tmp = t ? (*t * trf) : trf;
   for (int i = 0; i < a_points.a_size; i++) {
     glow_sPoint p1 = tmp * (*((GlowPoint*)a_points[i]));
-    p[i].x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    p[i].y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+    p[i].x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    p[i].y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
 
     if (jshadow) {
       points[i].x = int(p[i].x + round);
@@ -1316,8 +1316,8 @@ void GrowPolyLine::export_javabean(GlowTransform* t, void* node,
   glow_sShadowInfo* sp = 0;
   if (jshadow) {
     int ish = int(shadow_width / 100 * tmp.vertical_scale() *
-                  MIN((x_right - x_left) * ctx->mw->zoom_factor_x,
-                      (y_high - y_low) * ctx->mw->zoom_factor_y) + round);
+                  MIN((x_right - x_left) * ctx->mw.zoom_factor_x,
+                      (y_high - y_low) * ctx->mw.zoom_factor_y) + round);
 
     if (ish)
       calculate_shadow(&sp, &p_num, ish, 0, 0, 1, 0);

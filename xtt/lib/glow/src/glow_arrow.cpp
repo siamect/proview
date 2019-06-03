@@ -160,10 +160,10 @@ void GlowArrow::open(std::ifstream& fp)
   }
 }
 
-void GlowArrow::draw(DrawWind *w, void* pos, int highlight, int hot, void* node)
+void GlowArrow::draw(GlowWind *w, void* pos, int highlight, int hot, void* node)
 {
   int p1_x, p1_y, p2_x, p2_y, p_dest_x, p_dest_y;
-  if (w == ctx->navw) {
+  if (w == &ctx->navw) {
     hot = 0;
     p1_x = p1.nav_z_x;
     p1_y = p1.nav_z_y;
@@ -191,10 +191,10 @@ void GlowArrow::draw(DrawWind *w, void* pos, int highlight, int hot, void* node)
       p2_y + ((GlowPoint*)pos)->z_y - w->offset_y, draw_type, idx, highlight);
 }
 
-void GlowArrow::erase(DrawWind *w, void* pos, int hot, void* node)
+void GlowArrow::erase(GlowWind *w, void* pos, int hot, void* node)
 {
   int p1_x, p1_y, p2_x, p2_y, p_dest_x, p_dest_y;
-  if (w == ctx->navw) {
+  if (w == &ctx->navw) {
     hot = 0;
     p1_x = p1.nav_z_x;
     p1_y = p1.nav_z_y;

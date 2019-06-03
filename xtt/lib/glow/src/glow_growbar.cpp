@@ -160,7 +160,7 @@ void GrowBar::open(std::ifstream& fp)
   }
 }
 
-void GrowBar::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowBar::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -185,7 +185,7 @@ void GrowBar::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowBar::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowBar::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -230,12 +230,12 @@ void GrowBar::set_highlight(int on)
   }
 }
 
-void GrowBar::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowBar::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
   if (!(display_level & ctx->display_level))
     return;
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int idx;
   glow_eDrawType drawtype;
   glow_eGradient grad = gradient;
@@ -372,11 +372,11 @@ void GrowBar::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   }
 }
 
-void GrowBar::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowBar::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int idx;
   if (fix_line_width) {
     idx = line_width;
@@ -515,10 +515,10 @@ void GrowBar::export_javabean(GlowTransform* t, void* node,
   Matrix tmp = t ? (*t * trf) : trf;
   glow_sPoint p1 = tmp * ll;
   glow_sPoint p2 = tmp * ur;
-  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p1.x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p1.y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+  p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
 
   int ll_x = int(MIN(p1.x, p2.x));
   int ur_x = int(MAX(p1.x, p2.x));

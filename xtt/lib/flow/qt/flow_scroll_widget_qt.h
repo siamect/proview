@@ -86,8 +86,6 @@ public:
   int destroyed;
   QScrollArea* form;
 
-  QImage image;
-
   virtual void handleEvent(QEvent* event);
 
 protected:
@@ -100,9 +98,6 @@ protected:
 
   bool is_realized;
   unsigned int ctxType;
-
-private:
-  void createBuffer(QSize size);
 
 public slots:
   void scroll_h_action(int value);

@@ -166,11 +166,11 @@ void GrowSlider::get_info_pixel(glow_eDirection* dir, double* max_position,
     *dir = direction;
     if (direction == glow_eDirection_Left
         || direction == glow_eDirection_Right) {
-      *max_position = max_pos * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-      *min_position = min_pos * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+      *max_position = max_pos * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+      *min_position = min_pos * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
     } else {
-      *max_position = max_pos * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-      *min_position = min_pos * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+      *max_position = max_pos * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+      *min_position = min_pos * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
     }
   } else {
     *dir = bg_dir;
@@ -178,31 +178,31 @@ void GrowSlider::get_info_pixel(glow_eDirection* dir, double* max_position,
     switch (bg_dir) {
     case glow_eDirection_Right:
       *max_position
-          = (bg_max - origo) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+          = (bg_max - origo) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
       *min_position
-          = (bg_min - origo) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
+          = (bg_min - origo) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
       break;
     case glow_eDirection_Left:
       *max_position
-          = (bg_max - (x_right - x_left - origo)) * ctx->mw->zoom_factor_x
-          - ctx->mw->offset_x;
+          = (bg_max - (x_right - x_left - origo)) * ctx->mw.zoom_factor_x
+          - ctx->mw.offset_x;
       *min_position
-          = (bg_min - (x_right - x_left - origo)) * ctx->mw->zoom_factor_x
-          - ctx->mw->offset_x;
+          = (bg_min - (x_right - x_left - origo)) * ctx->mw.zoom_factor_x
+          - ctx->mw.offset_x;
       break;
     case glow_eDirection_Down:
       *max_position
-          = (bg_max - origo) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+          = (bg_max - origo) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
       *min_position
-          = (bg_min - origo) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+          = (bg_min - origo) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
       break;
     case glow_eDirection_Up:
       *max_position
-          = (bg_max - (y_high - y_low - origo)) * ctx->mw->zoom_factor_y
-          - ctx->mw->offset_y;
+          = (bg_max - (y_high - y_low - origo)) * ctx->mw.zoom_factor_y
+          - ctx->mw.offset_y;
       *min_position
-          = (bg_min - (y_high - y_low - origo)) * ctx->mw->zoom_factor_y
-          - ctx->mw->offset_y;
+          = (bg_min - (y_high - y_low - origo)) * ctx->mw.zoom_factor_y
+          - ctx->mw.offset_y;
       break;
     default:;
     }
@@ -271,10 +271,10 @@ void GrowSlider::export_javabean(GlowTransform* t, void* node,
     p2 = *t * p2;
   }
 
-  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p1.x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p1.y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+  p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
 
   nc->get_java_name(java_name);
   ctx->export_jbean->slider(p1.x, p1.y, p2.x, p2.y, java_name, draw_type,

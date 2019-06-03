@@ -154,7 +154,7 @@ void GrowBarArc::open(std::ifstream& fp)
   }
 }
 
-void GrowBarArc::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowBarArc::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -179,7 +179,7 @@ void GrowBarArc::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowBarArc::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowBarArc::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -224,10 +224,10 @@ void GrowBarArc::set_highlight(int on)
   }
 }
 
-void GrowBarArc::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowBarArc::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int idx;
   double ang;
   glow_eDrawType drawtype;
@@ -352,9 +352,9 @@ void GrowBarArc::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   }
 }
 
-void GrowBarArc::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowBarArc::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int idx;
   if (hot && ctx->environment != glow_eEnv_Development
       && ctx->hot_indication != glow_eHotIndication_LineWidth)
@@ -456,7 +456,7 @@ void GrowBarArc::export_javabean(GlowTransform* t, void* node,
 #if 0
   int bold;
   int idx = int(
-      ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * (text_size + 4) - 4);
+      ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (text_size + 4) - 4);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
 
   bold = (text_drawtype == glow_eDrawType_TextHelveticaBold);

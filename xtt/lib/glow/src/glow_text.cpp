@@ -132,7 +132,7 @@ void GlowText::open(std::ifstream& fp)
   }
 }
 
-void GlowText::draw(DrawWind* w, void* pos, int highlight, int hot, void* node)
+void GlowText::draw(GlowWind* w, void* pos, int highlight, int hot, void* node)
 {
   int idx = int(w->zoom_factor_y / w->base_zoom_factor * (text_size + 4) - 4);
   if (idx < 0)
@@ -154,7 +154,7 @@ static glow_eDrawType get_erase_gc(glow_eDrawType gc) {
   }
 }
 
-void GlowText::erase(DrawWind* w, void* pos, int hot, void* node)
+void GlowText::erase(GlowWind* w, void* pos, int hot, void* node)
 {
   int idx = int(w->zoom_factor_y / w->base_zoom_factor * (text_size + 4) - 4);
   if (idx < 0)

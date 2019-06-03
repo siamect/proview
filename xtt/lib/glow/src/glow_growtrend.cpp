@@ -391,7 +391,7 @@ void GrowTrend::open(std::ifstream& fp)
   \param ur_x		Upper right x coordinate of drawing area.
   \param ur_y		Upper right y coordinate of drawing area.
 */
-void GrowTrend::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowTrend::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -428,7 +428,7 @@ void GrowTrend::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   drawing area,
   the drawingarea is extended so it contains the whole objects.
 */
-void GrowTrend::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowTrend::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -491,13 +491,13 @@ void GrowTrend::set_highlight(int on)
   multiplied with the parentnodes transform, to give the appropriate coordinates
   for the drawing.
 */
-void GrowTrend::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowTrend::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
   if (!(display_level & ctx->display_level))
     return;
 
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
 
   int idx;
   if (fix_line_width) {
@@ -572,7 +572,7 @@ void GrowTrend::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       glow_eDrawType_LineHighlight, highlight, (GrowNode*)colornode, 0);
 
   if (fill_curve) {
-    ctx->gdraw->set_clip_rectangle(w, ll_x, ll_y, ur_x, ur_y);
+    ctx->gdraw->set_clip_rectangle(w->window, ll_x, ll_y, ur_x, ur_y);
     for (int i = 0; i < curve_cnt; i++) {
       if (curve[i])
         curve[i]->border = 0;
@@ -594,7 +594,7 @@ void GrowTrend::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       if (curve[i])
         curve[i]->border = 1;
     }
-    ctx->gdraw->reset_clip_rectangle(w);
+    ctx->gdraw->reset_clip_rectangle(w->window);
   }
 
   for (int i = 0; i < vertical_lines; i++) {
@@ -624,7 +624,7 @@ void GrowTrend::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
         curve[i]->fill = 0;
     }
   }
-  ctx->gdraw->set_clip_rectangle(w, ll_x, ll_y, ur_x, ur_y);
+  ctx->gdraw->set_clip_rectangle(w->window, ll_x, ll_y, ur_x, ur_y);
   if (t) {
     GlowTransform tmp;
     tmp.set(*t * trf);
@@ -638,7 +638,7 @@ void GrowTrend::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
         curve[i]->draw(w, &trf, highlight, hot, node, colornode);
     }
   }
-  ctx->gdraw->reset_clip_rectangle(w);
+  ctx->gdraw->reset_clip_rectangle(w->window);
 
   if (fill_curve) {
     ctx->gdraw->line(ll_x, ll_y, ll_x, ur_y, drawtype, idx, 0);
@@ -693,11 +693,11 @@ void GrowTrend::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   \param hot		Draw as hot, with larger line width.
   \param node		Parent node. Can be zero.
 */
-void GrowTrend::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowTrend::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int idx;
   if (fix_line_width) {
     idx = line_width;
@@ -942,10 +942,10 @@ void GrowTrend::export_javabean(GlowTransform* t, void* node,
   glow_sPoint p1 = tmp * ll;
   glow_sPoint p2 = tmp * ur;
 
-  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p1.x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p1.y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+  p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   double ll_x = MIN(p1.x, p2.x);
   double ur_x = MAX(p1.x, p2.x);
   double ll_y = MIN(p1.y, p2.y);

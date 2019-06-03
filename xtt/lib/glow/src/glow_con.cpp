@@ -351,7 +351,7 @@ GlowCon::~GlowCon()
     ((GrowConGlue*)source_node)->con_modified(0);
   ctx->set_dirty();
   if (hot)
-    ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 }
 
 GlowCon::GlowCon(const GlowCon& c, GlowNode* source, GlowNode* dest)
@@ -451,16 +451,16 @@ void GlowCon::get_con_borders()
     for (int i = 0; i < a_num; i++)
       arc_a[i]->get_borders(0, 0, &x_right, &x_left, &y_high, &y_low, NULL);
   }
-  x_right += (cc->line_width + 1) * ctx->mw->zoom_factor_x / 2;
-  x_left -= (cc->line_width + 1) * ctx->mw->zoom_factor_x / 2;
-  y_low -= (cc->line_width + 1) * ctx->mw->zoom_factor_y / 2;
-  y_high += (cc->line_width + 1) * ctx->mw->zoom_factor_y / 2;
+  x_right += (cc->line_width + 1) * ctx->mw.zoom_factor_x / 2;
+  x_left -= (cc->line_width + 1) * ctx->mw.zoom_factor_x / 2;
+  y_low -= (cc->line_width + 1) * ctx->mw.zoom_factor_y / 2;
+  y_high += (cc->line_width + 1) * ctx->mw.zoom_factor_y / 2;
 }
 
 void GlowCon::move(double delta_x, double delta_y, int grid)
 {
-  double x = delta_x / ctx->mw->zoom_factor_x;
-  double y = delta_y / ctx->mw->zoom_factor_y;
+  double x = delta_x / ctx->mw.zoom_factor_x;
+  double y = delta_y / ctx->mw.zoom_factor_y;
 
   if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
     ctx->set_dirty();
@@ -488,8 +488,8 @@ void GlowCon::move(double delta_x, double delta_y, int grid)
 
 void GlowCon::move_noerase(int delta_x, int delta_y, int grid)
 {
-  double x = delta_x / ctx->mw->zoom_factor_x;
-  double y = delta_y / ctx->mw->zoom_factor_y;
+  double x = delta_x / ctx->mw.zoom_factor_x;
+  double y = delta_y / ctx->mw.zoom_factor_y;
 
   if (delta_x != 0 || delta_y != 0) {
     ctx->set_dirty();
@@ -787,7 +787,7 @@ void GlowCon::open(std::ifstream& fp)
   }
 }
 
-void GlowCon::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GlowCon::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -828,7 +828,7 @@ void GlowCon::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GlowCon::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GlowCon::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -2825,11 +2825,11 @@ int GlowCon::event_handler(glow_eEvent event, int x, int y)
     }
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
-      ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
+      ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_CrossHair);
       set_hot(1);
     }
     if (!sts && hot) {
-      ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+      ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
       set_hot(0);
     }
     break;

@@ -148,11 +148,11 @@ public:
   void print(void* pos, void* node);
   void save(std::ofstream& fp, glow_eSaveMode mode);
   void open(GrowCtx* ctx, std::ifstream& fp);
-  void draw(DrawWind *w, void* pos, int highlight, int hot, void* node);
-  void erase(DrawWind *w, void* pos, int hot, void* node);
-  void draw(DrawWind *w, GlowTransform* t, int highlight, int hot, void* node,
+  void draw(GlowWind *w, void* pos, int highlight, int hot, void* node);
+  void erase(GlowWind *w, void* pos, int hot, void* node);
+  void draw(GlowWind *w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
-  void erase(DrawWind *w, GlowTransform* t, int hot, void* node);
+  void erase(GlowWind *w, GlowTransform* t, int hot, void* node);
   void draw_inverse(void* pos, int hot, void* node);
   void get_borders(
       double* x_right, double* x_left, double* y_high, double* y_low);

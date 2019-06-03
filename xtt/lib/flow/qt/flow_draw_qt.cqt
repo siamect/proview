@@ -131,8 +131,8 @@ void FlowDrawQt::create_secondary_ctx(FlowCtx* flow_ctx,
   }
 
   ctx->fdraw = this;
-  ctx->mw = &m_wind;
-  ctx->navw = &nav_wind;
+  ctx->mw = this->ctx->mw;
+  ctx->navw = this->ctx->navw;
   ctx->set_nodraw();
   ctx->trace_connect_func = flow_ctx->trace_connect_func;
   ctx->trace_disconnect_func = flow_ctx->trace_disconnect_func;
@@ -165,7 +165,6 @@ void FlowDrawQt::change_ctx(FlowCtx* from_ctx, FlowCtx* to_ctx)
     ((BrowCtx*)to_ctx)->configure();
   }
   to_ctx->set_dirty();
-  to_ctx->redraw_if_dirty();
 }
 
 void FlowDrawQt::delete_secondary_ctx(FlowCtx* ctx)
@@ -192,11 +191,7 @@ FlowDrawQt::FlowDrawQt(QWidget* x_toplevel, void** flow_ctx,
   ctx->fdraw = this;
 
   assert(dynamic_cast<QtScrollWidgetFlow*>(toplevel) != NULL);
-  m_wind.window = dynamic_cast<QtScrollWidgetFlow*>(toplevel);
-  m_wind.buffer = &(dynamic_cast<QtScrollWidgetFlow*>(toplevel)->image);
-
-  ctx->mw = &m_wind;
-  ctx->navw = &nav_wind;
+  ctx->mw = dynamic_cast<QtScrollWidgetFlow*>(toplevel);
 
   foreground = flow_allocate_color("black");
 
@@ -205,11 +200,14 @@ FlowDrawQt::FlowDrawQt(QWidget* x_toplevel, void** flow_ctx,
   init_proc(toplevel, ctx, client_data);
 }
 
+void FlowDrawQt::set_dirty(void *w) {
+  ((QWidget*)w)->update();
+}
+
 void FlowDrawQt::init_nav(QWidget* nav_widget, void* flow_ctx)
 {
   assert(dynamic_cast<QtScrollWidgetFlow*>(nav_widget) != NULL);
-  nav_wind.window = dynamic_cast<QtScrollWidgetFlow*>(nav_widget);
-  nav_wind.buffer = &(dynamic_cast<QtScrollWidgetFlow*>(nav_widget)->image);
+  ctx->navw = dynamic_cast<QtScrollWidgetFlow*>(nav_widget);
 
   QPalette pal;
   pal.setColor(QPalette::Background, background);
@@ -243,7 +241,7 @@ void FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
     return;
   }
 
-  if (target == m_wind.window || event->type() == QEvent::KeyPress) {
+  if (target == ctx->mw || event->type() == QEvent::KeyPress) {
     switch (event->type()) {
     case QEvent::KeyPress: {
       QKeyEvent* keyEvent = ((QKeyEvent*)event);
@@ -574,6 +572,7 @@ void FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
     case QEvent::Paint:
     case QEvent::UpdateRequest: {
       QPaintEvent* paintEvent = ((QPaintEvent*)event);
+      ctx->is_dirty = 1;
       sts = ctx->event_handler(flow_eEvent_Exposure, paintEvent->rect().x(),
           paintEvent->rect().y(), paintEvent->rect().width(),
           paintEvent->rect().height());
@@ -696,7 +695,7 @@ void FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
     default:
       break;
     }
-  } else if (target == nav_wind.window) {
+  } else if (target == ctx->navw) {
     switch (event->type()) {
     case QEvent::MouseButtonPress: {
       QMouseEvent* mouseEvent = ((QMouseEvent*)event);
@@ -747,8 +746,8 @@ void FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
     }
     case QEvent::Paint:
     case QEvent::UpdateRequest: {
+      ctx->is_dirty = 1;
       sts = ctx->event_handler_nav(flow_eEvent_Exposure, 0, 0);
-      nav_wind.window->update();
       break;
     }
     case QEvent::MouseMove: {
@@ -765,12 +764,6 @@ void FlowDrawQt::event_handler(FlowCtx* ctx, QEvent* event, QWidget* target)
     default:;
     }
   }
-
-  if (sts == FLOW__DESTROYED) {
-    return;
-  }
-
-  m_wind.window->update();
 }
 
 void FlowDrawQt::enable_event(FlowCtx* ctx, flow_eEvent event, flow_eEventType event_type,
@@ -779,41 +772,42 @@ void FlowDrawQt::enable_event(FlowCtx* ctx, flow_eEvent event, flow_eEventType e
   ctx->enable_event(event, event_type, event_cb);
 }
 
-int FlowDrawQt::begin(DrawWind *w) {
+int FlowDrawQt::begin(void *w) {
   if (!this->w) {
-    this->w = w;
+    this->w = (QWidget*)w;
+    this->painter.begin(this->w);
     return 1;
   }
   return 0;
 }
 
 void FlowDrawQt::end() {
+  this->painter.end();
   this->w = NULL;
 }
 
-unique_ptr<QPainter> FlowDrawQt::get_painter(int painter_type, int size)
+void FlowDrawQt::get_painter(int painter_type, int size)
 {
-  unique_ptr<QPainter> painter(new QPainter(w->buffer));
-  painter->setBrush(QBrush(draw_type_to_color(this, painter_type)));
-  painter->setBackground(QBrush(this->background));
+  painter.setBrush(QBrush(draw_type_to_color(this, painter_type)));
+  painter.setBackground(QBrush(this->background));
   switch (painter_type) {
   case flow_eDrawType_LineDashed:
   case flow_eDrawType_LineDashedRed: {
-    QPen pen = QPen(painter->brush(), size + 1, Qt::DashLine);
+    QPen pen = QPen(painter.brush(), size + 1, Qt::DashLine);
     QVector<double> dashes;
     dashes << 7 + size << 7 + size;
     pen.setDashPattern(dashes);
-    painter->setPen(pen);
-    return painter;
+    painter.setPen(pen);
+    return;
   }
   case flow_eDrawType_TextHelvetica:
   case flow_eDrawType_TextHelveticaBold:
   case flow_eDrawType_TextHelveticaErase:
   case flow_eDrawType_TextHelveticaEraseBold: {
-    painter->setPen(QPen(painter->brush(), size + 1));
+    painter.setPen(QPen(painter.brush(), size + 1));
     int sizes[9] = {8, 10, 12, 14, 14, 18, 18, 18, 24};
-    painter->setFont(get_font(painter_type, sizes[size], "Helvetica"));
-    return painter;
+    painter.setFont(get_font(painter_type, sizes[size], "Helvetica"));
+    return;
   }
   case flow_eDrawType_Green:
   case flow_eDrawType_Yellow:
@@ -823,8 +817,8 @@ unique_ptr<QPainter> FlowDrawQt::get_painter(int painter_type, int size)
   case flow_eDrawType_LineRed:
   case flow_eDrawType_LineGray:
   default:
-    painter->setPen(QPen(painter->brush(), size + 1));
-    return painter;
+    painter.setPen(QPen(painter.brush(), size + 1));
+    return;
   }
 }
 
@@ -839,11 +833,11 @@ void FlowDrawQt::rect(int x, int y, int width, int height,
     painter_type = flow_eDrawType(painter_type + 1);
   }
 
-  unique_ptr<QPainter> painter = get_painter(painter_type, idx);
+  get_painter(painter_type, idx);
   if (!fill) {
-    painter->setBrush(Qt::NoBrush);
+    painter.setBrush(Qt::NoBrush);
   }
-  painter->drawRect(x, y, width, height);
+  painter.drawRect(x, y, width, height);
 }
 
 void FlowDrawQt::triangle(int x, int y, int width, int height,
@@ -857,7 +851,7 @@ void FlowDrawQt::triangle(int x, int y, int width, int height,
     painter_type = flow_eDrawType(painter_type + 1);
   }
 
-  unique_ptr<QPainter> painter = get_painter(painter_type, idx);
+  get_painter(painter_type, idx);
 
   QPolygon poly(4);
   poly[0] = QPoint(x, y + height);
@@ -866,9 +860,9 @@ void FlowDrawQt::triangle(int x, int y, int width, int height,
   poly[3] = QPoint(x, y + height);
 
   if (!fill) {
-    painter->setBrush(Qt::NoBrush);
+    painter.setBrush(Qt::NoBrush);
   }
-  painter->drawPolygon(poly);
+  painter.drawPolygon(poly);
 }
 
 void FlowDrawQt::arrow(int x1, int y1, int x2, int y2, int x3,
@@ -878,7 +872,7 @@ void FlowDrawQt::arrow(int x1, int y1, int x2, int y2, int x3,
     painter_type = flow_eDrawType_Line;
   }
 
-  unique_ptr<QPainter> painter = get_painter(painter_type, idx);
+  get_painter(painter_type, idx);
 
   QPolygon poly(4);
   poly[0] = QPoint(x1, y1);
@@ -888,7 +882,7 @@ void FlowDrawQt::arrow(int x1, int y1, int x2, int y2, int x3,
 
   QPainterPath path;
   path.addPolygon(poly);
-  painter->fillPath(path, painter->brush());
+  painter.fillPath(path, painter.brush());
 }
 
 void FlowDrawQt::arc(int x, int y, int width, int height,
@@ -903,9 +897,9 @@ void FlowDrawQt::arc(int x, int y, int width, int height,
     painter_type = flow_eDrawType(painter_type + 1);
   }
 
-  unique_ptr<QPainter> painter = get_painter(painter_type, idx);
-  painter->setBrush(Qt::NoBrush);
-  painter->drawArc(x, y, width, height, angle1 * 16, angle2 * 16);
+  get_painter(painter_type, idx);
+  painter.setBrush(Qt::NoBrush);
+  painter.drawArc(x, y, width, height, angle1 * 16, angle2 * 16);
 }
 
 void FlowDrawQt::line(int x1, int y1, int x2, int y2,
@@ -919,16 +913,16 @@ void FlowDrawQt::line(int x1, int y1, int x2, int y2,
     painter_type = flow_eDrawType(painter_type + 1);
   }
 
-  unique_ptr<QPainter> painter = get_painter(painter_type, idx);
-  painter->drawLine(x1, y1, x2, y2);
+  get_painter(painter_type, idx);
+  painter.drawLine(x1, y1, x2, y2);
 }
 
 void FlowDrawQt::text(int x, int y, char* text, int len, flow_eDrawType painter_type, int idx, double size, int highlight, int dimmed)
 {
-  unique_ptr<QPainter> painter = get_painter(painter_type, idx);
+  get_painter(painter_type, idx);
   if (dimmed) {
-    painter->setBrush(QBrush(flow_allocate_color("gray")));
-    painter->setPen(QPen(painter->brush(), size+1));
+    painter.setBrush(QBrush(flow_allocate_color("gray")));
+    painter.setPen(QPen(painter.brush(), size+1));
   }
 
   QString str;
@@ -938,11 +932,11 @@ void FlowDrawQt::text(int x, int y, char* text, int len, flow_eDrawType painter_
     str = QString::fromUtf8(text);
   }
 
-  painter->setFont(get_font(painter_type, FONT_SCALE * size));
+  painter.setFont(get_font(painter_type, FONT_SCALE * size));
 
-  QRect rect = painter->fontMetrics().boundingRect(str);
+  QRect rect = painter.fontMetrics().boundingRect(str);
 
-  painter->drawText(x, ROUND(y - 0.8 * rect.height()), rect.width(), rect.height(), Qt::TextDontClip, str, &rect);
+  painter.drawText(x, ROUND(y - 0.8 * rect.height()), rect.width(), rect.height(), Qt::TextDontClip, str, &rect);
 }
 
 void FlowDrawQt::pixmaps_create(
@@ -976,18 +970,20 @@ void FlowDrawQt::pixmap(int x, int y, flow_sPixmapData* pixmap_data,
   flow_sPixmapDataElem* pdata = (flow_sPixmapDataElem*)pixmap_data + idx;
   draw_sPixmap* pms = (draw_sPixmap*)pixmaps;
 
-  {
-    unique_ptr<QPainter> painter = get_painter(gc_bg, idx);
-    painter->fillRect(x, y, pdata->width, pdata->height, painter->brush());
-  }
+  get_painter(gc_bg, idx);
+  painter.fillRect(x, y, pdata->width, pdata->height, painter.brush());
 
-  unique_ptr<QPainter> painter = get_painter(gc_fg, idx);
+  get_painter(gc_fg, idx);
+
+  painter.save();
 
   QRegion clipRegion = QRegion(pms->pixmap[idx].createMaskFromColor(Qt::black));
-  painter->setClipRegion(clipRegion.translated(x, y));
-  painter->setClipping(true);
+  painter.setClipRegion(clipRegion.translated(x, y));
+  painter.setClipping(true);
 
-  painter->fillRect(x, y, pdata->width, pdata->height, painter->brush());
+  painter.fillRect(x, y, pdata->width, pdata->height, painter.brush());
+
+  painter.restore();
 }
 
 void FlowDrawQt::image(int x, int y, int width, int height,
@@ -997,41 +993,46 @@ void FlowDrawQt::image(int x, int y, int width, int height,
     return;
   }
 
-  unique_ptr<QPainter> painter = get_painter(flow_eDrawType_Line, 0);
+  get_painter(flow_eDrawType_Line, 0);
 
   if (clip_mask) {
+    painter.save();
     QRegion clipRegion
       = QRegion(((QPixmap*)clip_mask)->createMaskFromColor(Qt::black));
-    painter->setClipRegion(clipRegion.translated(x, y));
-    painter->setClipping(true);
+    painter.setClipRegion(clipRegion.translated(x, y));
+    painter.setClipping(true);
   }
 
-  painter->drawImage(QRect(x, y, width, height), *((QImage*)image));
+  painter.drawImage(QRect(x, y, width, height), *((QImage*)image));
+
+  if (clip_mask) {
+    painter.restore();
+  }
 }
 
 void FlowDrawQt::clear()
 {
-  unique_ptr<QPainter> painter = new QPainter(w->buffer);
-  painter->setBackground(QBrush(background));
-  painter->eraseRect(w->buffer->rect());
+  painter.setBackground(QBrush(background));
+  painter.eraseRect(w->rect());
 }
 
-void FlowDrawQt::get_window_size(DrawWind *wind, int* width, int* height)
+void FlowDrawQt::get_window_size(void *wind, int* width, int* height)
 {
-  *width = wind->buffer->width();
-  *height = wind->buffer->height();
+  QWidget *w = (QWidget*)wind;
+  *width = w->width();
+  *height = w->height();
 }
 
-void FlowDrawQt::set_window_size(DrawWind *wind, int width, int height)
+void FlowDrawQt::set_window_size(void *wind, int width, int height)
 {
-  wind->window->resize(width, height);
+  ((QWidget*)wind)->resize(width, height);
 }
 
 bool FlowDrawQt::draw_timer_cb()
 {
   draw_timer_id->stop();
   (draw_timer_callback_func)(ctx);
-  m_wind.window->update();
+  ((QWidget*)ctx->mw)->update();
   return FALSE;
 }
 
@@ -1070,20 +1071,21 @@ void FlowDrawQt::cancel_timer(void* ctx)
   }
 }
 
-void FlowDrawQt::set_cursor(DrawWind *wind, draw_eCursor cursor)
+void FlowDrawQt::set_cursor(void *wind, draw_eCursor cursor)
 {
+  QWidget *w = (QWidget*)wind;
   if (cursor == draw_eCursor_Normal) {
-    wind->window->unsetCursor();
+    w->unsetCursor();
   } else {
     switch (cursor) {
     case draw_eCursor_CrossHair:
-      wind->window->setCursor(QCursor(Qt::CrossCursor));
+      w->setCursor(QCursor(Qt::CrossCursor));
       break;
     case draw_eCursor_DiamondCross:
-      wind->window->setCursor(QCursor(Qt::SizeAllCursor));
+      w->setCursor(QCursor(Qt::SizeAllCursor));
       break;
     case draw_eCursor_Hand:
-      wind->window->setCursor(QCursor(Qt::PointingHandCursor));
+      w->setCursor(QCursor(Qt::PointingHandCursor));
       break;
     default:
       break;

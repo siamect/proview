@@ -276,10 +276,10 @@ void GrowXYCurve::export_javabean(GlowTransform* t, void* node,
   Matrix tmp = t ? (*t * trf) : trf;
   glow_sPoint p1 = tmp * ll;
   glow_sPoint p2 = tmp * ur;
-  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p1.x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p1.y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+  p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
 
   double ll_x = MIN(p1.x, p2.x);
   double ur_x = MAX(p1.x, p2.x);

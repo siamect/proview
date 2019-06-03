@@ -48,8 +48,8 @@ static void tiptext_timer_cb(GlowCtx* ctx)
   ctx->tiptext->active = true;
 
   ctx->set_dirty();
-  ctx->redraw_if_dirty();
 }
+
 GlowTipText::~GlowTipText()
 {
   if (timer_id)
@@ -69,7 +69,7 @@ void GlowTipText::draw_text(GlowArrayElem* e, char* text, int x, int y)
 
   ctx->gdraw->get_text_extent(text, strlen(text), glow_eDrawType_TextHelvetica,
       text_size, glow_eFont_LucidaSans, &z_width, &z_height, &z_descent,
-      ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * (8 + 2 * text_size),
+      ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8 + 2 * text_size),
       0);
 
   text_x = x + TIPTEXT_OFFSET_X;
@@ -80,12 +80,12 @@ void GlowTipText::draw_text(GlowArrayElem* e, char* text, int x, int y)
   strncpy(tiptext, text, sizeof(tiptext));
   text_object = e;
 
-  if (text_x + text_width > ctx->mw->window_width + ctx->mw->subwindow_x)
-    text_x = ctx->mw->window_width + ctx->mw->subwindow_x - text_width;
+  if (text_x + text_width > ctx->mw.window_width + ctx->mw.subwindow_x)
+    text_x = ctx->mw.window_width + ctx->mw.subwindow_x - text_width;
   if (text_x < 0)
     text_x = 0;
-  if (text_y + text_height > ctx->mw->window_height + ctx->mw->subwindow_y)
-    text_y = ctx->mw->window_height + ctx->mw->subwindow_y - text_height;
+  if (text_y + text_height > ctx->mw.window_height + ctx->mw.subwindow_y)
+    text_y = ctx->mw.window_height + ctx->mw.subwindow_y - text_height;
   if (text_y < 0)
     text_y = 0;
 
@@ -104,7 +104,7 @@ void GlowTipText::draw()
   ctx->gdraw->text(text_x + 2, text_y + text_height - text_descent - 2, tiptext,
       strlen(tiptext), glow_eDrawType_TextHelvetica, glow_eDrawType_Line,
       text_size, 0, glow_eFont_LucidaSans,
-      ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * (8 + 2 * text_size),
+      ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8 + 2 * text_size),
       0);
 }
 

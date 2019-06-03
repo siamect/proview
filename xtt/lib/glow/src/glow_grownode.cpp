@@ -88,7 +88,7 @@ GrowNode::~GrowNode()
   ctx->set_dirty();
   ctx->delete_node_cons(this);
   if (hot)
-    ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
   //  delete nc;
   for (int i = 0; i < 10; i++) {
     if (annotsize[i] > 0)
@@ -417,13 +417,13 @@ void GrowNode::move(double delta_x, double delta_y, int grid)
     double x_grid, y_grid;
 
     /* Move to closest grid point */
-    ctx->find_grid(x_left + delta_x / ctx->mw->zoom_factor_x,
-        y_low + delta_y / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid(x_left + delta_x / ctx->mw.zoom_factor_x,
+        y_low + delta_y / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
     trf.move(x_grid - x_left, y_grid - y_low);
     get_node_borders();
   } else {
-    double dx = delta_x / ctx->mw->zoom_factor_x;
-    double dy = delta_y / ctx->mw->zoom_factor_y;
+    double dx = delta_x / ctx->mw.zoom_factor_x;
+    double dy = delta_y / ctx->mw.zoom_factor_y;
     trf.move(dx, dy);
     x_right += dx;
     x_left += dx;
@@ -570,15 +570,15 @@ int GrowNode::event_handler(glow_eEvent event, int x, int y, double fx, double f
       int hot_type;
       if ((hot_type = ctx->send_hot_request(this))) {
         if (!ctx->trace_started) {
-          ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
+          ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_CrossHair);
           set_hot(1);
           ctx->tiptext_event(this, x, y);
         } else if (hot_type & glow_mHotType_CursorCrossHair) {
-          ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
+          ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_CrossHair);
           set_hot(1);
           ctx->tiptext_event(this, x, y);
         } else if (hot_type & glow_mHotType_CursorHand) {
-          ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Hand);
+          ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Hand);
           set_hot(1);
           ctx->tiptext_event(this, x, y);
         }
@@ -586,7 +586,7 @@ int GrowNode::event_handler(glow_eEvent event, int x, int y, double fx, double f
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
-        ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+        ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
       set_hot(0);
       ctx->tiptext->remove_text(this);
     }
@@ -788,7 +788,7 @@ void GrowNode::set_rotation(
   ctx->set_dirty();
 }
 
-void GrowNode::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowNode::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -810,7 +810,7 @@ void GrowNode::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
       && y_high * w->zoom_factor_y - w->offset_y + 1 >= ll_y
       && y_low * w->zoom_factor_y - w->offset_y <= ur_y) {
     if (annot_scrollingtext != -1) {
-      ctx->gdraw->set_clip_rectangle(w, x_left * w->zoom_factor_x - w->offset_x,
+      ctx->gdraw->set_clip_rectangle(w->window, x_left * w->zoom_factor_x - w->offset_x,
           y_low * w->zoom_factor_y - w->offset_y,
           x_right * w->zoom_factor_x - w->offset_x + 1,
           y_high * w->zoom_factor_y - w->offset_y + 2);
@@ -818,12 +818,12 @@ void GrowNode::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 
     draw(w, (GlowTransform*)NULL, highlight, hot, (void*)this, NULL);
     if (annot_scrollingtext != -1) {
-      ctx->gdraw->reset_clip_rectangle(w);
+      ctx->gdraw->reset_clip_rectangle(w->window);
     }
   }
 }
 
-void GrowNode::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowNode::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -860,10 +860,10 @@ void GrowNode::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
   }
 }
 
-void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowNode::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   if (node && !root_node && node != (void*)this)
     root_node = (GrowNode*)node;
 
@@ -947,12 +947,12 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     case glow_eDirection_Right:
       x_level = fill_level * (p2.x - p1.x);
       clip_sts = ctx->gdraw->set_clip_rectangle(
-          w, (int)p1.x - 1, (int)p1.y - 1, (int)(p1.x + x_level), (int)p2.y + 1);
+          w->window, (int)p1.x - 1, (int)p1.y - 1, (int)(p1.x + x_level), (int)p2.y + 1);
       break;
     case glow_eDirection_Left:
       x_level = (1 - fill_level) * (p2.x - p1.x);
       clip_sts = ctx->gdraw->set_clip_rectangle(
-          w, (int)p1.x - 1, (int)p1.y - 1, (int)(p1.x + x_level), (int)p2.y + 1);
+          w->window, (int)p1.x - 1, (int)p1.y - 1, (int)(p1.x + x_level), (int)p2.y + 1);
       if (level_color_tone != glow_eDrawTone_No) {
         old_color_tone = color_tone;
         color_tone = level_color_tone;
@@ -964,12 +964,12 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     case glow_eDirection_Up:
       y_level = fill_level * (p2.y - p1.y);
       clip_sts = ctx->gdraw->set_clip_rectangle(
-          w, (int)p1.x - 1, (int)p1.y - 1, (int)p2.x + 1, (int)(p1.y + y_level));
+          w->window, (int)p1.x - 1, (int)p1.y - 1, (int)p2.x + 1, (int)(p1.y + y_level));
       break;
     case glow_eDirection_Down:
       y_level = (1 - fill_level) * (p2.y - p1.y);
       clip_sts = ctx->gdraw->set_clip_rectangle(
-          w, (int)p1.x - 1, (int)p1.y - 1, (int)p2.x + 1, (int)(p1.y + y_level));
+          w->window, (int)p1.x - 1, (int)p1.y - 1, (int)p2.x + 1, (int)(p1.y + y_level));
       if (level_color_tone != glow_eDrawTone_No) {
         old_color_tone = color_tone;
         color_tone = level_color_tone;
@@ -993,7 +993,7 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     } else
       nc->draw(w, &trf, highlight, hot, node, node);
     if (ODD(clip_sts)) {
-      ctx->gdraw->reset_clip_rectangle(w);
+      ctx->gdraw->reset_clip_rectangle(w->window);
     }
 
     switch (level_direction) {
@@ -1006,7 +1006,7 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
         fill_drawtype = level_fill_drawtype;
       }
       clip_sts = ctx->gdraw->set_clip_rectangle(
-          w, (int)(p1.x + x_level), (int)p1.y - 1, (int)p2.x + 1, (int)p2.y + 1);
+          w->window, (int)(p1.x + x_level), (int)p1.y - 1, (int)p2.x + 1, (int)p2.y + 1);
       break;
     case glow_eDirection_Left:
       if (level_color_tone != glow_eDrawTone_No)
@@ -1014,7 +1014,7 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       else if (level_fill_drawtype != glow_eDrawType_No)
         fill_drawtype = old_fill_drawtype;
       clip_sts = ctx->gdraw->set_clip_rectangle(
-          w, (int)(p1.x + x_level), (int)p1.y - 1, (int)p2.x + 1, (int)p2.y + 1);
+          w->window, (int)(p1.x + x_level), (int)p1.y - 1, (int)p2.x + 1, (int)p2.y + 1);
       break;
     case glow_eDirection_Up:
       if (level_color_tone != glow_eDrawTone_No) {
@@ -1025,7 +1025,7 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
         fill_drawtype = level_fill_drawtype;
       }
       clip_sts = ctx->gdraw->set_clip_rectangle(
-          w, (int)p1.x - 1, (int)(p1.y + y_level), (int)p2.x + 1, (int)p2.y + 1);
+          w->window, (int)p1.x - 1, (int)(p1.y + y_level), (int)p2.x + 1, (int)p2.y + 1);
       break;
     case glow_eDirection_Down:
       if (level_color_tone != glow_eDrawTone_No)
@@ -1033,7 +1033,7 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       else if (level_fill_drawtype != glow_eDrawType_No)
         fill_drawtype = old_fill_drawtype;
       clip_sts = ctx->gdraw->set_clip_rectangle(
-          w, (int)p1.x - 1, (int)(p1.y + y_level), (int)p2.x + 1, (int)p2.y + 1);
+          w->window, (int)p1.x - 1, (int)(p1.y + y_level), (int)p2.x + 1, (int)p2.y + 1);
       break;
     default:;
     }
@@ -1050,7 +1050,7 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     } else
       nc->draw(w, &trf, highlight, hot, node, node);
     if (ODD(clip_sts)) {
-      ctx->gdraw->reset_clip_rectangle(w);
+      ctx->gdraw->reset_clip_rectangle(w->window);
     }
 
     switch (level_direction) {
@@ -1075,9 +1075,9 @@ void GrowNode::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   }
 }
 
-void GrowNode::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowNode::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
 
   if (input_focus) {
     switch (nc->get_base_nc()->input_focus_mark) {
@@ -1300,10 +1300,10 @@ void GrowNode::export_javabean(GlowTransform* t, void* node,
     p2 = tmp * p2;
   }
 
-  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p1.x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p1.y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+  p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
 
   nc->get_java_name(java_name);
   ctx->export_jbean->node(p1.x, p1.y, p2.x, p2.y, java_name, draw_type,
@@ -1464,20 +1464,20 @@ int GrowNode::get_limits_pixel(
   double rotation = (trf.rotation / 360 - floor(trf.rotation / 360)) * 360;
   if (45 >= rotation || rotation > 315) {
     *direction = glow_eDirection_Down;
-    *pix_max = (p2.y - p0.y) * ctx->mw->zoom_factor_y;
-    *pix_min = (p1.y - p0.y) * ctx->mw->zoom_factor_y;
+    *pix_max = (p2.y - p0.y) * ctx->mw.zoom_factor_y;
+    *pix_min = (p1.y - p0.y) * ctx->mw.zoom_factor_y;
   } else if (45 < rotation && rotation <= 135) {
     *direction = glow_eDirection_Right;
-    *pix_max = (p0.x - p2.x) * ctx->mw->zoom_factor_x;
-    *pix_min = (p0.x - p1.x) * ctx->mw->zoom_factor_x;
+    *pix_max = (p0.x - p2.x) * ctx->mw.zoom_factor_x;
+    *pix_min = (p0.x - p1.x) * ctx->mw.zoom_factor_x;
   } else if (135 < rotation && rotation <= 225) {
     *direction = glow_eDirection_Up;
-    *pix_max = (p0.y - p2.y) * ctx->mw->zoom_factor_y;
-    *pix_min = (p0.y - p1.y) * ctx->mw->zoom_factor_y;
+    *pix_max = (p0.y - p2.y) * ctx->mw.zoom_factor_y;
+    *pix_min = (p0.y - p1.y) * ctx->mw.zoom_factor_y;
   } else if (225 < rotation && rotation <= 315) {
     *direction = glow_eDirection_Left;
-    *pix_max = (p2.x - p0.x) * ctx->mw->zoom_factor_x;
-    *pix_min = (p1.x - p0.x) * ctx->mw->zoom_factor_x;
+    *pix_max = (p2.x - p0.x) * ctx->mw.zoom_factor_x;
+    *pix_min = (p1.x - p0.x) * ctx->mw.zoom_factor_x;
   }
 
   return 1;

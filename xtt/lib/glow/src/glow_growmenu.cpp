@@ -78,7 +78,7 @@ GrowMenu::~GrowMenu()
   ctx->set_dirty();
 }
 
-void GrowMenu::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowMenu::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -103,7 +103,7 @@ void GrowMenu::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowMenu::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowMenu::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -140,13 +140,13 @@ void GrowMenu::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
   }
 }
 
-void GrowMenu::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowMenu::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
   if (!(display_level & ctx->display_level))
     return;
 
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
 
   Matrix tmp = t ? (*t * trf) : trf;
   int text_idx = int(tmp.vertical_scale() * w->zoom_factor_y /
@@ -258,11 +258,11 @@ void GrowMenu::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   }
 }
 
-void GrowMenu::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowMenu::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int idx;
   if (fix_line_width) {
     idx = line_width;
@@ -315,7 +315,7 @@ int GrowMenu::local_event_handler(glow_eEvent event, double x, double y)
     double vscale = 1; // trf.vertical_scale();
     // std::cout << "Event handler: Hit in menu " << this << '\n';
 
-    item = int((y - ll.y) / (item_height / vscale / ctx->mw->zoom_factor_y));
+    item = int((y - ll.y) / (item_height / vscale / ctx->mw.zoom_factor_y));
     if (item > item_cnt - 1)
       item = item_cnt - 1;
     if (item < 0)
@@ -371,12 +371,12 @@ int GrowMenu::event_handler(glow_eEvent event, int x, int y, double fx, double f
     }
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
-      ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
+      ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_CrossHair);
       set_hot(1);
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
-        ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+        ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
       set_hot(0);
     }
     if (old_item != current_item && old_item != -1) {
@@ -388,7 +388,7 @@ int GrowMenu::event_handler(glow_eEvent event, int x, int y, double fx, double f
     if (hot && new_item) {
       if (info.item[current_item].type == glow_eMenuItem_PulldownMenu)
         ctx->send_menu_callback(this, current_item, glow_eEvent_MenuCreate,
-            ur.x, ll.y + item_height / ctx->mw->zoom_factor_y * current_item);
+            ur.x, ll.y + item_height / ctx->mw.zoom_factor_y * current_item);
     }
     break;
   }
@@ -499,7 +499,7 @@ int GrowMenu::get_current_item(int* item)
 void GrowMenu::get_submenu_position(int item, double* x, double* y)
 {
   *x = ur.x;
-  *y = ll.y + item_height / ctx->mw->zoom_factor_y * item;
+  *y = ll.y + item_height / ctx->mw.zoom_factor_y * item;
 }
 
 int GrowMenu::get_parent(GlowArrayElem** parent)

@@ -175,7 +175,7 @@ void GrowWindow::open(std::ifstream& fp)
   configure_scrollbars();
 }
 
-void GrowWindow::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowWindow::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -200,7 +200,7 @@ void GrowWindow::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowWindow::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowWindow::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -245,10 +245,10 @@ void GrowWindow::set_highlight(int on)
   }
 }
 
-void GrowWindow::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowWindow::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  if (w == ctx->navw) {
+  if (w == &ctx->navw) {
     draw_brief(w, t, highlight, hot, node, colornode);
     return;
   }
@@ -304,39 +304,39 @@ void GrowWindow::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
         = int((dy2 - horizontal_scrollbar * scrollbar_width) * w->zoom_factor_y)
         - w->offset_y;
 
-    window_ctx->mw->window_width = int((x_right - x_left) * w->zoom_factor_x);
-    window_ctx->mw->window_height = int((y_high - y_low) * w->zoom_factor_y);
-    window_ctx->mw->subwindow_x = int(x_left * w->zoom_factor_x - w->offset_x);
-    window_ctx->mw->subwindow_y = int(y_low * w->zoom_factor_y - w->offset_y);
-    window_ctx->mw->offset_x = -ll_x + int(h_value * w->zoom_factor_x);
-    window_ctx->mw->offset_y = -ll_y + int(v_value * w->zoom_factor_y);
-    window_ctx->mw->zoom_factor_x
-        = window_ctx->mw->subwindow_scale * w->zoom_factor_x;
-    window_ctx->mw->zoom_factor_y
-        = window_ctx->mw->subwindow_scale * w->zoom_factor_y;
+    window_ctx->mw.window_width = int((x_right - x_left) * w->zoom_factor_x);
+    window_ctx->mw.window_height = int((y_high - y_low) * w->zoom_factor_y);
+    window_ctx->mw.subwindow_x = int(x_left * w->zoom_factor_x - w->offset_x);
+    window_ctx->mw.subwindow_y = int(y_low * w->zoom_factor_y - w->offset_y);
+    window_ctx->mw.offset_x = -ll_x + int(h_value * w->zoom_factor_x);
+    window_ctx->mw.offset_y = -ll_y + int(v_value * w->zoom_factor_y);
+    window_ctx->mw.zoom_factor_x
+        = window_ctx->mw.subwindow_scale * w->zoom_factor_x;
+    window_ctx->mw.zoom_factor_y
+        = window_ctx->mw.subwindow_scale * w->zoom_factor_y;
 
     ctx->gdraw->push_customcolors(window_ctx->customcolors);
     if (fill)
       ctx->gdraw->rect(
           ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fill_drawtype, 1, 0);
 
-    ctx->gdraw->end(false);
-    ctx->gdraw->begin(window_ctx->mw);
-    window_ctx->draw(window_ctx->mw, ll_x, ll_y, ur_x, ur_y);
-    ctx->gdraw->end(false);
+    ctx->gdraw->end();
+    ctx->gdraw->begin(&window_ctx->mw);
+    window_ctx->draw(&window_ctx->mw, ll_x, ll_y, ur_x, ur_y);
+    ctx->gdraw->end();
     ctx->gdraw->begin(w);
     ctx->gdraw->pop_customcolors();
   }
 
-  int ur_x = int(dx2 * ctx->mw->zoom_factor_x) - ctx->mw->offset_x;
-  int ur_y = int(dy2 * ctx->mw->zoom_factor_y) - ctx->mw->offset_y;
+  int ur_x = int(dx2 * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
+  int ur_y = int(dy2 * ctx->mw.zoom_factor_y) - ctx->mw.offset_y;
 
   drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
       highlight, (GrowNode*)colornode, 0);
   ctx->gdraw->rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, 0, idx);
 }
 
-void GrowWindow::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowWindow::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
@@ -363,7 +363,7 @@ void GrowWindow::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
       ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase, 1, 0);
 }
 
-void GrowWindow::draw_brief(DrawWind* w, GlowTransform* t, int highlight,
+void GrowWindow::draw_brief(GlowWind* w, GlowTransform* t, int highlight,
     int hot, void* node, void* colornode)
 {
   if (!(display_level & ctx->display_level))
@@ -406,16 +406,16 @@ int GrowWindow::trace_scan()
 
   if (window_ctx) {
     int ur_x = int((x_right - vertical_scrollbar * scrollbar_width)
-                   * ctx->mw->zoom_factor_x)
-        - ctx->mw->offset_x;
-    int ll_x = int(x_left * ctx->mw->zoom_factor_x) - ctx->mw->offset_x;
+                   * ctx->mw.zoom_factor_x)
+        - ctx->mw.offset_x;
+    int ll_x = int(x_left * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
     int ur_y = int((y_high - horizontal_scrollbar * scrollbar_width)
-                   * ctx->mw->zoom_factor_y)
-        - ctx->mw->offset_y;
+                   * ctx->mw.zoom_factor_y)
+        - ctx->mw.offset_y;
     int ll_y
-        = int((y_low + y_low_offs) * ctx->mw->zoom_factor_y) - ctx->mw->offset_y;
+        = int((y_low + y_low_offs) * ctx->mw.zoom_factor_y) - ctx->mw.offset_y;
 
-    ctx->gdraw->set_clip_rectangle(ctx->mw, ll_x, ll_y, ur_x, ur_y);
+    ctx->gdraw->set_clip_rectangle(ctx->mw.window, ll_x, ll_y, ur_x, ur_y);
 
     if (ctx->trace_ctrl_func)
       (ctx->trace_ctrl_func)(glow_eTraceCtrl_CtxPop, window_ctx);
@@ -426,13 +426,13 @@ int GrowWindow::trace_scan()
     else if (sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED) {
       if (ctx->trace_ctrl_func)
         (ctx->trace_ctrl_func)(glow_eTraceCtrl_CtxPush, ctx);
-      ctx->gdraw->reset_clip_rectangle(ctx->mw);
+      ctx->gdraw->reset_clip_rectangle(ctx->mw.window);
       return sts;
     }
     if (ctx->trace_ctrl_func)
       (ctx->trace_ctrl_func)(glow_eTraceCtrl_CtxPush, window_ctx);
 
-    ctx->gdraw->reset_clip_rectangle(ctx->mw);
+    ctx->gdraw->reset_clip_rectangle(ctx->mw.window);
   }
   return 1;
 }
@@ -451,13 +451,13 @@ int GrowWindow::trace_init()
     glow_sPoint d1 = trf * ll;
     glow_sPoint d2 = trf * ur;
 
-    int ll_x = int(MIN(d1.x, d2.x) * ctx->mw->zoom_factor_x) -
-        ctx->mw->offset_x;
-    int ll_y = int((MIN(d1.y, d2.y) + y_low_offs) * ctx->mw->zoom_factor_y) -
-        ctx->mw->offset_y;
+    int ll_x = int(MIN(d1.x, d2.x) * ctx->mw.zoom_factor_x) -
+        ctx->mw.offset_x;
+    int ll_y = int((MIN(d1.y, d2.y) + y_low_offs) * ctx->mw.zoom_factor_y) -
+        ctx->mw.offset_y;
 
-    window_ctx->mw->offset_x = -ll_x + int(h_value * ctx->mw->zoom_factor_x);
-    window_ctx->mw->offset_y = -ll_y + int(v_value * ctx->mw->zoom_factor_y);
+    window_ctx->mw.offset_x = -ll_x + int(h_value * ctx->mw.zoom_factor_x);
+    window_ctx->mw.offset_y = -ll_y + int(v_value * ctx->mw.zoom_factor_y);
 
     memcpy(window_ctx->event_callback, ctx->event_callback,
         sizeof(ctx->event_callback));
@@ -529,10 +529,10 @@ void GrowWindow::export_javabean(GlowTransform* t, void* node,
   glow_sPoint p1 = tmp * ll;
   glow_sPoint p2 = tmp * ur;
 
-  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p1.x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p1.y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+  p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   double ll_x = MIN(p1.x, p2.x);
   double ur_x = MAX(p1.x, p2.x);
   double ll_y = MIN(p1.y, p2.y);
@@ -557,9 +557,6 @@ int GrowWindow::event_handler(glow_eEvent event, int x, int y, double fx, double
   int sts, v_sts, h_sts;
 
   switch (event) {
-  case glow_eEvent_Exposure:
-    window_ctx->mw->update_buffer(ctx->mw);
-    return 1;
   case glow_eEvent_Key_Right:
   case glow_eEvent_Key_Left:
   case glow_eEvent_Key_Up:
@@ -655,17 +652,17 @@ int GrowWindow::event_handler(glow_eEvent event, int x, int y, double fx, double
       return sts;
 
     int ur_x = int((x_right - vertical_scrollbar * scrollbar_width)
-                   * ctx->mw->zoom_factor_x)
-        - ctx->mw->offset_x;
-    int ll_x = int(x_left * ctx->mw->zoom_factor_x) - ctx->mw->offset_x;
+                   * ctx->mw.zoom_factor_x)
+        - ctx->mw.offset_x;
+    int ll_x = int(x_left * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
     int ur_y = int((y_high - horizontal_scrollbar * scrollbar_width)
-                   * ctx->mw->zoom_factor_y)
-        - ctx->mw->offset_y;
+                   * ctx->mw.zoom_factor_y)
+        - ctx->mw.offset_y;
     int ll_y
-        = int((y_low + y_low_offs) * ctx->mw->zoom_factor_y) - ctx->mw->offset_y;
+        = int((y_low + y_low_offs) * ctx->mw.zoom_factor_y) - ctx->mw.offset_y;
 
     ctx->gdraw->push_customcolors(window_ctx->customcolors);
-    ctx->gdraw->set_clip_rectangle(ctx->mw, ll_x, ll_y, ur_x, ur_y);
+    ctx->gdraw->set_clip_rectangle(ctx->mw.window, ll_x, ll_y, ur_x, ur_y);
 
     // Set callback to redraw the background
     window_ctx->redraw_callback = redraw_cb;
@@ -676,13 +673,13 @@ int GrowWindow::event_handler(glow_eEvent event, int x, int y, double fx, double
       return sts;
     else if (sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED) {
       ctx->gdraw->pop_customcolors();
-      ctx->gdraw->reset_clip_rectangle(ctx->mw);
+      ctx->gdraw->reset_clip_rectangle(ctx->mw.window);
       return 1;
     }
 
     window_ctx->redraw_callback = 0;
     window_ctx->redraw_data = 0;
-    ctx->gdraw->reset_clip_rectangle(ctx->mw);
+    ctx->gdraw->reset_clip_rectangle(ctx->mw.window);
     ctx->gdraw->pop_customcolors();
 
     if (window_ctx->inputfocus_object && !input_focus) {
@@ -722,11 +719,11 @@ int GrowWindow::update_attributes()
 
   if (!streq(input_file_name, file_name)
       || (window_ctx && !streq(window_ctx->owner, owner))) {
-    int ur_x = int(x_right * ctx->mw->zoom_factor_x) - ctx->mw->offset_x;
-    int ll_x = int(x_left * ctx->mw->zoom_factor_x) - ctx->mw->offset_x;
-    int ur_y = int(y_high * ctx->mw->zoom_factor_y) - ctx->mw->offset_y;
-    int ll_y = int(y_low * ctx->mw->zoom_factor_y) - ctx->mw->offset_y;
-    ctx->gdraw->set_clip_rectangle(ctx->mw, ll_x, ll_y, ur_x, ur_y);
+    int ur_x = int(x_right * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
+    int ll_x = int(x_left * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
+    int ur_y = int(y_high * ctx->mw.zoom_factor_y) - ctx->mw.offset_y;
+    int ll_y = int(y_low * ctx->mw.zoom_factor_y) - ctx->mw.offset_y;
+    ctx->gdraw->set_clip_rectangle(ctx->mw.window, ll_x, ll_y, ur_x, ur_y);
 
     if (window_ctx) {
       if (window_ctx->trace_started)
@@ -739,11 +736,11 @@ int GrowWindow::update_attributes()
     new_ctx();
     sts = 1;
 
-    ctx->gdraw->reset_clip_rectangle(ctx->mw);
+    ctx->gdraw->reset_clip_rectangle(ctx->mw.window);
   } else if (window_ctx) {
-    window_ctx->mw->subwindow_scale = window_scale;
-    window_ctx->mw->zoom_factor_x = window_ctx->mw->zoom_factor_y
-        = window_ctx->mw->subwindow_scale * ctx->mw->zoom_factor_x;
+    window_ctx->mw.subwindow_scale = window_scale;
+    window_ctx->mw.zoom_factor_x = window_ctx->mw.zoom_factor_y
+        = window_ctx->mw.subwindow_scale * ctx->mw.zoom_factor_x;
     window_ctx->a.zoom();
   }
 
@@ -780,31 +777,31 @@ void GrowWindow::configure_scrollbars()
         scrollbar_bg_color, scrollbar_color, 1);
     v_scrollbar->register_value_changed_cb((void*)this, &v_value_changed_cb);
     if (window_ctx) {
-      v_scrollbar->set_value(wctx_y0 * window_ctx->mw->subwindow_scale, y_high
+      v_scrollbar->set_value(wctx_y0 * window_ctx->mw.subwindow_scale, y_high
               - (y_low + y_low_offs) - scrollbar_width * horizontal_scrollbar);
       v_scrollbar->set_range(
-          wctx_y0 * window_ctx->mw->subwindow_scale, wctx_y1 * window_scale);
-      v_value = wctx_y0 * window_ctx->mw->subwindow_scale;
+          wctx_y0 * window_ctx->mw.subwindow_scale, wctx_y1 * window_scale);
+      v_value = wctx_y0 * window_ctx->mw.subwindow_scale;
     }
     v_scrollbar->set_shadow(shadow);
   } else if (!vertical_scrollbar && v_scrollbar) {
     delete v_scrollbar;
     v_scrollbar = 0;
     if (window_ctx)
-      v_value = wctx_y0 * window_ctx->mw->subwindow_scale;
+      v_value = wctx_y0 * window_ctx->mw.subwindow_scale;
   } else if (v_scrollbar) {
     // Reconfigure range and length
     if (window_ctx) {
-      v_scrollbar->set_value(wctx_y0 * window_ctx->mw->subwindow_scale, y_high
+      v_scrollbar->set_value(wctx_y0 * window_ctx->mw.subwindow_scale, y_high
               - (y_low + y_low_offs) - scrollbar_width * horizontal_scrollbar);
-      v_value = wctx_y0 * window_ctx->mw->subwindow_scale;
-      v_scrollbar->set_range(wctx_y0 * window_ctx->mw->subwindow_scale,
-          wctx_y1 * window_ctx->mw->subwindow_scale);
+      v_value = wctx_y0 * window_ctx->mw.subwindow_scale;
+      v_scrollbar->set_range(wctx_y0 * window_ctx->mw.subwindow_scale,
+          wctx_y1 * window_ctx->mw.subwindow_scale);
     }
     v_scrollbar->set_shadow(shadow);
   } else {
     if (window_ctx)
-      v_value = wctx_y0 * window_ctx->mw->subwindow_scale;
+      v_value = wctx_y0 * window_ctx->mw.subwindow_scale;
   }
 
   if (horizontal_scrollbar && !h_scrollbar) {
@@ -821,31 +818,31 @@ void GrowWindow::configure_scrollbars()
         scrollbar_bg_color, scrollbar_color, 1);
     h_scrollbar->register_value_changed_cb((void*)this, &h_value_changed_cb);
     if (window_ctx) {
-      h_scrollbar->set_value(wctx_x0 * window_ctx->mw->subwindow_scale,
+      h_scrollbar->set_value(wctx_x0 * window_ctx->mw.subwindow_scale,
           x_right - x_left - scrollbar_width * vertical_scrollbar);
-      h_scrollbar->set_range(wctx_x0 * window_ctx->mw->subwindow_scale,
-          wctx_x1 * window_ctx->mw->subwindow_scale);
-      h_value = wctx_x0 * window_ctx->mw->subwindow_scale;
+      h_scrollbar->set_range(wctx_x0 * window_ctx->mw.subwindow_scale,
+          wctx_x1 * window_ctx->mw.subwindow_scale);
+      h_value = wctx_x0 * window_ctx->mw.subwindow_scale;
     }
     h_scrollbar->set_shadow(shadow);
   } else if (!horizontal_scrollbar && h_scrollbar) {
     delete h_scrollbar;
     h_scrollbar = 0;
     if (window_ctx)
-      h_value = wctx_x0 * window_ctx->mw->subwindow_scale;
+      h_value = wctx_x0 * window_ctx->mw.subwindow_scale;
   } else if (h_scrollbar) {
     // Reconfigure lenght and range
     if (window_ctx) {
-      h_scrollbar->set_value(wctx_x0 * window_ctx->mw->subwindow_scale,
+      h_scrollbar->set_value(wctx_x0 * window_ctx->mw.subwindow_scale,
           x_right - x_left - scrollbar_width * vertical_scrollbar);
-      h_value = wctx_x0 * window_ctx->mw->subwindow_scale;
-      h_scrollbar->set_range(wctx_x0 * window_ctx->mw->subwindow_scale,
-          wctx_x1 * window_ctx->mw->subwindow_scale);
+      h_value = wctx_x0 * window_ctx->mw.subwindow_scale;
+      h_scrollbar->set_range(wctx_x0 * window_ctx->mw.subwindow_scale,
+          wctx_x1 * window_ctx->mw.subwindow_scale);
     }
     h_scrollbar->set_shadow(shadow);
   } else {
     if (window_ctx)
-      h_value = wctx_x0 * window_ctx->mw->subwindow_scale;
+      h_value = wctx_x0 * window_ctx->mw.subwindow_scale;
   }
 }
 
@@ -887,12 +884,12 @@ void GrowWindow::new_ctx()
   window_ctx = new GrowCtx("WindowComponent");
   window_ctx->gdraw = ctx->gdraw;
   window_ctx->is_subwindow = 1;
-  window_ctx->mw = ctx->mw->copy();
-  window_ctx->mw->zoom_factor_x = window_ctx->mw->zoom_factor_y =
-      window_ctx->mw->base_zoom_factor = ctx->mw->zoom_factor_x * window_scale;
-  window_ctx->navw = ctx->navw->copy();
-  window_ctx->navw->zoom_factor_x = window_ctx->navw->zoom_factor_y =
-      window_ctx->navw->base_zoom_factor = ctx->mw->zoom_factor_x * window_scale;
+  window_ctx->mw.window = ctx->mw.window;
+  window_ctx->mw.zoom_factor_x = window_ctx->mw.zoom_factor_y =
+      window_ctx->mw.base_zoom_factor = ctx->mw.zoom_factor_x * window_scale;
+  window_ctx->navw.window = ctx->navw.window;
+  window_ctx->navw.zoom_factor_x = window_ctx->navw.zoom_factor_y =
+      window_ctx->navw.base_zoom_factor = ctx->mw.zoom_factor_x * window_scale;
   window_ctx->userdata_save_callback = ctx->userdata_save_callback;
   window_ctx->userdata_open_callback = ctx->userdata_open_callback;
   window_ctx->userdata_copy_callback = ctx->userdata_copy_callback;
@@ -948,15 +945,15 @@ void GrowWindow::new_ctx()
     wctx_y0 = window_ctx->y_low;
     wctx_y1 = window_ctx->y_high;
   }
-  window_ctx->mw->window_width = int((x_right - x_left) * ctx->mw->zoom_factor_x);
-  window_ctx->mw->window_height = int((y_high - y_low) * ctx->mw->zoom_factor_y);
-  window_ctx->mw->subwindow_x
-      = int(x_left * ctx->mw->zoom_factor_x - ctx->mw->offset_x);
-  window_ctx->mw->subwindow_y
-      = int(y_low * ctx->mw->zoom_factor_y - ctx->mw->offset_y);
-  window_ctx->mw->subwindow_scale = ctx->mw->subwindow_scale * window_scale;
-  window_ctx->mw->zoom_factor_x = window_ctx->mw->zoom_factor_y
-      = ctx->mw->zoom_factor_x * window_ctx->mw->subwindow_scale;
+  window_ctx->mw.window_width = int((x_right - x_left) * ctx->mw.zoom_factor_x);
+  window_ctx->mw.window_height = int((y_high - y_low) * ctx->mw.zoom_factor_y);
+  window_ctx->mw.subwindow_x
+      = int(x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x);
+  window_ctx->mw.subwindow_y
+      = int(y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y);
+  window_ctx->mw.subwindow_scale = ctx->mw.subwindow_scale * window_scale;
+  window_ctx->mw.zoom_factor_x = window_ctx->mw.zoom_factor_y
+      = ctx->mw.zoom_factor_x * window_ctx->mw.subwindow_scale;
   window_ctx->move_restriction = glow_eMoveRestriction_Disable;
   window_ctx->a.zoom();
 
@@ -981,7 +978,7 @@ void GrowWindow::draw_background()
   if (!(display_level & ctx->display_level))
     return;
 
-  int idx = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * line_width - 1);
+  int idx = int(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
   idx = CLAMP(idx + hot, 0, DRAW_TYPE_SIZE - 1);
 
   glow_sPoint d1 = trf * ll;
@@ -992,23 +989,23 @@ void GrowWindow::draw_background()
   double dy2 = MAX(d1.y, d2.y);
 
   if (v_scrollbar)
-    v_scrollbar->draw(ctx->mw, 0, 0, 0, 0, 0);
+    v_scrollbar->draw(&ctx->mw, 0, 0, 0, 0, 0);
   if (h_scrollbar)
-    h_scrollbar->draw(ctx->mw, 0, 0, 0, 0, 0);
+    h_scrollbar->draw(&ctx->mw, 0, 0, 0, 0, 0);
 
-  int ll_x = int(dx1 * ctx->mw->zoom_factor_x) - ctx->mw->offset_x;
-  int ll_y = int((dy1 + y_low_offs) * ctx->mw->zoom_factor_y) - ctx->mw->offset_y;
+  int ll_x = int(dx1 * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
+  int ll_y = int((dy1 + y_low_offs) * ctx->mw.zoom_factor_y) - ctx->mw.offset_y;
 
   if (window_ctx && fill) {
     int ur_x = int((dx2 - vertical_scrollbar * scrollbar_width)
-                   * ctx->mw->zoom_factor_x) - ctx->mw->offset_x;
+                   * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
     int ur_y = int((dy2 - horizontal_scrollbar * scrollbar_width)
-               * ctx->mw->zoom_factor_y) - ctx->mw->offset_y;
+               * ctx->mw.zoom_factor_y) - ctx->mw.offset_y;
     ctx->gdraw->rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fill_drawtype, 1, 0);
   }
 
-  int ur_x = int(dx2 * ctx->mw->zoom_factor_x) - ctx->mw->offset_x;
-  int ur_y = int(dy2 * ctx->mw->zoom_factor_y) - ctx->mw->offset_y;
+  int ur_x = int(dx2 * ctx->mw.zoom_factor_x) - ctx->mw.offset_x;
+  int ur_y = int(dy2 * ctx->mw.zoom_factor_y) - ctx->mw.offset_y;
 
   glow_eDrawType drawtype = ctx->get_drawtype(
       draw_type, glow_eDrawType_LineHighlight, highlight, 0, 0);
@@ -1035,8 +1032,8 @@ int GrowWindow::get_background_object_limits(GlowTransform* t,
 int GrowWindow::set_source(char* source, char* new_owner)
 {
   int clip_removed = 0;
-  if (ctx->mw->clip_cnt) {
-    ctx->gdraw->reset_clip_rectangle(ctx->mw);
+  if (ctx->mw.window->clip_cnt) {
+    ctx->gdraw->reset_clip_rectangle(ctx->mw.window);
     clip_removed = 1;
   }
   strcpy(input_file_name, source);
@@ -1049,7 +1046,7 @@ int GrowWindow::set_source(char* source, char* new_owner)
 
   if (clip_removed) {
     ctx->gdraw->set_clip_rectangle(
-        ctx->mw, 0, 0, ctx->mw->window_width, ctx->mw->window_height);
+        ctx->mw.window, 0, 0, ctx->mw.window_width, ctx->mw.window_height);
   }
 
   return sts;

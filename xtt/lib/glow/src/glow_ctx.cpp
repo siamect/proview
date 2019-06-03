@@ -62,10 +62,10 @@ CtxComment::CtxComment()
 }
 
 GlowCtx::GlowCtx(const char* ctx_name, int offs_x, int offs_y)
-  : ctx_type(glow_eCtxType_Glow), mw(NULL), navw(NULL), print_zoom_factor(100),
-    x_right(0), x_left(0), y_high(0), y_low(0), nav_rect_ll_x(0),
-    nav_rect_ll_y(0), nav_rect_ur_x(0), nav_rect_ur_y(0), gdraw(0),
-    node_movement_active(0), node_movement_paste_active(0),
+  : ctx_type(glow_eCtxType_Glow), mw(offs_x, offs_y), navw(offs_x, offs_y),
+    print_zoom_factor(100), x_right(0), x_left(0), y_high(0), y_low(0),
+    nav_rect_ll_x(0), nav_rect_ll_y(0), nav_rect_ur_x(0), nav_rect_ur_y(0),
+    gdraw(0), node_movement_active(0), node_movement_paste_active(0),
     node_movement_paste_pending(0), nav_rect_movement_active(0),
     nav_rect_zoom_active(0), select_rect_active(0), con_create_active(0),
     auto_scrolling_active(0), is_dirty(0), a_nc(20, 20), a_cc(20, 20),
@@ -160,28 +160,28 @@ int GlowCtx::save(char* filename, glow_eSaveMode mode)
 
   fp << int(glow_eSave_Ctx) << '\n';
 
-  fp << int(glow_eSave_Ctx_zoom_factor_x) << FSPACE << mw->zoom_factor_x << '\n';
-  fp << int(glow_eSave_Ctx_zoom_factor_y) << FSPACE << mw->zoom_factor_y << '\n';
-  fp << int(glow_eSave_Ctx_base_zoom_factor) << FSPACE << mw->base_zoom_factor
+  fp << int(glow_eSave_Ctx_zoom_factor_x) << FSPACE << mw.zoom_factor_x << '\n';
+  fp << int(glow_eSave_Ctx_zoom_factor_y) << FSPACE << mw.zoom_factor_y << '\n';
+  fp << int(glow_eSave_Ctx_base_zoom_factor) << FSPACE << mw.base_zoom_factor
      << '\n';
-  fp << int(glow_eSave_Ctx_offset_x) << FSPACE << mw->offset_x << '\n';
-  fp << int(glow_eSave_Ctx_offset_y) << FSPACE << mw->offset_y << '\n';
-  fp << int(glow_eSave_Ctx_nav_zoom_factor_x) << FSPACE << navw->zoom_factor_x
+  fp << int(glow_eSave_Ctx_offset_x) << FSPACE << mw.offset_x << '\n';
+  fp << int(glow_eSave_Ctx_offset_y) << FSPACE << mw.offset_y << '\n';
+  fp << int(glow_eSave_Ctx_nav_zoom_factor_x) << FSPACE << navw.zoom_factor_x
      << '\n';
-  fp << int(glow_eSave_Ctx_nav_zoom_factor_y) << FSPACE << navw->zoom_factor_y
+  fp << int(glow_eSave_Ctx_nav_zoom_factor_y) << FSPACE << navw.zoom_factor_y
      << '\n';
   fp << int(glow_eSave_Ctx_print_zoom_factor) << FSPACE << print_zoom_factor
      << '\n';
-  fp << int(glow_eSave_Ctx_nav_offset_x) << FSPACE << navw->offset_x << '\n';
-  fp << int(glow_eSave_Ctx_nav_offset_y) << FSPACE << navw->offset_y << '\n';
+  fp << int(glow_eSave_Ctx_nav_offset_x) << FSPACE << navw.offset_x << '\n';
+  fp << int(glow_eSave_Ctx_nav_offset_y) << FSPACE << navw.offset_y << '\n';
   fp << int(glow_eSave_Ctx_x_right) << FSPACE << x_right << '\n';
   fp << int(glow_eSave_Ctx_x_left) << FSPACE << x_left << '\n';
   fp << int(glow_eSave_Ctx_y_high) << FSPACE << y_high << '\n';
   fp << int(glow_eSave_Ctx_y_low) << FSPACE << y_low << '\n';
-  fp << int(glow_eSave_Ctx_window_width) << FSPACE << mw->window_width << '\n';
-  fp << int(glow_eSave_Ctx_window_height) << FSPACE << mw->window_height << '\n';
-  fp << int(glow_eSave_Ctx_nav_window_width) << FSPACE << navw->window_width << '\n';
-  fp << int(glow_eSave_Ctx_nav_window_height) << FSPACE << navw->window_height << '\n';
+  fp << int(glow_eSave_Ctx_window_width) << FSPACE << mw.window_width << '\n';
+  fp << int(glow_eSave_Ctx_window_height) << FSPACE << mw.window_height << '\n';
+  fp << int(glow_eSave_Ctx_nav_window_width) << FSPACE << navw.window_width << '\n';
+  fp << int(glow_eSave_Ctx_nav_window_height) << FSPACE << navw.window_height << '\n';
   fp << int(glow_eSave_Ctx_nav_rect_ll_x) << FSPACE << nav_rect_ll_x << '\n';
   fp << int(glow_eSave_Ctx_nav_rect_ll_y) << FSPACE << nav_rect_ll_y << '\n';
   fp << int(glow_eSave_Ctx_nav_rect_ur_x) << FSPACE << nav_rect_ur_x << '\n';
@@ -296,14 +296,6 @@ int GlowCtx::open(char* filename, glow_eSaveMode mode)
   if (gdraw)
     gdraw->ctx->set_nodraw(); // Needed for growwindows
 
-  // If mw and navw have not been initialized, it means that we created a
-  // context only to call open() to obtain some variables from a pwg file.
-  DrawWind tmp_mw, tmp_navw;
-  if (!mw)
-    mw = &tmp_mw;
-  if (!navw)
-    navw = &tmp_navw;
-
   for (;;) {
     if (!fp.good()) {
       fp.clear();
@@ -316,35 +308,35 @@ int GlowCtx::open(char* filename, glow_eSaveMode mode)
     case glow_eSave_Ctx:
       break;
     case glow_eSave_Ctx_zoom_factor_x:
-      fp >> mw->zoom_factor_x;
+      fp >> mw.zoom_factor_x;
       break;
     case glow_eSave_Ctx_zoom_factor_y:
-      fp >> mw->zoom_factor_y;
+      fp >> mw.zoom_factor_y;
       zoom_y_found = 1;
       break;
     case glow_eSave_Ctx_base_zoom_factor:
-      fp >> mw->base_zoom_factor;
+      fp >> mw.base_zoom_factor;
       break;
     case glow_eSave_Ctx_offset_x:
-      fp >> mw->offset_x;
+      fp >> mw.offset_x;
       break;
     case glow_eSave_Ctx_offset_y:
-      fp >> mw->offset_y;
+      fp >> mw.offset_y;
       break;
     case glow_eSave_Ctx_nav_zoom_factor_x:
-      fp >> navw->zoom_factor_x;
+      fp >> navw.zoom_factor_x;
       break;
     case glow_eSave_Ctx_nav_zoom_factor_y:
-      fp >> navw->zoom_factor_y;
+      fp >> navw.zoom_factor_y;
       break;
     case glow_eSave_Ctx_print_zoom_factor:
       fp >> print_zoom_factor;
       break;
     case glow_eSave_Ctx_nav_offset_x:
-      fp >> navw->offset_x;
+      fp >> navw.offset_x;
       break;
     case glow_eSave_Ctx_nav_offset_y:
-      fp >> navw->offset_y;
+      fp >> navw.offset_y;
       break;
     case glow_eSave_Ctx_x_right:
       fp >> x_right;
@@ -359,16 +351,16 @@ int GlowCtx::open(char* filename, glow_eSaveMode mode)
       fp >> y_low;
       break;
     case glow_eSave_Ctx_window_width:
-      fp >> mw->window_width;
+      fp >> mw.window_width;
       break;
     case glow_eSave_Ctx_window_height:
-      fp >> mw->window_height;
+      fp >> mw.window_height;
       break;
     case glow_eSave_Ctx_nav_window_width:
-      fp >> navw->window_width;
+      fp >> navw.window_width;
       break;
     case glow_eSave_Ctx_nav_window_height:
-      fp >> navw->window_height;
+      fp >> navw.window_height;
       break;
     case glow_eSave_Ctx_nav_rect_ll_x:
       fp >> nav_rect_ll_x;
@@ -470,8 +462,8 @@ int GlowCtx::open(char* filename, glow_eSaveMode mode)
 
   // For backward compatibility
   if (!zoom_y_found) {
-    mw->zoom_factor_y = mw->zoom_factor_x;
-    navw->zoom_factor_y = navw->zoom_factor_x;
+    mw.zoom_factor_y = mw.zoom_factor_x;
+    navw.zoom_factor_y = navw.zoom_factor_x;
   }
 
   if (ctx_type == glow_eCtxType_Grow && !grow_loaded)
@@ -549,8 +541,8 @@ void GlowCtx::con_create_dest(
     e.any.type = glow_eEventType_CreateCon;
     e.any.x_pixel = x;
     e.any.y_pixel = y;
-    e.any.x = (x + mw->offset_x) / mw->zoom_factor_x;
-    e.any.y = (y + mw->offset_y) / mw->zoom_factor_y;
+    e.any.x = (x + mw.offset_x) / mw.zoom_factor_x;
+    e.any.y = (y + mw.offset_y) / mw.zoom_factor_y;
     e.con_create.source_object = con_create_node;
     e.con_create.source_conpoint = con_create_conpoint_num;
     e.con_create.dest_object = node;
@@ -566,12 +558,12 @@ void GlowCtx::zoom(double factor)
   if (fabs(factor) < DBL_EPSILON)
     return;
 
-  mw->zoom_factor_x *= factor;
-  mw->zoom_factor_y *= factor;
-  mw->offset_x = int(
-      (mw->offset_x - mw->window_width / 2.0 * (1.0 / factor - 1)) * factor);
-  mw->offset_y = int(
-      (mw->offset_y - mw->window_height / 2.0 * (1.0 / factor - 1)) * factor);
+  mw.zoom_factor_x *= factor;
+  mw.zoom_factor_y *= factor;
+  mw.offset_x = int(
+      (mw.offset_x - mw.window_width / 2.0 * (1.0 / factor - 1)) * factor);
+  mw.offset_y = int(
+      (mw.offset_y - mw.window_height / 2.0 * (1.0 / factor - 1)) * factor);
 
   a.zoom();
   nav_zoom();
@@ -583,7 +575,7 @@ void GlowCtx::zoom_x(double factor)
   if (fabs(factor) < DBL_EPSILON)
     return;
 
-  mw->zoom_factor_x = factor;
+  mw.zoom_factor_x = factor;
   a.zoom();
   nav_zoom();
   change_scrollbar();
@@ -594,7 +586,7 @@ void GlowCtx::zoom_y(double factor)
   if (fabs(factor) < DBL_EPSILON)
     return;
 
-  mw->zoom_factor_y = factor;
+  mw.zoom_factor_y = factor;
   a.zoom();
   nav_zoom();
   change_scrollbar();
@@ -605,13 +597,13 @@ void GlowCtx::zoom_absolute(double factor)
   if (fabs(factor) < DBL_EPSILON)
     return;
 
-  mw->offset_x = int(
-      (mw->offset_x - mw->window_width / 2.0 * (mw->zoom_factor_x / factor - 1))
-      * factor / mw->zoom_factor_x);
-  mw->offset_y = int(
-      (mw->offset_y - mw->window_height / 2.0 * (mw->zoom_factor_y / factor - 1))
-      * factor / mw->zoom_factor_y);
-  mw->zoom_factor_x = mw->zoom_factor_y = factor;
+  mw.offset_x = int(
+      (mw.offset_x - mw.window_width / 2.0 * (mw.zoom_factor_x / factor - 1))
+      * factor / mw.zoom_factor_x);
+  mw.offset_y = int(
+      (mw.offset_y - mw.window_height / 2.0 * (mw.zoom_factor_y / factor - 1))
+      * factor / mw.zoom_factor_y);
+  mw.zoom_factor_x = mw.zoom_factor_y = factor;
   a.zoom();
   nav_zoom();
 }
@@ -642,8 +634,8 @@ void GlowCtx::traverse(int x, int y)
   if (x == 0 && y == 0)
     return;
 
-  mw->offset_x -= x;
-  mw->offset_y -= y;
+  mw.offset_x -= x;
+  mw.offset_y -= y;
   if (con_create_active) {
     con_create_conpoint_x += x;
     con_create_conpoint_y += y;
@@ -674,31 +666,13 @@ void GlowCtx::get_borders()
 
 void GlowCtx::set_dirty()
 {
-  if (!nodraw) {
+  if (!nodraw && !is_dirty) {
     is_dirty = 1;
-  }
-}
-
-void GlowCtx::redraw_if_dirty()
-{
-  if (nodraw) {
-    return;
-  }
-  if (is_dirty) {
-    is_dirty = 0;
-    gdraw->begin(mw);
-    gdraw->clear();
-    draw(mw, 0, 0, mw->window_width, mw->window_height);
-    gdraw->end();
-
-    if (no_nav || (nav_rect_ur_x - nav_rect_ll_x) == 0) {
+    gdraw->set_dirty(mw.window);
+    if (no_nav || navw.window_width == 0) {
       return;
     }
-
-    gdraw->begin(navw);
-    gdraw->clear();
-    draw(navw, 0, 0, navw->window_width, navw->window_height);
-    gdraw->end();
+    gdraw->set_dirty(navw.window);
   }
 }
 
@@ -719,7 +693,7 @@ int GlowCtx::export_image(char* filename)
   return gdraw->export_image(filename);
 }
 
-void GlowCtx::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GlowCtx::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   if (ctx_type == glow_eCtxType_Grow || ctx_type == glow_eCtxType_Curve) {
     ((GrowCtx*)this)->draw(w, ll_x, ll_y, ur_x, ur_y);
@@ -730,7 +704,7 @@ void GlowCtx::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
     a.a[i]->draw(w, ll_x, ll_y, ur_x, ur_y);
   }
 
-  if (w == mw) {
+  if (w == &mw) {
     if (select_rect_active) {
       gdraw->rect(select_rect_ll_x, select_rect_ll_y,
         select_rect_ur_x - select_rect_ll_x,
@@ -741,18 +715,18 @@ void GlowCtx::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
         con_create_last_x, con_create_last_y, glow_eDrawType_Line, 0);
     }
     if (show_grid)
-      draw_grid(mw, ll_x, ll_y, ur_x, ur_y);
-  } else if (w == navw) {
+      draw_grid(&mw, ll_x, ll_y, ur_x, ur_y);
+  } else if (w == &navw) {
     nav_rect_ll_x = int(
-        navw->zoom_factor_x * mw->offset_x / mw->zoom_factor_x - navw->offset_x);
+        navw.zoom_factor_x * mw.offset_x / mw.zoom_factor_x - navw.offset_x);
     nav_rect_ur_x = int(
-        navw->zoom_factor_x * (mw->offset_x + mw->window_width) / mw->zoom_factor_x
-        - navw->offset_x);
+        navw.zoom_factor_x * (mw.offset_x + mw.window_width) / mw.zoom_factor_x
+        - navw.offset_x);
     nav_rect_ll_y = int(
-        navw->zoom_factor_y * mw->offset_y / mw->zoom_factor_y - navw->offset_y);
+        navw.zoom_factor_y * mw.offset_y / mw.zoom_factor_y - navw.offset_y);
     nav_rect_ur_y = int(
-        navw->zoom_factor_y * (mw->offset_y + mw->window_height) / mw->zoom_factor_y
-        - navw->offset_y);
+        navw.zoom_factor_y * (mw.offset_y + mw.window_height) / mw.zoom_factor_y
+        - navw.offset_y);
 
     gdraw->rect(nav_rect_ll_x, nav_rect_ll_y,
         nav_rect_ur_x - nav_rect_ll_x, nav_rect_ur_y - nav_rect_ll_y,
@@ -822,8 +796,8 @@ void GlowCtx::paste_execute()
   double ll_y = 1e10;
   a_move.get_borders(&ur_x, &ll_x, &ur_y, &ll_y);
 
-  double delta_x = int((ur_x + ll_x) / 2 * mw->zoom_factor_x - mw->offset_x - cursor_x);
-  double delta_y = int((ur_y + ll_y) / 2 * mw->zoom_factor_y - mw->offset_y - cursor_y);
+  double delta_x = int((ur_x + ll_x) / 2 * mw.zoom_factor_x - mw.offset_x - cursor_x);
+  double delta_y = int((ur_y + ll_y) / 2 * mw.zoom_factor_y - mw.offset_y - cursor_y);
   node_movement_paste_active = 1;
   if (ctx_type == glow_eCtxType_Grow
       && ((GrowCtx*)this)->move_restriction == glow_eMoveRestriction_Vertical)
@@ -836,7 +810,7 @@ void GlowCtx::paste_execute()
   a_move.get_node_borders();
   node_move_last_x = cursor_x;
   node_move_last_y = cursor_y;
-  gdraw->set_cursor(mw, glow_eDrawCursor_DiamondCross);
+  gdraw->set_cursor(mw.window, glow_eDrawCursor_DiamondCross);
   nav_zoom();
 
   //  if ( !user_highlight)
@@ -869,19 +843,19 @@ void GlowCtx::nav_zoom()
 
   if (a.size() > 0) {
     get_borders();
-    double x_nav_left = MIN(x_left, mw->offset_x / mw->zoom_factor_x);
+    double x_nav_left = MIN(x_left, mw.offset_x / mw.zoom_factor_x);
     double x_nav_right
-        = MAX(x_right, (mw->offset_x + mw->window_width) / mw->zoom_factor_x);
-    double y_nav_low = MIN(y_low, mw->offset_y / mw->zoom_factor_y);
+        = MAX(x_right, (mw.offset_x + mw.window_width) / mw.zoom_factor_x);
+    double y_nav_low = MIN(y_low, mw.offset_y / mw.zoom_factor_y);
     double y_nav_high
-        = MAX(y_high, (mw->offset_y + mw->window_height) / mw->zoom_factor_y);
+        = MAX(y_high, (mw.offset_y + mw.window_height) / mw.zoom_factor_y);
     if (feq(x_nav_right, x_nav_left) || feq(y_nav_high, y_nav_low))
       return;
-    navw->zoom_factor_x = MIN(navw->window_width / (x_nav_right - x_nav_left),
-        navw->window_height / (y_nav_high - y_nav_low));
-    navw->zoom_factor_y = navw->zoom_factor_x;
-    navw->offset_x = int(x_nav_left * navw->zoom_factor_x);
-    navw->offset_y = int(y_nav_low * navw->zoom_factor_y);
+    navw.zoom_factor_x = MIN(navw.window_width / (x_nav_right - x_nav_left),
+        navw.window_height / (y_nav_high - y_nav_low));
+    navw.zoom_factor_y = navw.zoom_factor_x;
+    navw.offset_x = int(x_nav_left * navw.zoom_factor_x);
+    navw.offset_y = int(y_nav_low * navw.zoom_factor_y);
     set_dirty();
     a.nav_zoom();
   }
@@ -992,7 +966,7 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         }
       }
 
-      gdraw->set_cursor(mw, glow_eDrawCursor_DiamondCross);
+      gdraw->set_cursor(mw.window, glow_eDrawCursor_DiamondCross);
       if (event == event_region_select)
         // Move and region select is defined as the same event
         node_move_event = 1;
@@ -1023,7 +997,7 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       node_move_last_y = y;
       node_movement_paste_active = 0;
       nav_zoom();
-      gdraw->set_cursor(mw, glow_eDrawCursor_Normal);
+      gdraw->set_cursor(mw.window, glow_eDrawCursor_Normal);
 
       /* Send callback for all move objects */
       if (event_callback[glow_eEvent_ObjectMoved]) {
@@ -1033,8 +1007,8 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         e.any.type = glow_eEventType_Object;
         e.any.x_pixel = x;
         e.any.y_pixel = y;
-        e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
-        e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
+        e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+        e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
         for (int i = 0; i < a_move.size(); i++) {
           e.object.object = a_move[i];
           e.object.object_type = a_move[i]->type();
@@ -1072,7 +1046,7 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     if (ctx_type == glow_eCtxType_Curve)
       ((CurveCtx*)this)->adjust_layout();
 
-    gdraw->get_window_size(mw, &mw->window_width, &mw->window_height);
+    gdraw->get_window_size(mw.window, &mw.window_width, &mw.window_height);
     nav_zoom();
     if (ctx_type == glow_eCtxType_Brow)
       ((BrowCtx*)this)->change_scrollbar();
@@ -1118,7 +1092,7 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       node_move_last_y = y;
       node_movement_active = 0;
       nav_zoom();
-      gdraw->set_cursor(mw, glow_eDrawCursor_CrossHair);
+      gdraw->set_cursor(mw.window, glow_eDrawCursor_CrossHair);
 
       /* Send callback for all move objects */
       if (event_callback[glow_eEvent_ObjectMoved]) {
@@ -1128,8 +1102,8 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         e.any.type = glow_eEventType_Object;
         e.any.x_pixel = x;
         e.any.y_pixel = y;
-        e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
-        e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
+        e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+        e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
         for (int i = 0; i < a_move.size(); i++) {
           e.object.object = a_move[i];
           e.object.object_type = a_move[i]->type();
@@ -1154,10 +1128,10 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       expand_select_rect(x, y);
 
       /* Save the final select area */
-      select_area_ll_x = (select_rect_ll_x + mw->offset_x) / mw->zoom_factor_x;
-      select_area_ll_y = (select_rect_ll_y + mw->offset_y) / mw->zoom_factor_y;
-      select_area_ur_x = (select_rect_ur_x + mw->offset_x) / mw->zoom_factor_x;
-      select_area_ur_y = (select_rect_ur_y + mw->offset_y) / mw->zoom_factor_y;
+      select_area_ll_x = (select_rect_ll_x + mw.offset_x) / mw.zoom_factor_x;
+      select_area_ll_y = (select_rect_ll_y + mw.offset_y) / mw.zoom_factor_y;
+      select_area_ur_x = (select_rect_ur_x + mw.offset_x) / mw.zoom_factor_x;
+      select_area_ur_y = (select_rect_ur_y + mw.offset_y) / mw.zoom_factor_y;
 
       if (select_rect_event == event_region_select) {
         /* Insert selected objects to selectlist */
@@ -1179,8 +1153,8 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         e.any.type = glow_eEventType_Object;
         e.any.x_pixel = x;
         e.any.y_pixel = y;
-        e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
-        e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
+        e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+        e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
         e.object.object_type = glow_eObjectType_NoObject;
         e.object.object = 0;
         event_callback[select_rect_event](this, &e);
@@ -1201,8 +1175,8 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           e.any.type = glow_eEventType_CreateCon;
           e.any.x_pixel = x;
           e.any.y_pixel = y;
-          e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
-          e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
+          e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+          e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
           e.con_create.source_object = con_create_node;
           e.con_create.source_conpoint = con_create_conpoint_num;
           e.con_create.dest_object = 0;
@@ -1229,13 +1203,13 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     cursor_present = 0;
     if (node_movement_active || con_create_active || select_rect_active
         || node_movement_paste_active) {
-      if (x < 0 || x >= ctx->mw->window_width || y < 0
-          || y >= mw->window_height) {
+      if (x < 0 || x >= ctx->mw.window_width || y < 0
+          || y >= mw.window_height) {
         /* Start auto scrolling */
         auto_scrolling(this);
       }
-    } else if (x < 0 || x > ctx->mw->window_width || y < 0
-        || y > mw->window_height)
+    } else if (x < 0 || x > ctx->mw.window_width || y < 0
+        || y > mw.window_height)
       a.set_hot(0);
     break;
   case glow_eEvent_VisibilityUnobscured:
@@ -1255,8 +1229,8 @@ int GlowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     e.any.type = glow_eEventType_Object;
     e.any.x_pixel = x;
     e.any.y_pixel = y;
-    e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
-    e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
+    e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+    e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
     e.object.object_type = callback_object_type;
     if (callback_object_type == glow_eObjectType_Node)
       e.object.object = callback_object;
@@ -1299,18 +1273,18 @@ int GlowCtx::event_handler_nav(glow_eEvent event, int x, int y)
     if (nav_rect_ll_x < x && x < nav_rect_ur_x && nav_rect_ll_y < y
         && y < nav_rect_ur_y) {
       if (!nav_rect_hot) {
-        gdraw->set_cursor(navw, glow_eDrawCursor_CrossHair);
+        gdraw->set_cursor(navw.window, glow_eDrawCursor_CrossHair);
         nav_rect_hot = 1;
       }
     } else {
       if (nav_rect_hot) {
-        gdraw->set_cursor(navw, glow_eDrawCursor_Normal);
+        gdraw->set_cursor(navw.window, glow_eDrawCursor_Normal);
         nav_rect_hot = 0;
       }
     }
     break;
   case glow_eEvent_Exposure:
-    gdraw->get_window_size(navw, &navw->window_width, &navw->window_height);
+    gdraw->get_window_size(navw.window, &navw.window_width, &navw.window_height);
     nav_zoom();
     break;
   case glow_eEvent_ButtonMotion:
@@ -1327,11 +1301,11 @@ int GlowCtx::event_handler_nav(glow_eEvent event, int x, int y)
       nav_rect_move_last_x = x;
       nav_rect_move_last_y = y;
 
-      int mainwind_delta_x = int(-mw->zoom_factor_x / navw->zoom_factor_x * delta_x);
-      int mainwind_delta_y = int(-mw->zoom_factor_y / navw->zoom_factor_y * delta_y);
+      int mainwind_delta_x = int(-mw.zoom_factor_x / navw.zoom_factor_x * delta_x);
+      int mainwind_delta_y = int(-mw.zoom_factor_y / navw.zoom_factor_y * delta_y);
       if (ABS(mainwind_delta_x) > 0 || ABS(mainwind_delta_y) > 0) {
-        mw->offset_x -= mainwind_delta_x;
-        mw->offset_y -= mainwind_delta_y;
+        mw.offset_x -= mainwind_delta_x;
+        mw.offset_y -= mainwind_delta_y;
         set_dirty();
       }
       if (ctx_type == glow_eCtxType_Grow) {
@@ -1526,8 +1500,6 @@ int GlowCtx::trace_scan()
   if (ctx_type == glow_eCtxType_Grow)
     ((GrowCtx*)this)->exec_dynamic();
 
-  redraw_if_dirty();
-
   return 1;
 }
 
@@ -1563,30 +1535,30 @@ void GlowCtx::get_selected_cons(GlowArrayElem*** cons, int* num)
 
 void GlowCtx::position_to_pixel(double x, double y, int* pix_x, int* pix_y)
 {
-  *pix_x = int(x * mw->zoom_factor_x - mw->offset_x);
-  *pix_y = int(y * mw->zoom_factor_y - mw->offset_y);
+  *pix_x = int(x * mw.zoom_factor_x - mw.offset_x);
+  *pix_y = int(y * mw.zoom_factor_y - mw.offset_y);
 }
 
 void GlowCtx::unzoom()
 {
-  zoom(mw->base_zoom_factor / mw->zoom_factor_x);
+  zoom(mw.base_zoom_factor / mw.zoom_factor_x);
 }
 
 void GlowCtx::center_object(GlowArrayElem* object)
 {
   double ll_x, ll_y, ur_x, ur_y;
 
-  gdraw->get_window_size(mw, &mw->window_width, &mw->window_height);
+  gdraw->get_window_size(mw.window, &mw.window_width, &mw.window_height);
 
   ur_x = -1e10;
   ll_x = 1e10;
   ur_y = -1e10;
   ll_y = 1e10;
   object->get_borders(&ur_x, &ll_x, &ur_y, &ll_y);
-  mw->offset_x
-      = int(((ur_x + ll_x) / 2) * mw->zoom_factor_x - mw->window_width / 2);
-  mw->offset_y
-      = int(((ur_y + ll_y) / 2) * mw->zoom_factor_y - mw->window_height / 2);
+  mw.offset_x
+      = int(((ur_x + ll_x) / 2) * mw.zoom_factor_x - mw.window_width / 2);
+  mw.offset_y
+      = int(((ur_y + ll_y) / 2) * mw.zoom_factor_y - mw.window_height / 2);
 
   nav_zoom();
   change_scrollbar();
@@ -1797,37 +1769,37 @@ void GlowCtx::change_scrollbar()
   if (scroll_callback == NULL)
     return;
 
-  scroll_size = mw->window_width / 100 / mw->zoom_factor_x;
+  scroll_size = mw.window_width / 100 / mw.zoom_factor_x;
   if (feq(scroll_size, 0.0))
     return;
 
   data.scroll_data = scroll_data;
   data.total_width = int((x_right - x_left) / scroll_size) + 1;
   data.total_height = int((y_high - y_low) / scroll_size) + 1;
-  data.window_width = int(mw->window_width / scroll_size / mw->zoom_factor_x) + 1;
+  data.window_width = int(mw.window_width / scroll_size / mw.zoom_factor_x) + 1;
   data.window_height
-      = int(mw->window_height / scroll_size / mw->zoom_factor_y) + 1;
+      = int(mw.window_height / scroll_size / mw.zoom_factor_y) + 1;
   data.offset_x = int(
-      mw->offset_x / scroll_size / mw->zoom_factor_x - x_left / scroll_size);
+      mw.offset_x / scroll_size / mw.zoom_factor_x - x_left / scroll_size);
   data.offset_y
-      = int(mw->offset_y / scroll_size / mw->zoom_factor_y - y_low / scroll_size);
+      = int(mw.offset_y / scroll_size / mw.zoom_factor_y - y_low / scroll_size);
 
   (scroll_callback)(&data);
 }
 
 void GlowCtx::scroll(double x, double y)
 {
-  int delta_x = int(x * mw->window_width);
-  int delta_y = int(y * mw->window_height);
+  int delta_x = int(x * mw.window_width);
+  int delta_y = int(y * mw.window_height);
 
-  if (delta_y < 0 && mw->offset_y + mw->window_height > y_high * mw->zoom_factor_y)
+  if (delta_y < 0 && mw.offset_y + mw.window_height > y_high * mw.zoom_factor_y)
     delta_y = 0;
-  else if (delta_y > 0 && mw->offset_y < y_low * mw->zoom_factor_y)
+  else if (delta_y > 0 && mw.offset_y < y_low * mw.zoom_factor_y)
     delta_y = 0;
 
-  if (delta_x < 0 && mw->offset_x + mw->window_width > x_right * mw->zoom_factor_x)
+  if (delta_x < 0 && mw.offset_x + mw.window_width > x_right * mw.zoom_factor_x)
     delta_x = 0;
-  else if (delta_x > 0 && mw->offset_x < x_left * mw->zoom_factor_x)
+  else if (delta_x > 0 && mw.offset_x < x_left * mw.zoom_factor_x)
     delta_x = 0;
 
   if (delta_x == 0 && delta_y == 0)
@@ -1842,8 +1814,8 @@ void GlowCtx::scroll(int delta_x, int delta_y)
   if (delta_x == 0 && delta_y == 0)
     return;
 
-  mw->offset_x -= delta_x;
-  mw->offset_y -= delta_y;
+  mw.offset_x -= delta_x;
+  mw.offset_y -= delta_y;
 
   move_widgets(delta_x, delta_y);
 
@@ -1854,15 +1826,15 @@ void GlowCtx::scroll(int delta_x, int delta_y)
   }
 }
 
-void GlowCtx::draw_grid(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GlowCtx::draw_grid(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int x0, x1, y0, y1, i, j;
   int point_num;
 
-  x0 = int((ll_x + mw->offset_x) / mw->zoom_factor_x / grid_size_x);
-  x1 = int((ur_x + mw->offset_x) / mw->zoom_factor_x / grid_size_x);
-  y0 = int((ll_y + mw->offset_y) / mw->zoom_factor_y / grid_size_y);
-  y1 = int((ur_y + mw->offset_y) / mw->zoom_factor_y / grid_size_y);
+  x0 = int((ll_x + mw.offset_x) / mw.zoom_factor_x / grid_size_x);
+  x1 = int((ur_x + mw.offset_x) / mw.zoom_factor_x / grid_size_x);
+  y0 = int((ll_y + mw.offset_y) / mw.zoom_factor_y / grid_size_y);
+  y1 = int((ur_y + mw.offset_y) / mw.zoom_factor_y / grid_size_y);
 
   if (x1 <= x0)
     return;
@@ -1877,8 +1849,8 @@ void GlowCtx::draw_grid(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   int idx = 0;
   for (i = x0; i <= x1; i++) {
     for (j = y0; j <= y1; j++) {
-      p[idx].x = int(grid_size_x * i * mw->zoom_factor_x) - mw->offset_x;
-      p[idx].y = int(grid_size_y * j * mw->zoom_factor_y) - mw->offset_y;
+      p[idx].x = int(grid_size_x * i * mw.zoom_factor_x) - mw.offset_x;
+      p[idx].y = int(grid_size_y * j * mw.zoom_factor_y) - mw.offset_y;
       idx++;
     }
   }
@@ -1924,22 +1896,21 @@ void auto_scrolling(GlowCtx* ctx)
 
   ctx->auto_scrolling_active = 1;
   if (ctx->node_movement_active || ctx->node_movement_paste_active) {
-    delta_x = -(ctx->node_move_last_x - ctx->mw->window_width / 2) / 3;
-    delta_y = -(ctx->node_move_last_y - ctx->mw->window_height / 2) / 3;
+    delta_x = -(ctx->node_move_last_x - ctx->mw.window_width / 2) / 3;
+    delta_y = -(ctx->node_move_last_y - ctx->mw.window_height / 2) / 3;
 
     ctx->a_move.move(-delta_x, -delta_y, 0);
   } else if (ctx->select_rect_active) {
-    delta_x = -(ctx->select_rect_last_x - ctx->mw->window_width / 2) / 3;
-    delta_y = -(ctx->select_rect_last_y - ctx->mw->window_height / 2) / 3;
+    delta_x = -(ctx->select_rect_last_x - ctx->mw.window_width / 2) / 3;
+    delta_y = -(ctx->select_rect_last_y - ctx->mw.window_height / 2) / 3;
   } else if (ctx->con_create_active) {
-    delta_x = -(ctx->con_create_last_x - ctx->mw->window_width / 2) / 3;
-    delta_y = -(ctx->con_create_last_y - ctx->mw->window_height / 2) / 3;
+    delta_x = -(ctx->con_create_last_x - ctx->mw.window_width / 2) / 3;
+    delta_y = -(ctx->con_create_last_y - ctx->mw.window_height / 2) / 3;
   }
 
   ctx->traverse(delta_x, delta_y);
   ctx->change_scrollbar();
   ctx->set_dirty();
-  ctx->redraw_if_dirty();
   ctx->gdraw->set_timer(ctx, 300, auto_scrolling, &ctx->auto_scrolling_id);
 }
 
@@ -1947,8 +1918,8 @@ void glow_scroll_horizontal(GlowCtx* ctx, int value, int bottom)
 {
   int x_pix;
 
-  x_pix = int(-value * ctx->scroll_size * ctx->mw->zoom_factor_x
-      + (ctx->mw->offset_x - ctx->x_left * ctx->mw->zoom_factor_x));
+  x_pix = int(-value * ctx->scroll_size * ctx->mw.zoom_factor_x
+      + (ctx->mw.offset_x - ctx->x_left * ctx->mw.zoom_factor_x));
   ctx->scroll(x_pix, 0);
 }
 
@@ -1956,8 +1927,8 @@ void glow_scroll_vertical(GlowCtx* ctx, int value, int bottom)
 {
   int y_pix;
 
-  y_pix = int(-value * ctx->scroll_size * ctx->mw->zoom_factor_y
-      + (ctx->mw->offset_y - ctx->y_low * ctx->mw->zoom_factor_y));
+  y_pix = int(-value * ctx->scroll_size * ctx->mw.zoom_factor_y
+      + (ctx->mw.offset_y - ctx->y_low * ctx->mw.zoom_factor_y));
   ctx->scroll(0, y_pix);
 }
 

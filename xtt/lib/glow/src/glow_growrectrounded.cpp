@@ -82,7 +82,7 @@ GrowRectRounded::~GrowRectRounded()
   ctx->object_deleted(this);
   ctx->set_dirty();
   if (hot)
-    ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 }
 
 void GrowRectRounded::move(double delta_x, double delta_y, int grid)
@@ -94,13 +94,13 @@ void GrowRectRounded::move(double delta_x, double delta_y, int grid)
     double x_grid, y_grid;
 
     /* Move to closest grid point */
-    ctx->find_grid(x_left + delta_x / ctx->mw->zoom_factor_x,
-        y_low + delta_y / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid(x_left + delta_x / ctx->mw.zoom_factor_x,
+        y_low + delta_y / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
     trf.move(x_grid - x_left, y_grid - y_low);
     get_node_borders();
   } else {
-    double dx = delta_x / ctx->mw->zoom_factor_x;
-    double dy = delta_y / ctx->mw->zoom_factor_y;
+    double dx = delta_x / ctx->mw.zoom_factor_x;
+    double dy = delta_y / ctx->mw.zoom_factor_y;
     trf.move(dx, dy);
     x_right += dx;
     x_left += dx;
@@ -161,12 +161,12 @@ int GrowRectRounded::event_handler(glow_eEvent event, int x, int y, double fx, d
     }
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
-      ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
+      ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_CrossHair);
       set_hot(1);
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
-        ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+        ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
       set_hot(0);
     }
     break;
@@ -355,7 +355,7 @@ void GrowRectRounded::open(std::ifstream& fp)
   }
 }
 
-void GrowRectRounded::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowRectRounded::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -381,7 +381,7 @@ void GrowRectRounded::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 }
 
 void GrowRectRounded::draw(
-    DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+    GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -571,12 +571,12 @@ void GrowRectRounded::set_rotation(
   ctx->set_dirty();
 }
 
-void GrowRectRounded::draw(DrawWind* w, GlowTransform* t, int highlight,
+void GrowRectRounded::draw(GlowWind* w, GlowTransform* t, int highlight,
     int hot, void* node, void* colornode)
 {
   if (!(display_level & ctx->display_level))
     return;
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int chot = 0;
   if (hot && ctx->environment != glow_eEnv_Development) {
     if (ctx->hot_indication == glow_eHotIndication_No)
@@ -779,11 +779,11 @@ void GrowRectRounded::draw(DrawWind* w, GlowTransform* t, int highlight,
   }
 }
 
-void GrowRectRounded::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowRectRounded::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   if (hot && ctx->environment != glow_eEnv_Development
       && ctx->hot_indication != glow_eHotIndication_LineWidth)
     hot = 0;
@@ -877,7 +877,7 @@ int GrowRectRounded::draw_annot_background(
     GlowTransform* t, void* node, double x, double y)
 {
   if (fill) {
-    draw(ctx->mw, t, 0, 0, node, node);
+    draw(&ctx->mw, t, 0, 0, node, node);
     return 1;
   }
   return 0;
@@ -953,17 +953,17 @@ void GrowRectRounded::export_javabean(GlowTransform* t, void* node,
     idx = line_width;
     idx += hot;
     if (idx < 0) {
-      erase(ctx->mw, t, hot, node);
+      erase(&ctx->mw, t, hot, node);
       return;
     }
   } else {
     if (node && ((GrowNode*)node)->line_width)
-      idx = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor
+      idx = int(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor
               * ((GrowNode*)node)->line_width
           - 1);
     else
       idx = int(
-          ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * line_width - 1);
+          ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
     idx += hot;
   }
   idx = MAX(0, idx);
@@ -973,10 +973,10 @@ void GrowRectRounded::export_javabean(GlowTransform* t, void* node,
   glow_sPoint p1 = tmp * ll;
   glow_sPoint p2 = tmp * ur;
 
-  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p1.x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p1.y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+  p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   double ll_x = MIN(p1.x, p2.x);
   double ur_x = MAX(p1.x, p2.x);
   double ll_y = MIN(p1.y, p2.y);

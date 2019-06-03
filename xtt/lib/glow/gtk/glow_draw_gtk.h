@@ -52,34 +52,11 @@ class GlowCustomColorsGtk;
 
 class DrawWindGtk : public DrawWind {
 public:
-  DrawWindGtk()
-  {
-    zoom_factor_x = zoom_factor_y = base_zoom_factor = 20;
-    offset_x = offset_y = 0;
-    window_width = window_height = 0;
-    subwindow_x = subwindow_y = 0;
-    subwindow_scale = 1;
-    clip_cnt = 0;
-    memset(clip_rectangle, 0, sizeof(clip_rectangle));
-  }
-  GdkWindow* window = NULL;
-  GdkPixmap* buffer = NULL;
+  DrawWindGtk();
+  GtkWidget* toplevel;
+  GdkWindow* window;
   GdkRectangle clip_rectangle[DRAW_CLIP_SIZE];
-  GdkPixmap* background_pixmap = NULL;
-
-  DrawWind* copy() {
-    DrawWindGtk* tmp = new DrawWindGtk();
-    tmp->clip_cnt = this->clip_cnt;
-    tmp->window = this->window;
-    tmp->buffer = this->buffer;
-    memcpy(tmp->clip_rectangle, this->clip_rectangle, sizeof(this->clip_rectangle));
-    tmp->background_pixmap = this->background_pixmap;
-    return tmp;
-  }
-
-  virtual void update_buffer(DrawWind* w) {
-    this->buffer = ((DrawWindGtk*)w)->buffer;
-  }
+  GdkPixmap* background_pixmap;
 };
 
 class GlowDrawGtk : public GlowDraw {
@@ -91,7 +68,7 @@ public:
 
   DrawWindGtk m_wind;
   DrawWindGtk nav_wind;
-  DrawWindGtk *w = NULL;
+  GlowWind *w = NULL;
   GdkDisplay* display;
   GdkScreen* screen;
   GdkGC* gc;
@@ -117,8 +94,9 @@ public:
       int (*event_cb)(GlowCtx* ctx, glow_tEvent event));
   void clear();
 
-  int begin(DrawWind* wind);
-  void end(bool flush = true);
+  int begin(GlowWind* wind);
+  void end();
+  void set_dirty(DrawWind* wind);
 
   void get_window_size(DrawWind* w, int* width, int* height);
   void set_window_size(DrawWind* w, int width, int height);

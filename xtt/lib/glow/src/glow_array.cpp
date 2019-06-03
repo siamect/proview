@@ -1087,14 +1087,14 @@ void GlowArray::open(GrowCtx* ctx, std::ifstream& fp)
   }
 }
 
-void GlowArray::draw(DrawWind *w, void* pos, int highlight, int hot, void* node)
+void GlowArray::draw(GlowWind *w, void* pos, int highlight, int hot, void* node)
 {
   for (int i = 0; i < a_size; i++) {
     a[i]->draw(w, pos, highlight, hot, node);
   }
 }
 
-void GlowArray::draw(DrawWind *w, GlowTransform* t, int highlight, int hot,
+void GlowArray::draw(GlowWind *w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
   for (int i = 0; i < a_size; i++) {
@@ -1109,14 +1109,14 @@ void GlowArray::draw_inverse(void* pos, int hot, void* node)
   }
 }
 
-void GlowArray::erase(DrawWind *w, void* pos, int hot, void* node)
+void GlowArray::erase(GlowWind *w, void* pos, int hot, void* node)
 {
   for (int i = 0; i < a_size; i++) {
     a[i]->erase(w, pos, hot, node);
   }
 }
 
-void GlowArray::erase(DrawWind *w, GlowTransform* t, int hot, void* node)
+void GlowArray::erase(GlowWind *w, GlowTransform* t, int hot, void* node)
 {
   for (int i = 0; i < a_size; i++) {
     a[i]->erase(w, t, hot, node);

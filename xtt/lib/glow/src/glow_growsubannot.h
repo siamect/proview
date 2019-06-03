@@ -67,9 +67,9 @@ public:
   void nav_zoom();
   void save(std::ofstream& fp, glow_eSaveMode mode);
   void open(std::ifstream& fp);
-  void draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
-  void draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
-  void erase(DrawWind* w)
+  void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
+  void erase(GlowWind* w)
   {
     text.erase(w, (void*)&pzero, hot, NULL);
     rect.erase(w, (void*)&pzero, hot, NULL);
@@ -125,9 +125,9 @@ public:
   {
     return this->ctx;
   }
-  void draw(DrawWind* w, GlowTransform* t, int highlight, int hot, void* node,
+  void draw(GlowWind* w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
-  void erase(DrawWind* w, GlowTransform* t, int hot, void* node);
+  void erase(GlowWind* w, GlowTransform* t, int hot, void* node);
   void set_transform(GlowTransform* t);
   void set_transform_from_stored(GlowTransform* t)
   {

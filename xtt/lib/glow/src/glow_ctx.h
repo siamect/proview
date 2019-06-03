@@ -57,6 +57,33 @@ public:
   char text[100][200];
 };
 
+class GlowWind {
+public:
+  DrawWind* window;
+  int type;
+  int double_buffered = 1;
+
+  double zoom_factor_x; //!< Zoom factor in x direction.
+  double zoom_factor_y; //!< Zoom factor in y direction.
+  double base_zoom_factor; //!< Original zoom factor.
+  int offset_x; //!< Offset in pixel between origo and displayed window in x
+  //! direction.
+  int offset_y; //!< Offset in pixel between origo and displayde window in y
+  //! direction.
+  int window_width; //!< Window width in pixel.
+  int window_height; //!< Window height in pixel.
+  int subwindow_x; //!< Subwindow x coordinate in pixel.
+  int subwindow_y; //!< Subwindow y coordinate in pixel.
+  double subwindow_scale; //!< Subwindow scale.
+
+  GlowWind(int offs_x, int offs_y) : window(0), zoom_factor_x(20),
+      zoom_factor_y(20), base_zoom_factor(20), offset_x(offs_x),
+      offset_y(offs_y), window_width(0), window_height(0), subwindow_x(0),
+      subwindow_y(0), subwindow_scale(1)
+  {
+  }
+};
+
 //! Backcall data for scrollbar reconfiguration
 typedef struct {
   void* scroll_data; //!< Scrollbar data (growwidget_sScroll).
@@ -96,8 +123,8 @@ public:
   GlowCtx(const char* ctx_name, int offs_x = 0, int offs_y = 0);
 
   glow_eCtxType ctx_type; //!< Type of context
-  DrawWind* mw; //!< Main window data.
-  DrawWind* navw; //!< Navigation window data.
+  GlowWind mw; //!< Main window data.
+  GlowWind navw; //!< Navigation window data.
   double print_zoom_factor; //!< Zoom factor when printing to postscript.
   double x_right; //!< Right border of work area.
   double x_left; //!< Left border of work area.
@@ -548,7 +575,7 @@ public:
     \param ur_y		y coordiate for upper right corner of area to draw in
     pixel.
   */
-  virtual void draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  virtual void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Redraw an area of the window. Arguments in double.
   /*!
@@ -561,7 +588,7 @@ public:
     \param ur_y		y coordiate for upper right corner of area to draw in
     pixel.
   */
-  void draw(DrawWind* w, double ll_x, double ll_y, double ur_x, double ur_y)
+  void draw(GlowWind* w, double ll_x, double ll_y, double ur_x, double ur_y)
   {
     draw(w, (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);
   }
@@ -608,12 +635,7 @@ public:
   void delete_node_cons(void* node);
 
   //! Mark that window needs to be redrawn.
-  /*! The window will be redrawn when a call to redraw_if_dirty() is made. */
   void set_dirty();
-
-  //! Redraw the window if it is dirty.
-  /*! Redraw the window if it has been marked as dirty by set_dirty() */
-  void redraw_if_dirty();
 
   int is_dirty; //!< Defered redraw is active.
   GlowArray a_nc; //!< Array of nodeclasses.
@@ -973,7 +995,7 @@ public:
     \param ur_x		x coordinate for upper right corner of area in pixel.
     \param ur_y		y coordinate for upper right corner of area in pixel.
   */
-  void draw_grid(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw_grid(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Register callback functions for userdata handling.
   /*!

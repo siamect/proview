@@ -75,12 +75,12 @@ void GrowScrollBar::set_highlight(int on)
   }
 }
 
-void GrowScrollBar::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowScrollBar::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
   if (!(display_level & ctx->display_level))
     return;
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int idx;
 
   idx = int(w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
@@ -163,11 +163,11 @@ void GrowScrollBar::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   ctx->gdraw->rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, bdrawtype, 0, idx);
 }
 
-void GrowScrollBar::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowScrollBar::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int idx;
 
   idx = int(w->zoom_factor_y / w->base_zoom_factor * line_width - 1);

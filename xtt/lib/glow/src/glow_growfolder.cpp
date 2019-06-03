@@ -427,7 +427,7 @@ void GrowFolder::open(std::ifstream& fp)
   GrowWindow::update_attributes();
 }
 
-void GrowFolder::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowFolder::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -452,7 +452,7 @@ void GrowFolder::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowFolder::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowFolder::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -497,12 +497,12 @@ void GrowFolder::set_highlight(int on)
   }
 }
 
-void GrowFolder::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowFolder::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
   if (!(display_level & ctx->display_level))
     return;
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int idx;
   glow_eDrawType drawtype;
 
@@ -612,12 +612,12 @@ void GrowFolder::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       p[0].x + 1, p[0].y, p[3].x - 1, p[3].y, color_selected, idx, 0);
 }
 
-void GrowFolder::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowFolder::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
 
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int idx = int(w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
 
@@ -651,10 +651,10 @@ void GrowFolder::export_javabean(GlowTransform* t, void* node,
   glow_sPoint p1 = tmp * ll;
   glow_sPoint p2 = tmp * ur;
 
-  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p1.x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p1.y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+  p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   double ll_x = MIN(p1.x, p2.x);
   double ur_x = MAX(p1.x, p2.x);
   double ll_y = MIN(p1.y, p2.y);

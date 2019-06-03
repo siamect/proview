@@ -90,8 +90,8 @@ GrowImage::GrowImage(GrowCtx* glow_ctx, const char* name, double x, double y,
     if (!pixmap)
       ur.posit(ll.x + 1, ll.y + 1);
     else
-      ur.posit(ll.x + double(current_width) / ctx->mw->zoom_factor_x,
-          ll.y + double(current_height) / ctx->mw->zoom_factor_y);
+      ur.posit(ll.x + double(current_width) / ctx->mw.zoom_factor_x,
+          ll.y + double(current_height) / ctx->mw.zoom_factor_y);
   }
   ctx->set_dirty();
   get_node_borders();
@@ -116,7 +116,7 @@ GrowImage::~GrowImage()
 
   ctx->set_dirty();
   if (hot)
-    ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
   if (original_image)
     ctx->gdraw->image_free(original_image);
   if (image)
@@ -172,10 +172,10 @@ int GrowImage::insert_image(const char* imagefile)
   if (!original_image)
     return 0;
 
-  current_width = int(ctx->mw->zoom_factor_x / ctx->mw->base_zoom_factor
+  current_width = int(ctx->mw.zoom_factor_x / ctx->mw.base_zoom_factor
           * ctx->gdraw->image_get_width(image)
       + 0.5);
-  current_height = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor
+  current_height = int(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor
           * ctx->gdraw->image_get_height(image)
       + 0.5);
   current_color_tone = color_tone;
@@ -186,8 +186,8 @@ int GrowImage::insert_image(const char* imagefile)
   original_width = ctx->gdraw->image_get_width(original_image);
   original_height = ctx->gdraw->image_get_height(original_image);
 
-  ur.posit(ll.x + double(current_width) / ctx->mw->zoom_factor_x,
-      ll.y + double(current_height) / ctx->mw->zoom_factor_y);
+  ur.posit(ll.x + double(current_width) / ctx->mw.zoom_factor_x,
+      ll.y + double(current_height) / ctx->mw.zoom_factor_y);
   get_node_borders();
 
   int w, h;
@@ -255,13 +255,13 @@ void GrowImage::move(double delta_x, double delta_y, int grid)
     double x_grid, y_grid;
 
     /* Move to closest grid point */
-    ctx->find_grid(x_left + delta_x / ctx->mw->zoom_factor_x,
-        y_low + delta_y / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid(x_left + delta_x / ctx->mw.zoom_factor_x,
+        y_low + delta_y / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
     trf.move(x_grid - x_left, y_grid - y_low);
     get_node_borders();
   } else {
-    double dx = delta_x / ctx->mw->zoom_factor_x;
-    double dy = delta_y / ctx->mw->zoom_factor_y;
+    double dx = delta_x / ctx->mw.zoom_factor_x;
+    double dy = delta_y / ctx->mw.zoom_factor_y;
     trf.move(dx, dy);
     x_right += dx;
     x_left += dx;
@@ -321,12 +321,12 @@ int GrowImage::event_handler(glow_eEvent event, int x, int y, double fx, double 
     }
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
-      ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
+      ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_CrossHair);
       set_hot(1);
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
-        ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+        ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
       set_hot(0);
     }
     break;
@@ -486,7 +486,7 @@ void GrowImage::open(std::ifstream& fp)
     insert_image(image_filename);
 }
 
-void GrowImage::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowImage::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -511,7 +511,7 @@ void GrowImage::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowImage::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowImage::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -699,13 +699,13 @@ void GrowImage::set_rotation(
   ctx->set_dirty();
 }
 
-void GrowImage::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowImage::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
   if (!(display_level & ctx->display_level))
     return;
 
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
 
   Matrix tmp = t ? (*t * trf) : trf;
   glow_sPoint p1 = tmp * ll;
@@ -727,7 +727,7 @@ void GrowImage::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
 
   rotation = int((rot + 45) / 90) * 90;
 
-  if (w == ctx->navw) {
+  if (w == &ctx->navw) {
     ctx->gdraw->rect(
         ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineGray, 1, 0);
   } else {
@@ -843,12 +843,12 @@ void GrowImage::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   }
 }
 
-void GrowImage::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowImage::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
 
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
 
   Matrix tmp = t ? (*t * trf) : trf;
   glow_sPoint p1 = tmp * ll;
@@ -946,10 +946,10 @@ void GrowImage::export_javabean(GlowTransform* t, void* node,
   glow_sPoint p1 = tmp * ll;
   glow_sPoint p2 = tmp * ur;
 
-  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p1.x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p1.y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+  p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   double ll_x = MIN(p1.x, p2.x);
   double ur_x = MAX(p1.x, p2.x);
   double ll_y = MIN(p1.y, p2.y);

@@ -75,7 +75,7 @@ GrowToolbar::~GrowToolbar()
   ctx->set_dirty();
   ctx->delete_node_cons(this);
   if (hot)
-    ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 }
 
 void GrowToolbar::copy_from(const GrowToolbar& n)
@@ -330,18 +330,18 @@ int GrowToolbar::event_handler(glow_eEvent event, int x, int y, double fx, doubl
       int hot_type;
       if ((hot_type = ctx->send_hot_request(this))) {
         if (!ctx->trace_started) {
-          ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
+          ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_CrossHair);
           set_hot(1);
           ctx->tiptext_event(this, x, y);
         } else if (hot_type & glow_mHotType_CursorCrossHair) {
-          ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
+          ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_CrossHair);
           hot_tool = idx + 1;
           int category, mask_idx;
           int lsts = get_mask_index(idx, &category, &mask_idx);
           if (ODD(lsts))
             ctx->tiptext_toolbar_event(this, x, y, category, mask_idx);
         } else if (hot_type & glow_mHotType_CursorHand) {
-          ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Hand);
+          ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Hand);
           hot_tool = idx + 1;
           int category, mask_idx;
           int lsts = get_mask_index(idx, &category, &mask_idx);
@@ -353,7 +353,7 @@ int GrowToolbar::event_handler(glow_eEvent event, int x, int y, double fx, doubl
     if (!sts
         && ((!ctx->trace_started && hot) || (ctx->trace_started && hot_tool))) {
       if (!ctx->hot_found)
-        ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+        ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
       if (hot_tool)
         ((GrowNode*)nc->a.a[hot_tool - 1])->set_hot(0);
       hot_tool = 0;
@@ -522,14 +522,14 @@ void GrowToolbar::scale()
 {
   double scale;
 
-  if (ctx->mw->window_width == 0)
+  if (ctx->mw.window_width == 0)
     return;
 
-  if (x_right * ctx->mw->zoom_factor_x - ctx->mw->offset_x
-      > ctx->mw->window_width) {
-    scale = (ctx->mw->window_width
-                - (x_left * ctx->mw->zoom_factor_x - ctx->mw->offset_x) - 10)
-        / ((x_right - x_left) * ctx->mw->zoom_factor_x);
+  if (x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x
+      > ctx->mw.window_width) {
+    scale = (ctx->mw.window_width
+                - (x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x) - 10)
+        / ((x_right - x_left) * ctx->mw.zoom_factor_x);
 
     trf.scale(scale, 1, x_left, y_low);
     get_node_borders();

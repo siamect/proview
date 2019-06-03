@@ -41,29 +41,6 @@
 
 #define DRAW_CLIP_SIZE 10
 
-class DrawWind {
-public:
-  int type;
-  int double_buffered = 1;
-
-  double zoom_factor_x; //!< Zoom factor in x direction.
-  double zoom_factor_y; //!< Zoom factor in y direction.
-  double base_zoom_factor; //!< Original zoom factor.
-  int offset_x; //!< Offset in pixel between origo and displayed window in x
-  //! direction.
-  int offset_y; //!< Offset in pixel between origo and displayde window in y
-  //! direction.
-  int window_width; //!< Window width in pixel.
-  int window_height; //!< Window height in pixel.
-  int subwindow_x; //!< Subwindow x coordinate in pixel.
-  int subwindow_y; //!< Subwindow y coordinate in pixel.
-  double subwindow_scale; //!< Subwindow scale.
-  int clip_cnt = 0;
-
-  virtual DrawWind* copy() { return NULL; }
-  virtual void update_buffer(DrawWind* w) {}
-};
-
 class GlowDraw {
 public:
   GlowCtx* ctx;
@@ -79,8 +56,9 @@ public:
   virtual void get_window_size(DrawWind* w, int* width, int* height) = 0;
   virtual void set_window_size(DrawWind* w, int width, int height) = 0;
 
-  virtual int begin(DrawWind* wind) = 0;
-  virtual void end(bool flush = true) = 0;
+  virtual int begin(GlowWind* wind) = 0;
+  virtual void end() = 0;
+  virtual void set_dirty(DrawWind* wind) = 0;
 
   virtual void rect(int x, int y, int width, int height, glow_eDrawType gc_type,
       int fill, int idx, int highlight = 0) = 0;
@@ -161,6 +139,13 @@ public:
   virtual void pop_customcolors() = 0;
   virtual GlowCustomColors* create_customcolors() = 0;
   virtual void reset_customcolors(GlowCustomColors* cc) = 0;
+};
+
+class DrawWind {
+public:
+  DrawWind();
+  int type;
+  int clip_cnt;
 };
 
 #endif

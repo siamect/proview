@@ -141,8 +141,8 @@ int GlowConPoint::event_handler(
 void GlowConPoint::conpoint_select(
     void* pos, int x, int y, double* distance, void** cp)
 {
-  int px = ((GlowPoint*)pos)->z_x - ctx->mw->offset_x + p.z_x;
-  int py = ((GlowPoint*)pos)->z_y - ctx->mw->offset_y + p.z_y;
+  int px = ((GlowPoint*)pos)->z_x - ctx->mw.offset_x + p.z_x;
+  int py = ((GlowPoint*)pos)->z_y - ctx->mw.offset_y + p.z_y;
 
   double dist = sqrt(1.0 * (x - px) * (x - px) + 1.0 * (y - py) * (y - py));
   if (dist < *distance) {
@@ -155,8 +155,8 @@ void GlowConPoint::conpoint_select(GlowTransform* t, int x, int y,
     double* distance, void** cp, int* pix_x, int* pix_y)
 {
   glow_sPoint p = *t * trf * this->p;
-  int px = int(p.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x);
-  int py = int(p.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y);
+  int px = int(p.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x);
+  int py = int(p.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y);
 
   double dist = sqrt(1.0 * (x - px) * (x - px) + 1.0 * (y - py) * (y - py));
   if (dist < *distance) {

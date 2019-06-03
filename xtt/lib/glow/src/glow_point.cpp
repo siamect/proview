@@ -50,33 +50,33 @@ void GlowPoint::posit(double x1, double y1)
 {
   x = x1;
   y = y1;
-  z_x = int(x * ctx->mw->zoom_factor_x + 0.5);
-  z_y = int(y * ctx->mw->zoom_factor_y + 0.5);
-  nav_z_x = int(x * ctx->navw->zoom_factor_x + 0.5);
-  nav_z_y = int(y * ctx->navw->zoom_factor_y + 0.5);
+  z_x = int(x * ctx->mw.zoom_factor_x + 0.5);
+  z_y = int(y * ctx->mw.zoom_factor_y + 0.5);
+  nav_z_x = int(x * ctx->navw.zoom_factor_x + 0.5);
+  nav_z_y = int(y * ctx->navw.zoom_factor_y + 0.5);
 }
 
 void GlowPoint::posit_z(int x1, int y1)
 {
-  x = 1.0 * x1 / ctx->mw->zoom_factor_x;
-  y = 1.0 * y1 / ctx->mw->zoom_factor_y;
+  x = 1.0 * x1 / ctx->mw.zoom_factor_x;
+  y = 1.0 * y1 / ctx->mw.zoom_factor_y;
   z_x = x1;
   z_y = y1;
-  nav_z_x = int(x * ctx->navw->zoom_factor_x);
-  nav_z_y = int(y * ctx->navw->zoom_factor_y);
+  nav_z_x = int(x * ctx->navw.zoom_factor_x);
+  nav_z_y = int(y * ctx->navw.zoom_factor_y);
 }
 
 void GlowPoint::zoom()
 {
-  z_x = int(x * ctx->mw->zoom_factor_x + 0.5);
-  z_y = int(y * ctx->mw->zoom_factor_y + 0.5);
-  current_zoom_factor = ctx->mw->zoom_factor_x;
+  z_x = int(x * ctx->mw.zoom_factor_x + 0.5);
+  z_y = int(y * ctx->mw.zoom_factor_y + 0.5);
+  current_zoom_factor = ctx->mw.zoom_factor_x;
 }
 
 void GlowPoint::nav_zoom()
 {
-  nav_z_x = int(x * ctx->navw->zoom_factor_x + 0.5);
-  nav_z_y = int(y * ctx->navw->zoom_factor_y + 0.5);
+  nav_z_x = int(x * ctx->navw.zoom_factor_x + 0.5);
+  nav_z_y = int(y * ctx->navw.zoom_factor_y + 0.5);
 }
 
 void GlowPoint::print_zoom()

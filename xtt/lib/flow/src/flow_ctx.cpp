@@ -517,31 +517,13 @@ void FlowCtx::get_borders()
 
 void FlowCtx::set_dirty()
 {
-  if (!nodraw) {
+  if (!nodraw && !is_dirty) {
     is_dirty = 1;
-  }
-}
-
-void FlowCtx::redraw_if_dirty()
-{
-  if (nodraw) {
-    return;
-  }
-  if (is_dirty) {
-    is_dirty = 0;
-    fdraw->begin(mw);
-    fdraw->clear();
-    draw(0, 0, window_width, window_height);
-    fdraw->end();
-
+    fdraw->set_dirty(mw);
     if (no_nav || nav_window_width == 0) {
       return;
     }
-
-    fdraw->begin(navw);
-    fdraw->clear();
-    nav_draw(0, 0, nav_window_width, nav_window_height);
-    fdraw->end();
+    fdraw->set_dirty(navw);
   }
 }
 
@@ -1196,11 +1178,8 @@ int FlowCtx::event_handler(flow_eEvent event, int x, int y, int w, int h)
     else if (callback_object_type == flow_eObjectType_Con)
       e.object.object = callback_object;
     sts = event_callback[event](this, &e);
-    redraw_if_dirty();
     return sts;
   }
-
-  redraw_if_dirty();
 
   return 1;
 }
@@ -1302,8 +1281,6 @@ int FlowCtx::event_handler_nav(flow_eEvent event, int x, int y)
     break;
   default:;
   }
-
-  redraw_if_dirty();
 
   return 1;
 }
@@ -1471,8 +1448,6 @@ void FlowCtx::trace_scan()
 
   for (int i = 0; i < a.a_size; i++)
     a.a[i]->trace_scan();
-
-  redraw_if_dirty();
 }
 
 void FlowCtx::get_selected_nodes(FlowArrayElem*** nodes, int* num)
@@ -2063,7 +2038,6 @@ void auto_scrolling(FlowCtx* ctx)
 
   ctx->traverse(delta_x, delta_y);
   ctx->change_scrollbar();
-  ctx->redraw_if_dirty();
   ctx->fdraw->set_timer(ctx, 300, auto_scrolling, &ctx->auto_scrolling_id);
 }
 

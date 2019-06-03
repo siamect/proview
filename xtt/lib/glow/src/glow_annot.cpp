@@ -133,7 +133,7 @@ void glow_measure_annot_text(GrowCtx* ctx, char* text, glow_eDrawType draw_type,
   case glow_eAnnotType_OneLine:
     ctx->gdraw->get_text_extent(text, strlen(text), draw_type, text_size, font,
         &z_width, &z_height, &z_descent,
-        ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * (8 + 2 * text_size),
+        ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8 + 2 * text_size),
         0);
     *rows = 1;
     break;
@@ -148,8 +148,8 @@ void glow_measure_annot_text(GrowCtx* ctx, char* text, glow_eDrawType draw_type,
       if (*s == 10) {
         if (len) {
           ctx->gdraw->get_text_extent(line, len, draw_type, text_size, font,
-              &l_width, &l_height, &l_descent, ctx->mw->zoom_factor_y
-                  / ctx->mw->base_zoom_factor * (8 + 2 * text_size),
+              &l_width, &l_height, &l_descent, ctx->mw.zoom_factor_y
+                  / ctx->mw.base_zoom_factor * (8 + 2 * text_size),
               0);
           z_width = MAX(z_width, l_width);
         }
@@ -161,8 +161,8 @@ void glow_measure_annot_text(GrowCtx* ctx, char* text, glow_eDrawType draw_type,
     }
     if (len) {
       ctx->gdraw->get_text_extent(line, len, draw_type, text_size, font,
-          &l_width, &l_height, &l_descent, ctx->mw->zoom_factor_y
-              / ctx->mw->base_zoom_factor * (8 + 2 * text_size),
+          &l_width, &l_height, &l_descent, ctx->mw.zoom_factor_y
+              / ctx->mw.base_zoom_factor * (8 + 2 * text_size),
           0);
       z_width = MAX(z_width, l_width);
       line_cnt++;
@@ -172,6 +172,6 @@ void glow_measure_annot_text(GrowCtx* ctx, char* text, glow_eDrawType draw_type,
     break;
   }
   }
-  *width = 1.0 * z_width / ctx->mw->base_zoom_factor;
-  *height = 1.0 * z_height / ctx->mw->base_zoom_factor;
+  *width = 1.0 * z_width / ctx->mw.base_zoom_factor;
+  *height = 1.0 * z_height / ctx->mw.base_zoom_factor;
 }

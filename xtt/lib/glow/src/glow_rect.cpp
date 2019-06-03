@@ -124,12 +124,12 @@ void GlowRect::open(std::ifstream& fp)
   }
 }
 
-void GlowRect::draw(DrawWind* w, void* pos, int highlight, int hot, void* node)
+void GlowRect::draw(GlowWind* w, void* pos, int highlight, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
   int ll_x, ll_y, ur_x, ur_y;
-  if (w == ctx->navw) {
+  if (w == &ctx->navw) {
     hot = 0;
     ll_x = ll.nav_z_x;
     ll_y = ll.nav_z_y;
@@ -165,12 +165,12 @@ void GlowRect::draw(DrawWind* w, void* pos, int highlight, int hot, void* node)
         draw_type, 1, 0);
 }
 
-void GlowRect::erase(DrawWind* w, void* pos, int hot, void* node)
+void GlowRect::erase(GlowWind* w, void* pos, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
   int ll_x, ll_y, ur_x, ur_y;
-  if (w == ctx->navw) {
+  if (w == &ctx->navw) {
     hot = 0;
     ll_x = ll.nav_z_x;
     ll_y = ll.nav_z_y;
@@ -208,10 +208,10 @@ int GlowRect::event_handler(
     void* pos, glow_eEvent event, int x, int y, void* node)
 {
   GlowPoint* p = (GlowPoint*)pos;
-  if (ll.z_x + p->z_x - ctx->mw->offset_x <= x
-      && x <= ur.z_x + p->z_x - ctx->mw->offset_x
-      && ll.z_y + p->z_y - ctx->mw->offset_y <= y
-      && y <= ur.z_y + p->z_y - ctx->mw->offset_y) {
+  if (ll.z_x + p->z_x - ctx->mw.offset_x <= x
+      && x <= ur.z_x + p->z_x - ctx->mw.offset_x
+      && ll.z_y + p->z_y - ctx->mw.offset_y <= y
+      && y <= ur.z_y + p->z_y - ctx->mw.offset_y) {
     return 1;
   } else
     return 0;

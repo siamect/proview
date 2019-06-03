@@ -102,13 +102,13 @@ void GrowAnnot::open(std::ifstream& fp)
   }
 }
 
-void GrowAnnot::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowAnnot::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
   if (!(display_level & ctx->display_level))
     return;
 
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
 
   if (!((GlowNode*)node)->annotv[number])
     return;
@@ -270,12 +270,12 @@ static glow_eDrawType get_erase_gc(glow_eDrawType gc) {
   }
 }
 
-void GrowAnnot::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowAnnot::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
 
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
 
   if (!((GlowNode*)node)->annotv[number])
     return;
@@ -411,7 +411,7 @@ void GrowAnnot::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 }
 
 void GrowAnnot::erase_background(
-    DrawWind* w, GlowTransform* t, int hot, void* node)
+    GlowWind* w, GlowTransform* t, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
@@ -524,16 +524,16 @@ void GrowAnnot::export_javabean(GlowTransform* t, void* node,
     std::ofstream& fp)
 {
   Matrix tmp = t ? (*t * trf) : trf;
-  int idx = int(tmp.vertical_scale() * ctx->mw->zoom_factor_y /
-                    ctx->mw->base_zoom_factor * (text_size + 4) - 4);
+  int idx = int(tmp.vertical_scale() * ctx->mw.zoom_factor_y /
+                    ctx->mw.base_zoom_factor * (text_size + 4) - 4);
   if (idx < 0)
     return;
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
 
 
   glow_sPoint p = tmp * this->p;
-  p.x = p.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p.y = p.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p.x = p.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p.y = p.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
 
   int bold = (draw_type == glow_eDrawType_TextHelveticaBold);
 
@@ -546,8 +546,8 @@ void GrowAnnot::export_javabean_font(
     GlowTransform* t, void* node, glow_eExportPass pass, std::ofstream& fp)
 {
   Matrix tmp = t ? (*t * trf) : trf;
-  int idx = int(tmp.vertical_scale() * ctx->mw->zoom_factor_y /
-                    ctx->mw->base_zoom_factor * (text_size + 4) - 4);
+  int idx = int(tmp.vertical_scale() * ctx->mw.zoom_factor_y /
+                    ctx->mw.base_zoom_factor * (text_size + 4) - 4);
   if (idx < 0)
     return;
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
@@ -597,8 +597,8 @@ void GrowAnnot::get_annotation_info(void* node, int* t_size,
 int GrowAnnot::get_text_size(GlowTransform* t, double* tsize)
 {
   Matrix tmp = t ? (*t * trf) : trf;
-  *tsize = tmp.vertical_scale() * ctx->mw->zoom_factor_y /
-      ctx->mw->base_zoom_factor * (8 + 2 * text_size);
+  *tsize = tmp.vertical_scale() * ctx->mw.zoom_factor_y /
+      ctx->mw.base_zoom_factor * (8 + 2 * text_size);
 
   return 1;
 }
@@ -614,10 +614,10 @@ void GrowAnnot::get_text_extent(
 
   Matrix tmp = t ? (*t * trf) : trf;
   double trf_scale = tmp.vertical_scale();
-  int idx = int(trf_scale * ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor
+  int idx = int(trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor
           * (text_size + 4)
       - 4);
-  double tsize = trf_scale * ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor
+  double tsize = trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor
       * (8 + 2 * text_size);
   if (idx < 0)
     return;
@@ -630,6 +630,6 @@ void GrowAnnot::get_text_extent(
   ctx->gdraw->get_text_extent(textp, text_len, draw_type, idx, font, &z_width,
       &z_height, &descent, tsize, 0);
 
-  *width = (double)z_width / ctx->mw->zoom_factor_x;
-  *height = (double)z_height / ctx->mw->zoom_factor_y;
+  *width = (double)z_width / ctx->mw.zoom_factor_x;
+  *height = (double)z_height / ctx->mw.zoom_factor_y;
 }

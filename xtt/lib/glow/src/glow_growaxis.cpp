@@ -182,7 +182,7 @@ void GrowAxis::open(std::ifstream& fp)
   configure();
 }
 
-void GrowAxis::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowAxis::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -207,7 +207,7 @@ void GrowAxis::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowAxis::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowAxis::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -252,10 +252,10 @@ void GrowAxis::set_highlight(int on)
   }
 }
 
-void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowAxis::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int draw_text = (fabs(increment) > DBL_EPSILON);
   int idx;
   int x, y;
@@ -496,7 +496,7 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   }
 }
 
-void GrowAxis::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowAxis::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
   int hotw = 2;
 
@@ -640,14 +640,14 @@ void GrowAxis::set_range(double minval, double maxval, int keep_settings)
   max_value = maxval;
   min_value = minval;
 
-  DrawWind* w = ctx->mw;
+  GlowWind* w = &ctx->mw;
   // double tsize = w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
   glow_sPoint p1 = trf * ll;
   glow_sPoint p2 = trf * ur;
-  p1.x = int(p1.x * ctx->mw->zoom_factor_x) - w->offset_x;
-  p1.y = int(p1.y * ctx->mw->zoom_factor_y) - w->offset_y;
-  p2.x = int(p2.x * ctx->mw->zoom_factor_x) - w->offset_x;
-  p2.y = int(p2.y * ctx->mw->zoom_factor_y) - w->offset_y;
+  p1.x = int(p1.x * ctx->mw.zoom_factor_x) - w->offset_x;
+  p1.y = int(p1.y * ctx->mw.zoom_factor_y) - w->offset_y;
+  p2.x = int(p2.x * ctx->mw.zoom_factor_x) - w->offset_x;
+  p2.y = int(p2.y * ctx->mw.zoom_factor_y) - w->offset_y;
   double rotation = (trf.rotation / 360 - floor(trf.rotation / 360)) * 360;
 
   if (!keep_settings) {
@@ -711,9 +711,9 @@ void GrowAxis::export_javabean(GlowTransform* t, void* node,
   int z_height, z_width, z_descent;
   int max_z_width = 0;
   int idx = int(
-      ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * (text_size + 4) - 4);
+      ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (text_size + 4) - 4);
   double tsize
-      = ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * (8 + 2 * text_size);
+      = ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8 + 2 * text_size);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
 
   bold = (text_drawtype == glow_eDrawType_TextHelveticaBold);
@@ -721,10 +721,10 @@ void GrowAxis::export_javabean(GlowTransform* t, void* node,
   Matrix tmp = t ? (*t * trf) : trf;
   glow_sPoint p1 = tmp * ll;
   glow_sPoint p2 = tmp * ur;
-  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p1.x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p1.y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+  p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
 
   double ll_x = MIN(p1.x, p2.x);
   double ur_x = MAX(p1.x, p2.x);

@@ -119,7 +119,7 @@ public:
 
     Draw the object, without borders or shadow.
   */
-  void draw(DrawWind* w, void* pos, int highlight, int hot, void* node);
+  void draw(GlowWind* w, void* pos, int highlight, int hot, void* node);
 
   //! Erase the object.
   /*!
@@ -127,7 +127,7 @@ public:
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase(DrawWind* w, void* pos, int hot, void* node);
+  void erase(GlowWind* w, void* pos, int hot, void* node);
 
   //! Calculate the border for a set of objects or for a parent node.
   /*!

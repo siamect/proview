@@ -97,7 +97,7 @@ public:
   void open(std::ifstream& fp);
 
   //! Erase the object
-  void erase(DrawWind* w)
+  void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
   }
@@ -152,7 +152,7 @@ public:
     multiplied with the parentnodes transform, to give the appropriate
     coordinates for the drawing.
   */
-  void draw(DrawWind* w, GlowTransform* t, int highlight, int hot, void* node,
+  void draw(GlowWind* w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
 
   //! Erase the object.
@@ -161,7 +161,7 @@ public:
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase(DrawWind* w, GlowTransform* t, int hot, void* node);
+  void erase(GlowWind* w, GlowTransform* t, int hot, void* node);
 
   //! Set the bar value
   /*!

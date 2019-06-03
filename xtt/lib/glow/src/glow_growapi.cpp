@@ -668,7 +668,7 @@ void grow_ZoomAbsolute(grow_tCtx ctx, double zoom_factor)
 
 void grow_GetZoom(grow_tCtx ctx, double* zoom_factor)
 {
-  *zoom_factor = ctx->mw->zoom_factor_x;
+  *zoom_factor = ctx->mw.zoom_factor_x;
 }
 
 void grow_Scroll(grow_tCtx ctx, double x, double y)
@@ -680,14 +680,14 @@ void grow_SetAttributes(
     grow_tCtx ctx, grow_sAttributes* attr, unsigned long mask)
 {
   if (mask & grow_eAttr_base_zoom_factor) {
-    ctx->mw->zoom_factor_x *= attr->base_zoom_factor / ctx->mw->base_zoom_factor;
-    ctx->mw->zoom_factor_y *= attr->base_zoom_factor / ctx->mw->base_zoom_factor;
-    ctx->mw->base_zoom_factor = attr->base_zoom_factor;
+    ctx->mw.zoom_factor_x *= attr->base_zoom_factor / ctx->mw.base_zoom_factor;
+    ctx->mw.zoom_factor_y *= attr->base_zoom_factor / ctx->mw.base_zoom_factor;
+    ctx->mw.base_zoom_factor = attr->base_zoom_factor;
   }
   if (mask & grow_eAttr_offset_x)
-    ctx->mw->offset_x = attr->offset_x;
+    ctx->mw.offset_x = attr->offset_x;
   if (mask & grow_eAttr_offset_y)
-    ctx->mw->offset_y = attr->offset_y;
+    ctx->mw.offset_y = attr->offset_y;
   if (mask & grow_eAttr_grid_size_x)
     ctx->grid_size_x = attr->grid_size_x;
   if (mask & grow_eAttr_grid_size_y)
@@ -736,11 +736,11 @@ void grow_GetAttributes(
     grow_tCtx ctx, grow_sAttributes* attr, unsigned long mask)
 {
   if (mask & grow_eAttr_base_zoom_factor)
-    attr->base_zoom_factor = ctx->mw->base_zoom_factor;
+    attr->base_zoom_factor = ctx->mw.base_zoom_factor;
   if (mask & grow_eAttr_offset_x)
-    attr->offset_x = ctx->mw->offset_x;
+    attr->offset_x = ctx->mw.offset_x;
   if (mask & grow_eAttr_offset_y)
-    attr->offset_y = ctx->mw->offset_y;
+    attr->offset_y = ctx->mw.offset_y;
   if (mask & grow_eAttr_grid_size_x)
     attr->grid_size_x = ctx->grid_size_x;
   if (mask & grow_eAttr_grid_size_y)
@@ -839,20 +839,9 @@ void grow_ResetNodraw(grow_tCtx ctx)
   ctx->reset_nodraw();
 }
 
-void grow_SetDeferedRedraw(grow_tCtx ctx)
-{
-  ctx->set_dirty();
-}
-
-void grow_RedrawDefered(grow_tCtx ctx)
-{
-  ctx->redraw_if_dirty();
-}
-
 void grow_Redraw(grow_tCtx ctx)
 {
   ctx->set_dirty();
-  ctx->redraw_if_dirty();
 }
 
 void grow_SetMode(grow_tCtx ctx, grow_eMode mode)
@@ -4170,7 +4159,7 @@ void grow_MoveObject(grow_tObject object, double x, double y)
 {
   grow_tCtx ctx = (grow_tCtx)((GlowArrayElem*)object)->get_ctx();
   ((GlowArrayElem*)object)
-      ->move(x * ctx->mw->zoom_factor_x, y * ctx->mw->zoom_factor_y, 0);
+      ->move(x * ctx->mw.zoom_factor_x, y * ctx->mw.zoom_factor_y, 0);
 }
 
 void grow_SetObjectScale(grow_tObject object, double scale_x, double scale_y,
@@ -5523,8 +5512,8 @@ grow_tCtx grow_GetWindowCtx( grow_tObject window)
 
 void grow_GetWindowSize(grow_tCtx ctx, int* width, int* height)
 {
-  *width = ctx->mw->window_width;
-  *height = ctx->mw->window_height;
+  *width = ctx->mw.window_width;
+  *height = ctx->mw.window_height;
 }
 
 int grow_IsJava(char* name, int* is_frame, int* is_applet, char* java_name)

@@ -292,7 +292,7 @@ void GrowConGlue::open(std::ifstream& fp)
   }
 }
 
-void GrowConGlue::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowConGlue::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -317,7 +317,7 @@ void GrowConGlue::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowConGlue::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowConGlue::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -362,10 +362,10 @@ void GrowConGlue::set_highlight(int on)
   }
 }
 
-void GrowConGlue::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int idx, idx_up, idx_down, idx_left, idx_right;
   glow_eDrawType drawtype;
   glow_eDrawType shift_drawtype;
@@ -1200,7 +1200,7 @@ void GrowConGlue::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   }
 }
 
-void GrowConGlue::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowConGlue::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
   glow_sPoint p1 = {x_left, y_low};
   glow_sPoint p2 = {x_right, y_high};
@@ -1272,7 +1272,7 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
     std::ofstream& fp)
 {
   int idx
-      = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * line_width - 1);
+      = int(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
 
   glow_sPoint p1 = {x_left, y_low};
@@ -1282,10 +1282,10 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
     p2 = *t * p2;
   }
 
-  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p1.x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p1.y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+  p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
 
   int ll_x = int(MIN(p1.x, p2.x) + 0.5);
   int ur_x = int(MAX(p1.x, p2.x) + 0.5);
@@ -1303,15 +1303,15 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
   int lw_left = line_width_left;
 
   int idx_up =
-      int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * lw_up - 1) + hot;
+      int(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * lw_up - 1) + hot;
   int idx_down =
-      int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * lw_down - 1) +
+      int(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * lw_down - 1) +
       hot;
   int idx_left =
-      int(ctx->mw->zoom_factor_x / ctx->mw->base_zoom_factor * lw_left - 1) +
+      int(ctx->mw.zoom_factor_x / ctx->mw.base_zoom_factor * lw_left - 1) +
       hot;
   int idx_right =
-      int(ctx->mw->zoom_factor_x / ctx->mw->base_zoom_factor * lw_right - 1) +
+      int(ctx->mw.zoom_factor_x / ctx->mw.base_zoom_factor * lw_right - 1) +
       hot;
 
   idx = MAX(0, idx);

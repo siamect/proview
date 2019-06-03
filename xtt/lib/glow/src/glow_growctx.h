@@ -112,7 +112,7 @@ public:
     selection rectangle
     if this is active.
   */
-  void draw(DrawWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw(GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Set edit mode.
   /*! \param grow_mode		Edit mode. */

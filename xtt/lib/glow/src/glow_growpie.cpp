@@ -239,7 +239,7 @@ void GrowPie::trace_close()
     ctx->trace_disconnect_func((void*)this);
 }
 
-void GrowPie::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowPie::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -264,7 +264,7 @@ void GrowPie::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowPie::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowPie::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -309,10 +309,10 @@ void GrowPie::set_highlight(int on)
   }
 }
 
-void GrowPie::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowPie::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int chot = 0;
   if (hot && ctx->environment != glow_eEnv_Development) {
     if (ctx->hot_indication == glow_eHotIndication_No)
@@ -455,11 +455,11 @@ void GrowPie::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   }
 }
 
-void GrowPie::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowPie::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
   int idx;
 
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   if (node && ((GrowNode*)node)->line_width)
     idx = int(
         w->zoom_factor_y / w->base_zoom_factor * ((GrowNode*)node)->line_width
@@ -543,10 +543,10 @@ void GrowPie::export_javabean(GlowTransform* t, void* node,
   glow_sPoint p1 = tmp * ll;
   glow_sPoint p2 = tmp * ur;
 
-  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p1.x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p1.y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+  p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   int ll_x = int(MIN(p1.x, p2.x));
   int ur_x = int(MAX(p1.x, p2.x));
   int ll_y = int(MIN(p1.y, p2.y));

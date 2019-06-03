@@ -64,7 +64,7 @@ GrowGroup::~GrowGroup()
   ctx->set_dirty();
   ctx->delete_node_cons(this);
   if (hot)
-    ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 
   delete nc;
   nc = 0;

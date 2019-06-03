@@ -114,10 +114,10 @@ void GlowLine::open(std::ifstream& fp)
   }
 }
 
-void GlowLine::draw(DrawWind* w, void* pos, int hightlight, int hot, void* node)
+void GlowLine::draw(GlowWind* w, void* pos, int hightlight, int hot, void* node)
 {
   int p1_x, p1_y, p2_x, p2_y;
-  if (w == ctx->navw) {
+  if (w == &ctx->navw) {
     hot = 0;
     p1_x = p1.nav_z_x;
     p1_y = p1.nav_z_y;
@@ -142,10 +142,10 @@ void GlowLine::draw(DrawWind* w, void* pos, int hightlight, int hot, void* node)
 }
 
 void GlowLine::draw_shadow(
-    DrawWind* w, int border, int shadow, int hightlight, int hot)
+    GlowWind* w, int border, int shadow, int hightlight, int hot)
 {
   int p1_x, p1_y, p2_x, p2_y;
-  if (w == ctx->navw) {
+  if (w == &ctx->navw) {
     hot = 0;
     p1_x = p1.nav_z_x;
     p1_y = p1.nav_z_y;
@@ -213,10 +213,10 @@ void GlowLine::draw_shadow(
   }
 }
 
-void GlowLine::erase(DrawWind* w, void* pos, int hot, void* node)
+void GlowLine::erase(GlowWind* w, void* pos, int hot, void* node)
 {
   int p1_x, p1_y, p2_x, p2_y;
-  if (w == ctx->navw) {
+  if (w == &ctx->navw) {
     hot = 0;
     p1_x = p1.nav_z_x;
     p1_y = p1.nav_z_y;
@@ -244,10 +244,10 @@ int GlowLine::event_handler(
     void* pos, glow_eEvent event, int x, int y, void* node)
 {
   GlowPoint* p = (GlowPoint*)pos;
-  int x1 = p1.z_x + p->z_x - ctx->mw->offset_x;
-  int x2 = p2.z_x + p->z_x - ctx->mw->offset_x;
-  int y1 = p1.z_y + p->z_y - ctx->mw->offset_y;
-  int y2 = p2.z_y + p->z_y - ctx->mw->offset_y;
+  int x1 = p1.z_x + p->z_x - ctx->mw.offset_x;
+  int x2 = p2.z_x + p->z_x - ctx->mw.offset_x;
+  int y1 = p1.z_y + p->z_y - ctx->mw.offset_y;
+  int y2 = p2.z_y + p->z_y - ctx->mw.offset_y;
 
   if ((x1 == x2 && y1 < y2 && // Vertical
           ABS(x1 - x) < 3 && y1 < y && y < y2)
@@ -327,11 +327,11 @@ void GlowLine::export_javabean(GlowTransform* t, void* node,
   if (p1.z_x == p2.z_x && p1.z_y == p2.z_y)
     return;
   int idx
-      = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * line_width - 1);
+      = int(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  ctx->export_jbean->line(p1.z_x - ctx->mw->offset_x, p1.z_y - ctx->mw->offset_y,
-      p2.z_x - ctx->mw->offset_x, p2.z_y - ctx->mw->offset_y, draw_type, idx,
+  ctx->export_jbean->line(p1.z_x - ctx->mw.offset_x, p1.z_y - ctx->mw.offset_y,
+      p2.z_x - ctx->mw.offset_x, p2.z_y - ctx->mw.offset_y, draw_type, idx,
       pass, shape_cnt, node_cnt, fp);
   (*shape_cnt)++;
 }
@@ -343,7 +343,7 @@ void GlowLine::export_javabean_shadow(GlowTransform* t, void* node,
   if (p1.z_x == p2.z_x && p1.z_y == p2.z_y)
     return;
   int idx
-      = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * line_width - 1);
+      = int(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
 
@@ -353,29 +353,29 @@ void GlowLine::export_javabean_shadow(GlowTransform* t, void* node,
   if (shadow) {
     if (p1.z_x == p2.z_x) {
       // Vertical line
-      ctx->export_jbean->line(p1.z_x - ctx->mw->offset_x + idx / 2 - idx + offs,
-          p1.z_y - ctx->mw->offset_y,
-          p2.z_x - ctx->mw->offset_x + idx / 2 - idx + offs,
-          p2.z_y - ctx->mw->offset_y, ctx->shift_drawtype(draw_type, -2, 0),
+      ctx->export_jbean->line(p1.z_x - ctx->mw.offset_x + idx / 2 - idx + offs,
+          p1.z_y - ctx->mw.offset_y,
+          p2.z_x - ctx->mw.offset_x + idx / 2 - idx + offs,
+          p2.z_y - ctx->mw.offset_y, ctx->shift_drawtype(draw_type, -2, 0),
           ish - 1, pass, shape_cnt, node_cnt, fp);
       (*shape_cnt)++;
-      ctx->export_jbean->line(p1.z_x - ctx->mw->offset_x + idx / 2 - offs,
-          p1.z_y - ctx->mw->offset_y, p2.z_x - ctx->mw->offset_x + idx / 2 - offs,
-          p2.z_y - ctx->mw->offset_y, ctx->shift_drawtype(draw_type, 2, 0),
+      ctx->export_jbean->line(p1.z_x - ctx->mw.offset_x + idx / 2 - offs,
+          p1.z_y - ctx->mw.offset_y, p2.z_x - ctx->mw.offset_x + idx / 2 - offs,
+          p2.z_y - ctx->mw.offset_y, ctx->shift_drawtype(draw_type, 2, 0),
           ish - 1, pass, shape_cnt, node_cnt, fp);
       (*shape_cnt)++;
     } else {
       // Horizontal line
-      ctx->export_jbean->line(p1.z_x - ctx->mw->offset_x,
-          p1.z_y - ctx->mw->offset_y + idx / 2 - idx + offs,
-          p2.z_x - ctx->mw->offset_x,
-          p2.z_y - ctx->mw->offset_y + idx / 2 - idx + offs,
+      ctx->export_jbean->line(p1.z_x - ctx->mw.offset_x,
+          p1.z_y - ctx->mw.offset_y + idx / 2 - idx + offs,
+          p2.z_x - ctx->mw.offset_x,
+          p2.z_y - ctx->mw.offset_y + idx / 2 - idx + offs,
           ctx->shift_drawtype(draw_type, -2, 0), ish - 1, pass, shape_cnt,
           node_cnt, fp);
       (*shape_cnt)++;
-      ctx->export_jbean->line(p1.z_x - ctx->mw->offset_x,
-          p1.z_y - ctx->mw->offset_y + idx / 2 - offs, p2.z_x - ctx->mw->offset_x,
-          p2.z_y - ctx->mw->offset_y + idx / 2 - offs,
+      ctx->export_jbean->line(p1.z_x - ctx->mw.offset_x,
+          p1.z_y - ctx->mw.offset_y + idx / 2 - offs, p2.z_x - ctx->mw.offset_x,
+          p2.z_y - ctx->mw.offset_y + idx / 2 - offs,
           ctx->shift_drawtype(draw_type, 2, 0), ish - 1, pass, shape_cnt,
           node_cnt, fp);
       (*shape_cnt)++;
@@ -384,26 +384,26 @@ void GlowLine::export_javabean_shadow(GlowTransform* t, void* node,
   if (border) {
     if (p1.z_x == p2.z_x) {
       // Vertical line
-      ctx->export_jbean->line(p1.z_x - ctx->mw->offset_x + idx / 2 - idx,
-          p1.z_y - ctx->mw->offset_y, p2.z_x - ctx->mw->offset_x + idx / 2 - idx,
-          p2.z_y - ctx->mw->offset_y, glow_eDrawType_Line, 0, pass, shape_cnt,
+      ctx->export_jbean->line(p1.z_x - ctx->mw.offset_x + idx / 2 - idx,
+          p1.z_y - ctx->mw.offset_y, p2.z_x - ctx->mw.offset_x + idx / 2 - idx,
+          p2.z_y - ctx->mw.offset_y, glow_eDrawType_Line, 0, pass, shape_cnt,
           node_cnt, fp);
       (*shape_cnt)++;
-      ctx->export_jbean->line(p1.z_x - ctx->mw->offset_x + idx / 2,
-          p1.z_y - ctx->mw->offset_y, p2.z_x - ctx->mw->offset_x + idx / 2,
-          p2.z_y - ctx->mw->offset_y, glow_eDrawType_Line, 0, pass, shape_cnt,
+      ctx->export_jbean->line(p1.z_x - ctx->mw.offset_x + idx / 2,
+          p1.z_y - ctx->mw.offset_y, p2.z_x - ctx->mw.offset_x + idx / 2,
+          p2.z_y - ctx->mw.offset_y, glow_eDrawType_Line, 0, pass, shape_cnt,
           node_cnt, fp);
       (*shape_cnt)++;
     } else {
       // Horizontal line
-      ctx->export_jbean->line(p1.z_x - ctx->mw->offset_x,
-          p1.z_y - ctx->mw->offset_y + idx / 2 - idx, p2.z_x - ctx->mw->offset_x,
-          p2.z_y - ctx->mw->offset_y + idx / 2 - idx, glow_eDrawType_Line, 0,
+      ctx->export_jbean->line(p1.z_x - ctx->mw.offset_x,
+          p1.z_y - ctx->mw.offset_y + idx / 2 - idx, p2.z_x - ctx->mw.offset_x,
+          p2.z_y - ctx->mw.offset_y + idx / 2 - idx, glow_eDrawType_Line, 0,
           pass, shape_cnt, node_cnt, fp);
       (*shape_cnt)++;
-      ctx->export_jbean->line(p1.z_x - ctx->mw->offset_x,
-          p1.z_y - ctx->mw->offset_y + idx / 2, p2.z_x - ctx->mw->offset_x,
-          p2.z_y - ctx->mw->offset_y + idx / 2, glow_eDrawType_Line, 0, pass,
+      ctx->export_jbean->line(p1.z_x - ctx->mw.offset_x,
+          p1.z_y - ctx->mw.offset_y + idx / 2, p2.z_x - ctx->mw.offset_x,
+          p2.z_y - ctx->mw.offset_y + idx / 2, glow_eDrawType_Line, 0, pass,
           shape_cnt, node_cnt, fp);
       (*shape_cnt)++;
     }

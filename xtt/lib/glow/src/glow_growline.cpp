@@ -77,7 +77,7 @@ GrowLine::~GrowLine()
 
   ctx->set_dirty();
   if (hot)
-    ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 }
 
 void GrowLine::move(double delta_x, double delta_y, int grid)
@@ -89,13 +89,13 @@ void GrowLine::move(double delta_x, double delta_y, int grid)
     double x_grid, y_grid;
 
     /* Move to closest grid point */
-    ctx->find_grid(x_left + delta_x / ctx->mw->zoom_factor_x,
-        y_low + delta_y / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid(x_left + delta_x / ctx->mw.zoom_factor_x,
+        y_low + delta_y / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
     trf.move(x_grid - x_left, y_grid - y_low);
     get_node_borders();
   } else {
-    double dx = delta_x / ctx->mw->zoom_factor_x;
-    double dy = delta_y / ctx->mw->zoom_factor_y;
+    double dx = delta_x / ctx->mw.zoom_factor_x;
+    double dy = delta_y / ctx->mw.zoom_factor_y;
     trf.move(dx, dy);
     x_right += dx;
     x_left += dx;
@@ -165,12 +165,12 @@ int GrowLine::event_handler(glow_eEvent event, int x, int y, double fx,
     }
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
-      ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
+      ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_CrossHair);
       set_hot(1);
     }
     if (!sts && hot) {
       if (!ctx->hot_found)
-        ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+        ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
       set_hot(0);
     }
     break;
@@ -261,7 +261,7 @@ void GrowLine::open(std::ifstream& fp)
   }
 }
 
-void GrowLine::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowLine::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -286,7 +286,7 @@ void GrowLine::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowLine::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowLine::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -487,10 +487,10 @@ void GrowLine::set_rotation(
   ctx->set_dirty();
 }
 
-void GrowLine::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowLine::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   if (hot && ctx->environment != glow_eEnv_Development
       && ctx->hot_indication != glow_eHotIndication_LineWidth)
     hot = 0;
@@ -525,9 +525,9 @@ void GrowLine::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       0, line_type);
 }
 
-void GrowLine::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowLine::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   if (hot && ctx->environment != glow_eEnv_Development
       && ctx->hot_indication != glow_eHotIndication_LineWidth)
     hot = 0;
@@ -615,12 +615,12 @@ void GrowLine::export_javabean(GlowTransform* t, void* node,
 {
   int idx;
   if (node && ((GrowNode*)node)->line_width)
-    idx = int(ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor
+    idx = int(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor
             * ((GrowNode*)node)->line_width
         - 1);
   else
     idx = int(
-        ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * line_width - 1);
+        ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
   idx += hot;
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
@@ -629,10 +629,10 @@ void GrowLine::export_javabean(GlowTransform* t, void* node,
   glow_sPoint p1 = tmp * this->p1;
   glow_sPoint p2 = tmp * this->p2;
 
-  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p1.x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p1.y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+  p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
 
   if (feq(p1.x, p2.x) && feq(p1.y, p2.y))
     return;

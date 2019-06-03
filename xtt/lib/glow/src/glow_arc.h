@@ -131,7 +131,7 @@ public:
 
     Draw the object, without borders or shadow.
   */
-  void draw(DrawWind *w, void* pos, int highlight, int hot, void* node);
+  void draw(GlowWind *w, void* pos, int highlight, int hot, void* node);
 
   //! Draw border and shadow of the arc.
   /*!
@@ -144,7 +144,7 @@ public:
     linewidth 1 pixel.
     The shadow also always has linewith 1 pixel.
   */
-  void draw_shadow(DrawWind *w, int border, int shadow, int highlight, int hot);
+  void draw_shadow(GlowWind *w, int border, int shadow, int highlight, int hot);
 
   //! Erase the object.
   /*!
@@ -152,7 +152,7 @@ public:
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase(DrawWind *w, void* pos, int hot, void* node);
+  void erase(GlowWind *w, void* pos, int hot, void* node);
 
   //! Calculate the border for a set of objects or for a parent node.
   /*!

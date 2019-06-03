@@ -626,20 +626,20 @@ void KeyboardCtx::zoom(double factor)
   if (fabs(factor) < DBL_EPSILON)
     return;
 
-  mw->zoom_factor_x *= factor;
-  mw->zoom_factor_y *= factor;
-  if (mw->offset_x != 0)
-    mw->offset_x = int(
-        (mw->offset_x - mw->window_width / 2.0 * (1.0 / factor - 1)) * factor);
-  if (mw->offset_y != 0)
-    mw->offset_y = int(
-        (mw->offset_y - mw->window_height / 2.0 * (1.0 / factor - 1)) * factor);
-  mw->offset_x = MAX(mw->offset_x, 0);
-  mw->offset_y = MAX(mw->offset_y, 0);
-  if ((x_right - x_left) * mw->zoom_factor_x <= mw->window_width)
-    mw->offset_x = 0;
-  if ((y_high - y_low) * mw->zoom_factor_y <= mw->window_height)
-    mw->offset_y = 0;
+  mw.zoom_factor_x *= factor;
+  mw.zoom_factor_y *= factor;
+  if (mw.offset_x != 0)
+    mw.offset_x = int(
+        (mw.offset_x - mw.window_width / 2.0 * (1.0 / factor - 1)) * factor);
+  if (mw.offset_y != 0)
+    mw.offset_y = int(
+        (mw.offset_y - mw.window_height / 2.0 * (1.0 / factor - 1)) * factor);
+  mw.offset_x = MAX(mw.offset_x, 0);
+  mw.offset_y = MAX(mw.offset_y, 0);
+  if ((x_right - x_left) * mw.zoom_factor_x <= mw.window_width)
+    mw.offset_x = 0;
+  if ((y_high - y_low) * mw.zoom_factor_y <= mw.window_height)
+    mw.offset_y = 0;
   a.zoom();
   nav_zoom();
 }
@@ -654,8 +654,8 @@ int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
   //  std::cout << "Event: " << event << '\n';
 
-  double fx = double(x + mw->offset_x) / mw->zoom_factor_x;
-  double fy = double(y + mw->offset_y) / mw->zoom_factor_y;
+  double fx = double(x + mw.offset_x) / mw.zoom_factor_x;
+  double fy = double(y + mw.offset_y) / mw.zoom_factor_y;
 
   callback_object_type = glow_eObjectType_NoObject;
   callback_object = 0;
@@ -900,8 +900,8 @@ int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           e.any.type = glow_eEventType_KeyAscii;
           e.any.x_pixel = x;
           e.any.y_pixel = y;
-          e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
-          e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
+          e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+          e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
           e.key.ascii = keyc;
           event_callback[glow_eEvent_Key_Ascii](this, &e);
         }
@@ -912,32 +912,28 @@ int KeyboardCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   case glow_eEvent_Exposure:
     int width, height;
 
-    gdraw->get_window_size(mw, &width, &height);
-    if (mw->window_width != width || mw->window_height != height) {
-      mw->window_width = width;
-      mw->window_height = height;
+    gdraw->get_window_size(mw.window, &width, &height);
+    if (mw.window_width != width || mw.window_height != height) {
+      mw.window_width = width;
+      mw.window_height = height;
     }
-
-    set_dirty();
     break;
   default:;
   }
-
-  redraw_if_dirty();
 
   return 1;
 }
 
 void KeyboardCtx::get_size(int* width, int* height)
 {
-  *width = int((x_right - x_left) * mw->zoom_factor_x);
-  *height = int((y_high - y_low) * mw->zoom_factor_y);
+  *width = int((x_right - x_left) * mw.zoom_factor_x);
+  *height = int((y_high - y_low) * mw.zoom_factor_y);
 }
 
 void KeyboardCtx::set_size(int width, int height)
 {
-  mw->zoom_factor_x = ((float)width) / (x_right - x_left);
-  mw->zoom_factor_y = ((float)height) / (y_high - y_low);
+  mw.zoom_factor_x = ((float)width) / (x_right - x_left);
+  mw.zoom_factor_y = ((float)height) / (y_high - y_low);
   a.zoom();
   set_dirty();
 }

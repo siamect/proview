@@ -44,7 +44,7 @@ FlowDraw::~FlowDraw()
 {
 }
 
-int FlowDraw::begin(DrawWind *wind)
+int FlowDraw::begin(void *wind)
 {
   return 0;
 }

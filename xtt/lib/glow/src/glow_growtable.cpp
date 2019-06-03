@@ -395,7 +395,7 @@ void GrowTable::open(std::ifstream& fp)
   configure_scrollbars();
 }
 
-void GrowTable::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowTable::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -420,7 +420,7 @@ void GrowTable::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowTable::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowTable::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -465,11 +465,11 @@ void GrowTable::set_highlight(int on)
   }
 }
 
-void GrowTable::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowTable::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  hot = (w == ctx->navw) ? 0 : hot;
-  if (w == ctx->navw) {
+  hot = (w == &ctx->navw) ? 0 : hot;
+  if (w == &ctx->navw) {
     draw_brief(w, t, highlight, hot, node, colornode);
     return;
   }
@@ -570,7 +570,7 @@ void GrowTable::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       ctx->gdraw->rect(ll_x, ll_y, ur_x - ll_x, header_h, fill_drawtype, 1, 0);
 
     ctx->gdraw->set_clip_rectangle(
-        w, ll_x + header_w, ll_y, ur_x, ll_y + header_h);
+        w->window, ll_x + header_w, ll_y, ur_x, ll_y + header_h);
 
     if (shadow) {
       x = t_ll_x;
@@ -612,7 +612,7 @@ void GrowTable::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       if (x > ur_x)
         break;
     }
-    ctx->gdraw->reset_clip_rectangle(w);
+    ctx->gdraw->reset_clip_rectangle(w->window);
 
     if (header_w) {
       if (shadow) {
@@ -647,7 +647,7 @@ void GrowTable::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
           fill_drawtype, 1, 0);
 
     ctx->gdraw->set_clip_rectangle(
-        w, ll_x, ll_y + header_h, ll_x + header_w, ur_y);
+        w->window, ll_x, ll_y + header_h, ll_x + header_w, ur_y);
 
     // Draw selected cell, if cell in header column
     if (selected_cell_row >= 0 && selected_cell_column == 0) {
@@ -715,7 +715,7 @@ void GrowTable::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
         }
       }
     }
-    ctx->gdraw->reset_clip_rectangle(w);
+    ctx->gdraw->reset_clip_rectangle(w->window);
     ctx->gdraw->rect(ll_x, ll_y + header_h - 1, header_w,
         ur_y - ll_y - header_h + 1, drawtype, 0, idx);
   }
@@ -725,7 +725,7 @@ void GrowTable::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     ctx->gdraw->rect(
         o_ll_x, o_ll_y, o_ur_x - o_ll_x, o_ur_y - o_ll_y, fill_drawtype, 1, 0);
 
-  ctx->gdraw->set_clip_rectangle(w, o_ll_x, o_ll_y, o_ur_x, o_ur_y);
+  ctx->gdraw->set_clip_rectangle(w->window, o_ll_x, o_ll_y, o_ur_x, o_ur_y);
 
   if (selected_cell_row >= 0 && !(header_column && selected_cell_column == 0)) {
     // Draw selected cell, if cell not in header column
@@ -857,7 +857,7 @@ void GrowTable::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     column_offs += column_size[i] * rows;
   }
 
-  ctx->gdraw->reset_clip_rectangle(w);
+  ctx->gdraw->reset_clip_rectangle(w->window);
 
   // Draw frame
   ctx->gdraw->rect(
@@ -874,11 +874,11 @@ void GrowTable::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   }
 }
 
-void GrowTable::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowTable::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int idx;
   idx = int(w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
@@ -905,7 +905,7 @@ void GrowTable::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
       ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase, 1, 0);
 }
 
-void GrowTable::draw_brief(DrawWind* w, GlowTransform* t, int highlight,
+void GrowTable::draw_brief(GlowWind* w, GlowTransform* t, int highlight,
     int hot, void* node, void* colornode)
 {
   if (!(display_level & ctx->display_level))
@@ -1008,10 +1008,10 @@ void GrowTable::export_javabean(GlowTransform* t, void* node,
   glow_sPoint p1 = tmp * ll;
   glow_sPoint p2 = tmp * ur;
 
-  p1.x = p1.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p1.y = p1.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  p2.x = p2.x * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-  p2.y = p2.y * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
+  p1.x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p1.y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+  p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
 
   double ll_x = MIN(p1.x, p2.x);
   double ur_x = MAX(p1.x, p2.x);
@@ -1020,12 +1020,12 @@ void GrowTable::export_javabean(GlowTransform* t, void* node,
 
   double cwidth[TABLE_MAX_COL];
   for (int i = 0; i < columns; i++)
-    cwidth[i] = column_width[i] * ctx->mw->zoom_factor_x;
+    cwidth[i] = column_width[i] * ctx->mw.zoom_factor_x;
 
   ctx->export_jbean->table(ll_x, ll_y, ur_x, ur_y, fill_drawtype, fill, rows,
       columns, header_row, header_column, text_size, text_drawtype,
-      header_row_height * ctx->mw->zoom_factor_y,
-      row_height * ctx->mw->zoom_factor_y, (double*)cwidth, (char*)header_text,
+      header_row_height * ctx->mw.zoom_factor_y,
+      row_height * ctx->mw.zoom_factor_y, (double*)cwidth, (char*)header_text,
       pass, shape_cnt, node_cnt, fp);
 }
 

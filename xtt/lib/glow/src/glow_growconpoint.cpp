@@ -73,7 +73,7 @@ GrowConPoint::~GrowConPoint()
 
   ctx->set_dirty();
   if (hot)
-    ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 }
 
 void GrowConPoint::move(double delta_x, double delta_y, int grid)
@@ -87,13 +87,13 @@ void GrowConPoint::move(double delta_x, double delta_y, int grid)
     /* Move to closest grid point */
     x = (x_right + x_left) / 2;
     y = (y_high + y_low) / 2;
-    ctx->find_grid(x + delta_x / ctx->mw->zoom_factor_x,
-        y + delta_y / ctx->mw->zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid(x + delta_x / ctx->mw.zoom_factor_x,
+        y + delta_y / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
     trf.move(x_grid - x, y_grid - y);
     get_node_borders();
   } else {
-    double dx = delta_x / ctx->mw->zoom_factor_x;
-    double dy = delta_y / ctx->mw->zoom_factor_y;
+    double dx = delta_x / ctx->mw.zoom_factor_x;
+    double dy = delta_y / ctx->mw.zoom_factor_y;
     trf.move(dx, dy);
     x_right += dx;
     x_left += dx;
@@ -129,11 +129,11 @@ int GrowConPoint::event_handler(glow_eEvent event, int x, int y, double fx, doub
     }
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
-      ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
+      ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_CrossHair);
       set_hot(1);
     }
     if (!sts && hot) {
-      ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+      ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
       set_hot(0);
     }
   } else {
@@ -214,7 +214,7 @@ void GrowConPoint::open(std::ifstream& fp)
   }
 }
 
-void GrowConPoint::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowConPoint::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -239,7 +239,7 @@ void GrowConPoint::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowConPoint::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowConPoint::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -308,10 +308,10 @@ void GrowConPoint::nav_zoom()
   arc.nav_zoom();
 }
 
-void GrowConPoint::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowConPoint::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  if (w == ctx->navw) {
+  if (w == &ctx->navw) {
     return;
   }
 
@@ -325,9 +325,9 @@ void GrowConPoint::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   arc.draw(w, (void*)&p1, highlight, hot, NULL);
 }
 
-void GrowConPoint::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowConPoint::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
-  hot = (w == ctx->navw) ? 0 : hot;
+  hot = (w == &ctx->navw) ? 0 : hot;
 
   Matrix tmp = t ? (*t * trf) : trf;
   glow_sPoint ptmp = tmp * p;
