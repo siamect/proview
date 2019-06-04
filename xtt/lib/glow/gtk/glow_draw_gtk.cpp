@@ -1570,13 +1570,9 @@ void GlowDrawGtk::clear()
   if (w->background_pixmap) {
     set_clip(get_gc(this, glow_eDrawType_Line, 0));
 
-    // TODO: Is this really correct?
-    // Should we really draw the window to background_pixmap?
-    // Shouldn't it be the other way around,
-    // draw the background_pixmap to the window?
     if (!((GrowCtx*)ctx)->background_tiled)
-      gdk_draw_drawable(w->background_pixmap,
-          get_gc(this, glow_eDrawType_Line, 0), w->window, 0, 0, 0, 0,
+      gdk_draw_drawable(w->window,
+          get_gc(this, glow_eDrawType_Line, 0), w->background_pixmap, 0, 0, 0, 0,
           this->w->window_width, this->w->window_height);
     else {
       int background_width, background_height;
@@ -1584,8 +1580,8 @@ void GlowDrawGtk::clear()
           &background_height);
       for (int i = 0; i <= this->w->window_width / background_width; i++)
         for (int j = 0; j <= this->w->window_height / background_height; j++)
-          gdk_draw_drawable(w->background_pixmap,
-              get_gc(this, glow_eDrawType_Line, 0), w->window, 0, 0,
+          gdk_draw_drawable(w->window,
+              get_gc(this, glow_eDrawType_Line, 0), w->background_pixmap, 0, 0,
               i * background_width, j * background_height,
               background_width, background_height);
     }
