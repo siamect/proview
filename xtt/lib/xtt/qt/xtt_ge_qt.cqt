@@ -265,7 +265,6 @@ XttGeQt::XttGeQt(void* xg_parent_ctx, const char* xg_name,
   // Qt
   if (!(options & ge_mOptions_Embedded)) {
     toplevel = new XttGeQtWidget(this);
-    toplevel->setMinimumSize(window_width, window_height);
     toplevel->setWindowTitle(QString::fromLatin1(title));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -378,9 +377,8 @@ XttGeQt::XttGeQt(void* xg_parent_ctx, const char* xg_name,
     grow_GetZoom(graph->grow->ctx, &zoom);
     window_width = zoom * (x1 - x0);
     window_height = zoom * (y1 - y0);
-
-    toplevel->setMinimumSize(window_width, window_height);
   }
+  toplevel->setMinimumSize(window_width, window_height);
 }
 
 void XttGeQt::create_confirm_dialog()
