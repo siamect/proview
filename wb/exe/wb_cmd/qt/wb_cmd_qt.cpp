@@ -82,6 +82,9 @@ int main(int argc, char* argv[])
   log_setLevel(LOG_TRACE);
   QApplication app(argc, argv);
   QApplication::setStyle(new PwrStyle());
+  setlocale(LC_ALL, "en_US");
+  setlocale(LC_NUMERIC, "POSIX");
+  setlocale(LC_TIME, "en_US");
   new CmdQt(argc, argv);
   return app.exec();
 }
