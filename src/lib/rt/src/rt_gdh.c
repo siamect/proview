@@ -5411,7 +5411,7 @@ void gdh_GetStrDL(char* sp, /**< Direct link to string attribute */
  * lck_Create(&sts, lck_eLock_Str).
  */
 void gdh_SetStrDL(char* sp, /**< Direct link to string attribute */
-    char* str, /**< Time value to set */
+    char* str, /**< String value to set */
     int size /**< Size of string */
     )
 {
