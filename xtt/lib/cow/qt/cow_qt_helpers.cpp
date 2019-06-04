@@ -236,7 +236,7 @@ void fixed_put(QWidget* parent, QWidget* widget, int x, int y)
 void add_expanding(QStatusBar* statusbar, QWidget* widget)
 {
   widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  statusbar->addWidget(widget);
+  statusbar->addWidget(widget, 1);
 }
 
 void add_expanding(QSplitter* splitter, QWidget* widget)
