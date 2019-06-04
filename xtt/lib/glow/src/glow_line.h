@@ -211,7 +211,7 @@ public:
   {
     if (draw_type != drawtype) {
       draw_type = drawtype;
-      ctx->set_dirty();
+      ctx->set_dirty(p1.x, p1.y, p2.x, p2.y);
     }
   }
 
@@ -224,7 +224,7 @@ public:
   {
     if (line_width != linewidth) {
       line_width = linewidth;
-      ctx->set_dirty();
+      ctx->set_dirty(p1.x, p1.y, p2.x, p2.y);
     }
   }
 

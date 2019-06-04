@@ -278,7 +278,7 @@ public:
     color_shift = 0;
     color_lightness = 0;
     color_intensity = 0;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 
   //! Reset the fill color to the original fill color.
@@ -291,7 +291,7 @@ public:
     color_shift = original_color_shift;
     color_lightness = original_color_lightness;
     color_intensity = original_color_intensity;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 
   //! Set the border color.
@@ -307,7 +307,7 @@ public:
     color_shift = 0;
     color_lightness = 0;
     color_intensity = 0;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 
   //! Reset the border color to the original border color.
@@ -316,7 +316,7 @@ public:
     if (draw_type == original_border_drawtype)
       return;
     draw_type = original_border_drawtype;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 
   //! Set the text color.
@@ -332,7 +332,7 @@ public:
     color_shift = 0;
     color_lightness = 0;
     color_intensity = 0;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 
   //! Reset the text color to the original text color.
@@ -341,7 +341,7 @@ public:
     if (text_drawtype == original_text_drawtype)
       return;
     text_drawtype = original_text_drawtype;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 
   //! Set the original fill color.
@@ -424,7 +424,7 @@ public:
       return;
     color_tone = tone;
     color_shift = 0;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 
   //! Reset color tone to original color tone.
@@ -434,7 +434,7 @@ public:
       return;
     color_tone = original_color_tone;
     color_shift = original_color_shift;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 
   //! Set the original color lightness.
@@ -470,7 +470,7 @@ public:
     if (color_lightness == lightness)
       return;
     color_lightness = lightness;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 
   //! Reset color lightness to original color lightness.
@@ -512,7 +512,7 @@ public:
     if (color_intensity == intensity)
       return;
     color_intensity = intensity;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 
   //! Reset the color intensity to original color intensity.
@@ -559,7 +559,7 @@ public:
     if (color_shift == shift)
       return;
     color_shift = shift;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 
   //! Reset the color shift to original color shift.
@@ -576,7 +576,7 @@ public:
   {
     if (color_inverse != inverse) {
       color_inverse = inverse;
-      ctx->set_dirty();
+      ctx->set_dirty(x_left, y_low, x_right, y_high);
     }
   }
 
@@ -598,7 +598,7 @@ public:
   {
     if (background_drawtype != color) {
       background_drawtype = color;
-      ctx->set_dirty();
+      ctx->set_dirty(x_left, y_low, x_right, y_high);
     }
   }
 
@@ -634,7 +634,7 @@ public:
   {
     if (!feq(fill_level, level)) {
       fill_level = level;
-      ctx->set_dirty();
+      ctx->set_dirty(x_left, y_low, x_right, y_high);
     }
   }
 
@@ -1058,7 +1058,7 @@ public:
   {
     if (shadow != shadowval) {
       shadow = shadowval;
-      ctx->set_dirty();
+      ctx->set_dirty(x_left, y_low, x_right, y_high);
     }
   }
 
@@ -1070,7 +1070,7 @@ public:
   {
     if (gradient != gradientval) {
       gradient = gradientval;
-      ctx->set_dirty();
+      ctx->set_dirty(x_left, y_low, x_right, y_high);
     }
   }
 

@@ -65,21 +65,27 @@ public:
   {
     if (fill != fillval) {
       fill = fillval;
-      ctx->set_dirty();
+      double llx = 1e10, lly = 1e10, urx = -1e10, ury = -1e10;
+      get_borders(0, 0, &urx, &llx, &ury, &lly, NULL);
+      ctx->set_dirty(llx, lly, urx, ury);
     }
   }
   void set_drawtype(glow_eDrawType drawtype)
   {
     if (draw_type != drawtype) {
       draw_type = drawtype;
-      ctx->set_dirty();
+      double llx = 1e10, lly = 1e10, urx = -1e10, ury = -1e10;
+      get_borders(0, 0, &urx, &llx, &ury, &lly, NULL);
+      ctx->set_dirty(llx, lly, urx, ury);
     }
   }
   void set_linewidth(int linewidth)
   {
     if (line_width != linewidth) {
       line_width = linewidth;
-      ctx->set_dirty();
+      double llx = 1e10, lly = 1e10, urx = -1e10, ury = -1e10;
+      get_borders(0, 0, &urx, &llx, &ury, &lly, NULL);
+      ctx->set_dirty(llx, lly, urx, ury);
     }
   }
   void add_points(void* pos, glow_sPoint* pointarray, int point_cnt,

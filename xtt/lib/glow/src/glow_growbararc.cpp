@@ -60,12 +60,12 @@ GrowBarArc::GrowBarArc(GrowCtx* glow_ctx, const char* name, double x1,
       bar_bordercolor(glow_eDrawType_Color145), bar_borderwidth(1), bar_direction(0)
 {
   if (!nodraw)
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 GrowBarArc::~GrowBarArc()
 {
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowBarArc::save(std::ofstream& fp, glow_eSaveMode mode)
@@ -220,7 +220,7 @@ void GrowBarArc::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -424,14 +424,13 @@ void GrowBarArc::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
   y_high += dy;
   y_low += dy;
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowBarArc::get_range(double *min, double *max)
@@ -443,7 +442,7 @@ void GrowBarArc::get_range(double *min, double *max)
 void GrowBarArc::set_range(double min, double max)
 {
   if (!feq(max_value, max) || !feq(min_value, min)) {
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
   max_value = max;
   min_value = min;

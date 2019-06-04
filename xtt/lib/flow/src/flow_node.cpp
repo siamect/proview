@@ -83,7 +83,7 @@ FlowNode::FlowNode(FlowCtx* flow_ctx, const char* name,
   get_borders();
   zoom();
   if (!nodraw)
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void FlowNode::copy_from(const FlowNode& n)
@@ -111,7 +111,7 @@ FlowNode::~FlowNode()
 
   ctx->delete_node_cons(this);
   ctx->conpoint_select_remove(this);
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   if (hot)
     ctx->fdraw->set_cursor(ctx->mw, draw_eCursor_Normal);
 }
@@ -132,6 +132,7 @@ void FlowNode::move(int delta_x, int delta_y, int grid)
 {
   double x, y, x_grid, y_grid;
 
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   if (grid) {
     /* Move to closest grid point */
     x = pos.x + 1.0 * delta_x / ctx->zoom_factor;
@@ -155,15 +156,14 @@ void FlowNode::move(int delta_x, int delta_y, int grid)
     obst_y_high += 1.0 * delta_y / ctx->zoom_factor;
     obst_y_low += 1.0 * delta_y / ctx->zoom_factor;
   }
-  if (delta_x != 0 || delta_y != 0) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void FlowNode::move_noerase(int delta_x, int delta_y, int grid)
 {
   double x, y, x_grid, y_grid;
 
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   if (grid) {
     /* Move to closest grid point */
     x = pos.x + 1.0 * delta_x / ctx->zoom_factor;
@@ -180,9 +180,7 @@ void FlowNode::move_noerase(int delta_x, int delta_y, int grid)
     pos.posit(x, y);
     get_borders();
   }
-  if (delta_x != 0 || delta_y != 0) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void FlowNode::print(double ll_x, double ll_y, double ur_x, double ur_y)
@@ -481,7 +479,7 @@ void FlowNode::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -489,7 +487,7 @@ void FlowNode::set_dimmed(int on)
 {
   if (dimmed != on) {
     dimmed = on;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -497,7 +495,7 @@ void FlowNode::set_hot(int on)
 {
   if (hot != on) {
     hot = on;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -505,7 +503,7 @@ void FlowNode::set_inverse(int on)
 {
   if (inverse != on) {
     inverse = on;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -540,7 +538,7 @@ void FlowNode::set_annotation(int num, const char* text, int size, int nodraw)
   }
 
   if (!nodraw)
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void FlowNode::get_annotation(int num, char* text, int size)
@@ -596,7 +594,7 @@ void FlowNode::measure_annotation(
 void FlowNode::set_annot_pixmap(int num, flow_sAnnotPixmap* pixmap, int nodraw)
 {
   if (!nodraw && annotpixmapv[num] != pixmap) {
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
   annotpixmapv[num] = pixmap;
   if (relative_annot_pos) {
@@ -614,14 +612,14 @@ void FlowNode::remove_annot_pixmap(int num)
 {
   if (annotpixmapv[num] != 0) {
     annotpixmapv[num] = 0;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
 void FlowNode::set_radiobutton(int num, int value, int nodraw)
 {
   if (!nodraw && rbuttonv[num] != value) {
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
   rbuttonv[num] = value;
 }
@@ -868,7 +866,7 @@ void FlowNode::set_fillcolor(flow_eDrawType color)
 {
   if (fill_color != color) {
     fill_color = color;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -878,10 +876,10 @@ void FlowNode::conpoint_select(int num)
     return;
   if (sel_conpoint1 == -1) {
     sel_conpoint1 = num;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   } else if (sel_conpoint2 == -1) {
     sel_conpoint2 = num;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -889,10 +887,10 @@ void FlowNode::conpoint_select_clear(int num)
 {
   if (sel_conpoint1 == num) {
     sel_conpoint1 = -1;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   } else if (sel_conpoint2 == num) {
     sel_conpoint2 = -1;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -901,7 +899,7 @@ void FlowNode::conpoint_select_clear()
   if (sel_conpoint1 != -1 || sel_conpoint2 != -1) {
     sel_conpoint1 = -1;
     sel_conpoint2 = -1;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -916,6 +914,6 @@ void FlowNode::change_nodeclass(FlowNodeClass* new_nc)
 {
   if (nc != new_nc) {
     nc = new_nc;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }

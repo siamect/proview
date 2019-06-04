@@ -515,15 +515,31 @@ void FlowCtx::get_borders()
   a.get_borders(&x_right, &x_left, &y_high, &y_low);
 }
 
-void FlowCtx::set_dirty()
+void FlowCtx::set_dirty(double ll_x, double ll_y, double ur_x, double ur_y)
 {
   if (!nodraw && !is_dirty) {
     is_dirty = 1;
-    fdraw->set_dirty(mw);
+    if (ur_x < 0) {
+      fdraw->set_dirty(mw, 0, 0, window_width, window_height);
+    } else {
+      fdraw->set_dirty(mw,
+          int(ll_x * zoom_factor - offset_x - 20),
+          int(ll_y * zoom_factor - offset_y - 20),
+          int(ur_x * zoom_factor + offset_x + 20),
+          int(ur_y * zoom_factor + offset_y + 20));
+    }
     if (no_nav || nav_window_width == 0) {
       return;
     }
-    fdraw->set_dirty(navw);
+    if (ur_x < 0) {
+      fdraw->set_dirty(navw, 0, 0, nav_window_width, nav_window_height);
+    } else {
+      fdraw->set_dirty(navw,
+          int(ll_x * nav_zoom_factor - nav_offset_x - 1),
+          int(ll_y * nav_zoom_factor - nav_offset_y - 1),
+          int(ur_x * nav_zoom_factor + nav_offset_x + 1),
+          int(ur_y * nav_zoom_factor + nav_offset_y + 1));
+    }
   }
 }
 

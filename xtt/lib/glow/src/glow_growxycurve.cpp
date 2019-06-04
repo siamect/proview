@@ -250,7 +250,7 @@ void GrowXYCurve::set_xy_data(
       fill_curve, 1, 0, dt_fill, 0, 1);
   ctx->reset_nodraw();
   free((char*)pointarray);
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 //! Export the object as a javabean.

@@ -329,7 +329,7 @@ FlowCon::FlowCon(FlowCtx* flow_ctx, const char* name, FlowConClass* con_class,
   *rsts = FLOW__SUCCESS;
 
   if (!nodraw)
-      ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 FlowCon::~FlowCon()
@@ -345,7 +345,7 @@ FlowCon::~FlowCon()
   }
 
   if (!ctx->nodraw)
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   if (hot)
     ctx->fdraw->set_cursor(ctx->mw, draw_eCursor_Normal);
 }
@@ -374,7 +374,7 @@ void FlowCon::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -382,7 +382,7 @@ void FlowCon::set_hot(int on)
 {
   if (hot != on) {
     hot = on;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -473,6 +473,7 @@ void FlowCon::move(int delta_x, int delta_y, int grid)
   if (movement_type == flow_eMoveType_Route || grid)
     reconfigure();
   else {
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
     for (int i = 0; i < p_num; i++) {
       point_x[i] += x;
       point_y[i] += y;
@@ -487,9 +488,7 @@ void FlowCon::move(int delta_x, int delta_y, int grid)
       arrow_a.shift(&cc->zero, x, y, highlight, dimmed, hot);
     }
     get_con_borders();
-  }
-  if (delta_x != 0 || delta_y != 0) {
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -504,6 +503,7 @@ void FlowCon::move_noerase(int delta_x, int delta_y, int grid)
     reconfigure();
     ctx->reset_nodraw();
   } else {
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
     for (int i = 0; i < p_num; i++) {
       point_x[i] += x;
       point_y[i] += y;
@@ -514,9 +514,7 @@ void FlowCon::move_noerase(int delta_x, int delta_y, int grid)
     else
       draw_routed(p_num, point_x, point_y);
     get_con_borders();
-  }
-  if (delta_x != 0 || delta_y != 0) {
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -2707,7 +2705,7 @@ void FlowCon::draw_routed(int points, double* x, double* y)
   p_num = points;
   if (l_num != points - 1) {
     l_num = points - 1;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -2725,7 +2723,7 @@ void FlowCon::draw_routed_trans(int points, double* x, double* y)
   p_num = points;
   if (l_num != j) {
     l_num = j;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -2959,7 +2957,7 @@ void FlowCon::draw_routed_roundcorner(int points, double* x, double* y)
   if (l_num != points - 1 || a_num != points - 2) {
     l_num = points - 1;
     a_num = points - 2;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 

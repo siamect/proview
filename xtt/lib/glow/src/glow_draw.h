@@ -58,7 +58,7 @@ public:
 
   virtual int begin(GlowWind* wind) = 0;
   virtual void end() = 0;
-  virtual void set_dirty(DrawWind* wind) = 0;
+  virtual void set_dirty(DrawWind* wind, int ll_x, int ll_y, int ur_x, int ur_y) = 0;
 
   virtual void rect(int x, int y, int width, int height, glow_eDrawType gc_type,
       int fill, int idx, int highlight = 0) = 0;

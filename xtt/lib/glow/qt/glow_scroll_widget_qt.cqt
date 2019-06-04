@@ -54,9 +54,6 @@ void QtScrollWidgetGlow::init(unsigned int eCtxType,
 {
   setFocusPolicy(Qt::ClickFocus);
   setMouseTracking(true);
-  if (getenv("DISPLAY")[0] != ':') {
-    setAttribute(Qt::WA_PaintOnScreen);
-  }
   this->ctxType = eCtxType;
   this->init_proc = init_proc;
   this->init_widget_proc = init_proc2;
@@ -75,9 +72,6 @@ QWidget* QtScrollWidgetGlow::initScroll(unsigned int eCtxType,
 {
   setFocusPolicy(Qt::ClickFocus);
   setMouseTracking(true);
-  if (getenv("DISPLAY")[0] != ':') {
-    setAttribute(Qt::WA_PaintOnScreen);
-  }
   this->ctxType = eCtxType;
   this->init_proc = init_proc;
   this->init_widget_proc = init_proc2;
@@ -110,9 +104,6 @@ void QtScrollWidgetGlow::init(unsigned int eCtxType, QWidget* main)
 {
   setFocusPolicy(Qt::ClickFocus);
   setMouseTracking(true);
-  if (getenv("DISPLAY")[0] != ':') {
-    setAttribute(Qt::WA_PaintOnScreen);
-  }
   this->ctxType = eCtxType;
   this->scroll_timerid = new QTimer(this);
   is_navigator = 1;
@@ -218,15 +209,14 @@ void QtScrollWidgetGlow::scroll_v_released(int value)
 void QtScrollWidgetGlow::paintEvent(QPaintEvent* event)
 {
   GlowCtx* ctx = (GlowCtx*)parent_ctx;
+  QRect r = event->rect();
   if (((DrawWindQt*)ctx->mw.window)->window == this) {
     draw_ctx->begin(&ctx->mw);
-    ctx->draw(&ctx->mw, event->rect().x(), event->rect().y(),
-        event->rect().width(), event->rect().height());
+    ctx->draw(&ctx->mw, r.x(), r.y(), r.x() + r.width(), r.y() + r.height());
     draw_ctx->end();
   } else if (((DrawWindQt*)ctx->navw.window)->window == this) {
     draw_ctx->begin(&ctx->navw);
-    ctx->draw(&ctx->navw, event->rect().x(), event->rect().y(),
-        event->rect().width(), event->rect().height());
+    ctx->draw(&ctx->navw, r.x(), r.y(), r.x() + r.width(), r.y() + r.height());
     draw_ctx->end();
   }
   ctx->is_dirty = 0;

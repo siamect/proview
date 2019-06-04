@@ -1226,10 +1226,10 @@ void GlowDrawGtk::end() {
   this->w = NULL;
 }
 
-void GlowDrawGtk::set_dirty(DrawWind* wind) {
+void GlowDrawGtk::set_dirty(DrawWind* wind, int ll_x, int ll_y, int ur_x, int ur_y) {
   GdkWindow *w = ((DrawWindGtk*)wind)->window;
-  GdkRectangle r = {0, 0, gdk_window_get_width(w), gdk_window_get_height(w)};
-  gdk_window_invalidate_rect(w, &r, false);
+  GdkRectangle r = {ll_x, ll_y, ur_x - ll_x, ur_y - ll_y};
+  gdk_window_invalidate_rect(w, &r, TRUE);
 }
 
 void GlowDrawGtk::rect(int x, int y, int width, int height,

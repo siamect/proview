@@ -68,12 +68,12 @@ GrowFolder::GrowFolder(GrowCtx* glow_ctx, const char* name, double x, double y,
   y_low_offs = header_height;
 
   if (!nodraw)
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 GrowFolder::~GrowFolder()
 {
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowFolder::save(std::ofstream& fp, glow_eSaveMode mode)
@@ -493,7 +493,7 @@ void GrowFolder::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -694,7 +694,7 @@ int GrowFolder::event_handler(glow_eEvent event, int x, int y, double fx, double
           strcpy(owner, folder_owner[i]);
           current_folder = i;
           GrowWindow::update_attributes();
-          ctx->set_dirty();
+          ctx->set_dirty(x_left, y_low, x_right, y_high);
           break;
         }
         x += w;
@@ -728,7 +728,7 @@ void GrowFolder::set_textsize(int size)
 {
   if (text_size != size) {
     text_size = size;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -742,7 +742,7 @@ void GrowFolder::set_textbold(int bold)
     text_drawtype = glow_eDrawType_TextHelveticaBold;
   else
     text_drawtype = glow_eDrawType_TextHelvetica;
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 int GrowFolder::set_folder(int idx)
@@ -758,7 +758,7 @@ int GrowFolder::set_folder(int idx)
   strcpy(owner, folder_owner[idx]);
   current_folder = idx;
   GrowWindow::update_attributes();
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 
   return 1;
 }

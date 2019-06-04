@@ -67,7 +67,7 @@ GrowLine::GrowLine(GrowCtx* glow_ctx, const char* name, double x1, double y1,
     p2.posit(x_grid, y_grid);
   }
   if (!nodraw)
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   get_node_borders();
 }
 
@@ -75,16 +75,14 @@ GrowLine::~GrowLine()
 {
   ctx->object_deleted(this);
 
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   if (hot)
     ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 }
 
 void GrowLine::move(double delta_x, double delta_y, int grid)
 {
-  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   if (grid) {
     double x_grid, y_grid;
 
@@ -102,6 +100,7 @@ void GrowLine::move(double delta_x, double delta_y, int grid)
     y_high += dy;
     y_low += dy;
   }
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 int GrowLine::local_event_handler(glow_eEvent event, double x, double y) {
@@ -327,7 +326,7 @@ void GrowLine::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -380,9 +379,10 @@ void GrowLine::set_position(double x, double y)
   if (feq(trf.a13, x) && feq(trf.a23, y))
     return;
 
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.posit(x, y);
   get_node_borders();
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowLine::set_scale(
@@ -421,6 +421,7 @@ void GrowLine::set_scale(
 
   double old_x_left = x_left, old_y_low = y_low;
   double old_x_right = x_right, old_y_high = y_high;
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.scale_from_stored(scale_x, scale_y, x0, y0);
   get_node_borders();
 
@@ -449,7 +450,7 @@ void GrowLine::set_scale(
     break;
   default:;
   }
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowLine::set_rotation(
@@ -482,9 +483,10 @@ void GrowLine::set_rotation(
   default:;
   }
 
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.rotate_from_stored(angle, x0, y0);
   get_node_borders();
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowLine::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
@@ -599,14 +601,13 @@ void GrowLine::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
   y_high += dy;
   y_low += dy;
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowLine::export_javabean(GlowTransform* t, void* node,

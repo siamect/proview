@@ -55,12 +55,12 @@ GrowBar::GrowBar(GrowCtx* glow_ctx, const char* name, double x, double y,
       bar_bordercolor(glow_eDrawType_Inherit), bar_borderwidth(1), user_data(0)
 {
   if (!nodraw)
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 GrowBar::~GrowBar()
 {
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowBar::save(std::ofstream& fp, glow_eSaveMode mode)
@@ -226,7 +226,7 @@ void GrowBar::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -473,14 +473,13 @@ void GrowBar::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
   y_high += dy;
   y_low += dy;
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowBar::set_trace_attr(GlowTraceData* attr)
@@ -502,7 +501,7 @@ void GrowBar::get_range(double *min, double *max)
 void GrowBar::set_range(double min, double max)
 {
   if (!feq(max_value, max) || !feq(min_value, min)) {
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
   max_value = max;
   min_value = min;

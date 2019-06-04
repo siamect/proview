@@ -76,7 +76,7 @@ public:
 
   int begin(void *w);
   void end();
-  void set_dirty(void *w);
+  void set_dirty(void *w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   void rect(int x, int y, int width, int height, flow_eDrawType gc_type,
       int fill, int idx, int highlight, int dimmed);

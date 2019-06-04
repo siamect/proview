@@ -62,12 +62,12 @@ GrowPie::GrowPie(GrowCtx* glow_ctx, const char* name, double x1, double y1,
   memset(sector_size, 0, sizeof(sector_size));
 
   if (!nodraw)
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 GrowPie::~GrowPie()
 {
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowPie::save(std::ofstream& fp, glow_eSaveMode mode)
@@ -305,7 +305,7 @@ void GrowPie::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -525,14 +525,13 @@ void GrowPie::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
   y_high += dy;
   y_low += dy;
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowPie::export_javabean(GlowTransform* t, void* node,
@@ -578,7 +577,7 @@ void GrowPie::set_conf(
   max_value = max_val;
   for (int i = 0; i < sectors; i++)
     sector_color[i] = color[i];
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowPie::get_conf(int* sector_num, double* min_val, double* max_val)
@@ -592,7 +591,7 @@ void GrowPie::set_values(double* values)
 {
   for (int i = 0; i < sectors; i++)
     sector_size[i] = values[i];
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowPie::convert(glow_eConvert version)

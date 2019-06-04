@@ -497,7 +497,7 @@ public:
       return;
     color_tone = tone;
     color_shift = 0;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 
   //! Set the original color lightness.
@@ -527,7 +527,7 @@ public:
     if (color_lightness == lightness)
       return;
     color_lightness = lightness;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 
   //! Set the original color intensity.
@@ -557,7 +557,7 @@ public:
     if (color_intensity == intensity)
       return;
     color_intensity = intensity;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 
   //! Set the original color shift.
@@ -596,7 +596,7 @@ public:
     if (color_shift == shift)
       return;
     color_shift = shift;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 
   //! Set the color inverse.
@@ -607,7 +607,7 @@ public:
   {
     if (color_inverse != inverse) {
       color_inverse = inverse;
-      ctx->set_dirty();
+      ctx->set_dirty(x_left, y_low, x_right, y_high);
     }
   }
 

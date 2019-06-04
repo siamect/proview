@@ -51,12 +51,12 @@ GrowScrollBar::GrowScrollBar(GrowCtx* glow_ctx, const char* name, double x,
       callback_userdata(0), value_changed_cb(0), bar_color(bar_d_type)
 {
   if (!nodraw)
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 GrowScrollBar::~GrowScrollBar()
 {
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowScrollBar::save(std::ofstream& fp, glow_eSaveMode mode)
@@ -71,7 +71,7 @@ void GrowScrollBar::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -204,7 +204,7 @@ double GrowScrollBar::set_value(double value, double length)
 
   bar_value = CLAMP(bar_value, min_value, max_value - bar_length);
   if (!feq(bar_value, old_val)) {
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
   return bar_value;
 }
@@ -212,7 +212,7 @@ double GrowScrollBar::set_value(double value, double length)
 void GrowScrollBar::set_range(double min, double max)
 {
   if (!feq(max_value, max) || !feq(min_value, min)) {
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
   max_value = max;
   min_value = min;

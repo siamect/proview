@@ -233,29 +233,27 @@ void FlowLine::get_borders(double pos_x, double pos_y, double* x_right,
 void FlowLine::move(void* pos, double x1, double y1, double x2, double y2,
     int highlight, int dimmed, int hot)
 {
-  if (!feq(p1.x, x1) || !feq(p1.y, y1) || !feq(p2.x, x2) || !feq(p2.y, y2)) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty(p1.x, p1.y, p2.x, p2.y);
   p1.x = x1;
   p1.y = y1;
   p2.x = x2;
   p2.y = y2;
   zoom();
   nav_zoom();
+  ctx->set_dirty(p1.x, p1.y, p2.x, p2.y);
 }
 
 void FlowLine::shift(void* pos, double delta_x, double delta_y, int highlight,
     int dimmed, int hot)
 {
-  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty(p1.x, p1.y, p2.x, p2.y);
   p1.x += delta_x;
   p1.y += delta_y;
   p2.x += delta_x;
   p2.y += delta_y;
   zoom();
   nav_zoom();
+  ctx->set_dirty(p1.x, p1.y, p2.x, p2.y);
 }
 
 std::ostream& operator<<(std::ostream& o, const FlowLine l)

@@ -59,7 +59,7 @@ GrowMenu::GrowMenu(GrowCtx* glow_ctx, const char* name,
       font(t_font)
 {
   if (!nodraw)
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 GrowMenu::~GrowMenu()
@@ -75,7 +75,7 @@ GrowMenu::~GrowMenu()
   if (input_focus && parent_menu)
     ((GrowMenu*)parent_menu)->set_input_focus(1, glow_eEvent_Null);
 
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowMenu::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
@@ -484,7 +484,7 @@ void GrowMenu::shift_current_item(int shift)
       ctx->delete_menu_child(this);
     }
   }
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 int GrowMenu::get_current_item(int* item)

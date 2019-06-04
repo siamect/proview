@@ -200,8 +200,8 @@ FlowDrawQt::FlowDrawQt(QWidget* x_toplevel, void** flow_ctx,
   init_proc(toplevel, ctx, client_data);
 }
 
-void FlowDrawQt::set_dirty(void *w) {
-  ((QWidget*)w)->update();
+void FlowDrawQt::set_dirty(void *w, int ll_x, int ll_y, int ur_x, int ur_y) {
+  ((QWidget*)w)->update(QRect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y));
 }
 
 void FlowDrawQt::init_nav(QWidget* nav_widget, void* flow_ctx)

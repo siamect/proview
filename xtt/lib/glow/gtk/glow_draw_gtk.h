@@ -96,7 +96,7 @@ public:
 
   int begin(GlowWind* wind);
   void end();
-  void set_dirty(DrawWind* wind);
+  void set_dirty(DrawWind* wind, int ll_x, int ll_y, int ur_x, int ur_y);
 
   void get_window_size(DrawWind* w, int* width, int* height);
   void set_window_size(DrawWind* w, int width, int height);

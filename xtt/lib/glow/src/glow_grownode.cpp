@@ -77,7 +77,7 @@ GrowNode::GrowNode(GrowCtx* glow_ctx, const char* name,
     return;
   get_node_borders();
   if (!nodraw)
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 GrowNode::~GrowNode()
@@ -85,7 +85,7 @@ GrowNode::~GrowNode()
   if (!nc)
     return;
 
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   ctx->delete_node_cons(this);
   if (hot)
     ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
@@ -404,15 +404,15 @@ void GrowNode::open(std::ifstream& fp)
 
 void GrowNode::move_to(double x, double y)
 {
-  if (!feq(x_left, x) || !feq(y_low, y)) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.move(x - x_left, y - y_low);
   get_node_borders();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowNode::move(double delta_x, double delta_y, int grid)
 {
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   if (grid) {
     double x_grid, y_grid;
 
@@ -434,9 +434,7 @@ void GrowNode::move(double delta_x, double delta_y, int grid)
     obst_y_high += dy;
     obst_y_low += dy;
   }
-  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowNode::move_noerase(int delta_x, int delta_y, int grid)
@@ -453,7 +451,7 @@ void GrowNode::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -611,7 +609,7 @@ void GrowNode::set_hot(int on)
 {
   if (hot != on) {
     hot = on;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -649,10 +647,11 @@ void GrowNode::set_position(double x, double y)
   if (feq(trf.a13, trf.s.a13 + x) && feq(trf.a23, trf.s.a23 + y))
     return;
 
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.move_from_stored(x, y);
   get_node_borders();
   call_redraw_node_cons();
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowNode::set_scale_pos(double x, double y, double scale_x, double scale_y,
@@ -709,6 +708,7 @@ void GrowNode::set_scale(
   double old_x_right = x_right;
   double old_y_low = y_low;
   double old_y_high = y_high;
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.scale_from_stored(scale_x, scale_y, x0, y0);
   get_node_borders();
 
@@ -742,7 +742,7 @@ void GrowNode::set_scale(
     }
   **/
   call_redraw_node_cons();
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowNode::set_rotation(
@@ -781,11 +781,12 @@ void GrowNode::set_rotation(
   default:;
   }
 
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   t.rotate(angel, x0, y0);
   trf.set(t * trf.s);
   get_node_borders();
   call_redraw_node_cons();
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowNode::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
@@ -1168,7 +1169,7 @@ void GrowNode::set_annotation_input(
   if (nodraw || invisible)
     return;
 
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowNode::get_borders(GlowTransform* t, double* x1_right, double* x1_left,
@@ -1215,7 +1216,7 @@ void GrowNode::set_linewidth(int linewidth)
 {
   if (line_width != linewidth) {
     line_width = linewidth;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -1270,9 +1271,7 @@ void GrowNode::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
@@ -1282,6 +1281,7 @@ void GrowNode::align(double x, double y, glow_eAlignDirection direction)
   obst_x_left += dx;
   obst_y_high += dy;
   obst_y_low += dy;
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowNode::export_javabean(GlowTransform* t, void* node,
@@ -1364,7 +1364,7 @@ void GrowNode::set_nodeclass(GlowNodeClass* new_nc)
   if (nc != new_nc) {
     nc = new_nc;
     get_node_borders();
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -1602,12 +1602,12 @@ void GrowNode::set_input_focus(int focus, glow_eEvent event)
 {
   if (focus && !input_focus) {
     input_focus = 1;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
 
     ctx->register_inputfocus(this, 1);
   } else if (!focus && input_focus) {
     input_focus = 0;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
 
     ctx->register_inputfocus(this, 0);
   }
@@ -1625,7 +1625,7 @@ void GrowNode::open_annotation_input(int num)
     input_position = strlen(annotv[num]);
   else
     input_position = 0;
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowNode::close_annotation_input(int num)
@@ -1636,7 +1636,7 @@ void GrowNode::close_annotation_input(int num)
   input_active = 0;
   input_selected = 0;
   annotv_inputmode[num] = 0;
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowNode::close_annotation_input()
@@ -1645,7 +1645,7 @@ void GrowNode::close_annotation_input()
     input_active = 0;
     for (int i = 0; i < 10; i++)
       annotv_inputmode[i] = 0;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -1656,10 +1656,10 @@ void GrowNode::set_annotation_selection(int selection)
 
   if (selection && !input_selected) {
     input_selected = 1;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   } else if (!selection && input_selected) {
     input_selected = 0;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -1733,7 +1733,7 @@ void GrowNode::annot_input_event(glow_eEvent event, int keycode)
   default:
     return;
   }
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 int GrowNode::get_annotation_info(int num, int* t_size,
@@ -1765,7 +1765,7 @@ void GrowNode::set_annotation_text_offset(int num, double x, double y)
   if (num == annot_scrollingtext) {
     annot_offset_x = x;
     annot_offset_y = y;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -1807,7 +1807,7 @@ void GrowNode::set_visibility(glow_eVis visibility)
   default:
     return;
   }
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowNode::set_textbold(int bold)
@@ -1821,7 +1821,7 @@ void GrowNode::set_textbold(int bold)
   else
     text_type = glow_eDrawType_TextHelvetica;
   get_node_borders();
-  ctx->set_dirty();
+  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowNode::set_textfont(glow_eFont textfont)
@@ -1829,7 +1829,7 @@ void GrowNode::set_textfont(glow_eFont textfont)
   if (text_font != textfont) {
     text_font = textfont;
     get_node_borders();
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }
 
@@ -1840,6 +1840,6 @@ void GrowNode::set_colortheme_lightness()
 
   if (ctx->customcolors->colortheme_lightness != color_lightness) {
     color_lightness = ctx->customcolors->colortheme_lightness;
-    ctx->set_dirty();
+    ctx->set_dirty(x_left, y_low, x_right, y_high);
   }
 }

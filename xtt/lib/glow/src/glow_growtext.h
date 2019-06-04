@@ -419,7 +419,7 @@ public:
   {
     if (color_drawtype != drawtype) {
       color_drawtype = drawtype;
-      ctx->set_dirty();
+      ctx->set_dirty(x_left, y_low, x_right, y_high);
     }
   }
 
