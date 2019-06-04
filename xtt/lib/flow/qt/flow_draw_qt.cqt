@@ -63,12 +63,6 @@ static FlowCtx* last_ctx;
 static QMouseEvent* last_event;
 static QWidget* last_target;
 
-static QColor flow_allocate_color(const char* named_color)
-{
-  QColor color(named_color);
-  return color.isValid() ? color : Qt::black;
-}
-
 static QColor draw_type_to_color(FlowDrawQt* draw_ctx, int painter_type)
 {
   switch (painter_type) {
@@ -83,17 +77,17 @@ static QColor draw_type_to_color(FlowDrawQt* draw_ctx, int painter_type)
     return draw_ctx->background;
   case flow_eDrawType_LineRed:
   case flow_eDrawType_LineDashedRed:
-    return flow_allocate_color("red");
+    return QColor(255, 0, 0);
   case flow_eDrawType_LineGray:
-    return flow_allocate_color("gray");
+    return QColor(160, 160, 160);
   case flow_eDrawType_Green:
-    return flow_allocate_color("green");
+    return QColor(0, 255, 0);
   case flow_eDrawType_Yellow:
-    return flow_allocate_color("yellow");
+    return QColor(255, 255, 0);
   case flow_eDrawType_DarkGray:
-    return flow_allocate_color("gray28");
+    return QColor(128, 128, 128);
   default:
-    return flow_allocate_color("black");
+    return QColor(0, 0, 0);
   }
 }
 
@@ -193,7 +187,7 @@ FlowDrawQt::FlowDrawQt(QWidget* x_toplevel, void** flow_ctx,
   assert(dynamic_cast<QtScrollWidgetFlow*>(toplevel) != NULL);
   ctx->mw = dynamic_cast<QtScrollWidgetFlow*>(toplevel);
 
-  foreground = flow_allocate_color("black");
+  foreground = QColor(0, 0, 0);
 
   set_white_background();
 
@@ -921,7 +915,7 @@ void FlowDrawQt::text(int x, int y, char* text, int len, flow_eDrawType painter_
 {
   get_painter(painter_type, idx);
   if (dimmed) {
-    painter.setBrush(QBrush(flow_allocate_color("gray")));
+    painter.setBrush(QBrush(QColor(160, 160, 160)));
     painter.setPen(QPen(painter.brush(), size+1));
   }
 
@@ -1118,7 +1112,7 @@ void FlowDrawQt::set_click_sensitivity(int value)
 
 void FlowDrawQt::set_white_background()
 {
-  background = flow_allocate_color("white");
+  background = QColor(255, 255, 255);
 
   QPalette pal;
   pal.setColor(QPalette::Background, background);

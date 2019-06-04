@@ -64,12 +64,6 @@
 static QMouseEvent* last_event;
 static QWidget* last_target;
 
-static QColor glow_allocate_named_color(const char* named_color)
-{
-  QColor color = QColor(named_color);
-  return color.isValid() ? color : Qt::black;
-}
-
 static QColor glow_allocate_custom_color(GlowDrawQt *draw_ctx,
     glow_eDrawType drawtype, int r, int g, int b)
 {
@@ -94,16 +88,16 @@ static QColor draw_type_to_color(
   case glow_eDrawType_LineDashed:
   case glow_eDrawType_TextHelvetica:
   case glow_eDrawType_TextHelveticaBold:
-    return glow_allocate_named_color("black");
+    return QColor(0, 0, 0);
   case glow_eDrawType_LineErase:
   case glow_eDrawType_TextHelveticaErase:
   case glow_eDrawType_TextHelveticaEraseBold:
     return draw_ctx->background;
   case glow_eDrawType_LineRed:
   case glow_eDrawType_LineDashedRed:
-    return glow_allocate_named_color("red");
+    return QColor(255, 0, 0);
   case glow_eDrawType_LineGray:
-    return glow_allocate_named_color("gray");
+    return QColor(160, 160, 160);
   default: {
     if (painter_type >= glow_eDrawType_Color4
         && painter_type <= glow_eDrawType_Color300) {
