@@ -41,7 +41,6 @@
 
 #include "xtt_ev.h"
 
-#include <QDialog>
 #include <QWidget>
 
 class EvQtObject;
@@ -54,9 +53,9 @@ public:
       int ev_eventname_seg, pwr_tStatus* status);
   ~EvQt();
 
-  QDialog* parent_wid_eve;
-  QDialog* parent_wid_ala;
-  QDialog* parent_wid_blk;
+  QWidget* parent_wid_eve;
+  QWidget* parent_wid_ala;
+  QWidget* parent_wid_blk;
   QWidget* eve_widget;
   QWidget* ala_widget;
   QWidget* blk_widget;

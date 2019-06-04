@@ -51,10 +51,10 @@
 #include <QMenuBar>
 #include <QVBoxLayout>
 
-class CallbackWidget : public QDialog {
+class CallbackWidget : public QWidget {
 public:
   CallbackWidget(EvQtObject* parent, void (EvQtObject::*close)(), void (EvQtObject::*focus)())
-      : QDialog(), ev(parent), close_cb(close), focus_cb(focus) {}
+      : QWidget(), ev(parent), close_cb(close), focus_cb(focus) {}
 
 protected:
   void closeEvent(QCloseEvent* event);
@@ -69,13 +69,13 @@ private:
 void CallbackWidget::closeEvent(QCloseEvent* event)
 {
   ((ev)->*(close_cb))();
-  QDialog::closeEvent(event);
+  QWidget::closeEvent(event);
 }
 
 void CallbackWidget::focusInEvent(QFocusEvent* event)
 {
   ((ev)->*(focus_cb))();
-  QDialog::focusInEvent(event);
+  QWidget::focusInEvent(event);
 }
 
 EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
@@ -613,19 +613,16 @@ void EvQt::unmap_blk()
 void EvQt::set_transient_eve(void* basewidget)
 {
   parent_wid_eve->setParent(((QWidget*)basewidget));
-  parent_wid_eve->setModal(true);
 }
 
 void EvQt::set_transient_ala(void* basewidget)
 {
   parent_wid_ala->setParent(((QWidget*)basewidget));
-  parent_wid_ala->setModal(true);
 }
 
 void EvQt::set_transient_blk(void* basewidget)
 {
   parent_wid_blk->setParent(((QWidget*)basewidget));
-  parent_wid_blk->setModal(true);
 }
 
 void EvQt::set_title_ala(char* title)
