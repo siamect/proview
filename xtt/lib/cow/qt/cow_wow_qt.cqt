@@ -964,9 +964,9 @@ void CoWowQt::SetParent(QWidget* parent)
   object->setParent(parent);
 }
 
-static bool PrintDialog(QPrinter* printer, QImage *image, QWidget *parent)
+static bool PrintDialog(QPrinter* printer, QWidget *parent)
 {
-  if (image->width() > image->height()) {
+  if (parent->width() > parent->height()) {
     printer->setOrientation(QPrinter::Landscape);
   } else {
     printer->setOrientation(QPrinter::Portrait);
@@ -984,38 +984,6 @@ typedef struct {
   int offset_y;
 } ctx_settings;
 
-static ctx_settings BeginPrint(QPrinter* printer, QPainter *painter, flow_tCtx ctx, QImage *image)
-{
-  painter->setRenderHint(QPainter::Antialiasing, true);
-  painter->setRenderHint(QPainter::TextAntialiasing, true);
-  painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
-
-  ctx_settings settings = {ctx->zoom_factor, ctx->window_width, ctx->window_height, ctx->offset_x, ctx->offset_y};
-
-  ctx->window_width = image->width();
-  ctx->window_height = image->height();
-
-  return settings;
-}
-
-static void EndPrint(flow_tCtx ctx, ctx_settings* settings)
-{
-  // Restore ctx zoom settings
-  ctx->zoom_factor = settings->zoom_factor;
-  ctx->window_width = settings->window_width;
-  ctx->window_height = settings->window_height;
-  ctx->offset_x = settings->offset_x;
-  ctx->offset_y = settings->offset_y;
-  ctx->a.zoom();
-  int nav_backup = ctx->no_nav;
-  ctx->no_nav = true;
-  ctx->set_dirty();
-  ctx->redraw_if_dirty();
-  ctx->no_nav = nav_backup;
-  ctx->nav_zoom();
-  ctx->change_scrollbar();
-}
-
 static int GetPrintHeaderMargin(QPainter* painter)
 {
   QFont tmpFont = painter->font();
@@ -1027,7 +995,38 @@ static int GetPrintHeaderMargin(QPainter* painter)
   return height;
 }
 
-static void PrintPage(QPainter* painter, const char* title, flow_tCtx ctx, QImage* image, double ll_x, double ll_y, double ur_x, double ur_y, int page) {
+static ctx_settings BeginPrint(QPrinter* printer, QPainter *painter, flow_tCtx ctx, QWidget *widget)
+{
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setRenderHint(QPainter::TextAntialiasing, true);
+  painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
+
+  ctx_settings settings = {ctx->zoom_factor, ctx->window_width, ctx->window_height, ctx->offset_x, ctx->offset_y};
+
+  widget->resize(printer->pageRect().width(), printer->pageRect().height() - GetPrintHeaderMargin(painter));
+
+  ctx->window_width = widget->width();
+  ctx->window_height = widget->height();
+
+  return settings;
+}
+
+static void EndPrint(flow_tCtx ctx, ctx_settings* settings, QWidget *widget)
+{
+  // Restore ctx zoom settings
+  ctx->zoom_factor = settings->zoom_factor;
+  ctx->window_width = settings->window_width;
+  ctx->window_height = settings->window_height;
+  ctx->offset_x = settings->offset_x;
+  ctx->offset_y = settings->offset_y;
+  widget->resize(ctx->window_width, ctx->window_height);
+  ctx->a.zoom();
+  ctx->nav_zoom();
+  ctx->change_scrollbar();
+  ctx->set_dirty();
+}
+
+static void PrintPage(QPainter* painter, const char* title, flow_tCtx ctx, QWidget *widget, double ll_x, double ll_y, double ur_x, double ur_y, int page) {
   double zoom = qMin(
     ctx->window_width / (ur_x - ll_x + 2 / ctx->zoom_factor),
     ctx->window_height / (ur_y - ll_y + 2 / ctx->zoom_factor)
@@ -1040,12 +1039,8 @@ static void PrintPage(QPainter* painter, const char* title, flow_tCtx ctx, QImag
 
   double width_backup = ctx->window_width;
   double height_backup = ctx->window_height;
-  int nav_backup = ctx->no_nav;
   ctx->window_width = (ur_x - ll_x) * zoom + 2;
   ctx->window_height = (ur_y - ll_y) * zoom + 2;
-  ctx->no_nav = true;
-  ctx->set_dirty();
-  ctx->redraw_if_dirty();
 
   double margin_y = GetPrintHeaderMargin(painter);
 
@@ -1075,13 +1070,12 @@ static void PrintPage(QPainter* painter, const char* title, flow_tCtx ctx, QImag
   painter->setClipRect(0, 0, ctx->window_width, ctx->window_height);
   painter->setClipping(true);
 
-  painter->drawImage(0, 0, *image);
+  widget->render(painter);
 
   painter->setClipping(false);
 
   ctx->window_width = width_backup;
   ctx->window_height = height_backup;
-  ctx->no_nav = nav_backup;
 }
 
 #include <assert.h>
@@ -1098,17 +1092,14 @@ pwr_tStatus CoWowQt::CreateBrowPrintDialogQt(const char* title, void* brow_ctx, 
 
   assert(dynamic_cast<QtScrollWidgetFlow*>(w) != NULL);
   QtScrollWidgetFlow* widget = dynamic_cast<QtScrollWidgetFlow*>(w);
-  QImage imageTmp(widget->image);
 
   // TODO: Change FlowDraw so that pixmaps can be scaled up in size.
   // Then, change this to QPrinter::HighResolution.
   QPrinter printer;
 
-  if (PrintDialog(&printer, &imageTmp, widget)) {
+  if (PrintDialog(&printer, widget)) {
     brow_tCtx ctx = (brow_tCtx)brow_ctx;
     QPainter painter(&printer);
-
-    widget->image = QImage(printer.pageRect().width(), printer.pageRect().height() - GetPrintHeaderMargin(&painter), QImage::Format_RGB32);
 
     // For some reason, the brow context cannot measure its width correctly
     // So we estimate it to be 42 rows (portrait) or 60 rows (landscape).
@@ -1122,22 +1113,21 @@ pwr_tStatus CoWowQt::CreateBrowPrintDialogQt(const char* title, void* brow_ctx, 
       width = height / (210.0 / 297.0);
     }
 
-    ctx_settings settings = BeginPrint(&printer, &painter, ctx, &(widget->image));
+    ctx_settings settings = BeginPrint(&printer, &painter, ctx, widget);
 
     for (int i = 0;; i++) {
       ll_y = i * height;
       ur_y = ll_y + height;
       if (ll_y > ctx->y_high)
         break;
-      PrintPage(&painter, title, ctx, &(widget->image), 0, ll_y, width, ur_y, i+1);
+      PrintPage(&painter, title, ctx, widget, 0, ll_y, width, ur_y, i+1);
 
       if (ur_y < ctx->y_high) {
         printer.newPage();
       }
     }
 
-    widget->image = imageTmp;
-    EndPrint(ctx, &settings);
+    EndPrint(ctx, &settings, widget);
   }
   return WOW__SUCCESS;
 }
@@ -1150,17 +1140,14 @@ pwr_tStatus CoWowQt::CreateFlowPrintDialogQt(const char* title, void* flow_ctx, 
 
   assert(dynamic_cast<QtScrollWidgetFlow*>(w) != NULL);
   QtScrollWidgetFlow* widget = dynamic_cast<QtScrollWidgetFlow*>(w);
-  QImage imageTmp(widget->image);
 
   QPrinter printer(QPrinter::HighResolution);
 
-  if (PrintDialog(&printer, &imageTmp, widget)) {
+  if (PrintDialog(&printer, widget)) {
     flow_tCtx ctx = (flow_tCtx)flow_ctx;
     QPainter painter(&printer);
 
-    widget->image = QImage(printer.pageRect().width(), printer.pageRect().height() - GetPrintHeaderMargin(&painter), QImage::Format_RGB32);
-
-    ctx_settings settings = BeginPrint(&printer, &painter, ctx, &(widget->image));
+    ctx_settings settings = BeginPrint(&printer, &painter, ctx, widget);
 
     int num_pages = 0;
     for (int i = 0; i < ctx->a.size(); i++) {
@@ -1174,7 +1161,7 @@ pwr_tStatus CoWowQt::CreateFlowPrintDialogQt(const char* title, void* flow_ctx, 
       if (ctx->a[i]->type() == flow_eObjectType_Node) {
         FlowNode* elem = ((FlowNode*)ctx->a[i]);
         if (elem->nc->group == flow_eNodeGroup_Document) {
-          PrintPage(&painter, title, ctx, &(widget->image), elem->x_left, elem->y_low, elem->x_right, elem->y_high, j);
+          PrintPage(&painter, title, ctx, widget, elem->x_left, elem->y_low, elem->x_right, elem->y_high, j);
 
           if (j < num_pages) {
             printer.newPage();
@@ -1184,8 +1171,7 @@ pwr_tStatus CoWowQt::CreateFlowPrintDialogQt(const char* title, void* flow_ctx, 
       }
     }
 
-    widget->image = imageTmp;
-    EndPrint(ctx, &settings);
+    EndPrint(ctx, &settings, widget);
   }
   return WOW__SUCCESS;
 }

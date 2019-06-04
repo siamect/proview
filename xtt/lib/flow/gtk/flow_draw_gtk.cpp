@@ -98,7 +98,6 @@ static GdkColor flow_allocate_color(
 static void event_timer(FlowCtx* ctx, int time_ms);
 static void cancel_event_timer(FlowCtx* ctx);
 static gboolean event_timer_cb(void* ctx);
-static gboolean redraw_timer_cb(void* ctx);
 
 static void flow_create_cursor(FlowDrawGtk* draw_ctx)
 {
@@ -336,17 +335,10 @@ FlowDrawGtk::~FlowDrawGtk()
 {
   closing_down = 1;
 
-  cancel_redraw_timer();
-
   ctx->set_nodraw();
   delete ctx;
   draw_free_gc(this);
   gdk_colormap_free_colors(colormap, color_vect, color_vect_cnt);
-
-  if (m_wind.buffer)
-    g_object_unref(m_wind.buffer);
-  if (nav_wind.buffer)
-    g_object_unref(nav_wind.buffer);
 
   if (timer_id)
     g_source_remove(timer_id);
@@ -365,8 +357,8 @@ void FlowDrawGtk::create_secondary_ctx(FlowCtx* flow_ctx,
     ctx = new FlowCtx("Claes context", 20);
 
   ctx->fdraw = this;
-  ctx->mw = &m_wind;
-  ctx->navw = &nav_wind;
+  ctx->mw = this->ctx->mw;
+  ctx->navw = this->ctx->navw;
   ctx->set_nodraw();
   ctx->trace_connect_func = flow_ctx->trace_connect_func;
   ctx->trace_disconnect_func = flow_ctx->trace_disconnect_func;
@@ -398,36 +390,12 @@ void FlowDrawGtk::change_ctx(FlowCtx* from_ctx, FlowCtx* to_ctx)
     ((BrowCtx*)to_ctx)->configure();
   }
   to_ctx->set_dirty();
-  to_ctx->redraw_if_dirty();
 }
 
 void FlowDrawGtk::delete_secondary_ctx(FlowCtx* ctx)
 {
   ctx->set_nodraw();
   delete ctx;
-}
-
-void FlowDrawGtk::create_buffer(DrawWind *w)
-{
-  if (w->window == NULL) {
-    fprintf(stderr, "ERROR!\n");
-  }
-  int window_width, window_height;
-  gdk_drawable_get_size(w->window, &window_width, &window_height);
-
-  if (w->buffer) {
-    int buffer_width, buffer_height;
-    gdk_pixmap_get_size(w->buffer, &buffer_width, &buffer_height);
-
-    if (window_width == buffer_width && window_height == buffer_height)
-      return;
-
-    g_object_unref(w->buffer);
-  }
-
-  w->buffer = gdk_pixmap_new(w->window, window_width, window_height, -1);
-
-  ctx->set_dirty();
 }
 
 FlowDrawGtk::FlowDrawGtk(GtkWidget* x_toplevel, void** flow_ctx,
@@ -449,18 +417,15 @@ FlowDrawGtk::FlowDrawGtk(GtkWidget* x_toplevel, void** flow_ctx,
   ctx->fdraw = this;
 
   display = gtk_widget_get_display(toplevel);
-  m_wind.window = toplevel->window;
   screen = gtk_widget_get_screen(toplevel);
 
-  ctx->mw = &m_wind;
-  ctx->navw = &nav_wind;
+  ctx->mw = toplevel->window;
 
   colormap = gdk_colormap_new(gdk_visual_get_system(), TRUE);
 
   foreground = flow_allocate_color(this, "black");
-  flow_create_gc(this, m_wind.window);
+  flow_create_gc(this, (GdkDrawable*)ctx->mw);
   set_white_background();
-  create_buffer(&m_wind);
 
   flow_create_cursor(this);
 
@@ -470,8 +435,7 @@ FlowDrawGtk::FlowDrawGtk(GtkWidget* x_toplevel, void** flow_ctx,
 void FlowDrawGtk::init_nav(GtkWidget* nav_widget, void* flow_ctx)
 {
   nav_toplevel = nav_widget;
-  nav_wind.window = nav_toplevel->window;
-  create_buffer(&nav_wind);
+  ctx->navw = nav_toplevel->window;
 
   gtk_widget_modify_bg(nav_widget, GTK_STATE_NORMAL, &background);
 
@@ -493,7 +457,7 @@ void FlowDrawGtk::event_handler(FlowCtx* ctx, GdkEvent event)
   if (closing_down)
     return;
 
-  if (event.any.window == m_wind.window || event.type == GDK_KEY_PRESS) {
+  if (event.any.window == ctx->mw || event.type == GDK_KEY_PRESS) {
     switch (event.type) {
     case GDK_KEY_PRESS: {
       guint keysym = event.key.keyval;
@@ -812,10 +776,15 @@ void FlowDrawGtk::event_handler(FlowCtx* ctx, GdkEvent event)
       }
       break;
     case GDK_EXPOSE:
-      create_buffer(&m_wind);
+      ctx->is_dirty = 1;
       sts = ctx->event_handler(flow_eEvent_Exposure, event.expose.area.x,
           event.expose.area.y, event.expose.area.width,
           event.expose.area.height);
+      begin(event.any.window);
+      ctx->draw(event.expose.area.x, event.expose.area.y,
+          event.expose.area.width, event.expose.area.height);
+      end();
+      ctx->is_dirty = 0;
       break;
     case GDK_VISIBILITY_NOTIFY:
       switch (event.visibility.state) {
@@ -928,7 +897,7 @@ void FlowDrawGtk::event_handler(FlowCtx* ctx, GdkEvent event)
     default:
       break;
     }
-  } else if (event.any.window == nav_wind.window) {
+  } else if (event.any.window == ctx->navw) {
     switch (event.type) {
     case GDK_BUTTON_PRESS:
       switch (event.button.button) {
@@ -968,8 +937,13 @@ void FlowDrawGtk::event_handler(FlowCtx* ctx, GdkEvent event)
             (int)event.button.x, (int)event.button.y);
       break;
     case GDK_EXPOSE:
-      create_buffer(&nav_wind);
+      ctx->is_dirty = 1;
       sts = ctx->event_handler_nav(flow_eEvent_Exposure, 0, 0);
+      begin(event.any.window);
+      ctx->nav_draw(event.expose.area.x, event.expose.area.y,
+          event.expose.area.width, event.expose.area.height);
+      end();
+      ctx->is_dirty = 0;
       break;
     case GDK_MOTION_NOTIFY:
       if (event.motion.is_hint) {
@@ -1005,20 +979,22 @@ void FlowDrawGtk::enable_event(FlowCtx* ctx, flow_eEvent event,
   ctx->enable_event(event, event_type, event_cb);
 }
 
-int FlowDrawGtk::begin(DrawWind *w) {
+int FlowDrawGtk::begin(void *w) {
   if (!this->w) {
-    this->w = w;
+    this->w = (GdkWindow*)w;
     return 1;
   }
   return 0;
 }
 
 void FlowDrawGtk::end() {
-  int width, height;
-  gdk_drawable_get_size(w->buffer, &width, &height);
-
-  gdk_draw_drawable(w->window, gcs[flow_eDrawType_Line][0], w->buffer, 0, 0, 0, 0, width, height);
   this->w = NULL;
+}
+
+void FlowDrawGtk::set_dirty(void *wind) {
+  GdkWindow *w = (GdkWindow*)wind;
+  GdkRectangle r = {0, 0, gdk_window_get_width(w), gdk_window_get_height(w)};
+  gdk_window_invalidate_rect(w, &r, false);
 }
 
 void FlowDrawGtk::rect(int x, int y, int width, int height,
@@ -1041,7 +1017,7 @@ void FlowDrawGtk::rect(int x, int y, int width, int height,
     gc = gcs[gc_type][idx];
   }
 
-  gdk_draw_rectangle(w->buffer, gc, fill, x, y, width, height);
+  gdk_draw_rectangle(w, gc, fill, x, y, width, height);
 }
 
 void FlowDrawGtk::triangle(int x, int y, int width, int height,
@@ -1066,7 +1042,7 @@ void FlowDrawGtk::triangle(int x, int y, int width, int height,
 
   GdkPoint p[4] = { { x, y + height }, { x + width / 2, y },
     { x + width, y + height }, { x, y + height } };
-  gdk_draw_polygon(w->buffer, gc, fill, p, 4);
+  gdk_draw_polygon(w, gc, fill, p, 4);
 }
 
 void FlowDrawGtk::arrow(int x1, int y1, int x2, int y2, int x3,
@@ -1077,7 +1053,7 @@ void FlowDrawGtk::arrow(int x1, int y1, int x2, int y2, int x3,
   if (gc_type == flow_eDrawType_LineGray && highlight)
     gc_type = flow_eDrawType_Line;
 
-  gdk_draw_polygon(w->buffer, gcs[gc_type + highlight][idx], 1, p, 4);
+  gdk_draw_polygon(w, gcs[gc_type + highlight][idx], 1, p, 4);
 }
 
 void FlowDrawGtk::arc(int x, int y, int width, int height,
@@ -1092,7 +1068,7 @@ void FlowDrawGtk::arc(int x, int y, int width, int height,
     gc_type = flow_eDrawType(gc_type + 1);
   }
 
-  gdk_draw_arc(w->buffer, gcs[gc_type][idx], 0, x, y, width, height, angle1 * 64,
+  gdk_draw_arc(w, gcs[gc_type][idx], 0, x, y, width, height, angle1 * 64,
       angle2 * 64);
 }
 
@@ -1107,7 +1083,7 @@ void FlowDrawGtk::line(int x1, int y1, int x2, int y2,
     gc_type = flow_eDrawType(gc_type + 1);
   }
 
-  gdk_draw_line(w->buffer, gcs[gc_type][idx], x1, y1, x2, y2);
+  gdk_draw_line(w, gcs[gc_type][idx], x1, y1, x2, y2);
 }
 
 #define FONTSTR "Lucida Sans"
@@ -1141,7 +1117,7 @@ void FlowDrawGtk::text(int x, int y, char* text, int len, flow_eDrawType gc_type
   }
 
   PangoRenderer* pr = gdk_pango_renderer_get_default(screen);
-  gdk_pango_renderer_set_drawable(GDK_PANGO_RENDERER(pr), w->buffer);
+  gdk_pango_renderer_set_drawable(GDK_PANGO_RENDERER(pr), (GdkDrawable*)w);
   gdk_pango_renderer_set_gc(GDK_PANGO_RENDERER(pr), gcs[gc_type][idx]);
 
   PangoContext* pctx = gdk_pango_context_get_for_screen(screen);
@@ -1184,8 +1160,9 @@ void FlowDrawGtk::pixmaps_create(
   draw_sPixmap* pms = (draw_sPixmap*)calloc(1, sizeof(*pms));
   for (int i = 0; i < DRAW_PIXMAP_SIZE; i++) {
     if (i == 0 || (i > 0 && pdata->bits != prev_pdata->bits)) {
-      pms->pixmap[i] = gdk_pixmap_create_from_data(m_wind.buffer, (char*)pdata->bits,
-          pdata->width, pdata->height, 1, &foreground, &background);
+      pms->pixmap[i] = gdk_pixmap_create_from_data(
+          (GdkDrawable*)ctx->mw, (char*)pdata->bits, pdata->width,
+          pdata->height, 1, &foreground, &background);
     } else
       pms->pixmap[i] = pms->pixmap[i - 1];
     prev_pdata = pdata;
@@ -1211,12 +1188,10 @@ void FlowDrawGtk::pixmap(int x, int y, flow_sPixmapData* pixmap_data,
   flow_sPixmapDataElem* pdata = (flow_sPixmapDataElem*)pixmap_data + idx;
   draw_sPixmap* pms = (draw_sPixmap*)pixmaps;
 
-  gdk_draw_rectangle(
-      w->buffer, gcs[gc_bg][idx], 1, x, y, pdata->width, pdata->height);
+  gdk_draw_rectangle(w, gcs[gc_bg][idx], 1, x, y, pdata->width, pdata->height);
   gdk_gc_set_clip_mask(gcs[gc_fg][idx], pms->pixmap[idx]);
   gdk_gc_set_clip_origin(gcs[gc_fg][idx], x, y);
-  gdk_draw_rectangle(w->buffer, gcs[gc_fg][idx], 1, x, y,
-      pdata->width, pdata->height);
+  gdk_draw_rectangle(w, gcs[gc_fg][idx], 1, x, y, pdata->width, pdata->height);
   gdk_gc_set_clip_mask(gcs[gc_fg][idx], NULL);
   gdk_gc_set_clip_origin(gcs[gc_fg][idx], 0, 0);
 }
@@ -1233,7 +1208,7 @@ void FlowDrawGtk::image(int x, int y, int width, int height,
     gdk_gc_set_clip_origin(gcs[flow_eDrawType_Line][0], x, y);
   }
 
-  gdk_draw_pixbuf(w->buffer, gcs[flow_eDrawType_Line][0], (GdkPixbuf*)image, 0, 0,
+  gdk_draw_pixbuf(w, gcs[flow_eDrawType_Line][0], (GdkPixbuf*)image, 0, 0,
       x, y, width, height, GDK_RGB_DITHER_NONE, 0, 0);
 
   if (clip_mask) {
@@ -1245,18 +1220,18 @@ void FlowDrawGtk::image(int x, int y, int width, int height,
 void FlowDrawGtk::clear()
 {
   int width, height;
-  gdk_drawable_get_size(w->buffer, &width, &height);
-  gdk_draw_rectangle(w->buffer, gcs[flow_eDrawType_LineErase][0], TRUE, 0, 0, width, height);
+  gdk_drawable_get_size(w, &width, &height);
+  gdk_draw_rectangle(w, gcs[flow_eDrawType_LineErase][0], TRUE, 0, 0, width, height);
 }
 
-void FlowDrawGtk::get_window_size(DrawWind *wind, int* width, int* height)
+void FlowDrawGtk::get_window_size(void *wind, int* width, int* height)
 {
-  gdk_drawable_get_size(wind->buffer, width, height);
+  gdk_drawable_get_size((GdkDrawable*)wind, width, height);
 }
 
-void FlowDrawGtk::set_window_size(DrawWind *wind, int width, int height)
+void FlowDrawGtk::set_window_size(void *wind, int width, int height)
 {
-  gdk_window_resize(wind->window, width, height);
+  gdk_window_resize((GdkWindow*)wind, width, height);
 }
 
 static gboolean draw_timer_cb(void* data)
@@ -1293,28 +1268,6 @@ static void event_timer(FlowCtx* ctx, int time_ms)
   draw_ctx->timer_id = g_timeout_add(time_ms, event_timer_cb, ctx);
 }
 
-static gboolean redraw_timer_cb(void* data) {
-  FlowDrawGtk* draw_ctx = (FlowDrawGtk*)data;
-  draw_ctx->redraw_timer = 0;
-  draw_ctx->ctx->redraw_if_dirty();
-  return FALSE;
-}
-
-void FlowDrawGtk::cancel_redraw_timer()
-{
-  if (redraw_timer) {
-    g_source_remove(redraw_timer);
-    redraw_timer = 0;
-  }
-}
-
-void FlowDrawGtk::start_redraw_timer()
-{
-  if (!redraw_timer) {
-    redraw_timer = g_timeout_add(40, redraw_timer_cb, this);
-  }
-}
-
 void FlowDrawGtk::set_timer(FlowCtx* ctx, int time_ms,
     void (*callback_func)(FlowCtx* ctx), void** id)
 {
@@ -1336,12 +1289,12 @@ void FlowDrawGtk::cancel_timer(void* id)
   free((char*)id);
 }
 
-void FlowDrawGtk::set_cursor(DrawWind *wind, draw_eCursor cursor)
+void FlowDrawGtk::set_cursor(void *wind, draw_eCursor cursor)
 {
   if (cursor == draw_eCursor_Normal)
-    gdk_window_set_cursor(wind->window, NULL);
+    gdk_window_set_cursor((GdkWindow*)wind, NULL);
   else
-    gdk_window_set_cursor(wind->window, cursors[cursor]);
+    gdk_window_set_cursor((GdkWindow*)wind, cursors[cursor]);
   gdk_display_flush(display);
 }
 
@@ -1349,7 +1302,7 @@ void FlowDrawGtk::get_text_extent(const char* text, int len,
     flow_eDrawType gc_type, int idx, int* width, int* height, double size)
 {
   PangoRenderer* pr = gdk_pango_renderer_get_default(screen);
-  gdk_pango_renderer_set_drawable(GDK_PANGO_RENDERER(pr), m_wind.buffer);
+  gdk_pango_renderer_set_drawable(GDK_PANGO_RENDERER(pr), (GdkDrawable*)ctx->mw);
   gdk_pango_renderer_set_gc(GDK_PANGO_RENDERER(pr), gcs[gc_type][idx]);
 
   PangoContext* pctx = gdk_pango_context_get_for_screen(screen);

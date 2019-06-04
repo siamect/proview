@@ -54,10 +54,6 @@ public:
   void configure();
   void change_scrollbar();
   void zoom(double factor);
-  void unzoom()
-  {
-    zoom(base_zoom_factor / zoom_factor);
-  }
   int print(char* filename);
   void print_draw_page(void* context, const char* title, int page,
       flow_eOrientation orientation, double scale);

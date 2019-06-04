@@ -58,31 +58,10 @@ class GlowCustomColors;
 
 class DrawWindQt : public DrawWind {
 public:
-  DrawWindQt()
-  {
-    zoom_factor_x = zoom_factor_y = base_zoom_factor = 20;
-    offset_x = offset_y = 0;
-    window_width = window_height = 0;
-    subwindow_x = subwindow_y = 0;
-    subwindow_scale = 1;
-    clip_cnt = 0;
-    memset(clip_rectangle, 0, sizeof(clip_rectangle));
-  }
-
-  QWidget* window = NULL;
-  QImage* buffer = NULL;
+  DrawWindQt();
+  QWidget* window;
   QRect clip_rectangle[DRAW_CLIP_SIZE];
-  QPixmap* background_pixmap = NULL;
-
-  DrawWind* copy() {
-    DrawWindQt* tmp = new DrawWindQt();
-    tmp->clip_cnt = this->clip_cnt;
-    tmp->window = this->window;
-    tmp->buffer = this->buffer;
-    memcpy(tmp->clip_rectangle, this->clip_rectangle, sizeof(this->clip_rectangle));
-    tmp->background_pixmap = this->background_pixmap;
-    return tmp;
-  }
+  QImage* background_pixmap;
 };
 
 class GlowCustomColorsQt;
@@ -99,7 +78,7 @@ public:
 
   DrawWindQt m_wind;
   DrawWindQt nav_wind;
-  DrawWindQt *w = NULL;
+  GlowWind *w = NULL;
   QColor background;
   QColor original_background;
   QTimer* timer_id;
@@ -113,8 +92,9 @@ public:
       int (*event_cb)(GlowCtx* ctx, glow_tEvent event));
   void clear();
 
-  int begin(DrawWind *w);
-  void end(bool flush = true);
+  int begin(GlowWind *w);
+  void end();
+  void set_dirty(DrawWind *w);
 
   void get_window_size(DrawWind* w, int* width, int* height);
   void set_window_size(DrawWind* w, int width, int height);
@@ -157,7 +137,6 @@ public:
       void** id);
   void remove_timer(void* id);
   void init_nav(QWidget* nav_widget);
-  unique_ptr<QPoint[]> points_to_qt_points(glow_sPointX* points, int point_cnt);
   unique_ptr<QPoint[]> points_to_qt_points_curve(
       glow_sPointX* points, int point_cnt, int* cnt);
   int image_get_width(glow_tImImage image);
@@ -201,13 +180,16 @@ public:
   void reset_customcolors(GlowCustomColors* cc);
 
 private:
-  unique_ptr<QPainter> get_painter(
-      QPaintDevice* window, int painter_type, int size);
+  void get_painter(int painter_type, int size);
   void event_timer(QMouseEvent *event, QWidget *target);
   void cancel_event_timer();
 
+  void set_clip();
+  void reset_clip();
+
   void (*draw_timer_callback_func)(GlowCtx* ctx);
   QTimer* draw_timer_id;
+  QPainter painter;
 
 public slots:
   bool event_timer_cb();

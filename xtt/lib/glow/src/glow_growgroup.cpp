@@ -64,7 +64,7 @@ GrowGroup::~GrowGroup()
   ctx->set_dirty();
   ctx->delete_node_cons(this);
   if (hot)
-    ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 
   delete nc;
   nc = 0;
@@ -78,7 +78,7 @@ void GrowGroup::copy_from(const GrowGroup& n)
     memcpy(dynamic, n.nc->dynamic, n.dynamicsize);
   }
   // Get unique name
-  sprintf(n_name, "Grp%d_", ((GrowCtx*)ctx)->objectname_cnt++);
+  sprintf(n_name, "Grp%d_", ctx->objectname_cnt++);
 
   nc = new GlowNodeGroup((GlowNodeGroup&)*n.nc);
   nc->a.set_parent(this);
@@ -206,7 +206,8 @@ int GrowGroup::get_background_object_limits(GlowTransform* t,
   int sts;
 
   if (t) {
-    GlowTransform trf_tot = *t * trf;
+    GlowTransform trf_tot;
+    trf_tot.set(*t * trf);
     sts = nc->a.get_background_object_limits(
         &trf_tot, type, x, y, background, min, max, direction);
   } else
@@ -217,9 +218,7 @@ int GrowGroup::get_background_object_limits(GlowTransform* t,
 
 GlowArrayElem* GrowGroup::get_node_from_name(char* name)
 {
-  int i;
-
-  for (i = 0; i < nc->a.a_size; i++) {
+  for (int i = 0; i < nc->a.a_size; i++) {
     if ((nc->a.a[i]->type() == glow_eObjectType_Node
             || nc->a.a[i]->type() == glow_eObjectType_GrowNode
             || nc->a.a[i]->type() == glow_eObjectType_GrowConGlue)

@@ -195,7 +195,7 @@ public:
     \param ur_x		Upper right x coordinate of drawing area.
     \param ur_y		Upper right y coordinate of drawing area.
   */
-  void draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Draw the objects if any part is inside the drawing area, and extends the
   //! drawing area.
@@ -209,10 +209,10 @@ public:
     drawing area,
     the drawingarea is extended so it contains the whole objects.
   */
-  void draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
+  void draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
 
   //! Erase the object
-  void erase(DrawWind* w)
+  virtual void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
   }
@@ -224,14 +224,6 @@ public:
     \param grid		Position object on grid point.
   */
   void move(double delta_x, double delta_y, int grid);
-
-  //! Move the object without erase.
-  /*!
-    \param delta_x	Moved distance in x direction.
-    \param delta_y	Moved distance in y direction.
-    \param grid		Position object on grid point.
-  */
-  void move_noerase(int delta_x, int delta_y, int grid);
 
   //! Set object highlight.
   /*!
@@ -401,15 +393,16 @@ public:
   */
   void set_fill_color(glow_eDrawType drawtype)
   {
-    fill_drawtype = drawtype;
-    ctx->set_dirty();
+    if (fill_drawtype != drawtype) {
+      fill_drawtype = drawtype;
+      ctx->set_dirty();
+    }
   }
 
   //! Reset the fill color to the original fill color.
   void reset_fill_color()
   {
-    fill_drawtype = original_fill_drawtype;
-    ctx->set_dirty();
+    set_fill_color(original_fill_drawtype);
   }
 
   //! Set the border color.
@@ -418,15 +411,13 @@ public:
   */
   void set_border_color(glow_eDrawType drawtype)
   {
-    draw_type = drawtype;
-    ctx->set_dirty();
+    set_drawtype(drawtype);
   }
 
   //! Reset the border color to the original border color.
   void reset_border_color()
   {
-    draw_type = original_border_drawtype;
-    ctx->set_dirty();
+    set_drawtype(original_border_drawtype);
   }
 
   //! Set the original fill color.
@@ -455,8 +446,10 @@ public:
   */
   void set_original_background_color(glow_eDrawType color)
   {
-    background_drawtype = color;
-    ctx->set_dirty();
+    if (background_drawtype != color) {
+      background_drawtype = color;
+      ctx->set_dirty();
+    }
   }
 
   //! Draw the object.
@@ -473,7 +466,7 @@ public:
     multiplied with the parentnodes transform, to give the appropriate
     coordinates for the drawing.
   */
-  void draw(DrawWind* w, GlowTransform* t, int highlight, int hot, void* node,
+  void draw(GlowWind* w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
 
   //! Erase the object.
@@ -482,7 +475,7 @@ public:
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase(DrawWind* w, GlowTransform* t, int hot, void* node);
+  void erase(GlowWind* w, GlowTransform* t, int hot, void* node);
 
   //! Add a transform to the current transform.
   /*!
@@ -502,7 +495,8 @@ public:
   */
   void set_transform_from_stored(GlowTransform* t)
   {
-    trf.set_from_stored(t), get_node_borders();
+    trf.set(*t * trf.s);
+    get_node_borders();
   }
 
   //! Store the current transform
@@ -513,20 +507,6 @@ public:
   {
     trf.store();
   }
-
-  //! Set the linewidth.
-  /*!
-    \param linewidth	Linewidth in range 0 to 8. 0 gives a linewidth of 1
-    pixel at original zoom. 1 -> 2 pixel etc.
-  */
-  void set_linewidth(int linewidth);
-
-  //! Set fill.
-  /*!
-    \param fillval	If 1 the object will be draw with fill, if 0 the object
-    will be drawn without fill.
-  */
-  void set_fill(int fillval);
 
   //! Set border.
   /*!
@@ -542,8 +522,10 @@ public:
   */
   void set_shadow(int shadowval)
   {
-    shadow = shadowval;
-    ctx->set_dirty();
+    if (shadow != shadowval) {
+      shadow = shadowval;
+      ctx->set_dirty();
+    }
   }
 
   //! Set shadow width.
@@ -552,8 +534,10 @@ public:
   */
   void set_shadow_width(double width)
   {
-    shadow_width = width;
-    ctx->set_dirty();
+    if (shadow_width != width) {
+      shadow_width = width;
+      ctx->set_dirty();
+    }
   }
 
   //! Set Gradient.
@@ -562,8 +546,10 @@ public:
   */
   void set_gradient(glow_eGradient gradientval)
   {
-    gradient = gradientval;
-    ctx->set_dirty();
+    if (gradient != gradientval) {
+      gradient = gradientval;
+      ctx->set_dirty();
+    }
   }
 
   void get_ctx(void** c)

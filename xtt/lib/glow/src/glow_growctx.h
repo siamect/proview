@@ -112,14 +112,7 @@ public:
     selection rectangle
     if this is active.
   */
-  void draw(DrawWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
-
-  //! Draw a specified area of the window.
-  /*! Interface with double arguments */
-  void draw(DrawWind *w, double ll_x, double ll_y, double ur_x, double ur_y)
-  {
-    draw(w, (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);
-  }
+  void draw(GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Set edit mode.
   /*! \param grow_mode		Edit mode. */

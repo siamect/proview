@@ -77,7 +77,7 @@ void BrowCtx::configure()
   a.configure();
   get_borders();
   frame_x_right
-      = MAX(x_right, 1.0 * (mw->window_width + mw->offset_x) / mw->zoom_factor_x);
+      = MAX(x_right, 1.0 * (mw.window_width + mw.offset_x) / mw.zoom_factor_x);
   a.zoom();
   change_scrollbar();
 }
@@ -93,19 +93,19 @@ void BrowCtx::change_scrollbar()
     if (a.size() == 0)
       return;
     ((GlowNode*)a[0])->measure(&ll_x, &ll_y, &ur_x, &ur_y);
-    scroll_size = ur_y - ll_y + 1.0 / mw->zoom_factor_y;
+    scroll_size = ur_y - ll_y + 1.0 / mw.zoom_factor_y;
   }
 
   data.scroll_data = scroll_data;
   data.total_width = int((x_right - x_left) / scroll_size);
   data.total_height = int((y_high - y_low) / scroll_size);
-  data.window_width = int(mw->window_width / scroll_size / mw->zoom_factor_x);
+  data.window_width = int(mw.window_width / scroll_size / mw.zoom_factor_x);
   data.window_height
-      = int(mw->window_height / scroll_size / mw->zoom_factor_y + 1);
+      = int(mw.window_height / scroll_size / mw.zoom_factor_y + 1);
   data.offset_x = int(
-      mw->offset_x / scroll_size / mw->zoom_factor_x - x_left / scroll_size);
+      mw.offset_x / scroll_size / mw.zoom_factor_x - x_left / scroll_size);
   data.offset_y
-      = int(mw->offset_y / scroll_size / mw->zoom_factor_y - y_low / scroll_size);
+      = int(mw.offset_y / scroll_size / mw.zoom_factor_y - y_low / scroll_size);
 
   (scroll_callback)(&data);
 }
@@ -115,20 +115,20 @@ void BrowCtx::zoom(double factor)
   if (fabs(factor) < DBL_EPSILON)
     return;
 
-  mw->zoom_factor_x *= factor;
-  mw->zoom_factor_y *= factor;
-  if (mw->offset_x != 0)
-    mw->offset_x = int(
-        (mw->offset_x - mw->window_width / 2.0 * (1.0 / factor - 1)) * factor);
-  if (mw->offset_y != 0)
-    mw->offset_y = int(
-        (mw->offset_y - mw->window_height / 2.0 * (1.0 / factor - 1)) * factor);
-  mw->offset_x = MAX(mw->offset_x, 0);
-  mw->offset_y = MAX(mw->offset_y, 0);
-  if ((x_right - x_left) * mw->zoom_factor_x <= mw->window_width)
-    mw->offset_x = 0;
-  if ((y_high - y_low) * mw->zoom_factor_y <= mw->window_height)
-    mw->offset_y = 0;
+  mw.zoom_factor_x *= factor;
+  mw.zoom_factor_y *= factor;
+  if (mw.offset_x != 0)
+    mw.offset_x = int(
+        (mw.offset_x - mw.window_width / 2.0 * (1.0 / factor - 1)) * factor);
+  if (mw.offset_y != 0)
+    mw.offset_y = int(
+        (mw.offset_y - mw.window_height / 2.0 * (1.0 / factor - 1)) * factor);
+  mw.offset_x = MAX(mw.offset_x, 0);
+  mw.offset_y = MAX(mw.offset_y, 0);
+  if ((x_right - x_left) * mw.zoom_factor_x <= mw.window_width)
+    mw.offset_x = 0;
+  if ((y_high - y_low) * mw.zoom_factor_y <= mw.window_height)
+    mw.offset_y = 0;
   a.zoom();
   set_dirty();
   nav_zoom();
@@ -137,7 +137,6 @@ void BrowCtx::zoom(double factor)
 
 void BrowCtx::print(char* filename)
 {
-  int i;
   double ll_x, ll_y, ur_x, ur_y;
   double width, height;
 
@@ -149,7 +148,7 @@ void BrowCtx::print(char* filename)
 
   print_ps = new GlowPscript(filename, this, 1);
 
-  for (i = 0;; i++) {
+  for (int i = 0;; i++) {
     ll_y = i * height;
     ur_y = ll_y + height;
     ll_x = 0;
@@ -168,8 +167,8 @@ int BrowCtx::is_visible(GlowArrayElem* element)
   double window_low, window_high;
 
   ((GlowNode*)element)->measure(&ll_x, &ll_y, &ur_x, &ur_y);
-  window_low = double(mw->offset_y) / mw->zoom_factor_y;
-  window_high = double(mw->offset_y + mw->window_height) / mw->zoom_factor_y;
+  window_low = double(mw.offset_y) / mw.zoom_factor_y;
+  window_high = double(mw.offset_y + mw.window_height) / mw.zoom_factor_y;
   if (ll_y >= window_low && ur_y <= window_high)
     return 1;
   else
@@ -183,11 +182,11 @@ void BrowCtx::center_object(GlowArrayElem* object, double factor)
   int y_pix;
 
   ((GlowNode*)object)->measure(&ll_x, &ll_y, &ur_x, &ur_y);
-  new_offset_y = int(ll_y * mw->zoom_factor_y - factor * mw->window_height);
+  new_offset_y = int(ll_y * mw.zoom_factor_y - factor * mw.window_height);
   if (new_offset_y <= 0)
-    y_pix = mw->offset_y;
+    y_pix = mw.offset_y;
   else
-    y_pix = -(new_offset_y - mw->offset_y);
+    y_pix = -(new_offset_y - mw.offset_y);
   scroll(0, y_pix);
   change_scrollbar();
 }
@@ -196,8 +195,8 @@ void brow_scroll_horizontal(BrowCtx* ctx, int value, int bottom)
 {
   int x_pix;
 
-  x_pix = int(-value * ctx->scroll_size * ctx->mw->zoom_factor_x
-      + (ctx->mw->offset_x - ctx->x_left * ctx->mw->zoom_factor_x));
+  x_pix = int(-value * ctx->scroll_size * ctx->mw.zoom_factor_x
+      + (ctx->mw.offset_x - ctx->x_left * ctx->mw.zoom_factor_x));
   ctx->scroll(x_pix, 0);
 }
 
@@ -205,15 +204,15 @@ void brow_scroll_vertical(BrowCtx* ctx, int value, int bottom)
 {
   int y_pix;
 
-  y_pix = int(-value * ctx->scroll_size * ctx->mw->zoom_factor_y
-      + (ctx->mw->offset_y - ctx->y_low * ctx->mw->zoom_factor_y));
+  y_pix = int(-value * ctx->scroll_size * ctx->mw.zoom_factor_y
+      + (ctx->mw.offset_y - ctx->y_low * ctx->mw.zoom_factor_y));
   // Correction for the bottom position
   if (bottom
       && (y_pix >= 0
-             || ctx->mw->window_height + y_pix
-                 < ctx->y_high * ctx->mw->zoom_factor_y - ctx->mw->offset_y))
-    //        mw->window_height >= (y_high - y_low) * mw->zoom_factor_y)
-    y_pix = int(ctx->mw->window_height + ctx->mw->offset_y
-        - ctx->y_high * ctx->mw->zoom_factor_y);
+             || ctx->mw.window_height + y_pix
+                 < ctx->y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y))
+    //        mw.window_height >= (y_high - y_low) * mw.zoom_factor_y)
+    y_pix = int(ctx->mw.window_height + ctx->mw.offset_y
+        - ctx->y_high * ctx->mw.zoom_factor_y);
   ctx->scroll(0, y_pix);
 }

@@ -175,36 +175,29 @@ FlowTraceAttr FlowConPoint::get_trace_attr()
 void FlowConPoint::draw(
     void* pos, int highlight, int dimmed, int hot, void* node)
 {
-  int line_width = 1;
-  int idx = int(ctx->zoom_factor / ctx->base_zoom_factor * line_width - 1) + 2;
-  idx = MAX(0, idx);
-  idx = MIN(idx, DRAW_TYPE_SIZE - 1);
+  int idx = int(ctx->zoom_factor / ctx->base_zoom_factor - 1) + 2;
+  idx = CLAMP(idx, 0, DRAW_TYPE_SIZE - 1);
   int size = (int)(0.025 * ctx->zoom_factor);
-  int x, y;
 
   if (((FlowNode*)node)->sel_conpoint1 == number
       || ((FlowNode*)node)->sel_conpoint2 == number) {
+    int x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x - size / 2;
+    int y = p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y - size / 2;
     switch (direction) {
     case flow_eDirection_Up:
-      x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x - size / 2;
-      y = p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y - size;
-      ;
+      y -= size / 2;
       break;
     case flow_eDirection_Down:
-      x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x - size / 2;
-      y = p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y;
+      y += size / 2;
       break;
     case flow_eDirection_Right:
-      x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x - size;
-      y = p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y - size / 2;
+      x -= size / 2;
       break;
     case flow_eDirection_Left:
-      x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x;
-      y = p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y - size / 2;
+      x += size / 2;
       break;
     default:
-      x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x - size / 2;
-      y = p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y - size / 2;
+      break;
     }
     ctx->fdraw->arc(x, y, size, size, 0, 360, flow_eDrawType_LineRed, idx, 0, 0);
   }
@@ -212,36 +205,29 @@ void FlowConPoint::draw(
 
 void FlowConPoint::erase(void* pos, int hot, void* node)
 {
-  int line_width = 1;
-  int idx = int(ctx->zoom_factor / ctx->base_zoom_factor * line_width - 1) + 2;
-  idx = MAX(0, idx);
-  idx = MIN(idx, DRAW_TYPE_SIZE - 1);
+  int idx = int(ctx->zoom_factor / ctx->base_zoom_factor - 1) + 2;
+  idx = CLAMP(idx, 0, DRAW_TYPE_SIZE - 1);
   int size = (int)(0.025 * ctx->zoom_factor);
-  int x, y;
 
   if (((FlowNode*)node)->sel_conpoint1 == number
       || ((FlowNode*)node)->sel_conpoint2 == number) {
+    int x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x - size / 2;
+    int y = p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y - size / 2;
     switch (direction) {
     case flow_eDirection_Up:
-      x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x - size / 2;
-      y = p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y - size;
-      ;
+      y -= size / 2;
       break;
     case flow_eDirection_Down:
-      x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x - size / 2;
-      y = p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y;
+      y += size / 2;
       break;
     case flow_eDirection_Right:
-      x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x - size;
-      y = p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y - size / 2;
+      x -= size / 2;
       break;
     case flow_eDirection_Left:
-      x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x;
-      y = p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y - size / 2;
+      x += size / 2;
       break;
     default:
-      x = p.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x - size / 2;
-      y = p.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y - size / 2;
+      break;
     }
     ctx->fdraw->arc(x, y, size, size, 0, 360, flow_eDrawType_LineErase, idx);
   }

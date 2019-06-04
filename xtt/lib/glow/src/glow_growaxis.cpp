@@ -182,7 +182,7 @@ void GrowAxis::open(std::ifstream& fp)
   configure();
 }
 
-void GrowAxis::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowAxis::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int tmp;
 
@@ -207,7 +207,7 @@ void GrowAxis::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
-void GrowAxis::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
+void GrowAxis::draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 {
   int tmp;
   int obj_ur_x = int(x_right * w->zoom_factor_x) - w->offset_x;
@@ -246,25 +246,24 @@ void GrowAxis::draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y)
 
 void GrowAxis::set_highlight(int on)
 {
-  highlight = on;
-  ctx->set_dirty();
+  if (highlight != on) {
+    highlight = on;
+    ctx->set_dirty();
+  }
 }
 
-void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowAxis::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  hot = (w == ctx->navw) ? 0 : hot;
-  int i;
+  hot = (w == &ctx->navw) ? 0 : hot;
   int draw_text = (fabs(increment) > DBL_EPSILON);
   int idx;
   int x, y;
   char text[20];
   int line_length;
-  int x_text, y_text;
+  int y_text;
   int z_height = 0, z_width, z_descent = 0;
   int max_z_width = 0;
-  double rotation;
-  glow_eDrawType drawtype;
   int text_idx
       = int(w->zoom_factor_y / w->base_zoom_factor * (text_size + 4) - 4);
   double tsize = w->zoom_factor_y / w->base_zoom_factor * (8 + 2 * text_size);
@@ -291,27 +290,22 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
 
   idx = MAX(0, idx);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-  if (!t) {
-    x1 = int(trf.x(ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int(trf.x(ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int(trf.y(ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-    rotation = (trf.rot() / 360 - floor(trf.rot() / 360)) * 360;
-  } else {
-    x1 = int(trf.x(t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int(trf.x(t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int(trf.y(t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-    rotation = (trf.rot(t) / 360 - floor(trf.rot(t) / 360)) * 360;
-  }
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
+  p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+  p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+  p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+  p2.y = p2.y * w->zoom_factor_y - w->offset_y;
+  double rotation = (tmp.rotation / 360 - floor(tmp.rotation / 360)) * 360;
 
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
-  drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
+  int ll_x = int(MIN(p1.x, p2.x));
+  int ur_x = int(MAX(p1.x, p2.x));
+  int ll_y = int(MIN(p1.y, p2.y));
+  int ur_y = int(MAX(p1.y, p2.y));
+
+  glow_eDrawType drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
       highlight, (GrowNode*)colornode, 0);
 
   if (45 >= rotation || rotation > 315) {
@@ -321,7 +315,7 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
 
     // Calculate max value text width
     if (draw_text) {
-      for (i = 0; i < lines; i++) {
+      for (int i = 0; i < lines; i++) {
         if (i % valuequotient == 0) {
           format_text(text, format, max_value - i * increment);
           ctx->gdraw->get_text_extent(text, strlen(text), text_drawtype,
@@ -331,16 +325,14 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
             max_z_width = z_width;
         }
       }
-      x_text = ll_x + max_z_width;
       line_length = ur_x - ll_x - max_z_width;
       if (line_length < 3)
         line_length = 3;
     } else {
-      x_text = ll_x;
       line_length = ur_x - ll_x;
     }
 
-    for (i = 0; i < lines; i++) {
+    for (int i = 0; i < lines; i++) {
       y = int(ll_y + double(ur_y - ll_y) / (lines - 1) * i);
       if (i % longquotient == 0)
         ctx->gdraw->line(ur_x - line_length, y, ur_x, y, drawtype, idx, 0);
@@ -381,7 +373,7 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       line_length = ur_y - ll_y;
     }
 
-    for (i = 0; i < lines; i++) {
+    for (int i = 0; i < lines; i++) {
       x = int(ll_x + double(ur_x - ll_x) / (lines - 1) * (lines - 1 - i));
       if (i % longquotient == 0)
         ctx->gdraw->line(x, ur_y - line_length, x, ur_y, drawtype, idx, 0);
@@ -396,6 +388,7 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
             &z_descent, tsize, 0);
 
         if (text_idx >= 0 && z_height < ur_y - ll_y) {
+          int x_text;
           if (i == lines - 1)
             x_text = x;
           else if (i == 0)
@@ -414,8 +407,9 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     ctx->gdraw->line(ll_x, ll_y, ll_x, ur_y, drawtype, idx, 0);
 
     // Calculate max value text width
+    int x_text = ur_x;
     if (draw_text) {
-      for (i = 0; i < lines; i++) {
+      for (int i = 0; i < lines; i++) {
         if (i % valuequotient == 0) {
           format_text(text, format, max_value - i * increment);
           ctx->gdraw->get_text_extent(text, strlen(text), text_drawtype,
@@ -425,16 +419,15 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
             max_z_width = z_width;
         }
       }
-      x_text = ur_x - max_z_width;
+      x_text -= max_z_width;
       line_length = ur_x - ll_x - max_z_width;
       if (line_length < 3)
         line_length = 3;
     } else {
-      x_text = ur_x;
       line_length = ur_x - ll_x;
     }
 
-    for (i = 0; i < lines; i++) {
+    for (int i = 0; i < lines; i++) {
       y = int(ll_y + double(ur_y - ll_y) / (lines - 1) * (lines - 1 - i));
       if (i % longquotient == 0)
         ctx->gdraw->line(ll_x, y, ll_x + line_length, y, drawtype, idx, 0);
@@ -473,7 +466,7 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       line_length = ur_y - ll_y;
     }
 
-    for (i = 0; i < lines; i++) {
+    for (int i = 0; i < lines; i++) {
       x = int(ll_x + double(ur_x - ll_x) / (lines - 1) * i);
       if (i % longquotient == 0)
         ctx->gdraw->line(x, ll_y, x, ll_y + line_length, drawtype, idx, 0);
@@ -487,6 +480,7 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
             &z_descent, tsize, 0);
 
         if (text_idx >= 0 && z_height - z_descent < ur_y - ll_y) {
+          int x_text;
           if (i == lines - 1)
             x_text = x - z_width;
           else if (i == 0)
@@ -502,27 +496,22 @@ void GrowAxis::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   }
 }
 
-void GrowAxis::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowAxis::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
   int hotw = 2;
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-  if (!t) {
-    x1 = int(trf.x(ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int(trf.x(ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int(trf.y(ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  } else {
-    x1 = int(trf.x(t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-    x2 = int(trf.x(t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-    y2 = int(trf.y(t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  }
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
+  p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+  p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+  p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+  p2.y = p2.y * w->zoom_factor_y - w->offset_y;
 
-  ll_x = MIN(x1, x2) - hotw;
-  ur_x = MAX(x1, x2) + hotw;
-  ll_y = MIN(y1, y2) - hotw;
-  ur_y = MAX(y1, y2) + hotw;
+  int ll_x = int(MIN(p1.x, p2.x)) - hotw;
+  int ur_x = int(MAX(p1.x, p2.x)) + hotw;
+  int ll_y = int(MIN(p1.y, p2.y)) - hotw;
+  int ur_y = int(MAX(p1.y, p2.y)) + hotw;
 
   ctx->gdraw->rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
       glow_eDrawType_LineErase, 1, 0);
@@ -532,7 +521,6 @@ void GrowAxis::align(double x, double y, glow_eAlignDirection direction)
 {
   double dx, dy;
 
-  ctx->set_dirty();
   switch (direction) {
   case glow_eAlignDirection_CenterVert:
     dx = x - (x_right + x_left) / 2;
@@ -563,6 +551,9 @@ void GrowAxis::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
+  }
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
@@ -572,9 +563,11 @@ void GrowAxis::align(double x, double y, glow_eAlignDirection direction)
 
 void GrowAxis::set_textsize(int size)
 {
-  text_size = size;
+  if (text_size != size) {
+    text_size = size;
+    ctx->set_dirty();
+  }
   get_node_borders();
-  ctx->set_dirty();
 }
 
 void GrowAxis::set_textbold(int bold)
@@ -647,37 +640,27 @@ void GrowAxis::set_range(double minval, double maxval, int keep_settings)
   max_value = maxval;
   min_value = minval;
 
-  DrawWind* w = ctx->mw;
+  GlowWind* w = &ctx->mw;
   // double tsize = w->zoom_factor_y / w->base_zoom_factor * (8+2*text_size);
-  int x1 = int(trf.x(ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
-  int y1 = int(trf.y(ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
-  int x2 = int(trf.x(ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
-  int y2 = int(trf.y(ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
-  double rotation = (trf.rot() / 360 - floor(trf.rot() / 360)) * 360;
+  glow_sPoint p1 = trf * ll;
+  glow_sPoint p2 = trf * ur;
+  p1.x = int(p1.x * ctx->mw.zoom_factor_x) - w->offset_x;
+  p1.y = int(p1.y * ctx->mw.zoom_factor_y) - w->offset_y;
+  p2.x = int(p2.x * ctx->mw.zoom_factor_x) - w->offset_x;
+  p2.y = int(p2.y * ctx->mw.zoom_factor_y) - w->offset_y;
+  double rotation = (trf.rotation / 360 - floor(trf.rotation / 360)) * 360;
 
   if (!keep_settings) {
-    int len;
-    int lix;
-    int di;
-    int horizontal = (rotation < 45 || (rotation > 135 && rotation < 225)
-                         || rotation > 315)
-        ? 0
-        : 1;
-    if (horizontal)
-      len = ABS(x2 - x1);
-    else
-      len = ABS(y2 - y1);
-
-    if (len < 150)
-      lix = 0;
-    else
-      lix = 1;
+    int horizontal = !(rotation < 45 || (rotation > 135 && rotation < 225)
+                         || rotation > 315);
+    int len = horizontal ? int(ABS(p2.x - p1.x)) : int(ABS(p2.y - p1.y));
+    int lix = (len >= 150);
 
     double d = fabs(maxval - minval);
     if (d < 5)
       d = 1000 * d;
 
-    di = (int)(d + 0.5);
+    int di = (int)(d + 0.5);
     while (di >= 25)
       di /= 10;
 
@@ -721,49 +704,39 @@ void GrowAxis::export_javabean(GlowTransform* t, void* node,
     glow_eExportPass pass, int* shape_cnt, int node_cnt, int in_nc,
     std::ofstream& fp)
 {
-  int i;
   int draw_text = (fabs(increment) > DBL_EPSILON);
-  double x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
-  double rotation;
   int bold;
   char text[20];
   int line_length;
   int z_height, z_width, z_descent;
   int max_z_width = 0;
   int idx = int(
-      ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * (text_size + 4) - 4);
+      ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (text_size + 4) - 4);
   double tsize
-      = ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor * (8 + 2 * text_size);
+      = ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (8 + 2 * text_size);
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
 
   bold = (text_drawtype == glow_eDrawType_TextHelveticaBold);
 
-  if (!t) {
-    x1 = trf.x(ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = trf.y(ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = trf.x(ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = trf.y(ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  } else {
-    x1 = trf.x(t, ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = trf.y(t, ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = trf.x(t, ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = trf.y(t, ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  }
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
+  p1.x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p1.y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+  p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
 
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
+  double ll_x = MIN(p1.x, p2.x);
+  double ur_x = MAX(p1.x, p2.x);
+  double ll_y = MIN(p1.y, p2.y);
+  double ur_y = MAX(p1.y, p2.y);
 
-  if (t)
-    rotation = (trf.rot(t) / 360 - floor(trf.rot(t) / 360)) * 360;
-  else
-    rotation = (trf.rot() / 360 - floor(trf.rot() / 360)) * 360;
+  double rotation = (tmp.rotation / 360 - floor(tmp.rotation / 360)) * 360;
 
   // Calculate max value line width
   if (45 >= rotation || rotation > 315) {
     if (draw_text) {
-      for (i = 0; i < lines; i++) {
+      for (int i = 0; i < lines; i++) {
         if (i % valuequotient == 0) {
           format_text(text, format, max_value - i * increment);
           ctx->gdraw->get_text_extent(text, strlen(text), text_drawtype,
@@ -786,7 +759,7 @@ void GrowAxis::export_javabean(GlowTransform* t, void* node,
       line_length = int(ur_y - ll_y);
   } else if (135 < rotation && rotation <= 225) {
     if (draw_text) {
-      for (i = 0; i < lines; i++) {
+      for (int i = 0; i < lines; i++) {
         if (i % valuequotient == 0) {
           format_text(text, format, max_value - i * increment);
           ctx->gdraw->get_text_extent(text, strlen(text), text_drawtype,
@@ -812,11 +785,10 @@ void GrowAxis::export_javabean(GlowTransform* t, void* node,
   if (line_length < 3)
     line_length = 3;
 
-  ((GrowCtx*)ctx)
-      ->export_jbean->axis(ll_x, ll_y, ur_x, ur_y, draw_type,
-          text_color_drawtype, min_value, max_value, lines, longquotient,
-          valuequotient, line_length, line_width, rotation, bold, idx, format,
-          pass, shape_cnt, node_cnt, fp);
+  ctx->export_jbean->axis(ll_x, ll_y, ur_x, ur_y, draw_type,
+      text_color_drawtype, min_value, max_value, lines, longquotient,
+      valuequotient, line_length, line_width, rotation, bold, idx, format,
+      pass, shape_cnt, node_cnt, fp);
 }
 
 int GrowAxis::trace_scan()
@@ -964,19 +936,12 @@ glow_eVis GrowAxis::get_visibility()
 
 void GrowAxis::set_visibility(glow_eVis visibility)
 {
-  switch (visibility) {
-  case glow_eVis_Visible:
-    if (invisible == 0)
-      return;
-    invisible = 0;
-    break;
-  case glow_eVis_Invisible:
-    if (invisible)
-      return;
-    invisible = 1;
-    break;
-  case glow_eVis_Dimmed:
-    break;
+  if ((!invisible && visibility == glow_eVis_Visible) ||
+      (invisible && visibility == glow_eVis_Invisible) ||
+      visibility == glow_eVis_Dimmed) {
+    return;
   }
+
+  invisible = (visibility == glow_eVis_Invisible);
   ctx->set_dirty();
 }

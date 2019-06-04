@@ -145,8 +145,8 @@ public:
   /*! \param fp	Input file. */
   void open(std::ifstream& fp);
 
-  void draw(DrawWind* w, GlowPoint* pos, int highlight, int hot, void* node);
-  void erase(DrawWind* w, GlowPoint* pos, int hot, void* node);
+  void draw(GlowWind* w, GlowPoint* pos, int highlight, int hot, void* node);
+  void erase(GlowWind* w, GlowPoint* pos, int hot, void* node);
 
   //! Draw the calling node.
   /*!
@@ -159,7 +159,7 @@ public:
 
     Call the draw function for each element.
   */
-  void draw(DrawWind* w, GlowTransform* t, int highlight, int hot, void* node,
+  void draw(GlowWind* w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
 
   //! Erase the calling node.
@@ -170,7 +170,7 @@ public:
 
     Call the erase fuction for each element.
   */
-  void erase(DrawWind* w, GlowTransform* t, int hot, void* node);
+  void erase(GlowWind* w, GlowTransform* t, int hot, void* node);
 
   int get_conpoint(int num, double* x, double* y, glow_eDirection* dir);
 

@@ -172,14 +172,14 @@ class GrowRect extends GlowRect {
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    let x1 = this.trf.x(t, this.ll.x, this.ll.y) * this.ctx.mw.zoom_factor_x +
-        0.5 - this.ctx.mw.offset_x;
-    let y1 = this.trf.y(t, this.ll.x, this.ll.y) * this.ctx.mw.zoom_factor_y +
-        0.5 - this.ctx.mw.offset_y;
-    let x2 = this.trf.x(t, this.ur.x, this.ur.y) * this.ctx.mw.zoom_factor_x +
-        0.5 - this.ctx.mw.offset_x;
-    let y2 = this.trf.y(t, this.ur.x, this.ur.y) * this.ctx.mw.zoom_factor_y +
-        0.5 - this.ctx.mw.offset_y;
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
+
+    let x1 = p1.x * this.ctx.mw.zoom_factor_x + 0.5 - this.ctx.mw.offset_x;
+    let y1 = p1.y * this.ctx.mw.zoom_factor_y + 0.5 - this.ctx.mw.offset_y;
+    let x2 = p2.x * this.ctx.mw.zoom_factor_x + 0.5 - this.ctx.mw.offset_x;
+    let y2 = p2.y * this.ctx.mw.zoom_factor_y + 0.5 - this.ctx.mw.offset_y;
 
     let ll_x = Math.min(x1, x2);
     let ur_x = Math.max(x1, x2);
@@ -239,14 +239,14 @@ class GrowRect extends GlowRect {
       ];
       this.ctx.gdraw.polyline(points, 7, drawtype, true, 0);
     }
-    if (this.fill !== 0) {
+    if (this.fill) {
       if (display_shadow && ish !== 0) {
         if (grad === Gradient.No || fillcolor === DrawType.ColorRed) {
           let drawtype = (chot === 0) ? fillcolor : GlowColor.shift_drawtype(fillcolor, chot, null);
           this.ctx.gdraw.rect(ll_x + ish, ll_y + ish, ur_x - ll_x - 2 *
               ish, ur_y - ll_y - 2 * ish, drawtype, true, 0);
         } else {
-          let rotationa = t ? this.trf.rot(t) : this.trf.rot();
+          let rotationa = t ? this.trf.rotation + t.rotation : this.trf.rotation;
 
           let fa0, fa1, fa2;
           if (this.bgcolor_gradient !== 0 &&
@@ -281,7 +281,7 @@ class GrowRect extends GlowRect {
           this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
               drawtype, true, 0);
         } else {
-          let rotationb = t ? this.trf.rot(t) : this.trf.rot();
+          let rotationb = t ? this.trf.rotation + t.rotation : this.trf.rotation;
 
           let fb0, fb1, fb2;
           if (this.bgcolor_gradient !== 0 &&
@@ -313,7 +313,7 @@ class GrowRect extends GlowRect {
       }
     }
     if (this.border !== 0 ||
-        !(this.fill !== 0 || (display_shadow && this.shadow_width !== 0))) {
+        !(this.fill || (display_shadow && this.shadow_width !== 0))) {
       let drawtype =
           GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
               highlight, colornode, 0, 0);
@@ -322,12 +322,12 @@ class GrowRect extends GlowRect {
   }
 
   get_borders(t, g) {
-    let x1 = this.trf.x(t, this.ll.x, this.ll.y);
-    let x2 = this.trf.x(t, this.ur.x, this.ur.y);
-    let y1 = this.trf.y(t, this.ll.x, this.ll.y);
-    let y2 = this.trf.y(t, this.ur.x, this.ur.y);
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
 
-    g.set(Rect.union(g, new Rect(Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2), Math.max(y1, y2))));
+    g.set(Rect.union(g, new Rect(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y),
+        Math.max(p1.x, p2.x), Math.max(p1.y, p2.y))));
   }
 
   get_node_borders() {
@@ -376,7 +376,8 @@ class GrowRect extends GlowRect {
     let old_x_right = this.ur_x;
     let old_y_low = this.ll_y;
     let old_y_high = this.ur_y;
-    this.trf.scale_from_stored(scale_x, scale_y, x0, y0);
+    this.trf.revert();
+    this.trf.scale(scale_x, scale_y, x0, y0);
     this.get_node_borders();
 
     switch (type) {

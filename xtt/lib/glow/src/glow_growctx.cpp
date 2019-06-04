@@ -109,7 +109,7 @@ GrowCtx::GrowCtx(const char* ctx_name) : GlowCtx(ctx_name),
   memset(argtype, 0, sizeof(argtype));
   memset(dyn_color, 0, sizeof(dyn_color));
   memset(dyn_attr, 0, sizeof(dyn_attr));
-};
+}
 
 GrowCtx::~GrowCtx()
 {
@@ -130,7 +130,7 @@ GrowCtx::~GrowCtx()
 
 void GrowCtx::set_mode(grow_eMode grow_mode)
 {
-  if (edit_mode == grow_eMode_Scale) {
+  if (edit_mode == grow_eMode_Scale && select_rect_active) {
     // Erase scale rectangle
     select_rect_active = 0;
     set_dirty();
@@ -138,7 +138,7 @@ void GrowCtx::set_mode(grow_eMode grow_mode)
 
   edit_mode = grow_mode;
   if (edit_mode == grow_eMode_Edit || edit_mode == grow_eMode_EditPolyLine) {
-    gdraw->set_cursor(mw, glow_eDrawCursor_Normal);
+    gdraw->set_cursor(mw.window, glow_eDrawCursor_Normal);
     hot_mode = default_hot_mode;
   } else if (edit_mode == grow_eMode_Scale) {
     double ll_x, ll_y, ur_x, ur_y;
@@ -151,29 +151,28 @@ void GrowCtx::set_mode(grow_eMode grow_mode)
     ur_y = -1e10;
     ll_y = 1e10;
     a_sel.get_borders(&ur_x, &ll_x, &ur_y, &ll_y);
-    select_rect_ll_x = int(ll_x * mw->zoom_factor_x) - mw->offset_x;
-    select_rect_ll_y = int(ll_y * mw->zoom_factor_y) - mw->offset_y;
-    select_rect_ur_x = int(ur_x * mw->zoom_factor_x) - mw->offset_x;
-    select_rect_ur_y = int(ur_y * mw->zoom_factor_y) - mw->offset_y;
+    select_rect_ll_x = int(ll_x * mw.zoom_factor_x) - mw.offset_x;
+    select_rect_ll_y = int(ll_y * mw.zoom_factor_y) - mw.offset_y;
+    select_rect_ur_x = int(ur_x * mw.zoom_factor_x) - mw.offset_x;
+    select_rect_ur_y = int(ur_y * mw.zoom_factor_y) - mw.offset_y;
     scale_x = 1;
     scale_y = 1;
   } else {
-    gdraw->set_cursor(mw, glow_eDrawCursor_DiamondCross);
+    gdraw->set_cursor(mw.window, glow_eDrawCursor_DiamondCross);
     hot_mode = glow_eHotMode_Disabled;
   }
 }
 
 int GrowCtx::subw_event_handler(glow_eEvent event, int x, int y, int w, int h)
 {
-  int i;
   int sts;
 
-  double fx = double(x + mw->offset_x) / mw->zoom_factor_x;
-  double fy = double(y + mw->offset_y) / mw->zoom_factor_y;
+  double fx = double(x + mw.offset_x) / mw.zoom_factor_x;
+  double fy = double(y + mw.offset_y) / mw.zoom_factor_y;
 
   if (has_subwindows == -1) {
     // Initialize
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       if (a[i]->type() == glow_eObjectType_GrowWindow
           || a[i]->type() == glow_eObjectType_GrowFolder
           || a[i]->type() == glow_eObjectType_GrowTable) {
@@ -187,7 +186,7 @@ int GrowCtx::subw_event_handler(glow_eEvent event, int x, int y, int w, int h)
     }
   }
 
-  for (i = a.a_size - 1; i >= 0; i--) {
+  for (int i = a.a_size - 1; i >= 0; i--) {
     if (a[i]->type() == glow_eObjectType_GrowWindow
         || a[i]->type() == glow_eObjectType_GrowFolder
         || a[i]->type() == glow_eObjectType_GrowTable) {
@@ -232,8 +231,8 @@ int GrowCtx::subw_event_handler(glow_eEvent event, int x, int y, int w, int h)
               e.any.type = glow_eEventType_Object;
               e.any.x_pixel = x;
               e.any.y_pixel = y;
-              e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
-              e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
+              e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+              e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
               e.object.object_type = glow_eObjectType_NoObject;
               event_callback[event](this, &e);
             }
@@ -254,11 +253,10 @@ int GrowCtx::subw_event_handler(glow_eEvent event, int x, int y, int w, int h)
 int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 {
   int sts = 0;
-  int i;
   int node_move_event = 0;
 
-  double fx = double(x + mw->offset_x) / mw->zoom_factor_x;
-  double fy = double(y + mw->offset_y) / mw->zoom_factor_y;
+  double fx = double(x + mw.offset_x) / mw.zoom_factor_x;
+  double fy = double(y + mw.offset_y) / mw.zoom_factor_y;
 
   callback_object_type = glow_eObjectType_NoObject;
   callback_object = 0;
@@ -300,7 +298,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
   // Check if any menue is active
   if (a.a_size && a[a.a_size - 1]->type() == glow_eObjectType_GrowMenu) {
-    for (i = a.a_size - 1; i >= 0; i--) {
+    for (int i = a.a_size - 1; i >= 0; i--) {
       if (a[i]->type() != glow_eObjectType_GrowMenu)
         break;
       switch (event) {
@@ -348,7 +346,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
   if (event == event_create_con && edit_mode == grow_eMode_Edit) {
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[a.a_size - i - 1]->event_handler(event, x, y, fx, fy);
       if (sts)
         break;
@@ -358,21 +356,19 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     move_clear();
 
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[a.a_size - i - 1]->event_handler(event, x, y, fx, fy);
       if (sts)
         break;
     }
     if (sts) {
-      int j, node_cnt;
-
       modified = 1;
       if (a_sel.size() > 1 && select_find(a_move[0])) {
         /* Move all selected nodes */
         move_clear();
 
         /* Insert nodes first and then all connections connected to the nodes */
-        for (i = 0; i < a_sel.size(); i++) {
+        for (int i = 0; i < a_sel.size(); i++) {
           if (a_sel[i]->type() != glow_eObjectType_Con)
             move_insert(a_sel[i]);
         }
@@ -386,9 +382,9 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       node_move_last_y = y;
 
       /* Insert all connnected cons for movement */
-      node_cnt = a_move.size();
-      for (i = 0; i < node_cnt; i++) {
-        for (j = 0; j < a.size(); j++) {
+      int node_cnt = a_move.size();
+      for (int i = 0; i < node_cnt; i++) {
+        for (int j = 0; j < a.size(); j++) {
           if (a[j]->type() == glow_eObjectType_Con
               && ((GlowCon*)a[j])->is_connected_to((GlowNode*)a_move[i])) {
             if (move_insert(a[j]))
@@ -397,7 +393,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         }
       }
 
-      gdraw->set_cursor(mw, glow_eDrawCursor_DiamondCross);
+      gdraw->set_cursor(mw.window, glow_eDrawCursor_DiamondCross);
       if (event == event_region_select)
         // Move and region select is defined as the same event
         node_move_event = 1;
@@ -424,8 +420,8 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       e.any.type = glow_eEventType_Object;
       e.any.x_pixel = x;
       e.any.y_pixel = y;
-      e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
-      e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
+      e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+      e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
       e.object.object = a_move[0];
       e.object.object_type = a_move[0]->type();
       event_callback[glow_eEvent_SliderMoveStart](this, &e);
@@ -446,13 +442,13 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     if (move_restriction == glow_eMoveRestriction_Disable) {
       move_clear();
       node_movement_active = 0;
-      gdraw->set_cursor(mw, glow_eDrawCursor_Normal);
+      gdraw->set_cursor(mw.window, glow_eDrawCursor_Normal);
     }
   } else if (event == event_move_node && edit_mode == grow_eMode_EditPolyLine) {
     move_clear();
 
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[a.a_size - i - 1]->event_handler(event, x, y, fx, fy);
       if (sts)
         break;
@@ -464,7 +460,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         node_movement_active = 1;
         node_move_last_x = x;
         node_move_last_y = y;
-        gdraw->set_cursor(mw, glow_eDrawCursor_DiamondCross);
+        gdraw->set_cursor(mw.window, glow_eDrawCursor_DiamondCross);
         if (event == event_region_select)
           // Move and region select is defined as the same event
           node_move_event = 1;
@@ -599,7 +595,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       node_move_last_y = y;
       node_movement_paste_active = 0;
       nav_zoom();
-      gdraw->set_cursor(mw, glow_eDrawCursor_Normal);
+      gdraw->set_cursor(mw.window, glow_eDrawCursor_Normal);
 
       /* Send callback for all move objects */
       if (event_callback[glow_eEvent_PasteSequenceEnd]) {
@@ -616,9 +612,9 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         e.any.type = glow_eEventType_Object;
         e.any.x_pixel = x;
         e.any.y_pixel = y;
-        e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
-        e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
-        for (i = 0; i < a_move.size(); i++) {
+        e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+        e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
+        for (int i = 0; i < a_move.size(); i++) {
           e.object.object = a_move[i];
           e.object.object_type = a_move[i]->type();
           event_callback[event_move_node](this, &e);
@@ -649,7 +645,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
   case glow_eEvent_ScrollDown:
     tiptext->remove();
     sts = 0;
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       sts = a.a[i]->event_handler(event, x, y, fx, fy);
       if (sts == GLOW__NO_PROPAGATE)
         break;
@@ -664,10 +660,10 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     if (ctx_type == glow_eCtxType_Curve)
       ((CurveCtx*)this)->adjust_layout();
 
-    gdraw->get_window_size(mw, &width, &height);
-    if (mw->window_width != width || mw->window_height != height) {
-      mw->window_width = width;
-      mw->window_height = height;
+    gdraw->get_window_size(mw.window, &width, &height);
+    if (mw.window_width != width || mw.window_height != height) {
+      mw.window_width = width;
+      mw.window_height = height;
 
       if (event_callback[glow_eEvent_Resized]) {
         static glow_sEvent e;
@@ -719,49 +715,48 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       switch (scale_type) {
       case glow_eScaleType_Up:
         if (scale_equal)
-          gdraw->set_cursor(mw, glow_eDrawCursor_Normal);
+          gdraw->set_cursor(mw.window, glow_eDrawCursor_Normal);
         else
-          gdraw->set_cursor(mw, glow_eDrawCursor_TopSide);
+          gdraw->set_cursor(mw.window, glow_eDrawCursor_TopSide);
         break;
       case glow_eScaleType_Down:
         if (scale_equal)
-          gdraw->set_cursor(mw, glow_eDrawCursor_Normal);
+          gdraw->set_cursor(mw.window, glow_eDrawCursor_Normal);
         else
-          gdraw->set_cursor(mw, glow_eDrawCursor_BottomSide);
+          gdraw->set_cursor(mw.window, glow_eDrawCursor_BottomSide);
         break;
       case glow_eScaleType_Right:
         if (scale_equal)
-          gdraw->set_cursor(mw, glow_eDrawCursor_Normal);
+          gdraw->set_cursor(mw.window, glow_eDrawCursor_Normal);
         else
-          gdraw->set_cursor(mw, glow_eDrawCursor_LeftSide);
+          gdraw->set_cursor(mw.window, glow_eDrawCursor_LeftSide);
         break;
       case glow_eScaleType_Left:
         if (scale_equal)
-          gdraw->set_cursor(mw, glow_eDrawCursor_Normal);
+          gdraw->set_cursor(mw.window, glow_eDrawCursor_Normal);
         else
-          gdraw->set_cursor(mw, glow_eDrawCursor_RightSide);
+          gdraw->set_cursor(mw.window, glow_eDrawCursor_RightSide);
         break;
       case glow_eScaleType_UpperRight:
-        gdraw->set_cursor(mw, glow_eDrawCursor_TopLeftCorner);
+        gdraw->set_cursor(mw.window, glow_eDrawCursor_TopLeftCorner);
         break;
       case glow_eScaleType_LowerLeft:
-        gdraw->set_cursor(mw, glow_eDrawCursor_BottomRightCorner);
+        gdraw->set_cursor(mw.window, glow_eDrawCursor_BottomRightCorner);
         break;
       case glow_eScaleType_UpperLeft:
-        gdraw->set_cursor(mw, glow_eDrawCursor_TopRightCorner);
+        gdraw->set_cursor(mw.window, glow_eDrawCursor_TopRightCorner);
         break;
       case glow_eScaleType_LowerRight:
-        gdraw->set_cursor(mw, glow_eDrawCursor_BottomLeftCorner);
+        gdraw->set_cursor(mw.window, glow_eDrawCursor_BottomLeftCorner);
         break;
       default:
-        gdraw->set_cursor(mw, glow_eDrawCursor_Normal);
+        gdraw->set_cursor(mw.window, glow_eDrawCursor_Normal);
       }
     } else {
       cursor_present = 1;
       cursor_x = x;
       cursor_y = y;
       if (node_movement_paste_active) {
-        set_dirty();
         switch (move_restriction) {
         case glow_eMoveRestriction_Vertical:
           a_move.move(0, y - node_move_last_y, 0);
@@ -778,7 +773,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       }
       sts = 0;
       hot_found = (hot_mode == glow_eHotMode_Disabled);
-      for (i = 0; i < a.a_size; i++) {
+      for (int i = 0; i < a.a_size; i++) {
         sts = a.a[a.a_size - i - 1]->event_handler(event, x, y, fx, fy);
       }
     }
@@ -793,66 +788,62 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       modified = 1;
       switch (move_restriction) {
       case glow_eMoveRestriction_No:
-        set_dirty();
         a_move.move(x - node_move_last_x, y - node_move_last_y, 0);
         node_move_last_x = x;
         node_move_last_y = y;
         break;
       case glow_eMoveRestriction_Vertical:
-        set_dirty();
         a_move.move(0, y - node_move_last_y, 0);
         node_move_last_x = x;
         node_move_last_y = y;
         break;
       case glow_eMoveRestriction_Horizontal:
-        set_dirty();
         a_move.move(x - node_move_last_x, 0, 0);
         node_move_last_x = x;
         node_move_last_y = y;
         break;
       case glow_eMoveRestriction_VerticalSlider:
-        cursor_y = double(y + mw->offset_y) / mw->zoom_factor_y;
+        cursor_y = double(y + mw.offset_y) / mw.zoom_factor_y;
         if (cursor_y + slider_cursor_offset > restriction_max_limit) {
-          if (double(node_move_last_y + mw->offset_y) / mw->zoom_factor_y
+          if (double(node_move_last_y + mw.offset_y) / mw.zoom_factor_y
                   + slider_cursor_offset
               > restriction_max_limit)
             break;
           else
             move_y = int(
                 (restriction_max_limit
-                    - (double(node_move_last_y + mw->offset_y) / mw->zoom_factor_y
+                    - (double(node_move_last_y + mw.offset_y) / mw.zoom_factor_y
                           + slider_cursor_offset))
-                * mw->zoom_factor_y);
+                * mw.zoom_factor_y);
         } else if (cursor_y + slider_cursor_offset < restriction_min_limit) {
-          if (double(node_move_last_y + mw->offset_y) / mw->zoom_factor_y
+          if (double(node_move_last_y + mw.offset_y) / mw.zoom_factor_y
                   + slider_cursor_offset
               < restriction_min_limit)
             break;
           else
             move_y = int(
                 (restriction_min_limit
-                    - (double(node_move_last_y + mw->offset_y) / mw->zoom_factor_y
+                    - (double(node_move_last_y + mw.offset_y) / mw.zoom_factor_y
                           + slider_cursor_offset))
-                * mw->zoom_factor_y);
+                * mw.zoom_factor_y);
         } else {
-          if (double(node_move_last_y + mw->offset_y) / mw->zoom_factor_y
+          if (double(node_move_last_y + mw.offset_y) / mw.zoom_factor_y
                   + slider_cursor_offset
               > restriction_max_limit)
             move_y
                 = int((cursor_y + slider_cursor_offset - restriction_max_limit)
-                    * mw->zoom_factor_y);
-          else if (double(node_move_last_y + mw->offset_y) / mw->zoom_factor_y
+                    * mw.zoom_factor_y);
+          else if (double(node_move_last_y + mw.offset_y) / mw.zoom_factor_y
                   + slider_cursor_offset
               < restriction_min_limit)
             move_y
                 = int((cursor_y + slider_cursor_offset - restriction_min_limit)
-                    * mw->zoom_factor_y);
+                    * mw.zoom_factor_y);
           else
             move_y = y - node_move_last_y;
         }
         if (!move_y)
           break;
-        set_dirty();
         a_move.move(0, move_y, 0);
         if (restriction_object && event_callback[glow_eEvent_SliderMoved]
             && a_move.size() == 1
@@ -863,9 +854,9 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           e.any.type = glow_eEventType_Object;
           e.any.x_pixel = x;
           e.any.y_pixel = node_move_last_y + move_y;
-          e.any.x = double(x + mw->offset_x) / mw->zoom_factor_x;
-          e.any.y = double(node_move_last_y + move_y + mw->offset_y)
-              / mw->zoom_factor_y;
+          e.any.x = double(x + mw.offset_x) / mw.zoom_factor_x;
+          e.any.y = double(node_move_last_y + move_y + mw.offset_y)
+              / mw.zoom_factor_y;
           e.object.object = restriction_object;
           e.object.object_type = restriction_object->type();
           event_callback[glow_eEvent_SliderMoved](this, &e);
@@ -874,48 +865,47 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         node_move_last_y = y;
         break;
       case glow_eMoveRestriction_HorizontalSlider:
-        cursor_x = double(x + mw->offset_x) / mw->zoom_factor_x;
+        cursor_x = double(x + mw.offset_x) / mw.zoom_factor_x;
         if (cursor_x + slider_cursor_offset > restriction_max_limit) {
-          if (double(node_move_last_x + mw->offset_x) / mw->zoom_factor_x
+          if (double(node_move_last_x + mw.offset_x) / mw.zoom_factor_x
                   + slider_cursor_offset
               > restriction_max_limit)
             break;
           else
             move_x = int(
                 (restriction_max_limit
-                    - (double(node_move_last_x + mw->offset_x) / mw->zoom_factor_x
+                    - (double(node_move_last_x + mw.offset_x) / mw.zoom_factor_x
                           + slider_cursor_offset))
-                * mw->zoom_factor_x);
+                * mw.zoom_factor_x);
         } else if (cursor_x + slider_cursor_offset < restriction_min_limit) {
-          if (double(node_move_last_x + mw->offset_x) / mw->zoom_factor_x
+          if (double(node_move_last_x + mw.offset_x) / mw.zoom_factor_x
                   + slider_cursor_offset
               < restriction_min_limit)
             break;
           else
             move_x = int(
                 (restriction_min_limit
-                    - (double(node_move_last_x + mw->offset_x) / mw->zoom_factor_x
+                    - (double(node_move_last_x + mw.offset_x) / mw.zoom_factor_x
                           + slider_cursor_offset))
-                * mw->zoom_factor_x);
+                * mw.zoom_factor_x);
         } else {
-          if (double(node_move_last_x + mw->offset_x) / mw->zoom_factor_x
+          if (double(node_move_last_x + mw.offset_x) / mw.zoom_factor_x
                   + slider_cursor_offset
               > restriction_max_limit)
             move_x
                 = int((cursor_x + slider_cursor_offset - restriction_max_limit)
-                    * mw->zoom_factor_x);
-          else if (double(node_move_last_x + mw->offset_x) / mw->zoom_factor_x
+                    * mw.zoom_factor_x);
+          else if (double(node_move_last_x + mw.offset_x) / mw.zoom_factor_x
                   + slider_cursor_offset
               < restriction_min_limit)
             move_x
                 = int((cursor_x + slider_cursor_offset - restriction_min_limit)
-                    * mw->zoom_factor_x);
+                    * mw.zoom_factor_x);
           else
             move_x = x - node_move_last_x;
         }
         if (!move_x)
           break;
-        set_dirty();
         a_move.move(move_x, 0, 0);
         if (restriction_object && event_callback[glow_eEvent_SliderMoved]
             && a_move.size() == 1
@@ -926,9 +916,9 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           e.any.type = glow_eEventType_Object;
           e.any.x_pixel = node_move_last_x + move_x;
           e.any.y_pixel = y;
-          e.any.x = double(node_move_last_x + move_x + mw->offset_x)
-              / mw->zoom_factor_x;
-          e.any.y = double(y + mw->offset_y) / mw->zoom_factor_y;
+          e.any.x = double(node_move_last_x + move_x + mw.offset_x)
+              / mw.zoom_factor_x;
+          e.any.y = double(y + mw.offset_y) / mw.zoom_factor_y;
           e.object.object = restriction_object;
           e.object.object_type = restriction_object->type();
           event_callback[glow_eEvent_SliderMoved](this, &e);
@@ -953,21 +943,14 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       con_create_last_x = x;
       con_create_last_y = y;
       hot_found = (hot_mode == glow_eHotMode_Disabled);
-      for (i = 0; i < a.a_size; i++) {
+      for (int i = 0; i < a.a_size; i++) {
         sts = a.a[a.a_size - i - 1]->event_handler(glow_eEvent_CursorMotion, x,
             y, fx, fy);
       }
     } else if (select_rect_active && edit_mode != grow_eMode_Scale) {
-      int draw_ll_x;
-      int draw_ll_y;
-      int draw_ur_x;
-      int draw_ur_y;
-
       if (scale_equal
           && (edit_mode == grow_eMode_Circle || edit_mode == grow_eMode_Rect
-                 || edit_mode == grow_eMode_RectRounded))
-
-      {
+                 || edit_mode == grow_eMode_RectRounded)) {
         int delta_x, delta_y;
         delta_y = delta_x
             = MAX(ABS(x - select_rect_start_x), ABS(y - select_rect_start_y));
@@ -975,15 +958,6 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           delta_x = -delta_x;
         if (y < select_rect_start_y)
           delta_y = -delta_y;
-
-        draw_ll_x = MIN(select_rect_ll_x,
-            MIN(select_rect_start_x, select_rect_start_x + delta_x));
-        draw_ll_y = MIN(select_rect_ll_y,
-            MIN(select_rect_start_y, select_rect_start_y + delta_y));
-        draw_ur_x = MAX(select_rect_ur_x,
-            MAX(select_rect_start_x, select_rect_start_x + delta_x));
-        draw_ur_y = MAX(select_rect_ur_y,
-            MAX(select_rect_start_y, select_rect_start_y + delta_y));
 
         select_rect_ll_x
             = MIN(select_rect_start_x, select_rect_start_x + delta_x);
@@ -994,11 +968,6 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         select_rect_ur_y
             = MAX(select_rect_start_y, select_rect_start_y + delta_y);
       } else {
-        draw_ll_x = MIN(MIN(x, select_rect_start_x), select_rect_ll_x);
-        draw_ll_y = MIN(MIN(y, select_rect_start_y), select_rect_ll_y);
-        draw_ur_x = MAX(MAX(x, select_rect_start_x), select_rect_ur_x);
-        draw_ur_y = MAX(MAX(y, select_rect_start_y), select_rect_ur_y);
-
         select_rect_ll_x = MIN(x, select_rect_start_x);
         select_rect_ll_y = MIN(y, select_rect_start_y);
         select_rect_ur_x = MAX(x, select_rect_start_x);
@@ -1047,10 +1016,10 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         if (grid_on) {
           double fx, fy;
-          find_grid((double)(x2 + mw->offset_x) / mw->zoom_factor_x,
-              (double)(y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
-          x2 = fx * mw->zoom_factor_x - mw->offset_x;
-          y2 = fy * mw->zoom_factor_y - mw->offset_y;
+          find_grid((x2 + mw.offset_x) / mw.zoom_factor_x,
+              (y2 + mw.offset_y) / mw.zoom_factor_y, &fx, &fy);
+          x2 = fx * mw.zoom_factor_x - mw.offset_x;
+          y2 = fy * mw.zoom_factor_y - mw.offset_y;
 
           scale_x = (x2 - select_rect_stored_ll_x)
               / (select_rect_stored_ur_x - select_rect_stored_ll_x);
@@ -1073,9 +1042,9 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         if (grid_on) {
           double fx, fy;
-          find_grid((double)(x2 + mw->offset_x) / mw->zoom_factor_x,
-              (double)(y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
-          y2 = fy * mw->zoom_factor_y - mw->offset_y;
+          find_grid((x2 + mw.offset_x) / mw.zoom_factor_x,
+              (y2 + mw.offset_y) / mw.zoom_factor_y, &fx, &fy);
+          y2 = fy * mw.zoom_factor_y - mw.offset_y;
 
           scale_y = (y2 - select_rect_stored_ll_y)
               / (select_rect_stored_ur_y - select_rect_stored_ll_y);
@@ -1110,10 +1079,10 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         if (grid_on) {
           double fx, fy;
-          find_grid((double)(x2 + mw->offset_x) / mw->zoom_factor_x,
-              (double)(y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
-          x2 = fx * mw->zoom_factor_x - mw->offset_x;
-          y2 = fy * mw->zoom_factor_y - mw->offset_y;
+          find_grid((x2 + mw.offset_x) / mw.zoom_factor_x,
+              (y2 + mw.offset_y) / mw.zoom_factor_y, &fx, &fy);
+          x2 = fx * mw.zoom_factor_x - mw.offset_x;
+          y2 = fy * mw.zoom_factor_y - mw.offset_y;
 
           scale_x = (x2 - select_rect_stored_ll_x)
               / (select_rect_stored_ur_x - select_rect_stored_ll_x);
@@ -1136,9 +1105,9 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         if (grid_on) {
           double fx, fy;
-          find_grid((double)(x2 + mw->offset_x) / mw->zoom_factor_x,
-              (double)(y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
-          x2 = fx * mw->zoom_factor_x - mw->offset_x;
+          find_grid((x2 + mw.offset_x) / mw.zoom_factor_x,
+              (y2 + mw.offset_y) / mw.zoom_factor_y, &fx, &fy);
+          x2 = fx * mw.zoom_factor_x - mw.offset_x;
 
           scale_x = (x2 - select_rect_stored_ll_x)
               / (select_rect_stored_ur_x - select_rect_stored_ll_x);
@@ -1159,9 +1128,9 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         if (grid_on) {
           double fx, fy;
-          find_grid((double)(x2 + mw->offset_x) / mw->zoom_factor_x,
-              (double)(y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
-          x2 = fx * mw->zoom_factor_x - mw->offset_x;
+          find_grid((x2 + mw.offset_x) / mw.zoom_factor_x,
+              (y2 + mw.offset_y) / mw.zoom_factor_y, &fx, &fy);
+          x2 = fx * mw.zoom_factor_x - mw.offset_x;
 
           scale_x = -(x2 - select_rect_stored_ur_x)
               / (select_rect_stored_ur_x - select_rect_stored_ll_x);
@@ -1196,10 +1165,10 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         if (grid_on) {
           double fx, fy;
-          find_grid((double)(x2 + mw->offset_x) / mw->zoom_factor_x,
-              (double)(y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
-          x2 = fx * mw->zoom_factor_x - mw->offset_x;
-          y2 = fy * mw->zoom_factor_y - mw->offset_y;
+          find_grid((x2 + mw.offset_x) / mw.zoom_factor_x,
+              (y2 + mw.offset_y) / mw.zoom_factor_y, &fx, &fy);
+          x2 = fx * mw.zoom_factor_x - mw.offset_x;
+          y2 = fy * mw.zoom_factor_y - mw.offset_y;
 
           scale_x = -(x2 - select_rect_stored_ur_x)
               / (select_rect_stored_ur_x - select_rect_stored_ll_x);
@@ -1222,9 +1191,9 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         if (grid_on) {
           double fx, fy;
-          find_grid((double)(x2 + mw->offset_x) / mw->zoom_factor_x,
-              (double)(y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
-          y2 = fy * mw->zoom_factor_y - mw->offset_y;
+          find_grid((x2 + mw.offset_x) / mw.zoom_factor_x,
+              (y2 + mw.offset_y) / mw.zoom_factor_y, &fx, &fy);
+          y2 = fy * mw.zoom_factor_y - mw.offset_y;
 
           scale_y = -(y2 - select_rect_stored_ur_y)
               / (select_rect_stored_ur_y - select_rect_stored_ll_y);
@@ -1259,10 +1228,10 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
 
         if (grid_on) {
           double fx, fy;
-          find_grid((double)(x2 + mw->offset_x) / mw->zoom_factor_x,
-              (double)(y2 + mw->offset_y) / mw->zoom_factor_y, &fx, &fy);
-          x2 = fx * mw->zoom_factor_x - mw->offset_x;
-          y2 = fy * mw->zoom_factor_y - mw->offset_y;
+          find_grid((x2 + mw.offset_x) / mw.zoom_factor_x,
+              (y2 + mw.offset_y) / mw.zoom_factor_y, &fx, &fy);
+          x2 = fx * mw.zoom_factor_x - mw.offset_x;
+          y2 = fy * mw.zoom_factor_y - mw.offset_y;
 
           scale_x = -(x2 - select_rect_stored_ur_x)
               / (select_rect_stored_ur_x - select_rect_stored_ll_x);
@@ -1317,7 +1286,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       node_move_last_y = y;
       node_movement_active = 0;
       nav_zoom();
-      gdraw->set_cursor(mw, glow_eDrawCursor_CrossHair);
+      gdraw->set_cursor(mw.window, glow_eDrawCursor_CrossHair);
     } else if (node_movement_active) {
       int move_x, move_y;
       double cursor_y, cursor_x;
@@ -1326,7 +1295,6 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       case glow_eMoveRestriction_No:
       case glow_eMoveRestriction_Vertical:
       case glow_eMoveRestriction_Horizontal:
-        set_dirty();
         if (!grid_on || a_move.a_size == 1) {
           if (move_restriction == glow_eMoveRestriction_No)
             a_move.move(x - node_move_last_x, y - node_move_last_y, grid_on);
@@ -1345,21 +1313,21 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           find_grid(ll_x, ll_y, &x_grid, &y_grid);
           if (move_restriction == glow_eMoveRestriction_No)
             a_move.move(
-                x - node_move_last_x + (x_grid - ll_x) * mw->zoom_factor_x,
-                y - node_move_last_y + (y_grid - ll_y) * mw->zoom_factor_y, 0);
+                x - node_move_last_x + (x_grid - ll_x) * mw.zoom_factor_x,
+                y - node_move_last_y + (y_grid - ll_y) * mw.zoom_factor_y, 0);
           else if (move_restriction == glow_eMoveRestriction_Vertical)
             a_move.move(0,
-                y - node_move_last_y + (y_grid - ll_y) * mw->zoom_factor_y, 0);
+                y - node_move_last_y + (y_grid - ll_y) * mw.zoom_factor_y, 0);
           else
             a_move.move(
-                x - node_move_last_x + (x_grid - ll_x) * mw->zoom_factor_x, 0,
+                x - node_move_last_x + (x_grid - ll_x) * mw.zoom_factor_x, 0,
                 0);
         }
         node_move_last_x = x;
         node_move_last_y = y;
         node_movement_active = 0;
         nav_zoom();
-        gdraw->set_cursor(mw, glow_eDrawCursor_CrossHair);
+        gdraw->set_cursor(mw.window, glow_eDrawCursor_CrossHair);
 
         // Send callback for all move objects
         if (event_callback[glow_eEvent_ObjectMoved]) {
@@ -1369,9 +1337,9 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           e.any.type = glow_eEventType_Object;
           e.any.x_pixel = x;
           e.any.y_pixel = y;
-          e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
-          e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
-          for (i = 0; i < a_move.size(); i++) {
+          e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+          e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
+          for (int i = 0; i < a_move.size(); i++) {
             e.object.object = a_move[i];
             e.object.object_type = a_move[i]->type();
             event_callback[event_move_node](this, &e);
@@ -1392,42 +1360,42 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         }
         break;
       case glow_eMoveRestriction_VerticalSlider:
-        cursor_y = double(y + mw->offset_y) / mw->zoom_factor_y;
+        cursor_y = double(y + mw.offset_y) / mw.zoom_factor_y;
         if (cursor_y + slider_cursor_offset > restriction_max_limit) {
-          if (double(node_move_last_y + mw->offset_y) / mw->zoom_factor_y
+          if (double(node_move_last_y + mw.offset_y) / mw.zoom_factor_y
                   + slider_cursor_offset
               > restriction_max_limit)
             move_y = 0;
           else
             move_y = int(
                 (restriction_max_limit
-                    - (double(node_move_last_y + mw->offset_y) / mw->zoom_factor_y
+                    - (double(node_move_last_y + mw.offset_y) / mw.zoom_factor_y
                           + slider_cursor_offset))
-                * mw->zoom_factor_y);
+                * mw.zoom_factor_y);
         } else if (cursor_y + slider_cursor_offset < restriction_min_limit) {
-          if (double(node_move_last_y + mw->offset_y) / mw->zoom_factor_y
+          if (double(node_move_last_y + mw.offset_y) / mw.zoom_factor_y
                   + slider_cursor_offset
               < restriction_min_limit)
             move_y = 0;
           else
             move_y = int(
                 (restriction_min_limit
-                    - (double(node_move_last_y + mw->offset_y) / mw->zoom_factor_y
+                    - (double(node_move_last_y + mw.offset_y) / mw.zoom_factor_y
                           + slider_cursor_offset))
-                * mw->zoom_factor_y);
+                * mw.zoom_factor_y);
         } else {
-          if (double(node_move_last_y + mw->offset_y) / mw->zoom_factor_y
+          if (double(node_move_last_y + mw.offset_y) / mw.zoom_factor_y
                   + slider_cursor_offset
               > restriction_max_limit)
             move_y
                 = int((cursor_y + slider_cursor_offset - restriction_max_limit)
-                    * mw->zoom_factor_y);
-          else if (double(node_move_last_y + mw->offset_y) / mw->zoom_factor_y
+                    * mw.zoom_factor_y);
+          else if (double(node_move_last_y + mw.offset_y) / mw.zoom_factor_y
                   + slider_cursor_offset
               < restriction_min_limit)
             move_y
                 = int((cursor_y + slider_cursor_offset - restriction_min_limit)
-                    * mw->zoom_factor_y);
+                    * mw.zoom_factor_y);
           else
             move_y = y - node_move_last_y;
         }
@@ -1435,7 +1403,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           a_move.move(0, move_y, 0);
         node_movement_active = 0;
         nav_zoom();
-        gdraw->set_cursor(mw, glow_eDrawCursor_CrossHair);
+        gdraw->set_cursor(mw.window, glow_eDrawCursor_CrossHair);
         if (restriction_object && event_callback[glow_eEvent_SliderMoved]
             && a_move.size() == 1
             && a_move[0]->type() == glow_eObjectType_GrowSlider) {
@@ -1445,9 +1413,9 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           e.any.type = glow_eEventType_Object;
           e.any.x_pixel = x;
           e.any.y_pixel = node_move_last_y + move_y;
-          e.any.x = double(x + mw->offset_x) / mw->zoom_factor_x;
-          e.any.y = double(node_move_last_y + move_y + mw->offset_y)
-              / mw->zoom_factor_y;
+          e.any.x = double(x + mw.offset_x) / mw.zoom_factor_x;
+          e.any.y = double(node_move_last_y + move_y + mw.offset_y)
+              / mw.zoom_factor_y;
           e.object.object = restriction_object;
           e.object.object_type = restriction_object->type();
           event_callback[glow_eEvent_SliderMoved](this, &e);
@@ -1457,8 +1425,8 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           e.any.type = glow_eEventType_Object;
           e.any.x_pixel = x;
           e.any.y_pixel = y;
-          e.any.x = double(x + mw->offset_x) / mw->zoom_factor_x;
-          e.any.y = double(y + mw->offset_y) / mw->zoom_factor_y;
+          e.any.x = double(x + mw.offset_x) / mw.zoom_factor_x;
+          e.any.y = double(y + mw.offset_y) / mw.zoom_factor_y;
           e.object.object = restriction_object;
           e.object.object_type = restriction_object->type();
           event_callback[glow_eEvent_SliderMoveEnd](this, &e);
@@ -1467,42 +1435,42 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         node_move_last_y = y;
         break;
       case glow_eMoveRestriction_HorizontalSlider:
-        cursor_x = double(x + mw->offset_x) / mw->zoom_factor_x;
+        cursor_x = double(x + mw.offset_x) / mw.zoom_factor_x;
         if (cursor_x + slider_cursor_offset > restriction_max_limit) {
-          if (double(node_move_last_x + mw->offset_x) / mw->zoom_factor_x
+          if (double(node_move_last_x + mw.offset_x) / mw.zoom_factor_x
                   + slider_cursor_offset
               > restriction_max_limit)
             move_x = 0;
           else
             move_x = int(
                 (restriction_max_limit
-                    - (double(node_move_last_x + mw->offset_x) / mw->zoom_factor_x
+                    - (double(node_move_last_x + mw.offset_x) / mw.zoom_factor_x
                           + slider_cursor_offset))
-                * mw->zoom_factor_x);
+                * mw.zoom_factor_x);
         } else if (cursor_x + slider_cursor_offset < restriction_min_limit) {
-          if (double(node_move_last_x + mw->offset_x) / mw->zoom_factor_x
+          if (double(node_move_last_x + mw.offset_x) / mw.zoom_factor_x
                   + slider_cursor_offset
               < restriction_min_limit)
             move_x = 0;
           else
             move_x = int(
                 (restriction_min_limit
-                    - (double(node_move_last_x + mw->offset_x) / mw->zoom_factor_x
+                    - (double(node_move_last_x + mw.offset_x) / mw.zoom_factor_x
                           + slider_cursor_offset))
-                * mw->zoom_factor_x);
+                * mw.zoom_factor_x);
         } else {
-          if (double(node_move_last_x + mw->offset_x) / mw->zoom_factor_x
+          if (double(node_move_last_x + mw.offset_x) / mw.zoom_factor_x
                   + slider_cursor_offset
               > restriction_max_limit)
             move_x
                 = int((cursor_x + slider_cursor_offset - restriction_max_limit)
-                    * mw->zoom_factor_x);
-          else if (double(node_move_last_x + mw->offset_x) / mw->zoom_factor_x
+                    * mw.zoom_factor_x);
+          else if (double(node_move_last_x + mw.offset_x) / mw.zoom_factor_x
                   + slider_cursor_offset
               < restriction_min_limit)
             move_x
                 = int((cursor_x + slider_cursor_offset - restriction_min_limit)
-                    * mw->zoom_factor_x);
+                    * mw.zoom_factor_x);
           else
             move_x = x - node_move_last_x;
         }
@@ -1510,7 +1478,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           a_move.move(move_x, 0, 0);
         node_movement_active = 0;
         nav_zoom();
-        gdraw->set_cursor(mw, glow_eDrawCursor_CrossHair);
+        gdraw->set_cursor(mw.window, glow_eDrawCursor_CrossHair);
         if (restriction_object && event_callback[glow_eEvent_SliderMoved]
             && a_move.size() == 1
             && a_move[0]->type() == glow_eObjectType_GrowSlider) {
@@ -1520,9 +1488,9 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           e.any.type = glow_eEventType_Object;
           e.any.x_pixel = node_move_last_x + move_x;
           e.any.y_pixel = y;
-          e.any.x = double(node_move_last_x + move_x + mw->offset_x)
-              / mw->zoom_factor_x;
-          e.any.y = double(y + mw->offset_y) / mw->zoom_factor_y;
+          e.any.x = double(node_move_last_x + move_x + mw.offset_x)
+              / mw.zoom_factor_x;
+          e.any.y = double(y + mw.offset_y) / mw.zoom_factor_y;
           e.object.object = restriction_object;
           e.object.object_type = restriction_object->type();
           event_callback[glow_eEvent_SliderMoved](this, &e);
@@ -1532,8 +1500,8 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           e.any.type = glow_eEventType_Object;
           e.any.x_pixel = x;
           e.any.y_pixel = y;
-          e.any.x = double(x + mw->offset_x) / mw->zoom_factor_x;
-          e.any.y = double(y + mw->offset_y) / mw->zoom_factor_y;
+          e.any.x = double(x + mw.offset_x) / mw.zoom_factor_x;
+          e.any.y = double(y + mw.offset_y) / mw.zoom_factor_y;
           e.object.object = restriction_object;
           e.object.object_type = restriction_object->type();
           if (event_callback[glow_eEvent_SliderMoveEnd])
@@ -1589,10 +1557,10 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       set_dirty();
 
       /* Save the final select area */
-      select_area_ll_x = (select_rect_ll_x + mw->offset_x) / mw->zoom_factor_x;
-      select_area_ll_y = (select_rect_ll_y + mw->offset_y) / mw->zoom_factor_y;
-      select_area_ur_x = (select_rect_ur_x + mw->offset_x) / mw->zoom_factor_x;
-      select_area_ur_y = (select_rect_ur_y + mw->offset_y) / mw->zoom_factor_y;
+      select_area_ll_x = (select_rect_ll_x + mw.offset_x) / mw.zoom_factor_x;
+      select_area_ll_y = (select_rect_ll_y + mw.offset_y) / mw.zoom_factor_y;
+      select_area_ur_x = (select_rect_ur_x + mw.offset_x) / mw.zoom_factor_x;
+      select_area_ur_y = (select_rect_ur_y + mw.offset_y) / mw.zoom_factor_y;
 
       if (edit_mode == grow_eMode_Rect || edit_mode == grow_eMode_RectRounded
           || edit_mode == grow_eMode_Circle) {
@@ -1631,8 +1599,8 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           e.any.type = glow_eEventType_Object;
           e.any.x_pixel = x;
           e.any.y_pixel = y;
-          e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
-          e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
+          e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+          e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
           e.object.object_type = glow_eObjectType_NoObject;
           e.object.object = 0;
           event_callback[select_rect_event](this, &e);
@@ -1640,8 +1608,6 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       }
     } else if (select_rect_active && edit_mode == grow_eMode_Scale) {
     } else if (con_create_active) {
-      set_dirty();
-
       if (edit_mode == grow_eMode_Line || edit_mode == grow_eMode_PolyLine) {
         switch (move_restriction) {
         case glow_eMoveRestriction_Vertical:
@@ -1669,10 +1635,10 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           } else {
             double grid_x, grid_y;
 
-            find_grid(double(x + mw->offset_x) / mw->zoom_factor_x,
-                double(y + mw->offset_y) / mw->zoom_factor_y, &grid_x, &grid_y);
-            polyline_last_end_x = int(grid_x * mw->zoom_factor_x) - mw->offset_x;
-            polyline_last_end_y = int(grid_y * mw->zoom_factor_y) - mw->offset_y;
+            find_grid(double(x + mw.offset_x) / mw.zoom_factor_x,
+                double(y + mw.offset_y) / mw.zoom_factor_y, &grid_x, &grid_y);
+            polyline_last_end_x = int(grid_x * mw.zoom_factor_x) - mw.offset_x;
+            polyline_last_end_y = int(grid_y * mw.zoom_factor_y) - mw.offset_y;
           }
         }
         if (event_callback[glow_eEvent_CreateGrowObject]) {
@@ -1682,13 +1648,13 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           e.any.type = glow_eEventType_CreateGrowObject;
           e.any.x_pixel = x;
           e.any.y_pixel = y;
-          e.any.x = (x + mw->offset_x) / mw->zoom_factor_x;
-          e.any.y = (y + mw->offset_y) / mw->zoom_factor_y;
+          e.any.x = (x + mw.offset_x) / mw.zoom_factor_x;
+          e.any.y = (y + mw.offset_y) / mw.zoom_factor_y;
           e.create_grow_object.mode = edit_mode;
           e.create_grow_object.x2
-              = (con_create_conpoint_x + mw->offset_x) / mw->zoom_factor_x;
+              = (con_create_conpoint_x + mw.offset_x) / mw.zoom_factor_x;
           e.create_grow_object.y2
-              = (con_create_conpoint_y + mw->offset_y) / mw->zoom_factor_y;
+              = (con_create_conpoint_y + mw.offset_y) / mw.zoom_factor_y;
           e.create_grow_object.first_line = !polyline_not_first;
           event_callback[glow_eEvent_CreateGrowObject](this, &e);
         }
@@ -1696,7 +1662,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
           polyline_not_first = 1;
       } else {
         /* Find the destination node */
-        for (i = 0; i < a.a_size; i++) {
+        for (int i = 0; i < a.a_size; i++) {
           sts = a.a[a.a_size - i - 1]->event_handler(event, x, y, fx, fy);
           if (sts)
             break;
@@ -1710,8 +1676,8 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
             e.any.type = glow_eEventType_CreateCon;
             e.any.x_pixel = x;
             e.any.y_pixel = y;
-            e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
-            e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
+            e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+            e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
             e.con_create.source_object = con_create_node;
             e.con_create.source_conpoint = con_create_conpoint_num;
             e.con_create.dest_object = 0;
@@ -1721,6 +1687,7 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         }
       }
       con_create_active = 0;
+      set_dirty();
     }
     break;
   case glow_eEvent_Enter:
@@ -1738,11 +1705,11 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     cursor_present = 0;
     if (node_movement_active || con_create_active || select_rect_active
         || node_movement_paste_active) {
-      if (x < 0 || x > mw->window_width || y < 0 || y > mw->window_height) {
+      if (x < 0 || x > mw.window_width || y < 0 || y > mw.window_height) {
         /* Start auto scrolling */
         auto_scrolling(this);
       }
-    } else if (x < 0 || x > mw->window_width || y < 0 || y > mw->window_height)
+    } else if (x < 0 || x > mw.window_width || y < 0 || y > mw.window_height)
       a.set_hot(0);
     tiptext->remove();
     break;
@@ -1781,8 +1748,8 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       e.any.type = glow_eEventType_KeyAscii;
       e.any.x_pixel = x;
       e.any.y_pixel = y;
-      e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
-      e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
+      e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+      e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
       if (inputfocus_object) {
         e.key.object_type = inputfocus_object->type();
         e.key.object = inputfocus_object;
@@ -1808,36 +1775,34 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     e.any.type = glow_eEventType_Object;
     e.any.x_pixel = x;
     e.any.y_pixel = y;
-    e.any.x = 1.0 * (x + mw->offset_x) / mw->zoom_factor_x;
-    e.any.y = 1.0 * (y + mw->offset_y) / mw->zoom_factor_y;
+    e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+    e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
     e.object.object_type = callback_object_type;
     if (callback_object_type != glow_eObjectType_NoObject)
       e.object.object = callback_object;
     sts = event_callback[event](this, &e);
     if (sts == GLOW__TERMINATED || sts == GLOW__SUBTERMINATED
         || sts == GLOW__SWAPTERMINATED) {
-      redraw_if_dirty();
       return sts;
     }
   }
-  redraw_if_dirty();
+
   return 1;
 }
 
 int GrowCtx::save(char* filename, glow_eSaveMode mode)
 {
   // Remove unused nodeclasses
-  int found, i, j;
   GlowArrayElem* element;
 
-  for (i = 0; i < a_nc.a_size; i++) {
-    found = a.find_nc(a_nc[i]);
+  for (int i = 0; i < a_nc.a_size; i++) {
+    int found = a.find_nc(a_nc[i]);
     if (!found)
       found = a_paste.find_nc(a_nc[i]);
     if (!found)
       found = a_nc.find_nc(a_nc[i]);
     if (!found) {
-      for (j = 0; j < a_nc.a_size; j++) {
+      for (int j = 0; j < a_nc.a_size; j++) {
         if (((GlowNodeClass*)a_nc[j])->next_nc == a_nc[i]) {
           found = 1;
           break;
@@ -1852,8 +1817,8 @@ int GrowCtx::save(char* filename, glow_eSaveMode mode)
     }
   }
   // Remove unused conclasses
-  for (i = 0; i < a_cc.a_size; i++) {
-    found = a.find_cc(a_cc[i]);
+  for (int i = 0; i < a_cc.a_size; i++) {
+    int found = a.find_cc(a_cc[i]);
     if (!found)
       found = a_paste.find_cc(a_cc[i]);
     if (!found) {
@@ -1869,7 +1834,6 @@ int GrowCtx::save(char* filename, glow_eSaveMode mode)
 
 void GrowCtx::save_grow(std::ofstream& fp, glow_eSaveMode mode)
 {
-  int i;
   char* s;
 
   fp << int(glow_eSave_GrowCtx) << '\n';
@@ -1893,10 +1857,10 @@ void GrowCtx::save_grow(std::ofstream& fp, glow_eSaveMode mode)
   }
   fp << int(glow_eSave_GrowCtx_arg_cnt) << FSPACE << arg_cnt << '\n';
   fp << int(glow_eSave_GrowCtx_argname) << '\n';
-  for (i = 0; i < arg_cnt; i++)
+  for (int i = 0; i < arg_cnt; i++)
     fp << argname[i] << '\n';
   fp << int(glow_eSave_GrowCtx_argtype) << '\n';
-  for (i = 0; i < arg_cnt; i++)
+  for (int i = 0; i < arg_cnt; i++)
     fp << argtype[i] << '\n';
   fp << int(glow_eSave_GrowCtx_x0) << FSPACE << x0 << '\n';
   fp << int(glow_eSave_GrowCtx_y0) << FSPACE << y0 << '\n';
@@ -1904,7 +1868,7 @@ void GrowCtx::save_grow(std::ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowCtx_y1) << FSPACE << y1 << '\n';
   fp << int(glow_eSave_GrowCtx_path_cnt) << FSPACE << path_cnt << '\n';
   fp << int(glow_eSave_GrowCtx_path) << '\n';
-  for (i = 0; i < path_cnt; i++)
+  for (int i = 0; i < path_cnt; i++)
     fp << path[i] << '\n';
   fp << int(glow_eSave_GrowCtx_dyn_type1) << FSPACE << dyn_type1 << '\n';
   fp << int(glow_eSave_GrowCtx_dyn_type2) << FSPACE << dyn_type2 << '\n';
@@ -1920,10 +1884,10 @@ void GrowCtx::save_grow(std::ofstream& fp, glow_eSaveMode mode)
      << '\n';
   fp << int(glow_eSave_GrowCtx_dyn_color4) << FSPACE << int(dyn_color[3])
      << '\n';
-  fp << int(glow_eSave_GrowCtx_dyn_attr1) << FSPACE << int(dyn_attr[0]) << '\n';
-  fp << int(glow_eSave_GrowCtx_dyn_attr2) << FSPACE << int(dyn_attr[1]) << '\n';
-  fp << int(glow_eSave_GrowCtx_dyn_attr3) << FSPACE << int(dyn_attr[2]) << '\n';
-  fp << int(glow_eSave_GrowCtx_dyn_attr4) << FSPACE << int(dyn_attr[3]) << '\n';
+  fp << int(glow_eSave_GrowCtx_dyn_attr1) << FSPACE << dyn_attr[0] << '\n';
+  fp << int(glow_eSave_GrowCtx_dyn_attr2) << FSPACE << dyn_attr[1] << '\n';
+  fp << int(glow_eSave_GrowCtx_dyn_attr3) << FSPACE << dyn_attr[2] << '\n';
+  fp << int(glow_eSave_GrowCtx_dyn_attr4) << FSPACE << dyn_attr[3] << '\n';
   fp << int(glow_eSave_GrowCtx_no_con_obstacle) << FSPACE << no_con_obstacle
      << '\n';
   fp << int(glow_eSave_GrowCtx_slider) << FSPACE << slider << '\n';
@@ -1968,8 +1932,8 @@ void GrowCtx::save_grow(std::ofstream& fp, glow_eSaveMode mode)
 
 void GrowCtx::save_meta(std::ofstream& fp, glow_eSaveMode mode)
 {
-  int default_width = int((x1 - x0) * mw->zoom_factor_x);
-  int default_height = int((y1 - y0) * mw->zoom_factor_x);
+  int default_width = int((x1 - x0) * mw.zoom_factor_x);
+  int default_height = int((y1 - y0) * mw.zoom_factor_x);
   fp << "0! DefaultWidth " << default_width << '\n';
   fp << "0! DefaultHeight " << default_height << '\n';
 }
@@ -2018,7 +1982,6 @@ void GrowCtx::open_grow(std::ifstream& fp)
   int end_found = 0;
   char dummy[40];
   int tmp;
-  int i, j;
   char c;
   int double_buffered = 0;
 
@@ -2055,7 +2018,7 @@ void GrowCtx::open_grow(std::ifstream& fp)
       if (dynamicsize) {
         dynamic = (char*)calloc(1, dynamicsize);
         fp.get();
-        for (j = 0; j < dynamicsize; j++) {
+        for (int j = 0; j < dynamicsize; j++) {
           if ((c = fp.get()) == '"') {
             if (dynamic[j - 1] == '\\')
               j--;
@@ -2074,12 +2037,12 @@ void GrowCtx::open_grow(std::ifstream& fp)
       break;
     case glow_eSave_GrowCtx_argname:
       fp.get();
-      for (i = 0; i < arg_cnt; i++) {
+      for (int i = 0; i < arg_cnt; i++) {
         fp.getline(argname[i], sizeof(argname[0]));
       }
       break;
     case glow_eSave_GrowCtx_argtype:
-      for (i = 0; i < arg_cnt; i++)
+      for (int i = 0; i < arg_cnt; i++)
         fp >> argtype[i];
       break;
     case glow_eSave_GrowCtx_x0:
@@ -2102,7 +2065,7 @@ void GrowCtx::open_grow(std::ifstream& fp)
       break;
     case glow_eSave_GrowCtx_path:
       fp.get();
-      for (i = 0; i < path_cnt; i++) {
+      for (int i = 0; i < path_cnt; i++) {
         fp.getline(path[i], sizeof(path[0]));
       }
       break;
@@ -2252,7 +2215,6 @@ int GrowCtx::save_subgraph(char* filename, glow_eSaveMode mode)
   std::ofstream fp;
   char nc_name[80];
   char* s;
-  int i;
 
   if ((s = strrchr(filename, ':')))
     strcpy(nc_name, s + 1);
@@ -2279,10 +2241,10 @@ int GrowCtx::save_subgraph(char* filename, glow_eSaveMode mode)
      << '\n';
   fp << int(glow_eSave_NodeClass_arg_cnt) << FSPACE << arg_cnt << '\n';
   fp << int(glow_eSave_NodeClass_argname) << '\n';
-  for (i = 0; i < arg_cnt; i++)
+  for (int i = 0; i < arg_cnt; i++)
     fp << argname[i] << '\n';
   fp << int(glow_eSave_NodeClass_argtype) << '\n';
-  for (i = 0; i < arg_cnt; i++)
+  for (int i = 0; i < arg_cnt; i++)
     fp << argtype[i] << '\n';
   fp << int(glow_eSave_NodeClass_dynamicsize) << FSPACE << dynamicsize << '\n';
   fp << int(glow_eSave_NodeClass_dynamic) << '\n';
@@ -2309,14 +2271,10 @@ int GrowCtx::save_subgraph(char* filename, glow_eSaveMode mode)
      << '\n';
   fp << int(glow_eSave_NodeClass_dyn_color4) << FSPACE << int(dyn_color[3])
      << '\n';
-  fp << int(glow_eSave_NodeClass_dyn_attr1) << FSPACE << int(dyn_attr[0])
-     << '\n';
-  fp << int(glow_eSave_NodeClass_dyn_attr2) << FSPACE << int(dyn_attr[1])
-     << '\n';
-  fp << int(glow_eSave_NodeClass_dyn_attr3) << FSPACE << int(dyn_attr[2])
-     << '\n';
-  fp << int(glow_eSave_NodeClass_dyn_attr4) << FSPACE << int(dyn_attr[3])
-     << '\n';
+  fp << int(glow_eSave_NodeClass_dyn_attr1) << FSPACE << dyn_attr[0] << '\n';
+  fp << int(glow_eSave_NodeClass_dyn_attr2) << FSPACE << dyn_attr[1] << '\n';
+  fp << int(glow_eSave_NodeClass_dyn_attr3) << FSPACE << dyn_attr[2] << '\n';
+  fp << int(glow_eSave_NodeClass_dyn_attr4) << FSPACE << dyn_attr[3] << '\n';
   fp << int(glow_eSave_NodeClass_no_con_obstacle) << FSPACE << no_con_obstacle
      << '\n';
   fp << int(glow_eSave_NodeClass_slider) << FSPACE << slider << '\n';
@@ -2332,8 +2290,8 @@ int GrowCtx::save_subgraph(char* filename, glow_eSaveMode mode)
   fp << int(glow_eSave_NodeClass_x1) << FSPACE << x1 << '\n';
   fp << int(glow_eSave_NodeClass_input_focus_mark) << FSPACE
      << int(input_focus_mark) << '\n';
-  fp << int(glow_eSave_NodeClass_recursive_trace) << FSPACE
-     << int(recursive_trace) << '\n';
+  fp << int(glow_eSave_NodeClass_recursive_trace) << FSPACE << recursive_trace
+     << '\n';
   if (user_data && userdata_save_callback) {
     fp << int(glow_eSave_NodeClass_userdata_cb) << '\n';
     (userdata_save_callback)(&fp, this, glow_eUserdataCbType_Ctx);
@@ -2418,7 +2376,6 @@ int GrowCtx::open_subgraph(char* filename, glow_eSaveMode mode)
 
 void GrowCtx::clear_all(int keep_paste)
 {
-  int i;
   GlowArrayElem* element;
 
   delete_all();
@@ -2447,12 +2404,12 @@ void GrowCtx::clear_all(int keep_paste)
 
   set_nodraw();
   reset_custom_colors();
-  zoom_absolute(mw->base_zoom_factor);
-  mw->offset_x = 0;
-  mw->offset_y = 0;
+  zoom_absolute(mw.base_zoom_factor);
+  mw.offset_x = 0;
+  mw.offset_y = 0;
 
   if (!keep_paste) {
-    for (i = a_nc.a_size - 1; i >= 0; i--) {
+    for (int i = a_nc.a_size - 1; i >= 0; i--) {
       element = a_nc.a[i];
       a_nc.remove(element);
       delete element;
@@ -2460,11 +2417,9 @@ void GrowCtx::clear_all(int keep_paste)
     a_paste.a_size = 0;
   } else {
     // Remove all nodeclasses except for nodes in pastebuffer
-    int found, i, j;
-
-    for (i = a_nc.a_size - 1; i >= 0; i--) {
-      found = 0;
-      for (j = 0; j < a_paste.a_size; j++) {
+    for (int i = a_nc.a_size - 1; i >= 0; i--) {
+      int found = 0;
+      for (int j = 0; j < a_paste.a_size; j++) {
         if (a_paste[j]->type() == glow_eObjectType_GrowNode
             || a_paste[j]->type() == glow_eObjectType_GrowSlider
             || a_paste[j]->type() == glow_eObjectType_GrowGroup
@@ -2498,9 +2453,9 @@ void GrowCtx::get_name(char* grow_name)
   strcpy(grow_name, name);
 }
 
-void GrowCtx::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+void GrowCtx::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
-  gdraw->set_clip_rectangle(w, ll_x, ll_y, ur_x, ur_y);
+  gdraw->set_clip_rectangle(w->window, ll_x, ll_y, ur_x, ur_y);
 
   if (redraw_callback)
     (redraw_callback)(redraw_data);
@@ -2512,34 +2467,40 @@ void GrowCtx::draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
     if (a.a[i]->type() != glow_eObjectType_Con)
       a.a[i]->draw(w, ll_x, ll_y, ur_x, ur_y);
   }
-  if (w == mw) {
+  if (w == &mw) {
     if (show_grid)
       draw_grid(w, ll_x, ll_y, ur_x, ur_y);
     tiptext->draw();
   }
-  gdraw->reset_clip_rectangle(w);
+  gdraw->reset_clip_rectangle(w->window);
 
-  if (w == mw && select_rect_active) {
-    if (edit_mode == grow_eMode_Circle)
-      gdraw->arc(select_rect_ll_x, select_rect_ll_y,
-          select_rect_ur_x - select_rect_ll_x,
-          select_rect_ur_y - select_rect_ll_y, 0, 360, glow_eDrawType_Line, 0,
-          0);
-    else
-      gdraw->rect(select_rect_ll_x, select_rect_ll_y,
-          select_rect_ur_x - select_rect_ll_x,
-          select_rect_ur_y - select_rect_ll_y, glow_eDrawType_Line, 0, 0);
-  } else if (w == navw) {
+  if (w == &mw) {
+    if (select_rect_active) {
+      if (edit_mode == grow_eMode_Circle)
+        gdraw->arc(select_rect_ll_x, select_rect_ll_y,
+            select_rect_ur_x - select_rect_ll_x,
+            select_rect_ur_y - select_rect_ll_y, 0, 360, glow_eDrawType_Line, 0,
+            0);
+      else
+        gdraw->rect(select_rect_ll_x, select_rect_ll_y,
+            select_rect_ur_x - select_rect_ll_x,
+            select_rect_ur_y - select_rect_ll_y, glow_eDrawType_Line, 0, 0);
+    }
+    if (con_create_active) {
+      gdraw->line(con_create_conpoint_x, con_create_conpoint_y,
+        con_create_last_x, con_create_last_y, glow_eDrawType_Line, 0);
+    }
+  } else if (w == &navw) {
     nav_rect_ll_x = int(
-        navw->zoom_factor_x * mw->offset_x / mw->zoom_factor_x - navw->offset_x);
+        navw.zoom_factor_x * mw.offset_x / mw.zoom_factor_x - navw.offset_x);
     nav_rect_ur_x = int(
-        navw->zoom_factor_x * (mw->offset_x + mw->window_width) / mw->zoom_factor_x
-          - navw->offset_x);
+        navw.zoom_factor_x * (mw.offset_x + mw.window_width) / mw.zoom_factor_x
+          - navw.offset_x);
     nav_rect_ll_y = int(
-        navw->zoom_factor_y * mw->offset_y / mw->zoom_factor_y - navw->offset_y);
+        navw.zoom_factor_y * mw.offset_y / mw.zoom_factor_y - navw.offset_y);
     nav_rect_ur_y = int(
-        navw->zoom_factor_y * (mw->offset_y + mw->window_height) / mw->zoom_factor_y
-          - navw->offset_y);
+        navw.zoom_factor_y * (mw.offset_y + mw.window_height) / mw.zoom_factor_y
+          - navw.offset_y);
 
     gdraw->rect(nav_rect_ll_x, nav_rect_ll_y, nav_rect_ur_x - nav_rect_ll_x,
         nav_rect_ur_y - nav_rect_ll_y, glow_eDrawType_Line, 0, 0);
@@ -2685,29 +2646,31 @@ void GrowCtx::set_background(glow_eDrawType color)
     int sts;
     int width, height;
 
-    if (!background_tiled && !(mw->window_width == 0 || mw->window_height == 0)) {
-      sts = grow_image_to_pixmap(this, background_image, mw->window_width,
-          mw->window_height, &pixmap, &image, &width, &height);
+    if (!background_tiled && !(mw.window_width == 0 || mw.window_height == 0)) {
+      sts = grow_image_to_pixmap(this, background_image, mw.window_width,
+          mw.window_height, &pixmap, &image, &width, &height);
       if (EVEN(sts))
-        gdraw->set_background(mw, color, 0, 0, 0, 0);
+        gdraw->set_background(mw.window, color, 0, 0, 0, 0);
       else
-        gdraw->set_background(mw, color, pixmap, image, width, height);
+        gdraw->set_background(mw.window, color, pixmap, image, width, height);
     } else if (background_tiled) {
       sts = grow_image_to_pixmap(
           this, background_image, 0, 0, &pixmap, &image, &width, &height);
       if (EVEN(sts))
-        gdraw->set_background(mw, color, 0, 0, 0, 0);
+        gdraw->set_background(mw.window, color, 0, 0, 0, 0);
       else
-        gdraw->set_background(mw, color, pixmap, image, width, height);
+        gdraw->set_background(mw.window, color, pixmap, image, width, height);
     } else
-      gdraw->set_background(mw, color, 0, 0, 0, 0);
+      gdraw->set_background(mw.window, color, 0, 0, 0, 0);
   } else {
-    gdraw->set_background(mw, color, 0, 0, 0, 0);
+    gdraw->set_background(mw.window, color, 0, 0, 0, 0);
     if (!no_nav)
-      gdraw->set_background(navw, color, 0, 0, 0, 0);
+      gdraw->set_background(navw.window, color, 0, 0, 0, 0);
   }
-  background_color = color;
-  set_dirty();
+  if (background_color != color) {
+    background_color = color;
+    set_dirty();
+  }
 }
 
 int GrowCtx::get_background_image_size(int* width, int* height)
@@ -2729,8 +2692,8 @@ int GrowCtx::get_background_image_size(int* width, int* height)
   i1->get_borders(&ur_x, &ll_x, &ur_y, &ll_y);
   delete i1;
 
-  *width = (int)((ur_x - ll_x) * mw->base_zoom_factor);
-  *height = (int)((ur_y - ll_y) * mw->base_zoom_factor);
+  *width = (int)((ur_x - ll_x) * mw.base_zoom_factor);
+  *height = (int)((ur_y - ll_y) * mw.base_zoom_factor);
 
   return 1;
 }
@@ -2747,9 +2710,11 @@ void GrowCtx::get_background_image(char* image)
 
 void GrowCtx::reset_background()
 {
-  gdraw->reset_background(mw);
-  background_color = glow_eDrawType_LineErase;
-  set_dirty();
+  gdraw->reset_background(mw.window);
+  if (background_color != glow_eDrawType_LineErase) {
+    background_color = glow_eDrawType_LineErase;
+    set_dirty();
+  }
 }
 
 void GrowCtx::set_dynamic(char* code, int size)
@@ -2788,8 +2753,8 @@ int GrowCtx::get_default_window_size(int* width, int* height)
   if (x0 >= x1 || y0 >= y1)
     return 0;
 
-  *width = int((x1 - x0) * mw->zoom_factor_x);
-  *height = int((y1 - y0) * mw->zoom_factor_y);
+  *width = int((x1 - x0) * mw.zoom_factor_x);
+  *height = int((y1 - y0) * mw.zoom_factor_y);
   return 1;
 }
 
@@ -2798,12 +2763,12 @@ void GrowCtx::set_default_layout()
   if (x0 >= x1 || y0 >= y1)
     return;
 
-  gdraw->get_window_size(mw, &mw->window_width, &mw->window_height);
-  mw->zoom_factor_x
-      = MIN(mw->window_width / (x1 - x0), mw->window_height / (y1 - y0));
-  mw->zoom_factor_y = mw->zoom_factor_x;
-  mw->offset_x = int(x0 * mw->zoom_factor_x);
-  mw->offset_y = int(y0 * mw->zoom_factor_y);
+  gdraw->get_window_size(mw.window, &mw.window_width, &mw.window_height);
+  mw.zoom_factor_x
+      = MIN(mw.window_width / (x1 - x0), mw.window_height / (y1 - y0));
+  mw.zoom_factor_y = mw.zoom_factor_x;
+  mw.offset_x = int(x0 * mw.zoom_factor_x);
+  mw.offset_y = int(y0 * mw.zoom_factor_y);
   change_scrollbar();
   a.zoom();
   if (enable_bg_pixmap && !streq(background_image, "")
@@ -2845,8 +2810,8 @@ void grow_auto_scrolling(GrowCtx* ctx)
   ctx->auto_scrolling_active = 1;
 
   if (ctx->node_movement_active && ctx->edit_mode == grow_eMode_EditPolyLine) {
-    delta_x = -(ctx->node_move_last_x - ctx->mw->window_width / 2) / 6;
-    delta_y = -(ctx->node_move_last_y - ctx->mw->window_height / 2) / 6;
+    delta_x = -(ctx->node_move_last_x - ctx->mw.window_width / 2) / 6;
+    delta_y = -(ctx->node_move_last_y - ctx->mw.window_height / 2) / 6;
     if (ctx->move_restriction == glow_eMoveRestriction_Vertical)
       delta_x = 0;
     else if (ctx->move_restriction == glow_eMoveRestriction_Horizontal)
@@ -2859,8 +2824,8 @@ void grow_auto_scrolling(GrowCtx* ctx)
       ctx->auto_scrolling_active = 0;
       return;
     }
-    delta_x = -(ctx->node_move_last_x - ctx->mw->window_width / 2) / 6;
-    delta_y = -(ctx->node_move_last_y - ctx->mw->window_height / 2) / 6;
+    delta_x = -(ctx->node_move_last_x - ctx->mw.window_width / 2) / 6;
+    delta_y = -(ctx->node_move_last_y - ctx->mw.window_height / 2) / 6;
 
     switch (ctx->move_restriction) {
     case glow_eMoveRestriction_Vertical:
@@ -2873,16 +2838,16 @@ void grow_auto_scrolling(GrowCtx* ctx)
       ctx->a_move.move(-delta_x, -delta_y, 0);
     }
   } else if (ctx->select_rect_active) {
-    delta_x = -(ctx->select_rect_last_x - ctx->mw->window_width / 2) / 12;
-    delta_y = -(ctx->select_rect_last_y - ctx->mw->window_height / 2) / 12;
+    delta_x = -(ctx->select_rect_last_x - ctx->mw.window_width / 2) / 12;
+    delta_y = -(ctx->select_rect_last_y - ctx->mw.window_height / 2) / 12;
 
     ctx->select_rect_stored_ll_x += delta_x;
     ctx->select_rect_stored_ll_y += delta_y;
     ctx->select_rect_stored_ur_x += delta_x;
     ctx->select_rect_stored_ur_y += delta_y;
   } else if (ctx->con_create_active) {
-    delta_x = -(ctx->con_create_last_x - ctx->mw->window_width / 2) / 6;
-    delta_y = -(ctx->con_create_last_y - ctx->mw->window_height / 2) / 6;
+    delta_x = -(ctx->con_create_last_x - ctx->mw.window_width / 2) / 6;
+    delta_y = -(ctx->con_create_last_y - ctx->mw.window_height / 2) / 6;
 
     ctx->polyline_start_x += delta_x;
     ctx->polyline_start_y += delta_y;
@@ -2893,7 +2858,6 @@ void grow_auto_scrolling(GrowCtx* ctx)
   ctx->traverse(delta_x, delta_y);
   ctx->change_scrollbar();
   ctx->set_dirty();
-  ctx->redraw_if_dirty();
   ctx->gdraw->set_timer(ctx, 300, auto_scrolling, &ctx->auto_scrolling_id);
 }
 
@@ -2967,7 +2931,6 @@ void GrowCtx::set_move_restrictions(glow_eMoveRestriction restriction,
 
 void GrowCtx::align_select(glow_eAlignDirection direction)
 {
-  int i;
   double object_x = 0.0, object_y = 0.0;
   double ll_x, ll_y, ur_x, ur_y;
 
@@ -2978,7 +2941,7 @@ void GrowCtx::align_select(glow_eAlignDirection direction)
   case glow_eAlignDirection_Left:
     // Find the object with the lowest y-koord
     object_y = 1e37;
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->measure(&ll_x, &ll_y, &ur_x, &ur_y);
       if (ll_y < object_y) {
         object_y = ll_y;
@@ -2991,7 +2954,7 @@ void GrowCtx::align_select(glow_eAlignDirection direction)
   case glow_eAlignDirection_Right:
     // Find the object with the lowest y-koord
     object_y = 1e37;
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->measure(&ll_x, &ll_y, &ur_x, &ur_y);
       if (ll_y < object_y) {
         object_y = ll_y;
@@ -3004,7 +2967,7 @@ void GrowCtx::align_select(glow_eAlignDirection direction)
   case glow_eAlignDirection_Up:
     // Find the object with the lowest x-koord
     object_x = 1e37;
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->measure(&ll_x, &ll_y, &ur_x, &ur_y);
       if (ll_x < object_x) {
         object_y = ur_y;
@@ -3017,7 +2980,7 @@ void GrowCtx::align_select(glow_eAlignDirection direction)
   case glow_eAlignDirection_Down:
     // Find the object with the lowest x-koord
     object_x = 1e37;
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->measure(&ll_x, &ll_y, &ur_x, &ur_y);
       if (ll_x < object_x) {
         object_y = ll_y;
@@ -3030,7 +2993,7 @@ void GrowCtx::align_select(glow_eAlignDirection direction)
   case glow_eAlignDirection_CenterHoriz:
     // Find the object with the lowest x-koord
     object_x = 1e37;
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->measure(&ll_x, &ll_y, &ur_x, &ur_y);
       if (ll_x < object_x) {
         object_y = (ll_y + ur_y) / 2;
@@ -3043,7 +3006,7 @@ void GrowCtx::align_select(glow_eAlignDirection direction)
   case glow_eAlignDirection_CenterVert:
     // Find the object with the lowest x-koord
     object_y = 1e37;
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->measure(&ll_x, &ll_y, &ur_x, &ur_y);
       if (ll_y < object_y) {
         object_y = ll_y;
@@ -3061,12 +3024,10 @@ void GrowCtx::align_select(glow_eAlignDirection direction)
     a_sel.align(0, object_y, direction);
     break;
   }
-  set_dirty();
 }
 
 void GrowCtx::equidistance_select(glow_eAlignDirection direction)
 {
-  int i, j;
   double dx, dy;
   double ll_x1, ll_y1, ur_x1, ur_y1;
   double ll_x2, ll_y2, ur_x2, ur_y2;
@@ -3078,8 +3039,8 @@ void GrowCtx::equidistance_select(glow_eAlignDirection direction)
   switch (direction) {
   case glow_eAlignDirection_Down:
     // Order in y-koord
-    for (i = a_sel.size() - 1; i > 0; i--) {
-      for (j = 0; j < i; j++) {
+    for (int i = a_sel.size() - 1; i > 0; i--) {
+      for (int j = 0; j < i; j++) {
         a_sel[j + 1]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
         a_sel[j]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
         if (ll_y1 < ll_y2) {
@@ -3092,14 +3053,14 @@ void GrowCtx::equidistance_select(glow_eAlignDirection direction)
     a_sel[0]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
     a_sel[a_sel.size() - 1]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
     dy = (ll_y2 - ll_y1) / (a_sel.size() - 1);
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->align(0, ll_y1 + i * dy, direction);
     }
     break;
   case glow_eAlignDirection_Up:
     // Order in y-koord
-    for (i = a_sel.size() - 1; i > 0; i--) {
-      for (j = 0; j < i; j++) {
+    for (int i = a_sel.size() - 1; i > 0; i--) {
+      for (int j = 0; j < i; j++) {
         a_sel[j + 1]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
         a_sel[j]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
         if (ur_y1 < ur_y2) {
@@ -3112,14 +3073,14 @@ void GrowCtx::equidistance_select(glow_eAlignDirection direction)
     a_sel[0]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
     a_sel[a_sel.size() - 1]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
     dy = (ur_y2 - ur_y1) / (a_sel.size() - 1);
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->align(0, ur_y1 + i * dy, direction);
     }
     break;
   case glow_eAlignDirection_CenterVert:
     // Order in y-koord
-    for (i = a_sel.size() - 1; i > 0; i--) {
-      for (j = 0; j < i; j++) {
+    for (int i = a_sel.size() - 1; i > 0; i--) {
+      for (int j = 0; j < i; j++) {
         a_sel[j + 1]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
         a_sel[j]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
         if ((ur_y1 + ll_y1) / 2 < (ur_y2 + ll_y2) / 2) {
@@ -3132,15 +3093,15 @@ void GrowCtx::equidistance_select(glow_eAlignDirection direction)
     a_sel[0]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
     a_sel[a_sel.size() - 1]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
     dy = ((ur_y2 + ll_y2) / 2 - (ur_y1 + ll_y1) / 2) / (a_sel.size() - 1);
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->align(
           0, (ur_y1 + ll_y1) / 2 + i * dy, glow_eAlignDirection_CenterHoriz);
     }
     break;
   case glow_eAlignDirection_Left:
     // Order in x-koord
-    for (i = a_sel.size() - 1; i > 0; i--) {
-      for (j = 0; j < i; j++) {
+    for (int i = a_sel.size() - 1; i > 0; i--) {
+      for (int j = 0; j < i; j++) {
         a_sel[j + 1]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
         a_sel[j]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
         if (ll_x1 < ll_x2) {
@@ -3153,14 +3114,14 @@ void GrowCtx::equidistance_select(glow_eAlignDirection direction)
     a_sel[0]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
     a_sel[a_sel.size() - 1]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
     dx = (ll_x2 - ll_x1) / (a_sel.size() - 1);
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->align(ll_x1 + i * dx, 0, direction);
     }
     break;
   case glow_eAlignDirection_Right:
     // Order in x-koord
-    for (i = a_sel.size() - 1; i > 0; i--) {
-      for (j = 0; j < i; j++) {
+    for (int i = a_sel.size() - 1; i > 0; i--) {
+      for (int j = 0; j < i; j++) {
         a_sel[j + 1]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
         a_sel[j]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
         if (ur_x1 < ur_x2) {
@@ -3173,14 +3134,14 @@ void GrowCtx::equidistance_select(glow_eAlignDirection direction)
     a_sel[0]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
     a_sel[a_sel.size() - 1]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
     dx = (ur_x2 - ur_x1) / (a_sel.size() - 1);
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->align(ur_x1 + i * dx, 0, direction);
     }
     break;
   case glow_eAlignDirection_CenterHoriz:
     // Order in x-koord
-    for (i = a_sel.size() - 1; i > 0; i--) {
-      for (j = 0; j < i; j++) {
+    for (int i = a_sel.size() - 1; i > 0; i--) {
+      for (int j = 0; j < i; j++) {
         a_sel[j + 1]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
         a_sel[j]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
         if ((ur_x1 + ll_x1) / 2 < (ur_x2 + ll_x2) / 2) {
@@ -3193,14 +3154,13 @@ void GrowCtx::equidistance_select(glow_eAlignDirection direction)
     a_sel[0]->measure(&ll_x1, &ll_y1, &ur_x1, &ur_y1);
     a_sel[a_sel.size() - 1]->measure(&ll_x2, &ll_y2, &ur_x2, &ur_y2);
     dx = ((ur_x2 + ll_x2) / 2 - (ur_x1 + ll_x1) / 2) / (a_sel.size() - 1);
-    for (i = 0; i < a_sel.size(); i++) {
+    for (int i = 0; i < a_sel.size(); i++) {
       a_sel[i]->align(
           (ur_x1 + ll_x1) / 2 + i * dx, 0, glow_eAlignDirection_CenterVert);
     }
     break;
   default:;
   }
-  set_dirty();
 }
 
 void GrowCtx::measure_javabean(double* pix_x_right, double* pix_x_left,
@@ -3220,22 +3180,22 @@ void GrowCtx::measure_javabean(double* pix_x_right, double* pix_x_left,
         a[i]->get_borders(&jb_x_right, &jb_x_left, &jb_y_high, &jb_y_low);
       }
     }
-    *pix_x_right = jb_x_right * mw->zoom_factor_x - double(mw->offset_x);
-    *pix_x_left = jb_x_left * mw->zoom_factor_x - double(mw->offset_x);
-    *pix_y_high = jb_y_high * mw->zoom_factor_y - double(mw->offset_y);
-    *pix_y_low = jb_y_low * mw->zoom_factor_y - double(mw->offset_y);
+    *pix_x_right = jb_x_right * mw.zoom_factor_x - double(mw.offset_x);
+    *pix_x_left = jb_x_left * mw.zoom_factor_x - double(mw.offset_x);
+    *pix_y_high = jb_y_high * mw.zoom_factor_y - double(mw.offset_y);
+    *pix_y_low = jb_y_low * mw.zoom_factor_y - double(mw.offset_y);
   } else {
-    *pix_x_left = x0 * mw->zoom_factor_x - double(mw->offset_x);
-    *pix_x_right = x1 * mw->zoom_factor_x - double(mw->offset_x);
-    *pix_y_low = y0 * mw->zoom_factor_y - double(mw->offset_y);
-    *pix_y_high = y1 * mw->zoom_factor_y - double(mw->offset_y);
+    *pix_x_left = x0 * mw.zoom_factor_x - double(mw.offset_x);
+    *pix_x_right = x1 * mw.zoom_factor_x - double(mw.offset_x);
+    *pix_y_low = y0 * mw.zoom_factor_y - double(mw.offset_y);
+    *pix_y_high = y1 * mw.zoom_factor_y - double(mw.offset_y);
   }
 }
 
 void GrowCtx::to_pixel(double x, double y, double* pix_x, double* pix_y)
 {
-  *pix_x = x * mw->zoom_factor_x - double(mw->offset_x);
-  *pix_y = y * mw->zoom_factor_y - double(mw->offset_y);
+  *pix_x = x * mw.zoom_factor_x - double(mw.offset_x);
+  *pix_y = y * mw.zoom_factor_y - double(mw.offset_y);
 }
 
 void GrowCtx::set_javaframe(double* pix_x_right, double* pix_x_left,
@@ -3254,7 +3214,6 @@ void GrowCtx::set_javaframe(double* pix_x_right, double* pix_x_left,
 
 void GrowCtx::export_javabean(std::ofstream& fp, int components)
 {
-  int i;
   int shape_cnt;
 
   export_jbean = new GlowExportJBean(this);
@@ -3262,7 +3221,7 @@ void GrowCtx::export_javabean(std::ofstream& fp, int components)
   if (components == 1) {
     // Declare components and set compoinent attirbutes
     shape_cnt = 0;
-    for (i = 0; i < a.size(); i++) {
+    for (int i = 0; i < a.size(); i++) {
       a[i]->export_javabean((GlowTransform*)NULL, NULL,
           glow_eExportPass_Declare, &shape_cnt, i, 0, fp);
     }
@@ -3270,7 +3229,7 @@ void GrowCtx::export_javabean(std::ofstream& fp, int components)
   } else if (components == 2) {
     // Attribute pass
     shape_cnt = 0;
-    for (i = 0; i < a.size(); i++) {
+    for (int i = 0; i < a.size(); i++) {
       a[i]->export_javabean((GlowTransform*)NULL, NULL,
           glow_eExportPass_Attributes, &shape_cnt, i, 0, fp);
     }
@@ -3280,7 +3239,7 @@ void GrowCtx::export_javabean(std::ofstream& fp, int components)
 
     // Init pass
     shape_cnt = 0;
-    for (i = 0; i < a.size(); i++) {
+    for (int i = 0; i < a.size(); i++) {
       a[i]->export_javabean((GlowTransform*)NULL, NULL, glow_eExportPass_Init,
           &shape_cnt, i, 0, fp);
     }
@@ -3288,7 +3247,7 @@ void GrowCtx::export_javabean(std::ofstream& fp, int components)
 
     // Shape pass
     shape_cnt = 0;
-    for (i = 0; i < a.size(); i++) {
+    for (int i = 0; i < a.size(); i++) {
       a[i]->export_javabean((GlowTransform*)NULL, NULL, glow_eExportPass_Shape,
           &shape_cnt, i, 0, fp);
     }
@@ -3297,7 +3256,7 @@ void GrowCtx::export_javabean(std::ofstream& fp, int components)
     // Draw pass
     export_jbean->growctx(glow_eExportPass_Draw, fp);
     shape_cnt = 0;
-    for (i = 0; i < a.size(); i++) {
+    for (int i = 0; i < a.size(); i++) {
       a[i]->export_javabean((GlowTransform*)NULL, NULL, glow_eExportPass_Draw,
           &shape_cnt, i, 0, fp);
     }
@@ -3312,7 +3271,6 @@ void GrowCtx::export_javabean(std::ofstream& fp, int components)
 void GrowCtx::export_nodeclass_javabean(
     GlowArrayElem* nc, std::ofstream& fp, int components)
 {
-  int i;
   int shape_cnt;
   int page;
   int pages;
@@ -3330,7 +3288,7 @@ void GrowCtx::export_nodeclass_javabean(
   if (components == 1) {
     // Declare components and set component attributes
     shape_cnt = 0;
-    for (i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
+    for (int i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
       ((GlowNodeClass*)nc)
           ->a[i]
           ->export_javabean((GlowTransform*)NULL, NULL,
@@ -3345,9 +3303,8 @@ void GrowCtx::export_nodeclass_javabean(
         export_jbean->nc = next_nc;
         export_jbean->page = page;
 
-        for (i = 0; i < ((GlowNodeClass*)next_nc)->a.size(); i++) {
-          if (((GlowNodeClass*)next_nc)->a[i]->type()
-              == glow_eObjectType_GrowAnnot)
+        for (int i = 0; i < next_nc->a.size(); i++) {
+          if (next_nc->a[i]->type() == glow_eObjectType_GrowAnnot)
             continue;
           next_nc->a[i]->export_javabean((GlowTransform*)NULL, NULL,
               glow_eExportPass_Declare, &shape_cnt, i, 1, fp);
@@ -3359,7 +3316,7 @@ void GrowCtx::export_nodeclass_javabean(
   } else if (components == 2) {
     // Attribute pass
     shape_cnt = 0;
-    for (i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
+    for (int i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
       ((GlowNodeClass*)nc)
           ->a[i]
           ->export_javabean((GlowTransform*)NULL, NULL,
@@ -3374,9 +3331,8 @@ void GrowCtx::export_nodeclass_javabean(
         export_jbean->nc = next_nc;
         export_jbean->page = page;
 
-        for (i = 0; i < ((GlowNodeClass*)next_nc)->a.size(); i++) {
-          if (((GlowNodeClass*)next_nc)->a[i]->type()
-              == glow_eObjectType_GrowAnnot)
+        for (int i = 0; i < next_nc->a.size(); i++) {
+          if (next_nc->a[i]->type() == glow_eObjectType_GrowAnnot)
             continue;
           next_nc->a[i]->export_javabean((GlowTransform*)NULL, NULL,
               glow_eExportPass_Attributes, &shape_cnt, i, 1, fp);
@@ -3393,7 +3349,7 @@ void GrowCtx::export_nodeclass_javabean(
 
     // Init pass
     shape_cnt = 0;
-    for (i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
+    for (int i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
       ((GlowNodeClass*)nc)
           ->a[i]
           ->export_javabean((GlowTransform*)NULL, NULL, glow_eExportPass_Init,
@@ -3404,7 +3360,7 @@ void GrowCtx::export_nodeclass_javabean(
 
     // Shape pass
     shape_cnt = 0;
-    for (i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
+    for (int i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
       ((GlowNodeClass*)nc)
           ->a[i]
           ->export_javabean((GlowTransform*)NULL, NULL, glow_eExportPass_Shape,
@@ -3422,9 +3378,8 @@ void GrowCtx::export_nodeclass_javabean(
         export_jbean->nc = next_nc;
         export_jbean->page = page;
         shape_cnt = 0;
-        for (i = 0; i < ((GlowNodeClass*)next_nc)->a.size(); i++) {
-          if (((GlowNodeClass*)next_nc)->a[i]->type()
-              == glow_eObjectType_GrowAnnot)
+        for (int i = 0; i < next_nc->a.size(); i++) {
+          if (next_nc->a[i]->type() == glow_eObjectType_GrowAnnot)
             continue;
           next_nc->a[i]->export_javabean((GlowTransform*)NULL, NULL,
               glow_eExportPass_Init, &shape_cnt, i, 1, fp);
@@ -3433,9 +3388,8 @@ void GrowCtx::export_nodeclass_javabean(
         export_jbean->nodeclass(
             next_nc, glow_eExportPass_Init, fp, page, pages);
         shape_cnt = 0;
-        for (i = 0; i < ((GlowNodeClass*)next_nc)->a.size(); i++) {
-          if (((GlowNodeClass*)next_nc)->a[i]->type()
-              == glow_eObjectType_GrowAnnot)
+        for (int i = 0; i < next_nc->a.size(); i++) {
+          if (next_nc->a[i]->type() == glow_eObjectType_GrowAnnot)
             continue;
           next_nc->a[i]->export_javabean((GlowTransform*)NULL, NULL,
               glow_eExportPass_Shape, &shape_cnt, i, 1, fp);
@@ -3451,7 +3405,7 @@ void GrowCtx::export_nodeclass_javabean(
     export_jbean->nodeclass(
         (GlowNodeClass*)nc, glow_eExportPass_Draw, fp, 1, pages);
     shape_cnt = 0;
-    for (i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
+    for (int i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
       ((GlowNodeClass*)nc)
           ->a[i]
           ->export_javabean((GlowTransform*)NULL, NULL, glow_eExportPass_Draw,
@@ -3476,9 +3430,8 @@ void GrowCtx::export_nodeclass_javabean(
             next_nc, glow_eExportPass_Draw, fp, page, pages);
 
         shape_cnt = 0;
-        for (i = 0; i < ((GlowNodeClass*)next_nc)->a.size(); i++) {
-          if (((GlowNodeClass*)next_nc)->a[i]->type()
-              == glow_eObjectType_GrowAnnot)
+        for (int i = 0; i < next_nc->a.size(); i++) {
+          if (next_nc->a[i]->type() == glow_eObjectType_GrowAnnot)
             continue;
           next_nc->a[i]->export_javabean((GlowTransform*)NULL, NULL,
               glow_eExportPass_Draw, &shape_cnt, i, 1, fp);
@@ -3498,8 +3451,6 @@ void GrowCtx::export_nodeclass_javabean(
 void GrowCtx::export_nc_javabean_font(
     GlowArrayElem* nc, std::ofstream& fp, int components)
 {
-  int i;
-
   export_jbean = new GlowExportJBean(this, (GlowNodeClass*)nc);
 
   if (components == 1) {
@@ -3510,7 +3461,7 @@ void GrowCtx::export_nc_javabean_font(
     // Paint
 
     // Init pass
-    for (i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
+    for (int i = 0; i < ((GlowNodeClass*)nc)->a.size(); i++) {
       if (((GlowNodeClass*)nc)->a[i]->type() == glow_eObjectType_GrowAnnot) {
         ((GrowAnnot*)((GlowNodeClass*)nc)->a[i])
             ->export_javabean_font(
@@ -3540,12 +3491,9 @@ int GrowCtx::get_java_name(char* jname)
 
 void GrowCtx::get_annotation_numbers(int** numbers, int* cnt)
 {
-  int i;
-  int* p;
-
   *cnt = 0;
-  p = (int*)calloc(10, sizeof(int));
-  for (i = 0; i < a.a_size; i++) {
+  int* p = (int*)calloc(10, sizeof(int));
+  for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == glow_eObjectType_GrowSubAnnot) {
       if (*cnt >= 10)
         break;
@@ -3584,8 +3532,8 @@ int GrowCtx::send_menu_callback(
 
     e.event = event;
     e.any.type = glow_eEventType_Menu;
-    e.any.x_pixel = int(x * mw->zoom_factor_x) - mw->offset_x;
-    e.any.y_pixel = int(y * mw->zoom_factor_y) - mw->offset_y;
+    e.any.x_pixel = int(x * mw.zoom_factor_x) - mw.offset_x;
+    e.any.y_pixel = int(y * mw.zoom_factor_y) - mw.offset_y;
     e.any.x = x;
     e.any.y = y;
     e.menu.object_type = object->type();
@@ -3606,8 +3554,8 @@ int GrowCtx::send_table_callback(GlowArrayElem* object, glow_eEvent event,
 
     e.event = event;
     e.any.type = glow_eEventType_Table;
-    e.any.x_pixel = int(x * mw->zoom_factor_x) - mw->offset_x;
-    e.any.y_pixel = int(y * mw->zoom_factor_y) - mw->offset_y;
+    e.any.x_pixel = int(x * mw.zoom_factor_x) - mw.offset_x;
+    e.any.y_pixel = int(y * mw.zoom_factor_y) - mw.offset_y;
     e.any.x = x;
     e.any.y = y;
     e.table.object_type = object->type();
@@ -3629,8 +3577,8 @@ int GrowCtx::send_toolbar_callback(GlowArrayElem* object, glow_eEvent event,
 
     e.event = event;
     e.any.type = glow_eEventType_Toolbar;
-    e.any.x_pixel = int(x * mw->zoom_factor_x) - mw->offset_x;
-    e.any.y_pixel = int(y * mw->zoom_factor_y) - mw->offset_y;
+    e.any.x_pixel = int(x * mw.zoom_factor_x) - mw.offset_x;
+    e.any.y_pixel = int(y * mw.zoom_factor_y) - mw.offset_y;
     e.any.x = x;
     e.any.y = y;
     e.toolbar.object_type = object->type();
@@ -3645,10 +3593,10 @@ int GrowCtx::send_toolbar_callback(GlowArrayElem* object, glow_eEvent event,
 
 void GrowCtx::store_geometry()
 {
-  stored_offset_x = mw->offset_x;
-  stored_offset_y = mw->offset_y;
-  stored_zoom_factor_x = mw->zoom_factor_x;
-  stored_zoom_factor_y = mw->zoom_factor_y;
+  stored_offset_x = mw.offset_x;
+  stored_offset_y = mw.offset_y;
+  stored_zoom_factor_x = mw.zoom_factor_x;
+  stored_zoom_factor_y = mw.zoom_factor_y;
   stored_grid_size_x = grid_size_x;
   stored_grid_size_y = grid_size_y;
   stored_grid_on = grid_on;
@@ -3659,10 +3607,10 @@ void GrowCtx::restore_geometry()
 {
   if (feq(stored_zoom_factor_x, 0.0))
     return;
-  mw->offset_x = stored_offset_x;
-  mw->offset_y = stored_offset_y;
-  mw->zoom_factor_x = stored_zoom_factor_x;
-  mw->zoom_factor_y = stored_zoom_factor_y;
+  mw.offset_x = stored_offset_x;
+  mw.offset_y = stored_offset_y;
+  mw.zoom_factor_x = stored_zoom_factor_x;
+  mw.zoom_factor_y = stored_zoom_factor_y;
   a.zoom();
   grid_size_x = stored_grid_size_x;
   grid_size_y = stored_grid_size_y;
@@ -3676,27 +3624,26 @@ void GrowCtx::get_text_extent(char* text, int len, glow_eDrawType draw_type,
     double* descent)
 {
   int z_width, z_height, z_descent;
-  double tsize = mw->zoom_factor_y / mw->base_zoom_factor * (8 + 2 * text_size);
+  double tsize = mw.zoom_factor_y / mw.base_zoom_factor * (8 + 2 * text_size);
 
   gdraw->get_text_extent(text, len, draw_type, text_size, font, &z_width,
       &z_height, &z_descent, tsize, 0);
 
-  *width = double(z_width) / mw->zoom_factor_y;
-  *height = double(z_height) / mw->zoom_factor_y;
-  *descent = double(z_descent) / mw->zoom_factor_y;
+  *width = double(z_width) / mw.zoom_factor_y;
+  *height = double(z_height) / mw.zoom_factor_y;
+  *descent = double(z_descent) / mw.zoom_factor_y;
 }
 
 int GrowCtx::group_select(GlowArrayElem** group, char* last_group)
 {
   char name[20];
-  int i, j;
   GlowArray a_group(20, 20);
 
   if (a_sel.size() == 0)
     return GLOW__NOSELECT;
 
   // Connections, windows and tables in a group are not allowed
-  for (i = 0; i < a_sel.size(); i++) {
+  for (int i = 0; i < a_sel.size(); i++) {
     if (a_sel[i]->type() == glow_eObjectType_Con
         || a_sel[i]->type() == glow_eObjectType_GrowWindow
         || a_sel[i]->type() == glow_eObjectType_GrowFolder
@@ -3710,8 +3657,8 @@ int GrowCtx::group_select(GlowArrayElem** group, char* last_group)
   sprintf(name, "Grp%d_", objectname_cnt++);
 
   // The objects i the group has to be in the same order as a
-  for (i = 0; i < a.size(); i++) {
-    for (j = 0; j < a_sel.size(); j++) {
+  for (int i = 0; i < a.size(); i++) {
+    for (int j = 0; j < a_sel.size(); j++) {
       if (a[i] == a_sel[j]) {
         a_group.insert(a[i]);
         break;
@@ -3724,7 +3671,7 @@ int GrowCtx::group_select(GlowArrayElem** group, char* last_group)
   a_group.clear();
 
   // Remove objects
-  for (i = 0; i < a_sel.size(); i++)
+  for (int i = 0; i < a_sel.size(); i++)
     a.remove(a_sel.a[i]);
   a_sel.clear();
 
@@ -3735,22 +3682,19 @@ int GrowCtx::group_select(GlowArrayElem** group, char* last_group)
 
 int GrowCtx::ungroup_select()
 {
-  int i;
-  GrowGroup* group;
-
   // Groups in group can't be ungrouped
-  for (i = 0; i < a_sel.size(); i++) {
+  for (int i = 0; i < a_sel.size(); i++) {
     if (a_sel[i]->type() == glow_eObjectType_GrowGroup) {
-      group = (GrowGroup*)a_sel[i];
+      GrowGroup* group = (GrowGroup*)a_sel[i];
       if (group->parent)
         return 0;
     }
   }
 
   a_sel.set_highlight(0);
-  for (i = 0; i < a_sel.size(); i++) {
+  for (int i = 0; i < a_sel.size(); i++) {
     if (a_sel[i]->type() == glow_eObjectType_GrowGroup) {
-      group = (GrowGroup*)a_sel[i];
+      GrowGroup* group = (GrowGroup*)a_sel[i];
       group->set_rootnode(0);
       group->ungroup();
       a.remove(group);
@@ -3962,10 +3906,10 @@ int GrowCtx::get_next_object_position(
     double window_x_low, window_x_high;
     double window_y_low, window_y_high;
 
-    window_x_low = double(mw->offset_x) / mw->zoom_factor_x;
-    window_x_high = double(mw->offset_x + mw->window_width) / mw->zoom_factor_x;
-    window_y_low = double(mw->offset_y) / mw->zoom_factor_y;
-    window_y_high = double(mw->offset_y + mw->window_height) / mw->zoom_factor_y;
+    window_x_low = double(mw.offset_x) / mw.zoom_factor_x;
+    window_x_high = double(mw.offset_x + mw.window_width) / mw.zoom_factor_x;
+    window_y_low = double(mw.offset_y) / mw.zoom_factor_y;
+    window_y_high = double(mw.offset_y + mw.window_height) / mw.zoom_factor_y;
 
     for (int i = 0; i < a.size(); i++) {
       if (a[i]->type() == glow_eObjectType_GrowNode
@@ -4122,10 +4066,10 @@ int GrowCtx::is_visible(GlowArrayElem* element, glow_eVisible type)
   double window_y_low, window_y_high;
 
   element->measure(&ll_x, &ll_y, &ur_x, &ur_y);
-  window_x_low = double(mw->offset_x) / mw->zoom_factor_x;
-  window_x_high = double(mw->offset_x + mw->window_width) / mw->zoom_factor_x;
-  window_y_low = double(mw->offset_y) / mw->zoom_factor_y;
-  window_y_high = double(mw->offset_y + mw->window_height) / mw->zoom_factor_y;
+  window_x_low = double(mw.offset_x) / mw.zoom_factor_x;
+  window_x_high = double(mw.offset_x + mw.window_width) / mw.zoom_factor_x;
+  window_y_low = double(mw.offset_y) / mw.zoom_factor_y;
+  window_y_high = double(mw.offset_y + mw.window_height) / mw.zoom_factor_y;
   switch (type) {
   case glow_eVisible_Full:
     if (ll_x >= window_x_low && ur_x <= window_x_high && ll_y >= window_y_low
@@ -4349,10 +4293,10 @@ void GrowCtx::read_object(std::ifstream& fp, GlowArrayElem** o)
 void GrowCtx::measure_window(
     double* ll_x, double* ll_y, double* ur_x, double* ur_y)
 {
-  *ll_x = double(mw->offset_x) / mw->zoom_factor_x;
-  *ur_x = double(mw->offset_x + mw->window_width) / mw->zoom_factor_x;
-  *ll_y = double(mw->offset_y) / mw->zoom_factor_y;
-  *ur_y = double(mw->offset_y + mw->window_height) / mw->zoom_factor_y;
+  *ll_x = double(mw.offset_x) / mw.zoom_factor_x;
+  *ur_x = double(mw.offset_x + mw.window_width) / mw.zoom_factor_x;
+  *ll_y = double(mw.offset_y) / mw.zoom_factor_y;
+  *ur_y = double(mw.offset_y + mw.window_height) / mw.zoom_factor_y;
 }
 
 int GrowCtx::set_custom_color(
@@ -4361,8 +4305,7 @@ int GrowCtx::set_custom_color(
   if (!customcolors)
     return 0;
 
-  int sts;
-  sts = customcolors->set_color(color, red, green, blue);
+  int sts = customcolors->set_color(color, red, green, blue);
   if (ODD(sts)) {
     gdraw->update_color(color);
     if (color == background_color)

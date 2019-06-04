@@ -169,29 +169,24 @@ class GrowArc extends GlowArc {
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    let x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-    let y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-    let x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-    let y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-    let rot = Math.floor(this.trf.rot(t));
+    let tmp = Matrix.multiply(t, this.trf);
+    let p = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
+
+    let x1 = Math.floor(p.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+    let rot = Math.floor(tmp.rotation);
 
     if (rot % 90 !== 0 &&
         Math.abs((this.ur.x - this.ll.x) - (this.ur.y - this.ll.y)) <
         Number.MIN_VALUE) {
-      let tmp = t ? GlowTransform.multiply(t, this.trf) : this.trf;
-      let scale = this.trf.vertical_scale(tmp);
-      let x_c = ((this.trf.x(t, this.ll.x, this.ll.y) * this.ctx.mw.zoom_factor_x -
-            this.ctx.mw.offset_x) +
-            (this.trf.x(t, this.ur.x, this.ur.y) * this.ctx.mw.zoom_factor_x -
-                this.ctx.mw.offset_x)) / 2;
-      let y_c = ((this.trf.y(t, this.ll.x, this.ll.y) * this.ctx.mw.zoom_factor_y -
-            this.ctx.mw.offset_y) +
-            (this.trf.y(t, this.ur.x, this.ur.y) * this.ctx.mw.zoom_factor_y -
-                this.ctx.mw.offset_y)) / 2;
+      let scale = Matrix.multiply(tmp, this.trf).vertical_scale();
+      let x_c = ((p.x * this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x) +
+            (p2.x * this.ctx.mw.zoom_factor_x - this.ctx.mw.offset_x)) / 2;
+      let y_c = ((p.y * this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y) +
+            (p2.y * this.ctx.mw.zoom_factor_y - this.ctx.mw.offset_y)) / 2;
 
       x1 = Math.floor(-scale *
           ((this.ur.x - this.ll.x) / 2 * this.ctx.mw.zoom_factor_x) + x_c + 0.5);
@@ -333,12 +328,12 @@ class GrowArc extends GlowArc {
   }
 
   get_borders(t, g) {
-    let x1 = this.trf.x(t, this.ll.x, this.ll.y);
-    let x2 = this.trf.x(t, this.ur.x, this.ur.y);
-    let y1 = this.trf.y(t, this.ll.x, this.ll.y);
-    let y2 = this.trf.y(t, this.ur.x, this.ur.y);
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
 
-    g.set(Rect.union(g, new Rect(Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2), Math.max(y1, y2))));
+    g.set(Rect.union(g, new Rect(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y),
+        Math.max(p1.x, p2.x), Math.max(p1.y, p2.y))));
   }
 
   get_background_object_limits(t, type, x, y, bo) {

@@ -170,16 +170,10 @@ void FlowArc::nav_erase(void* pos, void* node)
 int FlowArc::event_handler(
     void* pos, flow_eEvent event, int x, int y, void* node)
 {
-  FlowPoint* p;
-
-  p = (FlowPoint*)pos;
-  if (angle2 == 360 && ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x <= x
+  return (angle2 == 360 && ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x <= x
       && x <= ur.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x
       && ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y <= y
-      && y <= ur.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y) {
-    return 1;
-  } else
-    return 0;
+      && y <= ur.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y);
 }
 
 void FlowArc::get_borders(double pos_x, double pos_y, double* x_right,
@@ -198,6 +192,10 @@ void FlowArc::get_borders(double pos_x, double pos_y, double* x_right,
 void FlowArc::move(void* pos, double x1, double y1, double x2, double y2,
     int ang1, int ang2, int highlight, int dimmed, int hot)
 {
+  if (!feq(ll.x, x1) || !feq(ll.y, y1) || !feq(ur.x, x2) || !feq(ur.y, y2) ||
+      angle1 != ang1 || angle2 != ang2) {
+    ctx->set_dirty();
+  }
   ll.x = x1;
   ll.y = y1;
   ur.x = x2;
@@ -206,19 +204,20 @@ void FlowArc::move(void* pos, double x1, double y1, double x2, double y2,
   angle2 = ang2;
   zoom();
   nav_zoom();
-  ctx->set_dirty();
 }
 
 void FlowArc::shift(void* pos, double delta_x, double delta_y, int highlight,
     int dimmed, int hot)
 {
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
   ll.x += delta_x;
   ll.y += delta_y;
   ur.x += delta_x;
   ur.y += delta_y;
   zoom();
   nav_zoom();
-  ctx->set_dirty();
 }
 
 std::ostream& operator<<(std::ostream& o, const FlowArc a)

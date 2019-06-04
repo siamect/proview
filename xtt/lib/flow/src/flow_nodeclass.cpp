@@ -64,9 +64,7 @@ FlowNodeClass::FlowNodeClass(
 
 void FlowNodeClass::print(FlowPoint* pos, void* node, int highlight)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     a.a[i]->print(pos, node, highlight);
   }
 }
@@ -141,9 +139,7 @@ void FlowNodeClass::nav_draw(FlowPoint* pos, int highlight, void* node)
 
 void FlowNodeClass::draw_inverse(FlowPoint* pos, int hot, void* node)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     switch (a.a[i]->type()) {
     case flow_eObjectType_Radiobutton:
     case flow_eObjectType_Image:
@@ -172,10 +168,8 @@ void FlowNodeClass::nav_erase(FlowPoint* pos, void* node)
 int FlowNodeClass::get_conpoint(
     int num, double* x, double* y, flow_eDirection* dir)
 {
-  int i, sts;
-
-  for (i = 0; i < a.a_size; i++) {
-    sts = a.a[i]->get_conpoint(num, x, y, dir);
+  for (int i = 0; i < a.a_size; i++) {
+    int sts = a.a[i]->get_conpoint(num, x, y, dir);
     if (sts)
       return sts;
   }
@@ -202,9 +196,7 @@ int FlowNodeClass::event_handler(
 void FlowNodeClass::erase_annotation(
     void* pos, int highlight, int hot, void* node, int num)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Annot
         && ((FlowAnnot*)a.a[i])->number == num) {
       a.a[i]->erase(pos, hot, node);
@@ -217,9 +209,7 @@ void FlowNodeClass::erase_annotation(
 void FlowNodeClass::draw_annotation(
     void* pos, int highlight, int hot, void* node, int num)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Annot
         && ((FlowAnnot*)a.a[i])->number == num) {
       a.a[i]->draw(pos, highlight, 0, hot, node);
@@ -231,9 +221,7 @@ void FlowNodeClass::draw_annotation(
 
 void FlowNodeClass::open_annotation_input(void* pos, void* node, int num)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Annot
         && ((FlowAnnot*)a.a[i])->number == num) {
       ((FlowAnnot*)a.a[i])->open_annotation_input(pos, node);
@@ -244,9 +232,7 @@ void FlowNodeClass::open_annotation_input(void* pos, void* node, int num)
 
 void FlowNodeClass::close_annotation_input(void* node, int num)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Annot
         && ((FlowAnnot*)a.a[i])->number == num) {
       ((FlowAnnot*)a.a[i])->close_annotation_input(node);
@@ -257,16 +243,13 @@ void FlowNodeClass::close_annotation_input(void* node, int num)
 
 int FlowNodeClass::get_annotation_input(void* node, int num, char** text)
 {
-  int i, sts = 0;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Annot
         && ((FlowAnnot*)a.a[i])->number == num) {
-      sts = ((FlowAnnot*)a.a[i])->get_annotation_input(node, text);
-      break;
+      return ((FlowAnnot*)a.a[i])->get_annotation_input(node, text);
     }
   }
-  return sts;
+  return 0;
 }
 
 void FlowNodeClass::move_widgets(void* node, int x, int y)
@@ -279,9 +262,7 @@ void FlowNodeClass::move_widgets(void* node, int x, int y)
 
 void FlowNodeClass::configure_annotations(void* pos, void* node)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Annot) {
       ((FlowAnnot*)a.a[i])->configure_annotations(pos, node);
     } else if (a.a[i]->type() == flow_eObjectType_AnnotPixmap) {
@@ -293,9 +274,7 @@ void FlowNodeClass::configure_annotations(void* pos, void* node)
 void FlowNodeClass::measure_annotation(
     int num, char* text, double* width, double* height)
 {
-  int i;
-
-  for (i = 0; i < a.a_size; i++) {
+  for (int i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Annot
         && ((FlowAnnot*)a.a[i])->number == num) {
       ((FlowAnnot*)a.a[i])->measure_annot(text, width, height);
@@ -307,10 +286,8 @@ void FlowNodeClass::measure_annotation(
 void FlowNodeClass::get_obstacle_borders(double pos_x, double pos_y,
     double* x_right, double* x_left, double* y_high, double* y_low, void* node)
 {
-  int i;
-
   if (group == flow_eNodeGroup_Document || no_con_obstacle) {
-    for (i = 0; i < a.a_size; i++) {
+    for (int i = 0; i < a.a_size; i++) {
       if (a.a[i]->type() == flow_eObjectType_Rect)
         a.a[i]->get_borders(pos_x, pos_y, x_right, x_left, y_high, y_low, node);
     }

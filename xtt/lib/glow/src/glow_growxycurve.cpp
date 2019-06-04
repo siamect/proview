@@ -169,27 +169,21 @@ void GrowXYCurve::set_xy_curve_color(
 void GrowXYCurve::set_xy_data(
     double* y_data, double* x_data, int curve_idx, int data_points)
 {
-  glow_eDrawType dt, dt_fill;
-  int points;
-  int cpoints;
-  glow_sPoint* pointarray;
-  glow_sPoint* point_p;
-  int i, j, idx;
-
   if (curve_idx > TREND_MAX_CURVES)
     return;
 
   no_of_points = MAX(2, no_of_points);
-  points = cpoints = MIN(no_of_points, data_points);
+  int points = MIN(no_of_points, data_points);
+  int cpoints = points;
   if (fill_curve)
     cpoints += 2;
 
   curve_width = MIN(DRAW_TYPE_SIZE, MAX(1, curve_width));
 
-  pointarray = (glow_sPoint*)calloc(cpoints, sizeof(glow_sPoint));
-  point_p = pointarray;
-  j = curve_idx;
-  for (i = 0, idx = 0; i < cpoints; i++, idx++) {
+  glow_sPoint* pointarray = (glow_sPoint*)calloc(cpoints, sizeof(glow_sPoint));
+  glow_sPoint* point_p = pointarray;
+  int j = curve_idx;
+  for (int i = 0, idx = 0; i < cpoints; i++, idx++) {
     if (!fill_curve) {
       idx = i;
       if (!feq(y_max_value[j], y_min_value[j]))
@@ -246,15 +240,11 @@ void GrowXYCurve::set_xy_data(
   if (curve[j])
     delete curve[j];
 
+  glow_eDrawType dt = draw_type, dt_fill = draw_type;
   if (curve_drawtype[j] != glow_eDrawType_Inherit)
     dt = curve_drawtype[j];
-  else
-    dt = draw_type;
-
   if (curve_fill_drawtype[j] != glow_eDrawType_Inherit)
     dt_fill = curve_fill_drawtype[j];
-  else
-    dt_fill = draw_type;
 
   curve[j] = new GrowPolyLine(ctx, "", pointarray, cpoints, dt, curve_width, 0,
       fill_curve, 1, 0, dt_fill, 0, 1);
@@ -283,35 +273,24 @@ void GrowXYCurve::export_javabean(GlowTransform* t, void* node,
     glow_eExportPass pass, int* shape_cnt, int node_cnt, int in_nc,
     std::ofstream& fp)
 {
-  double x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
-  double rotation;
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p1 = tmp * ll;
+  glow_sPoint p2 = tmp * ur;
+  p1.x = p1.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p1.y = p1.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+  p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
 
-  if (!t) {
-    x1 = trf.x(ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = trf.y(ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = trf.x(ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = trf.y(ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  } else {
-    x1 = trf.x(t, ll.x, ll.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y1 = trf.y(t, ll.x, ll.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-    x2 = trf.x(t, ur.x, ur.y) * ctx->mw->zoom_factor_x - ctx->mw->offset_x;
-    y2 = trf.y(t, ur.x, ur.y) * ctx->mw->zoom_factor_y - ctx->mw->offset_y;
-  }
+  double ll_x = MIN(p1.x, p2.x);
+  double ur_x = MAX(p1.x, p2.x);
+  double ll_y = MIN(p1.y, p2.y);
+  double ur_y = MAX(p1.y, p2.y);
 
-  ll_x = MIN(x1, x2);
-  ur_x = MAX(x1, x2);
-  ll_y = MIN(y1, y2);
-  ur_y = MAX(y1, y2);
+  double rotation = (tmp.rotation / 360 - floor(tmp.rotation / 360)) * 360;
 
-  if (t)
-    rotation = (trf.rot(t) / 360 - floor(trf.rot(t) / 360)) * 360;
-  else
-    rotation = (trf.rot() / 360 - floor(trf.rot() / 360)) * 360;
-
-  ((GrowCtx*)ctx)
-      ->export_jbean->xycurve(ll_x, ll_y, ur_x, ur_y, draw_type, fill_drawtype,
-          fill, border, curve_width, no_of_points, horizontal_lines,
-          vertical_lines, line_width, rotation, pass, shape_cnt, node_cnt, fp);
+  ctx->export_jbean->xycurve(ll_x, ll_y, ur_x, ur_y, draw_type, fill_drawtype,
+      fill, border, curve_width, no_of_points, horizontal_lines, vertical_lines,
+      line_width, rotation, pass, shape_cnt, node_cnt, fp);
 }
 
 int GrowXYCurve::get_java_name(char* name)

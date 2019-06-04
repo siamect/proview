@@ -182,7 +182,7 @@ public:
     \param ur_x		Upper right x coordinate of drawing area.
     \param ur_y		Upper right y coordinate of drawing area.
   */
-  void draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Draw the objects if any part is inside the drawing area, and extends the
   //! drawing area.
@@ -196,10 +196,10 @@ public:
     drawing area,
     the drawingarea is extended so it contains the whole objects.
   */
-  void draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
+  void draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
 
   //! Erase the object
-  void erase(DrawWind* w)
+  void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
   }
@@ -211,14 +211,6 @@ public:
     \param grid		Position object on grid point.
   */
   void move(double delta_x, double delta_y, int grid);
-
-  //! Move the object without erase.
-  /*!
-    \param delta_x	Moved distance in x direction.
-    \param delta_y	Moved distance in y direction.
-    \param grid		Position object on grid point.
-  */
-  void move_noerase(int delta_x, int delta_y, int grid);
 
   //! Set object highlight.
   /*!
@@ -475,7 +467,7 @@ public:
     multiplied with the parentnodes transform, to give the appropriate
     coordinates for the drawing.
   */
-  void draw(DrawWind* w, GlowTransform* t, int highlight, int hot, void* node,
+  void draw(GlowWind* w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
 
   //! Erase the object.
@@ -484,7 +476,7 @@ public:
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase(DrawWind* w, GlowTransform* t, int hot, void* node);
+  void erase(GlowWind* w, GlowTransform* t, int hot, void* node);
 
   //! Set the original color tone
   /*!
@@ -523,12 +515,7 @@ public:
   */
   void incr_original_color_lightness(int lightness)
   {
-    color_lightness += lightness;
-    if (color_lightness > 5)
-      color_lightness = 5;
-    if (color_lightness < -5)
-      color_lightness = -5;
-    ctx->set_dirty();
+    set_color_lightness(CLAMP(color_lightness + lightness, -5, 5));
   }
 
   //! Set the color lightness.
@@ -558,12 +545,7 @@ public:
   */
   void incr_original_color_intensity(int intensity)
   {
-    color_intensity += intensity;
-    if (color_intensity > 5)
-      color_intensity = 5;
-    if (color_intensity < -5)
-      color_intensity = -5;
-    ctx->set_dirty();
+    set_color_lightness(CLAMP(color_intensity + intensity, -5, 5));
   }
 
   //! Set the color intensity.
@@ -602,10 +584,7 @@ public:
   */
   void incr_color_shift(int shift)
   {
-    if (!shift)
-      return;
-    color_shift += shift;
-    ctx->set_dirty();
+    set_color_shift(color_shift + shift);
   }
 
   //! Set the original color shift.
@@ -626,8 +605,10 @@ public:
   */
   void set_color_inverse(int inverse)
   {
-    color_inverse = inverse;
-    ctx->set_dirty();
+    if (color_inverse != inverse) {
+      color_inverse = inverse;
+      ctx->set_dirty();
+    }
   }
 
   //! Calculate the color of the image dependent on the color tone, brightness,
@@ -656,7 +637,8 @@ public:
   */
   void set_transform_from_stored(GlowTransform* t)
   {
-    trf.set_from_stored(t), get_node_borders();
+    trf.set(*t * trf.s);
+    get_node_borders();
   }
 
   //! Store the current transform

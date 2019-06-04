@@ -58,7 +58,7 @@ GlowNodeGroup::GlowNodeGroup(const GlowNodeGroup& nc)
     : GlowNodeClass((GlowNodeClass&)nc)
 {
   // Get unique name
-  sprintf(n_name, "Grp%d_", ((GrowCtx*)ctx)->objectname_cnt++);
+  sprintf(n_name, "Grp%d_", ctx->objectname_cnt++);
 }
 
 GlowNodeGroup::~GlowNodeGroup()

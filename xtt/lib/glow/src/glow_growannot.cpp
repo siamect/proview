@@ -102,23 +102,19 @@ void GrowAnnot::open(std::ifstream& fp)
   }
 }
 
-void GrowAnnot::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
+void GrowAnnot::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     void* node, void* colornode)
 {
-  int x1, y1;
-
   if (!(display_level & ctx->display_level))
     return;
-  hot = (w == ctx->navw) ? 0 : hot;
+
+  hot = (w == &ctx->navw) ? 0 : hot;
 
   if (!((GlowNode*)node)->annotv[number])
     return;
 
-  glow_eDrawType color;
-  int rot;
-  double offset_x = 0;
-  double offset_y = 0;
-  double trf_scale = trf.vertical_scale(t);
+  Matrix tmp = t ? (*t * trf) : trf;
+  double trf_scale = tmp.vertical_scale();
   int idx = int(
       trf_scale * w->zoom_factor_y / w->base_zoom_factor * (text_size + 4) - 4);
   double tsize = trf_scale * w->zoom_factor_y / w->base_zoom_factor
@@ -130,6 +126,8 @@ void GrowAnnot::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
   glow_eFont lfont;
   glow_eDrawType ldraw_type;
 
+  double offset_x = 0;
+  double offset_y = 0;
   if (node && ((GrowNode*)node)->annot_scrollingtext == number) {
     offset_x = ((GrowNode*)node)->annot_offset_x;
     offset_y = ((GrowNode*)node)->annot_offset_y;
@@ -143,15 +141,10 @@ void GrowAnnot::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     ldraw_type = draw_type;
   }
 
-  if (!t) {
-    x1 = int((trf.x(p.x, p.y) + offset_x) * w->zoom_factor_x) - w->offset_x;
-    y1 = int((trf.y(p.x, p.y) + offset_y) * w->zoom_factor_y) - w->offset_y;
-    rot = (int)trf.rot();
-  } else {
-    x1 = int((trf.x(t, p.x, p.y) + offset_x) * w->zoom_factor_x) - w->offset_x;
-    y1 = int((trf.y(t, p.x, p.y) + offset_y) * w->zoom_factor_y) - w->offset_y;
-    rot = (int)trf.rot(t);
-  }
+  glow_sPoint p = tmp * this->p;
+  p.x = (p.x + offset_x) * w->zoom_factor_x - w->offset_x;
+  p.y = (p.y + offset_y) * w->zoom_factor_y - w->offset_y;
+  int rot = (int)tmp.rotation;
   rot = rot < 0 ? rot % 360 + 360 : rot % 360;
 
   switch (annot_type) {
@@ -160,9 +153,8 @@ void GrowAnnot::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     char* textp;
     int text_len;
 
-    color = ((GrowCtx*)ctx)
-                ->get_drawtype(color_drawtype, glow_eDrawType_LineHighlight,
-                    highlight, (GrowNode*)colornode, 2);
+    glow_eDrawType color = ctx->get_drawtype(color_drawtype,
+        glow_eDrawType_LineHighlight, highlight, (GrowNode*)colornode, 2);
 
     if (protect) {
       text_len
@@ -185,17 +177,17 @@ void GrowAnnot::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     case glow_eAdjustment_Left:
       break;
     case glow_eAdjustment_Right:
-      x1 -= width;
+      p.x -= width;
       break;
     case glow_eAdjustment_Center:
-      x1 -= width / 2;
+      p.x -= width / 2;
       break;
     }
 
     if (rot < 45 || rot >= 315) {
       if (((GlowNode*)node)->annotv_inputmode[number]
           && ((GrowNode*)node)->input_selected) {
-        ctx->gdraw->rect(x1, y1 - height + descent, width, height,
+        ctx->gdraw->rect((int)p.x, (int)p.y - height + descent, width, height,
             glow_eDrawType_MediumGray, 1, 0);
       }
     } else {
@@ -203,35 +195,36 @@ void GrowAnnot::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       if (adjustment == glow_eAdjustment_Center) {
         // Only center adjustment supports text rotation
         if (45 <= rot && rot < 135) {
-          x1 += width / 2;
-          y1 += width / 2;
+          p.x += width / 2;
+          p.y += width / 2;
         } else if (135 <= rot && rot < 225) {
-          y1 += height - descent;
+          p.y += height - descent;
         } else if (225 <= rot && rot < 315) {
-          x1 += width / 2 - height + descent;
-          y1 -= width / 2 - height + descent;
+          p.x += width / 2 - height + descent;
+          p.y -= width / 2 - height + descent;
         } else {
-          x1 -= width;
+          p.x -= width;
         }
       } else {
         if (45 <= rot && rot < 135) {
-          y1 += height - descent;
+          p.y += height - descent;
         } else if (135 <= rot && rot < 225) {
-          x1 -= width;
-          y1 += height - descent;
+          p.x -= width;
+          p.y += height - descent;
         } else {
-          x1 -= width;
+          p.x -= width;
         }
         rot = 0;
       }
     }
 
-    ctx->gdraw->text(x1, y1, textp, text_len, ldraw_type, color, idx,
-        highlight, lfont, tsize, rot);
+    ctx->gdraw->text((int)p.x, (int)p.y, textp, text_len, ldraw_type, color,
+        idx, highlight, lfont, tsize, rot);
 
     if (((GlowNode*)node)->annotv_inputmode[number])
-      ctx->gdraw->text_cursor(x1, y1, textp, text_len, ldraw_type, color,
-          idx, highlight, ((GrowNode*)node)->input_position, lfont, tsize);
+      ctx->gdraw->text_cursor((int)p.x, (int)p.y, textp, text_len, ldraw_type,
+          color, idx, highlight, ((GrowNode*)node)->input_position, lfont,
+          tsize);
     break;
   }
   case glow_eAnnotType_MultiLine: {
@@ -240,9 +233,8 @@ void GrowAnnot::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
     int line_cnt = 0;
     char* line = ((GlowNode*)node)->annotv[number];
     char* s;
-    color = ((GrowCtx*)ctx)
-                ->get_drawtype(color_drawtype, glow_eDrawType_LineHighlight,
-                    highlight, (GrowNode*)colornode, 2);
+    glow_eDrawType color = ctx->get_drawtype(color_drawtype,
+        glow_eDrawType_LineHighlight, highlight, (GrowNode*)colornode, 2);
 
     ctx->gdraw->get_text_extent("", 0, ldraw_type, idx, lfont, &z_width,
         &z_height, &z_descent, tsize, 0);
@@ -250,7 +242,7 @@ void GrowAnnot::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
       if (*s == 10) {
         if (len) {
           *s = 0;
-          ctx->gdraw->text(x1, y1 + line_cnt * z_height, line, len,
+          ctx->gdraw->text((int)p.x, (int)p.y + line_cnt * z_height, line, len,
               ldraw_type, color, idx, highlight, lfont, tsize, 0);
           *s = 10;
         }
@@ -261,8 +253,8 @@ void GrowAnnot::draw(DrawWind* w, GlowTransform* t, int highlight, int hot,
         len++;
     }
     if (len)
-      ctx->gdraw->text(x1, y1 + line_cnt * z_height, line, len, ldraw_type,
-          color, idx, highlight, lfont, tsize, 0);
+      ctx->gdraw->text((int)p.x, (int)p.y + line_cnt * z_height, line, len,
+          ldraw_type, color, idx, highlight, lfont, tsize, 0);
     break;
   }
   }
@@ -278,18 +270,18 @@ static glow_eDrawType get_erase_gc(glow_eDrawType gc) {
   }
 }
 
-void GrowAnnot::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
+void GrowAnnot::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
 {
-  int x1, y1;
-
   if (!(display_level & ctx->display_level))
     return;
-  hot = (w == ctx->navw) ? 0 : hot;
+
+  hot = (w == &ctx->navw) ? 0 : hot;
 
   if (!((GlowNode*)node)->annotv[number])
     return;
-  int rot;
-  double trf_scale = trf.vertical_scale(t);
+
+  Matrix tmp = t ? (*t * trf) : trf;
+  double trf_scale = tmp.vertical_scale();
   int idx = int(
       trf_scale * w->zoom_factor_y / w->base_zoom_factor * (text_size + 4) - 4);
   double tsize = trf_scale * w->zoom_factor_y / w->base_zoom_factor
@@ -309,15 +301,10 @@ void GrowAnnot::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
     ldraw_type = draw_type;
   }
 
-  if (!t) {
-    x1 = int(trf.x(p.x, p.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(p.x, p.y) * w->zoom_factor_y) - w->offset_y;
-    rot = (int)trf.rot();
-  } else {
-    x1 = int(trf.x(t, p.x, p.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(t, p.x, p.y) * w->zoom_factor_y) - w->offset_y;
-    rot = (int)trf.rot(t);
-  }
+  glow_sPoint p = tmp * this->p;
+  p.x = p.x * w->zoom_factor_x - w->offset_x;
+  p.y = p.y * w->zoom_factor_y - w->offset_y;
+  int rot = (int)tmp.rotation;
   rot = rot < 0 ? rot % 360 + 360 : rot % 360;
 
   switch (annot_type) {
@@ -347,15 +334,15 @@ void GrowAnnot::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
     case glow_eAdjustment_Left:
       break;
     case glow_eAdjustment_Right:
-      x1 -= width;
+      p.x -= width;
       break;
     case glow_eAdjustment_Center:
-      x1 -= width / 2;
+      p.x -= width / 2;
       break;
     }
     if (((GlowNode*)node)->annotv_inputmode[number]
         && ((GrowNode*)node)->input_selected) {
-      ctx->gdraw->rect(x1, y1 - height + descent, width, height,
+      ctx->gdraw->rect((int)p.x, (int)p.y - height + descent, width, height,
           glow_eDrawType_LineErase, 1, 0);
     }
 
@@ -364,30 +351,30 @@ void GrowAnnot::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
       if (adjustment == glow_eAdjustment_Center) {
         // Only center adjustment supports text rotation
         if (45 <= rot && rot < 135) {
-          x1 += width / 2;
-          y1 += width / 2;
+          p.x += width / 2;
+          p.y += width / 2;
         } else if (135 <= rot && rot < 225) {
-          y1 += height - descent;
+          p.y += height - descent;
         } else if (225 <= rot && rot < 315) {
-          x1 += width / 2 - height + descent;
-          y1 -= width / 2 - height + descent;
+          p.x += width / 2 - height + descent;
+          p.y -= width / 2 - height + descent;
         } else {
-          x1 -= width;
+          p.x -= width;
         }
       } else {
         if (45 <= rot && rot < 135) {
-          y1 += height - descent;
+          p.y += height - descent;
         } else if (135 <= rot && rot < 225) {
-          x1 -= width;
-          y1 += height - descent;
+          p.x -= width;
+          p.y += height - descent;
         } else {
-          x1 -= width;
+          p.x -= width;
         }
         rot = 0;
       }
     }
 
-    ctx->gdraw->text(x1, y1, textp, text_len, get_erase_gc(ldraw_type),
+    ctx->gdraw->text((int)p.x, (int)p.y, textp, text_len, get_erase_gc(ldraw_type),
         glow_eDrawType_Line, idx, 0, lfont, tsize, rot);
     break;
   }
@@ -403,7 +390,7 @@ void GrowAnnot::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
       if (*s == 10) {
         if (len) {
           *s = 0;
-          ctx->gdraw->text(x1, y1 + line_cnt * z_height, line, len,
+          ctx->gdraw->text((int)p.x, (int)p.y + line_cnt * z_height, line, len,
               get_erase_gc(ldraw_type), glow_eDrawType_Line, idx, 0, lfont,
               tsize, 0);
           *s = 10;
@@ -415,7 +402,7 @@ void GrowAnnot::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
         len++;
     }
     if (len)
-      ctx->gdraw->text(x1, y1 + line_cnt * z_height, line, len,
+      ctx->gdraw->text((int)p.x, (int)p.y + line_cnt * z_height, line, len,
           get_erase_gc(ldraw_type), glow_eDrawType_Line, idx, 0, lfont,
           tsize, 0);
     break;
@@ -424,16 +411,16 @@ void GrowAnnot::erase(DrawWind* w, GlowTransform* t, int hot, void* node)
 }
 
 void GrowAnnot::erase_background(
-    DrawWind* w, GlowTransform* t, int hot, void* node)
+    GlowWind* w, GlowTransform* t, int hot, void* node)
 {
-  int x1, y1;
-
   if (!(display_level & ctx->display_level))
     return;
 
   if (!((GlowNode*)node)->annotv[number])
     return;
-  double trf_scale = trf.vertical_scale(t);
+
+  Matrix tmp = t ? (*t * trf) : trf;
+  double trf_scale = tmp.vertical_scale();
   int idx = int(
       trf_scale * w->zoom_factor_y / w->base_zoom_factor * (text_size + 4) - 4);
   double tsize = trf_scale * w->zoom_factor_y / w->base_zoom_factor
@@ -453,13 +440,10 @@ void GrowAnnot::erase_background(
     ldraw_type = draw_type;
   }
 
-  if (!t) {
-    x1 = int(trf.x(p.x, p.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(p.x, p.y) * w->zoom_factor_y) - w->offset_y;
-  } else {
-    x1 = int(trf.x(t, p.x, p.y) * w->zoom_factor_x) - w->offset_x;
-    y1 = int(trf.y(t, p.x, p.y) * w->zoom_factor_y) - w->offset_y;
-  }
+  glow_sPoint p = tmp * this->p;
+  p.x = p.x * w->zoom_factor_x - w->offset_x;
+  p.y = p.y * w->zoom_factor_y - w->offset_y;
+
   switch (annot_type) {
   case glow_eAnnotType_OneLine: {
     int sts;
@@ -467,20 +451,20 @@ void GrowAnnot::erase_background(
     sts = ((GrowNode*)node)->draw_annot_background(t, 0, 0);
     if (ODD(sts)) {
       // There is not any gc for color text...
-      //        glow_draw_text( ctx, x1, y1,
+      //        glow_draw_text( ctx, p.x, p.y,
       //		((GlowNode *) node)->annotv[number],
       //		strlen(((GlowNode *) node)->annotv[number]), background,
       // idx,
       //		0, 0);
     } else {
       if (!protect)
-        ctx->gdraw->text(x1, y1, ((GlowNode*)node)->annotv[number],
+        ctx->gdraw->text((int)p.x, (int)p.y, ((GlowNode*)node)->annotv[number],
             strlen(((GlowNode*)node)->annotv[number]), get_erase_gc(ldraw_type),
             glow_eDrawType_Line, idx, 0, lfont, tsize, 0);
       else {
         int text_len
             = MIN(strlen(((GlowNode*)node)->annotv[number]), sizeof(stars) - 2);
-        ctx->gdraw->text(x1, y1, &stars[sizeof(stars) - 1 - text_len], text_len,
+        ctx->gdraw->text((int)p.x, (int)p.y, &stars[sizeof(stars) - 1 - text_len], text_len,
             get_erase_gc(ldraw_type), glow_eDrawType_Line, idx, 0, lfont,
             tsize, 0);
       }
@@ -499,7 +483,7 @@ void GrowAnnot::erase_background(
       if (*s == 10) {
         if (len) {
           *s = 0;
-          ctx->gdraw->text(x1, y1 + line_cnt * z_height, line, len,
+          ctx->gdraw->text((int)p.x, (int)p.y + line_cnt * z_height, line, len,
               get_erase_gc(ldraw_type), glow_eDrawType_Line, idx, 0, lfont,
               tsize, 0);
           *s = 10;
@@ -511,7 +495,7 @@ void GrowAnnot::erase_background(
         len++;
     }
     if (len)
-      ctx->gdraw->text(x1, y1 + line_cnt * z_height, line, len,
+      ctx->gdraw->text((int)p.x, (int)p.y + line_cnt * z_height, line, len,
           get_erase_gc(ldraw_type), glow_eDrawType_Line, idx, 0, lfont,
           tsize, 0);
     break;
@@ -522,90 +506,63 @@ void GrowAnnot::erase_background(
 void GrowAnnot::get_borders(GlowTransform* t, double* x_right, double* x_left,
     double* y_high, double* y_low)
 {
-  double x1, y1;
+  Matrix tmp = t ? (*t * trf) : trf;
+  glow_sPoint p = tmp * this->p;
 
-  if (!t) {
-    x1 = trf.x(p.x, p.y);
-    y1 = trf.y(p.x, p.y);
-  } else {
-    x1 = trf.x(t, p.x, p.y);
-    y1 = trf.y(t, p.x, p.y);
-  }
-
-  if (x1 < *x_left)
-    *x_left = x1;
-  if (x1 > *x_right)
-    *x_right = x1;
-  if (y1 < *y_low)
-    *y_low = y1;
-  if (y1 > *y_high)
-    *y_high = y1;
+  if (p.x < *x_left)
+    *x_left = p.x;
+  if (p.x > *x_right)
+    *x_right = p.x;
+  if (p.y < *y_low)
+    *y_low = p.y;
+  if (p.y > *y_high)
+    *y_high = p.y;
 }
 
 void GrowAnnot::export_javabean(GlowTransform* t, void* node,
     glow_eExportPass pass, int* shape_cnt, int node_cnt, int in_nc,
     std::ofstream& fp)
 {
-  int x1, y1;
-  int bold;
-
-  double trf_scale = trf.vertical_scale(t);
-  int idx = int(trf_scale * ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor
-          * (text_size + 4)
-      - 4);
+  Matrix tmp = t ? (*t * trf) : trf;
+  int idx = int(tmp.vertical_scale() * ctx->mw.zoom_factor_y /
+                    ctx->mw.base_zoom_factor * (text_size + 4) - 4);
   if (idx < 0)
     return;
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
 
-  if (!t) {
-    x1 = int(trf.x(p.x, p.y) * ctx->mw->zoom_factor_x) - ctx->mw->offset_x;
-    y1 = int(trf.y(p.x, p.y) * ctx->mw->zoom_factor_y) - ctx->mw->offset_y;
-  } else {
-    x1 = int(trf.x(t, p.x, p.y) * ctx->mw->zoom_factor_x) - ctx->mw->offset_x;
-    y1 = int(trf.y(t, p.x, p.y) * ctx->mw->zoom_factor_y) - ctx->mw->offset_y;
-  }
 
-  bold = (draw_type == glow_eDrawType_TextHelveticaBold);
+  glow_sPoint p = tmp * this->p;
+  p.x = p.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+  p.y = p.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
 
-  ((GrowCtx*)ctx)
-      ->export_jbean->annot(x1, y1, number, draw_type, color_drawtype, bold,
-          adjustment, idx, pass, shape_cnt, node_cnt, fp);
+  int bold = (draw_type == glow_eDrawType_TextHelveticaBold);
+
+  ctx->export_jbean->annot((int)p.x, (int)p.y, number, draw_type,
+      color_drawtype, bold, adjustment, idx, pass, shape_cnt, node_cnt, fp);
   //  (*shape_cnt)++;
 }
 
 void GrowAnnot::export_javabean_font(
     GlowTransform* t, void* node, glow_eExportPass pass, std::ofstream& fp)
 {
-  int bold;
-  glow_eDrawType background;
-
-  double trf_scale = trf.vertical_scale(t);
-  int idx = int(trf_scale * ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor
-          * (text_size + 4)
-      - 4);
+  Matrix tmp = t ? (*t * trf) : trf;
+  int idx = int(tmp.vertical_scale() * ctx->mw.zoom_factor_y /
+                    ctx->mw.base_zoom_factor * (text_size + 4) - 4);
   if (idx < 0)
     return;
   idx = MIN(idx, DRAW_TYPE_SIZE - 1);
 
-  glow_eFont lfont;
-  glow_eDrawType ldraw_type;
-
+  glow_eDrawType ldraw_type = draw_type;
   if (node && ((GrowNode*)node)->text_font != glow_eFont_No) {
-    lfont = ((GrowNode*)node)->text_font;
     ldraw_type = ((GrowNode*)node)->text_type;
-  } else {
-    lfont = font;
-    ldraw_type = draw_type;
   }
 
-  bold = (ldraw_type == glow_eDrawType_TextHelveticaBold);
+  glow_eDrawType background;
+  ctx->export_jbean->nc->get_annot_background(NULL, NULL, &background);
 
-  ((GrowCtx*)ctx)
-      ->export_jbean->nc->get_annot_background(NULL, NULL, &background);
-
-  ((GrowCtx*)ctx)
-      ->export_jbean->annot_font(
-          number, ldraw_type, background, bold, idx, pass, fp);
+  int bold = (ldraw_type == glow_eDrawType_TextHelveticaBold);
+  ctx->export_jbean->annot_font(number, ldraw_type, background, bold, idx,
+      pass, fp);
 }
 
 void GrowAnnot::convert(glow_eConvert version)
@@ -624,9 +581,8 @@ void GrowAnnot::get_annotation_info(void* node, int* t_size,
     glow_eDrawType* t_drawtype, glow_eDrawType* t_color, glow_eFont* t_font,
     glow_eAnnotType* t_type)
 {
-  *t_color = ((GrowCtx*)ctx)
-                 ->get_drawtype(color_drawtype, glow_eDrawType_LineHighlight, 0,
-                     (GrowNode*)node, 2);
+  *t_color = ctx->get_drawtype(color_drawtype, glow_eDrawType_LineHighlight, 0,
+      (GrowNode*)node, 2);
   *t_size = text_size;
   *t_type = annot_type;
   if (node && ((GrowNode*)node)->text_font != glow_eFont_No) {
@@ -640,9 +596,9 @@ void GrowAnnot::get_annotation_info(void* node, int* t_size,
 
 int GrowAnnot::get_text_size(GlowTransform* t, double* tsize)
 {
-  double trf_scale = trf.vertical_scale(t);
-  *tsize = trf_scale * ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor
-      * (8 + 2 * text_size);
+  Matrix tmp = t ? (*t * trf) : trf;
+  *tsize = tmp.vertical_scale() * ctx->mw.zoom_factor_y /
+      ctx->mw.base_zoom_factor * (8 + 2 * text_size);
 
   return 1;
 }
@@ -655,12 +611,13 @@ void GrowAnnot::get_text_extent(
     *height = 0;
     return;
   }
-  int z_width, z_height, descent;
-  double trf_scale = trf.vertical_scale(t);
-  int idx = int(trf_scale * ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor
+
+  Matrix tmp = t ? (*t * trf) : trf;
+  double trf_scale = tmp.vertical_scale();
+  int idx = int(trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor
           * (text_size + 4)
       - 4);
-  double tsize = trf_scale * ctx->mw->zoom_factor_y / ctx->mw->base_zoom_factor
+  double tsize = trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor
       * (8 + 2 * text_size);
   if (idx < 0)
     return;
@@ -669,9 +626,10 @@ void GrowAnnot::get_text_extent(
   char* textp = ((GlowNode*)node)->annotv[number];
   int text_len = strlen(((GlowNode*)node)->annotv[number]);
 
+  int z_width, z_height, descent;
   ctx->gdraw->get_text_extent(textp, text_len, draw_type, idx, font, &z_width,
       &z_height, &descent, tsize, 0);
 
-  *width = (double)z_width / ctx->mw->zoom_factor_x;
-  *height = (double)z_height / ctx->mw->zoom_factor_y;
+  *width = (double)z_width / ctx->mw.zoom_factor_x;
+  *height = (double)z_height / ctx->mw.zoom_factor_y;
 }

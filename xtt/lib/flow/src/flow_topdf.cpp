@@ -65,20 +65,18 @@ int CnvContent::find_link(char* subject, char* text, int* page)
 {
   char key_part[4][40];
   char subject_part[4][40];
-  int i, j;
-  int subject_nr;
-  int key_nr;
   int hit = 0;
 
-  subject_nr = dcli_parse(subject, " 	", "", (char*)subject_part,
+  int subject_nr = dcli_parse(subject, " 	", "", (char*)subject_part,
       sizeof(subject_part) / sizeof(subject_part[0]), sizeof(subject_part[0]),
       0);
 
+  int j;
   for (j = 0; j < (int)tab.size(); j++) {
-    key_nr = dcli_parse(tab[j].subject, " 	", "", (char*)key_part,
+    int key_nr = dcli_parse(tab[j].subject, " 	", "", (char*)key_part,
         sizeof(key_part) / sizeof(key_part[0]), sizeof(key_part[0]), 0);
     if (key_nr == subject_nr) {
-      for (i = 0; i < key_nr; i++) {
+      for (int i = 0; i < key_nr; i++) {
         if (str_NoCaseStrcmp(subject_part[i], key_part[i]) == 0) {
           if (i == key_nr - 1) {
             hit = 1;

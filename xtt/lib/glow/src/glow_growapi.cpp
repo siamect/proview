@@ -668,27 +668,26 @@ void grow_ZoomAbsolute(grow_tCtx ctx, double zoom_factor)
 
 void grow_GetZoom(grow_tCtx ctx, double* zoom_factor)
 {
-  *zoom_factor = ctx->mw->zoom_factor_x;
+  *zoom_factor = ctx->mw.zoom_factor_x;
 }
 
 void grow_Scroll(grow_tCtx ctx, double x, double y)
 {
   ctx->scroll(x, y);
-  ;
 }
 
 void grow_SetAttributes(
     grow_tCtx ctx, grow_sAttributes* attr, unsigned long mask)
 {
   if (mask & grow_eAttr_base_zoom_factor) {
-    ctx->mw->zoom_factor_x *= attr->base_zoom_factor / ctx->mw->base_zoom_factor;
-    ctx->mw->zoom_factor_y *= attr->base_zoom_factor / ctx->mw->base_zoom_factor;
-    ctx->mw->base_zoom_factor = attr->base_zoom_factor;
+    ctx->mw.zoom_factor_x *= attr->base_zoom_factor / ctx->mw.base_zoom_factor;
+    ctx->mw.zoom_factor_y *= attr->base_zoom_factor / ctx->mw.base_zoom_factor;
+    ctx->mw.base_zoom_factor = attr->base_zoom_factor;
   }
   if (mask & grow_eAttr_offset_x)
-    ctx->mw->offset_x = attr->offset_x;
+    ctx->mw.offset_x = attr->offset_x;
   if (mask & grow_eAttr_offset_y)
-    ctx->mw->offset_y = attr->offset_y;
+    ctx->mw.offset_y = attr->offset_y;
   if (mask & grow_eAttr_grid_size_x)
     ctx->grid_size_x = attr->grid_size_x;
   if (mask & grow_eAttr_grid_size_y)
@@ -737,11 +736,11 @@ void grow_GetAttributes(
     grow_tCtx ctx, grow_sAttributes* attr, unsigned long mask)
 {
   if (mask & grow_eAttr_base_zoom_factor)
-    attr->base_zoom_factor = ctx->mw->base_zoom_factor;
+    attr->base_zoom_factor = ctx->mw.base_zoom_factor;
   if (mask & grow_eAttr_offset_x)
-    attr->offset_x = ctx->mw->offset_x;
+    attr->offset_x = ctx->mw.offset_x;
   if (mask & grow_eAttr_offset_y)
-    attr->offset_y = ctx->mw->offset_y;
+    attr->offset_y = ctx->mw.offset_y;
   if (mask & grow_eAttr_grid_size_x)
     attr->grid_size_x = ctx->grid_size_x;
   if (mask & grow_eAttr_grid_size_y)
@@ -840,20 +839,9 @@ void grow_ResetNodraw(grow_tCtx ctx)
   ctx->reset_nodraw();
 }
 
-void grow_SetDeferedRedraw(grow_tCtx ctx)
-{
-  ctx->set_dirty();
-}
-
-void grow_RedrawDefered(grow_tCtx ctx)
-{
-  ctx->redraw_if_dirty();
-}
-
 void grow_Redraw(grow_tCtx ctx)
 {
   ctx->set_dirty();
-  ctx->redraw_if_dirty();
 }
 
 void grow_SetMode(grow_tCtx ctx, grow_eMode mode)
@@ -1261,12 +1249,9 @@ static int grow_name_validation_cb(void* ctx, void* value)
 int grow_GetObjectAttrInfo(
     grow_tObject object, char* transtab, grow_sAttrInfo** info, int* attr_cnt)
 {
-  grow_sAttrInfo* attrinfo;
-  int i, j;
+  grow_sAttrInfo* attrinfo = (grow_sAttrInfo*)calloc(100, sizeof(grow_sAttrInfo));
 
-  attrinfo = (grow_sAttrInfo*)calloc(100, sizeof(grow_sAttrInfo));
-
-  i = 0;
+  int i = 0;
   switch (((GrowRect*)object)->type()) {
   case glow_eObjectType_GrowRect: {
     GrowRect* op = (GrowRect*)object;
@@ -3018,7 +3003,7 @@ int grow_GetObjectAttrInfo(
       attrinfo[i++].size = sizeof(op->nc->n_name);
     }
 
-    for (j = 0; j < 10; j++) {
+    for (int j = 0; j < 10; j++) {
       if (op->nc->check_annotation(j)) {
         sprintf(annot_name, "A%d", j);
         if ((name = growapi_translate(transtab, annot_name))) {
@@ -3044,7 +3029,7 @@ int grow_GetObjectAttrInfo(
       }
     }
 
-    for (j = 0; j < op->nc->arg_cnt; j++) {
+    for (int j = 0; j < op->nc->arg_cnt; j++) {
       strcpy(attrinfo[i].name, op->nc->argname[j]);
       attrinfo[i].value_p = malloc(80);
       attrinfo[i].type = glow_eType_String;
@@ -3129,7 +3114,7 @@ int grow_GetObjectAttrInfo(
       attrinfo[i++].size = sizeof(op->min_pos);
     }
 
-    for (j = 0; j < 10; j++) {
+    for (int j = 0; j < 10; j++) {
       if (op->nc->check_annotation(j)) {
         sprintf(annot_name, "A%d", j);
         if ((name = growapi_translate(transtab, annot_name))) {
@@ -3145,7 +3130,7 @@ int grow_GetObjectAttrInfo(
       }
     }
 
-    for (j = 0; j < op->nc->arg_cnt; j++) {
+    for (int j = 0; j < op->nc->arg_cnt; j++) {
       strcpy(attrinfo[i].name, op->nc->argname[j]);
       attrinfo[i].value_p = malloc(80);
       attrinfo[i].type = glow_eType_String;
@@ -3224,7 +3209,7 @@ int grow_GetObjectAttrInfo(
     attrinfo[i].type = glow_eType_Cycle;
     attrinfo[i++].size = sizeof(op->cycle);
 
-    for (j = 0; j < op->arg_cnt; j++) {
+    for (int j = 0; j < op->arg_cnt; j++) {
       sprintf(attrinfo[i].name, "Arg%d", j + 1);
       attrinfo[i].value_p = &op->argname[j];
       attrinfo[i].type = glow_eType_String;
@@ -3243,15 +3228,13 @@ int grow_GetObjectAttrInfo(
 int grow_GetSubGraphAttrInfo(
     grow_tCtx ctx, char* transtab, grow_sAttrInfo** info, int* attr_cnt)
 {
-  grow_sAttrInfo* attrinfo;
-  int i;
   char* dynamic;
   int dynsize;
   char* name;
 
-  attrinfo = (grow_sAttrInfo*)calloc(40, sizeof(grow_sAttrInfo));
+  grow_sAttrInfo* attrinfo = (grow_sAttrInfo*)calloc(40, sizeof(grow_sAttrInfo));
 
-  i = 0;
+  int i = 0;
 
   if ((name = growapi_translate(transtab, "DynType1"))) {
     strcpy(attrinfo[i].name, name);
@@ -3405,12 +3388,9 @@ int grow_GetSubGraphAttrInfo(
 
 int grow_GetGraphAttrInfo(grow_tCtx ctx, grow_sAttrInfo** info, int* attr_cnt)
 {
-  grow_sAttrInfo* attrinfo;
-  int i;
+  grow_sAttrInfo* attrinfo = (grow_sAttrInfo*)calloc(40, sizeof(grow_sAttrInfo));
 
-  attrinfo = (grow_sAttrInfo*)calloc(40, sizeof(grow_sAttrInfo));
-
-  i = 0;
+  int i = 0;
 
   strcpy(attrinfo[i].name, "subgraph");
   attrinfo[i].value_p = &ctx->subgraph;
@@ -4179,7 +4159,7 @@ void grow_MoveObject(grow_tObject object, double x, double y)
 {
   grow_tCtx ctx = (grow_tCtx)((GlowArrayElem*)object)->get_ctx();
   ((GlowArrayElem*)object)
-      ->move(x * ctx->mw->zoom_factor_x, y * ctx->mw->zoom_factor_y, 0);
+      ->move(x * ctx->mw.zoom_factor_x, y * ctx->mw.zoom_factor_y, 0);
 }
 
 void grow_SetObjectScale(grow_tObject object, double scale_x, double scale_y,
@@ -5532,8 +5512,8 @@ grow_tCtx grow_GetWindowCtx( grow_tObject window)
 
 void grow_GetWindowSize(grow_tCtx ctx, int* width, int* height)
 {
-  *width = ctx->mw->window_width;
-  *height = ctx->mw->window_height;
+  *width = ctx->mw.window_width;
+  *height = ctx->mw.window_height;
 }
 
 int grow_IsJava(char* name, int* is_frame, int* is_applet, char* java_name)

@@ -826,19 +826,6 @@ void grow_SetNodraw(grow_tCtx ctx);
 /*! \param ctx	Grow context. */
 void grow_ResetNodraw(grow_tCtx ctx);
 
-//! Set defered redraw.
-/*! \param ctx	Grow context.
-  The redraw will be deferd until a call to redraw_defered() is made.
-*/
-void grow_SetDeferedRedraw(grow_tCtx ctx);
-
-//! Execute the defered redrawings.
-/*! \param ctx	Grow context.
-  Execute redrawing the defered redrawing area since the call to
-  set_defered_redraw().
-*/
-void grow_RedrawDefered(grow_tCtx ctx);
-
 //! Redraw the window.
 /*! \param ctx	Grow context. */
 void grow_Redraw(grow_tCtx ctx);

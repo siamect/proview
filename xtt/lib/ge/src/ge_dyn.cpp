@@ -2202,7 +2202,7 @@ int GeDyn::scan(grow_tObject object)
         || sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED)
       return sts;
   }
-  grow_RedrawDefered(graph->grow->ctx);
+  grow_Redraw(graph->grow->ctx);
   return 1;
 }
 
@@ -12169,7 +12169,6 @@ int GeTable::scan(grow_tObject object)
   char buf[256];
   int len;
 
-  grow_SetDeferedRedraw(dyn->graph->grow->ctx);
   for (i = 0; i < columns; i++) {
     if (is_headerref[i]) {
       for (j = 0; j < elements[i]; j++) {
@@ -12515,7 +12514,7 @@ int GeTable::scan(grow_tObject object)
   }
   if (!sel_found)
     grow_SetSelectedCell(object, -1, -1);
-  grow_RedrawDefered(dyn->graph->grow->ctx);
+  grow_Redraw(dyn->graph->grow->ctx);
   if (first_scan)
     first_scan = false;
   return 1;

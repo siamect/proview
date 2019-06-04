@@ -123,3 +123,7 @@ glow_eGradient GlowDraw::gradient_rotate(double rot, glow_eGradient gradient)
   }
   return g;
 }
+
+DrawWind::DrawWind() : clip_cnt(0)
+{
+}

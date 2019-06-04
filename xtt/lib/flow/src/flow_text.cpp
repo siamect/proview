@@ -201,20 +201,6 @@ void FlowText::nav_erase(void* pos, void* node)
 int FlowText::event_handler(
     void* pos, flow_eEvent event, int x, int y, void* node)
 {
-  FlowPoint* p;
-
-  p = (FlowPoint*)pos;
-  /**
-    if ( p1.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x < x &&
-         x < p2.z_x  + ((FlowPoint *)pos)->z_x - ctx->offset_x &&
-         p1.z_y  + ((FlowPoint *)pos)->z_y - ctx->offset_y < y &&
-         y < p2.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y)
-    {
-      std::cout << "Event handler: Hit in text\n";
-      return 1;
-    }
-    else
-  ***/
   return 0;
 }
 
@@ -244,21 +230,25 @@ void FlowText::get_borders(double pos_x, double pos_y, double* x_right,
 void FlowText::move(
     void* pos, double x, double y, int highlight, int dimmed, int hot)
 {
+  if (!feq(p.x, x) || !feq(p.y, y)) {
+    ctx->set_dirty();
+  }
   p.x = x;
   p.y = y;
   zoom();
   nav_zoom();
-  ctx->set_dirty();
 }
 
 void FlowText::shift(void* pos, double delta_x, double delta_y, int highlight,
     int dimmed, int hot)
 {
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
   p.x += delta_x;
   p.y += delta_y;
   zoom();
   nav_zoom();
-  ctx->set_dirty();
 }
 
 std::ostream& operator<<(std::ostream& o, const FlowText t)

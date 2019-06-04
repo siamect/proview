@@ -54,13 +54,12 @@ public:
       int (*event_cb)(FlowCtx* ctx, flow_tEvent event)) = 0;
   virtual void clear() = 0;
 
-  virtual void get_window_size(DrawWind* wind, int* width, int* height) = 0;
-  virtual void set_window_size(DrawWind* wind, int width, int height) = 0;
+  virtual void get_window_size(void* wind, int* width, int* height) = 0;
+  virtual void set_window_size(void* wind, int width, int height) = 0;
 
-  virtual int begin(DrawWind* wind);
+  virtual int begin(void* wind);
   virtual void end();
-  virtual void start_redraw_timer() {}
-  virtual void cancel_redraw_timer() {}
+  virtual void set_dirty(void* wind) {};
 
   virtual void rect(int x, int y, int width, int height, flow_eDrawType gc_type,
       int fill, int idx, int highlight = 0, int dimmed = 0) = 0;
@@ -87,7 +86,7 @@ public:
       void (*callback_func)(FlowCtx* ctx), void** id) = 0;
   virtual void cancel_timer(void* id) = 0;
 
-  virtual void set_cursor(DrawWind* wind, draw_eCursor cursor) = 0;
+  virtual void set_cursor(void* wind, draw_eCursor cursor) = 0;
 
   virtual void get_text_extent(const char* text, int len,
       flow_eDrawType gc_type, int idx, int* width, int* height, double size) = 0;

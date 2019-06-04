@@ -97,7 +97,7 @@ GlowNode::~GlowNode()
   ctx->set_dirty();
   ctx->delete_node_cons(this);
   if (hot)
-    ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 }
 
 int GlowNode::get_conpoint(int num, double* x, double* y, glow_eDirection* dir)
@@ -114,9 +114,6 @@ int GlowNode::get_conpoint(int num, double* x, double* y, glow_eDirection* dir)
 
 void GlowNode::save(std::ofstream& fp, glow_eSaveMode mode)
 {
-  int i;
-  char* s;
-
   if ((mode == glow_eSaveMode_Trace && nc->group != glow_eNodeGroup_Trace)
       || (mode == glow_eSaveMode_Edit && nc->group == glow_eNodeGroup_Trace))
     return;
@@ -125,7 +122,7 @@ void GlowNode::save(std::ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_Node_nc) << FSPACE << nc->n_name << '\n';
   fp << int(glow_eSave_Node_n_name) << FSPACE << n_name << '\n';
   fp << int(glow_eSave_Node_refcon_cnt) << '\n';
-  for (i = 0; i < MAX_CONPOINTS; i++)
+  for (int i = 0; i < MAX_CONPOINTS; i++)
     fp << refcon_cnt[i] << '\n';
   fp << int(glow_eSave_Node_x_right) << FSPACE << x_right << '\n';
   fp << int(glow_eSave_Node_x_left) << FSPACE << x_left << '\n';
@@ -136,13 +133,13 @@ void GlowNode::save(std::ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_Node_obst_y_high) << FSPACE << obst_y_high << '\n';
   fp << int(glow_eSave_Node_obst_y_low) << FSPACE << obst_y_low << '\n';
   fp << int(glow_eSave_Node_annotsize) << '\n';
-  for (i = 0; i < 10; i++)
+  for (int i = 0; i < 10; i++)
     fp << annotsize[i] << '\n';
   fp << int(glow_eSave_Node_annotv) << '\n';
-  for (i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++) {
     if (annotsize[i]) {
       fp << "\"";
-      for (s = annotv[i]; *s; s++) {
+      for (char* s = annotv[i]; *s; s++) {
         if (*s == '"')
           fp << "\\";
         fp << *s;
@@ -181,11 +178,8 @@ void GlowNode::open(std::ifstream& fp)
   int end_found = 0;
   char dummy[40];
   char nc_name[80];
-  int i, j;
-  char c;
   int tmp;
   unsigned int utmp;
-  int sts;
 
   for (;;) {
     if (!fp.good()) {
@@ -206,7 +200,7 @@ void GlowNode::open(std::ifstream& fp)
         nc = (GlowNodeClass*)ctx->get_nodeclass_from_name(nc_name);
         if (!nc && ctx->type() == glow_eCtxType_Grow) {
           // If grow, load subgraph
-          sts = ctx->open_subgraph_from_name(nc_name, glow_eSaveMode_SubGraph);
+          int sts = ctx->open_subgraph_from_name(nc_name, glow_eSaveMode_SubGraph);
           if (ODD(sts)) {
             nc = (GlowNodeClass*)ctx->get_nodeclass_from_name(nc_name);
             if (nc)
@@ -230,7 +224,7 @@ void GlowNode::open(std::ifstream& fp)
       fp.getline(n_name, sizeof(n_name));
       break;
     case glow_eSave_Node_refcon_cnt:
-      for (i = 0; i < MAX_CONPOINTS; i++)
+      for (int i = 0; i < MAX_CONPOINTS; i++)
         fp >> refcon_cnt[i];
       break;
     case glow_eSave_Node_x_right:
@@ -258,16 +252,17 @@ void GlowNode::open(std::ifstream& fp)
       fp >> obst_y_low;
       break;
     case glow_eSave_Node_annotsize:
-      for (i = 0; i < 10; i++)
+      for (int i = 0; i < 10; i++)
         fp >> annotsize[i];
       break;
     case glow_eSave_Node_annotv:
       fp.getline(dummy, sizeof(dummy));
-      for (i = 0; i < 10; i++) {
+      for (int i = 0; i < 10; i++) {
         if (annotsize[i]) {
           annotv[i] = (char*)calloc(1, annotsize[i]);
           fp.get();
-          for (j = 0; j < annotsize[i]; j++) {
+          for (int j = 0; j < annotsize[i]; j++) {
+            char c;
             if ((c = fp.get()) == '"') {
               if (j > 0 && annotv[i][j - 1] == '\\')
                 j--;
@@ -388,7 +383,6 @@ void GlowNode::get_annotation(int num, char* text, int size)
 
 void GlowNode::conpoint_refcon_reconfig(int conpoint)
 {
-  //  ctx->conpoint_refcon_erase( this, conpoint);
   refcon_cnt[conpoint] = 0;
   ctx->conpoint_refcon_redraw(this, conpoint);
 }

@@ -42,21 +42,13 @@
 #include <gtk/gtk.h>
 #include "flow_draw.h"
 
-class DrawWind {
-public:
-    GdkWindow* window = NULL;
-    GdkPixmap* buffer = NULL;
-};
-
 class FlowDrawGtk : public FlowDraw {
 public:
   GtkWidget* toplevel;
   GtkWidget* nav_shell;
   GtkWidget* nav_toplevel;
   GdkDisplay* display;
-  DrawWind m_wind;
-  DrawWind nav_wind;
-  DrawWind* w = NULL;
+  GdkWindow* w = NULL;
   GdkScreen* screen;
   GdkGC* gc;
   GdkGC* gc_erase;
@@ -75,7 +67,6 @@ public:
   GdkColor color_vect[20];
   int color_vect_cnt;
   int closing_down;
-  guint redraw_timer;
 
   FlowDrawGtk(GtkWidget* toplevel, void** flow_ctx,
       int (*init_proc)(GtkWidget* w, FlowCtx* ctx, void* client_data),
@@ -85,16 +76,15 @@ public:
   void event_handler(FlowCtx* ctx, GdkEvent event);
   void enable_event(FlowCtx* ctx, flow_eEvent event, flow_eEventType event_type,
       int (*event_cb)(FlowCtx* ctx, flow_tEvent event));
-  void create_buffer(DrawWind *wind);
+  void create_buffer(void *wind);
   void clear();
 
-  void get_window_size(DrawWind *wind, int* width, int* height);
-  void set_window_size(DrawWind *wind, int width, int height);
+  void get_window_size(void *wind, int* width, int* height);
+  void set_window_size(void *wind, int width, int height);
 
-  int begin(DrawWind *wind);
+  int begin(void *wind);
   void end();
-  void start_redraw_timer();
-  void cancel_redraw_timer();
+  void set_dirty(void *wind);
 
   void rect(int x, int y, int width, int height, flow_eDrawType gc_type,
       int fill, int idx, int highlight = 0, int dimmed = 0);
@@ -118,7 +108,7 @@ public:
   void set_timer(FlowCtx* ctx, int time_ms, void (*callback_func)(FlowCtx* ctx),
       void** id);
   void cancel_timer(void* id);
-  void set_cursor(DrawWind *wind, draw_eCursor cursor);
+  void set_cursor(void *wind, draw_eCursor cursor);
   void get_text_extent(const char* text, int len, flow_eDrawType gc_type,
       int idx, int* width, int* height, double size);
   void delete_secondary_ctx(FlowCtx* ctx);

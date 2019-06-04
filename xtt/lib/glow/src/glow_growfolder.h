@@ -97,7 +97,7 @@ public:
   void open(std::ifstream& fp);
 
   //! Erase the object
-  void erase(DrawWind* w)
+  void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
   }
@@ -109,7 +109,7 @@ public:
     \param ur_x		Upper right x coordinate of drawing area.
     \param ur_y		Upper right y coordinate of drawing area.
   */
-  void draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Draw the objects if any part is inside the drawing area, and extends the
   //! drawing area.
@@ -123,7 +123,7 @@ public:
     drawing area,
     the drawingarea is extended so it contains the whole objects.
   */
-  void draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
+  void draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
 
   //! Set object highlight.
   /*!
@@ -170,7 +170,7 @@ public:
     multiplied with the parentnodes transform, to give the appropriate
     coordinates for the drawing.
   */
-  void draw(DrawWind* w, GlowTransform* t, int highlight, int hot, void* node,
+  void draw(GlowWind* w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
 
   //! Erase the object.
@@ -179,7 +179,7 @@ public:
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase(DrawWind* w, GlowTransform* t, int hot, void* node);
+  void erase(GlowWind* w, GlowTransform* t, int hot, void* node);
 
   //! Export the object as a javabean.
   /*!
@@ -209,7 +209,7 @@ public:
   int event_handler(glow_eEvent event, int x, int y, double fx, double fy);
 
   //! Check if new filename
-  void update_attributes();
+  int update_attributes();
 
   //! Set text size
   /*!
@@ -229,8 +229,10 @@ public:
   */
   void set_original_text_color(glow_eDrawType drawtype)
   {
-    text_color_drawtype = drawtype;
-    ctx->set_dirty();
+    if (text_color_drawtype != drawtype) {
+      text_color_drawtype = drawtype;
+      ctx->set_dirty();
+    }
   }
 
   //! Set displayed folder.

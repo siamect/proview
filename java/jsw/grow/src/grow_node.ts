@@ -213,7 +213,7 @@ class GrowNode extends GlowNode {
       if (t === null) {
         this.nc.draw(this.trf, highlight, hot, node, node);
       } else {
-        let trf_tot = GlowTransform.multiply(t, this.trf);
+        let trf_tot = Matrix.multiply(t, this.trf);
         this.nc.draw(trf_tot, highlight, hot, this, this);
       }
     } else {
@@ -291,7 +291,7 @@ class GrowNode extends GlowNode {
       if (t === null) {
         this.nc.draw(this.trf, highlight, hot, node, node);
       } else {
-        let trf_tot = GlowTransform.multiply(t, this.trf);
+        let trf_tot = Matrix.multiply(t, this.trf);
         // If this node has a trace pointer, use colors for this node
         this.nc.draw(trf_tot, highlight, hot, this, this);
       }
@@ -351,7 +351,7 @@ class GrowNode extends GlowNode {
       if (t === null) {
         this.nc.draw(this.trf, highlight, hot, node, node);
       } else {
-        let trf_tot = GlowTransform.multiply(t, this.trf);
+        let trf_tot = Matrix.multiply(t, this.trf);
         // If this node has a trace pointer, use colors for this node
         this.nc.draw(trf_tot, highlight, hot, this, this);
       }
@@ -466,7 +466,8 @@ class GrowNode extends GlowNode {
     old_x_right = this.ur_x;
     old_y_low = this.ll_y;
     old_y_high = this.ur_y;
-    this.trf.scale_from_stored(scale_x, scale_y, x0, y0);
+    this.trf.revert();
+    this.trf.scale(scale_x, scale_y, x0, y0);
     this.get_node_borders();
 
     this.ctx.draw();
@@ -510,7 +511,7 @@ class GrowNode extends GlowNode {
 
     let t = new GlowTransform();
     t.rotate(angel, x0, y0);
-    this.trf.set_from_stored(t);
+    this.trf.set(Matrix.multiply(t, this.trf.s));
     this.get_node_borders();
   }
 
@@ -600,29 +601,27 @@ class GrowNode extends GlowNode {
     }
 
     // Calculate max and min coordinates
-    let x1 = this.trf.x(0, this.nc.y0);
-    let y1 = this.trf.y(0, this.nc.y0);
-    let x2 = this.trf.x(0, this.nc.y1);
-    let y2 = this.trf.y(0, this.nc.y1);
+    let p1 = this.trf.apply(new Point(0, this.nc.y0));
+    let p2 = this.trf.apply(new Point(0, this.nc.y1));
 
-    let rotation = (this.trf.rot() / 360 - Math.floor(this.trf.rot() / 360)) * 360;
+    let rotation = (this.trf.rotation / 360 - Math.floor(this.trf.rotation / 360)) * 360;
 
     if (rotation <= 45 || rotation > 315) {
       limits.direction = Direction.Down;
-      limits.min = y1;
-      limits.max = y2;
+      limits.min = p1.y;
+      limits.max = p2.y;
     } else if (rotation > 45 && rotation <= 135) {
       limits.direction = Direction.Right;
-      limits.min = x2;
-      limits.max = x1;
+      limits.min = p2.x;
+      limits.max = p1.x;
     } else if (rotation > 135 && rotation <= 225) {
       limits.direction = Direction.Up;
-      limits.min = y2;
-      limits.max = y1;
+      limits.min = p2.y;
+      limits.max = p1.y;
     } else if (rotation > 225 && rotation <= 315) {
       limits.direction = Direction.Left;
-      limits.min = x1;
-      limits.max = x2;
+      limits.min = p1.x;
+      limits.max = p2.x;
     }
     limits.status = 1;
     return limits;
@@ -635,7 +634,7 @@ class GrowNode extends GlowNode {
   }
 
   get_borders(t, g) {
-    let t2 = (t) ? GlowTransform.multiply(t, this.trf) : this.trf;
+    let t2 = (t) ? Matrix.multiply(t, this.trf) : this.trf;
     this.nc.get_borders(t2, g);
   }
 
@@ -655,30 +654,28 @@ class GrowNode extends GlowNode {
     this.get_borders(t, g);
     if (g.hit(new Point(x, y))) {
       // Hit, calculate max and min koordinates
-      let x1 = this.trf.x(t, 0, this.nc.y0);
-      let y1 = this.trf.y(t, 0, this.nc.y0);
-      let x2 = this.trf.x(t, 0, this.nc.y1);
-      let y2 = this.trf.y(t, 0, this.nc.y1);
+      let tmp = Matrix.multiply(t, this.trf);
+      let p1 = tmp.apply(new Point(0, this.nc.y0));
+      let p2 = tmp.apply(new Point(0, this.nc.y1));
 
-      let rotation =
-            (this.trf.rot(t) / 360 - Math.floor(this.trf.rot(t) / 360)) * 360;
+      let rotation = (tmp.rotation / 360 - Math.floor(tmp.rotation / 360)) * 360;
 
       if (rotation <= 45 || rotation > 315) {
         b.direction = Direction.Down;
-        b.min = y1;
-        b.max = y2;
+        b.min = p1.y;
+        b.max = p2.y;
       } else if (rotation > 45 && rotation <= 135) {
         b.direction = Direction.Left;
-        b.min = x2;
-        b.max = x1;
+        b.min = p2.x;
+        b.max = p1.x;
       } else if (rotation > 135 && rotation <= 225) {
         b.direction = Direction.Up;
-        b.min = y2;
-        b.max = y1;
+        b.min = p2.y;
+        b.max = p1.y;
       } else if (rotation > 225 && rotation <= 315) {
         b.direction = Direction.Right;
-        b.min = x1;
-        b.max = x2;
+        b.min = p1.x;
+        b.max = p2.x;
       }
       b.background = this;
 
@@ -875,7 +872,7 @@ class GrowNode extends GlowNode {
   }
 
   getAnnotationTextExtent(num) {
-    return this.nc.getAnnotationTextExtent(this.trf, this, num);
+    return this.nc.getAnnotationTextExtent(t, this.trfhis, num);
   }
 
   setColorThemeLightness() {

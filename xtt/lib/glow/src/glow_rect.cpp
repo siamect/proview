@@ -124,12 +124,12 @@ void GlowRect::open(std::ifstream& fp)
   }
 }
 
-void GlowRect::draw(DrawWind* w, void* pos, int highlight, int hot, void* node)
+void GlowRect::draw(GlowWind* w, void* pos, int highlight, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
   int ll_x, ll_y, ur_x, ur_y;
-  if (w == ctx->navw) {
+  if (w == &ctx->navw) {
     hot = 0;
     ll_x = ll.nav_z_x;
     ll_y = ll.nav_z_y;
@@ -165,12 +165,12 @@ void GlowRect::draw(DrawWind* w, void* pos, int highlight, int hot, void* node)
         draw_type, 1, 0);
 }
 
-void GlowRect::erase(DrawWind* w, void* pos, int hot, void* node)
+void GlowRect::erase(GlowWind* w, void* pos, int hot, void* node)
 {
   if (!(display_level & ctx->display_level))
     return;
   int ll_x, ll_y, ur_x, ur_y;
-  if (w == ctx->navw) {
+  if (w == &ctx->navw) {
     hot = 0;
     ll_x = ll.nav_z_x;
     ll_y = ll.nav_z_y;
@@ -208,10 +208,10 @@ int GlowRect::event_handler(
     void* pos, glow_eEvent event, int x, int y, void* node)
 {
   GlowPoint* p = (GlowPoint*)pos;
-  if (ll.z_x + p->z_x - ctx->mw->offset_x <= x
-      && x <= ur.z_x + p->z_x - ctx->mw->offset_x
-      && ll.z_y + p->z_y - ctx->mw->offset_y <= y
-      && y <= ur.z_y + p->z_y - ctx->mw->offset_y) {
+  if (ll.z_x + p->z_x - ctx->mw.offset_x <= x
+      && x <= ur.z_x + p->z_x - ctx->mw.offset_x
+      && ll.z_y + p->z_y - ctx->mw.offset_y <= y
+      && y <= ur.z_y + p->z_y - ctx->mw.offset_y) {
     return 1;
   } else
     return 0;
@@ -234,25 +234,28 @@ void GlowRect::get_borders(double pos_x, double pos_y, double* x_right,
 
 void GlowRect::move(void* pos, double x, double y, int highlight, int hot)
 {
-  double width = ur.x - ll.x;
-  double height = ur.y - ll.y;
+  if (!feq(ll.x, x) || !feq(ll.y, y) || !feq(ur.x, x + ur.x - ll.x)
+      || !feq(ur.y, y + ur.y - ll.y)) {
+    ctx->set_dirty();
+  }
+  ur.x = x + ur.x - ll.x;
+  ur.y = y + ur.y - ll.y;
   ll.x = x;
   ll.y = y;
-  ur.x = x + width;
-  ur.y = y + height;
   zoom();
   nav_zoom();
-  ctx->set_dirty();
 }
 
 void GlowRect::shift(
     void* pos, double delta_x, double delta_y, int highlight, int hot)
 {
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
   ll.x += delta_x;
   ll.y += delta_y;
   ur.x += delta_x;
   ur.y += delta_y;
   zoom();
   nav_zoom();
-  ctx->set_dirty();
 }

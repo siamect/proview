@@ -45,7 +45,7 @@
 /*! \addtogroup Glow */
 /*@{*/
 
-class DrawWind;
+class GlowWind;
 class GlowExportFlow;
 
 //! Base class for all drawing objects and components.
@@ -103,17 +103,19 @@ public:
   virtual void open(std::ifstream& fp){}
   virtual void print(void* pos, void* node){}
   virtual void draw(){}
-  virtual void draw(DrawWind *w, int ll_x, int ll_y, int ur_x, int ur_y){}
-  virtual void draw(DrawWind *w, int* ll_x, int* ll_y, int* ur_x, int* ur_y){}
-  virtual void draw(DrawWind *w, void* pos, int highlight, int hot, void* node){}
-  virtual void draw(DrawWind *w, GlowTransform* t, int highlight, int hot,
+  virtual void draw(GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y){}
+  virtual void draw(GlowWind *w, int* ll_x, int* ll_y, int* ur_x, int* ur_y){}
+  virtual void draw(GlowWind *w, void* pos, int highlight, int hot, void* node){}
+  virtual void draw(GlowWind *w, GlowTransform* t, int highlight, int hot,
       void* node, void* colornode){}
   virtual void erase(){}
-  virtual void erase(DrawWind *w, void* pos, int hot, void* node){}
-  virtual void erase(DrawWind *w, GlowTransform* t, int hot, void* node){}
+  virtual void erase(GlowWind *w, void* pos, int hot, void* node){}
+  virtual void erase(GlowWind *w, GlowTransform* t, int hot, void* node){}
   virtual void draw_inverse(void* pos, int hot, void* node){}
   virtual void move(double delta_x, double delta_y, int grid){}
-  virtual void move_noerase(int delta_x, int delta_y, int grid){}
+  virtual void move_noerase(int delta_x, int delta_y, int grid) {
+    move(double(delta_x), double(delta_y), grid);
+  }
   virtual void shift(
       void* pos, double delta_x, double delta_y, int highlight, int hot){}
   virtual void conpoint_select(
@@ -165,7 +167,6 @@ public:
     return 0;
   }
   virtual void conpoint_refcon_redraw(void* node, int conpoint){}
-  virtual void conpoint_refcon_erase(void* node, int conpoint){}
   virtual void remove_notify(){}
   virtual void set_user_data(void* data){}
   virtual void get_user_data(void** data){}

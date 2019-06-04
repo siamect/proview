@@ -290,7 +290,7 @@ class GrowPolyline extends GlowPolyline {
         this.ctx.gdraw.polyline(this.points, this.a_points.size(),
             drawtype, true, 0);
       } else {
-        let rotation = t ? this.trf.rot(t) : this.trf.rot();
+        let rotation = t ? this.trf.rotation + t.rotation : this.trf.rotation;
 
         let f1, f2;
         if (this.gradient_contrast >= 0) {
@@ -314,7 +314,7 @@ class GrowPolyline extends GlowPolyline {
         0 && this.fill_eq_shadow === 0;
 
     if (display_shadow && this.shadow_width !== 0) {
-      let trf_scale = this.trf.vertical_scale(t);
+      let trf_scale = Matrix.multiply(t, this.trf).vertical_scale();
       let ish = Math.floor(this.shadow_width / 100 * trf_scale *
           Math.min((this.ur_x - this.ll_x) * this.ctx.mw.zoom_factor_x,
               (this.ur_y - this.ll_y) * this.ctx.mw.zoom_factor_y) + 0.5);
@@ -587,19 +587,18 @@ class GrowPolyline extends GlowPolyline {
   }
 
   get_borders(t, g) {
-    let x2 = 0, y2 = 0;
+    let tmp = Matrix.multiply(t, this.trf);
+    let p2 = new Point();
     for (let i = 0; i < this.a_points.size() - 1; i++) {
       let e = this.a_points.get(i);
-      let x1 = x2;
-      let y1 = y2;
+      let p1 = new Point(p2.x, p2.y);
       if (i === 0) {
-        x1 = this.trf.x(t, e.x, e.y);
-        y1 = this.trf.y(t, e.x, e.y);
+        p1 = tmp.apply(e);
       }
-      x2 = this.trf.x(t, e.x, e.y);
-      y2 = this.trf.y(t, e.x, e.y);
+      p2 = tmp.apply(e);
 
-      g.set(Rect.union(g, new Rect(Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2), Math.max(y1, y2))));
+      g.set(Rect.union(g, new Rect(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y),
+          Math.max(p1.x, p2.x), Math.max(p1.y, p2.y))));
     }
   }
 

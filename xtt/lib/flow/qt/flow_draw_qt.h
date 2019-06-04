@@ -46,20 +46,12 @@
 #include <QPainter>
 #include <QWidget>
 
-class DrawWind {
-public:
-    QWidget* window = NULL;
-    QImage* buffer = NULL;
-};
-
 class FlowDrawQt : private QObject, public FlowDraw {
   Q_OBJECT
 
 public:
   QWidget* toplevel;
-  DrawWind m_wind;
-  DrawWind nav_wind;
-  DrawWind* w = NULL;
+  QWidget* w = NULL;
   QColor background;
   QColor foreground;
   QTimer* timer_id;
@@ -79,11 +71,12 @@ public:
 
   void clear();
 
-  void get_window_size(DrawWind *wind, int* width, int* height);
-  void set_window_size(DrawWind *wind, int width, int height);
+  void get_window_size(void *wind, int* width, int* height);
+  void set_window_size(void *wind, int width, int height);
 
-  int begin(DrawWind *wind);
+  int begin(void *w);
   void end();
+  void set_dirty(void *w);
 
   void rect(int x, int y, int width, int height, flow_eDrawType gc_type,
       int fill, int idx, int highlight, int dimmed);
@@ -110,7 +103,7 @@ public:
       void** id);
   void cancel_timer(void* id);
 
-  void set_cursor(DrawWind *wind, draw_eCursor cursor);
+  void set_cursor(void *wind, draw_eCursor cursor);
 
   void get_text_extent(const char* text, int len,
       flow_eDrawType gc_type, int idx, int* width, int* height, double size);
@@ -137,13 +130,13 @@ public:
       void* flow_ctx, int page_border, int* sts);
 
 private:
-  unique_ptr<QPainter> get_painter(int painter_type, int size);
+  void get_painter(int painter_type, int size);
 
   void event_timer(FlowCtx* ctx, QMouseEvent *event, QWidget *target);
-  void cancel_event_timer(FlowCtx* ctx);
 
   void (*draw_timer_callback_func)(FlowCtx* ctx);
   QTimer* draw_timer_id;
+  QPainter painter;
 
 public slots:
   bool event_timer_cb();

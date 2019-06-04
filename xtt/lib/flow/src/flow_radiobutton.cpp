@@ -179,24 +179,17 @@ void FlowRadiobutton::nav_erase(void* pos, void* node)
 int FlowRadiobutton::event_handler(
     void* pos, flow_eEvent event, int x, int y, void* node)
 {
-  FlowPoint* p;
-  int sts;
-
-  p = (FlowPoint*)pos;
   if (ll.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x <= x
       && x <= ur.z_x + ((FlowPoint*)pos)->z_x - ctx->offset_x
       && ll.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y <= y
       && y <= ur.z_y + ((FlowPoint*)pos)->z_y - ctx->offset_y) {
-    switch (event) {
-    case flow_eEvent_MB1Click:
-      //        std::cout << "Event handler: Hit in radiobutton\n";
+    if (event == flow_eEvent_MB1Click) {
       // Call backcall function
-      sts = ctx->radiobutton_cb(
+      int sts = ctx->radiobutton_cb(
           (FlowArrayElem*)node, number, ((FlowNode*)node)->rbuttonv[number]);
       if (sts == FLOW__DESTROYED)
         return sts;
       return FLOW__NO_PROPAGATE;
-    default:;
     }
     return 1;
   } else
@@ -219,29 +212,30 @@ void FlowRadiobutton::get_borders(double pos_x, double pos_y, double* x_right,
 void FlowRadiobutton::move(
     void* pos, double x, double y, int highlight, int dimmed, int hot)
 {
-  double width, height;
-
-  width = ur.x - ll.x;
-  height = ur.y - ll.y;
+  if (!feq(ll.x, x) || !feq(ll.y, y) || !feq(ur.x, x + ur.x - ll.x)
+      || !feq(ur.y, y + ur.y - ll.y)) {
+    ctx->set_dirty();
+  }
+  ur.x = x + ur.x - ll.x;
+  ur.y = y + ur.y - ll.y;
   ll.x = x;
   ll.y = y;
-  ur.x = x + width;
-  ur.y = y + height;
   zoom();
   nav_zoom();
-  ctx->set_dirty();
 }
 
 void FlowRadiobutton::shift(void* pos, double delta_x, double delta_y,
     int highlight, int dimmed, int hot)
 {
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
   ll.x += delta_x;
   ll.y += delta_y;
   ur.x += delta_x;
   ur.y += delta_y;
   zoom();
   nav_zoom();
-  ctx->set_dirty();
 }
 
 std::ostream& operator<<(std::ostream& o, const FlowRadiobutton r)

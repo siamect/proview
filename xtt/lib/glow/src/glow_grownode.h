@@ -90,7 +90,7 @@ public:
   void copy_from(const GrowNode& n);
 
   //! Erase the object
-  void erase(DrawWind* w)
+  virtual void erase(GlowWind* w)
   {
     erase(w, (GlowTransform*)NULL, hot, NULL);
   }
@@ -476,10 +476,7 @@ public:
   //! Reset color lightness to original color lightness.
   void reset_color_lightness()
   {
-    if (color_lightness == original_color_lightness)
-      return;
-    color_lightness = original_color_lightness;
-    ctx->set_dirty();
+    set_color_lightness(original_color_lightness);
   }
 
   //! Set the original color intensity.
@@ -521,10 +518,7 @@ public:
   //! Reset the color intensity to original color intensity.
   void reset_color_intensity()
   {
-    if (color_intensity == original_color_intensity)
-      return;
-    color_intensity = original_color_intensity;
-    ctx->set_dirty();
+    set_color_intensity(original_color_intensity);
   }
 
   //! Set the original color shift.
@@ -553,10 +547,7 @@ public:
   */
   void incr_color_shift(int shift)
   {
-    if (!shift)
-      return;
-    color_shift += shift;
-    ctx->set_dirty();
+    set_color_shift(color_shift + shift);
   }
 
   //! Set the original color shift.
@@ -574,10 +565,7 @@ public:
   //! Reset the color shift to original color shift.
   void reset_color_shift()
   {
-    if (color_shift == original_color_shift)
-      return;
-    color_shift = original_color_shift;
-    ctx->set_dirty();
+    set_color_shift(original_color_shift);
   }
 
   //! Set the color inverse.
@@ -586,8 +574,10 @@ public:
   */
   void set_color_inverse(int inverse)
   {
-    color_inverse = inverse;
-    ctx->set_dirty();
+    if (color_inverse != inverse) {
+      color_inverse = inverse;
+      ctx->set_dirty();
+    }
   }
 
   //! Set the original background color.
@@ -606,17 +596,16 @@ public:
   */
   void set_background_color(glow_eDrawType color)
   {
-    background_drawtype = color;
-    ctx->set_dirty();
+    if (background_drawtype != color) {
+      background_drawtype = color;
+      ctx->set_dirty();
+    }
   }
 
   //! Reset the background color to the original background color.
   void reset_background_color()
   {
-    if (background_drawtype == original_background_drawtype)
-      return;
-    background_drawtype = original_background_drawtype;
-    ctx->set_dirty();
+    set_background_color(original_background_drawtype);
   }
 
   //! Set the level fill color.
@@ -643,8 +632,10 @@ public:
   */
   void set_fill_level(double level)
   {
-    fill_level = level;
-    ctx->set_dirty();
+    if (!feq(fill_level, level)) {
+      fill_level = level;
+      ctx->set_dirty();
+    }
   }
 
   //! Set the level direction.
@@ -715,7 +706,7 @@ public:
     \param ur_x		Upper right x coordinate of drawing area.
     \param ur_y		Upper right y coordinate of drawing area.
   */
-  void draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Draw the objects if any part is inside the drawing area, and extends the
   //! drawing area.
@@ -729,7 +720,7 @@ public:
     drawing area,
     the drawingarea is extended so it contains the whole objects.
   */
-  void draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
+  void draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
   //! Draw the object.
   /*!
     \param t		Transform of parent node. Can be zero.
@@ -744,7 +735,7 @@ public:
     multiplied with the parentnodes transform, to give the appropriate
     coordinates for the drawing.
   */
-  void draw(DrawWind* w, GlowTransform* t, int highlight, int hot, void* node,
+  void draw(GlowWind* w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
 
   //! Erase the object.
@@ -753,7 +744,7 @@ public:
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase(DrawWind* w, GlowTransform* t, int hot, void* node);
+  void erase(GlowWind* w, GlowTransform* t, int hot, void* node);
 
   //! Add a transform to the current transform.
   /*!
@@ -773,7 +764,8 @@ public:
   */
   void set_transform_from_stored(GlowTransform* t)
   {
-    trf.set_from_stored(t), get_node_borders();
+    trf.set(*t * trf.s);
+    get_node_borders();
   }
 
   //! Get info for a connection point
@@ -940,7 +932,7 @@ public:
   /*! This function should be called when a group where the object is a member
    * is dissolved.
    */
-  void ungroup()
+  virtual void ungroup()
   {
     root_node = 0;
   }
@@ -1064,8 +1056,10 @@ public:
   */
   void set_shadow(int shadowval)
   {
-    shadow = shadowval;
-    ctx->set_dirty();
+    if (shadow != shadowval) {
+      shadow = shadowval;
+      ctx->set_dirty();
+    }
   }
 
   //! Set Gradient.
@@ -1074,8 +1068,10 @@ public:
   */
   void set_gradient(glow_eGradient gradientval)
   {
-    gradient = gradientval;
-    ctx->set_dirty();
+    if (gradient != gradientval) {
+      gradient = gradientval;
+      ctx->set_dirty();
+    }
   }
 
   //! Set root node.

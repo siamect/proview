@@ -48,23 +48,15 @@
 #include <QPainter>
 #include <QTimer>
 
-void QtScrollWidgetGlow::createBuffer(QSize size)
-{
-  if (size.isEmpty()) {
-    return;
-  }
-  this->image = QImage(size, QImage::Format_RGB32);
-  QPainter imPainter(&image);
-  imPainter.fillRect(image.rect(), palette().color(QPalette::Background));
-}
-
 void QtScrollWidgetGlow::init(unsigned int eCtxType,
     int (*init_proc)(GlowCtx* ctx, void* client_data), void* client_data,
     int (*init_proc2)(QWidget* w, GlowCtx* ctx, void* client_data))
 {
-  createBuffer(size());
   setFocusPolicy(Qt::ClickFocus);
   setMouseTracking(true);
+  if (getenv("DISPLAY")[0] != ':') {
+    setAttribute(Qt::WA_PaintOnScreen);
+  }
   this->ctxType = eCtxType;
   this->init_proc = init_proc;
   this->init_widget_proc = init_proc2;
@@ -81,9 +73,11 @@ QWidget* QtScrollWidgetGlow::initScroll(unsigned int eCtxType,
     int (*init_proc)(GlowCtx* ctx, void* client_data), void* client_data,
     int (*init_proc2)(QWidget* w, GlowCtx* ctx, void* client_data))
 {
-  createBuffer(size());
   setFocusPolicy(Qt::ClickFocus);
   setMouseTracking(true);
+  if (getenv("DISPLAY")[0] != ':') {
+    setAttribute(Qt::WA_PaintOnScreen);
+  }
   this->ctxType = eCtxType;
   this->init_proc = init_proc;
   this->init_widget_proc = init_proc2;
@@ -114,9 +108,11 @@ QWidget* QtScrollWidgetGlow::initScroll(unsigned int eCtxType,
 
 void QtScrollWidgetGlow::init(unsigned int eCtxType, QWidget* main)
 {
-  createBuffer(size());
   setFocusPolicy(Qt::ClickFocus);
   setMouseTracking(true);
+  if (getenv("DISPLAY")[0] != ':') {
+    setAttribute(Qt::WA_PaintOnScreen);
+  }
   this->ctxType = eCtxType;
   this->scroll_timerid = new QTimer(this);
   is_navigator = 1;
@@ -221,10 +217,19 @@ void QtScrollWidgetGlow::scroll_v_released(int value)
 
 void QtScrollWidgetGlow::paintEvent(QPaintEvent* event)
 {
-  QPainter painter(this);
-  QRect dirtyRect = event->rect();
-  painter.drawImage(dirtyRect, image, dirtyRect);
-  QWidget::paintEvent(event);
+  GlowCtx* ctx = (GlowCtx*)parent_ctx;
+  if (((DrawWindQt*)ctx->mw.window)->window == this) {
+    draw_ctx->begin(&ctx->mw);
+    ctx->draw(&ctx->mw, event->rect().x(), event->rect().y(),
+        event->rect().width(), event->rect().height());
+    draw_ctx->end();
+  } else if (((DrawWindQt*)ctx->navw.window)->window == this) {
+    draw_ctx->begin(&ctx->navw);
+    ctx->draw(&ctx->navw, event->rect().x(), event->rect().y(),
+        event->rect().width(), event->rect().height());
+    draw_ctx->end();
+  }
+  ctx->is_dirty = 0;
 }
 
 void QtScrollWidgetGlow::closeEvent(QCloseEvent* event)
@@ -249,8 +254,8 @@ void QtScrollWidgetGlow::handleEvent(QEvent* event)
     if (parent_ctx) {
       GlowCtx* ctx = (GlowCtx*)parent_ctx;
       GlowDrawQt* drawer = ((GlowDrawQt*)ctx->gdraw);
-      if (event->type() == QEvent::MouseMove) {
-        drawer->m_wind.window->update();
+      if (event->type() == QEvent::Resize || event->type() == QEvent::Show) {
+        ctx->set_dirty();
       }
       drawer->event_handler(event, this);
     }
@@ -261,7 +266,6 @@ bool QtScrollWidgetGlow::event(QEvent* event)
 {
   if (event->type() == QEvent::Resize) {
     emit resize_signal((QResizeEvent*)event);
-    createBuffer(((QResizeEvent*)event)->size());
   }
   if (!is_realized && event->type() == QEvent::Show) {
     realize();

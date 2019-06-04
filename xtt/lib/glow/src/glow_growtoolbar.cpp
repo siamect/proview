@@ -75,7 +75,7 @@ GrowToolbar::~GrowToolbar()
   ctx->set_dirty();
   ctx->delete_node_cons(this);
   if (hot)
-    ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 }
 
 void GrowToolbar::copy_from(const GrowToolbar& n)
@@ -179,9 +179,7 @@ void GrowToolbar::trace_close()
 
 GlowArrayElem* GrowToolbar::get_node_from_name(char* name)
 {
-  int i;
-
-  for (i = 0; i < nc->a.a_size; i++) {
+  for (int i = 0; i < nc->a.a_size; i++) {
     if ((nc->a.a[i]->type() == glow_eObjectType_Node
             || nc->a.a[i]->type() == glow_eObjectType_GrowNode
             || nc->a.a[i]->type() == glow_eObjectType_GrowConGlue)
@@ -237,17 +235,14 @@ void GrowToolbar::set_rootnode(void* node)
 
 int GrowToolbar::event_handler(glow_eEvent event, double fx, double fy)
 {
-  double x, y;
-  int sts;
-
   if (invisible || dimmed)
     return 0;
 
   if (!ctx->trace_started)
     return GrowNode::event_handler(event, fx, fy);
 
-  trf.reverse(fx, fy, &x, &y);
-  sts = nc->event_handler(event, x, y);
+  glow_sPoint p = trf.reverse(fx, fy);
+  int sts = nc->event_handler(event, p.x, p.y);
   if (ctx->trace_started && sts) {
     // Register group members with click action
     if (is_sensitive())
@@ -258,11 +253,6 @@ int GrowToolbar::event_handler(glow_eEvent event, double fx, double fy)
 
 int GrowToolbar::event_handler(glow_eEvent event, int x, int y, double fx, double fy)
 {
-  int sts, lsts;
-  int hot_type;
-  int idx = 0, mask_idx, category;
-  double rx, ry;
-
   if (invisible || dimmed)
     return 0;
 
@@ -282,11 +272,11 @@ int GrowToolbar::event_handler(glow_eEvent event, int x, int y, double fx, doubl
   }
 
   // Convert koordinates to local koordinates
-  trf.reverse(fx, fy, &rx, &ry);
+  glow_sPoint r = trf.reverse(fx, fy);
 
-  sts = 0;
+  int sts = 0;
   if (event == ctx->event_move_node) {
-    sts = nc->event_handler(event, rx, ry);
+    sts = nc->event_handler(event, r.x, r.y);
     if (sts) {
       /* Register node for potential movement */
       ctx->move_insert(this);
@@ -296,17 +286,19 @@ int GrowToolbar::event_handler(glow_eEvent event, int x, int y, double fx, doubl
   } else if (event == ctx->event_create_con) {
     return sts;
   }
+
+  int idx;
   switch (event) {
   case glow_eEvent_MB1Down:
     if (ctx->trace_started) {
-      sts = nc_event_handler(event, rx, ry, &idx);
+      sts = nc_event_handler(event, r.x, r.y, &idx);
       if (sts)
         ((GrowNode*)nc->a.a[idx])->set_color_inverse(1);
     }
     break;
   case glow_eEvent_MB1Up:
     if (ctx->trace_started) {
-      sts = nc_event_handler(event, rx, ry, &idx);
+      sts = nc_event_handler(event, r.x, r.y, &idx);
       if (sts)
         ((GrowNode*)nc->a.a[idx])->set_color_inverse(0);
     }
@@ -317,10 +309,9 @@ int GrowToolbar::event_handler(glow_eEvent event, int x, int y, double fx, doubl
         sts = 0;
       else {
         if (is_sensitive()) {
-          sts = nc_event_handler(event, rx, ry, &idx);
+          sts = nc_event_handler(event, r.x, r.y, &idx);
           if (sts) {
             ((GrowNode*)nc->a.a[idx])->set_hot(1);
-            ctx->set_dirty();
             ctx->hot_found = 1;
           }
         }
@@ -329,60 +320,59 @@ int GrowToolbar::event_handler(glow_eEvent event, int x, int y, double fx, doubl
       if (ctx->hot_found)
         sts = 0;
       else {
-        sts = nc_event_handler(event, rx, ry, &idx);
+        sts = nc_event_handler(event, r.x, r.y, &idx);
         if (sts)
           ctx->hot_found = 1;
       }
     }
     if (sts && !hot
         && !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
+      int hot_type;
       if ((hot_type = ctx->send_hot_request(this))) {
         if (!ctx->trace_started) {
-          ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
-          hot = 1;
-          ctx->set_dirty();
+          ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_CrossHair);
+          set_hot(1);
           ctx->tiptext_event(this, x, y);
         } else if (hot_type & glow_mHotType_CursorCrossHair) {
-          ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_CrossHair);
+          ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_CrossHair);
           hot_tool = idx + 1;
-          lsts = get_mask_index(idx, &category, &mask_idx);
+          int category, mask_idx;
+          int lsts = get_mask_index(idx, &category, &mask_idx);
           if (ODD(lsts))
             ctx->tiptext_toolbar_event(this, x, y, category, mask_idx);
-          ctx->set_dirty();
         } else if (hot_type & glow_mHotType_CursorHand) {
-          ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Hand);
+          ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Hand);
           hot_tool = idx + 1;
-          lsts = get_mask_index(idx, &category, &mask_idx);
+          int category, mask_idx;
+          int lsts = get_mask_index(idx, &category, &mask_idx);
           if (ODD(lsts))
             ctx->tiptext_toolbar_event(this, x, y, category, mask_idx);
-          ctx->set_dirty();
         }
       }
     }
     if (!sts
         && ((!ctx->trace_started && hot) || (ctx->trace_started && hot_tool))) {
       if (!ctx->hot_found)
-        ctx->gdraw->set_cursor(ctx->mw, glow_eDrawCursor_Normal);
+        ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
       if (hot_tool)
         ((GrowNode*)nc->a.a[hot_tool - 1])->set_hot(0);
       hot_tool = 0;
-      hot = 0;
-      ctx->set_dirty();
+      set_hot(0);
       ctx->tiptext->remove_text(this);
     }
     break;
   }
   case glow_eEvent_MB1Click:
-    sts = nc_event_handler(event, rx, ry, &idx);
+    sts = nc_event_handler(event, r.x, r.y, &idx);
     if (sts) {
-      lsts = get_mask_index(idx, &category, &mask_idx);
+      int category, mask_idx;
+      int lsts = get_mask_index(idx, &category, &mask_idx);
       if (ODD(lsts))
-        ((GrowCtx*)ctx)
-            ->send_toolbar_callback(this, event, fx, fy, category, mask_idx);
+        ctx->send_toolbar_callback(this, event, fx, fy, category, mask_idx);
     }
     break;
   default:
-    sts = nc_event_handler(event, rx, ry, &idx);
+    sts = nc_event_handler(event, r.x, r.y, &idx);
   }
 
   return sts;
@@ -390,11 +380,8 @@ int GrowToolbar::event_handler(glow_eEvent event, int x, int y, double fx, doubl
 
 int GrowToolbar::nc_event_handler(glow_eEvent event, double x, double y, int* idx)
 {
-  int i;
-  int sts;
-
-  for (i = 0; i < nc->a.a_size; i++) {
-    sts = ((GrowNode*)nc->a.a[i])->event_handler(event, x, y);
+  for (int i = 0; i < nc->a.a_size; i++) {
+    int sts = ((GrowNode*)nc->a.a[i])->event_handler(event, x, y);
     if (sts) {
       *idx = i;
       return sts;
@@ -447,7 +434,7 @@ void GrowToolbar::configure(char* tools1, char* tools2, int tools1_cnt,
       }
       if (ODD(sts)) {
         GrowNode* n1;
-        n1 = new GrowNode(ctx, subg_name, (GlowNodeClass*)nc1, x1, y1);
+        n1 = new GrowNode(ctx, subg_name, nc1, x1, y1);
         n1->disable_callback();
         nc->insert(n1);
 
@@ -485,7 +472,7 @@ void GrowToolbar::configure(char* tools1, char* tools2, int tools1_cnt,
       }
       if (ODD(sts)) {
         GrowNode* n1;
-        n1 = new GrowNode(ctx, subg_name, (GlowNodeClass*)nc1, x1, y1);
+        n1 = new GrowNode(ctx, subg_name, nc1, x1, y1);
         n1->disable_callback();
         nc->insert(n1);
 
@@ -513,10 +500,9 @@ void GrowToolbar::configure(char* tools1, char* tools2, int tools1_cnt,
 int GrowToolbar::get_mask_index(int idx, int* category, int* mask_idx)
 {
   // Calculate category and index
-  unsigned int mask;
   int cnt = 0;
-  int i;
-  for (i = 0; i < 64; i++) {
+  for (int i = 0; i < 64; i++) {
+    unsigned int mask;
     if (i < 32)
       mask = 1 << i;
     else
@@ -536,14 +522,14 @@ void GrowToolbar::scale()
 {
   double scale;
 
-  if (ctx->mw->window_width == 0)
+  if (ctx->mw.window_width == 0)
     return;
 
-  if (x_right * ctx->mw->zoom_factor_x - ctx->mw->offset_x
-      > ctx->mw->window_width) {
-    scale = (ctx->mw->window_width
-                - (x_left * ctx->mw->zoom_factor_x - ctx->mw->offset_x) - 10)
-        / ((x_right - x_left) * ctx->mw->zoom_factor_x);
+  if (x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x
+      > ctx->mw.window_width) {
+    scale = (ctx->mw.window_width
+                - (x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x) - 10)
+        / ((x_right - x_left) * ctx->mw.zoom_factor_x);
 
     trf.scale(scale, 1, x_left, y_low);
     get_node_borders();

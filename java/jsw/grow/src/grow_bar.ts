@@ -108,20 +108,20 @@ class GrowBar extends GrowRect {
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    let x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
-    let x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
-    let y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
+
+    let x1 = Math.floor(p1.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p1.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y) - this.ctx.mw.offset_y;
 
     let ll_x = Math.min(x1, x2);
     let ur_x = Math.max(x1, x2);
     let ll_y = Math.min(y1, y2);
     let ur_y = Math.max(y1, y2);
-    if (this.fill !== 0) {
+    if (this.fill) {
       let drawtype =
           GlowColor.get_drawtype(this.fill_drawtype, DrawType.FillHighlight,
               highlight, colornode, 1, 0);
@@ -130,7 +130,7 @@ class GrowBar extends GrowRect {
         this.ctx.gdraw.rect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
             drawtype, true, 0);
       } else {
-        let rotation = (t) ? this.trf.rot(t) : this.trf.rot();
+        let rotation = (t) ? this.trf.rotation + t.rotation : this.trf.rotation;
 
         let fa1, fa2;
         if (this.gradient_contrast >= 0) {
@@ -155,7 +155,7 @@ class GrowBar extends GrowRect {
     if (this.max_value !== this.min_value) {
       let x0, y0, width, height, l_x0, l_y0, l_x1, l_y1;
 
-      let rotation = (t) ? this.trf.rot(t) : this.trf.rot();
+      let rotation = (t) ? this.trf.rotation + t.rotation : this.trf.rotation;
       rotation = (rotation / 360 - Math.floor(rotation / 360)) * 360;
       x0 = ll_x;
       y0 = ll_y;
@@ -201,7 +201,7 @@ class GrowBar extends GrowRect {
       if (grad === Gradient.No) {
         this.ctx.gdraw.rect(x0, y0, width, height, dt, true, 0);
       } else {
-        rotation = (t) ? this.trf.rot(t) : this.trf.rot();
+        rotation = (t) ? this.trf.rotation + t.rotation : this.trf.rotation;
 
         let fb1, fb2;
         if (this.gradient_contrast >= 0) {

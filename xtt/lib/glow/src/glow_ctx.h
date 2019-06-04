@@ -57,6 +57,33 @@ public:
   char text[100][200];
 };
 
+class GlowWind {
+public:
+  DrawWind* window;
+  int type;
+  int double_buffered = 1;
+
+  double zoom_factor_x; //!< Zoom factor in x direction.
+  double zoom_factor_y; //!< Zoom factor in y direction.
+  double base_zoom_factor; //!< Original zoom factor.
+  int offset_x; //!< Offset in pixel between origo and displayed window in x
+  //! direction.
+  int offset_y; //!< Offset in pixel between origo and displayde window in y
+  //! direction.
+  int window_width; //!< Window width in pixel.
+  int window_height; //!< Window height in pixel.
+  int subwindow_x; //!< Subwindow x coordinate in pixel.
+  int subwindow_y; //!< Subwindow y coordinate in pixel.
+  double subwindow_scale; //!< Subwindow scale.
+
+  GlowWind(int offs_x, int offs_y) : window(0), zoom_factor_x(20),
+      zoom_factor_y(20), base_zoom_factor(20), offset_x(offs_x),
+      offset_y(offs_y), window_width(0), window_height(0), subwindow_x(0),
+      subwindow_y(0), subwindow_scale(1)
+  {
+  }
+};
+
 //! Backcall data for scrollbar reconfiguration
 typedef struct {
   void* scroll_data; //!< Scrollbar data (growwidget_sScroll).
@@ -96,8 +123,8 @@ public:
   GlowCtx(const char* ctx_name, int offs_x = 0, int offs_y = 0);
 
   glow_eCtxType ctx_type; //!< Type of context
-  DrawWind* mw; //!< Main window data.
-  DrawWind* navw; //!< Navigation window data.
+  GlowWind mw; //!< Main window data.
+  GlowWind navw; //!< Navigation window data.
   double print_zoom_factor; //!< Zoom factor when printing to postscript.
   double x_right; //!< Right border of work area.
   double x_left; //!< Left border of work area.
@@ -115,7 +142,7 @@ public:
 
     Saves the context with all nodeclasses, conclasses and objects.
   */
-  int save(char* filename, glow_eSaveMode mode);
+  virtual int save(char* filename, glow_eSaveMode mode);
 
   //! Open context from file.
   /*!
@@ -140,7 +167,7 @@ public:
 
   //! Remove an object.
   /*! \param element	Object to remove. */
-  void remove(GlowArrayElem* element)
+  virtual void remove(GlowArrayElem* element)
   {
     a.remove(element);
   }
@@ -487,7 +514,7 @@ public:
 
   //! Zoom with a specifed zoom factor.
   /*! \param factor	Zoom factor. */
-  void zoom(double factor);
+  virtual void zoom(double factor);
 
   //! Zoom in x direction with a specified zoom factor.
   /*! \param factor	Zoom factor in x direction. */
@@ -548,7 +575,7 @@ public:
     \param ur_y		y coordiate for upper right corner of area to draw in
     pixel.
   */
-  virtual void draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  virtual void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Redraw an area of the window. Arguments in double.
   /*!
@@ -561,7 +588,7 @@ public:
     \param ur_y		y coordiate for upper right corner of area to draw in
     pixel.
   */
-  void draw(DrawWind* w, double ll_x, double ll_y, double ur_x, double ur_y)
+  void draw(GlowWind* w, double ll_x, double ll_y, double ur_x, double ur_y)
   {
     draw(w, (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);
   }
@@ -569,18 +596,18 @@ public:
   //! Update zoom of navigation window.
   /*! The zoomfactor of the navigation window is updated to match the extent of
    * the working space. */
-  void nav_zoom();
+  virtual void nav_zoom();
 
   //! Zoom to appropriate scale for postscript output.
   void print_zoom();
 
   //! Handle events.
   /*! Calls the event handler of GrowCtx. */
-  int event_handler(glow_eEvent event, int x, int y, int w, int h);
+  virtual int event_handler(glow_eEvent event, int x, int y, int w, int h);
 
   //! Handle events in the navigation window.
   /*! Handle the event for moving and scaling the navigation rectangle. */
-  int event_handler_nav(glow_eEvent event, int x, int y);
+  virtual int event_handler_nav(glow_eEvent event, int x, int y);
 
   //! Enable an event en register a backcall function for the event.
   /*!
@@ -608,12 +635,7 @@ public:
   void delete_node_cons(void* node);
 
   //! Mark that window needs to be redrawn.
-  /*! The window will be redrawn when a call to redraw_if_dirty() is made. */
   void set_dirty();
-
-  //! Redraw the window if it is dirty.
-  /*! Redraw the window if it has been marked as dirty by set_dirty() */
-  void redraw_if_dirty();
 
   int is_dirty; //!< Defered redraw is active.
   GlowArray a_nc; //!< Array of nodeclasses.
@@ -707,16 +729,6 @@ public:
   void conpoint_refcon_redraw(void* node, int conpoint)
   {
     a.conpoint_refcon_redraw(node, conpoint);
-  }
-
-  //! Erase the reference connections for a specific node and connection point.
-  /*!
-    \param node		Node.
-    \param conpoint	Connection point number.
-  */
-  void conpoint_refcon_erase(void* node, int conpoint)
-  {
-    a.conpoint_refcon_erase(node, conpoint);
   }
 
   //! Get object from name.
@@ -945,7 +957,7 @@ public:
 
   //! Update the scroobars.
   /*! The scrollbar callback function is called to update the scrollbars. */
-  void change_scrollbar();
+  virtual void change_scrollbar();
 
   //! Find an object by name.
   /*!
@@ -983,7 +995,7 @@ public:
     \param ur_x		x coordinate for upper right corner of area in pixel.
     \param ur_y		y coordinate for upper right corner of area in pixel.
   */
-  void draw_grid(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw_grid(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Register callback functions for userdata handling.
   /*!
@@ -1031,6 +1043,8 @@ public:
 
   //! Set colorthem lightness.
   void set_colortheme_is_default(int isdefault);
+
+  void expand_select_rect(int x, int y);
 
   //! Destructor
   /*! Delete all objects in the context. */

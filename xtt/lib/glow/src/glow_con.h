@@ -134,8 +134,8 @@ public:
     \param fp	Input file.
   */
   void open(std::ifstream& fp);
-  void draw(DrawWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
-  void draw(DrawWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
+  void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw(GlowWind* w, int* ll_x, int* ll_y, int* ur_x, int* ur_y);
   void erase(){}
   void move(double delta_x, double delta_y, int grid);
   void move_noerase(int delta_x, int delta_y, int move);
@@ -259,7 +259,6 @@ public:
       double src_x, double src_y, glow_eDirection src_dir);
   void move_ref(double x1, double y1, double x2, double y2);
   void conpoint_refcon_redraw(void* node, int conpoint);
-  void conpoint_refcon_erase(void* node, int conpoint);
   void remove_notify();
   int ideal_line_cnt;
   int current_line_cnt;

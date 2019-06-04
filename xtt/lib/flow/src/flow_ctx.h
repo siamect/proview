@@ -43,7 +43,6 @@
 
 #define CONPOINT_SELECTLIST_SIZE 2
 
-class DrawWind;
 class FlowDraw;
 class FlowTipText;
 
@@ -62,8 +61,8 @@ public:
   FlowCtx(const char* ctx_name, double zoom_fact = 100, int offs_x = 0,
       int offs_y = 0);
 
-  DrawWind* mw; //!< Main window data.
-  DrawWind* navw; //!< Navigation window data.
+  void* mw; //!< Main window data.
+  void* navw; //!< Navigation window data.
   flow_eCtxType ctx_type;
   double zoom_factor;
   double base_zoom_factor;
@@ -238,6 +237,7 @@ public:
   int select_rect_ll_y;
   int select_rect_ur_x;
   int select_rect_ur_y;
+  void expand_select_rect(int x, int y);
   double select_area_ll_x;
   double select_area_ll_y;
   double select_area_ur_x;
@@ -280,7 +280,6 @@ public:
   void redraw_node_cons(void* node);
   void delete_node_cons(void* node);
   void set_dirty();
-  void redraw_if_dirty();
   int is_dirty;
   FlowArray a;
   FlowArray a_sel;
@@ -482,7 +481,6 @@ public:
   }
   ~FlowCtx();
 
-private:
   void draw(int ll_x, int ll_y, int ur_x, int ur_y);
   void nav_draw(int ll_x, int ll_y, int ur_x, int ur_y);
 };

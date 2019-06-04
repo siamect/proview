@@ -120,14 +120,14 @@ class GrowRectRounded extends GrowRect {
     idx = Math.max(0, idx);
     idx = Math.min(idx, DRAW_TYPE_SIZE - 1);
 
-    let x1 = Math.floor(this.trf.x(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-    let y1 = Math.floor(this.trf.y(t, this.ll.x, this.ll.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
-    let x2 = Math.floor(this.trf.x(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
-    let y2 = Math.floor(this.trf.y(t, this.ur.x, this.ur.y) *
-          this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+    let tmp = Matrix.multiply(t, this.trf);
+    let p1 = tmp.apply(this.ll);
+    let p2 = tmp.apply(this.ur);
+
+    let x1 = Math.floor(p1.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y1 = Math.floor(p1.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
+    let x2 = Math.floor(p2.x * this.ctx.mw.zoom_factor_x + 0.5) - this.ctx.mw.offset_x;
+    let y2 = Math.floor(p2.y * this.ctx.mw.zoom_factor_y + 0.5) - this.ctx.mw.offset_y;
 
     let ll_x = Math.min(x1, x2);
     let ur_x = Math.max(x1, x2);
@@ -135,7 +135,7 @@ class GrowRectRounded extends GrowRect {
     let ur_y = Math.max(y1, y2);
     let amount = Math.floor(this.round_amount / 100 *
         Math.min(ur_x - ll_x, ur_y - ll_y) + 0.5);
-    if (this.fill !== 0) {
+    if (this.fill) {
       let ish = Math.floor(this.shadow_width / 100 *
           Math.min(ur_x - ll_x, ur_y - ll_y) + 0.5);
       let display_shadow = ((node !== null && node.shadow !== 0) ||
@@ -169,7 +169,7 @@ class GrowRectRounded extends GrowRect {
           this.ctx.gdraw.arc(ur_x - 2 * amount, ll_y, 2 * amount, 2 *
               amount, 0, 90, drawtype, true, 0);
         } else {
-          let rotationa = t ? this.trf.rot(t) : this.trf.rot();
+          let rotationa = t ? this.trf.rotation + t.rotation : this.trf.rotation;
 
           let fa1, fa2;
           if (this.gradient_contrast >= 0) {
@@ -244,7 +244,7 @@ class GrowRectRounded extends GrowRect {
                 2 * amount, ur_y - ll_y - 2 * amount, drawtype, true, 0);
           }
         } else {
-          let rotationb  = t ? this.trf.rot(t) : this.trf.rot();
+          let rotationb  = t ? this.trf.rotation + t.rotation : this.trf.rotation;
 
           let fb1, fb2;
           if (this.gradient_contrast >= 0) {
@@ -268,7 +268,7 @@ class GrowRectRounded extends GrowRect {
         }
       }
     }
-    if (this.border !== 0 || this.fill === 0) {
+    if (this.border !== 0 || !this.fill) {
       let drawtype =
           GlowColor.get_drawtype(this.draw_type, DrawType.LineHighlight,
               highlight, colornode, 0, 0);
