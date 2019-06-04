@@ -84,5 +84,9 @@ int main(int argc, char* argv[])
 {
   CmdGtk* cmd;
 
+  setlocale(LC_ALL, "en_US");
+  setlocale(LC_NUMERIC, "POSIX");
+  setlocale(LC_TIME, "en_US");
+
   cmd = new CmdGtk(argc, argv);
 }
