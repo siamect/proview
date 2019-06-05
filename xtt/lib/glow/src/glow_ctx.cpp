@@ -664,31 +664,15 @@ void GlowCtx::get_borders()
   a.get_borders(&x_right, &x_left, &y_high, &y_low);
 }
 
-void GlowCtx::set_dirty(double ll_x, double ll_y, double ur_x, double ur_y)
+void GlowCtx::set_dirty()
 {
   if (!nodraw && !is_dirty) {
     is_dirty = 1;
-    if (ur_x < 0) {
-      gdraw->set_dirty(mw.window, 0, 0, mw.window_width, mw.window_height);
-    } else {
-      gdraw->set_dirty(mw.window,
-          int(ll_x * mw.zoom_factor_x - mw.offset_x - 20),
-          int(ll_y * mw.zoom_factor_y - mw.offset_y - 20),
-          int(ur_x * mw.zoom_factor_x - mw.offset_x + 20),
-          int(ur_y * mw.zoom_factor_y - mw.offset_y + 20));
-    }
+    gdraw->set_dirty(mw.window);
     if (no_nav || navw.window_width == 0) {
       return;
     }
-    if (ur_x < 0) {
-      gdraw->set_dirty(navw.window, 0, 0, navw.window_width, navw.window_height);
-    } else {
-      gdraw->set_dirty(navw.window,
-          int(ll_x * navw.zoom_factor_x - navw.offset_x - 1),
-          int(ll_y * navw.zoom_factor_y - navw.offset_y - 1),
-          int(ur_x * navw.zoom_factor_x - navw.offset_x + 1),
-          int(ur_y * navw.zoom_factor_y - navw.offset_y + 1));
-    }
+    gdraw->set_dirty(navw.window);
   }
 }
 

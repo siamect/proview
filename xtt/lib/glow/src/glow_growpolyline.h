@@ -323,7 +323,7 @@ public:
   {
     if (shadow != shadowval) {
       shadow = shadowval;
-      ctx->set_dirty(x_left, y_low, x_right, y_high);
+      ctx->set_dirty();
     }
   }
 
@@ -335,7 +335,7 @@ public:
   {
     if (shadow_width != width) {
       shadow_width = width;
-      ctx->set_dirty(x_left, y_low, x_right, y_high);
+      ctx->set_dirty();
     }
   }
 
@@ -347,7 +347,7 @@ public:
   {
     if (gradient != gradientval) {
       gradient = gradientval;
-      ctx->set_dirty(x_left, y_low, x_right, y_high);
+      ctx->set_dirty();
     }
   }
 
@@ -518,7 +518,7 @@ public:
   {
     if (fill_drawtype != drawtype) {
       fill_drawtype = drawtype;
-      ctx->set_dirty(x_left, y_low, x_right, y_high);
+      ctx->set_dirty();
     }
   }
 
@@ -571,7 +571,7 @@ public:
   {
     if (background_drawtype != color) {
       background_drawtype = color;
-      ctx->set_dirty(x_left, y_low, x_right, y_high);
+      ctx->set_dirty();
     }
   }
 

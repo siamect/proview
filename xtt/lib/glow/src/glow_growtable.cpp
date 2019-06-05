@@ -76,12 +76,12 @@ GrowTable::GrowTable(GrowCtx* glow_ctx, const char* name, double x, double y,
   configure();
 
   if (!nodraw)
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
 }
 
 GrowTable::~GrowTable()
 {
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
   if (v_scrollbar)
     delete v_scrollbar;
   if (h_scrollbar)
@@ -461,7 +461,7 @@ void GrowTable::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -990,13 +990,14 @@ void GrowTable::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
+  }
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
   y_high += dy;
   y_low += dy;
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowTable::export_javabean(GlowTransform* t, void* node,
@@ -1112,7 +1113,7 @@ int GrowTable::event_handler(glow_eEvent event, int x, int y, double fx, double 
         v_value -= (table_y1 - table_y0) * window_scale / 50;
         if (v_value < table_y0 * window_scale)
           v_value = table_y0 * window_scale;
-        ctx->set_dirty(x_left, y_low, x_right, y_high);
+        ctx->set_dirty();
         v_scrollbar->set_value(v_value, y_high - (y_low + y_low_offs)
                 - scrollbar_width * horizontal_scrollbar);
         return 1;
@@ -1134,7 +1135,7 @@ int GrowTable::event_handler(glow_eEvent event, int x, int y, double fx, double 
           v_value = (table_y1 - (y_high - y_low
                                     - scrollbar_width * horizontal_scrollbar))
               * window_scale;
-        ctx->set_dirty(x_left, y_low, x_right, y_high);
+        ctx->set_dirty();
         v_scrollbar->set_value(v_value, y_high - (y_low + y_low_offs)
                 - scrollbar_width * horizontal_scrollbar);
         return 1;
@@ -1275,7 +1276,7 @@ void GrowTable::v_value_changed_cb(void* o, double value)
 
   if (!feq(gw->v_value, value)) {
     gw->v_value = value;
-    gw->ctx->set_dirty(gw->x_left, gw->y_low, gw->x_right, gw->y_high);
+    gw->ctx->set_dirty();
   }
 }
 
@@ -1285,7 +1286,7 @@ void GrowTable::h_value_changed_cb(void* o, double value)
 
   if (!feq(gw->h_value, value)) {
     gw->h_value = value;
-    gw->ctx->set_dirty(gw->x_left, gw->y_low, gw->x_right, gw->y_high);
+    gw->ctx->set_dirty();
   }
 }
 
@@ -1293,7 +1294,7 @@ void GrowTable::set_textsize(int size)
 {
   if (text_size != size) {
     text_size = size;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -1307,14 +1308,14 @@ void GrowTable::set_textbold(int bold)
     text_drawtype = glow_eDrawType_TextHelveticaBold;
   else
     text_drawtype = glow_eDrawType_TextHelvetica;
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowTable::set_textfont(glow_eFont textfont)
 {
   if (font != textfont) {
     font = textfont;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -1341,7 +1342,7 @@ void GrowTable::set_cell_value(int column, int row, char* value)
     offs += rows * column_size[i];
   offs += row * column_size[column];
   strncpy(cell_value + offs, value, column_size[column]);
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowTable::set_selected_cell(int column, int row)
@@ -1354,7 +1355,7 @@ void GrowTable::set_selected_cell(int column, int row)
 
   selected_cell_column = column;
   selected_cell_row = row;
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 int GrowTable::get_selected_cell(int* column, int* row)
@@ -1371,12 +1372,12 @@ void GrowTable::set_input_focus(int focus, glow_eEvent event)
 {
   if (focus && !input_focus) {
     input_focus = 1;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
 
     ctx->register_inputfocus(this, 1);
   } else if (!focus && input_focus) {
     input_focus = 0;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
 
     ctx->register_inputfocus(this, 0);
   }
@@ -1428,12 +1429,12 @@ int GrowTable::make_cell_visible(int column, int row)
   if (!feq(scroll_x, 0.0) && horizontal_scrollbar) {
     h_value += scroll_x;
     h_value = h_scrollbar->set_value(h_value);
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
   if (!feq(scroll_y, 0.0) && vertical_scrollbar) {
     v_value += scroll_y;
     v_value = v_scrollbar->set_value(v_value);
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
   return ((!feq(scroll_x, 0.0) && horizontal_scrollbar)
       || (!feq(scroll_y, 0.0) && vertical_scrollbar));

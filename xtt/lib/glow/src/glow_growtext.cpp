@@ -67,7 +67,7 @@ GrowText::GrowText(GrowCtx* glow_ctx, const char* name, const char* text1,
   }
   get_node_borders();
   if (!nodraw)
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
 }
 
 GrowText::GrowText(const GrowText& n) : GlowText(n)
@@ -82,14 +82,13 @@ GrowText::GrowText(const GrowText& n) : GlowText(n)
 GrowText::~GrowText()
 {
   ctx->object_deleted(this);
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
   if (hot)
     ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 }
 
 void GrowText::move(double delta_x, double delta_y, int grid)
 {
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
   if (grid) {
     double x_grid, y_grid;
 
@@ -107,7 +106,9 @@ void GrowText::move(double delta_x, double delta_y, int grid)
     y_high += dy;
     y_low += dy;
   }
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
 }
 
 int GrowText::local_event_handler(glow_eEvent event, double x, double y)
@@ -359,7 +360,7 @@ void GrowText::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -399,10 +400,9 @@ void GrowText::set_position(double x, double y)
   if (feq(trf.a13, x) && feq(trf.a23, y))
     return;
 
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.posit(x, y);
   get_node_borders();
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowText::set_scale(
@@ -443,7 +443,6 @@ void GrowText::set_scale(
   double old_x_right = x_right;
   double old_y_low = y_low;
   double old_y_high = y_high;
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.scale_from_stored(scale_x, scale_y, x0, y0);
   get_node_borders();
 
@@ -472,7 +471,7 @@ void GrowText::set_scale(
     break;
   default:;
   }
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowText::set_rotation(
@@ -505,10 +504,9 @@ void GrowText::set_rotation(
   default:;
   }
 
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.rotate_from_stored(angle, x0, y0);
   get_node_borders();
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowText::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
@@ -798,7 +796,7 @@ void GrowText::set_text(char* new_text)
   strcpy(text, new_text);
   get_node_borders();
 
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowText::set_textsize(int size)
@@ -806,7 +804,7 @@ void GrowText::set_textsize(int size)
   if (text_size != size) {
     text_size = size;
     get_node_borders();
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -821,7 +819,7 @@ void GrowText::set_textbold(int bold)
   else
     draw_type = glow_eDrawType_TextHelvetica;
   get_node_borders();
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowText::set_textfont(glow_eFont textfont)
@@ -829,7 +827,7 @@ void GrowText::set_textfont(glow_eFont textfont)
   if (font != textfont) {
     font = textfont;
     get_node_borders();
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -947,13 +945,14 @@ void GrowText::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
+  }
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
   y_high += dy;
   y_low += dy;
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowText::convert(glow_eConvert version)

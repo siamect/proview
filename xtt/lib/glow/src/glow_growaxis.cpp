@@ -71,12 +71,12 @@ GrowAxis::GrowAxis(GrowCtx* glow_ctx, const char* name, double x1, double y1,
 
   configure();
   if (!nodraw)
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
 }
 
 GrowAxis::~GrowAxis()
 {
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowAxis::configure()
@@ -248,7 +248,7 @@ void GrowAxis::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -551,20 +551,21 @@ void GrowAxis::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
+  }
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
   y_high += dy;
   y_low += dy;
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowAxis::set_textsize(int size)
 {
   if (text_size != size) {
     text_size = size;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
   get_node_borders();
 }
@@ -580,7 +581,7 @@ void GrowAxis::set_textbold(int bold)
   else
     text_drawtype = glow_eDrawType_TextHelvetica;
   get_node_borders();
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowAxis::set_range(double minval, double maxval, int keep_settings)
@@ -696,7 +697,7 @@ void GrowAxis::set_range(double minval, double maxval, int keep_settings)
       strcpy(format, "%g");
   }
   configure();
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowAxis::export_javabean(GlowTransform* t, void* node,
@@ -827,7 +828,7 @@ void GrowAxis::set_conf(double max_val, double min_val, int no_of_lines,
     strcpy(format, value_format);
 
   configure();
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowAxis::set_format(const char* f)
@@ -942,5 +943,5 @@ void GrowAxis::set_visibility(glow_eVis visibility)
   }
 
   invisible = (visibility == glow_eVis_Invisible);
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }

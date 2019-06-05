@@ -331,7 +331,7 @@ GlowCon::GlowCon(GrowCtx* glow_ctx, const char* name, GlowConClass* con_class,
   get_con_borders();
   con_modified();
   if (!nodraw)
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
 }
 
 GlowCon::~GlowCon()
@@ -349,7 +349,7 @@ GlowCon::~GlowCon()
     ((GrowConGlue*)dest_node)->con_modified(0);
   if (source_node->type() == glow_eObjectType_GrowConGlue)
     ((GrowConGlue*)source_node)->con_modified(0);
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
   if (hot)
     ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 }
@@ -378,7 +378,7 @@ void GlowCon::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -386,7 +386,7 @@ void GlowCon::set_hot(int on)
 {
   if (hot != on) {
     hot = on;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -462,7 +462,10 @@ void GlowCon::move(double delta_x, double delta_y, int grid)
   double x = delta_x / ctx->mw.zoom_factor_x;
   double y = delta_y / ctx->mw.zoom_factor_y;
 
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
+
   if (movement_type == glow_eMoveType_Route || grid) {
     reconfigure();
   } else {
@@ -481,7 +484,6 @@ void GlowCon::move(double delta_x, double delta_y, int grid)
     }
     get_con_borders();
   }
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GlowCon::move_noerase(int delta_x, int delta_y, int grid)
@@ -489,7 +491,10 @@ void GlowCon::move_noerase(int delta_x, int delta_y, int grid)
   double x = delta_x / ctx->mw.zoom_factor_x;
   double y = delta_y / ctx->mw.zoom_factor_y;
 
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  if (delta_x != 0 || delta_y != 0) {
+    ctx->set_dirty();
+  }
+
   if (cc->con_type != glow_eConType_Routed
       || movement_type == glow_eMoveType_Route || grid || p_num == 0) {
     ctx->set_nodraw();
@@ -507,7 +512,6 @@ void GlowCon::move_noerase(int delta_x, int delta_y, int grid)
       draw_routed(p_num, point_x, point_y);
     get_con_borders();
   }
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GlowCon::reconfigure()
@@ -2855,7 +2859,7 @@ void GlowCon::draw_routed(int points, double* x, double* y)
 
   p_num = points;
   if (l_num != points - 1) {
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
     l_num = points - 1;
   }
 }
@@ -2873,7 +2877,7 @@ void GlowCon::draw_routed_trans(int points, double* x, double* y)
 
   p_num = points;
   if (l_num != j) {
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
     l_num = j;
   }
 }
@@ -3112,7 +3116,7 @@ void GlowCon::draw_routed_roundcorner(int points, double* x, double* y)
   }
   p_num = points;
   if (l_num != points - 1 || a_num != points - 2) {
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
     l_num = points - 1;
     a_num = points - 2;
   }
@@ -3309,7 +3313,7 @@ void GlowCon::change_conclass(GlowConClass* conclass)
 
   con_modified();
 
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GlowCon::export_javabean(GlowTransform* t, void* node,
@@ -3353,7 +3357,7 @@ void GlowCon::set_border(int borderval)
 {
   if (border != borderval) {
     border = borderval;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
   arc_a.set_border(border);
   line_a.set_border(border);
@@ -3364,7 +3368,7 @@ void GlowCon::set_shadow(int shadowval)
 {
   if (shadow != shadowval) {
     shadow = shadowval;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
   arc_a.set_shadow(shadow);
   line_a.set_shadow(shadow);

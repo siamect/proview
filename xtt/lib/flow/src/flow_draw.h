@@ -59,7 +59,7 @@ public:
 
   virtual int begin(void* wind);
   virtual void end();
-  virtual void set_dirty(void* wind, int ll_x, int ll_y, int ur_x, int ur_y) = 0;
+  virtual void set_dirty(void* wind) {};
 
   virtual void rect(int x, int y, int width, int height, flow_eDrawType gc_type,
       int fill, int idx, int highlight = 0, int dimmed = 0) = 0;

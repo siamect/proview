@@ -516,7 +516,7 @@ public:
   {
     if (line_type != type) {
       line_type = type;
-      ctx->set_dirty(x_left, y_low, x_right, y_high);
+      ctx->set_dirty();
     }
   }
 

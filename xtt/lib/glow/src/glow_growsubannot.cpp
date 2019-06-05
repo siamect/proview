@@ -69,21 +69,20 @@ GrowSubAnnot::GrowSubAnnot(GrowCtx* glow_ctx, const char* name, double x,
     rect.ur.posit(p.x + ctx->draw_delta, p.y);
   }
   if (!nodraw)
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   get_node_borders();
 }
 
 GrowSubAnnot::~GrowSubAnnot()
 {
   ctx->object_deleted(this);
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
   if (hot)
     ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 }
 
 void GrowSubAnnot::move(double delta_x, double delta_y, int grid)
 {
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
   if (grid) {
     double x_grid, y_grid;
 
@@ -104,7 +103,9 @@ void GrowSubAnnot::move(double delta_x, double delta_y, int grid)
   glow_sPoint p = trf * this->p;
   rect.move((void*)&pzero, p.x, p.y - ctx->draw_delta, highlight, hot);
   text.move((void*)&pzero, p.x, p.y, highlight, hot);
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
 }
 
 int GrowSubAnnot::event_handler(glow_eEvent event, int x, int y, double fx, double fy)
@@ -307,7 +308,7 @@ void GrowSubAnnot::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -416,7 +417,9 @@ void GrowSubAnnot::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
+  }
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
@@ -426,7 +429,6 @@ void GrowSubAnnot::align(double x, double y, glow_eAlignDirection direction)
   glow_sPoint p1 = trf * p;
   rect.move((void*)&pzero, p1.x, p1.y - ctx->draw_delta, highlight, hot);
   text.move((void*)&pzero, p1.x, p1.y, highlight, hot);
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowSubAnnot::export_javabean(GlowTransform* t, void* node,
@@ -472,7 +474,7 @@ void GrowSubAnnot::set_textbold(int bold)
   else
     draw_type = glow_eDrawType_TextHelvetica;
   get_node_borders();
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowSubAnnot::export_flow(GlowExportFlow* ef)

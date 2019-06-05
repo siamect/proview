@@ -204,7 +204,7 @@ public:
   void con_modified(GlowCon* con)
   {
     configure(con);
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 
   //! Add a transform to the current transform.

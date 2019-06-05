@@ -64,12 +64,12 @@ GrowWindow::GrowWindow(GrowCtx* glow_ctx, const char* name, double x, double y,
   strcpy(owner, "");
 
   if (!nodraw)
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
 }
 
 GrowWindow::~GrowWindow()
 {
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
   if (window_ctx) {
     if (window_ctx->trace_started)
       window_ctx->trace_close();
@@ -241,7 +241,7 @@ void GrowWindow::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -511,13 +511,14 @@ void GrowWindow::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
+  }
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
   y_high += dy;
   y_low += dy;
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowWindow::export_javabean(GlowTransform* t, void* node,
@@ -850,7 +851,7 @@ void GrowWindow::v_value_changed_cb(void* o, double value)
   GrowWindow* gw = (GrowWindow*)o;
   if (gw->v_value != value) {
     gw->v_value = value;
-    gw->ctx->set_dirty(gw->x_left, gw->y_low, gw->x_right, gw->y_high);
+    gw->ctx->set_dirty();
   }
 }
 
@@ -859,7 +860,7 @@ void GrowWindow::h_value_changed_cb(void* o, double value)
   GrowWindow* gw = (GrowWindow*)o;
   if (gw->h_value != value) {
     gw->h_value = value;
-    gw->ctx->set_dirty(gw->x_left, gw->y_low, gw->x_right, gw->y_high);
+    gw->ctx->set_dirty();
   }
 }
 
@@ -1041,7 +1042,7 @@ int GrowWindow::set_source(char* source, char* new_owner)
 
   int sts = update_attributes();
 
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 
   if (clip_removed) {
     ctx->gdraw->set_clip_rectangle(

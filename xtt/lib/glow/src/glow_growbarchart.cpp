@@ -63,12 +63,12 @@ GrowBarChart::GrowBarChart(GrowCtx* glow_ctx, const char* name, double x,
   memset(bar_values, 0, sizeof(bar_values));
 
   if (!nodraw)
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
 }
 
 GrowBarChart::~GrowBarChart()
 {
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowBarChart::save(std::ofstream& fp, glow_eSaveMode mode)
@@ -288,7 +288,7 @@ void GrowBarChart::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -634,13 +634,14 @@ void GrowBarChart::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
+  }
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
   y_high += dy;
   y_low += dy;
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowBarChart::export_javabean(GlowTransform* t, void* node,
@@ -691,7 +692,7 @@ void GrowBarChart::set_conf(int bar_num, int barsegment_num, double min_val,
   line_color = lcolor;
   for (int i = 0; i < bars; i++)
     bar_color[i] = color[i];
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowBarChart::get_conf(
@@ -732,7 +733,7 @@ void GrowBarChart::set_values(float* values1, float* values2, float* values3,
     memcpy(bar_values[10], values11, bars * sizeof(bar_values[0][0]));
   if (barsegments > 11 && values12)
     memcpy(bar_values[11], values12, bars * sizeof(bar_values[0][0]));
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowBarChart::convert(glow_eConvert version)

@@ -1022,7 +1022,8 @@ void GlowDrawGtk::event_handler(GdkEvent event)
           event.expose.area.height);
       begin(&ctx->mw);
       ctx->draw(&ctx->mw, event.expose.area.x, event.expose.area.y,
-          event.expose.area.width, event.expose.area.height);
+          event.expose.area.x + event.expose.area.width,
+          event.expose.area.y + event.expose.area.height);
       end();
       ctx->is_dirty = 0;
       break;
@@ -1179,7 +1180,8 @@ void GlowDrawGtk::event_handler(GdkEvent event)
       sts = ctx->event_handler_nav(glow_eEvent_Exposure, 0, 0);
       begin(&ctx->navw);
       ctx->draw(&ctx->navw, event.expose.area.x, event.expose.area.y,
-          event.expose.area.width, event.expose.area.height);
+          event.expose.area.x + event.expose.area.width,
+          event.expose.area.y + event.expose.area.height);
       end();
       ctx->is_dirty = 0;
       break;
@@ -1226,10 +1228,10 @@ void GlowDrawGtk::end() {
   this->w = NULL;
 }
 
-void GlowDrawGtk::set_dirty(DrawWind* wind, int ll_x, int ll_y, int ur_x, int ur_y) {
+void GlowDrawGtk::set_dirty(DrawWind* wind) {
   GdkWindow *w = ((DrawWindGtk*)wind)->window;
-  GdkRectangle r = {ll_x, ll_y, ur_x - ll_x, ur_y - ll_y};
-  gdk_window_invalidate_rect(w, &r, TRUE);
+  GdkRectangle r = {0, 0, gdk_window_get_width(w), gdk_window_get_height(w)};
+  gdk_window_invalidate_rect(w, &r, false);
 }
 
 void GlowDrawGtk::rect(int x, int y, int width, int height,

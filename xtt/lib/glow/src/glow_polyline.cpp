@@ -185,7 +185,5 @@ void GlowPolyLine::add_points(
   }
   zoom();
   nav_zoom();
-  double llx = 1e10, lly = 1e10, urx = -1e10, ury = -1e10;
-  get_borders(0, 0, &urx, &llx, &ury, &lly, NULL);
-  ctx->set_dirty(llx, lly, urx, ury);
+  ctx->set_dirty();
 }

@@ -279,7 +279,7 @@ public:
   void tiptext_event(FlowArrayElem* object, int x, int y);
   void redraw_node_cons(void* node);
   void delete_node_cons(void* node);
-  void set_dirty(double ll_x = 0, double ll_y = 0, double ur_x = -1, double ur_y = -1);
+  void set_dirty();
   int is_dirty;
   FlowArray a;
   FlowArray a_sel;

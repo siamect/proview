@@ -942,7 +942,8 @@ void FlowDrawGtk::event_handler(FlowCtx* ctx, GdkEvent event)
       sts = ctx->event_handler_nav(flow_eEvent_Exposure, 0, 0);
       begin(event.any.window);
       ctx->nav_draw(event.expose.area.x, event.expose.area.y,
-          event.expose.area.width, event.expose.area.height);
+          event.expose.area.x + event.expose.area.width,
+          event.expose.area.y + event.expose.area.height);
       end();
       ctx->is_dirty = 0;
       break;
@@ -992,10 +993,10 @@ void FlowDrawGtk::end() {
   this->w = NULL;
 }
 
-void FlowDrawGtk::set_dirty(void *wind, int ll_x, int ll_y, int ur_x, int ur_y) {
+void FlowDrawGtk::set_dirty(void *wind) {
   GdkWindow *w = (GdkWindow*)wind;
-  GdkRectangle r = {ll_x, ll_y, ur_x - ll_x, ur_y - ll_y};
-  gdk_window_invalidate_rect(w, &r, TRUE);
+  GdkRectangle r = {0, 0, gdk_window_get_width(w), gdk_window_get_height(w)};
+  gdk_window_invalidate_rect(w, &r, false);
 }
 
 void FlowDrawGtk::rect(int x, int y, int width, int height,

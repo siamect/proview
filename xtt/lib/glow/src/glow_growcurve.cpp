@@ -50,7 +50,7 @@ GrowCurve::GrowCurve(GrowCtx* glow_ctx, const char* name, glow_sCurveData* data,
   if (data)
     configure_curves(data);
   if (!nodraw)
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
 }
 
 GrowCurve::~GrowCurve()
@@ -437,7 +437,7 @@ void GrowCurve::configure_curves(glow_sCurveData* data)
       }
     }
 
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   } else if (data->type == glow_eCurveDataType_SeparateX) {
     curve_cnt = data->curves;
     no_of_points = data->rows[0];
@@ -755,7 +755,7 @@ void GrowCurve::configure_curves(glow_sCurveData* data)
       free((char*)pointarray);
     }
 
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -819,6 +819,6 @@ void GrowCurve::add_points(glow_sCurveData* data, unsigned int* no_of_points)
       }
     }
     ctx->reset_nodraw();
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }

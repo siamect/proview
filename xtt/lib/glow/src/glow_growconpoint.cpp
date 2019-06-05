@@ -63,7 +63,7 @@ GrowConPoint::GrowConPoint(GrowCtx* glow_ctx, const char* name, double x,
   arc.ll.posit(-ctx->draw_delta, -ctx->draw_delta);
   arc.ur.posit(ctx->draw_delta, ctx->draw_delta);
   if (!nodraw)
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   get_node_borders();
 }
 
@@ -71,14 +71,16 @@ GrowConPoint::~GrowConPoint()
 {
   ctx->object_deleted(this);
 
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
   if (hot)
     ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 }
 
 void GrowConPoint::move(double delta_x, double delta_y, int grid)
 {
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
   if (grid) {
     double x, y, x_grid, y_grid;
 
@@ -98,7 +100,6 @@ void GrowConPoint::move(double delta_x, double delta_y, int grid)
     y_high += dy;
     y_low += dy;
   }
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 int GrowConPoint::event_handler(glow_eEvent event, int x, int y, double fx, double fy)
@@ -279,7 +280,7 @@ void GrowConPoint::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -378,13 +379,14 @@ void GrowConPoint::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
+  }
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
   y_high += dy;
   y_low += dy;
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowConPoint::get_node_borders(GlowTransform* t, double* x_right,

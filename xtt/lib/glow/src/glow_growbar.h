@@ -201,7 +201,7 @@ public:
   void set_value(double value)
   {
     if (!feq(bar_value, value)) {
-      ctx->set_dirty(x_left, y_low, x_right, y_high);
+      ctx->set_dirty();
     }
     bar_value = value;
   }

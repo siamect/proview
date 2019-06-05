@@ -83,7 +83,7 @@ GrowTrend::GrowTrend(GrowCtx* glow_ctx, const char* name, double x, double y,
 
   configure_curves();
   if (!nodraw)
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
 }
 
 //! Destructor
@@ -91,7 +91,7 @@ GrowTrend::GrowTrend(GrowCtx* glow_ctx, const char* name, double x, double y,
  */
 GrowTrend::~GrowTrend()
 {
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
   for (int i = 0; i < curve_cnt; i++)
     delete curve[i];
 }
@@ -473,7 +473,7 @@ void GrowTrend::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -794,7 +794,7 @@ void GrowTrend::add_value(double value, int idx)
     curve[idx]->add_and_shift_y_value(curve_value);
   else
     curve[idx]->add_and_shift_y_value_filled(curve_value);
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 //! Moves object to alignment line or point.
@@ -836,13 +836,14 @@ void GrowTrend::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
+  }
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
   y_high += dy;
   y_low += dy;
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowTrend::set_trace_attr(GlowTraceData* attr)
@@ -1072,7 +1073,7 @@ void GrowTrend::set_data(double* data[3], int data_curves, int data_points)
   }
   ctx->reset_nodraw();
   free((char*)pointarray);
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 //! Set vertical mark 1.
@@ -1087,7 +1088,7 @@ void GrowTrend::set_x_mark1(double mark)
           * (ur.x - ll.x);
   if (!display_x_mark1 || !feq(x_mark1, old_mark)) {
     display_x_mark1 = 1;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -1103,7 +1104,7 @@ void GrowTrend::set_x_mark2(double mark)
           * (ur.x - ll.x);
   if (!display_x_mark2 || !feq(x_mark2, old_mark)) {
     display_x_mark2 = 1;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -1119,7 +1120,7 @@ void GrowTrend::set_y_mark1(double mark)
           * (ur.y - ll.y);
   if (!display_y_mark1 || !feq(y_mark1, old_mark)) {
     display_y_mark1 = 1;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -1135,7 +1136,7 @@ void GrowTrend::set_y_mark2(double mark)
           * (ur.y - ll.y);
   if (!display_y_mark2 || !feq(y_mark2, old_mark)) {
     display_y_mark2 = 1;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 

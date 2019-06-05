@@ -835,8 +835,8 @@ void GlowDrawQt::end() {
   this->w = NULL;
 }
 
-void GlowDrawQt::set_dirty(DrawWind *w, int ll_x, int ll_y, int ur_x, int ur_y) {
-  ((DrawWindQt*)w)->window->update(QRect(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y));
+void GlowDrawQt::set_dirty(DrawWind *w) {
+  ((DrawWindQt*)w)->window->update();
 }
 
 void GlowDrawQt::rect(int x, int y, int width, int height,

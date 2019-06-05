@@ -73,14 +73,14 @@ GrowRectRounded::GrowRectRounded(GrowCtx* glow_ctx, const char* name, double x,
     ur.posit(x_grid, y_grid);
   }
   if (!nodraw)
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   get_node_borders();
 }
 
 GrowRectRounded::~GrowRectRounded()
 {
   ctx->object_deleted(this);
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
   if (hot)
     ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 }
@@ -90,7 +90,6 @@ void GrowRectRounded::move(double delta_x, double delta_y, int grid)
   if (fixposition)
     return;
 
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
   if (grid) {
     double x_grid, y_grid;
 
@@ -108,7 +107,9 @@ void GrowRectRounded::move(double delta_x, double delta_y, int grid)
     y_high += dy;
     y_low += dy;
   }
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
 }
 
 int GrowRectRounded::local_event_handler(glow_eEvent event, double x, double y)
@@ -421,7 +422,7 @@ void GrowRectRounded::set_highlight(int on)
 {
   if (highlight != on) {
     highlight = on;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -461,10 +462,9 @@ void GrowRectRounded::set_position(double x, double y)
   if (feq(trf.a13, x) && feq(trf.a23, y))
     return;
 
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.posit(x, y);
   get_node_borders();
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowRectRounded::set_scale(
@@ -505,7 +505,6 @@ void GrowRectRounded::set_scale(
   double old_x_right = x_right;
   double old_y_low = y_low;
   double old_y_high = y_high;
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.scale_from_stored(scale_x, scale_y, x0, y0);
   get_node_borders();
 
@@ -534,7 +533,7 @@ void GrowRectRounded::set_scale(
     break;
   default:;
   }
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowRectRounded::set_rotation(
@@ -567,10 +566,9 @@ void GrowRectRounded::set_rotation(
   default:;
   }
 
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
   trf.rotate_from_stored(angle, x0, y0);
   get_node_borders();
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
 }
 
 void GrowRectRounded::draw(GlowWind* w, GlowTransform* t, int highlight,
@@ -871,7 +869,7 @@ void GrowRectRounded::set_border(int borderval)
 {
   if (border != borderval) {
     border = borderval;
-    ctx->set_dirty(x_left, y_low, x_right, y_high);
+    ctx->set_dirty();
   }
 }
 
@@ -932,13 +930,14 @@ void GrowRectRounded::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
+    ctx->set_dirty();
+  }
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
   y_high += dy;
   y_low += dy;
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
 }
 
 void GrowRectRounded::export_javabean(GlowTransform* t, void* node,

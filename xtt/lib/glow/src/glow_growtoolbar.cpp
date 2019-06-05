@@ -72,7 +72,7 @@ GrowToolbar::GrowToolbar(GrowCtx* glow_ctx, const char* name,
 
 GrowToolbar::~GrowToolbar()
 {
-  ctx->set_dirty(x_left, y_low, x_right, y_high);
+  ctx->set_dirty();
   ctx->delete_node_cons(this);
   if (hot)
     ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);

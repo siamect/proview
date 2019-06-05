@@ -235,27 +235,29 @@ void FlowImage::get_borders(double pos_x, double pos_y, double* x_right,
 void FlowImage::move(
     void* pos, double x, double y, int highlight, int dimmed, int hot)
 {
-  ctx->set_dirty(ll.x, ll.y, ur.x, ur.y);
+  if (!feq(ll.x, x) || !feq(ll.y, y) || !feq(ur.x, x + ur.x - ll.x) || !feq(ur.y, y + ur.y - ll.y)) {
+    ctx->set_dirty();
+  }
   ur.x = x + ur.x - ll.x;
   ur.y = y + ur.y - ll.y;
   ll.x = x;
   ll.y = y;
   zoom();
   nav_zoom();
-  ctx->set_dirty(ll.x, ll.y, ur.x, ur.y);
 }
 
 void FlowImage::shift(void* pos, double delta_x, double delta_y, int highlight,
     int dimmed, int hot)
 {
-  ctx->set_dirty(ll.x, ll.y, ur.x, ur.y);
+  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
+    ctx->set_dirty();
+  }
   ll.x += delta_x;
   ll.y += delta_y;
   ur.x += delta_x;
   ur.y += delta_y;
   zoom();
   nav_zoom();
-  ctx->set_dirty(ll.x, ll.y, ur.x, ur.y);
 }
 
 std::ostream& operator<<(std::ostream& o, const FlowImage r)
