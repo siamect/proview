@@ -944,7 +944,7 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   addMenuItem(toplevel, functions, "&Open Object...",
       SLOT(activate_attribute()), "CTRL+A");
   addMenuItem(toplevel, functions, "Open &Subwindow",
-      SLOT(activate_subwindow()), "CTRL+J");
+      SLOT(activate_subwindow()));
 
   // Mode entry
   QMenu* mode = menu_bar->addMenu(translate_utf8("&Mode"));

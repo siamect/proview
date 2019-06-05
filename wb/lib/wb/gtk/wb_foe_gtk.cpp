@@ -1758,8 +1758,6 @@ pwr_tStatus WFoeGtk::create_window(int x_top, int y_top, int width_adb,
       = gtk_menu_item_new_with_mnemonic("Open _Subwindow");
   g_signal_connect(functions_subwind, "activate",
       G_CALLBACK(WFoeGtk::activate_subwindow), this);
-  gtk_widget_add_accelerator(functions_openobj, "activate", accel_g, 'j',
-      GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
 
   GtkMenu* functions_menu = (GtkMenu*)g_object_new(GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_openobj);
