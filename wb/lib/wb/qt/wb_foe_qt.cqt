@@ -297,6 +297,8 @@ void WFoeQtWidget::activate_palette_con()
   foe->nav_palette->setVisible(false);
   foe->node_palette->setVisible(false);
   foe->con_palette->setVisible(true);
+  foe->node_palette_managed = 0;
+  foe->nav_palette_managed = 0;
   foe->con_palette_managed = 1;
   foe->con_palctx->set_inputfocus(1);
 }
@@ -311,6 +313,8 @@ void WFoeQtWidget::activate_palette_object()
   foe->con_palette->setVisible(false);
   foe->nav_palette->setVisible(false);
   foe->node_palette->setVisible(true);
+  foe->con_palette_managed = 0;
+  foe->nav_palette_managed = 0;
   foe->node_palette_managed = 1;
   foe->node_palctx->set_inputfocus(1);
 }
@@ -355,6 +359,8 @@ void WFoeQtWidget::activate_palette_plant()
   foe->con_palette->setVisible(false);
   foe->node_palette->setVisible(false);
   foe->nav_palette->setVisible(true);
+  foe->node_palette_managed = 0;
+  foe->con_palette_managed = 0;
   foe->nav_palette_managed = 1;
   foe->navctx->set_inputfocus(1);
 }
