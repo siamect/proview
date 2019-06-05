@@ -192,8 +192,6 @@ void WAttQtWidget::focusInEvent(QFocusEvent* event)
 
 void WAttQtWidget::hide_cmd_entry()
 {
-  watt->wattnav->set_inputfocus();
-
   if (watt->input_open) {
     watt->cmd_prompt->setVisible(false);
     watt->input_open = 0;
