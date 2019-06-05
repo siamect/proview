@@ -170,6 +170,10 @@ FlowCon::FlowCon(FlowCtx* flow_ctx, const char* name, FlowConClass* con_class,
           cc->line_width);
       line_a.insert(l1);
     }
+
+    if (!nodraw) {
+      con_route_grafcet(cc->con_type, src_x, src_y, dest_x, dest_y);
+    }
     break;
   }
   case flow_eConType_Fixed: {
