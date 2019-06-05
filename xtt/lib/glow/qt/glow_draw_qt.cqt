@@ -1026,9 +1026,14 @@ void GlowDrawQt::text(int x, int y, char* text, int len,
 
   painter.setFont(get_font(font_idx, painter_type, size));
 
-  QRect rect = painter.fontMetrics().boundingRect(str);
-  int width = rect.width();
-  int height = rect.height();
+  int width = 0;
+  int height = 0;
+  QStringList l = str.split("\n");
+  for (int i = 0; i < l.length(); i++) {
+    QRect boundingRect = painter.fontMetrics().boundingRect(l[i]);
+    width = MAX(width, boundingRect.width());
+    height += boundingRect.height();
+  }
   height = (int)(height * 0.9);
 
   int px, py;
@@ -1045,7 +1050,7 @@ void GlowDrawQt::text(int x, int y, char* text, int len,
     px = x;
     py = (int)(y - (1.0 - FONT_DESCENT) * height);
   }
-  painter.drawText(px, py, rect.width(), rect.height(), Qt::TextDontClip, str);
+  painter.drawText(px, py, width, height, Qt::TextDontClip, str);
   reset_clip();
 }
 
@@ -1245,10 +1250,15 @@ void GlowDrawQt::get_text_extent(const char* text, int len,
 
   QFont font = get_font(font_idx, painter_type, size);
 
-  QRect boundingRect = QFontMetrics(font).boundingRect(str);
+  int lwidth = 0;
+  int lheight = 0;
+  QStringList l = str.split("\n");
+  for (int i = 0; i < l.length(); i++) {
+    QRect boundingRect = QFontMetrics(font).boundingRect(l[i]);
+    lwidth = MAX(lwidth, boundingRect.width());
+    lheight += boundingRect.height();
+  }
 
-  int lwidth = boundingRect.width();
-  int lheight = boundingRect.height();
   lheight = (int)(lheight * 0.9);
 
   if (rot == 90 || rot == 270) {

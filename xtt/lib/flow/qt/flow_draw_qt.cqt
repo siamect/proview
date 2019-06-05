@@ -1099,10 +1099,14 @@ void FlowDrawQt::get_text_extent(const char* text, int len,
 
   QFont font = get_font(painter_type, FONT_SCALE * size);
 
-  QRect boundingRect = QFontMetrics(font).boundingRect(str);
-
-  *width = boundingRect.width();
-  *height = boundingRect.height();
+  *width = 0;
+  *height = 0;
+  QStringList l = str.split("\n");
+  for (int i = 0; i < l.length(); i++) {
+    QRect boundingRect = QFontMetrics(font).boundingRect(l[i]);
+    *width = MAX(*width, boundingRect.width());
+    *height += boundingRect.height();
+  }
 }
 
 void FlowDrawQt::set_click_sensitivity(int value)
