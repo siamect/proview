@@ -1963,6 +1963,7 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   hpaned->addWidget(graph_list);
   hpaned->addWidget(objectnav_w);
   add_expanding(hpaned, grow_widget);
+  hpaned->setStretchFactor(2, 1);
   hpaned->addWidget(vpaned);
 
   QVBoxLayout* vbox = new QVBoxLayout(toplevel);
