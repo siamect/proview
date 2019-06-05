@@ -429,12 +429,19 @@ void WdaQt::open_class_dialog(char* hierstr, char* classstr, char* namestr)
 
   int res = wdaclass_dia.exec();
   if (res == QDialog::Accepted) {
-    char* hiername = qPrintableLatin1(wdaclass_hiervalue->text());
-    char* searchname = qPrintableLatin1(wdaclass_namevalue->text());
-    char* classname = qPrintableLatin1(wdaclass_classvalue->text());
+    char* hiername = (char*)malloc(wdaclass_hiervalue->text().length() + 1);
+    char* searchname = (char*)malloc(wdaclass_namevalue->text().length() + 1);
+    char* classname = (char*)malloc(wdaclass_classvalue->text().length() + 1);
+    strcpy(hiername, qPrintableLatin1(wdaclass_hiervalue->text()));
+    strcpy(searchname, qPrintableLatin1(wdaclass_namevalue->text()));
+    strcpy(classname, qPrintableLatin1(wdaclass_classvalue->text()));
     bool attrobjects = wdaclass_attrobjects->isChecked();
 
     toplevel->class_activate_ok(hiername, searchname, classname, attrobjects);
+
+    free(hiername);
+    free(searchname);
+    free(classname);
   }
 }
 
