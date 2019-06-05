@@ -267,6 +267,8 @@ WVselQt::WVselQt(pwr_tStatus* status, void* wv_parent_ctx,
   volumelist->setSelectionMode(QAbstractItemView::SingleSelection);
 
   volumelist->setColumnCount(3);
+  volumelist->header()->setResizeMode(0, QHeaderView::Stretch);
+  volumelist->header()->setStretchLastSection(false);
   volumelist->header()->close();
 
   QDialogButtonBox* buttons = new QDialogButtonBox();
