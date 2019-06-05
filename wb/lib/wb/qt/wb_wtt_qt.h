@@ -287,7 +287,7 @@ public slots:
   void activate_zoom_out();
   void activate_zoom_reset();
   void activate_twowindows();
-  void activate_set_alltoplevel();
+  void activate_set_alltoplevel(bool set);
   void activate_messages();
   void activate_view();
   void activate_savesettings();

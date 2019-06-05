@@ -1292,13 +1292,8 @@ void WttQtWidget::activate_twowindows()
   wtt->activate_twowindows();
 }
 
-void WttQtWidget::activate_set_alltoplevel()
+void WttQtWidget::activate_set_alltoplevel(bool set)
 {
-  int set = ((int)((WttQt*)wtt)->view_alltoplevel_w->isChecked());
-  if (sender() != ((WttQt*)wtt)->view_alltoplevel_w) {
-    set = !set;
-    ((WttQt*)wtt)->view_alltoplevel_w->setChecked(set);
-  }
   wtt->activate_set_alltoplevel(set);
 }
 
@@ -2055,8 +2050,8 @@ WttQt::WttQt(void* wt_parent_ctx, const char* wt_name, const char* iconname,
       "zoom-original");
   addMenuItem(
       toplevel, view, "T&wo Windows", SLOT(activate_twowindows()), "CTRL+T");
-  view_alltoplevel_w = addMenuItem(
-      toplevel, view, "V&iew all toplevel", SLOT(activate_set_alltoplevel()));
+  view_alltoplevel_w = addCheckableMenuItem(
+      toplevel, view, "V&iew all toplevel", SLOT(activate_set_alltoplevel(bool)));
   addMenuItem(toplevel, view, "&Messages", SLOT(activate_messages()));
 
   // Options menu
