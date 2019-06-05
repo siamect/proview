@@ -145,6 +145,7 @@ int XAttOneQt::change_value(int set_focus)
     cmd_label->setText(fl(buf));
   } else {
     if (atype == pwr_eType_Text) {
+      statusbar->setMaximumHeight(QWIDGETSIZE_MAX);
       cmd_entry->setVisible(false);
       cmd_scrolledinput->setVisible(true);
 
@@ -155,11 +156,12 @@ int XAttOneQt::change_value(int set_focus)
       input_multiline = 1;
 
       if (value) {
-        cmd_scrolled_buffer->setText(fl(value));
+        cmd_scrolled_buffer->setPlainText(fl(value));
       } else {
-        cmd_scrolled_buffer->setText("");
+        cmd_scrolled_buffer->setPlainText("");
       }
     } else {
+      statusbar->setMaximumHeight(25);
       cmd_entry->setVisible(true);
       cmd_scrolledinput->setVisible(false);
       if (set_focus) {
@@ -288,7 +290,7 @@ XAttOneQt::XAttOneQt(void* xa_parent_ctx, pwr_sAttrRef* xa_aref, char* xa_title,
       SLOT(activate_cmd_entry()));
 
   // Scrolled text input
-  cmd_scrolled_buffer = new QTextEdit();
+  cmd_scrolled_buffer = new QPlainTextEdit();
 
   // Buttons
   QDialogButtonBox* buttons = new QDialogButtonBox();
@@ -303,7 +305,7 @@ XAttOneQt::XAttOneQt(void* xa_parent_ctx, pwr_sAttrRef* xa_aref, char* xa_title,
       toplevel, SLOT(close()));
 
   // Horizontal box
-  QStatusBar* statusbar = new QStatusBar();
+  statusbar = new QStatusBar();
   statusbar->addWidget(msg_label);
   statusbar->addWidget(cmd_prompt);
   add_expanding(statusbar, cmd_label);

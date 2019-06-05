@@ -44,7 +44,8 @@
 #include "xtt_xattone.h"
 
 #include <QLabel>
-#include <QTextEdit>
+#include <QPlainTextEdit>
+#include <QStatusBar>
 
 class XAttOneQtWidget;
 
@@ -59,9 +60,10 @@ public:
   QLabel* cmd_prompt;
   QLabel* cmd_label;
   QWidget* cmd_scrolledinput;
-  QTextEdit* cmd_scrolled_buffer;
+  QPlainTextEdit* cmd_scrolled_buffer;
   static CoWowRecall value_recall;
   CoWowEntryQt* cmd_entry;
+  QStatusBar* statusbar;
 
   void message(char severity, const char* message);
   void set_prompt(char* prompt);

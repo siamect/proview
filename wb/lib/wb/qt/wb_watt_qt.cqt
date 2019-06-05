@@ -80,6 +80,7 @@ void WAttQt::change_value(int set_focus)
   int input_size;
 
   if (input_open) {
+    statusbar->setMaximumHeight(25);
     cmd_entry->setVisible(false);
     cmd_scrolledinput->setVisible(false);
     set_prompt("");
@@ -99,6 +100,7 @@ void WAttQt::change_value(int set_focus)
   }
 
   if (multiline) {
+    statusbar->setMaximumHeight(QWIDGETSIZE_MAX);
     cmd_scrolledinput->setVisible(true);
 
     set_pane_position(pane, -170);
@@ -116,7 +118,7 @@ void WAttQt::change_value(int set_focus)
 
   if (value) {
     if (multiline) {
-      cmd_scrolled_buffer->setText(QString::fromLatin1(value));
+      cmd_scrolled_buffer->setPlainText(QString::fromLatin1(value));
     } else {
       cmd_entry->setText(QString::fromLatin1(value));
 
@@ -138,7 +140,7 @@ void WAttQtWidget::action_text_inserted()
     // Remove inserted chars
     QString txt = watt->cmd_scrolled_buffer->toPlainText();
     txt.truncate(watt->input_max_length);
-    watt->cmd_scrolled_buffer->setText(txt);
+    watt->cmd_scrolled_buffer->setPlainText(txt);
 
     CoWowQt wow(this);
     wow.DisplayError("Error message", "Attribute size exceeded");
@@ -220,6 +222,7 @@ void WAttQt::change_value_close()
 
         wattnav->set_attr_value(input_node, input_name, text);
       }
+      statusbar->setMaximumHeight(25);
       cmd_scrolledinput->setVisible(false);
       set_prompt("");
       input_open = 0;
@@ -303,6 +306,7 @@ void WAttQtWidget::activate_cmd_scrolled_ok()
 
       watt->wattnav->set_attr_value(watt->input_node, watt->input_name, text);
     }
+    watt->statusbar->setMaximumHeight(25);
     watt->cmd_scrolledinput->setVisible(false);
     watt->set_prompt("");
     watt->input_open = 0;
@@ -325,6 +329,7 @@ void WAttQtWidget::activate_cmd_scrolled_ok()
 void WAttQtWidget::activate_cmd_scrolled_ca()
 {
   if (watt->input_open) {
+    watt->statusbar->setMaximumHeight(25);
     watt->cmd_scrolledinput->setVisible(false);
 
     set_pane_position(watt->pane, -50);
@@ -426,7 +431,7 @@ WAttQt::WAttQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
   wattnav->message_cb = &WAtt::message_cb;
   wattnav->change_value_cb = &WAtt::change_value_cb;
 
-  QStatusBar* statusbar = new QStatusBar();
+  statusbar = new QStatusBar();
   msg_label = new QLabel("");
   cmd_prompt = new QLabel("value > ");
   cmd_entry = new CoWowEntryQt(&value_recall);
@@ -451,7 +456,7 @@ WAttQt::WAttQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
 
   toplevel->setLayout(vbox);
 
-  cmd_scrolled_buffer = new QTextEdit();
+  cmd_scrolled_buffer = new QPlainTextEdit();
   QObject::connect(cmd_scrolled_buffer, SIGNAL(textChanged()), toplevel,
       SLOT(action_text_inserted()));
 

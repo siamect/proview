@@ -66,7 +66,7 @@ void WAttTextQtWidget::action_text_inserted()
     // Remove inserted chars
     QString txt = atxt->textbuffer->toPlainText();
     txt.truncate(atxt->input_max_length);
-    atxt->textbuffer->setText(txt);
+    atxt->textbuffer->setPlainText(txt);
 
     CoWowQt wow(this);
     wow.DisplayError("Error message", "Attribute size exceeded");
@@ -87,12 +87,12 @@ void WAttTextQtWidget::activate_copy()
 void WAttTextQtWidget::activate_cut()
 {
   QApplication::clipboard()->setText(atxt->textbuffer->toPlainText());
-  atxt->textbuffer->setText("");
+  atxt->textbuffer->setPlainText("");
 }
 
 void WAttTextQtWidget::activate_paste()
 {
-  atxt->textbuffer->setText(QApplication::clipboard()->text());
+  atxt->textbuffer->setPlainText(QApplication::clipboard()->text());
 }
 
 void WAttTextQtWidget::activate_ok()
@@ -234,7 +234,7 @@ WAttTextQt::WAttTextQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
   }
   utility = ((WUtility*)parent_ctx)->utype;
 
-  textbuffer = new QTextEdit();
+  textbuffer = new QPlainTextEdit();
   QObject::connect(textbuffer, SIGNAL(textChanged()), toplevel,
       SLOT(action_text_inserted()));
 
@@ -290,7 +290,7 @@ WAttTextQt::WAttTextQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
 
   input_max_length = ainfo.size - 1;
 
-  textbuffer->setText(QString::fromLatin1(value));
+  textbuffer->setPlainText(QString::fromLatin1(value));
 
   textbuffer->setReadOnly(!editmode);
 

@@ -83,6 +83,7 @@ void XColWindQt::change_value(int set_focus)
   int input_size;
 
   if (input_open) {
+    statusbar->setMaximumHeight(25);
     cmd_entry->setVisible(false);
     cmd_scrolledinput->setVisible(false);
     set_prompt("");
@@ -102,6 +103,7 @@ void XColWindQt::change_value(int set_focus)
   }
 
   if (multiline) {
+    statusbar->setMaximumHeight(QWIDGETSIZE_MAX);
     cmd_scrolledinput->setVisible(true);
 
     set_pane_position(pane, -170);
@@ -123,7 +125,7 @@ void XColWindQt::change_value(int set_focus)
 
   if (value) {
     if (multiline) {
-      cmd_scrolled_buffer->setText(fl(value));
+      cmd_scrolled_buffer->setPlainText(fl(value));
     } else {
       cmd_entry->setText("");
       cmd_entry->setText(fl(value));
@@ -151,7 +153,7 @@ void XColWindQtWidget::action_text_inserted()
 
     QString txt = colwind->cmd_scrolled_buffer->toPlainText();
     txt.truncate(colwind->input_max_length);
-    colwind->cmd_scrolled_buffer->setText(txt);
+    colwind->cmd_scrolled_buffer->setPlainText(txt);
 
     CoWowQt wow(this);
     wow.DisplayError("Error message", "Attribute size exceeded");
@@ -283,6 +285,7 @@ void XColWindQt::change_value_close()
         xattnav->set_attr_value(input_node, input_name, text);
       }
 
+      statusbar->setMaximumHeight(25);
       cmd_scrolledinput->setVisible(false);
       set_prompt("");
       input_open = 0;
@@ -356,6 +359,7 @@ void XColWindQtWidget::activate_cmd_scrolled_ok()
 
     colwind->xattnav->set_attr_value(
         colwind->input_node, colwind->input_name, text);
+    colwind->statusbar->setMaximumHeight(25);
     colwind->cmd_scrolledinput->setVisible(false);
     colwind->set_prompt("");
     colwind->input_open = 0;
@@ -370,6 +374,7 @@ void XColWindQtWidget::activate_cmd_scrolled_ok()
 void XColWindQtWidget::activate_cmd_scrolled_ca()
 {
   if (colwind->input_open) {
+    colwind->statusbar->setMaximumHeight(25);
     colwind->cmd_scrolledinput->setVisible(false);
 
     set_pane_position(colwind->pane, -50);
@@ -532,7 +537,7 @@ XColWindQt::XColWindQt(void* xa_parent_ctx, pwr_sAttrRef* xa_objar_list,
   xattnav->is_authorized_cb = &xcolwind_is_authorized_cb;
   xattnav->init_cb = &init_cb;
 
-  QStatusBar* statusbar = new QStatusBar();
+  statusbar = new QStatusBar();
   msg_label = new QLabel("");
   cmd_prompt = new QLabel("value > ");
   cmd_entry = new CoWowEntryQt(&value_recall);
@@ -554,7 +559,7 @@ XColWindQt::XColWindQt(void* xa_parent_ctx, pwr_sAttrRef* xa_objar_list,
 
   toplevel->setLayout(vbox);
 
-  cmd_scrolled_buffer = new QTextEdit();
+  cmd_scrolled_buffer = new QPlainTextEdit();
   QObject::connect(cmd_scrolled_buffer, SIGNAL(textChanged()), toplevel,
       SLOT(action_text_inserted()));
 

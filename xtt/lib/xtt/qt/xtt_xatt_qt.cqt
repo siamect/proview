@@ -84,6 +84,7 @@ void XAttQt::change_value(int set_focus)
   int input_size;
 
   if (input_open) {
+    statusbar->setMaximumHeight(25);
     cmd_entry->setVisible(false);
     cmd_scrolledinput->setVisible(false);
     set_prompt("");
@@ -103,6 +104,7 @@ void XAttQt::change_value(int set_focus)
   }
 
   if (multiline) {
+    statusbar->setMaximumHeight(QWIDGETSIZE_MAX);
     cmd_scrolledinput->setVisible(true);
 
     set_pane_position(pane, -170);
@@ -124,7 +126,7 @@ void XAttQt::change_value(int set_focus)
 
   if (value) {
     if (multiline) {
-      cmd_scrolled_buffer->setText(fl(value));
+      cmd_scrolled_buffer->setPlainText(fl(value));
     } else {
       cmd_entry->setText(fl(value));
 
@@ -149,7 +151,7 @@ void XAttQtWidget::action_text_inserted()
     // inserted text)
     QString txt = xatt->cmd_scrolled_buffer->toPlainText();
     txt.truncate(xatt->input_max_length);
-    xatt->cmd_scrolled_buffer->setText(txt);
+    xatt->cmd_scrolled_buffer->setPlainText(txt);
 
     CoWowQt wow(this);
     wow.DisplayError("Error message", "Attribute size exceeded");
@@ -223,6 +225,7 @@ void XAttQt::change_value_close()
         xattnav->set_attr_value(input_node, input_name, text);
       }
 
+      statusbar->setMaximumHeight(25);
       cmd_scrolledinput->setVisible(false);
       set_prompt("");
       input_open = 0;
@@ -291,6 +294,7 @@ void XAttQtWidget::activate_cmd_scrolled_ok()
       xatt->message('E', "Input error, invalid character");
     }
 
+    xatt->statusbar->setMaximumHeight(25);
     xatt->cmd_scrolledinput->setVisible(false);
     xatt->set_prompt("");
     xatt->input_open = 0;
@@ -305,6 +309,7 @@ void XAttQtWidget::activate_cmd_scrolled_ok()
 void XAttQtWidget::activate_cmd_scrolled_ca()
 {
   if (xatt->input_open) {
+    xatt->statusbar->setMaximumHeight(25);
     xatt->cmd_scrolledinput->setVisible(false);
 
     set_pane_position(xatt->pane, -50);
@@ -406,7 +411,7 @@ XAttQt::XAttQt(void* xa_parent_ctx, pwr_sAttrRef* xa_objar,
   xattnav->is_authorized_cb = &xatt_is_authorized_cb;
   xattnav->init_cb = &init_cb;
 
-  QStatusBar* statusbar = new QStatusBar();
+  statusbar = new QStatusBar();
   msg_label = new QLabel("");
   cmd_prompt = new QLabel("value > ");
   cmd_entry = new CoWowEntryQt(&value_recall);
@@ -428,7 +433,7 @@ XAttQt::XAttQt(void* xa_parent_ctx, pwr_sAttrRef* xa_objar,
 
   toplevel->setLayout(vbox);
 
-  cmd_scrolled_buffer = new QTextEdit();
+  cmd_scrolled_buffer = new QPlainTextEdit();
   QObject::connect(cmd_scrolled_buffer, SIGNAL(textChanged()), toplevel,
       SLOT(action_text_inserted()));
 

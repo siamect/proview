@@ -42,7 +42,7 @@
 #include "wb_watttext.h"
 
 #include <QLabel>
-#include <QTextEdit>
+#include <QPlainTextEdit>
 
 class WAttTextQtWidget;
 
@@ -52,7 +52,7 @@ public:
       pwr_sAttrRef wa_aref, int wa_editmode, pwr_tStatus* status);
   ~WAttTextQt();
   QLabel* msg_label;
-  QTextEdit* textbuffer;
+  QPlainTextEdit* textbuffer;
   int input_max_length;
   int init;
 

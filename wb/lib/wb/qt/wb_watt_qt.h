@@ -44,8 +44,9 @@
 #include "wb_watt.h"
 
 #include <QLabel>
+#include <QPlainTextEdit>
 #include <QSplitter>
-#include <QTextEdit>
+#include <QStatusBar>
 
 class WAttQtWidget;
 
@@ -59,12 +60,13 @@ public:
   QLabel* msg_label;
   QLabel* cmd_prompt;
   QWidget* cmd_scrolledinput;
-  QTextEdit* cmd_scrolled_buffer;
+  QPlainTextEdit* cmd_scrolled_buffer;
   QSplitter* pane;
   static CoWowRecall value_recall;
   CoWowEntryQt* cmd_entry;
   CoWowFocusTimerQt focustimer;
   int input_max_length;
+  QStatusBar* statusbar;
 
   void message(char severity, const char* message);
   void set_prompt(const char* prompt);

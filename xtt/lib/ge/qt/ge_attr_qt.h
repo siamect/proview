@@ -42,8 +42,9 @@
 #include "ge_attr.h"
 
 #include <QLabel>
+#include <QPlainTextEdit>
 #include <QSplitter>
-#include <QTextEdit>
+#include <QStatusBar>
 
 /* ge_attr.h -- Ge attribute editor */
 
@@ -65,11 +66,12 @@ public:
   QLabel* msg_label;
   QLabel* cmd_prompt;
   QWidget* cmd_scrolledinput;
-  QTextEdit* cmd_scrolled_buffer;
+  QPlainTextEdit* cmd_scrolled_buffer;
   QSplitter* pane;
   static CoWowRecall value_recall;
   CoWowEntryQt* cmd_entry;
   int input_max_length;
+  QStatusBar* statusbar;
 
   void message(char severity, const char* message);
   void message_popup(char severity, const char* message);

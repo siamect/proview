@@ -86,6 +86,7 @@ void WdaQt::change_value(int set_focus)
   int input_size;
 
   if (input_open) {
+    statusbar->setMaximumHeight(25);
     cmd_entry->setVisible(false);
     cmd_scrolledinput->setVisible(false);
     set_prompt("");
@@ -105,6 +106,7 @@ void WdaQt::change_value(int set_focus)
   }
 
   if (multiline) {
+    statusbar->setMaximumHeight(QWIDGETSIZE_MAX);
     cmd_scrolledinput->setVisible(true);
 
     set_pane_position(pane, -170);
@@ -121,7 +123,7 @@ void WdaQt::change_value(int set_focus)
 
   if (value) {
     if (multiline) {
-      cmd_scrolled_buffer->setText(QString::fromLatin1(value));
+      cmd_scrolled_buffer->setPlainText(QString::fromLatin1(value));
     } else {
       cmd_entry->setText(QString::fromLatin1(value));
 
@@ -267,6 +269,7 @@ void WdaQt::change_value_close()
       }
 
       wdanav->set_attr_value(input_node, input_name, text);
+      statusbar->setMaximumHeight(25);
       cmd_scrolledinput->setVisible(false);
       set_prompt("");
       input_open = 0;
@@ -342,6 +345,7 @@ void WdaQtWidget::activate_cmd_scrolled_ok()
 
       wda->wdanav->set_attr_value(wda->input_node, wda->input_name, text);
     }
+    wda->statusbar->setMaximumHeight(25);
     wda->cmd_scrolledinput->setVisible(false);
     wda->set_prompt("");
     wda->input_open = 0;
@@ -359,6 +363,7 @@ void WdaQtWidget::activate_cmd_scrolled_ok()
 void WdaQtWidget::activate_cmd_scrolled_ca()
 {
   if (wda->input_open) {
+    wda->statusbar->setMaximumHeight(25);
     wda->cmd_scrolledinput->setVisible(false);
 
     set_pane_position(wda->pane, -50);
@@ -525,7 +530,7 @@ WdaQt::WdaQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
   wdanav->message_cb = &Wda::message_cb;
   wdanav->change_value_cb = &Wda::change_value_cb;
 
-  QStatusBar* statusbar = new QStatusBar();
+  statusbar = new QStatusBar();
   msg_label = new QLabel("");
   cmd_prompt = new QLabel("value > ");
   cmd_entry = new CoWowEntryQt(&value_recall);
@@ -547,7 +552,7 @@ WdaQt::WdaQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
 
   toplevel->setLayout(vbox);
 
-  cmd_scrolled_buffer = new QTextEdit();
+  cmd_scrolled_buffer = new QPlainTextEdit();
 
   QDialogButtonBox* buttons = new QDialogButtonBox();
   buttons->addButton(QDialogButtonBox::Ok);
