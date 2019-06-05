@@ -464,9 +464,12 @@ void WFoeQtWidget::activate_edit_togg()
 {
   if (sender() != foe->edit_togg) {
     foe->edit_togg->setChecked(true);
+    foe->edit_was_checked = true;
+  } else {
+    foe->edit_was_checked = !foe->edit_was_checked;
   }
 
-  foe->activate_edit_togg(true);
+  foe->activate_edit_togg(foe->edit_was_checked);
 }
 
 void WFoeQtWidget::valchanged_textinput()

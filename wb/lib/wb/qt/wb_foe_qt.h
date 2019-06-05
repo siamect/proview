@@ -113,6 +113,7 @@ public:
   QAction* select_cp_nextup;
   QAction* select_cp_nextdown;
   CoWowFocusTimerQt focustimer;
+  bool edit_was_checked = false;
 
   WFoeQt(void* f_parent_ctx, const char* f_name, pwr_tObjid plcprogram,
       ldh_tWBContext ldhwbctx, ldh_tSesContext ldhsesctx, int f_map_window,
