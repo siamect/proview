@@ -705,22 +705,30 @@ void GlowDrawQt::event_handler(QEvent* event, QWidget* target)
         button_pressed = 0;
         button_clicked_and_pressed = 0;
       }
-      if (button1_pressed || button2_pressed || button3_pressed) {
-        sts = ctx->event_handler(
-            glow_eEvent_ButtonMotion, pos.x(), pos.y(), 0, 0);
-      } else {
-        sts = ctx->event_handler(
-            glow_eEvent_CursorMotion, pos.x(), pos.y(), 0, 0);
+      if (pos.x() > 0 && pos.y() > 0 && pos.x() < target->width() && pos.y() < target->height()) {
+        if (button1_pressed || button2_pressed || button3_pressed) {
+          if (!ctx->cursor_present) {
+            sts = ctx->event_handler(glow_eEvent_Enter, pos.x(), pos.y(), 0, 0);
+          } else {
+            sts = ctx->event_handler(
+                glow_eEvent_ButtonMotion, pos.x(), pos.y(), 0, 0);
+          }
+        } else {
+          sts = ctx->event_handler(
+              glow_eEvent_CursorMotion, pos.x(), pos.y(), 0, 0);
+        }
+      } else if (ctx->cursor_present && (button1_pressed || button2_pressed || button3_pressed)) {
+        sts = ctx->event_handler(glow_eEvent_Leave, pos.x(), pos.y(), 0, 0);
       }
       break;
     }
     case QEvent::Enter: {
-      QPoint pos = QCursor::pos();
+      QPoint pos = target->mapFromGlobal(QCursor::pos());
       sts = ctx->event_handler(glow_eEvent_Enter, pos.x(), pos.y(), 0, 0);
       break;
     }
     case QEvent::Leave: {
-      QPoint pos = QCursor::pos();
+      QPoint pos = target->mapFromGlobal(QCursor::pos());
       sts = ctx->event_handler(glow_eEvent_Leave, pos.x(), pos.y(), 0, 0);
       break;
     }
@@ -732,9 +740,6 @@ void GlowDrawQt::event_handler(QEvent* event, QWidget* target)
       sts = ctx->event_handler(glow_eEvent_Unmap, 0, 0, 0, 0);
       break;
     }
-    case QEvent::FocusIn:
-    case QEvent::FocusOut:
-      break;
     case QEvent::Wheel: {
       // TODO: the event handler should also take scroll delta as a parameter
       QWheelEvent* wheelEvent = ((QWheelEvent*)event);
