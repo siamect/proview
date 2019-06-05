@@ -168,9 +168,8 @@ void GlowDrawQt::get_painter(int painter_type, int size)
   if (painter_type == glow_eDrawType_LineDashed ||
       painter_type == glow_eDrawType_LineDashedRed) {
     QPen pen = painter.pen();
-    pen.setStyle(Qt::DashLine);
     QVector<double> dashes;
-    dashes << 7 + size << 7 + size;
+    dashes << (7 + size) / pen.widthF() << (7 + size) / pen.widthF();
     pen.setDashPattern(dashes);
     painter.setPen(pen);
   }

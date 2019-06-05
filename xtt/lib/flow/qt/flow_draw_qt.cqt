@@ -789,35 +789,21 @@ void FlowDrawQt::get_painter(int painter_type, int size)
 {
   painter.setBrush(QBrush(draw_type_to_color(this, painter_type)));
   painter.setBackground(QBrush(this->background));
-  switch (painter_type) {
-  case flow_eDrawType_LineDashed:
-  case flow_eDrawType_LineDashedRed: {
-    QPen pen = QPen(painter.brush(), size + 1, Qt::DashLine);
+  painter.setPen(QPen(painter.brush(), size + 1));
+
+  if (painter_type == flow_eDrawType_LineDashed ||
+      painter_type == flow_eDrawType_LineDashedRed) {
+    QPen pen = painter.pen();
     QVector<double> dashes;
-    dashes << 7 + size << 7 + size;
+    dashes << (7 + size) / pen.widthF() << (7 + size) / pen.widthF();
     pen.setDashPattern(dashes);
     painter.setPen(pen);
-    return;
   }
-  case flow_eDrawType_TextHelvetica:
-  case flow_eDrawType_TextHelveticaBold:
-  case flow_eDrawType_TextHelveticaErase:
-  case flow_eDrawType_TextHelveticaEraseBold: {
-    painter.setPen(QPen(painter.brush(), size + 1));
+
+  if (painter_type >= flow_eDrawType_TextHelvetica &&
+      painter_type <= flow_eDrawType_TextHelveticaEraseBold) {
     int sizes[9] = {8, 10, 12, 14, 14, 18, 18, 18, 24};
     painter.setFont(get_font(painter_type, sizes[size], "Helvetica"));
-    return;
-  }
-  case flow_eDrawType_Green:
-  case flow_eDrawType_Yellow:
-  case flow_eDrawType_DarkGray:
-  case flow_eDrawType_Line:
-  case flow_eDrawType_LineErase:
-  case flow_eDrawType_LineRed:
-  case flow_eDrawType_LineGray:
-  default:
-    painter.setPen(QPen(painter.brush(), size + 1));
-    return;
   }
 }
 
