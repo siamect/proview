@@ -650,6 +650,7 @@ void CoWowEntryQt::keyPressEvent(QKeyEvent* event)
   }
   case Qt::Key_Escape:
     if (m_hide_on_esc) {
+      clearFocus();
       hide();
     }
     m_re->resetTmp();
@@ -658,6 +659,10 @@ void CoWowEntryQt::keyPressEvent(QKeyEvent* event)
     break;
   }
   QLineEdit::keyPressEvent(event);
+  if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
+    clearFocus();
+    hide();
+  }
 }
 
 //

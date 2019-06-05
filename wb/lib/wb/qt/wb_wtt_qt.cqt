@@ -1351,36 +1351,28 @@ void WttQtWidget::activate_help_proview()
 
 void WttQtWidget::valchanged_cmd_entry()
 {
-  int sts;
+  if (!wtt->focused_wnav && (wtt->input_open || wtt->command_open)) {
+    wtt->set_focus_default();
+  }
 
   if (wtt->input_open) {
-    switch (wtt->input_mode) {
-    case wtt_eInputMode_Attribute:
+    int sts = 1;
+    if (wtt->input_mode == wtt_eInputMode_Attribute) {
       sts = wtt->input_wnav->set_attr_value(wtt->input_node, wtt->input_objid,
           qPrintableLatin1(wtt->cmd_entry->text()));
-      if (EVEN(sts)) {
-        wtt->message('E', wnav_get_message(sts));
-      }
-      break;
-    case wtt_eInputMode_ObjectName:
+    } else if (wtt->input_mode == wtt_eInputMode_ObjectName) {
       sts = wtt->input_wnav->set_object_name(wtt->input_node, wtt->input_objid,
           qPrintableLatin1(wtt->cmd_entry->text()));
-      if (EVEN(sts)) {
-        wtt->message('E', wnav_get_message(sts));
-      }
-      break;
-    default:;
     }
-    wtt->cmd_entry->setVisible(false);
+    if (EVEN(sts)) {
+      wtt->message('E', wnav_get_message(sts));
+    }
+
+    wtt->focused_wnav->set_inputfocus(1);
   } else if (wtt->command_open) {
-    if (!wtt->focused_wnav) {
-      wtt->set_focus_default();
-    }
     wtt->set_clock_cursor();
     wtt->focused_wnav->command(qPrintableLatin1(wtt->cmd_entry->text()));
     wtt->reset_cursor();
-    wtt->cmd_entry->setVisible(false);
-    wtt->set_prompt("");
     wtt->command_open = 0;
     wtt->focused_wnav->set_inputfocus(1);
   }
@@ -1400,9 +1392,9 @@ void WttQtWidget::focusInEvent(QFocusEvent* event)
 
 void WttQtWidget::hide_cmd_entry()
 {
+  wtt->set_prompt("");
   if (wtt->input_open) {
     wtt->input_wnav->select_object(wtt->input_node);
-    wtt->set_prompt("");
     wtt->input_open = 0;
   }
 }
