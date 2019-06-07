@@ -144,7 +144,7 @@ static QFont get_font(int font_idx, int painter_type, double size)
     res = QFont("Century Schoolbook L");
     break;
   case glow_eFont_Courier:
-    res = QFont("Courier 10 pitch");
+    res = QFont("Courier 10 Pitch");
     break;
   default:
     res = QFont("Lucida Sans");

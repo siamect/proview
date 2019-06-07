@@ -1727,10 +1727,9 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   tools_textfont->addItem("Helvetica", glow_eFont_Helvetica);
   tools_textfont->addItem("Times", glow_eFont_Times);
   tools_textfont->addItem(
-      "New Century Schoolbook", glow_eFont_NewCenturySchoolbook);
-  tools_textfont->addItem("Courier", glow_eFont_Courier);
+      "Century Schoolbook L", glow_eFont_NewCenturySchoolbook);
+  tools_textfont->addItem("Courier 10 Pitch", glow_eFont_Courier);
   tools_textfont->addItem("Lucida Sans", glow_eFont_LucidaSans);
-  tools_textfont->setFont(QFont("Courier"));
 
   // Bold checkbutton
   QCheckBox* bold = new QCheckBox("Bold");
