@@ -145,10 +145,6 @@ void GeQt::subgraphs_new()
 {
   int sts;
 
-  if (subgraphs_widget) {
-    subgraphs_widget->close();
-  }
-
   subgraphs = new SubGraphsQt(this, "SubGraphs", (void*)graph->grow->ctx,
       &subgraphs_widget, &sts);
   subgraphs->message_cb = &Ge::message_cb;
