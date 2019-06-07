@@ -45,6 +45,7 @@
 #include <QApplication>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QShortcut>
 #include <QVBoxLayout>
 
 void WGeQtWidget::focusInEvent(QFocusEvent* event)
@@ -246,6 +247,11 @@ WGeQt::WGeQt(void* wge_parent_ctx, char* wge_name, char* wge_filename,
         "system-help");
 
     graph_form->setMenuBar(menu_bar);
+  } else {
+    new QShortcut(QKeySequence("CTRL+W"), toplevel, SLOT(close()));
+    new QShortcut(QKeySequence("CTRL+I"), toplevel, SLOT(activate_zoom_in()));
+    new QShortcut(QKeySequence("CTRL+O"), toplevel, SLOT(activate_zoom_out()));
+    new QShortcut(QKeySequence("CTRL+H"), toplevel, SLOT(activate_help()));
   }
 
   add_expanding(graph_form, grow_widget);
