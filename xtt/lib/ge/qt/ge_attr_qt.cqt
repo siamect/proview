@@ -197,7 +197,7 @@ void AttrQtWidget::closeEvent(QCloseEvent* event)
   } else {
     delete attr;
   }
-  QWidget::closeEvent(event);
+  event->ignore();
 }
 
 void AttrQtWidget::focusInEvent(QFocusEvent* event)
@@ -443,4 +443,8 @@ AttrQt::~AttrQt()
     delete original_data;
   }
   delete (AttrNavQt*)attrnav;
+
+  if (!embedded) {
+    delete toplevel;
+  }
 }
