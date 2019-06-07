@@ -1908,28 +1908,25 @@ void GlowDrawQt::gradient_fill_rectrounded(int x, int y, int width, int h,
   }
 }
 
-void GlowDrawQt::gradient_fill_arc(int x, int y, int width, int h, int angle1,
-    int angle2, glow_eDrawType d0, glow_eDrawType d1, glow_eDrawType d2,
-    glow_eGradient gradient)
+void GlowDrawQt::gradient_fill_arc(int x, int y, int width, int height,
+    int angle1, int angle2, glow_eDrawType d0, glow_eDrawType d1,
+    glow_eDrawType d2, glow_eGradient gradient)
 {
-  while (angle1 >= 360) {
-    angle1 -= 360;
-  }
-  while (angle1 < 360) {
-    angle1 += 360;
+  if (angle1 >= 360) {
+    angle1 = angle1 - angle1 / 360 * 360;
+  } else if (angle1 < 0) {
+    angle1 = angle1 + (-angle1 / 360 + 1) * 360;
   }
 
   QGradient* pat;
-  if ((pat = gradient_create_pattern(-1, -1, 2, 2, d0, d1, d2, gradient))) {
+  if ((pat = gradient_create_pattern(x, y, width, height, d0, d1, d2, gradient))) {
     get_painter(glow_eDrawType_Line, 0);
-    painter.translate(x + width / 2.0, y + h / 2.0);
-    painter.scale(width / 2.0, h / 2.0);
     QPainterPath path;
     if (!(angle2 == 360 || angle2 == 180))
-      path.moveTo(0, 0);
-    path.arcTo(-1, -1, 2, 2, angle1, angle2);
+      path.moveTo(x + width / 2.0, y + height / 2.0);
+    path.arcTo(x, y, width, height, angle1, angle2);
     if (!(angle2 == 360 || angle2 == 180))
-      path.moveTo(0, 0);
+      path.moveTo(x + width / 2.0, y + height / 2.0);
     painter.fillPath(path, *pat);
     reset_clip();
 
