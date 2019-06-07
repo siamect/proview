@@ -1327,7 +1327,7 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   addMenuItem(
       toplevel, file, "&Open...", SLOT(activate_open()), "", "document-open");
   addMenuItem(
-      toplevel, file, "Save", SLOT(activate_save()), "", "document-save");
+      toplevel, file, "Save", SLOT(activate_save()), "CTRL+S", "document-save");
   addMenuItem(toplevel, file, "Save As", SLOT(activate_save_as()),
       "CTRL+SHIFT+S", "document-save-as");
   addMenuItem(toplevel, file, "&Build", SLOT(activate_build()));
@@ -1578,7 +1578,7 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   // Menu Help
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(
-      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
+      toplevel, help, "&Help", SLOT(activate_help()), "", "system-help");
   addMenuItem(
       toplevel, help, "H&elp on Subgraphs", SLOT(activate_help_subgraph()));
 
