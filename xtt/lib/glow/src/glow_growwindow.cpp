@@ -266,11 +266,6 @@ void GrowWindow::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   Matrix tmp = t ? (*t * trf) : trf;
   glow_sPoint d1 = tmp * ll;
   glow_sPoint d2 = tmp * ur;
-
-  d1.x = d1.x * w->zoom_factor_x - w->offset_x;
-  d1.y = d1.y * w->zoom_factor_y - w->offset_y;
-  d2.x = d2.x * w->zoom_factor_x - w->offset_x;
-  d2.y = d2.y * w->zoom_factor_y - w->offset_y;
   double dx1 = MIN(d1.x, d2.x);
   double dx2 = MAX(d1.x, d2.x);
   double dy1 = MIN(d1.y, d2.y);
@@ -320,11 +315,7 @@ void GrowWindow::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       ctx->gdraw->rect(
           ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fill_drawtype, 1, 0);
 
-    ctx->gdraw->end();
-    ctx->gdraw->begin(&window_ctx->mw);
     window_ctx->draw(&window_ctx->mw, ll_x, ll_y, ur_x, ur_y);
-    ctx->gdraw->end();
-    ctx->gdraw->begin(w);
     ctx->gdraw->pop_customcolors();
   }
 
