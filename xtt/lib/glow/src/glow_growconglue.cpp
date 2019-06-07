@@ -385,12 +385,12 @@ void GrowConGlue::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   p2.x = p2.x * w->zoom_factor_x - w->offset_x;
   p2.y = p2.y * w->zoom_factor_y - w->offset_y;
 
-  int ll_x = int(MIN(p1.x, p2.x) + 0.5);
-  int ur_x = int(MAX(p1.x, p2.x) + 0.5);
-  int ll_y = int(MIN(p1.y, p2.y) + 0.5);
-  int ur_y = int(MAX(p1.y, p2.y) + 0.5);
-  int m_x = int((p1.x + p2.x) / 2 + 0.5);
-  int m_y = int((p1.y + p2.y) / 2 + 0.5);
+  int ll_x = ROUND(MIN(p1.x, p2.x));
+  int ur_x = ROUND(MAX(p1.x, p2.x));
+  int ll_y = ROUND(MIN(p1.y, p2.y));
+  int ur_y = ROUND(MAX(p1.y, p2.y));
+  int m_x = ROUND((p1.x + p2.x) / 2);
+  int m_y = ROUND((p1.y + p2.y) / 2);
 
   drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
       highlight, (GrowNode*)colornode, 0);
@@ -1214,10 +1214,10 @@ void GrowConGlue::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
   p2.x = p2.x * w->zoom_factor_x - w->offset_x;
   p2.y = p2.y * w->zoom_factor_y - w->offset_y;
 
-  int ll_x = int(MIN(p1.x, p2.x) + 0.5);
-  int ur_x = int(MAX(p1.x, p2.x) + 0.5);
-  int ll_y = int(MIN(p1.y, p2.y) + 0.5);
-  int ur_y = int(MAX(p1.y, p2.y) + 0.5);
+  int ll_x = ROUND(MIN(p1.x, p2.x));
+  int ur_x = ROUND(MAX(p1.x, p2.x));
+  int ll_y = ROUND(MIN(p1.y, p2.y));
+  int ur_y = ROUND(MAX(p1.y, p2.y));
 
   ctx->gdraw->rect(ll_x, ll_y, ur_x - ll_x + 1, ur_y - ll_y + 1,
       glow_eDrawType_LineErase, 1, 0);
@@ -1287,12 +1287,12 @@ void GrowConGlue::export_javabean(GlowTransform* t, void* node,
   p2.x = p2.x * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
   p2.y = p2.y * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
 
-  int ll_x = int(MIN(p1.x, p2.x) + 0.5);
-  int ur_x = int(MAX(p1.x, p2.x) + 0.5);
-  int ll_y = int(MIN(p1.y, p2.y) + 0.5);
-  int ur_y = int(MAX(p1.y, p2.y) + 0.5);
-  int m_x = int((p1.x + p2.x) / 2 + 0.5);
-  int m_y = int((p1.y + p2.y) / 2 + 0.5);
+  int ll_x = ROUND(MIN(p1.x, p2.x));
+  int ur_x = ROUND(MAX(p1.x, p2.x));
+  int ll_y = ROUND(MIN(p1.y, p2.y));
+  int ur_y = ROUND(MAX(p1.y, p2.y));
+  int m_x = ROUND((p1.x + p2.x) / 2);
+  int m_y = ROUND((p1.y + p2.y) / 2);
 
   glow_eDrawType drawtype = ctx->get_drawtype(
       draw_type, glow_eDrawType_LineHighlight, highlight, 0, 0);

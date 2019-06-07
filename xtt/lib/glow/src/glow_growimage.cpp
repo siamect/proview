@@ -172,12 +172,10 @@ int GrowImage::insert_image(const char* imagefile)
   if (!original_image)
     return 0;
 
-  current_width = int(ctx->mw.zoom_factor_x / ctx->mw.base_zoom_factor
-          * ctx->gdraw->image_get_width(image)
-      + 0.5);
-  current_height = int(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor
-          * ctx->gdraw->image_get_height(image)
-      + 0.5);
+  current_width = ROUND(ctx->mw.zoom_factor_x / ctx->mw.base_zoom_factor
+          * ctx->gdraw->image_get_width(image));
+  current_height = ROUND(ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor
+          * ctx->gdraw->image_get_height(image));
   current_color_tone = color_tone;
   current_color_lightness = color_lightness;
   current_color_intensity = color_intensity;
@@ -746,8 +744,8 @@ void GrowImage::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
         flip_horiz = flip_horizontal;
       }
 
-      if (int(ur_x - ll_x + 0.5) != current_width
-          || int(ur_y - ll_y + 0.5) != current_height) {
+      if (ROUND(ur_x - ll_x) != current_width
+          || ROUND(ur_y - ll_y) != current_height) {
         sts = 1;
       }
 
@@ -786,11 +784,11 @@ void GrowImage::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       if (sts) {
         int w, h;
         if (ABS(rotation) % 180 == 90) {
-          w = int(ur_y - ll_y + 0.5);
-          h = int(ur_x - ll_x + 0.5);
+          w = ROUND(ur_y - ll_y);
+          h = ROUND(ur_x - ll_x);
         } else {
-          w = int(ur_x - ll_x + 0.5);
-          h = int(ur_y - ll_y + 0.5);
+          w = ROUND(ur_x - ll_x);
+          h = ROUND(ur_y - ll_y);
         }
         if (colornode) {
           current_color_tone = ((GrowNode*)colornode)->color_tone;
@@ -858,10 +856,10 @@ void GrowImage::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
   p1.y = p1.y * w->zoom_factor_y - w->offset_y;
   p2.x = p2.x * w->zoom_factor_x - w->offset_x;
   p2.y = p2.y * w->zoom_factor_y - w->offset_y;
-  int ll_x = int(MIN(p1.x, p2.x));
-  int ur_x = int(MAX(p1.x, p2.x));
-  int ll_y = int(MIN(p1.y, p2.y));
-  int ur_y = int(MAX(p1.y, p2.y));
+  int ll_x = ROUND(MIN(p1.x, p2.x));
+  int ur_x = ROUND(MAX(p1.x, p2.x));
+  int ll_y = ROUND(MIN(p1.y, p2.y));
+  int ur_y = ROUND(MAX(p1.y, p2.y));
 
   ctx->gdraw->rect(
       ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase, 1, 0);

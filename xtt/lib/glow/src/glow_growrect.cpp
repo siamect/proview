@@ -647,12 +647,12 @@ void GrowRect::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   p1.y = p1.y * w->zoom_factor_y - w->offset_y;
   p2.x = p2.x * w->zoom_factor_x - w->offset_x;
   p2.y = p2.y * w->zoom_factor_y - w->offset_y;
-  int ll_x = int(MIN(p1.x, p2.x));
-  int ur_x = int(MAX(p1.x, p2.x));
-  int ll_y = int(MIN(p1.y, p2.y));
-  int ur_y = int(MAX(p1.y, p2.y));
+  int ll_x = ROUND(MIN(p1.x, p2.x));
+  int ur_x = ROUND(MAX(p1.x, p2.x));
+  int ll_y = ROUND(MIN(p1.y, p2.y));
+  int ur_y = ROUND(MAX(p1.y, p2.y));
 
-  int ish = int(shadow_width / 100 * MIN(ur_x - ll_x, ur_y - ll_y) + 0.5);
+  int ish = ROUND(shadow_width / 100 * MIN(ur_x - ll_x, ur_y - ll_y));
   int display_shadow
       = ((node && ((GrowNode*)node)->shadow) || shadow) && !disable_shadow;
   glow_eDrawType fillcolor;
@@ -827,10 +827,10 @@ void GrowRect::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
   p1.y = p1.y * w->zoom_factor_y - w->offset_y;
   p2.x = p2.x * w->zoom_factor_x - w->offset_x;
   p2.y = p2.y * w->zoom_factor_y - w->offset_y;
-  int ll_x = int(MIN(p1.x, p2.x));
-  int ur_x = int(MAX(p1.x, p2.x));
-  int ll_y = int(MIN(p1.y, p2.y));
-  int ur_y = int(MAX(p1.y, p2.y));
+  int ll_x = ROUND(MIN(p1.x, p2.x));
+  int ur_x = ROUND(MAX(p1.x, p2.x));
+  int ll_y = ROUND(MIN(p1.y, p2.y));
+  int ur_y = ROUND(MAX(p1.y, p2.y));
 
   int display_shadow
       = ((node && ((GrowNode*)node)->shadow) || shadow) && !disable_shadow;

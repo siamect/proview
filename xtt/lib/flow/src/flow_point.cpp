@@ -47,10 +47,10 @@ void FlowPoint::posit(double x1, double y1)
 {
   x = x1;
   y = y1;
-  z_x = int(x * ctx->zoom_factor + 0.5);
-  z_y = int(y * ctx->zoom_factor + 0.5);
-  nav_z_x = int(x * ctx->nav_zoom_factor + 0.5);
-  nav_z_y = int(y * ctx->nav_zoom_factor + 0.5);
+  z_x = ROUND(x * ctx->zoom_factor);
+  z_y = ROUND(y * ctx->zoom_factor);
+  nav_z_x = ROUND(x * ctx->nav_zoom_factor);
+  nav_z_y = ROUND(y * ctx->nav_zoom_factor);
 }
 
 void FlowPoint::posit_z(int x1, int y1)
@@ -59,20 +59,20 @@ void FlowPoint::posit_z(int x1, int y1)
   y = 1.0 * y1 / ctx->zoom_factor;
   z_x = x1;
   z_y = y1;
-  nav_z_x = int(x * ctx->nav_zoom_factor);
-  nav_z_y = int(y * ctx->nav_zoom_factor);
+  nav_z_x = ROUND(x * ctx->nav_zoom_factor);
+  nav_z_y = ROUND(y * ctx->nav_zoom_factor);
 }
 
 void FlowPoint::zoom()
 {
-  z_x = int(x * ctx->zoom_factor + 0.5);
-  z_y = int(y * ctx->zoom_factor + 0.5);
+  z_x = ROUND(x * ctx->zoom_factor);
+  z_y = ROUND(y * ctx->zoom_factor);
 }
 
 void FlowPoint::nav_zoom()
 {
-  nav_z_x = int(x * ctx->nav_zoom_factor + 0.5);
-  nav_z_y = int(y * ctx->nav_zoom_factor + 0.5);
+  nav_z_x = ROUND(x * ctx->nav_zoom_factor);
+  nav_z_y = ROUND(y * ctx->nav_zoom_factor);
 }
 
 void FlowPoint::print_zoom()

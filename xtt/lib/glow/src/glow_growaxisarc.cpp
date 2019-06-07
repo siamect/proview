@@ -292,10 +292,10 @@ void GrowAxisArc::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   p2.y = p2.y * w->zoom_factor_y - w->offset_y;
   double rotation = (tmp.rotation / 360 - floor(tmp.rotation / 360)) * 360;
 
-  int ll_x = int(MIN(p1.x, p2.x));
-  int ur_x = int(MAX(p1.x, p2.x));
-  int ll_y = int(MIN(p1.y, p2.y));
-  int ur_y = int(MAX(p1.y, p2.y));
+  int ll_x = ROUND(MIN(p1.x, p2.x));
+  int ur_x = ROUND(MAX(p1.x, p2.x));
+  int ll_y = ROUND(MIN(p1.y, p2.y));
+  int ur_y = ROUND(MAX(p1.y, p2.y));
 
   glow_eDrawType drawtype = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
       highlight, (GrowNode*)colornode, 0);
@@ -393,10 +393,10 @@ void GrowAxisArc::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
   p2.x = p2.x * w->zoom_factor_x - w->offset_x;
   p2.y = p2.y * w->zoom_factor_y - w->offset_y;
 
-  int ll_x = int(MIN(p1.x, p2.x));
-  int ur_x = int(MAX(p1.x, p2.x));
-  int ll_y = int(MIN(p1.y, p2.y));
-  int ur_y = int(MAX(p1.y, p2.y));
+  int ll_x = ROUND(MIN(p1.x, p2.x));
+  int ur_x = ROUND(MAX(p1.x, p2.x));
+  int ll_y = ROUND(MIN(p1.y, p2.y));
+  int ur_y = ROUND(MAX(p1.y, p2.y));
 
   ctx->gdraw->arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
       angle1 - (int)tmp.rotation, angle2, glow_eDrawType_LineErase, 0, idx);
@@ -548,7 +548,7 @@ void GrowAxisArc::set_range(double minval, double maxval, int keep_settings)
     if (d < 5)
       d = 1000 * d;
 
-    int di = (int)(d + 0.5);
+    int di = ROUND(d);
     while (di >= 25)
       di /= 10;
 

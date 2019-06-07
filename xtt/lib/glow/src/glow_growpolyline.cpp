@@ -266,23 +266,23 @@ void GrowPolyLine::calculate_shadow(glow_sShadowInfo** s, int* num, int ish,
     if (fabs(sx0 - sx1) < DBL_EPSILON) {
       if (fabs(sx1 - sx2) < DBL_EPSILON) {
         x = sx1 + pos01 * ish;
-        sp[i].x = int(x + 0.5);
-        sp[i].y = int(sy1 + 0.5);
+        sp[i].x = ROUND(x);
+        sp[i].y = ROUND(sy1);
       } else {
         k12 = (sy2 - sy1) / (sx2 - sx1);
         m12 = sy1 - sx1 * k12 + pos12 * ish / fabs(cos(atan(k12)));
 
         x = sx1 + pos01 * ish;
-        sp[i].x = int(x + 0.5);
-        sp[i].y = int(k12 * x + m12 + 0.5);
+        sp[i].x = ROUND(x);
+        sp[i].y = ROUND(k12 * x + m12);
       }
     } else if (fabs(sx1 - sx2) < DBL_EPSILON) {
       k01 = (sy1 - sy0) / (sx1 - sx0);
       m01 = sy0 - sx0 * k01 + pos01 * ish / fabs(cos(atan(k01)));
 
       x = sx1 + pos12 * ish;
-      sp[i].x = int(x + 0.5);
-      sp[i].y = int(k01 * x + m01 + 0.5);
+      sp[i].x = ROUND(x);
+      sp[i].y = ROUND(k01 * x + m01);
     } else {
       k01 = (sy1 - sy0) / (sx1 - sx0);
       k12 = (sy2 - sy1) / (sx2 - sx1);
@@ -291,22 +291,22 @@ void GrowPolyLine::calculate_shadow(glow_sShadowInfo** s, int* num, int ish,
       if (fabs(k01 - k12) < DBL_EPSILON) {
         // Identical lines
         if (fabs(k01) < DBL_EPSILON) {
-          sp[i].x = int(sx1 + 0.5);
-          sp[i].y = int(m01 + 0.5);
+          sp[i].x = ROUND(sx1);
+          sp[i].y = ROUND(m01);
         } else {
           k12 = -k12;
           m12 = sy2 - k12 * sx2;
 
           x = (m12 - m01) / (k01 - k12);
-          sp[i].x = int(x + 0.5);
-          sp[i].y = int(k12 * x + m12 + 0.5);
+          sp[i].x = ROUND(x);
+          sp[i].y = ROUND(k12 * x + m12);
           k12 = k01;
           m12 = m01;
         }
       } else {
         x = (m12 - m01) / (k01 - k12);
-        sp[i].x = int(x + 0.5);
-        sp[i].y = int(k12 * x + m12 + 0.5);
+        sp[i].x = ROUND(x);
+        sp[i].y = ROUND(k12 * x + m12);
       }
     }
     if (pos12 == 1)
@@ -443,9 +443,9 @@ void GrowPolyLine::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     glow_sShadowInfo* sp;
     int p_num;
 
-    int ish = int(shadow_width / 100 * tmp.vertical_scale() *
+    int ish = ROUND(shadow_width / 100 * tmp.vertical_scale() *
                   MIN((x_right - x_left) * w->zoom_factor_x,
-                      (y_high - y_low) * w->zoom_factor_y) + 0.5);
+                      (y_high - y_low) * w->zoom_factor_y));
 
     if (ish >= 1) {
       calculate_shadow(&sp, &p_num, ish, highlight, colornode, 0, chot);

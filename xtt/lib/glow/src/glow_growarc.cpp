@@ -630,10 +630,10 @@ void GrowArc::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     p2.y = p2.y * w->zoom_factor_y - w->offset_y;
   }
 
-  int ll_x = int(MIN(p1.x, p2.x));
-  int ur_x = int(MAX(p1.x, p2.x));
-  int ll_y = int(MIN(p1.y, p2.y));
-  int ur_y = int(MAX(p1.y, p2.y));
+  int ll_x = ROUND(MIN(p1.x, p2.x));
+  int ur_x = ROUND(MAX(p1.x, p2.x));
+  int ll_y = ROUND(MIN(p1.y, p2.y));
+  int ur_y = ROUND(MAX(p1.y, p2.y));
 
   if (fill) {
     int display_shadow
@@ -681,7 +681,7 @@ void GrowArc::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
             angle1 - rot, angle2, fillcolor, f1, f2, grad);
       }
     } else {
-      int ish = int(shadow_width / 100 * MIN(ur_x - ll_x, ur_y - ll_y) + 0.5);
+      int ish = ROUND(shadow_width / 100 * MIN(ur_x - ll_x, ur_y - ll_y));
       int drawtype_incr = shadow_contrast;
       if (relief == glow_eRelief_Down)
         drawtype_incr = -shadow_contrast;
@@ -784,20 +784,20 @@ void GrowArc::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
     double y_c = ((p1.y * w->zoom_factor_y - w->offset_y)
                   + (p2.y * w->zoom_factor_y - w->offset_y)) / 2;
 
-    p1.x = int(-scale * ((ur.x - ll.x) / 2 * w->zoom_factor_x) + x_c + 0.5);
-    p1.y = int(-scale * ((ur.y - ll.y) / 2 * w->zoom_factor_y) + y_c + 0.5);
-    p2.x = int(scale * ((ur.x - ll.x) / 2 * w->zoom_factor_x) + x_c + 0.5);
-    p2.y = int(scale * ((ur.y - ll.y) / 2 * w->zoom_factor_y) + y_c + 0.5);
+    p1.x = -scale * ((ur.x - ll.x) / 2 * w->zoom_factor_x) + x_c;
+    p1.y = -scale * ((ur.y - ll.y) / 2 * w->zoom_factor_y) + y_c;
+    p2.x = scale * ((ur.x - ll.x) / 2 * w->zoom_factor_x) + x_c;
+    p2.y = scale * ((ur.y - ll.y) / 2 * w->zoom_factor_y) + y_c;
   } else {
-    p1.x = int(p1.x * w->zoom_factor_x + 0.5) - w->offset_x;
-    p1.y = int(p1.y * w->zoom_factor_y + 0.5) - w->offset_y;
-    p2.x = int(p2.x * w->zoom_factor_x + 0.5) - w->offset_x;
-    p2.y = int(p2.y * w->zoom_factor_y + 0.5) - w->offset_y;
+    p1.x = p1.x * w->zoom_factor_x - w->offset_x;
+    p1.y = p1.y * w->zoom_factor_y - w->offset_y;
+    p2.x = p2.x * w->zoom_factor_x - w->offset_x;
+    p2.y = p2.y * w->zoom_factor_y - w->offset_y;
   }
-  int ll_x = int(MIN(p1.x, p2.x));
-  int ur_x = int(MAX(p1.x, p2.x));
-  int ll_y = int(MIN(p1.y, p2.y));
-  int ur_y = int(MAX(p1.y, p2.y));
+  int ll_x = ROUND(MIN(p1.x, p2.x));
+  int ur_x = ROUND(MAX(p1.x, p2.x));
+  int ll_y = ROUND(MIN(p1.y, p2.y));
+  int ur_y = ROUND(MAX(p1.y, p2.y));
 
   if (border || !fill)
     ctx->gdraw->arc(ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, angle1 - rot, angle2,
