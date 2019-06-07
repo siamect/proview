@@ -205,26 +205,22 @@ void CoWowListWidgetQt::list_row_activated_cb(QTreeWidgetItem* item, int i)
 
 void CoWowListWidgetQt::list_apply_cb()
 {
-  button_pressed = 0;
-
-  QString selected_text;
-
   QList<QTreeWidgetItem*> selected_items = list->selectedItems();
-  if (selected_items.size() > 0) {
-    QTreeWidgetItem* item = selected_items[0];
-    selected_text = item->text(0);
+  if (selected_items.size() > 0 && action_cb) {
+    if (button_pressed == -1)
+      button_pressed = 0;
+    action_cb(parent_ctx, qPrintableLatin1(selected_items[0]->text(0)),
+        button_pressed);
   }
-  if (action_cb) {
-    (action_cb)(parent_ctx, qPrintableLatin1(selected_text), button_pressed);
-  }
-  close();
 }
 
 void CoWowListWidgetQt::list_ok_cb()
 {
-  button_pressed = 1;
-  list_apply_cb();
-  close();
+  if (list->selectedItems().size() > 0) {
+    button_pressed = 1;
+    list_apply_cb();
+    close();
+  }
 }
 
 CoWowListWidgetQt::CoWowListWidgetQt(QWidget* parent, const char* title,
@@ -298,15 +294,13 @@ void* CoWowQt::CreateList(const char* title, const char* texts, int textsize,
     void(action_cb)(void*, char*, int), void(cancel_cb)(void*),
     void* parent_ctx, int show_apply_button)
 {
-  CoWowListWidgetQt* tree = new CoWowListWidgetQt(object->parent_wid, title,
-      texts, textsize, action_cb, cancel_cb, parent_ctx, show_apply_button);
-  return tree;
+  return new CoWowListWidgetQt(object->parent_wid, title, texts, textsize,
+      action_cb, cancel_cb, parent_ctx, show_apply_button);
 }
 
 void CoWowQt::PopList(void* data)
 {
-  CoWowListWidgetQt* ctx = (CoWowListWidgetQt*)data;
-  pop(ctx);
+  pop((CoWowListWidgetQt*)data);
 }
 
 void CoWowWarrantQt::reject()
