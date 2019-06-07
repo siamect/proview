@@ -818,13 +818,13 @@ void GeQtWidget::activate_customcolors_write()
 
 void GeQtWidget::activate_import_graph()
 {
-  ge->wow->CreateFileSelDia("Graph Selection", (void*)this,
+  ge->wow->CreateFileSelDia("Graph Selection", ge,
       GeQt::graph_file_selected_cb, wow_eFileSelType_Graph);
 }
 
 void GeQtWidget::activate_import_image()
 {
-  ge->wow->CreateFileSelDia("Image Selection", (void*)this,
+  ge->wow->CreateFileSelDia("Image Selection", ge,
       GeQt::image_file_selected_cb, wow_eFileSelType_Image);
 }
 
