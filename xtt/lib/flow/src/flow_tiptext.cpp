@@ -124,6 +124,8 @@ void FlowTipText::draw()
     return;
 
   ctx->fdraw->rect(text_x, text_y, text_width, text_height,
+        flow_eDrawType_LineErase, 1, 0);
+  ctx->fdraw->rect(text_x, text_y, text_width, text_height,
       flow_eDrawType_Line, 0, 0);
 
   int y = text_y + 4 + (text_height - 4) / tiptext_rows;
