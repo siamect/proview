@@ -143,8 +143,8 @@ public:
     GlowTransform tmp;
     tmp.set(s);
     tmp.rotate(angle + s.rotation, x0, y0);
+    tmp.rotation = angle + s.rotation;
     set(tmp);
-    rotation -= s.rotation;
   }
 
   /**
