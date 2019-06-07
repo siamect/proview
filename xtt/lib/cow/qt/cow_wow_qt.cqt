@@ -475,7 +475,7 @@ void CoWowQt::CreateFileSelDia(const char* title, void* parent_ctx,
     filter = "Database files (*.dbs)";
   } else if (file_type == wow_eFileSelType_Wbl) {
     dcli_translate_filename(folder, "$pwrp_db");
-    filter = "Workbench loadfiles(*.wb_load, *.wb_dmp);;All Files (*)";
+    filter = "Workbench loadfiles(*.wb_load *.wb_dmp);;All Files (*)";
   } else if (file_type == wow_eFileSelType_Graph) {
     dcli_translate_filename(folder, "$pwrp_pop");
     filter = "Graphs (*.pwg)";
@@ -484,7 +484,7 @@ void CoWowQt::CreateFileSelDia(const char* title, void* parent_ctx,
     filter = "Color themes (*.pwgc)";
   } else if (file_type == wow_eFileSelType_Image) {
     dcli_translate_filename(folder, "$pwrp_pop");
-    filter = "Images (*.png,*.jpg,*.gif,*.svg);;All Files (*)";
+    filter = "Images (*.png *.jpg *.gif *.svg);;All Files (*)";
   } else if (file_type == wow_eFileSelType_Backup) {
     dcli_translate_filename(folder, "$pwrp_load");
     filter = "Backup files (*.bck);;All Files (*)";
