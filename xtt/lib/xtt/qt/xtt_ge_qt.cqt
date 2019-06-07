@@ -45,6 +45,7 @@
 #include "xtt_xnav.h"
 
 #include <QMenuBar>
+#include <QResizeEvent>
 #include <QVBoxLayout>
 
 void XttGeQtWidget::focusInEvent(QFocusEvent* event)
@@ -229,6 +230,69 @@ void XttGeQtWidget::closeEvent(QCloseEvent* event)
   QWidget::closeEvent(event);
 }
 
+void XttGeQtWidget::resizeEvent(QResizeEvent* event)
+{
+  int oldWidth = event->oldSize().width();
+  int oldHeight = event->oldSize().height();
+  int width = event->size().width();
+  int height = event->size().height();
+
+  event->accept();
+
+  if (width != oldWidth && height != oldHeight) {
+    if (ge->min_aspect * height > width) {
+      int delta = height - width / ge->min_aspect;
+      if (height - delta >= 0) {
+        height -= delta;
+      } else {
+        delta = height * ge->min_aspect - width;
+        if (width + delta <= INT_MAX) {
+          width += delta;
+        }
+      }
+    }
+    if (ge->max_aspect * height < width) {
+      int delta = width - height * ge->max_aspect;
+      if (width - delta >= 0) {
+        width -= delta;
+      } else {
+        delta = width / ge->max_aspect - height;
+        if (height + delta <= INT_MAX) {
+          height += delta;
+        }
+      }
+    }
+  } else if (width != oldWidth) {
+    if (ge->min_aspect * height > width) {
+      int delta = height - width / ge->min_aspect;
+      if (height - delta >= 0) {
+        height -= delta;
+      }
+    }
+    if (ge->max_aspect * height < width) {
+      int delta = width / ge->max_aspect - height;
+      if (height + delta <= INT_MAX) {
+        height += delta;
+      }
+    }
+  } else if (height != oldHeight) {
+    if (ge->min_aspect * height > width) {
+      int delta = height * ge->min_aspect - width;
+      if (width + delta <= INT_MAX) {
+        width += delta;
+      }
+    }
+    if (ge->max_aspect * height < width) {
+      int delta = width - height * ge->max_aspect;
+      if (width - delta >= 0) {
+        width -= delta;
+      }
+    }
+  }
+
+  resize(width, height);
+}
+
 XttGeQt::XttGeQt(void* xg_parent_ctx, const char* xg_name,
     const char* xg_filename, int xg_scrollbar, int xg_menu, int xg_navigator,
     int xg_width, int xg_height, int x, int y, double scan_time,
@@ -378,6 +442,11 @@ XttGeQt::XttGeQt(void* xg_parent_ctx, const char* xg_name,
     window_width = zoom * (x1 - x0);
     window_height = zoom * (y1 - y0);
   }
+
+  float rd = (window_width < 300 || window_height < 300) ? 0.2 : 0.05;
+  min_aspect = double(window_width) / window_height * (1.0 - rd);
+  max_aspect = double(window_width) / window_height * (1.0 + rd);
+
   toplevel->setMinimumSize(window_width, window_height);
 }
 

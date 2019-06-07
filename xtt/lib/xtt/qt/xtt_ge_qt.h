@@ -56,6 +56,7 @@ public:
   QWidget* value_dialog;
   QMessageBox* confirm_widget = NULL;
   CoWowFocusTimerQt focustimer;
+  double min_aspect, max_aspect;
 
   XttGeQt(void* parent_ctx, const char* name, const char* filename,
       int scrollbar, int menu, int navigator, int width, int height, int x,
@@ -101,6 +102,7 @@ public:
 protected:
   void focusInEvent(QFocusEvent* event);
   void closeEvent(QCloseEvent* event);
+  void resizeEvent(QResizeEvent* event);
 
 public slots:
   void activate_confirm_ok();
