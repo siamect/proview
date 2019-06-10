@@ -1023,10 +1023,7 @@ void GlowDrawQt::text(int x, int y, char* text, int len,
     str = QString::fromUtf8(text);
   }
 
-  if (rot != 0) {
-    rot = 360 - rot;
-    painter.rotate(rot);
-  }
+  painter.rotate(rot);
 
   painter.setFont(get_font(font_idx, painter_type, size));
 
@@ -1043,18 +1040,19 @@ void GlowDrawQt::text(int x, int y, char* text, int len,
   int px, py;
   if (rot == 180) {
     px = -x - width;
-    py = (int)(-y - FONT_DESCENT * height);
-  } else if (rot == 90) {
+    py = -y - FONT_DESCENT * height;
+  } else if (rot == 270) {
     px = -y - width + height / 2;
     py = x;
-  } else if (rot == 270) {
+  } else if (rot == 90) {
     px = y - width;
     py = -x - height;
   } else {
     px = x;
-    py = (int)(y - (1.0 - FONT_DESCENT) * height);
+    py = y - (1.0 - FONT_DESCENT) * height;
   }
   painter.drawText(px, py, width, height, Qt::TextDontClip, str);
+  painter.rotate(-rot);
   reset_clip();
 }
 
