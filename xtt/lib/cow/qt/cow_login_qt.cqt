@@ -118,7 +118,7 @@ CoLoginQt::CoLoginQt(void* wl_parent_ctx, QWidget* wl_parent_wid,
 
   password = new QLineEdit();
   password->setFixedHeight(20);
-  QObject::connect(password, SIGNAL(editingFinished()), toplevel,
+  QObject::connect(password, SIGNAL(returnPressed()), toplevel,
       SLOT(valchanged_password()));
 
   QWidget* passwordlabel = new QLabel("Password");
