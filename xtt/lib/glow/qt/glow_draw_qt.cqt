@@ -850,7 +850,7 @@ void GlowDrawQt::rect(int x, int y, int width, int height,
     painter_type = glow_eDrawType_Line;
   }
 
-  get_painter(painter_type, idx);
+  get_painter(painter_type + highlight, idx);
   if (fill) {
     painter.fillRect(x, y, width, height, painter.brush());
   } else {
@@ -873,7 +873,7 @@ void GlowDrawQt::arrow(int x1, int y1, int x2, int y2, int x3, int y3,
   poly[2] = QPoint(x3, y3);
   poly[3] = QPoint(x1, y1);
 
-  get_painter(painter_type, idx);
+  get_painter(painter_type + highlight, idx);
   QPainterPath path;
   path.addPolygon(poly);
   painter.fillPath(path, painter.brush());
@@ -898,7 +898,7 @@ void GlowDrawQt::arc(int x, int y, int width, int height, int angle1,
     angle1 = angle1 + (-angle1 / 360 + 1) * 360;
   }
 
-  get_painter(painter_type, idx);
+  get_painter(painter_type + highlight, idx);
   if (fill) {
     painter.drawPie(x, y, width, height, angle1 * 16, angle2 * 16);
   } else {
@@ -921,7 +921,7 @@ void GlowDrawQt::line(int x1, int y1, int x2, int y2,
     painter_type = glow_eDrawType_Line;
   }
 
-  get_painter(painter_type, idx);
+  get_painter(painter_type + highlight, idx);
 
   if (line_type != glow_eLineType_Solid) {
     QPen pen = painter.pen();
@@ -988,7 +988,7 @@ void GlowDrawQt::polyline(glow_sPointX* points, int point_cnt,
     painter_type = glow_eDrawType_Line;
   }
 
-  get_painter(painter_type, idx);
+  get_painter(painter_type + highlight, idx);
   if (fill) {
     unique_ptr<QPoint[]> qpoints = points_to_qt_points(points, point_cnt);
     painter.drawPolygon(qpoints.get(), point_cnt);
@@ -1009,7 +1009,7 @@ void GlowDrawQt::text(int x, int y, char* text, int len,
     font_idx = glow_eFont_Helvetica;
   }
 
-  get_painter(painter_type, idx);
+  get_painter(painter_type + highlight, idx);
 
   if (color != glow_eDrawType_Line) {
     painter.setBrush(QBrush(draw_type_to_color(this, color, idx)));

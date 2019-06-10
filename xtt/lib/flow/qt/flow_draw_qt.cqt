@@ -857,7 +857,7 @@ void FlowDrawQt::arrow(int x1, int y1, int x2, int y2, int x3,
     painter_type = flow_eDrawType_Line;
   }
 
-  get_painter(painter_type, idx);
+  get_painter(painter_type + highlight, idx);
 
   QPolygon poly(4);
   poly[0] = QPoint(x1, y1);
