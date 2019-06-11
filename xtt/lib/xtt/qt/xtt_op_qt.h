@@ -71,12 +71,12 @@ public:
   QLabel* alarmcnt_label;
   QWidget* aalarm_mark;
   QLabel* aalarm_label[5];
-  QWidget* aalarm_active[5];
-  QWidget* aalarm_info[5];
+  QLabel* aalarm_active[5];
+  QPushButton* aalarm_info[5];
   QWidget* aalarm_box[5];
   QLabel* balarm_label;
-  QWidget* balarm_active;
-  QWidget* balarm_info;
+  QLabel* balarm_active;
+  QPushButton* balarm_info;
   QWidget* balarm_box;
   QLabel* balarm_mark;
   QVBoxLayout* appl_form;
@@ -89,11 +89,8 @@ public:
   QPushButton* appl_buttons[25];
   QToolBar* tools;
   QToolBar* tools2;
-  QColor red_color;
-  QColor yellow_color;
-  QColor green_color;
-  QColor gray_color;
-  QColor white_color;
+  QPixmap active_pixmap;
+  QIcon info_icon;
   int a_height;
   int a_exist[5];
   int a_active[5];
@@ -117,7 +114,7 @@ public:
   void set_text_size();
 
 private:
-  void alarm_box_helper(int i);
+  QVBoxLayout* alarm_box_helper();
 
   OpQtWidget* toplevel;
 };
