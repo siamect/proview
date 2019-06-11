@@ -566,7 +566,7 @@ void EvList::event_alarm(mh_sMessage* msg)
       return;
 
     if (type != ev_eType_EventList)
-      log_info("Ev, New alarm %d %d", event->Info.Id.Nix, event->Info.Id.Idx);
+      log_info("Ev, New alarm %d %d\n", event->Info.Id.Nix, event->Info.Id.Idx);
 
     sts = get_destination(
         net_NetTimeToTime(&event->Info.EventTime), (void**)&dest);

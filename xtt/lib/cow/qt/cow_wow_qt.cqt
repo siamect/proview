@@ -174,7 +174,9 @@ void CoWowQt::DisplayError(
     msgBox.setDefaultButton(button);
   }
 
-  QTimer::singleShot(1000, &msgBox, SLOT(close()));
+  if (m_autoremove) {
+    QTimer::singleShot(1000, &msgBox, SLOT(close()));
+  }
 
   msgBox.exec();
 }
