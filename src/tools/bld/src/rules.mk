@@ -253,6 +253,10 @@ $(exe_dir)/%.pbm : %.pbm
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
+$(exe_dir)/%.dat : %.dat
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
 $(web_dir)/%.pbm : %.pbm
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)

@@ -28,6 +28,7 @@ vpath %.pdr $(co_source)
 vpath %.java $(co_source)
 vpath %.pwsg $(co_source)
 vpath %.meth $(co_source)
+vpath %.dat $(co_source)
 
 sources := $(sort \
              $(foreach file, \
@@ -110,6 +111,15 @@ meth_sources := $(sort \
              ) \
            )
 
+dat_sources := $(sort \
+            $(foreach file, \
+              $(foreach dir, \
+                $(source_dirs), \
+                $(wildcard $(dir)/*.dat) \
+              ), $(notdir $(file)) \
+            ) \
+          )
+
 cqt_objects := $(patsubst %.cqt, %_moc.o, $(cqt_sources))
 
 xdr_includes := $(addprefix $(inc_dir)/,$(patsubst %.x, %.h, $(xdr_sources)))
@@ -123,6 +133,7 @@ export_includes += $(xdr_includes) $(pdr_includes)
 
 export_pwsg := $(addprefix $(exe_dir)/,$(pwsg_sources))
 export_meth := $(addprefix $(inc_dir)/,$(meth_sources))
+export_dat := $(addprefix $(exe_dir)/, $(dat_sources))
 
 clean_h_includes := $(patsubst %.h,clean_%.h, $(h_includes))
 clean_hpp_includes := $(patsubst %.hpp,clean_%.hpp, $(hpp_includes))
@@ -154,7 +165,7 @@ all : init copy lib exe | silent
 
 init : dirs | silent
 
-copy : $(export_includes) $(l_copy) $(export_pwsg) $(export_meth) | silent
+copy : $(export_includes) $(l_copy) $(export_pwsg) $(export_meth) $(export_dat) | silent
 
 lib : $(export_lib) | silent
 
