@@ -63,11 +63,23 @@ public:
   GtkWidget* eve_widget;
   GtkWidget* ala_widget;
   GtkWidget* blk_widget;
+  bool eve_displayed;
+  bool ala_displayed;
+  bool blk_displayed;
   pwr_tObjid alarm_views[25];
 
   void map_eve(unsigned int options);
   void map_ala(unsigned int options);
   void map_blk(unsigned int options);
+  bool is_mapped_eve() {
+    return eve_displayed;
+  }
+  bool is_mapped_ala() {
+    return ala_displayed;
+  }
+  bool is_mapped_blk() {
+    return blk_displayed;
+  }
   void unmap_eve();
   void unmap_ala();
   void unmap_blk();

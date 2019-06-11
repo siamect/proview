@@ -419,26 +419,14 @@ EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
   // Store this for the mh callbacks
   ev = this;
 
-  if (display_eve) {
-    parent_wid_eve->show();
-    eve_displayed = 1;
-  } else {
-    parent_wid_eve->setVisible(false);
-  }
+  parent_wid_eve->show();
+  parent_wid_eve->setVisible(display_eve);
 
-  if (display_ala) {
-    parent_wid_ala->show();
-    ala_displayed = 1;
-  } else {
-    parent_wid_ala->setVisible(false);
-  }
+  parent_wid_ala->show();
+  parent_wid_ala->setVisible(display_ala);
 
-  if (display_blk) {
-    parent_wid_blk->show();
-    blk_displayed = 1;
-  } else {
-    parent_wid_blk->setVisible(false);
-  }
+  parent_wid_blk->show();
+  parent_wid_blk->setVisible(display_blk);
 
   wow = new CoWowQt(parent_wid_ala);
 
@@ -547,7 +535,6 @@ EvQt::~EvQt()
 void EvQt::map_eve(unsigned int options)
 {
   pop(parent_wid_eve);
-  eve_displayed = 1;
 
   if (options & ev_mAlaOptions_FullScreen) {
     parent_wid_eve->showFullScreen();
@@ -561,7 +548,6 @@ void EvQt::map_eve(unsigned int options)
 void EvQt::map_ala(unsigned int options)
 {
   pop(parent_wid_ala);
-  ala_displayed = 1;
 
   if (options & ev_mAlaOptions_FullScreen) {
     parent_wid_ala->showFullScreen();
@@ -575,7 +561,6 @@ void EvQt::map_ala(unsigned int options)
 void EvQt::map_blk(unsigned int options)
 {
   pop(parent_wid_blk);
-  blk_displayed = 1;
 
   if (options & ev_mAlaOptions_FullScreen) {
     parent_wid_blk->showFullScreen();
@@ -588,26 +573,17 @@ void EvQt::map_blk(unsigned int options)
 
 void EvQt::unmap_eve()
 {
-  if (eve_displayed) {
-    parent_wid_eve->setVisible(false);
-    eve_displayed = 0;
-  }
+  parent_wid_eve->setVisible(false);
 }
 
 void EvQt::unmap_ala()
 {
-  if (ala_displayed) {
-    parent_wid_ala->setVisible(false);
-    ala_displayed = 0;
-  }
+  parent_wid_ala->setVisible(false);
 }
 
 void EvQt::unmap_blk()
 {
-  if (blk_displayed) {
-    parent_wid_blk->setVisible(false);
-    blk_displayed = 0;
-  }
+  parent_wid_blk->setVisible(false);
 }
 
 void EvQt::set_transient_eve(void* basewidget)
@@ -632,21 +608,21 @@ void EvQt::set_title_ala(char* title)
 
 void EvQtObject::eve_action_inputfocus()
 {
-  if (ev->eve_displayed) {
+  if (ev->parent_wid_eve->isVisible()) {
     ev->eve->set_input_focus();
   }
 }
 
 void EvQtObject::ala_action_inputfocus()
 {
-  if (ev->ala_displayed) {
+  if (ev->parent_wid_ala->isVisible()) {
     ev->ala->set_input_focus();
   }
 }
 
 void EvQtObject::blk_action_inputfocus()
 {
-  if (ev->blk_displayed) {
+  if (ev->parent_wid_blk->isVisible()) {
     ev->blk->set_input_focus();
   }
 }
@@ -654,19 +630,16 @@ void EvQtObject::blk_action_inputfocus()
 void EvQtObject::eve_activate_exit()
 {
   ev->unmap_eve();
-  ev->eve_displayed = 0;
 }
 
 void EvQtObject::ala_activate_exit()
 {
   ev->unmap_ala();
-  ev->ala_displayed = 0;
 }
 
 void EvQtObject::blk_activate_exit()
 {
   ev->unmap_blk();
-  ev->blk_displayed = 0;
 }
 
 void EvQtObject::eve_activate_print()

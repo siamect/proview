@@ -54,8 +54,6 @@ EvListQt::EvListQt(void* ev_parent_ctx, ev_eType ev_type, int ev_size,
 {
   form_widget = scrolledbrowwidgetqt_new(init_brow_cb, this, &brow_widget);
 
-  form_widget->show();
-
   *w = form_widget;
 }
 

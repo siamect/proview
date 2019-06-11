@@ -65,9 +65,8 @@ Ev::Ev(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
       eve_display_return(display_return), start_trace_cb(NULL),
       display_in_xnav_cb(NULL), update_info_cb(NULL), help_cb(NULL),
       popup_menu_cb(0), sound_cb(0), pop_cb(0), is_authorized_cb(0), eve(NULL),
-      ala(NULL), blk(0), connected(0), ala_displayed(0), eve_displayed(0),
-      beep(ev_beep), pop_mask(ev_pop_mask), eventname_seg(ev_eventname_seg),
-      sala_cnt(0), seve_cnt(0), modified(0)
+      ala(NULL), blk(0), connected(0), beep(ev_beep), pop_mask(ev_pop_mask),
+      eventname_seg(ev_eventname_seg), sala_cnt(0), seve_cnt(0), modified(0)
 {
 }
 

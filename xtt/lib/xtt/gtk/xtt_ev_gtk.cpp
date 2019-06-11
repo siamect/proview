@@ -1141,7 +1141,7 @@ gboolean EvGtk::eve_action_inputfocus(
 {
   Ev* ev = (Ev*)data;
 
-  if (ev && ev->eve_displayed)
+  if (ev && ev->is_mapped_eve())
     ev->eve->set_input_focus();
 
   return FALSE;
@@ -1152,7 +1152,7 @@ gboolean EvGtk::ala_action_inputfocus(
 {
   Ev* ev = (Ev*)data;
 
-  if (ev && ev->ala_displayed)
+  if (ev && ev->is_mapped_ala())
     ev->ala->set_input_focus();
 
   return FALSE;
@@ -1163,90 +1163,65 @@ gboolean EvGtk::blk_action_inputfocus(
 {
   Ev* ev = (Ev*)data;
 
-  if (ev && ev->blk_displayed)
+  if (ev && ev->is_mapped_blk())
     ev->blk->set_input_focus();
 
   return FALSE;
 }
 
-void EvGtk::eve_activate_exit(GtkWidget* w, gpointer data)
+void EvGtk::eve_activate_exit(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->unmap_eve();
-  ev->eve_displayed = 0;
+  ((Ev*)ev)->unmap_eve();
 }
 
-void EvGtk::ala_activate_exit(GtkWidget* w, gpointer data)
+void EvGtk::ala_activate_exit(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->unmap_ala();
-  ev->ala_displayed = 0;
+  ((Ev*)ev)->unmap_ala();
 }
 
-void EvGtk::blk_activate_exit(GtkWidget* w, gpointer data)
+void EvGtk::blk_activate_exit(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->unmap_blk();
-  ev->blk_displayed = 0;
+  ((Ev*)ev)->unmap_blk();
 }
 
-void EvGtk::eve_activate_print(GtkWidget* w, gpointer data)
+void EvGtk::eve_activate_print(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->eve_activate_print();
+  ((Ev*)ev)->eve_activate_print();
 }
 
-void EvGtk::ala_activate_print(GtkWidget* w, gpointer data)
+void EvGtk::ala_activate_print(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->ala_activate_print();
+  ((Ev*)ev)->ala_activate_print();
 }
 
-void EvGtk::blk_activate_print(GtkWidget* w, gpointer data)
+void EvGtk::blk_activate_print(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->blk_activate_print();
+  ((Ev*)ev)->blk_activate_print();
 }
 
-void EvGtk::eve_activate_ack_last(GtkWidget* w, gpointer data)
+void EvGtk::eve_activate_ack_last(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->eve_activate_ack_last();
+  ((Ev*)ev)->eve_activate_ack_last();
 }
 
-void EvGtk::ala_activate_ack_last(GtkWidget* w, gpointer data)
+void EvGtk::ala_activate_ack_last(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->ala_activate_ack_last();
+  ((Ev*)ev)->ala_activate_ack_last();
 }
 
-void EvGtk::ala_activate_ack_all(GtkWidget* w, gpointer data)
+void EvGtk::ala_activate_ack_all(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->eve_activate_ack_all();
+  ((Ev*)ev)->eve_activate_ack_all();
 }
 
-void EvGtk::ala_activate_shift_view(GtkWidget* w, gpointer data)
+void EvGtk::ala_activate_shift_view(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->view_shift();
+  ((Ev*)ev)->view_shift();
 }
 
-void EvGtk::ala_activate_select_flat(GtkWidget* w, gpointer data)
+void EvGtk::ala_activate_select_flat(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->set_view(pwr_cNObjid);
+  ((Ev*)ev)->set_view(pwr_cNObjid);
 }
 
 void EvGtk::ala_activate_select_view1(GtkWidget* w, gpointer ev)
@@ -1350,197 +1325,143 @@ void EvGtk::ala_activate_select_view25(GtkWidget* w, gpointer ev)
   ((Ev*)ev)->set_view(((EvGtk*)ev)->alarm_views[24]);
 }
 
-void EvGtk::eve_activate_zoom_in(GtkWidget* w, gpointer data)
+void EvGtk::eve_activate_zoom_in(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->eve->zoom(1.2);
+  ((Ev*)ev)->eve->zoom(1.2);
 }
 
-void EvGtk::ala_activate_zoom_in(GtkWidget* w, gpointer data)
+void EvGtk::ala_activate_zoom_in(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->ala->zoom(1.2);
+  ((Ev*)ev)->ala->zoom(1.2);
 }
 
-void EvGtk::blk_activate_zoom_in(GtkWidget* w, gpointer data)
+void EvGtk::blk_activate_zoom_in(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->blk->zoom(1.2);
+  ((Ev*)ev)->blk->zoom(1.2);
 }
 
-void EvGtk::eve_activate_zoom_out(GtkWidget* w, gpointer data)
+void EvGtk::eve_activate_zoom_out(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->eve->zoom(5.0 / 6);
+  ((Ev*)ev)->eve->zoom(5.0 / 6);
 }
 
-void EvGtk::ala_activate_zoom_out(GtkWidget* w, gpointer data)
+void EvGtk::ala_activate_zoom_out(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->ala->zoom(5.0 / 6);
+  ((Ev*)ev)->ala->zoom(5.0 / 6);
 }
 
-void EvGtk::blk_activate_zoom_out(GtkWidget* w, gpointer data)
+void EvGtk::blk_activate_zoom_out(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->blk->zoom(5.0 / 6);
+  ((Ev*)ev)->blk->zoom(5.0 / 6);
 }
 
-void EvGtk::eve_activate_zoom_reset(GtkWidget* w, gpointer data)
+void EvGtk::eve_activate_zoom_reset(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->eve->unzoom();
+  ((Ev*)ev)->eve->unzoom();
 }
 
-void EvGtk::ala_activate_zoom_reset(GtkWidget* w, gpointer data)
+void EvGtk::ala_activate_zoom_reset(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->ala->unzoom();
+  ((Ev*)ev)->ala->unzoom();
 }
 
-void EvGtk::blk_activate_zoom_reset(GtkWidget* w, gpointer data)
+void EvGtk::blk_activate_zoom_reset(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->blk->unzoom();
+  ((Ev*)ev)->blk->unzoom();
 }
 
-void EvGtk::blk_activate_block_remove(GtkWidget* w, gpointer data)
+void EvGtk::blk_activate_block_remove(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->blk->block_remove();
+  ((Ev*)ev)->blk->block_remove();
 }
 
-void EvGtk::eve_activate_open_plc(GtkWidget* w, gpointer data)
+void EvGtk::eve_activate_open_plc(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->eve->start_trace();
+  ((Ev*)ev)->eve->start_trace();
 }
 
-void EvGtk::ala_activate_open_plc(GtkWidget* w, gpointer data)
+void EvGtk::ala_activate_open_plc(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->ala->start_trace();
+  ((Ev*)ev)->ala->start_trace();
 }
 
-void EvGtk::blk_activate_open_plc(GtkWidget* w, gpointer data)
+void EvGtk::blk_activate_open_plc(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->blk->start_trace();
+  ((Ev*)ev)->blk->start_trace();
 }
 
-void EvGtk::eve_activate_display_in_xnav(GtkWidget* w, gpointer data)
+void EvGtk::eve_activate_display_in_xnav(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->eve->display_in_xnav();
+  ((Ev*)ev)->eve->display_in_xnav();
 }
 
-void EvGtk::ala_activate_display_in_xnav(GtkWidget* w, gpointer data)
+void EvGtk::ala_activate_display_in_xnav(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->ala->display_in_xnav();
+  ((Ev*)ev)->ala->display_in_xnav();
 }
 
-void EvGtk::blk_activate_display_in_xnav(GtkWidget* w, gpointer data)
+void EvGtk::blk_activate_display_in_xnav(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->blk->display_in_xnav();
+  ((Ev*)ev)->blk->display_in_xnav();
 }
 
-void EvGtk::eve_activate_disp_hundredth(GtkWidget* w, gpointer data)
+void EvGtk::eve_activate_disp_hundredth(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
   int set = (int)gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(w));
-
-  ev->eve->set_display_hundredth(set);
+  ((Ev*)ev)->eve->set_display_hundredth(set);
 }
 
-void EvGtk::ala_activate_disp_hundredth(GtkWidget* w, gpointer data)
+void EvGtk::ala_activate_disp_hundredth(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
   int set = (int)gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(w));
-
-  ev->ala->set_display_hundredth(set);
+  ((Ev*)ev)->ala->set_display_hundredth(set);
 }
 
-void EvGtk::eve_activate_hide_object(GtkWidget* w, gpointer data)
+void EvGtk::eve_activate_hide_object(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
   int set = (int)gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(w));
-
-  ev->eve->set_hide_object(set);
+  ((Ev*)ev)->eve->set_hide_object(set);
 }
 
-void EvGtk::ala_activate_hide_object(GtkWidget* w, gpointer data)
+void EvGtk::ala_activate_hide_object(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
   int set = (int)gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(w));
-
-  ev->ala->set_hide_object(set);
+  ((Ev*)ev)->ala->set_hide_object(set);
 }
 
-void EvGtk::eve_activate_hide_text(GtkWidget* w, gpointer data)
+void EvGtk::eve_activate_hide_text(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
   int set = (int)gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(w));
-
-  ev->eve->set_hide_text(set);
+  ((Ev*)ev)->eve->set_hide_text(set);
 }
 
-void EvGtk::ala_activate_hide_text(GtkWidget* w, gpointer data)
+void EvGtk::ala_activate_hide_text(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
   int set = (int)gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(w));
-
-  ev->ala->set_hide_text(set);
+  ((Ev*)ev)->ala->set_hide_text(set);
 }
 
-void EvGtk::eve_activate_help(GtkWidget* w, gpointer data)
+void EvGtk::eve_activate_help(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->eve_activate_help();
+  ((Ev*)ev)->eve_activate_help();
 }
 
-void EvGtk::eve_activate_helpevent(GtkWidget* w, gpointer data)
+void EvGtk::eve_activate_helpevent(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->eve_activate_helpevent();
+  ((Ev*)ev)->eve_activate_helpevent();
 }
 
-void EvGtk::ala_activate_help(GtkWidget* w, gpointer data)
+void EvGtk::ala_activate_help(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->ala_activate_help();
+  ((Ev*)ev)->ala_activate_help();
 }
 
-void EvGtk::ala_activate_helpevent(GtkWidget* w, gpointer data)
+void EvGtk::ala_activate_helpevent(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->ala_activate_helpevent();
+  ((Ev*)ev)->ala_activate_helpevent();
 }
 
-void EvGtk::blk_activate_help(GtkWidget* w, gpointer data)
+void EvGtk::blk_activate_help(GtkWidget* w, gpointer ev)
 {
-  Ev* ev = (Ev*)data;
-
-  ev->blk_activate_help();
+  ((Ev*)ev)->blk_activate_help();
 }

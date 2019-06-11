@@ -88,9 +88,6 @@ public:
   EvList* ala;
   EvList* blk;
   int connected;
-  int ala_displayed;
-  int eve_displayed;
-  int blk_displayed;
   int beep;
   int eve_size;
   int ala_size;
@@ -155,18 +152,9 @@ public:
 
   int outunit_connect(pwr_tObjid user);
   void update(double scantime);
-  int is_mapped_eve()
-  {
-    return eve_displayed;
-  }
-  int is_mapped_ala()
-  {
-    return ala_displayed;
-  }
-  int is_mapped_blk()
-  {
-    return blk_displayed;
-  }
+  virtual bool is_mapped_eve() = 0;
+  virtual bool is_mapped_ala() = 0;
+  virtual bool is_mapped_blk() = 0;
   int get_alarm_info(evlist_sAlarmInfo* info, int backward, int alarmsize);
   void ack_last_prio(unsigned long type, unsigned long prio, int backward, int timecheck);
   void ack_all();

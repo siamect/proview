@@ -64,6 +64,15 @@ public:
   void map_eve(unsigned int options);
   void map_ala(unsigned int options);
   void map_blk(unsigned int options);
+  bool is_mapped_eve() {
+    return parent_wid_eve->isVisible();
+  }
+  bool is_mapped_ala() {
+    return parent_wid_ala->isVisible();
+  }
+  bool is_mapped_blk() {
+    return parent_wid_blk->isVisible();
+  }
   void unmap_eve();
   void unmap_ala();
   void unmap_blk();
