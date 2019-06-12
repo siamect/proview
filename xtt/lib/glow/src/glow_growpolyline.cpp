@@ -579,13 +579,15 @@ GrowPolyLine::~GrowPolyLine()
     ctx->gdraw->set_cursor(ctx->mw.window, glow_eDrawCursor_Normal);
 }
 
-int GrowPolyLine::local_event_handler(glow_eEvent event, double x, double y)
+int GrowPolyLine::event_handler(glow_eEvent event, double fx, double fy)
 {
+  // Convert from global to local coordinates
+  glow_sPoint p = trf.reverse(fx, fy);
   if (ctx->edit_mode == grow_eMode_EditPolyLine && ctx->a_sel[0] == this) {
     int dx = 4;
     int dy = 4;
 
-    glow_sPoint c = trf * glow_sPoint({x, y});
+    glow_sPoint c = trf * p;
     c.x = c.x * ctx->mw.zoom_factor_x + ctx->mw.offset_x;
     c.y = c.y * ctx->mw.zoom_factor_y + ctx->mw.offset_y;
 
@@ -611,20 +613,20 @@ int GrowPolyLine::local_event_handler(glow_eEvent event, double x, double y)
       p2 = *((GlowPoint *) a_points[i + 1]);
 
       if ((feq(p1.x, p2.x) && p1.y < p2.y && // Vertical
-           fabs(p1.x - x) < dx && p1.y < y && y < p2.y)
+           fabs(p1.x - p.x) < dx && p1.y < p.y && p.y < p2.y)
           || (feq(p1.x, p2.x) && p1.y > p2.y && // Vertical
-              fabs(p1.x - x) < dx && p2.y < y && y < p1.y)
+              fabs(p1.x - p.x) < dx && p2.y < p.y && p.y < p1.y)
           || (feq(p1.y, p2.y) && p1.x < p2.x && // Horizontal
-              fabs(p1.y - y) < dy && p1.x < x && x < p2.x)
+              fabs(p1.y - p.y) < dy && p1.x < p.x && p.x < p2.x)
           || (feq(p1.y, p2.y) && p1.x > p2.x && // Horizontal
-              fabs(p1.y - y) < dy && p2.x < x && x < p1.x)) {
+              fabs(p1.y - p.y) < dy && p2.x < p.x && p.x < p1.x)) {
         return 1;
       } else if (
-          (!(feq(p1.x, p2.x) || feq(p1.y, p2.y)) && p1.x < p2.x && p1.x <= x &&
-           x <= p2.x && fabs(y - (p2.y - p1.y) / (p2.x - p1.x) * x - p1.y +
+          (!(feq(p1.x, p2.x) || feq(p1.y, p2.y)) && p1.x < p2.x && p1.x <= p.x &&
+           p.x <= p2.x && fabs(p.y - (p2.y - p1.y) / (p2.x - p1.x) * p.x - p1.y +
                              (p2.y - p1.y) / (p2.x - p1.x) * p1.x) < dx) ||
-          (!(feq(p1.x, p2.x) || feq(p1.y, p2.y)) && p1.x > p2.x && p2.x <= x &&
-           x <= p1.x && fabs(y - (p2.y - p1.y) / (p2.x - p1.x) * x - p1.y +
+          (!(feq(p1.x, p2.x) || feq(p1.y, p2.y)) && p1.x > p2.x && p2.x <= p.x &&
+           p.x <= p1.x && fabs(p.y - (p2.y - p1.y) / (p2.x - p1.x) * p.x - p1.y +
                              (p2.y - p1.y) / (p2.x - p1.x) * p1.x) < dx)) {
         return 1;
       }
@@ -633,20 +635,11 @@ int GrowPolyLine::local_event_handler(glow_eEvent event, double x, double y)
   return 0;
 }
 
-int GrowPolyLine::event_handler(glow_eEvent event, double fx, double fy)
-{
-  glow_sPoint p = trf.reverse(fx, fy);
-  return local_event_handler(event, p.x, p.y);
-}
-
 int GrowPolyLine::event_handler(glow_eEvent event, int x, int y, double fx, double fy)
 {
-  // Convert koordinates to local koordinates
-  glow_sPoint r = trf.reverse(fx, fy);
-
   int sts = 0;
   if (event == ctx->event_move_node) {
-    sts = local_event_handler(event, r.x, r.y);
+    sts = event_handler(event, fx, fy);
     if (sts) {
       /* Register node for potential movement */
       ctx->move_insert(this);
@@ -660,7 +653,7 @@ int GrowPolyLine::event_handler(glow_eEvent event, int x, int y, double fx, doub
     else if (ctx->hot_found)
       sts = 0;
     else {
-      sts = local_event_handler(event, r.x, r.y);
+      sts = event_handler(event, fx, fy);
       if (sts)
         ctx->hot_found = 1;
     }
@@ -677,7 +670,7 @@ int GrowPolyLine::event_handler(glow_eEvent event, int x, int y, double fx, doub
     break;
   }
   default:
-    sts = local_event_handler(event, r.x, r.y);
+    sts = event_handler(event, fx, fy);
   }
   if (sts)
     ctx->register_callback_object(glow_eObjectType_Node, this);

@@ -301,21 +301,14 @@ void GrowMenu::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
       ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase, 1, 0);
 }
 
-int GrowMenu::local_event_handler(glow_eEvent event, double x, double y)
+int GrowMenu::event_handler(glow_eEvent event, double fx, double fy)
 {
-  double ll_x, ur_x, ll_y, ur_y;
-
-  ll_x = MIN(ll.x, ur.x);
-  ur_x = MAX(ll.x, ur.x);
-  ll_y = MIN(ll.y, ur.y);
-  ur_y = MAX(ll.y, ur.y);
-
-  if (ll_x <= x && x <= ur_x && ll_y <= y && y <= ur_y) {
+  if (MIN(ll.x, ur.x) <= fx && fx <= MAX(ll.x, ur.x) &&
+      MIN(ll.y, ur.y) <= fy && fy <= MAX(ll.y, ur.y)) {
     int item;
     double vscale = 1; // trf.vertical_scale();
-    // std::cout << "Event handler: Hit in menu " << this << '\n';
 
-    item = int((y - ll.y) / (item_height / vscale / ctx->mw.zoom_factor_y));
+    item = int((fy - ll.y) / (item_height / vscale / ctx->mw.zoom_factor_y));
     if (item > item_cnt - 1)
       item = item_cnt - 1;
     if (item < 0)
@@ -344,17 +337,8 @@ int GrowMenu::local_event_handler(glow_eEvent event, double x, double y)
   }
 }
 
-int GrowMenu::event_handler(glow_eEvent event, double fx, double fy)
-{
-  return local_event_handler(event, fx, fy);
-}
-
 int GrowMenu::event_handler(glow_eEvent event, int x, int y, double fx, double fy)
 {
-  // Convert koordinates to local koordinates
-  double rx = fx;
-  double ry = fy;
-
   int sts = 0;
   if (event == ctx->event_move_node) {
     return 0;
@@ -364,7 +348,7 @@ int GrowMenu::event_handler(glow_eEvent event, int x, int y, double fx, double f
     if (ctx->hot_mode != glow_eHotMode_TraceAction && ctx->hot_found)
       sts = 0;
     else {
-      sts = local_event_handler(event, rx, ry);
+      sts = event_handler(event, fx, fy);
       if (sts) {
         ctx->hot_found = 1;
       }
@@ -393,14 +377,14 @@ int GrowMenu::event_handler(glow_eEvent event, int x, int y, double fx, double f
     break;
   }
   case glow_eEvent_MB1Down:
-    sts = local_event_handler(event, rx, ry);
+    sts = event_handler(event, fx, fy);
     if (sts)
       // Remove any previous hit
       ctx->register_callback_object(glow_eObjectType_NoObject, 0);
     ctx->gdraw->set_click_sensitivity(glow_mSensitivity_MB1Click);
     break;
   case glow_eEvent_MB1Click: {
-    sts = local_event_handler(event, rx, ry);
+    sts = event_handler(event, fx, fy);
     if (sts && current_item != -1) {
       if (info.item[current_item].type == glow_eMenuItem_Button) {
         int csts = ctx->send_menu_callback(
@@ -418,7 +402,7 @@ int GrowMenu::event_handler(glow_eEvent event, int x, int y, double fx, double f
     }
   }
   default:
-    sts = local_event_handler(event, rx, ry);
+    sts = event_handler(event, fx, fy);
   }
   if (sts)
     ctx->register_callback_object(glow_eObjectType_Node, this);

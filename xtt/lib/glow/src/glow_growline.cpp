@@ -104,48 +104,42 @@ void GrowLine::move(double delta_x, double delta_y, int grid)
   }
 }
 
-int GrowLine::local_event_handler(glow_eEvent event, double x, double y) {
+int GrowLine::event_handler(glow_eEvent event, double fx, double fy)
+{
+  // Convert from global to local coordinates
+  glow_sPoint p = trf.reverse(fx, fy);
   glow_sPoint tmp2 = trf.reverse(0.05 * line_width, 0.05 * line_width);
   glow_sPoint tmp1 = trf.reverse(0, 0);
   double dx = fabs(tmp2.x - tmp1.x);
   double dy = fabs(tmp2.y - tmp1.y);
 
   if ((feq(p1.x, p2.x) && p1.y < p2.y && // Vertical
-       fabs(p1.x - x) < dx && p1.y < y && y < p2.y)
+       fabs(p1.x - p.x) < dx && p1.y < p.y && p.y < p2.y)
       || (feq(p1.x, p2.x) && p1.y > p2.y && // Vertical
-          fabs(p1.x - x) < dx && p2.y < y && y < p1.y)
+          fabs(p1.x - p.x) < dx && p2.y < p.y && p.y < p1.y)
       || (feq(p1.y, p2.y) && p1.x < p2.x && // Horizontal
-          fabs(p1.y - y) < dy && p1.x < x && x < p2.x)
+          fabs(p1.y - p.y) < dy && p1.x < p.x && p.x < p2.x)
       || (feq(p1.y, p2.y) && p1.x > p2.x && // Horizontal
-          fabs(p1.y - y) < dy && p2.x < x && x < p1.x)) {
+          fabs(p1.y - p.y) < dy && p2.x < p.x && p.x < p1.x)) {
     return 1;
   } else if (
-      (!(feq(p1.x, p2.x) || feq(p1.y, p2.y)) && p1.x < p2.x && p1.x <= x &&
-       x <= p2.x && fabs(y - (p2.y - p1.y) / (p2.x - p1.x) * x - p1.y +
+      (!(feq(p1.x, p2.x) || feq(p1.y, p2.y)) && p1.x < p2.x && p1.x <= p.x &&
+       p.x <= p2.x && fabs(p.y - (p2.y - p1.y) / (p2.x - p1.x) * p.x - p1.y +
                          (p2.y - p1.y) / (p2.x - p1.x) * p1.x) < dx) ||
-      (!(feq(p1.x, p2.x) || feq(p1.y, p2.y)) && p1.x > p2.x && p2.x <= x &&
-       x <= p1.x && fabs(y - (p2.y - p1.y) / (p2.x - p1.x) * x - p1.y +
+      (!(feq(p1.x, p2.x) || feq(p1.y, p2.y)) && p1.x > p2.x && p2.x <= p.x &&
+       p.x <= p1.x && fabs(p.y - (p2.y - p1.y) / (p2.x - p1.x) * p.x - p1.y +
                          (p2.y - p1.y) / (p2.x - p1.x) * p1.x) < dx)) {
     return 1;
   }
   return 0;
 }
 
-int GrowLine::event_handler(glow_eEvent event, double fx, double fy)
-{
-  glow_sPoint p = trf.reverse(fx, fy);
-  return local_event_handler(event, p.x, p.y);
-}
-
 int GrowLine::event_handler(glow_eEvent event, int x, int y, double fx,
     double fy)
 {
-  // Convert koordinates to local koordinates
-  glow_sPoint r = trf.reverse(fx, fy);
-
   int sts = 0;
   if (event == ctx->event_move_node) {
-    sts = local_event_handler(event, r.x, r.y);
+    sts = event_handler(event, fx, fy);
     if (sts) {
       /* Register node for potential movement */
       ctx->move_insert(this);
@@ -159,7 +153,7 @@ int GrowLine::event_handler(glow_eEvent event, int x, int y, double fx,
     else if (ctx->hot_found)
       sts = 0;
     else {
-      sts = local_event_handler(event, r.x, r.y);
+      sts = event_handler(event, fx, fy);
       if (sts)
         ctx->hot_found = 1;
     }
@@ -176,7 +170,7 @@ int GrowLine::event_handler(glow_eEvent event, int x, int y, double fx,
     break;
   }
   default:
-    sts = local_event_handler(event, r.x, r.y);
+    sts = event_handler(event, fx, fy);
   }
   if (sts)
     ctx->register_callback_object(glow_eObjectType_Node, this);

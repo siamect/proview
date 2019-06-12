@@ -112,36 +112,19 @@ void GrowRectRounded::move(double delta_x, double delta_y, int grid)
   }
 }
 
-int GrowRectRounded::local_event_handler(glow_eEvent event, double x, double y)
-{
-  double ll_x, ur_x, ll_y, ur_y;
-
-  ll_x = MIN(ll.x, ur.x);
-  ur_x = MAX(ll.x, ur.x);
-  ll_y = MIN(ll.y, ur.y);
-  ur_y = MAX(ll.y, ur.y);
-
-  if (ll_x <= x && x <= ur_x && ll_y <= y && y <= ur_y) {
-    //    std::cout << "Event handler: Hit in rect\n";
-    return 1;
-  } else
-    return 0;
-}
-
 int GrowRectRounded::event_handler(glow_eEvent event, double fx, double fy)
 {
+  // Convert from global to local coordinates
   glow_sPoint p = trf.reverse(fx, fy);
-  return local_event_handler(event, p.x, p.y);
+  return (MIN(ll.x, ur.x) <= p.x && p.x <= MAX(ll.x, ur.x)
+      && MIN(ll.y, ur.y) <= p.y && p.y <= MAX(ll.y, ur.y));
 }
 
 int GrowRectRounded::event_handler(glow_eEvent event, int x, int y, double fx, double fy)
 {
-  // Convert koordinates to local koordinates
-  glow_sPoint r = trf.reverse(fx, fy);
-
   int sts = 0;
   if (event == ctx->event_move_node) {
-    sts = local_event_handler(event, r.x, r.y);
+    sts = event_handler(event, fx, fy);
     if (sts) {
       /* Register node for potential movement */
       ctx->move_insert(this);
@@ -155,7 +138,7 @@ int GrowRectRounded::event_handler(glow_eEvent event, int x, int y, double fx, d
     else if (ctx->hot_found)
       sts = 0;
     else {
-      sts = local_event_handler(event, r.x, r.y);
+      sts = event_handler(event, fx, fy);
       if (sts)
         ctx->hot_found = 1;
     }
@@ -172,7 +155,7 @@ int GrowRectRounded::event_handler(glow_eEvent event, int x, int y, double fx, d
     break;
   }
   default:
-    sts = local_event_handler(event, r.x, r.y);
+    sts = event_handler(event, fx, fy);
   }
   if (sts)
     ctx->register_callback_object(glow_eObjectType_Node, this);

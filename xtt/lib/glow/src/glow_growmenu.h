@@ -180,7 +180,6 @@ public:
 
   int event_handler(glow_eEvent event, int x, int y, double fx, double fy);
   int event_handler(glow_eEvent event, double fx, double fy);
-  int local_event_handler(glow_eEvent event, double x, double y);
 
   //! Check this menu object is a child to the specified menu object, and delete
   //! it if it is.

@@ -571,9 +571,7 @@ int GrowWindow::event_handler(glow_eEvent event, int x, int y, double fx, double
     if (!ctx->trace_started)
       return 0;
     if (v_scrollbar) {
-      // Convert koordinates to local koordinates
-      glow_sPoint r = trf.reverse(fx, fy);
-      sts = local_event_handler(event, r.x, r.y);
+      sts = GrowRect::event_handler(event, fx, fy);
       if (sts) {
         v_value -= (wctx_y1 - wctx_y0) * window_scale / 50;
         if (v_value < wctx_y0 * window_scale)
@@ -589,9 +587,7 @@ int GrowWindow::event_handler(glow_eEvent event, int x, int y, double fx, double
     if (!ctx->trace_started)
       return 0;
     if (v_scrollbar) {
-      // Convert koordinates to local koordinates
-      glow_sPoint r = trf.reverse(fx, fy);
-      sts = local_event_handler(event, r.x, r.y);
+      sts = GrowRect::event_handler(event, fx, fy);
       if (sts) {
         v_value += (wctx_y1 - wctx_y0) * window_scale / 50;
         if (v_value > wctx_y1 * window_scale
@@ -633,9 +629,7 @@ int GrowWindow::event_handler(glow_eEvent event, int x, int y, double fx, double
   }
 
   if (ctx->hot_mode == glow_eHotMode_TraceAction) {
-    // Convert koordinates to local koordinates
-    glow_sPoint r = trf.reverse(fx, fy);
-    sts = local_event_handler(event, r.x, r.y);
+    sts = GrowRect::event_handler(event, fx, fy);
   }
 
   if (window_ctx && sts) {
@@ -680,10 +674,6 @@ int GrowWindow::event_handler(glow_eEvent event, int x, int y, double fx, double
       ctx->register_inputfocus(this, 0);
       input_focus = 0;
     }
-
-    // if ( window_ctx->callback_object)
-    //  ctx->register_callback_object( window_ctx->callback_object_type,
-    //  window_ctx->callback_object);
   }
   return sts;
 }

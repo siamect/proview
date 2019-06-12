@@ -1106,9 +1106,7 @@ int GrowTable::event_handler(glow_eEvent event, int x, int y, double fx, double 
     if (!ctx->trace_started)
       return 0;
     if (v_scrollbar) {
-      // Convert koordinates to local koordinates
-      glow_sPoint r = trf.reverse(fx, fy);
-      sts = local_event_handler(event, r.x, r.y);
+      sts = GrowRect::event_handler(event, fx, fy);
       if (sts) {
         v_value -= (table_y1 - table_y0) * window_scale / 50;
         if (v_value < table_y0 * window_scale)
@@ -1124,9 +1122,7 @@ int GrowTable::event_handler(glow_eEvent event, int x, int y, double fx, double 
     if (!ctx->trace_started)
       return 0;
     if (v_scrollbar) {
-      // Convert koordinates to local koordinates
-      glow_sPoint r = trf.reverse(fx, fy);
-      sts = local_event_handler(event, r.x, r.y);
+      sts = GrowRect::event_handler(event, fx, fy);
       if (sts) {
         v_value += (table_y1 - table_y0) * window_scale / 50;
         if (v_value > (table_y1 - (y_high - y_low

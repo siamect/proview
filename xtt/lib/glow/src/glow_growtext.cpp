@@ -111,21 +111,16 @@ void GrowText::move(double delta_x, double delta_y, int grid)
   }
 }
 
-int GrowText::local_event_handler(glow_eEvent event, double x, double y)
-{
-  return (x_left <= x && x <= x_right && y_low <= y && y <= y_high);
-}
-
 int GrowText::event_handler(glow_eEvent event, double fx, double fy)
 {
-  return local_event_handler(event, fx, fy);
+  return (x_left <= fx && fx <= x_right && y_low <= fy && fy <= y_high);
 }
 
 int GrowText::event_handler(glow_eEvent event, int x, int y, double fx, double fy)
 {
   int sts = 0;
   if (event == ctx->event_move_node) {
-    sts = local_event_handler(event, fx, fy);
+    sts = event_handler(event, fx, fy);
     if (sts) {
       /* Register node for potential movement */
       ctx->move_insert(this);
@@ -139,7 +134,7 @@ int GrowText::event_handler(glow_eEvent event, int x, int y, double fx, double f
     else if (ctx->hot_found)
       sts = 0;
     else {
-      sts = local_event_handler(event, fx, fy);
+      sts = event_handler(event, fx, fy);
       if (sts)
         ctx->hot_found = 1;
     }
@@ -156,7 +151,7 @@ int GrowText::event_handler(glow_eEvent event, int x, int y, double fx, double f
     break;
   }
   default:
-    sts = local_event_handler(event, fx, fy);
+    sts = event_handler(event, fx, fy);
   }
   if (sts)
     ctx->register_callback_object(glow_eObjectType_Node, this);

@@ -108,20 +108,6 @@ public:
   */
   int event_handler(glow_eEvent event, double fx, double fy);
 
-  //! Detects if the object is hit by an event in local coordinates
-  /*!
-    \param event	Current event.
-    \param x		x of event coordinate in the objects local coordinate
-    system.
-    \param y		y of event coordinate in the objects local coordinate
-    system.
-    \return 		Returns 1 if the object is hit, else 0.
-
-    Compares the coordinates of the event with the borders of the object.
-    If the event is inside the borders, 1 is returned, otherwise 0 is returned.
-  */
-  int local_event_handler(glow_eEvent event, double x, double y);
-
   //! Calculate the border for a set of objects or for a parent node.
   /*!
     \param t		Transform.
