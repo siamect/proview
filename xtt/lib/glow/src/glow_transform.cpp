@@ -140,7 +140,7 @@ glow_sPoint GlowTransform::reverse(double x, double y)
 {
   if (feq(a11, 0.0) || feq(a12 * a21 - a11 * a22, 0.0)) {
     if (feq(a11, 0.0) && feq(a22, 0.0) && !feq(a12, 0.0) && !feq(a21, 0.0)) {
-      return {(x - a13) / a12, (y - a23) / a21};
+      return {(y - a23) / a21, (x - a13) / a12};
     } else {
       return {0, 0};
     }
