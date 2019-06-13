@@ -59,7 +59,6 @@ PalQt::PalQt(void* pal_parent_ctx, const char* pal_name,
   form_widget = wrapInFrame(scrolledbrow);
 
   server = new QLocalServer(trace_obj);
-  server->listen("STRING");
   QObject::connect(
       server, SIGNAL(newConnection()), trace_obj, SLOT(sel_convert_cb()));
 
@@ -108,6 +107,10 @@ void PalQt::set_inputfocus(int focus)
 
 void PalQt::set_selection_owner()
 {
+  if (!server->isListening()) {
+    QLocalServer::removeServer("STRING");
+    server->listen("STRING");
+  }
   selection_owner = 1;
   brow_SetInverseColor(brow_ctx, flow_eDrawType_Line);
 }

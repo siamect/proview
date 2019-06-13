@@ -59,7 +59,6 @@ NavQt::NavQt(void* nav_parent_ctx, const char* nav_name,
   form_widget = wrapInFrame(scrolledbrow);
 
   server = new QLocalServer(trace_obj);
-  server->listen("STRING");
   QObject::connect(
       server, SIGNAL(newConnection()), trace_obj, SLOT(sel_convert_cb()));
 
@@ -107,6 +106,10 @@ void NavQtTraceObject::sel_convert_cb()
 
 void NavQt::set_selection_owner(int set)
 {
+  if (!server->isListening()) {
+    QLocalServer::removeServer("STRING");
+    server->listen("STRING");
+  }
   selection_owner = set;
 }
 

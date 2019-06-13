@@ -95,19 +95,15 @@ WNavQt::WNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
   *w = form_widget;
 
   serverString = new QLocalServer(trace_obj);
-  serverString->listen("STRING");
   QObject::connect(
       serverString, SIGNAL(newConnection()), trace_obj, SLOT(sel_convert_cb()));
   serverGraph = new QLocalServer(trace_obj);
-  serverGraph->listen("PWR_GRAPH");
   QObject::connect(
       serverGraph, SIGNAL(newConnection()), trace_obj, SLOT(sel_convert_cb()));
   serverObjId = new QLocalServer(trace_obj);
-  serverObjId->listen("PWR_OBJID");
   QObject::connect(
       serverObjId, SIGNAL(newConnection()), trace_obj, SLOT(sel_convert_cb()));
   serverAttrRef = new QLocalServer(trace_obj);
-  serverAttrRef->listen("PWR_ATTRREF");
   QObject::connect(serverAttrRef, SIGNAL(newConnection()), trace_obj,
       SLOT(sel_convert_cb()));
 
@@ -197,6 +193,23 @@ int WNavQt::get_selection(char* str, int len)
 
 void WNavQt::set_selection_owner()
 {
+  if (!serverString->isListening()) {
+    QLocalServer::removeServer("STRING");
+    serverString->listen("STRING");
+  }
+  if (!serverGraph->isListening()) {
+    QLocalServer::removeServer("PWR_GRAPH");
+    serverGraph->listen("PWR_GRAPH");
+  }
+  if (!serverObjId->isListening()) {
+    QLocalServer::removeServer("PWR_OBJID");
+    serverObjId->listen("PWR_OBJID");
+  }
+  if (!serverAttrRef->isListening()) {
+    QLocalServer::removeServer("PWR_ATTRREF");
+    serverAttrRef->listen("PWR_ATTRREF");
+  }
+
   selection_owner = 1;
 }
 
@@ -274,9 +287,11 @@ static void selection_data_set(
 {
   QByteArray block;
   QDataStream out(&block, QIODevice::WriteOnly);
-  out.writeRawData(data, strlen(data));
+  out << QString(data);
 
   QLocalSocket* clientConnection = server->nextPendingConnection();
+  QObject::connect(clientConnection, SIGNAL(disconnected()),
+      clientConnection, SLOT(deleteLater()));
   clientConnection->write(block);
   clientConnection->flush();
   clientConnection->disconnectFromServer();

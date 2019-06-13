@@ -73,15 +73,6 @@
 #include <qlocalsocket.h>
 
 typedef struct {
-  char str[200];
-  int len;
-  int received;
-  pwr_tStatus sts;
-  const char* atom;
-  int new_main;
-} wow_sSelection;
-
-typedef struct {
   char title[80];
   flow_tCtx flow_ctx;
   flow_eOrientation orientation;
@@ -424,46 +415,33 @@ void CoWowQtObject::DisplayLicense()
 
 int CoWowQt::GetSelection(char* str, int size, const char* atom)
 {
-  log_debug("GetSelection str=%s, size=%d, arom=%s\n", str, size, atom);
-  static wow_sSelection data;
-
-  data.received = 0;
-  data.sts = 0;
-  data.atom = atom;
-  data.new_main = 0;
-
   QLocalSocket* socket = new QLocalSocket();
   socket->connectToServer(fl(atom));
+  if (!socket->waitForConnected()) {
+    log_debug("GetSelection failed, could not connect to local server %s: %s\n", fl(atom), qPrintable(socket->errorString()));
+  }
 
-  while (!data.received) {
+  QString rcvStr;
+  int received = 0;
+  while (!received) {
     if (socket->waitForReadyRead(50)) {
-      if (socket->bytesAvailable() > 0) {
-        QDataStream in(socket);
-        if (socket->bytesAvailable() > int(sizeof(data.str) - 1)
-            || in.atEnd()) {
-          data.sts = 0;
-          continue;
-        }
-        in.readRawData(data.str, socket->bytesAvailable());
-        data.str[socket->bytesAvailable()] = 0;
-        data.len = socket->bytesAvailable();
-        data.sts = 1;
-      } else {
-        data.sts = 0;
+      QDataStream in(socket);
+      if (socket->bytesAvailable() > 0 && !in.atEnd()) {
+        in >> rcvStr;
       }
-
-      data.received = 1;
+      received = 1;
     }
     QApplication::processEvents();
   }
 
+  socket->close();
   delete socket;
 
-  if (data.sts && data.len < size) {
-    strcpy(str, data.str);
+  if (!rcvStr.isEmpty() && rcvStr.length() < size) {
+    strcpy(str, qPrintable(rcvStr));
   }
 
-  return data.sts;
+  return !rcvStr.isEmpty();
 }
 
 void CoWowQt::CreateFileSelDia(const char* title, void* parent_ctx,
