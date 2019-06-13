@@ -20,7 +20,7 @@ Optional:
 
 Mandatory if you want to build the QT version of ProviewR:
 
-> apt-get install libqt4-dev libphonon-dev
+> apt-get install libqt4-dev libphonon-dev phonon-backend-vlc
 
 Mandatory if you want to build the GTK version of ProviewR:
 
