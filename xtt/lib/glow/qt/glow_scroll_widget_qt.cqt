@@ -262,6 +262,9 @@ bool QtScrollWidgetGlow::event(QEvent* event)
     is_realized = true;
   }
   handleEvent(event);
+  if (event->type() >= QEvent::MouseButtonPress && event->type() <= QEvent::MouseMove) {
+    return true;
+  }
   return QWidget::event(event);
 }
 

@@ -209,6 +209,9 @@ XttGeQt::~XttGeQt()
     nav_widget->close();
   }
   delete graph;
+  if (!(options & ge_mOptions_Embedded)) {
+    delete toplevel;
+  }
 }
 
 void XttGeQt::pop()
@@ -228,7 +231,7 @@ void XttGeQtWidget::closeEvent(QCloseEvent* event)
   } else if (!(ge->options & ge_mOptions_Embedded)) {
     delete ge;
   }
-  QWidget::closeEvent(event);
+  event->ignore();
 }
 
 void XttGeQtWidget::resizeEvent(QResizeEvent* event)
