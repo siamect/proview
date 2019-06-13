@@ -142,6 +142,7 @@ void GrowTrend::configure_curves()
   }
   ctx->reset_nodraw();
   free((char*)pointarray);
+  ctx->set_dirty();
 }
 
 //! Save the content of the object to file.
