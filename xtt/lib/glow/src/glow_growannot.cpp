@@ -236,7 +236,7 @@ void GrowAnnot::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     glow_eDrawType color = ctx->get_drawtype(color_drawtype,
         glow_eDrawType_LineHighlight, highlight, (GrowNode*)colornode, 2);
 
-    ctx->gdraw->get_text_extent("", 0, ldraw_type, idx, lfont, &z_width,
+    ctx->gdraw->get_text_extent("Ag", 0, ldraw_type, idx, lfont, &z_width,
         &z_height, &z_descent, tsize, 0);
     for (s = ((GlowNode*)node)->annotv[number]; *s; s++) {
       if (*s == 10) {
@@ -252,9 +252,10 @@ void GrowAnnot::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       } else
         len++;
     }
-    if (len)
+    if (len) {
       ctx->gdraw->text((int)p.x, (int)p.y + line_cnt * z_height, line, len,
           ldraw_type, color, idx, highlight, lfont, tsize, 0);
+    }
     break;
   }
   }
@@ -384,7 +385,7 @@ void GrowAnnot::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
     int line_cnt = 0;
     char* line = ((GlowNode*)node)->annotv[number];
     char* s;
-    ctx->gdraw->get_text_extent("", 0, ldraw_type, idx, lfont, &z_width,
+    ctx->gdraw->get_text_extent("Ag", 0, ldraw_type, idx, lfont, &z_width,
         &z_height, &z_descent, tsize, 0);
     for (s = ((GlowNode*)node)->annotv[number]; *s; s++) {
       if (*s == 10) {
@@ -401,10 +402,11 @@ void GrowAnnot::erase(GlowWind* w, GlowTransform* t, int hot, void* node)
       } else
         len++;
     }
-    if (len)
+    if (len) {
       ctx->gdraw->text((int)p.x, (int)p.y + line_cnt * z_height, line, len,
           get_erase_gc(ldraw_type), glow_eDrawType_Line, idx, 0, lfont,
           tsize, 0);
+    }
     break;
   }
   }
@@ -477,7 +479,7 @@ void GrowAnnot::erase_background(
     int line_cnt = 0;
     char* line = ((GlowNode*)node)->annotv[number];
     char* s;
-    ctx->gdraw->get_text_extent("", 0, ldraw_type, idx, lfont, &z_width,
+    ctx->gdraw->get_text_extent("Ag", 0, ldraw_type, idx, lfont, &z_width,
         &z_height, &z_descent, tsize, 0);
     for (s = ((GlowNode*)node)->annotv[number]; *s; s++) {
       if (*s == 10) {
@@ -494,10 +496,11 @@ void GrowAnnot::erase_background(
       } else
         len++;
     }
-    if (len)
+    if (len) {
       ctx->gdraw->text((int)p.x, (int)p.y + line_cnt * z_height, line, len,
           get_erase_gc(ldraw_type), glow_eDrawType_Line, idx, 0, lfont,
           tsize, 0);
+    }
     break;
   }
   }
