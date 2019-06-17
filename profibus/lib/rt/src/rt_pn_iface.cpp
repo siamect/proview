@@ -448,8 +448,8 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES* ServiceReqRes,
     for (std::vector<GsdmlSubslotData*>::iterator it
          = dev_data->slot_data[ii]->subslot_data.begin();
          it != dev_data->slot_data[ii]->subslot_data.end();) {
-      // The interface submodule is always 32768 according to the standard
-      if ((*it)->subslot_number == 32768) {
+      // Don't add expectedsubmoduleblock if there's no IOCR
+      if ((*it)->data_record.empty() && ((*it)->io_input_length == 0 && (*it)->io_output_length == 0)) {
         delete *it;
         it = dev_data->slot_data[ii]->subslot_data.erase(it);
       } else {
