@@ -214,8 +214,8 @@ typedef struct DPM_SL_PRM_HEADERtag
 
 typedef struct DPV0_PRMtag
 {
-  unsigned char abUsr_Prm_Data
-      [MAX_USR_PRM_LEN]; /* user parameter data without DPV1-bytes */
+  unsigned char abUsr_Prm_Data[MAX_USR_PRM_LEN]; /* user parameter data without
+                                                    DPV1-bytes */
 } GNUC_PACKED DPV0_PRM;
 
 typedef struct DPV1_USR_PRMtag
