@@ -85,5 +85,6 @@ static pwr_tStatus IoRackClose(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/
 
-pwr_dExport pwr_BindIoMethods(Pb_FDL_SAP) = { pwr_BindIoMethod(IoRackInit),
-  pwr_BindIoMethod(IoRackClose), pwr_NullMethod };
+pwr_dExport pwr_BindIoMethods(Pb_FDL_SAP) = {pwr_BindIoMethod(IoRackInit),
+                                             pwr_BindIoMethod(IoRackClose),
+                                             pwr_NullMethod};

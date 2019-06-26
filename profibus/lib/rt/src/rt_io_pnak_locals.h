@@ -45,7 +45,8 @@
 
 /* rt_io_pnak_locals.h -- Profinet io handling locals. */
 
-typedef struct _PN_Alarm_Data {
+typedef struct _PN_Alarm_Data
+{
   unsigned short alarm_type;
   unsigned short alarm_prio;
   unsigned short rem_alarms;
@@ -58,12 +59,10 @@ typedef struct _PN_Alarm_Data {
   unsigned char* data;
 } PN_Alarm_Data;
 
-class PnApiData {
+class PnApiData
+{
 public:
-  PnApiData()
-      : api(0)
-  {
-  }
+  PnApiData() : api(0) {}
 
   unsigned int api;
   std::vector<unsigned int> module_index;
@@ -73,21 +72,19 @@ public:
   int print(std::ofstream& fp);
 };
 
-class PnIOCRData {
+class PnIOCRData
+{
 public:
   PnIOCRData()
-      : type(0)
-      , number_modules(0)
-      , identifier(0)
-      , io_data_length(0)
-      , clean_io_data_length(0)
+      : type(0), number_modules(0), identifier(0), io_data_length(0),
+        clean_io_data_length(0)
   {
   }
 
   unsigned short type;
   unsigned short number_modules;
   unsigned short identifier;
-  unsigned short io_data_length; // bytes of io-data including status;
+  unsigned short io_data_length;       // bytes of io-data including status;
   unsigned short clean_io_data_length; // bytes of io-data including status;
   unsigned char* io_data;
   unsigned char* clean_io_data;
@@ -97,16 +94,12 @@ public:
   int print(std::ofstream& fp);
 };
 
-class PnSubmoduleData {
+class PnSubmoduleData
+{
 public:
   PnSubmoduleData()
-      : subslot_number(0)
-      , subslot_idx(0)
-      , type(0)
-      , state(0)
-      , ident_number(0)
-      , phys_ident_number(0)
-      , api(0)
+      : subslot_number(0), subslot_idx(0), type(0), state(0), ident_number(0),
+        phys_ident_number(0), api(0)
   {
   }
 
@@ -118,29 +111,27 @@ public:
   unsigned int phys_ident_number;
   unsigned int api;
 
-  unsigned short io_in_data_length; // bytes of pure io-data
-  unsigned short offset_io_in; // offset in io-data area for this iocr
+  unsigned short io_in_data_length;  // bytes of pure io-data
+  unsigned short offset_io_in;       // offset in io-data area for this iocr
   unsigned short offset_clean_io_in; // offset in io-data area for this iocr
-  unsigned short offset_status_in; // offset in io-data area for this iocr
+  unsigned short offset_status_in;   // offset in io-data area for this iocr
 
-  unsigned short io_out_data_length; // bytes of pure io-data
-  unsigned short offset_io_out; // offset in io-data area for this iocr
+  unsigned short io_out_data_length;  // bytes of pure io-data
+  unsigned short offset_io_out;       // offset in io-data area for this iocr
   unsigned short offset_clean_io_out; // offset in io-data area for this iocr
-  unsigned short offset_status_out; // offset in io-data area for this iocr
+  unsigned short offset_status_out;   // offset in io-data area for this iocr
 
   ~PnSubmoduleData() {}
 
   int print(std::ofstream& fp);
 };
 
-class PnModuleData {
+class PnModuleData
+{
 public:
   PnModuleData()
-      : slot_number(0)
-      , slot_idx(0)
-      , state(0)
-      , ident_number(0)
-      , phys_ident_number(0)
+      : slot_number(0), slot_idx(0), state(0), ident_number(0),
+        phys_ident_number(0)
   {
   }
 
@@ -161,13 +152,11 @@ public:
   int print(std::ofstream& fp);
 };
 
-class PnDeviceData {
+class PnDeviceData
+{
 public:
   PnDeviceData()
-      : device_ref(0)
-      , alarm_ref(0)
-      , device_state(0)
-      , no_diff_modules(0)
+      : device_ref(0), alarm_ref(0), device_state(0), no_diff_modules(0)
   {
     memset(&alarm_data, 0, sizeof(PN_Alarm_Data));
   }
@@ -182,10 +171,7 @@ public:
   std::vector<PnModuleData*> module_data;
   std::vector<PnIOCRData*> iocr_data;
 
-  ~PnDeviceData()
-  {
-    device_reset();
-  }
+  ~PnDeviceData() { device_reset(); }
   void device_reset()
   {
     for (unsigned int i = 0; i < module_data.size(); i++)
@@ -201,7 +187,8 @@ public:
   int paste_slot(unsigned int slot_idx);
 };
 
-class PnDeviceInfo {
+class PnDeviceInfo
+{
 public:
   PnDeviceInfo() {}
   unsigned char ipaddress[4];
@@ -212,12 +199,14 @@ public:
   int deviceid;
 };
 
-typedef struct _agent_args {
+typedef struct _agent_args
+{
   void* local;
   io_sAgent* ap;
 } agent_args;
 
-class io_sAgentLocal {
+class io_sAgentLocal
+{
 public:
   io_sAgentLocal() {}
 

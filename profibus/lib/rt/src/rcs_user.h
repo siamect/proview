@@ -50,7 +50,7 @@
 #endif
 
 #if defined(_MSC_VER) /* Microsoft C */
-#pragma pack(1) /* Byte Alignment   */
+#pragma pack(1)       /* Byte Alignment   */
 #endif
 
 /* ======================================================================== */
@@ -171,61 +171,66 @@
 
 /* ------------------------ RCS message definition ------------------------ */
 
-typedef struct RCS_MESSAGEHEADERtag {
+typedef struct RCS_MESSAGEHEADERtag
+{
   unsigned char rx; /* receiver                         */
   unsigned char tx; /* transmitter                      */
   unsigned char ln; /* lenght                           */
   unsigned char nr; /* number                           */
-  unsigned char a; /* answer                           */
-  unsigned char f; /* fault                            */
-  unsigned char b; /* command                          */
-  unsigned char e; /* extension                        */
+  unsigned char a;  /* answer                           */
+  unsigned char f;  /* fault                            */
+  unsigned char b;  /* command                          */
+  unsigned char e;  /* extension                        */
 } RCS_MESSAGEHEADER;
 
-typedef struct RCS_MESSAGEtag {
+typedef struct RCS_MESSAGEtag
+{
   unsigned char rx; /* receiver                         */
   unsigned char tx; /* transmitter                      */
   unsigned char ln; /* lenght                           */
   unsigned char nr; /* number                           */
-  unsigned char a; /* answer                           */
-  unsigned char f; /* fault                            */
-  unsigned char b; /* command                          */
-  unsigned char e; /* extension                        */
+  unsigned char a;  /* answer                           */
+  unsigned char f;  /* fault                            */
+  unsigned char b;  /* command                          */
+  unsigned char e;  /* extension                        */
   unsigned char d[RCS_SEGMENT_LEN - RCS_MESSAGEHEADER_LEN]; /* data */
 } RCS_MESSAGE;
 
 /* ----------------- Standard telegram header ----------------------------- */
 /* Keyword: MESSAGE, TASK_B_10  --------------------------------------------*/
 
-typedef struct RCS_TELEGRAMHEADER_10tag {
+typedef struct RCS_TELEGRAMHEADER_10tag
+{
   unsigned char device_adr; /* device address                   */
-  unsigned char data_area; /* data area                        */
-  unsigned short data_adr; /* data address                     */
-  unsigned char data_idx; /* data index                       */
-  unsigned char data_cnt; /* data count                       */
-  unsigned char data_type; /* data type                        */
-  unsigned char function; /* function                         */
+  unsigned char data_area;  /* data area                        */
+  unsigned short data_adr;  /* data address                     */
+  unsigned char data_idx;   /* data index                       */
+  unsigned char data_cnt;   /* data count                       */
+  unsigned char data_type;  /* data type                        */
+  unsigned char function;   /* function                         */
 } RCS_TELEGRAMHEADER_10;
 
-typedef struct RCS_MESSAGETELEGRAMHEADER_10_tag {
-  unsigned char rx; /* receiver                         */
-  unsigned char tx; /* transmitter                      */
-  unsigned char ln; /* lenght                           */
-  unsigned char nr; /* number                           */
-  unsigned char a; /* answer                           */
-  unsigned char f; /* fault                            */
-  unsigned char b; /* command                          */
-  unsigned char e; /* extension                        */
+typedef struct RCS_MESSAGETELEGRAMHEADER_10_tag
+{
+  unsigned char rx;         /* receiver                         */
+  unsigned char tx;         /* transmitter                      */
+  unsigned char ln;         /* lenght                           */
+  unsigned char nr;         /* number                           */
+  unsigned char a;          /* answer                           */
+  unsigned char f;          /* fault                            */
+  unsigned char b;          /* command                          */
+  unsigned char e;          /* extension                        */
   unsigned char device_adr; /* device address                   */
-  unsigned char data_area; /* data area                        */
-  unsigned short data_adr; /* data address                     */
-  unsigned char data_idx; /* data index                       */
-  unsigned char data_cnt; /* data count                       */
-  unsigned char data_type; /* data type                        */
-  unsigned char function; /* function                         */
+  unsigned char data_area;  /* data area                        */
+  unsigned short data_adr;  /* data address                     */
+  unsigned char data_idx;   /* data index                       */
+  unsigned char data_cnt;   /* data count                       */
+  unsigned char data_type;  /* data type                        */
+  unsigned char function;   /* function                         */
 } RCS_MESSAGETELEGRAMHEADER_10;
 
-typedef struct RCS_TELEGRAMHEADERDATA_10tag {
+typedef struct RCS_TELEGRAMHEADERDATA_10tag
+{
   unsigned char device_adr;
   unsigned char data_area;
   unsigned short data_adr;
@@ -237,28 +242,29 @@ typedef struct RCS_TELEGRAMHEADERDATA_10tag {
       d[RCS_SEGMENT_LEN - RCS_MESSAGEHEADER_LEN - RCS_TELEGRAMHEADER_LEN];
 } RCS_TELEGRAMHEADERDATA_10;
 
-typedef struct RCS_MESSAGETELEGRAM_10tag {
-  unsigned char rx; /* receiver                         */
-  unsigned char tx; /* transmitter                      */
-  unsigned char ln; /* lenght                           */
-  unsigned char nr; /* number                           */
-  unsigned char a; /* answer                           */
-  unsigned char f; /* fault                            */
-  unsigned char b; /* command                          */
-  unsigned char e; /* extension                        */
+typedef struct RCS_MESSAGETELEGRAM_10tag
+{
+  unsigned char rx;         /* receiver                         */
+  unsigned char tx;         /* transmitter                      */
+  unsigned char ln;         /* lenght                           */
+  unsigned char nr;         /* number                           */
+  unsigned char a;          /* answer                           */
+  unsigned char f;          /* fault                            */
+  unsigned char b;          /* command                          */
+  unsigned char e;          /* extension                        */
   unsigned char device_adr; /* device address                   */
-  unsigned char data_area; /* data area                        */
-  unsigned short data_adr; /* data address                     */
-  unsigned char data_idx; /* data index                       */
-  unsigned char data_cnt; /* data count                       */
-  unsigned char data_type; /* data type                        */
-  unsigned char function; /* function                         */
+  unsigned char data_area;  /* data area                        */
+  unsigned short data_adr;  /* data address                     */
+  unsigned char data_idx;   /* data index                       */
+  unsigned char data_cnt;   /* data count                       */
+  unsigned char data_type;  /* data type                        */
+  unsigned char function;   /* function                         */
   unsigned char
       d[RCS_SEGMENT_LEN - RCS_MESSAGEHEADER_LEN - RCS_TELEGRAMHEADER_LEN];
 } RCS_MESSAGETELEGRAM_10;
 
 #if defined(_MSC_VER) /* Microsoft C */
-#pragma pack() /* Byte Alignment   */
+#pragma pack()        /* Byte Alignment   */
 #endif
 
 #ifdef __cplusplus
