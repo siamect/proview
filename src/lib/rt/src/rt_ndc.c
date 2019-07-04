@@ -729,7 +729,7 @@ pwr_tBoolean ndc_ConvertNativeToRemoteData(pwr_tStatus* sts,
           for (tcount = cap->elem, scount = ap->elem; tcount > 0 && *size > 0;
                tcount--, scount--) {
             if (scount > 0) {
-              ndc_ConvertRemoteToNativeData(sts, lccp, ridx, nap, rarp, narp,
+              ndc_ConvertNativeToRemoteData(sts, lccp, ridx, nap, rarp, narp,
                   tp, sp, size, (offset - cap->offs) % (cap->size / cap->elem),
                   toffs + atoffs, soffs + asoffs, nid);
               asoffs += ap->size / ap->elem;
