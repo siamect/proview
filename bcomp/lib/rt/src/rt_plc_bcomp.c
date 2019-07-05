@@ -39,6 +39,7 @@
 
 #include "co_math.h"
 #include "co_time.h"
+#include "co_dcli.h"
 #include "rt_plc_bcomp.h"
 
 /*_*
@@ -1203,7 +1204,7 @@ static void mpc_tscan(plc_sThread* tp, pwr_sClass_CompMPC_Fo* o,
   float out;
   float av;
   float av0; // Previous procvalue
-  float omin, omax, omiddle;
+  float omin, omax, omiddle, oramp;
   float timestep;
 
   switch (co->Algorithm) {
@@ -1232,22 +1233,28 @@ static void mpc_tscan(plc_sThread* tp, pwr_sClass_CompMPC_Fo* o,
     timestep = co->TStep;
   }
 
+  oramp = co->OutRamp;
+  if (co->OutRampCloseInterval != 0.0f) {
+    if ( fabsf(*o->SetValueP - *o->ProcValueP) < co->OutRampCloseInterval)
+      oramp = co->OutRampClose;
+  }
+
   for (i = 0; i < co->SSize; i++) {
     if (iter == 0) {
       if (tix == 0)
 	omiddle = o->OutValue;
       else
 	omiddle = vacc[tix-1][vix[tix-1]-1].output;
-      omax = MIN(omiddle + co->OutRamp * timestep, co->OutMax);
-      omin = MAX(omiddle - co->OutRamp * timestep, co->OutMin);
+      omax = MIN(omiddle + oramp * timestep, co->OutMax);
+      omin = MAX(omiddle - oramp * timestep, co->OutMin);
     }
     else {
       if (tix == 0)
 	omiddle = iter_vout[tix];
       else
 	omiddle = vacc[tix-1][vix[tix-1]-1].output + iter_vout[tix] - iter_vout[tix-1];
-      omax = MIN(omiddle + co->OutRamp * timestep/(iter*2), co->OutMax);
-      omin = MAX(omiddle - co->OutRamp * timestep/(iter*2), co->OutMin);
+      omax = MIN(omiddle + oramp * timestep/(iter*2), co->OutMax);
+      omin = MAX(omiddle - oramp * timestep/(iter*2), co->OutMin);
     }
     out = omin + (omax - omin)/(co->SSize - 1) * i;
     if (tix == 0)
@@ -1358,6 +1365,481 @@ void CompMPC_Fo_exec(plc_sThread* tp, pwr_sClass_CompMPC_Fo* o)
   for (i = 0; i < pow(co->SSize, co->TSize); i++) {
     if (vacc[co->TSize-1][i].acc < vacc[co->TSize-1][min_acc].acc)
       min_acc = i;	
+  }
+
+  idx = min_acc;
+  for (i = co->TSize - 1; i >= 0; i--) {
+    idx = idx / co->SSize;
+  }
+
+  vout = (float *)malloc(co->TSize * sizeof(float));
+  for ( j = 0; j < 3; j++) {
+    idx = min_acc;
+    for (i = co->TSize - 1; i >= 0; i--) {
+      vout[i] = vacc[i][idx].output;
+      idx = idx / co->SSize;
+    }
+
+    for (i = 0; i < co->TSize; i++) {
+      size = pow(co->SSize, i+1);
+      memset(vacc[i], 0,  size * sizeof(t_vacc));
+    }
+    memset(vix, 0, co->TSize * sizeof(unsigned int));
+    mpc_tscan(tp, o, co, 0, vix, j+1, vout);
+
+    min_acc = 0;
+    for (i = 0; i < pow(co->SSize,co->TSize); i++) {
+      if (vacc[co->TSize-1][i].acc < vacc[co->TSize-1][min_acc].acc)
+	min_acc = i;	
+    }
+
+    idx = min_acc;
+    for (i = co->TSize - 1; i >= 0; i--) {
+      if (i == 0)
+	break;
+      idx = idx / co->SSize;
+    }
+  }
+  free(vix);
+  free(vout);
+
+  co->CurrentPath = min_acc;
+  co->Error = *o->SetValueP - *o->ProcValueP;
+  switch (co->Algorithm) {
+  case pwr_eMpcAlgorithm_FirstScanTimeStep:
+    o->OutValue = vacc[0][idx].output;
+    break;
+  default:
+    o->OutValue += (vacc[0][idx].output - o->OutValue) * tp->f_scan_time / co->TStep * co->Gain;
+
+  }
+  co->OutValue = o->OutValue;
+}
+
+/* CompMPC_MLP */
+
+typedef enum {
+  mlp_eActivation_No = 0,
+  mlp_eActivation_Identity = 1,
+  mlp_eActivation_Logistic = 2,
+  mlp_eActivation_Tanh = 3,
+  mlp_eActivation_Relu = 4
+} mlp_eActivation;
+
+typedef struct {
+  unsigned int layers;
+  unsigned int *layer_sizes;
+  mlp_eActivation activation;
+  double **intercepts;
+  double ***coefs;
+  double **h;
+  double *inputs;
+  double aval[20];
+  pwr_tFloat32 *outlist;
+  unsigned int outlist_size;
+  unsigned int outlist_idx;
+} mlp_sCtx, *mlp_tCtx;
+
+
+void outlist_insert(mlp_tCtx mlp, pwr_tFloat32 out)
+{
+  mlp->outlist[mlp->outlist_idx] = out;
+  mlp->outlist_idx++;
+  if (mlp->outlist_idx >= mlp->outlist_size)
+    mlp->outlist_idx = 0;
+}
+
+pwr_tFloat32 outlist_get(mlp_tCtx mlp, unsigned int idx)
+{
+  int i;
+  if (idx >= mlp->outlist_size)
+    idx = mlp->outlist_size - 1;
+  i = mlp->outlist_idx - 1 - idx;
+  if (i < 0)
+    i += mlp->outlist_size;
+  return mlp->outlist[i];
+}
+
+void mpc_mlp_imodel(mlp_tCtx mlp, double *x, double *out)
+{
+  unsigned int i, j, k;
+
+  for (i = 0; i < mlp->layers - 1; i++) {
+    for (j = 0; j < mlp->layer_sizes[i+1]; j++) {
+      mlp->h[i][j] = mlp->intercepts[i][j];
+      for (k = 0; k < mlp->layer_sizes[i]; k++) {
+	if (i == 0) {
+	  mlp->h[i][j] += mlp->coefs[i][j][k] * x[k];
+	}
+	else
+	  mlp->h[i][j] += mlp->coefs[i][j][k] * mlp->h[i-1][k];
+      }
+      if (i != mlp->layers - 2) {
+	switch (mlp->activation) {
+	case mlp_eActivation_Tanh:
+	  mlp->h[i][j] = tanh(mlp->h[i][j]);
+	  break;
+	case mlp_eActivation_Identity:
+	  break;
+	case mlp_eActivation_Relu:
+	  if (mlp->h[i][j] < 0)
+	    mlp->h[i][j] = 0;
+	  break;
+	case mlp_eActivation_Logistic:
+	  mlp->h[i][j] = 1.0/(1.0 - exp(-mlp->h[i][j]));
+	  break;
+	default: ;
+	}
+      }
+    }
+  }
+  *out = mlp->h[mlp->layers - 2][0];
+}
+
+int mpc_mlp_import(const char *file, mlp_sCtx *mlp)
+{
+  pwr_tFileName fname;
+  FILE *fp;
+  char line[2000];
+  unsigned int i, j, k;
+  char *s;
+
+  dcli_translate_filename(fname, file);
+  fp = fopen(fname, "r");
+  if (!fp)
+    return 0;
+
+  while (dcli_read_line(line, sizeof(line), fp)) {
+    if (strncmp(line, "Layers ", 7) == 0) {
+      if (sscanf(&line[7], "%d", &mlp->layers) != 1) {
+	printf("Syntax error\n");
+	return 0;
+      }
+    }
+    else if (strncmp(line, "LayerSizes ", 11) == 0) {
+      mlp->layer_sizes = (unsigned int *)calloc(mlp->layers, sizeof(int));
+      s = line;
+      for (i = 0; i < mlp->layers; i++) {
+	s = strchr(s, ' ');
+	if (!s) {
+	  printf("Syntax error\n");
+	  return 0;
+	}
+	s++;
+	if (sscanf(s, "%d", &mlp->layer_sizes[i]) != 1) {
+	  printf("Syntax error\n");
+	  return 0;
+	}
+      }
+    }
+    else if (strncmp(line, "Activation ", 11) == 0) {
+       if (strcmp(&line[11], "identity") == 0)
+	 mlp->activation = mlp_eActivation_Identity;
+       else if (strcmp(&line[11], "logistic") == 0)
+	 mlp->activation = mlp_eActivation_Logistic;
+       else if (strcmp(&line[11], "tanh") == 0)
+	 mlp->activation = mlp_eActivation_Tanh;
+       else if (strcmp(&line[11], "relu") == 0)
+	 mlp->activation = mlp_eActivation_Relu;
+       else
+	 mlp->activation = mlp_eActivation_No;
+    }
+    else if (strncmp(line, "Intercepts", 9) == 0) {
+      mlp->intercepts = (double **)calloc(mlp->layers - 1, sizeof(double *));
+      for (i = 0; i < mlp->layers - 1; i++)
+	mlp->intercepts[i] = (double *)calloc(mlp->layer_sizes[i+1], sizeof(double));
+      for (i = 0; i < mlp->layers - 1; i++) {
+	dcli_read_line(line, sizeof(line), fp);
+	s = line;
+	for (j = 0; j < mlp->layer_sizes[i+1]; j++) {
+	  if (j != 0) {
+	    s = strchr(s, ' ');
+	    s++;
+	  }
+	  if (sscanf(s, "%lf", &mlp->intercepts[i][j]) != 1) {
+	    printf("Syntax error\n");
+	    return 0;
+	  }
+	}
+      }	
+    }
+    else if (strncmp(line, "Coefs", 5) == 0) {
+      unsigned int i1, j1, k1;
+
+      mlp->coefs = (double ***)calloc(mlp->layers, sizeof(double **));
+      for (i = 0; i < mlp->layers - 1; i++) {
+	mlp->coefs[i] = (double **)calloc(mlp->layer_sizes[i+1], sizeof(double));
+	for ( j = 0; j < mlp->layer_sizes[i+1]; j++) {
+	  mlp->coefs[i][j] = (double *)calloc(mlp->layer_sizes[i], sizeof(double));
+	}
+      }
+      for (i = 0; i < mlp->layers - 1; i++) {
+	for (j = 0; j < mlp->layer_sizes[i+1]; j++) {
+	  for (k = 0; k < mlp->layer_sizes[i]; k++) {
+	    dcli_read_line(line, sizeof(line), fp);
+	    sscanf(line, "%d %d %d %lf", &i1, &j1, &k1, &mlp->coefs[i][j][k]);
+	    if (i1 != i || j1 != j || k1 != k)
+	      printf("Syntax error\n");
+	  }
+	}	    
+      }	
+    }
+  }
+
+  fclose(fp);
+
+  /* Allocate weights */
+  mlp->h = (double **)calloc(mlp->layers - 1, sizeof(double *));
+  for (i = 0; i < mlp->layers - 1; i++) {
+    mlp->h[i] = (double *)calloc(mlp->layer_sizes[i+1], sizeof(double));
+  }
+  return 1;
+}
+
+float mpc_mlpacc_model(plc_sThread* tp, pwr_sClass_CompMPC_MLP_Fo *o, 
+		       pwr_sClass_CompMPC_MLP *co, 
+		       float out, float av0, float timestep, int tix, int *vix)
+{
+  float av;
+  double val;
+  int i, idx;
+
+  switch (co->Type) {
+  case pwr_eMlpType_Normal:
+    for (i = 0; i < co->LayerSizes[0]; i++) {
+      if ( i == 0) {
+	((mlp_tCtx)o->ModelP)->inputs[i] = (double)out;
+      }
+      else {
+	((mlp_tCtx)o->ModelP)->inputs[i] = (double)(**(pwr_tFloat32 **)((char *)&o->Attr2P + pwr_cInputOffset * (i - 1)));
+      }
+    }
+    break;
+
+  case pwr_eMlpType_Accumulating:
+    for (i = 0; i < co->LayerSizes[0]; i++) {
+      if (i == 0) {
+	((mlp_tCtx)o->ModelP)->inputs[i] = (double)out;
+      }
+      else if (i < co->TSize + 1) {
+	/* Backshifted output value */
+	if (i > tix) {
+	  if (i == tix + 1)
+	    idx = 0;
+	  else
+	    idx = (i - tix - 1) * co->TStep / tp->f_scan_time - 1;
+	  ((mlp_tCtx)o->ModelP)->inputs[i] = outlist_get((mlp_tCtx)o->ModelP, idx);
+	}
+	else
+	  ((mlp_tCtx)o->ModelP)->inputs[i] = ((t_vacc **)co->Vacc)[tix-i][vix[tix-i]-1].output;
+      }
+      else {
+	((mlp_tCtx)o->ModelP)->inputs[i] = (double)(**(pwr_tFloat32 **)((char *)&o->Attr2P + pwr_cInputOffset * (i - co->TSize - 1)));
+      }
+    }
+    break;
+  }
+
+  mpc_mlp_imodel((mlp_tCtx)o->ModelP, ((mlp_tCtx)o->ModelP)->inputs, &val);
+  av = (pwr_tFloat32)val; 
+
+  return av;
+} 
+
+void mpc_mlpacc_tscan(plc_sThread* tp, pwr_sClass_CompMPC_MLP_Fo* o, 
+	       pwr_sClass_CompMPC_MLP* co, int tix, int *vix, 
+	       int iter, float *iter_vout)
+{
+  if (tix == co->TSize)
+    return;
+
+  t_vacc **vacc = (t_vacc **)co->Vacc;
+  int i;
+  float t;
+  float out;
+  float av;
+  float av0; // Previous procvalue
+  float omin, omax, omiddle;
+  float timestep;
+  float oramp;
+
+  switch (co->Algorithm) {
+  case pwr_eMpcAlgorithm_ProgressiveTimeStep:
+  case pwr_eMpcAlgorithm_ProgressiveTimeStepMC:
+    t = 0;
+    timestep = co->TStep;
+    for (i = 1; i < tix; i++) {
+      t += timestep;
+      timestep *= co->TStepFactor;
+    }
+    break;
+  case pwr_eMpcAlgorithm_FirstScanTimeStep:
+  case pwr_eMpcAlgorithm_FirstScanTimeStepMC:
+    if (tix == 0) {
+      t = 0;
+      timestep = co->TStepFirst;
+    }
+    else {
+      t = co->TStepFirst + co->TStep * (tix - 1);
+      timestep = co->TStep;
+    }
+    break;
+  default:
+    t = (float)(co->TStep * tix);
+    timestep = co->TStep;
+  }
+
+  oramp = co->OutRamp;
+  if (co->OutRampCloseInterval != 0.0f) {
+    if ( fabsf(*o->SetValueP - *o->ProcValueP) < co->OutRampCloseInterval)
+      oramp = co->OutRampClose;
+  }
+
+  for (i = 0; i < co->SSize; i++) {
+    if (iter == 0) {
+      if (tix == 0)
+	omiddle = o->OutValue;
+      else
+	omiddle = vacc[tix-1][vix[tix-1]-1].output;
+      omax = MIN(omiddle + oramp * timestep, co->OutMax);
+      omin = MAX(omiddle - oramp * timestep, co->OutMin);
+    }
+    else {
+      if (tix == 0)
+	omiddle = iter_vout[tix];
+      else
+	omiddle = vacc[tix-1][vix[tix-1]-1].output + iter_vout[tix] - iter_vout[tix-1];
+      omax = MIN(omiddle + oramp * timestep/(iter*2), co->OutMax);
+      omin = MAX(omiddle - oramp * timestep/(iter*2), co->OutMin);
+    }
+    out = omin + (omax - omin)/(co->SSize - 1) * i;
+    if (tix == 0)
+      av0 = *o->ProcValueP;
+    else
+      av0 = vacc[tix-1][vix[tix]/co->SSize].value;
+
+    av = mpc_mlpacc_model(tp, o, co, out, av0, timestep, tix, vix); 
+    vacc[tix][vix[tix]].output = out;
+    vacc[tix][vix[tix]].value = av;
+    if (tix > 0)
+      vacc[tix][vix[tix]].acc = vacc[tix-1][vix[tix-1]-1].acc;
+
+    switch (co->Algorithm) {
+    case pwr_eMpcAlgorithm_FixTimeStepModelCorr:
+    case pwr_eMpcAlgorithm_ProgressiveTimeStepMC:
+    case pwr_eMpcAlgorithm_FirstScanTimeStepMC:
+      vacc[tix][vix[tix]].acc += fabs(av - (co->SetValue + co->ModelCorr));
+      break;
+    default:
+      vacc[tix][vix[tix]].acc += fabs(av - co->SetValue);
+    }
+    // printf("acc[%2d][%2d] %7.2f     sp %7.2f out %7.2f\n", tix, vix[tix], vacc[tix][vix[tix]].acc, co->SetValue, out);      
+    vix[tix]++;  
+
+    mpc_mlpacc_tscan(tp, o, co, tix+1, vix, iter, iter_vout);
+  }
+}
+
+
+/*_*
+  CompMPC_MLP_Fo
+
+  @aref compmpc_mlp_fo CompMPC_MLP_Fo
+*/
+void CompMPC_MLP_Fo_init(pwr_sClass_CompMPC_MLP_Fo* o)
+{
+  t_vacc **vacc;
+  int size;
+  int i;
+  pwr_sClass_CompMPC_MLP *co;
+  pwr_tDlid dlid;
+  pwr_tStatus sts;
+
+  sts = gdh_DLRefObjectInfoAttrref(
+      &o->PlcConnect, (void**)&o->PlcConnectP, &dlid);
+  if (EVEN(sts))
+    o->PlcConnectP = 0;
+
+  co = (pwr_sClass_CompMPC_MLP *)o->PlcConnectP;
+  if (!co)
+    return;
+
+  co->NoOfPaths = 0;
+  co->Vacc = malloc(co->TSize * sizeof(float*));
+  vacc = (t_vacc **)co->Vacc;
+  for (i = 0; i < co->TSize; i++) {
+    size = pow(co->SSize, i+1);
+    vacc[i] = (t_vacc *)malloc(size * sizeof(t_vacc));
+    memset(vacc[i], 0,  size * sizeof(t_vacc));
+    co->NoOfPaths += size;
+  }
+
+  o->ModelP = (mlp_tCtx)calloc(1, sizeof(mlp_sCtx));
+  co->Status = mpc_mlp_import(co->ModelFile, (mlp_tCtx)o->ModelP);
+  if (EVEN(co->Status))
+    return;
+
+  co->Layers = ((mlp_tCtx)o->ModelP)->layers;
+  for (i = 0; i < MIN(co->Layers, sizeof(co->LayerSizes)/sizeof(co->LayerSizes[0])); i++)
+    co->LayerSizes[i] = ((mlp_tCtx)o->ModelP)->layer_sizes[i];
+    
+  ((mlp_tCtx)o->ModelP)->inputs = (double *)calloc(((mlp_tCtx)o->ModelP)->layer_sizes[0],
+						   sizeof(double));
+}
+
+void CompMPC_MLP_Fo_exec(plc_sThread* tp, pwr_sClass_CompMPC_MLP_Fo* o)
+{
+  t_vacc **vacc;
+  int i, j;
+  int min_acc;
+  int *vix;
+  float *vout;
+  int idx;
+  int size;
+  pwr_sClass_CompMPC_MLP *co = (pwr_sClass_CompMPC_MLP *)o->PlcConnectP;
+
+  if (!co)
+    return;
+
+  if (((mlp_tCtx)o->ModelP)->outlist == 0) {
+    ((mlp_tCtx)o->ModelP)->outlist_size = co->TSize * lroundf(co->TStep / tp->f_scan_time);
+    ((mlp_tCtx)o->ModelP)->outlist = (pwr_tFloat32 *)calloc(((mlp_tCtx)o->ModelP)->outlist_size, sizeof(pwr_tFloat32));
+  }
+
+  co->ProcValue = o->ProcValue = *o->ProcValueP;
+  co->SetValue = o->SetValue = *o->SetValueP;
+  co->ForceValue = o->ForceValue = *o->ForceValueP;
+  co->Force = o->Force = *o->ForceP;
+
+  if (*o->ForceP) {
+    o->OutValue = *o->ForceValueP;
+    outlist_insert((mlp_tCtx)o->ModelP, o->OutValue);
+    co->ModelValue = mpc_mlpacc_model(tp, o, co, o->OutValue, 0, co->TStep, -1, 0);   
+    return;
+  }
+
+  /* SetValue correction */
+  switch (co->Algorithm) {
+  case pwr_eMpcAlgorithm_FixTimeStepModelCorr:
+  case pwr_eMpcAlgorithm_ProgressiveTimeStepMC:
+  case pwr_eMpcAlgorithm_FirstScanTimeStepMC:
+    if ( fabs(*o->SetValueP - *o->ProcValueP) < co->ModelCorrInterval)
+      co->ModelCorr += (*o->SetValueP - *o->ProcValueP) * (*o->ScanTime) / co->ModelCorrIntTime;
+    else
+      co->ModelCorr = 0;
+    break;
+  default:
+    co->ModelCorr = 0;
+  }
+
+  vacc = (t_vacc **)co->Vacc;
+  vix = (int *)calloc(1, co->TSize * sizeof(unsigned int));
+  mpc_mlpacc_tscan(tp, o, co, 0, vix, 0, 0);
+
+  min_acc = 0;
+  for (i = 0; i < pow(co->SSize, co->TSize); i++) {
+    if (vacc[co->TSize-1][i].acc < vacc[co->TSize-1][min_acc].acc)
+      min_acc = i;	
     //printf( "%d acc %7.2f\n", i, vacc[co->TSize-1][i].acc);
   }
   // printf("min_acc %d\n", min_acc);
@@ -1384,7 +1866,7 @@ void CompMPC_Fo_exec(plc_sThread* tp, pwr_sClass_CompMPC_Fo* o)
       memset(vacc[i], 0,  size * sizeof(t_vacc));
     }
     memset(vix, 0, co->TSize * sizeof(unsigned int));
-    mpc_tscan(tp, o, co, 0, vix, j+1, vout);
+    mpc_mlpacc_tscan(tp, o, co, 0, vix, j+1, vout);
 
     min_acc = 0;
     for (i = 0; i < pow(co->SSize,co->TSize); i++) {
@@ -1418,4 +1900,6 @@ void CompMPC_Fo_exec(plc_sThread* tp, pwr_sClass_CompMPC_Fo* o)
 
   }
   co->OutValue = o->OutValue;
+  outlist_insert((mlp_tCtx)o->ModelP, o->OutValue);
+  co->ModelValue = mpc_mlpacc_model(tp, o, co, co->OutValue, 0, co->TStep, -1, 0);   
 }
