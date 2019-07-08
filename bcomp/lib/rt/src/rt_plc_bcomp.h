@@ -64,5 +64,7 @@ void CompCurvePolValueFo_exec(
     plc_sThread* tp, pwr_sClass_CompCurvePolValueFo* o);
 void CompMPC_Fo_init(pwr_sClass_CompMPC_Fo* o);
 void CompMPC_Fo_exec(plc_sThread* tp, pwr_sClass_CompMPC_Fo* o);
+void CompMPC_MLP_Fo_init(pwr_sClass_CompMPC_MLP_Fo* o);
+void CompMPC_MLP_Fo_exec(plc_sThread* tp, pwr_sClass_CompMPC_MLP_Fo* o);
 
 #endif
