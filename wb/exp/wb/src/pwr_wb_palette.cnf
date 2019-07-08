@@ -137,6 +137,7 @@ palette NavigatorPalette
         class CompModeImc
         class CompModePID
         class CompMPC
+        class CompMPC_MLP
         class CompOnOffBurner
         class CompOnOffZone
 	class CompPosit
@@ -1264,6 +1265,7 @@ palette PlcEditorPalette
       class CompModePID_Fo
       class CompPID_Fo
       class CompMPC_Fo
+      class CompMPC_MLP_Fo
       class CompModeImc_Fo
       class CompImc_Fo
       class CompOnOffBurnerFo

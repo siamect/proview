@@ -39,8 +39,10 @@
 
 #include "co_math.h"
 #include "co_time.h"
+#include "co_cdh.h"
 #include "co_dcli.h"
 #include "rt_plc_bcomp.h"
+#include "rt_plc_msg.h"
 
 /*_*
   RunTimeCounterFo
@@ -1507,13 +1509,12 @@ int mpc_mlp_import(const char *file, mlp_sCtx *mlp)
   dcli_translate_filename(fname, file);
   fp = fopen(fname, "r");
   if (!fp)
-    return 0;
+    return PLC__FILE;
 
   while (dcli_read_line(line, sizeof(line), fp)) {
     if (strncmp(line, "Layers ", 7) == 0) {
       if (sscanf(&line[7], "%d", &mlp->layers) != 1) {
-	printf("Syntax error\n");
-	return 0;
+	return PLC__FILESYNTAX;
       }
     }
     else if (strncmp(line, "LayerSizes ", 11) == 0) {
@@ -1522,13 +1523,11 @@ int mpc_mlp_import(const char *file, mlp_sCtx *mlp)
       for (i = 0; i < mlp->layers; i++) {
 	s = strchr(s, ' ');
 	if (!s) {
-	  printf("Syntax error\n");
-	  return 0;
+	  return PLC__FILESYNTAX;
 	}
 	s++;
 	if (sscanf(s, "%d", &mlp->layer_sizes[i]) != 1) {
-	  printf("Syntax error\n");
-	  return 0;
+	  return PLC__FILESYNTAX;
 	}
       }
     }
@@ -1593,7 +1592,7 @@ int mpc_mlp_import(const char *file, mlp_sCtx *mlp)
   for (i = 0; i < mlp->layers - 1; i++) {
     mlp->h[i] = (double *)calloc(mlp->layer_sizes[i+1], sizeof(double));
   }
-  return 1;
+  return PLC__SUCCESS;
 }
 
 float mpc_mlpacc_model(plc_sThread* tp, pwr_sClass_CompMPC_MLP_Fo *o, 
@@ -1776,13 +1775,32 @@ void CompMPC_MLP_Fo_init(pwr_sClass_CompMPC_MLP_Fo* o)
 
   o->ModelP = (mlp_tCtx)calloc(1, sizeof(mlp_sCtx));
   co->Status = mpc_mlp_import(co->ModelFile, (mlp_tCtx)o->ModelP);
-  if (EVEN(co->Status))
+  if (EVEN(co->Status)) {
+    char astr[200];
+    cdh_ArefToString(astr, sizeof(astr), &o->PlcConnect, 1);
+    errh_Error("CompMPC_MLP initialization error, %s, %m", astr, co->Status);
     return;
+  }
 
   co->Layers = ((mlp_tCtx)o->ModelP)->layers;
   for (i = 0; i < MIN(co->Layers, sizeof(co->LayerSizes)/sizeof(co->LayerSizes[0])); i++)
     co->LayerSizes[i] = ((mlp_tCtx)o->ModelP)->layer_sizes[i];
-    
+  switch (((mlp_tCtx)o->ModelP)->activation) {
+  case mlp_eActivation_Tanh:
+    strcpy(co->Activation, "tanh");
+    break;
+  case mlp_eActivation_Identity:
+    strcpy(co->Activation, "identity");
+    break;
+  case mlp_eActivation_Relu:
+    strcpy(co->Activation, "relu");
+    break;
+  case mlp_eActivation_Logistic:
+    strcpy(co->Activation, "logistic");
+    break;
+  default:
+    strcpy(co->Activation, "unknown");    
+  }
   ((mlp_tCtx)o->ModelP)->inputs = (double *)calloc(((mlp_tCtx)o->ModelP)->layer_sizes[0],
 						   sizeof(double));
 }
@@ -1798,7 +1816,7 @@ void CompMPC_MLP_Fo_exec(plc_sThread* tp, pwr_sClass_CompMPC_MLP_Fo* o)
   int size;
   pwr_sClass_CompMPC_MLP *co = (pwr_sClass_CompMPC_MLP *)o->PlcConnectP;
 
-  if (!co)
+  if (!co || co->Status == PLC__FILE || co->Status == PLC__FILESYNTAX)
     return;
 
   if (((mlp_tCtx)o->ModelP)->outlist == 0) {
