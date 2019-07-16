@@ -445,13 +445,16 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES* ServiceReqRes,
       break;
   }
 
-  // Ignore Interface subslots as they break the device configuration
-  for (ii = 0; ii < num_modules; ii++) {
-    for (std::vector<GsdmlSubslotData*>::iterator it
-         = dev_data->slot_data[ii]->subslot_data.begin();
-         it != dev_data->slot_data[ii]->subslot_data.end();) {
-      // Don't add expectedsubmoduleblock if there's no IOCR
-      if ((*it)->data_record.empty() && ((*it)->io_input_length == 0 && (*it)->io_output_length == 0)) {
+  // Third time's a charm, only subslots up to 0x7FFF are included in the AR
+  // according to an old picture i found :)
+  for (ii = 0; ii < num_modules; ii++)
+  {
+    for (std::vector<GsdmlSubslotData*>::iterator it =
+             dev_data->slot_data[ii]->subslot_data.begin();
+         it != dev_data->slot_data[ii]->subslot_data.end();)
+    {
+      if ((*it)->subslot_number > 0x7FFF)
+      {
         delete *it;
         it = dev_data->slot_data[ii]->subslot_data.erase(it);
       }
