@@ -216,6 +216,9 @@ public:
   void delete_thread(void* thread);
   int get_closest_time(void* thread, char* tablename, unsigned int options,
       pwr_tTime* time, int before, unsigned int* id);
+  int get_id_value(void* thread, char* tablename,
+		   unsigned int id, pwr_eType type, int size, 
+		   void *value);
   void string_to_mysqlstring(char* in, char* out, int size);
   void mysqlstring_to_string(char* in, char* out, int size);
   int get_id_range(pwr_tStatus* sts, void* thread, sev_item* item,
