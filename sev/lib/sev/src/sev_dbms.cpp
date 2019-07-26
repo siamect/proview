@@ -639,6 +639,7 @@ MYSQL* sev_dbms_env::open_thread(unsigned int* sts)
 void sev_dbms_env::close_thread(MYSQL* con)
 {
   mysql_close(con);
+  mysql_thread_end();
 }
 
 bool sev_dbms_env::exists()
@@ -1956,6 +1957,10 @@ int sev_dbms::get_values(pwr_tStatus* sts, void* thread, pwr_tOid oid,
   char where_part[200];
   int rows = 0;
   MYSQL* con;
+  char startval[8];
+  char endval[8];
+  char *startvalue = 0;
+  char *endvalue = 0;
 
   if (thread)
     con = (MYSQL*)thread;
@@ -2009,23 +2014,47 @@ int sev_dbms::get_values(pwr_tStatus* sts, void* thread, pwr_tOid oid,
     unsigned int endid;
 
     if (starttime) {
-      // Get id for starttime
-      *sts = get_closest_time(
-          thread, item.tablename, item.options, starttime, 1, &startid);
-      if (*sts == SEV__NOROWS)
-        get_id_range(sts, thread, &item, item.options, &startid, 0);
+      if (type == pwr_eType_Boolean) {
+	// Get id for starttime
+	*sts = get_closest_time(
+            thread, item.tablename, item.options, starttime, 1, &startid);
+	if (*sts == SEV__NOROWS)
+	  get_id_range(sts, thread, &item, item.options, &startid, 0);
+	get_id_value(thread, item.tablename, startid, type, size, 
+		     startval);
+	startvalue = startval;
+
+      } else {      
+	// Get id for starttime
+	*sts = get_closest_time(
+            thread, item.tablename, item.options, starttime, 1, &startid);
+	if (*sts == SEV__NOROWS)
+	  get_id_range(sts, thread, &item, item.options, &startid, 0);
+      }
     } else {
       get_id_range(sts, thread, &item, item.options, &startid, 0);
       // startid = 0;
     }
     if (endtime) {
-      // Get id for starttime
-      *sts = get_closest_time(
-          thread, item.tablename, item.options, endtime, 0, &endid);
-      if (*sts == SEV__NOROWS)
-        get_id_range(sts, thread, &item, item.options, 0, &endid);
-      if (endid == 0)
-        endid = strtoul(row[4], 0, 10);
+      if (type == pwr_eType_Boolean) {
+	// Get id for starttime
+	*sts = get_closest_time(
+            thread, item.tablename, item.options, endtime, 1, &endid);
+	if (*sts == SEV__NOROWS)
+	  get_id_range(sts, thread, &item, item.options, 0, &endid);
+	if (endid == 0)
+	  endid = strtoul(row[4], 0, 10);
+	get_id_value(thread, item.tablename, endid, type, size, endval);
+	endvalue = endval;
+      } else {
+	// Get id for starttime
+	*sts = get_closest_time(
+            thread, item.tablename, item.options, endtime, 0, &endid);
+	if (*sts == SEV__NOROWS)
+	  get_id_range(sts, thread, &item, item.options, 0, &endid);
+	if (endid == 0)
+	  endid = strtoul(row[4], 0, 10);
+      }
     } else
       endid = strtoul(row[4], 0, 10);
 
@@ -2312,13 +2341,20 @@ int sev_dbms::get_values(pwr_tStatus* sts, void* thread, pwr_tOid oid,
     } else
       break;
   }
-  int bufrows = rows;
+  int bufrows = rows + (startvalue != 0) + (endvalue != 0);
 
   if (options & pwr_mSevOptionsMask_ReadOptimized) {
     *tbuf = (pwr_tTime*)calloc(bufrows, sizeof(pwr_tTime));
     *vbuf = calloc(bufrows, size);
 
     int bcnt = 0;
+
+    if (startvalue) {
+      (*tbuf)[bcnt] = *starttime;
+      memcpy((*vbuf), startvalue, size);
+      bcnt++;
+    }
+
     for (int i = 0; i < rows; i++) {
       int j = 0;
 
@@ -2384,6 +2420,13 @@ int sev_dbms::get_values(pwr_tStatus* sts, void* thread, pwr_tOid oid,
       // else
       //  printf( "%5d %5d %s %s\n", i, bcnt, row[0], row[1]);
     }
+
+    if (endvalue) {
+      (*tbuf)[bcnt] = *endtime;
+      memcpy(((char*)*vbuf) + bcnt * size, endvalue, size);
+      bcnt++;
+    }
+
     printf("bcnt %d bufrows %d\n", bcnt, bufrows);
     *bsize = bcnt;
     mysql_free_result(result);
@@ -3993,6 +4036,48 @@ int sev_dbms::get_closest_time(void* thread, char* tablename,
     return SEV__NOROWS;
   } else
     *id = strtoul(row[0], 0, 10);
+
+  mysql_free_result(result);
+
+  return 1;
+}
+
+int sev_dbms::get_id_value(void* thread, char* tablename,
+			   unsigned int id, pwr_eType type, int size, 
+			   void *value)
+{
+  char query[200];
+  MYSQL* con;
+
+  if (thread)
+    con = (MYSQL*)thread;
+  else
+    con = m_env->con();
+
+  sprintf(query, "select value from %s where id = %d",
+          tablename, id);
+  int rc = mysql_query(con, query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf("%s Query Error\n", __FUNCTION__);
+    return SEV__DBERROR;
+  }
+
+  MYSQL_ROW row;
+  MYSQL_RES* result = mysql_store_result(con);
+
+  if (!result) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf("%s Status Result Error\n", __FUNCTION__);
+    return SEV__DBERROR;
+  }
+
+  row = mysql_fetch_row(result);
+  if (!row) {
+    mysql_free_result(result);
+    return SEV__NOROWS;
+  } else
+    cdh_StringToAttrValue(type, row[0], value);
 
   mysql_free_result(result);
 
