@@ -117,6 +117,7 @@ typedef enum {
   errh_eAnix_videomgm = 26,
   errh_eAnix_redcom = 27,
   errh_eAnix_websocketserver = 28,
+  errh_eAnix_maintsupserver = 29,
   errh_eAnix_plc1 = 41,
   errh_eAnix_plc2 = 42,
   errh_eAnix_plc3 = 43,
