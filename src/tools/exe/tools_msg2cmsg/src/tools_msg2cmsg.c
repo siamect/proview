@@ -219,7 +219,7 @@ static void lex(FILE* fp) {
   }
 }
 
-static void WriteFiles(char* fname, FILE* cfp, FILE* hfp)
+static void WriteFiles(char* fname, FILE* cfp, FILE* hfp, FILE *pfp)
 {
   struct LstHead * fl;
   struct LstHead * ml;
@@ -255,6 +255,8 @@ static void WriteFiles(char* fname, FILE* cfp, FILE* hfp)
       msg = facid + 0x8000 + (idx << 3) + LstEntry(ml, sMsgCB, MsgL)->Severity;
       snprintf(name, sizeof(name), "%s%s", prefix, LstEntry(ml, sMsgCB, MsgL)->m.MsgName);
       fprintf(hfp, "#define %-29s %9.9d /* x%08x */\n", name, msg, msg);
+      if (pfp)
+	fprintf(pfp, "%s = %d\n", name, msg);
       fprintf(cfp, "\t{\"%s\", \"%s\"}", LstEntry(ml, sMsgCB, MsgL)->m.MsgName,
           LstEntry(ml, sMsgCB, MsgL)->m.MsgTxt);
       idx++;
@@ -275,10 +277,11 @@ int main(int argc, char** argv)
 {
   FILE* cfp = NULL;
   FILE* hfp = NULL;
+  FILE* pfp = NULL;
   FILE* in = NULL;
 
-  if (argc != 4) {
-    printf("Usage: co_msg2cmsg msg-file c_msg-file h_file\n");
+  if (!(argc == 4 || argc == 5)) {
+    printf("Usage: co_msg2cmsg msg-file c_msg-file h-file [py-file]\n");
     exit(2);
   }
 
@@ -301,6 +304,16 @@ int main(int argc, char** argv)
     exit(2);
   }
 
+  if (argc >= 5) {
+    if (!(pfp = fopen(argv[4], "w"))) {
+      printf("Can't open python-output file: %s\n", argv[4]);
+      fclose(in);
+      fclose(cfp);
+      fclose(hfp);
+      exit(2);
+    }
+  }
+
   LstInit(&lFacH);
   lex(in);
 
@@ -314,11 +327,13 @@ int main(int argc, char** argv)
   if ((p = strchr(fname, '.')))
     *p = '\0';
 
-  WriteFiles(fname, cfp, hfp);
+  WriteFiles(fname, cfp, hfp, pfp);
 
   fclose(in);
   fclose(cfp);
   fclose(hfp);
+  if (pfp)
+    fclose(pfp);
 
   return 0;
 }
