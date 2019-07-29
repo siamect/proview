@@ -926,7 +926,8 @@ void GlowDrawQt::line(int x1, int y1, int x2, int y2,
   if (line_type != glow_eLineType_Solid) {
     QPen pen = painter.pen();
     pen.setWidth(idx + 1);
-    pen.setStyle(Qt::DashLine);
+    pen.setStyle(Qt::CustomDashLine);
+    pen.setCapStyle(Qt::FlatCap);
     pen.setJoinStyle(Qt::MiterJoin);
     QVector<double> dashes;
     switch (line_type) {
@@ -943,25 +944,21 @@ void GlowDrawQt::line(int x1, int y1, int x2, int y2,
       break;
     }
     case glow_eLineType_Dotted: {
-      dashes << 1 + idx << 1 + idx;
-      dashes << 1 + 4 * idx << 1 + 4 * idx;
+      dashes << 1 + idx << 1 + 4 * idx;
       break;
     }
     case glow_eLineType_DotDashed1: {
-      dashes << 1 + 3 * idx << 1 + 3 * idx;
-      dashes << 1 + 2 * idx << 1 + 2 * idx;
-      dashes << 1 + idx << 1 + idx;
-      dashes << 1 + 2 * idx << 1 + 2 * idx;
+      dashes << 1 + 3 * idx << 1 + 2 * idx << 1 + idx << 1 + 2 * idx;
       break;
     }
     case glow_eLineType_DotDashed2: {
-      dashes << 1 + 6 * idx << 1 + 6 * idx;
-      dashes << 1 + 3 * idx << 1 + 3 * idx;
-      dashes << 1 + idx << 1 + idx;
-      dashes << 1 + 3 * idx << 1 + 3 * idx;
+      dashes << 1 + 6 * idx << 1 + 3 * idx << 1 + idx << 1 + 3 * idx;
       break;
     }
     default:;
+    }
+    for (int i = 0; i < dashes.size(); i++) {
+      dashes[i] /= (1 + idx);
     }
     pen.setDashPattern(dashes);
     painter.setPen(pen);
