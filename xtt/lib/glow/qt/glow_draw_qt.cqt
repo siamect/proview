@@ -1706,36 +1706,30 @@ void GlowDrawQt::image_pixel_iter(glow_tImImage orig_image,
     glow_tImImage* image, void (*pixel_cb)(void*, unsigned char*),
     void* userdata)
 {
-  unsigned char *rgb, *rgb_row;
-  int rgb_height;
-  int rgb_width;
-  int rowstride;
-
+  QImage img;
   if (orig_image) {
     if (image && *image != orig_image) {
       delete ((QImage*)*image);
     }
-    *((QImage*)*image) = ((QImage*)orig_image)->copy();
+    img = ((QImage*)orig_image)->convertToFormat(QImage::Format_ARGB32);
   } else if (!*image) {
     return;
+  } else {
+    img = ((QImage*)*image)->convertToFormat(QImage::Format_ARGB32);
   }
 
-  rgb = ((QImage*)*image)->convertToFormat(QImage::Format_ARGB32).bits();
-  rgb_height = ((QImage*)*image)->height();
-  rgb_width = ((QImage*)*image)->width();
-  rowstride = ((QImage*)*image)->bytesPerLine();
-
-  rgb_row = rgb;
-  for (int j = 0; j < rgb_height; j++) {
-    rgb = rgb_row;
-    for (int i = 0; i < rgb_width; i++) {
-      if (*(rgb + 3)) {
-        (pixel_cb)(userdata, rgb);
+  unsigned char* rgb_row = img.bits();
+  for (int j = 0; j < img.height(); j++) {
+    unsigned char* rgb = rgb_row;
+    for (int i = 0; i < img.width(); i++) {
+      if (*(rgb)) {
+        (pixel_cb)(userdata, rgb+1);
       }
       rgb += 4;
     }
-    rgb_row += rowstride;
+    rgb_row += img.bytesPerLine();
   }
+  *image = new QImage(img);
 }
 
 QGradient* GlowDrawQt::gradient_create_pattern(int x, int y, int w, int h,
