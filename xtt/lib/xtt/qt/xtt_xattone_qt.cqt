@@ -85,11 +85,6 @@ int XAttOneQt::set_value()
       textutf8 = cmd_entry->text();
     }
 
-    if (textutf8.isEmpty()) {
-      message('E', "Input cannot be empty");
-      return 0;
-    }
-
     char buff[1024];
     int sts = XNav::attr_string_to_value(
         atype, qPrintableLatin1(textutf8), buff, sizeof(buff), asize);

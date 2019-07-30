@@ -279,11 +279,8 @@ void XColWindQt::change_value_close()
 {
   if (input_open) {
     if (input_multiline) {
-      char* text = qPrintableLatin1(cmd_scrolled_buffer->toPlainText());
-
-      if (text) {
-        xattnav->set_attr_value(input_node, input_name, text);
-      }
+      xattnav->set_attr_value(input_node, input_name,
+        qPrintableLatin1(cmd_scrolled_buffer->toPlainText()));
 
       statusbar->setMaximumHeight(25);
       cmd_scrolledinput->setVisible(false);
@@ -294,15 +291,9 @@ void XColWindQt::change_value_close()
 
       xattnav->redraw();
       xattnav->set_inputfocus();
-      if (!text) {
-        message('E', "Input error, invalid character");
-      }
     } else {
-      char* text = qPrintableLatin1(cmd_entry->text());
-
-      if (text) {
-        xattnav->set_attr_value(input_node, input_name, text);
-      }
+      xattnav->set_attr_value(input_node, input_name,
+        qPrintableLatin1(cmd_entry->text()));
       cmd_entry->setVisible(false);
       set_prompt("");
       input_open = 0;
@@ -311,9 +302,6 @@ void XColWindQt::change_value_close()
       }
 
       xattnav->set_inputfocus();
-      if (!text) {
-        message('E', "Input error, invalid character");
-      }
     }
   }
 }
@@ -326,20 +314,13 @@ void XColWindQtWidget::activate_cmd_entry()
   colwind->xattnav->set_inputfocus();
 
   if (colwind->input_open) {
-    char* text = qPrintableLatin1(colwind->cmd_entry->text());
-
-    if (text) {
-      colwind->xattnav->set_attr_value(
-          colwind->input_node, colwind->input_name, text);
-    }
+    colwind->xattnav->set_attr_value(colwind->input_node, colwind->input_name,
+      qPrintableLatin1(colwind->cmd_entry->text()));
     colwind->cmd_entry->setVisible(false);
     colwind->set_prompt("");
     colwind->input_open = 0;
     if (colwind->redraw_cb) {
       (colwind->redraw_cb)(colwind);
-    }
-    if (!text) {
-      colwind->message('E', "Input error, invalid character");
     }
     return;
   }
@@ -348,17 +329,8 @@ void XColWindQtWidget::activate_cmd_entry()
 void XColWindQtWidget::activate_cmd_scrolled_ok()
 {
   if (colwind->input_open) {
-    char* text = qPrintableLatin1(colwind->cmd_scrolled_buffer->toPlainText());
-
-    if (text) {
-      colwind->xattnav->set_attr_value(
-          colwind->input_node, colwind->input_name, text);
-    } else {
-      colwind->message('E', "Input error, invalid character");
-    }
-
-    colwind->xattnav->set_attr_value(
-        colwind->input_node, colwind->input_name, text);
+    colwind->xattnav->set_attr_value(colwind->input_node, colwind->input_name,
+      qPrintableLatin1(colwind->cmd_scrolled_buffer->toPlainText()));
     colwind->statusbar->setMaximumHeight(25);
     colwind->cmd_scrolledinput->setVisible(false);
     colwind->set_prompt("");
