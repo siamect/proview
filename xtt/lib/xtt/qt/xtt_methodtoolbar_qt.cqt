@@ -243,21 +243,13 @@ void XttMethodToolbarQt::set_current_sensitive()
     for (int i = 0; i < GeMethods::opmeth_size; i++) {
       if (m_op_method_mask & (1 << i)
           && !streq(GeMethods::op_image[i], "")) {
-        if (xm_mask.OpMethods & (1 << i)) {
-          m_op_button_w[i]->setEnabled(true);
-        } else {
-          m_op_button_w[i]->setEnabled(false);
-        }
+        m_op_button_w[i]->setEnabled(xm_mask.OpMethods & (1 << i));
       }
     }
     for (int i = 0; i < GeMethods::mntmeth_size; i++) {
       if (m_mnt_method_mask & (1 << i)
           && !streq(GeMethods::mnt_image[i], "")) {
-        if (xm_mask.MntMethods & (1 << i)) {
-          m_mnt_button_w[i]->setEnabled(true);
-        } else {
-          m_mnt_button_w[i]->setEnabled(false);
-        }
+        m_mnt_button_w[i]->setEnabled(xm_mask.MntMethods & (1 << i));
       }
     }
     if (mask_store) {
