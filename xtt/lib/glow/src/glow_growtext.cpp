@@ -106,9 +106,7 @@ void GrowText::move(double delta_x, double delta_y, int grid)
     y_high += dy;
     y_low += dy;
   }
-  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty();
 }
 
 int GrowText::event_handler(glow_eEvent event, double fx, double fy)
@@ -940,14 +938,12 @@ void GrowText::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
-    ctx->set_dirty();
-  }
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
   y_high += dy;
   y_low += dy;
+  ctx->set_dirty();
 }
 
 void GrowText::convert(glow_eConvert version)

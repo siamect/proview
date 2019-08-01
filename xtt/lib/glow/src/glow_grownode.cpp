@@ -404,11 +404,9 @@ void GrowNode::open(std::ifstream& fp)
 
 void GrowNode::move_to(double x, double y)
 {
-  if (!feq(x_left, x) || !feq(y_low, y)) {
-    ctx->set_dirty();
-  }
   trf.move(x - x_left, y - y_low);
   get_node_borders();
+  ctx->set_dirty();
 }
 
 void GrowNode::move(double delta_x, double delta_y, int grid)
@@ -434,9 +432,7 @@ void GrowNode::move(double delta_x, double delta_y, int grid)
     obst_y_high += dy;
     obst_y_low += dy;
   }
-  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty();
 }
 
 void GrowNode::move_noerase(int delta_x, int delta_y, int grid)
@@ -705,10 +701,12 @@ void GrowNode::set_scale(
   default:;
   }
 
+  /*
   double old_x_left = x_left;
   double old_x_right = x_right;
   double old_y_low = y_low;
   double old_y_high = y_high;
+  */
   trf.scale_from_stored(scale_x, scale_y, x0, y0);
   get_node_borders();
 
@@ -1270,9 +1268,6 @@ void GrowNode::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
-    ctx->set_dirty();
-  }
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
@@ -1282,6 +1277,7 @@ void GrowNode::align(double x, double y, glow_eAlignDirection direction)
   obst_x_left += dx;
   obst_y_high += dy;
   obst_y_low += dy;
+  ctx->set_dirty();
 }
 
 void GrowNode::export_javabean(GlowTransform* t, void* node,

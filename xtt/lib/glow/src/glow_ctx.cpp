@@ -1291,29 +1291,24 @@ int GlowCtx::event_handler_nav(glow_eEvent event, int x, int y)
     if (nav_rect_movement_active) {
       int delta_x = x - nav_rect_move_last_x;
       int delta_y = y - nav_rect_move_last_y;
-      if (delta_x != 0 || delta_y != 0) {
-        nav_rect_ll_x += delta_x;
-        nav_rect_ur_x += delta_x;
-        nav_rect_ll_y += delta_y;
-        nav_rect_ur_y += delta_y;
-        set_dirty();
-      }
+      nav_rect_ll_x += delta_x;
+      nav_rect_ur_x += delta_x;
+      nav_rect_ll_y += delta_y;
+      nav_rect_ur_y += delta_y;
       nav_rect_move_last_x = x;
       nav_rect_move_last_y = y;
 
       int mainwind_delta_x = int(-mw.zoom_factor_x / navw.zoom_factor_x * delta_x);
       int mainwind_delta_y = int(-mw.zoom_factor_y / navw.zoom_factor_y * delta_y);
-      if (ABS(mainwind_delta_x) > 0 || ABS(mainwind_delta_y) > 0) {
-        mw.offset_x -= mainwind_delta_x;
-        mw.offset_y -= mainwind_delta_y;
-        set_dirty();
-      }
+      mw.offset_x -= mainwind_delta_x;
+      mw.offset_y -= mainwind_delta_y;
       if (ctx_type == glow_eCtxType_Grow) {
         ((GrowCtx*)this)->polyline_last_end_x += mainwind_delta_x;
         ((GrowCtx*)this)->polyline_last_end_y += mainwind_delta_y;
       }
 
       change_scrollbar();
+      set_dirty();
     } else if (nav_rect_zoom_active) {
       double center_x = 0.5 * (nav_rect_ur_x + nav_rect_ll_x);
       double center_y = 0.5 * (nav_rect_ur_y + nav_rect_ll_y);

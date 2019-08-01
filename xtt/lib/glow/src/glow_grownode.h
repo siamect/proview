@@ -632,10 +632,8 @@ public:
   */
   void set_fill_level(double level)
   {
-    if (!feq(fill_level, level)) {
-      fill_level = level;
-      ctx->set_dirty();
-    }
+    fill_level = level;
+    ctx->set_dirty();
   }
 
   //! Set the level direction.

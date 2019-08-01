@@ -198,10 +198,8 @@ public:
   */
   void set_value(double value)
   {
-    if (!feq(bar_value, value)) {
-      ctx->set_dirty();
-    }
     bar_value = value;
+    ctx->set_dirty();
   }
 
   //! Set parameters for the bar.

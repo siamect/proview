@@ -990,14 +990,12 @@ void GrowTable::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
-    ctx->set_dirty();
-  }
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
   y_high += dy;
   y_low += dy;
+  ctx->set_dirty();
 }
 
 void GrowTable::export_javabean(GlowTransform* t, void* node,
@@ -1269,29 +1267,21 @@ void GrowTable::configure_scrollbars()
 void GrowTable::v_value_changed_cb(void* o, double value)
 {
   GrowTable* gw = (GrowTable*)o;
-
-  if (!feq(gw->v_value, value)) {
-    gw->v_value = value;
-    gw->ctx->set_dirty();
-  }
+  gw->v_value = value;
+  gw->ctx->set_dirty();
 }
 
 void GrowTable::h_value_changed_cb(void* o, double value)
 {
   GrowTable* gw = (GrowTable*)o;
-
-  if (!feq(gw->h_value, value)) {
-    gw->h_value = value;
-    gw->ctx->set_dirty();
-  }
+  gw->h_value = value;
+  gw->ctx->set_dirty();
 }
 
 void GrowTable::set_textsize(int size)
 {
-  if (text_size != size) {
-    text_size = size;
-    ctx->set_dirty();
-  }
+  text_size = size;
+  ctx->set_dirty();
 }
 
 void GrowTable::set_textbold(int bold)
@@ -1309,10 +1299,8 @@ void GrowTable::set_textbold(int bold)
 
 void GrowTable::set_textfont(glow_eFont textfont)
 {
-  if (font != textfont) {
-    font = textfont;
-    ctx->set_dirty();
-  }
+  font = textfont;
+  ctx->set_dirty();
 }
 
 void GrowTable::get_table_info(glow_sTableInfo* info)
