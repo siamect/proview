@@ -566,7 +566,8 @@ void CompOnOffZoneFo_exec(plc_sThread* tp, pwr_sClass_CompOnOffZoneFo* o)
 
   2015 - 12 - 19	Bruno: initial object. v0.1
   2016 - 04 - 11	Bruno: cleaning. v0.2
-  2017 - 04 - 14    Bruno: remove "division by zero" potential bugs v0.3
+  2017 - 04 - 14  Bruno: remove "division by zero" potential bugs v0.3
+  2019 - 08 - 31  Bruno: add missing links for Trim_SP and FF inputs: copy IMC_Fo to IMC	
 */
 
 #define MAXCELLS 100
@@ -728,6 +729,8 @@ void CompIMC_Fo_exec(plc_sThread* tp, pwr_sClass_CompIMC_Fo* plc_obj)
   plant_obj->PV = *plc_obj->PVP; // Process value: copy IMC_Fo to IMC
   plant_obj->SP = *plc_obj->SPP; // Setpoint value: copy IMC_Fo to IMC
   plant_obj->aut = *plc_obj->autP; // Auto input: copy IMC_Fo to IMC
+  plant_obj->FF = *plc_obj->FF; // FF input: copy IMC_Fo to IMC	
+  plant_obj->Trim_SP = *plc_obj->Trim_SP; // Trim_SP input: copy IMC_Fo to IMC	
 
   LSP = plant_obj->SP + plant_obj->Trim_SP; // Calculate working setpoint
   LSP = CLAMP(LSP, plant_obj->LL_SP, plant_obj->HL_SP); // Apply limits
