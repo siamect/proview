@@ -55,1299 +55,1995 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
+from sklearn.linear_model import Lasso
+from sklearn.neural_network import MLPRegressor
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import r2_score
 from scipy.interpolate import interp1d
 import matplotlib
 matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import pickle
+import co
+from rt_mva import *
+from rt_mva_msg import *
 
-# adapted from http://matplotlib.org/examples/specialty_plots/hinton_demo.html
-def hinton(matrix, max_weight=None, ax=None):
-    """Draw Hinton diagram for visualizing a weight matrix."""
-    ax = ax if ax is not None else plt.gca()
+class ValueDialog:
+    def __init__(self, parent, title, text, rename_ok_cb):
 
-    if not max_weight:
-        max_weight = 2**np.ceil(np.log(np.abs(matrix).max())/np.log(2))
+        top = self.top = Toplevel(parent)
+        main.set_icon(top)
 
-    ax.patch.set_facecolor('lightgray')
-    ax.set_aspect('equal', 'box')
-    ax.xaxis.set_major_locator(plt.NullLocator())
-    ax.yaxis.set_major_locator(plt.NullLocator())
+        self.top.title(title)
 
-    for (x, y), w in np.ndenumerate(matrix):
-        color = 'red' if w > 0 else 'blue'
-        size = np.sqrt(np.abs(w))
-        if size > 0.98: size = 0.98        
-        rect = plt.Rectangle([x - size / 2, y - size / 2], size, size,
-                             facecolor=color, edgecolor=color)
-        ax.add_patch(rect)
+        label = Label(top, text=text)
+        label.grid(column=0, row=0, padx=10, pady=5, sticky=W)
 
-    nticks = matrix.shape[0]
-    ax.xaxis.tick_top()
-    ax.set_xticks(range(nticks))
-    ax.set_xticklabels(list(matrix.columns), rotation=90)
-    ax.set_yticks(range(nticks))
-    ax.set_yticklabels(matrix.columns)
-    ax.grid(False)
+        self.entry = Entry(top, width=15)
+        self.entry.grid(column=1, row=0, padx=10, pady=5, sticky=W)
+        self.rename_ok_cb = rename_ok_cb
 
-    ax.autoscale_view()
-    ax.invert_yaxis()
+        button = Button(top, text="Ok", command=self.ok_cb, width=10)
+        button.grid(column=0, row=1, padx=10, pady=5, sticky=W)
+    
+        button = Button(top, text="Cancel", command=self.cancel_cb, width=10)
+        button.grid(column=1, row=1, padx=10, pady=5, sticky=W)
+    
 
-# Plot callback
-def plot_action_cb(): 
-    cols = []
-    i = 0;
-    for name in wdname:
-        if datasel[i].get():
-            cols.append(wdcol[i])
-        i += 1
-                     
-    if len(cols) != 0:
-        plotdata = wd[cols]
-    else:
-        plotdata = wd
-    ax = plotdata.plot()
-    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5));
-    plt.show()
+    def cancel_cb(self):
+        self.top.destroy()
 
-# Individual plot callback
-def indplot_action_cb(): 
-    cols = []
-    i = 0;
-    ccnt = 0
-    for name in wdname:
-        if datasel[i].get():
-            cols.append(wdcol[i])
-            ccnt += 1
-        i += 1
-                     
+    def ok_cb(self):
+        value = self.entry.get()
+        self.rename_ok_cb(value)
+        self.top.destroy()
 
-    if len(cols) != 0:
-        plotdata = wd[cols]
-    else:
-        plotdata = wd
-        ccnt = wd.shape[1]
-        cols = wdcol
+class SelectDialog:
+
+    def __init__(self, parent, itemlist, cb_func):
+        self.window = Toplevel(parent, bg=bgcolor)
+        main.set_icon(self.window)
+        self.window.title("Select data")
+        self.itemlist = itemlist
+        self.cb_func = cb_func
+        #self.window.minsize(600, 200)
         
-    layo = ccnt * 100 + 10
+        self.listbox = Listbox(self.window)
+        self.listbox.grid(row=0, column=0)
+        
+        for item in itemlist:
+            self.listbox.insert(END, item)
+            
+        button = Button(self.window, text='Ok', command=self.ok_cb, bg=buttoncolor).grid(row=1, column=0)
 
-    j = 0
-    plt.figure()
-    while j < ccnt:
+    def ok_cb(self): 
+        idx = self.listbox.curselection()
+        self.cb_func(self.itemlist[idx[0]])
+        self.window.destroy()
+
+#
+# Linear regression model class
+#
+class LinRegModel:
+    TYPE_LINEAR_REGRESSION = 1
+    TYPE_RIDGE_REGRESSION = 2
+    TYPE_LASSO_REGRESSION = 3
+
+    # Constructor, create empty window
+    def __init__(self, wdwindow, type):
+        self.lr_wframe = None
+        self.lr_pframe = None
+        self.wdwindow = wdwindow
+        self.wdata = wdwindow.wdata
+        self.type = type
+        self.fignum = 0
+
+        self.lrwindow = Toplevel(wdwindow.window, bg=bgcolor)
+        self.lrwindow.title('Linear Regression ' + wdwindow.name)
+        self.lrwindow.minsize(600, 300)
+        main.set_icon(self.lrwindow)
+
+        # Create menu
+        menubar = Menu(self.lrwindow, bg=buttoncolor)
+        filemenu = Menu(menubar, bg=buttoncolor)
+        filemenu.add_command(label='Create Model', command=self.create_action_cb)
+        filemenu.add_command(label='Apply Model', command=self.open_action_cb)
+        filemenu.add_command(label='Save Model', command=self.save_action_cb)
+        menubar.add_cascade(label='File', menu=filemenu)
+        helpmenu = Menu(menubar, bg=buttoncolor)
+        helpmenu.add_command(label='Help', command=self.help_action_cb)
+        menubar.add_cascade(label='Help', menu=helpmenu)
+
+        self.lrwindow.config(menu=menubar)
+
+        self.lr_argframe = Frame(self.lrwindow, bg=bgcolor)
+        if self.type == self.TYPE_RIDGE_REGRESSION:
+            # Solver options list
+            list = ['auto', 'svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag', 'saga']
+            self.solver = StringVar()
+            self.solver.set('auto')
+            label = Label(self.lr_argframe, text='Solver')
+            label.grid(column=0, row=0, padx=0, pady=5, sticky=W)
+            label.config(bg=bgcolor)
+            optmenu = OptionMenu(self.lr_argframe, self.solver, *list)
+            optmenu.grid(column=1, row=0, padx=20, pady=5, sticky=W)
+            optmenu.config(bg=bgcolor)
+
+            # Max iter entry
+            self.maxiter = IntVar()
+            label = Label(self.lr_argframe, text='Max Iterations')
+            label.grid(column=0, row=1, padx=0, pady=5, sticky=W)
+            label.config(bg=bgcolor)
+            entry = Entry(self.lr_argframe, textvariable=self.maxiter, width=8)
+            self.maxiter.set(1000)
+            entry.grid(column=1, row=1, padx=20, pady=5, sticky=W)
+            entry.config(bg=bgcolor)
+
+            # alpha entry
+            label = Label(self.lr_argframe, text='Alpha')
+            label.grid(column=0, row=2, padx=0, pady=5, sticky=W)
+            label.config(bg=bgcolor)
+            self.alpha = DoubleVar()
+            entry = Entry(self.lr_argframe, textvariable=self.alpha, width=8)
+            self.alpha.set(1.0)
+            entry.grid(column=1, row=2, padx=20, pady=5, sticky=W)
+            entry.config(bg=bgcolor)
+
+            self.lr_argframe.pack(side=TOP, fill=X)
+
+        elif self.type == self.TYPE_LASSO_REGRESSION:
+            # Max iter entry
+            self.maxiter = IntVar()
+            label = Label(self.lr_argframe, text='Max Iterations')
+            label.grid(column=0, row=1, padx=0, pady=5, sticky=W)
+            label.config(bg=bgcolor)
+            entry = Entry(self.lr_argframe, textvariable=self.maxiter, width=8)
+            self.maxiter.set(20000)
+            entry.grid(column=1, row=1, padx=20, pady=5, sticky=W)
+            entry.config(bg=bgcolor)
+
+            # alpha entry
+            label = Label(self.lr_argframe, text='Alpha')
+            label.grid(column=0, row=2, padx=0, pady=5, sticky=W)
+            label.config(bg=bgcolor)
+            self.alpha = DoubleVar()
+            entry = Entry(self.lr_argframe, textvariable=self.alpha, width=8)
+            self.alpha.set(1.0)
+            entry.grid(column=1, row=2, padx=20, pady=5, sticky=W)
+            entry.config(bg=bgcolor)
+
+            self.lr_argframe.pack(side=TOP, fill=X)
+
+
+
+    # Save menu callback
+    def save_action_cb(self):
+
+        file = tkFileDialog.asksaveasfilename(initialdir='./', title='Select file',
+                                          filetypes=[('lrm files','*.lrm'),('all files','*.*')])
+        if file != '':
+            fp = open(file, 'w')
+            fp.write('Intercept ' + str(self.slr.intercept_[0]) + '\n')
+            i = 0
+            for name in self.wdata.wdname:
+                if i != 0:
+                    if self.type == self.TYPE_LASSO_REGRESSION:
+                        fp.write( name + ' ' + str(self.slr.coef_[i-1]) + '\n')
+                    else:
+                        fp.write( name + ' ' + str(self.slr.coef_[0][i-1]) + '\n')
+                i += 1
+            fp.close()
+
+    # Open menu callback
+    def open_action_cb(self):
+        file = tkFileDialog.askopenfilename(initialdir='./', title='Open Coefficients',
+                                            filetypes=[('lrm files','*.lrm'),('all files','*.*')])
+        if file != '':
+            lrname = []
+            lrcoeff = []
+            fp = open(file, 'r')
+            for line in fp:
+                token = line.rstrip().split(" ")
+                lrname.append(token[0])
+                lrcoeff.append(float(token[1]))
+            fp.close()
+
+            if len(lrname) != len(self.wdata.wdname):
+                tkMessageBox.showerror("Error", "Not matching number of attributes")
+                return
+        
+            coeff = [None]*len(self.wdata.wdname)
+            i = 0
+            coeff[0] = lrcoeff[0]
+            for name in lrname:
+                if i > 0:
+                    j = 0
+                    found = False
+                    for wname in self.wdata.wdname:
+                        if j > 0:
+                            if name == wname:
+                                found = True
+                                coeff[j] = lrcoeff[i]
+                                break
+                        j += 1
+                    if not found:
+                        tkMessageBox.showerror("Error", "Can't find " + name)
+                        return
+                i += 1
+
+            for c in coeff:
+                if c == None:
+                    tkMessageBox.showerror("Error", "Not matching index")
+                    return
+
+            i = 0
+            for n in self.wdata.wdname:
+                if i == 0:
+                    print coeff[0], 'Intercept'
+                else:
+                    print coeff[i], n
+                    i += 1
+
+            self.regrcoef_draw(coeff)
+        
+    # Create menu callback
+    def create_action_cb(self):
+
+        if self.type == self.TYPE_LINEAR_REGRESSION:
+            self.slr = LinearRegression()
+
+        elif self.type == self.TYPE_RIDGE_REGRESSION:
+            solver = self.solver.get()
+            maxiter = self.maxiter.get()
+            alpha = self.alpha.get()
+
+            self.slr = Ridge(alpha=alpha, max_iter=maxiter, solver=solver)
+
+        elif self.type == self.TYPE_LASSO_REGRESSION:
+            maxiter = self.maxiter.get()
+            alpha = self.alpha.get()
+
+            self.slr = Lasso(alpha=alpha, max_iter=maxiter)
+    
+        reg = self.slr.fit(self.wdata.wd.iloc[:,1:], self.wdata.wd.iloc[:,0:1])
+        print "params", self.slr.get_params()
+        print "coef ", self.slr.coef_
+        print "intercept ", self.slr.intercept_
+        coeff = [None]*len(self.wdata.wdname)
+        coeff[0] = self.slr.intercept_[0]
+        if self.type == self.TYPE_LASSO_REGRESSION:
+            for i in range(1,len(self.wdata.wdname)):
+                print i, self.slr.coef_[i-1]
+                coeff[i] = self.slr.coef_[i-1]
+        else:
+            for i in range(1,len(self.wdata.wdname)):
+                print i, self.slr.coef_[0][i-1]
+                coeff[i] = self.slr.coef_[0][i-1]
+        self.regrcoef_draw(coeff)
+
+    # Draw coefficients and curves
+    def regrcoef_draw(self, coeff):
+
+        textheigt = len(self.wdata.wdname) + 2
+        maxlen = 0
+        for name in self.wdata.wdname:
+            if len(name) > maxlen:
+                maxlen = len(name)
+                              
+        textlen = 0.01 * maxlen
+        textpages = 1 + math.floor(textheigt/9)
+
+
+        layo = (2 + textpages) * 100 + 10
+
+        j = textpages
+        fig = plt.figure(self.fignum, figsize=(8,2*(2 + textpages)))
+        self.fignum += 1
+        fig.canvas.set_window_title('Linear Regression ' + self.wdwindow.name)
+        # Calculate model values
+        res = pd.Series([coeff[0]]*len(self.wdata.wd))
+        i = 0
+        for name in self.wdata.wdname:
+            if i != 0:
+                res += coeff[i] * self.wdata.wd[self.wdata.wdcol[i]]
+            i += 1
+
+        # Get difference between actual value and model
+        diff = self.wdata.wd[self.wdata.wdcol[0]] - res
+
+        # Draw score
+        offs = 0.95
+        score = r2_score(res, self.wdata.wd[self.wdata.wdcol[0]])
+        plt.gcf().text(0.1, offs, 'Score', fontsize=10)
+        plt.gcf().text(0.1 + textlen, offs, "%.4f" % score, fontsize=10)
+
+        #Draw intercept
+        offs -= 0.035
+        plt.gcf().text(0.1, offs, 'Intercept', fontsize=10)
+        plt.gcf().text(0.1 + textlen, offs, "%f" % coeff[0], fontsize=10)
+
+        # Draw coefficients
+        i = 0
+        for name in self.wdata.wdname:
+            if i != 0:
+                offs -= 0.035
+                plt.gcf().text(0.1, offs, name, fontsize=10)
+                plt.gcf().text(0.1 + textlen, offs, "%f" % coeff[i], fontsize=10)
+            i += 1
+
+        ax = plt.subplot(layo+j+1)
         plt.subplot(layo+j+1)
-        plt.plot(wdtime, plotdata[cols[j]])
+        plt.plot(self.wdata.wdtime, self.wdata.wd[self.wdata.wdcol[0]])
+        plt.plot(self.wdata.wdtime, res, label='Model')
+        plt.legend(loc='center left', bbox_to_anchor=(1, 0.5));
+
+        j = j + 1
+
+        # Plot difference
+        plt.subplot(layo+j+1)
+        plt.plot(self.wdata.wdtime, diff, label='Diff')
+        plt.legend(loc='center left', bbox_to_anchor=(1, 0.5));
+
+        plt.show()
+        return
+
+
+        plotwind = Toplevel(self.lrwindow, bg=bgcolor)
+        plotwind.title('Linear Regression ' + self.wdwindow.name)
+        plotwind.minsize(600, 300)
+        main.set_icon(plotwind)
+
+        # Calculate model values
+        res = pd.Series([coeff[0]]*len(self.wdata.wd))
+        i = 0
+        for name in self.wdata.wdname:
+            if i != 0:
+                res += coeff[i] * self.wdata.wd[self.wdata.wdcol[i]]
+            i += 1
+
+        # Get difference between actual value and model
+        diff = self.wdata.wd[self.wdata.wdcol[0]] - res
+
+        self.lr_wframe = Frame(plotwind, bg=bgcolor)
+
+        score = r2_score(res, self.wdata.wd[self.wdata.wdcol[0]])
+        label = Label(self.lr_wframe, text='Score', bg=bgcolor)
+        label.grid(column=0, row=0, padx=20, pady=5, sticky=W)
+        label = Label(self.lr_wframe, text=str(score), bg=bgcolor)
+        label.grid(column=1, row=0, padx=20, pady=5, sticky=W)
+
+        # Draw linreg coefficients
+        msg = 'Intercept'
+        label = Label(self.lr_wframe, text=msg, bg=bgcolor)
+        label.grid(column=0, row=1, padx=20, pady=5, sticky=W)
+        msg = str(coeff[0])
+        label = Label(self.lr_wframe, text=msg, bg=bgcolor)
+        label.grid(column=1, row=1, padx=20, pady=5, sticky=W)
+
+        i = 0
+        for name in self.wdata.wdname:
+            if i != 0:
+                label = Label(self.lr_wframe, text=name, bg=bgcolor)
+                label.grid(column=0, row=i+1, padx=20, pady=5, sticky=W)
+                msg = str(coeff[i])
+                label = Label(self.lr_wframe, text=msg, bg=bgcolor)
+                label.grid(column=1, row=i+1, padx=20, pady=5, sticky=W)
+            i += 1
+
+        self.lr_wframe.pack(side=TOP, fill=X)
+
+        layo = 2 * 100 + 10
+
+        j = 0
+        fig = plt.figure()
+
+        # Plot actual value and model value
+        plt.subplot(layo+j+1)
+        plt.plot(self.wdata.wdtime, self.wdata.wd[self.wdata.wdcol[0]])
+        plt.plot(self.wdata.wdtime, res, label='Model')
         plt.legend(loc='center left', bbox_to_anchor=(1, 0.5));
         j = j + 1
 
-    plt.show()
-
-# Scatterplot callback
-def scatter_action_cb(): 
-    cols = []
-    i = 0;
-    for name in wdname:
-        if datasel[i].get():
-            cols.append(wdcol[i])
-        i += 1
-                     
-    if len(cols) != 0:
-        plotdata = wd[cols]
-    else:
-        plotdata = wd
-        
-    pd.tools.plotting.scatter_matrix(plotdata, diagonal="kde")
-    plt.tight_layout()
-    plt.show()
-
-# Correlationplot callback
-def corr_action_cb(): 
-    cols = []
-    i = 0;
-    for name in wdname:
-        if datasel[i].get():
-            cols.append(wdcol[i])
-        i += 1
-                     
-    if len(cols) != 0:
-        plotdata = wd[cols]
-    else:
-        plotdata = wd
-    corrmat = plotdata.corr()
-    #print corrmat
-    plt.figure()
-    hinton(corrmat)
-    plt.show()
-
-def corr2_action_cb(): 
-    cols = []
-    i = 0;
-    for name in wdname:
-        if datasel[i].get():
-            cols.append(wdcol[i])
-        i += 1
-                     
-    if len(cols) != 0:
-        plotdata = wd[cols]
-    else:
-        plotdata = wd
-    corrmat = plotdata.corr()
-    plt.figure()
-    sns.heatmap(corrmat, vmin=-1., vmax=1., square=False, cmap='RdBu_r').xaxis.tick_top()
-    plt.show()
-
-# Regressionplot callback
-def regr_action_cb(): 
-    cols = []
-    i = 0;
-    for name in wdname:
-        if datasel[i].get():
-            cols.append(wdcol[i])
-        i += 1
-                     
-    if len(cols) != 2:
-        tkMessageBox.showerror("Error", "Select two attributes")
-        return
-
-    plotdata = wd[cols]
-    plt.figure()
-    sns.regplot(x=cols[0],y=cols[1],data=plotdata)
-    plt.show()
-
-# Regression coefficients callback
-def regrcoef_action_cb(): 
-    global wd
-    global wdname
-
-    slr = LinearRegression()
-    
-    print "iloc 0:1 ", wd.iloc[:,0:1]
-    print "iloc 2:  ", wd.iloc[:,1:]
-
-    reg = slr.fit(wd.iloc[:,1:], wd.iloc[:,0:1])
-    print "coef ", slr.coef_
-    print "intercept ", slr.intercept_
-
-    w = Toplevel(window, bg=bgcolor)
-    w.title('Linear Regression Coefficients')
-    wframe = Frame(w, bg=bgcolor)
-
-    msg = 'Intercept'
-    label = Label(wframe, text=msg, bg=bgcolor)
-    label.grid(column=0, row=0, padx=20, pady=5, sticky=W)
-    msg = str(slr.intercept_[0])
-    label = Label(wframe, text=msg, bg=bgcolor)
-    label.grid(column=1, row=0, padx=20, pady=5, sticky=W)
-
-    i = 0
-    for name in wdname:
-        if i != 0:
-            label = Label(wframe, text=name, bg=bgcolor)
-            label.grid(column=0, row=i, padx=20, pady=5, sticky=W)
-            msg = str(slr.coef_[0][i-1])
-            label = Label(wframe, text=msg, bg=bgcolor)
-            label.grid(column=1, row=i, padx=20, pady=5, sticky=W)
-        i += 1
-
-    wframe.pack(side=TOP, fill=X)
-
-    res = pd.Series([slr.intercept_]*len(wd))
-    i = 0
-    for name in wdname:
-        if i != 0:
-            res += slr.coef_[0][i-1] * wd[wdcol[i]]
-        i += 1
-
-    diff = wd[wdcol[0]] - res
-
-    layo = 2 * 100 + 10
-
-    j = 0
-    fig = plt.figure()
-    plt.subplot(layo+j+1)
-    plt.plot(wdtime, wd[wdcol[0]])
-    #plt.legend(loc='center left', bbox_to_anchor=(1, 0.5));
-    #j = j + 1
-    #plt.subplot(layo+j+1)
-    plt.plot(wdtime, res, label='Result')
-    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5));
-    j = j + 1
-    plt.subplot(layo+j+1)
-    plt.plot(wdtime, diff, label='Diff')
-    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5));
-
-    #plt.show()
-    pframe = Frame(w, bg=bgcolor)
-    canvas = FigureCanvasTkAgg(fig, master=pframe)
-    plot_widget = canvas.get_tk_widget()
-    plot_widget.grid(column=0, row=0)
-    pframe.pack(side=BOTTOM, fill=X)
-
-# Move up callback
-def moveup_action_cb(): 
-    global wd
-    global wdcol
-    cix = []
-    i = 0;
-    for name in wdname:
-        if datasel[i].get():
-            cix.append(i)
-        i += 1
-                     
-    if len(cix) != 1:
-        tkMessageBox.showerror("Error", "Select one attributes")
-        return
-
-    if cix[0] == 0:
-        tkMessageBox.showerror("Error", "Can't move top object")
-        return
-    
-    cols = list(wd)
-    cols[cix[0]-1],cols[cix[0]] = cols[cix[0]],cols[cix[0]-1]
-    wdname[cix[0]-1],wdname[cix[0]] = wdname[cix[0]],wdname[cix[0]-1]
-    wd = wd.ix[:,cols]
-    wd.columns = wdcol
-    toolbar.pack_forget()
-    toolbar.destroy()
-    dataframe.pack_forget()
-    dataframe.destroy()
-    create_toolbar()
-    create_dataframe()
-    create_datamenu()
-    datasel[cix[0]-1].set(True)
-    
-# Move down callback
-def movedown_action_cb(): 
-    global wd
-    global wdcol
-    cix = []
-    i = 0;
-    for name in wdname:
-        if datasel[i].get():
-            cix.append(i)
-        i += 1
-                     
-    if len(cix) != 1:
-        tkMessageBox.showerror("Error", "Select one attributes")
-        return
-
-    if cix[0] == len(wdname) - 1:
-        tkMessageBox.showerror("Error", "Can't move bottom object")
-        return
-    
-    cols = list(wd)
-    cols[cix[0]],cols[cix[0]+1] = cols[cix[0]+1],cols[cix[0]]
-    wdname[cix[0]],wdname[cix[0]+1] = wdname[cix[0]+1],wdname[cix[0]]
-    wd = wd.ix[:,cols]
-    wd.columns = wdcol
-    toolbar.pack_forget()
-    toolbar.destroy()
-    dataframe.pack_forget()
-    dataframe.destroy()
-    create_toolbar()
-    create_dataframe()
-    create_datamenu()
-    datasel[cix[0]+1].set(True)
-
-# Revert callback
-def revert_action_cb():
-    global wd
-    global wdtime
-    global wdcol
-    global wdname
-    
-    wd = origdata.loc[:,origcol[1]:]
-    wdtime = origdata.loc[:,origcol[0]]
-
-    wdcol = []
-    wdname = []
-
-    i = 0
-    while i < wd.shape[1]:
-        colname = "A" + str(i+1)
-        wdcol.append(colname)
-        wdname.append(origcol[i+1])
-        i += 1
-
-    wd.columns = wdcol
-
-    toolbar.pack_forget()
-    toolbar.destroy()
-    dataframe.pack_forget()
-    dataframe.destroy()
-    create_toolbar()
-    create_dataframe()
-    create_datamenu()    
-
-# Clip callback
-def clip_action_cb():
-    global minentry
-    global maxentry
-    global clipdia
-    
-    clipdia = Toplevel(window, bg=bgcolor)
-    clipdia.title('Clip')
-
-    defaultmin = StringVar()
-    minlabel = Label(clipdia, text='Min', bg=bgcolor)
-    minlabel.grid(column=0, row=0, padx=20, pady=5, sticky=W)
-    minentry = Entry(clipdia, textvariable=defaultmin, bg=bgcolor)
-    defaultmin.set(str(0))
-    minentry.grid(column=1, row=0, padx=20, pady=5, sticky=W)
-
-    # Max entry
-    defaultmax = StringVar()
-    maxlabel = Label(clipdia, text='Max', bg=bgcolor)
-    maxlabel.grid(column=0, row=1, padx=20, pady=5, sticky=W)
-    maxentry = Entry(clipdia, textvariable=defaultmax, bg=bgcolor)
-    defaultmax.set(str(wd.shape[0]))
-    maxentry.grid(column=1, row=1, padx=20, pady=5, sticky=W)
-
-    readdatabutton = Button(clipdia, text="Apply", command=clip_action_ok_cb, bg=buttoncolor);
-    readdatabutton.grid(column=0, row=2, padx=60, pady=20, sticky=W)
-
-    readdatabutton = Button(clipdia, text="Cancel", command=clip_action_cancel_cb, bg=buttoncolor);
-    readdatabutton.grid(column=1, row=2, padx=60, pady=20, sticky=W)
-
-def clip_action_cancel_cb():
-    clipdia.destroy()
-
-def clip_action_ok_cb():
-    global wd
-    global wdtime
-    global wdname
-    global wdcol
-
-    minvalue = int(minentry.get())
-    maxvalue = int(maxentry.get())
-    clipdia.destroy()
-            
-    wd = wd[minvalue:maxvalue]
-    wdtime = wdtime[minvalue:maxvalue]
-    toolbar.pack_forget()
-    toolbar.destroy()
-    dataframe.pack_forget()
-    dataframe.destroy()
-    create_toolbar()
-    create_dataframe()
-    create_datamenu()    
-    
-# Delete column callback
-def deletecolumn_action_cb():
-    global wd
-    global wdtime
-    global wdname
-    global wdcol
-    global datasel
-
-    answer = tkMessageBox.askquestion('Delete columns', 'Do you want to delete the selected columns')
-    if answer == 'yes':
-        i = 0
-        new_wdcol = []
-        new_wdname = []
-        cols = []
-        for name in wdname:
-            if datasel[i].get() == 0:
-                new_wdcol.append(wdcol[i])
-                new_wdname.append(wdname[i])
-            i += 1
-                     
-        print new_wdname
-        if len(new_wdname) == len(wdname):
-            tkMessageBox.showerror("Error", "No columns selected")
-            return
-        
-        if len(new_wdcol) != 0:
-            wd = wd[new_wdcol]
-            wdcol = new_wdcol
-            wdname = new_wdname
-
-            i = 0
-            while i < wd.shape[1]:
-                colname = "A" + str(i+1)
-                wdcol[i] = colname
-                i += 1
-            print wdcol
-            wd.columns = wdcol
-        
-        toolbar.pack_forget()
-        toolbar.destroy()
-        dataframe.pack_forget()
-        dataframe.destroy()
-        create_toolbar()
-        create_dataframe()
-        create_datamenu()    
-    else:
-        print 'No'
-        
-# Convert column callback
-def convcolumn_action_cb():
-    global add_dia
-    global sel_copy
-    global sel_square
-    global sel_sqrt
-    global sel_exp
-    global sel_log
-    global sel_integral
-    global sel_derivate
-    global sel_add
-    global sel_sub
-    global sel_mul
-    global sel_div
-    global sel_curve
-    global sel_constant
-    global sel_shift
-    global fcurve
-    global constantentry
-    global shiftentry
-    global add_replace
-    
-    cix = []
-    i = 0;
-    for name in wdname:
-        if datasel[i].get():
-            cix.append(i)
-        i += 1
-                     
-    if len(cix) != 1:
-        tkMessageBox.showerror("Error", "Select one attribute")
-        return
-
-    add_replace = 1
-    add_dia = Toplevel(window, bg=bgcolor)
-    add_dia.title('Convert Column')
-
-    fcurve = None
-    sel_copy = IntVar()
-    sel_square = IntVar()
-    sel_sqrt = IntVar()
-    sel_exp = IntVar()
-    sel_log = IntVar()
-    sel_integral = IntVar()
-    sel_derivate = IntVar()
-    sel_add = IntVar()
-    sel_sub = IntVar()
-    sel_mul = IntVar()
-    sel_div = IntVar()
-    sel_curve = IntVar()
-    sel_constant = IntVar()
-    sel_shift = IntVar()
-
-    checkbox = Checkbutton(add_dia, text='Square', variable=sel_square,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=0, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Squareroot', variable=sel_sqrt,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=1, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Exp', variable=sel_exp,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=2, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Log', variable=sel_log,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=3, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Integral', variable=sel_integral,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=4, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Derivate', variable=sel_derivate,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=5, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Curve', variable=sel_curve,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=6, padx=20, pady=5, sticky=W)
-    button = Button(add_dia, text="Open curve file", command=addcol_action_curve_cb, bg=buttoncolor) 
-    button.grid(column=1, row=6, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Shift', variable=sel_shift,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=7, padx=20, pady=5, sticky=W)
-    shiftentry = Entry(add_dia, bg=bgcolor)
-    shiftentry.grid(column=1, row=7, padx=20, pady=5, sticky=W)
-
-    button = Button(add_dia, text="Apply", command=addcol_action_ok_cb, bg=buttoncolor);
-    button.grid(column=0, row=8, padx=60, pady=20, sticky=W)
-
-    button = Button(add_dia, text="Cancel", command=addcol_action_cancel_cb, bg=buttoncolor);
-    button.grid(column=1, row=8, padx=60, pady=20, sticky=W)
-
-# Add column callback
-def addcolumn_action_cb():
-    global add_dia
-    global sel_copy
-    global sel_square
-    global sel_sqrt
-    global sel_exp
-    global sel_log
-    global sel_integral
-    global sel_derivate
-    global sel_add
-    global sel_sub
-    global sel_mul
-    global sel_div
-    global sel_curve
-    global sel_constant
-    global sel_shift
-    global fcurve
-    global constantentry
-    global shiftentry
-    global add_replace
-    
-    add_replace = 0
-    
-    add_dia = Toplevel(window, bg=bgcolor)
-    add_dia.title('Add Column')
-
-    fcurve = None
-    sel_copy = IntVar()
-    sel_square = IntVar()
-    sel_sqrt = IntVar()
-    sel_exp = IntVar()
-    sel_log = IntVar()
-    sel_integral = IntVar()
-    sel_derivate = IntVar()
-    sel_add = IntVar()
-    sel_sub = IntVar()
-    sel_mul = IntVar()
-    sel_div = IntVar()
-    sel_curve = IntVar()
-    sel_constant = IntVar()
-    sel_shift = IntVar()
-    checkbox = Checkbutton(add_dia, text='Copy', variable=sel_copy,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=0, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Square', variable=sel_square,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=1, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Squareroot', variable=sel_sqrt,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=2, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Exp', variable=sel_exp,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=3, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Log', variable=sel_log,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=4, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Integral', variable=sel_integral,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=5, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Derivate', variable=sel_derivate,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=6, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Add', variable=sel_add,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=7, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Sub', variable=sel_sub,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=8, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Multiply', variable=sel_mul,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=9, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Divide', variable=sel_div,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=10, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Curve', variable=sel_curve,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=11, padx=20, pady=5, sticky=W)
-    button = Button(add_dia, text="Open curve file", command=addcol_action_curve_cb, bg=buttoncolor) 
-    button.grid(column=1, row=11, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Constant', variable=sel_constant,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=12, padx=20, pady=5, sticky=W)
-    constantentry = Entry(add_dia, bg=bgcolor)
-    constantentry.grid(column=1, row=12, padx=20, pady=5, sticky=W)
-
-    checkbox = Checkbutton(add_dia, text='Shift', variable=sel_shift,
-                           highlightthickness=0, bg=bgcolor)
-    checkbox.grid(column=0, row=13, padx=20, pady=5, sticky=W)
-    shiftentry = Entry(add_dia, bg=bgcolor)
-    shiftentry.grid(column=1, row=13, padx=20, pady=5, sticky=W)
-
-    button = Button(add_dia, text="Apply", command=addcol_action_ok_cb, bg=buttoncolor);
-    button.grid(column=0, row=14, padx=60, pady=20, sticky=W)
-
-    button = Button(add_dia, text="Cancel", command=addcol_action_cancel_cb, bg=buttoncolor);
-    button.grid(column=1, row=14, padx=60, pady=20, sticky=W)
-
-def addcol_action_curve_cb():
-    global fcurve
-    file = tkFileDialog.askopenfilename(initialdir='./', title='Open curve file',
-                                        filetypes=[('dat files','*.dat'),('all files','*.*')])
-    fcurve = None
-    if file != '':
-        curve = pd.read_csv(file, header=None)
-        fcurve = interp1d(curve.loc[:,0],curve.loc[:,1], fill_value='extrapolate')
-
-def addcol_action_cancel_cb():
-    add_dia.destroy()
-
-def addcol_action_ok_cb():
-    global wd
-    global wdtime
-    global wdcol
-    global wdname
-    global sel_copy
-    global sel_square
-    global sel_sqrt
-    global sel_exp
-    global sel_log
-    global sel_integral
-    global sel_derivate
-    global sel_add
-    global sel_sub
-    global sel_mul
-    global sel_div
-    global sel_curve
-    global sel_shift
-    global fcurve
-    global constantentry
-    global shiftentry
-    global add_replace
-    
-    cix = []
-    i = 0;
-    for name in wdname:
-        if datasel[i].get():
-            cix.append(i)
-        i += 1
-                     
-    if sel_constant.get():   
+        # Plot difference
+        plt.subplot(layo+j+1)
+        plt.plot(self.wdata.wdtime, diff, label='Diff')
+        plt.legend(loc='center left', bbox_to_anchor=(1, 0.5));
+
+        self.lr_pframe = Frame(plotwind, bg=bgcolor)
+        canvas = FigureCanvasTkAgg(fig, master=self.lr_pframe)
+        plot_widget = canvas.get_tk_widget()
+        plot_widget.grid(column=0, row=0)
+        self.lr_pframe.pack(side=BOTTOM, fill=X)
+
+    # Help callback
+    def help_action_cb(self):
+        os.system('co_help -s ' + pwr_exe + '/en_us/man_mva.dat -t mva_linreg_model &')
         pass
-    elif sel_add.get() or sel_sub.get() or sel_mul.get() or sel_div.get():   
-        if len(cix) != 2:
-            tkMessageBox.showerror("Error", "Select two attributes")
+
+#
+# End Linear regression class
+#
+
+#
+# MLP regressor model class
+#
+class MLPModel:
+    # Constructor, create empty window
+    def __init__(self, wdwindow):
+        self.lr_wframe = None
+        self.lr_pframe = None
+        self.wdwindow = wdwindow
+        self.wdata = wdwindow.wdata
+        self.fignum = 1
+
+        self.lrwindow = Toplevel(wdwindow.window, bg=bgcolor)
+        self.lrwindow.title('MLP Regressor ' + wdwindow.name)
+        self.lrwindow.minsize(600, 300)
+        main.set_icon(self.lrwindow)
+
+        # Create menu
+        menubar = Menu(self.lrwindow, bg=buttoncolor)
+        filemenu = Menu(menubar, bg=buttoncolor)
+        filemenu.add_command(label='Create Model', command=self.create_action_cb)
+        filemenu.add_command(label='Apply Model', command=self.open_action_cb)
+        filemenu.add_command(label='Save Model', command=self.save_action_cb)
+        filemenu.add_command(label='Export Model', command=self.export_action_cb)
+        menubar.add_cascade(label='File', menu=filemenu)
+        helpmenu = Menu(menubar, bg=buttoncolor)
+        helpmenu.add_command(label='Help', command=self.help_action_cb)
+        menubar.add_cascade(label='Help', menu=helpmenu)
+
+        self.lrwindow.config(menu=menubar)
+
+        # Solver options list
+        list = ['adam', 'lbfgs', 'sgd']
+        self.solver = StringVar()
+        self.solver.set('adam')
+        label = Label(self.lrwindow, text='Solver')
+        label.grid(column=0, row=0, padx=0, pady=5, sticky=W)
+        label.config(bg=bgcolor)
+        optmenu = OptionMenu(self.lrwindow, self.solver, *list)
+        optmenu.grid(column=1, row=0, padx=20, pady=5, sticky=W)
+        optmenu.config(bg=bgcolor)
+
+        # Activation options list
+        list = ['identity', 'logistic', 'tanh', 'relu']
+        self.activation = StringVar()
+        self.activation.set('tanh')
+        label = Label(self.lrwindow, text='Activation')
+        label.grid(column=0, row=1, padx=0, pady=5, sticky=W)
+        label.config(bg=bgcolor)
+        optmenu = OptionMenu(self.lrwindow, self.activation, *list)
+        optmenu.grid(column=1, row=1, padx=20, pady=5, sticky=W)
+        optmenu.config(bg=bgcolor)
+
+        # Max iter entry
+        self.maxiter = IntVar()
+        label = Label(self.lrwindow, text='Max Iterations')
+        label.grid(column=0, row=2, padx=0, pady=5, sticky=W)
+        label.config(bg=bgcolor)
+        entry = Entry(self.lrwindow, textvariable=self.maxiter, width=8)
+        self.maxiter.set(20000)
+        entry.grid(column=1, row=2, padx=20, pady=5, sticky=W)
+        entry.config(bg=bgcolor)
+
+        # Hidden layer sizes entry
+        label = Label(self.lrwindow, text='Hidden Layer Sizes')
+        label.grid(column=0, row=3, padx=0, pady=5, sticky=W)
+        label.config(bg=bgcolor)
+
+        self.layersize1 = IntVar()
+        entry = Entry(self.lrwindow, textvariable=self.layersize1, width=4)
+        self.layersize1.set(20)
+        entry.grid(column=1, row=3, padx=20, pady=5, sticky=W)
+        entry.config(bg=bgcolor)
+
+        self.layersize2 = IntVar()
+        entry = Entry(self.lrwindow, textvariable=self.layersize2, width=4)
+        self.layersize2.set(20)
+        entry.grid(column=2, row=3, padx=20, pady=5, sticky=W)
+        entry.config(bg=bgcolor)
+
+        self.layersize3 = IntVar()
+        entry = Entry(self.lrwindow, textvariable=self.layersize3, width=4)
+        self.layersize3.set(20)
+        entry.grid(column=3, row=3, padx=20, pady=5, sticky=W)
+        entry.config(bg=bgcolor)
+
+        self.layersize4 = IntVar()
+        entry = Entry(self.lrwindow, textvariable=self.layersize4, width=4)
+        self.layersize4.set(0)
+        entry.grid(column=4, row=3, padx=20, pady=5, sticky=W)
+        entry.config(bg=bgcolor)
+
+        self.layersize5 = IntVar()
+        entry = Entry(self.lrwindow, textvariable=self.layersize5, width=4)
+        self.layersize5.set(0)
+        entry.grid(column=5, row=3, padx=20, pady=5, sticky=W)
+        entry.config(bg=bgcolor)
+
+        # alpha entry
+        label = Label(self.lrwindow, text='Alpha')
+        label.grid(column=0, row=4, padx=0, pady=5, sticky=W)
+        label.config(bg=bgcolor)
+        self.alpha = DoubleVar()
+        entry = Entry(self.lrwindow, textvariable=self.alpha, width=8)
+        self.alpha.set(0.0001)
+        entry.grid(column=1, row=4, padx=20, pady=5, sticky=W)
+        entry.config(bg=bgcolor)
+
+        # beta_1 entry
+        label = Label(self.lrwindow, text='Beta1')
+        label.grid(column=0, row=5, padx=0, pady=5, sticky=W)
+        label.config(bg=bgcolor)
+        self.beta1 = DoubleVar()
+        entry = Entry(self.lrwindow, textvariable=self.beta1, width=8)
+        self.beta1.set(0.9)
+        entry.grid(column=1, row=5, padx=20, pady=5, sticky=W)
+        entry.config(bg=bgcolor)
+
+        # beta_2 entry
+        label = Label(self.lrwindow, text='Beta2')
+        label.grid(column=0, row=6, padx=0, pady=5, sticky=W)
+        label.config(bg=bgcolor)
+        self.beta2 = DoubleVar()
+        entry = Entry(self.lrwindow, textvariable=self.beta2, width=8)
+        self.beta2.set(0.999)
+        entry.grid(column=1, row=6, padx=20, pady=5, sticky=W)
+        entry.config(bg=bgcolor)
+
+        # Learning rate options list
+        list = ['constant', 'invscaling', 'adaptive']
+        self.learningrate = StringVar()
+        self.learningrate.set('constant')
+        label = Label(self.lrwindow, text='Learning rate')
+        label.grid(column=0, row=7, padx=0, pady=5, sticky=W)
+        label.config(bg=bgcolor)
+        optmenu = OptionMenu(self.lrwindow, self.learningrate, *list)
+        optmenu.grid(column=1, row=7, padx=20, pady=5, sticky=W)
+        optmenu.config(bg=bgcolor)
+
+        # learning rate init entry
+        label = Label(self.lrwindow, text='Initial learning rate')
+        label.grid(column=0, row=8, padx=0, pady=5, sticky=W)
+        label.config(bg=bgcolor)
+        self.learningrateinit = DoubleVar()
+        entry = Entry(self.lrwindow, textvariable=self.learningrateinit, width=8)
+        self.learningrateinit.set(0.001)
+        entry.grid(column=1, row=8, padx=20, pady=5, sticky=W)
+        entry.config(bg=bgcolor)
+
+        # tolerance entry
+        label = Label(self.lrwindow, text='Tolerance')
+        label.grid(column=0, row=9, padx=0, pady=5, sticky=W)
+        label.config(bg=bgcolor)
+        self.tol = DoubleVar()
+        entry = Entry(self.lrwindow, textvariable=self.tol, width=8)
+        self.tol.set(0.0001)
+        entry.grid(column=1, row=9, padx=20, pady=5, sticky=W)
+        entry.config(bg=bgcolor)
+
+        # Verbose options list
+        list = ['True', 'False']
+        self.verbose = StringVar()
+        self.verbose.set('True')
+        label = Label(self.lrwindow, text='Verbose')
+        label.grid(column=0, row=10, padx=0, pady=5, sticky=W)
+        label.config(bg=bgcolor)
+        optmenu = OptionMenu(self.lrwindow, self.verbose, *list)
+        optmenu.grid(column=1, row=10, padx=20, pady=5, sticky=W)
+        optmenu.config(bg=bgcolor)
+
+
+    # Save menu callback
+    def save_action_cb(self):
+
+        file = tkFileDialog.asksaveasfilename(initialdir='./', title='Select file',
+                                          filetypes=[('mlpm files','*.mlpm'),('all files','*.*')])
+        if file != '':
+            params = self.mlp.get_params()
+
+            all = [[self.mlp.n_layers_, self.mlp.n_outputs_, self.mlp.out_activation_], params,
+                   self.mlp.intercepts_, self.mlp.coefs_]
+            pickle.dump(all, open(file, 'wb'))
+
+    # Open menu callback
+    def open_action_cb(self):
+        file = tkFileDialog.askopenfilename(initialdir='./', title='Open Coefficients',
+                                            filetypes=[('mlpm files','*.mlpm'),('all files','*.*')])
+        if file != '':
+            all = pickle.load(open(file, 'rb'))
+
+            self.mlp = MLPRegressor()
+
+            params = all[1]
+            for par in params:
+                if par == 'beta_1':
+                    self.mlp.set_params(beta_1=params[par])
+                elif par == 'warm_start':
+                    self.mlp.set_params(warm_start=params[par])
+                elif par == 'beta_2':
+                    self.mlp.set_params(beta_2=params[par])
+                elif par == 'shuffle':
+                    self.mlp.set_params(shuffle=params[par])
+                elif par == 'verbose':
+                    self.mlp.set_params(verbose=params[par])
+                elif par == 'nesterovs_momentum':
+                    self.mlp.set_params(nesterovs_momentum=params[par])
+                elif par == 'activation':
+                    self.mlp.set_params(activation=params[par])
+                elif par == 'max_iter':
+                    self.mlp.set_params(max_iter=params[par])
+                elif par == 'batch_size':
+                    self.mlp.set_params(batch_size=params[par])
+                elif par == 'power_t':
+                    self.mlp.set_params(power_t=params[par])
+                elif par == 'random_state':
+                    self.mlp.set_params(random_state=params[par])
+                elif par == 'momentum':
+                    self.mlp.set_params(momentum=params[par])
+                elif par == 'tol':
+                    self.mlp.set_params(tol=params[par])
+                elif par == 'validation_fraction':
+                    self.mlp.set_params(validation_fraction=params[par])
+                elif par == 'alpha':
+                    self.mlp.set_params(alpha=params[par])
+                elif par == 'solver':
+                    self.mlp.set_params(solver=params[par])
+                elif par == 'early_stopping':
+                    self.mlp.set_params(early_stopping=params[par])
+                elif par == 'learning_rate':
+                    self.mlp.set_params(learning_rate=params[par])
+                elif par == 'learning_rate_init':
+                    self.mlp.set_params(learning_rate_init=params[par])
+                elif par == 'hidden_layer_sizes':
+                    self.mlp.set_params(hidden_layer_sizes=params[par])
+
+                self.mlp.intercepts_ = all[2]
+                self.mlp.coefs_ = all[3]
+                self.mlp.n_layers_ = all[0][0]
+                self.mlp.n_outputs_ = all[0][1]
+                self.mlp.out_activation_ = all[0][2]
+
+            self.mlp_draw()
+        
+    # Export menu callback
+    def export_action_cb(self):
+
+        file = tkFileDialog.asksaveasfilename(initialdir='./', title='Select file',
+                                          filetypes=[('txt files','*.txt'),('all files','*.*')])
+        if file != '':
+            params = self.mlp.get_params()
+
+            all = [[self.mlp.n_layers_, self.mlp.n_outputs_, self.mlp.out_activation_], params,
+                   self.mlp.intercepts_, self.mlp.coefs_]
+            fp = open(file, 'w')
+            fp.write('Layers ' + str(self.mlp.n_layers_) + '\n')
+            fp.write('LayerSizes')
+            inputs = len(self.mlp.coefs_[0])
+            layer_sizes = list(params['hidden_layer_sizes'])
+            layer_sizes.append(1)
+            fp.write(' ' + str(inputs))
+            for size in layer_sizes:
+                fp.write(' ' + str(size))
+            fp.write(' ' + str(self.mlp.n_outputs_) + '\n')
+            fp.write('Activation ' + params['activation'] +  '\n')
+            fp.write('Intercepts\n')
+            i = 0
+            while i < self.mlp.n_layers_ - 1:
+                j = 0
+                print 'layer_sizes', i, len(layer_sizes), layer_sizes
+                while j < layer_sizes[i]:
+                    fp.write(str(self.mlp.intercepts_[i][j]) + ' ')
+                    j += 1
+                fp.write('\n')
+                i += 1
+            fp.write('Coefs\n')
+            i = 0
+            while i < self.mlp.n_layers_ - 1:
+                j = 0
+                while j < layer_sizes[i]:
+                    if i == 0:
+                        k = 0
+                        while k < inputs:
+                            fp.write(str(i) + ' ' + str(j) + ' ' + str(k) + ' ' + str(self.mlp.coefs_[i][k][j]) + '\n')
+                            k += 1
+                    else:
+                        k = 0
+                        while k < layer_sizes[i-1]:
+                            fp.write(str(i) + ' ' + str(j) + ' ' + str(k) + ' ' + str(self.mlp.coefs_[i][k][j]) + '\n')
+                            k += 1
+                    j += 1
+                    #fp.write('\n')
+                i += 1
+            fp.close()
+
+    # Create menu callback
+    def create_action_cb(self):
+
+        solver = self.solver.get()
+        activation = self.activation.get()
+        maxiter = self.maxiter.get()
+        verbose = self.verbose.get() == 'True'
+        layersizes = []
+        if self.layersize1.get() > 0:
+            layersizes.append(self.layersize1.get())
+        if self.layersize2.get() > 0:
+            layersizes.append(self.layersize2.get())
+        if self.layersize3.get() > 0:
+            layersizes.append(self.layersize3.get())
+        if self.layersize4.get() > 0:
+            layersizes.append(self.layersize4.get())
+        if self.layersize5.get() > 0:
+            layersizes.append(self.layersize5.get())
+        beta1 = self.beta1.get()
+        beta2 = self.beta2.get()
+        alpha = self.alpha.get()
+        learningrate = self.learningrate.get()
+        learningrateinit = self.learningrateinit.get()
+        tol = self.tol.get()
+
+        self.mlp = MLPRegressor(solver=solver, random_state=0, activation=activation,
+                                hidden_layer_sizes=layersizes, verbose=verbose, max_iter=maxiter,
+                                early_stopping=False, learning_rate=learningrate,learning_rate_init=learningrateinit,
+                                beta_1=beta1, beta_2=beta2, alpha=alpha, tol=tol)
+    
+        X = self.wdata.wd.iloc[:,1:]
+        y = self.wdata.wd.iloc[:,0:1].values.ravel()
+        self.scaler = StandardScaler()
+        self.scaler.fit(X)
+        reg = self.mlp.fit(X, y)
+        coeff = 0
+        params = self.mlp.get_params()
+        self.mlp_draw()
+
+    def mlp_predict(self, X):
+        inputs = len(self.mlp.coefs_[0])
+        params = self.mlp.get_params()
+        layer_sizes = list(params['hidden_layer_sizes'])
+        layer_sizes.append(1)
+        h = [None] * (self.mlp.n_layers_ - 1)
+        i = 0
+        while i < self.mlp.n_layers_ - 1:
+            if i < self.mlp.n_layers_ - 2:
+                print 'i+1', i+1, len(h)
+                h[i] = [None] * len(self.mlp.coefs_[i+1])
+            else:
+                h[i] = [None] * 1
+            i += 1
+
+        n = 0
+        activation = params['activation']
+        res2 = pd.Series([None]*len(X))
+        while n < 500:
+            i = 0
+            while i < self.mlp.n_layers_ - 1:
+                j = 0
+                while j < layer_sizes[i]:
+                    h[i][j] = self.mlp.intercepts_[i][j]
+                    k = 0
+                    if i == 0:
+                        while k < inputs:
+                            x = X[self.wdata.wdcol[k+1]][n]
+                            h[i][j] += self.mlp.coefs_[i][k][j] * x
+                            k += 1
+                    else:
+                        while k < layer_sizes[i-1]:
+                            h[i][j] += self.mlp.coefs_[i][k][j] * h[i-1][k]
+                            k += 1
+                    if i != self.mlp.n_layers_ - 2:
+                        if  activation == 'tanh':
+                            h[i][j] = math.tanh(h[i][j])
+                        elif activation == 'identity':
+                            pass
+                        elif activation == 'relu':
+                            if h[i][j] < 0:
+                                h[i][j] = 0
+                        elif activation == 'logistic':
+                            h[i][j] = 1/(1+math.exp(-h[i][j]))
+                    j += 1
+
+                i += 1
+            res2[n] = h[i-1][0]
+            n += 1
+        return res2
+    
+    # Draw coefficients and curves
+    def mlp_draw(self):
+
+        X = self.wdata.wd.iloc[:,1:]
+        y = self.wdata.wd.iloc[:,0:1].values.ravel()
+
+        res = self.mlp.predict(X)
+
+        score = r2_score(res, self.wdata.wd[self.wdata.wdcol[0]])
+        print 'Score', score
+
+        layo = 1 * 100 + 10
+
+        j = 0
+        fig = plt.figure(self.fignum)
+        self.fignum += 1
+        fig.canvas.set_window_title('MLP Regressor ' + self.wdwindow.name)
+
+        #mgr = plt.get_current_fig_manager()
+        #main.set_icon(mgr.window)
+        ax = plt.subplot(layo+j+1)
+        plt.plot(self.wdata.wdtime, self.wdata.wd[self.wdata.wdcol[0]])
+        plt.plot(self.wdata.wdtime, res, label='Model')
+        plt.legend(loc='center left', bbox_to_anchor=(1, 0.5));
+        plt.gcf().text(0.1, 0.95, 'Score  ' + "%.4f" % score, fontsize=10)
+        plt.show()
+        fig = plt.figure()
+
+    # Help callback
+    def help_action_cb(self):
+        os.system('co_help -s ' + pwr_exe + '/en_us/man_mva.dat -t mva_linreg_model &')
+        pass
+
+#
+# End MLP regressor class
+#
+
+
+class WdWindow:
+    # Constructor, create empty window
+    def __init__(self):
+        global window
+
+        main.add_appl(self)
+        
+        self.name = ''
+        self.wdata = WData()
+        self.dataframe = None
+        self.add_dia = None
+        self.clipdia = None
+        self.fcurve = None
+        self.fcurvefile = None
+        self.constantentry = None
+        self.shiftentry = None
+        self.curveentry = None
+        self.datasel = None
+
+        self.window = Toplevel(window, bg=bgcolor)
+        self.window.title(self.name)
+        self.window.minsize(600, 200)
+        self.window.protocol("WM_DELETE_WINDOW", self.close_action_cb)
+        main.set_icon(self.window)
+        self.create_toolbar()
+        self.create_dataframe()
+        self.create_datamenu()
+
+    def empty(self):
+        return self.wdata.empty()
+    
+    # Rename callback
+    def rename_action_cb(self): 
+        ValueDialog(self.window, "Rename", "Name", self.rename_ok_cb)
+                    
+    def rename_ok_cb(self, name):
+        self.name = name
+        self.wdata.setName(name)
+        self.window.title(self.name)
+
+    def get_select(self):
+        if self.empty():
+            return None
+        mask = [None] * len(self.datasel)
+        i = 0
+        for sel in self.datasel:
+            mask[i] = (sel.get() == 1)
+            i += 1
+        return mask
+
+    # Plot callback
+    def plot_action_cb(self): 
+        if self.empty():
+            return        
+        self.wdata.plot(self.get_select())
+
+    # Individual plot callback
+    def indplot_action_cb(self): 
+        if self.empty():
             return
-        ser = pd.Series(wd[wdcol[cix[0]]])
-    else:
+        self.wdata.indplot(self.get_select())
+
+    # Scatterplot callback
+    def scatter_action_cb(self): 
+        if self.empty():
+            return
+        self.wdata.scatterplot(self.get_select())
+
+    # Correlationplot callback
+    def corr_action_cb(self): 
+        if self.empty():
+            return
+        self.wdata.correlation_plot(self.get_select())
+
+    def corr2_action_cb(self): 
+        if self.empty():
+            return
+        self.wdata.correlation2_plot(self.get_select())
+
+    # Regressionplot callback
+    def regr_action_cb(self): 
+        if self.empty():
+            return
+        try:
+            self.wdata.regression_plot(self.get_select())
+        except co.Error as e:
+            tkMessageBox.showerror("Error", e.str)
+
+    # Histogram callback
+    def histogram_action_cb(self): 
+        if self.empty():
+            return
+
+        fig = plt.figure()
+        ax = fig.add_subplot(1,1,1)
+        self.wdata.wd.hist(bins=50, ax=ax)
+        fig.show()
+
+    # Statistics callback
+    def stat_action_cb(self): 
+        if self.empty():
+            return
+
+        mean = self.wdata.wd.mean()
+        std = self.wdata.wd.std()
+
+        dia = Toplevel(self.window, bg=bgcolor)
+        dia.title('Statistics')
+        main.set_icon(dia)
+
+        l = Label(dia, text='Column', bg=bgcolor)
+        l.grid(column=0, row=0, padx=20, pady=5, sticky=W)
+        l = Label(dia, text='Mean', bg=bgcolor)
+        l.grid(column=1, row=0, padx=20, pady=5, sticky=W)
+        l = Label(dia, text='Std', bg=bgcolor)
+        l.grid(column=2, row=0, padx=20, pady=5, sticky=W)
+
+        i = 0
+        for col in self.wdata.wdcol:
+            print col, mean[i], std[i]
+            l = Label(dia, text=col, bg=bgcolor)
+            l.grid(column=0, row=i+1, padx=20, pady=5, sticky=W)
+            l = Label(dia, text=str(mean[i]), bg=bgcolor)
+            l.grid(column=1, row=i+1, padx=20, pady=5, sticky=W)
+            l = Label(dia, text=str(std[i]), bg=bgcolor)
+            l.grid(column=2, row=i+1, padx=20, pady=5, sticky=W)
+            i += 1
+
+
+    def regrcoef_action_cb(self): 
+        if self.empty():
+            return
+        wdwindow = self
+        LinRegModel(wdwindow, LinRegModel.TYPE_LINEAR_REGRESSION)
+    
+    def ridgeregr_action_cb(self): 
+        if self.empty():
+            return
+        wdwindow = self
+        LinRegModel(wdwindow, LinRegModel.TYPE_RIDGE_REGRESSION)
+    
+    def lassoregr_action_cb(self): 
+        if self.empty():
+            return
+        wdwindow = self
+        LinRegModel(wdwindow, LinRegModel.TYPE_LASSO_REGRESSION)
+    
+    def mlp_action_cb(self): 
+        if self.empty():
+            return
+        wdwindow = self
+        MLPModel(wdwindow)
+    
+    # Move up callback
+    def moveup_action_cb(self): 
+        if self.empty():
+            return
+
+        idx = 0
+        for sel in self.datasel:
+            if sel.get() == 1:
+                break
+            idx += 1
+        try:
+            self.wdata.moveup(self.get_select())
+        except co.Error as e:
+            tkMessageBox.showerror("Error", e.str)
+            return
+
+        self.redraw()
+        self.datasel[idx-1].set(True)
+    
+    # Move down callback
+    def movedown_action_cb(self): 
+        if self.empty():
+            return
+
+        idx = 0
+        for sel in self.datasel:
+            if sel.get() == 1:
+                break
+            idx += 1
+        try:
+            self.wdata.movedown(self.get_select())
+        except co.Error as e:
+            tkMessageBox.showerror("Error", e.str)
+            return
+
+        self.redraw()
+        self.datasel[idx+1].set(True)
+
+    # Revert callback
+    def revert_action_cb(self):
+        self.wdata.revert()
+        self.redraw()
+
+    # Clip callback
+    def clip_action_cb(self):
+        if self.empty():
+            return
+    
+        self.clipdia = Toplevel(self.window, bg=bgcolor)
+        self.clipdia.title('Clip')
+        main.set_icon(self.clipdia)
+
+        defaultmin = StringVar()
+        minlabel = Label(self.clipdia, text='Min', bg=bgcolor)
+        minlabel.grid(column=0, row=0, padx=20, pady=5, sticky=W)
+        self.minentry = Entry(self.clipdia, textvariable=defaultmin, bg=bgcolor)
+        defaultmin.set(str(0))
+        self.minentry.grid(column=1, row=0, padx=20, pady=5, sticky=W)
+
+        # Max entry
+        defaultmax = StringVar()
+        maxlabel = Label(self.clipdia, text='Max', bg=bgcolor)
+        maxlabel.grid(column=0, row=1, padx=20, pady=5, sticky=W)
+        self.maxentry = Entry(self.clipdia, textvariable=defaultmax, bg=bgcolor)
+        defaultmax.set(str(self.wdata.rows()))
+        self.maxentry.grid(column=1, row=1, padx=20, pady=5, sticky=W)
+
+        readdatabutton = Button(self.clipdia, text="Apply", command=self.clip_action_ok_cb, bg=buttoncolor);
+        readdatabutton.grid(column=0, row=2, padx=60, pady=20, sticky=W)
+
+        readdatabutton = Button(self.clipdia, text="Cancel", command=self.clip_action_cancel_cb, bg=buttoncolor);
+        readdatabutton.grid(column=1, row=2, padx=60, pady=20, sticky=W)
+
+    def clip_action_cancel_cb(self):
+        self.clipdia.destroy()
+
+    def clip_action_ok_cb(self):
+
+        minvalue = int(self.minentry.get())
+        maxvalue = int(self.maxentry.get())
+        self.clipdia.destroy()
+            
+        self.wdata.clip(minvalue, maxvalue)
+        self.redraw()
+    
+    # Split callback
+    def split_action_cb(self):
+        if self.empty():
+            return
+
+        ValueDialog(self.window, "Split entry", "Row", self.split_ok_cb)
+                    
+    def split_ok_cb(self, valuestr):
+        value = int(valuestr)
+
+        wdwindow = WdWindow()
+        idx = self.name.find('.')
+        if idx == -1:            
+            wdwindow.name = self.name + '_2'
+        else:
+            wdwindow.name = self.name[:idx] + '_2' + self.name[idx:]
+        wdwindow.window.title(wdwindow.name)
+        wdwindow.wdata.set_name(wdwindow.name)
+        wdwindow.wdata = self.wdata.split(value)
+        wdwindow.dataframe.pack_forget()
+        wdwindow.dataframe.destroy()
+        wdwindow.create_dataframe()
+
+        self.dataframe.pack_forget()
+        self.dataframe.destroy()
+        self.create_dataframe()
+
+    
+    # Multiply callback
+    def multiply_action_cb(self):
+        if self.empty():
+            return
+
+        ValueDialog(self.window, "Multiply", "Times", self.multiply_ok_cb)
+                    
+    def multiply_ok_cb(self, valuestr):
+        value = int(valuestr)
+        try:
+            self.wdata.multiply(value)
+        except co.Error as e:
+            tkMessageBox.showerror("Error", e.str)
+            return
+
+        self.dataframe.pack_forget()
+        self.dataframe.destroy()
+        self.create_dataframe()
+
+    # Delete column callback
+    def deletecolumn_action_cb(self):
+        if self.empty():
+            return
+
+        answer = tkMessageBox.askquestion('Delete columns', 'Do you want to delete the selected columns')
+        if answer == 'yes':
+            mask = [None] * len(self.datasel)
+            i = 0
+            for sel in self.datasel:
+                mask[i] = (sel.get() == 1)
+                i += 1
+
+            try:
+                self.wdata.delete_columns(mask)
+            except co.Error as e:
+                tkMessageBox.showerror("Error", e.str)
+                
+            self.redraw()
+        
+    # Convert column callback
+    def convcolumn_action_cb(self):
+        if self.empty():
+            return
+
+        cix = []
+        i = 0;
+        for name in self.wdata.wdname:
+            if self.datasel[i].get():
+                cix.append(i)
+            i += 1
+                     
         if len(cix) != 1:
-            tkMessageBox.showerror("Error", "Select one attributes")
+            tkMessageBox.showerror("Error", "Select one attribute")
             return
-        ser = pd.Series(wd[wdcol[cix[0]]])
 
-    if sel_copy.get():
-        colname = "Copy(" + wdname[cix[0]] + ")"
-    elif sel_square.get():
-        ser = np.square(ser)
-        colname = "Square(" + wdname[cix[0]] + ")"
-    elif sel_sqrt.get():
-        ser = np.sqrt(ser)
-        colname = "Sqrt(" + wdname[cix[0]] + ")"
-    elif sel_exp.get():
-        ser = np.exp(ser)
-        colname = "Exp(" + wdname[cix[0]] + ")"
-    elif sel_log.get():
-        ser = np.log(ser)
-        colname = "Log(" + wdname[cix[0]] + ")"
-    elif sel_integral.get():
-        igl = []
-        acc = 0
-        i = 0
-        dmean = ser.mean()
+        self.wdata.set_add_replace(1)
+        self.add_dia = Toplevel(self.window, bg=bgcolor)
+        self.add_dia.title('Convert Column')
+        main.set_icon(self.add_dia)
 
-        for val in ser.values:    
-            igl.append(acc)
-            if i != len(ser) - 1:
-                dt = wdtime[i+1]-wdtime[i]
-            else:
-                dt = old_dt
-            #acc += (val - dmean) * (dt.seconds + dt.microseconds/1000000.0)
-            acc += val * (dt.seconds + dt.microseconds/1000000.0)
-            print dt, dt.seconds + dt.microseconds/1000000.0, val
-            i += 1
-            old_dt = dt
+        self.fcurve = None
+        self.sel_copy = IntVar()
+        self.sel_norm = IntVar()
+        self.sel_square = IntVar()
+        self.sel_sqrt = IntVar()
+        self.sel_exp = IntVar()
+        self.sel_log = IntVar()
+        self.sel_integral = IntVar()
+        self.sel_derivate = IntVar()
+        self.sel_add = IntVar()
+        self.sel_sub = IntVar()
+        self.sel_mul = IntVar()
+        self.sel_div = IntVar()
+        self.sel_curve = IntVar()
+        self.sel_constant = IntVar()
+        self.sel_shift = IntVar()
 
-        ser = pd.Series(igl)
-        colname = "Integral(" + wdname[cix[0]] + ")"
-    elif sel_derivate.get():
-        der = []
-        old_val = 0
-        for val in ser.values:
-            der.append(val - old_val)
-            old_val = val
-        ser = pd.Series(der)
-        colname = "Derivate(" + wdname[cix[0]] + ")"
-    elif sel_add.get():
-        add = []
-        i = 0
-        print 'cix[1]', cix[1]
-        print wdname[2]
-        print wd[wdcol[2]][0]
-        for val in ser.values:
-            val2 = wd[wdcol[cix[1]]][i]
-            print 'val2', val2
-            add.append(val + val2)
-            i += 1
-        ser = pd.Series(add)
-        colname = "Add(" + wdname[cix[0]] + "," + wdname[cix[1]] + ")"
-    elif sel_sub.get():
-        sub = []
-        i = 0
-        print 'cix[1]', cix[1]
-        print wdname[2]
-        print wd[wdcol[2]][0]
-        for val in ser.values:
-            val2 = wd[wdcol[cix[1]]][i]
-            print 'val2', val2
-            sub.append(val - val2)
-            i += 1
-        ser = pd.Series(sub)
-        colname = "Sub(" + wdname[cix[0]] + "," + wdname[cix[1]] + ")"
-    elif sel_mul.get():
-        mul = []
-        i = 0
-        print 'cix[1]', cix[1]
-        print wdname[2]
-        print wd[wdcol[2]][0]
-        for val in ser.values:
-            val2 = wd[wdcol[cix[1]]][i]
-            print 'val2', val2
-            mul.append(val * val2)
-            i += 1
-        ser = pd.Series(mul)
-        colname = "Multiply(" + wdname[cix[0]] + "," + wdname[cix[1]] + ")"
-    elif sel_div.get():
-        div = []
-        i = 0
-        for val in ser.values:
-            cval = wd[wdcol[cix[1]]][i]
-            div.append(val/cval if cval else 0)
-            i += 1
-        ser = pd.Series(div)
-        colname = "Divide(" + wdname[cix[0]] + "," + wdname[cix[1]] + ")"
+        checkbox = Checkbutton(self.add_dia, text='Norm', variable=self.sel_norm,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=0, padx=20, pady=5, sticky=W)
 
-    elif sel_curve.get():
-        if fcurve == None:
-            tkMessageBox.showerror("Error", "No curve file is selected")
+        checkbox = Checkbutton(self.add_dia, text='Square', variable=self.sel_square,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=1, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Squareroot', variable=self.sel_sqrt,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=2, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Exp', variable=self.sel_exp,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=3, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Log', variable=self.sel_log,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=4, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Integral', variable=self.sel_integral,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=5, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Derivate', variable=self.sel_derivate,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=6, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Curve', variable=self.sel_curve,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=7, padx=20, pady=5, sticky=W)
+        self.curveentry = Entry(self.add_dia, bg=bgcolor)
+        self.curveentry.grid(column=1, row=7, padx=20, pady=5, sticky=W)
+        button = Button(self.add_dia, text="Browse", command=self.addcol_action_curve_cb, bg=buttoncolor) 
+        button.grid(column=2, row=7, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Shift', variable=self.sel_shift,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=8, padx=20, pady=5, sticky=W)
+        self.shiftentry = Entry(self.add_dia, bg=bgcolor)
+        self.shiftentry.grid(column=1, row=8, padx=20, pady=5, sticky=W)
+
+        button = Button(self.add_dia, text="Apply", command=self.addcol_action_ok_cb, bg=buttoncolor);
+        button.grid(column=0, row=9, padx=60, pady=20, sticky=W)
+
+        button = Button(self.add_dia, text="Cancel", command=self.addcol_action_cancel_cb, bg=buttoncolor);
+        button.grid(column=1, row=9, padx=60, pady=20, sticky=W)
+
+    # Add column callback
+    def addcolumn_action_cb(self):
+        if self.empty():
+            return
+
+        self.wdata.set_add_replace(0)
+    
+        self.add_dia = Toplevel(self.window, bg=bgcolor)
+        self.add_dia.title('Add Column')
+        main.set_icon(self.add_dia)
+
+        self.fcurve = None
+        self.sel_copy = IntVar()
+        self.sel_norm = IntVar()
+        self.sel_square = IntVar()
+        self.sel_sqrt = IntVar()
+        self.sel_exp = IntVar()
+        self.sel_log = IntVar()
+        self.sel_integral = IntVar()
+        self.sel_derivate = IntVar()
+        self.sel_add = IntVar()
+        self.sel_sub = IntVar()
+        self.sel_mul = IntVar()
+        self.sel_div = IntVar()
+        self.sel_curve = IntVar()
+        self.sel_constant = IntVar()
+        self.sel_shift = IntVar()
+        checkbox = Checkbutton(self.add_dia, text='Copy', variable=self.sel_copy,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=0, padx=20, pady=5, sticky=W)
+        
+        checkbox = Checkbutton(self.add_dia, text='Norm', variable=self.sel_norm,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=1, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Square', variable=self.sel_square,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=2, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Squareroot', variable=self.sel_sqrt,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=3, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Exp', variable=self.sel_exp,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=4, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Log', variable=self.sel_log,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=5, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Integral', variable=self.sel_integral,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=6, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Derivate', variable=self.sel_derivate,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=7, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Add', variable=self.sel_add,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=8, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Sub', variable=self.sel_sub,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=9, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Multiply', variable=self.sel_mul,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=10, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Divide', variable=self.sel_div,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=11, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Curve', variable=self.sel_curve,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=12, padx=20, pady=5, sticky=W)
+        self.curveentry = Entry(self.add_dia, bg=bgcolor)
+        self.curveentry.grid(column=1, row=12, padx=20, pady=5, sticky=W)
+        button = Button(self.add_dia, text="Browse", command=self.addcol_action_curve_cb, bg=buttoncolor) 
+        button.grid(column=2, row=12, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Constant', variable=self.sel_constant,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=13, padx=20, pady=5, sticky=W)
+        self.constantentry = Entry(self.add_dia, bg=bgcolor)
+        self.constantentry.grid(column=1, row=13, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Shift', variable=self.sel_shift,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=14, padx=20, pady=5, sticky=W)
+        self.shiftentry = Entry(self.add_dia, bg=bgcolor)
+        self.shiftentry.grid(column=1, row=14, padx=20, pady=5, sticky=W)
+        
+        button = Button(self.add_dia, text="Apply", command=self.addcol_action_ok_cb, bg=buttoncolor);
+        button.grid(column=0, row=15, padx=60, pady=20, sticky=W)
+
+        button = Button(self.add_dia, text="Cancel", command=self.addcol_action_cancel_cb, bg=buttoncolor);
+        button.grid(column=1, row=15, padx=60, pady=20, sticky=W)
+
+    def addcol_action_curve_cb(self):
+        self.fcurvefile = tkFileDialog.askopenfilename(
+            initialdir='./', title='Open curve file',
+            filetypes=[('dat files','*.dat'),('all files','*.*')])
+        self.fcurve = None
+        if self.fcurvefile != '':
+            fname = co.reTranslateFilename(self.fcurvefile)
+            self.curveentry.delete(0,END)
+            self.curveentry.insert(0,fname)
+
+    def addcol_action_cancel_cb(self):
+        self.add_dia.destroy()
+
+    def addcol_action_ok_cb(self):
+        cix = []
+        i = 0;
+        for name in self.wdata.wdname:
+            if self.datasel[i].get():
+                cix.append(i)
+            i += 1
+                         
+        if self.sel_constant.get():
+            pass
+        elif self.sel_add.get() or self.sel_sub.get() or self.sel_mul.get() or self.sel_div.get():   
+            if len(cix) != 2:
+                tkMessageBox.showerror("Error", "Select two attributes")
+                return
+            ser = pd.Series(self.wdata.wd[self.wdata.wdcol[cix[0]]])
+        else:
+            if len(cix) != 1:
+                tkMessageBox.showerror("Error", "Select one attributes")
+                return
+
+        cix1 = -1
+        cix2 = -1
+        arg1 = None
+        if len(cix) > 0:
+            cix1 = cix[0]
+        if len(cix) > 1:
+            cix2 = cix[1]
+
+        if self.sel_copy.get():
+            op = self.wdata.OP_COPY
+        elif self.sel_norm.get():
+            op = self.wdata.OP_NORM
+        elif self.sel_square.get():
+            op = self.wdata.OP_SQUARE
+        elif self.sel_sqrt.get():
+            op = self.wdata.OP_SQUAREROOT
+        elif self.sel_exp.get():
+            op = self.wdata.OP_EXP
+        elif self.sel_log.get():
+            op = self.wdata.OP_LOG
+        elif self.sel_integral.get():
+            op = self.wdata.OP_INTEGRAL
+        elif self.sel_derivate.get():
+            op = self.wdata.OP_DERIVATE
+        elif self.sel_add.get():
+            op = self.wdata.OP_ADD
+        elif self.sel_sub.get():
+            op = self.wdata.OP_SUB
+        elif self.sel_mul.get():
+            op = self.wdata.OP_MULTIPLY
+        elif self.sel_div.get():
+            op = self.wdata.OP_DIVIDE
+        elif self.sel_curve.get():
+            op = self.wdata.OP_CURVE
+            arg1 = self.curveentry.get()
+        elif self.sel_constant.get():
+            op = self.wdata.OP_CONSTANT
+            arg1 = self.constantentry.get()
+        elif self.sel_shift.get():
+            op = self.wdata.OP_SHIFT
+            arg1 = self.shiftentry.get()
+        else:
+            tkMessageBox.showerror("Error", "No action is selected")
+            return
+
+        try:
+            self.wdata.op_exec(op, cix1, cix2, arg1)
+        except co.Error as e:
+            tkMessageBox.showerror("Error", e.str)
+
+        self.redraw()
+        if not self.add_dia is None:
+            self.add_dia.destroy()
+
+    def close_action_cb(self, arg=0):
+        self.window.destroy()
+        main.remove_appl(self)
+    
+    # Save original dataframe
+    def saveorig_action_cb(self): 
+        if self.empty():
+            return
+
+        file = tkFileDialog.asksaveasfilename(initialdir='./', title='Select file',
+                                              filetypes=[('dat files','*.dat'),('all files','*.*')],
+                                              initialfile=self.name)
+        if len(file) != 0:
+            self.wdata.save_orig(file)
+
+
+    # Save work dataframe
+    def savewd_action_cb(self): 
+        if self.empty():
+            return
+
+        file = tkFileDialog.asksaveasfilename(initialdir='./', title='Select file',
+                                              filetypes=[('dat files','*.dat'),('all files','*.*')],
+                                              initialfile=self.name)
+        if len(file) != 0:
+            self.wdata.save_wd(file)
+
+    # Save formula
+    def saveformula_action_cb(self):
+        if self.empty():
+            return
+
+        file = tkFileDialog.asksaveasfilename(initialdir='./', title='Select file',
+                                          filetypes=[('frm files','*.frm'),('all files','*.*')])
+        if file != '':
+            self.wdata.save_formula(file)
+
+    # Apply formula
+    def applyformula_action_cb(self):
+        if self.empty():
+            return
+
+        self.add_dia = None
+        self.wdata.set_add_replace(0)
+
+        file = tkFileDialog.askopenfilename(initialdir='./', title='Open file',
+                                          filetypes=[('frm files','*.frm'),('all files','*.*')])
+        if file != '':
+            try:
+                self.wdata.apply_formula(file)
+            except co.Error as e:
+                tkMessageBox.showerror("Error", e.str)
+                return
+
+            self.redraw()
+            
+    def fetch_sev_cb(self):
+        fetch = FetchSev(self)
+
+    # New window
+    def new_action_cb(self, arg=0): 
+        WdWindow()
+
+    # Open from file
+    def open_action_cb(self, arg=0): 
+        file = tkFileDialog.askopenfilename(initialdir='./', title='Open file',
+                                          filetypes=[('dat files','*.dat'),('all files','*.*')])
+        if len(file) != 0:
+            self.read_file(file)
+
+    # Concatenate file other WdWindow
+    def concatwd_action_cb(self, arg=0): 
+        if self.empty():
+            return
+
+        apps = []
+        appnames = []
+        for appl in main.applist:
+            if appl == self:
+                continue
+            apps.append(appl)
+            appnames.append(appl.name)
+
+        if len(apps) == 0:
+            tkMessageBox.showerror("Error", "No other window")                
+            return
+
+        if len(apps) == 1:
+            ccwd = apps[0].wdata.wd
+            ccname = apps[0].wdata.wdname
+            ccwdtime = apps[0].wdata.wdtime
+            try:
+                self.wdata.concat(ccwd, ccname, ccwdtime)
+            except co.Error as e:
+                tkMessageBox.showerror("Error", e.str)
+                return
+                
+            self.dataframe.pack_forget()
+            self.dataframe.destroy()
+            self.create_dataframe()
+        else:
+            dia = SelectDialog(self.window, appnames, self.dataselect_ok_cb)
+
+    def dataselect_ok_cb(self, item):
+        for appl in main.applist:
+            if appl.name == item:
+                ccwd = appl.wdata.wd
+                ccname = appl.wdata.wdname
+                ccwdtime = appl.wdata.wdtime
+                try:
+                    self.wdata.concat(ccwd, ccname, ccwdtime)
+                except co.Error as e:
+                    tkMessageBox.showerror("Error", e.str)
+                    return
+
+                self.dataframe.pack_forget()
+                self.dataframe.destroy()
+                self.create_dataframe()
+                break
+        
+    # Concatenate file
+    def concat_action_cb(self, arg=0): 
+        if self.empty():
+            return
+
+        file = tkFileDialog.askopenfilename(initialdir='./', title='Open file',
+                                            filetypes=[('dat files','*.dat'),('all files','*.*')])
+        if file != '':
+
+            try:
+                self.wdata.concat_file(file)
+            except co.Error as e:
+                tkMessageBox.showerror("Error", e.str)                
+                return                
+
+            self.dataframe.pack_forget()
+            self.dataframe.destroy()
+            self.create_dataframe()
+
+    # Help callback
+    def help_action_cb(self):
+        os.system('co_help -s ' + pwr_exe + '/en_us/man_mva.dat &')
+
+    def new_data(self, data, col, name):
+        self.wdata.set_data(data, col, name)
+
+        self.dataframe.pack_forget()
+        self.dataframe.destroy()
+        self.create_dataframe()
+
+    def read_file(self, file):
+        self.wdata.read_file(file)
+            
+        if self.dataframe != None:
+            self.toolbar.pack_forget()
+            self.toolbar.destroy()
+            self.dataframe.pack_forget()
+            self.dataframe.destroy()
+
+        self.create_toolbar()
+        self.create_dataframe()
+        self.create_datamenu()
+        idx = file.rfind('/')
+        if idx == -1:
+            self.name = file
+        else:
+            self.name = file[idx+1:]
+        self.window.title(self.name)
+
+
+    # Create frame with action buttons
+    def create_datamenu(self):
+
+        # Create menu
+        menubar = Menu(self.window, bg=buttoncolor)
+        filemenu = Menu(menubar, bg=buttoncolor)
+        filemenu.add_command(label='New', command=self.new_action_cb, accelerator='Ctrl+N')
+        filemenu.add_command(label='Open', command=self.open_action_cb, accelerator='Ctrl+O')
+        filemenu.add_command(label='Import from server', command=self.fetch_sev_cb)
+        filemenu.add_command(label='Concatenate file', command=self.concat_action_cb)
+        filemenu.add_command(label='Join', command=self.concatwd_action_cb)
+        filemenu.add_command(label='Save', command=self.savewd_action_cb)
+        filemenu.add_command(label='Save Original Data', command=self.saveorig_action_cb)
+        filemenu.add_command(label='Save Formula', command=self.saveformula_action_cb)
+        filemenu.add_command(label='Apply Formula', command=self.applyformula_action_cb)
+        filemenu.add_command(label='Revert', command=self.revert_action_cb)
+        filemenu.add_command(label='Rename', command=self.rename_action_cb)
+        filemenu.add_command(label='Close', command=self.close_action_cb, accelerator='Ctrl+W')
+        menubar.add_cascade(label='File', menu=filemenu)
+
+        editmenu = Menu(menubar, bg=buttoncolor)
+        editmenu.add_command(label='Move up', command=self.moveup_action_cb)
+        editmenu.add_command(label='Move down', command=self.movedown_action_cb)
+        editmenu.add_command(label='Convert column', command=self.convcolumn_action_cb)
+        editmenu.add_command(label='Add column', command=self.addcolumn_action_cb)
+        editmenu.add_command(label='Delete column', command=self.deletecolumn_action_cb)
+        editmenu.add_command(label='Clip', command=self.clip_action_cb)
+        editmenu.add_command(label='Split', command=self.split_action_cb)
+        editmenu.add_command(label='Multiply', command=self.multiply_action_cb)
+        menubar.add_cascade(label='Edit', menu=editmenu)
+        
+        viewmenu = Menu(menubar, bg=buttoncolor)
+        viewmenu.add_command(label='Plot common', command=self.plot_action_cb)
+        viewmenu.add_command(label='Plot separate', command=self.indplot_action_cb)
+        viewmenu.add_command(label='Scatterplot', command=self.scatter_action_cb)
+        viewmenu.add_command(label='Plot correlation', command=self.corr_action_cb)
+        viewmenu.add_command(label='Plot correlation heatmap', command=self.corr2_action_cb)
+        viewmenu.add_command(label='Plot linear regression', command=self.regr_action_cb)
+        viewmenu.add_command(label='Plot histogram', command=self.histogram_action_cb)
+        viewmenu.add_command(label='Statistics', command=self.stat_action_cb)
+        menubar.add_cascade(label='View', menu=viewmenu)
+
+        functionmenu = Menu(menubar, bg=buttoncolor)
+        functionmenu.add_command(label='Linear regression', command=self.regrcoef_action_cb)
+        functionmenu.add_command(label='Ridge regression', command=self.ridgeregr_action_cb)
+        functionmenu.add_command(label='Lasso regression', command=self.lassoregr_action_cb)
+        functionmenu.add_command(label='MLP regressor', command=self.mlp_action_cb)
+        menubar.add_cascade(label='Functions', menu=functionmenu)
+        
+        helpmenu = Menu(menubar, bg=buttoncolor)
+        helpmenu.add_command(label='Help', command=self.help_action_cb)
+        menubar.add_cascade(label='Help', menu=helpmenu)
+        self.window.config(menu=menubar)
+        self.window.bind("<Control-w>", self.close_action_cb)
+        self.window.bind("<Control-o>", self.open_action_cb)
+        self.window.bind("<Control-n>", self.new_action_cb)
+    
+    def create_toolbar(self):
+    
+        self.toolbar = Frame(self.window, bg=bgcolor, bd=1, relief=RAISED)
+
+        self.toolbar_plot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_plot.png")
+        button = Button(self.toolbar, image=self.toolbar_plot_img, command=self.plot_action_cb, bg=buttoncolor)
+        button.pack(side=LEFT, padx=2, pady=2)
+
+        self.toolbar_indplot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_indplot.png")
+        button = Button(self.toolbar, image=self.toolbar_indplot_img, command=self.indplot_action_cb, bg=buttoncolor)
+        button.pack(side=LEFT, padx=2, pady=2)
+
+        self.toolbar_scatterplot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_scatterplot.png")
+        button = Button(self.toolbar, image=self.toolbar_scatterplot_img, command=self.scatter_action_cb, bg=buttoncolor)
+        button.pack(side=LEFT, padx=2, pady=2)
+
+        self.toolbar_lrplot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_lrplot.png")
+        button = Button(self.toolbar, image=self.toolbar_lrplot_img, command=self.regr_action_cb, bg=buttoncolor)
+        button.pack(side=LEFT, padx=2, pady=2)
+
+        self.toolbar_corrplot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_corrplot.png")
+        button = Button(self.toolbar, image=self.toolbar_corrplot_img, command=self.corr_action_cb, bg=buttoncolor)
+        button.pack(side=LEFT, padx=2, pady=2)
+
+        self.toolbar_corr2plot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_corr2plot.png")
+        button = Button(self.toolbar, image=self.toolbar_corr2plot_img, command=self.corr2_action_cb, bg=buttoncolor)
+        button.pack(side=LEFT, padx=2, pady=2)
+
+        self.toolbar_up_img = PhotoImage(file=pwr_exe+"/mvtoolbar_up.png")
+        button = Button(self.toolbar, image=self.toolbar_up_img, command=self.moveup_action_cb, bg=buttoncolor)
+        button.pack(side=LEFT, padx=2, pady=2)
+
+        self.toolbar_down_img = PhotoImage(file=pwr_exe+"/mvtoolbar_down.png")
+        button = Button(self.toolbar, image=self.toolbar_down_img, command=self.movedown_action_cb, bg=buttoncolor)
+        button.pack(side=LEFT, padx=2, pady=2)
+
+        self.toolbar_conv_img = PhotoImage(file=pwr_exe+"/mvtoolbar_conv.png")
+        button = Button(self.toolbar, image=self.toolbar_conv_img, command=self.convcolumn_action_cb, bg=buttoncolor)
+        button.pack(side=LEFT, padx=2, pady=2)
+
+        self.toolbar_add_img = PhotoImage(file=pwr_exe+"/mvtoolbar_add.png")
+        button = Button(self.toolbar, image=self.toolbar_add_img, command=self.addcolumn_action_cb, bg=buttoncolor)
+        button.pack(side=LEFT, padx=2, pady=2)
+
+        self.toolbar_delete_img = PhotoImage(file=pwr_exe+"/mvtoolbar_delete.png")
+        button = Button(self.toolbar, image=self.toolbar_delete_img, command=self.deletecolumn_action_cb, bg=buttoncolor)
+        button.pack(side=LEFT, padx=2, pady=2)
+
+        self.toolbar.pack(side=TOP, fill=X)
+
+    def create_dataframe(self):
+        global startframe
+
+        if 'startframe' in globals():    
+            startframe.pack_forget()
+            startframe.destroy()
+        self.dataframe = Frame(self.window, bg=bgcolor)
+
+        # Create dataset label
+        if self.wdata.wdcol != None:
+            dataset_text = "Dataset " + str(self.wdata.columns()) + " X " + str(self.wdata.rows())
+        else:
+            dataset_text = ""
+        dataset_label = Label(self.dataframe, text=dataset_text, anchor=NW);
+        dataset_label.grid(column=0, row=0, padx=40, pady=10, sticky='ew') 
+        dataset_label.config(bg=bgcolor)
+
+        if self.wdata.wdcol != None:
+            i = 0
+            self.datasel = [None] * len(self.wdata.wdcol)
+            for name in self.wdata.wdcol:
+                self.datasel[i] = IntVar()
+                text = self.wdata.wdcol[i] + ' ' + self.wdata.wdname[i]
+                item_checkbox = Checkbutton(self.dataframe, text=text, variable=self.datasel[i], highlightthickness=0,
+                                            bg=bgcolor)
+                item_checkbox.grid(column=0, row=i+1, padx=20, pady=5, sticky=W)
+                i = i + 1
+
+        self.dataframe.pack(side=LEFT, fill=X)
+
+    def redraw(self):
+        self.toolbar.pack_forget()
+        self.toolbar.destroy()
+        self.dataframe.pack_forget()
+        self.dataframe.destroy()
+        self.create_toolbar()
+        self.create_dataframe()
+        self.create_datamenu()    
+
+#
+# End of WdWindow class
+#
+
+#
+# Fetch sev items class
+#
+class FetchSev:
+
+    def on_configure(self, event):
+        size = self.iteminnerframe.winfo_reqwidth(), self.iteminnerframe.winfo_reqheight()
+        self.canvas.config(scrollregion="0 0 %s %s" % size)
+
+    # Constructor, create empty window
+    def __init__(self, wdata):
+        self.itemframe = None
+        self.wdata = wdata
+
+        self.fswindow = Toplevel(window, bg=bgcolor)
+        self.fswindow.title('Fetch from Sev Server')
+        main.set_icon(self.fswindow)
+        self.create_filterframe()
+
+    # Create filter frame
+    def create_filterframe(self):
+
+        if self.itemframe != None:
+            self.itemframe.pack_forget()
+            self.itemframe.destroy()
+
+        self.filterframe = Frame(self.fswindow, bg=bgcolor)
+        defaultserver = StringVar()
+
+        # Server entry
+        serverlabel = Label(self.filterframe, text='Sev server')
+        serverlabel.grid(column=0, row=0, padx=20, pady=5, sticky=W)
+        serverlabel.config(bg=bgcolor)
+        self.serverentry = Entry(self.filterframe, textvariable=defaultserver)
+        defaultserver.set('pwr56-build')
+        self.serverentry.grid(column=1, row=0, padx=20, pady=5, sticky=W)
+        self.serverentry.config(bg=bgcolor)
+
+        # Filter entry
+        filterlabel = Label(self.filterframe, text='Item Filter')
+        filterlabel.grid(column=0, row=1, padx=20, pady=5, sticky=W)
+        filterlabel.config(bg=bgcolor)
+        self.filterentry = Entry(self.filterframe)
+        self.filterentry.grid(column=1, row=1, padx=20, pady=5, sticky=W)
+        self.filterentry.config(bg=bgcolor)
+
+        # Fetch items button
+        filterbutton = Button(self.filterframe, text='Fetch Items', command=self.fetchitems_cb, bg=buttoncolor)
+        filterbutton.grid(column=2, row=1, padx=20, pady=5, sticky=W)
+        self.filterframe.pack(side=LEFT, fill=X)
+
+    # Create frame to show and select sev items
+
+    def fetchitems_cb(self):
+
+        filtervalue = self.filterentry.get()
+        self.server = self.serverentry.get()
+
+        self.items = pwrrt.getSevItemList(self.server, filtervalue)
+
+        self.itemframe = Frame(self.fswindow, bg=bgcolor)
+
+        # Scrollbars
+        scrollbar = Scrollbar(self.itemframe, orient=VERTICAL)
+        self.canvas = Canvas(self.itemframe, bd= 0, bg=bgcolor, yscrollcommand=scrollbar.set)
+        scrollbar.config(command=self.canvas.yview)
+        scrollbar.pack(side=RIGHT, fill=Y)
+        self.canvas.pack(expand=1, side=LEFT, fill=BOTH)
+        self.canvas.xview("moveto", 0)
+        self.canvas.yview("moveto", 0)
+        self.iteminnerframe = Frame(self.canvas, bg=bgcolor)
+        self.iteminnerframe.bind('<Configure>', self.on_configure)
+        self.canvas.create_window(0, 0, window=self.iteminnerframe, anchor=NW)
+
+        row = 0
+
+        valframe = Frame(self.iteminnerframe, bg=bgcolor)
+
+        # From entry
+        defaultfrom = StringVar()
+        fromlabel = Label(valframe, text='From')
+        fromlabel.grid(column=0, row=row, padx=0, pady=5, sticky=W)
+        fromlabel.config(bg=bgcolor)
+        self.fromentry = Entry(valframe, textvariable=defaultfrom)
+        defaultfrom.set('00:05:00')
+        self.fromentry.grid(column=1, row=row, padx=20, pady=5, sticky=W)
+        self.fromentry.config(bg=bgcolor)
+        row += 1
+
+        # To entry
+        defaultto = StringVar()
+        tolabel = Label(valframe, text='To')
+        tolabel.grid(column=0, row=row, padx=0, pady=5, sticky=W)
+        tolabel.config(bg=bgcolor)
+        self.toentry = Entry(valframe, textvariable=defaultto)
+        defaultto.set('now')
+        self.toentry.grid(column=1, row=row, padx=20, pady=5, sticky=W)
+        self.toentry.config(bg=bgcolor)
+        row += 1
+
+        # Interval entry
+        defaultinterval = StringVar()
+        intervallabel = Label(valframe, text='Interval')
+        intervallabel.grid(column=0, row=row, padx=0, pady=5, sticky=W)
+        intervallabel.config(bg=bgcolor)
+        self.intervalentry = Entry(valframe, textvariable=defaultinterval)
+        defaultinterval.set('1.0')
+        self.intervalentry.grid(column=1, row=row, padx=20, pady=5, sticky=W)
+        self.intervalentry.config(bg=bgcolor)
+        row += 1
+
+        # Max rows
+        defaultmax = StringVar()
+        maxlabel = Label(valframe, text='Max')
+        maxlabel.grid(column=0, row=row, padx=0, pady=5, sticky=W)
+        maxlabel.config(bg=bgcolor)
+        self.maxentry = Entry(valframe, textvariable=defaultmax)
+        defaultmax.set('500')
+        self.maxentry.grid(column=1, row=row, padx=20, pady=5, sticky=W)
+        self.maxentry.config(bg=bgcolor)
+        row += 1
+
+
+        readdatabutton = Button(valframe, text="Read DataSet", command=self.readdata_cb, bg=buttoncolor);
+        readdatabutton.grid(column=0, row=row, padx=0, pady=20, sticky=W)
+        row += 1
+
+        valframe.grid(column=0, row=0, padx=20, pady=5, sticky=W)
+
+        i = 0
+        row = 1
+        self.sel = [None] * len(self.items)
+        for item in self.items:
+            self.sel[i] = IntVar()
+            text = item[0] + "." + item[6]
+            item_checkbox = Checkbutton(self.iteminnerframe, text=text, variable=self.sel[i], highlightthickness=0,
+                                        bg=bgcolor)
+            item_checkbox.grid(column=0, row=i+row, padx=20, pady=5, sticky=W)
+            i = i + 1
+
+        self.filterframe.pack_forget()
+        self.filterframe.destroy()
+        self.itemframe.pack(expand=1, fill=BOTH)
+
+
+
+    # Read dataframe from sev database
+    def readdata_cb(self):
+        # Get selected items
+
+        wdname = []
+        dataattr = []
+        dataoid = []
+        isobject = []
+        origcol = ['Time']
+        wdcol = []
+
+        i = 0
+        j = 0
+        for selected in self.sel:
+            if selected.get():
+                colname = self.items[i][0] + '.' + self.items[i][6]
+                wdname.append(colname)
+                dataattr.append(self.items[i][6])
+                dataoid.append(self.items[i][1])
+                isobject.append(0)
+                origcol.append(colname)
+                colname = "A" + str(j+1)
+                wdcol.append(colname)
+                j += 1
+            i += 1
+        
+        if j == 0:
+            tkMessageBox.showerror("Error", "No item is selected")
+            return
+
+        fromvalue = self.fromentry.get()
+        tovalue = self.toentry.get()
+        intervalvalue = float(self.intervalentry.get())
+        maxvalue = int(self.maxentry.get())
+
+        result = pwrrt.getSevItemsDataFrame( self.server, dataoid, dataattr, isobject,
+                                             fromvalue, tovalue, intervalvalue, maxvalue)
+        if result == None:
+            tkMessageBox.showerror("Error", "None return")
             return
             
-        curve = []
-        i = 0
-        for val in ser.values:
-            curve.append(fcurve(val))
-            i += 1
-        ser = pd.Series(curve)
-        colname = "Curve(" + wdname[cix[0]] + ")"
-        print 'curve', ser
+        origdata = pd.DataFrame(data=result)
+        print  'Frame len', len(origdata), origdata.columns, origcol
+        origdata.columns = origcol
 
-    elif sel_constant.get():
-        value = float(constantentry.get())
+        self.wdata.new_data(origdata, wdcol, wdname)
 
-        const = [value] * len(wd)
-        ser = pd.Series(const)
-        colname = "Const(" + str(value) + ")"
+        #self.itemframe.pack_forget()
+        self.fswindow.destroy()
 
-    elif sel_shift.get():
-        shiftvalue = int(shiftentry.get())
 
-        shift = []
-        i = 0
-        for val in ser.values:
-            if shiftvalue > 0:
-                if i < shiftvalue:
-                    val = 0
-                else:
-                    val = ser.values[i-shiftvalue]
-            else:
-                if i - shiftvalue >= len(wd):
-                    val = 0
-                else:
-                    val = ser.values[i-shiftvalue]
-            shift.append(val)
-            i += 1
-        ser = pd.Series(shift)
-        colname = "Shift(" + wdname[cix[0]] + "," + str(shiftvalue) + ")"
-    else:
-        tkMessageBox.showerror("Error", "No action is selected")
-        return
+#
+# End FetchSev class
+#
 
-    idx = len(wdname)
-
-    if add_replace == 1:
-        wd[wdcol[cix[0]]] = ser
-        wdname[cix[0]] = colname
-    else:
-        wdname.append(colname)
-        colname = "A" + str(idx+1)
-        wdcol.append(colname)
-        wd[wdcol[idx]] = ser
-    toolbar.pack_forget()
-    toolbar.destroy()
-    dataframe.pack_forget()
-    dataframe.destroy()
-    create_toolbar()
-    create_dataframe()
-    create_datamenu()
-    add_dia.destroy()
     
-def close_action_cb(arg=0):
-    print 'Close action'
-    window.quit()
-    
-# Save original dataframe
-def save_action_cb(): 
-    file = tkFileDialog.asksaveasfilename(initialdir='./', title='Select file',
-                                          filetypes=[('dat files','*.dat'),('all files','*.*')])
-    if file != '':
-        origdata.to_csv(file, index=False)
-
-# Save work dataframe
-def savewd_action_cb(): 
-    file = tkFileDialog.asksaveasfilename(initialdir='./', title='Select file',
-                                          filetypes=[('dat files','*.dat'),('all files','*.*')])
-    if file != '':
-        save = wd
-        save.columns = wdname
-        save.insert(0, 'Time', wdtime)
-        save.to_csv(file, index=False)
-
-# Open from file
-def open_action_cb(arg=0): 
-    file = tkFileDialog.askopenfilename(initialdir='./', title='Open file',
-                                          filetypes=[('dat files','*.dat'),('all files','*.*')])
-    if file != '':
-        read_file(file)
-
-# Help callback
-def help_action_cb():
-    pass
-
-def read_file(file):
-    global origdata
-    global wd
-    global wdtime
-    global wdname
-    global origcol
-    global wdcol
-    
-    origdata = pd.read_csv(file, parse_dates=[0])
-    origcol = origdata.columns
-    wd = origdata.loc[:,origcol[1]:]
-    wdtime = origdata.loc[:,origcol[0]]
-
-    wdcol = []
-    wdname = []
-
-    i = 0
-    while i < wd.shape[1]:
-        colname = "A" + str(i+1)
-        wdcol.append(colname)
-        wdname.append(origcol[i+1])
-        i += 1
-
-    wd.columns = wdcol
-    if 'dataframe' in globals():
-        toolbar.pack_forget()
-        toolbar.destroy()
-        dataframe.pack_forget()
-        dataframe.destroy()
-            
-    create_toolbar()
-    create_dataframe()
-    create_datamenu()
-
-def on_configure(event):
-    size = iteminnerframe.winfo_reqwidth(), iteminnerframe.winfo_reqheight()
-    canvas.config(scrollregion="0 0 %s %s" % size)
-
-# Create frame to show and select sev items
-def fetchitems_cb(): 
-    global itemframe
-    global sel
-    global items
-    global canvas
-    global iteminnerframe
-    global server
-    global fromentry
-    global toentry
-    global intervalentry
-    global maxentry
-    
-    filtervalue = filterentry.get()
-    server = serverentry.get()
-
-    items = pwrrt.getSevItemList(server, filtervalue)
-
-    itemframe = Frame(window, bg=bgcolor)
-    
-    # Scrollbars
-    scrollbar = Scrollbar(itemframe, orient=VERTICAL)
-    canvas = Canvas(itemframe, bd= 0, bg=bgcolor, yscrollcommand=scrollbar.set)
-    scrollbar.config(command=canvas.yview)
-    scrollbar.pack(side=RIGHT, fill=Y)
-    canvas.pack(expand=1, side=LEFT, fill=BOTH)
-    canvas.xview("moveto", 0)
-    canvas.yview("moveto", 0)
-    iteminnerframe = Frame(canvas, bg=bgcolor)
-    iteminnerframe.bind('<Configure>', on_configure)
-    canvas.create_window(0, 0, window=iteminnerframe, anchor=NW)
-
-    row = 0
-
-    valframe = Frame(iteminnerframe, bg=bgcolor)
-
-    # From entry
-    defaultfrom = StringVar()
-    fromlabel = Label(valframe, text='From')
-    fromlabel.grid(column=0, row=row, padx=0, pady=5, sticky=W)
-    fromlabel.config(bg=bgcolor)
-    fromentry = Entry(valframe, textvariable=defaultfrom)
-    defaultfrom.set('00:05:00')
-    fromentry.grid(column=1, row=row, padx=20, pady=5, sticky=W)
-    fromentry.config(bg=bgcolor)
-    row += 1
-
-    # From entry
-    defaultto = StringVar()
-    tolabel = Label(valframe, text='To')
-    tolabel.grid(column=0, row=row, padx=0, pady=5, sticky=W)
-    tolabel.config(bg=bgcolor)
-    toentry = Entry(valframe, textvariable=defaultto)
-    defaultto.set('now')
-    toentry.grid(column=1, row=row, padx=20, pady=5, sticky=W)
-    toentry.config(bg=bgcolor)
-    row += 1
-
-    # Interval entry
-    defaultinterval = StringVar()
-    intervallabel = Label(valframe, text='Interval')
-    intervallabel.grid(column=0, row=row, padx=0, pady=5, sticky=W)
-    intervallabel.config(bg=bgcolor)
-    intervalentry = Entry(valframe, textvariable=defaultinterval)
-    defaultinterval.set('1.0')
-    intervalentry.grid(column=1, row=row, padx=20, pady=5, sticky=W)
-    intervalentry.config(bg=bgcolor)
-    row += 1
-
-    # Max rows
-    defaultmax = StringVar()
-    maxlabel = Label(valframe, text='Max')
-    maxlabel.grid(column=0, row=row, padx=0, pady=5, sticky=W)
-    maxlabel.config(bg=bgcolor)
-    maxentry = Entry(valframe, textvariable=defaultmax)
-    defaultmax.set('500')
-    maxentry.grid(column=1, row=row, padx=20, pady=5, sticky=W)
-    maxentry.config(bg=bgcolor)
-    row += 1
-
-
-    readdatabutton = Button(valframe, text="Read DataSet", command=readdata_cb, bg=buttoncolor);
-    readdatabutton.grid(column=0, row=row, padx=0, pady=20, sticky=W)
-    row += 1
-
-    valframe.grid(column=0, row=0, padx=20, pady=5, sticky=W)
-
-    i = 0
-    row = 1
-    sel = [None] * len(items)
-    for item in items:
-        sel[i] = IntVar()
-        text = item[0] + "." + item[6]
-        item_checkbox = Checkbutton(iteminnerframe, text=text, variable=sel[i], highlightthickness=0,
-                                    bg=bgcolor)
-        item_checkbox.grid(column=0, row=i+row, padx=20, pady=5, sticky=W)
-        i = i + 1
-
-    filterframe.pack_forget()
-    filterframe.destroy()
-    itemframe.pack(expand=1, fill=BOTH)
-
-
-# Create frame with action buttons
-def create_datamenu():
-
-    # Create menu
-    menubar = Menu(window, bg=buttoncolor)
-    filemenu = Menu(menubar, bg=buttoncolor)
-    filemenu.add_command(label='Open', command=open_action_cb, accelerator='Ctrl+O')
-    filemenu.add_command(label='Import from server', command=create_filterframe)
-    filemenu.add_command(label='Save', command=save_action_cb)
-    filemenu.add_command(label='Save Work Data', command=savewd_action_cb)
-    filemenu.add_command(label='Revert', command=revert_action_cb)
-    filemenu.add_command(label='Close', command=close_action_cb, accelerator='Ctrl+W')
-    menubar.add_cascade(label='File', menu=filemenu)
-
-    editmenu = Menu(menubar, bg=buttoncolor)
-    editmenu.add_command(label='Move up', command=moveup_action_cb)
-    editmenu.add_command(label='Move down', command=movedown_action_cb)
-    editmenu.add_command(label='Convert column', command=convcolumn_action_cb)
-    editmenu.add_command(label='Add column', command=addcolumn_action_cb)
-    editmenu.add_command(label='Delete column', command=deletecolumn_action_cb)
-    editmenu.add_command(label='Clip', command=clip_action_cb)
-    menubar.add_cascade(label='Edit', menu=editmenu)
-
-    viewmenu = Menu(menubar, bg=buttoncolor)
-    viewmenu.add_command(label='Plot common', command=plot_action_cb)
-    viewmenu.add_command(label='Plot separate', command=indplot_action_cb)
-    viewmenu.add_command(label='Scatterplot', command=scatter_action_cb)
-    viewmenu.add_command(label='Plot correlation', command=corr_action_cb)
-    viewmenu.add_command(label='Plot correlation heatmap', command=corr2_action_cb)
-    viewmenu.add_command(label='Plot linear regression', command=regr_action_cb)
-    menubar.add_cascade(label='View', menu=viewmenu)
-
-    functionmenu = Menu(menubar, bg=buttoncolor)
-    functionmenu.add_command(label='Linear regression', command=regrcoef_action_cb)
-    menubar.add_cascade(label='Functions', menu=functionmenu)
-
-    helpmenu = Menu(menubar, bg=buttoncolor)
-    helpmenu.add_command(label='Help', command=help_action_cb)
-    menubar.add_cascade(label='Help', menu=helpmenu)
-    window.config(menu=menubar)
-    
-
-# Read dataframe from sev database
-def readdata_cb():
-    # Get selected items
-    global origcol
-    global origdata
-    global wd
-    global wdname
-    global wdcol
-    global wdtime
-    global sel
-
-    wdname = []
-    dataattr = []
-    dataoid = []
-    origcol = ['Time']
-    wdcol = []
-
-    i = 0
-    j = 0
-    for selected in sel:
-        if selected.get():
-            colname = items[i][0] + '.' + items[i][6]
-            wdname.append(colname)
-            dataattr.append(items[i][6])
-            dataoid.append(items[i][1])
-            origcol.append(colname)
-            colname = "A" + str(j+1)
-            wdcol.append(colname)
-            j += 1
-        i += 1
-        
-    if j == 0:
-        tkMessageBox.showerror("Error", "No item is selected")
-        return
-    
-    fromvalue = fromentry.get()
-    tovalue = toentry.get()
-    intervalvalue = float(intervalentry.get())
-    maxvalue = int(maxentry.get())
-
-    result = pwrrt.getSevItemsDataFrame( server, dataoid, dataattr, 
-                                         fromvalue, tovalue, intervalvalue, maxvalue)
-
-    origdata = pd.DataFrame(data=result)
-    origdata.columns = origcol
-    wd = origdata.loc[:,origcol[1]:]
-    wd.columns = wdcol
-    wdtime = origdata.loc[:,origcol[0]]
-
-    itemframe.pack_forget()
-    itemframe.destroy()
-
-    create_toolbar()
-    create_dataframe()
-    create_datamenu()
-
-def create_toolbar():
-    global toolbar
-    global toolbar_plot_img
-    global toolbar_indplot_img
-    global toolbar_scatterplot_img
-    global toolbar_lrplot_img
-    global toolbar_corrplot_img
-    global toolbar_corr2plot_img
-    global toolbar_up_img
-    global toolbar_down_img
-    global toolbar_conv_img
-    global toolbar_add_img
-    global toolbar_delete_img
-    
-    toolbar = Frame(window, bg=bgcolor, bd=1, relief=RAISED)
-
-    toolbar_plot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_plot.png")
-    button = Button(toolbar, image=toolbar_plot_img, command=plot_action_cb, bg=buttoncolor)
-    button.pack(side=LEFT, padx=2, pady=2)
-
-    toolbar_indplot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_indplot.png")
-    button = Button(toolbar, image=toolbar_indplot_img, command=indplot_action_cb, bg=buttoncolor)
-    button.pack(side=LEFT, padx=2, pady=2)
-
-    toolbar_scatterplot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_scatterplot.png")
-    button = Button(toolbar, image=toolbar_scatterplot_img, command=scatter_action_cb, bg=buttoncolor)
-    button.pack(side=LEFT, padx=2, pady=2)
-
-    toolbar_lrplot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_lrplot.png")
-    button = Button(toolbar, image=toolbar_lrplot_img, command=regr_action_cb, bg=buttoncolor)
-    button.pack(side=LEFT, padx=2, pady=2)
-
-    toolbar_corrplot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_corrplot.png")
-    button = Button(toolbar, image=toolbar_corrplot_img, command=corr_action_cb, bg=buttoncolor)
-    button.pack(side=LEFT, padx=2, pady=2)
-
-    toolbar_corr2plot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_corr2plot.png")
-    button = Button(toolbar, image=toolbar_corr2plot_img, command=corr2_action_cb, bg=buttoncolor)
-    button.pack(side=LEFT, padx=2, pady=2)
-
-    toolbar_up_img = PhotoImage(file=pwr_exe+"/mvtoolbar_up.png")
-    button = Button(toolbar, image=toolbar_up_img, command=moveup_action_cb, bg=buttoncolor)
-    button.pack(side=LEFT, padx=2, pady=2)
-
-    toolbar_down_img = PhotoImage(file=pwr_exe+"/mvtoolbar_down.png")
-    button = Button(toolbar, image=toolbar_down_img, command=movedown_action_cb, bg=buttoncolor)
-    button.pack(side=LEFT, padx=2, pady=2)
-
-    toolbar_conv_img = PhotoImage(file=pwr_exe+"/mvtoolbar_conv.png")
-    button = Button(toolbar, image=toolbar_conv_img, command=convcolumn_action_cb, bg=buttoncolor)
-    button.pack(side=LEFT, padx=2, pady=2)
-
-    toolbar_add_img = PhotoImage(file=pwr_exe+"/mvtoolbar_add.png")
-    button = Button(toolbar, image=toolbar_add_img, command=addcolumn_action_cb, bg=buttoncolor)
-    button.pack(side=LEFT, padx=2, pady=2)
-
-    toolbar_delete_img = PhotoImage(file=pwr_exe+"/mvtoolbar_delete.png")
-    button = Button(toolbar, image=toolbar_delete_img, command=deletecolumn_action_cb, bg=buttoncolor)
-    button.pack(side=LEFT, padx=2, pady=2)
-
-    toolbar.pack(side=TOP, fill=X)
-
-
-def create_dataframe():
-    global wd
-    global datasel
-    global dataframe
-    global startframe
-
-    if 'startframe' in globals():    
-        startframe.pack_forget()
-        startframe.destroy()
-    dataframe = Frame(window, bg=bgcolor)
-
-    # Create dataset label
-    dataset_label = Label(dataframe, text="Dataset " + str(wd.shape[1]) + " X " +
-                          str(wd.shape[0]));
-    dataset_label.grid(column=0, row=0, padx=50, pady=10, sticky='ew') 
-    dataset_label.config(bg=bgcolor)
-
-    i = 0
-    datasel = [None] * len(wdcol)
-    for name in wdcol:
-        datasel[i] = IntVar()
-        text = wdcol[i] + ' ' + wdname[i]
-        item_checkbox = Checkbutton(dataframe, text=text, variable=datasel[i], highlightthickness=0,
-                                    bg=bgcolor)
-        item_checkbox.grid(column=0, row=i+1, padx=20, pady=5, sticky=W)
-        i = i + 1
-
-    dataframe.pack(side=LEFT, fill=X)
-
-# Create filter frame
-def create_filterframe():
-    global filterframe
-    global filterentry
-    global serverentry
-    global startframe
-
-    if 'itemframe' in globals():
-        itemframe.pack_forget()
-        itemframe.destroy()
-
-    if 'dataframe' in globals():
-        toolbar.pack_forget()
-        toolbar.destroy()
-        dataframe.pack_forget()
-        dataframe.destroy()
-        
-    if 'startframe' in globals():    
-        startframe.pack_forget()
-        startframe.destroy()
-    
-    filterframe = Frame(window, bg=bgcolor)
-    defaultserver = StringVar()
-
-    # Server entry
-    serverlabel = Label(filterframe, text='Sev server')
-    serverlabel.grid(column=0, row=0, padx=20, pady=5, sticky=W)
-    serverlabel.config(bg=bgcolor)
-    serverentry = Entry(filterframe, textvariable=defaultserver)
-    defaultserver.set('pwr56-build')
-    serverentry.grid(column=1, row=0, padx=20, pady=5, sticky=W)
-    serverentry.config(bg=bgcolor)
-
-    # Filter entry
-    filterlabel = Label(filterframe, text='Item Filter')
-    filterlabel.grid(column=0, row=1, padx=20, pady=5, sticky=W)
-    filterlabel.config(bg=bgcolor)
-    filterentry = Entry(filterframe)
-    filterentry.grid(column=1, row=1, padx=20, pady=5, sticky=W)
-    filterentry.config(bg=bgcolor)
-
-    # Fetch items button
-    filterbutton = Button(filterframe, text='Fetch Items', command=fetchitems_cb, bg=buttoncolor)
-    filterbutton.grid(column=2, row=1, padx=20, pady=5, sticky=W)
-    filterframe.pack(side=LEFT, fill=X)
-
 file = ''
+formula = ''
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "f:", "file")
+    opts, args = getopt.getopt(sys.argv[1:], "f:r:", ["--file","--formula"])
 except getopt.GetoptError:
-    print 'sev_analyse.py [-f <file>]'
+    print 'sev_analyse.py [-f <file> -r <formula>]'
     sys.exit(2)
 
 for opt, arg in opts:
     if opt == "-h":
-        print 'sev_analyse.py [-f <file>]'
+        print 'sev_analyse.py [-f <file> [-f <formula>]]'
     if opt in ("-f", "--file"):
         file = arg
+    if opt in ("-r", "--formula"):
+        formula = arg
         
-if file != '':
-    print 'opening file', file
-
 pwr_exe = os.environ.get('pwr_exe')
-
-# Create window
 bgcolor = 'white'
 buttoncolor = '#F0F0F0'
-window = Tk() 
-window.title("ProviewR Multivariate Analysis") 
-window.geometry('800x500') 
 
-# Create menu
-menubar = Menu(window, bg=buttoncolor)
-filemenu = Menu(menubar, bg=buttoncolor)
-filemenu.add_command(label='Open', command=open_action_cb, accelerator='Ctrl+O')
-filemenu.add_command(label='Import from server', command=create_filterframe)
-filemenu.add_command(label='Close', command=close_action_cb, accelerator='Ctrl+W')
-menubar.add_cascade(label='File', menu=filemenu)
-window.config(menu=menubar,bg=bgcolor)
-window.bind_all("<Control-w>", close_action_cb)
-window.bind_all("<Control-o>", open_action_cb)
+class MvMain:
 
+    def __init__(self):
+        global window
+        global main
 
-if file != '':
-    read_file(file)
-else:
-    startframe = Frame(window, bg=bgcolor)
-    canvas = Canvas(startframe, width=800, height=200, bg=bgcolor)
-    canvas.pack()
-    img = PhotoImage(file=pwr_exe+"/pwr_logga.png")
-    canvas.create_image(400, 100, image=img)
-    startframe.pack(side=LEFT, fill=X)
+        self.applist = []
+        
+        # Create window
+        main = self
+        window = Tk()
+        window.withdraw()
+        wdwindow = WdWindow()
+        if file != '':
+            wdwindow.read_file(file)
+            if formula != '':
+                try:
+                    wdwindow.wdata.apply_formula(formula)
+                except co.Error as e:
+                    tkMessageBox.showerror("Error", e.str)                    
+                    return
+                wdwindow.redraw()
 
+    def add_appl(self, a):
+        self.applist.append(a)
+
+    def remove_appl(self, a):
+        self.applist.remove(a)
+        if len(self.applist) == 0:
+            sys.exit()
+
+    def set_icon(self, w):
+        icon = PhotoImage(file=pwr_exe + '/pwr_icon16.png')
+        window.tk.call('wm', 'iconphoto', w._w, icon)
+
+            
+MvMain()
 window.mainloop()
 

@@ -367,6 +367,8 @@ XttGeQt::XttGeQt(void* xg_parent_ctx, const char* xg_name,
   graph->sound_cb = &ge_sound_cb;
   graph->eventlog_cb = &ge_eventlog_cb;
 
+  grow_widget->setMinimumSize(window_width, window_height);
+
   QObject::connect(((GraphQt*)graph)->grow_widget,
       SIGNAL(resize_signal(QResizeEvent*)), toplevel,
       SLOT(action_resize(QResizeEvent*)));
@@ -435,7 +437,7 @@ XttGeQt::XttGeQt(void* xg_parent_ctx, const char* xg_name,
       toplevel->setVisible(false);
     }
   } else {
-    this->graph_form->setMinimumSize(window_width, window_height);
+    this->graph_form->resize(window_width, window_height);
   }
 
   if (borders) {
@@ -456,7 +458,7 @@ XttGeQt::XttGeQt(void* xg_parent_ctx, const char* xg_name,
   min_aspect = double(window_width) / window_height * (1.0 - rd);
   max_aspect = double(window_width) / window_height * (1.0 + rd);
 
-  toplevel->setMinimumSize(window_width, window_height);
+  toplevel->resize(window_width, window_height);
 }
 
 void XttGeQt::create_confirm_dialog()

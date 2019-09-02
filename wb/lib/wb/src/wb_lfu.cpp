@@ -1815,6 +1815,28 @@ pwr_tStatus lfu_SaveDirectoryVolume(
         if (nodeo.cid() == pwr_cClass_SevNodeConfig) {
           // Qcom only connection
           nc.connection = 1;
+
+	  found = 0;
+	  sts = ldh_GetChild(ldhses, nodeo.oid(), &volobjid);
+	  while (ODD(sts)) {
+	    sts = ldh_GetObjectClass(ldhses, volobjid, &vcid);
+	    if (EVEN(sts))
+	      return sts;
+
+	    if (vcid == pwr_cClass_RootVolumeLoad) {
+	      sts = ldh_ObjidToName(ldhses, volobjid, ldh_eName_Object,
+				    volstr, sizeof(volstr), &size);
+	      found = 1;
+	      break;
+	    }
+	  }
+	  if (!found) {
+	    char msg[200];
+            sprintf(msg, "Error in SevNodeConfig object '%s', no RootVolumeLoad object found",
+		    nodeo.longName().c_str());
+	    MsgWindow::message('E', msg, msgw_ePop_Default);
+	    syntax_error = 1;
+	  }	    
         } else {
           // Get attribute Connection
           a = sp->attribute(nodeo.oid(), "RtBody", "Connection");
@@ -1824,15 +1846,16 @@ pwr_tStatus lfu_SaveDirectoryVolume(
           a.value(&nc.connection);
           if (!a)
             return sts;
-        }
-        // Get attribute Volume
-        a = sp->attribute(nodeo.oid(), "RtBody", "Volume");
-        if (!a)
-          return a.sts();
 
-        a.value(volstr);
-        if (!a)
-          return sts;
+	  // Get attribute Volume
+	  a = sp->attribute(nodeo.oid(), "RtBody", "Volume");
+	  if (!a)
+	    return a.sts();
+
+	  a.value(volstr);
+	  if (!a)
+	    return sts;
+        }
 
         // Get attribute QComMinResendTime
         a = sp->attribute(nodeo.oid(), "RtBody", "QComMinResendTime");

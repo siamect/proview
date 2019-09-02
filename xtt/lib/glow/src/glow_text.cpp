@@ -179,23 +179,19 @@ void GlowText::get_borders(double pos_x, double pos_y, double* x_right,
 
 void GlowText::move(void* pos, double x, double y, int highlight, int hot)
 {
-  if (!feq(p.x, x) || !feq(p.y, y)) {
-    ctx->set_dirty();
-  }
   p.x = x;
   p.y = y;
   zoom();
   nav_zoom();
+  ctx->set_dirty();
 }
 
 void GlowText::shift(
     void* pos, double delta_x, double delta_y, int highlight, int hot)
 {
-  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
-    ctx->set_dirty();
-  }
   p.x += delta_x;
   p.y += delta_y;
   zoom();
   nav_zoom();
+  ctx->set_dirty();
 }

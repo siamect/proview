@@ -278,16 +278,9 @@ void WdaQt::change_value_close()
 
       wdanav->redraw();
       wdanav->set_inputfocus();
-
-      if (!text) {
-        message('E', "Input error, invalid character");
-      }
     } else {
-      char* text = qPrintableLatin1(cmd_entry->text());
-
-      if (text) {
-        wdanav->set_attr_value(input_node, input_name, text);
-      }
+      wdanav->set_attr_value(input_node, input_name,
+        qPrintableLatin1(cmd_entry->text()));
       cmd_entry->setVisible(false);
       set_prompt("");
       input_open = 0;
@@ -296,10 +289,6 @@ void WdaQt::change_value_close()
       }
 
       wdanav->set_inputfocus();
-
-      if (!text) {
-        message('E', "Input error, invalid character");
-      }
     }
   }
 }
@@ -311,21 +300,14 @@ void WdaQtWidget::activate_cmd_entry()
 
   wda->wdanav->set_inputfocus();
 
-  char* text = qPrintableLatin1(wda->cmd_entry->text());
-
   if (wda->input_open) {
-    if (text) {
-      wda->wdanav->set_attr_value(wda->input_node, wda->input_name, text);
-    }
+    wda->wdanav->set_attr_value(wda->input_node, wda->input_name,
+      qPrintableLatin1(wda->cmd_entry->text()));
     wda->cmd_entry->setVisible(false);
     wda->set_prompt("");
     wda->input_open = 0;
     if (wda->redraw_cb) {
       (wda->redraw_cb)(wda);
-    }
-
-    if (!text) {
-      wda->message('E', "Input error, invalid character");
     }
   }
 }
@@ -335,16 +317,14 @@ void WdaQtWidget::activate_cmd_scrolled_ok()
   if (wda->input_open) {
     char* text = qPrintableLatin1(wda->cmd_scrolled_buffer->toPlainText());
 
-    if (text) {
-      // Replace ctrl characters with space
-      for (unsigned char* s = (unsigned char*)text; *s; s++) {
-        if (*s < ' ' && *s != 10 && *s != 13) {
-          *s = ' ';
-        }
+    // Replace ctrl characters with space
+    for (unsigned char* s = (unsigned char*)text; *s; s++) {
+      if (*s < ' ' && *s != 10 && *s != 13) {
+        *s = ' ';
       }
-
-      wda->wdanav->set_attr_value(wda->input_node, wda->input_name, text);
     }
+
+    wda->wdanav->set_attr_value(wda->input_node, wda->input_name, text);
     wda->statusbar->setMaximumHeight(25);
     wda->cmd_scrolledinput->setVisible(false);
     wda->set_prompt("");
@@ -354,9 +334,6 @@ void WdaQtWidget::activate_cmd_scrolled_ok()
 
     wda->wdanav->redraw();
     wda->wdanav->set_inputfocus();
-    if (!text) {
-      wda->message('E', "Input error, invalid character");
-    }
   }
 }
 

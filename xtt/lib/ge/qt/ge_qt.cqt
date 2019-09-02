@@ -1699,11 +1699,11 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   // Line type option menu
   QComboBox* tools_linetype
       = addToolMenu(toplevel, tools3, SLOT(activate_linetype(int)));
-  for (int i = 1; i <= 7; i++) {
+  for (int i = 0; i < 7; i++) {
     std::ostringstream txt;
-    txt << "Linetype " << i;
+    txt << "Linetype " << (i + 1);
     std::ostringstream fname;
-    fname << "$pwr_exe/ge_linetype_" << i << ".png";
+    fname << "$pwr_exe/ge_linetype_" << (i + 1) << ".png";
     tools_linetype->addItem(
         get_icon(fname.str().c_str()), txt.str().c_str(), i);
   }

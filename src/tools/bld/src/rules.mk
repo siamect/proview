@@ -16,11 +16,11 @@ endif
 
 $(bld_dir)/%.cmsg $(inc_dir)/%.h: %.msg
 	@ $(log_msg_h)
-	@ $(tools_msg2cmsg) $(source) $(bld_dir)/$(tname).cmsg $(inc_dir)/$(tname).h
+	@ $(tools_msg2cmsg) $(source) $(bld_dir)/$(tname).cmsg $(inc_dir)/$(tname).h $(exe_dir)/$(tname).py
 
 $(obj_dir)/%.cmsg $(inc_dir)/%.h : %.msg
 	@ $(log_msg_h)
-	@ $(tools_msg2cmsg) $(source) $(obj_dir)/$(tname).cmsg $(inc_dir)/$(tname).h
+	@ $(tools_msg2cmsg) $(source) $(obj_dir)/$(tname).cmsg $(inc_dir)/$(tname).h $(exe_dir)/$(tname).py
 
 $(obj_dir)/%.o : $(obj_dir)/%.cmsg
 	@ $(log_cmsg_obj)

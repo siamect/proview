@@ -74,4 +74,6 @@ ioread		<IO stalled, io read error>				/fatal
 iowrite		<IO stalled, io write error>				/fatal
 reduinit	<Redundancy init error>					/error
 reduconfig	<Redundancy not configured>				/error
+filesyntax	<Syntax error in file>					/error
+file		<No such file>						/error
 .end

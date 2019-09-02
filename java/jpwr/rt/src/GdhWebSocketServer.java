@@ -986,9 +986,9 @@ public class GdhWebSocketServer
 		      i += 4;
 		      int elements = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
 		      i += 4;
-		      int nameSize = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
-		      i += 4;
-		      String attrName = new String( value, i, nameSize); 
+		      int nameSize = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
+		      i += 2;
+		      String attrName = new String( value, i, nameSize);
 		      attrName = checkAttrName( attrName);
 		      if ( attrName != null) {
 			  Sub ret = this.refObjectInfo(attrName, threadNumber, refId, elements);
@@ -1093,9 +1093,9 @@ public class GdhWebSocketServer
 			  i += 4;
 			  int elements = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
 			  i += 4;
-			  int nameSize = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
-			  i += 4;
-			  String attrName = new String( value, i, nameSize); 
+			  int nameSize = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
+			  i += 2;
+			  String attrName = new String( value, i, nameSize);
 			  attrName = checkAttrName( attrName);
 			  if ( attrName != null) {
 			      Sub ret = this.refObjectInfo(attrName, threadNumber, refId, elements);

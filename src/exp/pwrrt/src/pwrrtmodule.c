@@ -3011,7 +3011,7 @@ Appl_mainloop(ApplObject *self, PyObject *args)
   int swap = 0;
   int first_scan = 1;
 
-  arglist = Py_BuildValue("(O)", self->ctx);
+  arglist = Py_BuildValue("()", self->ctx);
 
   PyEval_CallObject(self->open, arglist);
 
@@ -3491,6 +3491,8 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
   char *server, *fromstr, *tostr;
   pwr_tOName *oidvect;
   pwr_tOName *anamevect;
+  pwr_tOName cond_oid;
+  pwr_tOName cond_aname;
   int *isobjectvect;
   int oidcnt, anamecnt, isobjectcnt;
   pwr_tTime from, to;
@@ -3501,6 +3503,7 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
   PyObject *oidobj, *anameobj, *isobjectobj;  
   pwr_tFloat32 *vbuf;
   int maxrows = 0;
+  int options = 0;
   int rows;
   pwr_eType vtype;
   unsigned int vsize;
@@ -3513,7 +3516,7 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
   int valcnt;
   pwr_tDeltaTime dt;
   pwr_tFloat32 **vvect;
-  float *tbuf;
+  float *tbuf;  
   
   if ( !pwrrt_scctx) {
     sevcli_init( &sts, &pwrrt_scctx);
@@ -3521,8 +3524,8 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
       return set_error(sts);
   }
 
-  if ( !PyArg_ParseTuple(args, "sOOOssf|Is", &server, &oidobj, &anameobj, &isobjectobj, 
-			 &fromstr, &tostr, &tdiff, &maxrows, &time_format))
+  if ( !PyArg_ParseTuple(args, "sOOOssf|IsI", &server, &oidobj, &anameobj, &isobjectobj, 
+			 &fromstr, &tostr, &tdiff, &maxrows, &time_format, &options))
     return NULL;
 
   if ( time_format) {
@@ -3554,8 +3557,6 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
     if ( EVEN(sts))
       return set_error(sts);
   }
-  time_Adiff(&dt, &to, &from);
-  valcnt = (int)time_DToFloat(NULL, &dt)/tdiff;  
 
   if ( PyTuple_Check(oidobj))
     oidcnt = PyTuple_Size(oidobj);
@@ -3611,8 +3612,79 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
     isobjectvect[i] = PyInt_AsLong(pystr);
   }
 
-  for ( i = 0; i < oidcnt; i++)
-    printf("arg %s.%s\n", oidvect[i], anamevect[i]);
+  if (options & 1) {
+    /* First objid is condition */
+    strcpy(cond_oid, oidvect[0]);
+    strcpy(cond_aname, anamevect[0]);
+
+    for (i = 0; i < oidcnt - 1; i++) {
+      strcpy(oidvect[i], oidvect[i+1]);
+      strcpy(anamevect[i], anamevect[i+1]);
+      isobjectvect[i] = isobjectvect[i+1];
+    }
+    oidcnt -= 1;
+    anamecnt -= 1;
+    isobjectcnt -= 1;
+
+    if (oidcnt <= 0)
+      return set_error(GDH__ARGCOUNT);
+
+    /* Get condition data */
+    if ( strncmp("_O", cond_oid, 2) == 0) 
+      sts = cdh_StringToObjid(cond_oid, &oid);
+    else
+      sts = gdh_NameToObjid(cond_oid, &oid);
+    if ( EVEN(sts))
+      return set_error(sts);
+
+    sevcli_get_itemdata( &sts, pwrrt_scctx, oid, cond_aname, from, to, maxrows, &ttbuf, 
+			 (void **)&vbuf, &rows, &vtype, &vsize);
+    if ( sts == SEV__NOPOINTS)
+	Py_RETURN_NONE;
+      else if (EVEN(sts))
+	return set_error(sts);
+
+    //for (i = 0; i < rows; i++) {
+    //  char timstr[40];
+    //  time_AtoAscii(&ttbuf[i], time_eFormat_DateAndTime, timstr, sizeof(timstr));
+    //  printf("%d %s %d\n", i, timstr, ((pwr_tBoolean *)vbuf)[i]);      
+    //}
+
+    /* Find longest continuous interval where condition is high */
+    pwr_tBoolean last_value = 0;
+    pwr_tFloat32 max_time = 0.0f;
+    int last_idx;
+    int start_idx;
+    int end_idx;
+    for (i = 0; i < rows; i++) {
+      if (((pwr_tBoolean *)vbuf)[i] == 1 && last_value == 0) {
+	last_value = 1;
+	last_idx = i;
+      }
+      else if ((((pwr_tBoolean *)vbuf)[i] == 0 && last_value == 1) ||
+	       (((pwr_tBoolean *)vbuf)[i] == 1 && last_value == 1 && i == rows - 1)) {
+	last_value = 0;
+	time_Adiff(&dt, &ttbuf[i], &ttbuf[last_idx]);
+	if (time_DToFloat(0, &dt) > max_time) {
+	  max_time = time_DToFloat(0, &dt);
+	  start_idx = last_idx;
+	  end_idx = i;
+	}
+      }
+    }
+    if (max_time > 0.0f) {
+      from = ttbuf[start_idx];
+      to = ttbuf[end_idx];
+    }
+    free(ttbuf);
+    free(vbuf);
+  }
+
+  time_Adiff(&dt, &to, &from);
+  valcnt = (int)time_DToFloat(NULL, &dt)/tdiff;  
+
+  //for ( i = 0; i < oidcnt; i++)
+  //  printf("arg %s.%s\n", oidvect[i], anamevect[i]);
 
   vvect = calloc(oidcnt, sizeof(float *));
 
@@ -3624,7 +3696,6 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
     if ( EVEN(sts))
       return set_error(sts);
 
-
     if (!isobjectvect[i]) {
       sevcli_get_itemdata( &sts, pwrrt_scctx, oid, anamevect[i], from, to, maxrows, &ttbuf, 
 			   (void **)&vbuf, &rows, &vtype, &vsize);
@@ -3633,7 +3704,7 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
       else if (EVEN(sts))
 	return set_error(sts);
 
-      /* Create data rows for panda with interpolation */
+      /* Create data rows for pandas with interpolation */
       tbuf = malloc(rows * sizeof(float));
 
       for ( j = 0; j < rows; j++) {
@@ -3646,10 +3717,10 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
       for ( j = 0; j < valcnt; j++) {
 	if ( j*tdiff < tbuf[0])
 	  vvect[i][j] = vbuf[0];
-	else if ( j*tdiff > tbuf[rows - 1])
+	else if ( j*tdiff >= tbuf[rows - 1])
 	  vvect[i][j] = vbuf[rows-1]; 
 	else {
-	  while( tbuf[k] <= j*tdiff)
+	  while( tbuf[k] <= j*tdiff && k < rows - 1)
 	    k++;
 	  vvect[i][j] = vbuf[k-1] + (vbuf[k] - vbuf[k-1])/(tbuf[k] - tbuf[k-1]) * (j*tdiff - tbuf[k-1]);
 	}
@@ -3701,12 +3772,12 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
 		vp1 = (float *)(((char*)vbuf) + lineoffs);
 		vvect[l][j] = *vp1;
 	      }
-	      else if ( j*tdiff > tbuf[rows - 1]) {
+	      else if ( j*tdiff >=tbuf[rows - 1]) {
 		vp1 = (float *)(((char*)vbuf) + (rows - 1)*linesize + lineoffs);
 		vvect[l][j] = *vp1;
 	      }
 	      else {
-		while( tbuf[k] <= j*tdiff)
+		while( tbuf[k] <= j*tdiff && k < rows)
 		  k++;
 		vp1 = (float *)(((char *)vbuf) + (k - 1)*linesize + lineoffs);
 		vp2 = (float *)(((char *)vp1) + linesize);
@@ -4108,6 +4179,8 @@ PyMODINIT_FUNC initpwrrt(void)
   PyModule_AddObject(m, "Sub", (PyObject *)&SubType);
   Py_INCREF(&ApplType);
   PyModule_AddObject(m, "Appl", (PyObject *)&ApplType);
+
+  PyModule_AddIntConstant(m, "FRAME_OPTIONS_CONDITION", 1);
 
   PyDateTime_IMPORT;
 

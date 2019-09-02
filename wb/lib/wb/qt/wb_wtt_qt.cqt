@@ -68,6 +68,7 @@
 #include <QApplication>
 #include <QCloseEvent>
 #include <QDialogButtonBox>
+#include <QHeaderView>
 #include <QInputDialog>
 #include <QMenu>
 #include <QMenuBar>
@@ -1489,6 +1490,7 @@ BootDialog::BootDialog(WttQt* parent_ctx, QWidget* parent)
 
   boot_list = new QTreeWidget();
   boot_list->setColumnCount(1);
+  boot_list->header()->close();
 
   pwr_tString40 nodename;
   strcpy(nodename, "");
@@ -2359,7 +2361,7 @@ void OptionsDialog::activate_options_cancel()
 OptionsDialog::OptionsDialog(WttQt* parent_ctx, QWidget* parent)
     : QDialog(parent), wtt(parent_ctx)
 {
-  setMinimumSize(650, 450);
+  setMinimumSize(600, 360);
   setWindowTitle(fl("Options"));
   setAttribute(Qt::WA_DeleteOnClose);
 
@@ -2371,10 +2373,12 @@ OptionsDialog::OptionsDialog(WttQt* parent_ctx, QWidget* parent)
 
   QVBoxLayout* hier_vbox = new QVBoxLayout();
   hier_vbox->addWidget(hier_label);
+  hier_vbox->setAlignment(hier_label, Qt::AlignHCenter);
   hier_vbox->addWidget(wtt->enable_comment_w);
   hier_vbox->addWidget(wtt->enable_revisions_w);
   hier_vbox->addWidget(wtt->show_plant_w);
   hier_vbox->addWidget(wtt->show_node_w);
+  hier_vbox->addStretch(1);
 
   QLabel* entry_label = new QLabel(fl("Entry"));
   wtt->show_class_w = new QCheckBox(fl("Class"));
@@ -2387,6 +2391,7 @@ OptionsDialog::OptionsDialog(WttQt* parent_ctx, QWidget* parent)
 
   QVBoxLayout* entry_vbox = new QVBoxLayout();
   entry_vbox->addWidget(entry_label);
+  entry_vbox->setAlignment(entry_label, Qt::AlignHCenter);
   entry_vbox->addWidget(wtt->show_class_w);
   entry_vbox->addWidget(wtt->show_alias_w);
   entry_vbox->addWidget(wtt->show_descrip_w);
@@ -2394,6 +2399,7 @@ OptionsDialog::OptionsDialog(WttQt* parent_ctx, QWidget* parent)
   entry_vbox->addWidget(wtt->show_objxref_w);
   entry_vbox->addWidget(wtt->show_attrref_w);
   entry_vbox->addWidget(wtt->show_attrxref_w);
+  entry_vbox->addStretch(1);
 
   QLabel* build_label = new QLabel(fl("Build"));
   wtt->build_force_w = new QCheckBox(fl("Force"));
@@ -2406,6 +2412,7 @@ OptionsDialog::OptionsDialog(WttQt* parent_ctx, QWidget* parent)
 
   QVBoxLayout* build_vbox = new QVBoxLayout();
   build_vbox->addWidget(build_label);
+  build_vbox->setAlignment(build_label, Qt::AlignHCenter);
   build_vbox->addWidget(wtt->build_force_w);
   build_vbox->addWidget(wtt->build_debug_w);
   build_vbox->addWidget(wtt->build_crossref_w);
@@ -2413,6 +2420,7 @@ OptionsDialog::OptionsDialog(WttQt* parent_ctx, QWidget* parent)
   build_vbox->addWidget(wtt->build_crossrefgraph_w);
   build_vbox->addWidget(wtt->build_manual_w);
   build_vbox->addWidget(wtt->build_nocopy_w);
+  build_vbox->addStretch(1);
 
   QHBoxLayout* hbox = new QHBoxLayout();
   hbox->addLayout(hier_vbox);
@@ -2439,6 +2447,11 @@ OptionsDialog::OptionsDialog(WttQt* parent_ctx, QWidget* parent)
 
   setLayout(vbox);
   show();
+
+  int size = wtt->show_node_w->height();
+  hier_vbox->setSpacing(size);
+  entry_vbox->setSpacing(size);
+  build_vbox->setSpacing(size);
 }
 
 void WttQt::create_options_dialog()

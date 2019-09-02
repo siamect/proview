@@ -574,6 +574,13 @@ int sev_server::mainloop()
       garbage_collector(0);
       time_Aadd(&next_garco, &next_garco, &garco_interval);
     }
+    if (sts == QCOM__ALLOCQUOTA) {
+      struct timespec r, t;
+      t.tv_sec = 0;
+      t.tv_nsec = tmo * 1000000;
+      nanosleep(&t, &r);
+      continue;
+    }
     if (sts == QCOM__TMO || !mp)
       continue;
 
@@ -965,6 +972,7 @@ int sev_server::send_histdata(
     qcom_sQid tgt, sev_sMsgHistDataGetRequest* rmsg, unsigned int size)
 {
   pthread_t thread;
+  pthread_attr_t attr;
   int sts;
 
   sev_sHistDataThread* arg = (sev_sHistDataThread*)malloc(sizeof(*arg));
@@ -974,8 +982,11 @@ int sev_server::send_histdata(
   arg->size = size;
 
   if (m_read_threads) {
-    printf("New read thread\n");
-    sts = pthread_create(&thread, NULL, send_histdata_thread, arg);
+    static int pcnt = 0;
+    printf("New read thread %d\n", pcnt++);
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    sts = pthread_create(&thread, &attr, send_histdata_thread, arg);
     if (sts != 0)
       printf("pthread_create error %d\n", sts);
   } else {
@@ -1062,11 +1073,13 @@ void* sev_server::send_histdata_thread(void* arg)
   if (!qcom_Put(&sts, &tgt, &put)) {
     qcom_Free(&sts, put.data);
   }
+  free(tbuf);
+  free(vbuf);
 
   if (sev->m_read_threads)
     sev->m_db->delete_thread(thread);
 
-  // pthread_exit( (void *) 1);
+  pthread_exit( (void *) 1);
   return (void*)1;
 }
 

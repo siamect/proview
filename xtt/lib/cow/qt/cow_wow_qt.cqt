@@ -248,7 +248,7 @@ CoWowListWidgetQt::CoWowListWidgetQt(QWidget* parent, const char* title,
     name_p += textsize;
   }
 
-  list->header()->hide();
+  list->header()->close();
 
   connect(list, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this,
       SLOT(list_row_activated_cb(QTreeWidgetItem*, int)));

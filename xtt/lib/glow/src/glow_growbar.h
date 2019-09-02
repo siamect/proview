@@ -200,10 +200,8 @@ public:
   */
   void set_value(double value)
   {
-    if (!feq(bar_value, value)) {
-      ctx->set_dirty();
-    }
     bar_value = value;
+    ctx->set_dirty();
   }
 
   //! Moves object to alignment line or point.
