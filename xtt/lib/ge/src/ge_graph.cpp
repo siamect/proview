@@ -1929,7 +1929,7 @@ int Graph::graph_attr_set_data_cb(void* g, grow_tObject object, GeDyn* data)
 int Graph::graph_get_dyn_info_cb(
     void* g, GeDyn* dyn, attr_sItem** itemlist, int* itemlist_cnt)
 {
-  static attr_sItem items[40];
+  static attr_sItem items[100];
 
   memset(items, 0, sizeof(items));
   *itemlist = items;
@@ -1943,7 +1943,7 @@ int Graph::graph_get_subgraph_info_cb(
     void* g, char* name, attr_sItem** itemlist, int* itemlist_cnt)
 {
   Graph* graph = (Graph*)g;
-  static attr_sItem items[40];
+  static attr_sItem items[100];
   int i;
   grow_sAttrInfo *grow_info, *grow_info_p;
   int grow_info_cnt;
@@ -2130,7 +2130,7 @@ int Graph::edit_subgraph_attributes()
 int Graph::get_graph_attr_items(
     attr_sItem** itemlist, int* item_cnt, void** client_data)
 {
-  static attr_sItem items[40];
+  static attr_sItem items[100];
   int i;
   grow_sAttrInfo *grow_info, *grow_info_p;
   int grow_info_cnt;
