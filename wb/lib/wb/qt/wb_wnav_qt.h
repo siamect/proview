@@ -41,8 +41,6 @@
 
 #include <QTimer>
 
-#include <qlocalserver.h>
-
 /* wtt_wnav_qt.h -- Simple navigator */
 
 class CoLogin;
@@ -61,11 +59,6 @@ public:
 
   QWidget* brow_widget;
   QWidget* form_widget;
-
-  QLocalServer* serverString;
-  QLocalServer* serverGraph;
-  QLocalServer* serverObjId;
-  QLocalServer* serverAttrRef;
 
   void pop();
   void set_inputfocus(int focus);
@@ -115,7 +108,6 @@ public:
 
 public slots:
   void trace_scan();
-  void sel_convert_cb();
 
 private:
   WNavQt* wnav;

@@ -223,7 +223,7 @@ public:
 
   static void PopupPosition(
       QWidget* parent, int x_event, int y_event, int* x, int* y);
-  static int GetSelection(char* str, int size, const char* atom);
+  static int GetSelection(char* str, int size);
   static void SetWindowIcon(QWidget* w);
 
   static void update_title(QWidget* w, int editmode);
