@@ -11266,6 +11266,9 @@ int GeXY_Curve::scan(grow_tObject object)
       dyn->parse_attr_name(
           x_attr, parsed_name, &inverted, &attr_type_x, &attr_size, &attr_elem);
     }
+    if (attr_elem == 0)
+      return 1;
+
     x_value = calloc(MAX(attr_elem, no_of_points), attr_size / attr_elem);
 
     sts = gdh_GetObjectInfo(parsed_name, x_value, attr_size);
