@@ -391,7 +391,7 @@ void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     for (int i = 0; i < barsegments + 1; i++) {
       glow_eDrawType fillcolor = glow_eDrawType_Line;
 
-      if ( min_value > 0 || bar_values[i][j] > 0) {
+      if ( min_value >= 0 || bar_values[i][j] > 0) {
 	skip = 0;
 	bar_up_ur_y = bar_up_ll_y;
 
@@ -483,8 +483,11 @@ void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 	      drawtype = GlowColor::shift_drawtype(fillcolor, chot, 0);
 	    else
 	      drawtype = fillcolor;
-	    ctx->gdraw->fill_rect(w, bar_ll_x, bar_down_ll_y, bar_ur_x - bar_ll_x,
-	         bar_down_ur_y - bar_down_ll_y, drawtype);
+	    ctx->gdraw->rect(bar_ll_x, bar_down_ll_y, bar_ur_x - bar_ll_x,
+	         bar_down_ur_y - bar_down_ll_y, drawtype, 1, 0);
+	    if (bar_up_ll_y > ll_y)
+	      ctx->gdraw->rect(bar_ll_x, ll_y, bar_ur_x - bar_ll_x,
+			       bar_up_ll_y - ll_y, drawtype, 1, 0);
 	  } else {
 	    glow_eDrawType f1, f2;
 	    if (gradient_contrast >= 0) {
@@ -516,9 +519,9 @@ void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 	}
 	if ( min_value >= 0) {
 	  brect_ll_x = bar_ll_x;
-	  brect_ll_y = bar_up_ll_y;
+	  brect_ll_y = int(f_bar_up_ll_y);
 	  brect_width = bar_ur_x - bar_ll_x;
-	  brect_height = ur_y - bar_up_ll_y;
+	  brect_height = ur_y - int(f_bar_up_ll_y);
 	} else {
 	  brect_ll_x = bar_ll_x;
 	  brect_ll_y = bar_up_ll_y;
