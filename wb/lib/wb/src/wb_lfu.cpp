@@ -742,7 +742,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
         path_file_created = 1;
 
-        for (i = 0; i < 20; i++) {
+        for (i = 0; i < 50; i++) {
           str_trim(path, path_ptr[i]);
           if (!streq(path, ""))
             fprintf(fpath, "%s\n", path);
