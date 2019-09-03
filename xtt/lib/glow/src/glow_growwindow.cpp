@@ -502,14 +502,12 @@ void GrowWindow::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
-    ctx->set_dirty();
-  }
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
   y_high += dy;
   y_low += dy;
+  ctx->set_dirty();
 }
 
 void GrowWindow::export_javabean(GlowTransform* t, void* node,

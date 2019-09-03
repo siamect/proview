@@ -152,7 +152,7 @@ else
 endif
 
 explinkflags	:= $(cross_compile) -g -L$(elib_dir)
-cxxflags	:= $(cflags)
+cxxflags	:= $(cflags) -Wno-deprecated-copy
 clis		= /lis=$(list)
 dolist	= /lis=$(list)
 domap		= -Xlinker -Map -Xlinker $(map)

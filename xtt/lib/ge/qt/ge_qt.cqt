@@ -320,14 +320,9 @@ int GeQt::get_plant_select(char* select_name, int size)
   pwr_tAName buff;
 
   if (!ldhses) {
-    sts = CoWowQt::GetSelection(str, sizeof(str), "PWR_GRAPH");
+    sts = CoWowQt::GetSelection(str, sizeof(str));
     if (ODD(sts)) {
       strcpy(select_name, str);
-    } else {
-      sts = CoWowQt::GetSelection(str, sizeof(str), "STRING");
-      if (ODD(sts)) {
-        strcpy(select_name, str);
-      }
     }
     return sts;
   }
@@ -342,14 +337,9 @@ int GeQt::get_plant_select(char* select_name, int size)
     strncpy(select_name, buff, size);
     return 1;
   } else {
-    sts = CoWowQt::GetSelection(str, sizeof(str), "PWR_GRAPH");
+    sts = CoWowQt::GetSelection(str, sizeof(str));
     if (ODD(sts)) {
       strncpy(select_name, str, size);
-    } else {
-      sts = CoWowQt::GetSelection(str, sizeof(str), "STRING");
-      if (ODD(sts)) {
-        strncpy(select_name, str, size);
-      }
     }
     return sts;
   }
@@ -1699,11 +1689,11 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   // Line type option menu
   QComboBox* tools_linetype
       = addToolMenu(toplevel, tools3, SLOT(activate_linetype(int)));
-  for (int i = 1; i <= 7; i++) {
+  for (int i = 0; i < 7; i++) {
     std::ostringstream txt;
-    txt << "Linetype " << i;
+    txt << "Linetype " << (i + 1);
     std::ostringstream fname;
-    fname << "$pwr_exe/ge_linetype_" << i << ".png";
+    fname << "$pwr_exe/ge_linetype_" << (i + 1) << ".png";
     tools_linetype->addItem(
         get_icon(fname.str().c_str()), txt.str().c_str(), i);
   }

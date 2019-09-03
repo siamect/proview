@@ -250,11 +250,9 @@ void GrowSlider::set_info(glow_eDirection dir, double max_val, double min_val,
 
 void GrowSlider::set_range(double min, double max)
 {
-  if (!feq(max_value, max) || !feq(min_value, min)) {
-    ctx->set_dirty();
-  }
   max_value = max;
   min_value = min;
+  ctx->set_dirty();
 }
 
 void GrowSlider::export_javabean(GlowTransform* t, void* node,

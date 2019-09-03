@@ -43,10 +43,6 @@
 
 #include <QWidget>
 
-#include <qlocalserver.h>
-
-class NavQtTraceObject;
-
 class NavQt : public Nav {
 public:
   NavQt(void* parent_ctx, const char* name, ldh_tSesContext ldhses,
@@ -56,26 +52,8 @@ public:
   QWidget* brow_widget;
   QWidget* form_widget;
 
-  QLocalServer* server;
-
   void set_inputfocus(int focus);
   void set_selection_owner(int set);
-
-private:
-  NavQtTraceObject* trace_obj;
-};
-
-class NavQtTraceObject : public QObject {
-  Q_OBJECT
-
-public:
-  NavQtTraceObject(NavQt* parent) : QObject(), nav(parent) {}
-
-public slots:
-  void sel_convert_cb();
-
-private:
-  NavQt* nav;
 };
 
 #endif

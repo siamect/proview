@@ -41,10 +41,6 @@
 
 #include <QWidget>
 
-#include <qlocalserver.h>
-
-class PalQtTraceObject;
-
 class PalQt : public Pal {
 public:
   PalQt(void* parent_ctx, const char* name, ldh_tSesContext ldhses,
@@ -54,27 +50,9 @@ public:
   QWidget* brow_widget;
   QWidget* form_widget;
 
-  QLocalServer* server;
-
   void set_inputfocus(int focus);
   void set_selection_owner();
   void create_popup_menu(pwr_tCid cid, int x, int y);
-
-private:
-  PalQtTraceObject* trace_obj;
-};
-
-class PalQtTraceObject : public QObject {
-  Q_OBJECT
-
-public:
-  PalQtTraceObject(PalQt* parent) : QObject(), pal(parent) {}
-
-public slots:
-  void sel_convert_cb();
-
-private:
-  PalQt* pal;
 };
 
 #endif

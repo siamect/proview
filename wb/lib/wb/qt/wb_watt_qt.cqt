@@ -210,16 +210,14 @@ void WAttQt::change_value_close()
     if (input_multiline) {
       char* text = qPrintableLatin1(cmd_scrolled_buffer->toPlainText());
 
-      if (text) {
-        // Replace ctrl characters with space
-        for (unsigned char* s = (unsigned char*)text; *s; s++) {
-          if (*s < ' ' && *s != 10 && *s != 13) {
-            *s = ' ';
-          }
+      // Replace ctrl characters with space
+      for (unsigned char* s = (unsigned char*)text; *s; s++) {
+        if (*s < ' ' && *s != 10 && *s != 13) {
+          *s = ' ';
         }
-
-        wattnav->set_attr_value(input_node, input_name, text);
       }
+
+      wattnav->set_attr_value(input_node, input_name, text);
       statusbar->setMaximumHeight(25);
       cmd_scrolledinput->setVisible(false);
       set_prompt("");
@@ -229,16 +227,9 @@ void WAttQt::change_value_close()
 
       wattnav->redraw();
       wattnav->set_inputfocus();
-
-      if (!text) {
-        message('E', "Input error, invalid character");
-      }
     } else {
-      char* text = qPrintableLatin1(cmd_entry->text());
-
-      if (text) {
-        wattnav->set_attr_value(input_node, input_name, text);
-      }
+      wattnav->set_attr_value(input_node, input_name,
+        qPrintableLatin1(cmd_entry->text()));
       cmd_entry->setVisible(false);
       set_prompt("");
       input_open = 0;
@@ -247,10 +238,6 @@ void WAttQt::change_value_close()
       }
 
       wattnav->set_inputfocus();
-
-      if (!text) {
-        message('E', "Input error, invalid character");
-      }
     }
 
     if (pending_close) {
@@ -261,12 +248,9 @@ void WAttQt::change_value_close()
 
 void WAttQtWidget::activate_cmd_entry()
 {
-  char* text = qPrintableLatin1(watt->cmd_entry->text());
-
   if (watt->input_open) {
-    if (text) {
-      watt->wattnav->set_attr_value(watt->input_node, watt->input_name, text);
-    }
+    watt->wattnav->set_attr_value(watt->input_node, watt->input_name,
+      qPrintableLatin1(watt->cmd_entry->text()));
     watt->cmd_entry->setVisible(false);
     watt->set_prompt("");
     watt->input_open = 0;
@@ -280,10 +264,6 @@ void WAttQtWidget::activate_cmd_entry()
 
   watt->wattnav->set_inputfocus();
 
-  if (!text) {
-    watt->message('E', "Input error, invalid character");
-  }
-
   if (watt->pending_close) {
     close();
   }
@@ -294,16 +274,14 @@ void WAttQtWidget::activate_cmd_scrolled_ok()
   if (watt->input_open) {
     char* text = qPrintableLatin1(watt->cmd_scrolled_buffer->toPlainText());
 
-    if (text) {
-      // Replace ctrl characters with space
-      for (unsigned char* s = (unsigned char*)text; *s; s++) {
-        if (*s < ' ' && *s != 10 && *s != 13) {
-          *s = ' ';
-        }
+    // Replace ctrl characters with space
+    for (unsigned char* s = (unsigned char*)text; *s; s++) {
+      if (*s < ' ' && *s != 10 && *s != 13) {
+        *s = ' ';
       }
-
-      watt->wattnav->set_attr_value(watt->input_node, watt->input_name, text);
     }
+
+    watt->wattnav->set_attr_value(watt->input_node, watt->input_name, text);
     watt->statusbar->setMaximumHeight(25);
     watt->cmd_scrolledinput->setVisible(false);
     watt->set_prompt("");
@@ -313,10 +291,6 @@ void WAttQtWidget::activate_cmd_scrolled_ok()
 
     watt->wattnav->redraw();
     watt->wattnav->set_inputfocus();
-
-    if (!text) {
-      watt->message('E', "Input error, invalid character");
-    }
 
     if (watt->pending_close) {
       close();

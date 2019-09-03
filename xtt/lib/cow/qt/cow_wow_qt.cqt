@@ -52,6 +52,7 @@
 #include "flow_browapi.h"
 
 #include <QApplication>
+#include <QClipboard>
 #include <QDialogButtonBox>
 #include <QFileDialog>
 #include <QHBoxLayout>
@@ -69,8 +70,6 @@
 #include <QScrollArea>
 #include <QTimer>
 #include <QVBoxLayout>
-
-#include <qlocalsocket.h>
 
 typedef struct {
   char title[80];
@@ -248,7 +247,7 @@ CoWowListWidgetQt::CoWowListWidgetQt(QWidget* parent, const char* title,
     name_p += textsize;
   }
 
-  list->header()->hide();
+  list->header()->close();
 
   connect(list, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this,
       SLOT(list_row_activated_cb(QTreeWidgetItem*, int)));
@@ -413,34 +412,13 @@ void CoWowQtObject::DisplayLicense()
   pop(mbox);
 }
 
-int CoWowQt::GetSelection(char* str, int size, const char* atom)
+int CoWowQt::GetSelection(char* str, int size)
 {
-  QLocalSocket* socket = new QLocalSocket();
-  socket->connectToServer(fl(atom));
-  if (!socket->waitForConnected()) {
-    log_debug("GetSelection failed, could not connect to local server %s: %s\n", fl(atom), qPrintable(socket->errorString()));
-  }
-
-  QString rcvStr;
-  int received = 0;
-  while (!received) {
-    if (socket->waitForReadyRead(50)) {
-      QDataStream in(socket);
-      if (socket->bytesAvailable() > 0 && !in.atEnd()) {
-        in >> rcvStr;
-      }
-      received = 1;
-    }
-    QApplication::processEvents();
-  }
-
-  socket->close();
-  delete socket;
-
+  QString rcvStr = QApplication::clipboard()->text(QClipboard::Selection);
   if (!rcvStr.isEmpty() && rcvStr.length() < size) {
     strcpy(str, qPrintable(rcvStr));
+    return true;
   }
-
   return !rcvStr.isEmpty();
 }
 

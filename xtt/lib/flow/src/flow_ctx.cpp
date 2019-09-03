@@ -1190,17 +1190,15 @@ int FlowCtx::event_handler_nav(flow_eEvent event, int x, int y)
   case flow_eEvent_MB1ClickShift: {
     int delta_x = x - (nav_rect_ur_x + nav_rect_ll_x) / 2;
     int delta_y = y - (nav_rect_ur_y + nav_rect_ll_y) / 2;
-    if (delta_x != 0 || delta_y != 0) {
-      nav_rect_ll_x += delta_x;
-      nav_rect_ur_x += delta_x;
-      nav_rect_ll_y += delta_y;
-      nav_rect_ur_y += delta_y;
-      set_dirty();
-    }
+    nav_rect_ll_x += delta_x;
+    nav_rect_ur_x += delta_x;
+    nav_rect_ll_y += delta_y;
+    nav_rect_ur_y += delta_y;
 
     offset_x -= int(-zoom_factor / nav_zoom_factor * delta_x);
     offset_y -= int(-zoom_factor / nav_zoom_factor * delta_y);
     change_scrollbar();
+    set_dirty();
     break;
   }
   case flow_eEvent_MB1Press:
@@ -1241,19 +1239,17 @@ int FlowCtx::event_handler_nav(flow_eEvent event, int x, int y)
     if (nav_rect_movement_active) {
       int delta_x = x - nav_rect_move_last_x;
       int delta_y = y - nav_rect_move_last_y;
-      if (delta_x != 0 || delta_y != 0) {
-        nav_rect_ll_x += delta_x;
-        nav_rect_ur_x += delta_x;
-        nav_rect_ll_y += delta_y;
-        nav_rect_ur_y += delta_y;
-        set_dirty();
-      }
+      nav_rect_ll_x += delta_x;
+      nav_rect_ur_x += delta_x;
+      nav_rect_ll_y += delta_y;
+      nav_rect_ur_y += delta_y;
       nav_rect_move_last_x = x;
       nav_rect_move_last_y = y;
 
       offset_x -= int(-zoom_factor / nav_zoom_factor * delta_x);
       offset_y -= int(-zoom_factor / nav_zoom_factor * delta_y);
       change_scrollbar();
+      set_dirty();
     } else if (nav_rect_zoom_active) {
       double center_x = 0.5 * (nav_rect_ur_x + nav_rect_ll_x);
       double center_y = 0.5 * (nav_rect_ur_y + nav_rect_ll_y);
@@ -2004,12 +2000,10 @@ void FlowCtx::scroll(double x, double y)
 
 void FlowCtx::scroll(int delta_x, int delta_y)
 {
-  if (delta_x != 0 || delta_y != 0) {
-    offset_x -= delta_x;
-    offset_y -= delta_y;
-    move_widgets(delta_x, delta_y);
-    set_dirty();
-  }
+  offset_x -= delta_x;
+  offset_y -= delta_y;
+  move_widgets(delta_x, delta_y);
+  set_dirty();
 }
 
 void FlowCtx::auto_scrolling_stop()

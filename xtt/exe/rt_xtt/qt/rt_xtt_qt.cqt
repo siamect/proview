@@ -519,20 +519,9 @@ void XttQtWidget::focusInEvent(QFocusEvent* event)
 
 void XttQtWidget::valchanged_cmd_entry()
 {
-  if (xtt->cmd_entry->text().isEmpty()) {
-    xtt->cmd_entry->setVisible(false);
-    xtt->set_prompt("");
-    xtt->input_open = 0;
-    xtt->command_open = 0;
-    xtt->xnav->set_inputfocus();
-    xtt->message('E', "Input error, invalid character");
-    return;
-  }
-
-  char* text = qPrintableLatin1(xtt->cmd_entry->text());
-
   if (xtt->input_open) {
-    int sts = xtt->xnav->set_attr_value(text);
+    int sts = xtt->xnav->set_attr_value(
+      qPrintableLatin1(xtt->cmd_entry->text()));
     xtt->cmd_entry->setVisible(false);
     xtt->set_prompt("");
     xtt->input_open = 0;
@@ -541,7 +530,7 @@ void XttQtWidget::valchanged_cmd_entry()
       xtt->message('E', XNav::get_message(sts));
     }
   } else if (xtt->command_open) {
-    xtt->xnav->command(text);
+    xtt->xnav->command(qPrintableLatin1(xtt->cmd_entry->text()));
     xtt->cmd_entry->setVisible(false);
     xtt->set_prompt("");
     xtt->command_open = 0;

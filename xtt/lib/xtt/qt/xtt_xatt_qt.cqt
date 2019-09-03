@@ -219,11 +219,8 @@ void XAttQt::change_value_close()
 {
   if (input_open) {
     if (input_multiline) {
-      char* text = qPrintableLatin1(cmd_scrolled_buffer->toPlainText());
-
-      if (text) {
-        xattnav->set_attr_value(input_node, input_name, text);
-      }
+      xattnav->set_attr_value(input_node, input_name,
+        qPrintableLatin1(cmd_scrolled_buffer->toPlainText()));
 
       statusbar->setMaximumHeight(25);
       cmd_scrolledinput->setVisible(false);
@@ -234,15 +231,9 @@ void XAttQt::change_value_close()
 
       xattnav->redraw();
       xattnav->set_inputfocus();
-      if (!text) {
-        message('E', "Input error, invalid character");
-      }
     } else {
-      char* text = qPrintableLatin1(cmd_entry->text());
-
-      if (text) {
-        xattnav->set_attr_value(input_node, input_name, text);
-      }
+      xattnav->set_attr_value(input_node, input_name,
+        qPrintableLatin1(cmd_entry->text()));
       cmd_entry->setVisible(false);
       set_prompt("");
       input_open = 0;
@@ -251,9 +242,6 @@ void XAttQt::change_value_close()
       }
 
       xattnav->set_inputfocus();
-      if (!text) {
-        message('E', "Input error, invalid character");
-      }
     }
   }
 }
@@ -266,19 +254,13 @@ void XAttQtWidget::activate_cmd_entry()
   xatt->xattnav->set_inputfocus();
 
   if (xatt->input_open) {
-    char* text = qPrintableLatin1(xatt->cmd_entry->text());
-
-    if (text) {
-      xatt->xattnav->set_attr_value(xatt->input_node, xatt->input_name, text);
-    }
+    xatt->xattnav->set_attr_value(xatt->input_node, xatt->input_name,
+      qPrintableLatin1(xatt->cmd_entry->text()));
     xatt->cmd_entry->setVisible(false);
     xatt->set_prompt("");
     xatt->input_open = 0;
     if (xatt->redraw_cb) {
       (xatt->redraw_cb)(xatt);
-    }
-    if (!text) {
-      xatt->message('E', "Input error, invalid character");
     }
   }
 }
@@ -286,13 +268,8 @@ void XAttQtWidget::activate_cmd_entry()
 void XAttQtWidget::activate_cmd_scrolled_ok()
 {
   if (xatt->input_open) {
-    char* text = qPrintableLatin1(xatt->cmd_scrolled_buffer->toPlainText());
-
-    if (text) {
-      xatt->xattnav->set_attr_value(xatt->input_node, xatt->input_name, text);
-    } else {
-      xatt->message('E', "Input error, invalid character");
-    }
+    xatt->xattnav->set_attr_value(xatt->input_node, xatt->input_name,
+      qPrintableLatin1(xatt->cmd_scrolled_buffer->toPlainText()));
 
     xatt->statusbar->setMaximumHeight(25);
     xatt->cmd_scrolledinput->setVisible(false);

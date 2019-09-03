@@ -155,9 +155,7 @@ void FlowNode::move(int delta_x, int delta_y, int grid)
     obst_y_high += 1.0 * delta_y / ctx->zoom_factor;
     obst_y_low += 1.0 * delta_y / ctx->zoom_factor;
   }
-  if (delta_x != 0 || delta_y != 0) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty();
 }
 
 void FlowNode::move_noerase(int delta_x, int delta_y, int grid)
@@ -180,9 +178,7 @@ void FlowNode::move_noerase(int delta_x, int delta_y, int grid)
     pos.posit(x, y);
     get_borders();
   }
-  if (delta_x != 0 || delta_y != 0) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty();
 }
 
 void FlowNode::print(double ll_x, double ll_y, double ur_x, double ur_y)

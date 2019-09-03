@@ -462,10 +462,6 @@ void GlowCon::move(double delta_x, double delta_y, int grid)
   double x = delta_x / ctx->mw.zoom_factor_x;
   double y = delta_y / ctx->mw.zoom_factor_y;
 
-  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
-    ctx->set_dirty();
-  }
-
   if (movement_type == glow_eMoveType_Route || grid) {
     reconfigure();
   } else {
@@ -484,16 +480,13 @@ void GlowCon::move(double delta_x, double delta_y, int grid)
     }
     get_con_borders();
   }
+  ctx->set_dirty();
 }
 
 void GlowCon::move_noerase(int delta_x, int delta_y, int grid)
 {
   double x = delta_x / ctx->mw.zoom_factor_x;
   double y = delta_y / ctx->mw.zoom_factor_y;
-
-  if (delta_x != 0 || delta_y != 0) {
-    ctx->set_dirty();
-  }
 
   if (cc->con_type != glow_eConType_Routed
       || movement_type == glow_eMoveType_Route || grid || p_num == 0) {
@@ -512,6 +505,8 @@ void GlowCon::move_noerase(int delta_x, int delta_y, int grid)
       draw_routed(p_num, point_x, point_y);
     get_con_borders();
   }
+
+  ctx->set_dirty();
 }
 
 void GlowCon::reconfigure()

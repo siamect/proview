@@ -60,13 +60,12 @@
 #include "wb_xcrr_qt.h"
 
 #include <QApplication>
+#include <QClipboard>
 #include <QColor>
 #include <QInputDialog>
 #include <QLayout>
 #include <QMessageBox>
 #include <QScrollArea>
-
-#include <qlocalsocket.h>
 
 void WNavQt::pop()
 {
@@ -93,19 +92,6 @@ WNavQt::WNavQt(void* xn_parent_ctx, QWidget* xn_parent_wid, const char* xn_name,
 
   // Create the root item
   *w = form_widget;
-
-  serverString = new QLocalServer(trace_obj);
-  QObject::connect(
-      serverString, SIGNAL(newConnection()), trace_obj, SLOT(sel_convert_cb()));
-  serverGraph = new QLocalServer(trace_obj);
-  QObject::connect(
-      serverGraph, SIGNAL(newConnection()), trace_obj, SLOT(sel_convert_cb()));
-  serverObjId = new QLocalServer(trace_obj);
-  QObject::connect(
-      serverObjId, SIGNAL(newConnection()), trace_obj, SLOT(sel_convert_cb()));
-  serverAttrRef = new QLocalServer(trace_obj);
-  QObject::connect(serverAttrRef, SIGNAL(newConnection()), trace_obj,
-      SLOT(sel_convert_cb()));
 
   gbl.load_config(this);
 
@@ -181,36 +167,79 @@ void WNavQt::print(const char* title)
 
 int WNavQt::get_selection(char* str, int len)
 {
-  int sts;
-
-  sts = CoWowQt::GetSelection(str, len, "PWR_OBJID");
-  if (EVEN(sts)) {
-    sts = CoWowQt::GetSelection(str, len, "STRING");
-  }
-
-  return sts;
+  return CoWowQt::GetSelection(str, len);
 }
 
 void WNavQt::set_selection_owner()
 {
-  if (!serverString->isListening()) {
-    QLocalServer::removeServer("STRING");
-    serverString->listen("STRING");
-  }
-  if (!serverGraph->isListening()) {
-    QLocalServer::removeServer("PWR_GRAPH");
-    serverGraph->listen("PWR_GRAPH");
-  }
-  if (!serverObjId->isListening()) {
-    QLocalServer::removeServer("PWR_OBJID");
-    serverObjId->listen("PWR_OBJID");
-  }
-  if (!serverAttrRef->isListening()) {
-    QLocalServer::removeServer("PWR_ATTRREF");
-    serverAttrRef->listen("PWR_ATTRREF");
+  selection_owner = 1;
+  if (!selection_owner) {
+    return;
   }
 
-  selection_owner = 1;
+  pwr_sAttrRef attrref;
+  char* buffp;
+
+  int node_count;
+  brow_tNode* node_list;
+  brow_GetSelectedNodes(brow->ctx, &node_list, &node_count);
+  if (!node_count) {
+    return;
+  }
+
+  WItem* item;
+  brow_GetUserData(node_list[0], (void**)&item);
+
+  switch (item->type) {
+  case wnav_eItemType_Attr:
+  case wnav_eItemType_AttrInput:
+  case wnav_eItemType_AttrInputInv:
+  case wnav_eItemType_AttrInputF:
+  case wnav_eItemType_AttrOutput:
+  case wnav_eItemType_AttrArray:
+  case wnav_eItemType_AttrArrayOutput:
+  case wnav_eItemType_AttrArrayElem:
+  case wnav_eItemType_AttrObject: {
+    WItemBaseAttr* aitem = (WItemBaseAttr*)item;
+
+    int size;
+    pwr_tAName attr_str;
+    int sts = ldh_ObjidToName(ldhses, item->objid, ldh_eName_Hierarchy,
+        attr_str, sizeof(attr_str), &size);
+    if (EVEN(sts)) {
+      break;
+    }
+
+    strcat(attr_str, ".");
+    strcat(attr_str, aitem->name);
+    sts = ldh_NameToAttrRef(ldhses, attr_str, &attrref);
+    if (EVEN(sts)) {
+      break;
+    }
+    sts = (format_selection_cb)(
+        parent_ctx, attrref, &buffp, 0, 1, wnav_eSelectionFormat_User);
+    if (sts) {
+      QApplication::clipboard()->setText(buffp, QClipboard::Selection);
+    }
+    break;
+  }
+  case wnav_eItemType_Object: {
+    attrref = cdh_ObjidToAref(item->objid);
+    int sts = (format_selection_cb)(
+        parent_ctx, attrref, &buffp, 0, 0, wnav_eSelectionFormat_User);
+    if (sts) {
+      QApplication::clipboard()->setText(buffp, QClipboard::Selection);
+    }
+    break;
+  }
+  default: {
+    char name[200];
+    brow_GetAnnotation(node_list[0], 0, name, sizeof(name));
+    QApplication::clipboard()->setText(name, QClipboard::Selection);
+    break;
+  }
+  }
+  free(node_list);
 }
 
 void WNavQt::create_popup_menu(pwr_tAttrRef aref, int x, int y)
@@ -280,101 +309,6 @@ void WNavQt::logw_new(char* item, wlog_eCategory* categories, int show_item)
   } else {
     logw->CoLogW::show(0, item);
   }
-}
-
-static void selection_data_set(
-    WNavQt* wnav, QLocalServer* server, const char* data)
-{
-  QByteArray block;
-  QDataStream out(&block, QIODevice::WriteOnly);
-  out << QString(data);
-
-  QLocalSocket* clientConnection = server->nextPendingConnection();
-  QObject::connect(clientConnection, SIGNAL(disconnected()),
-      clientConnection, SLOT(deleteLater()));
-  clientConnection->write(block);
-  clientConnection->flush();
-  clientConnection->disconnectFromServer();
-}
-
-void WNavQtTraceObject::sel_convert_cb()
-{
-  pwr_sAttrRef attrref;
-  char* buffp;
-
-  QLocalServer* server = ((QLocalServer*)sender());
-
-  wnav_eSelectionFormat format;
-  if (server == wnav->serverGraph) {
-    format = wnav_eSelectionFormat_Graph;
-  } else if (server == wnav->serverObjId) {
-    format = wnav_eSelectionFormat_Objid;
-  } else if (server == wnav->serverAttrRef) {
-    format = wnav_eSelectionFormat_Attrref;
-  } else {
-    format = wnav_eSelectionFormat_User;
-  }
-
-  int node_count;
-  brow_tNode* node_list;
-  brow_GetSelectedNodes(wnav->brow->ctx, &node_list, &node_count);
-  if (!node_count) {
-    return;
-  }
-
-  WItem* item;
-  brow_GetUserData(node_list[0], (void**)&item);
-
-  switch (item->type) {
-  case wnav_eItemType_Attr:
-  case wnav_eItemType_AttrInput:
-  case wnav_eItemType_AttrInputInv:
-  case wnav_eItemType_AttrInputF:
-  case wnav_eItemType_AttrOutput:
-  case wnav_eItemType_AttrArray:
-  case wnav_eItemType_AttrArrayOutput:
-  case wnav_eItemType_AttrArrayElem:
-  case wnav_eItemType_AttrObject: {
-    WItemBaseAttr* aitem = (WItemBaseAttr*)item;
-
-    int size;
-    pwr_tAName attr_str;
-    int sts = ldh_ObjidToName(wnav->ldhses, item->objid, ldh_eName_Hierarchy,
-        attr_str, sizeof(attr_str), &size);
-    if (EVEN(sts)) {
-      break;
-    }
-
-    strcat(attr_str, ".");
-    strcat(attr_str, aitem->name);
-    sts = ldh_NameToAttrRef(wnav->ldhses, attr_str, &attrref);
-    if (EVEN(sts)) {
-      break;
-    }
-    sts = (wnav->format_selection_cb)(
-        wnav->parent_ctx, attrref, &buffp, 0, 1, format);
-    if (sts) {
-      selection_data_set(wnav, server, buffp);
-    }
-    break;
-  }
-  case wnav_eItemType_Object: {
-    attrref = cdh_ObjidToAref(item->objid);
-    int sts = (wnav->format_selection_cb)(
-        wnav->parent_ctx, attrref, &buffp, 0, 0, format);
-    if (sts) {
-      selection_data_set(wnav, server, buffp);
-    }
-    break;
-  }
-  default: {
-    char name[200];
-    brow_GetAnnotation(node_list[0], 0, name, sizeof(name));
-    selection_data_set(wnav, server, name);
-    break;
-  }
-  }
-  free(node_list);
 }
 
 int WNavQt::open_foe(const char* name, pwr_tOid plcpgm, void** foectx,

@@ -65,7 +65,7 @@ GeItemViewQt::GeItemViewQt(Ge* gectx) : QWidget(), ge_ctx(gectx), tree_widget(0)
       SLOT(activate_tree_widget(QTreeWidgetItem*, int)));
 
   tree_widget->setColumnCount(1);
-  tree_widget->header()->hide();
+  tree_widget->header()->close();
 
   autosave_button = new QCheckBox("Autosave", this);
   connect(autosave_button, SIGNAL(stateChanged(int)), this,

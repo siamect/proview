@@ -492,9 +492,7 @@ void FlowCon::move(int delta_x, int delta_y, int grid)
     }
     get_con_borders();
   }
-  if (delta_x != 0 || delta_y != 0) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty();
 }
 
 void FlowCon::move_noerase(int delta_x, int delta_y, int grid)
@@ -519,9 +517,7 @@ void FlowCon::move_noerase(int delta_x, int delta_y, int grid)
       draw_routed(p_num, point_x, point_y);
     get_con_borders();
   }
-  if (delta_x != 0 || delta_y != 0) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty();
 }
 
 void FlowCon::reconfigure()

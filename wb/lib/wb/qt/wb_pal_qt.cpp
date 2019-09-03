@@ -34,33 +34,27 @@
  * General Public License plus this exception.
  */
 
-/* wb_nav_qt.cpp -- Display plant and node hiererachy or plc-editor */
+/* wb_pal_qt.cpp -- Palette of configurator or plc-editor */
 
 #include "cow_qt_helpers.h"
 
 #include "flow_browwidget_qt.h"
 
-#include "wb_nav_qt.h"
+#include "wb_pal_qt.h"
 
+#include <QApplication>
+#include <QClipboard>
 #include <QScrollArea>
 
-#include <qlocalsocket.h>
-
-NavQt::NavQt(void* nav_parent_ctx, const char* nav_name,
-    ldh_tSesContext nav_ldhses, const char* nav_root_name, QWidget** w,
+PalQt::PalQt(void* pal_parent_ctx, const char* pal_name,
+    ldh_tSesContext pal_ldhses, const char* pal_root_name, QWidget** w,
     pwr_tStatus* status)
-    : Nav(nav_parent_ctx, nav_name, nav_ldhses, nav_root_name, status)
+    : Pal(pal_parent_ctx, pal_name, pal_ldhses, pal_root_name, status)
 {
-  trace_obj = new NavQtTraceObject(this);
-
   QScrollArea* scrolledbrow = ((QScrollArea*)scrolledbrowwidgetqt_new(
-      Nav::init_brow_cb, this, &brow_widget));
+      Pal::init_brow_cb, this, &brow_widget));
 
   form_widget = wrapInFrame(scrolledbrow);
-
-  server = new QLocalServer(trace_obj);
-  QObject::connect(
-      server, SIGNAL(newConnection()), trace_obj, SLOT(sel_convert_cb()));
 
   set_inputfocus(0);
 
@@ -68,49 +62,16 @@ NavQt::NavQt(void* nav_parent_ctx, const char* nav_name,
   *status = 1;
 }
 
-NavQt::~NavQt()
+PalQt::~PalQt()
 {
   PalFile::config_tree_free(menu);
   free_pixmaps();
-  delete trace_obj;
   form_widget->close();
 }
 
-void NavQtTraceObject::sel_convert_cb()
+void PalQt::create_popup_menu(pwr_tCid cid, int x, int y)
 {
-  char name[200];
-  pwr_tStatus sts;
-
-  if (!nav->selection_owner) {
-    return;
-  }
-
-  if (!nav->get_plant_select_cb) {
-    strcpy(name, "");
-  } else {
-    sts = nav->get_plant_select_cb(nav->parent_ctx, name, sizeof(name));
-    if (EVEN(sts)) {
-      strcpy(name, "");
-    }
-  }
-
-  QByteArray block;
-  QDataStream out(&block, QIODevice::WriteOnly);
-  out.writeRawData(name, strlen(name));
-
-  QLocalSocket* clientConnection = nav->server->nextPendingConnection();
-  clientConnection->write(block);
-  clientConnection->flush();
-  clientConnection->disconnectFromServer();
-}
-
-void NavQt::set_selection_owner(int set)
-{
-  if (!server->isListening()) {
-    QLocalServer::removeServer("STRING");
-    server->listen("STRING");
-  }
-  selection_owner = set;
+  (create_popup_menu_cb)(parent_ctx, cid, x, y);
 }
 
 static void modifyBackground(QWidget* widget, QColor color)
@@ -121,7 +82,7 @@ static void modifyBackground(QWidget* widget, QColor color)
   widget->setPalette(pal);
 }
 
-void NavQt::set_inputfocus(int focus)
+void PalQt::set_inputfocus(int focus)
 {
   if (!displayed) {
     return;
@@ -129,9 +90,41 @@ void NavQt::set_inputfocus(int focus)
 
   if (focus) {
     modifyBackground(form_widget, QColor("Black"));
+    brow_widget->setFocus();
   } else {
     modifyBackground(form_widget, QColor("White"));
-    brow_SelectClear(brow_ctx);
+    brow_SetInverseColor(brow_ctx, flow_eDrawType_LineGray);
     selection_owner = 0;
   }
+}
+
+void PalQt::set_selection_owner()
+{
+  selection_owner = 1;
+  brow_SetInverseColor(brow_ctx, flow_eDrawType_Line);
+  if (!selection_owner) {
+    return;
+  }
+
+  char name[200];
+  brow_tNode* node_list;
+  int node_count;
+  brow_GetSelectedNodes(brow_ctx, &node_list, &node_count);
+  if (!node_count) {
+    strcpy(name, "");
+  } else {
+    PalItem* item;
+    brow_GetUserData(node_list[0], (void**)&item);
+
+    switch (item->type) {
+    case pal_ePalItemType_ClassVolume:
+    case pal_ePalItemType_Class:
+    case pal_ePalItemType_Object:
+    default:
+      brow_GetAnnotation(node_list[0], 0, name, sizeof(name));
+      free(node_list);
+    }
+  }
+
+  QApplication::clipboard()->setText(name, QClipboard::Selection);
 }

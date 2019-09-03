@@ -544,9 +544,7 @@ void GrowPolyLine::move(double delta_x, double delta_y, int grid)
     y_high += dy;
     y_low += dy;
   }
-  if (!feq(delta_x, 0.0) || !feq(delta_y, 0.0)) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty();
 }
 
 void GrowPolyLine::move_current_point(int delta_x, int delta_y, int grid)
@@ -566,9 +564,7 @@ void GrowPolyLine::move_current_point(int delta_x, int delta_y, int grid)
   ((GlowPoint*)a_points[current_point])->y = tmp.y;
   zoom();
   get_node_borders();
-  if (delta_x != 0 || delta_y != 0) {
-    ctx->set_dirty();
-  }
+  ctx->set_dirty();
 }
 
 GrowPolyLine::~GrowPolyLine()
@@ -1263,14 +1259,12 @@ void GrowPolyLine::align(double x, double y, glow_eAlignDirection direction)
     dy = y - y_low;
     break;
   }
-  if (!feq(dx, 0.0) || !feq(dy, 0.0)) {
-    ctx->set_dirty();
-  }
   trf.move(dx, dy);
   x_right += dx;
   x_left += dx;
   y_high += dy;
   y_low += dy;
+  ctx->set_dirty();
 }
 
 void GrowPolyLine::export_javabean(GlowTransform* t, void* node,
