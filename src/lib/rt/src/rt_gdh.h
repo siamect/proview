@@ -342,7 +342,7 @@ pwr_tStatus gdh_SetAlarmBlockLevel(
 pwr_tStatus gdh_SetAlarmLevel(pwr_tObjid object, pwr_tUInt32 alarmLevel);
 
 pwr_tStatus gdh_SetObjectInfo(
-    char* attributeName, void* buffer, unsigned int sizeOfBuffer);
+    const char* attributeName, void* buffer, unsigned int sizeOfBuffer);
 
 pwr_tStatus gdh_SetObjectInfoAttrref(
     pwr_sAttrRef* attributeReference, void* buffer, unsigned int sizeOfBuffer);
@@ -444,13 +444,13 @@ void gdh_SetTimeDL(pwr_tTime* atp, pwr_tTime* time);
 void gdh_GetDeltaTimeDL(pwr_tDeltaTime* dtp, pwr_tDeltaTime* time);
 void gdh_SetDeltaTimeDL(pwr_tDeltaTime* dtp, pwr_tDeltaTime* time);
 void gdh_GetStrDL(char* sp, char* str, int size);
-void gdh_SetStrDL(char* sp, char* str, int size);
-pwr_tStatus gdh_GetObjectInfoTime(char* name, pwr_tTime* time);
-pwr_tStatus gdh_SetObjectInfoTime(char* name, pwr_tTime* time);
-pwr_tStatus gdh_GetObjectInfoDeltaTime(char* name, pwr_tDeltaTime* time);
-pwr_tStatus gdh_SetObjectInfoDeltaTime(char* name, pwr_tDeltaTime* time);
-pwr_tStatus gdh_GetObjectInfoStr(char* name, char* str, int size);
-pwr_tStatus gdh_SetObjectInfoStr(char* name, char* str, int size);
+void gdh_SetStrDL(char* sp, const char* str, int size);
+pwr_tStatus gdh_GetObjectInfoTime(const char* name, pwr_tTime* time);
+pwr_tStatus gdh_SetObjectInfoTime(const char* name, pwr_tTime* time);
+pwr_tStatus gdh_GetObjectInfoDeltaTime(const char* name, pwr_tDeltaTime* time);
+pwr_tStatus gdh_SetObjectInfoDeltaTime(const char* name, pwr_tDeltaTime* time);
+pwr_tStatus gdh_GetObjectInfoStr(const char* name, char* str, int size);
+pwr_tStatus gdh_SetObjectInfoStr(const char* name, const char* str, int size);
 
 /** @} */
 
