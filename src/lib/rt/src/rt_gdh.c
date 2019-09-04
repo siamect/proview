@@ -2503,7 +2503,7 @@ pwr_tStatus gdh_RenameObject(
  */
 
 pwr_tStatus gdh_SetObjectInfo(
-    char* name, /**< The name of the object or object attribute.*/
+    const char* name, /**< The name of the object or object attribute.*/
     void* bufp, /**< Pointer to the data. */
     unsigned int bufsize /**< The size in bytes of the data buffer. */
     )
@@ -2616,7 +2616,7 @@ pwr_tStatus gdh_SetObjectInfo(
   }
 
   if (gdh_log_cb && ODD(sts))
-    gdh_log_cb(name, bufp, bufsize);
+    gdh_log_cb((char *)name, bufp, bufsize);
 
   if (ccpLocked) {
     gdb_Lock;
@@ -5411,7 +5411,7 @@ void gdh_GetStrDL(char* sp, /**< Direct link to string attribute */
  * lck_Create(&sts, lck_eLock_Str).
  */
 void gdh_SetStrDL(char* sp, /**< Direct link to string attribute */
-    char* str, /**< String value to set */
+    const char* str, /**< String value to set */
     int size /**< Size of string */
     )
 {
@@ -5429,7 +5429,7 @@ void gdh_SetStrDL(char* sp, /**< Direct link to string attribute */
  *
  * @return pwr_tStatus
  */
-pwr_tStatus gdh_GetObjectInfoTime(char* name, /**< Attribute name */
+pwr_tStatus gdh_GetObjectInfoTime(const char* name, /**< Attribute name */
     pwr_tTime* time /**< Receives the requested time */
     )
 {
@@ -5450,7 +5450,7 @@ pwr_tStatus gdh_GetObjectInfoTime(char* name, /**< Attribute name */
  *
  * @return pwr_tStatus
  */
-pwr_tStatus gdh_SetObjectInfoTime(char* name, /**< Attribute name */
+pwr_tStatus gdh_SetObjectInfoTime(const char* name, /**< Attribute name */
     pwr_tTime* time /**< Time to set */
     )
 {
@@ -5471,7 +5471,7 @@ pwr_tStatus gdh_SetObjectInfoTime(char* name, /**< Attribute name */
  *
  * @return pwr_tStatus
  */
-pwr_tStatus gdh_GetObjectInfoDeltaTime(char* name, /**< Attribute name */
+pwr_tStatus gdh_GetObjectInfoDeltaTime(const char* name, /**< Attribute name */
     pwr_tDeltaTime* time /**< Receives the requested time */
     )
 {
@@ -5492,7 +5492,7 @@ pwr_tStatus gdh_GetObjectInfoDeltaTime(char* name, /**< Attribute name */
  *
  * @return pwr_tStatus
  */
-pwr_tStatus gdh_SetObjectInfoDeltaTime(char* name, /**< Attribute name */
+pwr_tStatus gdh_SetObjectInfoDeltaTime(const char* name, /**< Attribute name */
     pwr_tDeltaTime* time /**< Time to set */
     )
 {
@@ -5513,7 +5513,7 @@ pwr_tStatus gdh_SetObjectInfoDeltaTime(char* name, /**< Attribute name */
  *
  * @return pwr_tStatus
  */
-pwr_tStatus gdh_GetObjectInfoStr(char* name, /**< Attribute name */
+pwr_tStatus gdh_GetObjectInfoStr(const char* name, /**< Attribute name */
     char* str, /**< Receives the requested string */
     int size /**< String size */
     )
@@ -5535,8 +5535,8 @@ pwr_tStatus gdh_GetObjectInfoStr(char* name, /**< Attribute name */
  *
  * @return pwr_tStatus
  */
-pwr_tStatus gdh_SetObjectInfoStr(char* name, /**< Attribute name */
-    char* str, /**< String to set */
+pwr_tStatus gdh_SetObjectInfoStr(const char* name, /**< Attribute name */
+    const char* str, /**< String to set */
     int size /**< String size */
     )
 {
