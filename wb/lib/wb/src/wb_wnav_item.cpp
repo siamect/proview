@@ -3311,6 +3311,7 @@ int WItemAttrArrayElem::open_children(double x, double y)
             flow_eDest_IntoLast);
       }
       free((char*)bd);
+      break;
     }
     case pwr_eType_Objid:
     case pwr_eType_AttrRef: {
