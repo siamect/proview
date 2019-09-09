@@ -116,6 +116,7 @@ static pwr_tStatus logg_print(logg_ctx loggctx, pwr_tUInt32 ident, char* msg);
 static pwr_tStatus logg_get_message(
     logg_ctx loggctx, pwr_tUInt32* ident, char** msg);
 static pwr_tStatus logg_init(logg_ctx loggctx);
+static pwr_tStatus logg_free_message(void);
 
 /****************************************************************************
 * Name:		exit_hdlr()
@@ -443,7 +444,8 @@ static pwr_tStatus logg_get_message(
           exit(0);
         }
       }
-
+      logg_free_message();
+      return QCOM__QEMPTY;
     } else {
       *ident = *(pwr_tUInt32*)remlogg_get.data;
       *msg = (char*)remlogg_get.data + sizeof(pwr_tUInt32);
