@@ -660,6 +660,8 @@ Edit file \$pwrp_cnf/xtt_help.dat to write this description.
 
 EOF
 
+    cp $proot/src/cnf/xtt_help.dat $proot/bld/common/load
+
     # Create an empty directory database
     echo "Creating directory database"
     cat > $proot/src/db/directory.wb_load << EOF
