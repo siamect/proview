@@ -331,8 +331,8 @@ XttGeQt::XttGeQt(void* xg_parent_ctx, const char* xg_name,
   str_StrncpyCutOff(title, name, sizeof(title), 1);
 
   // Qt
+  toplevel = new XttGeQtWidget(this);
   if (!(options & ge_mOptions_Embedded)) {
-    toplevel = new XttGeQtWidget(this);
     toplevel->setWindowTitle(QString::fromLatin1(title));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
