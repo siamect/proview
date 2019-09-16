@@ -1215,8 +1215,7 @@ static void sendAlarmStatus(sOutunit* op)
         if (ep && !(ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow))
           break;
         if (ep && ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow
-            && (!(ep->msg.info.EventFlags & mh_mEventFlags_Ack)
-                   || !(ep->msg.info.EventFlags & mh_mEventFlags_Return)))
+            && !(ep->msg.info.EventFlags & mh_mEventFlags_Ack))
           break;
       }
 
@@ -1263,8 +1262,7 @@ static void sendAlarmStatus(sOutunit* op)
         if (ep && !(ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow))
           break;
         if (ep && ep->msg.info.EventFlags & mh_mEventFlags_InfoWindow
-            && (!(ep->msg.info.EventFlags & mh_mEventFlags_Ack)
-                   || !(ep->msg.info.EventFlags & mh_mEventFlags_Return)))
+            && !(ep->msg.info.EventFlags & mh_mEventFlags_Ack))
           break;
       }
 
