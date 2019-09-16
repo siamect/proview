@@ -191,7 +191,13 @@ int rtt_alarm_send(char* alarm_text, int alarm_prio)
     break;
   case 'I':
     mh_msg.EventType = mh_eEvent_Info;
-    mh_msg.EventFlags = mh_mEventFlags_InfoWindow;
+    mh_msg.EventFlags |= mh_mEventFlags_InfoWindow;
+    mh_msg.EventFlags |= mh_mEventFlags_Ack;
+    break;
+  case 'S':
+    mh_msg.EventType = mh_eEvent_InfoSuccess;
+    mh_msg.EventFlags |= mh_mEventFlags_InfoWindow;
+    mh_msg.EventFlags |= mh_mEventFlags_Ack;
     break;
   default:
     mh_msg.EventPrio = mh_eEventPrio_A;
