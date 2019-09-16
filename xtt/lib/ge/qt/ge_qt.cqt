@@ -320,14 +320,9 @@ int GeQt::get_plant_select(char* select_name, int size)
   pwr_tAName buff;
 
   if (!ldhses) {
-    sts = CoWowQt::GetSelection(str, sizeof(str), "PWR_GRAPH");
+    sts = CoWowQt::GetSelection(str, sizeof(str));
     if (ODD(sts)) {
       strcpy(select_name, str);
-    } else {
-      sts = CoWowQt::GetSelection(str, sizeof(str), "STRING");
-      if (ODD(sts)) {
-        strcpy(select_name, str);
-      }
     }
     return sts;
   }
@@ -342,14 +337,9 @@ int GeQt::get_plant_select(char* select_name, int size)
     strncpy(select_name, buff, size);
     return 1;
   } else {
-    sts = CoWowQt::GetSelection(str, sizeof(str), "PWR_GRAPH");
+    sts = CoWowQt::GetSelection(str, sizeof(str));
     if (ODD(sts)) {
       strncpy(select_name, str, size);
-    } else {
-      sts = CoWowQt::GetSelection(str, sizeof(str), "STRING");
-      if (ODD(sts)) {
-        strncpy(select_name, str, size);
-      }
     }
     return sts;
   }

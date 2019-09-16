@@ -66,11 +66,7 @@ WAttNavQt::~WAttNavQt()
 
 pwr_tStatus WAttNavQt::get_selection(char* str, int size)
 {
-  pwr_tStatus sts = CoWowQt::GetSelection(str, size, "PWR_OBJID");
-  if (EVEN(sts)) {
-    sts = CoWowQt::GetSelection(str, size, "STRING");
-  }
-  return sts;
+  return CoWowQt::GetSelection(str, size);
 }
 
 void WAttNavQt::set_inputfocus()

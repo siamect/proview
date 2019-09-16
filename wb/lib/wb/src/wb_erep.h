@@ -78,7 +78,7 @@ class wb_erep {
   std::vector<wb_vrep*> m_vrepbuffer;
   std::map<std::string, wb_tMethod> m_methods;
 
-  char m_dir_list[25][200];
+  char m_dir_list[52][200];
   int m_dir_cnt;
   int m_volatile_idx;
   int m_buffer_max;

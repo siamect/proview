@@ -1277,10 +1277,5 @@ int WFoeQt::view_set_entries()
 
 int WFoeQt::get_selection(char* str, int len)
 {
-  int sts = CoWowQt::GetSelection(str, len, "PWR_OBJID");
-  if (EVEN(sts)) {
-    sts = CoWowQt::GetSelection(str, len, "STRING");
-  }
-
-  return sts;
+  return CoWowQt::GetSelection(str, len);
 }
