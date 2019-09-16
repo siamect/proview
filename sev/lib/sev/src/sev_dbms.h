@@ -205,6 +205,11 @@ public:
       pwr_tStatus* sts, char* tablename, unsigned int item_idx);
   int handle_objectchange(
       pwr_tStatus* sts, char* tablename, unsigned int item_idx, bool newObject);
+  int get_events(pwr_tStatus *sts, void *thread, pwr_tOid,
+		 pwr_tMask options, pwr_tMask eventtypemask, 
+		 pwr_tMask eventpriomask, char *eventtext, char *eventname,
+		 pwr_tTime *starttime, pwr_tTime *endtime, unsigned int numpoints, 
+		 std::vector<sev_event> &list);
   int repair_table(pwr_tStatus* sts, char* tablename);
   int alter_engine(pwr_tStatus* sts, char* tablename);
   int optimize(pwr_tStatus* sts, char* tablename);

@@ -4716,6 +4716,342 @@ int sev_dbms::handle_objectchange(
   return 1;
 }
 
+int sev_dbms::get_events(pwr_tStatus *sts, void *thread, pwr_tOid oid,
+			 pwr_tMask options, pwr_tMask eventtypemask, 
+			 pwr_tMask eventpriomask, char *eventtext, char *eventname,
+			 pwr_tTime *starttime, pwr_tTime *endtime, unsigned int numevents, 
+			 std::vector<sev_event> &list)
+{
+  sev_item item;
+  get_item(sts, thread, &item, oid, (char *)"Events");
+  if (EVEN(*sts)) {
+    return 0;
+  }
+
+  char query[700];
+  char starttimstr[40];
+  char endtimstr[40];
+  pwr_tTime stime, etime;
+  char column_part[200];
+  char orderby_part[80];
+  char limit_part[80];
+  char where_part[600];
+  int rows = 0;
+  MYSQL* con;
+
+  if (thread)
+    con = (MYSQL*)thread;
+  else
+    con = m_env->con();
+
+  if (starttime && starttime->tv_sec == 0 && starttime->tv_nsec == 0)
+    starttime = 0;
+  else
+    stime = *starttime;
+
+  if (endtime && endtime->tv_sec == 0 && endtime->tv_nsec == 0)
+    endtime = 0;
+  else
+    etime = *endtime;
+
+  // Get number of rows
+  sprintf(query, "show table status where name = '%s';", item.tablename);
+
+  int rc = mysql_query(con, query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf("GetEvents Query Error\n");
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+
+  MYSQL_ROW row;
+  MYSQL_RES* result = mysql_store_result(con);
+
+  if (!result) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf("GetValues Status Result Error\n");
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+
+  row = mysql_fetch_row(result);
+  if (!row) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf("GetValues Status Result Error\n");
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+  mysql_free_result(result);
+
+  if (starttime) {
+    *sts = time_AtoAscii(
+        &stime, time_eFormat_NumDateAndTime, starttimstr, sizeof(starttimstr));
+    if (EVEN(*sts))
+      return 0;
+    starttimstr[19] = 0;
+  }
+  if (endtime) {
+    *sts = time_AtoAscii(
+        &etime, time_eFormat_NumDateAndTime, endtimstr, sizeof(endtimstr));
+    if (EVEN(*sts))
+      return 0;
+    endtimstr[19] = 0;
+  }
+
+  // Column part
+  if (options & pwr_mSevOptionsMask_HighTimeResolution)
+    strcpy(column_part, "time,ntime,eventtype,eventprio,eventid_nix,eventid_birthtime,"
+	   "eventid_idx,supobject_vid,supobject_oix,supobject_offset,supobject_size,eventtext,"
+	   "eventname");
+  else
+    strcpy(column_part, "time,eventtype,eventprio,eventid_nix,eventid_birthtime,"
+	   "eventid_idx,supobject_vid,supobject_oix,supobject_offset,supobject_size,eventtext,"
+	   "eventname");
+
+  // 'order by' part
+  if (options & pwr_mSevOptionsMask_HighTimeResolution)
+    strcpy(orderby_part, "time,ntime");
+  else
+    strcpy(orderby_part, "time");
+
+  // 'where' part
+  // Not read optimized
+  if (starttime && endtime) {
+    if (options & pwr_mSevOptionsMask_PosixTime)
+      sprintf(where_part, "where time >= %ld and time <= %ld",
+              (long int)starttime->tv_sec, (long int)endtime->tv_sec);
+    else
+      sprintf(where_part, "where time >= '%s' and time <= '%s'",
+              starttimstr, endtimstr);
+  } else if (starttime) {
+    if (options & pwr_mSevOptionsMask_PosixTime)
+      sprintf(where_part, "where time >= %ld", (long int)starttime->tv_sec);
+    else
+      sprintf(where_part, "where time >= '%s'", starttimstr);
+  } else if (endtime) {
+    if (options & pwr_mSevOptionsMask_PosixTime)
+      sprintf(where_part, "where time <= %ld", (long int)endtime->tv_sec);
+    else
+      sprintf(where_part, "where time <= '%s'", endtimstr);
+  } else
+    strcpy(where_part, "");
+
+  if (eventtypemask) {
+    bool first = true;
+    sprintf(&where_part[strlen(where_part)], " and (");    
+    if (eventtypemask & sev_mEventType_Ack) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Ack);
+      first = false;
+    }
+    if (eventtypemask & sev_mEventType_Block) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Block);
+      first = false;
+    }
+    if (eventtypemask & sev_mEventType_Cancel) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Cancel);
+      first = false;
+    }
+    if (eventtypemask & sev_mEventType_CancelBlock) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_CancelBlock);
+      first = false;
+    }
+    if (eventtypemask & sev_mEventType_Missing) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Missing);
+      first = false;
+    }
+    if (eventtypemask & sev_mEventType_Reblock) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Reblock);
+      first = false;
+    }
+    if (eventtypemask & sev_mEventType_Return) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Return);
+      first = false;
+    }
+    if (eventtypemask & sev_mEventType_Unblock) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Unblock);
+      first = false;
+    }
+    if (eventtypemask & sev_mEventType_InfoSuccess) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_InfoSuccess);
+      first = false;
+    }
+    if (eventtypemask & sev_mEventType_Alarm) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Alarm);
+      first = false;
+    }
+    if (eventtypemask & sev_mEventType_MaintenanceAlarm) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_MaintenanceAlarm);
+      first = false;
+    }
+    if (eventtypemask & sev_mEventType_SystemAlarm) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_SystemAlarm);
+      first = false;
+    }
+    if (eventtypemask & sev_mEventType_UserAlarm1) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_UserAlarm1);
+      first = false;
+    }
+    if (eventtypemask & sev_mEventType_UserAlarm2) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_UserAlarm2);
+      first = false;
+    }
+    if (eventtypemask & sev_mEventType_UserAlarm3) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_UserAlarm3);
+      first = false;
+    }
+    if (eventtypemask & sev_mEventType_UserAlarm4) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_UserAlarm4);
+      first = false;
+    }
+    if (eventtypemask & sev_mEventType_Info) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Info);
+      first = false;
+    }
+    sprintf(&where_part[strlen(where_part)], ")");    
+  }
+
+  if (eventpriomask) {
+    bool first = true;
+    sprintf(&where_part[strlen(where_part)], " and (");    
+    if (eventpriomask & sev_mEventPrio_A) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventprio = %d", mh_eEventPrio_A);
+      first = false;
+    }
+    if (eventpriomask & sev_mEventPrio_B) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventprio = %d", mh_eEventPrio_B);
+      first = false;
+    }
+    if (eventpriomask & sev_mEventPrio_C) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventprio = %d", mh_eEventPrio_C);
+      first = false;
+    }
+    if (eventpriomask & sev_mEventPrio_D) {
+      if (!first)
+	sprintf(&where_part[strlen(where_part)], " or ");    
+      sprintf(&where_part[strlen(where_part)], "eventprio = %d", mh_eEventPrio_C);
+      first = false;
+    }
+    sprintf(&where_part[strlen(where_part)], ")");    
+  }
+
+  if (!streq(eventtext, ""))
+    sprintf(&where_part[strlen(where_part)], " and eventtext regexp '%s'", eventtext);
+  if (!streq(eventname, ""))
+    sprintf(&where_part[strlen(where_part)], " and eventname regexp '%s'", eventname);
+
+  if (numevents)
+    sprintf(limit_part, "limit %d", numevents);
+  else
+    strcpy(limit_part, "");
+
+  sprintf(query, "select %s from %s %s order by %s %s", column_part,
+          item.tablename, where_part, orderby_part, limit_part);
+
+  printf("Query: %s\n", query);
+  rc = mysql_query(con, query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf("Get Events: %s\n", mysql_error(con));
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+
+  result = mysql_store_result(con);
+  if (!result) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf("GetEvents Result Error\n");
+    *sts = SEV__DBERROR;
+    return 0;
+  }
+  rows = mysql_num_rows(result);
+
+
+  for (int i = 0; i < rows; i++) {
+    sev_event e;
+    int j = 0;
+
+    row = mysql_fetch_row(result);
+    if (!row)
+      break;
+
+    if (options & pwr_mSevOptionsMask_PosixTime) {
+      if (options & pwr_mSevOptionsMask_HighTimeResolution) {
+	// Posix time, high resolution
+	e.time.tv_sec = strtoul(row[j++], 0, 10);
+	e.time.tv_nsec = strtoul(row[j++], 0, 10);
+      } else
+	// Posix time, low resolution
+        e.time.tv_sec = strtoul(row[j++], 0, 10);
+    } else {
+      if (options & pwr_mSevOptionsMask_HighTimeResolution) {
+	// Sql time, high resolution
+	timestr_to_time(row[j++], &e.time);
+	e.time.tv_nsec = strtoul(row[j++], 0, 10);
+      } else
+	// Sql time, low resolution
+	timestr_to_time(row[j++], &e.time);
+    }
+    e.type = strtoul(row[j++], 0, 10);
+    e.eventprio = strtoul(row[j++], 0, 10);
+    e.eventid.Nix = strtoul(row[j++], 0, 10);
+    e.eventid.BirthTime.tv_sec = strtoul(row[j++], 0, 10);
+    e.eventid.Idx = strtoul(row[j++], 0, 10);
+    e.supobject.Objid.vid = strtoul(row[j++], 0, 10);
+    e.supobject.Objid.oix = strtoul(row[j++], 0, 10);
+    e.supobject.Offset = strtoul(row[j++], 0, 10);
+    e.supobject.Size = strtoul(row[j++], 0, 10);
+    strncpy(e.eventtext, row[j++], sizeof(e.eventtext));
+    strncpy(e.eventname, row[j++], sizeof(e.eventname));
+    list.push_back(e);
+  }
+  printf("ecnt %d\n", list.size());
+
+  mysql_free_result(result);
+  *sts = SEV__SUCCESS;
+  return 1;
+}
+
 int sev_dbms::repair_table(pwr_tStatus* sts, char* tablename)
 {
   char query[200];
