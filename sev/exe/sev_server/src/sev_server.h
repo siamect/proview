@@ -66,6 +66,14 @@ typedef struct {
 } sev_sHistDataThread;
 
 typedef struct {
+  sev_server* sev;
+  qcom_sQid tgt;
+  sev_sMsgEventsGetRequest* rmsg;
+  unsigned int size;
+  unsigned int item_idx;
+} sev_sEventsThread;
+
+typedef struct {
   int key;
   pthread_t thread;
   que_sQue queue;
@@ -148,7 +156,10 @@ public:
   int send_objecthistdata(
       qcom_sQid tgt, sev_sMsgHistDataGetRequest* rmsg, unsigned int size);
   static void* send_objecthistdata_thread(void* arg);
+  int send_events(qcom_sQid tgt, sev_sMsgEventsGetRequest* rmsg, unsigned int size);
+  static void* send_events_thread(void* arg);
   int send_itemlist(qcom_sQid tgt);
+  int send_eventsitemlist(qcom_sQid tgt);
   int send_server_status(qcom_sQid tgt);
   int delete_item(qcom_sQid tgt, sev_sMsgHistItemDelete* rmsg);
   int receive_events(

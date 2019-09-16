@@ -420,6 +420,69 @@ int sev_server::send_itemlist(qcom_sQid tgt)
   return 1;
 }
 
+int sev_server::send_eventsitemlist(qcom_sQid tgt)
+{
+  int item_cnt = 0;
+
+  qcom_sPut put;
+  pwr_tStatus sts, lsts;
+  int size;
+
+  for (unsigned int i = 0; i < m_db->m_items.size(); i++) {
+    if (!m_db->m_items[i].deleted &&
+	strcmp(m_db->m_items[i].attr[0].aname, "Events") == 0 && 
+	m_db->m_items[i].attr[0].size == 0)
+    item_cnt++;
+  }
+
+  if (!item_cnt)
+    return 1;
+
+  size = sizeof(sev_sMsgEventsItems) + (item_cnt - 1) * sizeof(sev_sEventsItem);
+
+  put.size = size;
+  put.data = qcom_Alloc(&lsts, put.size);
+  put.allocate = 0;
+
+  ((sev_sMsgEventsItems*)put.data)->Type = sev_eMsgType_EventsItems;
+  ((sev_sMsgEventsItems*)put.data)->Version = sev_cNetVersion;
+
+  ((sev_sMsgEventsItems*)put.data)->NumItems = item_cnt;
+
+  sev_sEventsItem* itemPtr = ((sev_sMsgEventsItems*)put.data)->Items;
+  for (unsigned int i = 0; i < m_db->m_items.size(); i++) {
+    if (!(!m_db->m_items[i].deleted &&
+	  strcmp(m_db->m_items[i].attr[0].aname, "Events") == 0 && 
+	  m_db->m_items[i].attr[0].size == 0))
+      continue;
+    itemPtr->oid = m_db->m_items[i].oid;
+    strcpy(itemPtr->oname, m_db->m_items[i].oname);
+    itemPtr->storagetime
+        = net_DeltaTimeToNetTime(&m_db->m_items[i].storagetime);
+    itemPtr->creatime = net_TimeToNetTime(&m_db->m_items[i].creatime);
+    strcpy(itemPtr->description, m_db->m_items[i].description);
+    itemPtr->options = m_db->m_items[i].options;
+    itemPtr++;
+  }
+
+  if (!item_cnt)
+    ((sev_sMsgHistItems*)put.data)->Status = SEV__NOITEMS;
+  else
+    ((sev_sMsgHistItems*)put.data)->Status = SEV__SUCCESS;
+
+  put.reply.nid = m_nodes[0].nid;
+  put.reply.qix = sev_eProcSevServer;
+  put.type.b = (qcom_eBtype)sev_cMsgClass;
+  put.type.s = (qcom_eStype)sev_eMsgType_EventsItems;
+  put.msg_id = m_msg_id++;
+
+  if (!qcom_Put(&sts, &tgt, &put)) {
+    qcom_Free(&sts, put.data);
+    return 0;
+  }
+  return 1;
+}
+
 int sev_server::send_server_status(qcom_sQid tgt)
 {
   qcom_sPut put;
@@ -624,6 +687,14 @@ int sev_server::mainloop()
       case sev_eMsgType_EventsStore:
         receive_events((sev_sMsgEventsStore*)mp, get.size, get.sender.nid);
         m_stat.eventstore_msg_cnt++;
+        break;
+      case sev_eMsgType_EventsGetRequest:
+        send_events(get.reply, (sev_sMsgEventsGetRequest*)mp, get.size);
+        // m_stat.dataget_msg_cnt++;
+        // Don't free the message now
+        continue;
+      case sev_eMsgType_EventsItemsRequest:
+        send_eventsitemlist(get.reply);
         break;
       default:;
       }
@@ -844,6 +915,8 @@ int sev_server::check_histitems(sev_sMsgHistItems* msg, unsigned int size)
       }
     } else {
       // SevHistEvents item
+
+      storagetime = net_NetTimeToDeltaTime(&msg->Items[i].storagetime);
 
       if (!m_db->check_item(&m_sts, msg->Items[i].oid, msg->Items[i].oname,
               (char*)"Events", storagetime, (pwr_eType)0, 0,
@@ -1189,6 +1262,118 @@ void* sev_server::send_objecthistdata_thread(void* arg)
   if (sev->m_read_threads)
     sev->m_db->delete_thread(thread);
 
+  return (void*)1;
+}
+
+int sev_server::send_events(
+    qcom_sQid tgt, sev_sMsgEventsGetRequest* rmsg, unsigned int size)
+{
+  pthread_t thread;
+  pthread_attr_t attr;
+  int sts;
+
+  sev_sEventsThread* arg = (sev_sEventsThread*)malloc(sizeof(*arg));
+  arg->sev = this;
+  arg->tgt = tgt;
+  arg->rmsg = rmsg;
+  arg->size = size;
+
+  if (m_read_threads) {
+    static int pcnt = 0;
+    printf("New read thread %d\n", pcnt++);
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    sts = pthread_create(&thread, &attr, send_events_thread, arg);
+    if (sts != 0)
+      printf("pthread_create error %d\n", sts);
+  } else {
+    send_events_thread(arg);
+  }
+  return 1;
+}
+
+void* sev_server::send_events_thread(void* arg)
+{
+  sev_sMsgEventsGet* msg;
+  int msize;
+  qcom_sPut put;
+  pwr_tStatus sts, lsts;
+  pwr_tTime starttime, endtime;
+  unsigned int item_idx;
+  void* thread = 0;
+  std::vector<sev_event> list;
+
+  sev_server* sev = ((sev_sEventsThread*)arg)->sev;
+  qcom_sQid tgt = ((sev_sEventsThread*)arg)->tgt;
+  sev_sMsgEventsGetRequest* rmsg = ((sev_sEventsThread*)arg)->rmsg;
+
+  free(arg);
+
+  starttime = net_NetTimeToTime(&rmsg->StartTime);
+  endtime = net_NetTimeToTime(&rmsg->EndTime);
+
+  sev->m_db->get_item_idx(&sts, &item_idx, rmsg->Oid, (char *)"Events");
+  if (EVEN(sts)) {
+    qcom_Free(&lsts, rmsg);
+    return (void*)1;
+  }
+
+  if (sev->m_read_threads)
+    thread = sev->m_db->new_thread();
+
+  sev->m_db->get_events(&sts, thread, rmsg->Oid,
+			sev->m_db->m_items[item_idx].options, rmsg->EventTypeMask, 
+			rmsg->EventPrioMask, rmsg->EventText, rmsg->EventName,
+			&starttime, &endtime, rmsg->MaxEvents, list);
+  if (ODD(sts) && list.size() != 0)
+    msize = sizeof(*msg) + (list.size() - 1) * sizeof(sev_sEvents);
+  else
+    msize = sizeof(*msg);
+
+  put.reply.nid = sev->m_nodes[0].nid;
+  put.reply.qix = sev_eProcSevServer;
+  put.type.b = (qcom_eBtype)sev_cMsgClass;
+  put.type.s = (qcom_eStype)sev_eMsgType_EventsGet;
+  put.msg_id = sev->m_msg_id++;
+  put.size = msize;
+  msg = (sev_sMsgEventsGet*)qcom_Alloc(&lsts, put.size);
+
+  put.data = msg;
+  put.allocate = 0;
+
+  msg->Type = sev_eMsgType_EventsGet;
+  msg->Version = sev_cNetVersion;
+  msg->Oid = rmsg->Oid;
+  if (ODD(sts)) {
+    msg->NumEvents = list.size();
+  }
+  qcom_Free(&lsts, rmsg);
+
+  msg->Status = sts;
+
+  if (ODD(sts) && list.size()) {
+    sev_sEvents *mp = msg->Events;
+    for (int i = 0; i < list.size(); i++) {
+      mp->Time = net_TimeToNetTime(&list[i].time);
+      mp->EventType = list[i].type;
+      mp->EventPrio = list[i].eventprio;
+      mp->SupObjectOid = list[i].supobject.Objid;
+      mp->SupObjectOffset = list[i].supobject.Offset;
+      mp->SupObjectSize = list[i].supobject.Size;
+      strncpy(mp->EventText, list[i].eventtext, sizeof(mp->EventText));
+      strncpy(mp->EventName, list[i].eventname, sizeof(mp->EventName));
+      mp->EventId = list[i].eventid;
+      mp++;
+    }
+  }
+  if (!qcom_Put(&sts, &tgt, &put)) {
+    qcom_Free(&sts, put.data);
+  }
+
+  if (sev->m_read_threads)
+    sev->m_db->delete_thread(thread);
+
+  pthread_exit( (void *) 1);
   return (void*)1;
 }
 

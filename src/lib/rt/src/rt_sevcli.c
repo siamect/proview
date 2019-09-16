@@ -639,3 +639,225 @@ int sevcli_delete_item(
   qcom_Free(sts, rmsg);
   return 1;
 }
+
+
+/**
+ * @brief Fetches a list with the stored eventlists of the server.
+ * @return pwr_tStatus
+ */
+int sevcli_get_eventsitemlist(pwr_tStatus* sts, sevcli_tCtx ctx,
+			      sevcli_sEventsItem** list, unsigned int* cnt)
+{
+  sev_sMsgAny* msg;
+  qcom_sQid tgt;
+  qcom_sPut put;
+  pwr_tStatus lsts;
+  int tmo = 10000;
+  qcom_sGet get;
+  sevcli_sEventsItem* lp;
+  int i;
+
+  if (ctx->server)
+    tgt.nid = ctx->server;
+  else
+    tgt.nid = ctx->qid.nid;
+  tgt.qix = sev_eProcSevServer;
+
+  put.reply = ctx->qid;
+  put.type.b = (qcom_eBtype)sev_cMsgClass;
+  put.type.s = (qcom_eStype)sev_eMsgType_EventsItemsRequest;
+  put.msg_id = ctx->msg_id++;
+  put.size = sizeof(*msg);
+  put.allocate = 0;
+  msg = (sev_sMsgAny*)qcom_Alloc(sts, put.size);
+
+  put.data = msg;
+
+  msg->Type = sev_eMsgType_EventsItemsRequest;
+  msg->Version = sev_cNetVersion;
+
+  if (!qcom_Put(sts, &tgt, &put)) {
+    qcom_Free(&lsts, put.data);
+    return 0;
+  }
+
+  sev_sMsgEventsItems* rmsg;
+
+  memset(&get, 0, sizeof(get));
+
+  for (;;) {
+    rmsg = (sev_sMsgEventsItems*)qcom_Get(sts, &ctx->qid, &get, tmo);
+    if (*sts == QCOM__TMO || !rmsg) {
+      return 0;
+    }
+
+    if (get.type.b == sev_cMsgClass
+        && get.type.s == (qcom_eStype)sev_eMsgType_EventsItems)
+      break;
+
+    qcom_Free(sts, rmsg);
+  }
+
+  *sts = rmsg->Status;
+  if (EVEN(*sts))
+    return 0;
+
+  int item_cnt = rmsg->NumItems;
+
+  unsigned int data_size = (item_cnt * sizeof(sevcli_sEventsItem));
+  lp = (sevcli_sEventsItem*)malloc(data_size);
+  sevcli_sEventsItem* lp2 = lp;
+
+  sev_sEventsItem* itemPtr = ((sev_sMsgEventsItems*)rmsg)->Items;
+  for (i = 0; i < item_cnt; i++) {
+    lp->oid = itemPtr->oid;
+    strncpy(lp->oname, itemPtr->oname, sizeof(lp->oname));
+    strncpy(lp->description, itemPtr->description, sizeof(lp->description));
+    lp->storagetime = net_NetTimeToDeltaTime(&itemPtr->storagetime);
+    lp->options = itemPtr->options;
+    lp->creatime = net_NetTimeToTime(&itemPtr->creatime);
+    itemPtr++;
+    lp++;
+  }
+
+  qcom_Free(sts, rmsg);
+
+  *cnt = item_cnt;
+  *list = lp2;
+  *sts = SEV__SUCCESS;
+  return 1;
+}
+
+
+/**
+ * @brief Fetch stored historical events for an events item.
+ *
+ * @return pwr_tStatus
+ */
+int sevcli_get_events(pwr_tStatus* sts, sevcli_tCtx ctx, pwr_tOid oid,
+		      pwr_tTime starttime, pwr_tTime endtime, pwr_tUInt32 eventtypemask,
+		      pwr_tUInt32 eventpriomask, pwr_tString80 eventtext, pwr_tOName eventname,
+		      unsigned int maxevents, sevcli_sEvents **list, unsigned int* cnt)
+{
+  sev_sMsgEventsGetRequest* msg;
+  qcom_sQid tgt;
+  qcom_sPut put;
+  static int tmo = 0;
+  qcom_sGet get;
+  pwr_tStatus lsts;
+  sevcli_sEvents *lp;
+  sev_sEvents *ip;
+  int i;
+
+  if (tmo == 0) {
+    int value;
+    char value_str[20];
+    int nr;
+
+    if (cnf_get_value("sevTimeout", value_str, sizeof(value_str))) {
+      nr = sscanf(value_str, "%d", &value);
+      if (nr != 1)
+        tmo = 30000;
+      else
+        tmo = 1000 * value;
+    } else
+      tmo = 30000;
+  }
+
+  if (ctx->server)
+    tgt.nid = ctx->server;
+  else
+    tgt.nid = ctx->qid.nid;
+  tgt.qix = sev_eProcSevServer;
+
+  put.reply = ctx->qid;
+  put.type.b = (qcom_eBtype)sev_cMsgClass;
+  put.type.s = (qcom_eStype)sev_eMsgType_EventsGetRequest;
+  put.msg_id = ctx->msg_id++;
+  put.size = sizeof(*msg);
+  put.allocate = 0;
+  msg = (sev_sMsgEventsGetRequest*)qcom_Alloc(sts, put.size);
+
+  put.data = msg;
+
+  msg->Type = sev_eMsgType_EventsGetRequest;
+  msg->Version = sev_cNetVersion;
+  msg->Oid = oid;
+  msg->StartTime = net_TimeToNetTime(&starttime);
+  msg->EndTime = net_TimeToNetTime(&endtime);
+  msg->EventTypeMask = eventtypemask;
+  msg->EventPrioMask = eventpriomask;
+  strncpy(msg->EventText, eventtext, sizeof(msg->EventText));
+  strncpy(msg->EventName, eventname, sizeof(msg->EventName));
+  msg->MaxEvents = maxevents;
+
+  // Empty queue
+  sev_sMsgEventsGet* rmsg;
+
+  memset(&get, 0, sizeof(get));
+  for (;;) {
+    rmsg = (sev_sMsgEventsGet*)qcom_Get(sts, &ctx->qid, &get, 0);
+
+    if (!rmsg)
+      break;
+    qcom_Free(sts, rmsg);
+  }
+
+  if (!qcom_Put(sts, &tgt, &put)) {
+    qcom_Free(&lsts, put.data);
+    return 0;
+  }
+
+  memset(&get, 0, sizeof(get));
+
+  for (;;) {
+    rmsg = (sev_sMsgEventsGet*)qcom_Get(sts, &ctx->qid, &get, tmo);
+    if (*sts == QCOM__TMO || !rmsg) {
+      return 0;
+    }
+
+    if (get.type.b == sev_cMsgClass
+        && get.type.s == (qcom_eStype)sev_eMsgType_EventsGet
+        && cdh_ObjidIsEqual(oid, rmsg->Oid))
+      break;
+
+    qcom_Free(sts, rmsg);
+  }
+
+  *sts = rmsg->Status;
+  if (EVEN(*sts)) {
+    qcom_Free(&lsts, rmsg);
+    return 0;
+  }
+  if (rmsg->NumEvents == 0) {
+    qcom_Free(sts, rmsg);
+    *sts = SEV__NOPOINTS;
+    return 0;
+  }
+
+  int item_cnt = rmsg->NumEvents;
+
+  *list = calloc(item_cnt, sizeof(sevcli_sEventsItem));
+
+  lp = *list;
+  ip = rmsg->Events;
+  for (i = 0; i < item_cnt; i++) {
+    lp->Time = net_NetTimeToTime(&ip->Time);
+    lp->EventType = ip->EventType;
+    lp->EventPrio = ip->EventPrio;
+    lp->SupObjectOid = ip->SupObjectOid;
+    lp->SupObjectSize = ip->SupObjectSize;
+    strncpy(lp->EventText, ip->EventText, sizeof(lp->EventText));
+    strncpy(lp->EventName, ip->EventName, sizeof(lp->EventName));
+    lp->EventId = ip->EventId;
+    lp++;
+    ip++;
+  }
+  *cnt = item_cnt;
+
+  qcom_Free(&lsts, rmsg);
+
+  *sts = SEV__SUCCESS;
+  return 1;
+}
+

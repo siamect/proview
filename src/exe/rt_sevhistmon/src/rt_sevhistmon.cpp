@@ -1480,7 +1480,7 @@ pwr_tStatus rt_sevhistmon::mh_ack_bc(mh_sAck* msg)
 {
   sev_sEvent ed;
 
-  ed.type = sev_eEventType_Ack;
+  ed.type = msg->Info.EventType;
   ed.time = msg->Info.EventTime;
   strcpy(ed.eventtext, "");
   strncpy(ed.eventname, msg->EventName, sizeof(ed.eventname));
@@ -1502,7 +1502,7 @@ pwr_tStatus rt_sevhistmon::mh_return_bc(mh_sReturn* msg)
 {
   sev_sEvent ed;
 
-  ed.type = sev_eEventType_Return;
+  ed.type = msg->Info.EventType;
   ed.time = msg->Info.EventTime;
   strncpy(ed.eventtext, msg->EventText, sizeof(ed.eventtext));
   strncpy(ed.eventname, msg->EventName, sizeof(ed.eventname));
@@ -1525,7 +1525,7 @@ pwr_tStatus rt_sevhistmon::mh_alarm_bc(mh_sMessage* msg)
 {
   sev_sEvent ed;
 
-  ed.type = sev_eEventType_Alarm;
+  ed.type = msg->Info.EventType;
   ed.time = msg->Info.EventTime;
   strncpy(ed.eventtext, msg->EventText, sizeof(ed.eventtext));
   strncpy(ed.eventname, msg->EventName, sizeof(ed.eventname));
@@ -1548,7 +1548,7 @@ pwr_tStatus rt_sevhistmon::mh_block_bc(mh_sBlock* msg)
 {
   sev_sEvent ed;
 
-  ed.type = sev_eEventType_Block;
+  ed.type = msg->Info.EventType;
   ed.time = msg->Info.EventTime;
   strcpy(ed.eventtext, "");
   strncpy(ed.eventname, msg->EventName, sizeof(ed.eventname));
@@ -1571,7 +1571,7 @@ pwr_tStatus rt_sevhistmon::mh_cancel_bc(mh_sReturn* msg)
 {
   sev_sEvent ed;
 
-  ed.type = sev_eEventType_Cancel;
+  ed.type = msg->Info.EventType;
   ed.time = msg->Info.EventTime;
   strcpy(ed.eventtext, "");
   strncpy(ed.eventname, msg->EventName, sizeof(ed.eventname));
@@ -1594,7 +1594,7 @@ pwr_tStatus rt_sevhistmon::mh_info_bc(mh_sMessage* msg)
 {
   sev_sEvent ed;
 
-  ed.type = sev_eEventType_Info;
+  ed.type = msg->Info.EventType;
   ed.time = msg->Info.EventTime;
   strncpy(ed.eventtext, msg->EventText, sizeof(ed.eventtext));
   strncpy(ed.eventname, msg->EventName, sizeof(ed.eventname));

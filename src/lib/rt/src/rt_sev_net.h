@@ -67,7 +67,11 @@ typedef enum {
   sev_eMsgType_ExportNodeUp,
   sev_eMsgType_ExportItemsRequest,
   sev_eMsgType_ExportItems,
-  sev_eMsgType_ExportData
+  sev_eMsgType_ExportData,
+  sev_eMsgType_EventsItemsRequest,
+  sev_eMsgType_EventsItems,
+  sev_eMsgType_EventsGetRequest,
+  sev_eMsgType_EventsGet
 } sev_eMsgType;
 
 typedef enum {
@@ -79,8 +83,35 @@ typedef enum {
   sev_eEventType_Cancel
 } sev_eEventType;
 
+typedef enum {
+  sev_mEventType_Ack		= 1,
+  sev_mEventType_Block		= 2,
+  sev_mEventType_Cancel		= 4,
+  sev_mEventType_CancelBlock	= 8,
+  sev_mEventType_Missing	= 16,
+  sev_mEventType_Reblock	= 32,
+  sev_mEventType_Return		= 64,
+  sev_mEventType_Unblock	= 128,
+  sev_mEventType_InfoSuccess	= 256,
+  sev_mEventType_Alarm		= 512,
+  sev_mEventType_MaintenanceAlarm = 1024,
+  sev_mEventType_SystemAlarm	= 2048,
+  sev_mEventType_UserAlarm1	= 4096,
+  sev_mEventType_UserAlarm2	= 8192,
+  sev_mEventType_UserAlarm3	= 16384,
+  sev_mEventType_UserAlarm4	= 32768,
+  sev_mEventType_Info		= 65536
+} sev_mEventType;
+
+typedef enum {
+  sev_mEventPrio_A = 1,
+  sev_mEventPrio_B = 2,
+  sev_mEventPrio_C = 4,
+  sev_mEventPrio_D = 8
+} sev_mEventPrio;
+
 typedef struct {
-  sev_eEventType type;
+  unsigned int type;
   unsigned int eventprio;
   unsigned int eventid_nix;
   unsigned int eventid_birthtime;
@@ -272,6 +303,57 @@ typedef struct {
   unsigned int NumAttributes;
   sev_sExportItem Items[1];
 } sev_sMsgExportItems;
+
+typedef struct {
+  pwr_tOid oid;
+  pwr_tOName oname;
+  net_sTime storagetime;
+  net_sTime creatime;
+  pwr_tString80 description;
+  pwr_tMask options;
+} sev_sEventsItem;
+
+typedef struct {
+  pwr_tUInt16 Type;
+  pwr_tUInt16 Version;
+  pwr_tStatus Status;
+  unsigned int NumItems;
+  sev_sEventsItem Items[1];
+} sev_sMsgEventsItems;
+
+typedef struct {
+  pwr_tUInt16 Type;
+  pwr_tUInt16 Version;
+  pwr_tOid Oid;
+  net_sTime StartTime;
+  net_sTime EndTime;
+  pwr_tUInt32 EventTypeMask;
+  pwr_tUInt32 EventPrioMask;
+  pwr_tString80 EventText;
+  pwr_tOName EventName;
+  pwr_tUInt32 MaxEvents;
+} sev_sMsgEventsGetRequest;
+
+typedef struct {
+  net_sTime Time;
+  pwr_tUInt32 EventType;
+  pwr_tUInt32 EventPrio;
+  pwr_tOid SupObjectOid;
+  pwr_tUInt32 SupObjectOffset;
+  pwr_tUInt32 SupObjectSize;
+  pwr_tString80 EventText;
+  pwr_tOName EventName;
+  mh_sEventId EventId;
+} sev_sEvents;
+
+typedef struct {
+  pwr_tUInt16 Type;
+  pwr_tUInt16 Version;
+  pwr_tOid Oid;
+  pwr_tStatus Status;
+  int NumEvents;
+  sev_sEvents Events[1];
+} sev_sMsgEventsGet;
 
 
 #ifdef __cplusplus

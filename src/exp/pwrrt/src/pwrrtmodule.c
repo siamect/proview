@@ -3370,6 +3370,68 @@ static PyObject *pwrrt_getSevItemList(PyObject *self, PyObject *args)
   return result;
 }
 
+static PyObject *pwrrt_getSevEventsItemList(PyObject *self, PyObject *args)
+{
+  char *server;
+  char *filter = 0;
+  pwr_tStatus sts;
+  sevcli_sEventsItem *itemlist;
+  unsigned int itemcnt;
+  int cnt;
+  int i;
+  PyObject *ituple, *result;
+
+  if ( !pwrrt_scctx) {
+    sevcli_init( &sts, &pwrrt_scctx);
+    if ( EVEN(sts))
+      return set_error(sts);
+  }
+
+  if ( !PyArg_ParseTuple(args, "s|si", &server, &filter))
+    return NULL;
+
+  sevcli_set_servernode( &sts, pwrrt_scctx, server);
+  if ( EVEN(sts))
+    return set_error(sts);
+
+  sevcli_get_eventsitemlist( &sts, pwrrt_scctx, &itemlist, &itemcnt);
+  if (EVEN(sts))
+    return set_error(sts);
+
+  if ( filter && strcmp(filter,"") == 0)
+    filter = 0;
+
+  cnt = 0;
+  if ( filter) {
+    for ( i = 0; i < itemcnt; i++) {
+      if ( str_NoCaseStrncmp(filter, itemlist[i].oname, strlen(filter)) == 0)
+	cnt++;
+    }
+  }
+  else
+    cnt = itemcnt;
+
+  result = PyTuple_New(cnt);
+
+  cnt = 0;
+  for ( i = 0; i < itemcnt; i++) {
+    if ( !filter || str_NoCaseStrncmp(filter, itemlist[i].oname, strlen(filter)) == 0) {
+
+      ituple = PyTuple_New(4);
+      PyTuple_SetItem(ituple, 0, PyString_FromString(itemlist[i].oname));
+      PyTuple_SetItem(ituple, 1, PyString_FromString(cdh_ObjidToString(itemlist[i].oid, 1)));
+      PyTuple_SetItem(ituple, 2, PyString_FromString(itemlist[i].description));
+      PyTuple_SetItem(ituple, 3, PyLong_FromUnsignedLong(itemlist[i].options));
+      
+      PyTuple_SetItem(result, cnt, ituple);
+      cnt++;
+    }
+  }
+
+  free(itemlist);
+  return result;
+}
+
 static PyObject *pwrrt_getSevItemData(PyObject *self, PyObject *args)
 {
   pwr_tStatus sts;
@@ -3653,9 +3715,9 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
     /* Find longest continuous interval where condition is high */
     pwr_tBoolean last_value = 0;
     pwr_tFloat32 max_time = 0.0f;
-    int last_idx;
-    int start_idx;
-    int end_idx;
+    int last_idx = 0;
+    int start_idx = 0;
+    int end_idx = 0;
     for (i = 0; i < rows; i++) {
       if (((pwr_tBoolean *)vbuf)[i] == 1 && last_value == 0) {
 	last_value = 1;
@@ -3838,7 +3900,7 @@ static PyObject *pwrrt_getSevItemsDataFrameD(PyObject *self, PyObject *args)
   pwr_tDeltaTime fromdelta;
   float tdiff;
   pwr_tOid oid;
-  pwr_tTime *ttbuf, *tt0buf;
+  pwr_tTime *ttbuf, *tt0buf = 0;
   PyObject *oidobj, *anameobj, *isobjectobj;  
   pwr_tFloat32 *vbuf;
   int maxrows = 0;
@@ -3851,10 +3913,10 @@ static PyObject *pwrrt_getSevItemsDataFrameD(PyObject *self, PyObject *args)
   time_t sec;
   struct tm ts;
   char *time_format = 0;
-  int valcnt;
+  int valcnt = 0;
   pwr_tDeltaTime dt;
   pwr_tFloat32 **vvect;
-  float *tbuf, *t0buf;
+  float *tbuf, *t0buf = 0;
   
   if ( !pwrrt_scctx) {
     sevcli_init( &sts, &pwrrt_scctx);
@@ -4130,6 +4192,280 @@ static PyObject *pwrrt_getSevItemsDataFrameD(PyObject *self, PyObject *args)
   return result;
 }
 
+static PyObject *pwrrt_getSevEvents(PyObject *self, PyObject *args)
+{
+  pwr_tStatus sts;
+  char *server, *oidstr, *fromstr, *tostr, *eventtext, *eventname;
+  unsigned int eventtypemask, eventpriomask;
+  pwr_tTime from, to;
+  pwr_tDeltaTime fromdelta;
+  pwr_tOid oid;
+  int maxrows = 0;
+  sevcli_sEvents *list;
+  unsigned int listcnt;
+  PyObject *item_tuple, *eventid_tuple, *result;
+  char timstr[30];
+  int i;
+  PyObject *date;
+  time_t sec;
+  struct tm ts;
+  char *time_format = 0;
+  int time_string = 0;
+  char supobject[80];
+
+  if ( !pwrrt_scctx) {
+    sevcli_init( &sts, &pwrrt_scctx);
+    if ( EVEN(sts))
+      return set_error(sts);
+  }
+
+  if ( !PyArg_ParseTuple(args, "ssssIIss|Is", &server, &oidstr, &fromstr, &tostr, &eventtypemask,
+			 &eventpriomask, &eventtext, &eventname, &maxrows,
+			 &time_format))
+    return NULL;
+
+  if ( time_format) {
+    if ( strcmp(time_format, "string") == 0)
+      time_string = 1;
+  }
+  if ( maxrows == 0)
+    maxrows = 1000;
+
+  sevcli_set_servernode( &sts, pwrrt_scctx, server);
+  if ( EVEN(sts))
+    return set_error(sts);
+
+  if ( strncmp("_O", oidstr, 2) == 0) 
+    sts = cdh_StringToObjid( oidstr, &oid);
+  else
+    sts = gdh_NameToObjid( oidstr, &oid);
+  if ( EVEN(sts))
+    return set_error(sts);
+
+  if ( strcmp(tostr, "now") == 0) {
+    /* fromstr is a deltatime */
+    sts = time_AsciiToD(fromstr, &fromdelta);
+    if ( EVEN(sts))
+      return set_error(sts);
+
+    time_GetTime(&to);
+    time_Asub(&from, &to, &fromdelta);
+  }
+  else {
+    sts = time_AsciiToA(fromstr, &from);
+    if ( EVEN(sts))
+      return set_error(sts);
+
+    sts = time_AsciiToA(tostr, &to);
+    if ( EVEN(sts))
+      return set_error(sts);
+  }
+
+  sevcli_get_events( &sts, pwrrt_scctx, oid, from, to, eventtypemask, eventpriomask,
+		     eventtext, eventname, maxrows, &list, &listcnt);
+  if ( sts == SEV__NOPOINTS)
+    Py_RETURN_NONE;
+  else if (EVEN(sts))
+    return set_error(sts);
+
+  result = PyTuple_New(listcnt);
+
+  for ( i = 0; i < listcnt; i++) {
+    item_tuple = PyTuple_New(7);
+    eventid_tuple = PyTuple_New(2);
+    if ( time_string) {
+      /* Time string */
+      time_AtoAscii( &list[i].Time, time_eFormat_DateAndTime, timstr, sizeof(timstr));
+      PyTuple_SetItem(item_tuple, 0, PyString_FromString(timstr));
+    }
+    else {
+      /* Time datetime object */
+      sec = (time_t)list[i].Time.tv_sec;
+      localtime_r(&sec, &ts);
+      date = PyDateTime_FromDateAndTime(ts.tm_year+1900, ts.tm_mon+1, ts.tm_mday,
+					ts.tm_hour, ts.tm_min, ts.tm_sec, 
+					(int)list[i].Time.tv_nsec/1000);
+      PyTuple_SetItem(item_tuple, 0, date);
+    }      
+    PyTuple_SetItem(item_tuple, 1, PyInt_FromLong((long)list[i].EventType));
+    PyTuple_SetItem(item_tuple, 2, PyInt_FromLong((long)list[i].EventPrio));
+    PyTuple_SetItem(item_tuple, 3, PyString_FromString(list[i].EventText));
+    PyTuple_SetItem(item_tuple, 4, PyString_FromString(list[i].EventName));
+    strcpy(supobject, cdh_ObjidToString(list[i].SupObjectOid, 1));
+    if (list[i].SupObjectOffset > 0)
+      sprintf(&supobject[strlen(supobject)], "#%d:%d", list[i].SupObjectOffset, list[i].SupObjectSize);
+    PyTuple_SetItem(item_tuple, 5, PyString_FromString(supobject));
+    PyTuple_SetItem(eventid_tuple, 0, PyInt_FromLong((long)list[i].EventId.Nix));
+    PyTuple_SetItem(eventid_tuple, 1, PyInt_FromLong((long)list[i].EventId.Idx));
+    PyTuple_SetItem(item_tuple, 6, eventid_tuple);
+    
+    PyTuple_SetItem(result, i, item_tuple);
+  }
+
+  free(list);
+
+  return result;
+}
+
+static PyObject *pwrrt_getSevEventsDataFrame(PyObject *self, PyObject *args)
+{
+  pwr_tStatus sts;
+  char *server, *oidstr, *fromstr, *tostr, *eventtext, *eventname;
+  unsigned int eventtypemask, eventpriomask;
+  pwr_tTime from, to;
+  pwr_tDeltaTime fromdelta;
+  pwr_tOid oid;
+  int maxrows = 0;
+  sevcli_sEvents *list;
+  unsigned int listcnt;
+  PyObject *item_tuple, *eventid_tuple, *result;
+  char timstr[30];
+  int i;
+  PyObject *date;
+  time_t sec;
+  struct tm ts;
+  char *time_format = 0;
+  int time_string = 0;
+  char supobject[80];
+
+  if ( !pwrrt_scctx) {
+    sevcli_init( &sts, &pwrrt_scctx);
+    if ( EVEN(sts))
+      return set_error(sts);
+  }
+
+  if ( !PyArg_ParseTuple(args, "ssssIIss|Is", &server, &oidstr, &fromstr, &tostr, &eventtypemask,
+			 &eventpriomask, &eventtext, &eventname, &maxrows,
+			 &time_format))
+    return NULL;
+
+  if ( time_format) {
+    if ( strcmp(time_format, "string") == 0)
+      time_string = 1;
+  }
+  if ( maxrows == 0)
+    maxrows = 1000;
+
+  sevcli_set_servernode( &sts, pwrrt_scctx, server);
+  if ( EVEN(sts))
+    return set_error(sts);
+
+  if ( strncmp("_O", oidstr, 2) == 0) 
+    sts = cdh_StringToObjid( oidstr, &oid);
+  else
+    sts = gdh_NameToObjid( oidstr, &oid);
+  if ( EVEN(sts))
+    return set_error(sts);
+
+  if ( strcmp(tostr, "now") == 0) {
+    /* fromstr is a deltatime */
+    sts = time_AsciiToD(fromstr, &fromdelta);
+    if ( EVEN(sts))
+      return set_error(sts);
+
+    time_GetTime(&to);
+    time_Asub(&from, &to, &fromdelta);
+  }
+  else {
+    sts = time_AsciiToA(fromstr, &from);
+    if ( EVEN(sts))
+      return set_error(sts);
+
+    sts = time_AsciiToA(tostr, &to);
+    if ( EVEN(sts))
+      return set_error(sts);
+  }
+
+  sevcli_get_events( &sts, pwrrt_scctx, oid, from, to, eventtypemask, eventpriomask,
+		     eventtext, eventname, maxrows, &list, &listcnt);
+  if ( sts == SEV__NOPOINTS)
+    Py_RETURN_NONE;
+  else if (EVEN(sts))
+    return set_error(sts);
+
+  result = PyList_New(listcnt);
+
+  for ( i = 0; i < listcnt; i++) {
+    item_tuple = PyTuple_New(7);
+    eventid_tuple = PyTuple_New(2);
+    if ( time_string) {
+      /* Time string */
+      time_AtoAscii( &list[i].Time, time_eFormat_DateAndTime, timstr, sizeof(timstr));
+      PyTuple_SetItem(item_tuple, 0, PyString_FromString(timstr));
+    }
+    else {
+      /* Time datetime object */
+      sec = (time_t)list[i].Time.tv_sec;
+      localtime_r(&sec, &ts);
+      date = PyDateTime_FromDateAndTime(ts.tm_year+1900, ts.tm_mon+1, ts.tm_mday,
+					ts.tm_hour, ts.tm_min, ts.tm_sec, 
+					(int)list[i].Time.tv_nsec/1000);
+      PyTuple_SetItem(item_tuple, 0, date);
+    }      
+    PyTuple_SetItem(item_tuple, 1, PyInt_FromLong((long)list[i].EventType));
+    PyTuple_SetItem(item_tuple, 2, PyInt_FromLong((long)list[i].EventPrio));
+    PyTuple_SetItem(item_tuple, 3, PyString_FromString(list[i].EventText));
+    PyTuple_SetItem(item_tuple, 4, PyString_FromString(list[i].EventName));
+    strcpy(supobject, cdh_ObjidToString(list[i].SupObjectOid, 1));
+    if (list[i].SupObjectOffset > 0)
+      sprintf(&supobject[strlen(supobject)], "#%d:%d", list[i].SupObjectOffset, list[i].SupObjectSize);
+    PyTuple_SetItem(item_tuple, 5, PyString_FromString(supobject));
+    PyTuple_SetItem(eventid_tuple, 0, PyInt_FromLong((long)list[i].EventId.Nix));
+    PyTuple_SetItem(eventid_tuple, 1, PyInt_FromLong((long)list[i].EventId.Idx));
+    PyTuple_SetItem(item_tuple, 6, eventid_tuple);
+    
+    PyList_SetItem(result, i, item_tuple);
+  }
+
+#if 0
+  result = PyList_New(7);
+  time_tuple = PyTuple_New(listcnt);
+  eventtype_tuple = PyTuple_New(listcnt);
+  eventprio_tuple = PyTuple_New(listcnt);
+  eventtext_tuple = PyTuple_New(listcnt);
+  eventname_tuple = PyTuple_New(listcnt);
+  supobject_tuple = PyTuple_New(listcnt);
+  eventid_tuple = PyTuple_New(listcnt);
+
+  for ( i = 0; i < listcnt; i++) {
+    if ( time_string) {
+      /* Time string */
+      time_AtoAscii( &list[i].Time, time_eFormat_DateAndTime, timstr, sizeof(timstr));
+      PyTuple_SetItem(time_tuple, i, PyString_FromString(timstr));
+    }
+    else {
+      /* Time datetime object */
+      sec = (time_t)list[i].Time.tv_sec;
+      localtime_r(&sec, &ts);
+      date = PyDateTime_FromDateAndTime(ts.tm_year+1900, ts.tm_mon+1, ts.tm_mday,
+					ts.tm_hour, ts.tm_min, ts.tm_sec, 
+					(int)list[i].Time.tv_nsec/1000);
+      PyTuple_SetItem(time_tuple, i, date);
+    }      
+    PyTuple_SetItem(eventtype_tuple, i, PyInt_FromLong((long)list[i].EventType));
+    PyTuple_SetItem(eventprio_tuple, i, PyInt_FromLong((long)list[i].EventPrio));
+    PyTuple_SetItem(eventtext_tuple, i, PyString_FromString(list[i].EventText));
+    PyTuple_SetItem(eventname_tuple, i, PyString_FromString(list[i].EventName));
+    strcpy(supobject, cdh_ObjidToString(list[i].SupObjectOid, 1));
+    if (list[i].SupObjectOffset > 0)
+      sprintf(&supobject[strlen(supobject)], "#%d:%d", list[i].SupObjectOffset, list[i].SupObjectSize);
+    PyTuple_SetItem(supobject_tuple, i, PyString_FromString(supobject));
+    PyTuple_SetItem(eventid_tuple, i, PyInt_FromLong((long)list[i].EventId.Idx));
+    
+  }
+  PyList_SetItem(result, 0, time_tuple);
+  PyList_SetItem(result, 1, eventtype_tuple);
+  PyList_SetItem(result, 2, eventprio_tuple);
+  PyList_SetItem(result, 3, eventtext_tuple);
+  PyList_SetItem(result, 4, eventname_tuple);
+  PyList_SetItem(result, 5, supobject_tuple);
+  PyList_SetItem(result, 6, eventid_tuple);
+#endif
+
+  free(list);
+
+  return result;
+}
 
 static PyMethodDef PwrrtMethods[] = {
   {"volume", pwrrt_volume, METH_VARARGS, pwrrt_volume_doc},
@@ -4143,9 +4479,12 @@ static PyMethodDef PwrrtMethods[] = {
   {"getPriv", pwrrt_getPriv, METH_NOARGS, pwrrt_getPriv_doc},
   {"getUser", pwrrt_getUser, METH_NOARGS, pwrrt_getUser_doc},
   {"getSevItemList", pwrrt_getSevItemList, METH_VARARGS, "Get history item list"},
+  {"getSevEventsItemList", pwrrt_getSevEventsItemList, METH_VARARGS, "Get events history item list"},
   {"getSevItemData", pwrrt_getSevItemData, METH_VARARGS, "Get history data"},
   {"getSevItemsDataFrame", pwrrt_getSevItemsDataFrame, METH_VARARGS, "Get history data frame"},
   {"getSevItemsDataFrameD", pwrrt_getSevItemsDataFrameD, METH_VARARGS, "Get history data frame discrete"},
+  {"getSevEvents", pwrrt_getSevEvents, METH_VARARGS, "Get history events"},
+  {"getSevEventsDataFrame", pwrrt_getSevEventsDataFrame, METH_VARARGS, "Get history events data frame"},
   {NULL, NULL, 0, NULL}};
 
 PyMODINIT_FUNC initpwrrt(void)
