@@ -176,6 +176,11 @@ XttMultiViewQt::XttMultiViewQt(void* mv_parent_ctx, const char* mv_name,
     comp_widget = std::vector<QWidget*>(rows * cols);
     exchange_widget = std::vector<QWidget*>(rows * cols);
     exchange_widget_layout = std::vector<QHBoxLayout*>(rows * cols);
+    for (int i = 0; i < rows * cols; i++) {
+      exchange_widget_layout[i] = new QHBoxLayout(toplevel);
+      exchange_widget[i]
+          = layout_to_widget(exchange_widget_layout[i]);
+    }
 
     QHBoxLayout* col_widget_box = new QHBoxLayout();
     QSplitter* col_widget_pane = new QSplitter();
@@ -680,8 +685,6 @@ XttMultiViewQt::XttMultiViewQt(void* mv_parent_ctx, const char* mv_name,
 
         if (mv.Action[idx].Options
             & pwr_mMultiViewElemOptionsMask_Exchangeable) {
-          exchange_widget[idx]
-              = layout_to_widget(exchange_widget_layout[idx]);
           if (comp_widget[idx]) {
             add_expanding(exchange_widget_layout[idx],
                 comp_widget[idx]);

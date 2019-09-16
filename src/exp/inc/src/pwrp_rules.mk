@@ -36,7 +36,7 @@ $(pwrp_obj)/%.o : %.c
 ($(pwrp_obj)/%.o) : %.c
 	@ echo "cc ar $(notdir $(source))"
 	@ $(cc) $(cflags) $(csetos) $(cinc) -c -o $% $(source)
-	@ ar r $(target) $%
+	@ ar -Ur $(target) $%
 
 $(pwrp_obj)/%.o : %.cpp
 	@ echo "cc   $(notdir $(source))"
@@ -45,7 +45,7 @@ $(pwrp_obj)/%.o : %.cpp
 ($(pwrp_obj)/%.o) : %.cpp
 	@ echo "cc ar $(notdir $(source))"
 	@ $(cxx) $(cxxflags) $(csetos) $(cinc) -c -o $% $(source)
-	@ ar r $(target) $%
+	@ ar -Ur $(target) $%
 
 $(pwrp_obj)/%.o : %.for
 	@ echo "fortran77   $(notdir $(source))"
@@ -54,7 +54,7 @@ $(pwrp_obj)/%.o : %.for
 ($(pwrp_obj)/%.o) : %.for
 	@ echo "fortran77 ar $(notdir $(source))"
 	@ $(f77) $(f77flags) $(f77inc) -c -o $% $(source)
-	@ ar r $(target) $%
+	@ ar -Ur $(target) $%
 
 $(pwrp_inc)/%.h: %.msg
 	@ echo "Msg to h $(source)"

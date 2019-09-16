@@ -43,6 +43,7 @@
 /*@{*/
 
 #include "rt_qcom.h"
+#include "rt_mh_net.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -85,6 +86,27 @@ typedef struct {
   sevcli_sHistAttr attr[1]; /**< Array of attribute data */
 } sevcli_sHistItem;
 
+typedef struct {
+  pwr_tOid oid; /**< Object identity */
+  pwr_tAName oname; /**< Object name */
+  pwr_tDeltaTime storagetime; /**< Storage time from SevHist object */
+  pwr_tTime creatime; /**< Creation time */
+  pwr_tString80 description; /**< Description */
+  pwr_tMask options; /**< Options from SevHist object */
+} sevcli_sEventsItem;
+
+typedef struct {
+  pwr_tTime Time;
+  pwr_tUInt32 EventType;
+  pwr_tUInt32 EventPrio;
+  pwr_tOid SupObjectOid;
+  pwr_tUInt32 SupObjectOffset;
+  pwr_tUInt32 SupObjectSize;
+  pwr_tString80 EventText;
+  pwr_tOName EventName;
+  mh_sEventId EventId;
+} sevcli_sEvents;
+
 int sevcli_init(pwr_tStatus* sts, sevcli_tCtx* ctx);
 int sevcli_close(pwr_tStatus* sts, sevcli_tCtx ctx);
 void sevcli_set_servernid(sevcli_tCtx ctx, pwr_tNid nid);
@@ -101,6 +123,12 @@ int sevcli_get_objectitemdata(pwr_tStatus* sts, sevcli_tCtx ctx, pwr_tOid oid,
     char* aname, pwr_tTime starttime, pwr_tTime endtime, int numpoints,
     pwr_tTime** tbuf, void** vbuf, int* rows, sevcli_sHistAttr** histattr,
     int* numattributes);
+int sevcli_get_eventsitemlist(pwr_tStatus* sts, sevcli_tCtx ctx,
+			      sevcli_sEventsItem** list, unsigned int* cnt);
+int sevcli_get_events(pwr_tStatus* sts, sevcli_tCtx ctx, pwr_tOid oid,
+		      pwr_tTime starttime, pwr_tTime endtime, pwr_tUInt32 eventtypemask,
+		      pwr_tUInt32 eventpriomask, pwr_tString80 eventtext, pwr_tOName eventname,
+		      unsigned int maxevents, sevcli_sEvents **list, unsigned int* cnt);
 
 /** @} */
 
