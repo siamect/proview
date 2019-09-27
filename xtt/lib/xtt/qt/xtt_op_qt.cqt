@@ -159,7 +159,6 @@ OpQt::OpQt(void* op_parent_ctx, char* opplace, pwr_tStatus* status)
   toplevel->setWindowFlags(Qt::CustomizeWindowHint);
 
   CoWowQt::SetWindowIcon(toplevel);
-  QRect xtt_monitor_geometry = QApplication::desktop()->screenGeometry();
 
   pwr_tFileName fname;
   dcli_translate_filename(fname, "$pwr_exe/xtt_alarm_active.png");
@@ -383,11 +382,11 @@ OpQt::OpQt(void* op_parent_ctx, char* opplace, pwr_tStatus* status)
     if (sup_vect.size() > 10) {
       padding1 = 0;
       padding2 = 0;
-      buttonwidth = (xtt_monitor_geometry.width() - 350) / sup_vect.size();
+      buttonwidth = (monitor_geometry.width() - 350) / sup_vect.size();
     } else if (sup_vect.size() > 6) {
       padding1 = 8;
       padding2 = 5;
-      buttonwidth = (xtt_monitor_geometry.width() - 350) / sup_vect.size()
+      buttonwidth = (monitor_geometry.width() - 350) / sup_vect.size()
           - 2 * padding2;
     } else {
       padding1 = 8;
@@ -479,8 +478,8 @@ OpQt::OpQt(void* op_parent_ctx, char* opplace, pwr_tStatus* status)
     toplevel->activate_aalarm_decr();
   }
 
-  toplevel->resize(xtt_monitor_geometry.width(), OP_HEIGHT_MIN + OP_HEIGHT_STATUSBAR);
-  toplevel->move(0, 0);
+  toplevel->resize(monitor_geometry.width(), OP_HEIGHT_MIN + OP_HEIGHT_STATUSBAR);
+  toplevel->move(monitor_geometry.x(), 0);
 
   wow = new CoWowQt(toplevel);
   sup_timerid = wow->timer_new();
@@ -809,6 +808,16 @@ int OpQt::configure(char* opplace_str)
   if (opplace_p->StartJavaProcess) {
     start_jop = 1;
   }
+
+  int numberOfMonitors =  QApplication::desktop()->screenCount();
+  int monitor = opplace_p->Monitor;
+
+  if (monitor > numberOfMonitors || monitor < 0) monitor = 0;
+
+  if (monitor == 0) monitor = QApplication::desktop()->primaryScreen();
+  else monitor = opplace_p->Monitor - 1;
+
+  monitor_geometry = QApplication::desktop()->screenGeometry(monitor);
 
   // Examine Graph objects
   for (i = 0;
