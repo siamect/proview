@@ -809,13 +809,13 @@ void GeQtWidget::activate_customcolors_write()
 void GeQtWidget::activate_import_graph()
 {
   ge->wow->CreateFileSelDia("Graph Selection", ge,
-      GeQt::graph_file_selected_cb, wow_eFileSelType_Graph);
+      GeQt::graph_file_selected_cb, wow_eFileSelType_Graph, wow_eFileSelAction_Open);
 }
 
 void GeQtWidget::activate_import_image()
 {
   ge->wow->CreateFileSelDia("Image Selection", ge,
-      GeQt::image_file_selected_cb, wow_eFileSelType_Image);
+      GeQt::image_file_selected_cb, wow_eFileSelType_Image, wow_eFileSelAction_Open);
 }
 
 void GeQtWidget::activate_creanextpage()

@@ -534,7 +534,7 @@ void GeCurveGtk::activate_export_browse(GtkWidget* w, gpointer data)
   GeCurve* curve = (GeCurve*)data;
 
   curve->wow->CreateFileSelDia(CoWowGtk::translate_utf8("File Selection"),
-      (void*)curve, export_file_selected_cb, wow_eFileSelType_History);
+      (void*)curve, export_file_selected_cb, wow_eFileSelType_History, wow_eFileSelAction_Open);
 }
 
 void GeCurveGtk::export_file_selected_cb(

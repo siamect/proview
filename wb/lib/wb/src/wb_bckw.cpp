@@ -100,7 +100,7 @@ void WbBckW::filter_cb(void* ctx, void* data, char* text)
 void WbBckW::activate_open()
 {
   wow->CreateFileSelDia("Backup File Selection", (void*)this, file_selected_cb,
-      wow_eFileSelType_Backup);
+      wow_eFileSelType_Backup, wow_eFileSelAction_Open);
 }
 
 void WbBckW::file_selected_cb(
@@ -138,7 +138,7 @@ void WbBckW::activate_diff()
     return;
 
   wow->CreateFileSelDia("Backup File Selection", (void*)this,
-      diff_file_selected_cb, wow_eFileSelType_Backup);
+      diff_file_selected_cb, wow_eFileSelType_Backup, wow_eFileSelAction_Open);
 }
 
 void WbBckW::diff_file_selected_cb(

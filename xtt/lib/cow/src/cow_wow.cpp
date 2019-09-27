@@ -176,7 +176,7 @@ void CoWow::DeleteList(void* ctx)
 
 void CoWow::CreateFileSelDia(const char* title, void* parent_ctx,
     void (*file_selected_cb)(void*, char*, wow_eFileSelType),
-    wow_eFileSelType file_type)
+    wow_eFileSelType file_type, wow_eFileSelAction action)
 {
 }
 

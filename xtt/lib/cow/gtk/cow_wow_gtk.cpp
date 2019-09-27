@@ -864,13 +864,19 @@ int CoWowGtk::GetSelection(GtkWidget* w, char* str, int size, GdkAtom atom)
 
 void CoWowGtk::CreateFileSelDia(const char* title, void* parent_ctx,
     void (*file_selected_cb)(void*, char*, wow_eFileSelType),
-    wow_eFileSelType file_type)
+    wow_eFileSelType file_type, wow_eFileSelAction action)
 {
   GtkWidget* dialog;
   pwr_tFileName fname;
+  GtkFileChooserAction gaction;
+
+  if (action == wow_eFileSelAction_Open)
+    gaction = GTK_FILE_CHOOSER_ACTION_OPEN;
+  else
+    gaction = GTK_FILE_CHOOSER_ACTION_SAVE;
 
   dialog = gtk_file_chooser_dialog_new(title, NULL,
-      GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+      gaction, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
       GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
 
   if (file_type == wow_eFileSelType_Dbs) {
@@ -962,6 +968,10 @@ void CoWowGtk::CreateFileSelDia(const char* title, void* parent_ctx,
     gtk_file_filter_set_name(filter, "All Files");
     gtk_file_filter_add_pattern(filter, "*");
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+  } else if (file_type == wow_eFileSelType_Tmp) {
+    pwr_tFileName folder;
+    dcli_translate_filename(folder, "$pwrp_tmp");
+    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), folder);
   }
 
   if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
