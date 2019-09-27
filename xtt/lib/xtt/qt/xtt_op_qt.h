@@ -100,6 +100,7 @@ public:
   char a_alarm_moretext[5][256];
   char b_alarm_moretext[256];
   int text_size;
+  QRect monitor_geometry;
   CoWowFocusTimerQt poptimer;
   std::vector<OpCmd> cmd_vect;
 
