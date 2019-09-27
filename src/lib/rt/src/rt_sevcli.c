@@ -846,10 +846,12 @@ int sevcli_get_events(pwr_tStatus* sts, sevcli_tCtx ctx, pwr_tOid oid,
     lp->EventType = ip->EventType;
     lp->EventPrio = ip->EventPrio;
     lp->SupObjectOid = ip->SupObjectOid;
+    lp->SupObjectOffset = ip->SupObjectOffset;
     lp->SupObjectSize = ip->SupObjectSize;
     strncpy(lp->EventText, ip->EventText, sizeof(lp->EventText));
     strncpy(lp->EventName, ip->EventName, sizeof(lp->EventName));
     lp->EventId = ip->EventId;
+    lp->EventStatus = ip->EventStatus;
     lp++;
     ip++;
   }

@@ -1363,6 +1363,7 @@ void* sev_server::send_events_thread(void* arg)
       strncpy(mp->EventText, list[i].eventtext, sizeof(mp->EventText));
       strncpy(mp->EventName, list[i].eventname, sizeof(mp->EventName));
       mp->EventId = list[i].eventid;
+      mp->EventStatus = list[i].eventstatus;
       mp++;
     }
   }
@@ -1427,6 +1428,7 @@ int sev_server::receive_events(
       ev.supobject.Objid.oix = ep->sup_aref_oix;
       ev.supobject.Offset = ep->sup_aref_offset;
       ev.supobject.Size = ep->sup_aref_size;
+      ev.eventstatus = ep->eventstatus;
       m_db->store_event(&m_sts, 0, idx, &ev);
       ep++;
     }
@@ -1755,6 +1757,11 @@ void* sev_server::receive_histdata_thread(void* arg)
             ev.supobject.Objid.oix = ep->sup_aref_oix;
             ev.supobject.Offset = ep->sup_aref_offset;
             ev.supobject.Size = ep->sup_aref_size;
+	    if (msg->h.version > 1)
+	      // Eventstatus added in version 2
+	      ev.eventstatus = ep->eventstatus;
+	    else
+	      ev.eventstatus = 0;
             sev->m_db->store_event(&sev->m_sts, th->db_ctx, msg->item_idx, &ev);
             ep++;
           }
@@ -1777,6 +1784,7 @@ void* sev_server::receive_histdata_thread(void* arg)
             ev.supobject.Objid.oix = 0;
             ev.supobject.Offset = 0;
             ev.supobject.Size = 0;
+	    ev.eventstatus = 0;
             sev->m_db->store_event(&sev->m_sts, th->db_ctx, msg->item_idx, &ev);
             epV0++;
           }

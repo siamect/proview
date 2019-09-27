@@ -105,6 +105,7 @@ typedef struct {
   pwr_tString80 EventText;
   pwr_tOName EventName;
   mh_sEventId EventId;
+  pwr_tUInt32 EventStatus;
 } sevcli_sEvents;
 
 int sevcli_init(pwr_tStatus* sts, sevcli_tCtx* ctx);
