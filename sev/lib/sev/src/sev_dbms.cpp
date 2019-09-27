@@ -384,6 +384,11 @@ int sev_dbms_env::checkAndUpdateVersion(unsigned int version)
     updateDBToSevVersion4();
   }
 
+  if (old_version < 5) {
+    printf("Updating database tables to sev version 5\n");
+    updateDBToSevVersion5();
+  }
+
   if (old_version != version) {
     char query[100];
     sprintf(query, "update sev_version set version = %d", version);
@@ -587,6 +592,57 @@ int sev_dbms_env::updateDBToSevVersion4(void)
         "add supobject_offset int unsigned after eventid_idx, add "
         "supobject_oix int unsigned after eventid_idx,"
         "add supobject_vid int unsigned after eventid_idx",
+        tablename);
+
+    rc = mysql_query(con(), query);
+    if (rc) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf("%s: %s\n", __FUNCTION__, mysql_error(con()));
+      return 0;
+    }
+  }
+  mysql_free_result(result);
+
+  return 1;
+}
+
+int sev_dbms_env::updateDBToSevVersion5(void)
+{
+  int rc;
+  char query[300];
+
+  sprintf(query,
+      "select id,tablename from items where aname = 'Events' order by id");
+
+  rc = mysql_query(con(), query);
+  if (rc) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf("%s: %s\n", __FUNCTION__, mysql_error(con()));
+    return 0;
+  }
+
+  MYSQL_ROW row;
+  MYSQL_RES* result = mysql_store_result(con());
+  if (!result) {
+    printf("In %s row %d:\n", __FILE__, __LINE__);
+    printf("GetValues Result Error\n");
+    return 0;
+  }
+  int rows = mysql_num_rows(result);
+
+  std::vector<sev_item> itemsVec;
+  for (int i = 0; i < rows; i++) {
+    char tablename[80];
+    int id;
+
+    row = mysql_fetch_row(result);
+    if (!row)
+      break;
+    id = atoi(row[0]);
+    strncpy(tablename, row[1], sizeof(tablename));
+
+    sprintf(query,
+        "alter table %s add eventstatus int unsigned after eventname",
         tablename);
 
     rc = mysql_query(con(), query);
@@ -991,7 +1047,7 @@ int sev_dbms::create_event_table(
       "supobject_vid int unsigned, supobject_oix int unsigned, "
       "supobject_offset int unsigned,"
       "supobject_size int unsigned,"
-      "eventtext varchar(80), eventname varchar(80), index (time))%s;",
+      "eventtext varchar(80), eventname varchar(80), eventstatus int unsigned, index (time))%s;",
       tablename, readoptstr, timeformatstr, enginestr);
 
   int rc = mysql_query(m_env->con(), query);
@@ -2523,6 +2579,8 @@ int sev_dbms::store_event(
   else
     con = m_env->con();
 
+  printf("Store event:eventstatus %u\n", ep->eventstatus);
+
   *sts = time_AtoAscii(
       &ep->time, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
   if (EVEN(*sts))
@@ -2599,25 +2657,27 @@ int sev_dbms::store_event(
                      "eventid_nix, eventid_birthtime,"
                      "eventid_idx, supobject_vid, supobject_oix, "
                      "supobject_offset, supobject_size,"
-                     "eventtext, eventname) values "
-                     "(%ld,%ld,%d,%d,%d,%d,%d,%u,%u,%u,%u,'%s','%s')",
+                     "eventtext, eventname, eventstatus) values "
+                     "(%ld,%ld,%d,%d,%d,%d,%d,%u,%u,%u,%u,'%s','%s',%u)",
           m_items[item_idx].tablename, (long int)ep->time.tv_sec,
           (long int)ep->time.tv_nsec, ep->type, ep->eventprio, ep->eventid.Nix,
           ep->eventid.BirthTime.tv_sec, ep->eventid.Idx,
           ep->supobject.Objid.vid, ep->supobject.Objid.oix,
-          ep->supobject.Offset, ep->supobject.Size, eventtext, ep->eventname);
+	      ep->supobject.Offset, ep->supobject.Size, eventtext, ep->eventname,
+	      ep->eventstatus);
     } else {
       // Posix time, low resolution
       sprintf(query, "insert into %s (time, eventtype, eventprio, eventid_nix, "
                      "eventid_birthtime,"
                      "eventid_idx, supobject_vid, supobject_oix, "
                      "supobject_offset, supobject_size, "
-                     "eventtext, eventname) values "
-                     "(%ld,%d,%d,%d,%d,%d,%u,%u,%u,%u,'%s','%s')",
-          m_items[item_idx].tablename, (long int)ep->time.tv_sec, ep->type,
-          ep->eventprio, ep->eventid.Nix, ep->eventid.BirthTime.tv_sec,
-          ep->eventid.Idx, ep->supobject.Objid.vid, ep->supobject.Objid.oix,
-          ep->supobject.Offset, ep->supobject.Size, eventtext, ep->eventname);
+                     "eventtext, eventname, eventstatus) values "
+                     "(%ld,%d,%d,%d,%d,%d,%u,%u,%u,%u,'%s','%s',%u)",
+	  m_items[item_idx].tablename, (long int)ep->time.tv_sec, ep->type,
+	  ep->eventprio, ep->eventid.Nix, ep->eventid.BirthTime.tv_sec,
+	  ep->eventid.Idx, ep->supobject.Objid.vid, ep->supobject.Objid.oix,
+	  ep->supobject.Offset, ep->supobject.Size, eventtext, ep->eventname,
+	  ep->eventstatus);
     }
   } else {
     if (m_items[item_idx].options & pwr_mSevOptionsMask_HighTimeResolution) {
@@ -2626,25 +2686,27 @@ int sev_dbms::store_event(
                      "eventid_nix, eventid_birthtime,"
                      "eventid_idx, supobject_vid, supobject_oix, "
                      "supobject_offset, supobject_size,"
-                     "eventtext, eventname) values "
-                     "('%s',%ld,%d,%d,%d,%d,%d,%u,%u,%u,%u,'%s','%s')",
+                     "eventtext, eventname, eventstatus) values "
+                     "('%s',%ld,%d,%d,%d,%d,%d,%u,%u,%u,%u,'%s','%s',%u)",
           m_items[item_idx].tablename, timstr, (long int)ep->time.tv_nsec,
           ep->type, ep->eventprio, ep->eventid.Nix,
           ep->eventid.BirthTime.tv_sec, ep->eventid.Idx,
           ep->supobject.Objid.vid, ep->supobject.Objid.oix,
-          ep->supobject.Offset, ep->supobject.Size, eventtext, ep->eventname);
+	  ep->supobject.Offset, ep->supobject.Size, eventtext, ep->eventname,
+	  ep->eventstatus);
     } else {
       // Sql time, low resolution
       sprintf(query, "insert into %s (time, eventtype, eventprio, eventid_nix, "
                      "eventid_birthtime,"
                      "eventid_idx, supobject_vid, supobject_oix, "
                      "supobject_offset, supobject_size,"
-                     "eventtext, eventname) values "
-                     "('%s',%d,%d,%d,%d,%d,%u,%u,%u,%u,'%s','%s')",
+                     "eventtext, eventname, eventstatus) values "
+                     "('%s',%d,%d,%d,%d,%d,%u,%u,%u,%u,'%s','%s',%u)",
           m_items[item_idx].tablename, timstr, ep->type, ep->eventprio,
           ep->eventid.Nix, ep->eventid.BirthTime.tv_sec, ep->eventid.Idx,
           ep->supobject.Objid.vid, ep->supobject.Objid.oix,
-          ep->supobject.Offset, ep->supobject.Size, eventtext, ep->eventname);
+	  ep->supobject.Offset, ep->supobject.Size, eventtext, ep->eventname,
+	  ep->eventstatus);
     }
   }
   rc = mysql_query(con, query);
@@ -4803,11 +4865,11 @@ int sev_dbms::get_events(pwr_tStatus *sts, void *thread, pwr_tOid oid,
   if (options & pwr_mSevOptionsMask_HighTimeResolution)
     strcpy(column_part, "time,ntime,eventtype,eventprio,eventid_nix,eventid_birthtime,"
 	   "eventid_idx,supobject_vid,supobject_oix,supobject_offset,supobject_size,eventtext,"
-	   "eventname");
+	   "eventname,eventstatus");
   else
     strcpy(column_part, "time,eventtype,eventprio,eventid_nix,eventid_birthtime,"
 	   "eventid_idx,supobject_vid,supobject_oix,supobject_offset,supobject_size,eventtext,"
-	   "eventname");
+	   "eventname,eventstatus");
 
   // 'order by' part
   if (options & pwr_mSevOptionsMask_HighTimeResolution)
@@ -5043,6 +5105,7 @@ int sev_dbms::get_events(pwr_tStatus *sts, void *thread, pwr_tOid oid,
     e.supobject.Size = strtoul(row[j++], 0, 10);
     strncpy(e.eventtext, row[j++], sizeof(e.eventtext));
     strncpy(e.eventname, row[j++], sizeof(e.eventname));
+    e.eventstatus = strtoul(row[j++], 0, 10);
     list.push_back(e);
   }
   printf("ecnt %d\n", list.size());
