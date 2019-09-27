@@ -1840,7 +1840,7 @@ static int wnav_compile_func(void* client_data, void* client_flag)
       return sts;
 
     if (allplcpgm) {
-      sts = gcg_comp_plcembed_all(wnav->ldhses);
+      sts = gcg_comp_plcembed_all(wnav->ldhses, 0);
       if (EVEN(sts)) {
         wnav->message('E', wnav_get_message(sts));
         return sts;
@@ -1852,7 +1852,7 @@ static int wnav_compile_func(void* client_data, void* client_flag)
         return sts;
       }
 
-      sts = gcg_comp_plcembed(wnav->ldhses, oid);
+      sts = gcg_comp_plcembed(wnav->ldhses, oid, 0);
       if (EVEN(sts)) {
         wnav->message('E', wnav_get_message(sts));
         return sts;

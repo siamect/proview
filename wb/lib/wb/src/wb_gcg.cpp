@@ -15846,11 +15846,24 @@ static int gcg_in_libhier(gcg_ctx gcgctx, pwr_tOid oid)
   return 0;
 }
 
-int gcg_comp_plcembed_all(ldh_tSession ldhses)
+int gcg_comp_plcembed_all(ldh_tSession ldhses, int force)
 {
   pwr_tAttrRef plcint_aref;
   pwr_tOid last_oid = pwr_cNOid;
-  pwr_tStatus sts;
+  pwr_tStatus sts, rsts;
+  bool write_set = false;
+  ldh_sSessInfo info;
+
+  sts = ldh_GetSessionInfo(ldhses, &info);
+  if (EVEN(sts))
+    return sts;
+
+  if (info.Access == ldh_eAccess_ReadOnly) {
+    sts = ldh_SetSession(ldhses, ldh_eAccess_SharedReadWrite);
+    if (EVEN(sts))
+      return sts;
+    write_set = true;
+  }
 
   for (sts = ldh_GetClassListAttrRef(ldhses, pwr_cClass_PlcEmbed, &plcint_aref);
        ODD(sts); sts = ldh_GetNextAttrRef(
@@ -15858,16 +15871,28 @@ int gcg_comp_plcembed_all(ldh_tSession ldhses)
     if (cdh_ObjidIsEqual(last_oid, plcint_aref.Objid))
       continue;
 
-    sts = gcg_comp_plcembed(ldhses, plcint_aref.Objid);
-    if (EVEN(sts))
-      return sts;
+    rsts = gcg_comp_plcembed(ldhses, plcint_aref.Objid, force);
+    if (EVEN(rsts))
+      break;
 
     last_oid = plcint_aref.Objid;
   }
+
+  if (write_set) {
+    sts = ldh_SaveSession(ldhses);
+    if (EVEN(sts))
+      return sts;
+    sts = ldh_SetSession(ldhses, ldh_eAccess_ReadOnly);
+    if (EVEN(sts))
+      return sts;
+  }
+
+  if (EVEN(rsts))
+    return rsts;
   return GSX__SUCCESS;
 }
 
-int gcg_comp_plcembed(ldh_tSession ldhses, pwr_tOid oid)
+int gcg_comp_plcembed(ldh_tSession ldhses, pwr_tOid oid, int force)
 {
   pwr_tStatus sts;
   pwr_tAttrRef aref;
@@ -16007,10 +16032,14 @@ int gcg_comp_plcembed(ldh_tSession ldhses, pwr_tOid oid)
         memcpy(&mod_time, mod_time_ptr, sizeof(mod_time));
         free((char*)mod_time_ptr);
 
-        if (template_time->tv_sec != mod_time.tv_sec)
-          modified = 1;
-        else
-          modified = 0;
+	if (force)
+	  modified = 1;
+	else {
+	  if (template_time->tv_sec != mod_time.tv_sec)
+	    modified = 1;
+	  else
+	    modified = 0;
+	}
 
         if (modified) {
           // Delete old window

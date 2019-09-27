@@ -240,8 +240,8 @@ pwr_tStatus gcg_read_volume_plclist(pwr_tVolumeId volid,
     unsigned long* thread_count, gcg_t_threadlist** threadlist,
     unsigned long* plcproc_count, gcg_t_plcproclist** plcproclist);
 
-int gcg_comp_plcembed_all(ldh_tSession ldhses);
-int gcg_comp_plcembed(ldh_tSession ldhses, pwr_tOid oid);
+int gcg_comp_plcembed_all(ldh_tSession ldhses, int force);
+int gcg_comp_plcembed(ldh_tSession ldhses, pwr_tOid oid, int force);
 
 #ifdef __cplusplus
 }

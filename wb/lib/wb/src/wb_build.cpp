@@ -55,6 +55,7 @@
 #include "wb_build.h"
 #include "wb_env.h"
 #include "wb_lfu.h"
+#include "wb_gcg.h"
 #include "wb_foe.h"
 #include "wb_merep.h"
 #include "wb_dblock.h"
@@ -704,6 +705,10 @@ void wb_build::rootvolume(pwr_tVid vid)
 
   if (!opt.manual) {
     // Build all plcpgm
+    m_sts = gcg_comp_plcembed_all((ldh_tSession*)&m_session, opt.force);
+    if (evenSts())
+      return;
+
     classlist(pwr_cClass_plc);
     if (evenSts())
       return;
