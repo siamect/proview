@@ -1806,6 +1806,35 @@ pwr_tStatus gdh_GetNodeObject(pwr_tNodeId nid, /**< The node index. */
   return sts;
 }
 
+pwr_tStatus gdh_GetNodeInfo(pwr_tNodeId nid, /**< The node index. */
+    gdh_sNodeInfo* ip /**< Receive the node info. */
+    )
+{
+  pwr_tStatus sts = GDH__SUCCESS;
+  gdb_sNode* np;
+
+  if (ip == NULL)
+    return GDH__BADARG;
+
+  gdh_ScopeLock
+  {
+    np = hash_Search(&sts, gdbroot->nid_ht, &nid);
+    if (np != NULL) {
+      ip->nodidx = np->nid;
+      ip->nix = np->vol_oid.vid;
+      strcpy(ip->nodename, np->name); 
+      ip->objid = np->nod_oid;
+      ip->linkstate = 0;
+      ip->upcnt = np->upcnt;
+      ip->timeup = np->timeup;
+      ip->timedown = np->timedown;
+    }
+  }
+  gdh_ScopeUnlock;
+
+  return sts;
+}
+
 /**
  * @brief Get the characteristics of an attribute, given
  * its name and the class it belongs to.
