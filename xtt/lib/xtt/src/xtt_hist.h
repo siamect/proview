@@ -50,6 +50,9 @@ extern "C" {
 #ifndef xtt_evlist
 #include "xtt_evlist.h"
 #endif
+#ifndef cow_wow
+#include "cow_wow.h"
+#endif
 #define ERROR_TIME_CONVERT -99
 
 class CoWow;
@@ -133,10 +136,12 @@ public:
   }
 
   void activate_print();
+  void activate_export();
   void activate_help();
   void activate_helpevent();
   void time_cb(time_ePeriod period);
   void stat();
+  int export_events(const char *filename);
 
   static int GoBackMonth(
       pwr_tTime TimeIn, pwr_tTime* FromTime, pwr_tTime* ToTime);
@@ -154,6 +159,7 @@ public:
   static void help_event_cb(void* ctx, void* item);
   static void selection_changed_cb(void* ctx);
   static void hist_init_cb(void* ctx);
+  static void export_file_selected_cb(void *ctx, char *filename, wow_eFileSelType file_type);
 };
 
 #else

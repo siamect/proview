@@ -857,14 +857,14 @@ void GeGtk::activate_import_graph(GtkWidget* w, gpointer gectx)
 {
   ((Ge*)gectx)
       ->wow->CreateFileSelDia("Graph Selection", (void*)gectx,
-          graph_file_selected_cb, wow_eFileSelType_Graph);
+      graph_file_selected_cb, wow_eFileSelType_Graph, wow_eFileSelAction_Open);
 }
 
 void GeGtk::activate_import_image(GtkWidget* w, gpointer gectx)
 {
   ((Ge*)gectx)
       ->wow->CreateFileSelDia("Image Selection", (void*)gectx,
-          image_file_selected_cb, wow_eFileSelType_Image);
+          image_file_selected_cb, wow_eFileSelType_Image, wow_eFileSelAction_Open);
 }
 
 void GeGtk::activate_creanextpage(GtkWidget* w, gpointer gectx)

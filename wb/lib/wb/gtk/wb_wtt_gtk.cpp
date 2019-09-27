@@ -1287,7 +1287,7 @@ void WttGtk::activate_openfile_dbs(GtkWidget* w, gpointer data)
 
   wtt->set_clock_cursor();
   wtt->wnav->wow->CreateFileSelDia("Loadfile Selection", (void*)wtt,
-      Wtt::file_selected_cb, wow_eFileSelType_Dbs);
+      Wtt::file_selected_cb, wow_eFileSelType_Dbs, wow_eFileSelAction_Open);
   wtt->reset_cursor();
 }
 
@@ -1297,7 +1297,7 @@ void WttGtk::activate_openfile_wbl(GtkWidget* w, gpointer data)
 
   wtt->set_clock_cursor();
   wtt->wnav->wow->CreateFileSelDia("Loadfile Selection", (void*)wtt,
-      Wtt::file_selected_cb, wow_eFileSelType_Wbl);
+      Wtt::file_selected_cb, wow_eFileSelType_Wbl, wow_eFileSelAction_Open);
   wtt->reset_cursor();
 }
 

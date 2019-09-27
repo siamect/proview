@@ -43,6 +43,11 @@
 #include "co_lng.h"
 
 typedef enum {
+  wow_eFileSelAction_Save,
+  wow_eFileSelAction_Open
+} wow_eFileSelAction;
+
+typedef enum {
   wow_eFileSelType_,
   wow_eFileSelType_All,
   wow_eFileSelType_Dbs,
@@ -53,6 +58,7 @@ typedef enum {
   wow_eFileSelType_History,
   wow_eFileSelType_Backup,
   wow_eFileSelType_ColorTheme,
+  wow_eFileSelType_Tmp,
   wow_eFileSelType__
 } wow_eFileSelType;
 
@@ -133,7 +139,7 @@ public:
   virtual void DeleteList(void* ctx);
   virtual void CreateFileSelDia(const char* title, void* parent_ctx,
       void (*file_selected_cb)(void*, char*, wow_eFileSelType),
-      wow_eFileSelType file_type);
+				wow_eFileSelType file_type, wow_eFileSelAction action);
   virtual int CreateModalDialog(const char* title, const char* text,
       const char* button1, const char* button2, const char* button3,
       const char* image);

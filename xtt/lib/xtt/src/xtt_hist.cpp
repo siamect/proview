@@ -148,6 +148,48 @@ void Hist::activate_print()
     hist->print(Lng::translate("Eventlog"));
 }
 
+void Hist::activate_export()
+{
+  wow->CreateFileSelDia("Export", (void*)this,
+      export_file_selected_cb, wow_eFileSelType_Tmp, wow_eFileSelAction_Save);
+}
+
+void Hist::export_file_selected_cb(void *ctx, char *filename, wow_eFileSelType file_type)
+{
+  ((Hist *)ctx)->export_events(filename);  
+}
+
+int Hist::export_events(const char *filename)
+{
+  brow_tObject *list;
+  int list_cnt;
+  ItemAlarm *item;
+  char timstr[40];
+  char supobjectstr[80];
+  pwr_tFileName fname;
+  FILE *fp;
+
+  dcli_translate_filename(fname, filename);
+  fp = fopen(fname, "w");
+  if (!fp)
+    return 0;
+  fprintf(fp, "Time,Type,Prio,Text,Name,SupObject,Id,Status\n");
+  brow_GetObjectList(hist->brow->ctx, &list, &list_cnt);
+  for (int i = 0; i < list_cnt; i++) {
+    brow_GetUserData(list[i], (void **)&item);
+    time_AtoAscii(&item->time, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
+    strcpy(supobjectstr, cdh_ObjidToString(item->supobject.Objid, 1));
+    if (item->supobject.Flags.b.ObjectAttr)
+      sprintf(&supobjectstr[strlen(supobjectstr)], "#%u:%u", item->supobject.Offset,
+	      item->supobject.Size);
+    fprintf(fp, "%s,%u,%lu,\"%s\",\"%s\",%s,\"(%u,%u)\",%u\n",
+	   timstr, item->eventtype, item->eventprio, item->eventtext, item->eventname, 
+	   supobjectstr, item->eventid.Nix, item->eventid.Idx, item->status);
+  }
+  fclose(fp);
+  return 1;
+}
+
 void Hist::activate_help()
 {
   if (help_cb)

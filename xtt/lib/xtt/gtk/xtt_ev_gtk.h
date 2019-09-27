@@ -94,6 +94,7 @@ public:
   static void eve_activate_print(GtkWidget* w, gpointer data);
   static void ala_activate_print(GtkWidget* w, gpointer data);
   static void blk_activate_print(GtkWidget* w, gpointer data);
+  static void eve_activate_export(GtkWidget* w, gpointer data);
   static void eve_activate_ack_last(GtkWidget* w, gpointer data);
   static void ala_activate_ack_last(GtkWidget* w, gpointer data);
   static void ala_activate_ack_all(GtkWidget* w, gpointer data);

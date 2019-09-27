@@ -122,6 +122,10 @@ HistGtk::HistGtk(void* hist_parent_ctx, GtkWidget* hist_parent_wid,
       gtk_image_new_from_stock("gtk-print", GTK_ICON_SIZE_MENU));
   g_signal_connect(file_print, "activate", G_CALLBACK(activate_print), this);
 
+  GtkWidget* file_export = gtk_image_menu_item_new_with_mnemonic(
+      CoWowGtk::translate_utf8("_Export"));
+  g_signal_connect(file_export, "activate", G_CALLBACK(activate_export), this);
+
   GtkWidget* file_close = gtk_image_menu_item_new_with_mnemonic(
       CoWowGtk::translate_utf8("_Close"));
   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(file_close),
@@ -132,6 +136,7 @@ HistGtk::HistGtk(void* hist_parent_ctx, GtkWidget* hist_parent_wid,
 
   GtkMenu* file_menu = (GtkMenu*)g_object_new(GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_export);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
   GtkWidget* file
@@ -715,6 +720,13 @@ void HistGtk::activate_print(GtkWidget* w, gpointer data)
   Hist* histOP = (Hist*)data;
 
   histOP->activate_print();
+}
+
+void HistGtk::activate_export(GtkWidget* w, gpointer data)
+{
+  Hist* histOP = (Hist*)data;
+
+  histOP->activate_export();
 }
 
 void HistGtk::activate_zoom_in(GtkWidget* w, gpointer data)

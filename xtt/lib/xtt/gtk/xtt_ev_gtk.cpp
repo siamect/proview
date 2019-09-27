@@ -156,6 +156,11 @@ EvGtk::EvGtk(void* ev_parent_ctx, GtkWidget* ev_parent_wid, char* eve_name,
     g_signal_connect(
         file_print, "activate", G_CALLBACK(eve_activate_print), this);
 
+    GtkWidget* file_export = gtk_image_menu_item_new_with_mnemonic(
+        CoWowGtk::translate_utf8("_Export"));
+    g_signal_connect(
+        file_export, "activate", G_CALLBACK(eve_activate_export), this);
+
     GtkWidget* file_close = gtk_image_menu_item_new_with_mnemonic(
         CoWowGtk::translate_utf8("_Close"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(file_close),
@@ -167,6 +172,7 @@ EvGtk::EvGtk(void* ev_parent_ctx, GtkWidget* ev_parent_wid, char* eve_name,
 
     GtkMenu* file_menu = (GtkMenu*)g_object_new(GTK_TYPE_MENU, NULL);
     gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_print);
+    gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_export);
     gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
     GtkWidget* file
@@ -1214,7 +1220,12 @@ void EvGtk::blk_activate_print(GtkWidget* w, gpointer data)
   ev->blk_activate_print();
 }
 
-void EvGtk::eve_activate_ack_last(GtkWidget* w, gpointer data)
+void EvGtk::eve_activate_export(GtkWidget* w, gpointer ev)
+{
+  ((Ev*)ev)->eve_activate_export();
+}
+
+void EvGtk::eve_activate_ack_last(GtkWidget* w, gpointer ev)
 {
   Ev* ev = (Ev*)data;
 
