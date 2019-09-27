@@ -2076,11 +2076,11 @@ int sev_dbms::get_values(pwr_tStatus* sts, void* thread, pwr_tOid oid,
             thread, item.tablename, item.options, starttime, 1, &startid);
 	if (*sts == SEV__NOROWS)
 	  get_id_range(sts, thread, &item, item.options, &startid, 0);
-	get_id_value(thread, item.tablename, startid, type, size, 
+	get_id_value(thread, item.tablename, startid, type, size,
 		     startval);
 	startvalue = startval;
 
-      } else {      
+      } else {
 	// Get id for starttime
 	*sts = get_closest_time(
             thread, item.tablename, item.options, starttime, 1, &startid);
@@ -4105,7 +4105,7 @@ int sev_dbms::get_closest_time(void* thread, char* tablename,
 }
 
 int sev_dbms::get_id_value(void* thread, char* tablename,
-			   unsigned int id, pwr_eType type, int size, 
+			   unsigned int id, pwr_eType type, int size,
 			   void *value)
 {
   char query[200];
@@ -4779,9 +4779,9 @@ int sev_dbms::handle_objectchange(
 }
 
 int sev_dbms::get_events(pwr_tStatus *sts, void *thread, pwr_tOid oid,
-			 pwr_tMask options, pwr_tMask eventtypemask, 
+			 pwr_tMask options, pwr_tMask eventtypemask,
 			 pwr_tMask eventpriomask, char *eventtext, char *eventname,
-			 pwr_tTime *starttime, pwr_tTime *endtime, unsigned int numevents, 
+			 pwr_tTime *starttime, pwr_tTime *endtime, unsigned int numevents,
 			 std::vector<sev_event> &list)
 {
   sev_item item;
@@ -4790,7 +4790,7 @@ int sev_dbms::get_events(pwr_tStatus *sts, void *thread, pwr_tOid oid,
     return 0;
   }
 
-  char query[700];
+  char query[1300];
   char starttimstr[40];
   char endtimstr[40];
   pwr_tTime stime, etime;
@@ -4901,140 +4901,140 @@ int sev_dbms::get_events(pwr_tStatus *sts, void *thread, pwr_tOid oid,
 
   if (eventtypemask) {
     bool first = true;
-    sprintf(&where_part[strlen(where_part)], " and (");    
+    sprintf(&where_part[strlen(where_part)], " and (");
     if (eventtypemask & sev_mEventType_Ack) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Ack);
       first = false;
     }
     if (eventtypemask & sev_mEventType_Block) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Block);
       first = false;
     }
     if (eventtypemask & sev_mEventType_Cancel) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Cancel);
       first = false;
     }
     if (eventtypemask & sev_mEventType_CancelBlock) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_CancelBlock);
       first = false;
     }
     if (eventtypemask & sev_mEventType_Missing) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Missing);
       first = false;
     }
     if (eventtypemask & sev_mEventType_Reblock) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Reblock);
       first = false;
     }
     if (eventtypemask & sev_mEventType_Return) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Return);
       first = false;
     }
     if (eventtypemask & sev_mEventType_Unblock) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Unblock);
       first = false;
     }
     if (eventtypemask & sev_mEventType_InfoSuccess) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_InfoSuccess);
       first = false;
     }
     if (eventtypemask & sev_mEventType_Alarm) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Alarm);
       first = false;
     }
     if (eventtypemask & sev_mEventType_MaintenanceAlarm) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_MaintenanceAlarm);
       first = false;
     }
     if (eventtypemask & sev_mEventType_SystemAlarm) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_SystemAlarm);
       first = false;
     }
     if (eventtypemask & sev_mEventType_UserAlarm1) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_UserAlarm1);
       first = false;
     }
     if (eventtypemask & sev_mEventType_UserAlarm2) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_UserAlarm2);
       first = false;
     }
     if (eventtypemask & sev_mEventType_UserAlarm3) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_UserAlarm3);
       first = false;
     }
     if (eventtypemask & sev_mEventType_UserAlarm4) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_UserAlarm4);
       first = false;
     }
     if (eventtypemask & sev_mEventType_Info) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventtype = %d", mh_eEvent_Info);
       first = false;
     }
-    sprintf(&where_part[strlen(where_part)], ")");    
+    sprintf(&where_part[strlen(where_part)], ")");
   }
 
   if (eventpriomask) {
     bool first = true;
-    sprintf(&where_part[strlen(where_part)], " and (");    
+    sprintf(&where_part[strlen(where_part)], " and (");
     if (eventpriomask & sev_mEventPrio_A) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventprio = %d", mh_eEventPrio_A);
       first = false;
     }
     if (eventpriomask & sev_mEventPrio_B) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventprio = %d", mh_eEventPrio_B);
       first = false;
     }
     if (eventpriomask & sev_mEventPrio_C) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventprio = %d", mh_eEventPrio_C);
       first = false;
     }
     if (eventpriomask & sev_mEventPrio_D) {
       if (!first)
-	sprintf(&where_part[strlen(where_part)], " or ");    
+	sprintf(&where_part[strlen(where_part)], " or ");
       sprintf(&where_part[strlen(where_part)], "eventprio = %d", mh_eEventPrio_C);
       first = false;
     }
-    sprintf(&where_part[strlen(where_part)], ")");    
+    sprintf(&where_part[strlen(where_part)], ")");
   }
 
   if (!streq(eventtext, ""))
@@ -5108,7 +5108,7 @@ int sev_dbms::get_events(pwr_tStatus *sts, void *thread, pwr_tOid oid,
     e.eventstatus = strtoul(row[j++], 0, 10);
     list.push_back(e);
   }
-  printf("ecnt %d\n", list.size());
+  printf("ecnt %ld\n", list.size());
 
   mysql_free_result(result);
   *sts = SEV__SUCCESS;
