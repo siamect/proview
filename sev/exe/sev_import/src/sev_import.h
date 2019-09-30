@@ -39,6 +39,7 @@
 
 #include <vector>
 #include "rt_que.h"
+#include "rt_mh_net.h"
 #include "rt_sev_net.h"
 
 class sev_import;

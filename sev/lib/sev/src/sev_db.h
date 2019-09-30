@@ -47,7 +47,7 @@
 #include "rt_sev_net.h"
 #include "sev_valuecache.h"
 
-#define sev_cVersion 4
+#define sev_cVersion 5
 
 typedef enum {
   sev_eDbType_,
@@ -121,6 +121,7 @@ public:
   char eventtext[80];
   char eventname[80];
   pwr_tAttrRef supobject;
+  unsigned int eventstatus;
 };
 
 class sev_item {

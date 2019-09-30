@@ -424,7 +424,7 @@ int CoWowQt::GetSelection(char* str, int size)
 
 void CoWowQt::CreateFileSelDia(const char* title, void* parent_ctx,
     void (*file_selected_cb)(void*, char*, wow_eFileSelType),
-    wow_eFileSelType file_type)
+    wow_eFileSelType file_type, wow_eFileSelAction action)
 {
   pwr_tFileName folder;
   QString filter;
@@ -446,11 +446,16 @@ void CoWowQt::CreateFileSelDia(const char* title, void* parent_ctx,
   } else if (file_type == wow_eFileSelType_Backup) {
     dcli_translate_filename(folder, "$pwrp_load");
     filter = "Backup files (*.bck);;All Files (*)";
+  } else if (file_type == wow_eFileSelType_Tmp) {
+    dcli_translate_filename(folder, "$pwrp_tmp");
   }
 
   // QFileDialog::getOpenFileName() is broken
   QFileDialog dialog(object->parent_wid, fl(title), fl(folder), filter);
-  dialog.setFileMode(QFileDialog::ExistingFile);
+  if (action == wow_eFileSelAction_Open)
+    dialog.setFileMode(QFileDialog::ExistingFile);
+  else
+    dialog.setFileMode(QFileDialog::AnyFile);
 
   int sts = dialog.exec();
   if (sts == QDialog::Accepted && dialog.selectedFiles().length() > 0) {

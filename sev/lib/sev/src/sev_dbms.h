@@ -81,6 +81,7 @@ public:
   int checkAndUpdateVersion(unsigned int version);
   int updateDBToSevVersion2(void);
   int updateDBToSevVersion4(void);
+  int updateDBToSevVersion5(void);
   int createSevVersion2Tables(void);
   int createSevVersion3Tables(void);
   MYSQL* createDb(void);

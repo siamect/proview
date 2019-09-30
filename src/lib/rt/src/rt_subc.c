@@ -269,6 +269,8 @@ static gdb_sNode* testClient(pwr_tStatus* sts, sub_sClient* cp)
 
     } else { /* Lookup by attribute reference.  */
       do {
+	arp = &cp->aref;
+
         op = vol_OidToObject(&lsts, cp->aref.Objid, gdb_mLo_global,
             vol_mTrans_all, cvol_eHint_none);
         if (op == NULL) {

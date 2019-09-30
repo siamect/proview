@@ -874,7 +874,10 @@ int rt_sevhistmon::send_data()
 
     if (!qcom_Put(&sts, &tgt, &put)) {
       m_hs[i].threadp->ErrorCount++;
-      m_hs[i].threadp->Status = sts;
+      if (sts == QCOM__NOQ)
+	m_hs[i].threadp->Status = SEV__HISTDATAQ;
+      else
+	m_hs[i].threadp->Status = sts;
       conf_sts = sts;
       qcom_Free(&sts, put.data);
       continue;
@@ -967,7 +970,10 @@ int rt_sevhistmon::send_exportdata()
 
     if (!qcom_Put(&sts, &tgt, &put)) {
       m_hs[i].threadp->ErrorCount++;
-      m_hs[i].threadp->Status = sts;
+      if (sts == QCOM__NOQ)
+	m_hs[i].threadp->Status = SEV__EXPORTQ;
+      else
+	m_hs[i].threadp->Status = sts;
       conf_sts = sts;
       qcom_Free(&sts, put.data);
       continue;
@@ -1492,6 +1498,7 @@ pwr_tStatus rt_sevhistmon::mh_ack_bc(mh_sAck* msg)
   ed.sup_aref_oix = msg->SupObject.Objid.oix;
   ed.sup_aref_offset = msg->SupObject.Offset;
   ed.sup_aref_size = msg->SupObject.Size;
+  ed.eventstatus = 0;
 
   if (shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert(&ed);
@@ -1514,6 +1521,7 @@ pwr_tStatus rt_sevhistmon::mh_return_bc(mh_sReturn* msg)
   ed.sup_aref_oix = msg->SupObject.Objid.oix;
   ed.sup_aref_offset = msg->SupObject.Offset;
   ed.sup_aref_size = msg->SupObject.Size;
+  ed.eventstatus = 0;
 
   if (shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert(&ed);
@@ -1537,7 +1545,9 @@ pwr_tStatus rt_sevhistmon::mh_alarm_bc(mh_sMessage* msg)
   ed.sup_aref_oix = msg->SupObject.Objid.oix;
   ed.sup_aref_offset = msg->SupObject.Offset;
   ed.sup_aref_size = msg->SupObject.Size;
+  ed.eventstatus = msg->Status;
 
+  printf("alarm_bc, %u\n", msg->Status);
   if (shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert(&ed);
 
@@ -1560,6 +1570,7 @@ pwr_tStatus rt_sevhistmon::mh_block_bc(mh_sBlock* msg)
   ed.sup_aref_oix = msg->SupObject.Objid.oix;
   ed.sup_aref_offset = msg->SupObject.Offset;
   ed.sup_aref_size = msg->SupObject.Size;
+  ed.eventstatus = 0;
 
   if (shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert(&ed);
@@ -1583,6 +1594,7 @@ pwr_tStatus rt_sevhistmon::mh_cancel_bc(mh_sReturn* msg)
   ed.sup_aref_oix = msg->SupObject.Objid.oix;
   ed.sup_aref_offset = msg->SupObject.Offset;
   ed.sup_aref_size = msg->SupObject.Size;
+  ed.eventstatus = 0;
 
   if (shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert(&ed);
@@ -1602,6 +1614,11 @@ pwr_tStatus rt_sevhistmon::mh_info_bc(mh_sMessage* msg)
   ed.eventid_idx = msg->Info.Id.Idx;
   ed.eventid_nix = msg->Info.Id.Nix;
   ed.eventid_birthtime = msg->Info.Id.BirthTime.tv_sec;
+  ed.sup_aref_vid = msg->SupObject.Objid.vid;
+  ed.sup_aref_oix = msg->SupObject.Objid.oix;
+  ed.sup_aref_offset = msg->SupObject.Offset;
+  ed.sup_aref_size = msg->SupObject.Size;
+  ed.eventstatus = 0;
 
   if (shm->m_sevhistevents)
     shm->m_sevhistevents->evbuf_insert(&ed);
@@ -1611,6 +1628,22 @@ pwr_tStatus rt_sevhistmon::mh_info_bc(mh_sMessage* msg)
 
 pwr_tStatus rt_sevhistmon::mh_clear_alarmlist_bc(pwr_tNodeIndex nix)
 {
+  pwr_tStatus sts;
+  sev_sEvent ed;
+  gdh_sNodeInfo info;
+  pwr_tTime current_time;
+
+  sts = gdh_GetNodeInfo(nix, &info);
+  time_GetTime(&current_time);
+
+  memset(&ed, 0, sizeof(ed));
+  ed.type = sev_eEvent_ClearAlarmList;
+  ed.time = net_TimeToNetTime(&current_time);
+  ed.sup_aref_vid = info.nix;
+  strncpy(ed.eventname, info.nodename, sizeof(ed.eventname));
+
+  if (shm->m_sevhistevents)
+    shm->m_sevhistevents->evbuf_insert(&ed);
   return 1;
 }
 
@@ -1694,6 +1727,7 @@ void sev_sevhistevents::evbuf_send()
   unsigned int ev_cnt = 0;
   if (evbuf_sent == ev_cInit) {
     for (unsigned int idx = evbuf_oldest;;) {
+      printf("evbuf_send, %u\n", event_buffer[idx].eventstatus);
       memcpy(&((sev_sMsgEventsStore*)put.data)->Events[ev_cnt],
           &event_buffer[idx], sizeof(sev_sEvent));
       ev_cnt++;
@@ -1727,7 +1761,10 @@ void sev_sevhistevents::evbuf_send()
 
   if (!qcom_Put(&sts, &tgt, &put)) {
     monitor->m_hs[event_thread_idx].threadp->ErrorCount++;
-    monitor->m_hs[event_thread_idx].threadp->Status = sts;
+    if (sts == QCOM__NOQ)
+      monitor->m_hs[event_thread_idx].threadp->Status = SEV__EVENTSQ;
+    else
+      monitor->m_hs[event_thread_idx].threadp->Status = sts;
     qcom_Free(&sts, put.data);
   }
   monitor->m_hs[event_thread_idx].threadp->SendCount++;

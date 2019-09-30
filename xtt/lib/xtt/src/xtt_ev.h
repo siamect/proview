@@ -45,6 +45,9 @@
 #ifndef xtt_eveve
 #include "xtt_eveve.h"
 #endif
+#ifndef cow_wow
+#include "cow_wow.h"
+#endif
 
 class CoWow;
 class XttMethodToolbar;
@@ -164,10 +167,12 @@ public:
   char* name_to_alias(char* name);
   pwr_tStatus set_view(pwr_tOid view);
   void view_shift();
+  int eve_export_events(const char *filename);
 
   void eve_activate_print();
   void ala_activate_print();
   void blk_activate_print();
+  void eve_activate_export();
   void ala_activate_ack_last();
   void eve_activate_ack_last();
   void eve_activate_ack_all();
@@ -198,6 +203,7 @@ public:
   static void seve_copy_list_cb(void* ctx, EvList* evl);
   static void seve_close_cb(void* ctx, EvEve* seve);
   static void help_event_cb(void* ctx, void* item);
+  static void eve_export_file_selected_cb(void *ctx, char *filename, wow_eFileSelType file_type);
 
   static pwr_tStatus mh_ack_bc(mh_sAck* MsgP);
   static pwr_tStatus mh_return_bc(mh_sReturn* MsgP);

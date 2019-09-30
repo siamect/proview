@@ -135,6 +135,7 @@ EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
     QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
     addMenuItem(object, file, "&Print", SLOT(eve_activate_print()), "",
         "document-print");
+    addMenuItem(object, file, "&Export", SLOT(eve_activate_export()));
     addMenuItem(
         object, file, "&Close", SLOT(eve_activate_exit()), "CTRL+W", "window-close");
 
@@ -655,6 +656,11 @@ void EvQtObject::ala_activate_print()
 void EvQtObject::blk_activate_print()
 {
   ev->blk_activate_print();
+}
+
+void EvQtObject::eve_activate_export()
+{
+  ev->eve_activate_export();
 }
 
 void EvQtObject::eve_activate_ack_last()

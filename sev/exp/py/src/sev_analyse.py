@@ -82,6 +82,7 @@ class ValueDialog:
 
         self.entry = Entry(top, width=15)
         self.entry.grid(column=1, row=0, padx=10, pady=5, sticky=W)
+        self.entry.focus()
         self.rename_ok_cb = rename_ok_cb
 
         button = Button(top, text="Ok", command=self.ok_cb, width=10)
@@ -90,11 +91,13 @@ class ValueDialog:
         button = Button(top, text="Cancel", command=self.cancel_cb, width=10)
         button.grid(column=1, row=1, padx=10, pady=5, sticky=W)
     
+        self.top.bind('<Return>', self.ok_cb)
+
 
     def cancel_cb(self):
         self.top.destroy()
 
-    def ok_cb(self):
+    def ok_cb(self, arg=0):
         value = self.entry.get()
         self.rename_ok_cb(value)
         self.top.destroy()
@@ -1801,7 +1804,8 @@ class FetchSev:
         self.wdata = wdata
 
         self.fswindow = Toplevel(window, bg=bgcolor)
-        self.fswindow.title('Fetch from Sev Server')
+        self.fswindow.title('Import from Sev Server')
+        self.fswindow.geometry("350x200")
         main.set_icon(self.fswindow)
         self.create_filterframe()
 
@@ -1816,11 +1820,19 @@ class FetchSev:
         defaultserver = StringVar()
 
         # Server entry
+        # Read last server from file
+        try:
+            fp = open(pwrp_tmp + "/sevserver.dat", "r")
+            srv = fp.read()
+            fp.close()
+        except IOError:
+            srv = ''
+
         serverlabel = Label(self.filterframe, text='Sev server')
         serverlabel.grid(column=0, row=0, padx=20, pady=5, sticky=W)
         serverlabel.config(bg=bgcolor)
         self.serverentry = Entry(self.filterframe, textvariable=defaultserver)
-        defaultserver.set('pwr56-build')
+        defaultserver.set(srv)
         self.serverentry.grid(column=1, row=0, padx=20, pady=5, sticky=W)
         self.serverentry.config(bg=bgcolor)
 
@@ -1834,15 +1846,24 @@ class FetchSev:
 
         # Fetch items button
         filterbutton = Button(self.filterframe, text='Fetch Items', command=self.fetchitems_cb, bg=buttoncolor)
-        filterbutton.grid(column=2, row=1, padx=20, pady=5, sticky=W)
+        filterbutton.grid(column=1, row=2, padx=20, pady=5, sticky=W)
         self.filterframe.pack(side=LEFT, fill=X)
 
     # Create frame to show and select sev items
 
     def fetchitems_cb(self):
 
+        self.fswindow.geometry("650x700")
         filtervalue = self.filterentry.get()
         self.server = self.serverentry.get()
+
+        # Store server to file
+        try:
+            fp = open(pwrp_tmp + "/sevserver.dat", "w")
+            fp.write(self.server)
+            fp.close()
+        except IOError:
+            pass
 
         self.items = pwrrt.getSevItemList(self.server, filtervalue)
 
@@ -2005,6 +2026,7 @@ for opt, arg in opts:
         formula = arg
         
 pwr_exe = os.environ.get('pwr_exe')
+pwrp_tmp = os.environ.get('pwrp_tmp')
 bgcolor = 'white'
 buttoncolor = '#F0F0F0'
 

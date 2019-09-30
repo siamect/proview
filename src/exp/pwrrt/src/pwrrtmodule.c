@@ -4271,7 +4271,7 @@ static PyObject *pwrrt_getSevEvents(PyObject *self, PyObject *args)
   result = PyTuple_New(listcnt);
 
   for ( i = 0; i < listcnt; i++) {
-    item_tuple = PyTuple_New(7);
+    item_tuple = PyTuple_New(8);
     eventid_tuple = PyTuple_New(2);
     if ( time_string) {
       /* Time string */
@@ -4293,11 +4293,12 @@ static PyObject *pwrrt_getSevEvents(PyObject *self, PyObject *args)
     PyTuple_SetItem(item_tuple, 4, PyString_FromString(list[i].EventName));
     strcpy(supobject, cdh_ObjidToString(list[i].SupObjectOid, 1));
     if (list[i].SupObjectOffset > 0)
-      sprintf(&supobject[strlen(supobject)], "#%d:%d", list[i].SupObjectOffset, list[i].SupObjectSize);
+      sprintf(&supobject[strlen(supobject)], "/%d:%d", list[i].SupObjectOffset, list[i].SupObjectSize);
     PyTuple_SetItem(item_tuple, 5, PyString_FromString(supobject));
     PyTuple_SetItem(eventid_tuple, 0, PyInt_FromLong((long)list[i].EventId.Nix));
     PyTuple_SetItem(eventid_tuple, 1, PyInt_FromLong((long)list[i].EventId.Idx));
     PyTuple_SetItem(item_tuple, 6, eventid_tuple);
+    PyTuple_SetItem(item_tuple, 7, PyInt_FromLong((long)list[i].EventStatus));
     
     PyTuple_SetItem(result, i, item_tuple);
   }
@@ -4386,7 +4387,7 @@ static PyObject *pwrrt_getSevEventsDataFrame(PyObject *self, PyObject *args)
   result = PyList_New(listcnt);
 
   for ( i = 0; i < listcnt; i++) {
-    item_tuple = PyTuple_New(7);
+    item_tuple = PyTuple_New(8);
     eventid_tuple = PyTuple_New(2);
     if ( time_string) {
       /* Time string */
@@ -4413,6 +4414,7 @@ static PyObject *pwrrt_getSevEventsDataFrame(PyObject *self, PyObject *args)
     PyTuple_SetItem(eventid_tuple, 0, PyInt_FromLong((long)list[i].EventId.Nix));
     PyTuple_SetItem(eventid_tuple, 1, PyInt_FromLong((long)list[i].EventId.Idx));
     PyTuple_SetItem(item_tuple, 6, eventid_tuple);
+    PyTuple_SetItem(item_tuple, 7, PyInt_FromLong((long)list[i].EventStatus));
     
     PyList_SetItem(result, i, item_tuple);
   }

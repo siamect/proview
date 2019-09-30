@@ -48,7 +48,9 @@ extern "C" {
 #define sev_eProcSevServer 122
 #define sev_eProcSevImport 123
 #define sev_cMsgClass 202
-#define sev_cNetVersion 1
+#define sev_cNetVersion 2
+
+#define sev_eEvent_ClearAlarmList 2147483647
 
 typedef enum {
   sev_eMsgType_NodeUp,
@@ -123,6 +125,7 @@ typedef struct {
   unsigned int sup_aref_oix;
   unsigned int sup_aref_offset;
   unsigned int sup_aref_size;
+  unsigned int eventstatus;
 } sev_sEvent;
 
 typedef struct {
@@ -344,6 +347,7 @@ typedef struct {
   pwr_tString80 EventText;
   pwr_tOName EventName;
   mh_sEventId EventId;
+  pwr_tUInt32 EventStatus;
 } sev_sEvents;
 
 typedef struct {

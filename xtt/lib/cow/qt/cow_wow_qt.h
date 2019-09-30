@@ -198,7 +198,7 @@ public:
   void PopList(void* ctx);
   void CreateFileSelDia(const char* title, void* parent_ctx,
       void (*file_selected_cb)(void*, char*, wow_eFileSelType),
-      wow_eFileSelType file_type);
+      wow_eFileSelType file_type, wow_eFileSelAction action);
   int CreateModalDialog(const char* title, const char* text,
       const char* button1, const char* button2, const char* button3,
       const char* image);

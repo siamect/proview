@@ -1626,7 +1626,7 @@ void Ge::activate_colortheme_next()
 void Ge::activate_customcolors_read()
 {
   wow->CreateFileSelDia("CustomColors Selection", (void*)this,
-      customcolors_selected_cb, wow_eFileSelType_ColorTheme);
+      customcolors_selected_cb, wow_eFileSelType_ColorTheme, wow_eFileSelAction_Open);
 }
 
 void Ge::customcolors_selected_cb(
