@@ -84,8 +84,7 @@ endif
 
 $(bld_dir)/%_moc.o : %.cqt
 	@ echo "Generating $(sname)_moc.cpp from $(sname).h using moc"
-	@ moc $(csetos) $(cinc) $(sname).h \
-	  -o $(bld_dir)/$(sname)_moc.cpp
+	@ moc $(csetos) $(sname).h -o $(bld_dir)/$(sname)_moc.cpp
 	@ echo "Compiling $(sname)_moc.cpp"
 	@ $(cxx) $(cxxflags) $(csetos) $(cinc) -o $(bld_dir)/$(sname)_moc.o  $(bld_dir)/$(sname)_moc.cpp
 
