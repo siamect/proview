@@ -16115,18 +16115,16 @@ int GePopupMenu::action(grow_tObject object, glow_tEvent event)
     int x, y;
     int reference = 0;
 
-    if (ref_object[0] == '&') {
+    dyn->parse_attr_name(
+        ref_object, parsed_name, &inverted, &attr_type, &attr_size);
+    if (parsed_name[0] == '&') {
       // Refobject starting with '&' indicates reference
       pwr_tAName refname;
-      dyn->parse_attr_name(
-          ref_object, refname, &inverted, &attr_type, &attr_size);
+      strncpy(refname, parsed_name, sizeof(refname));
       sts = dyn->graph->get_reference_name(refname, parsed_name);
       if (EVEN(sts))
         break;
-      // reference = 1;
     } else {
-      dyn->parse_attr_name(
-          ref_object, parsed_name, &inverted, &attr_type, &attr_size);
       if (inverted) // Old syntax for reference
         reference = 1;
     }
