@@ -1806,6 +1806,12 @@ pwr_tStatus gdh_GetNodeObject(pwr_tNodeId nid, /**< The node index. */
   return sts;
 }
 
+/**
+ * @brief Return info for a node identified by a
+ * node identifier (of type pwr_tNodeId).
+ *
+ * @return pwr_tStatus
+ */
 pwr_tStatus gdh_GetNodeInfo(pwr_tNodeId nid, /**< The node index. */
     gdh_sNodeInfo* ip /**< Receive the node info. */
     )
