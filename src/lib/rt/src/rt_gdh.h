@@ -109,7 +109,7 @@ typedef struct {
   pwr_tBoolean isLoaded; /**< Volume is loaded */
   pwr_tBoolean isMounted; /**< Volume is mounted */
   pwr_tTime time; /**< Version */
-  char name[32]; /**< Ascii name of volume (nul-terminated) */
+  char name[32]; /**< Ascii name of volume (null-terminated) */
   pwr_tCid cid; /**< Class of volume */
   pwr_tNid nid; /**< Node index */
 
