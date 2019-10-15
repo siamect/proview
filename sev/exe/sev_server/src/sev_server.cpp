@@ -1143,11 +1143,13 @@ void* sev_server::send_histdata_thread(void* arg)
     memcpy((char*)&msg->Data + sizeof(pwr_tTime) * rows, vbuf,
         sev->m_db->m_items[item_idx].attr[0].size * rows);
   }
-  if (!qcom_Put(&sts, &tgt, &put)) {
-    qcom_Free(&sts, put.data);
+  if (!qcom_Put(&lsts, &tgt, &put)) {
+    qcom_Free(&lsts, put.data);
   }
-  free(tbuf);
-  free(vbuf);
+  if (ODD(sts)) {
+    free(tbuf);
+    free(vbuf);
+  }
 
   if (sev->m_read_threads)
     sev->m_db->delete_thread(thread);
@@ -1498,6 +1500,7 @@ void* sev_server::garbage_collector_thread(void* arg)
   void* thread = 0;
   pwr_tTime next_garco, currenttime;
   pwr_tDeltaTime garco_interval;
+  unsigned int reconnect_cnt = 0;
 
   sev_server* sev = (sev_server*)arg;
 
@@ -1513,6 +1516,14 @@ void* sev_server::garbage_collector_thread(void* arg)
     time_GetTime(&currenttime);
     if (time_Acomp(&currenttime, &next_garco) == 1) {
       sev->garbage_collector(thread);
+      if (sev->m_sts == SEV__NOCONNECTION) {
+	if ( reconnect_cnt < 50) {
+	  errh_Error("Database connection lost, thread garbage collector, reconnecting");
+	  thread = sev->m_db->new_thread();
+	  reconnect_cnt++;
+	}
+      }
+	
 
       time_FloatToD(&garco_interval, sev->m_config->GarbageInterval);
       time_Aadd(&next_garco, &next_garco, &garco_interval);
@@ -1549,6 +1560,8 @@ void sev_server::garbage_collector(void* thread)
       scan_cnt = 0;
 
       garbage_item(thread, current);
+      if (m_sts == SEV__NOCONNECTION)
+	return;
 
       current++;
       if (current >= item_size)
