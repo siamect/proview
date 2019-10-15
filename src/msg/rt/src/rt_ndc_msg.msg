@@ -38,7 +38,7 @@
 !  This module contains the defintion of the error messages used
 !  in ndc modules.
 !
-.facility       NDC,101 /prefix = NDC__	
+.facility       NDC,113 /prefix = NDC__	
 
 success		<successful completion>					/succ
 offset		<invalid offset>					/error
