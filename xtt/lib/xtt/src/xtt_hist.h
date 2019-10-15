@@ -137,6 +137,7 @@ public:
 
   void activate_print();
   void activate_export();
+  void activate_analyse();
   void activate_help();
   void activate_helpevent();
   void time_cb(time_ePeriod period);

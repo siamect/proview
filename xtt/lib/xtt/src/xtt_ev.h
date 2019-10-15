@@ -185,6 +185,7 @@ public:
   void ala_activate_print();
   void blk_activate_print();
   void eve_activate_export();
+  void eve_activate_analyse();
   void ala_activate_ack_last();
   void eve_activate_ack_last();
   void eve_activate_ack_all();
