@@ -1611,6 +1611,10 @@ int GeCurve::read_file(char* filename)
   pwr_tFileName fname;
   int i, j;
   int skip_line;
+  int pyformat = 0;
+  pwr_tTime time, start_time;
+  pwr_tDeltaTime dt;
+  pwr_tStatus sts;
 
   dcli_translate_filename(fname, filename);
 
@@ -1626,8 +1630,15 @@ int GeCurve::read_file(char* filename)
     fprintf(stderr, "Error! Cannot read curve file: '%s'!\n", fname);
     return 0;
   }
-  nr = dcli_parse(line, " 	", "", (char*)item_str,
-      sizeof(item_str) / sizeof(item_str[0]), sizeof(item_str[0]), 0);
+  if (strncmp(line, "Time,", 5) == 0)
+    pyformat = 1;
+
+  if (pyformat)
+    nr = dcli_parse(line, ",", "", (char*)item_str,
+        sizeof(item_str) / sizeof(item_str[0]), sizeof(item_str[0]), 0);
+  else
+    nr = dcli_parse(line, " 	", "", (char*)item_str,
+        sizeof(item_str) / sizeof(item_str[0]), sizeof(item_str[0]), 0);
   if (nr == 0) {
     fclose(fp);
     fprintf(stderr, "Error! Cannot parse curve file: '%s'!\n", fname);
@@ -1667,22 +1678,56 @@ int GeCurve::read_file(char* filename)
 
   j = 0;
   while (dcli_read_line(line, sizeof(line), fp)) {
-    dcli_parse(line, " 	", "", (char*)item_str,
-        sizeof(item_str) / sizeof(item_str[0]), sizeof(item_str[0]), 0);
-    skip_line = 0;
-    for (i = 0; i < cd->cols + 1; i++) {
-      if (i == 0)
-        nr = sscanf(item_str[i], "%lf", &cd->x_data[i][j]);
-      else
-        nr = sscanf(item_str[i], "%lf", &cd->y_data[i - 1][j]);
-      if (nr != 1) {
-        if (i == 0) {
-          printf("Unreadble line %d\n", j);
-          skip_line = 1;
-          cd->rows[0]--;
-          break;
-        } else
-          cd->y_data[i - 1][j] = 0;
+    if (pyformat) {
+      dcli_parse(line, ",", "", (char*)item_str,
+          sizeof(item_str) / sizeof(item_str[0]), sizeof(item_str[0]), 0);
+      skip_line = 0;
+      for (i = 0; i < cd->cols + 1; i++) {
+	if (i == 0) {
+	  sts = time_FormAsciiToA(item_str[i], HUNDRED, 0, &time);
+	  if (ODD(sts)) {
+	    if (j == 0) {
+	      start_time = time;
+	      cd->x_data[i][j] = 0;
+	    } else {
+	      time_Adiff(&dt, &time, &start_time);
+	      time_DToFloat64(&cd->x_data[i][j], &dt);
+	    }
+	    nr = 1;
+	  }
+	  else
+	    nr = 0;
+	}
+	else
+	  nr = sscanf(item_str[i], "%lf", &cd->y_data[i - 1][j]);
+	if (nr != 1) {
+	  if (i == 0) {
+	    printf("Unreadble line %d\n", j);
+	    skip_line = 1;
+	    cd->rows[0]--;
+	    break;
+	  } else
+	    cd->y_data[i - 1][j] = 0;
+	}
+      }
+    } else {
+      dcli_parse(line, " 	", "", (char*)item_str,
+          sizeof(item_str) / sizeof(item_str[0]), sizeof(item_str[0]), 0);
+      skip_line = 0;
+      for (i = 0; i < cd->cols + 1; i++) {
+	if (i == 0)
+	  nr = sscanf(item_str[i], "%lf", &cd->x_data[i][j]);
+	else
+	  nr = sscanf(item_str[i], "%lf", &cd->y_data[i - 1][j]);
+	if (nr != 1) {
+	  if (i == 0) {
+	    printf("Unreadble line %d\n", j);
+	    skip_line = 1;
+	    cd->rows[0]--;
+	    break;
+	  } else
+	    cd->y_data[i - 1][j] = 0;
+	}
       }
     }
     if (skip_line)
