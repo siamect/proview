@@ -311,7 +311,7 @@ class WData:
         corrmat = plotdata.corr()
         fig = plt.figure()
         fig.canvas.set_window_title('Correlation Heatmap ' + self.name)
-        sns.heatmap(corrmat, vmin=-1., vmax=1., square=False, cmap='RdBu_r').xaxis.tick_top()
+        sns.heatmap(corrmat, vmin=-1., vmax=1., square=False, cmap='RdBu_r', annot=True).xaxis.tick_top()
         plt.show()
 
     def regression_plot(self, mask):

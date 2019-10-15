@@ -70,8 +70,10 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.widgets
 import pickle
 import co
+import wow
 from rt_mva import *
 from rt_mva_msg import *
+
 
 class Sev:
   mEventType_Ack = 1
@@ -225,6 +227,19 @@ class Ev:
             str += 'B'
     return str
 
+class EventClip:
+    def __init__(self, mintime, maxtime):
+        self.mintime = mintime
+        self.maxtime = maxtime
+
+class EventClipSelected:
+    def __init__(self, idxlist):
+        self.idxlist = idxlist
+
+class EventSplit:
+    def __init__(self, time):
+        self.time = time
+    
 class EventFilter:
     def __init__(self, typemask, priomask, eventtext, eventname, supobject):
         self.eventtypemask = typemask
@@ -424,10 +439,8 @@ class FilterDialog:
             if sel.get() == 1:
                 eventpriovalue += m
             m = m << 1
-        print 'Masks:', eventtypevalue, eventpriovalue
         filter = EventFilter(eventtypevalue, eventpriovalue, self.eventtextentry.get(),
                              self.eventnameentry.get(), '')
-        print 'Filter', filter.eventtypemask, filter.eventpriomask, filter.eventtext, filter.eventname
         self.filter_cb(filter)
         self.top.destroy()
 
@@ -443,7 +456,7 @@ class ValueDialog:
         label.grid(column=0, row=0, padx=10, pady=5, sticky=W)
 
         defaultvalue = StringVar()
-        self.entry = Entry(top, width=20, textvariable=defaultvalue)
+        self.entry = Entry(top, width=25, textvariable=defaultvalue)
         self.entry.grid(column=1, row=0, padx=10, pady=5, sticky=W)
         defaultvalue.set(defaultstr)
         self.entry.focus()
@@ -539,7 +552,6 @@ class EWData:
         self.wd.columns = self.origcol
         self.wd['Text'].fillna('',inplace=True)
         self.set = True
-        print self.wd['SupObject']
 
     def save_orig(self, file):
         self.origdata.to_csv(file, index=False)
@@ -556,20 +568,29 @@ class EWData:
     
         self.wd = self.origdata.loc[:,:]
 
-    def clip(self, mintime, maxtime):
-        self.wd = self.wd[(self.wd['Time'] >= mintime) & (self.wd['Time'] <= maxtime)]
+    def clip(self, c):
+        self.wd = self.wd[(self.wd['Time'] >= c.mintime) & (self.wd['Time'] <= c.maxtime)]
         self.wd = self.wd.reset_index(drop=True)
 
-    def split(self, value):
+    def clip_selected(self, c):
+        self.wd = self.wd.loc[self.wd.index.isin(c.idxlist)]
+        self.wd = self.wd.reset_index(drop=True)
+
+    def split(self, s):
         wdata = EWData()
         wdata.origdata = self.origdata
         wdata.origcol = self.origcol
-        wdata.wd = self.wd[self.wd['Time'] < value]
+        wdata.wd = self.wd[self.wd['Time'] < s.time]
         wdata.wd = wdata.wd.reset_index(drop=True)
         wdata.set = True
 
-        self.wd = self.wd[self.wd['Time'] >= value]
+        self.wd = self.wd[self.wd['Time'] >= s.time]
+        self.wd = self.wd.reset_index(drop=True)
         return wdata
+
+    def split_redo(self, s):
+        self.wd = self.wd[self.wd['Time'] >= s.time]
+        self.wd = self.wd.reset_index(drop=True)
 
     def filter(self, eventfilter):
         mod = False
@@ -649,16 +670,106 @@ class EWData:
 
         if eventfilter.supobject != '':
             mask = self.wd['SupObject'].str.match(eventfilter.supobject)
-            print 'Mask', type(mask), mask
             for b in mask:
                 if b != True:
                     b = False
-            print 'Mask', type(mask), mask
             self.wd = self.wd[mask]
             mod = True
 
         if mod:
             self.wd = self.wd.reset_index(drop=True)
+
+class TrendHistogram:
+    def __init__(self, wdata):
+        self.wdata = wdata
+        self.trenddia = Toplevel(window, bg=bgcolor)
+        self.trenddia.geometry("450x170")
+        self.trenddia.title('TrendHistogram')
+        main.set_icon(self.trenddia)
+
+        defaultmin = StringVar()
+        minlabel = Label(self.trenddia, text='From', bg=bgcolor)
+        minlabel.grid(column=0, row=0, padx=20, pady=5, sticky=W)
+        self.minentry = Entry(self.trenddia, textvariable=defaultmin, width=25, bg=bgcolor)
+        defaultmin.set(str(self.wdata.wd['Time'][0]))
+        self.minentry.grid(column=1, row=0, padx=20, pady=5, sticky=W)
+
+        # Max entry
+        defaultmax = StringVar()
+        maxlabel = Label(self.trenddia, text='To', bg=bgcolor)
+        maxlabel.grid(column=0, row=1, padx=20, pady=5, sticky=W)
+        self.maxentry = Entry(self.trenddia, textvariable=defaultmax, width=25, bg=bgcolor)
+        defaultmax.set(str(self.wdata.wd['Time'][len(self.wdata.wd)-1]))
+        self.maxentry.grid(column=1, row=1, padx=20, pady=5, sticky=W)
+
+        # Bins
+        defaultbins = StringVar()
+        binslabel = Label(self.trenddia, text='Number of bins', bg=bgcolor)
+        binslabel.grid(column=0, row=2, padx=20, pady=5, sticky=W)
+        self.binsentry = Entry(self.trenddia, textvariable=defaultbins, width=25, bg=bgcolor)
+        defaultbins.set(str(100))
+        self.binsentry.grid(column=1, row=2, padx=20, pady=5, sticky=W)
+
+        # All events
+        self.all_events = IntVar()
+        checkbox = Checkbutton(self.trenddia, text='All events',
+                               variable=self.all_events, highlightthickness=0,
+                               bg=bgcolor)
+        checkbox.grid(column=0, row=3, padx=20, pady=5, sticky=W)
+
+        readdatabutton = Button(self.trenddia, text="Apply", command=self.trend_action_ok_cb, bg=buttoncolor);
+        readdatabutton.grid(column=0, row=4, padx=60, pady=20, sticky=W)
+
+        readdatabutton = Button(self.trenddia, text="Cancel", command=self.trend_action_cancel_cb, bg=buttoncolor);
+        readdatabutton.grid(column=1, row=4, padx=60, pady=20, sticky=W)
+
+    def trend_action_cancel_cb(self):
+        self.trenddia.destroy()
+
+    def trend_action_ok_cb(self):
+        try:
+            mintime = datetime.strptime(self.minentry.get(), '%Y-%m-%d %H:%M:%S.%f')
+        except ValueError:
+            try:
+                mintime = datetime.strptime(self.minentry.get(), '%Y-%m-%d %H:%M:%S')
+            except ValueError:
+                tkMessageBox.showerror("Error", "Time syntax error")
+                return
+        try:
+            maxtime = datetime.strptime(self.maxentry.get(), '%Y-%m-%d %H:%M:%S.%f')
+        except ValueError:
+            try:
+                maxtime = datetime.strptime(self.maxentry.get(), '%Y-%m-%d %H:%M:%S')
+            except ValueError:
+                tkMessageBox.showerror("Error", "Time syntax error")
+                return
+        try:
+            bins = int(self.binsentry.get())
+        except ValueError:
+            tkMessageBox.showerror("Error", "Integer syntax error")
+            return
+        all_events = self.all_events.get()
+
+        self.trenddia.destroy()
+
+        if all_events == 1:
+            wd = self.wdata.wd
+        else:
+            types = [Ev.eEvent_Alarm, Ev.eEvent_MaintenanceAlarm, Ev.eEvent_SystemAlarm,
+                     Ev.eEvent_Info, Ev.eEvent_InfoSuccess,
+                     Ev.eEvent_UserAlarm1, Ev.eEvent_UserAlarm2, Ev.eEvent_UserAlarm3,
+                     Ev.eEvent_UserAlarm4]
+            wd = self.wdata.wd.loc[self.wdata.wd['Type'].isin(types)]
+
+        wdtime = wd[(wd['Time'] >= mintime) & (wd['Time'] <= maxtime)]['Time']
+#        wdtime = self.wdata.wd[(self.wdata.wd['Time'] >= mintime) & (self.wdata.wd['Time'] <= maxtime)]['Time']
+        fig = plt.figure(figsize=(12,5))
+        ax = fig.add_subplot(1,1,1)
+        timelist = []
+        for t in wdtime:
+            timelist.append(t)
+        ax.hist(timelist, bins=bins)
+        plt.show()
 
 class FrequencyHistogram:
     def __init__(self, wdata):
@@ -671,29 +782,41 @@ class FrequencyHistogram:
 
         i = 0
         self.names = []
+        self.texts = []
         while i < len(self.counts):
             res = self.wdata.wd.loc[ (self.wdata.wd['SupObject'] == self.counts.index[i]) & self.wdata.wd['Type'].isin(types)]
             if len(res) > 0:
                 res = res.iloc[0]
-                self.names.append(res['Text'])
+                self.names.append(res['Name'])
+                self.texts.append(res['Text'])                   
             else:
                 self.names.append('')
+                self.textss.append('')
             i += 1
 
         self.xlim = None
         self.ax = None
         self.page = 0 
         self.rows = 30
+        self.display_names = 0
         fig = plt.figure(num="Event Frequency Histogram")
         fig.subplots_adjust(left=0.4)
         axprev = plt.axes([0.01, 0.01, 0.1, 0.05])
         axnext = plt.axes([0.125, 0.01, 0.1, 0.05])
+        axdisplay = plt.axes([0.580, 0.01, 0.1, 0.05])
+        axname = plt.axes([0.700, 0.01, 0.1, 0.05])
+        axtext = plt.axes([0.825, 0.01, 0.1, 0.05])
         bprev = matplotlib.widgets.Button(axprev, 'Previous')
         bprev.on_clicked(self.bprev_cb)
         bnext = matplotlib.widgets.Button(axnext, 'Next')
         bnext.on_clicked(self.bnext_cb)
+        bdisplay = matplotlib.widgets.Button(axdisplay, 'Display', color=bgcolor)
+        bname = matplotlib.widgets.Button(axname, 'Name')
+        bname.on_clicked(self.bname_cb)
+        btext = matplotlib.widgets.Button(axtext, 'Text')
+        btext.on_clicked(self.btext_cb)
         axrows = plt.axes([0.25, 0.01, 0.1, 0.05])
-        self.btext = matplotlib.widgets.Button(axrows, '', color=bgcolor)
+        self.brows = matplotlib.widgets.Button(axrows, '', color=bgcolor)
         self.draw()
         plt.show()
 
@@ -705,7 +828,7 @@ class FrequencyHistogram:
             idx2 = len(self.counts)
         size = idx2 - idx1
         text = str(idx1+1) + "-" + str(idx2) + " (" + str(len(self.counts)) + ")"        
-        self.btext.label.set_text(text)
+        self.brows.label.set_text(text)
         if self.ax == None:
             self.ax = plt.subplot()
         if self.xlim != None:
@@ -716,7 +839,10 @@ class FrequencyHistogram:
         values = self.counts[idx1:idx2]
         self.y_pos = np.arange(size)
         self.ax.barh(self.y_pos, values, align='center', alpha=0.5)
-        plt.yticks(self.y_pos, self.names[idx1:idx2])
+        if self.display_names:
+            plt.yticks(self.y_pos, self.names[idx1:idx2])
+        else:
+            plt.yticks(self.y_pos, self.texts[idx1:idx2])
         if self.xlim == None:
             self.xlim = self.ax.get_xlim()
 
@@ -736,7 +862,19 @@ class FrequencyHistogram:
         self.ax.clear()
         self.draw()
         plt.draw()
-        
+
+    def bname_cb(self, event):
+        self.display_names = 1
+        self.ax.clear()
+        self.draw()
+        plt.draw()
+
+    def btext_cb(self, event):
+        self.display_names = 0
+        self.ax.clear()
+        self.draw()
+        plt.draw()
+
 class WdWindow:
     # Constructor, create empty window
     def __init__(self):
@@ -1012,6 +1150,21 @@ class WdWindow:
             return
         fh = FrequencyHistogram(self.wdata)        
 
+    # Event trend histogram callback
+    def trend_histogram_action_cb(self): 
+        if self.empty():
+            return
+
+        th = TrendHistogram(self.wdata)
+#        fig = plt.figure(figsize=(12,5))
+#        ax = fig.add_subplot(1,1,1)
+#        timelist = []
+#        for t in self.wdata.wd['Time']:
+#            timelist.append(t)
+#        print timelist
+#        ax.hist(timelist, bins=100)
+#        plt.show()
+
     # Revert callback
     def revert_action_cb(self):
         self.wdata.revert()
@@ -1033,7 +1186,6 @@ class WdWindow:
         
     # Search Previous callback
     def searchprev_action_cb(self, arg=0):
-        print 'Here in search prev'
         selected = self.tree.focus()
         if selected == None:
             next = self.search_next - 1
@@ -1061,7 +1213,6 @@ class WdWindow:
             while i < len(self.wdata.wd):
                 if self.wdata.wd['Text'][i].lower().find(searchstr) >= 0 or \
                    self.wdata.wd['Name'][i].lower().find(searchstr) >= 0:
-                    print 'Found', i
                     id = self.tree.get_children()[i]
                     self.tree.focus(id)
                     self.tree.yview_moveto(float((0 if i < 5 else i - 5))/len(self.wdata.wd))
@@ -1074,7 +1225,6 @@ class WdWindow:
             while i >= 0:
                 if self.wdata.wd['Text'][i].lower().find(searchstr) >= 0 or \
                    self.wdata.wd['Name'][i].lower().find(searchstr) >= 0:
-                    print 'Found', i
                     id = self.tree.get_children()[i]
                     self.tree.focus(id)
                     self.tree.yview_moveto(float((0 if i < 5 else i - 5))/len(self.wdata.wd))
@@ -1091,22 +1241,23 @@ class WdWindow:
             return
     
         self.clipdia = Toplevel(self.window, bg=bgcolor)
+        self.clipdia.geometry("450x130")
         self.clipdia.title('Clip')
         main.set_icon(self.clipdia)
 
         defaultmin = StringVar()
         minlabel = Label(self.clipdia, text='From', bg=bgcolor)
         minlabel.grid(column=0, row=0, padx=20, pady=5, sticky=W)
-        self.minentry = Entry(self.clipdia, textvariable=defaultmin, bg=bgcolor)
-        defaultmin.set(str(self.wdata.wd['Time'][0]))
+        self.minentry = Entry(self.clipdia, textvariable=defaultmin, width=25, bg=bgcolor)
+        defaultmin.set(str(self.wdata.wd['Time'][len(self.wdata.wd)-1]))
         self.minentry.grid(column=1, row=0, padx=20, pady=5, sticky=W)
 
         # Max entry
         defaultmax = StringVar()
         maxlabel = Label(self.clipdia, text='To', bg=bgcolor)
         maxlabel.grid(column=0, row=1, padx=20, pady=5, sticky=W)
-        self.maxentry = Entry(self.clipdia, textvariable=defaultmax, bg=bgcolor)
-        defaultmax.set(str(self.wdata.wd['Time'][len(self.wdata.wd)-1]))
+        self.maxentry = Entry(self.clipdia, textvariable=defaultmax, width=25, bg=bgcolor)
+        defaultmax.set(str(self.wdata.wd['Time'][0]))
         self.maxentry.grid(column=1, row=1, padx=20, pady=5, sticky=W)
 
         readdatabutton = Button(self.clipdia, text="Apply", command=self.clip_action_ok_cb, bg=buttoncolor);
@@ -1119,25 +1270,68 @@ class WdWindow:
         self.clipdia.destroy()
 
     def clip_action_ok_cb(self):
-
-        minvalue = datetime.strptime(self.minentry.get(), '%Y-%m-%d %H:%M:%S')
-        maxvalue = datetime.strptime(self.maxentry.get(), '%Y-%m-%d %H:%M:%S')
-        print 'Clip', minvalue, maxvalue
+        try:
+            mintime = datetime.strptime(self.minentry.get(), '%Y-%m-%d %H:%M:%S.%f')
+        except ValueError:
+            try:
+                mintime = datetime.strptime(self.minentry.get(), '%Y-%m-%d %H:%M:%S')
+            except ValueError:
+                tkMessageBox.showerror("Error", "Time syntax error")
+                return
+        try:
+            maxtime = datetime.strptime(self.maxentry.get(), '%Y-%m-%d %H:%M:%S.%f')
+        except ValueError:
+            try:
+                maxtime = datetime.strptime(self.maxentry.get(), '%Y-%m-%d %H:%M:%S')
+            except ValueError:
+                tkMessageBox.showerror("Error", "Time syntax error")
+                return
         self.clipdia.destroy()
-            
-        self.wdata.clip(minvalue, maxvalue)
+        clip = EventClip(mintime, maxtime)
+        self.stack.append(clip)
+        self.wdata.clip(clip)
         self.redraw()
     
+    # Clip Selected callback
+    def clip_select_action_cb(self):
+        if self.empty():
+            return
+
+        selected = self.tree.focus()
+        if len(self.tree.selection()) == 0:
+            tkMessageBox.showerror("Error", "Selection empty")
+            return
+
+        rows = []
+        for item in self.tree.selection():
+            rows.append(int(item))
+            
+        clip = EventClipSelected(rows)
+        self.stack.append(clip)
+        self.wdata.clip_selected(clip)
+        self.redraw()
+
     # Split callback
     def split_action_cb(self):
         if self.empty():
             return
 
-        defaultvalue = str(self.wdata.wd['Time'][0])
+        selected = self.tree.focus()
+        if selected == None:
+            defaultvalue = str(self.wdata.wd['Time'][0])
+        else:
+            defaultvalue = str(self.tree.item(selected)['text'])
         ValueDialog(self.window, "Split Time", "Time", defaultvalue, self.split_ok_cb)
                     
     def split_ok_cb(self, valuestr):
-        value = datetime.strptime(valuestr, '%Y-%m-%d %H:%M:%S')
+        try:
+            value = datetime.strptime(valuestr, '%Y-%m-%d %H:%M:%S.%f')
+        except ValueError:
+            try:
+                value = datetime.strptime(valuestr, '%Y-%m-%d %H:%M:%S')
+            except ValueError:
+                tkMessageBox.showerror("Error", "Time syntax error")
+                return
 
         wdwindow = WdWindow()
         idx = self.name.find('.')
@@ -1147,7 +1341,9 @@ class WdWindow:
             wdwindow.name = self.name[:idx] + '_2' + self.name[idx:]
         wdwindow.window.title(wdwindow.name)
         wdwindow.wdata.set_name(wdwindow.name)
-        wdwindow.wdata = self.wdata.split(value)
+        split = EventSplit(value)
+        wdwindow.wdata = self.wdata.split(split)
+        self.stack.append(split)
         if wdwindow.dataframe != None:
             wdwindow.dataframe.pack_forget()
             wdwindow.dataframe.destroy()
@@ -1166,7 +1362,6 @@ class WdWindow:
         FilterDialog(self.window, self.filter_ok_cb)
                     
     def filter_ok_cb(self, filter):
-        print 'Event cb', filter.eventtext, filter.eventname
         self.wdata.filter(filter)
         self.stack.append(filter)
         
@@ -1184,8 +1379,24 @@ class WdWindow:
             tkMessageBox.showerror("Error", "Select an event")
             return
         
-        print 'Tree select', self.tree.item(selected)['values'][4]
         filter = EventFilter(0,0,'','', self.tree.item(selected)['values'][4])
+        self.wdata.filter(filter)
+
+        self.stack.append(filter)
+        self.dataframe.pack_forget()
+        self.dataframe.destroy()
+        self.create_dataframe()
+
+    # Filter alarms callback
+    def filteralarms_action_cb(self):
+        if self.empty():
+            return
+        typemask = Sev.mEventType_Alarm | Sev.mEventType_MaintenanceAlarm | \
+                   Sev.mEventType_SystemAlarm | \
+                   Sev.mEventType_UserAlarm1 | Sev.mEventType_UserAlarm2 | \
+                   Sev.mEventType_UserAlarm3 | Sev.mEventType_UserAlarm4 | \
+                   Sev.mEventType_Info | Sev.mEventType_InfoSuccess
+        filter = EventFilter(typemask,0,'','','')
         self.wdata.filter(filter)
 
         self.stack.append(filter)
@@ -1196,10 +1407,20 @@ class WdWindow:
     # Previous
     def previous_action_cb(self):
         self.wdata.revert()
+        if len(self.stack) == 0:
+            return
+        
         self.stack.pop()
         i = 0
         while i < len(self.stack):
-            self.wdata.filter(self.stack[i])
+            if isinstance(self.stack[i], EventFilter):
+                self.wdata.filter(self.stack[i])
+            elif isinstance(self.stack[i], EventClip):
+                self.wdata.clip(self.stack[i])
+            elif isinstance(self.stack[i], EventClipSelected):
+                self.wdata.clip_selected(self.stack[i])
+            elif isinstance(self.stack[i], EventSplit):
+                self.wdata.split_redo(self.stack[i])
             i += 1
 
         self.dataframe.pack_forget()
@@ -1282,8 +1503,6 @@ class WdWindow:
     def read_file(self, file):
         self.wdata.read_file(file)
             
-        print 'Read', self.dataframe
-
         if self.toolbar != None:
             self.toolbar.pack_forget()
             self.toolbar.destroy()
@@ -1323,6 +1542,7 @@ class WdWindow:
         editmenu.add_command(label='Search Next', command=self.searchnext_action_cb, accelerator='Ctrl+G')
         editmenu.add_command(label='Search Previous', command=self.searchprev_action_cb, accelerator='Shift+Ctrl+G')
         editmenu.add_command(label='Clip', command=self.clip_action_cb)
+        editmenu.add_command(label='Crop not selected', command=self.clip_select_action_cb)
         editmenu.add_command(label='Split', command=self.split_action_cb)
         editmenu.add_command(label='Filter', command=self.filter_action_cb)
         editmenu.add_command(label='Filter on SupObject', command=self.filteronsupobject_action_cb)
@@ -1332,6 +1552,7 @@ class WdWindow:
         viewmenu = Menu(menubar, bg=buttoncolor)
         viewmenu.add_command(label='Event frequency table', command=self.frequency_table_action_cb)
         viewmenu.add_command(label='Event frequency histogram', command=self.frequency_histogram_action_cb)
+        viewmenu.add_command(label='Trend histogram', command=self.trend_histogram_action_cb)
         viewmenu.add_command(label='Number of not acked alarms plot', command=self.alarmplot_ack_action_cb)
         viewmenu.add_command(label='Number of not returned alarms plot', command=self.alarmplot_notret_action_cb)
         menubar.add_cascade(label='View', menu=viewmenu)
@@ -1351,24 +1572,44 @@ class WdWindow:
     
         self.toolbar = Frame(self.window, bg=bgcolor, bd=1, relief=RAISED)
 
+        self.toolbar_revert_img = PhotoImage(file=pwr_exe+"/evatoolbar_revert.png")
+        button = Button(self.toolbar, image=self.toolbar_revert_img, command=self.revert_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Revert')
+        button.pack(side=LEFT, padx=2, pady=2)
+
         self.toolbar_prev_img = PhotoImage(file=pwr_exe+"/evatoolbar_prev.png")
         button = Button(self.toolbar, image=self.toolbar_prev_img, command=self.previous_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Back')
+        button.pack(side=LEFT, padx=2, pady=2)
+
+        self.toolbar_crop_img = PhotoImage(file=pwr_exe+"/evatoolbar_crop.png")
+        button = Button(self.toolbar, image=self.toolbar_crop_img, command=self.clip_select_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Crop not selected')
         button.pack(side=LEFT, padx=2, pady=2)
 
         self.toolbar_filter_img = PhotoImage(file=pwr_exe+"/evatoolbar_filter.png")
         button = Button(self.toolbar, image=self.toolbar_filter_img, command=self.filter_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Filter')
+        button.pack(side=LEFT, padx=2, pady=2)
+
+        self.toolbar_filteralarms_img = PhotoImage(file=pwr_exe+"/evatoolbar_filteralarms.png")
+        button = Button(self.toolbar, image=self.toolbar_filteralarms_img, command=self.filteralarms_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Alarm and info message filter')
         button.pack(side=LEFT, padx=2, pady=2)
 
         self.toolbar_filtersup_img = PhotoImage(file=pwr_exe+"/evatoolbar_filtersup.png")
         button = Button(self.toolbar, image=self.toolbar_filtersup_img, command=self.filteronsupobject_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='SupObject filter')
         button.pack(side=LEFT, padx=2, pady=2)
 
         self.toolbar_plot_img = PhotoImage(file=pwr_exe+"/evatoolbar_plot.png")
         button = Button(self.toolbar, image=self.toolbar_plot_img, command=self.alarmplot_notret_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Number of not returned alarms plot')
         button.pack(side=LEFT, padx=2, pady=2)
 
         self.toolbar_frequencyplot_img = PhotoImage(file=pwr_exe+"/evatoolbar_frequencyplot.png")
         button = Button(self.toolbar, image=self.toolbar_frequencyplot_img, command=self.frequency_histogram_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Event frequency histogram')
         button.pack(side=LEFT, padx=2, pady=2)
 
         self.toolbar.pack(side=TOP, fill=X)
@@ -1383,6 +1624,10 @@ class WdWindow:
             startframe.pack_forget()
             startframe.destroy()
         self.dataframe = Frame(self.window, bg=bgcolor)
+
+        rowslabel = Label(self.dataframe, text='Dataset ' + str(len(self.wdata.wd)) + ' rows',
+                          bg=bgcolor)
+        rowslabel.pack()
 
         self.img_evred = PhotoImage(file=pwr_exe+"/eva_evred.png")
         self.img_evyellow = PhotoImage(file=pwr_exe+"/eva_evyellow.png")
@@ -1480,7 +1725,8 @@ class WdWindow:
                 img = self.img_evnone
             
         
-            self.tree.insert('', 'end', text=str(self.wdata.wd.iat[j,0]), image=img,
+            self.tree.insert('', 'end', iid=str(j), text=str(self.wdata.wd.iat[j,0]),
+                             image=img,
                              values=(Ev.eventtype_to_str(self.wdata.wd.iat[j,1]),
                                      Ev.eventprio_to_str(self.wdata.wd.iat[j,2]),
                                      '' if not isinstance(self.wdata.wd.iat[j,3],basestring) else self.wdata.wd.iat[j,3],
@@ -1581,7 +1827,11 @@ class FetchSev:
         except IOError:
             pass
 
-        self.items = pwrrt.getSevItemList(self.server, filtervalue)
+        try:
+            self.items = pwrrt.getSevItemList(self.server, filtervalue)
+        except RuntimeError as e:
+            tkMessageBox.showerror("Error", str(e))
+            return
 
         self.itemframe = Frame(self.fswindow, bg=bgcolor)
 
@@ -1831,12 +2081,17 @@ class FetchSev:
             if sel.get() == 1:
                 eventpriovalue += m
             m = m << 1
-        print 'Masks:', eventtypevalue, eventpriovalue
         maxvalue = int(self.maxentry.get())
-
-        result = pwrrt.getSevEventsDataFrame( self.server, oid,
-                                              fromvalue, tovalue, eventtypevalue,
-                                              eventpriovalue, '', '', maxvalue)
+        print fromvalue, tovalue
+        try:
+            result = pwrrt.getSevEventsDataFrame( self.server, oid,
+                                                  fromvalue, tovalue, eventtypevalue,
+                                                  eventpriovalue, '', '', maxvalue)
+        except RuntimeError as e:
+            tkMessageBox.showerror("Error", str(e))
+            return
+            
+        
         if result == None or len(result) == 0:
             tkMessageBox.showerror("Error", "No events found")
             return
@@ -1856,12 +2111,12 @@ file = ''
 try:
     opts, args = getopt.getopt(sys.argv[1:], "f:r:", ["--file"])
 except getopt.GetoptError:
-    print 'sev_analyse.py [-f <file>]'
+    print 'sev_eva.py [-f <file>]'
     sys.exit(2)
 
 for opt, arg in opts:
     if opt == "-h":
-        print 'sev_analyse.py [-f <file>]'
+        print 'sev_eva.py [-f <file>]'
     if opt in ("-f", "--file"):
         file = arg
         

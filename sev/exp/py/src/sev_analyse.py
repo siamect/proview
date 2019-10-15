@@ -66,6 +66,7 @@ matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import pickle
 import co
+import wow
 from rt_mva import *
 from rt_mva_msg import *
 
@@ -1674,8 +1675,8 @@ class WdWindow:
         viewmenu.add_command(label='Plot common', command=self.plot_action_cb)
         viewmenu.add_command(label='Plot separate', command=self.indplot_action_cb)
         viewmenu.add_command(label='Scatterplot', command=self.scatter_action_cb)
-        viewmenu.add_command(label='Plot correlation', command=self.corr_action_cb)
-        viewmenu.add_command(label='Plot correlation heatmap', command=self.corr2_action_cb)
+        viewmenu.add_command(label='Plot correlation', command=self.corr2_action_cb)
+        viewmenu.add_command(label='Plot correlation hinton', command=self.corr_action_cb)
         viewmenu.add_command(label='Plot linear regression', command=self.regr_action_cb)
         viewmenu.add_command(label='Plot histogram', command=self.histogram_action_cb)
         viewmenu.add_command(label='Statistics', command=self.stat_action_cb)
@@ -1702,46 +1703,52 @@ class WdWindow:
 
         self.toolbar_plot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_plot.png")
         button = Button(self.toolbar, image=self.toolbar_plot_img, command=self.plot_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Plot common')
         button.pack(side=LEFT, padx=2, pady=2)
 
         self.toolbar_indplot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_indplot.png")
         button = Button(self.toolbar, image=self.toolbar_indplot_img, command=self.indplot_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Plot separate')
         button.pack(side=LEFT, padx=2, pady=2)
 
         self.toolbar_scatterplot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_scatterplot.png")
         button = Button(self.toolbar, image=self.toolbar_scatterplot_img, command=self.scatter_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Scatterplot')
         button.pack(side=LEFT, padx=2, pady=2)
 
         self.toolbar_lrplot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_lrplot.png")
         button = Button(self.toolbar, image=self.toolbar_lrplot_img, command=self.regr_action_cb, bg=buttoncolor)
-        button.pack(side=LEFT, padx=2, pady=2)
-
-        self.toolbar_corrplot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_corrplot.png")
-        button = Button(self.toolbar, image=self.toolbar_corrplot_img, command=self.corr_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Linear regression plot')
         button.pack(side=LEFT, padx=2, pady=2)
 
         self.toolbar_corr2plot_img = PhotoImage(file=pwr_exe+"/mvtoolbar_corr2plot.png")
         button = Button(self.toolbar, image=self.toolbar_corr2plot_img, command=self.corr2_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Correlation plot')
         button.pack(side=LEFT, padx=2, pady=2)
 
         self.toolbar_up_img = PhotoImage(file=pwr_exe+"/mvtoolbar_up.png")
         button = Button(self.toolbar, image=self.toolbar_up_img, command=self.moveup_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Move item up')
         button.pack(side=LEFT, padx=2, pady=2)
 
         self.toolbar_down_img = PhotoImage(file=pwr_exe+"/mvtoolbar_down.png")
         button = Button(self.toolbar, image=self.toolbar_down_img, command=self.movedown_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Move item down')
         button.pack(side=LEFT, padx=2, pady=2)
 
         self.toolbar_conv_img = PhotoImage(file=pwr_exe+"/mvtoolbar_conv.png")
         button = Button(self.toolbar, image=self.toolbar_conv_img, command=self.convcolumn_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Convert item')
         button.pack(side=LEFT, padx=2, pady=2)
 
         self.toolbar_add_img = PhotoImage(file=pwr_exe+"/mvtoolbar_add.png")
         button = Button(self.toolbar, image=self.toolbar_add_img, command=self.addcolumn_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Add item')
         button.pack(side=LEFT, padx=2, pady=2)
 
         self.toolbar_delete_img = PhotoImage(file=pwr_exe+"/mvtoolbar_delete.png")
         button = Button(self.toolbar, image=self.toolbar_delete_img, command=self.deletecolumn_action_cb, bg=buttoncolor)
+        wow.Tooltip(button, text='Delete item')
         button.pack(side=LEFT, padx=2, pady=2)
 
         self.toolbar.pack(side=TOP, fill=X)
@@ -1865,7 +1872,11 @@ class FetchSev:
         except IOError:
             pass
 
-        self.items = pwrrt.getSevItemList(self.server, filtervalue)
+        try:
+            self.items = pwrrt.getSevItemList(self.server, filtervalue)
+        except RuntimeError as e:
+            tkMessageBox.showerror("Error", str(e))
+            return
 
         self.itemframe = Frame(self.fswindow, bg=bgcolor)
 
@@ -1988,8 +1999,13 @@ class FetchSev:
         intervalvalue = float(self.intervalentry.get())
         maxvalue = int(self.maxentry.get())
 
-        result = pwrrt.getSevItemsDataFrame( self.server, dataoid, dataattr, isobject,
-                                             fromvalue, tovalue, intervalvalue, maxvalue)
+        try:
+            result = pwrrt.getSevItemsDataFrame( self.server, dataoid, dataattr, isobject,
+                                                 fromvalue, tovalue, intervalvalue, maxvalue)
+        except RuntimeError as e:
+            tkMessageBox.showerror("Error", str(e))
+            return
+
         if result == None:
             tkMessageBox.showerror("Error", "None return")
             return
