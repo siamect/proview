@@ -107,6 +107,7 @@ protected:
 public slots:
   void activate_print();
   void activate_export();
+  void activate_analyse();
   void activate_zoom_in();
   void activate_zoom_out();
   void activate_zoom_reset();

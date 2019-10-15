@@ -91,6 +91,8 @@ HistQt::HistQt(void* hist_parent_ctx, char* hist_name, pwr_tAttrRef* arp,
   addMenuItem(
       toplevel, file, "&Export", SLOT(activate_export()));
   addMenuItem(
+      toplevel, file, "&Analyse", SLOT(activate_analyse()));
+  addMenuItem(
       toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
 
   // Functions entry
@@ -401,6 +403,11 @@ void HistQtWidget::activate_print()
 void HistQtWidget::activate_export()
 {
   hist->activate_export();
+}
+
+void HistQtWidget::activate_analyse()
+{
+  hist->activate_analyse();
 }
 
 void HistQtWidget::activate_zoom_in()

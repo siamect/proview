@@ -93,6 +93,7 @@ public:
   static void activate_exit(GtkWidget* w, gpointer data);
   static void activate_print(GtkWidget* w, gpointer data);
   static void activate_export(GtkWidget* w, gpointer data);
+  static void activate_analyse(GtkWidget* w, gpointer data);
   static void activate_zoom_in(GtkWidget* w, gpointer data);
   static void activate_zoom_out(GtkWidget* w, gpointer data);
   static void activate_zoom_reset(GtkWidget* w, gpointer data);

@@ -296,7 +296,7 @@ int Ev::eve_export_events(const char *filename)
     return 0;
   fprintf(fp, "Time,Type,Prio,Text,Name,SupObject,Id,Status\n");
   brow_GetObjectList(eve->brow->ctx, &list, &list_cnt);
-  for (int i = 0; i < list_cnt; i++) {
+  for (int i = list_cnt - 1; i >= 0; i--) {
     brow_GetUserData(list[i], (void **)&item);
     time_AtoAscii(&item->time, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
     strcpy(supobjectstr, cdh_ObjidToString(item->supobject.Objid, 1));
@@ -309,6 +309,12 @@ int Ev::eve_export_events(const char *filename)
   }
   fclose(fp);
   return 1;
+}
+
+void Ev::eve_activate_analyse()
+{
+  eve_export_events("$pwrp_tmp/pwr_eventlist.dat");  
+  system("sev_eva.py -f $pwrp_tmp/pwr_eventlist.dat &");
 }
 
 void Ev::eve_activate_ack_last()
