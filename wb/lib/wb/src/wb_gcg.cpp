@@ -15850,7 +15850,8 @@ int gcg_comp_plcembed_all(ldh_tSession ldhses, int force)
 {
   pwr_tAttrRef plcint_aref;
   pwr_tOid last_oid = pwr_cNOid;
-  pwr_tStatus sts, rsts;
+  pwr_tStatus sts;
+  pwr_tStatus rsts = 1;
   bool write_set = false;
   ldh_sSessInfo info;
 
