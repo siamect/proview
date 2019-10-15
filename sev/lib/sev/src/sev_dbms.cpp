@@ -651,6 +651,17 @@ int sev_dbms_env::updateDBToSevVersion5(void)
       printf("%s: %s\n", __FUNCTION__, mysql_error(con()));
       return 0;
     }
+
+    sprintf(query,
+        "update %s set eventstatus=0",
+        tablename);
+
+    rc = mysql_query(con(), query);
+    if (rc) {
+      printf("In %s row %d:\n", __FILE__, __LINE__);
+      printf("%s: %s\n", __FUNCTION__, mysql_error(con()));
+      return 0;
+    }
   }
   mysql_free_result(result);
 
@@ -2948,7 +2959,10 @@ int sev_dbms::delete_old_data(pwr_tStatus* sts, void* thread, char* tablename,
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
     printf("Delete old data: %s\n", mysql_error(con));
-    *sts = SEV__DBERROR;
+    if ( con->net.last_errno == CR_SERVER_GONE_ERROR)
+      *sts = SEV__NOCONNECTION;
+    else
+      *sts = SEV__DBERROR;
     return 0;
   }
 
@@ -5108,7 +5122,6 @@ int sev_dbms::get_events(pwr_tStatus *sts, void *thread, pwr_tOid oid,
     e.eventstatus = strtoul(row[j++], 0, 10);
     list.push_back(e);
   }
-  printf("ecnt %ld\n", list.size());
 
   mysql_free_result(result);
   *sts = SEV__SUCCESS;
