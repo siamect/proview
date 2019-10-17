@@ -174,7 +174,7 @@ static pwr_tBoolean ConvertPut(
    */
   if (put->type.s == (qcom_eStype)net_eMsg_volumes7) {
     put->type.s = net_eMsg_volumes;
-    fXdr = xdr_net_sVolumes7;
+    fXdr = (tFuncXdr)xdr_net_sVolumes7;
   } else {
     if ((int)put->type.s <= (int)net_eMsg__
         || (int)put->type.s >= (int)net_eMsg_)
@@ -228,7 +228,7 @@ static pwr_tBoolean ConvertGet(pwr_tStatus* sts, qcom_sGet* get, void* data)
 
     if (netver == 7) {
       get->type.s = net_eMsg_volumes7;
-      fXdr = xdr_net_sVolumes7;
+      fXdr = (tFuncXdr)xdr_net_sVolumes7;
     }
   }
 
