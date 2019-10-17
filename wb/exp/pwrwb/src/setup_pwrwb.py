@@ -6,6 +6,27 @@ import os
 pwr_lib = os.environ['pwr_elib']
 pwr_obj = os.environ['pwr_eobj']
 pwr_inc = os.environ['pwr_einc']
+try:
+    pwre_conf_qt = os.environ['PWRE_CONF_QT']
+except:
+    pwre_conf_qt = ""
+
+if pwre_conf_qt == "":
+    libs = ['pwr_wb_gtk', 'pwr_xtt_gtk', 'pwr_ge_gtk', 'pwr_cow_gtk',
+            'pwr_flow_gtk', 'pwr_glow_gtk',
+            'pwr_wb', 'pwr_xtt', 'pwr_ge', 'pwr_cow', 'pwr_flow', 'pwr_glow',
+            'pwr_wb_gtk', 'pwr_xtt_gtk', 'pwr_ge_gtk', 'pwr_cow_gtk', 'pwr_flow_gtk', 'pwr_glow_gtk',
+            'pwr_wb', 'pwr_xtt', 'pwr_ge', 'pwr_cow',
+            'pwr_flow', 'pwr_glow', 
+            'pwr_rt', 'pwr_statussrv', 'pwr_co', 'pwr_msg_dummy']
+else:
+    libs = ['pwr_wb_qt', 'pwr_xtt_qt', 'pwr_ge_qt', 'pwr_cow_qt',
+            'pwr_flow_qt', 'pwr_glow_qt',
+            'pwr_wb', 'pwr_xtt', 'pwr_ge', 'pwr_cow', 'pwr_flow', 'pwr_glow',
+            'pwr_wb_qt', 'pwr_xtt_qt', 'pwr_ge_qt', 'pwr_cow_qt', 'pwr_flow_qt', 'pwr_glow_qt',
+            'pwr_wb', 'pwr_xtt', 'pwr_ge', 'pwr_cow',
+            'pwr_flow', 'pwr_glow', 
+            'pwr_rt', 'pwr_statussrv', 'pwr_co', 'pwr_msg_dummy']
 
 pwrwbmodule = Extension( name='pwrwb',
                          sources=['pwrwbmodule.cpp'],
@@ -21,17 +42,11 @@ pwrwbmodule = Extension( name='pwrwb',
                                         pwr_obj + '/stdsoap2.o'],
                          include_dirs=[pwr_inc],
                          library_dirs=[pwr_lib],
-                         libraries=['pwr_wb_gtk', 'pwr_xtt_gtk', 'pwr_ge_gtk', 'pwr_cow_gtk',
-                                    'pwr_flow_gtk', 'pwr_glow_gtk',
-                                    'pwr_wb', 'pwr_xtt', 'pwr_ge', 'pwr_cow', 'pwr_flow', 'pwr_glow',
-                                    'pwr_wb_gtk', 'pwr_wb', 'pwr_xtt_gtk', 'pwr_ge_gtk', 'pwr_cow_gtk',
-                                    'pwr_flow_gtk', 'pwr_glow_gtk', 'pwr_xtt', 'pwr_ge', 'pwr_cow',
-                                    'pwr_flow', 'pwr_glow', 
-                                    'pwr_rt', 'pwr_statussrv', 'pwr_co', 
-                                    'pwr_msg_dummy', 'db_cxx', 'rpcsvc', 'asound', 'pthread',
-                                    'm', 'db', 'z', 'crypt', 'rt', 'fl', 'X11', 'mysqlclient',
-                                    'sqlite3', 'rsvg-2','gtk-x11-2.0'],
-#                         extra_link_args=['-L/usr/lib/x86_64-linux-gnu', commands.getoutput('pkg-config --libs gtk+-2.0')],
+                         libraries=libs +
+                         ['db_cxx', 'rpcsvc', 'asound', 'pthread',
+                          'm', 'db', 'z', 'crypt', 'rt', 'fl', 'X11', 'mysqlclient',
+                          'sqlite3', 'rsvg-2','gtk-x11-2.0'],
+#                        extra_link_args=['-L/usr/lib/x86_64-linux-gnu', commands.getoutput('pkg-config --libs gtk+-2.0')],
                          language='c++'
                        )
                       
