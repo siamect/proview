@@ -111,7 +111,7 @@ pwr_tStatus mh_NetXdrMessage(XDR* xdrs, int subtype, mh_sHead* hp)
   case mh_eMsg_OutunitHello:
     break;
   case mh_eMsg_OutunitInfo:
-    if (!xdr_mh_sOutunitInfo(xdrs, hp + 1))
+    if (!xdr_mh_sOutunitInfo(xdrs, (mh_sOutunitInfo *)(hp + 1)))
       return MH__XDRFAILED;
     break;
   case mh_eMsg_OutunitSync:
