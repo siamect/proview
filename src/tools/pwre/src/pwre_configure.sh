@@ -341,6 +341,9 @@ if [ "$buildversion" != "" ]; then
 else
     echo "export PWRE_CONF_BUILDVERSION=\"0\"" >> $cfile
 fi
+echo "export pwrp_root=/dev/null" >> $cfile
+echo "export pwrp_exe=/dev/null" >> $cfile
+echo "export pwrp_db=/dev/null" >> $cfile
 echo "export PWRE_CONF_LOCKDBS=$lockdbs" >> $cfile
 echo "export PWRE_CONF_PARALLEL=$parallel" >> $cfile
 
@@ -349,14 +352,14 @@ if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
 
 #    if [ $pwre_conf_qt -eq 1 ]; then
         pwre_config_check_lib qt        QT      qt qt 0 "/usr/lib/libQtGui.so:/usr/lib/$hwpl-linux-$gnu/libQtGui.so"
-        pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtGui"
-        pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtCore/QtCore"
-        pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtGui/QtGui"
-        pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtNetwork/QtNetwork"
+        pwre_config_check_include qt    QT   0 "/usr/include/qt4/QtGui"
+        pwre_config_check_include qt    QT   0 "/usr/include/qt4/QtCore/QtCore"
+        pwre_config_check_include qt    QT   0 "/usr/include/qt4/QtGui/QtGui"
+        pwre_config_check_include qt    QT   0 "/usr/include/qt4/QtNetwork/QtNetwork"
 #    fi
 #    if [ $pwre_conf_gtk -eq 1 ]; then
         pwre_config_check_lib gtk       GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-$gnu/libgtk-x11-2.0.so"
-        pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
+        pwre_config_check_include gtk   GTK   0 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
 #    fi
 
     pwre_config_check_include jni   JNI   1 $jdk/include/jni.h
@@ -425,17 +428,17 @@ else
     pwre_config_check_include alsa  ALSA  1 "/usr/include/alsa/asoundlib.h"
 
     echo ""
-    echo "Gui Qt/Gtk:"
-    if [ ! -z $pwre_conf_qt ]; then
+    echo "Gui either Qt or Gtk :"
+#   if [ ! -z $pwre_conf_qt ]; then
         pwre_config_check_lib qt        QT      qt qt 0 "/usr/lib/libQtGui.so:/usr/lib/$hwpl-linux-$gnu/libQtGui.so"
-        pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtGui"
-        pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtCore/QtCore"
-        pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtGui/QtGui"
-        pwre_config_check_include qt    QT   1 "/usr/include/qt4/QtNetwork/QtNetwork"
-    else
+        pwre_config_check_include qt    QT   0 "/usr/include/qt4/QtGui"
+        pwre_config_check_include qt    QT   0 "/usr/include/qt4/QtCore/QtCore"
+        pwre_config_check_include qt    QT   0 "/usr/include/qt4/QtGui/QtGui"
+        pwre_config_check_include qt    QT   0 "/usr/include/qt4/QtNetwork/QtNetwork"
+#   else
         pwre_config_check_lib gtk       GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-$gnu/libgtk-x11-2.0.so"
-        pwre_config_check_include gtk   GTK   1 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
-    fi
+        pwre_config_check_include gtk   GTK   0 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
+#    fi
 
     echo ""
     echo "Optional :"
@@ -472,6 +475,7 @@ else
     pwre_config_check_include powerlink EPL 1 "$epl/Include/Epl.h"
     pwre_config_check_include powerlinkuser EPLU 0 "$epl/Examples/X86/Generic/powerlink_user_lib/EplCfg.h"
     pwre_config_check_include rsvg  RSVG  1 "/usr/include/librsvg-2/librsvg/rsvg.h:/usr/include/librsvg-2.0/librsvg/rsvg.h"
+    pwre_config_check_include pydev   PYDEV   0 "/usr/include/python2.7/pymath.h"
     pwre_config_check_tool android ANDROID "/usr/local/android-sdk-linux/tools/android"
 
 
