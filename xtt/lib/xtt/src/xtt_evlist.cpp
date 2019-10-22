@@ -2768,7 +2768,7 @@ void EvList::fill_alarm_tables()
 
     idx = 0;
     for (i = 0; i < object_cnt; i++) {
-      if (idx > int(sizeof(at.ActiveArray) / sizeof(at.ActiveArray[0])))
+      if (idx >= int(sizeof(at.ActiveArray) / sizeof(at.ActiveArray[0])))
         break;
 
       brow_GetUserData(object_list[i], (void**)&item);
