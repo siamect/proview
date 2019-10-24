@@ -517,6 +517,8 @@ bool wb_print_wbl::printValue(wb_volume& v, pwr_eType type, unsigned int flags,
       strcpy(sval, "ATTIME_MIN");
     else if (memcmp(val, &pwr_cAtMax, sizeof(pwr_tTime)) == 0)
       strcpy(sval, "ATTIME_MAX");
+    else if (memcmp(val, &pwr_cNotATime, sizeof(pwr_tTime)) == 0)
+      strcpy(sval, "NotATime");
     else {
       sts = time_AtoAscii(
           (pwr_tTime*)val, time_eFormat_DateAndTime, timbuf, sizeof(timbuf));
@@ -535,6 +537,8 @@ bool wb_print_wbl::printValue(wb_volume& v, pwr_eType type, unsigned int flags,
       strcpy(sval, "DTTIME_MIN");
     else if (memcmp(val, &pwr_cDtMax, sizeof(pwr_tDeltaTime)) == 0)
       strcpy(sval, "DTTIME_MAX");
+    else if (memcmp(val, &pwr_cNotADeltaTime, sizeof(pwr_tDeltaTime)) == 0)
+      strcpy(sval, "NotADeltaTime");
     else {
       sts = time_DtoAscii((pwr_tDeltaTime*)val, 1, timbuf, sizeof(timbuf));
       if (ODD(sts)) {
