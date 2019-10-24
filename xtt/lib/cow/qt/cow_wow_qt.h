@@ -239,8 +239,6 @@ public:
 public slots:
   void DisplayWarranty();
   void DisplayLicense();
-
-  void wait_cb();
 };
 
 #endif
