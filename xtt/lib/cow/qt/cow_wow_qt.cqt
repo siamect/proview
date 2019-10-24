@@ -608,6 +608,7 @@ void CoWowEntryQt::keyPressEvent(QKeyEvent* event)
   }
   case Qt::Key_Escape:
     if (m_hide_on_esc) {
+      emit editingFinished();
       clearFocus();
       hide();
     }
@@ -621,6 +622,10 @@ void CoWowEntryQt::keyPressEvent(QKeyEvent* event)
     clearFocus();
     hide();
   }
+}
+
+void CoWowEntryQt::focusOutEvent(QFocusEvent *event) {
+  event->ignore();
 }
 
 //

@@ -65,6 +65,7 @@ public:
 
 protected:
   void keyPressEvent(QKeyEvent* event);
+  void focusOutEvent(QFocusEvent *);
 };
 
 class CoWowModalDialogQt : public QDialog {
