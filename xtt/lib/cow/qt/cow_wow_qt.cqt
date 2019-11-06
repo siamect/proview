@@ -266,6 +266,8 @@ CoWowListWidgetQt::CoWowListWidgetQt(QWidget* parent, const char* title,
   list->resizeColumnToContents(0);
   show();
 
+  pop(this);
+
   list->setFocus();
 }
 
