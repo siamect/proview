@@ -234,8 +234,9 @@ class CoWowQtObject : public QObject {
   Q_OBJECT
 
 public:
-  CoWowQtObject(QWidget* parent) : QObject(), parent_wid(parent) {}
+  CoWowQtObject(QWidget* parent, CoWowQt* w) : QObject(), parent_wid(parent), wow(w) {}
   QWidget* parent_wid;
+  CoWowQt* wow;
 
 public slots:
   void DisplayWarranty();

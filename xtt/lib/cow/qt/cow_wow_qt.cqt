@@ -389,6 +389,10 @@ CoWowWarrantQt::CoWowWarrantQt(CoWowQtObject* parent)
 
 void CoWowQtObject::DisplayWarranty()
 {
+  // Display only once
+  if (wow->HideWarranty()) {
+    return;
+  }
   new CoWowWarrantQt(this);
 }
 
@@ -917,7 +921,7 @@ void CoWowQt::update_title(QWidget* w, int editmode)
 
 CoWowQt::CoWowQt(QWidget* parent)
 {
-  object = new CoWowQtObject(parent);
+  object = new CoWowQtObject(parent, this);
   m_wait_timerid = new QTimer(object);
 }
 
