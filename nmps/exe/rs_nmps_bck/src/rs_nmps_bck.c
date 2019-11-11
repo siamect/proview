@@ -1184,7 +1184,7 @@ static pwr_tStatus nmpsbck_write(bck_ctx bckctx)
   pwr_tStatus sts;
   nmpsbck_t_recordheader recordheader;
   pwr_tUInt32 csts;
-  pwr_tUInt32 actpos;
+  long int actpos;
   FILE* bckfile;
 
   if (!bckctx->bckconfig->BackupOn)
@@ -1320,7 +1320,7 @@ static pwr_tStatus nmpsbck_check_file(bck_ctx bckctx, FILE* bckfile,
   nmpsbck_t_cellheader cellheader;
   nmpsbck_t_dataheader dataheader;
   pwr_tUInt32 csts;
-  pwr_tUInt32 actpos;
+  long int actpos;
   int cell_read_success;
   int data_read_success;
 
@@ -1460,7 +1460,7 @@ static pwr_tStatus nmpsbck_read(bck_ctx bckctx, char* backupfile)
   FILE* bckfile1;
   FILE* bckfile2;
   pwr_tUInt32 csts;
-  pwr_tUInt32 actpos;
+  long int actpos;
   int k;
   char* databuff = 0;
   int databuff_size = 0;
