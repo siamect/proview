@@ -91,9 +91,8 @@ SObject pwrb:Class
 !
 !  This example shows how digital signals can be counted. Some signals
 !  are counted if they are TRUE others if they are FALSE and then the
-!  sum is stored. Note that Di2 and Di3 are included in the sum if 
-!  they are FALSE.
-!  @image orm_aarithm_1.gif
+!  sum is stored. Note that Di3 is included in the sum if it is FALSE.
+!  @image orm_aarithm_1.png
 
 ! @b See Also
 !  @classlink DArithm pwrb_darithm.html
@@ -256,6 +255,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d2"
+          Attr Flags |= PWR_MASK_NOINVERT
           Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
@@ -271,6 +271,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d3"
+          Attr Flags |= PWR_MASK_NOINVERT
           Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
@@ -286,6 +287,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d4"
+          Attr Flags |= PWR_MASK_NOINVERT
           Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
@@ -301,6 +303,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d5"
+          Attr Flags |= PWR_MASK_NOINVERT
           Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
@@ -316,6 +319,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d6"
+          Attr Flags |= PWR_MASK_NOINVERT
           Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
@@ -331,6 +335,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d7"
+          Attr Flags |= PWR_MASK_NOINVERT
           Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
@@ -346,6 +351,7 @@ SObject pwrb:Class
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
           Attr GraphName = "d8"
+          Attr Flags |= PWR_MASK_NOINVERT
           Attr Flags |= PWR_MASK_REDUTRANSFER
         EndBody
       EndObject
