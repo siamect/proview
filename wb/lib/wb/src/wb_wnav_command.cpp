@@ -5051,7 +5051,7 @@ static int wnav_update_func(void* client_data, void* client_flag)
     wb_volume* v = (wb_volume*)ldh_SessionToVol(wnav->ldhses);
     wb_vrep* vrep = (wb_vrep*)*v;
     vrep->updateMeta();
-    wnav->message('I', "Classvolumes updated");
+    wnav->message('I', "Classes updated");
   } else {
     wnav->message('E', "Syntax error");
     return WNAV__SYNTAX;
