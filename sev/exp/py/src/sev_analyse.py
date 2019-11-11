@@ -1864,6 +1864,12 @@ class FetchSev:
         filtervalue = self.filterentry.get()
         self.server = self.serverentry.get()
 
+        try:
+            pwrrt.init('sev_analyse')
+        except RuntimeError as e:
+            tkMessageBox.showerror("Error", str(e))
+            return
+
         # Store server to file
         try:
             fp = open(pwrp_tmp + "/sevserver.dat", "w")
@@ -1998,6 +2004,12 @@ class FetchSev:
         tovalue = self.toentry.get()
         intervalvalue = float(self.intervalentry.get())
         maxvalue = int(self.maxentry.get())
+
+        try:
+            pwrrt.init('sev_analyse')
+        except RuntimeError as e:
+            tkMessageBox.showerror("Error", str(e))
+            return
 
         try:
             result = pwrrt.getSevItemsDataFrame( self.server, dataoid, dataattr, isobject,

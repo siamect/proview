@@ -1828,6 +1828,12 @@ class FetchSev:
             pass
 
         try:
+            pwrrt.init('sev_eva')
+        except RuntimeError as e:
+            tkMessageBox.showerror("Error", str(e))
+            return
+
+        try:
             self.items = pwrrt.getSevItemList(self.server, filtervalue)
         except RuntimeError as e:
             tkMessageBox.showerror("Error", str(e))
@@ -2083,6 +2089,13 @@ class FetchSev:
             m = m << 1
         maxvalue = int(self.maxentry.get())
         print fromvalue, tovalue
+
+        try:
+            pwrrt.init('sev_eva')
+        except RuntimeError as e:
+            tkMessageBox.showerror("Error", str(e))
+            return
+
         try:
             result = pwrrt.getSevEventsDataFrame( self.server, oid,
                                                   fromvalue, tovalue, eventtypevalue,
