@@ -20,6 +20,7 @@
 #include "rt_pwr_msg.h"
 #include "co_user_msg.h"
 
+static int pwrrt_initialized = 0;
 static unsigned int pwrrt_priv = pwr_mPrv_RtRead;
 static char pwrrt_user[80] = "";
 static sevcli_tCtx pwrrt_scctx = 0;
@@ -628,6 +629,17 @@ quit()\n\
 /*
  * Doc for static methods
  */
+PyDoc_STRVAR(pwrrt_init_doc,"\
+init(name)\n--\n\n\
+Attach ProviewR runtime.\n\n\
+Arguments\n\
+---------\n\
+name String\n\
+  Name of application.\n\n\
+Example\n\
+-------\n\
+pwrrt.init('my_py')\n");
+
 PyDoc_STRVAR(pwrrt_volume_doc,"\
 volume(volumeName)\n--\n\n\
 Get volume\n\n\
@@ -2927,6 +2939,14 @@ Appl_init(ApplObject *self, PyObject *args, PyObject *kwds)
     return -1;
   }
 
+  if (!pwrrt_initialized) {
+    sts = gdh_Init(name);
+    if ( EVEN(sts)) {
+      set_error(sts);
+      return -1;
+    }
+  }
+
   sts = gdh_NameToObjid( applobj, &self->apploid);
   if ( EVEN(sts)) {
     set_error(sts);
@@ -3144,6 +3164,24 @@ Appl_log(ApplObject *self, PyObject *args)
  * Static methods
  */
 
+
+static PyObject *pwrrt_init(PyObject *self, PyObject *args)
+{	     
+  const char *name;
+  pwr_tStatus sts;
+
+  if (pwrrt_initialized)
+    Py_RETURN_NONE;
+
+  if ( !PyArg_ParseTuple(args, "s", &name))
+    return NULL;
+
+  sts = gdh_Init(name);
+  if ( EVEN(sts))
+    return set_error(sts);
+  pwrrt_initialized = 1;
+  Py_RETURN_NONE;
+}
 
 static PyObject *pwrrt_volume(PyObject *self, PyObject *args)
 {
@@ -4470,6 +4508,7 @@ static PyObject *pwrrt_getSevEventsDataFrame(PyObject *self, PyObject *args)
 }
 
 static PyMethodDef PwrrtMethods[] = {
+  {"init", pwrrt_init, METH_VARARGS, pwrrt_init_doc},
   {"volume", pwrrt_volume, METH_VARARGS, pwrrt_volume_doc},
   {"volumes", pwrrt_volumes, METH_NOARGS, pwrrt_volumes_doc},
   {"object", pwrrt_object, METH_VARARGS, pwrrt_object_doc},
@@ -4524,6 +4563,4 @@ PyMODINIT_FUNC initpwrrt(void)
   PyModule_AddIntConstant(m, "FRAME_OPTIONS_CONDITION", 1);
 
   PyDateTime_IMPORT;
-
-  gdh_Init("Python");
 }
