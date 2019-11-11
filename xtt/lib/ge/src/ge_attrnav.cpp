@@ -1313,6 +1313,11 @@ int attrnav_attr_string_to_value(int type_id, char* value_str, void* buffer_ptr,
       return ATTRNAV__INPUT_SYNTAX;
     break;
   }
+  case glow_eType_Float: {
+    if (sscanf(value_str, "%f", (pwr_tFloat32*)buffer_ptr) != 1)
+      return ATTRNAV__INPUT_SYNTAX;
+    break;
+  }
   case glow_eType_Double: {
     pwr_tFloat32 f;
     pwr_tFloat64 d;
@@ -1385,6 +1390,13 @@ void attrnav_attrvalue_to_string(
       *len = snprintf(str, size, "%d", *(pwr_tBoolean*)value_ptr);
     else
       *len = snprintf(str, size, format, *(pwr_tBoolean*)value_ptr);
+    break;
+  }
+  case glow_eType_Float: {
+    if (!format)
+      *len = snprintf(str, size, "%g", *(float*)value_ptr);
+    else
+      *len = snprintf(str, size, format, *(float*)value_ptr);
     break;
   }
   case glow_eType_Double: {
@@ -1585,6 +1597,12 @@ int AttrNav::set_attr_value(
       if (item->type_id == glow_eType_Double) {
         if (*(double*)&buffer < item->min_limit
             || *(double*)&buffer > item->max_limit) {
+          message(0, 'E', "Min or maxvalue exceeded");
+          return 0;
+        }
+      } else if (item->type_id == glow_eType_Float) {
+        if (*(float*)&buffer < item->min_limit
+            || *(float*)&buffer > item->max_limit) {
           message(0, 'E', "Min or maxvalue exceeded");
           return 0;
         }
