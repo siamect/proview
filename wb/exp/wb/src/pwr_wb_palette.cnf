@@ -1219,6 +1219,7 @@ palette PlcEditorPalette
     class Sim_Delay
     class Sim_LagFilter
     class Sim_LeadLagFilter
+    class Sim_ModelMLP_Fo
     class Sim_SigGen
     class Sim_SignalGeneratorFo
     class Sim_Simulink
