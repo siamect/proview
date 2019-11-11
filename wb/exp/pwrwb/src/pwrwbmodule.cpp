@@ -85,7 +85,7 @@ while (v):\n\
 ");
 
 PyDoc_STRVAR(vid_root_doc,"\
-child()\n--\n\n\
+root()\n--\n\n\
 Get first root object of the volume.\n\n\
 Returns\n\
 -------\n\
@@ -100,7 +100,7 @@ while o:\n\
 ");
 
 PyDoc_STRVAR(vid_roots_doc,"\
-children()\n--\n\n\
+roots()\n--\n\n\
 Get all root objects of the volume.\n\n\
 Returns\n\
 -------\n\
@@ -651,7 +651,7 @@ pwrwb.openWb('VolDemo')\n\
 
 PyDoc_STRVAR(pwrwb_openSession_doc,"\
 openSession(volume, access)\n--\n\n\
-Open database.\n\
+Open session.\n\
 If no database argument is supplied, the directory volume is opened.\n\n\
 Arguments\n\
 ---------\n\
@@ -1052,7 +1052,7 @@ static PyTypeObject ArefType = {
     0,                         /* tp_setattro */
     0,                         /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,        /* tp_flags */
-    "Proview runtime object",  /* tp_doc */    
+    "Proview development attribute",  /* tp_doc */    
     0,                         /* tp_traverse */
     0,                         /* tp_clear */
     Aref_richcompare,          /* tp_richcompare */
@@ -1126,7 +1126,7 @@ static PyTypeObject CidType = {
     0,                         /* tp_setattro */
     0,                         /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,        /* tp_flags */
-    "Proview runtime class",   /* tp_doc */    
+    "Class of a development object", /* tp_doc */    
     0,                         /* tp_traverse */
     0,                         /* tp_clear */
     Cid_richcompare,           /* tp_richcompare */
@@ -1187,7 +1187,7 @@ static PyTypeObject TidType = {
     0,                         /* tp_setattro */
     0,                         /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,        /* tp_flags */
-    "Proview runtime class",   /* tp_doc */    
+    "Attribute type",          /* tp_doc */    
     0,                         /* tp_traverse */
     0,                         /* tp_clear */
     Tid_richcompare,           /* tp_richcompare */
