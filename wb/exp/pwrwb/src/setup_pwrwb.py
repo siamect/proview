@@ -19,6 +19,7 @@ if pwre_conf_qt == "":
             'pwr_wb', 'pwr_xtt', 'pwr_ge', 'pwr_cow',
             'pwr_flow', 'pwr_glow', 
             'pwr_rt', 'pwr_statussrv', 'pwr_co', 'pwr_msg_dummy']
+    xlibs = ['gtk-x11-2.0']
 else:
     libs = ['pwr_wb_qt', 'pwr_xtt_qt', 'pwr_ge_qt', 'pwr_cow_qt',
             'pwr_flow_qt', 'pwr_glow_qt',
@@ -27,6 +28,7 @@ else:
             'pwr_wb', 'pwr_xtt', 'pwr_ge', 'pwr_cow',
             'pwr_flow', 'pwr_glow', 
             'pwr_rt', 'pwr_statussrv', 'pwr_co', 'pwr_msg_dummy']
+    xlibs = ['QtCore', 'QtGui']
 
 pwrwbmodule = Extension( name='pwrwb',
                          sources=['pwrwbmodule.cpp'],
@@ -45,7 +47,7 @@ pwrwbmodule = Extension( name='pwrwb',
                          libraries=libs +
                          ['db_cxx', 'rpcsvc', 'asound', 'pthread',
                           'm', 'db', 'z', 'crypt', 'rt', 'fl', 'X11', 'mysqlclient',
-                          'sqlite3', 'rsvg-2','gtk-x11-2.0'],
+                          'sqlite3', 'rsvg-2', 'QtCore', 'QtGui'] + xlibs,
 #                        extra_link_args=['-L/usr/lib/x86_64-linux-gnu', commands.getoutput('pkg-config --libs gtk+-2.0')],
                          language='c++'
                        )
