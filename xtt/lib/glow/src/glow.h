@@ -98,7 +98,8 @@ typedef enum {
   glow_eType_AnnotType, //!< Type is glow_eAnnotType
   glow_eType_DynType2, //!< Type of dynamics mask 2
   glow_eType_ActionType2, //!< Type of action mask 2
-  glow_eType_AppMotion //!< Type is glow_eAppMotion
+  glow_eType_AppMotion, //!< Type is glow_eAppMotion
+  glow_eType_Float //!< Type is a float
 } glow_eType;
 
 //! Type of Ctx class

@@ -14873,12 +14873,12 @@ void GeFillLevel::get_attributes(attr_sItem* attrinfo, int* item_count)
 
   strcpy(attrinfo[i].name, "FillLevel.MinValue");
   attrinfo[i].value = &min_value;
-  attrinfo[i].type = glow_eType_Double;
+  attrinfo[i].type = glow_eType_Float;
   attrinfo[i++].size = sizeof(min_value);
 
   strcpy(attrinfo[i].name, "FillLevel.MaxValue");
   attrinfo[i].value = &max_value;
-  attrinfo[i].type = glow_eType_Double;
+  attrinfo[i].type = glow_eType_Float;
   attrinfo[i++].size = sizeof(max_value);
 
   strcpy(attrinfo[i].name, "FillLevel.MinValueAttr");
