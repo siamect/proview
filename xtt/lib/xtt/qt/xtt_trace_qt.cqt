@@ -55,6 +55,7 @@
 #include "xtt_trace_qt.h"
 
 #include <QAction>
+#include <QCloseEvent>
 #include <QMenu>
 #include <QMenuBar>
 #include <QSplitter>
@@ -173,19 +174,21 @@ void RtTraceQtWidget::activate_helpplclist()
 
 RtTraceQt::~RtTraceQt()
 {
-  trace_tNode *node, *fnode;
-
   trace_stop();
 
   /* Delete all trace children windows */
-  for (node = trace_list; node;) {
+  for (trace_tNode *node = trace_list; node;) {
     delete node->tractx;
-    fnode = node->Next;
+    trace_tNode *fnode = node->Next;
     free((char*)node);
     node = fnode;
   }
   if (nav_shell) {
     nav_shell->close();
+  }
+
+  if (toplevel) {
+    delete toplevel;
   }
 
   if (trace_timerid) {
@@ -211,7 +214,7 @@ RtTrace* RtTraceQt::subwindow_new(void* ctx, pwr_tObjid oid, pwr_tStatus* sts)
 void RtTraceQtWidget::closeEvent(QCloseEvent* event)
 {
   rt->activate_close();
-  QWidget::closeEvent(event);
+  event->ignore();
 }
 
 RtTraceQt::RtTraceQt(void* tr_parent_ctx, pwr_tObjid tr_objid,
