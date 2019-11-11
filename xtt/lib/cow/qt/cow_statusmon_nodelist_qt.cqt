@@ -67,7 +67,6 @@ NodelistQt::NodelistQt(void* nodelist_parent_ctx, const char* nodelist_name,
   pwr_tStatus sts;
 
   toplevel = new NodelistQtWidget(this);
-  toplevel->setMinimumSize(850, 300);
   toplevel->setWindowTitle(fl(nodelist_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -178,6 +177,7 @@ NodelistQt::NodelistQt(void* nodelist_parent_ctx, const char* nodelist_name,
   add_expanding(vbox, nodelistnav_widget);
 
   toplevel->setLayout(vbox);
+  toplevel->resize(850, 300);
   toplevel->show();
 
   wow = new CoWowQt(toplevel);

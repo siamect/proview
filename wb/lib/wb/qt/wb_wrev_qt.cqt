@@ -166,7 +166,6 @@ WRevQt::WRevQt(void* wa_parent_ctx, ldh_tSession wa_ldhses)
   int sts;
 
   toplevel = new WRevQtWidget(this);
-  toplevel->setMinimumSize(700, 300);
   toplevel->setWindowTitle(fl("Revisions"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -232,6 +231,7 @@ WRevQt::WRevQt(void* wa_parent_ctx, ldh_tSession wa_ldhses)
   vbox->addWidget(statusbar);
 
   toplevel->setLayout(vbox);
+  toplevel->resize(700, 300);
   toplevel->show();
 
   wow = new CoWowQt(toplevel);

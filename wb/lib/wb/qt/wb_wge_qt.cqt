@@ -198,7 +198,6 @@ WGeQt::WGeQt(void* wge_parent_ctx, char* wge_name, char* wge_filename,
 
   // Qt
   toplevel = new WGeQtWidget(this);
-  toplevel->setMinimumSize(window_width, window_height);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -257,6 +256,7 @@ WGeQt::WGeQt(void* wge_parent_ctx, char* wge_name, char* wge_filename,
   add_expanding(graph_form, grow_widget);
 
   toplevel->setLayout(graph_form);
+  toplevel->resize(window_width, window_height);
   toplevel->show();
 
   if (navigator) {

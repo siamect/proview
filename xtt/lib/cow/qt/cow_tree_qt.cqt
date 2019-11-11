@@ -129,7 +129,6 @@ CowTreeQt::CowTreeQt(void* a_parent_ctx, const char* title,
   int sts;
 
   toplevel = new CowTreeQtWidget(this);
-  toplevel->setMinimumSize(600, 400);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -201,6 +200,7 @@ CowTreeQt::CowTreeQt(void* a_parent_ctx, const char* title,
   vbox->addWidget(statusbar);
 
   toplevel->setLayout(vbox);
+  toplevel->resize(600, 400);
   toplevel->show();
 
   wow = new CoWowQt(toplevel);

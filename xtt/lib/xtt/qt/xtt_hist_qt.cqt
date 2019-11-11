@@ -65,15 +65,11 @@ void HistQtWidget::closeEvent(QCloseEvent* event)
 HistQt::HistQt(void* hist_parent_ctx, char* hist_name, pwr_tAttrRef* arp,
     pwr_tStatus* status) : Hist(hist_parent_ctx, hist_name, arp, status)
 {
-  const int hist_width = 1335;
-  const int hist_height = 700;
-
   // shall be MessageHandler.EventLogSize
   hist_size = 100000;
 
   // Qt
   toplevel = new HistQtWidget(this);
-  toplevel->setMinimumSize(hist_width, hist_height);
   toplevel->setWindowTitle(translate_utf8(hist_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -332,6 +328,7 @@ HistQt::HistQt(void* hist_parent_ctx, char* hist_name, pwr_tAttrRef* arp,
   add_expanding(hist_vbox, hist_widget);
 
   toplevel->setLayout(hist_vbox);
+  toplevel->resize(1335, 700);
   toplevel->show();
 
   Hist::time_cb(time_ePeriod_AllTime);

@@ -123,7 +123,6 @@ XCrrQt::XCrrQt(void* xa_parent_ctx, pwr_sAttrRef* xa_objar,
   }
 
   toplevel = new XCrrQtWidget(this);
-  toplevel->setMinimumSize(600, 420);
   toplevel->setWindowTitle(convert_utf8(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -160,6 +159,7 @@ XCrrQt::XCrrQt(void* xa_parent_ctx, pwr_sAttrRef* xa_objar,
   add_expanding(vbox, brow_widget);
 
   toplevel->setLayout(vbox);
+  toplevel->resize(600, 420);
   toplevel->show();
 
   *xa_sts = XATT__SUCCESS;

@@ -185,7 +185,6 @@ CoXHelpQt::CoXHelpQt(void* xa_parent_ctx, xhelp_eUtility utility, int* xa_sts)
   strcpy(title, Lng::translate("Help"));
 
   toplevel = new CoXHelpQtWidget(this);
-  toplevel->setMinimumSize(700, 600);
   toplevel->setWindowTitle(fl(title));
 
   CoWowQt::SetWindowIcon(toplevel);
@@ -256,6 +255,7 @@ CoXHelpQt::CoXHelpQt(void* xa_parent_ctx, xhelp_eUtility utility, int* xa_sts)
   vbox->addWidget(brow_widget);
 
   toplevel->setLayout(vbox);
+  toplevel->resize(700, 600);
   toplevel->show(); // The xhelpnav must be realized.
   toplevel->hide();
 

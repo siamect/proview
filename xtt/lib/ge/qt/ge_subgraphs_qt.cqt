@@ -118,7 +118,6 @@ SubGraphsQt::SubGraphsQt(void* xn_parent_ctx, const char* xn_name,
     : SubGraphs(xn_parent_ctx, xn_name, xn_growctx, status)
 {
   toplevel = new SubGraphsQtWidget(this);
-  toplevel->setMinimumSize(300, 500);
   toplevel->setWindowTitle(fl(name));
 
   // Menu
@@ -152,7 +151,7 @@ SubGraphsQt::SubGraphsQt(void* xn_parent_ctx, const char* xn_name,
   add_expanding(vbox, form_widget);
 
   toplevel->setLayout(vbox);
-
+  toplevel->resize(300, 500);
   toplevel->show();
 
   *w = toplevel;

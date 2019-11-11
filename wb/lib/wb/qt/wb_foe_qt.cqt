@@ -756,8 +756,6 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
 {
   pwr_tStatus sts;
 
-  toplevel->setMinimumSize(1100, 1000);
-
   CoWowQt::SetWindowIcon(toplevel);
 
   QMenuBar* menu_bar = new QMenuBar();
@@ -1076,6 +1074,7 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   vbox->addWidget(statusbar);
 
   toplevel->setLayout(vbox);
+  toplevel->resize(1100, 1000);
   toplevel->show();
 
   con_palette->setVisible(false);

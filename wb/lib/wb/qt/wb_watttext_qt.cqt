@@ -198,7 +198,6 @@ WAttTextQt::WAttTextQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
   }
 
   toplevel = new WAttTextQtWidget(this);
-  toplevel->setMinimumSize(800, 700);
   toplevel->setWindowTitle(fl(namep));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -259,6 +258,7 @@ WAttTextQt::WAttTextQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
   vbox->addWidget(msg_label);
 
   toplevel->setLayout(vbox);
+  toplevel->resize(800, 700);
   toplevel->show();
 
   if (utility == wb_eUtility_Wtt) {

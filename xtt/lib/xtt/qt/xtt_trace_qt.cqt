@@ -222,7 +222,6 @@ RtTraceQt::RtTraceQt(void* tr_parent_ctx, pwr_tObjid tr_objid,
     : RtTrace(tr_parent_ctx, tr_objid, status), nav_shell(0)
 {
   const int window_width = 900;
-  const int window_height = 800;
   const int nav_width = 180;
   pwr_tStatus sts;
   pwr_tObjid window_objid;
@@ -286,7 +285,6 @@ RtTraceQt::RtTraceQt(void* tr_parent_ctx, pwr_tObjid tr_objid,
 
   // Qt
   toplevel = new RtTraceQtWidget(this);
-  toplevel->setMinimumSize(window_width, window_height);
   toplevel->setWindowTitle(QString::fromLatin1(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -406,6 +404,7 @@ RtTraceQt::RtTraceQt(void* tr_parent_ctx, pwr_tObjid tr_objid,
   add_expanding(vbox, paned);
 
   toplevel->setLayout(vbox);
+  toplevel->resize(window_width, 800);
   toplevel->show();
 
   QList<int> sizes;

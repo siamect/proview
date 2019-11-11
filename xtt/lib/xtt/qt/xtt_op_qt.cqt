@@ -156,7 +156,6 @@ OpQt::OpQt(void* op_parent_ctx, char* opplace, pwr_tStatus* status)
   memset(appl_buttons, 0, sizeof(appl_buttons));
 
   toplevel = new OpQtWidget(this);
-  toplevel->setMinimumSize(1100, OP_HEIGHT_MIN + OP_HEIGHT_STATUSBAR);
   toplevel->setWindowFlags(Qt::CustomizeWindowHint);
 
   CoWowQt::SetWindowIcon(toplevel);
@@ -451,6 +450,7 @@ OpQt::OpQt(void* op_parent_ctx, char* opplace, pwr_tStatus* status)
 
   toplevel->setLayout(vbox_conf);
   toplevel->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
+  toplevel->resize(1100, OP_HEIGHT_MIN + OP_HEIGHT_STATUSBAR);
   toplevel->show();
 
   if (start_jop) {

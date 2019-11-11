@@ -409,7 +409,6 @@ XColWindQt::XColWindQt(void* xa_parent_ctx, pwr_sAttrRef* xa_objar_list,
   xattnav_eType xattnav_type;
 
   toplevel = new XColWindQtWidget(this);
-  toplevel->setMinimumSize(420, 600);
   toplevel->setWindowTitle(convert_utf8(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -550,6 +549,7 @@ XColWindQt::XColWindQt(void* xa_parent_ctx, pwr_sAttrRef* xa_objar_list,
 
   add_expanding(statusbar, cmd_scrolledinput);
 
+  toplevel->resize(420, 600);
   toplevel->show();
 
   msg_label->setVisible(false);

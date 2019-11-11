@@ -363,7 +363,6 @@ WAttQt::WAttQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
   }
 
   toplevel = new WAttQtWidget(this);
-  toplevel->setMinimumSize(410, 570);
   toplevel->setWindowTitle(fl(namep));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -447,6 +446,7 @@ WAttQt::WAttQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
 
   add_expanding(statusbar, cmd_scrolledinput);
 
+  toplevel->resize(410, 570);
   toplevel->show();
 
   msg_label->setVisible(false);

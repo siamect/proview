@@ -525,7 +525,7 @@ XttStreamQt::XttStreamQt(void* st_parent_ctx, const char* name,
 
   toplevel->setLayout(main_layout);
   if (!embedded) {
-    toplevel->setMinimumSize(width, height);
+    toplevel->resize(width, height);
     toplevel->show();
 
     if (options & strm_mOptions_FullScreen) {

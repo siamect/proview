@@ -56,17 +56,10 @@ EvEveQt::EvEveQt(void* ev_parent_ctx, char* eve_name, pwr_tObjid ev_user,
     : EvEve(ev_parent_ctx, eve_name, ev_user, ev_eventname_seg, ev_width,
             ev_height, ev_x, ev_y, ev_view, ev_options, status)
 {
-  pwr_tStatus sts;
-  pwr_sClass_OpPlace* opp;
-  int eve_width = 700;
-  int eve_height = 300;
+  int eve_width = (ev_width != 0) ? ev_width : 700;
+  int eve_height = (ev_height != 0) ? ev_height : 300;
 
   *status = 1;
-
-  if (ev_width != 0 && ev_height != 0) {
-    eve_width = ev_width;
-    eve_height = ev_height;
-  }
 
   // Check user object
   if (cdh_ObjidIsNull(user)) {
@@ -74,7 +67,8 @@ EvEveQt::EvEveQt(void* ev_parent_ctx, char* eve_name, pwr_tObjid ev_user,
     return;
   }
 
-  sts = gdh_ObjidToPointer(user, (pwr_tAddress*)&opp);
+  pwr_sClass_OpPlace* opp;
+  pwr_tStatus sts = gdh_ObjidToPointer(user, (pwr_tAddress*)&opp);
   if (EVEN(sts)) {
     *status = XNAV__NOUSER;
     return;
@@ -84,7 +78,6 @@ EvEveQt::EvEveQt(void* ev_parent_ctx, char* eve_name, pwr_tObjid ev_user,
   // Eve Window
   toplevel = new EvEveQtWidget(this);
   if (!(options & ev_mAlaOptions_Embedded)) {
-    toplevel->setMinimumSize(eve_width, eve_height);
     toplevel->setWindowTitle(translate_utf8(eve_name));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -207,13 +200,14 @@ EvEveQt::EvEveQt(void* ev_parent_ctx, char* eve_name, pwr_tObjid ev_user,
   eve_sup_methodtoolbar->set_sensitive();
 
   if (!(options & ev_mAlaOptions_Embedded)) {
+    toplevel->resize(eve_width, eve_height);
     toplevel->show();
     if (!(EvEve::x == 0 && EvEve::y == 0)) {
       // Set position
       toplevel->move(EvEve::x, EvEve::y);
     }
   } else {
-    eve_widget->setMinimumSize(eve_width, eve_height);
+    eve_widget->resize(eve_width, eve_height);
   }
 
   eve_displayed = 1;
