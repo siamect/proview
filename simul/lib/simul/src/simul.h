@@ -57,5 +57,7 @@ void Sim_CylinderTankFo_init(pwr_sClass_Sim_CylinderTankFo* o);
 void Sim_CylinderTankFo_exec(plc_sThread* tp, pwr_sClass_Sim_CylinderTankFo* o);
 void Sim_FurnaceFo_init(pwr_sClass_Sim_FurnaceFo* o);
 void Sim_FurnaceFo_exec(plc_sThread* tp, pwr_sClass_Sim_FurnaceFo* o);
+void Sim_ModelMLP_Fo_init(pwr_sClass_Sim_ModelMLP_Fo* o);
+void Sim_ModelMLP_Fo_exec(plc_sThread* tp, pwr_sClass_Sim_ModelMLP_Fo* o);
 
 #endif
