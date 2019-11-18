@@ -278,7 +278,7 @@ public:
   int update_attributes();
 
   //! Create a new grow context
-  void new_ctx();
+  void new_ctx(bool is_updating_attributes = false);
 
   // Configure the scrollbars
   void configure_scrollbars();
