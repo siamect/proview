@@ -1,0 +1,167 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:            pwr
+# Required-Start:      networking
+# Required-Stop:       networking
+# Default-Start:       2 3 4 5
+# Default-Stop:        0 1 6
+# Short-Description:   Start Proview Runtime Environment.
+# Description:         Start Proview Runtime Environment.
+### END INIT INFO
+
+#
+# Start script for Proview runtime
+#
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+wrapper="/tmp/rt_ini_wrapper"
+killer="/tmp/pwr_killer"
+
+. /etc/pwrp_profile
+umask 002
+
+create_wrapper()
+{
+  if [ ! -e $wrapper ] ; then
+    echo "#!/bin/bash" > $wrapper
+    echo "source /etc/pwrp_profile" >> $wrapper
+    echo "umask 002" >> $wrapper
+    echo "\$pwr_exe/rt_ini \$* &" >> $wrapper
+    chmod a+rx $wrapper
+    if [ ! -e $wrapper ] ;then
+      echo "$wrapper not writable, check permissions"
+      exit
+    fi
+  fi
+}
+
+create_killer()
+{
+    echo "#!/bin/bash" > $killer
+    echo "source /etc/pwrp_profile" >> $killer
+    echo "umask 002" >> $killer
+    
+    echo "`ps ax | grep "rt_" | awk '{ print "kill -9 "$1}'`" >> $killer
+    echo "`ps ax | grep "rs_" | awk '{ print "kill -9 "$1}'`" >> $killer
+    echo "`ps ax | grep "ra_" | awk '{ print "kill -9 "$1}'`" >> $killer
+    echo "`ps ax | grep "sev_" | awk '{ print "kill -9 "$1}'`" >> $killer
+    echo "`ps ax | grep "opc_" | awk '{ print "kill -9 "$1}'`" >> $killer
+    echo "`ps ax | grep "plc_" | awk '{ print "kill -9 "$1}'`" >> $killer
+    echo "`ps ax | grep "jpwr.rt" | awk '{ print "kill -9 "$1}'`" >> $killer
+
+    echo "eval `ipcs -s|grep ^0x|grep "[ \t]pwrp[ \t]"|awk '{printf "ipcrm sem %s;", $2}'`" >> $killer
+    echo "eval `ipcs -q|grep ^0x|grep "[ \t]pwrp[ \t]"|awk '{printf "ipcrm msg %s;", $2}'`" >> $killer
+    echo "eval `ipcs -m|grep ^0x|grep "[ \t]pwrp[ \t]"|awk '{printf "ipcrm shm %s;", $2}'`" >> $killer
+    echo "if [ -e $pwrp_exe/pwrp_stop.sh ]; then" >> $killer
+    echo "  source $pwrp_exe/pwrp_stop.sh" >> $killer
+    echo "fi" >> $killer
+    echo "rm /tmp/pwr*\$PWR_BUS_ID" >> $killer
+
+    chmod a+rx $killer
+    if [ ! -e $killer ] ;then
+      echo "$killer not writable, check permissions"
+      exit
+    fi
+}
+
+
+pwr_start()
+{
+  create_wrapper
+  if [ `whoami` == "pwrp" ];then
+    $wrapper
+  else
+    sudo -u pwrp $wrapper
+  fi
+}
+
+pwr_stop()
+{
+  create_wrapper
+  if [ `whoami` == "pwrp" ];then
+    $wrapper -s
+    if [ -e $pwrp_exe/pwrp_stop.sh ]; then
+      source $pwrp_exe/pwrp_stop.sh
+    fi
+  else
+    sudo -u pwrp $wrapper -s
+    if [ -e $pwrp_exe/pwrp_stop.sh ]; then
+      sudo -u pwrp source $pwrp_exe/pwrp_stop.sh
+    fi
+  fi 
+  while [ "`ps aux | grep -v grep | grep rt_`" != "" ] ; do sleep 1; done  
+}
+
+pwr_reload()
+{
+  if [ `whoami` == "pwrp" ];then
+    $pwr_exe/rt_ini_wrapper -r
+  else
+    sudo -u pwrp $pwr_exe/rt_ini_wrapper -r
+  fi
+}
+
+pwr_kill()
+{
+  create_killer
+  if [ `whoami` == "pwrp" ];then
+    $killer
+  else
+    sudo -u pwrp $killer
+  fi 
+}
+
+case "$1"
+  in
+    start)
+	echo "Start Proview Runtime Environment."
+	pwr_start    
+	echo "Done."
+      ;;
+    stop)
+	echo "Stop Proveiw Runtime Environment."
+	pwr_stop
+	echo "Done."
+      ;;
+    restart)
+	echo "Restart Proview Runtime Environment."
+	echo "Closing down..."
+	pwr_stop
+	sleep 1
+	echo "Starting..."
+	pwr_start
+	echo "Done."
+	;;
+    reload)
+	echo "Reload Proview Runtime Environment"
+        pwr_reload
+	echo "Done."
+	;;
+    kill)
+	echo "Remove all processes and resources for Proview Runtime Environment"
+        pwr_kill
+	echo "Done."
+	;;
+    reset)
+	echo "Remove all processes and resources for Proview Runtime Environment"
+        pwr_kill
+	echo "Done."
+	;;
+    *)
+	echo "  pwr  Start and stop Proview Runtime Environment" >&2
+	echo "" >&2
+	echo "  Usage:" >&2
+	echo "  pwr start|stop|restart|reload|reset" >&2
+	echo "" >&2
+	echo "    start    Start Runtime environment" >&2
+	echo "    stop     Stop Runtime environment" >&2
+	echo "    restart  First stop and then start Runtime environment" >&2
+	echo "    reload   Soft restart of Runtime environment" >&2
+	echo "    reset    Remove all processes and resources" >&2
+	echo "" >&2
+
+        exit 1
+	;;
+  esac
+
+exit 0

@@ -319,7 +319,6 @@ AttrQt::AttrQt(QWidget* a_parent_wid, void* a_parent_ctx, attr_eType a_type,
 
   if (!embedded) {
     toplevel = new AttrQtWidget(this, a_parent_wid);
-    toplevel->setMinimumSize(500, 700);
     toplevel->setWindowTitle(fl("Object Attributes"));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -407,6 +406,7 @@ AttrQt::AttrQt(QWidget* a_parent_wid, void* a_parent_ctx, attr_eType a_type,
 
     toplevel->setLayout(vbox);
 
+    toplevel->resize(500, 700);
     toplevel->show();
 
     msg_label->setVisible(false);

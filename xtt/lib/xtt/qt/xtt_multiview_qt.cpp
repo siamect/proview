@@ -153,7 +153,6 @@ XttMultiViewQt::XttMultiViewQt(void* mv_parent_ctx, const char* mv_name,
 
   // Qt
   toplevel = new XttMultiViewQtWidget(this);
-  toplevel->setMinimumSize(window_width, window_height);
   if (!(options & ge_mOptions_Embedded)) {
     toplevel->setWindowTitle(QString::fromLatin1(mv.Title));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -772,6 +771,7 @@ XttMultiViewQt::XttMultiViewQt(void* mv_parent_ctx, const char* mv_name,
   }
 
   if (!(options & ge_mOptions_Embedded)) {
+    toplevel->resize(window_width, window_height);
     toplevel->show();
 
     if (!(mv_x == 0 && mv_y == 0)) {

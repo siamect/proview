@@ -51,7 +51,6 @@ WbBckWQt::WbBckWQt(void* bckw_parent_ctx, ldh_tSession bckw_ldhses,
         l_list, l_editmode, status)
 {
   toplevel = new WbBckWQtWidget(this);
-  toplevel->setMinimumSize(1100, 600);
   toplevel->setWindowTitle(fl(bckw_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -100,6 +99,7 @@ WbBckWQt::WbBckWQt(void* bckw_parent_ctx, ldh_tSession bckw_ldhses,
   add_expanding(form, nav_widget);
 
   toplevel->setLayout(form);
+  toplevel->resize(1100, 600);
   toplevel->show();
 
   wow = new CoWowQt(toplevel);

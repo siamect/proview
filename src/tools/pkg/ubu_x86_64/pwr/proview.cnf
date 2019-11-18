@@ -1,0 +1,14 @@
+#
+# Configuration file for Proview
+#
+# Default QCOM Bus Id
+#
+qcomBusId              999 
+#
+# Web directory
+#
+webDirectory            /var/www
+
+
+
+

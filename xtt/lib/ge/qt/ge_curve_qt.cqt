@@ -740,7 +740,6 @@ GeCurveQt::GeCurveQt(void* gc_parent_ctx, char* curve_name, char* filename,
 
   // Qt
   toplevel = new GeCurveQtWidget(this);
-  toplevel->setMinimumSize(window_width, window_height);
   if (!(options & curve_mOptions_Embedded)) {
     toplevel->setWindowTitle(convert_utf8(title));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);
@@ -896,6 +895,7 @@ GeCurveQt::GeCurveQt(void* gc_parent_ctx, char* curve_name, char* filename,
   add_expanding(vbox_layout, vpaned);
 
   toplevel->setLayout(vbox_layout);
+  toplevel->resize(window_width, window_height);
   if (!(options & curve_mOptions_Embedded)) {
     toplevel->show();
   }

@@ -243,7 +243,6 @@ WVselQt::WVselQt(pwr_tStatus* status, void* wv_parent_ctx,
 
   // Create the window
   toplevel = new WVselQtWidget(this);
-  toplevel->setMinimumSize(500, 400);
   toplevel->setWindowTitle(fl(name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -289,6 +288,7 @@ WVselQt::WVselQt(pwr_tStatus* status, void* wv_parent_ctx,
   vbox->addWidget(buttons);
 
   toplevel->setLayout(vbox);
+  toplevel->resize(500, 400);
   toplevel->show();
 
   sts = load_volumelist();

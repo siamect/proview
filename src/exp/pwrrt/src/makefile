@@ -37,7 +37,7 @@ silent :
 $(exe_dir)/pwrrt.so : pwrrtmodule.c
 	@ if [ "$(PWRE_CONF_PYDEV)" ==  "1" ]; then\
 	    echo "Bulding Python c extension pwrrt";\
-	    python setup_pwrrt.py build --build-base $(bld_dir);\
+	    python setup_pwrrt.py -q build --build-base $(bld_dir);\
 	    if [ "$(pwre_hw)" == "hw_x86_64" ]; then \
 	      mv $(bld_dir)/lib.linux-x86_64-2.7/pwrrt.so $(pwr_exe); \
 	    elif [ "$(pwre_hw)" == "hw_x86" ]; then \

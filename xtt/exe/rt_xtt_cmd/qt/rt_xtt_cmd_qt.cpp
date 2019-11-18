@@ -134,9 +134,9 @@ int main(int argc, char* argv[])
 
   // Qt
   cmd = new XttCmdQt();
-  cmd->brow_widget->setMinimumSize(400, 700);
   cmd->brow_widget->setWindowTitle(fl(title));
   cmd->brow_widget->setAttribute(Qt::WA_DeleteOnClose);
+  cmd->brow_widget->resize(400, 700);
   cmd->brow_widget->show();
   if (hide) {
     cmd->brow_widget->setVisible(false);

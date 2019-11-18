@@ -129,7 +129,6 @@ WCrrQt::WCrrQt(void* xa_parent_ctx, ldh_tSesContext xa_ldhses,
   strncpy(title, namep, sizeof(title));
 
   toplevel = new WCrrQtWidget(this);
-  toplevel->setMinimumSize(600, 420);
   toplevel->setWindowTitle(convert_utf8(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -168,6 +167,7 @@ WCrrQt::WCrrQt(void* xa_parent_ctx, ldh_tSesContext xa_ldhses,
   add_expanding(vbox, brow_widget);
 
   toplevel->setLayout(vbox);
+  toplevel->resize(600, 420);
   toplevel->show();
 
   *xa_sts = XATT__SUCCESS;

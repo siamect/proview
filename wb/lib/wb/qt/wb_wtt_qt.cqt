@@ -1876,7 +1876,6 @@ WttQt::WttQt(void* wt_parent_ctx, const char* wt_name, const char* iconname,
 
   // Qt
   toplevel = new WttQtWidget(this);
-  toplevel->setMinimumSize(window_width, window_height);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -2217,6 +2216,7 @@ WttQt::WttQt(void* wt_parent_ctx, const char* wt_name, const char* iconname,
   vbox->addWidget(statusbar);
 
   toplevel->setLayout(vbox);
+  toplevel->resize(window_width, window_height);
   toplevel->show();
   realized = 1;
 

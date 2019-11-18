@@ -150,7 +150,6 @@ WUtedQt::WUtedQt(void* wu_parent_ctx, const char* wu_name,
           wu_editmode, wu_quit_cb, status)
 {
   toplevel = new WUtedQtWidget(this);
-  toplevel->setMinimumSize(800, 400);
   toplevel->setWindowTitle(fl("Wb Utilities"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -285,6 +284,7 @@ WUtedQt::WUtedQt(void* wu_parent_ctx, const char* wu_name,
   vbox->addWidget(statusbar);
 
   toplevel->setLayout(vbox);
+  toplevel->resize(800, 400);
   toplevel->show();
 
   batch_sts = UTED_BATCH_CURRSESS;

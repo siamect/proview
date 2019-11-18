@@ -459,7 +459,6 @@ WdaQt::WdaQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
   int sts;
 
   toplevel = new WdaQtWidget(this);
-  toplevel->setMinimumSize(700, 700);
   toplevel->setWindowTitle(fl("Spreadsheet Editor"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -546,6 +545,7 @@ WdaQt::WdaQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
 
   add_expanding(statusbar, cmd_scrolledinput);
 
+  toplevel->resize(700, 700);
   toplevel->show();
 
   msg_label->setVisible(false);

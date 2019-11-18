@@ -294,15 +294,11 @@ struct net_sSubSpec {
 %  net_sSubSpec		spec[1];		/* Specifications (dynamic) */
 %} net_sSubAdd;
 %
-%bool_t
-%xdr_net_sSubAdd();
+%bool_t xdr_net_sSubAdd(XDR *xdrs, net_sSubAdd *objp);
 %
 #elif defined RPC_XDR
 %
-%bool_t
-%xdr_net_sSubAdd(xdrs, objp)
-%	XDR *xdrs;
-%	net_sSubAdd *objp;
+%bool_t xdr_net_sSubAdd(XDR *xdrs, net_sSubAdd *objp)
 %{
 %	int count;
 %
@@ -336,15 +332,11 @@ struct net_sSubSpec {
 %  pwr_tSubid		sid[1] pwr_dPacked;	/* Subscription to remove */
 %} net_sSubRemove;
 %
-%bool_t
-%xdr_net_sSubRemove();
+%bool_t xdr_net_sSubRemove(XDR *xdrs, net_sSubRemove *objp);
 %
 #elif defined RPC_XDR
 %
-%bool_t
-%xdr_net_sSubRemove(xdrs, objp)
-%	XDR *xdrs;
-%	net_sSubRemove *objp;
+%bool_t xdr_net_sSubRemove(XDR *xdrs, net_sSubRemove *objp)
 %{
 %	int count;
 %
@@ -376,15 +368,11 @@ struct net_sSubSpec {
 %  pwr_tUInt32		size 	pwr_dPacked;	/* Size of data */
 %  char			data[1];		/* Dynamic */
 %} net_sSubData;
-%bool_t xdr_net_sSubData();
+%bool_t xdr_net_sSubData(XDR *xdrs, net_sSubData *objp, int *offset);
 %
 #elif defined RPC_XDR
 %
-%bool_t
-%xdr_net_sSubData(xdrs, objp, offset)
-%	XDR *xdrs;
-%	net_sSubData *objp;
-%	int *offset;
+%bool_t xdr_net_sSubData(XDR *xdrs, net_sSubData *objp, int *offset)
 %{
 %	int size;
 %
@@ -423,14 +411,11 @@ struct net_sSubSpec {
 %  net_sSubData		subdata[1];			/* Dynamic */
 %} net_sSubMessage;
 %
-%bool_t xdr_net_sSubMessage();
+%bool_t xdr_net_sSubMessage(XDR *xdrs, net_sSubMessage *objp);
 %
 #elif defined RPC_XDR
 %
-%bool_t
-%xdr_net_sSubMessage(xdrs, objp)
-%	XDR *xdrs;
-%	net_sSubMessage *objp;
+%bool_t xdr_net_sSubMessage(XDR *xdrs, net_sSubMessage *objp)
 %{
 %	int count;
 %	int offset;
@@ -472,14 +457,11 @@ struct net_sSanEntry {
 %  net_sSanEntry	sane[1] pwr_dPacked;
 %} net_sSanAdd;
 %
-%bool_t xdr_net_sSanAdd();
+%bool_t xdr_net_sSanAdd(XDR *xdrs, net_sSanAdd *objp);
 %
 #elif defined RPC_XDR
 %
-%bool_t
-%xdr_net_sSanAdd(xdrs, objp)
-%	XDR *xdrs;
-%	net_sSanAdd *objp;
+%bool_t xdr_net_sSanAdd(XDR *xdrs, net_sSanAdd *objp)
 %{
 %	int count;
 %
@@ -516,13 +498,10 @@ struct net_sSanEntry {
 %  pwr_tSubid		sid[1] 	pwr_dPacked;		/* Subscriptions to remove (dynamic) */
 %} net_sSanRemove;
 %
-%bool_t xdr_net_sSanRemove();
+%bool_t xdr_net_sSanRemove(XDR *xdrs, net_sSanRemove *objp);
 %
 #elif defined RPC_XDR
-%bool_t
-%xdr_net_sSanRemove(xdrs, objp)
-%	XDR *xdrs;
-%	net_sSanRemove *objp;
+%bool_t xdr_net_sSanRemove(XDR *xdrs, net_sSanRemove *objp)
 %{
 %	int count;
 %
@@ -571,12 +550,9 @@ struct net_sSanData {
 %  net_sSanData		data[1]	pwr_dPacked;	/* Dynamic */
 %} net_sSanUpdate;
 %
-%bool_t xdr_net_sSanUpdate();
+%bool_t xdr_net_sSanUpdate(XDR *xdrs, net_sSanUpdate *objp);
 #elif defined RPC_XDR
-%bool_t
-%xdr_net_sSanUpdate(xdrs, objp)
-%	XDR *xdrs;
-%	net_sSanUpdate *objp;
+%bool_t xdr_net_sSanUpdate(XDR *xdrs, net_sSanUpdate *objp)
 %{
 %	int count;
 %
@@ -611,12 +587,9 @@ struct net_sSanData {
 %  char			name[1];		/* name buffer */
 %} net_sNameToObject;
 %
-%bool_t xdr_net_sNameToObject();
+%bool_t xdr_net_sNameToObject(XDR *xdrs, net_sNameToObject *objp);
 #elif defined RPC_XDR
-%bool_t
-%xdr_net_sNameToObject(xdrs, objp)
-%	XDR *xdrs;
-%	net_sNameToObject *objp;
+%bool_t xdr_net_sNameToObject(XDR *xdrs, net_sNameToObject *objp)
 %{
 %	int len;
 %
@@ -732,14 +705,11 @@ struct net_sGobject {
 %  net_sGobject		g[1]	pwr_dPacked;	/* Array of object headers */
 %} net_sObjectR;
 %
-%bool_t xdr_net_sObjectR();
+%bool_t xdr_net_sObjectR(XDR *xdrs, net_sObjectR *objp);
 %
 #elif defined RPC_XDR
 %
-%bool_t
-%xdr_net_sObjectR(xdrs, objp)
-%	XDR *xdrs;
-%	net_sObjectR *objp;
+%bool_t xdr_net_sObjectR(XDR *xdrs, net_sObjectR *objp)
 %{
 %	int count;
 %
@@ -783,14 +753,11 @@ struct net_sGetObjectInfo {
 %  char			info[1];		/* Data requested.  */
 %} net_sGetObjectInfoR;
 %
-%bool_t xdr_net_sGetObjectInfoR();
+%bool_t xdr_net_sGetObjectInfoR(XDR *xdrs, net_sGetObjectInfoR *objp);
 %
 #elif defined RPC_XDR
 %
-%bool_t
-%xdr_net_sGetObjectInfoR(xdrs, objp)
-%	XDR *xdrs;
-%	net_sGetObjectInfoR *objp;
+%bool_t xdr_net_sGetObjectInfoR(XDR *xdrs, net_sGetObjectInfoR *objp)
 %{
 %	int size;
 %
@@ -828,14 +795,11 @@ struct net_sGetObjectInfo {
 %  char			info[1];		/* Data to write (size bytes) */
 %} net_sSetObjectInfo;
 %
-%bool_t xdr_net_sSetObjectInfo();
+%bool_t xdr_net_sSetObjectInfo(XDR *xdrs, net_sSetObjectInfo *objp);
 %
 #elif defined RPC_XDR
 %
-%bool_t
-%xdr_net_sSetObjectInfo(xdrs, objp)
-%	XDR *xdrs;
-%	net_sSetObjectInfo *objp;
+%bool_t xdr_net_sSetObjectInfo(XDR *xdrs, net_sSetObjectInfo *objp)
 %{
 %	int size;
 %
@@ -954,7 +918,7 @@ struct net_sGvolume7 {
 %  net_sGvolume		g[1]	pwr_dPacked;	/* Array of volume headers */
 %} net_sVolumes;
 %
-%bool_t xdr_net_sVolumes();
+%bool_t xdr_net_sVolumes(XDR *xdrs, net_sVolumes *objp);
 %
 %typedef struct {
 %  net_sMessage		hdr	pwr_dPacked;	/* Header */
@@ -963,14 +927,11 @@ struct net_sGvolume7 {
 %  net_sGvolume7	g[1]	pwr_dPacked;	/* Array of volume headers */
 %} net_sVolumes7;
 %
-%bool_t xdr_net_sVolumes7();
+%bool_t xdr_net_sVolumes7(XDR *xdrs, net_sVolumes7 *objp);
 %
 #elif defined RPC_XDR
 %
-%bool_t
-%xdr_net_sVolumes(xdrs, objp)
-%	XDR *xdrs;
-%	net_sVolumes *objp;
+%bool_t xdr_net_sVolumes(XDR *xdrs, net_sVolumes *objp)
 %{
 %	int count;
 %
@@ -995,10 +956,7 @@ struct net_sGvolume7 {
 %}
 %
 %
-%bool_t
-%xdr_net_sVolumes7(xdrs, objp)
-%	XDR *xdrs;
-%	net_sVolumes *objp;
+%bool_t xdr_net_sVolumes7(XDR *xdrs, net_sVolumes7 *objp)
 %{
 %	int count;
 %
@@ -1035,14 +993,11 @@ struct net_sMount {
 %  net_sMount		mount[1] pwr_dPacked;/* Array of mount requests */
 %} net_sVolumesR;
 %
-%bool_t xdr_net_sVolumesR();
+%bool_t xdr_net_sVolumesR(XDR *xdrs, net_sVolumesR *objp);
 %
 #elif defined RPC_XDR
 %
-%bool_t
-%xdr_net_sVolumesR(xdrs, objp)
-%	XDR *xdrs;
-%	net_sVolumesR *objp;
+%bool_t xdr_net_sVolumesR(XDR *xdrs, net_sVolumesR *objp)
 %{
 %	int count;
 %

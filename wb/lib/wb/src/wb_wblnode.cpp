@@ -2206,6 +2206,8 @@ int wb_wblnode::attrStringToValue(int type_id, char* value_str,
       memcpy(buffer_ptr, &pwr_cAtMin, sizeof(pwr_tTime));
     else if (streq(value_str, "ATTIME_MAX"))
       memcpy(buffer_ptr, &pwr_cAtMax, sizeof(pwr_tTime));
+    else if (streq(value_str, "NotATime"))
+      memcpy(buffer_ptr, &pwr_cNotATime, sizeof(pwr_tTime));
     else {
       sts = time_AsciiToA(value_str, &time);
       if (EVEN(sts))
@@ -2221,6 +2223,8 @@ int wb_wblnode::attrStringToValue(int type_id, char* value_str,
       memcpy(buffer_ptr, &pwr_cDtMin, sizeof(pwr_tDeltaTime));
     else if (streq(value_str, "DTTIME_MAX"))
       memcpy(buffer_ptr, &pwr_cDtMax, sizeof(pwr_tDeltaTime));
+    else if (streq(value_str, "NotADeltaTime"))
+      memcpy(buffer_ptr, &pwr_cNotADeltaTime, sizeof(pwr_tDeltaTime));
     else {
       sts = time_AsciiToD(value_str, &deltatime);
       if (EVEN(sts))

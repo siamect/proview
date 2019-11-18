@@ -57,6 +57,7 @@
 #include <QDesktopWidget>
 #include <QInputDialog>
 #include <QMenuBar>
+#include <QTimer>
 #include <QVBoxLayout>
 
 void XttQt::hotkey_Command(char* arg, void* userdata)
@@ -595,7 +596,7 @@ XttQt::XttQt(int argc, char* argv[], int* return_sts)
 
   // Qt
   toplevel = new XttQtWidget(this);
-  toplevel->setMinimumSize(window_width, window_height);
+  toplevel->resize(window_width, window_height);
   toplevel->setWindowTitle(fl(title));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -774,11 +775,12 @@ XttQt::XttQt(int argc, char* argv[], int* return_sts)
       ((CoWowQt*)wow)->SetParent(((CoLoginQt*)xnav->cologin)->toplevel);
     }
 
-    wow->DisplayWarranty();
-
     if (xnav->cologin) {
       ((CoWowQt*)wow)->SetParent(toplevel);
     }
+
+    // Use timeout to get in on the top of the display
+    QTimer::singleShot(100, ((CoWowQt*)wow)->object, SLOT(DisplayWarranty()));
   }
 
   timerid = wow->timer_new();

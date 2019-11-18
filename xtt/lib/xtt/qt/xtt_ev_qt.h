@@ -108,6 +108,7 @@ public slots:
   void ala_activate_print();
   void blk_activate_print();
   void eve_activate_export();
+  void eve_activate_analyse();
   void eve_activate_ack_last();
   void ala_activate_ack_last();
   void ala_activate_ack_all();

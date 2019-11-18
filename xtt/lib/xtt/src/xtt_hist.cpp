@@ -154,6 +154,12 @@ void Hist::activate_export()
       export_file_selected_cb, wow_eFileSelType_Tmp, wow_eFileSelAction_Save);
 }
 
+void Hist::activate_analyse()
+{
+  export_events("$pwrp_tmp/pwr_eventlog.dat");
+  system("sev_eva.py -f $pwrp_tmp/pwr_eventlog.dat &");
+}
+
 void Hist::export_file_selected_cb(void *ctx, char *filename, wow_eFileSelType file_type)
 {
   ((Hist *)ctx)->export_events(filename);  
@@ -175,7 +181,7 @@ int Hist::export_events(const char *filename)
     return 0;
   fprintf(fp, "Time,Type,Prio,Text,Name,SupObject,Id,Status\n");
   brow_GetObjectList(hist->brow->ctx, &list, &list_cnt);
-  for (int i = 0; i < list_cnt; i++) {
+  for (int i = list_cnt - 1; i >= 0; i--) {
     brow_GetUserData(list[i], (void **)&item);
     time_AtoAscii(&item->time, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
     strcpy(supobjectstr, cdh_ObjidToString(item->supobject.Objid, 1));

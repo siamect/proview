@@ -151,6 +151,22 @@ sub configure()
   system($ENV{"pwre_bin"} . "/pwre_configure.sh"." ".$_[0]." ".$_[1]." ".$_[2]);
 }
 
+sub set_flavour # args: flavour
+{
+  if ($_[0] eq "qt") {
+    $ENV{pwre_conf_qt} = "1";
+  }
+  else {
+    delete $ENV{"pwre_conf_qt"};
+  }
+  if ($_[0] eq "gtk") {
+    $ENV{"pwre_conf_gtk"} = "1";
+  }
+  else {
+    delete $ENV{"pwre_conf_gtk"};
+  }
+}
+
 #
 # build()
 #
@@ -176,13 +192,16 @@ sub build() # args: branch, subbranch, flavour, phase
     shift(@_);
   }
 
+  my($flavour);
   if ($_[0] eq "all") {
-    build_all_modules();
+    $flavour = $_[1];
+    build_all_modules($flavour);
     return;
   }
 
   if ($_[0] eq "module" || $_[0] eq "") {
-    build_module();
+    $flavour = $_[1];
+    build_module($flavour);
     return;
   }
 
@@ -207,6 +226,7 @@ sub build() # args: branch, subbranch, flavour, phase
     $flavour = $_[0];
     shift(@_);
   }
+  set_flavour($flavour);
 
   printf("--\n");
   printf("-- Build\n");
@@ -597,7 +617,13 @@ sub import()
 #
 sub build_all_modules()
 {
-  my $flavour = $_[0];
+  my $flavour;
+  if ($_[0] eq "") {
+    $flavour = "qt";
+  } else {
+    $flavour = $_[0];
+  }
+  set_flavour($flavour);
 
   build_kernel($flavour);
   _module("nmps");
@@ -814,7 +840,7 @@ sub method_build()
     _module("rt");
     $ENV{"export_type"} = "exp";
      my($exe_dir) = $ENV{"pwr_exe"};
-    system("rm $exe_dir/rt_io_comm");
+    system("if [ -e $exe_dir/rt_io_comm ]; then rm $exe_dir/rt_io_comm; fi");
     _build("exe", "rt_io_comm", "src", "all");
     merge();
   }
@@ -827,7 +853,7 @@ sub method_build()
     _module("wb");
     $ENV{"export_type"} = "exp";
     my($exe_dir) = $ENV{"pwr_exe"};
-    system("rm $exe_dir/wb_$flavour");
+    system("if [ -e $exe_dir/wb_$flavour ]; then rm $exe_dir/wb_$flavour; fi");
     _build("exe", "wb", $flavour, "all");
     _build("exe", "wb", "src", "all");
      merge();
@@ -838,7 +864,7 @@ sub method_build()
     _module("xtt");
     $ENV{"export_type"} = "exp";
     my($exe_dir) = $ENV{"pwr_exe"};
-    system("rm $exe_dir/rt_xtt_$flavour");
+    system("if [ -e $exe_dir/rt_xtt_$flavour ]; then rm $exe_dir/rt_xtt_$flavour; fi");
     _build("exe", "rt_xtt", $flavour, "all");
     _build("exe", "rt_xtt", "src", "all");
     merge();
@@ -918,13 +944,12 @@ sub build_module()
     $lib = 1;
     $exe = 1;
   }
-  if ($_[0] eq "motif" || $_[1] eq "motif" || $_[2] eq "motif" || $_[3] eq "motif") {
-    $flavour = "motif";
-  } elsif ($_[0] eq "qt" || $_[1] eq "qt" || $_[2] eq "qt" || $_[3] eq "qt") {
-    $flavour = "qt";
-  } else {
+  if ($_[0] eq "gtk" || $_[1] eq "gtk" || $_[2] eq "gtk" || $_[3] eq "gtk") {
     $flavour = "gtk";
+  } else {
+    $flavour = "qt";
   }
+  set_flavour($flavour);
 
   if (!defined($ENV{"pwre_env"})) {
     print("++ Environment is not initialized!\n");
@@ -1021,6 +1046,8 @@ sub build_module()
       _build("exe", "pwr_rtmon", "src", "all");
       _build("exe", "pwr_rtmon", "$flavour", "all");
       _build("exp", "ge", "src", "all");
+      _build("exp", "py", "src", "all");
+      _build("exp", "*", "src", "exe");
       _build("mmi", "*", "src", "copy");
       _build("mmi", "*", $flavour, "copy");
       _build("wbl", "pwrs", "src", "lib");
@@ -1098,6 +1125,7 @@ sub build_module()
       _build("wbl", "*", "src", "exe");
       _build("exe", "*", "src", "all");
       _build("exe", "*", $flavour, "all");
+      _build("exp", "*", "src", "exe");
       _build("doc", "dsh", "src", "copy");
       _build("doc", "orm", "src", "copy");
     }

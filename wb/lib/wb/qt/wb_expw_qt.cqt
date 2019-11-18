@@ -51,7 +51,6 @@ WbExpWQt::WbExpWQt(void* expw_parent_ctx, ldh_tSession expw_ldhses,
         status)
 {
   toplevel = new WbExpWQtWidget(this);
-  toplevel->setMinimumSize(1100, 600);
   toplevel->setWindowTitle(fl(expw_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -112,6 +111,7 @@ WbExpWQt::WbExpWQt(void* expw_parent_ctx, ldh_tSession expw_ldhses,
   add_expanding(form, nav_widget);
 
   toplevel->setLayout(form);
+  toplevel->resize(1100, 600);
   toplevel->show();
 
   wow = new CoWowQt(toplevel);

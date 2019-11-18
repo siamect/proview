@@ -833,13 +833,13 @@ void GlowCtx::paste_execute()
 
 void GlowCtx::nav_zoom()
 {
+  if (nodraw)
+    return;
+
   if (ctx_type == glow_eCtxType_Curve) {
     ((CurveCtx*)this)->nav_zoom();
     return;
   }
-
-  if (nodraw)
-    return;
 
   if (a.size() > 0) {
     get_borders();

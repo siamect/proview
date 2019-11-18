@@ -59,6 +59,7 @@
 #include <QCloseEvent>
 #include <QDesktopWidget>
 #include <QPushButton>
+#include <QTimer>
 
 #define OP_HEIGHT_MIN 90
 #define OP_HEIGHT_INC 20
@@ -155,7 +156,6 @@ OpQt::OpQt(void* op_parent_ctx, char* opplace, pwr_tStatus* status)
   memset(appl_buttons, 0, sizeof(appl_buttons));
 
   toplevel = new OpQtWidget(this);
-  toplevel->setMinimumSize(1100, OP_HEIGHT_MIN + OP_HEIGHT_STATUSBAR);
   toplevel->setWindowFlags(Qt::CustomizeWindowHint);
 
   CoWowQt::SetWindowIcon(toplevel);
@@ -450,6 +450,7 @@ OpQt::OpQt(void* op_parent_ctx, char* opplace, pwr_tStatus* status)
 
   toplevel->setLayout(vbox_conf);
   toplevel->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
+  toplevel->resize(1100, OP_HEIGHT_MIN + OP_HEIGHT_STATUSBAR);
   toplevel->show();
 
   if (start_jop) {
@@ -475,7 +476,8 @@ OpQt::OpQt(void* op_parent_ctx, char* opplace, pwr_tStatus* status)
 
   wow = new CoWowQt(toplevel);
   sup_timerid = wow->timer_new();
-  wow->DisplayWarranty();
+  // Use timeout to get in on the top of the display
+  QTimer::singleShot(100, ((CoWowQt*)wow)->object, SLOT(DisplayWarranty()));
 
   if (!(layout_mask & pwr_mOpWindLayoutMask_HideStatusBar)) {
     sup_scan(this);

@@ -257,13 +257,10 @@ struct mh_sDSupInfo {
 %};
 %
 %typedef struct mh_uSupInfo mh_uSupInfo;
-%bool_t xdr_mh_uSupInfo();
+%bool_t xdr_mh_uSupInfo(XDR *xdrs, mh_uSupInfo *objp);
 %
 #elif defined RPC_XDR
-%bool_t
-%xdr_mh_uSupInfo(xdrs, objp)
-%	XDR *xdrs;
-%	mh_uSupInfo *objp;
+%bool_t xdr_mh_uSupInfo(XDR *xdrs, mh_uSupInfo *objp)
 %{
 %       int SupType; 
 %
@@ -410,14 +407,11 @@ struct mh_sOutunitAlarmReq {
 %};
 %typedef struct mh_sOutunitInfo mh_sOutunitInfo;
 %
-%bool_t xdr_mh_sOutunitInfo();
+%bool_t xdr_mh_sOutunitInfo(XDR *xdrs, mh_sOutunitInfo *op);
 %
 #elif defined RPC_XDR
 %
-%bool_t
-%xdr_mh_sOutunitInfo(xdrs, op)
-%	XDR *xdrs;
-%	mh_sOutunitInfo *op;
+%bool_t xdr_mh_sOutunitInfo(XDR *xdrs, mh_sOutunitInfo *op)
 %{
 %	int selSize;
 %	int i;
@@ -492,15 +486,11 @@ struct mh_sAlarmSts {
 %  mh_sAlarmSts         Sts[1];		/* Specifications (dynamic) */
 %} mh_sAlarmStatus;
 %
-%bool_t
-%xdr_mh_sAlarmStatus();
+%bool_t xdr_mh_sAlarmStatus(XDR *xdrs, mh_sAlarmStatus *objp);
 %
 #elif defined RPC_XDR
 %
-%bool_t
-%xdr_mh_sAlarmStatus(xdrs, objp)
-%	XDR *xdrs;
-%	mh_sAlarmStatus *objp;
+%bool_t xdr_mh_sAlarmStatus(XDR *xdrs, mh_sAlarmStatus *objp)
 %{
 %	int count;
 %

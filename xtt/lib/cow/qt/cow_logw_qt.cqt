@@ -49,7 +49,6 @@ CoLogWQt::CoLogWQt(void* logw_parent_ctx, const char* logw_name,
     : CoLogW(logw_parent_ctx, logw_name, l_show_item, status)
 {
   toplevel = new CoLogWQtWidget(this);
-  toplevel->setMinimumSize(800, 600);
   toplevel->setWindowTitle(fl(logw_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -82,6 +81,7 @@ CoLogWQt::CoLogWQt(void* logw_parent_ctx, const char* logw_name,
   add_expanding(form, nav_widget);
 
   toplevel->setLayout(form);
+  toplevel->resize(800, 600);
   toplevel->show();
 
   wow = new CoWowQt(toplevel);

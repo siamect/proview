@@ -1300,8 +1300,6 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   }
 
   toplevel = new GeQtWidget(this);
-
-  toplevel->setMinimumSize(window_width, window_height);
   toplevel->setWindowTitle(fl(title));
 
   CoWowQt::SetWindowIcon(toplevel);
@@ -1960,6 +1958,7 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   vbox->addWidget(statusbar);
 
   toplevel->setLayout(vbox);
+  toplevel->resize(window_width, window_height);
   toplevel->show();
 
   tools_textfont->setFixedHeight(tools_textsize->height());

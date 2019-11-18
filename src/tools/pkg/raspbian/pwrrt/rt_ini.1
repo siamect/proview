@@ -1,0 +1,98 @@
+.TH rt_ini "1" "April 2005" "Proview" "Proview Manual"
+.SH NAME
+rt_ini - start, restart or stop the Proview runtime environment
+.SH SYNOPSIS
+.B rt_ini 
+[\fIOPTION\fR]
+.SH DESCRIPTION
+Startup process for the Proview runtime environment.
+.SH OPTIONS
+.HP
+\fB\-a\fR
+.IP
+Application file. The application file defines the application processes for
+the node. The default name is $pwrp_load/ld_appl_'node'_'busid'.txt, where node is
+the nodename and busid is the QCOM bus id, for example
+
+$pwrp_load/ld_appl_vwxn1t_507.txt
+
+.HP
+\fB\-b\fR
+.IP
+Boot file. The default bootfile is $pwrp_load/ld_boot_'node'_'busid'.txt, where node
+is the nodename and busid the QCOM bus id, for example
+
+$pwrp_load/ld_appl_vwxn1t_0507.txt
+
+.HP
+\fB\-c\fR
+.IP
+Console file. The output of log messages to the console device can be redirected with
+the -c option.
+
+.HP
+\fB\-d\fR
+.IP
+Load file directory. Default is $pwrp_load.
+.HP
+\fB\-e\fR
+.IP
+Ignore errors.
+.HP
+\fB\-f\fR
+.IP
+Ignore fatal errors.
+.HP
+\fB\-h\fR
+.IP
+Print help.
+.HP
+\fB\-i\fR
+.IP
+Interactive. Print error messages to terminal.
+.HP
+\fB\-n\fR
+.IP
+Node name.
+.HP
+\fB\-p\fR
+.IP
+Plc file. Default is $pwrp_exe/plc_'node'_'busid' where node id the node name and busid
+the QCOM bus id.
+.HP
+\fB\-q\fR
+.IP
+QCOM bus id.
+.HP
+\fB\-r\fR
+.IP
+Soft restart.
+.HP
+\fB\-s\fR
+.IP
+Stop Proview.
+.HP
+\fB\-v\fR
+.IP
+Verbose.
+.HP
+\fB\-w\fR
+.IP
+Ignore warnings.
+.HP
+\fB\-A\fR
+.IP
+Alias file. Default is $pwrp_load/pwrp_alias.dat
+.HP
+\fB\-?\fR
+.IP
+Print help.
+
+.SH FILES
+/etc/pwrp_profile
+
+The Proview system wide configuration file.
+
+.SH "SEE ALSO"
+.BR pwr(1)
+

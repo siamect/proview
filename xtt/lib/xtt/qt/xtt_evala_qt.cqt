@@ -57,17 +57,10 @@ EvAlaQt::EvAlaQt(void* ev_parent_ctx, char* ala_name, pwr_tObjid ev_user,
     : EvAla(ev_parent_ctx, ala_name, ev_user, ev_eventname_seg, ev_width,
             ev_height, ev_x, ev_y, ev_view, ev_options, status)
 {
-  pwr_tStatus sts;
-  pwr_sClass_OpPlace* opp;
-  int ala_width = 700;
-  int ala_height = 300;
+  int ala_width = (ev_width != 0) ? ev_width : 700;
+  int ala_height = (ev_height != 0) ? ev_height : 300;
 
   *status = 1;
-
-  if (ev_width != 0 && ev_height != 0) {
-    ala_width = ev_width;
-    ala_height = ev_height;
-  }
 
   // Check user object
   if (cdh_ObjidIsNull(user)) {
@@ -75,7 +68,8 @@ EvAlaQt::EvAlaQt(void* ev_parent_ctx, char* ala_name, pwr_tObjid ev_user,
     return;
   }
 
-  sts = gdh_ObjidToPointer(user, (pwr_tAddress*)&opp);
+  pwr_sClass_OpPlace* opp;
+  pwr_tStatus sts = gdh_ObjidToPointer(user, (pwr_tAddress*)&opp);
   if (EVEN(sts)) {
     *status = XNAV__NOUSER;
     return;
@@ -87,7 +81,6 @@ EvAlaQt::EvAlaQt(void* ev_parent_ctx, char* ala_name, pwr_tObjid ev_user,
 
   toplevel = new EvAlaQtWidget(this);
   if (!(options & ev_mAlaOptions_Embedded)) {
-    toplevel->setMinimumSize(ala_width, ala_height);
     toplevel->setWindowTitle(translate_utf8(ala_name));
     toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -219,13 +212,14 @@ EvAlaQt::EvAlaQt(void* ev_parent_ctx, char* ala_name, pwr_tObjid ev_user,
   ala_sup_methodtoolbar->set_sensitive();
 
   if (!(options & ev_mAlaOptions_Embedded)) {
+    toplevel->resize(ala_width, ala_height);
     toplevel->show();
     if (!(EvAla::x == 0 && EvAla::y == 0)) {
       // Set position
       toplevel->move(EvAla::x, EvAla::y);
     }
   } else {
-    ala_widget->setMinimumSize(ala_width, ala_height);
+    ala_widget->resize(ala_width, ala_height);
   }
 
   ala_displayed = 1;

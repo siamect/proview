@@ -89,12 +89,6 @@ EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
 {
   pwr_tStatus sts;
   pwr_sClass_OpPlace* opp;
-  const int eve_width = 700;
-  const int eve_height = 600;
-  const int ala_width = 700;
-  const int ala_height = 300;
-  const int blk_width = 700;
-  const int blk_height = 300;
 
   *status = 1;
 
@@ -120,7 +114,6 @@ EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
   {
     parent_wid_eve = new CallbackWidget(
         object, &EvQtObject::eve_activate_exit, &EvQtObject::eve_action_inputfocus);
-    parent_wid_eve->setMinimumSize(eve_width, eve_height);
     parent_wid_eve->setWindowTitle(translate_utf8(eve_name));
     // Do not set the DeleteOnClose attribute.
 
@@ -136,6 +129,7 @@ EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
     addMenuItem(object, file, "&Print", SLOT(eve_activate_print()), "",
         "document-print");
     addMenuItem(object, file, "&Export", SLOT(eve_activate_export()));
+    addMenuItem(object, file, "&Analyse", SLOT(eve_activate_analyse()));
     addMenuItem(
         object, file, "&Close", SLOT(eve_activate_exit()), "CTRL+W", "window-close");
 
@@ -225,7 +219,6 @@ EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
   {
     parent_wid_ala = new CallbackWidget(
         object, &EvQtObject::ala_activate_exit, &EvQtObject::ala_action_inputfocus);
-    parent_wid_ala->setMinimumSize(ala_width, ala_height);
     parent_wid_ala->setWindowTitle(translate_utf8(ala_name));
     // Do not set the DeleteOnClose attribute.
 
@@ -362,7 +355,6 @@ EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
   {
     parent_wid_blk = new CallbackWidget(
         object, &EvQtObject::blk_activate_exit, &EvQtObject::blk_action_inputfocus);
-    parent_wid_blk->setMinimumSize(blk_width, blk_height);
     parent_wid_blk->setWindowTitle(translate_utf8(blk_name));
     // Do not set the DeleteOnClose attribute.
 
@@ -420,12 +412,15 @@ EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
   // Store this for the mh callbacks
   ev = this;
 
+  parent_wid_eve->resize(700, 600);
   parent_wid_eve->show();
   parent_wid_eve->setVisible(display_eve);
 
+  parent_wid_ala->resize(700, 300);
   parent_wid_ala->show();
   parent_wid_ala->setVisible(display_ala);
 
+  parent_wid_blk->resize(700, 300);
   parent_wid_blk->show();
   parent_wid_blk->setVisible(display_blk);
 
@@ -661,6 +656,11 @@ void EvQtObject::blk_activate_print()
 void EvQtObject::eve_activate_export()
 {
   ev->eve_activate_export();
+}
+
+void EvQtObject::eve_activate_analyse()
+{
+  ev->eve_activate_analyse();
 }
 
 void EvQtObject::eve_activate_ack_last()

@@ -68,6 +68,7 @@
 #include <QPrinter>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QTime>
 #include <QTimer>
 #include <QVBoxLayout>
 
@@ -265,6 +266,8 @@ CoWowListWidgetQt::CoWowListWidgetQt(QWidget* parent, const char* title,
   list->resizeColumnToContents(0);
   show();
 
+  pop(this);
+
   list->setFocus();
 }
 
@@ -388,6 +391,10 @@ CoWowWarrantQt::CoWowWarrantQt(CoWowQtObject* parent)
 
 void CoWowQtObject::DisplayWarranty()
 {
+  // Display only once
+  if (wow->HideWarranty()) {
+    return;
+  }
   new CoWowWarrantQt(this);
 }
 
@@ -607,6 +614,7 @@ void CoWowEntryQt::keyPressEvent(QKeyEvent* event)
   }
   case Qt::Key_Escape:
     if (m_hide_on_esc) {
+      emit editingFinished();
       clearFocus();
       hide();
     }
@@ -620,6 +628,10 @@ void CoWowEntryQt::keyPressEvent(QKeyEvent* event)
     clearFocus();
     hide();
   }
+}
+
+void CoWowEntryQt::focusOutEvent(QFocusEvent *event) {
+  event->ignore();
 }
 
 //
@@ -887,13 +899,12 @@ pwr_tStatus CoWowQt::DeleteMenuItem(const char* name, void* menu)
   return 1;
 }
 
-void CoWowQtObject::wait_cb()
-{
-}
-
 void CoWowQt::Wait(float time)
 {
-  initOneShotTimer(m_wait_timerid, SLOT(wait_cb()), int(time * 1000));
+  QTime start = QTime::currentTime().addMSecs(int(time * 1000));
+  while (QTime::currentTime() < start) {
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+  }
 }
 
 void CoWowQt::update_title(QWidget* w, int editmode)
@@ -912,7 +923,7 @@ void CoWowQt::update_title(QWidget* w, int editmode)
 
 CoWowQt::CoWowQt(QWidget* parent)
 {
-  object = new CoWowQtObject(parent);
+  object = new CoWowQtObject(parent, this);
   m_wait_timerid = new QTimer(object);
 }
 

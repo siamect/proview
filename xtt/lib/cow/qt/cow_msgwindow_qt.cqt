@@ -57,7 +57,6 @@ MsgWindowQt::MsgWindowQt(void* msg_parent_ctx, const char* msg_name,
     pwr_tStatus* status) : MsgWindow(msg_parent_ctx, msg_name, status)
 {
   toplevel = new MsgWindowQtWidget(this);
-  toplevel->setMinimumSize(800, 600);
   toplevel->setWindowTitle(translate_utf8(msg_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -92,6 +91,7 @@ MsgWindowQt::MsgWindowQt(void* msg_parent_ctx, const char* msg_name,
   add_expanding(form, nav_widget);
 
   toplevel->setLayout(form);
+  toplevel->resize(800, 600);
   toplevel->show(); // The MsgList must be realized.
   toplevel->hide();
 

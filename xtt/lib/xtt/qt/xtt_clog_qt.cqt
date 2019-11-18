@@ -66,7 +66,6 @@ CLogQt::CLogQt(void* clog_parent_ctx, const char* clog_name,
     pwr_tStatus* status) : CLog(clog_parent_ctx, clog_name, status)
 {
   toplevel = new CLogQtWidget(this);
-  toplevel->setMinimumSize(1000, 800);
   toplevel->setWindowTitle(translate_utf8(clog_name));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -112,6 +111,7 @@ CLogQt::CLogQt(void* clog_parent_ctx, const char* clog_name,
   add_expanding(vbox, clognav_widget);
 
   toplevel->setLayout(vbox);
+  toplevel->resize(1000, 800);
   toplevel->show();
 
   wow = new CoWowQt(toplevel);

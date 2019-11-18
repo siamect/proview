@@ -175,7 +175,6 @@ WPkgQt::WPkgQt(void* wa_parent_ctx) : WPkg(wa_parent_ctx)
   int sts;
 
   toplevel = new WPkgQtWidget(this);
-  toplevel->setMinimumSize(600, 600);
   toplevel->setWindowTitle(fl("Distributor"));
   toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -248,6 +247,7 @@ WPkgQt::WPkgQt(void* wa_parent_ctx) : WPkg(wa_parent_ctx)
   vbox->addWidget(statusbar);
 
   toplevel->setLayout(vbox);
+  toplevel->resize(600, 600);
   toplevel->show();
 
   wow = new CoWowQt(toplevel);
