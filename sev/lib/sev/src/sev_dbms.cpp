@@ -59,6 +59,9 @@
 
 #include "sev_dbms.h"
 
+static unsigned int mysql_timeout = 315360000;
+static bool mysql_enable_reconnect = true;
+
 char sev_dbms_env::m_systemName[40];
 
 sev_dbms_env::sev_dbms_env(const char* v_fileName)
@@ -276,12 +279,16 @@ int sev_dbms_env::create(const char* v_fileName, const char* v_host,
 
 MYSQL* sev_dbms_env::createDb(void)
 {
+
   if (mysql_library_init(0, NULL, NULL)) {
     printf("** Cannot init mysql client library\n");
     return 0;
   }
 
   m_con = mysql_init(NULL);
+
+  mysql_options(m_con, MYSQL_OPT_CONNECT_TIMEOUT, &mysql_timeout);
+  mysql_options(m_con, MYSQL_OPT_RECONNECT, &mysql_enable_reconnect);
 
   MYSQL* con = mysql_real_connect(
       m_con, host(), user(), passwd(), 0, port(), socket(), 0);
@@ -679,6 +686,9 @@ MYSQL* sev_dbms_env::openDb(unsigned int* sts)
 
   m_con = mysql_init(NULL);
 
+  mysql_options(m_con, MYSQL_OPT_CONNECT_TIMEOUT, &mysql_timeout);
+  mysql_options(m_con, MYSQL_OPT_RECONNECT, &mysql_enable_reconnect);
+
   MYSQL* con = mysql_real_connect(
       m_con, host(), user(), passwd(), dbName(), port(), socket(), 0);
   if (con == 0) {
@@ -692,6 +702,9 @@ MYSQL* sev_dbms_env::openDb(unsigned int* sts)
 MYSQL* sev_dbms_env::open_thread(unsigned int* sts)
 {
   MYSQL* con = mysql_init(NULL);
+
+  mysql_options(con, MYSQL_OPT_CONNECT_TIMEOUT, &mysql_timeout);
+  mysql_options(con, MYSQL_OPT_RECONNECT, &mysql_enable_reconnect);
 
   con = mysql_real_connect(
       con, host(), user(), passwd(), dbName(), port(), socket(), 0);
@@ -1011,7 +1024,7 @@ int sev_dbms::delete_table(pwr_tStatus* sts, char* tablename)
 int sev_dbms::create_event_table(
     pwr_tStatus* sts, char* tablename, pwr_tMask options)
 {
-  char query[540];
+  char query[580];
   char timeformatstr[80];
   char jumpstr[80];
   char idtypestr[20];
@@ -2629,6 +2642,8 @@ int sev_dbms::store_event(
   if (!result) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
     printf("%s Result Error\n", __FUNCTION__);
+    *sts = SEV__DBERROR;
+    return 0;
   }
 
   int rows = mysql_num_rows(result);
