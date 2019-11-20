@@ -707,12 +707,13 @@ int GrowWindow::update_attributes()
     if (window_ctx) {
       if (window_ctx->trace_started)
         window_ctx->trace_close();
+      ctx->gdraw->pop_customcolors();
       delete window_ctx;
       fill_drawtype = original_fill_drawtype = glow_eDrawType_Inherit;
       fill = 0;
     }
     strcpy(file_name, input_file_name);
-    new_ctx();
+    new_ctx(true);
     sts = 1;
 
     ctx->gdraw->reset_clip_rectangle(ctx->mw.window);
@@ -843,7 +844,7 @@ void GrowWindow::h_value_changed_cb(void* o, double value)
   }
 }
 
-void GrowWindow::new_ctx()
+void GrowWindow::new_ctx(bool is_updating_attributes)
 {
   char fname[200];
   int sts;
@@ -898,6 +899,9 @@ void GrowWindow::new_ctx()
   if (!copied)
     strcpy(window_ctx->owner, owner);
   window_ctx->customcolors = ctx->gdraw->create_customcolors();
+  
+  if (is_updating_attributes)
+    ctx->gdraw->push_customcolors(window_ctx->customcolors);
 
   if (!no_file) {
     window_ctx->set_nodraw();

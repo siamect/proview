@@ -2754,9 +2754,14 @@ void GlowDrawGtk::pop_customcolors()
 {
   if (customcolors_cnt <= 0) {
     printf("** Customcolor stack disorder\n");
+    return;
   }
+
   for (int i = 0; i < customcolors_cnt - 1; i++)
+  {
     customcolors[i] = customcolors[i + 1];
+    customcolors[i + 1] = NULL;
+  }
   customcolors_cnt--;
 }
 
