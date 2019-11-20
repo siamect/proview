@@ -19,7 +19,7 @@
 ! 
 !  Linking ProviewR statically or dynamically with other modules is
 !  making a combined work based on ProviewR. Thus, the terms and
-!  conditions of the GNU General Public License cover the whole
+!  conditions of the GNU General Public License cover the whole 
 !  combination.
 ! 
 !  In addition, as a special exception, the copyright holders of
@@ -33,38 +33,46 @@
 !  combined work), being distributed under the terms of the GNU 
 !  General Public License plus this exception.
 !
-!  pwrs_c_subblock.wb_load -- Defines the class SubBlock.
+!  pwrb_c_blockattrint32.wb_load -- Defines the class BlockAttrInt32.
 !
-SObject pwrs:Class
+SObject pwrb:Class
 !/**
-!  @Group ClassDefinition
-!  Definition a subblock.
-!
-!  $SubBlock is the root of a block element in a block object.
+!  @Version 1.0
+!  @Summary Int32 block attribute.
+!  Configuration of a block attribute of type Int32.
 !
 !  @b See also
-!  @classlink $Block pwrs_block.html
-!  @classlink $BlockAttribute pwrs_blockattribute.html
+!  @classlink BlockAttribute pwrs_blockattribute.html
 !*/
-!
-  Object $SubBlock $ClassDef pwr_eCix_SubBlock
+  Object BlockAttrInt32 $ClassDef 717 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
-      Attr Method = pwr_eMethod_SysBody
-      Attr Flags |= pwr_mClassDef_System
+      Attr Method = pwr_eMethod_Standard
     EndBody
-    Object SysBody $ObjBodyDef 1
+    Object RtBody $ObjBodyDef 1 
       Body SysBody
-        Attr StructName = "SubBlock"
+        Attr StructName = "BlockAttrInt32"
       EndBody
       !/**
-      !  Optional description.
+      !  Superclass
       !*/
-      Object Description $Attribute 1
+      Object Super $Attribute 1 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$String80"
+          Attr TypeRef = "pwrs:Class-$BlockAttribute"
+          Attr Flags |= PWR_MASK_CLASS
+          Attr Flags |= PWR_MASK_SUPERCLASS
         EndBody
       EndObject
+      !/**
+      !  Attribute value.
+      !*/
+      Object Value $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+    EndObject
+    Object Template BlockAttrInt32
     EndObject
   EndObject
 EndSObject

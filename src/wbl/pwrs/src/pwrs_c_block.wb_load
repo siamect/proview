@@ -40,6 +40,15 @@ SObject pwrs:Class
 !  @Group ClassDefinition
 !  Definition a block.
 !
+!  A block a kind of object without a class. It's built by a set of objects
+!  with $Block, $SubBlock and subclasses of $BlockAttribute, and presented
+!  at runtime in shape of an object.
+!
+!  $Block is the root of a block object.
+!
+!  @b See also
+!  @classlink $SubBlock pwrs_subblock.html
+!  @classlink $BlockAttribute pwrs_blockattribute.html
 !*/
 !
   Object $Block $ClassDef pwr_eCix_Block

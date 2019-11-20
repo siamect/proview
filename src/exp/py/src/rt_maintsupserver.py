@@ -272,6 +272,9 @@ def process(o):
     o.setSts(sts)
 
 
+# Init gdh
+pwrrt.init('MaintSupServer')
+
 # Get server object
 cid = pwrrt.Cid('MaintSupServer')
 server = None
