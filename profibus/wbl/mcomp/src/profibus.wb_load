@@ -1,4 +1,4 @@
-Volume Profibus $ClassVolume 0.0.250.7 
+Volume Profibus $ClassVolume 0.0.250.7
   Body SysBody 05-SEP-2005 17:51:40.00
     Attr NextOix = "_X263"
     Attr NextCix = "_X22"
@@ -1208,7 +1208,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! @Summary Process that handles the slave. Plc(1), rt_io_comm(2) or application process(4).
         ! Process that handles the slave. All slaves belonging to the same Profiboard must be handled
         ! by the same process.
-        ! 
+        !
         ! 1: The slave is handled by the plc process, and by a specific
         !    thread in the plc, which is specified in the ThreadObject attribute.
         ! 2: The slave is handled by the rt_io_comm process.
@@ -1225,7 +1225,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! @Summary Plc thread that handles the slave.
         ! The PlcThread object of the plc thread that handles the slave.
         ! The slave is handled with the scantime of the thread.
-        ! All slaves 
+        ! All slaves
         !*/
         Object ThreadObject $Attribute 5 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
@@ -1393,7 +1393,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! The parameters WdFact1 and WdFact2 represent factors for setting
         ! the watchdog control. The watchdog control in a DP-Slave takes care
         ! that, if the master fails, the outputs fall in the safe state after
-        ! the expiration of this time.  
+        ! the expiration of this time.
         ! t[ms] = 10*WdFact1*WdFact2
         !*/
         Object WdFact1 $Attribute 21 16-JAN-2006 09:46:40.50
@@ -1408,7 +1408,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! The parameters WdFact1 and WdFact2 represent factors for setting
         ! the watchdog control. The watchdog control in a DP-Slave takes care
         ! that, if the master fails, the outputs fall in the safe state after
-        ! the expiration of this time.  
+        ! the expiration of this time.
         ! t[ms] = 10*WdFact1*WdFact2
         !*/
         Object WdFact2 $Attribute 22 16-JAN-2006 09:46:40.50
@@ -2005,7 +2005,7 @@ Volume Profibus $ClassVolume 0.0.250.7
     !  @Group Profibus
     !  @Summary Configuration of a Profibus module
     !  Configuration of a Profibus module.
-    ! 
+    !
     !*/
     Object Pb_Module $ClassDef 11 16-JAN-2006 09:46:40.50
       Body SysBody 16-JAN-2006 09:46:40.50
@@ -2048,7 +2048,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         !/**
         ! @Summary Process that handles the card. Plc(1), rt_io_comm(2) or application process(4).
         ! Process that handles the card.
-        ! 
+        !
         ! 1: The card is read by the plc process, and is handled by a specific
         !    thread in the plc, which is specified in the ThreadObject attribute.
         ! 2: The card is read by the rt_io_comm process.
@@ -2150,13 +2150,15 @@ Volume Profibus $ClassVolume 0.0.250.7
       EndObject
     EndObject
     !/**
-    ! @Author Claes Jurstrand
-    ! @Version 1.0
+    ! @Author Claes Jurstrand/Marcus Nordenberg
+    ! @Version 1.1
     ! @Group Profibus
     ! @Summary Configurates a Profibus PCI master card (Softing profiboard)
     ! Configurates a Profibus PCI master card (Softing Profiboard). Available on LynxOS and Linux.
     ! The object should be named Px, where x is the number of the device, eg P1.
-    ! You can have maximum two buses (master cards) on each system.
+    ! You can have maximum two buses (master cards) on each system. The latest API from Softing
+    ! can only handle one board per process. So you have to make sure to select PlcThread
+    ! objects from different PlcProcess objects.
     !*/
     Object Pb_Profiboard $ClassDef 13 16-JAN-2006 09:46:40.51
       Body SysBody 16-JAN-2006 09:46:40.51
@@ -2300,8 +2302,8 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndObject
         !/**
         ! Baud rate for the bus in Kbit/s. Possible values are 500, 1500, 3000, 6000, 12000.
-        ! Note that the values for some of the following attributes are depending on the 
-        ! baud rate. For further information about these bus parameters, please refer to the 
+        ! Note that the values for some of the following attributes are depending on the
+        ! baud rate. For further information about these bus parameters, please refer to the
         ! documentation from Softing.
         !*/
         Object BaudRate $Attribute 11 16-JAN-2006 09:46:40.51
@@ -2312,9 +2314,9 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! Watchdog timer for write supervision in the master card. This watchdog is 
-        ! activated at the first write operation after initialization. If the timer later 
-        ! elapses without a write operation, the master card will reset itself, and the bus 
+        ! Watchdog timer for write supervision in the master card. This watchdog is
+        ! activated at the first write operation after initialization. If the timer later
+        ! elapses without a write operation, the master card will reset itself, and the bus
         ! will stop, leaving all slaves to stall when their own stalltime elapses.
         ! Range 100..10000 ms
         !*/
@@ -2326,7 +2328,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! Slot time, the maximum time a master station must wait for a transaction response. 
+        ! Slot time, the maximum time a master station must wait for a transaction response.
         ! Range 37..16383 Bit Times.
         ! Recommended values for each baudrate:
         ! 500 kbit/s - 200
@@ -2343,7 +2345,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! Minimum station delay time for responder, the period of time which may elapse before 
+        ! Minimum station delay time for responder, the period of time which may elapse before
         ! the responder can send the response frame. Range 11..1023 Bit Times.
         ! Recommended values for each baudrate:
         ! 500 kbit/s - 11
@@ -2394,7 +2396,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! Setup time, the time between the occurance of an interrupt request and the necessary request 
+        ! Setup time, the time between the occurance of an interrupt request and the necessary request
         ! action is performed. Range 1..494-Tqui BitTimes.
         ! Recommended values for each baudrate:
         ! 500 kbit/s - 1
@@ -2412,7 +2414,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndObject
         !/**
         ! Target rotation time, the anticipated time for one token rotation on the bus, including
-        ! allowances for high and low priority transactions and GAP maintenance. 
+        ! allowances for high and low priority transactions and GAP maintenance.
         ! Range 256..2^24-1 Bit Times.
         ! The value is irrelevant in Profibus DP operations.
         !*/
@@ -2451,7 +2453,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! Maximum retry limit, indicates how often FDL has to repeat the request frame when no response 
+        ! Maximum retry limit, indicates how often FDL has to repeat the request frame when no response
         ! or acknowledge frame is receive from the recognized station within the slot time. Range 0..7.
         ! Recommended values for each baudrate:
         ! 500 kbit/s - 1
@@ -2691,7 +2693,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndObject
         !/**
         ! Baud rate for the bus in Kbit/s. Possible values are 500, 1500, 3000, 6000, 12000.
-        ! Note that the values for some of the following attributes are depending on the 
+        ! Note that the values for some of the following attributes are depending on the
         ! baud rate.
         !*/
         Object BaudRate $Attribute 37 09-DEC-2008 13:19:32.10
@@ -2702,9 +2704,9 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! Watchdog timer for write supervision in the master card. This watchdog is 
-        ! activated at the first write operation after initialization. If the timer later 
-        ! elapses without a write operation, the master card will reset itself, and the bus 
+        ! Watchdog timer for write supervision in the master card. This watchdog is
+        ! activated at the first write operation after initialization. If the timer later
+        ! elapses without a write operation, the master card will reset itself, and the bus
         ! will stop, leaving all slaves to stall when their own stall time elapses.
         ! A value of 0 will disable the board's watchdog functionality altogether.
         ! Range 0..65535 ms
@@ -2717,7 +2719,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! Slot time, the maximum time a master station must wait for a transaction response. 
+        ! Slot time, the maximum time a master station must wait for a transaction response.
         ! Range 37..16383 Bit Times.
         ! Recommended values for each baud rate:
         ! 500 kbit/s - 200
@@ -2734,7 +2736,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! Minimum station delay time for responder, the period of time which may elapse before 
+        ! Minimum station delay time for responder, the period of time which may elapse before
         ! the responder can send the response frame. Range 11..1023 Bit Times.
         ! Recommended values for each baud rate:
         ! 500 kbit/s - 11
@@ -2785,7 +2787,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! Setup time, the time between the occurrence of an interrupt request and the necessary request 
+        ! Setup time, the time between the occurrence of an interrupt request and the necessary request
         ! action is performed. Range 1..494-Tqui BitTimes.
         ! Recommended values for each baud rate:
         ! 500 kbit/s - 1
@@ -2803,7 +2805,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         EndObject
         !/**
         ! Target rotation time, the anticipated time for one token rotation on the bus, including
-        ! allowances for high and low priority transactions and GAP maintenance. 
+        ! allowances for high and low priority transactions and GAP maintenance.
         ! Range 256..2^24-1 Bit Times.
         ! The value is irrelevant in Profibus DP operations.
         !*/
@@ -2842,7 +2844,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! Maximum retry limit, indicates how often FDL has to repeat the request frame when no response 
+        ! Maximum retry limit, indicates how often FDL has to repeat the request frame when no response
         ! or acknowledge frame is receive from the recognized station within the slot time. Range 0..7.
         ! Recommended values for each baud rate:
         ! 500 kbit/s - 1
@@ -2985,73 +2987,73 @@ Volume Profibus $ClassVolume 0.0.250.7
           Attr NextAix = "_X11"
         EndBody
         !/**
-        ! Diagnosis appears Alarm 
-        ! A diagnosis appears alarm signals an event within a submodule, 
-        ! for instance overtemperature, short circuit, etc. 
-        ! The content of the alarm is defined by the Diagnosis ASE for this type. 
-        ! 
-        ! Process Alarm 
-        ! A process alarm signals the occurrence of an event in the 
-        ! connected process, for instance upper limit value exceeded. 
-        ! 
-        ! Pull Alarm 
-        ! A slot signals the withdrawal of a submodule/module or change 
-        ! in configuration (reduction). 
-        ! 
-        ! Plug Alarm 
-        ! A slot signals the insertion of a submodule/module, a new need 
-        ! for parametrization, or a change in configuration (addition). 
-        ! 
-        ! Status Alarm 
-        ! A status alarm signals a change in the state of a submodule, 
-        ! for instance run, stop or ready. 
-        ! 
-        ! Update Alarm 
-        ! An update alarm signals the change of a parameter in a submodule 
-        ! e.g. by a local operation or a remote access. 
-        ! 
-        ! Redundancy Alarm 
-        ! A redundancy alarm signals the fault of one IO controller to the 
-        ! remaining IO controller for redundant IO ARs. 
-        ! 
-        ! Controlled by supervisor 
-        ! A slot signals the logical withdrawal of a submodule by the 
-        ! IO supervisor. The actions shall be according to the Pull Alarm. 
-        ! 
-        ! Released Alarm 
-        ! A slot signals the logical insertion of a submodule by the IO supervisor. 
-        ! The actions shall be according to the Plug Alarm. 
-        ! 
-        ! Plug Wrong Submodule Alarm 
-        ! A slot signals the insertion of a wrong submodule/module or a 
-        ! change in configuration (addition). 
-        ! 
-        ! Return of Submodule Alarm 
+        ! Diagnosis appears Alarm
+        ! A diagnosis appears alarm signals an event within a submodule,
+        ! for instance overtemperature, short circuit, etc.
+        ! The content of the alarm is defined by the Diagnosis ASE for this type.
+        !
+        ! Process Alarm
+        ! A process alarm signals the occurrence of an event in the
+        ! connected process, for instance upper limit value exceeded.
+        !
+        ! Pull Alarm
+        ! A slot signals the withdrawal of a submodule/module or change
+        ! in configuration (reduction).
+        !
+        ! Plug Alarm
+        ! A slot signals the insertion of a submodule/module, a new need
+        ! for parametrization, or a change in configuration (addition).
+        !
+        ! Status Alarm
+        ! A status alarm signals a change in the state of a submodule,
+        ! for instance run, stop or ready.
+        !
+        ! Update Alarm
+        ! An update alarm signals the change of a parameter in a submodule
+        ! e.g. by a local operation or a remote access.
+        !
+        ! Redundancy Alarm
+        ! A redundancy alarm signals the fault of one IO controller to the
+        ! remaining IO controller for redundant IO ARs.
+        !
+        ! Controlled by supervisor
+        ! A slot signals the logical withdrawal of a submodule by the
+        ! IO supervisor. The actions shall be according to the Pull Alarm.
+        !
+        ! Released Alarm
+        ! A slot signals the logical insertion of a submodule by the IO supervisor.
+        ! The actions shall be according to the Plug Alarm.
+        !
+        ! Plug Wrong Submodule Alarm
+        ! A slot signals the insertion of a wrong submodule/module or a
+        ! change in configuration (addition).
+        !
+        ! Return of Submodule Alarm
         ! A slot signals that a submodule is ready to switch its IOCS/IOPS from
-        ! "BAD" to "GOOD" again without new parameterization. 
-        ! 
-        ! Diagnosis disappears Alarm 
-        ! A diagnosis disappears alarm signals a disappearing diagnosis event 
-        ! within a submodule. The content of the alarm is defined by the 
-        ! Diagnosis ASE for this type. 
-        ! 
-        ! Multicast Communication Mismatch 
-        ! A multicast consumer submodule signals that communication 
-        ! relationship to the associated multicast provider is failed. 
-        ! 
-        ! Port Data Change Notification Alarm 
-        ! A port submodule signals that port data has been changed. 
-        ! 
-        ! Sync Data Change Notification Alarm 
-        ! An interface submodule signals that synchronization data has been changed. 
-        ! 
-        ! Isochronous Mode Problem Notification Alarm 
-        ! The application signals that problems with isochronously execution 
-        ! have been detected. 
-        ! 
-        ! Furthermore, manufacturer specific alarms may be used and alarms 
-        ! are reserved for profile specific definitions. 
-        ! 
+        ! "BAD" to "GOOD" again without new parameterization.
+        !
+        ! Diagnosis disappears Alarm
+        ! A diagnosis disappears alarm signals a disappearing diagnosis event
+        ! within a submodule. The content of the alarm is defined by the
+        ! Diagnosis ASE for this type.
+        !
+        ! Multicast Communication Mismatch
+        ! A multicast consumer submodule signals that communication
+        ! relationship to the associated multicast provider is failed.
+        !
+        ! Port Data Change Notification Alarm
+        ! A port submodule signals that port data has been changed.
+        !
+        ! Sync Data Change Notification Alarm
+        ! An interface submodule signals that synchronization data has been changed.
+        !
+        ! Isochronous Mode Problem Notification Alarm
+        ! The application signals that problems with isochronously execution
+        ! have been detected.
+        !
+        ! Furthermore, manufacturer specific alarms may be used and alarms
+        ! are reserved for profile specific definitions.
+        !
         !*/
         Object Type $Attribute 1 10-JUN-2010 10:53:19.20
           Body SysBody 21-OCT-2010 08:59:53.40
@@ -3106,7 +3108,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! Module ident number identifying the module the 
+        ! Module ident number identifying the module the
         ! alarm comes from (see GSDML-file)
         !*/
         Object ModuleIdentNumber $Attribute 6 10-JUN-2010 11:49:40.15
@@ -3118,7 +3120,7 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         !/**
-        ! Subodule ident number identifying the module the 
+        ! Subodule ident number identifying the module the
         ! alarm comes from (see GSDML-file)
         !*/
         Object SubmoduleIdentNumber $Attribute 7 10-JUN-2010 11:49:56.34
@@ -3272,31 +3274,31 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! @Group Profinet
     ! @Summary Configures a Softing Profinet controller stack.
     ! Configures a Sofing Profinet controller stack.
-    ! 
-    ! ProviewR has support for a Profinet stack from Softing (www.softing.com). 
-    ! The Profinet stack is implemented as three Linux kernel modules. The stack 
+    !
+    ! ProviewR has support for a Profinet stack from Softing (www.softing.com).
+    ! The Profinet stack is implemented as three Linux kernel modules. The stack
     ! is configured by the current object and is placed below the $Node object.
-    ! 
+    !
     ! See ProviewR documentation 'Guide to I/O System' for more information. See also
     ! a Case Study in class help class ABB_ACS880_PnDevice
-    ! 
+    !
     ! Note due to Softing licens requirements the NIC must have a specific macadress.
-    ! 
-    ! Example: 
-    ! 
+    !
+    ! Example:
+    !
     !  auto eth1
     !  iface eth1 inet static
     !                  address 192.168.90.1
     !                  netmask 255.255.254.0
     !                  hwaddress ether xx:xx:xx:xx:xx:xx
-    ! 
+    !
     !  where  xx:xx:xx:xx:xx:xx needs to be:
-    ! 
+    !
     !        AA:00:04:00:xx:14 where xx is 21-52 (hex, i.e. max 50 device available)
-    ! 
+    !
     !  See also an example 9 'Ethernet interface settings in file' /etc/network/interfaces
     !  in class ABB_ACS880_PnDevice.
-    ! 
+    !
     ! @b See also
     ! @classlink PnDevice profibus_pndevice.html
     ! @classlink PnModule profibus_pnmodule.html
@@ -3415,29 +3417,29 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! @Group Profinet
     ! @Summary Configures a Profinet device.
     ! Configures a Profinet device.
-    ! 
+    !
     ! Baseobject for a profinet device. Reside below a profinet agent object.
     ! In the attribute GSDMfile the gsdmlfile for the current device is stated.
     ! When the gsdml­file is supplied the device can be configured by the Profinet
     ! configurator. See ProviewR documentation 'Guide to I/O System' for more
     ! information. See also a Case Study class ABB_ACS880_PnDevice.
-    ! 
+    !
     ! Note 'DeviceName' is the most important setting and defines the device on
     ! the network. When IO communication starts the Profinet stack will first
     ! look up all the devices on the network by the name.
-    ! 
+    !
     ! There is a viewer tool for searching a network for Profinet devices and to set the
     ! 'DeviceName'. The viewer is started from a terminal window with the shell command:
-    ! 
+    !
     ! > profinet_viewer [device]
-    ! 
+    !
     ! Where 'device' is the network device, eg eth0. By default the profinet_viewer will
     ! connect to eth1.
-    ! 
-    ! @bNote. 
-    ! The ProviewR runtime environment should be stopped on the current node before the 
+    !
+    ! @bNote.
+    ! The ProviewR runtime environment should be stopped on the current node before the
     ! the viewer is started.
-    ! 
+    !
     ! @b See also
     ! @classlink PnControllerSoftingPNAK profibus_pncontrollersoftingpnak.html
     ! @classlink Hilscher_cifX_PnController otherio_hilscher_cifx_pncontroller.html
@@ -3509,7 +3511,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         !/**
         ! @Summary Process that handles the device. Plc(1), rt_io_comm(2) or application process(4).
         ! Process that handles the device.
-        ! 
+        !
         ! 1: The device is read by the plc process, and is handled by a specific
         !    thread in the plc, which is specified in the ThreadObject attribute.
         ! 2: The device is read by the rt_io_comm process.
@@ -3863,22 +3865,22 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! @Group Profinet
     ! @Summary Configures a Profinet module.
     ! Configures a Profinet module.
-    ! 
+    !
     ! This object configures the data exchange between a Profinet Slave Device and a
     ! Profinet Master.
-    ! 
+    !
     ! The class PnModule will be valid for all types of modules. In many cases there exist
     ! prepared subclasses of the PnModuleÂ­class for the specific module. This is for example
     ! the case for a Siemens ET200M device. For the prepared classes the IO channels will
     ! exist as a part of the module­object. The prepared classes should be used if they exist.
     ! See ProviewR documentation 'Guide to I/O Systemfor more information.
-    ! 
+    !
     ! @bConfiguration (prepared subclasses)
     ! One device object (not this module object) are placed as children to the master. For
     ! the device object, a profinet configurator is opened, that configures the device object
     ! and creates this module objects for the modules handled by the device. See
     ! a Case Study in class ABB_ACS880_PnDevice for more information.
-    ! 
+    !
     ! @classlink PnControllerSoftingPNAK profibus_pncontrollersoftingpnak.html
     ! @classlink PnDevice profibus_pndevice.html
     ! @classlink ABB_ACS880_PnDevice abb_abb_acs880_pndevice.html
@@ -3938,7 +3940,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         !/**
         ! @Summary Process that handles the module. Plc(1), rt_io_comm(2) or application process(4).
         ! Process that handles the module.
-        ! 
+        !
         ! 1: The module is read by the plc process, and is handled by a specific
         !    thread in the plc, which is specified in the ThreadObject attribute.
         ! 2: The module is read by the rt_io_comm process.
@@ -4041,34 +4043,34 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! @Group Profibus
     ! @Summary Configures a Profibus FDL Service Access Point (SAP) or Remote Service Access Point (RSAP).
     ! Configures a Profibus FDL (R)SAP.
-    ! 
+    !
     ! With Profibus FDL Service Access Points data transfer services between nodes on a Profibus
     ! network is made possible.
     ! There are two SAP types reflecting the different characteristics of Master Stations and
     ! Slave Stations. Usually, "regular" SAP's are activated o Master Stations whereas Responder
     ! SAP's (RSAP's) are activated on Slave Stations. However both can be used on either one.
-    ! 
+    !
     ! A (R)SAP is defined by an address in the interval 0-63. A SAP is used to issue data transfers
     ! to a remote SAP or RSAP. A SAP can also be used to request data from a remote RSAP.
     ! A RSAP cannot request data from a remote (R)SAP. It is used to respond on a data request
     ! and to receive data.
-    ! 
+    !
     ! This object defines a SAP or RSAP and it's address. Also defined is the slave address
     ! of the node that this SAP will exchange data with. It should be created as a child to a
-    ! Pb_Profiboard. 
-    ! 
+    ! Pb_Profiboard.
+    !
     ! See ProviewR documentation 'Guide to I/O Systems' for more information.
-    ! 
+    !
     ! @bConfiguration
     ! Instances of the class Pb_FDL_DataTransfer are created as children to the Pb_FDL_SAP object.
-    ! 
+    !
     ! For the SAP more than one instance can be created of the types SDA, SDN and SRD. These
-    ! different type are used to send data to a remote SAP (types SDA and SDN) or to request data and 
+    ! different type are used to send data to a remote SAP (types SDA and SDN) or to request data and
     ! if needed, at the same time send, data (type SRD). See more on class Pb_FDL_DataTransfer.
-    ! 
+    !
     ! For a RSAP instance only one instance can be created of type RUM used to recieve data and to update
     ! the data that will be sent back by a SRD request.
-    ! 
+    !
     ! @classlink Pb_Profiboard profibus_pb_profiboard.html
     ! @classlink Pb_FDL_DataTransfer profibus_pb_fdl_datatransfer.html
     !*/
@@ -4158,7 +4160,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! @Summary Process that handles the slave. Plc(1), rt_io_comm(2) or application process(4).
         ! Process that handles the slave. All slaves belonging to the same Profiboard must be handled
         ! by the same process.
-        ! 
+        !
         ! 1: The slave is handled by the plc process, and by a specific
         !    thread in the plc, which is specified in the ThreadObject attribute.
         ! 2: The slave is handled by the rt_io_comm process.
@@ -4175,7 +4177,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! @Summary Plc thread that handles the slave.
         ! The PlcThread object of the plc thread that handles the slave.
         ! The slave is handled with the scantime of the thread.
-        ! All slaves 
+        ! All slaves
         !*/
         Object ThreadObject $Attribute 7 14-AUG-2014 13:30:57.23
           Body SysBody 14-AUG-2014 13:30:57.23
@@ -4327,43 +4329,43 @@ Volume Profibus $ClassVolume 0.0.250.7
     ! @Group Profibus
     ! @Summary Configures a Profibus FDL Data Transfer Service.
     ! Configures a Profibus FDL Data Transfer Service.
-    ! 
+    !
     ! With Profibus FDL Service Access Points data transfer services between nodes on a Profibus
     ! network is made possible.
-    ! 
+    !
     ! There are two SAP types reflecting the different characteristics of Master Stations and
     ! Slave Stations. Usually, "regular" SAP's are activated on Master Stations whereas Responder
     ! SAP's (RSAP's) are activated on Slave Stations. However both can be used on either one.
-    ! 
+    !
     ! There are five types of data transfer services that can be configured. Three for sending and/or
-    ! requesting data and two for preparing reply data (only one supported). 
-    ! 
-    ! The first three of them are used from a SAP and cannot be used with a responder SAP (RSAP). These 
+    ! requesting data and two for preparing reply data (only one supported).
+    !
+    ! The first three of them are used from a SAP and cannot be used with a responder SAP (RSAP). These
     ! are SDA (Send Data with Acknowledge), SDN (Send Data with No acknowledge) and SRD (Send and Request
-    ! Data with reply). When requesting data no data need to be sent. 
-    ! 
+    ! Data with reply). When requesting data no data need to be sent.
+    !
     ! The other two services are used together with a responder SAP (RSAP) to prepare the reply data
-    ! that will be sent back to a SAP upon the receipt of a SDA, SDN or SRD. These are RU (Reply-Update, 
+    ! that will be sent back to a SAP upon the receipt of a SDA, SDN or SRD. These are RU (Reply-Update,
     ! this one is not supported) and RUM (Reply-Update-Multiple)
-    ! 
+    !
     ! Each data transfer is configured with the destination address (address of remote (R)SAP).
-    ! 
+    !
     ! The data that is to be sent or received are created as standard I/O channels which should be
-    ! created as children to the Pb_FDL_DataTransfer-object. When receiveing data, the data will always 
-    ! be directed to the first (top) Pb_FDL_DataTransfer-object found as a child to the 
-    ! Pb_FDL_SAP-object. 
-    ! 
+    ! created as children to the Pb_FDL_DataTransfer-object. When receiveing data, the data will always
+    ! be directed to the first (top) Pb_FDL_DataTransfer-object found as a child to the
+    ! Pb_FDL_SAP-object.
+    !
     ! See ProviewR documentation 'Guide to I/O Systems' for more information.
-    ! 
+    !
     ! @bConfiguration
     ! Instances of the class Pb_FDL_DataTransfer are created as children to the Pb_FDL_SAP object.
-    ! 
+    !
     ! I/O-channels are created as children to the Pb_FDL_DataTransfer-object to represent the
     ! data being sent and/or received.
-    ! 
+    !
     ! For a RSAP instance only one instance can be created of type RUM used to recieve data and to update
     ! the data that will be sent back by a SRD request.
-    ! 
+    !
     ! @classlink Pb_FDL_SAP profibus_pb_fdl_sap.html
     !*/
     Object Pb_FDL_DataTransfer $ClassDef 21 14-AUG-2014 15:41:30.53
@@ -4414,8 +4416,8 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! FDLIF_SRD - Send and Request Data with reply
         ! FDLIF_RU  - Reply Update (not supprted, RUM will always be used)
         ! FDLIF_RUM - Reply Update Multiple
-        ! 
-        ! SDA and SDN can also receive data explictly sent with a SDA or SDN service from a 
+        !
+        ! SDA and SDN can also receive data explictly sent with a SDA or SDN service from a
         ! remote SAP. If more than one Pb_FDL_DataTransfer objects have been created for a single
         ! SAP then the first child will receive the data.
         !*/
@@ -4452,7 +4454,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! @Summary Process that handles the slave. Plc(1), rt_io_comm(2) or application process(4).
         ! Process that handles the slave. All slaves belonging to the same Profiboard must be handled
         ! by the same process.
-        ! 
+        !
         ! 1: The slave is handled by the plc process, and by a specific
         !    thread in the plc, which is specified in the ThreadObject attribute.
         ! 2: The slave is handled by the rt_io_comm process.
@@ -4469,7 +4471,7 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! @Summary Plc thread that handles the slave.
         ! The PlcThread object of the plc thread that handles the slave.
         ! The slave is handled with the scantime of the thread.
-        ! All slaves 
+        ! All slaves
         !*/
         Object ThreadObject $Attribute 12 14-AUG-2014 15:41:08.64
           Body SysBody 14-AUG-2014 15:41:08.64

@@ -174,7 +174,8 @@ typedef unsigned short T_PNAK_EXCEPTION_SOURCE;
 #define PNAK_EXCEPTION_SOURCE_IS_PNAK 1u
 #define PNAK_EXCEPTION_SOURCE_IS_APPL 2u
 
-typedef struct _T_PNAK_EXCEPTION {
+typedef struct _T_PNAK_EXCEPTION
+{
   T_PNAK_EXCEPTION_SOURCE Source;
   unsigned short ChannelId;
 
@@ -204,7 +205,8 @@ typedef unsigned short T_PNAK_MODE_ID;
 
 #define PNAK_VERSION_STRING_LENGTH 42
 
-typedef struct _T_PNAK_VERSION {
+typedef struct _T_PNAK_VERSION
+{
   unsigned short IfId;
   unsigned short HostIfId;
   unsigned short HostConfigIfId;
@@ -218,7 +220,8 @@ typedef struct _T_PNAK_VERSION {
 
 } PACK_WORD_ALIGNMENT(T_PNAK_VERSION);
 
-typedef struct _T_PNAK_VERSIONS {
+typedef struct _T_PNAK_VERSIONS
+{
   T_PNAK_VERSION Firmware;
   T_PNAK_VERSION Pnak;
 
@@ -264,32 +267,31 @@ typedef PN_U32 T_PNAK_WAIT_OBJECT;
 #define PNAK_WAIT_TIMEOUT ((T_PNAK_WAIT_OBJECT)0x80000000uL)
 
 #define PNAK_WAIT_OBJECTS_SERVICE                                              \
-  (PNAK_WAIT_OBJECT_SERVICE_CON | PNAK_WAIT_OBJECT_SERVICE_IND                 \
-      | PNAK_WAIT_OBJECT_SERVICE_REQ_RES_HANDLED)
+  (PNAK_WAIT_OBJECT_SERVICE_CON | PNAK_WAIT_OBJECT_SERVICE_IND |               \
+   PNAK_WAIT_OBJECT_SERVICE_REQ_RES_HANDLED)
 #define PNAK_WAIT_OBJECTS_EVENT_IND                                            \
-  (PNAK_WAIT_OBJECT_STATE_CHANGED | PNAK_WAIT_OBJECT_ALARM                     \
-      | PNAK_WAIT_OBJECT_ALARM_ACK | PNAK_WAIT_OBJECT_DEVICE_STATE_CHANGED     \
-      | PNAK_WAIT_OBJECT_ETHERNET_STATE_CHANGED | PNAK_WAIT_OBJECT_PTCP        \
-      | PNAK_WAIT_OBJECT_MRPD)
+  (PNAK_WAIT_OBJECT_STATE_CHANGED | PNAK_WAIT_OBJECT_ALARM |                   \
+   PNAK_WAIT_OBJECT_ALARM_ACK | PNAK_WAIT_OBJECT_DEVICE_STATE_CHANGED |        \
+   PNAK_WAIT_OBJECT_ETHERNET_STATE_CHANGED | PNAK_WAIT_OBJECT_PTCP |           \
+   PNAK_WAIT_OBJECT_MRPD)
 #define PNAK_WAIT_OBJECTS_DATA_IND                                             \
-  (PNAK_WAIT_OBJECT_PROVIDER_DATA_UPDATED                                      \
-      | PNAK_WAIT_OBJECT_CONSUMER_DATA_CHANGED)
+  (PNAK_WAIT_OBJECT_PROVIDER_DATA_UPDATED |                                    \
+   PNAK_WAIT_OBJECT_CONSUMER_DATA_CHANGED)
 #define PNAK_WAIT_OBJECTS_SOCKET_IND                                           \
-  (PNAK_WAIT_OBJECT_SOCKET_STATE_CHANGED                                       \
-      | PNAK_WAIT_OBJECT_SOCKET_DATA_RECEIVED)
+  (PNAK_WAIT_OBJECT_SOCKET_STATE_CHANGED |                                     \
+   PNAK_WAIT_OBJECT_SOCKET_DATA_RECEIVED)
 #define PNAK_WAIT_OBJECTS_OTHER                                                \
-  (PNAK_WAIT_OBJECT_EXCEPTION | PNAK_WAIT_OBJECT_CHANNEL_CLOSED                \
-      | PNAK_WAIT_OBJECT_INTERRUPTED)
+  (PNAK_WAIT_OBJECT_EXCEPTION | PNAK_WAIT_OBJECT_CHANNEL_CLOSED |              \
+   PNAK_WAIT_OBJECT_INTERRUPTED)
 #define PNAK_WAIT_OBJECTS_USER                                                 \
-  (PNAK_USER_WAIT_OBJECT_1 | PNAK_USER_WAIT_OBJECT_2 | PNAK_USER_WAIT_OBJECT_3 \
-      | PNAK_USER_WAIT_OBJECT_4 | PNAK_USER_WAIT_OBJECT_5                      \
-      | PNAK_USER_WAIT_OBJECT_6 | PNAK_USER_WAIT_OBJECT_7                      \
-      | PNAK_USER_WAIT_OBJECT_8)
+  (PNAK_USER_WAIT_OBJECT_1 | PNAK_USER_WAIT_OBJECT_2 |                         \
+   PNAK_USER_WAIT_OBJECT_3 | PNAK_USER_WAIT_OBJECT_4 |                         \
+   PNAK_USER_WAIT_OBJECT_5 | PNAK_USER_WAIT_OBJECT_6 |                         \
+   PNAK_USER_WAIT_OBJECT_7 | PNAK_USER_WAIT_OBJECT_8)
 #define PNAK_WAIT_OBJECTS_ALL                                                  \
-  (PNAK_WAIT_OBJECTS_OTHER | PNAK_WAIT_OBJECTS_EVENT_IND                       \
-      | PNAK_WAIT_OBJECTS_DATA_IND | PNAK_WAIT_OBJECTS_SERVICE                 \
-      | PNAK_WAIT_OBJECTS_SOCKET_IND | PNAK_WAIT_OBJECTS_USER                  \
-      | PNAK_WAIT_TIMEOUT)
+  (PNAK_WAIT_OBJECTS_OTHER | PNAK_WAIT_OBJECTS_EVENT_IND |                     \
+   PNAK_WAIT_OBJECTS_DATA_IND | PNAK_WAIT_OBJECTS_SERVICE |                    \
+   PNAK_WAIT_OBJECTS_SOCKET_IND | PNAK_WAIT_OBJECTS_USER | PNAK_WAIT_TIMEOUT)
 
 /*---------------------------------------------------------------------------*/
 
@@ -317,7 +319,8 @@ typedef unsigned char T_PNAK_SERVICE_RESULT;
 #define PNAK_RESULT_POS (T_PNAK_SERVICE_RESULT)0x00u
 #define PNAK_RESULT_NEG (T_PNAK_SERVICE_RESULT)0x01u
 
-typedef struct _T_PNAK_SERVICE_DESCRIPTION {
+typedef struct _T_PNAK_SERVICE_DESCRIPTION
+{
   unsigned short DeviceRef;
 
   unsigned char Instance;
@@ -353,14 +356,16 @@ typedef struct _T_PNAK_SERVICE_DESCRIPTION {
 
 /*=== SERVICE REQUEST/RESPONSE ==============================================*/
 
-typedef struct _T_PNAK_SERVICE_REQ_RES_ENTRY {
+typedef struct _T_PNAK_SERVICE_REQ_RES_ENTRY
+{
   unsigned short ServiceOffset;
 
 } PACK_WORD_ALIGNMENT(T_PNAK_SERVICE_REQ_RES_ENTRY);
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PNAK_SERVICE_REQ_RES {
+typedef struct _T_PNAK_SERVICE_REQ_RES
+{
   unsigned short NumberEntries;
 
   T_PNAK_SERVICE_REQ_RES_ENTRY ServiceEntry[PNAK_MAX_NUMBER_REQ_SERVICES];
@@ -370,14 +375,16 @@ typedef struct _T_PNAK_SERVICE_REQ_RES {
 
 /*=== SERVICE CONFIRMATION ==================================================*/
 
-typedef struct _T_PNAK_SERVICE_CON_ENTRY {
+typedef struct _T_PNAK_SERVICE_CON_ENTRY
+{
   unsigned short ServiceOffset;
 
 } PACK_WORD_ALIGNMENT(T_PNAK_SERVICE_CON_ENTRY);
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PNAK_SERVICE_CON {
+typedef struct _T_PNAK_SERVICE_CON
+{
   unsigned short NumberEntries;
 
   T_PNAK_SERVICE_CON_ENTRY ServiceEntry[PNAK_MAX_NUMBER_CON_SERVICES];
@@ -387,14 +394,16 @@ typedef struct _T_PNAK_SERVICE_CON {
 
 /*=== SERVICE INDICATION ====================================================*/
 
-typedef struct _T_PNAK_SERVICE_IND_ENTRY {
+typedef struct _T_PNAK_SERVICE_IND_ENTRY
+{
   unsigned short ServiceOffset;
 
 } PACK_WORD_ALIGNMENT(T_PNAK_SERVICE_IND_ENTRY);
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PNAK_SERVICE_IND {
+typedef struct _T_PNAK_SERVICE_IND
+{
   unsigned short NumberEntries;
 
   T_PNAK_SERVICE_IND_ENTRY ServiceEntry[PNAK_MAX_NUMBER_IND_SERVICES];
@@ -413,14 +422,16 @@ typedef unsigned short T_PNAK_MODE;
 
 /*=== EVENT REQUEST ==========================================================*/
 
-typedef struct _T_PNAK_EVENT_SET_MODE {
+typedef struct _T_PNAK_EVENT_SET_MODE
+{
   T_PNAK_MODE Mode;
 
 } PACK_WORD_ALIGNMENT(T_PNAK_EVENT_SET_MODE);
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PNAK_EVENT_SET_DEVICE_STATE {
+typedef struct _T_PNAK_EVENT_SET_DEVICE_STATE
+{
   T_BITSET_256 ActivateDeviceReference;
   T_BITSET_256 DeactivateDeviceReference;
 
@@ -444,7 +455,8 @@ typedef enum _T_PNAK_STATE {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PNAK_EVENT_STATE {
+typedef struct _T_PNAK_EVENT_STATE
+{
   T_PNAK_MODE Mode;
   T_PNAK_STATE State;
 
@@ -452,14 +464,16 @@ typedef struct _T_PNAK_EVENT_STATE {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PNAK_EVENT_ALARM {
+typedef struct _T_PNAK_EVENT_ALARM
+{
   T_BITSET_256 DeviceReference;
 
 } PACK_WORD_ALIGNMENT(T_PNAK_EVENT_ALARM);
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PNAK_EVENT_ALARM_ACK {
+typedef struct _T_PNAK_EVENT_ALARM_ACK
+{
   T_BITSET_256 DeviceReference;
 
 } PACK_WORD_ALIGNMENT(T_PNAK_EVENT_ALARM_ACK);
@@ -475,16 +489,16 @@ typedef struct _T_PNAK_EVENT_ALARM_ACK {
 #define PNAK_DEVICE_STATE_CONTROL_ERROR 0x40u
 #define PNAK_DEVICE_STATE_CLOSE_PENDING 0x80u
 #define PNAK_DEVICE_STATE_MASK                                                 \
-  (PNAK_DEVICE_STATE_DEACTIVATED | PNAK_DEVICE_STATE_FIND_DEVICE               \
-      | PNAK_DEVICE_STATE_CONNECTION_ESTABLISHMENT                             \
-      | PNAK_DEVICE_STATE_CONNECTED)
+  (PNAK_DEVICE_STATE_DEACTIVATED | PNAK_DEVICE_STATE_FIND_DEVICE |             \
+   PNAK_DEVICE_STATE_CONNECTION_ESTABLISHMENT | PNAK_DEVICE_STATE_CONNECTED)
 #define PNAK_DEVICE_STATE_MASK_CONNECTING                                      \
   (PNAK_DEVICE_STATE_FIND_DEVICE | PNAK_DEVICE_STATE_CONNECTION_ESTABLISHMENT)
 #define PNAK_DEVICE_STATE_ERROR_MASK                                           \
-  (PNAK_DEVICE_STATE_CONNECT_ERROR | PNAK_DEVICE_STATE_WRITE_ERROR             \
-      | PNAK_DEVICE_STATE_CONTROL_ERROR)
+  (PNAK_DEVICE_STATE_CONNECT_ERROR | PNAK_DEVICE_STATE_WRITE_ERROR |           \
+   PNAK_DEVICE_STATE_CONTROL_ERROR)
 
-typedef struct _T_PNAK_EVENT_DEVICE_STATE {
+typedef struct _T_PNAK_EVENT_DEVICE_STATE
+{
   unsigned char State[MAX_NUMBER_SUPPORTED_DEVICES];
 
 } PACK_WORD_ALIGNMENT(T_PNAK_EVENT_DEVICE_STATE);
@@ -500,12 +514,14 @@ typedef struct _T_PNAK_EVENT_DEVICE_STATE {
 #define PNAK_MRPD_MISSING_APPEARS 0x8000u
 #define PNAK_MRPD_MISSING_DISAPPEARS 0x0000u
 
-typedef struct _T_PNAK_EVENT_MRPD_IOCR {
+typedef struct _T_PNAK_EVENT_MRPD_IOCR
+{
   PN_U16 FrameId[PN_SERVICE_DOWNLOAD_MAX_NUMBER_IOCRS];
 
 } PACK_WORD_ALIGNMENT(T_PNAK_EVENT_MRPD_IOCR);
 
-typedef struct _T_PNAK_EVENT_MRPD {
+typedef struct _T_PNAK_EVENT_MRPD
+{
   T_PNAK_EVENT_MRPD_IOCR AR[MAX_NUMBER_CMDEV_CONNECTIONS];
 
 } PACK_WORD_ALIGNMENT(T_PNAK_EVENT_MRPD);
@@ -520,13 +536,14 @@ typedef struct _T_PNAK_EVENT_MRPD {
 #define PNAK_EVENT_PTCP 0x00000020uL
 #define PNAK_EVENT_MRPD 0x00000040uL
 #define PNAK_EVENT_MASK                                                        \
-  (PNAK_EVENT_STATE_CHANGED | PNAK_EVENT_DEVICE_STATE_CHANGED                  \
-      | PNAK_EVENT_ALARM | PNAK_EVENT_ALARM_ACK                                \
-      | PNAK_EVENT_ETHERNET_STATE_CHANGED | PNAK_EVENT_PTCP | PNAK_EVENT_MRPD)
+  (PNAK_EVENT_STATE_CHANGED | PNAK_EVENT_DEVICE_STATE_CHANGED |                \
+   PNAK_EVENT_ALARM | PNAK_EVENT_ALARM_ACK |                                   \
+   PNAK_EVENT_ETHERNET_STATE_CHANGED | PNAK_EVENT_PTCP | PNAK_EVENT_MRPD)
 
 typedef PN_U32 T_PNAK_EVENT_REG;
 
-typedef struct _T_PNAK_EVENT_IND_MASK {
+typedef struct _T_PNAK_EVENT_IND_MASK
+{
   T_PNAK_EVENT_REG EventMaskReg;
 
 } PACK_WORD_ALIGNMENT(T_PNAK_EVENT_IND_MASK);
@@ -553,7 +570,8 @@ STATISTIC INTERFACE
 #define PNIO_STATUS_ENCODING_LITTLE_ENDIAN 0x10u
 #define PNIO_STATUS_ENCODING_MASK 0xF0u
 
-typedef struct _T_PNAK_CONNECTION_STATISTIC {
+typedef struct _T_PNAK_CONNECTION_STATISTIC
+{
   PN_U32 Coding;
 
   PN_U8 Encoding;
@@ -563,7 +581,8 @@ typedef struct _T_PNAK_CONNECTION_STATISTIC {
 
 } T_PNAK_CONNECTION_STATISTIC;
 
-typedef struct _T_PNAK_CMCTL_STATISTIC {
+typedef struct _T_PNAK_CMCTL_STATISTIC
+{
   PN_U32 NumberDevicesInStartup;
   PN_U32 NumberDevicesConnected;
 
@@ -576,7 +595,8 @@ typedef struct _T_PNAK_CMCTL_STATISTIC {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PNAK_CMDEV_STATISTIC {
+typedef struct _T_PNAK_CMDEV_STATISTIC
+{
   T_PNAK_CONNECTION_STATISTIC Cmdev[MAX_NUMBER_CMDEV_CONNECTIONS];
 
 } T_PNAK_CMDEV_STATISTIC;
@@ -587,14 +607,16 @@ DATA INTERFACE
 
 /*=== DATA INDICATION =======================================================*/
 
-typedef struct _T_PNAK_DATA_CONSUMER_DATA_CHANGED {
+typedef struct _T_PNAK_DATA_CONSUMER_DATA_CHANGED
+{
   T_BITSET_256 DeviceReference;
 
 } PACK_WORD_ALIGNMENT(T_PNAK_DATA_CONSUMER_DATA_CHANGED);
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PNAK_DATA_PROVIDER_DATA_UPDATED {
+typedef struct _T_PNAK_DATA_PROVIDER_DATA_UPDATED
+{
   T_BITSET_256 DeviceReference;
 
 } PACK_WORD_ALIGNMENT(T_PNAK_DATA_PROVIDER_DATA_UPDATED);
@@ -607,7 +629,8 @@ typedef struct _T_PNAK_DATA_PROVIDER_DATA_UPDATED {
 
 typedef PN_U32 T_PNAK_DATA_EVENT_REG;
 
-typedef struct _T_PNAK_DATA_IND_MASK {
+typedef struct _T_PNAK_DATA_IND_MASK
+{
   T_PNAK_DATA_EVENT_REG EventMaskReg;
 
 } PACK_WORD_ALIGNMENT(T_PNAK_DATA_IND_MASK);
@@ -645,62 +668,69 @@ extern T_PNAK_RESULT pnak_stop_stack(unsigned short);
 
 /*--- General interface functions -------------------------------------------*/
 
-extern T_PNAK_RESULT pnak_wait_for_multiple_objects(
-    unsigned short, T_PNAK_WAIT_OBJECT*, T_PNAK_TIMEOUT);
-extern T_PNAK_RESULT pnak_set_multiple_objects(
-    unsigned short, const T_PNAK_WAIT_OBJECT);
-extern T_PNAK_RESULT pnak_mask_multiple_objects(
-    unsigned short, const T_PNAK_WAIT_OBJECT);
+extern T_PNAK_RESULT pnak_wait_for_multiple_objects(unsigned short,
+                                                    T_PNAK_WAIT_OBJECT*,
+                                                    T_PNAK_TIMEOUT);
+extern T_PNAK_RESULT pnak_set_multiple_objects(unsigned short,
+                                               const T_PNAK_WAIT_OBJECT);
+extern T_PNAK_RESULT pnak_mask_multiple_objects(unsigned short,
+                                                const T_PNAK_WAIT_OBJECT);
 
 extern T_PNAK_RESULT pnak_get_exception(unsigned short, T_PNAK_EXCEPTION*);
 extern T_PNAK_RESULT pnak_get_version(unsigned short, T_PNAK_VERSIONS*);
 
 extern T_PNAK_RESULT pnak_snmp_get_data(unsigned short, T_PNAK_OID*, void*,
-    PN_U32*, PN_U32*, unsigned char, PN_BOOL);
-extern T_PNAK_RESULT pnak_snmp_check_data(
-    unsigned short, T_PNAK_OID*, void*, PN_U32, PN_U32, unsigned char);
-extern T_PNAK_RESULT pnak_snmp_set_data(
-    unsigned short, T_PNAK_OID*, void*, PN_U32, PN_U32);
+                                        PN_U32*, PN_U32*, unsigned char,
+                                        PN_BOOL);
+extern T_PNAK_RESULT pnak_snmp_check_data(unsigned short, T_PNAK_OID*, void*,
+                                          PN_U32, PN_U32, unsigned char);
+extern T_PNAK_RESULT pnak_snmp_set_data(unsigned short, T_PNAK_OID*, void*,
+                                        PN_U32, PN_U32);
 
 extern T_PNAK_RESULT pnak_retrigger_watchdog(unsigned short, PN_U32);
 
 /*--- Service interface functions -------------------------------------------*/
 
-extern T_PNAK_RESULT pnak_limit_number_parallel_services(
-    unsigned short, unsigned short, unsigned short);
+extern T_PNAK_RESULT pnak_limit_number_parallel_services(unsigned short,
+                                                         unsigned short,
+                                                         unsigned short);
 
-extern T_PNAK_RESULT pnak_send_service_req_res(
-    unsigned short, const T_PNAK_SERVICE_REQ_RES*);
+extern T_PNAK_RESULT pnak_send_service_req_res(unsigned short,
+                                               const T_PNAK_SERVICE_REQ_RES*);
 extern T_PNAK_RESULT pnak_get_service_ind(unsigned short, T_PNAK_SERVICE_IND*);
 extern T_PNAK_RESULT pnak_get_service_con(unsigned short, T_PNAK_SERVICE_CON*);
 
 /*--- Event interface functions ---------------------------------------------*/
 
-extern T_PNAK_RESULT pnak_set_mode(
-    unsigned short, const T_PNAK_EVENT_SET_MODE*);
-extern T_PNAK_RESULT pnak_set_device_state(
-    unsigned short, const T_PNAK_EVENT_SET_DEVICE_STATE*);
+extern T_PNAK_RESULT pnak_set_mode(unsigned short,
+                                   const T_PNAK_EVENT_SET_MODE*);
+extern T_PNAK_RESULT
+pnak_set_device_state(unsigned short, const T_PNAK_EVENT_SET_DEVICE_STATE*);
 
 extern T_PNAK_RESULT pnak_get_state(unsigned short, T_PNAK_EVENT_STATE*);
-extern T_PNAK_RESULT pnak_get_device_state_ind(
-    unsigned short, T_PNAK_EVENT_DEVICE_STATE*);
+extern T_PNAK_RESULT pnak_get_device_state_ind(unsigned short,
+                                               T_PNAK_EVENT_DEVICE_STATE*);
 extern T_PNAK_RESULT pnak_get_alarm_ind(unsigned short, T_PNAK_EVENT_ALARM*);
-extern T_PNAK_RESULT pnak_get_alarm_ack_ind(
-    unsigned short, T_PNAK_EVENT_ALARM_ACK*);
+extern T_PNAK_RESULT pnak_get_alarm_ack_ind(unsigned short,
+                                            T_PNAK_EVENT_ALARM_ACK*);
 extern T_PNAK_RESULT pnak_get_ptcp_ind(unsigned short, PN_U32*);
 extern T_PNAK_RESULT pnak_get_mrpd_ind(unsigned short, T_PNAK_EVENT_MRPD*);
 
 /*--- Data interface functions ----------------------------------------------*/
 
 extern T_PNAK_RESULT pnak_set_iocr_data(unsigned short, unsigned short,
-    const unsigned char*, unsigned short, unsigned char);
+                                        const unsigned char*, unsigned short,
+                                        unsigned char);
 
 extern T_PNAK_RESULT pnak_get_iocr_data(unsigned short, unsigned short,
-    unsigned char*, unsigned short*, unsigned char*, unsigned char*);
-extern T_PNAK_RESULT pnak_get_consumer_data_changed_ind(
-    unsigned short, T_PNAK_DATA_CONSUMER_DATA_CHANGED*);
-extern T_PNAK_RESULT pnak_get_provider_data_updated(
-    unsigned short, T_PNAK_DATA_PROVIDER_DATA_UPDATED*);
+                                        unsigned char*, unsigned short*,
+                                        unsigned char*, unsigned char*);
+extern T_PNAK_RESULT
+pnak_get_consumer_data_changed_ind(unsigned short,
+                                   T_PNAK_DATA_CONSUMER_DATA_CHANGED*);
+extern T_PNAK_RESULT
+pnak_get_provider_data_updated(unsigned short,
+                               T_PNAK_DATA_PROVIDER_DATA_UPDATED*);
 
 /*=============================================================================
 CALLBACK INTERFACE
@@ -710,36 +740,40 @@ typedef int (*T_PNAK_WAIT_OBJECT_CALLBACK)(unsigned short, T_PNAK_WAIT_OBJECT);
 typedef int (*T_PNAK_HW_START_CALLBACK)(unsigned short, T_PNAK_MODE_ID, void*);
 
 typedef void (*T_PROVIDER_CALLBACK)(unsigned short, unsigned short,
-    unsigned char*, unsigned short, unsigned char*);
+                                    unsigned char*, unsigned short,
+                                    unsigned char*);
 typedef void (*T_CONSUMER_CALLBACK)(unsigned short, unsigned short,
-    const unsigned char*, unsigned short, unsigned char, unsigned char);
+                                    const unsigned char*, unsigned short,
+                                    unsigned char, unsigned char);
 
-extern T_PNAK_RESULT pnak_register_provider_callback(
-    unsigned short, T_PROVIDER_CALLBACK);
+extern T_PNAK_RESULT pnak_register_provider_callback(unsigned short,
+                                                     T_PROVIDER_CALLBACK);
 extern T_PNAK_RESULT pnak_unregister_provider_callback(unsigned short);
 
-extern T_PNAK_RESULT pnak_register_consumer_callback(
-    unsigned short, T_CONSUMER_CALLBACK);
+extern T_PNAK_RESULT pnak_register_consumer_callback(unsigned short,
+                                                     T_CONSUMER_CALLBACK);
 extern T_PNAK_RESULT pnak_unregister_consumer_callback(unsigned short);
 
-extern T_PNAK_RESULT pnak_register_ethernet_provider_hook(
-    unsigned short, T_PROVIDER_CALLBACK);
+extern T_PNAK_RESULT pnak_register_ethernet_provider_hook(unsigned short,
+                                                          T_PROVIDER_CALLBACK);
 extern T_PNAK_RESULT pnak_unregister_ethernet_provider_hook(unsigned short);
 
 /*---------------------------------------------------------------------------*/
 
-typedef void (*T_PNAK_CMCTL_STATISTIC_CALLBACK)(
-    unsigned short, T_PNAK_CMCTL_STATISTIC*);
+typedef void (*T_PNAK_CMCTL_STATISTIC_CALLBACK)(unsigned short,
+                                                T_PNAK_CMCTL_STATISTIC*);
 
-extern T_PNAK_RESULT pnak_register_cmctl_statistic_callback(
-    unsigned short, T_PNAK_CMCTL_STATISTIC_CALLBACK);
+extern T_PNAK_RESULT
+pnak_register_cmctl_statistic_callback(unsigned short,
+                                       T_PNAK_CMCTL_STATISTIC_CALLBACK);
 extern T_PNAK_RESULT pnak_unregister_cmctl_statistic_callback(unsigned short);
 
-typedef void (*T_PNAK_CMDEV_STATISTIC_CALLBACK)(
-    unsigned short, T_PNAK_CMDEV_STATISTIC*);
+typedef void (*T_PNAK_CMDEV_STATISTIC_CALLBACK)(unsigned short,
+                                                T_PNAK_CMDEV_STATISTIC*);
 
-extern T_PNAK_RESULT pnak_register_cmdev_statistic_callback(
-    unsigned short, T_PNAK_CMDEV_STATISTIC_CALLBACK);
+extern T_PNAK_RESULT
+pnak_register_cmdev_statistic_callback(unsigned short,
+                                       T_PNAK_CMDEV_STATISTIC_CALLBACK);
 extern T_PNAK_RESULT pnak_unregister_cmdev_statistic_callback(unsigned short);
 
 #endif /* __DOXYGEN__ */
@@ -838,13 +872,13 @@ SOCKET USER INTERFACE
   (SOCK_FLAG_TYPE_TCP | 0x00000001uL) /**< Enables keep-alive packets to       \
                                          supervise a TCP connection */
 #define SOCK_FLAG_ENABLE_BROADCAST                                             \
-  (SOCK_FLAG_TYPE_UDP                                                          \
-      | 0x00000002uL) /**< Enables the transmission of broadcast messages over \
-                         a UDP socket */
+  (SOCK_FLAG_TYPE_UDP |                                                        \
+   0x00000002uL) /**< Enables the transmission of broadcast messages over      \
+                    a UDP socket */
 #define SOCK_FLAG_ENABLE_MULTICAST                                             \
-  (SOCK_FLAG_TYPE_UDP                                                          \
-      | 0x00000004uL) /**< Enables the transmission of multicast messages over \
-                         a UDP socket */
+  (SOCK_FLAG_TYPE_UDP |                                                        \
+   0x00000004uL) /**< Enables the transmission of multicast messages over      \
+                    a UDP socket */
 #define SOCK_FLAG_USER_MASK                                                    \
   0x0000FFFFuL /**< Specifies the bits wich are valid for the socket           \
                   application */
@@ -859,12 +893,12 @@ SOCKET USER INTERFACE
  */
 
 typedef enum _T_SOCKET_RESULT {
-  SOCK_SUCCESS = 0u, /**< General success return value */
-  SOCK_ERR_INVALID_ARGUMENT, /**< Passed argument is invalid */
+  SOCK_SUCCESS = 0u,                /**< General success return value */
+  SOCK_ERR_INVALID_ARGUMENT,        /**< Passed argument is invalid */
   SOCK_ERR_API_ALREADY_INITIALIZED, /**< Socket Interface already initialized */
-  SOCK_ERR_API_NOT_INITIALIZED, /**< Socket Interface not initialized */
-  SOCK_ERR_INVALID_SOCKET_ID, /**< The passed socket ID is invalid */
-  SOCK_ERR_OUT_OF_SOCKETS, /**< No free socket available */
+  SOCK_ERR_API_NOT_INITIALIZED,     /**< Socket Interface not initialized */
+  SOCK_ERR_INVALID_SOCKET_ID,       /**< The passed socket ID is invalid */
+  SOCK_ERR_OUT_OF_SOCKETS,          /**< No free socket available */
   SOCK_ERR_SOCKET_NOT_CREATED, /**< The specified socket has not been created.
                                 */
   SOCK_ERR_SOCKET_OFFLINE, /**< The local port associated with the socket is not
@@ -879,15 +913,15 @@ typedef enum _T_SOCKET_RESULT {
   SOCK_ERR_SOCKET_CONNECTED, /**< The request is rejected because the specified
                                 TCP connection has established a connection
                                 before the filter was activated. */
-  SOCK_ERR_ADDR_IN_USE, /**< The passed local address is already in use by
-                           another socket. */
-  SOCK_ERR_INVALID_LOCAL_ADDR, /**< The passed local IP address is invalid. It
-                                  is not possible to bind the socket to this
-                                  address. Which IP addresses are allowed
-                                  depends on the socket configuration (e.g.
-                                  socket type UDP or TCP) and the network
-                                  settings adjusted by calling the function
-                                  sock_init(). */
+  SOCK_ERR_ADDR_IN_USE,      /**< The passed local address is already in use by
+                                another socket. */
+  SOCK_ERR_INVALID_LOCAL_ADDR,  /**< The passed local IP address is invalid. It
+                                   is not possible to bind the socket to this
+                                   address. Which IP addresses are allowed
+                                   depends on the socket configuration (e.g.
+                                   socket type UDP or TCP) and the network
+                                   settings adjusted by calling the function
+                                   sock_init(). */
   SOCK_ERR_INVALID_REMOTE_ADDR, /**< The passed remote IP address is invalid. It
                                    is not possible to send or connect to this
                                    address. Which IP addresses are allowed
@@ -895,15 +929,15 @@ typedef enum _T_SOCKET_RESULT {
                                    socket type UDP or TCP) and the network
                                    settings adjusted by calling the function
                                    sock_init(). */
-  SOCK_ERR_NO_DATA_RECEIVED, /**< No data has been received on the specfied
-                                socket or TCP connection. */
+  SOCK_ERR_NO_DATA_RECEIVED,    /**< No data has been received on the specfied
+                                   socket or TCP connection. */
   SOCK_ERR_NOT_SUPPORTED, /**< The requested action is not supported on the
                              specified socket. */
   SOCK_ERR_TEMPORARY_NOT_EXECUTABLE, /**< The requested action is temporary not
                                         executable on the specified socket due a
                                         concurrent pending request. */
-  SOCK_ERR_FATAL_ERROR, /**< A fatal error is reported during execution of
-                           function. */
+  SOCK_ERR_FATAL_ERROR,       /**< A fatal error is reported during execution of
+                                 function. */
   SOCK_ERR_LIBRARY_NOT_LOADED /**< Can not load socket library */
 } T_SOCKET_RESULT;
 
@@ -918,7 +952,7 @@ typedef enum _T_SOCKET_RESULT {
                   unknown. */
 #define SOCK_PORT_ANY                                                          \
   0u /**< Can be used as local port when creating a TCP Client socket to let   \
-        the TCP/IP stack select a unique local port from the dynamic client                                                                \
+        the TCP/IP stack select a unique local port from the dynamic client    \
         port range. */
 /** @} */
 
@@ -931,7 +965,8 @@ typedef enum _T_SOCKET_RESULT {
  * (big-endian).
  */
 
-typedef struct _T_PNAK_SOCK_ADDR {
+typedef struct _T_PNAK_SOCK_ADDR
+{
   PN_U32 IpAddress; /**< IP address */
 
   unsigned short Port; /**< port number */
@@ -948,18 +983,19 @@ typedef struct _T_PNAK_SOCK_ADDR {
  * @{
  * \brief Configurable Options for the socket interface
  */
-typedef struct _T_PNAK_SOCK_CONFIG_OPTIONS {
+typedef struct _T_PNAK_SOCK_CONFIG_OPTIONS
+{
   PN_U32
-      Timeout; /**< Keep-Alive Timeout in milliseconds. The Keep-Alive Timeout
-                  will be used for the supervision of TCP connections. The
-                  connection will be aborted if the remote connection partner
-                  did not show activity within this timeout. The supervision of
-                  TCP connections can be enabled/disabled socket-specific when
-                    creating the socket by calling sock_create(). For UDP
-                  sockets the application needs to perform a supervision if
-                  necessary. If the timeout value is set to 0 and
-                  #SOCK_FLAG_ENABLE_KEEPALIVE is set when creating a socket, a
-                  default value for the Keep-Alive Timeout will be used. */
+  Timeout; /**< Keep-Alive Timeout in milliseconds. The Keep-Alive Timeout
+              will be used for the supervision of TCP connections. The
+              connection will be aborted if the remote connection partner
+              did not show activity within this timeout. The supervision of
+              TCP connections can be enabled/disabled socket-specific when
+                creating the socket by calling sock_create(). For UDP
+              sockets the application needs to perform a supervision if
+              necessary. If the timeout value is set to 0 and
+              #SOCK_FLAG_ENABLE_KEEPALIVE is set when creating a socket, a
+              default value for the Keep-Alive Timeout will be used. */
 
 } PACK_WORD_ALIGNMENT(T_PNAK_SOCK_CONFIG_OPTIONS);
 
@@ -973,8 +1009,9 @@ typedef struct _T_PNAK_SOCK_CONFIG_OPTIONS {
  * All of the structure data must be specified in network-byte-order
  * (big-endian).
  */
-typedef struct _T_PNAK_SOCK_NETWORK_SETTINGS {
-  PN_U32 IpAddress; /**< The IP-Address of the Device. For future use only. */
+typedef struct _T_PNAK_SOCK_NETWORK_SETTINGS
+{
+  PN_U32 IpAddress;  /**< The IP-Address of the Device. For future use only. */
   PN_U32 SubnetMask; /**< The Netmask of the Device. For future use only. */
   PN_U32 GatewayAddress; /**< The Gateway of the Device. For future use only. */
 
@@ -992,11 +1029,12 @@ typedef struct _T_PNAK_SOCK_NETWORK_SETTINGS {
  * @{
  * \brief This structure holds the initialization data for the socket interface
  */
-typedef struct _T_PNAK_SOCK_INIT {
+typedef struct _T_PNAK_SOCK_INIT
+{
   T_PNAK_SOCK_NETWORK_SETTINGS
-      NetworkSettings; /**< Network specific parameter */
+  NetworkSettings; /**< Network specific parameter */
   T_PNAK_SOCK_CONFIG_OPTIONS
-      ConfigOptions; /**< Configurable Options for the socket interface */
+  ConfigOptions; /**< Configurable Options for the socket interface */
 
 } PACK_WORD_ALIGNMENT(T_PNAK_SOCK_INIT);
 /** @} */
@@ -1037,14 +1075,14 @@ typedef struct _T_PNAK_SOCK_INIT {
                   crashed. */
 #define SOCK_TCP_CONNECTION_STATUS_CODE_TIMEOUT                                \
   0x00000004uL /**< The connection has been aborted because of a network       \
-                  failure or because the remote connection partner failed to                                                                            \
+                  failure or because the remote connection partner failed to   \
                   respond within the configured supervision timeout (see also  \
                   T_PNAK_SOCK_CONFIG_OPTIONS). */
 #define SOCK_TCP_CONNECTION_STATUS_CODE_CONNECT_REJECTED                       \
   0x00000005uL /**< It was not possible to establish a connection because the  \
-                  destination host rejected the connect request, e.g. because                                                                  \
+                  destination host rejected the connect request, e.g. because  \
                   the remote port is closed. This error only occurs for a TCP  \
-                  client socket. To retry connection establishment the                                                             \
+                  client socket. To retry connection establishment the         \
                   application has to close the socket and re-create the socket \
                   again. */
 /** @} */
@@ -1054,14 +1092,15 @@ typedef struct _T_PNAK_SOCK_INIT {
  * @{
  * \brief This structure holds status informations about a single TCP connection
  */
-typedef struct _T_PNAK_SOCK_TCP_CONNECTION_LOCAL_STATUS {
-  PN_U32 Status; /**< Local status of the TCP connection. Valid values: \ref
-                    ConnectionStatus */
+typedef struct _T_PNAK_SOCK_TCP_CONNECTION_LOCAL_STATUS
+{
+  PN_U32 Status;     /**< Local status of the TCP connection. Valid values: \ref
+                        ConnectionStatus */
   PN_U32 StatusCode; /**< Indicates the last error of the TCP connection. Valid
                         values: \ref ConnectionStatusCode */
 
   T_PNAK_SOCK_ADDR
-      RemoteAddr; /**< Address information of the remote connection partner */
+  RemoteAddr; /**< Address information of the remote connection partner */
 
 } PACK_WORD_ALIGNMENT(T_PNAK_SOCK_TCP_CONNECTION_LOCAL_STATUS);
 
@@ -1072,7 +1111,8 @@ typedef struct _T_PNAK_SOCK_TCP_CONNECTION_LOCAL_STATUS {
  * \brief This structure holds status informations about all TCP connections of
  * a socket
  */
-typedef struct _T_PNAK_SOCK_TCP_LOCAL_STATUS_DATA {
+typedef struct _T_PNAK_SOCK_TCP_LOCAL_STATUS_DATA
+{
   PN_U32 NumberConnections; /**< Number of TCP connection for which status info
                                is provided */
 
@@ -1088,8 +1128,9 @@ typedef struct _T_PNAK_SOCK_TCP_LOCAL_STATUS_DATA {
  * Status of a socket
  * @{
  */
-#define SOCK_LOCAL_STATUS_CLOSED 0x00000001uL /**< The local socket is closed  \
-                                               */
+#define SOCK_LOCAL_STATUS_CLOSED                                               \
+  0x00000001uL /**< The local socket is closed                                 \
+                */
 #define SOCK_LOCAL_STATUS_OFFLINE                                              \
   0x00000002uL /**< The local port associated with the socket is not open.     \
                   Sending/Receiving of messages is not possible. */
@@ -1116,15 +1157,16 @@ typedef struct _T_PNAK_SOCK_TCP_LOCAL_STATUS_DATA {
  * @{
  * \brief This structure holds status informations about a socket
  */
-typedef struct _T_PNAK_SOCK_IOC_GET_LOCAL_STATUS {
-  PN_U32 Status; /**< Common socket status information. Valid values: \ref
-                    SocketStatus */
+typedef struct _T_PNAK_SOCK_IOC_GET_LOCAL_STATUS
+{
+  PN_U32 Status;     /**< Common socket status information. Valid values: \ref
+                        SocketStatus */
   PN_U32 StatusCode; /**< Common socket error code. Valid values: \ref
                         SocketStatusCode */
 
   union {
     T_PNAK_SOCK_TCP_LOCAL_STATUS_DATA
-        Tcp; /**< TCP specific socket status information */
+    Tcp; /**< TCP specific socket status information */
     /* UDP specific socket status information not existing */
 
   } UseAs;
@@ -1160,7 +1202,7 @@ typedef struct _T_PNAK_SOCK_IOC_GET_LOCAL_STATUS {
                   host is down */
 #define SOCK_SEND_STATUS_CODE_REJECTED                                         \
   0x00000003uL /**< The destination host rejected the message, e.g. remote     \
-                  port is closed. This error can only be returned by TCP                                        \
+                  port is closed. This error can only be returned by TCP       \
                   sockets. */
 #define SOCK_SEND_STATUS_CODE_SEND_ERROR                                       \
   0x00000004uL /**< The TCP/IP stack reported a general problem sending the    \
@@ -1172,9 +1214,10 @@ typedef struct _T_PNAK_SOCK_IOC_GET_LOCAL_STATUS {
  * @{
  * \brief This structure holds TCP specific send status informations
  */
-typedef struct _T_PNAK_SOCK_TCP_SEND_STATUS_DATA {
+typedef struct _T_PNAK_SOCK_TCP_SEND_STATUS_DATA
+{
   T_PNAK_SOCK_ADDR
-      RemoteAddr; /**< Address information of the remote connection partner */
+  RemoteAddr; /**< Address information of the remote connection partner */
 
 } PACK_WORD_ALIGNMENT(T_PNAK_SOCK_TCP_SEND_STATUS_DATA);
 
@@ -1184,15 +1227,16 @@ typedef struct _T_PNAK_SOCK_TCP_SEND_STATUS_DATA {
  * @{
  * \brief This structure holds send status informations
  */
-typedef struct _T_PNAK_SOCK_IOC_GET_SEND_STATUS {
-  PN_U32 Status; /**< Common send status information. Valid values: \ref
-                    SendStatus  */
+typedef struct _T_PNAK_SOCK_IOC_GET_SEND_STATUS
+{
+  PN_U32 Status;     /**< Common send status information. Valid values: \ref
+                        SendStatus  */
   PN_U32 StatusCode; /**< Common send error code. Valid values: \ref
                         SendStatusCode */
 
   union {
     T_PNAK_SOCK_TCP_SEND_STATUS_DATA
-        Tcp; /**< TCP specific send status information */
+    Tcp; /**< TCP specific send status information */
     /* UDP specific send status information not existing */
 
   } UseAs;
@@ -1221,8 +1265,9 @@ typedef struct _T_PNAK_SOCK_IOC_GET_SEND_STATUS {
  * Receive Error Codes
  * @{
  */
-#define SOCK_RECEIVE_STATUS_CODE_NO_ERROR 0x00000000uL /**< No error detected  \
-                                                        */
+#define SOCK_RECEIVE_STATUS_CODE_NO_ERROR                                      \
+  0x00000000uL /**< No error detected                                          \
+                */
 /** @} */
 /** @} */
 
@@ -1230,9 +1275,10 @@ typedef struct _T_PNAK_SOCK_IOC_GET_SEND_STATUS {
  * @{
  * \brief This structure holds TCP specific receive status informations
  */
-typedef struct _T_PNAK_SOCK_TCP_RECEIVE_STATUS_DATA {
+typedef struct _T_PNAK_SOCK_TCP_RECEIVE_STATUS_DATA
+{
   T_PNAK_SOCK_ADDR
-      RemoteAddr; /**< Address information of the remote connection partner */
+  RemoteAddr; /**< Address information of the remote connection partner */
 
 } PACK_WORD_ALIGNMENT(T_PNAK_SOCK_TCP_RECEIVE_STATUS_DATA);
 
@@ -1242,15 +1288,16 @@ typedef struct _T_PNAK_SOCK_TCP_RECEIVE_STATUS_DATA {
  * @{
  * \brief This structure holds receive status informations
  */
-typedef struct _T_PNAK_SOCK_IOC_GET_RECEIVE_STATUS {
-  PN_U32 Status; /**< Common receive status information. Valid values: \ref
-                    ReceiveStatus  */
+typedef struct _T_PNAK_SOCK_IOC_GET_RECEIVE_STATUS
+{
+  PN_U32 Status;     /**< Common receive status information. Valid values: \ref
+                        ReceiveStatus  */
   PN_U32 StatusCode; /**< Common receive error code. Valid values: \ref
                         ReceiveStatusCode */
 
   union {
     T_PNAK_SOCK_TCP_RECEIVE_STATUS_DATA
-        Tcp; /**< TCP specific receive status information */
+    Tcp; /**< TCP specific receive status information */
     /* UDP specific send status information not existing */
 
   } UseAs;
@@ -1265,9 +1312,10 @@ typedef struct _T_PNAK_SOCK_IOC_GET_RECEIVE_STATUS {
  * @{
  * \brief This structure specifies the TCP connection which shall be aborted
  */
-typedef struct _T_PNAK_SOCK_IOC_CLOSE_TCP_CONNECTION {
+typedef struct _T_PNAK_SOCK_IOC_CLOSE_TCP_CONNECTION
+{
   T_PNAK_SOCK_ADDR
-      RemoteAddr; /**< Address information of the remote connection partner */
+  RemoteAddr; /**< Address information of the remote connection partner */
 
 } PACK_WORD_ALIGNMENT(T_PNAK_SOCK_IOC_CLOSE_TCP_CONNECTION);
 
@@ -1282,7 +1330,8 @@ typedef struct _T_PNAK_SOCK_IOC_CLOSE_TCP_CONNECTION {
  * \brief This structure specifies the IP addresses from which a connection
  * establishment shall be accepted
  */
-typedef struct _T_PNAK_SOCK_IOC_TCP_ACCEPT_FILTER {
+typedef struct _T_PNAK_SOCK_IOC_TCP_ACCEPT_FILTER
+{
   PN_U16 NumberEntries; /**< number of filter entries */
   PN_U16 Alignment;
 
@@ -1299,7 +1348,8 @@ typedef struct _T_PNAK_SOCK_IOC_TCP_ACCEPT_FILTER {
  * \brief This structure specifies the IP addresses of the multicast group the
  * application wants to join or leave
  */
-typedef struct _T_PNAK_SOCK_IOC_MULTICAST {
+typedef struct _T_PNAK_SOCK_IOC_MULTICAST
+{
   PN_U32 IpAddress;
 
 } PACK_WORD_ALIGNMENT(T_PNAK_SOCK_IOC_MULTICAST);
@@ -1323,8 +1373,9 @@ typedef struct _T_PNAK_SOCK_IOC_MULTICAST {
 #define SOCK_IOC_TCP_ACCEPT_FILTER                                             \
   0x00000005uL /**< Defines which IP Addresses are accepted by the socket */
 #define SOCK_IOC_UDP_ADD_MULTICAST 0x00000006uL /**< Join a multicast group */
-#define SOCK_IOC_UDP_DEL_MULTICAST 0x00000007uL /**< Leave a multicast group   \
-                                                 */
+#define SOCK_IOC_UDP_DEL_MULTICAST                                             \
+  0x00000007uL /**< Leave a multicast group                                    \
+                */
 /** @} */
 /** @} */
 
@@ -1332,22 +1383,23 @@ typedef struct _T_PNAK_SOCK_IOC_MULTICAST {
  * @{
  * \brief This structure holds the data for an IO Control Command
  */
-typedef struct _T_PNAK_SOCK_IO_CONTROL {
+typedef struct _T_PNAK_SOCK_IO_CONTROL
+{
   PN_U32 Command; /**< Specifies the IO Control Command. Valid values: \ref
                      IoctlCommand */
 
   union {
     T_PNAK_SOCK_IOC_GET_LOCAL_STATUS
-        GetLocalStatus; /**< Local Socket Status informations */
+    GetLocalStatus; /**< Local Socket Status informations */
     T_PNAK_SOCK_IOC_GET_SEND_STATUS
-        GetSendStatus; /**< Send Status informations */
+    GetSendStatus; /**< Send Status informations */
     T_PNAK_SOCK_IOC_GET_RECEIVE_STATUS
-        GetReceiveStatus; /**< Receive Status informations */
+    GetReceiveStatus; /**< Receive Status informations */
     T_PNAK_SOCK_IOC_CLOSE_TCP_CONNECTION
-        CloseTcpConnection; /**< TCP connection which shall be closed */
+    CloseTcpConnection; /**< TCP connection which shall be closed */
     T_PNAK_SOCK_IOC_TCP_ACCEPT_FILTER
-        TcpAcceptFilter; /**< IP Address which shall be able to connect to the
-                            server */
+    TcpAcceptFilter; /**< IP Address which shall be able to connect to the
+                        server */
     T_PNAK_SOCK_IOC_MULTICAST AddMulticast; /**< Multicast group to join */
     T_PNAK_SOCK_IOC_MULTICAST DelMulticast; /**< Multicast group to leave */
 
@@ -1375,19 +1427,22 @@ extern T_SOCKET_RESULT pnak_sock_term(unsigned short);
 /*--- socket interface functions --------------------------------------------*/
 
 extern T_SOCKET_RESULT pnak_sock_create(unsigned short, PN_U32,
-    T_PNAK_SOCK_ADDR*, T_PNAK_SOCK_ADDR*, unsigned short*);
+                                        T_PNAK_SOCK_ADDR*, T_PNAK_SOCK_ADDR*,
+                                        unsigned short*);
 extern T_SOCKET_RESULT pnak_sock_close(unsigned short, unsigned short);
 extern T_SOCKET_RESULT pnak_sock_send(unsigned short, unsigned short,
-    T_PNAK_SOCK_ADDR*, PN_U16, const unsigned char*);
-extern T_SOCKET_RESULT pnak_sock_receive(
-    unsigned short, unsigned short, T_PNAK_SOCK_ADDR*, PN_U16*, unsigned char*);
-extern T_SOCKET_RESULT pnak_sock_ioctl(
-    unsigned short, unsigned short, T_PNAK_SOCK_IO_CONTROL*);
+                                      T_PNAK_SOCK_ADDR*, PN_U16,
+                                      const unsigned char*);
+extern T_SOCKET_RESULT pnak_sock_receive(unsigned short, unsigned short,
+                                         T_PNAK_SOCK_ADDR*, PN_U16*,
+                                         unsigned char*);
+extern T_SOCKET_RESULT pnak_sock_ioctl(unsigned short, unsigned short,
+                                       T_PNAK_SOCK_IO_CONTROL*);
 
 /*--- socket interface helper functions -------------------------------------*/
 
-extern T_SOCKET_RESULT pnak_sock_get_receive_status(
-    unsigned short, T_BITSET_64*);
+extern T_SOCKET_RESULT pnak_sock_get_receive_status(unsigned short,
+                                                    T_BITSET_64*);
 
 #endif /* __DOXYGEN__ */
 

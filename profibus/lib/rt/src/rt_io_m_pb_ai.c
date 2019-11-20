@@ -56,8 +56,8 @@
 \*----------------------------------------------------------------------------*/
 
 void ConvertAi(pwr_sClass_ChanAi* cop, pwr_tInt16 nobits, pwr_tUInt8 rawvalue8,
-    pwr_tUInt16 rawvalue16, pwr_tUInt32 rawvalue32, pwr_tFloat32* actvalue_p,
-    pwr_tEnum representation)
+               pwr_tUInt16 rawvalue16, pwr_tUInt32 rawvalue32,
+               pwr_tFloat32* actvalue_p, pwr_tEnum representation)
 
 {
   pwr_tFloat32 sigvalue;
@@ -66,24 +66,30 @@ void ConvertAi(pwr_sClass_ChanAi* cop, pwr_tInt16 nobits, pwr_tUInt8 rawvalue8,
   pwr_tFloat32 f_raw = 0.0;
   int i;
 
-  if (nobits == 32) {
+  if (nobits == 32)
+  {
     if (representation == PB_NUMREP_SIGNEDINT)
       f_raw = (float)((int)rawvalue32);
     else
       f_raw = (float)rawvalue32;
-  } else if (nobits == 16) {
+  }
+  else if (nobits == 16)
+  {
     if (representation == PB_NUMREP_SIGNEDINT)
       f_raw = (float)((short)rawvalue16);
     else
       f_raw = (float)rawvalue16;
-  } else if (nobits == 8) {
+  }
+  else if (nobits == 8)
+  {
     if (representation == PB_NUMREP_SIGNEDINT)
       f_raw = (float)((char)rawvalue8);
     else
       f_raw = (float)rawvalue8;
   }
 
-  switch (cop->SensorPolyType) {
+  switch (cop->SensorPolyType)
+  {
   case 0:
     *actvalue_p = cop->SigValPolyCoef0 + cop->SigValPolyCoef1 * f_raw;
     break;
@@ -94,7 +100,8 @@ void ConvertAi(pwr_sClass_ChanAi* cop, pwr_tInt16 nobits, pwr_tUInt8 rawvalue8,
     sigvalue = cop->SigValPolyCoef0 + cop->SigValPolyCoef1 * f_raw;
     polycoef_p = &cop->SensorPolyCoef2;
     actvalue = 0;
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < 3; i++)
+    {
       actvalue = sigvalue * actvalue + *polycoef_p;
       polycoef_p--;
     }
@@ -124,8 +131,9 @@ void ConvertAi(pwr_sClass_ChanAi* cop, pwr_tInt16 nobits, pwr_tUInt8 rawvalue8,
 \*----------------------------------------------------------------------------*/
 
 void ConvertAit(pwr_sClass_ChanAit* cop, pwr_tInt16 nobits,
-    pwr_tUInt16 rawvalue8, pwr_tUInt16 rawvalue16, pwr_tUInt32 rawvalue32,
-    pwr_tFloat32* actvalue_p, pwr_tEnum representation)
+                pwr_tUInt16 rawvalue8, pwr_tUInt16 rawvalue16,
+                pwr_tUInt32 rawvalue32, pwr_tFloat32* actvalue_p,
+                pwr_tEnum representation)
 {
   pwr_tFloat32 Slope;
   pwr_tFloat32 Intercept;
@@ -136,17 +144,22 @@ void ConvertAit(pwr_sClass_ChanAit* cop, pwr_tInt16 nobits,
   pwr_tFloat32 sigvalue;
   pwr_tFloat32 f_raw = 0.0;
 
-  if (nobits == 32) {
+  if (nobits == 32)
+  {
     if (representation == PB_NUMREP_SIGNEDINT)
       f_raw = (float)((int)rawvalue32);
     else
       f_raw = (float)rawvalue32;
-  } else if (nobits == 16) {
+  }
+  else if (nobits == 16)
+  {
     if (representation == PB_NUMREP_SIGNEDINT)
       f_raw = (float)((short)rawvalue16);
     else
       f_raw = (float)rawvalue16;
-  } else if (nobits == 8) {
+  }
+  else if (nobits == 8)
+  {
     if (representation == PB_NUMREP_SIGNEDINT)
       f_raw = (float)((char)rawvalue8);
     else
@@ -157,7 +170,8 @@ void ConvertAit(pwr_sClass_ChanAit* cop, pwr_tInt16 nobits,
 
   Last = cop->NoOfCoordinates;
 
-  while ((Last - First) > 1) {
+  while ((Last - First) > 1)
+  {
     Middle = (First + Last) / 2;
     TransTabValue = cop->InValue[Middle];
     if (sigvalue < TransTabValue)
@@ -174,8 +188,8 @@ void ConvertAit(pwr_sClass_ChanAit* cop, pwr_tInt16 nobits,
 /*----------------------------------------------------------------------------*\
    Init method for the Pb module Ai
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardInit(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                              io_sCard* cp)
 {
   io_sCardLocal* local;
   pwr_sClass_Pb_Ai* op;
@@ -185,23 +199,28 @@ static pwr_tStatus IoCardInit(
   op = (pwr_sClass_Pb_Ai*)cp->op;
   local = (io_sCardLocal*)cp->Local;
 
-  if (rp->Class != pwr_cClass_Pb_DP_Slave) {
+  if (rp->Class != pwr_cClass_Pb_DP_Slave)
+  {
     errh_Info("Illegal object type %s", cp->Name);
     return 1;
   }
 
-  if (op->Status >= PB_MODULE_STATE_OPERATE) {
-    for (i = 0; i < IO_MAXCHAN; i++) {
+  if (op->Status >= PB_MODULE_STATE_OPERATE)
+  {
+    for (i = 0; i < IO_MAXCHAN; i++)
+    {
       local->scancount[i] = 0;
     }
     // Calculate polycoeff
-    for (i = 0; i < cp->ChanListSize; i++) {
+    for (i = 0; i < cp->ChanListSize; i++)
+    {
       chanp = &cp->chanlist[i];
       if (!chanp->cop)
         continue;
       io_AiRangeToCoef(chanp);
     }
-  } else
+  }
+  else
     errh_Info("Error initializing Pb module Ai %s", cp->Name);
 
   return IO__SUCCESS;
@@ -210,8 +229,8 @@ static pwr_tStatus IoCardInit(
 /*----------------------------------------------------------------------------*\
    Read method for the Pb Ai card
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardRead(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardRead(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                              io_sCard* cp)
 {
   io_sCardLocal* local;
   pwr_sClass_Pb_Ai* op;
@@ -232,8 +251,10 @@ static pwr_tStatus IoCardRead(
   op = (pwr_sClass_Pb_Ai*)cp->op;
   slave = (pwr_sClass_Pb_DP_Slave*)rp->op;
 
-  if (op->Status >= PB_MODULE_STATE_OPERATE && slave->DisableSlave != 1) {
-    for (i = 0; i < cp->ChanListSize; i++) {
+  if (op->Status >= PB_MODULE_STATE_OPERATE && slave->DisableSlave != 1)
+  {
+    for (i = 0; i < cp->ChanListSize; i++)
+    {
       chanp = &cp->chanlist[i];
       if (!chanp->cop || !chanp->sop)
         continue;
@@ -244,107 +265,121 @@ static pwr_tStatus IoCardRead(
       if (cop->CalculateNewCoef)
         io_AiRangeToCoef(chanp);
 
-      if (cop->ConversionOn) {
-        if (local->scancount[i] <= 1) {
-          if (op->BytesPerChannel == 4) {
+      if (cop->ConversionOn)
+      {
+        if (local->scancount[i] <= 1)
+        {
+          if (op->BytesPerChannel == 4)
+          {
             memcpy(&udata32, local->input_area + op->OffsetInputs + 4 * i, 4);
             if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian)
               udata32 = swap32(udata32);
             data32 = (pwr_tInt32)udata32;
             sop->RawValue = 0;
             if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT)
-              sop->SigValue
-                  = udata32 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
+              sop->SigValue =
+                  udata32 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
             else
-              sop->SigValue
-                  = data32 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
-            switch (chanp->ChanClass) {
+              sop->SigValue =
+                  data32 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
+            switch (chanp->ChanClass)
+            {
             case pwr_cClass_ChanAi:
-              ConvertAi(
-                  cop, 32, 0, 0, udata32, &actvalue, op->NumberRepresentation);
+              ConvertAi(cop, 32, 0, 0, udata32, &actvalue,
+                        op->NumberRepresentation);
               break;
             case pwr_cClass_ChanAit:
               ConvertAit((pwr_sClass_ChanAit*)cop, 32, 0, 0, udata32, &actvalue,
-                  op->NumberRepresentation);
+                         op->NumberRepresentation);
               break;
             }
-          } else if (op->BytesPerChannel == 3) {
+          }
+          else if (op->BytesPerChannel == 3)
+          {
             udata32 = 0;
             memcpy(&udata32, local->input_area + op->OffsetInputs + 3 * i, 3);
-            if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian) {
+            if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian)
+            {
               udata32 = swap32(udata32);
               udata32 = udata32 >> 8;
             }
             data32 = (pwr_tInt32)udata32;
             sop->RawValue = 0;
             if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT)
-              sop->SigValue
-                  = udata32 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
+              sop->SigValue =
+                  udata32 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
             else
-              sop->SigValue
-                  = data32 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
-            switch (chanp->ChanClass) {
+              sop->SigValue =
+                  data32 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
+            switch (chanp->ChanClass)
+            {
             case pwr_cClass_ChanAi:
-              ConvertAi(
-                  cop, 32, 0, 0, udata32, &actvalue, op->NumberRepresentation);
+              ConvertAi(cop, 32, 0, 0, udata32, &actvalue,
+                        op->NumberRepresentation);
               break;
             case pwr_cClass_ChanAit:
               ConvertAit((pwr_sClass_ChanAit*)cop, 32, 0, 0, udata32, &actvalue,
-                  op->NumberRepresentation);
+                         op->NumberRepresentation);
               break;
             }
-          } else if (op->BytesPerChannel == 2) {
+          }
+          else if (op->BytesPerChannel == 2)
+          {
             memcpy(&udata16, local->input_area + op->OffsetInputs + 2 * i, 2);
             if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian)
               udata16 = swap16(udata16);
             data16 = (pwr_tInt16)udata16;
             sop->RawValue = udata16;
             if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT)
-              sop->SigValue
-                  = udata16 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
+              sop->SigValue =
+                  udata16 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
             else
-              sop->SigValue
-                  = data16 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
-            switch (chanp->ChanClass) {
+              sop->SigValue =
+                  data16 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
+            switch (chanp->ChanClass)
+            {
             case pwr_cClass_ChanAi:
-              ConvertAi(
-                  cop, 16, 0, udata16, 0, &actvalue, op->NumberRepresentation);
+              ConvertAi(cop, 16, 0, udata16, 0, &actvalue,
+                        op->NumberRepresentation);
               break;
             case pwr_cClass_ChanAit:
               ConvertAit((pwr_sClass_ChanAit*)cop, 16, 0, udata16, 0, &actvalue,
-                  op->NumberRepresentation);
+                         op->NumberRepresentation);
               break;
             }
           }
 
-          else if (op->BytesPerChannel == 1) {
+          else if (op->BytesPerChannel == 1)
+          {
             memcpy(&udata8, local->input_area + op->OffsetInputs + i, 1);
             data8 = (pwr_tInt8)udata8;
             sop->RawValue = udata8;
             if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT)
-              sop->SigValue
-                  = udata8 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
+              sop->SigValue =
+                  udata8 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
             else
-              sop->SigValue
-                  = data8 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
-            switch (chanp->ChanClass) {
+              sop->SigValue =
+                  data8 * cop->SigValPolyCoef1 + cop->SigValPolyCoef0;
+            switch (chanp->ChanClass)
+            {
             case pwr_cClass_ChanAi:
-              ConvertAi(
-                  cop, 8, udata8, 0, 0, &actvalue, op->NumberRepresentation);
+              ConvertAi(cop, 8, udata8, 0, 0, &actvalue,
+                        op->NumberRepresentation);
               break;
             case pwr_cClass_ChanAit:
               ConvertAit((pwr_sClass_ChanAit*)cop, 8, udata8, 0, 0, &actvalue,
-                  op->NumberRepresentation);
+                         op->NumberRepresentation);
               break;
             }
           }
 
           // Filter
-          if (sop->FilterType == 1 && sop->FilterAttribute[0] > 0
-              && sop->FilterAttribute[0] > ctx->ScanTime) {
-            actvalue = *(pwr_tFloat32*)chanp->vbp
-                + ctx->ScanTime / sop->FilterAttribute[0]
-                    * (actvalue - *(pwr_tFloat32*)chanp->vbp);
+          if (sop->FilterType == 1 && sop->FilterAttribute[0] > 0 &&
+              sop->FilterAttribute[0] > ctx->ScanTime)
+          {
+            actvalue = *(pwr_tFloat32*)chanp->vbp +
+                       ctx->ScanTime / sop->FilterAttribute[0] *
+                           (actvalue - *(pwr_tFloat32*)chanp->vbp);
           }
 
           *(pwr_tFloat32*)chanp->vbp = actvalue;
@@ -353,8 +388,8 @@ static pwr_tStatus IoCardRead(
         local->scancount[i]--;
 
       } // if ...ConversionOn
-    } // for
-  } // if ...op->Status
+    }   // for
+  }     // if ...op->Status
 
   return IO__SUCCESS;
 }
@@ -362,8 +397,8 @@ static pwr_tStatus IoCardRead(
 /*----------------------------------------------------------------------------*\
    Close method for the Pb Ai card
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardClose(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardClose(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                               io_sCard* cp)
 {
   io_sCardLocal* local;
   local = cp->Local;
@@ -377,5 +412,6 @@ static pwr_tStatus IoCardClose(
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/
 
-pwr_dExport pwr_BindIoMethods(Pb_Ai) = { pwr_BindIoMethod(IoCardInit),
-  pwr_BindIoMethod(IoCardRead), pwr_BindIoMethod(IoCardClose), pwr_NullMethod };
+pwr_dExport pwr_BindIoMethods(Pb_Ai) = {
+    pwr_BindIoMethod(IoCardInit), pwr_BindIoMethod(IoCardRead),
+    pwr_BindIoMethod(IoCardClose), pwr_NullMethod};

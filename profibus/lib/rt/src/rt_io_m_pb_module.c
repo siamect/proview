@@ -52,8 +52,8 @@
 /*----------------------------------------------------------------------------*\
    Init method for the Pb module
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardInit(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                              io_sCard* cp)
 {
   io_sCardLocal* local;
   pwr_sClass_Pb_Module* op;
@@ -62,7 +62,8 @@ static pwr_tStatus IoCardInit(
   op = (pwr_sClass_Pb_Module*)cp->op;
   local = (io_sCardLocal*)cp->Local;
 
-  for (i = 0; i < IO_MAXCHAN; i++) {
+  for (i = 0; i < IO_MAXCHAN; i++)
+  {
     local->scancount[i] = 0;
   }
 
@@ -74,8 +75,8 @@ static pwr_tStatus IoCardInit(
 /*----------------------------------------------------------------------------*\
    Read method for the Pb module
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardRead(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardRead(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                              io_sCard* cp)
 {
   io_sCardLocal* local;
   pwr_sClass_Pb_Module* op;
@@ -92,7 +93,7 @@ static pwr_tStatus IoCardRead(
   /* all inputs will be zeroed */
 
   io_bus_card_read(ctx, rp, cp, local->input_area, slave->Diag,
-      slave->ByteOrdering, slave->FloatRepresentation);
+                   slave->ByteOrdering, slave->FloatRepresentation);
 
   //  printf("Method Pb_Module-IoCardRead\n");
   return IO__SUCCESS;
@@ -101,8 +102,8 @@ static pwr_tStatus IoCardRead(
 /*----------------------------------------------------------------------------*\
    Write method for the Pb module
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardWrite(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardWrite(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                               io_sCard* cp)
 {
   io_sCardLocal* local;
   pwr_sClass_Pb_Module* op;
@@ -114,9 +115,10 @@ static pwr_tStatus IoCardWrite(
 
   op->Status = slave->Status;
 
-  if (op->Status == PB__NORMAL) {
+  if (op->Status == PB__NORMAL)
+  {
     io_bus_card_write(ctx, cp, local->output_area, slave->ByteOrdering,
-        slave->FloatRepresentation);
+                      slave->FloatRepresentation);
   }
   //  printf("Method Pb_Module-IoCardWrite\n");
   return IO__SUCCESS;
@@ -125,8 +127,8 @@ static pwr_tStatus IoCardWrite(
 /*----------------------------------------------------------------------------*\
    Close method for the Pb module
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardClose(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardClose(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                               io_sCard* cp)
 {
   io_sCardLocal* local;
   local = cp->Local;
@@ -141,6 +143,7 @@ static pwr_tStatus IoCardClose(
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/
 
-pwr_dExport pwr_BindIoMethods(Pb_Module) = { pwr_BindIoMethod(IoCardInit),
-  pwr_BindIoMethod(IoCardRead), pwr_BindIoMethod(IoCardWrite),
-  pwr_BindIoMethod(IoCardClose), pwr_NullMethod };
+pwr_dExport pwr_BindIoMethods(Pb_Module) = {
+    pwr_BindIoMethod(IoCardInit), pwr_BindIoMethod(IoCardRead),
+    pwr_BindIoMethod(IoCardWrite), pwr_BindIoMethod(IoCardClose),
+    pwr_NullMethod};

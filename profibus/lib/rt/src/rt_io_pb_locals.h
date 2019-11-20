@@ -72,20 +72,23 @@
 
 /* io_sAgentLocal now lives in the respective agent modules.  */
 
-typedef struct _io_sRackLocal {
+typedef struct _io_sRackLocal
+{
   unsigned char fdl;
   unsigned char dp;
   unsigned int start_time;
   unsigned int start_cnt;
 } io_sRackLocal;
 
-typedef struct {
+typedef struct
+{
   void* input_area;
   void* output_area;
   int scancount[IO_MAXCHAN];
 } io_sCardLocal;
 
-typedef struct {
+typedef struct
+{
   unsigned short invoke_id;
   unsigned short input_area_size;
   unsigned short output_area_size;
@@ -95,21 +98,24 @@ typedef struct {
   unsigned short float_representation;
 } io_sFDLCardLocal;
 
-typedef struct _agent_args {
+typedef struct _agent_args
+{
   void* local;
   io_sAgent* ap;
+  io_tCtx ctx;
 } agent_args;
 
-typedef struct {
-  int hServiceReadDevice; // Handle for Service device
-  int hServiceWriteDevice; // Handle for Service device
-  int hDpDataDevice; // Handle for DP-Data device
-  int hDpsInputDataDevice; // Handle for DP-Slave Input-Data device
+typedef struct
+{
+  int hServiceReadDevice;   // Handle for Service device
+  int hServiceWriteDevice;  // Handle for Service device
+  int hDpDataDevice;        // Handle for DP-Data device
+  int hDpsInputDataDevice;  // Handle for DP-Slave Input-Data device
   int hDpsOutputDataDevice; // Handle for DP-Slave Output-Data device
   unsigned char CurrentBoardNumber;
   int slave_diag_requested; // Slave diag requested
-  int parallel_service; // parallel activity
-  int hDpsBoardDevice; // Handle for DP-Slave Output-Data device
+  int parallel_service;     // parallel activity
+  int hDpsBoardDevice;      // Handle for DP-Slave Output-Data device
   pthread_t events;
   pthread_mutex_t mutex;
   agent_args args;

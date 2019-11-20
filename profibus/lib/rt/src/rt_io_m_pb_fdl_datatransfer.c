@@ -65,8 +65,9 @@
 static unsigned char req_res_buffer[512];
 
 static short fdlif_sda_sdn_sdr_req(io_sAgentLocal* local_agent,
-    pwr_sClass_Pb_FDL_SAP* sap, pwr_sClass_Pb_FDL_DataTransfer* op,
-    io_sFDLCardLocal* local)
+                                   pwr_sClass_Pb_FDL_SAP* sap,
+                                   pwr_sClass_Pb_FDL_DataTransfer* op,
+                                   io_sFDLCardLocal* local)
 
 /*-----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
@@ -106,16 +107,20 @@ possible return values:
    */
   sdb.comm_ref = 0;
   sdb.layer = FDLIF;
-  switch (op->Type) {
-  case pwr_ePbFDLDataTransferTypeEnum_FDLIF_SDA: {
+  switch (op->Type)
+  {
+  case pwr_ePbFDLDataTransferTypeEnum_FDLIF_SDA:
+  {
     sdb.service = FDLIF_SDA;
     break;
   }
-  case pwr_ePbFDLDataTransferTypeEnum_FDLIF_SDN: {
+  case pwr_ePbFDLDataTransferTypeEnum_FDLIF_SDN:
+  {
     sdb.service = FDLIF_SDN;
     break;
   }
-  case pwr_ePbFDLDataTransferTypeEnum_FDLIF_SRD: {
+  case pwr_ePbFDLDataTransferTypeEnum_FDLIF_SRD:
+  {
     sdb.service = FDLIF_SRD;
     break;
   }
@@ -128,15 +133,17 @@ possible return values:
   sdb.invoke_id = local->invoke_id = local_agent->invoke_id;
   local_agent->invoke_id = (local_agent->invoke_id + 1) % 128;
 
-  result = profi_snd_req_res(
-      (T_PROFI_DEVICE_HANDLE*)local_agent, &sdb, (void*)req, PB_FALSE);
+  // result = profi_snd_req_res(
+  //     (T_PROFI_DEVICE_HANDLE*)local_agent, &sdb, (void*)req, PB_FALSE);
+  result = profi_snd_req_res(&sdb, (void*)req, PB_FALSE);
 
   return ((pwr_tBoolean)(result == E_OK));
 }
 
 static short fdlif_reply_update_mult_req(io_sAgentLocal* local_agent,
-    pwr_sClass_Pb_FDL_SAP* sap, pwr_sClass_Pb_FDL_DataTransfer* op,
-    io_sFDLCardLocal* local)
+                                         pwr_sClass_Pb_FDL_SAP* sap,
+                                         pwr_sClass_Pb_FDL_DataTransfer* op,
+                                         io_sFDLCardLocal* local)
 
 /*-----------------------------------------------------------------------------
     FUNCTIONAL_DESCRIPTION
@@ -179,8 +186,9 @@ possible return values:
   sdb.invoke_id = local->invoke_id = local_agent->invoke_id;
   local_agent->invoke_id = (local_agent->invoke_id + 1) % 128;
 
-  result = profi_snd_req_res(
-      (T_PROFI_DEVICE_HANDLE*)local_agent, &sdb, (void*)req, PB_FALSE);
+  // result = profi_snd_req_res((T_PROFI_DEVICE_HANDLE*)local_agent, &sdb,
+  // (void*)req, PB_FALSE);
+  result = profi_snd_req_res(&sdb, (void*)req, PB_FALSE);
 
   return ((pwr_tBoolean)(result == E_OK));
 }
@@ -188,8 +196,8 @@ possible return values:
 /*----------------------------------------------------------------------------*\
    Init method for the Pb module
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardInit(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                              io_sCard* cp)
 {
   io_sFDLCardLocal* local;
   pwr_sClass_Pb_FDL_DataTransfer* op = (pwr_sClass_Pb_FDL_DataTransfer*)cp->op;
@@ -206,8 +214,8 @@ static pwr_tStatus IoCardInit(
   local->byte_ordering = ((pwr_sClass_Pb_FDL_SAP*)rp->op)->ByteOrdering;
 
   io_bus_card_init(ctx, cp, &input_area_offset, &input_area_chansize,
-      &output_area_offset, &output_area_chansize, local->byte_ordering,
-      io_eAlignment_Packed);
+                   &output_area_offset, &output_area_chansize,
+                   local->byte_ordering, io_eAlignment_Packed);
 
   local->input_area_size = input_area_offset + input_area_chansize;
   local->output_area_size = output_area_offset + output_area_chansize;
@@ -227,13 +235,13 @@ static pwr_tStatus IoCardInit(
 /*----------------------------------------------------------------------------*\
    Read method for the Pb FDL Data transfer module
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardRead(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardRead(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                              io_sCard* cp)
 {
   io_sFDLCardLocal* local = (io_sFDLCardLocal*)cp->Local;
 
   io_bus_card_read(ctx, rp, cp, local->input_area, 0, local->byte_ordering,
-      local->float_representation);
+                   local->float_representation);
 
   return IO__SUCCESS;
 }
@@ -241,8 +249,8 @@ static pwr_tStatus IoCardRead(
 /*----------------------------------------------------------------------------*\
    Write method for the Pb  FDL Data transfer module
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardWrite(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardWrite(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                               io_sCard* cp)
 {
   io_sAgentLocal* local_agent = (io_sAgentLocal*)ap->Local;
   pwr_sClass_Pb_FDL_DataTransfer* op = (pwr_sClass_Pb_FDL_DataTransfer*)cp->op;
@@ -251,16 +259,21 @@ static pwr_tStatus IoCardWrite(
 
   op->Status = sap->Status;
 
-  if (op->Status == PB__NORMAL) {
+  if (op->Status == PB__NORMAL)
+  {
     io_bus_card_write(ctx, cp, local->output_area, local->byte_ordering,
-        local->float_representation);
+                      local->float_representation);
 
-    if (op->SendReq) {
+    if (op->SendReq)
+    {
       pthread_mutex_lock(&local_agent->mutex);
 
-      if (sap->Responder) {
+      if (sap->Responder)
+      {
         fdlif_reply_update_mult_req(local_agent, sap, op, local);
-      } else {
+      }
+      else
+      {
         fdlif_sda_sdn_sdr_req(local_agent, sap, op, local);
       }
       op->SendReq = 0;
@@ -274,8 +287,8 @@ static pwr_tStatus IoCardWrite(
 /*----------------------------------------------------------------------------*\
    Close method for the Pb module
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardClose(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardClose(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                               io_sCard* cp)
 {
   io_sCardLocal* local;
   local = cp->Local;
@@ -290,7 +303,7 @@ static pwr_tStatus IoCardClose(
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/
 
-pwr_dExport pwr_BindIoMethods(Pb_FDL_DataTransfer)
-    = { pwr_BindIoMethod(IoCardInit), pwr_BindIoMethod(IoCardRead),
-        pwr_BindIoMethod(IoCardWrite), pwr_BindIoMethod(IoCardClose),
-        pwr_NullMethod };
+pwr_dExport pwr_BindIoMethods(Pb_FDL_DataTransfer) = {
+    pwr_BindIoMethod(IoCardInit), pwr_BindIoMethod(IoCardRead),
+    pwr_BindIoMethod(IoCardWrite), pwr_BindIoMethod(IoCardClose),
+    pwr_NullMethod};
