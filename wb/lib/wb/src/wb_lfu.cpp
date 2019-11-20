@@ -1829,6 +1829,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      found = 1;
 	      break;
 	    }
+            sts = ldh_GetNextSibling(ldhses, volobjid, &volobjid);
 	  }
 	  if (!found) {
 	    char msg[200];
