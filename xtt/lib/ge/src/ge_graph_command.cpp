@@ -3639,7 +3639,7 @@ static int graph_getobjecttext_func(void* filectx, ccm_sArg* arg_list,
   Graph* graph;
   int type;
   grow_tObject o;
-  char text[200];
+  char text[K_STRING_SIZE];
 
   if (arg_count != 1)
     return CCM__ARGMISM;
@@ -3653,7 +3653,7 @@ static int graph_getobjecttext_func(void* filectx, ccm_sArg* arg_list,
   type = grow_GetObjectType(o);
   if (type == glow_eObjectType_GrowText) {
     grow_GetObjectText(o, text, sizeof(text));
-    strncpy(return_string, text, sizeof(text));
+    strncpy(return_string, text, sizeof(K_STRING_SIZE));
   } else
     strcpy(return_string, "");
 

@@ -469,7 +469,7 @@ int main(int argc, char* argv[])
 {
   remtrans_item* remtrans;
   unsigned char id[32];
-  unsigned char pname[32];
+  unsigned char pname[80];
   pwr_tStatus sts;
   int i;
   float time_since_scan = 0.0;
