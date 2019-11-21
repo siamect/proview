@@ -160,10 +160,10 @@ DEFINES
 #define PROFINET_AR_PROPERTY_DATA_RATE_1GBIT 0x00000040uL
 #define PROFINET_AR_PROPERTY_DATA_RATE_10GBIT 0x00000060uL
 #define PROFINET_AR_PROPERTY_DATA_RATE_MASK                                    \
-  (PROFINET_AR_PROPERTY_DATA_RATE_AT_LEAST_100MBIT                             \
-      | PROFINET_AR_PROPERTY_DATA_RATE_100MBIT                                 \
-      | PROFINET_AR_PROPERTY_DATA_RATE_1GBIT                                   \
-      | PROFINET_AR_PROPERTY_DATA_RATE_10GBIT)
+  (PROFINET_AR_PROPERTY_DATA_RATE_AT_LEAST_100MBIT |                           \
+   PROFINET_AR_PROPERTY_DATA_RATE_100MBIT |                                    \
+   PROFINET_AR_PROPERTY_DATA_RATE_1GBIT |                                      \
+   PROFINET_AR_PROPERTY_DATA_RATE_10GBIT)
 #define PROFINET_AR_PROPERTY_ACCESS_BY_EXP_SUB_BLOCK 0x00000000uL
 #define PROFINET_AR_PROPERTY_ACCESS_BY_DEVICE 0x00000100uL
 #define PROFINET_AR_PROPERTY_COMPANION_SINGLE_AR 0x00000000uL
@@ -174,21 +174,22 @@ DEFINES
 #define PROFINET_AR_PROPERTY_STARTUP_MODE_LEGACY 0x00000000uL
 #define PROFINET_AR_PROPERTY_STARTUP_MODE_ADVANCED 0x40000000uL
 #define PROFINET_AR_PROPERTY_STARTUP_MODE_MASK                                 \
-  (PROFINET_AR_PROPERTY_STARTUP_MODE_LEGACY                                    \
-      | PROFINET_AR_PROPERTY_STARTUP_MODE_ADVANCED)
+  (PROFINET_AR_PROPERTY_STARTUP_MODE_LEGACY |                                  \
+   PROFINET_AR_PROPERTY_STARTUP_MODE_ADVANCED)
 #define PROFINET_AR_PROPERTY_PULL_MODULE_ALARM_ALLOWED 0x80000000uL
 #define PROFINET_AR_PROPERTY_MASK                                              \
-  (PROFINET_AR_PROPERTY_STATE_MASK | PROFINET_AR_PROPERTY_TAKEOVER_NOT_ALLOWED \
-      | PROFINET_AR_PROPERTY_TAKEOVER_ALLOWED                                  \
-      | PROFINET_AR_PROPERTY_PARAMETER_SERVER_EXT                              \
-      | PROFINET_AR_PROPERTY_PARAMETER_SERVER_CM                               \
-      | PROFINET_AR_PROPERTY_DATA_RATE_MASK                                    \
-      | PROFINET_AR_PROPERTY_ACCESS_BY_EXP_SUB_BLOCK                           \
-      | PROFINET_AR_PROPERTY_ACCESS_BY_DEVICE                                  \
-      | PROFINET_AR_PROPERTY_COMPANION_SINGLE_AR                               \
-      | PROFINET_AR_PROPERTY_COMPANION_AR_WITHOUT_ACK                          \
-      | PROFINET_AR_PROPERTY_STARTUP_MODE_MASK                                 \
-      | PROFINET_AR_PROPERTY_PULL_MODULE_ALARM_ALLOWED)
+  (PROFINET_AR_PROPERTY_STATE_MASK |                                           \
+   PROFINET_AR_PROPERTY_TAKEOVER_NOT_ALLOWED |                                 \
+   PROFINET_AR_PROPERTY_TAKEOVER_ALLOWED |                                     \
+   PROFINET_AR_PROPERTY_PARAMETER_SERVER_EXT |                                 \
+   PROFINET_AR_PROPERTY_PARAMETER_SERVER_CM |                                  \
+   PROFINET_AR_PROPERTY_DATA_RATE_MASK |                                       \
+   PROFINET_AR_PROPERTY_ACCESS_BY_EXP_SUB_BLOCK |                              \
+   PROFINET_AR_PROPERTY_ACCESS_BY_DEVICE |                                     \
+   PROFINET_AR_PROPERTY_COMPANION_SINGLE_AR |                                  \
+   PROFINET_AR_PROPERTY_COMPANION_AR_WITHOUT_ACK |                             \
+   PROFINET_AR_PROPERTY_STARTUP_MODE_MASK |                                    \
+   PROFINET_AR_PROPERTY_PULL_MODULE_ALARM_ALLOWED)
 
 /*===========================================================================*/
 
@@ -204,8 +205,8 @@ DEFINES
 #define PROFINET_IO_CR_RT_CLASS3 0x00000003uL
 #define PROFINET_IO_CR_RT_CLASS_UDP 0x00000004uL
 #define PROFINET_IO_CR_RT_CLASS_MASK                                           \
-  (PROFINET_IO_CR_RT_CLASS1 | PROFINET_IO_CR_RT_CLASS2                         \
-      | PROFINET_IO_CR_RT_CLASS3 | PROFINET_IO_CR_RT_CLASS_UDP)
+  (PROFINET_IO_CR_RT_CLASS1 | PROFINET_IO_CR_RT_CLASS2 |                       \
+   PROFINET_IO_CR_RT_CLASS3 | PROFINET_IO_CR_RT_CLASS_UDP)
 #define PROFINET_IO_CR_PROPERTIES_RESERVED_MASK 0xFF001FF0uL
 
 /*---------------------------------------------------------------------------*/
@@ -242,8 +243,8 @@ DEFINES
 #define PROFINET_IO_CR_TAG_DEFAULT_VLAN 0x0001uL
 #define PROFINET_IO_CR_TAG_USER_PRIORITY 0xC000uL
 #define PROFINET_IO_CR_TAG_MASK                                                \
-  (PROFINET_IO_CR_TAG_NO_VLAN | PROFINET_IO_CR_TAG_DEFAULT_VLAN                \
-      | PROFINET_IO_CR_TAG_USER_PRIORITY)
+  (PROFINET_IO_CR_TAG_NO_VLAN | PROFINET_IO_CR_TAG_DEFAULT_VLAN |              \
+   PROFINET_IO_CR_TAG_USER_PRIORITY)
 
 #define PROFINET_IO_CR_MIN_FRAME_SEND_OFFSET 0x00000000uL
 #define PROFINET_IO_CR_MAX_FRAME_SEND_OFFSET 0x003D08FFuL
@@ -281,9 +282,9 @@ DEFINES
 #define PROFINET_MODULE_STATE_PROPER_MODULE 0x0002u
 #define PROFINET_MODULE_STATE_SUBSTITUTE_MODULE 0x0003u
 #define PROFINET_MODULE_STATE_MASK                                             \
-  (PROFINET_MODULE_STATE_NO_MODULE | PROFINET_MODULE_STATE_WRONG_MODULE        \
-      | PROFINET_MODULE_STATE_PROPER_MODULE                                    \
-      | PROFINET_MODULE_STATE_SUBSTITUTE_MODULE)
+  (PROFINET_MODULE_STATE_NO_MODULE | PROFINET_MODULE_STATE_WRONG_MODULE |      \
+   PROFINET_MODULE_STATE_PROPER_MODULE |                                       \
+   PROFINET_MODULE_STATE_SUBSTITUTE_MODULE)
 
 /*===========================================================================*/
 
@@ -307,9 +308,9 @@ DEFINES
 #define PROFINET_IO_SUBMODULE_TYPE_OUTPUT 0x0002u
 #define PROFINET_IO_SUBMODULE_TYPE_INPUT_AND_OUTPUT 0x0003u
 #define PROFINET_IO_SUBMODULE_TYPE_IO_MASK                                     \
-  (PROFINET_IO_SUBMODULE_TYPE_NO_INPUT_NO_OUTPUT                               \
-      | PROFINET_IO_SUBMODULE_TYPE_INPUT | PROFINET_IO_SUBMODULE_TYPE_OUTPUT   \
-      | PROFINET_IO_SUBMODULE_TYPE_INPUT_AND_OUTPUT)
+  (PROFINET_IO_SUBMODULE_TYPE_NO_INPUT_NO_OUTPUT |                             \
+   PROFINET_IO_SUBMODULE_TYPE_INPUT | PROFINET_IO_SUBMODULE_TYPE_OUTPUT |      \
+   PROFINET_IO_SUBMODULE_TYPE_INPUT_AND_OUTPUT)
 
 #define PROFINET_IO_SUBMODULE_TYPE_SHARED_INPUT 0x0004u
 #define PROFINET_IO_SUBMODULE_TYPE_NORMAL_INPUT 0x0000u
@@ -320,14 +321,14 @@ DEFINES
 #define PROFINET_IO_SUBMODULE_TYPE_DISCARD_IOXS 0x0020u
 
 #define PROFINET_IO_SUBMODULE_TYPE_MASK                                        \
-  (PROFINET_IO_SUBMODULE_TYPE_IO_MASK                                          \
-      | PROFINET_IO_SUBMODULE_TYPE_SHARED_INPUT                                \
-      | PROFINET_IO_SUBMODULE_TYPE_NORMAL_INPUT                                \
-      | PROFINET_IO_SUBMODULE_TYPE_REDUCED_INPUT                               \
-      | PROFINET_IO_SUBMODULE_TYPE_NORMAL_OUTPUT                               \
-      | PROFINET_IO_SUBMODULE_TYPE_REDUCED_OUTPUT                              \
-      | PROFINET_IO_SUBMODULE_TYPE_NORMAL_IOXS                                 \
-      | PROFINET_IO_SUBMODULE_TYPE_DISCARD_IOXS)
+  (PROFINET_IO_SUBMODULE_TYPE_IO_MASK |                                        \
+   PROFINET_IO_SUBMODULE_TYPE_SHARED_INPUT |                                   \
+   PROFINET_IO_SUBMODULE_TYPE_NORMAL_INPUT |                                   \
+   PROFINET_IO_SUBMODULE_TYPE_REDUCED_INPUT |                                  \
+   PROFINET_IO_SUBMODULE_TYPE_NORMAL_OUTPUT |                                  \
+   PROFINET_IO_SUBMODULE_TYPE_REDUCED_OUTPUT |                                 \
+   PROFINET_IO_SUBMODULE_TYPE_NORMAL_IOXS |                                    \
+   PROFINET_IO_SUBMODULE_TYPE_DISCARD_IOXS)
 
 /*===========================================================================*/
 
@@ -350,11 +351,10 @@ DEFINES
 #define CYCLIC_DATA_STATUS_NORMAL_OPERATION 0x20u
 #define CYCLIC_DATA_STATUS_PROBLEM_DETECTED 0x00u
 #define CYCLIC_DATA_STATUS_MASK                                                \
-  (CYCLIC_DATA_STATUS_STATE_PRIMARY | CYCLIC_DATA_STATUS_STATE_BACKUP          \
-      | CYCLIC_DATA_STATUS_DATA_VALID | CYCLIC_DATA_STATUS_DATA_INVALID        \
-      | CYCLIC_DATA_STATUS_STATE_RUN | CYCLIC_DATA_STATUS_STATE_STOP           \
-      | CYCLIC_DATA_STATUS_NORMAL_OPERATION                                    \
-      | CYCLIC_DATA_STATUS_PROBLEM_DETECTED)
+  (CYCLIC_DATA_STATUS_STATE_PRIMARY | CYCLIC_DATA_STATUS_STATE_BACKUP |        \
+   CYCLIC_DATA_STATUS_DATA_VALID | CYCLIC_DATA_STATUS_DATA_INVALID |           \
+   CYCLIC_DATA_STATUS_STATE_RUN | CYCLIC_DATA_STATUS_STATE_STOP |              \
+   CYCLIC_DATA_STATUS_NORMAL_OPERATION | CYCLIC_DATA_STATUS_PROBLEM_DETECTED)
 
 /*===========================================================================*/
 
@@ -404,12 +404,12 @@ DEFINES
 #define PROFINET_MC_CR_ADDR_RESOLUTION_MIN_FACTOR 0x00010000uL
 #define PROFINET_MC_CR_ADDR_RESOLUTION_MAX_FACTOR 0xFFFF0000uL
 #define PROFINET_MC_CR_ADDR_RESOLUTION_FACTOR_MASK                             \
-  (PROFINET_MC_CR_ADDR_RESOLUTION_MIN_FACTOR                                   \
-      | PROFINET_MC_CR_ADDR_RESOLUTION_MAX_FACTOR)
+  (PROFINET_MC_CR_ADDR_RESOLUTION_MIN_FACTOR |                                 \
+   PROFINET_MC_CR_ADDR_RESOLUTION_MAX_FACTOR)
 
 #define PROFINET_MC_CR_MASK                                                    \
-  (PROFINET_MC_CR_ADDR_RESOLUTION_MASK                                         \
-      | PROFINET_MC_CR_ADDR_RESOLUTION_FACTOR_MASK)
+  (PROFINET_MC_CR_ADDR_RESOLUTION_MASK |                                       \
+   PROFINET_MC_CR_ADDR_RESOLUTION_FACTOR_MASK)
 
 /*---------------------------------------------------------------------------*/
 
@@ -482,7 +482,8 @@ DEFINES
 
 /*===========================================================================*/
 
-typedef struct _T_PN_MAC_ADDRESS {
+typedef struct _T_PN_MAC_ADDRESS
+{
   PN_U8 HighAndVersionHighByte;
   PN_U8 HighAndVersionLowByte;
 
@@ -496,7 +497,8 @@ typedef struct _T_PN_MAC_ADDRESS {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_UUID {
+typedef struct _T_PROFINET_UUID
+{
   PN_U8 TimeLowHighWordHighByte;
   PN_U8 TimeLowHighWordLowByte;
   PN_U8 TimeLowLowWordHighByte;
@@ -625,7 +627,8 @@ typedef struct _T_PROFINET_UUID {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_ERROR_CON {
+typedef struct _T_PN_SERVICE_ERROR_CON
+{
   PN_U8 Code;
   PN_U8 Detail;
 
@@ -639,15 +642,16 @@ typedef struct _T_PN_SERVICE_ERROR_CON {
 #define PROFINET_IO_MCR_FRAME_ID_RT_CLASS1_BASE (PN_U16)0xF800u
 #define PROFINET_IO_MCR_FRAME_ID_RT_CLASS1_NUMBER_IDS (PN_U16)0x03FFu
 #define PROFINET_IO_MCR_FRAME_ID_RT_CLASS1_HIGHEST_FRAME_ID                    \
-  (PN_U16)(PROFINET_IO_MCR_FRAME_ID_RT_CLASS1_BASE                             \
-      + PROFINET_IO_MCR_FRAME_ID_RT_CLASS1_NUMBER_IDS)
+  (PN_U16)(PROFINET_IO_MCR_FRAME_ID_RT_CLASS1_BASE +                           \
+           PROFINET_IO_MCR_FRAME_ID_RT_CLASS1_NUMBER_IDS)
 #define PROFINET_IO_MCR_FRAME_ID_RT_CLASS2_BASE (PN_U16)0xBC00u
 #define PROFINET_IO_MCR_FRAME_ID_RT_CLASS2_NUMBER_IDS (PN_U16)0x03FFu
 #define PROFINET_IO_MCR_FRAME_ID_RT_CLASS2_HIGHEST_FRAME_ID                    \
-  (PN_U16)(PROFINET_IO_MCR_FRAME_ID_RT_CLASS2_BASE                             \
-      + PROFINET_IO_MCR_FRAME_ID_RT_CLASS2_NUMBER_IDS)
+  (PN_U16)(PROFINET_IO_MCR_FRAME_ID_RT_CLASS2_BASE +                           \
+           PROFINET_IO_MCR_FRAME_ID_RT_CLASS2_NUMBER_IDS)
 
-typedef struct _T_PN_MCR_PROVIDER {
+typedef struct _T_PN_MCR_PROVIDER
+{
   PN_U8 FrameIdHighByte;
   PN_U8 FrameIdLowByte;
 
@@ -655,7 +659,8 @@ typedef struct _T_PN_MCR_PROVIDER {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_MCR_CONSUMER {
+typedef struct _T_PN_MCR_CONSUMER
+{
   PN_U8 FrameIdHighByte;
   PN_U8 FrameIdLowByte;
 
@@ -680,20 +685,21 @@ typedef struct _T_PN_MCR_CONSUMER {
 #define PROFINET_IO_CR_FRAME_ID_RT_CLASS3_BASE (PN_U16)0x0100u
 #define PROFINET_IO_CR_FRAME_ID_RT_CLASS3_NUMBER_IDS (PN_U16)0x05FFu
 #define PROFINET_IO_CR_FRAME_ID_RT_CLASS3_HIGHEST_FRAME_ID                     \
-  (PN_U16)(PROFINET_IO_CR_FRAME_ID_RT_CLASS3_BASE                              \
-      + PROFINET_IO_CR_FRAME_ID_RT_CLASS3_NUMBER_IDS)
+  (PN_U16)(PROFINET_IO_CR_FRAME_ID_RT_CLASS3_BASE +                            \
+           PROFINET_IO_CR_FRAME_ID_RT_CLASS3_NUMBER_IDS)
 
 #define PROFINET_IO_CR_FRAME_ID_RT_CLASS3_MRPD_BASE (PN_U16)0x0700u
 #define PROFINET_IO_CR_FRAME_ID_RT_CLASS3_MRPD_NUMBER_IDS (PN_U16)0x08FFu
 #define PROFINET_IO_CR_FRAME_ID_RT_CLASS3_MRPD_HIGHEST_FRAME_ID                \
-  (PN_U16)(PROFINET_IO_CR_FRAME_ID_RT_CLASS3_MRPD_BASE                         \
-      + PROFINET_IO_CR_FRAME_ID_RT_CLASS3_MRPD_NUMBER_IDS)
+  (PN_U16)(PROFINET_IO_CR_FRAME_ID_RT_CLASS3_MRPD_BASE +                       \
+           PROFINET_IO_CR_FRAME_ID_RT_CLASS3_MRPD_NUMBER_IDS)
 typedef T_PN_MCR_PROVIDER T_PN_RTC3_PROVIDER;
 typedef T_PN_MCR_PROVIDER T_PN_RTC3_CONSUMER;
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_ALARM_CR {
+typedef struct _T_PN_ALARM_CR
+{
   PN_U8 VersionHighByte;
   PN_U8 VersionLowByte;
 
@@ -721,7 +727,8 @@ typedef struct _T_PN_ALARM_CR {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_REFERENCE {
+typedef struct _T_PN_REFERENCE
+{
   PN_U8 ReferenceHighByte;
   PN_U8 ReferenceLowByte;
 
@@ -731,7 +738,8 @@ typedef struct _T_PN_REFERENCE {
 
 #define PROFINET_IO_CR_IO_STATUS_LENGTH 0x0001u
 
-typedef struct _T_PN_SUBMODULE {
+typedef struct _T_PN_SUBMODULE
+{
   PN_U8 SubSlotNumberHighByte;
   PN_U8 SubSlotNumberLowByte;
 
@@ -763,7 +771,8 @@ typedef struct _T_PN_SUBMODULE {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_MODULE {
+typedef struct _T_PN_MODULE
+{
   PN_U8 VersionHighByte;
   PN_U8 VersionLowByte;
 
@@ -789,7 +798,8 @@ typedef struct _T_PN_MODULE {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_DATA_RECORD {
+typedef struct _T_PN_DATA_RECORD
+{
   PN_U8 VersionHighByte;
   PN_U8 VersionLowByte;
 
@@ -815,7 +825,8 @@ typedef struct _T_PN_DATA_RECORD {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_API {
+typedef struct _T_PN_API
+{
   PN_U8 APIHighWordHighByte;
   PN_U8 APIHighWordLowByte;
   PN_U8 APILowWordHighByte;
@@ -832,7 +843,8 @@ typedef struct _T_PN_API {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_IOCR {
+typedef struct _T_PN_IOCR
+{
   PN_U8 VersionHighByte;
   PN_U8 VersionLowByte;
 
@@ -972,7 +984,8 @@ typedef struct _T_PN_IOCR {
 #define PN_SERVICE_DOWNLOAD_LITTLE_ENDIAN 0u
 #define PN_SERVICE_DOWNLOAD_BIG_ENDIAN 1u
 
-typedef struct _T_PN_SERVICE_DOWNLOAD_REQ {
+typedef struct _T_PN_SERVICE_DOWNLOAD_REQ
+{
   PN_U8 IpAddressHighWordHighByte;
   PN_U8 IpAddressHighWordLowByte;
   PN_U8 IpAddressLowWordHighByte;
@@ -1037,7 +1050,8 @@ typedef struct _T_PN_SERVICE_DOWNLOAD_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_DATA_INFO {
+typedef struct _T_PN_DATA_INFO
+{
   PN_U8 SlotNumberHighByte;
   PN_U8 SlotNumberLowByte;
 
@@ -1051,7 +1065,8 @@ typedef struct _T_PN_DATA_INFO {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_API_INFO {
+typedef struct _T_PN_API_INFO
+{
   PN_U8 APIHighWordHighByte;
   PN_U8 APIHighWordLowByte;
   PN_U8 APILowWordHighByte;
@@ -1078,8 +1093,8 @@ typedef struct _T_PN_API_INFO {
 #define PN_IOCR_CMDEV_AR_MASK 0x00FFu
 #define PN_IOCR_NUMBER_MASK 0x7E00u
 #define PN_IOCR_IDENTIFIER_MASK                                                \
-  (PN_IOCR_DEVICE_REF_MASK | PN_IOCR_CMDEV_AR_MASK | PN_IOCR_NUMBER_MASK       \
-      | PN_IOCR_CMDEV_MASK)
+  (PN_IOCR_DEVICE_REF_MASK | PN_IOCR_CMDEV_AR_MASK | PN_IOCR_NUMBER_MASK |     \
+   PN_IOCR_CMDEV_MASK)
 
 #define _PN_IOCR_NUMBER_TO_DEVICE_REF(IOCRIdentifier)                          \
   (IOCRIdentifier & PN_IOCR_DEVICE_REF_MASK)
@@ -1089,7 +1104,8 @@ typedef struct _T_PN_API_INFO {
   ((IOCRIdentifier & PN_IOCR_NUMBER_MASK) >> 9u)
 #define _PN_IOCR_CMDEV(IOCRIdentifier) (IOCRIdentifier & PN_IOCR_CMDEV_MASK)
 
-typedef struct _T_PN_IOCR_INFO {
+typedef struct _T_PN_IOCR_INFO
+{
   PN_U8 IOCRIdentifierHighByte;
   PN_U8 IOCRIdentifierLowByte;
 
@@ -1110,7 +1126,8 @@ typedef struct _T_PN_IOCR_INFO {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_DOWNLOAD_CON {
+typedef struct _T_PN_SERVICE_DOWNLOAD_CON
+{
   PN_U8 AlarmRefHighByte;
   PN_U8 AlarmRefLowByte;
 
@@ -1136,7 +1153,8 @@ typedef struct _T_PN_SERVICE_DOWNLOAD_CON {
 #define PN_IDENT_MAINTENANCE_3_SUPPORTED (PN_U16)0x0008u
 #define PN_IDENT_MAINTENANCE_4_SUPPORTED (PN_U16)0x0010u
 
-typedef struct _T_PN_SERVICE_SET_IDENTIFICATION_REQ {
+typedef struct _T_PN_SERVICE_SET_IDENTIFICATION_REQ
+{
   PN_U8 TypeOfStation[SERVICE_SET_IDENTIFICATION_TYPE_OF_STATION_LENGTH];
   PN_U8 OrderId[PROFINET_IDENT_MAINTENANCE_ORDER_ID_LENGTH];
   PN_U8 SerialNumber[PROFINET_IDENT_MAINTENANCE_SR_NUMBER_LENGTH];
@@ -1168,7 +1186,8 @@ typedef struct _T_PN_SERVICE_SET_IDENTIFICATION_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_SET_IDENTIFICATION_CON {
+typedef struct _T_PN_SERVICE_SET_IDENTIFICATION_CON
+{
   PN_U16 DummyForCompiler;
 
 } PACK_BYTE_ALIGNMENT(T_PN_SERVICE_SET_IDENTIFICATION_CON);
@@ -1185,7 +1204,8 @@ typedef struct _T_PN_SERVICE_SET_IDENTIFICATION_CON {
 #define MIN_WATCHDOG_INTERVAL (PN_U32)3uL
 #define MAX_WATCHDOG_INTERVAL (PN_U32)60000uL
 
-typedef struct _T_PN_SERVICE_CONFIGURE_WATCHDOG_REQ {
+typedef struct _T_PN_SERVICE_CONFIGURE_WATCHDOG_REQ
+{
   PN_U8 WatchdogExpirationAction;
   PN_U8 Alignment;
 
@@ -1198,7 +1218,8 @@ typedef struct _T_PN_SERVICE_CONFIGURE_WATCHDOG_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_CONFIGURE_WATCHDOG_CON {
+typedef struct _T_PN_SERVICE_CONFIGURE_WATCHDOG_CON
+{
   PN_U16 DummyForCompiler;
 
 } PACK_BYTE_ALIGNMENT(T_PN_SERVICE_CONFIGURE_WATCHDOG_CON);
@@ -1268,14 +1289,15 @@ typedef struct _T_PN_SERVICE_CONFIGURE_WATCHDOG_CON {
 #define PROFINET_SYNC_MODE_CABLE_DELAY_CHECK_ON (PN_U16)0x0001u
 #define PROFINET_SYNC_MODE_SYNC_MASTER_CHECK_ON (PN_U16)0x0002u
 #define PROFINET_SYNC_MODE_MASK                                                \
-  (PN_U16)(PROFINET_SYNC_MODE_CABLE_DELAY_CHECK_ON                             \
-      | PROFINET_SYNC_MODE_SYNC_MASTER_CHECK_ON)
+  (PN_U16)(PROFINET_SYNC_MODE_CABLE_DELAY_CHECK_ON |                           \
+           PROFINET_SYNC_MODE_SYNC_MASTER_CHECK_ON)
 
 #define PROFINET_MAU_TYPE_MODE_DIFFERENCE_CHECK_ON (PN_U16)0x0001u
 #define PROFINET_MAU_TYPE_MODE_MASK                                            \
   (PN_U16)(PROFINET_MAU_TYPE_MODE_DIFFERENCE_CHECK_ON)
 
-typedef struct _T_PN_NEIGHBOUR_PORT_DATA {
+typedef struct _T_PN_NEIGHBOUR_PORT_DATA
+{
   PN_U8 Flags;
   PN_U8 Alignment;
 
@@ -1312,7 +1334,8 @@ typedef struct _T_PN_NEIGHBOUR_PORT_DATA {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_DOWNLOAD_NEIGHBOUR_DATA_REQ {
+typedef struct _T_PN_SERVICE_DOWNLOAD_NEIGHBOUR_DATA_REQ
+{
   PN_U8 NumberPorts;
   PN_U8 Alignment;
 
@@ -1322,7 +1345,8 @@ typedef struct _T_PN_SERVICE_DOWNLOAD_NEIGHBOUR_DATA_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_DOWNLOAD_NEIGHBOUR_DATA_CON {
+typedef struct _T_PN_SERVICE_DOWNLOAD_NEIGHBOUR_DATA_CON
+{
   PN_U16 DummyForCompiler;
 
 } PACK_BYTE_ALIGNMENT(T_PN_SERVICE_DOWNLOAD_NEIGHBOUR_DATA_CON);
@@ -1334,7 +1358,8 @@ typedef struct _T_PN_SERVICE_DOWNLOAD_NEIGHBOUR_DATA_CON {
 
 #define MAX_LICENCE_DATA_LENGTH (PN_U16)256u
 
-typedef struct _T_PN_SERVICE_CONFIGURE_LICENCE_REQ {
+typedef struct _T_PN_SERVICE_CONFIGURE_LICENCE_REQ
+{
   PN_U8 DataLengthHighByte;
   PN_U8 DataLengthLowByte;
 
@@ -1344,7 +1369,8 @@ typedef struct _T_PN_SERVICE_CONFIGURE_LICENCE_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_CONFIGURE_LICENCE_CON {
+typedef struct _T_PN_SERVICE_CONFIGURE_LICENCE_CON
+{
   PN_U16 DummyForCompiler;
 
 } PACK_BYTE_ALIGNMENT(T_PN_SERVICE_CONFIGURE_LICENCE_CON);
@@ -1363,12 +1389,12 @@ typedef struct _T_PN_SERVICE_CONFIGURE_LICENCE_CON {
 #define PN_SYNC_DOMAIN_PRIORITY1_LEVEL7 0x38u
 #define PN_SYNC_DOMAIN_PRIORITY1_MASTER_ACTIVE 0x80u
 #define PN_SYNC_DOMAIN_PRIORITY1_MASK                                          \
-  (PN_SYNC_DOMAIN_PRIORITY1_PRIMARY_MASTER                                     \
-      | PN_SYNC_DOMAIN_PRIORITY1_SECONDARY_MASTER                              \
-      | PN_SYNC_DOMAIN_PRIORITY1_LEVEL0 | PN_SYNC_DOMAIN_PRIORITY1_LEVEL1      \
-      | PN_SYNC_DOMAIN_PRIORITY1_LEVEL2 | PN_SYNC_DOMAIN_PRIORITY1_LEVEL3      \
-      | PN_SYNC_DOMAIN_PRIORITY1_LEVEL4 | PN_SYNC_DOMAIN_PRIORITY1_LEVEL5      \
-      | PN_SYNC_DOMAIN_PRIORITY1_LEVEL6 | PN_SYNC_DOMAIN_PRIORITY1_LEVEL7)
+  (PN_SYNC_DOMAIN_PRIORITY1_PRIMARY_MASTER |                                   \
+   PN_SYNC_DOMAIN_PRIORITY1_SECONDARY_MASTER |                                 \
+   PN_SYNC_DOMAIN_PRIORITY1_LEVEL0 | PN_SYNC_DOMAIN_PRIORITY1_LEVEL1 |         \
+   PN_SYNC_DOMAIN_PRIORITY1_LEVEL2 | PN_SYNC_DOMAIN_PRIORITY1_LEVEL3 |         \
+   PN_SYNC_DOMAIN_PRIORITY1_LEVEL4 | PN_SYNC_DOMAIN_PRIORITY1_LEVEL5 |         \
+   PN_SYNC_DOMAIN_PRIORITY1_LEVEL6 | PN_SYNC_DOMAIN_PRIORITY1_LEVEL7)
 
 #define PN_SYNC_DOMAIN_PRIORITY2_DEFAULT 0xFFu
 
@@ -1416,7 +1442,8 @@ typedef struct _T_PN_SERVICE_CONFIGURE_LICENCE_CON {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_DEFAULT_API_DATA_RECORD {
+typedef struct _T_PN_DEFAULT_API_DATA_RECORD
+{
   PN_U8 VersionHighByte;
   PN_U8 VersionLowByte;
 
@@ -1441,7 +1468,8 @@ typedef struct _T_PN_DEFAULT_API_DATA_RECORD {
 
 } PACK_BYTE_ALIGNMENT(T_PN_DEFAULT_API_DATA_RECORD);
 
-typedef struct _T_PN_SERVICE_DOWNLOAD_IRT_DOMAIN_REQ {
+typedef struct _T_PN_SERVICE_DOWNLOAD_IRT_DOMAIN_REQ
+{
   PN_U8 NumberOfDataRecordsHighByte;
   PN_U8 NumberOfDataRecordsLowByte;
 
@@ -1453,7 +1481,8 @@ typedef struct _T_PN_SERVICE_DOWNLOAD_IRT_DOMAIN_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_DOWNLOAD_IRT_DOMAIN_CON {
+typedef struct _T_PN_SERVICE_DOWNLOAD_IRT_DOMAIN_CON
+{
   PN_U16 DummyForCompiler;
 
 } PACK_BYTE_ALIGNMENT(T_PN_SERVICE_DOWNLOAD_IRT_DOMAIN_CON);
@@ -1478,7 +1507,8 @@ typedef T_PN_SERVICE_DOWNLOAD_IRT_DOMAIN_CON
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_BLOCK_HEADER {
+typedef struct _T_PROFINET_BLOCK_HEADER
+{
   PN_U8 TypeHighByte;
   PN_U8 TypeLowByte;
 
@@ -1492,7 +1522,8 @@ typedef struct _T_PROFINET_BLOCK_HEADER {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_EXTENDED_BLOCK {
+typedef struct _T_PN_EXTENDED_BLOCK
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   /*
@@ -1509,11 +1540,12 @@ typedef struct _T_PN_EXTENDED_BLOCK {
 #define CONFIG_ID_SELECTOR_AR_SET_4 (PN_U16)0x0004u
 #define CONFIG_ID_SELECTOR_NUMBER_AR_PER_SET (PN_U16)0x0010u
 #define CONFIG_ID_SELECTOR_MASK                                                \
-  (PN_U16)(CONFIG_ID_SELECTOR_AR_SET_1 | CONFIG_ID_SELECTOR_AR_SET_2           \
-      | CONFIG_ID_SELECTOR_AR_SET_3 | CONFIG_ID_SELECTOR_AR_SET_4              \
-      | CONFIG_ID_SELECTOR_NUMBER_AR_PER_SET)
+  (PN_U16)(CONFIG_ID_SELECTOR_AR_SET_1 | CONFIG_ID_SELECTOR_AR_SET_2 |         \
+           CONFIG_ID_SELECTOR_AR_SET_3 | CONFIG_ID_SELECTOR_AR_SET_4 |         \
+           CONFIG_ID_SELECTOR_NUMBER_AR_PER_SET)
 
-typedef struct _T_PN_EXTENDED_BLOCK_CONFIG_ID {
+typedef struct _T_PN_EXTENDED_BLOCK_CONFIG_ID
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Reserved[2];
@@ -1547,7 +1579,8 @@ typedef struct _T_PN_EXTENDED_BLOCK_CONFIG_ID {
 #define PN_SERVICE_ERROR_DOWNLOAD_EXTENDED_INVALID_RESERVED_BYTE 0x08u
 #define PN_SERVICE_ERROR_DOWNLOAD_EXTENDED_INVALID_SELECTOR 0x09u
 
-typedef struct _T_PN_SERVICE_DOWNLOAD_EXTENDED_REQ {
+typedef struct _T_PN_SERVICE_DOWNLOAD_EXTENDED_REQ
+{
   PN_U8 NumberOfBlocksHighByte;
   PN_U8 NumberOfBlocksLowByte;
 
@@ -1561,7 +1594,8 @@ typedef struct _T_PN_SERVICE_DOWNLOAD_EXTENDED_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_DOWNLOAD_EXTENDED_CON {
+typedef struct _T_PN_SERVICE_DOWNLOAD_EXTENDED_CON
+{
   PN_U16 DummyForCompiler;
 
 } PACK_BYTE_ALIGNMENT(T_PN_SERVICE_DOWNLOAD_EXTENDED_CON);
@@ -1608,11 +1642,11 @@ typedef struct _T_PN_SERVICE_DOWNLOAD_EXTENDED_CON {
 #define PROFINET_ALARM_SPECIFIER_SUBMODULE_DIAGNOSIS_STATE (PN_U16)0x2000u
 #define PROFINET_ALARM_SPECIFIER_AR_DIAGNOSIS_STATE (PN_U16)0x8000u
 #define PROFINET_ALARM_SPECIFIER_MASK                                          \
-  (PROFINET_ALARM_SPECIFIER_SEQUENCE_MASK                                      \
-      | PROFINET_ALARM_SPECIFIER_CHANNEL_DIAGNOSIS                             \
-      | PROFINET_ALARM_SPECIFIER_MANUFACTURER_DIAGNOSIS                        \
-      | PROFINET_ALARM_SPECIFIER_SUBMODULE_DIAGNOSIS_STATE                     \
-      | PROFINET_ALARM_SPECIFIER_AR_DIAGNOSIS_STATE)
+  (PROFINET_ALARM_SPECIFIER_SEQUENCE_MASK |                                    \
+   PROFINET_ALARM_SPECIFIER_CHANNEL_DIAGNOSIS |                                \
+   PROFINET_ALARM_SPECIFIER_MANUFACTURER_DIAGNOSIS |                           \
+   PROFINET_ALARM_SPECIFIER_SUBMODULE_DIAGNOSIS_STATE |                        \
+   PROFINET_ALARM_SPECIFIER_AR_DIAGNOSIS_STATE)
 
 #define PROFINET_ALARM_USER_STRUCTURE_IDENT_MANUFACTURER_LOWER_LIMIT           \
   (PN_U16)0x0000u
@@ -1648,8 +1682,8 @@ typedef struct _T_PN_SERVICE_DOWNLOAD_EXTENDED_CON {
 #define PROFINET_ALARM_CHANNEL_PROPERTIES_DIRECTION_IN (PN_U16)0x2000u
 #define PROFINET_ALARM_CHANNEL_PROPERTIES_DIRECTION_OUT (PN_U16)0x4000u
 #define PROFINET_ALARM_CHANNEL_PROPERTIES_DIRECTION_IN_OUT                     \
-  (PROFINET_ALARM_CHANNEL_PROPERTIES_DIRECTION_IN                              \
-      | PROFINET_ALARM_CHANNEL_PROPERTIES_DIRECTION_OUT)
+  (PROFINET_ALARM_CHANNEL_PROPERTIES_DIRECTION_IN |                            \
+   PROFINET_ALARM_CHANNEL_PROPERTIES_DIRECTION_OUT)
 
 #define PROFINET_CH_ERR_TYPE_SHORT_CIRCUIT (PN_U16)0x0001u
 #define PROFINET_CH_ERR_TYPE_UNDERVOLTAGE (PN_U16)0x0002u
@@ -1775,7 +1809,8 @@ typedef struct _T_PN_SERVICE_DOWNLOAD_EXTENDED_CON {
 /* used with channel error type 0x800E */
 #define PROFINET_EXT_CH_ERR_TYPE_SUBORDINATED_ENTITY_INFO (PN_U16)0x8000u
 
-typedef struct _T_PN_SERVICE_GET_ALARM_REQ {
+typedef struct _T_PN_SERVICE_GET_ALARM_REQ
+{
   PN_U8 AlarmRefHighByte;
   PN_U8 AlarmRefLowByte;
 
@@ -1783,7 +1818,8 @@ typedef struct _T_PN_SERVICE_GET_ALARM_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_GET_ALARM_CON {
+typedef struct _T_PN_SERVICE_GET_ALARM_CON
+{
   PN_U8 AlarmRefHighByte;
   PN_U8 AlarmRefLowByte;
 
@@ -1828,7 +1864,8 @@ typedef struct _T_PN_SERVICE_GET_ALARM_CON {
 
 /*===========================================================================*/
 
-typedef struct _T_PN_SERVICE_ALARM_ACK_REQ {
+typedef struct _T_PN_SERVICE_ALARM_ACK_REQ
+{
   PN_U8 AlarmRefHighByte;
   PN_U8 AlarmRefLowByte;
 
@@ -1839,7 +1876,8 @@ typedef struct _T_PN_SERVICE_ALARM_ACK_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_ALARM_ACK_CON {
+typedef struct _T_PN_SERVICE_ALARM_ACK_CON
+{
   PN_U8 AlarmRefHighByte;
   PN_U8 AlarmRefLowByte;
 
@@ -1847,7 +1885,8 @@ typedef struct _T_PN_SERVICE_ALARM_ACK_CON {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_MAINTENANCE_ITEM {
+typedef struct _T_PROFINET_MAINTENANCE_ITEM
+{
   PN_U8 UserStructureIdentifierHighByte;
   PN_U8 UserStructureIdentifierLowByte;
 
@@ -1864,7 +1903,8 @@ typedef struct _T_PROFINET_MAINTENANCE_ITEM {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_UPLOAD_RETRIEVAL_ITEM {
+typedef struct _T_PROFINET_UPLOAD_RETRIEVAL_ITEM
+{
   PN_U8 UserStructureIdentifierHighByte;
   PN_U8 UserStructureIdentifierLowByte;
 
@@ -1888,7 +1928,8 @@ typedef struct _T_PROFINET_UPLOAD_RETRIEVAL_ITEM {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_IPARAMETER_ITEM {
+typedef struct _T_PROFINET_IPARAMETER_ITEM
+{
   PN_U8 UserStructureIdentifierHighByte;
   PN_U8 UserStructureIdentifierLowByte;
 
@@ -1920,7 +1961,8 @@ typedef struct _T_PROFINET_IPARAMETER_ITEM {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_CHANNEL_DIAG {
+typedef struct _T_PROFINET_CHANNEL_DIAG
+{
   PN_U8 UserStructureIdentifierHighByte;
   PN_U8 UserStructureIdentifierLowByte;
 
@@ -1937,7 +1979,8 @@ typedef struct _T_PROFINET_CHANNEL_DIAG {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_EXT_CHANNEL_DIAG {
+typedef struct _T_PROFINET_EXT_CHANNEL_DIAG
+{
   PN_U8 UserStructureIdentifierHighByte;
   PN_U8 UserStructureIdentifierLowByte;
 
@@ -1980,7 +2023,8 @@ typedef struct _T_PROFINET_EXT_CHANNEL_DIAG {
 #define PROFINET_QUALIFIED_CHANNEL_DIAG_QUALIFIER_27                           \
   (PN_U32)0x08000000u /* Start of Fault */
 
-typedef struct _T_PROFINET_QUALIFIED_CHANNEL_DIAG {
+typedef struct _T_PROFINET_QUALIFIED_CHANNEL_DIAG
+{
   PN_U8 UserStructureIdentifierHighByte;
   PN_U8 UserStructureIdentifierLowByte;
 
@@ -2017,7 +2061,8 @@ typedef struct _T_PROFINET_QUALIFIED_CHANNEL_DIAG {
 #define PN_SERVICE_ALARM_INVALID_SPECIFIER 0x05u
 #define PN_SERVICE_ALARM_INVALID_LENGTH 0x06u
 
-typedef struct _T_PN_SERVICE_ALARM_REQ {
+typedef struct _T_PN_SERVICE_ALARM_REQ
+{
   PN_U8 AlarmRefHighByte;
   PN_U8 AlarmRefLowByte;
 
@@ -2062,7 +2107,8 @@ typedef struct _T_PN_SERVICE_ALARM_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_ALARM_CON {
+typedef struct _T_PN_SERVICE_ALARM_CON
+{
   PN_U8 AlarmRefHighByte;
   PN_U8 AlarmRefLowByte;
 
@@ -2070,7 +2116,8 @@ typedef struct _T_PN_SERVICE_ALARM_CON {
 
 /*===========================================================================*/
 
-typedef struct _T_PN_SERVICE_GET_ALARM_ACK_REQ {
+typedef struct _T_PN_SERVICE_GET_ALARM_ACK_REQ
+{
   PN_U8 AlarmRefHighByte;
   PN_U8 AlarmRefLowByte;
 
@@ -2078,7 +2125,8 @@ typedef struct _T_PN_SERVICE_GET_ALARM_ACK_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_GET_ALARM_ACK_CON {
+typedef struct _T_PN_SERVICE_GET_ALARM_ACK_CON
+{
   PN_U8 AlarmRefHighByte;
   PN_U8 AlarmRefLowByte;
 
@@ -2112,14 +2160,16 @@ typedef struct _T_PN_SERVICE_GET_ALARM_ACK_CON {
 
 /*===========================================================================*/
 
-typedef struct _T_PN_SERVICE_GET_DEVICE_STATE_REQ {
+typedef struct _T_PN_SERVICE_GET_DEVICE_STATE_REQ
+{
   PN_U16 DummyForCompiler;
 
 } PACK_BYTE_ALIGNMENT(T_PN_SERVICE_GET_DEVICE_STATE_REQ);
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_ERROR_CODE {
+typedef struct _T_PN_ERROR_CODE
+{
   PN_U8 Reason;
   PN_U8 Decode;
 
@@ -2134,7 +2184,8 @@ typedef T_PN_ERROR_CODE T_PROFINET_ERROR_CODE;
 
 #define PROFINET_STATUS_OK 0uL
 
-typedef struct _T_PROFINET_STATUS {
+typedef struct _T_PROFINET_STATUS
+{
   union {
     PN_U32 Status;
     PN_U32 RpcError;
@@ -2147,7 +2198,8 @@ typedef struct _T_PROFINET_STATUS {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_DIFF_MODULE_API {
+typedef struct _T_PN_DIFF_MODULE_API
+{
   PN_U8 APIHighWordHighByte;
   PN_U8 APIHighWordLowByte;
   PN_U8 APILowWordHighByte;
@@ -2169,11 +2221,12 @@ typedef struct _T_PN_DIFF_MODULE_API {
 #define PROFINET_MODULE_STATE_PROPER_MODULE 0x0002u
 #define PROFINET_MODULE_STATE_SUBSTITUTE_MODULE 0x0003u
 #define PROFINET_MODULE_STATE_MASK                                             \
-  (PROFINET_MODULE_STATE_NO_MODULE | PROFINET_MODULE_STATE_WRONG_MODULE        \
-      | PROFINET_MODULE_STATE_PROPER_MODULE                                    \
-      | PROFINET_MODULE_STATE_SUBSTITUTE_MODULE)
+  (PROFINET_MODULE_STATE_NO_MODULE | PROFINET_MODULE_STATE_WRONG_MODULE |      \
+   PROFINET_MODULE_STATE_PROPER_MODULE |                                       \
+   PROFINET_MODULE_STATE_SUBSTITUTE_MODULE)
 
-typedef struct _T_PN_DIFF_MODULE_SLOT {
+typedef struct _T_PN_DIFF_MODULE_SLOT
+{
   PN_U8 SlotNumberHighByte;
   PN_U8 SlotNumberLowByte;
 
@@ -2243,7 +2296,8 @@ typedef struct _T_PN_DIFF_MODULE_SLOT {
 #define PROFINET_SUBMODULE_STATE_IDENT_INFO_RESRERVED                          \
   (PROFINET_SUBMODULE_STATE_FORMAT_INDICATOR | 0x6000u)
 
-typedef struct _T_PN_DIFF_MODULE_SUBSLOT {
+typedef struct _T_PN_DIFF_MODULE_SUBSLOT
+{
   PN_U8 SubSlotNumberHighByte;
   PN_U8 SubSlotNumberLowByte;
 
@@ -2259,7 +2313,8 @@ typedef struct _T_PN_DIFF_MODULE_SUBSLOT {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_DIFF_MODULE {
+typedef struct _T_PN_DIFF_MODULE
+{
   PN_U8 NumberOfAPIsHighByte;
   PN_U8 NumberOfAPIsLowByte;
 
@@ -2271,7 +2326,8 @@ typedef struct _T_PN_DIFF_MODULE {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_GET_DEVICE_STATE_CON {
+typedef struct _T_PN_SERVICE_GET_DEVICE_STATE_CON
+{
   PN_U8 StateHighByte;
   PN_U8 StateLowByte;
 
@@ -2289,14 +2345,16 @@ typedef struct _T_PN_SERVICE_GET_DEVICE_STATE_CON {
 
 /*===========================================================================*/
 
-typedef struct _T_PN_SERVICE_GET_LIST_OF_STATION_REQ {
+typedef struct _T_PN_SERVICE_GET_LIST_OF_STATION_REQ
+{
   PN_U16 DummyForCompiler;
 
 } PACK_BYTE_ALIGNMENT(T_PN_SERVICE_GET_LIST_OF_STATION_REQ);
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_DEVICE_IP_INFO {
+typedef struct _T_PN_DEVICE_IP_INFO
+{
   PN_U8 AddressHighWordHighByte;
   PN_U8 AddressHighWordLowByte;
   PN_U8 AddressLowWordHighByte;
@@ -2321,7 +2379,8 @@ typedef struct _T_PN_DEVICE_IP_INFO {
 #define DEVICE_TYPE_IO_MULTI_DEVICE 0x04u
 #define DEVICE_TYPE_IO_SUPERVISOR 0x08u
 
-typedef struct _T_PN_DEVICE_PROPERTY_INFO {
+typedef struct _T_PN_DEVICE_PROPERTY_INFO
+{
   PN_U8 DeviceIdHighByte;
   PN_U8 DeviceIdLowByte;
 
@@ -2335,7 +2394,8 @@ typedef struct _T_PN_DEVICE_PROPERTY_INFO {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_DEVICE_INFO {
+typedef struct _T_PN_DEVICE_INFO
+{
   T_PN_MAC_ADDRESS MacAddress;
   T_PN_DEVICE_IP_INFO Ip;
   T_PN_DEVICE_PROPERTY_INFO Property;
@@ -2351,7 +2411,8 @@ typedef struct _T_PN_DEVICE_INFO {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_GET_LIST_OF_STATION_CON {
+typedef struct _T_PN_SERVICE_GET_LIST_OF_STATION_CON
+{
   PN_U8 NumberOfDevicesHighByte;
   PN_U8 NumberOfDevicesLowByte;
 
@@ -2386,7 +2447,8 @@ typedef struct _T_PN_SERVICE_GET_LIST_OF_STATION_CON {
 #define PN_SERVICE_SET_IP_SETTINGS_RESPONSE_TIMEOUT                            \
   PN_SERVICE_SET_RESPONSE_TIMEOUT
 
-typedef struct _T_PN_SERVICE_SET_NAME_REQ {
+typedef struct _T_PN_SERVICE_SET_NAME_REQ
+{
   T_PN_MAC_ADDRESS DestMacAddress;
 
   PN_U8 NameLengthHighByte;
@@ -2398,14 +2460,16 @@ typedef struct _T_PN_SERVICE_SET_NAME_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_SET_NAME_CON {
+typedef struct _T_PN_SERVICE_SET_NAME_CON
+{
   PN_U16 DummyForCompiler;
 
 } PACK_BYTE_ALIGNMENT(T_PN_SERVICE_SET_NAME_CON);
 
 /*===========================================================================*/
 
-typedef struct _T_PN_SERVICE_SET_IP_SETTINGS_REQ {
+typedef struct _T_PN_SERVICE_SET_IP_SETTINGS_REQ
+{
   T_PN_MAC_ADDRESS DestMacAddress;
 
   PN_U8 AddressHighWordHighByte;
@@ -2427,7 +2491,8 @@ typedef struct _T_PN_SERVICE_SET_IP_SETTINGS_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_SET_IP_SETTINGS_CON {
+typedef struct _T_PN_SERVICE_SET_IP_SETTINGS_CON
+{
   PN_U16 DummyForCompiler;
 
 } PACK_BYTE_ALIGNMENT(T_PN_SERVICE_SET_IP_SETTINGS_CON);
@@ -2489,7 +2554,8 @@ typedef struct _T_PN_SERVICE_SET_IP_SETTINGS_CON {
 
 #define SOFTING_CONFIGURATION_LAST_FRAGMENT (PN_U32)0x80000000uL
 
-typedef struct _T_PN_STORE_SOFTING_CONFIGURATION {
+typedef struct _T_PN_STORE_SOFTING_CONFIGURATION
+{
   PN_U8 ConfigLengthHighWordHighByte;
   PN_U8 ConfigLengthHighWordLowByte;
   PN_U8 ConfigLengthLowWordHighByte;
@@ -2515,7 +2581,8 @@ typedef struct _T_PN_STORE_SOFTING_CONFIGURATION {
 
 #define PROFILE_INFO_TASK_PROFILING (PN_U8)255u
 
-typedef struct _T_PN_PROFILE_INFO {
+typedef struct _T_PN_PROFILE_INFO
+{
   PN_U8 Action;
   PN_U8 ModuleId;
 
@@ -2525,7 +2592,8 @@ typedef struct _T_PN_PROFILE_INFO {
 
 #define PN_SERVICE_DCP_SET_RESPONSE_TIMEOUT PN_SERVICE_SET_RESPONSE_TIMEOUT
 
-typedef struct _T_PN_SERVICE_DCP_SET_REQ {
+typedef struct _T_PN_SERVICE_DCP_SET_REQ
+{
   T_PN_MAC_ADDRESS DestMacAddress;
 
   PN_U8 Option;
@@ -2548,7 +2616,8 @@ typedef struct _T_PN_SERVICE_DCP_SET_REQ {
 #define DCP_RESULT_RESOURCE_ERROR (PN_U8)4u
 #define DCP_RESULT_SET_NOT_POSSIBLE (PN_U8)5u
 
-typedef struct _T_PN_SERVICE_DCP_SET_CON {
+typedef struct _T_PN_SERVICE_DCP_SET_CON
+{
   PN_U16 DummyForCompiler;
 
 } PACK_BYTE_ALIGNMENT(T_PN_SERVICE_DCP_SET_CON);
@@ -2557,7 +2626,8 @@ typedef struct _T_PN_SERVICE_DCP_SET_CON {
 
 #define PN_SERVICE_DCP_GET_RESPONSE_TIMEOUT PN_SERVICE_SET_RESPONSE_TIMEOUT
 
-typedef struct _T_PN_SERVICE_DCP_GET_REQ {
+typedef struct _T_PN_SERVICE_DCP_GET_REQ
+{
   T_PN_MAC_ADDRESS DestMacAddress;
 
   PN_U8 Option;
@@ -2567,13 +2637,15 @@ typedef struct _T_PN_SERVICE_DCP_GET_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SYS_TIME {
+typedef struct _T_PN_SYS_TIME
+{
   PN_U32 HighPart;
   PN_U32 LowPart;
 
 } PACK_BYTE_ALIGNMENT(T_PN_SYS_TIME);
 
-typedef struct _T_PN_PROFILE_ENTRY {
+typedef struct _T_PN_PROFILE_ENTRY
+{
   PN_U32 Identifier;
   T_PN_SYS_TIME Time;
 
@@ -2584,7 +2656,8 @@ typedef struct _T_PN_PROFILE_ENTRY {
 #define PROFILE_DATA_ENCODING_BIG_ENDIAN 0x00u
 #define PROFILE_DATA_ENCODING_LITTLE_ENDIAN 0x01u
 
-typedef struct _T_PN_PROFILE_INFO_HEADER {
+typedef struct _T_PN_PROFILE_INFO_HEADER
+{
   PN_U32 Version;
 
   PN_U32 CountsPer1ms;
@@ -2600,7 +2673,8 @@ typedef struct _T_PN_PROFILE_INFO_HEADER {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_DCP_BLOCK_INFO {
+typedef struct _T_PROFINET_DCP_BLOCK_INFO
+{
   PN_U8 BlockInfoHighByte;
   PN_U8 BlockInfoLowByte;
 
@@ -2611,7 +2685,8 @@ typedef struct _T_PROFINET_DCP_BLOCK_INFO {
 #define STORE_CONFIGURATION_RESULT_OK 0x00u
 #define STORE_CONFIGURATION_RESULT_BUSY 0xFFu
 
-typedef struct _T_PN_STORE_SOFTING_CONFIGURATION_RESULT {
+typedef struct _T_PN_STORE_SOFTING_CONFIGURATION_RESULT
+{
   PN_U8 Result;
   PN_U8 Alignment;
 
@@ -2619,7 +2694,8 @@ typedef struct _T_PN_STORE_SOFTING_CONFIGURATION_RESULT {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_DCP_GET_CON {
+typedef struct _T_PN_SERVICE_DCP_GET_CON
+{
   PN_U8 Option;
   PN_U8 Suboption;
 
@@ -2658,7 +2734,8 @@ typedef struct _T_PN_SERVICE_DCP_GET_CON {
 #define APPLICATION_DATA_OPTION_RESULT_RESOURCE_ERROR (PN_U8)4u
 #define APPLICATION_DATA_OPTION_RESULT_SET_NOT_POSSIBLE (PN_U8)5u
 
-typedef struct _T_PN_APPLICATION_OPTION {
+typedef struct _T_PN_APPLICATION_OPTION
+{
   PN_U8 Option;
   PN_U8 Suboption;
 
@@ -2666,7 +2743,8 @@ typedef struct _T_PN_APPLICATION_OPTION {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_APPLICATION_OPTION_DATA {
+typedef struct _T_PN_APPLICATION_OPTION_DATA
+{
   PN_U8 Option;
   PN_U8 Suboption;
 
@@ -2680,7 +2758,8 @@ typedef struct _T_PN_APPLICATION_OPTION_DATA {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_APPLICATION_OPTION_RESULT {
+typedef struct _T_PN_APPLICATION_OPTION_RESULT
+{
   PN_U8 Option;
   PN_U8 Suboption;
 
@@ -2692,7 +2771,8 @@ typedef struct _T_PN_APPLICATION_OPTION_RESULT {
 
 typedef T_PN_APPLICATION_OPTION T_PN_APPLICATION_OPTION_GET;
 
-typedef struct _T_PN_SERVICE_APPLICATION_DATA_GET_IND {
+typedef struct _T_PN_SERVICE_APPLICATION_DATA_GET_IND
+{
   PN_U8 NumberOptionsHighByte;
   PN_U8 NumberOptionsLowByte;
 
@@ -2705,7 +2785,8 @@ typedef struct _T_PN_SERVICE_APPLICATION_DATA_GET_IND {
 
 typedef T_PN_APPLICATION_OPTION_DATA T_PN_APPLICATION_OPTION_DATA_GET;
 
-typedef struct _T_PN_SERVICE_APPLICATION_DATA_GET_RES {
+typedef struct _T_PN_SERVICE_APPLICATION_DATA_GET_RES
+{
   PN_U8 NumberOptionsHighByte;
   PN_U8 NumberOptionsLowByte;
 
@@ -2720,7 +2801,8 @@ typedef T_PN_APPLICATION_OPTION_DATA T_PN_APPLICATION_OPTION_DATA_SET;
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_APPLICATION_DATA_SET_IND {
+typedef struct _T_PN_SERVICE_APPLICATION_DATA_SET_IND
+{
   PN_U8 NumberOptionsHighByte;
   PN_U8 NumberOptionsLowByte;
 
@@ -2733,7 +2815,8 @@ typedef struct _T_PN_SERVICE_APPLICATION_DATA_SET_IND {
 
 typedef T_PN_APPLICATION_OPTION_RESULT T_PN_APPLICATION_OPTION_SET;
 
-typedef struct _T_PN_SERVICE_APPLICATION_DATA_SET_RES {
+typedef struct _T_PN_SERVICE_APPLICATION_DATA_SET_RES
+{
   PN_U8 NumberOptionsHighByte;
   PN_U8 NumberOptionsLowByte;
 
@@ -2744,7 +2827,8 @@ typedef struct _T_PN_SERVICE_APPLICATION_DATA_SET_RES {
 
 /*===========================================================================*/
 
-typedef struct _T_PN_SERVICE_GET_ETHERNET_DATA_REQ {
+typedef struct _T_PN_SERVICE_GET_ETHERNET_DATA_REQ
+{
   PN_U16 DummyForCompiler;
 
 } PACK_BYTE_ALIGNMENT(T_PN_SERVICE_GET_ETHERNET_DATA_REQ);
@@ -2777,7 +2861,8 @@ typedef struct _T_PN_SERVICE_GET_ETHERNET_DATA_REQ {
 #define PN_LINE_LENGTH_UNKNOWN (PN_U16)0xFFFFu
 #define PN_DELAY_UNKNOWN (PN_U32)0uL
 
-typedef struct _T_PN_PORT_DATA {
+typedef struct _T_PN_PORT_DATA
+{
   PN_U8 LinkState;
   PN_U8 Autonegotiation;
 
@@ -2834,7 +2919,8 @@ typedef struct _T_PN_PORT_DATA {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_GET_ETHERNET_DATA_CON {
+typedef struct _T_PN_SERVICE_GET_ETHERNET_DATA_CON
+{
   PN_U8 Flags;
   PN_U8 AdditionalFlags;
 
@@ -2865,7 +2951,8 @@ typedef struct _T_PN_SERVICE_GET_ETHERNET_DATA_CON {
 
 /*===========================================================================*/
 
-typedef struct _T_PN_CONNECT_IO_LOCATION {
+typedef struct _T_PN_CONNECT_IO_LOCATION
+{
   PN_U8 SlotNumberHighByte;
   PN_U8 SlotNumberLowByte;
 
@@ -2879,7 +2966,8 @@ typedef struct _T_PN_CONNECT_IO_LOCATION {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_CONNECT_IOCR_API {
+typedef struct _T_PN_CONNECT_IOCR_API
+{
   PN_U8 APIHighWordHighByte;
   PN_U8 APIHighWordLowByte;
   PN_U8 APILowWordHighByte;
@@ -2900,7 +2988,8 @@ typedef struct _T_PN_CONNECT_IOCR_API {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_CONNECT_IOCR {
+typedef struct _T_PN_CONNECT_IOCR
+{
   PN_U8 IOCRIdentifierHighByte;
   PN_U8 IOCRIdentifierLowByte;
 
@@ -2927,7 +3016,8 @@ typedef struct _T_PN_CONNECT_IOCR {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_CONNECT_SUBMODULE {
+typedef struct _T_PN_CONNECT_SUBMODULE
+{
   PN_U8 SubSlotNumberHighByte;
   PN_U8 SubSlotNumberLowByte;
 
@@ -2952,7 +3042,8 @@ typedef struct _T_PN_CONNECT_SUBMODULE {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_CONNECT_MODULE_API {
+typedef struct _T_PN_CONNECT_MODULE_API
+{
   PN_U8 APIHighWordHighByte;
   PN_U8 APIHighWordLowByte;
   PN_U8 APILowWordHighByte;
@@ -2976,7 +3067,8 @@ typedef struct _T_PN_CONNECT_MODULE_API {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_CONNECT_MODULE {
+typedef struct _T_PN_CONNECT_MODULE
+{
   PN_U8 NumberOfAPIsHighByte;
   PN_U8 NumberOfAPIsLowByte;
 
@@ -2988,7 +3080,8 @@ typedef struct _T_PN_CONNECT_MODULE {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_CONNECT_AR_VENDOR_BLOCK {
+typedef struct _T_PN_CONNECT_AR_VENDOR_BLOCK
+{
   PN_U8 VersionHighByte;
   PN_U8 VersionLowByte;
 
@@ -3011,7 +3104,8 @@ typedef struct _T_PN_CONNECT_AR_VENDOR_BLOCK {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_CONNECT_REDUNDANCY_BLOCK {
+typedef struct _T_PN_CONNECT_REDUNDANCY_BLOCK
+{
   PN_U8 VersionHighByte;
   PN_U8 VersionLowByte;
 
@@ -3032,7 +3126,8 @@ typedef struct _T_PN_CONNECT_REDUNDANCY_BLOCK {
 #define PROFINET_AR_TYPE_IOCARSINGLE_RT3 (PN_U16)0x0010u
 #define PROFINET_AR_TYPE_IOCAR_SR (PN_U16)0x0020u
 
-typedef struct _T_PN_SERVICE_CONNECT_IND {
+typedef struct _T_PN_SERVICE_CONNECT_IND
+{
   PN_U8 ARIdentifierHighByte;
   PN_U8 ARIdentifierLowByte;
 
@@ -3078,7 +3173,8 @@ typedef struct _T_PN_SERVICE_CONNECT_IND {
 #define CONNECT_RES_ERROR_CODE1_AR_OUT_OF_RESOURCE 0x40u
 #define CONNECT_RES_ERROR_CODE2_AR_OUT_OF_RESOURCE 0x04u
 
-typedef struct _T_PN_SERVICE_CONNECT_RES {
+typedef struct _T_PN_SERVICE_CONNECT_RES
+{
   PN_U8 ARIdentifierHighByte;
   PN_U8 ARIdentifierLowByte;
 
@@ -3100,7 +3196,8 @@ typedef struct _T_PN_SERVICE_CONNECT_RES {
 
 /*===========================================================================*/
 
-typedef struct _T_PN_SERVICE_WRITE_IND {
+typedef struct _T_PN_SERVICE_WRITE_IND
+{
   PN_U8 ARIdentifierHighByte;
   PN_U8 ARIdentifierLowByte;
 
@@ -3138,7 +3235,8 @@ typedef struct _T_PN_SERVICE_WRITE_IND {
 #define PN_SERVICE_WRITE_INVALID_SEQUENCE_NUMBER 0x07u
 #define PN_SERVICE_WRITE_INVALID_AR_UUID 0x08u
 
-typedef struct _T_PN_SERVICE_WRITE_REQ {
+typedef struct _T_PN_SERVICE_WRITE_REQ
+{
   PN_U8 VersionHighByte;
   PN_U8 VersionLowByte;
 
@@ -3181,7 +3279,8 @@ typedef struct _T_PN_SERVICE_WRITE_REQ {
 #define WRITE_RES_ERROR_CODE1_INVALID_SLOT_SUBSLOT 0xB2u
 #define WRITE_RES_ERROR_CODE2_INVALID_SLOT_SUBSLOT 7u
 
-typedef struct _T_PN_SERVICE_WRITE_RES {
+typedef struct _T_PN_SERVICE_WRITE_RES
+{
   PN_U8 ARIdentifierHighByte;
   PN_U8 ARIdentifierLowByte;
 
@@ -3192,7 +3291,8 @@ typedef struct _T_PN_SERVICE_WRITE_RES {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_WRITE_CON {
+typedef struct _T_PN_SERVICE_WRITE_CON
+{
   PN_U16 DummyForCompiler;
 
 } PACK_BYTE_ALIGNMENT(T_PN_SERVICE_WRITE_CON);
@@ -3353,7 +3453,8 @@ typedef struct _T_PN_SERVICE_WRITE_CON {
   PN_SERVICE_WRITE_INVALID_SEQUENCE_NUMBER
 #define PN_SERVICE_READ_INVALID_AR_UUID PN_SERVICE_WRITE_INVALID_AR_UUID
 
-typedef struct _T_PN_SERVICE_READ_IND {
+typedef struct _T_PN_SERVICE_READ_IND
+{
   PN_U8 ARIdentifierHighByte;
   PN_U8 ARIdentifierLowByte;
 
@@ -3378,7 +3479,8 @@ typedef struct _T_PN_SERVICE_READ_IND {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_READ_REQ {
+typedef struct _T_PN_SERVICE_READ_REQ
+{
   PN_U8 VersionHighByte;
   PN_U8 VersionLowByte;
 
@@ -3403,7 +3505,8 @@ typedef struct _T_PN_SERVICE_READ_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_READ_CON {
+typedef struct _T_PN_SERVICE_READ_CON
+{
   PN_U8 APIHighWordHighByte;
   PN_U8 APIHighWordLowByte;
   PN_U8 APILowWordHighByte;
@@ -3445,7 +3548,8 @@ typedef struct _T_PN_SERVICE_READ_CON {
 #define READ_RES_ERROR_CODE2_INVALID_SLOT_SUBSLOT                              \
   WRITE_RES_ERROR_CODE2_INVALID_SLOT_SUBSLOT
 
-typedef struct _T_PN_SERVICE_READ_RES {
+typedef struct _T_PN_SERVICE_READ_RES
+{
   PN_U8 ARIdentifierHighByte;
   PN_U8 ARIdentifierLowByte;
 
@@ -3595,7 +3699,8 @@ typedef T_PN_SERVICE_READ_IND T_PN_SERVICE_IMPLICIT_READ_IND;
 #define PN_SERVICE_IMPLICIT_READ_INVALID_TARGET_UUID                           \
   (PN_SERVICE_IMPLICIT_READ_RESPONSE_TIMEOUT + 0x06u)
 
-typedef struct _T_PN_SERVICE_IMPLICIT_READ_REQ {
+typedef struct _T_PN_SERVICE_IMPLICIT_READ_REQ
+{
   PN_U8 IpAddressHighWordHighByte;
   PN_U8 IpAddressHighWordLowByte;
   PN_U8 IpAddressLowWordHighByte;
@@ -3635,7 +3740,8 @@ typedef struct _T_PN_SERVICE_IMPLICIT_READ_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_IMIPLICIT_READ_CON {
+typedef struct _T_PN_SERVICE_IMIPLICIT_READ_CON
+{
   PN_U8 TypeHighByte;
   PN_U8 TypeLowByte;
 
@@ -3674,7 +3780,8 @@ typedef T_PN_SERVICE_READ_RES T_PN_SERVICE_IMPLICIT_READ_RES;
 #define PN_SERVICE_LOOKUP_INVALID_RESPONSE                                     \
   (PN_SERVICE_LOOKUP_RESPONSE_TIMEOUT + 0x02u)
 
-typedef struct _T_PN_SERVICE_LOOKUP_REQ {
+typedef struct _T_PN_SERVICE_LOOKUP_REQ
+{
   PN_U8 IpAddressHighWordHighByte;
   PN_U8 IpAddressHighWordLowByte;
   PN_U8 IpAddressLowWordHighByte;
@@ -3684,7 +3791,8 @@ typedef struct _T_PN_SERVICE_LOOKUP_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_LOOKUP_CON {
+typedef struct _T_PN_SERVICE_LOOKUP_CON
+{
   PN_U8 InstanceHighByte;
   PN_U8 InstanceLowByte;
 
@@ -3708,7 +3816,8 @@ typedef struct _T_PN_SERVICE_LOOKUP_CON {
 #define PN_SERVICE_DISCOVER_INVALID_MAC_ADDRESS 0x01u
 #define PN_SERVICE_DISCOVER_DCP_TIMEOUT 0x02u
 
-typedef struct _T_PN_SERVICE_DISCOVER_REQ {
+typedef struct _T_PN_SERVICE_DISCOVER_REQ
+{
   PN_U8 Flags;
   PN_U8 Alignment;
 
@@ -3729,7 +3838,8 @@ typedef struct _T_PN_SERVICE_DISCOVER_REQ {
 #define PN_DISCOVER_BLOCK_TYPE_NODE_LOCAL_DATA 0x0001u
 #define PN_DISCOVER_BLOCK_TYPE_NODE_REMOTE_DATA 0x0002u
 
-typedef struct _T_PN_DISCOVER_BLOCK_HEADER {
+typedef struct _T_PN_DISCOVER_BLOCK_HEADER
+{
   PN_U8 TypeHighByte;
   PN_U8 TypeLowByte;
 
@@ -3745,7 +3855,8 @@ typedef struct _T_PN_DISCOVER_BLOCK_HEADER {
 
 typedef T_PROFINET_UUID T_MRP_UUID;
 
-typedef struct _T_PN_DISCOVER_NODE_LOCAL_IF_DATA_V10 {
+typedef struct _T_PN_DISCOVER_NODE_LOCAL_IF_DATA_V10
+{
   PN_U8 InterfaceNumber;
   PN_U8 Alignment;
 
@@ -3792,7 +3903,8 @@ typedef struct _T_PN_DISCOVER_NODE_LOCAL_IF_DATA_V10 {
 #define PN_FEATURE_FRAGMENTATION_ENABLED 0x00000010uL
 #define PN_FEATURE_FRAGMENTATION_SUPPORTED 0x00000020uL
 
-typedef struct _T_PN_DISCOVER_NODE_LOCAL_PORT_DATA_V10 {
+typedef struct _T_PN_DISCOVER_NODE_LOCAL_PORT_DATA_V10
+{
   PN_U8 InterfaceNumber;
   PN_U8 PortNumber;
 
@@ -3840,7 +3952,8 @@ typedef struct _T_PN_DISCOVER_NODE_LOCAL_PORT_DATA_V10 {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_DISCOVER_NODE_LOCAL_DATA_V10 {
+typedef struct _T_PN_DISCOVER_NODE_LOCAL_DATA_V10
+{
   T_PN_DISCOVER_BLOCK_HEADER Header;
 
   PN_U8 ChassisIdTypeHighByte;
@@ -3865,7 +3978,8 @@ typedef struct _T_PN_DISCOVER_NODE_LOCAL_DATA_V10 {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_DISCOVER_NODE_REMOTE_PEER_DATA_V10 {
+typedef struct _T_PN_DISCOVER_NODE_REMOTE_PEER_DATA_V10
+{
   PN_U8 LocalInterfaceNumber;
   PN_U8 LocalPortNumber;
 
@@ -3898,7 +4012,8 @@ typedef struct _T_PN_DISCOVER_NODE_REMOTE_PEER_DATA_V10 {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_DISCOVER_NODE_REMOTE_DATA_V10 {
+typedef struct _T_PN_DISCOVER_NODE_REMOTE_DATA_V10
+{
   T_PN_DISCOVER_BLOCK_HEADER Header;
 
   PN_U8 NumberOfPeerHighByte;
@@ -3911,7 +4026,8 @@ typedef struct _T_PN_DISCOVER_NODE_REMOTE_DATA_V10 {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_DISCOVER_CON {
+typedef struct _T_PN_SERVICE_DISCOVER_CON
+{
   PN_U8 RemainingLengthHighByte;
   PN_U8 RemainingLengthLowByte;
 
@@ -3938,7 +4054,8 @@ typedef T_PN_DIFF_MODULE_SUBSLOT T_PROFINET_MODULE_SUBSLOT_RES;
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_MODULE_RES {
+typedef struct _T_PROFINET_MODULE_RES
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 NumberOfAPIsHighByte;
@@ -3952,7 +4069,8 @@ typedef struct _T_PROFINET_MODULE_RES {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_IOCR {
+typedef struct _T_PROFINET_IOCR
+{
   PN_U8 PropertiesHighWordHighByte;
   PN_U8 PropertiesHighWordLowByte;
   PN_U8 PropertiesLowWordHighByte;
@@ -3974,7 +4092,8 @@ typedef struct _T_PROFINET_IOCR {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_API {
+typedef struct _T_PROFINET_API
+{
   PN_U8 APIHighWordHighByte;
   PN_U8 APIHighWordLowByte;
   PN_U8 APILowWordHighByte;
@@ -3984,7 +4103,8 @@ typedef struct _T_PROFINET_API {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_AR_VENDOR {
+typedef struct _T_PROFINET_AR_VENDOR
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 APStructureIdentifierHighByte;
@@ -4004,7 +4124,8 @@ typedef struct _T_PROFINET_AR_VENDOR {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_IOCR_DFP {
+typedef struct _T_PROFINET_IOCR_DFP
+{
   PN_U8 IOCRReferenceHighByte;
   PN_U8 IOCRReferenceLowByte;
 
@@ -4020,7 +4141,8 @@ typedef struct _T_PROFINET_IOCR_DFP {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_IR_INFO {
+typedef struct _T_PROFINET_IR_INFO
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding1[2];
@@ -4049,7 +4171,8 @@ typedef struct _T_PROFINET_IR_INFO {
 #define PROFINET_SR_PROPERTIES_SET_INVALID_INPUT_INVALID 0x00000004u
 #define PROFINET_SR_PROPERTIES_RESERVED2 0x0000FFF8u
 
-typedef struct _T_PROFINET_SR_INFO {
+typedef struct _T_PROFINET_SR_INFO
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 DataHoldFactorHighByte;
@@ -4068,8 +4191,8 @@ typedef struct _T_PROFINET_SR_INFO {
 #define PROFINET_FSU_HELLO_ON_LINK_UP 0x00000001uL
 #define PROFINET_FSU_HELLO_DELAYED_ON_LINK_UP 0x00000002uL
 #define PROFINET_FSU_HELLO_MODE_MASK                                           \
-  (PROFINET_FSU_HELLO_MODE_OFF | PROFINET_FSU_HELLO_ON_LINK_UP                 \
-      | PROFINET_FSU_HELLO_DELAYED_ON_LINK_UP)
+  (PROFINET_FSU_HELLO_MODE_OFF | PROFINET_FSU_HELLO_ON_LINK_UP |               \
+   PROFINET_FSU_HELLO_DELAYED_ON_LINK_UP)
 
 #define PROFINET_FSU_HELLO_INTERVAL_30MS 0x0000001EuL
 #define PROFINET_FSU_HELLO_INTERVAL_50MS 0x00000032uL
@@ -4084,7 +4207,8 @@ typedef struct _T_PROFINET_SR_INFO {
 #define PROFINET_FSU_HELLO_DELAY_500MS 0x000001F4uL
 #define PROFINET_FSU_HELLO_DELAY_1S 0x000003E8uL
 
-typedef struct _T_PROFINET_FS_HELLO {
+typedef struct _T_PROFINET_FS_HELLO
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -4116,7 +4240,8 @@ typedef struct _T_PROFINET_FS_HELLO {
 #define PROFINET_FSU_PRM_MODE_OFF 0x00000000uL
 #define PROFINET_FSU_PRM_MODE_ON 0x00000001uL
 
-typedef struct _T_PROFINET_FS_PRM {
+typedef struct _T_PROFINET_FS_PRM
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding1[2];
@@ -4133,7 +4258,8 @@ typedef struct _T_PROFINET_FS_PRM {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_FS {
+typedef struct _T_PROFINET_FS
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -4147,7 +4273,8 @@ typedef struct _T_PROFINET_FS {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_AR_FSU_ADJUST {
+typedef struct _T_PROFINET_AR_FSU_ADJUST
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -4163,7 +4290,8 @@ typedef T_PROFINET_AR_FSU_ADJUST T_PROFINET_AR_FSU;
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_INTERFACE_FSU_ADJUST {
+typedef struct _T_PROFINET_INTERFACE_FSU_ADJUST
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -4177,7 +4305,8 @@ typedef struct _T_PROFINET_INTERFACE_FSU_ADJUST {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_SRL_DATA {
+typedef struct _T_PROFINET_SRL_DATA
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 RedundancyInfoHighByte;
@@ -4187,7 +4316,8 @@ typedef struct _T_PROFINET_SRL_DATA {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_AR_DATA_INFO {
+typedef struct _T_PROFINET_AR_DATA_INFO
+{
   PN_U8 NumberEntriesHighByte;
   PN_U8 NumberEntriesLowByte;
 
@@ -4204,7 +4334,8 @@ typedef struct _T_PROFINET_AR_DATA_INFO {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_AR {
+typedef struct _T_PROFINET_AR
+{
   T_PROFINET_UUID ARUUID;
   T_PROFINET_UUID InitiatorUUID;
   T_PROFINET_UUID PrmServerUUID;
@@ -4263,7 +4394,8 @@ typedef struct _T_PROFINET_AR {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_AR_DATA {
+typedef struct _T_PROFINET_AR_DATA
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 NumberOfARsHighByte;
@@ -4277,7 +4409,8 @@ typedef struct _T_PROFINET_AR_DATA {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_IM0_FILTER_SUBMODULE {
+typedef struct _T_PROFINET_IM0_FILTER_SUBMODULE
+{
   PN_U8 SubSlotNumberHighByte;
   PN_U8 SubSlotNumberLowByte;
 
@@ -4293,7 +4426,8 @@ typedef T_PROFINET_IM0_FILTER_SUBMODULE T_PROFINET_EXPECTED_IDENT_SUBMODULE;
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_IM0_FILTER_MODULE {
+typedef struct _T_PROFINET_IM0_FILTER_MODULE
+{
   PN_U8 SlotNumberHighByte;
   PN_U8 SlotNumberLowByte;
 
@@ -4316,7 +4450,8 @@ typedef T_PROFINET_IM0_FILTER_MODULE T_PROFINET_EXPECTED_IDENT_MODULE;
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_IM0_FILTER_API {
+typedef struct _T_PROFINET_IM0_FILTER_API
+{
   PN_U8 APIHighWordHighByte;
   PN_U8 APIHighWordLowByte;
   PN_U8 APILowWordHighByte;
@@ -4336,7 +4471,8 @@ typedef T_PROFINET_IM0_FILTER_API T_PROFINET_EXPECTED_IDENT_API;
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_IM0_FILTER_DATA {
+typedef struct _T_PROFINET_IM0_FILTER_DATA
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 NumberOfAPIsHighByte;
@@ -4350,7 +4486,8 @@ typedef struct _T_PROFINET_IM0_FILTER_DATA {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_API_DATA {
+typedef struct _T_PROFINET_API_DATA
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 NumberOfAPIsHighByte;
@@ -4367,7 +4504,8 @@ typedef struct _T_PROFINET_API_DATA {
 #define PROFINET_SUBMODULE_DATA_DESCRIPTION_INPUT (PN_U16)0x0001u
 #define PROFINET_SUBMODULE_DATA_DESCRIPTION_OUTPUT (PN_U16)0x0002u
 
-typedef struct _T_PROFINET_SUBMODULE_DATA {
+typedef struct _T_PROFINET_SUBMODULE_DATA
+{
   PN_U8 SubSlotNumberHighByte;
   PN_U8 SubSlotNumberLowByte;
 
@@ -4383,7 +4521,8 @@ typedef struct _T_PROFINET_SUBMODULE_DATA {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_SUBMODULE_IO_DATA {
+typedef struct _T_PROFINET_SUBMODULE_IO_DATA
+{
   PN_U8 DataDescriptionHighByte;
   PN_U8 DataDescriptionLowByte;
 
@@ -4397,7 +4536,8 @@ typedef struct _T_PROFINET_SUBMODULE_IO_DATA {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_MODULE_API {
+typedef struct _T_PROFINET_MODULE_API
+{
   PN_U8 APIHighWordHighByte;
   PN_U8 APIHighWordLowByte;
   PN_U8 APILowWordHighByte;
@@ -4426,7 +4566,8 @@ typedef struct _T_PROFINET_MODULE_API {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_MODULE_REQ {
+typedef struct _T_PROFINET_MODULE_REQ
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 NumberOfAPIsHighByte;
@@ -4444,7 +4585,8 @@ typedef T_PROFINET_MODULE_REQ T_PROFINET_MODULE_DIFF_DATA;
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_RECORD_INPUT_DATA {
+typedef struct _T_PROFINET_RECORD_INPUT_DATA
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 ConsumerStatusLength;
@@ -4464,7 +4606,8 @@ typedef struct _T_PROFINET_RECORD_INPUT_DATA {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_OUTPUT_DATA_ITEM {
+typedef struct _T_PROFINET_OUTPUT_DATA_ITEM
+{
   PN_U8 ConsumerStatus;
   /*
     PN_U8                         Data [DataLength];
@@ -4481,7 +4624,8 @@ typedef struct _T_PROFINET_OUTPUT_DATA_ITEM {
 
 #define PROFINET_FAIL_SAFE_SUBSTITUTION_ACTIVE (PN_U16)0x0001u
 
-typedef struct _T_PROFINET_SUBSTITUTE_VALUE {
+typedef struct _T_PROFINET_SUBSTITUTE_VALUE
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 SubstitutionModeHighByte;
@@ -4495,7 +4639,8 @@ typedef struct _T_PROFINET_SUBSTITUTE_VALUE {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_RECORD_OUTPUT_DATA {
+typedef struct _T_PROFINET_RECORD_OUTPUT_DATA
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 SubstituteActiveHighByte;
@@ -4516,7 +4661,8 @@ typedef struct _T_PROFINET_RECORD_OUTPUT_DATA {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_TIMESTAMP {
+typedef struct _T_PROFINET_TIMESTAMP
+{
   PN_U8 HighPartHighWordHighByte;
   PN_U8 HighPartHighWordLowByte;
   PN_U8 HighPartLowWordHighByte;
@@ -4531,7 +4677,8 @@ typedef struct _T_PROFINET_TIMESTAMP {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_LOG_ENTRY {
+typedef struct _T_PROFINET_LOG_ENTRY
+{
   T_PROFINET_TIMESTAMP TimeStamp;
 
   T_PROFINET_UUID ARUUID;
@@ -4546,7 +4693,8 @@ typedef struct _T_PROFINET_LOG_ENTRY {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_LOG_DATA {
+typedef struct _T_PROFINET_LOG_DATA
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   T_PROFINET_TIMESTAMP CurrentTimeStamp;
@@ -4562,7 +4710,8 @@ typedef struct _T_PROFINET_LOG_DATA {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_PD_PEER_PORT {
+typedef struct _T_PROFINET_PD_PEER_PORT
+{
   PN_U8 LengthPeerPortId;
   /*
     PN_U8   PeerPortId [LengthPeerPortId];
@@ -4572,7 +4721,8 @@ typedef struct _T_PROFINET_PD_PEER_PORT {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PD_PEER_CHASSIS {
+typedef struct _T_PROFINET_PD_PEER_CHASSIS
+{
   PN_U8 LengthPeerChassisId;
   /*
     PN_U8   PeerChassisId [LengthPeerChassisId];
@@ -4584,7 +4734,8 @@ typedef struct _T_PROFINET_PD_PEER_CHASSIS {
 
 #define PROFINET_CABLE_DELAY_FORMAT_INDICATOR 0x80000000uL
 
-typedef struct _T_PROFINET_PD_LINE_DELAY {
+typedef struct _T_PROFINET_PD_LINE_DELAY
+{
   PN_U8 DelayHighWordHighByte;
   PN_U8 DelayHighWordLowByte;
   PN_U8 DelayLowWordHighByte;
@@ -4594,7 +4745,8 @@ typedef struct _T_PROFINET_PD_LINE_DELAY {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PD_PEER_REAL {
+typedef struct _T_PROFINET_PD_PEER_REAL
+{
   T_PROFINET_PD_PEER_PORT PeerPort;
   /*
     T_PROFINET_PD_PEER_CHASSIS    PeerChassis;
@@ -4607,7 +4759,8 @@ typedef struct _T_PROFINET_PD_PEER_REAL {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PD_PEERS_REAL {
+typedef struct _T_PROFINET_PD_PEERS_REAL
+{
   PN_U8 NumberOfPeers;
   /*
     PN_U8                     Padding []; align to 32-Bit
@@ -4620,7 +4773,8 @@ typedef struct _T_PROFINET_PD_PEERS_REAL {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PD_MAU_TYPE {
+typedef struct _T_PROFINET_PD_MAU_TYPE
+{
   PN_U8 TypeHighByte;
   PN_U8 TypeLowByte;
 
@@ -4628,7 +4782,8 @@ typedef struct _T_PROFINET_PD_MAU_TYPE {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PD_LINK_STATE {
+typedef struct _T_PROFINET_PD_LINK_STATE
+{
   PN_U8 StateHighByte;
   PN_U8 StateLowByte;
 
@@ -4641,7 +4796,8 @@ typedef struct _T_PROFINET_PD_LINK_STATE {
 #define PROFINET_MEDIA_TYPE_FIBER_OPTIC_CABLE (PN_U32)0x00000002uL
 #define PROFINET_MEDIA_TYPE_RADIO (PN_U32)0x00000003uL
 
-typedef struct _T_PROFINET_PD_MEDIA_TYPE {
+typedef struct _T_PROFINET_PD_MEDIA_TYPE
+{
   PN_U8 TypeHighWordHighByte;
   PN_U8 TypeHighWordLowByte;
   PN_U8 TypeLowWordHighByte;
@@ -4655,14 +4811,15 @@ typedef struct _T_PROFINET_PD_MEDIA_TYPE {
 #define PROFINET_RTC3_STATUS_UP (PN_U16)0x0002uL
 #define PROFINET_RTC3_STATUS_RUN (PN_U16)0x0004uL
 #define PROFINET_RTC3_STATUS_MASK_STATE                                        \
-  (PN_U16)(PROFINET_RTC3_STATUS_OFF | PROFINET_RTC3_STATUS_UP                  \
-      | PROFINET_RTC3_STATUS_RUN)
+  (PN_U16)(PROFINET_RTC3_STATUS_OFF | PROFINET_RTC3_STATUS_UP |                \
+           PROFINET_RTC3_STATUS_RUN)
 #define PROFINET_RTC3_STATUS_FRAG_OFF (PN_U16)0x0000uL
 #define PROFINET_RTC3_STATUS_FRAG_ON (PN_U16)0x1000uL
 #define PROFINET_RTC3_STATUS_SHORTEN_PREAMBLE (PN_U16)0x2000uL
 #define PROFINET_RTC3_STATUS_OPTIMIZED (PN_U16)0x8000uL
 
-typedef struct _T_PROFINET_PD_PORT_SETTINGS {
+typedef struct _T_PROFINET_PD_PORT_SETTINGS
+{
   T_PROFINET_PD_MAU_TYPE MAU;
   PN_U8 Padding1[2]; /* align to 32-Bit */
 
@@ -4685,7 +4842,8 @@ typedef struct _T_PROFINET_PD_PORT_SETTINGS {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PD_PORT_DATA_REAL {
+typedef struct _T_PROFINET_PD_PORT_DATA_REAL
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -4711,7 +4869,8 @@ typedef struct _T_PROFINET_PD_PORT_DATA_REAL {
 
 typedef T_PN_DEVICE_IP_INFO T_PROFINET_IP_PARAMETER;
 
-typedef struct _T_PROFINET_PD_INTERFACE_DATA_REAL {
+typedef struct _T_PROFINET_PD_INTERFACE_DATA_REAL
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 LengthChassisId;
@@ -4730,7 +4889,8 @@ typedef struct _T_PROFINET_PD_INTERFACE_DATA_REAL {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_PD_PEER_CHECK_DATA {
+typedef struct _T_PROFINET_PD_PEER_CHECK_DATA
+{
   T_PROFINET_PD_PEER_PORT PeerPort;
   /*
     T_PROFINET_PD_PEER_CHASSIS    PeerChassis;
@@ -4740,7 +4900,8 @@ typedef struct _T_PROFINET_PD_PEER_CHECK_DATA {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PD_PEER_CHECK {
+typedef struct _T_PROFINET_PD_PEER_CHECK
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 NumberOfPeers;
@@ -4754,7 +4915,8 @@ typedef struct _T_PROFINET_PD_PEER_CHECK {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PD_LINE_DELAY_CHECK {
+typedef struct _T_PROFINET_PD_LINE_DELAY_CHECK
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -4765,7 +4927,8 @@ typedef struct _T_PROFINET_PD_LINE_DELAY_CHECK {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PD_MAU_TYPE_CHECK {
+typedef struct _T_PROFINET_PD_MAU_TYPE_CHECK
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   T_PROFINET_PD_MAU_TYPE MAUType;
@@ -4774,7 +4937,8 @@ typedef struct _T_PROFINET_PD_MAU_TYPE_CHECK {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PD_LINK_STATE_CHECK {
+typedef struct _T_PROFINET_PD_LINK_STATE_CHECK
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   T_PROFINET_PD_LINK_STATE Link;
@@ -4788,7 +4952,8 @@ typedef struct _T_PROFINET_PD_LINK_STATE_CHECK {
 #define PROFINET_DISABLE_SYNC_MASTER_CHECK (PN_U16)0x0000u
 #define PROFINET_ENABLE_SYNC_MASTER_CHECK (PN_U16)0x0002u
 
-typedef struct _T_PROFINET_PD_SYNC_DIFF_CHECK {
+typedef struct _T_PROFINET_PD_SYNC_DIFF_CHECK
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 SyncModeHighByte;
@@ -4801,7 +4966,8 @@ typedef struct _T_PROFINET_PD_SYNC_DIFF_CHECK {
 #define PROFINET_DISABLE_MAU_TYPE_CHECK (PN_U16)0x0000u
 #define PROFINET_ENABLE_MAU_TYPE_CHECK (PN_U16)0x0001u
 
-typedef struct _T_PROFINET_PD_MAU_TYPE_DIFF_CHECK {
+typedef struct _T_PROFINET_PD_MAU_TYPE_DIFF_CHECK
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 MAUTypeModeHighByte;
@@ -4811,7 +4977,8 @@ typedef struct _T_PROFINET_PD_MAU_TYPE_DIFF_CHECK {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PD_PORT_DATA_CHECK {
+typedef struct _T_PROFINET_PD_PORT_DATA_CHECK
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -4835,7 +5002,8 @@ typedef struct _T_PROFINET_PD_PORT_DATA_CHECK {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_PD_PORT_STATISTIC {
+typedef struct _T_PROFINET_PD_PORT_STATISTIC
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -4874,7 +5042,8 @@ typedef struct _T_PROFINET_PD_PORT_STATISTIC {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_NC_DATA_CHECK {
+typedef struct _T_PROFINET_NC_DATA_CHECK
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -4908,7 +5077,8 @@ typedef struct _T_PROFINET_NC_DATA_CHECK {
 #define DEFAULT_MRP_LINK_CHANGE_COUNT (PN_U16)4u
 #define MAX_MRP_LINK_CHANGE_COUNT (PN_U16)5u
 
-typedef struct _T_PROFINET_MRP_CLIENT_PARAMS {
+typedef struct _T_PROFINET_MRP_CLIENT_PARAMS
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 LinkDownTimeHighByte;
@@ -4924,7 +5094,8 @@ typedef struct _T_PROFINET_MRP_CLIENT_PARAMS {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_MRP_MANAGER_PARAMS {
+typedef struct _T_PROFINET_MRP_MANAGER_PARAMS
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 PriorityHighByte;
@@ -4949,7 +5120,8 @@ typedef struct _T_PROFINET_MRP_MANAGER_PARAMS {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_MRP_PARAMS {
+typedef struct _T_PROFINET_MRP_PARAMS
+{
   union {
     T_PROFINET_MRP_CLIENT_PARAMS Client;
     T_PROFINET_MRP_MANAGER_PARAMS Manager;
@@ -4963,7 +5135,8 @@ typedef struct _T_PROFINET_MRP_PARAMS {
 #define MULTIPLE_INTERFACE_MODE_LEGACY 0x00000000uL
 #define MULTIPLE_INTERFACE_MODE_LOCAL_CHASSIS_ID 0x00000001uL
 
-typedef struct _T_PROFINET_PD_INTERFACE_DATA_ADJUST {
+typedef struct _T_PROFINET_PD_INTERFACE_DATA_ADJUST
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -4977,7 +5150,8 @@ typedef struct _T_PROFINET_PD_INTERFACE_DATA_ADJUST {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_PD_PORT_FO_ADJUST {
+typedef struct _T_PROFINET_PD_PORT_FO_ADJUST
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   /* TODO: define structure */
@@ -4986,7 +5160,8 @@ typedef struct _T_PROFINET_PD_PORT_FO_ADJUST {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_DOMAIN_BOUNDARY_ADJUST {
+typedef struct _T_PROFINET_DOMAIN_BOUNDARY_ADJUST
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding1[2];
@@ -5010,7 +5185,8 @@ typedef struct _T_PROFINET_DOMAIN_BOUNDARY_ADJUST {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_MULTICAST_BOUNDARY_ADJUST {
+typedef struct _T_PROFINET_MULTICAST_BOUNDARY_ADJUST
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding1[2];
@@ -5033,7 +5209,8 @@ typedef T_PROFINET_MULTICAST_BOUNDARY_ADJUST T_PROFINET_DCP_BOUNDARY_ADJUST;
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_MAU_TYPE_ADJUST {
+typedef struct _T_PROFINET_MAU_TYPE_ADJUST
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -5048,7 +5225,8 @@ typedef struct _T_PROFINET_MAU_TYPE_ADJUST {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_LINK_STATE_ADJUST {
+typedef struct _T_PROFINET_LINK_STATE_ADJUST
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -5065,7 +5243,8 @@ typedef struct _T_PROFINET_LINK_STATE_ADJUST {
 
 #define PROFINET_ADJUST_SHORTEN_PREAMBLE (PN_U16)0x0001uL
 
-typedef struct _T_PROFINET_PREAMBLE_LENGTH_ADJUST {
+typedef struct _T_PROFINET_PREAMBLE_LENGTH_ADJUST
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -5080,7 +5259,8 @@ typedef struct _T_PROFINET_PREAMBLE_LENGTH_ADJUST {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PD_PORT_DATA_ADJUST {
+typedef struct _T_PROFINET_PD_PORT_DATA_ADJUST
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -5107,7 +5287,8 @@ typedef struct _T_PROFINET_PD_PORT_DATA_ADJUST {
 
 #define MAX_MRP_DOMAIN_NAME_LENGTH PN_MAX_DEVICE_NAME_LENGTH
 
-typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_ADJUST {
+typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_ADJUST
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding1[2];
@@ -5130,7 +5311,8 @@ typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_ADJUST {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_MRP_INSTANCE_DATA_ADJUST {
+typedef struct _T_PROFINET_MRP_INSTANCE_DATA_ADJUST
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding1;
@@ -5154,7 +5336,8 @@ typedef struct _T_PROFINET_MRP_INSTANCE_DATA_ADJUST {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_ADJUST_V1_1 {
+typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_ADJUST_V1_1
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding;
@@ -5167,7 +5350,8 @@ typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_ADJUST_V1_1 {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_MRP_RING_STATE {
+typedef struct _T_PROFINET_MRP_RING_STATE
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 StateHighByte;
@@ -5177,7 +5361,8 @@ typedef struct _T_PROFINET_MRP_RING_STATE {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_REAL {
+typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_REAL
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -5202,7 +5387,8 @@ typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_REAL {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_MRP_INSTANCE_DATA_REAL {
+typedef struct _T_PROFINET_MRP_INSTANCE_DATA_REAL
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding;
@@ -5228,7 +5414,8 @@ typedef struct _T_PROFINET_MRP_INSTANCE_DATA_REAL {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_REAL_V1_1 {
+typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_REAL_V1_1
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding;
@@ -5246,7 +5433,8 @@ typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_REAL_V1_1 {
 #define MRP_CHECK_DOMAIN_UUID_DISABLE (PN_U32)0x00000000
 #define MRP_CHECK_DOMAIN_UUID_ENABLE (PN_U32)0x00000002
 
-typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_CHECK {
+typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_CHECK
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -5262,7 +5450,8 @@ typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_CHECK {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_MRP_INSTANCE_DATA_CHECK {
+typedef struct _T_PROFINET_MRP_INSTANCE_DATA_CHECK
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding;
@@ -5277,7 +5466,8 @@ typedef struct _T_PROFINET_MRP_INSTANCE_DATA_CHECK {
 
 } PACK_BYTE_ALIGNMENT(T_PROFINET_MRP_INSTANCE_DATA_CHECK);
 
-typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_CHECK_V1_1 {
+typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_CHECK_V1_1
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding;
@@ -5289,7 +5479,8 @@ typedef struct _T_PROFINET_PD_INTERFACE_MRP_DATA_CHECK_V1_1 {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_PD_PORT_MRP_DATA_ADJUST {
+typedef struct _T_PROFINET_PD_PORT_MRP_DATA_ADJUST
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -5305,7 +5496,8 @@ typedef T_PROFINET_PD_PORT_MRP_DATA_ADJUST T_PROFINET_PD_PORT_MRP_DATA_REAL;
 #define PROFINET_MAX_LINE_RX_DELAY_UNKNOWN 0uL
 #define PROFINET_YELLOW_TIME_DISABLE 0uL
 
-typedef struct _T_PROFINET_PORT_GLOBAL_DATA_V1_1 {
+typedef struct _T_PROFINET_PORT_GLOBAL_DATA_V1_1
+{
   PN_U8 MaxTxDelayHighWordHighByte;
   PN_U8 MaxTxDelayHighWordLowByte;
   PN_U8 MaxTxDelayLowWordHighByte;
@@ -5322,7 +5514,8 @@ typedef struct _T_PROFINET_PORT_GLOBAL_DATA_V1_1 {
 
 #define PROFINET_DEFAULT_YELLOW_TIME 0x0001E848uL
 
-typedef struct _T_PROFINET_PORT_GLOBAL_DATA_V1_2 {
+typedef struct _T_PROFINET_PORT_GLOBAL_DATA_V1_2
+{
   PN_U8 MaxTxDelayHighWordHighByte;
   PN_U8 MaxTxDelayHighWordLowByte;
   PN_U8 MaxTxDelayLowWordHighByte;
@@ -5347,7 +5540,8 @@ typedef struct _T_PROFINET_PORT_GLOBAL_DATA_V1_2 {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PDIR_GLOBAL_DATA {
+typedef struct _T_PROFINET_PDIR_GLOBAL_DATA
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -5382,12 +5576,13 @@ typedef struct _T_PROFINET_PDIR_GLOBAL_DATA {
 #define PROFINET_TX_PORT_GROUP_6 0x40u
 #define PROFINET_TX_PORT_GROUP_7 0x80u
 #define PROFINET_TX_PORT_GROUP_ALL                                             \
-  (PROFINET_TX_PORT_GROUP_LOCAL | PROFINET_TX_PORT_GROUP_1                     \
-      | PROFINET_TX_PORT_GROUP_2 | PROFINET_TX_PORT_GROUP_3                    \
-      | PROFINET_TX_PORT_GROUP_4 | PROFINET_TX_PORT_GROUP_5                    \
-      | PROFINET_TX_PORT_GROUP_6 | PROFINET_TX_PORT_GROUP_7)
+  (PROFINET_TX_PORT_GROUP_LOCAL | PROFINET_TX_PORT_GROUP_1 |                   \
+   PROFINET_TX_PORT_GROUP_2 | PROFINET_TX_PORT_GROUP_3 |                       \
+   PROFINET_TX_PORT_GROUP_4 | PROFINET_TX_PORT_GROUP_5 |                       \
+   PROFINET_TX_PORT_GROUP_6 | PROFINET_TX_PORT_GROUP_7)
 
-typedef struct _T_PROFINET_PDIR_FRAME_DATA_DETAIL {
+typedef struct _T_PROFINET_PDIR_FRAME_DATA_DETAIL
+{
   PN_U8 FrameSendOffsetHighWordHighByte;
   PN_U8 FrameSendOffsetHighWordLowByte;
   PN_U8 FrameSendOffsetLowWordHighByte;
@@ -5430,19 +5625,20 @@ typedef struct _T_PROFINET_PDIR_FRAME_DATA_DETAIL {
 #define PROFINET_RTC3_MULTICAST_ADDRESS 0x00000002uL
 #define PROFINET_FF_MULTICAST_ADDRESS 0x00000004uL
 #define PROFINET_MULTICAST_ADDRESS_MASK                                        \
-  (PROFINET_LEGACY_MULTICAST_ADDRESS | PROFINET_RTC3_MULTICAST_ADDRESS         \
-      | PROFINET_FF_MULTICAST_ADDRESS)
+  (PROFINET_LEGACY_MULTICAST_ADDRESS | PROFINET_RTC3_MULTICAST_ADDRESS |       \
+   PROFINET_FF_MULTICAST_ADDRESS)
 #define PROFINET_FRAGMENTATION_DISABLED 0x00000000uL
 #define PROFINET_MAX_128_BYTE_FRAGMENTS 0x00000008uL
 #define PROFINET_MAX_256_BYTE_FRAGMENTS 0x00000010uL
 #define PROFINET_FRAGMENTATION_MASK                                            \
-  (PROFINET_FRAGMENTATION_DISABLED | PROFINET_MAX_128_BYTE_FRAGMENTS           \
-      | PROFINET_MAX_256_BYTE_FRAGMENTS)
+  (PROFINET_FRAGMENTATION_DISABLED | PROFINET_MAX_128_BYTE_FRAGMENTS |         \
+   PROFINET_MAX_256_BYTE_FRAGMENTS)
 #define PROFINET_PDIR_FRAME_PROPERTY_MASK 0x0000FFFFuL
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PDIR_FRAME_DATA_V1_0 {
+typedef struct _T_PROFINET_PDIR_FRAME_DATA_V1_0
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -5455,7 +5651,8 @@ typedef struct _T_PROFINET_PDIR_FRAME_DATA_V1_0 {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PDIR_FRAME_DATA_V1_1 {
+typedef struct _T_PROFINET_PDIR_FRAME_DATA_V1_1
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -5473,7 +5670,8 @@ typedef struct _T_PROFINET_PDIR_FRAME_DATA_V1_1 {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_RED_GUARD {
+typedef struct _T_PROFINET_RED_GUARD
+{
   PN_U8 StartOfRedFrameIdHighByte;
   PN_U8 StartOfRedFrameIdLowByte;
 
@@ -5484,7 +5682,8 @@ typedef struct _T_PROFINET_RED_GUARD {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PDIR_PERIOD_ASSIGNMENT {
+typedef struct _T_PROFINET_PDIR_PERIOD_ASSIGNMENT
+{
   PN_U8 RedOrangeHighWordHighByte;
   PN_U8 RedOrangeHighWordLowByte;
   PN_U8 RedOrangeLowWordHighByte;
@@ -5504,7 +5703,8 @@ typedef struct _T_PROFINET_PDIR_PERIOD_ASSIGNMENT {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PDIR_PHASE {
+typedef struct _T_PROFINET_PDIR_PHASE
+{
   PN_U8 AssignmentHighByte;
   PN_U8 AssignmentLowByte;
 
@@ -5512,7 +5712,8 @@ typedef struct _T_PROFINET_PDIR_PHASE {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PDIR_PHASE_ASSIGNMENT {
+typedef struct _T_PROFINET_PDIR_PHASE_ASSIGNMENT
+{
   T_PROFINET_PDIR_PHASE Tx;
   T_PROFINET_PDIR_PHASE Rx;
 
@@ -5520,7 +5721,8 @@ typedef struct _T_PROFINET_PDIR_PHASE_ASSIGNMENT {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PDIR_PORT_PHASE_DATA {
+typedef struct _T_PROFINET_PDIR_PORT_PHASE_DATA
+{
   PN_U8 NumberOfPhasesHighWordHighByte;
   PN_U8 NumberOfPhasesHighWordLowByte;
   PN_U8 NumberOfPhasesLowWordHighByte;
@@ -5534,7 +5736,8 @@ typedef struct _T_PROFINET_PDIR_PORT_PHASE_DATA {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PDIR_BEGIN_END_ASSIGNMENT {
+typedef struct _T_PROFINET_PDIR_BEGIN_END_ASSIGNMENT
+{
   T_PROFINET_PDIR_PERIOD_ASSIGNMENT Tx;
   T_PROFINET_PDIR_PERIOD_ASSIGNMENT Rx;
 
@@ -5544,7 +5747,8 @@ typedef struct _T_PROFINET_PDIR_BEGIN_END_ASSIGNMENT {
 
 #define MAX_NUMBER_PDIR_BEGIN_END_ASSIGNMENTS 0x00000010uL
 
-typedef struct _T_PROFINET_PDIR_PORT_BEGIN_END_DATA {
+typedef struct _T_PROFINET_PDIR_PORT_BEGIN_END_DATA
+{
   PN_U8 NumberOfAssignmentsHighWordHighByte;
   PN_U8 NumberOfAssignmentsHighWordLowByte;
   PN_U8 NumberOfAssignmentsLowWordHighByte;
@@ -5558,7 +5762,8 @@ typedef struct _T_PROFINET_PDIR_PORT_BEGIN_END_DATA {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_PDIR_BEGIN_END_DATA {
+typedef struct _T_PROFINET_PDIR_BEGIN_END_DATA
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -5579,7 +5784,8 @@ typedef struct _T_PROFINET_PDIR_BEGIN_END_DATA {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_PDIR_DATA {
+typedef struct _T_PROFINET_PDIR_DATA
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -5622,7 +5828,8 @@ typedef struct _T_PROFINET_PDIR_DATA {
 #define PROFINET_SYNC_PROPERTY_ROLE_SLAVE 0x0001u
 #define PROFINET_SYNC_PROPERTY_ROLE_MASTER 0x0002u
 
-typedef struct _T_PROFINET_PD_SYNC_DATA {
+typedef struct _T_PROFINET_PD_SYNC_DATA
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -5678,7 +5885,8 @@ typedef struct _T_PROFINET_PD_SYNC_DATA {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_SUBFRAME_BLOCK {
+typedef struct _T_PROFINET_SUBFRAME_BLOCK
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 FrameIdHighByte;
@@ -5700,7 +5908,8 @@ typedef struct _T_PROFINET_SUBFRAME_BLOCK {
 
 #define PROFINET_MAX_NUMBER_SUBFRAME_BLOCKS 255u
 
-typedef struct _T_PROFINET_PDIR_SUBFRAME_DATA {
+typedef struct _T_PROFINET_PDIR_SUBFRAME_DATA
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 NumberOfBlocksHighByte;
@@ -5714,7 +5923,8 @@ typedef struct _T_PROFINET_PDIR_SUBFRAME_DATA {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_PDEV_DATA {
+typedef struct _T_PROFINET_PDEV_DATA
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -5729,7 +5939,8 @@ typedef struct _T_PROFINET_PDEV_DATA {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_IDENT_MAINTENANCE {
+typedef struct _T_PROFINET_IDENT_MAINTENANCE
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 VendorIdHighByte;
@@ -5765,7 +5976,8 @@ typedef struct _T_PROFINET_IDENT_MAINTENANCE {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_IDENT_MAINTENANCE_1 {
+typedef struct _T_PROFINET_IDENT_MAINTENANCE_1
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Function[PROFINET_IDENT_MAINTENANCE_FUNCTION_LENGTH];
@@ -5775,7 +5987,8 @@ typedef struct _T_PROFINET_IDENT_MAINTENANCE_1 {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_IDENT_MAINTENANCE_2 {
+typedef struct _T_PROFINET_IDENT_MAINTENANCE_2
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Date[PROFINET_IDENT_MAINTENANCE_DATE_LENGTH];
@@ -5784,7 +5997,8 @@ typedef struct _T_PROFINET_IDENT_MAINTENANCE_2 {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_IDENT_MAINTENANCE_3 {
+typedef struct _T_PROFINET_IDENT_MAINTENANCE_3
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Description[PROFINET_IDENT_MAINTENANCE_DESCRIPTION_LENGTH];
@@ -5793,7 +6007,8 @@ typedef struct _T_PROFINET_IDENT_MAINTENANCE_3 {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_IDENT_MAINTENANCE_4 {
+typedef struct _T_PROFINET_IDENT_MAINTENANCE_4
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Signature[PROFINET_IDENT_MAINTENANCE_SIGNATURE_LENGTH];
@@ -5802,7 +6017,8 @@ typedef struct _T_PROFINET_IDENT_MAINTENANCE_4 {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_MULTIPLE_HEADER {
+typedef struct _T_PROFINET_MULTIPLE_HEADER
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 Padding[2];
@@ -5825,7 +6041,8 @@ typedef T_PROFINET_MULTIPLE_HEADER T_PROFINET_PD_EXPECTED_DATA;
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_RECORD_DIAGNOSIS {
+typedef struct _T_PROFINET_RECORD_DIAGNOSIS
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 APIHighWordHighByte;
@@ -5859,7 +6076,8 @@ typedef struct _T_PROFINET_RECORD_DIAGNOSIS {
 
 /*===========================================================================*/
 
-typedef struct _T_PROFINET_SUBMODULE_LIST_ENTRY {
+typedef struct _T_PROFINET_SUBMODULE_LIST_ENTRY
+{
   PN_U8 APIHighWordHighByte;
   PN_U8 APIHighWordLowByte;
   PN_U8 APILowWordHighByte;
@@ -5875,7 +6093,8 @@ typedef struct _T_PROFINET_SUBMODULE_LIST_ENTRY {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PROFINET_SUBMODULE_LIST {
+typedef struct _T_PROFINET_SUBMODULE_LIST
+{
   T_PROFINET_BLOCK_HEADER Header;
 
   PN_U8 NumberEntriesHighByte;
@@ -5896,7 +6115,8 @@ typedef struct _T_PROFINET_SUBMODULE_LIST {
 #define C_CONTROL_COMMAND_READYFORRTCLASS3 0x0020u
 #define C_CONTROL_COMMAND_PRM_BEGIN 0x0040u
 
-typedef struct _T_PN_SERVICE_CONTROL_IND {
+typedef struct _T_PN_SERVICE_CONTROL_IND
+{
   PN_U8 ARIdentifierHighByte;
   PN_U8 ARIdentifierLowByte;
 
@@ -5917,7 +6137,8 @@ typedef struct _T_PN_SERVICE_CONTROL_IND {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_CONTROL_RES_ERROR {
+typedef struct _T_PN_CONTROL_RES_ERROR
+{
   PN_U8 ErrorCode1;
   PN_U8 ErrorCode2;
 
@@ -5930,7 +6151,8 @@ typedef struct _T_PN_CONTROL_RES_ERROR {
 
 #define PROFINET_ERROR_CODE1_SUBMODULE_LIST_BLOCK_FAULTY 25u
 
-typedef struct _T_PN_SERVICE_CONTROL_RES {
+typedef struct _T_PN_SERVICE_CONTROL_RES
+{
   PN_U8 ARIdentifierHighByte;
   PN_U8 ARIdentifierLowByte;
 
@@ -5956,7 +6178,8 @@ typedef struct _T_PN_SERVICE_CONTROL_RES {
 
 /*===========================================================================*/
 
-typedef struct _T_PN_SERVICE_WRITE_MULTIPLE_IND {
+typedef struct _T_PN_SERVICE_WRITE_MULTIPLE_IND
+{
   PN_U8 ARIdentifierHighByte;
   PN_U8 ARIdentifierLowByte;
 
@@ -5971,7 +6194,8 @@ typedef struct _T_PN_SERVICE_WRITE_MULTIPLE_IND {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_WRITE_MULTIPLE_REQ {
+typedef struct _T_PN_SERVICE_WRITE_MULTIPLE_REQ
+{
   PN_U8 NumberOfBlocksHighByte;
   PN_U8 NumberOfBlocksLowByte;
 
@@ -5983,7 +6207,8 @@ typedef struct _T_PN_SERVICE_WRITE_MULTIPLE_REQ {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_WRITE_MULTIPLE_RES {
+typedef struct _T_WRITE_MULTIPLE_RES
+{
   PN_U8 ARIdentifierHighByte;
   PN_U8 ARIdentifierLowByte;
 
@@ -6008,7 +6233,8 @@ typedef struct _T_WRITE_MULTIPLE_RES {
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_WRITE_MULTIPLE_RES {
+typedef struct _T_PN_SERVICE_WRITE_MULTIPLE_RES
+{
   PN_U8 ARIdentifierHighByte;
   PN_U8 ARIdentifierLowByte;
 
@@ -6027,7 +6253,8 @@ typedef T_WRITE_MULTIPLE_RES T_WRITE_MULTIPLE_CON;
 
 /*---------------------------------------------------------------------------*/
 
-typedef struct _T_PN_SERVICE_WRITE_MULTIPLE_CON {
+typedef struct _T_PN_SERVICE_WRITE_MULTIPLE_CON
+{
   PN_U8 NumberOfBlocksHighByte;
   PN_U8 NumberOfBlocksLowByte;
 
@@ -6041,10 +6268,11 @@ typedef struct _T_PN_SERVICE_WRITE_MULTIPLE_CON {
 
 #define MAX_NUMBER_MISMATCH_ENTRIES                                            \
   ((MAX_NUMBER_LOCAL_MISMATCH_ENTRIES > MAX_NUMBER_PEER_MISMATCH_ENTRIES)      \
-          ? MAX_NUMBER_LOCAL_MISMATCH_ENTRIES                                  \
-          : MAX_NUMBER_PEER_MISMATCH_ENTRIES)
+       ? MAX_NUMBER_LOCAL_MISMATCH_ENTRIES                                     \
+       : MAX_NUMBER_PEER_MISMATCH_ENTRIES)
 
-typedef struct _T_PN_SERVICE_LOCAL_AND_PEER_CHECK_IND {
+typedef struct _T_PN_SERVICE_LOCAL_AND_PEER_CHECK_IND
+{
   PN_U8 ARIdentifierHighByte;
   PN_U8 ARIdentifierLowByte;
 

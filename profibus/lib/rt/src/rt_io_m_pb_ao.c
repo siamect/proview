@@ -52,8 +52,8 @@
 /*----------------------------------------------------------------------------*\
    Init method for the Pb module Ao
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardInit(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                              io_sCard* cp)
 {
   io_sCardLocal* local;
   pwr_sClass_Pb_Ao* op;
@@ -63,20 +63,24 @@ static pwr_tStatus IoCardInit(
   op = (pwr_sClass_Pb_Ao*)cp->op;
   local = (io_sCardLocal*)cp->Local;
 
-  if (rp->Class != pwr_cClass_Pb_DP_Slave) {
+  if (rp->Class != pwr_cClass_Pb_DP_Slave)
+  {
     errh_Info("Illegal object type %s", cp->Name);
     return IO__SUCCESS;
   }
 
-  if (op->Status >= PB_MODULE_STATE_OPERATE) {
+  if (op->Status >= PB_MODULE_STATE_OPERATE)
+  {
     // Calculate polycoeff
-    for (i = 0; i < cp->ChanListSize; i++) {
+    for (i = 0; i < cp->ChanListSize; i++)
+    {
       chanp = &cp->chanlist[i];
       if (!chanp->cop)
         continue;
       io_AoRangeToCoef(chanp);
     }
-  } else
+  }
+  else
     errh_Info("Error initializing Pb module Ao %s", cp->Name);
 
   return IO__SUCCESS;
@@ -85,8 +89,8 @@ static pwr_tStatus IoCardInit(
 /*----------------------------------------------------------------------------*\
    Write method for the Pb module Ao
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardWrite(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardWrite(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                               io_sCard* cp)
 {
   io_sCardLocal* local;
   pwr_sClass_Pb_Ao* op;
@@ -109,10 +113,12 @@ static pwr_tStatus IoCardWrite(
   op = (pwr_sClass_Pb_Ao*)cp->op;
   slave = (pwr_sClass_Pb_DP_Slave*)rp->op;
 
-  if (op->Status >= PB_MODULE_STATE_OPERATE && slave->DisableSlave != 1) {
+  if (op->Status >= PB_MODULE_STATE_OPERATE && slave->DisableSlave != 1)
+  {
     fixout = ctx->Node->EmergBreakTrue && ctx->Node->EmergBreakSelect == FIXOUT;
 
-    for (i = 0; i < cp->ChanListSize; i++) {
+    for (i = 0; i < cp->ChanListSize; i++)
+    {
       chanp = &cp->chanlist[i];
       if (!chanp->cop || !chanp->sop)
         continue;
@@ -125,7 +131,8 @@ static pwr_tStatus IoCardWrite(
         value = cop->FixedOutValue;
       else if (cop->TestOn)
         value = cop->TestValue;
-      else {
+      else
+      {
         value = *(pwr_tFloat32*)chanp->vbp;
       }
 
@@ -152,50 +159,66 @@ static pwr_tStatus IoCardWrite(
       // Calculate signal value
       sop->SigValue = cop->SigValPolyCoef1 * value + cop->SigValPolyCoef0;
 
-      if (op->BytesPerChannel == 4) {
-        if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT) {
+      if (op->BytesPerChannel == 4)
+      {
+        if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT)
+        {
           udata32 = (pwr_tUInt32)rawvalue;
           if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian)
             udata32 = swap32(udata32);
           memcpy(local->output_area + op->OffsetOutputs + 4 * i, &udata32, 4);
-        } else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT) {
+        }
+        else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT)
+        {
           data32 = (pwr_tInt32)rawvalue;
           if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian)
             data32 = swap32(data32);
           memcpy(local->output_area + op->OffsetOutputs + 4 * i, &data32, 4);
         }
-
-      } else if (op->BytesPerChannel == 3) {
-        if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT) {
+      }
+      else if (op->BytesPerChannel == 3)
+      {
+        if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT)
+        {
           udata32 = (pwr_tUInt32)rawvalue;
           if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian)
             udata32 = swap32(udata32);
           memcpy(local->output_area + op->OffsetOutputs + 3 * i, &udata32, 3);
-        } else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT) {
+        }
+        else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT)
+        {
           data32 = (pwr_tInt32)rawvalue;
           if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian)
             data32 = swap32(data32);
           memcpy(local->output_area + op->OffsetOutputs + 3 * i, &data32, 3);
         }
-
-      } else if (op->BytesPerChannel == 2) {
-        if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT) {
+      }
+      else if (op->BytesPerChannel == 2)
+      {
+        if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT)
+        {
           udata16 = (pwr_tUInt16)rawvalue;
           if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian)
             udata16 = swap16(udata16);
           memcpy(local->output_area + op->OffsetOutputs + 2 * i, &udata16, 2);
-        } else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT) {
+        }
+        else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT)
+        {
           data16 = (pwr_tInt16)rawvalue;
           if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian)
             data16 = swap16(data16);
           memcpy(local->output_area + op->OffsetOutputs + 2 * i, &data16, 2);
         }
-
-      } else if (op->BytesPerChannel == 1) {
-        if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT) {
+      }
+      else if (op->BytesPerChannel == 1)
+      {
+        if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT)
+        {
           udata8 = (pwr_tUInt8)rawvalue;
           memcpy(local->output_area + op->OffsetOutputs + i, &udata8, 1);
-        } else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT) {
+        }
+        else if (op->NumberRepresentation == PB_NUMREP_SIGNEDINT)
+        {
           data8 = (pwr_tInt8)rawvalue;
           memcpy(local->output_area + op->OffsetOutputs + i, &data8, 1);
         }
@@ -209,8 +232,8 @@ static pwr_tStatus IoCardWrite(
 /*----------------------------------------------------------------------------*\
 
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardClose(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardClose(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                               io_sCard* cp)
 {
   io_sCardLocal* local;
   local = cp->Local;
@@ -224,6 +247,6 @@ static pwr_tStatus IoCardClose(
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/
 
-pwr_dExport pwr_BindIoMethods(Pb_Ao)
-    = { pwr_BindIoMethod(IoCardInit), pwr_BindIoMethod(IoCardWrite),
-        pwr_BindIoMethod(IoCardClose), pwr_NullMethod };
+pwr_dExport pwr_BindIoMethods(Pb_Ao) = {
+    pwr_BindIoMethod(IoCardInit), pwr_BindIoMethod(IoCardWrite),
+    pwr_BindIoMethod(IoCardClose), pwr_NullMethod};
