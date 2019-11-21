@@ -271,7 +271,7 @@ pwr_sAttrRef wb_adrep::aref()
 //
 pwr_tOid wb_adrep::boid()
 {
-  pwr_tOid oid;
+  pwr_tOid oid = pwr_cNOid;
 
   // dbs_sBdef *b = (dbs_sBdef *)dbs_Address(sts, m_v->m_env, m_a->bdef);
 
