@@ -3692,7 +3692,7 @@ innodb poolen genom att addera följande rader i /etc/mysql/my.cnf
 <c>innodb_additional_mem_pool_size=20M
 
 För stora databaser måste storleken på log-filen ökas, och genom att konfigurera
-en fil per tabell får man mer information on kontroll över disk-utrymmet.
+en fil per tabell får man mer information och kontroll över disk-utrymmet.
 
 <c>innodb_log_file_size=128M
 <c>innodb_log_buffer_size=16M
