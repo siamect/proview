@@ -17,7 +17,8 @@ Arguments
 --lock-dbs       Lock dbs-files. Dbs-files will not be rebuilt.
 --unlock-dbs     Unlock dbs-files
 --parallel       Build with parallel execution.
---not-parallel   Don't build with parallel execution
+--not-parallel   Don't build with parallel execution.
+--ebuild         Build with cross compilation.
 
 EOF
 }
