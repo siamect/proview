@@ -139,10 +139,15 @@ $(export_lib) : $(objects)
 	  fi
 	jar cfm $(export_lib) manifest.stub
 	@ cd $(pwre_broot)/$(pwre_target)/bld; \
-	echo "Inserting png and gif files"; \
+	echo "Inserting png and gif files " $(comp_name); \
 	jar uf $(export_lib) jpwr/$(comp_name)/*.gif; \
 	jar uf $(export_lib) jpwr/$(comp_name)/*.png; \
-	find jpwr/$(comp_name) -name "*.class" -exec jar uf $(export_lib) {} \;; \
+	dirname=$(comp_name); \
+	if [ $(comp_name) == "rt_client" ]; then \
+	  find jpwr/rt -name "*.class" -exec jar uf $(export_lib) {} \;; \
+	else \
+	  find jpwr/$(comp_name) -name "*.class" -exec jar uf $(export_lib) {} \;; \
+	fi; \
 	chmod a+r $(export_lib);
 #	@ jar cvfm $(export_lib) manifest.stub jpwr/$(comp_name)/*.class jpwr/$(comp_name)/*.gif
 
