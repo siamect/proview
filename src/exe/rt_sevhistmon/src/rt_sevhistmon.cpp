@@ -907,6 +907,9 @@ int rt_sevhistmon::send_exportdata()
     if (m_hs[i].configerror)
       continue;
 
+    if (m_hs[i].sevexportlist.size() == 0)
+      continue;
+
     connected = 0;
     for (unsigned int j = 0; j < m_nodes.size(); j++) {
       if (m_hs[i].nid == m_nodes[j].nid) {
