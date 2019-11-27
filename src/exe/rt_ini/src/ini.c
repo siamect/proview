@@ -42,6 +42,7 @@
 #include "pwr_basecomponentclasses.h"
 #include "pwr_otherioclasses.h"
 #include "pwr_opcclasses.h"
+#include "pwr_sevclasses.h"
 
 #include "co_dcli.h"
 #include "co_string.h"
