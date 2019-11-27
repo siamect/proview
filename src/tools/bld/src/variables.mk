@@ -91,8 +91,13 @@ ifeq ($(pwre_conf_qt),1)
   csetos 	:= -DPWRE_CONF_QT $(pwre_conf_cc_define)
   cinc          := -I$(inc_dir) -I$(einc_dir) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirqt)
 else
-  csetos 	:= -DPWRE_CONF_GTK $(pwre_conf_cc_define)
-  cinc          := -I$(inc_dir) -I$(einc_dir) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirgtk) $(pwre_conf_incdirgst)
+  ifeq ($(pwre_conf_gtk),1)
+    csetos 	:= -DPWRE_CONF_GTK $(pwre_conf_cc_define)
+    cinc          := -I$(inc_dir) -I$(einc_dir) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirgtk) $(pwre_conf_incdirgst)
+  else
+    csetos 	:= $(pwre_conf_cc_define)
+    cinc          := -I$(inc_dir) -I$(einc_dir) -I$(co_source) $(pwre_conf_incdir) $(pwre_conf_incdirgtk) $(pwre_conf_incdirgst)
+  endif
 endif
 rm		:= rm
 cp		:= cp
