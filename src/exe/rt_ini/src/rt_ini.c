@@ -86,8 +86,6 @@ static void usage(char*);
 static void ini_errl_cb(void* userdata, char* str, char severity,
     pwr_tStatus sts, int anix, int message_type);
 
-void handle_signal(int sig, siginfo_t* si, void* ctx);
-
 static int pid_fd = -1;
 static char* pid_filename = NULL;
 
@@ -531,6 +529,17 @@ static pwr_tStatus terminate()
   /* Unlink errlog message queue */
   errl_Unlink();
 
+  // if (cp->flags.b.daemonize) {
+  //   if (pid_fd != -1) {
+  //      lockf(pid_fd, F_ULOCK, 0);
+  //      close(pid_fd);
+  //    }
+
+  //   if (pid_filename != NULL) {
+  //     unlink(pid_filename);
+  //   }
+  // }
+
   exit(EXIT_SUCCESS);
 }
 
@@ -885,7 +894,7 @@ static pwr_tStatus events(ini_sContext* cp)
 
     /* Request for termination ?? */
     if (sts != QCOM__TMO && sts != QCOM__QEMPTY && get.type.b == 11) {
-      sts = terminate();
+      sts = terminate(cp);
       return sts;
     }
 
@@ -1675,7 +1684,6 @@ static void create_pidfile()
 static void daemonize()
 {
   pid_t pid = 0;
-  struct sigaction act;
   int fd;
 
   // First fork
@@ -1712,50 +1720,4 @@ static void daemonize()
   stdin = fopen("/dev/null", "r");
   stdout = fopen("/dev/null", "w+");
   stderr = fopen("/dev/null", "w+");
-
-  // Register signal handler
-  act.sa_handler = NULL;
-  act.sa_sigaction = handle_signal;
-  act.sa_flags |= SA_SIGINFO;
-
-  if ((sigemptyset(&act.sa_mask) == -1)
-      || (sigaction(SIGTERM, &act, NULL) == -1)
-      || (sigaction(SIGHUP, &act, NULL) == -1)) {
-    perror("Could not set up signal handlers for rt_ini");
-  }
-}
-
-/**
- * @brief handle_signal
- */
-void handle_signal(int sig, siginfo_t* si, void* ctx)
-{
-  ini_sContext* cp = (ini_sContext*)ctx;
-
-  switch (sig) {
-  case SIGTERM:
-    errh_LogInfo(
-        &cp->log, "SIGNAL CAUGHT (%d). Exiting!\n", sig, cp->node.bodySize);
-    stop(cp);
-
-    if (cp->flags.b.daemonize) {
-      if (pid_fd != -1) {
-        lockf(pid_fd, F_ULOCK, 0);
-        close(pid_fd);
-      }
-
-      if (pid_filename != NULL) {
-        unlink(pid_filename);
-      }
-    }
-    break;
-  case SIGHUP:
-    errh_LogInfo(
-        &cp->log, "SIGNAL CAUGHT (%d). Restarting!\n", sig, cp->node.bodySize);
-    // TODO restart :)
-    break;
-  default:
-    // Noop
-    break;
-  }
 }
