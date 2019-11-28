@@ -186,7 +186,7 @@ class WData:
         self.origdata.to_csv(file, index=False)
 
     def save_wd(self, file):
-        save = self.wd
+        save = self.wd.copy()
         save.columns = self.wdname
         save.insert(0, 'Time', self.wdtime)
         save.to_csv(file, index=False)

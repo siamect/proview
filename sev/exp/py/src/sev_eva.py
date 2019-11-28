@@ -1784,7 +1784,7 @@ class FetchSev:
         # Server entry
         # Read last server from file
         try:
-            fp = open(pwrp_tmp + "/sevserver.dat", "r")
+            fp = open(home + "/sevserver.dat", "r")
             srv = fp.read()
             fp.close()
         except IOError:
@@ -1821,7 +1821,7 @@ class FetchSev:
 
         # Store server to file
         try:
-            fp = open(pwrp_tmp + "/sevserver.dat", "w")
+            fp = open(home + "/sevserver.dat", "w")
             fp.write(self.server)
             fp.close()
         except IOError:
@@ -2134,7 +2134,7 @@ for opt, arg in opts:
         file = arg
         
 pwr_exe = os.environ.get('pwr_exe')
-pwrp_tmp = os.environ.get('pwrp_tmp')
+home = os.environ.get('HOME')
 bgcolor = 'white'
 buttoncolor = '#F0F0F0'
 
