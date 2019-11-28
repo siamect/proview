@@ -43,6 +43,7 @@
 #include "wb_wge_qt.h"
 
 #include <QApplication>
+#include <QCloseEvent>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QShortcut>
@@ -146,9 +147,14 @@ void WGeQtWidget::action_resize(QResizeEvent* event)
 
 WGeQt::~WGeQt()
 {
+  if (close_cb) {
+    (close_cb)(this);
+  }
   if (nav_widget) {
     nav_widget->close();
   }
+  delete graph;
+  delete toplevel;
 }
 
 void WGeQt::set_size(int width, int height)
@@ -175,7 +181,7 @@ void WGeQtWidget::closeEvent(QCloseEvent* event)
   } else {
     delete ge;
   }
-  QWidget::closeEvent(event);
+  event->ignore();
 }
 
 WGeQt::WGeQt(void* wge_parent_ctx, char* wge_name, char* wge_filename,
@@ -199,7 +205,6 @@ WGeQt::WGeQt(void* wge_parent_ctx, char* wge_name, char* wge_filename,
   // Qt
   toplevel = new WGeQtWidget(this);
   toplevel->setWindowTitle(fl(title));
-  toplevel->setAttribute(Qt::WA_DeleteOnClose);
 
   CoWowQt::SetWindowIcon(toplevel);
 

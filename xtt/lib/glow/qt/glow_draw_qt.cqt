@@ -281,19 +281,16 @@ void GlowDrawQt::event_handler(QEvent* event, QWidget* target)
     switch (event->type()) {
     case QEvent::KeyPress: {
       QKeyEvent* keyEvent = ((QKeyEvent*)event);
-      int keysym;
-
-      keysym = keyEvent->key();
-      if (keysym >= Qt::Key_Space && keysym <= Qt::Key_AsciiTilde) {
-        char buff = QChar(keysym).toAscii();
+      if (keyEvent->key() >= Qt::Key_Space && keyEvent->key() <= Qt::Key_AsciiTilde) {
+        const char *buff = qPrintable(keyEvent->text());
 
         if (keyEvent->modifiers() & Qt::ControlModifier) {
-          sts = ctx->event_handler(glow_eEvent_Key_CtrlAscii, 0, 0, buff, 0);
+          sts = ctx->event_handler(glow_eEvent_Key_CtrlAscii, 0, 0, buff[0], 0);
         } else {
-          sts = ctx->event_handler(glow_eEvent_Key_Ascii, 0, 0, buff, 0);
+          sts = ctx->event_handler(glow_eEvent_Key_Ascii, 0, 0, buff[0], 0);
         }
       } else {
-        switch (keysym) {
+        switch (keyEvent->key()) {
         case Qt::Key_Return:
         case Qt::Key_Enter:
           sts = ctx->event_handler(glow_eEvent_Key_Return, 0, 0, 0, 0);

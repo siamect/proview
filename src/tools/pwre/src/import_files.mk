@@ -40,6 +40,8 @@ rt_modules = \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/otherio/inc/pwr_otherioclasses.hpp \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/remote/inc/pwr_remoteclasses.h \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/remote/inc/pwr_remoteclasses.hpp \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/sev/inc/pwr_sevclasses.h \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/sev/inc/pwr_sevclasses.hpp \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/abb/inc/pwr_abbclasses.h \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/abb/inc/pwr_abbclasses.hpp \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/inor/inc/pwr_inorclasses.h \
@@ -79,7 +81,7 @@ op_motif_modules = \
 java_modules = \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/pwr_rt.jar \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/pwr_jop.jar \
-		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/pwr_jopc.jar \
+		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/pwr_jopg.jar \
 		$(pwre_broot)/$(pwre_os)/$(pwre_hw)/exp/lib/pwr_rt_client.jar
 
 
@@ -168,6 +170,14 @@ $(pwre_broot)/$(pwre_os)/$(pwre_hw)/remote/inc/%.h : $(pwre_vmsinc)/exp/inc/%.h
 	@ cp $(source) $(target)
 
 $(pwre_broot)/$(pwre_os)/$(pwre_hw)/remote/inc/%.hpp : $(pwre_vmsinc)/exp/inc/%.hpp
+	@ echo Import ${target}
+	@ cp $(source) $(target)
+
+$(pwre_broot)/$(pwre_os)/$(pwre_hw)/sev/inc/%.h : $(pwre_vmsinc)/exp/inc/%.h
+	@ echo Import ${target}
+	@ cp $(source) $(target)
+
+$(pwre_broot)/$(pwre_os)/$(pwre_hw)/sev/inc/%.hpp : $(pwre_vmsinc)/exp/inc/%.hpp
 	@ echo Import ${target}
 	@ cp $(source) $(target)
 

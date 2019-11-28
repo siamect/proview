@@ -11,7 +11,7 @@ try:
 except:
     pwre_conf_qt = ""
 
-if pwre_conf_qt == "":
+if pwre_conf_qt == "1":
     libs = ['pwr_wb_gtk', 'pwr_xtt_gtk', 'pwr_ge_gtk', 'pwr_cow_gtk',
             'pwr_flow_gtk', 'pwr_glow_gtk',
             'pwr_wb', 'pwr_xtt', 'pwr_ge', 'pwr_cow', 'pwr_flow', 'pwr_glow',

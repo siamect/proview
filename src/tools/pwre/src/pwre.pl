@@ -153,6 +153,7 @@ sub configure()
 
 sub set_flavour # args: flavour
 {
+  printf("Set flavour %s\n", $_[0]);
   if ($_[0] eq "qt") {
     $ENV{pwre_conf_qt} = "1";
   }
@@ -330,6 +331,7 @@ sub ebuild # args: pass flavour
   printf("\n");
   close FILE;
 
+  set_flavour("");
   my $pass = $_[0];
   my $flavour = $_[1];
 
@@ -348,16 +350,16 @@ sub ebuild # args: pass flavour
     _build("msg", "*", "src", "all");
     _build("lib", "rt", "src", "init");
     _build("lib", "rt", "src", "copy");
-    _build("lib", "rt", $flavour, "copy");
+#    _build("lib", "rt", $flavour, "copy");
     _build("lib", "co", "src", "init");
     _build("lib", "co", "src", "copy");
-    _build("lib", "co", $flavour, "copy");
+#    _build("lib", "co", $flavour, "copy");
     _build("lib", "dtt", "src", "init");
     _build("lib", "dtt", "src", "copy");
     _build("lib", "statussrv", "src", "init");
     _build("lib", "statussrv", "src", "copy");
     _build("lib", "co", "src", "all");
-    _build("lib", "co", $flavour, "all");
+#    _build("lib", "co", $flavour, "all");
     _build("exe", "co*", "src", "all");
     _build("exe", "*", "src", "copy");
     _build("exp", "stdsoap2", "src", "copy");
@@ -380,9 +382,11 @@ sub ebuild # args: pass flavour
     _build("lib","epl_dummy","src","init lib");
     _build("lib","piface_dummy","src","init lib");
     merge();
+    _module("sev");
+    merge();
     _module("rt");
     _build("exe", "rt*", "src", "all");
-    _build("exe", "co*", $flavour, "all");
+#    _build("exe", "co*", $flavour, "all");
     _build("exe", "pwr_user", "src", "all");
     if ($to_build{"nmps"}) {
       merge();
