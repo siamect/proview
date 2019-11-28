@@ -311,18 +311,18 @@ class LinRegModel:
             self.slr = Lasso(alpha=alpha, max_iter=maxiter)
     
         reg = self.slr.fit(self.wdata.wd.iloc[:,1:], self.wdata.wd.iloc[:,0:1])
-        print "params", self.slr.get_params()
-        print "coef ", self.slr.coef_
-        print "intercept ", self.slr.intercept_
+        #print "params", self.slr.get_params()
+        #print "coef ", self.slr.coef_
+        #print "intercept ", self.slr.intercept_
         coeff = [None]*len(self.wdata.wdname)
         coeff[0] = self.slr.intercept_[0]
         if self.type == self.TYPE_LASSO_REGRESSION:
             for i in range(1,len(self.wdata.wdname)):
-                print i, self.slr.coef_[i-1]
+                #print i, self.slr.coef_[i-1]
                 coeff[i] = self.slr.coef_[i-1]
         else:
             for i in range(1,len(self.wdata.wdname)):
-                print i, self.slr.coef_[0][i-1]
+                #print i, self.slr.coef_[0][i-1]
                 coeff[i] = self.slr.coef_[0][i-1]
         self.regrcoef_draw(coeff)
 
@@ -737,7 +737,7 @@ class MLPModel:
             i = 0
             while i < self.mlp.n_layers_ - 1:
                 j = 0
-                print 'layer_sizes', i, len(layer_sizes), layer_sizes
+                #print 'layer_sizes', i, len(layer_sizes), layer_sizes
                 while j < layer_sizes[i]:
                     fp.write(str(self.mlp.intercepts_[i][j]) + ' ')
                     j += 1
@@ -811,7 +811,7 @@ class MLPModel:
         i = 0
         while i < self.mlp.n_layers_ - 1:
             if i < self.mlp.n_layers_ - 2:
-                print 'i+1', i+1, len(h)
+                #print 'i+1', i+1, len(h)
                 h[i] = [None] * len(self.mlp.coefs_[i+1])
             else:
                 h[i] = [None] * 1
@@ -862,7 +862,7 @@ class MLPModel:
         res = self.mlp.predict(X)
 
         score = r2_score(res, self.wdata.wd[self.wdata.wdcol[0]])
-        print 'Score', score
+        #print 'Score', score
 
         layo = 1 * 100 + 10
 
@@ -1010,7 +1010,7 @@ class WdWindow:
 
         i = 0
         for col in self.wdata.wdcol:
-            print col, mean[i], std[i]
+            #print col, mean[i], std[i]
             l = Label(dia, text=col, bg=bgcolor)
             l.grid(column=0, row=i+1, padx=20, pady=5, sticky=W)
             l = Label(dia, text=str(mean[i]), bg=bgcolor)
@@ -1829,7 +1829,7 @@ class FetchSev:
         # Server entry
         # Read last server from file
         try:
-            fp = open(pwrp_tmp + "/sevserver.dat", "r")
+            fp = open(home + "/sevserver.dat", "r")
             srv = fp.read()
             fp.close()
         except IOError:
@@ -1872,7 +1872,7 @@ class FetchSev:
 
         # Store server to file
         try:
-            fp = open(pwrp_tmp + "/sevserver.dat", "w")
+            fp = open(home + "/sevserver.dat", "w")
             fp.write(self.server)
             fp.close()
         except IOError:
@@ -2023,7 +2023,7 @@ class FetchSev:
             return
             
         origdata = pd.DataFrame(data=result)
-        print  'Frame len', len(origdata), origdata.columns, origcol
+        #print  'Frame len', len(origdata), origdata.columns, origcol
         origdata.columns = origcol
 
         self.wdata.new_data(origdata, wdcol, wdname)
@@ -2054,7 +2054,7 @@ for opt, arg in opts:
         formula = arg
         
 pwr_exe = os.environ.get('pwr_exe')
-pwrp_tmp = os.environ.get('pwrp_tmp')
+home = os.environ.get('HOME')
 bgcolor = 'white'
 buttoncolor = '#F0F0F0'
 
