@@ -422,6 +422,7 @@ public:
       a.move_widgets(x, y);
   }
   int display_level;
+  int del_all;
   void scroll(int delta_x, int delta_y);
   void scroll(double delta_x, double delta_y);
   double scroll_size;

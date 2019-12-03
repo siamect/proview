@@ -85,7 +85,7 @@ FlowCtx::FlowCtx(const char* ctx_name, double zoom_fact, int offs_x, int offs_y)
       select_policy(flow_eSelectPolicy_Partial), tiptext(0),
       inverse_color(flow_eDrawType_Line),
       text_coding(flow_eTextCoding_ISO8859_1),
-      display_level(flow_mDisplayLevel_1), scroll_size(0), scroll_callback(0),
+      display_level(flow_mDisplayLevel_1), del_all(0), scroll_size(0), scroll_callback(0),
       scroll_data(NULL)
 {
   strcpy(name, ctx_name);
@@ -121,6 +121,7 @@ FlowCtx::~FlowCtx()
 void FlowCtx::delete_all()
 {
   set_nodraw();
+  del_all = 1;
   for (int i = 0; i < a.a_size; i++) {
     FlowArrayElem* element = a.a[i];
     remove(element);
@@ -130,6 +131,7 @@ void FlowCtx::delete_all()
     i--;
   }
   reset_nodraw();
+  del_all = 0;
 }
 
 int FlowCtx::save(char* filename, flow_eSaveMode mode)

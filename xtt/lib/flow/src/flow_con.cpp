@@ -342,6 +342,8 @@ FlowCon::~FlowCon()
 
   ctx->remove(this);
   ctx->select_remove(this);
+  if (ctx->del_all)
+    return;
 
   if (temporary_ref || cc->con_type == flow_eConType_Reference) {
     source_node->conpoint_refcon_reconfig(source_conpoint);
