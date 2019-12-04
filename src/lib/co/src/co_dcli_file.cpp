@@ -61,7 +61,7 @@ void dcli_set_default_directory(char* dir)
 
 int dcli_get_defaultfilename(const char* inname, char* outname, const char* ext)
 {
-  char filename[80];
+  pwr_tFileName filename;
   const char *s, *s2;
 
   if (strchr(inname, '/'))
@@ -142,7 +142,7 @@ int dcli_replace_env(const char* str, char* newstr)
   char* value;
   char symbol[80];
   char lower_symbol[80];
-  char news[160];
+  pwr_tCmd news;
 
   symbolmode = 0;
   s = (char*)str;
