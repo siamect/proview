@@ -1002,6 +1002,9 @@ void FlowDrawGtk::set_dirty(void *wind) {
 void FlowDrawGtk::rect(int x, int y, int width, int height,
     flow_eDrawType gc_type, int fill, int idx, int highlight, int dimmed)
 {
+  if (width == 0 || height == 0)
+    return;
+
   GdkGC* gc;
   if (gc_type == flow_eDrawType_Green) {
     gc = gc_green;

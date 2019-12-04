@@ -445,6 +445,7 @@ void FlowCtx::zoom(double factor)
       = int((offset_y - window_height / 2.0 * (1.0 / factor - 1)) * factor);
   a.zoom();
   nav_zoom();
+  set_dirty();
   change_scrollbar();
 }
 
@@ -788,15 +789,17 @@ void FlowCtx::nav_draw(int ll_x, int ll_y, int ur_x, int ur_y)
     a.a[i]->nav_draw(ll_x, ll_y, ur_x, ur_y);
   }
 
-  nav_rect_ll_x = int(nav_zoom_factor * offset_x / zoom_factor - nav_offset_x);
-  nav_rect_ur_x = int(
-      nav_zoom_factor * (offset_x + window_width) / zoom_factor - nav_offset_x);
-  nav_rect_ll_y = int(nav_zoom_factor * offset_y / zoom_factor - nav_offset_y);
-  nav_rect_ur_y = int(nav_zoom_factor * (offset_y + window_height) / zoom_factor
-      - nav_offset_y);
-
-  fdraw->rect(nav_rect_ll_x, nav_rect_ll_y, nav_rect_ur_x - nav_rect_ll_x,
-      nav_rect_ur_y - nav_rect_ll_y, flow_eDrawType_Line, 0, 0);
+  if ( window_width != 0 && window_height != 0) {
+    nav_rect_ll_x = int(nav_zoom_factor * offset_x / zoom_factor - nav_offset_x);
+    nav_rect_ur_x = int(
+        nav_zoom_factor * (offset_x + window_width) / zoom_factor - nav_offset_x);
+    nav_rect_ll_y = int(nav_zoom_factor * offset_y / zoom_factor - nav_offset_y);
+    nav_rect_ur_y = int(nav_zoom_factor * (offset_y + window_height) / zoom_factor
+        - nav_offset_y);
+  
+    fdraw->rect(nav_rect_ll_x, nav_rect_ll_y, nav_rect_ur_x - nav_rect_ll_x,
+        nav_rect_ur_y - nav_rect_ll_y, flow_eDrawType_Line, 0, 0);
+  }
 }
 
 void FlowCtx::find_grid(double x, double y, double* x_grid, double* y_grid)
@@ -1233,10 +1236,12 @@ int FlowCtx::event_handler_nav(flow_eEvent event, int x, int y)
       }
     }
     break;
-  case flow_eEvent_Exposure:
+  case flow_eEvent_Exposure: {
     fdraw->get_window_size(navw, &nav_window_width, &nav_window_height);
+    fdraw->get_window_size(mw, &window_width, &window_height);
     nav_zoom();
     break;
+  }
   case flow_eEvent_ButtonMotion:
     if (nav_rect_movement_active) {
       int delta_x = x - nav_rect_move_last_x;
