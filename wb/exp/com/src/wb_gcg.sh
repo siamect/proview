@@ -328,6 +328,8 @@ fi
 machine=`eval uname -m`
 if [ $machine = "x86_64" ]; then
   CurrentOpSys=$OpSys_X86_64_LINUX
+elif [ ${machine:0:3} = "arm" ]; then
+  CurrentOpSys=$OpSys_ARM_LINUX
 else
   CurrentOpSys=$OpSys_X86_LINUX
 fi
@@ -427,6 +429,18 @@ elif [ $OpSys -eq $OpSys_X86_64_LINUX ]; then
       Compile$FileTypeStr
       exit $gcg_status
   fi
+
+elif [ $OpSys -eq $OpSys_ARM_LINUX ]; then
+  pwrp_gc="$pwrp_tmp"
+  
+# Suppress all warnings, -x
+  cc_cmd="$cc -c -x c -Wall $cc_debug -D_REENTRANT -DOS_LINUX -I$pwr_inc -I$pwrp_inc -I$pwrp_tmp $PWR_EXT_INC"
+
+  FileTypeStr="`echo $vFileType| cut -f $FileTypeIdx -d ,`"
+
+# Execute build command
+  Compile$FileTypeStr
+  exit $gcg_status
 
 elif [ $OpSys -eq $OpSys_CustomBuild ]; then
 
