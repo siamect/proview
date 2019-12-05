@@ -88,9 +88,8 @@ int cnv_get_image(char* fname, cnv_tImImage* image, cnv_tPixmap* pixmap)
   if (!*image)
     return 0;
   *pixmap = (cnv_tPixmap)Imlib_move_image(imlib, (ImlibImage*)*image);
-#else
-  printf("** Image not converted: %s\n", fname);
 #endif
+
   return 1;
 }
 
