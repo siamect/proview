@@ -219,7 +219,7 @@ void QtScrollWidgetGlow::paintEvent(QPaintEvent* event)
     ctx->draw(&ctx->navw, r.x(), r.y(), r.x() + r.width(), r.y() + r.height());
     draw_ctx->end();
   }
-  ctx->is_dirty = 0;
+  ctx->reset_dirty();
 }
 
 void QtScrollWidgetGlow::closeEvent(QCloseEvent* event)

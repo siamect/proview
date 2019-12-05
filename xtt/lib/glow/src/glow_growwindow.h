@@ -314,6 +314,7 @@ public:
       glow_eDirection* direction);
   void set_input_focus(int focus, glow_eEvent event);
   int set_source(char* source, char* new_owner);
+  void reset_dirty() {window_ctx->reset_dirty();}
 
   static void v_value_changed_cb(void* o, double value);
   static void h_value_changed_cb(void* o, double value);

@@ -1025,7 +1025,7 @@ void GlowDrawGtk::event_handler(GdkEvent event)
           event.expose.area.x + event.expose.area.width,
           event.expose.area.y + event.expose.area.height);
       end();
-      ctx->is_dirty = 0;
+      ctx->reset_dirty();
       break;
     case GDK_VISIBILITY_NOTIFY:
       switch (event.visibility.state) {
@@ -1183,7 +1183,7 @@ void GlowDrawGtk::event_handler(GdkEvent event)
           event.expose.area.x + event.expose.area.width,
           event.expose.area.y + event.expose.area.height);
       end();
-      ctx->is_dirty = 0;
+      ctx->reset_dirty();
       break;
     case GDK_MOTION_NOTIFY:
       if (event.motion.is_hint) {

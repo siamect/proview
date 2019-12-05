@@ -4535,3 +4535,16 @@ int GrowCtx::find_by_name(const char* name, GlowArrayElem** element)
         ->window_ctx->find_by_name(&name[len + 1], element);
   }
 }
+
+void GrowCtx::reset_dirty()
+{
+  is_dirty = 0;
+  if (has_subwindows) {
+    for (int i = 0; i < a.a_size; i++) {
+      if (a[i]->type() == glow_eObjectType_GrowWindow
+	  || a[i]->type() == glow_eObjectType_GrowFolder) {
+	((GrowWindow *)a[i])->reset_dirty();
+      }
+    }
+  }
+}

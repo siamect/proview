@@ -636,6 +636,7 @@ public:
 
   //! Mark that window needs to be redrawn.
   void set_dirty();
+  virtual void reset_dirty() {is_dirty = 0;}
 
   int is_dirty; //!< Defered redraw is active.
   GlowArray a_nc; //!< Array of nodeclasses.

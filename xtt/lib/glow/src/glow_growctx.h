@@ -1098,6 +1098,8 @@ public:
   glow_eTextCoding text_coding; //!< Text coding
   int recursive_trace; //!< Subgraph recursive trace
   glow_eEditSetMode edit_set_mode; //!< Special edit mode
+  void reset_dirty();
+
 };
 
 void grow_auto_scrolling(GrowCtx* ctx);
