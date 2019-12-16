@@ -3626,6 +3626,7 @@ Volume Remote $ClassVolume 0.0.1.4
         EndObject
         !/**
         !  Connection mode determines if our side should act as client or as server.
+	!  0 means client and 1 server.
         !  Dynamic change is not possible.
         !*/
         Object ConnectionMode $Attribute 8 23-JAN-2018 17:01:41.00
