@@ -256,7 +256,6 @@ public class Mh
 				  String moreText)
   {
     //hantera det mottagna meddelandet
-    System.out.println("messReceived " + eventType);
     MhrEvent evItem =  new MhrEvent(messString, 
                                     nameString,
                                     timeString, 
