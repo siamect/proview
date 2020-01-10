@@ -50,6 +50,7 @@ typedef struct
 } gsdml_sModuleClass;
 
 typedef char gsdml_tString80[80];
+typedef char gsdml_tString2048[2048];
 typedef char gsdml_tString1024[1024];
 typedef char gsdml_tString512[512];
 typedef char gsdml_tString[80];
@@ -711,7 +712,7 @@ public:
 typedef struct
 {
   gsdml_tUnsigned32 ByteOffset;
-  gsdml_tString1024 Data;
+  gsdml_tString2048 Data;
 } gsdml_sConst;
 
 class gsdml_Const
