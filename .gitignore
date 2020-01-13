@@ -10,4 +10,5 @@ rls/
 adm/
 pwre_db
 .vscode/
+.nfs*
 
