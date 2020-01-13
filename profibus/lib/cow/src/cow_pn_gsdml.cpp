@@ -6537,6 +6537,8 @@ gsdml_DeviceAccessPointItem::gsdml_DeviceAccessPointItem(pn_gsdml* g)
 
 void gsdml_DeviceAccessPointItem::build()
 {
+  Body.FixedInSlots.list = new gsdml_Valuelist(Body.FixedInSlots.str);
+
   if (ModuleInfo)
     ModuleInfo->build();
   if (SubslotList)
@@ -6553,6 +6555,7 @@ void gsdml_DeviceAccessPointItem::build()
     UseableSubmodules->build();
   if (SlotList)
     SlotList->build();
+
   Body.PhysicalSlots.list = new gsdml_Valuelist(Body.PhysicalSlots.str);
 }
 

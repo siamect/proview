@@ -128,17 +128,20 @@ class GsdmlSlotData
 {
 public:
   GsdmlSlotData()
-      : module_enum_number(0), module_class(0), module_oid(pwr_cNOid),
+      : module_enum_number(0), dap_fixed_slot(0), module_class(0), module_oid(pwr_cNOid),
         slot_number(0), slot_idx(0)
   {
     module_text[0] = 0;
   }
   unsigned int module_enum_number;
   unsigned int module_ident_number;
+
+  unsigned int dap_fixed_slot;
   pwr_tCid module_class;
   pwr_tOid module_oid;
   char module_text[160];
   unsigned int slot_number;
+
   unsigned int slot_idx;
   std::vector<GsdmlSubslotData*> subslot_data;
 

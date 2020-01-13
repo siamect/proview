@@ -136,7 +136,8 @@ int GsdmlSlotData::print(std::ofstream& fp, bool reverse_endianess)
      << "        ModuleIdentNumber=\"" << module_ident_number << "\"\n"
      << "        ModuleClass=\"" << module_class << "\"\n"
      << "        ModuleText=\"" << module_text << "\"\n"
-     << "        SlotNumber=\"" << slot_number << "\" >\n";
+     << "        SlotNumber=\"" << slot_number << "\"\n"
+     << "        DapFixedInSlot=\"" << dap_fixed_slot << "\" >\n";
 
   for (unsigned int i = 0; i < subslot_data.size(); i++)
   {
@@ -610,6 +611,8 @@ int GsdmlDataReader::tag_attribute(const char* name, const char* value)
       strncpy(sd->module_text, value, sizeof(sd->module_text));
     else if (streq(name, "SlotNumber"))
       sscanf(value, "%u", &sd->slot_number);
+    else if (streq(name, "DapFixedInSlot"))
+      sscanf(value, "%u", &sd->dap_fixed_slot);
     break;
   }
   case gsdmldata_eTag_Subslot:

@@ -1257,25 +1257,43 @@ int GsdmlAttrNav::object_attr()
     }
 
     new ItemPnDAP(this, "DAP", sd, NULL, flow_eDest_IntoLast);
-
     slot_cnt++;
+
+    gsdml_ValuelistIterator fixed_in_slots_iter(
+        gsdml->ApplicationProcess->DeviceAccessPointList
+            ->DeviceAccessPointItem[device_num - 1]
+            ->Body.FixedInSlots.list);
+
+    // Check to see if this DAP is supposed to be fixed in a specific slot (We assume the first one).
+    // We also assume the DAP is never placed in more than one slot.
+    // FixedInSlots attribute may apply to modules and submodules aswell but is not implemented (yet)
+    unsigned int fixed_position = fixed_in_slots_iter.begin();
+    if (fixed_position > 0 && sd->dap_fixed_slot != 1)
+    {
+      sd->dap_fixed_slot = 1;
+      sd->slot_number = slot_cnt;
+    }
 
     gsdml_ValuelistIterator iter(
         gsdml->ApplicationProcess->DeviceAccessPointList
             ->DeviceAccessPointItem[device_num - 1]
             ->Body.PhysicalSlots.list);
-    for (unsigned int i = iter.begin(); i != iter.end(); i = iter.next())
-    {
-      if (i == 0)
-        // DAP already created
-        continue;
+
+    // Add all the slots, the DAP goes to the first physical slot
+    int first_slot = iter.begin();
+    for (unsigned int physical_slot = first_slot; physical_slot != iter.end(); physical_slot = iter.next()) {
+
+      //Skip the DAP
+      if (first_slot == physical_slot)
+        physical_slot = iter.next();
+
       char name[80];
-      sprintf(name, "Slot %u", i);
+      sprintf(name, "Slot %u", physical_slot);
 
       if (dev_data.slot_data.size() <= slot_cnt)
       {
         sd = new GsdmlSlotData();
-        sd->slot_number = i;
+        sd->slot_number = physical_slot;
         sd->slot_idx = slot_cnt;
         dev_data.slot_data.push_back(sd);
       }
@@ -1283,8 +1301,7 @@ int GsdmlAttrNav::object_attr()
       {
         sd = dev_data.slot_data[slot_cnt];
         sd->slot_idx = slot_cnt;
-        if (i != sd->slot_number)
-        {
+        if (physical_slot != sd->slot_number) {
           printf("GSML-Error, datafile corrupt, unexpected slot number\n");
         }
       }
