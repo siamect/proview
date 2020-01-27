@@ -1698,9 +1698,6 @@ static void daemonize()
   if (setsid() < 0)
     exit(EXIT_FAILURE);
 
-  // Ignore any signals from children
-  signal(SIGCHLD, SIG_IGN);
-
   // Second fork
   pid = fork();
   if (pid < 0)
@@ -1720,4 +1717,5 @@ static void daemonize()
   stdin = fopen("/dev/null", "r");
   stdout = fopen("/dev/null", "w+");
   stderr = fopen("/dev/null", "w+");
+
 }
