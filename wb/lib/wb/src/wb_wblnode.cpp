@@ -290,6 +290,9 @@ static wbl_sSym classes[] = { { "pwr_eClass_ClassDef", pwr_eClass_ClassDef },
   { "BaseComponent:Class-CompModePID", pwr_cClass_CompModePID },
   { "BaseComponent:Class-CompPID", pwr_cClass_CompPID },
   { "BaseComponent:Class-CompModeIMC", pwr_cClass_CompModeIMC },
+  { "BaseComponent:Class-CompMPC", pwr_cClass_CompMPC },
+  { "BaseComponent:Class-CompMPC_MLP", pwr_cClass_CompMPC_MLP },
+  { "BaseComponent:Class-CompMPC_Monitor", pwr_cClass_CompMPC_Monitor },
   { "BaseComponent:Class-CompIMC", pwr_cClass_CompIMC }, { 0, 0 } };
 
 /* Datatypes */

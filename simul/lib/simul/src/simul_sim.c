@@ -113,6 +113,43 @@ void Sim_SignalGeneratorFo_exec(plc_sThread* tp, pwr_sClass_Sim_SignalGeneratorF
     if ( value > co->Bias + co->Amplitude)
       value -= co->Amplitude;
     break;
+  case pwr_eSim_SignalGeneratorType_Triangular: {
+    if ( co->Period < FLT_MIN)
+      break;
+
+    co->Accum += *o->ScanTime;
+    if ( co->Accum / co->Period > (int)(1000.0f / co->Period))
+      co->Accum -= co->Period * (int)(1000.0f / co->Period);
+    
+    float p = co->Accum / co->Period - (int)(co->Accum / co->Period);
+    if ( p <= co->PulseWidth/100)
+      value += co->Amplitude * p / (co->PulseWidth/100);
+    else
+      value += co->Amplitude * (1 - p) / (1 - (co->PulseWidth/100));
+
+    break;
+  }
+  case pwr_eSim_SignalGeneratorType_StepPyramid: {
+    if ( co->Period < FLT_MIN)
+      break;
+
+    co->Accum += *o->ScanTime;
+    if ( co->Accum / co->Period > (int)(1000.0f / co->Period))
+      co->Accum -= co->Period * (int)(1000.0f / co->Period);
+    
+    float p = co->Accum / co->Period - (int)(co->Accum / co->Period);
+    int steps = (int)(1.0f / (co->PulseWidth/100));
+    if (ODD(steps))
+      steps -= 1;
+    int current = (int)(p * steps);
+    int height = steps/2;
+    if ( current <= steps/2 - 1)
+      value += co->Amplitude / height * (current + 1);
+    else  if (current < steps - 1)
+      value += co->Amplitude / height * (steps - current - 1);
+
+    break;
+  }
   }
 
   if ( co->FilterTime > 0.001f) {
@@ -124,6 +161,11 @@ void Sim_SignalGeneratorFo_exec(plc_sThread* tp, pwr_sClass_Sim_SignalGeneratorF
     value += (float)rand() / RAND_MAX * co->Noise * 2 - co->Noise;    
   }
 
+  if (co->RampUp != 0.0f && value - o->ActualValue > co->RampUp * tp->f_scan_time)
+    o->ActualValue += co->RampUp * tp->f_scan_time;
+  else if (co->RampDown != 0.0f && value - o->ActualValue < -co->RampDown * tp->f_scan_time)
+    o->ActualValue -= co->RampDown * tp->f_scan_time;
+  else
     o->ActualValue = value;
   co->ActualValue = o->ActualValue;
 }

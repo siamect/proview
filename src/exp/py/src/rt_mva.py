@@ -75,7 +75,47 @@ def hinton(matrix, max_weight=None, ax=None):
     ax.autoscale_view()
     ax.invert_yaxis()
 
+def minmax_scale(ser):
+    """MinMax scaler [0,1]."""
+    max = ser.max()
+    min = ser.min()
+    if min == max:
+        coeff0 = 0.0
+        coeff1 = 1.0 / max
+        ser = ser / max
+    else:
+        coeff0 = -min/(max - min)
+        coeff1 = 1.0/(max - min)
+        ser = ser * coeff1 + coeff0
+    return ser, coeff0, coeff1;
 
+def minmax2_scale(ser):
+    """MinMax scaler [-1,1]."""
+    max = ser.max()
+    min = ser.min()
+    if min == max:
+        coeff0 = 0.0
+        coeff1 = 1.0 / max
+        ser = ser / max
+    else:
+        coeff0 = -2.0*min/(max - min) - 1
+        coeff1 = 2.0/(max - min)
+        ser = ser * coeff1 + coeff0
+    return ser, coeff0, coeff1;
+
+def standard_scale(ser):
+    """Standard scaler."""
+    mean = ser.mean()
+    std = ser.std()
+    if std == 0:
+        coeff0 = 0.0
+        coeff1 = 1.0 / mean
+        ser = ser / mean
+    else:
+        coeff0 = -mean/std
+        coeff1 = 1.0/std
+        ser = ser * coeff1 + coeff0
+    return ser, coeff0, coeff1;
 
 class WData:
     """WData class, container for measuring data.
@@ -102,6 +142,8 @@ class WData:
     OP_CURVE = 13
     OP_CONSTANT = 14
     OP_SHIFT = 15
+    OP_SCALE = 16
+    OP_MSHIFT = 17
         
     operations = ((OP_NO, 'No'),
                   (OP_COPY, 'Copy'),
@@ -118,7 +160,9 @@ class WData:
                   (OP_DIVIDE, 'Divide'),
                   (OP_CURVE, 'Curve'),
                   (OP_CONSTANT, 'Const'),
-                  (OP_SHIFT, 'Shift'))
+                  (OP_SHIFT, 'Shift'),
+                  (OP_SCALE, 'Scale'),
+                  (OP_MSHIFT, 'MShift'))
 
     def __init__(self):
         self.set = False
@@ -382,7 +426,7 @@ class WData:
             i += 1
                      
         if len(cix) != 1:
-            raise co.Error(0, "Select one attributes")
+            raise co.Error(0, "Select one attribute")
             return
 
         if cix[0] == len(self.wdname) - 1:
@@ -586,7 +630,7 @@ class WData:
 
             i = len(opv) - 1
             for op in reversed(opv):
-                self.exec_op(op, par1v[i], par2v[i])
+                self.exec_op(op, par1v[i], par2v[i], 0)
                 i -= 1
 
         self.formula_trim(formulas)
@@ -631,7 +675,7 @@ class WData:
                 i += 1
             self.wd.columns = self.wdcol
         
-    def exec_op(self, op, par1, par2):
+    def exec_op(self, op, par1, par2, par3):
 
         arg1 = None
         found1 = False
@@ -646,6 +690,9 @@ class WData:
 
         if op == self.OP_SHIFT:
             arg1 = par2
+        if op == self.OP_MSHIFT:
+            arg1 = par2
+            arg2 = par3
         elif op == self.OP_CURVE:
             arg1 = par2
         elif op == self.OP_CONSTANT:
@@ -658,9 +705,9 @@ class WData:
                     break
                 i2 += 1
 
-        self.op_exec(op, i1, i2, arg1)
+        self.op_exec(op, i1, i2, arg1, 0)
 
-    def op_exec(self, op, cix1, cix2, arg1):
+    def op_exec(self, op, cix1, cix2, arg1, arg2):
         if cix1 != -1:
             ser = pd.Series(self.wd[self.wdcol[cix1]])
         
@@ -755,7 +802,7 @@ class WData:
 
         elif op == self.OP_CURVE:
             if arg1 == '':
-                raise co.Error(0, 'No curve file is supplied')
+                raise co.SyntaxError(0, 'No curve file is supplied')
             
             fname = co.translateFilename(arg1)
             curveframe = pd.read_csv(fname, header=None)
@@ -766,14 +813,20 @@ class WData:
             colname = "Curve(" + self.wdname[cix1] + "," + arg1 + ")"
 
         elif op == self.OP_CONSTANT:
-            value = float(arg1)
+            try:
+                value = float(arg1)
+            except:
+                raise co.SyntaxError(0, 'Missing value or sytax error')
 
             const = [value] * len(self.wd)
             ser = pd.Series(const)
             colname = "Const(" + str(value) + ")"
 
         elif op == self.OP_SHIFT:
-            shiftvalue = int(arg1)
+            try:
+                shiftvalue = int(arg1)
+            except:
+                raise co.SyntaxError(0, 'Missing value or syntax error')
 
             shift = []
             i = 0
@@ -792,6 +845,47 @@ class WData:
                 i += 1
             ser = pd.Series(shift)
             colname = "Shift(" + self.wdname[cix1] + "," + str(shiftvalue) + ")"
+        elif op == self.OP_MSHIFT:
+            try:
+                shiftnum = int(arg2)
+                shiftarg1 = int(arg1) 
+            except:
+                raise co.SyntaxError(0, 'Missing value or syntax error')
+
+            j = 0
+            while j < shiftnum:
+                shiftvalue = shiftarg1 * (j + 1)
+                shift = []
+                i = 0
+                for val in ser.values:
+                    if shiftvalue > 0:
+                        if i < shiftvalue:
+                            val = 0
+                        else:
+                            val = ser.values[i-shiftvalue]
+                    else:
+                        if i - shiftvalue >= len(self.wd):
+                            val = 0
+                        else:
+                            val = ser.values[i-shiftvalue]
+                    shift.append(val)
+                    i += 1
+                ser_shift = pd.Series(shift)
+                colname = "Shift(" + self.wdname[cix1] + "," + str(shiftvalue) + ")"
+
+                if j < shiftnum - 1:
+                    idx = len(self.wdname)
+                    self.wdname.append(colname)
+                    colname = "A" + str(idx+1)
+                    self.wdcol.append(colname)
+                    self.wd[self.wdcol[idx]] = ser_shift
+                j += 1
+            ser = ser_shift
+            
+        elif op == self.OP_SCALE:
+            ser, coeff0, coeff1 = minmax_scale(ser)
+            colname = "Scale(" + self.wdname[cix1] + ")"
+            print 'Scale Coeff0', coeff0, 'Coeff1', coeff1
         else:
             raise co.Error(0, 'No action is selected')
 

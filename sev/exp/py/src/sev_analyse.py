@@ -480,6 +480,7 @@ class MLPModel:
         self.wdwindow = wdwindow
         self.wdata = wdwindow.wdata
         self.fignum = 1
+        self.scaler = 'No'
 
         self.lrwindow = Toplevel(wdwindow.window, bg=bgcolor)
         self.lrwindow.title('MLP Regressor ' + wdwindow.name)
@@ -500,15 +501,26 @@ class MLPModel:
 
         self.lrwindow.config(menu=menubar)
 
+        # Scaler options list
+        list = ['No', 'MinMax', 'Standard']
+        self.scaleropt = StringVar()
+        self.scaleropt.set('No')
+        label = Label(self.lrwindow, text='Scaler')
+        label.grid(column=0, row=0, padx=0, pady=5, sticky=W)
+        label.config(bg=bgcolor)
+        optmenu = OptionMenu(self.lrwindow, self.scaleropt, *list)
+        optmenu.grid(column=1, row=0, padx=20, pady=5, sticky=W)
+        optmenu.config(bg=bgcolor)
+
         # Solver options list
         list = ['adam', 'lbfgs', 'sgd']
         self.solver = StringVar()
         self.solver.set('adam')
         label = Label(self.lrwindow, text='Solver')
-        label.grid(column=0, row=0, padx=0, pady=5, sticky=W)
+        label.grid(column=0, row=1, padx=0, pady=5, sticky=W)
         label.config(bg=bgcolor)
         optmenu = OptionMenu(self.lrwindow, self.solver, *list)
-        optmenu.grid(column=1, row=0, padx=20, pady=5, sticky=W)
+        optmenu.grid(column=1, row=1, padx=20, pady=5, sticky=W)
         optmenu.config(bg=bgcolor)
 
         # Activation options list
@@ -516,85 +528,85 @@ class MLPModel:
         self.activation = StringVar()
         self.activation.set('tanh')
         label = Label(self.lrwindow, text='Activation')
-        label.grid(column=0, row=1, padx=0, pady=5, sticky=W)
+        label.grid(column=0, row=2, padx=0, pady=5, sticky=W)
         label.config(bg=bgcolor)
         optmenu = OptionMenu(self.lrwindow, self.activation, *list)
-        optmenu.grid(column=1, row=1, padx=20, pady=5, sticky=W)
+        optmenu.grid(column=1, row=2, padx=20, pady=5, sticky=W)
         optmenu.config(bg=bgcolor)
 
         # Max iter entry
         self.maxiter = IntVar()
         label = Label(self.lrwindow, text='Max Iterations')
-        label.grid(column=0, row=2, padx=0, pady=5, sticky=W)
+        label.grid(column=0, row=3, padx=0, pady=5, sticky=W)
         label.config(bg=bgcolor)
         entry = Entry(self.lrwindow, textvariable=self.maxiter, width=8)
         self.maxiter.set(20000)
-        entry.grid(column=1, row=2, padx=20, pady=5, sticky=W)
+        entry.grid(column=1, row=3, padx=20, pady=5, sticky=W)
         entry.config(bg=bgcolor)
 
         # Hidden layer sizes entry
         label = Label(self.lrwindow, text='Hidden Layer Sizes')
-        label.grid(column=0, row=3, padx=0, pady=5, sticky=W)
+        label.grid(column=0, row=4, padx=0, pady=5, sticky=W)
         label.config(bg=bgcolor)
 
         self.layersize1 = IntVar()
         entry = Entry(self.lrwindow, textvariable=self.layersize1, width=4)
         self.layersize1.set(20)
-        entry.grid(column=1, row=3, padx=20, pady=5, sticky=W)
+        entry.grid(column=1, row=4, padx=20, pady=5, sticky=W)
         entry.config(bg=bgcolor)
 
         self.layersize2 = IntVar()
         entry = Entry(self.lrwindow, textvariable=self.layersize2, width=4)
         self.layersize2.set(20)
-        entry.grid(column=2, row=3, padx=20, pady=5, sticky=W)
+        entry.grid(column=2, row=4, padx=20, pady=5, sticky=W)
         entry.config(bg=bgcolor)
 
         self.layersize3 = IntVar()
         entry = Entry(self.lrwindow, textvariable=self.layersize3, width=4)
         self.layersize3.set(20)
-        entry.grid(column=3, row=3, padx=20, pady=5, sticky=W)
+        entry.grid(column=3, row=4, padx=20, pady=5, sticky=W)
         entry.config(bg=bgcolor)
 
         self.layersize4 = IntVar()
         entry = Entry(self.lrwindow, textvariable=self.layersize4, width=4)
         self.layersize4.set(0)
-        entry.grid(column=4, row=3, padx=20, pady=5, sticky=W)
+        entry.grid(column=4, row=4, padx=20, pady=5, sticky=W)
         entry.config(bg=bgcolor)
 
         self.layersize5 = IntVar()
         entry = Entry(self.lrwindow, textvariable=self.layersize5, width=4)
         self.layersize5.set(0)
-        entry.grid(column=5, row=3, padx=20, pady=5, sticky=W)
+        entry.grid(column=5, row=4, padx=20, pady=5, sticky=W)
         entry.config(bg=bgcolor)
 
         # alpha entry
         label = Label(self.lrwindow, text='Alpha')
-        label.grid(column=0, row=4, padx=0, pady=5, sticky=W)
+        label.grid(column=0, row=5, padx=0, pady=5, sticky=W)
         label.config(bg=bgcolor)
         self.alpha = DoubleVar()
         entry = Entry(self.lrwindow, textvariable=self.alpha, width=8)
         self.alpha.set(0.0001)
-        entry.grid(column=1, row=4, padx=20, pady=5, sticky=W)
+        entry.grid(column=1, row=5, padx=20, pady=5, sticky=W)
         entry.config(bg=bgcolor)
 
         # beta_1 entry
         label = Label(self.lrwindow, text='Beta1')
-        label.grid(column=0, row=5, padx=0, pady=5, sticky=W)
+        label.grid(column=0, row=6, padx=0, pady=5, sticky=W)
         label.config(bg=bgcolor)
         self.beta1 = DoubleVar()
         entry = Entry(self.lrwindow, textvariable=self.beta1, width=8)
         self.beta1.set(0.9)
-        entry.grid(column=1, row=5, padx=20, pady=5, sticky=W)
+        entry.grid(column=1, row=6, padx=20, pady=5, sticky=W)
         entry.config(bg=bgcolor)
 
         # beta_2 entry
         label = Label(self.lrwindow, text='Beta2')
-        label.grid(column=0, row=6, padx=0, pady=5, sticky=W)
+        label.grid(column=0, row=7, padx=0, pady=5, sticky=W)
         label.config(bg=bgcolor)
         self.beta2 = DoubleVar()
         entry = Entry(self.lrwindow, textvariable=self.beta2, width=8)
         self.beta2.set(0.999)
-        entry.grid(column=1, row=6, padx=20, pady=5, sticky=W)
+        entry.grid(column=1, row=7, padx=20, pady=5, sticky=W)
         entry.config(bg=bgcolor)
 
         # Learning rate options list
@@ -602,30 +614,30 @@ class MLPModel:
         self.learningrate = StringVar()
         self.learningrate.set('constant')
         label = Label(self.lrwindow, text='Learning rate')
-        label.grid(column=0, row=7, padx=0, pady=5, sticky=W)
+        label.grid(column=0, row=8, padx=0, pady=5, sticky=W)
         label.config(bg=bgcolor)
         optmenu = OptionMenu(self.lrwindow, self.learningrate, *list)
-        optmenu.grid(column=1, row=7, padx=20, pady=5, sticky=W)
+        optmenu.grid(column=1, row=8, padx=20, pady=5, sticky=W)
         optmenu.config(bg=bgcolor)
 
         # learning rate init entry
         label = Label(self.lrwindow, text='Initial learning rate')
-        label.grid(column=0, row=8, padx=0, pady=5, sticky=W)
+        label.grid(column=0, row=9, padx=0, pady=5, sticky=W)
         label.config(bg=bgcolor)
         self.learningrateinit = DoubleVar()
         entry = Entry(self.lrwindow, textvariable=self.learningrateinit, width=8)
         self.learningrateinit.set(0.001)
-        entry.grid(column=1, row=8, padx=20, pady=5, sticky=W)
+        entry.grid(column=1, row=9, padx=20, pady=5, sticky=W)
         entry.config(bg=bgcolor)
 
         # tolerance entry
         label = Label(self.lrwindow, text='Tolerance')
-        label.grid(column=0, row=9, padx=0, pady=5, sticky=W)
+        label.grid(column=0, row=10, padx=0, pady=5, sticky=W)
         label.config(bg=bgcolor)
         self.tol = DoubleVar()
         entry = Entry(self.lrwindow, textvariable=self.tol, width=8)
         self.tol.set(0.0001)
-        entry.grid(column=1, row=9, padx=20, pady=5, sticky=W)
+        entry.grid(column=1, row=10, padx=20, pady=5, sticky=W)
         entry.config(bg=bgcolor)
 
         # Verbose options list
@@ -633,10 +645,10 @@ class MLPModel:
         self.verbose = StringVar()
         self.verbose.set('True')
         label = Label(self.lrwindow, text='Verbose')
-        label.grid(column=0, row=10, padx=0, pady=5, sticky=W)
+        label.grid(column=0, row=11, padx=0, pady=5, sticky=W)
         label.config(bg=bgcolor)
         optmenu = OptionMenu(self.lrwindow, self.verbose, *list)
-        optmenu.grid(column=1, row=10, padx=20, pady=5, sticky=W)
+        optmenu.grid(column=1, row=11, padx=20, pady=5, sticky=W)
         optmenu.config(bg=bgcolor)
 
 
@@ -649,7 +661,7 @@ class MLPModel:
             params = self.mlp.get_params()
 
             all = [[self.mlp.n_layers_, self.mlp.n_outputs_, self.mlp.out_activation_], params,
-                   self.mlp.intercepts_, self.mlp.coefs_]
+                   self.mlp.intercepts_, self.mlp.coefs_, self.scaler, self.scaler_c0, self.scaler_c1]
             pickle.dump(all, open(file, 'wb'))
 
     # Open menu callback
@@ -704,13 +716,50 @@ class MLPModel:
                 elif par == 'hidden_layer_sizes':
                     self.mlp.set_params(hidden_layer_sizes=params[par])
 
-                self.mlp.intercepts_ = all[2]
-                self.mlp.coefs_ = all[3]
-                self.mlp.n_layers_ = all[0][0]
-                self.mlp.n_outputs_ = all[0][1]
-                self.mlp.out_activation_ = all[0][2]
+            self.mlp.intercepts_ = all[2]
+            self.mlp.coefs_ = all[3]
+            self.mlp.n_layers_ = all[0][0]
+            self.mlp.n_outputs_ = all[0][1]
+            self.mlp.out_activation_ = all[0][2]
+            self.scaler = all[4]
+            self.scaler_c0 = all[5]
+            self.scaler_c1 = all[6]
 
-            self.mlp_draw()
+            self.scaleropt.set(self.scaler)
+            self.solver.set(params['solver'])
+            self.activation.set(params['activation'])
+            self.maxiter.set(params['max_iter'])
+            layer_sizes = list(params['hidden_layer_sizes'])
+            self.layersize1.set(0)
+            self.layersize2.set(0)
+            self.layersize3.set(0)
+            self.layersize4.set(0)
+            self.layersize5.set(0)
+            if self.mlp.n_layers_ > 2:
+                   self.layersize1.set(layer_sizes[0])
+            if self.mlp.n_layers_ > 3:
+                   self.layersize2.set(layer_sizes[1])
+            if self.mlp.n_layers_ > 4:
+                   self.layersize3.set(layer_sizes[2])
+            if self.mlp.n_layers_ > 5:
+                   self.layersize4.set(layer_sizes[3])
+            if self.mlp.n_layers_ > 6:
+                   self.layersize5.set(layer_sizes[4])
+            self.alpha.set(params['alpha'])
+            self.beta1.set(params['beta_1'])
+            self.beta2.set(params['beta_2'])
+            self.learningrate.set(params['learning_rate'])
+            self.tol.set(params['tol'])
+            
+            Z = self.wdata.wd.iloc[:,1:].copy()
+            y = self.wdata.wd.iloc[:,0:1].values.ravel()
+            y = y * self.scaler_c1[0] + self.scaler_c0[0]
+            i = 0
+            while i < Z.shape[1]:
+                Z.iloc[:,i] = Z.iloc[:,i] * self.scaler_c1[i+1] + self.scaler_c0[i+1]
+                i += 1
+            
+            self.mlp_draw(Z, y)
         
     # Export menu callback
     def export_action_cb(self):
@@ -720,9 +769,24 @@ class MLPModel:
         if file != '':
             params = self.mlp.get_params()
 
-            all = [[self.mlp.n_layers_, self.mlp.n_outputs_, self.mlp.out_activation_], params,
-                   self.mlp.intercepts_, self.mlp.coefs_]
             fp = open(file, 'w')
+            if self.scaler != 'No':
+                fp.write('Scaler ' + str(len(self.scaler_c0)) + '\n')
+                i = 0
+                while i < len(self.scaler_c0):
+                    fp.write(str(self.scaler_c0[i]))
+                    if i != len(self.scaler_c0) - 1:
+                        fp.write(' ')
+                    i += 1
+                fp.write('\n')
+                i = 0
+                while i < len(self.scaler_c1):
+                    fp.write(str(self.scaler_c1[i]))
+                    if i != len(self.scaler_c0) - 1:
+                        fp.write(' ')
+                    i += 1
+                fp.write('\n')            
+
             fp.write('Layers ' + str(self.mlp.n_layers_) + '\n')
             fp.write('LayerSizes')
             inputs = len(self.mlp.coefs_[0])
@@ -737,7 +801,6 @@ class MLPModel:
             i = 0
             while i < self.mlp.n_layers_ - 1:
                 j = 0
-                #print 'layer_sizes', i, len(layer_sizes), layer_sizes
                 while j < layer_sizes[i]:
                     fp.write(str(self.mlp.intercepts_[i][j]) + ' ')
                     j += 1
@@ -766,6 +829,7 @@ class MLPModel:
     # Create menu callback
     def create_action_cb(self):
 
+        scaler = self.scaleropt.get()
         solver = self.solver.get()
         activation = self.activation.get()
         maxiter = self.maxiter.get()
@@ -795,12 +859,40 @@ class MLPModel:
     
         X = self.wdata.wd.iloc[:,1:]
         y = self.wdata.wd.iloc[:,0:1].values.ravel()
-        self.scaler = StandardScaler()
-        self.scaler.fit(X)
-        reg = self.mlp.fit(X, y)
+        self.scaler_c0 = []
+        self.scaler_c1 = []
+        self.scaler = scaler
+        if scaler == 'No':
+            Z = X
+            self.scaler_c0.append(0)
+            self.scaler_c1.append(1)
+            i = 0
+            while i < X.shape[1]:
+                self.scaler_c0.append(0)
+                self.scaler_c1.append(1)
+                i += 1
+        else:
+            Z = X.copy()
+            if scaler == 'MinMax':
+                y, c0, c1 = minmax_scale(y)
+            elif scaler == 'Standard':
+                y, c0, c1 = standard_scale(y)
+            self.scaler_c0.append(c0)
+            self.scaler_c1.append(c1)
+            i = 0
+            while i < Z.shape[1]:
+                if scaler == 'MinMax':
+                    Z.iloc[:,i], c0, c1 = minmax_scale(Z.iloc[:,i])
+                elif scaler == 'Standard':
+                    Z.iloc[:,i], c0, c1 = standard_scale(Z.iloc[:,i])
+                self.scaler_c0.append(c0)
+                self.scaler_c1.append(c1)
+                i += 1
+                
+        reg = self.mlp.fit(Z, y)
         coeff = 0
         params = self.mlp.get_params()
-        self.mlp_draw()
+        self.mlp_draw(Z, y)
 
     def mlp_predict(self, X):
         inputs = len(self.mlp.coefs_[0])
@@ -811,7 +903,6 @@ class MLPModel:
         i = 0
         while i < self.mlp.n_layers_ - 1:
             if i < self.mlp.n_layers_ - 2:
-                #print 'i+1', i+1, len(h)
                 h[i] = [None] * len(self.mlp.coefs_[i+1])
             else:
                 h[i] = [None] * 1
@@ -854,15 +945,11 @@ class MLPModel:
         return res2
     
     # Draw coefficients and curves
-    def mlp_draw(self):
-
-        X = self.wdata.wd.iloc[:,1:]
-        y = self.wdata.wd.iloc[:,0:1].values.ravel()
+    def mlp_draw(self, X, y):
 
         res = self.mlp.predict(X)
 
-        score = r2_score(res, self.wdata.wd[self.wdata.wdcol[0]])
-        #print 'Score', score
+        score = r2_score(res, y)
 
         layo = 1 * 100 + 10
 
@@ -874,7 +961,7 @@ class MLPModel:
         #mgr = plt.get_current_fig_manager()
         #main.set_icon(mgr.window)
         ax = plt.subplot(layo+j+1)
-        plt.plot(self.wdata.wdtime, self.wdata.wd[self.wdata.wdcol[0]])
+        plt.plot(self.wdata.wdtime, y)
         plt.plot(self.wdata.wdtime, res, label='Model')
         plt.legend(loc='center left', bbox_to_anchor=(1, 0.5));
         plt.gcf().text(0.1, 0.95, 'Score  ' + "%.4f" % score, fontsize=10)
@@ -907,6 +994,8 @@ class WdWindow:
         self.fcurvefile = None
         self.constantentry = None
         self.shiftentry = None
+        self.mshiftentry = None
+        self.mshiftnumentry = None
         self.curveentry = None
         self.datasel = None
 
@@ -1010,7 +1099,6 @@ class WdWindow:
 
         i = 0
         for col in self.wdata.wdcol:
-            #print col, mean[i], std[i]
             l = Label(dia, text=col, bg=bgcolor)
             l.grid(column=0, row=i+1, padx=20, pady=5, sticky=W)
             l = Label(dia, text=str(mean[i]), bg=bgcolor)
@@ -1233,54 +1321,60 @@ class WdWindow:
         self.sel_curve = IntVar()
         self.sel_constant = IntVar()
         self.sel_shift = IntVar()
+        self.sel_mshift = IntVar()
+        self.sel_scale = IntVar()
 
         checkbox = Checkbutton(self.add_dia, text='Norm', variable=self.sel_norm,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=0, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Square', variable=self.sel_square,
+        checkbox = Checkbutton(self.add_dia, text='Scale', variable=self.sel_scale,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=1, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Squareroot', variable=self.sel_sqrt,
+        checkbox = Checkbutton(self.add_dia, text='Square', variable=self.sel_square,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=2, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Exp', variable=self.sel_exp,
+        checkbox = Checkbutton(self.add_dia, text='Squareroot', variable=self.sel_sqrt,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=3, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Log', variable=self.sel_log,
+        checkbox = Checkbutton(self.add_dia, text='Exp', variable=self.sel_exp,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=4, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Integral', variable=self.sel_integral,
+        checkbox = Checkbutton(self.add_dia, text='Log', variable=self.sel_log,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=5, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Derivate', variable=self.sel_derivate,
+        checkbox = Checkbutton(self.add_dia, text='Integral', variable=self.sel_integral,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=6, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Curve', variable=self.sel_curve,
+        checkbox = Checkbutton(self.add_dia, text='Derivate', variable=self.sel_derivate,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=7, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Curve', variable=self.sel_curve,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=8, padx=20, pady=5, sticky=W)
         self.curveentry = Entry(self.add_dia, bg=bgcolor)
-        self.curveentry.grid(column=1, row=7, padx=20, pady=5, sticky=W)
+        self.curveentry.grid(column=1, row=8, padx=20, pady=5, sticky=W)
         button = Button(self.add_dia, text="Browse", command=self.addcol_action_curve_cb, bg=buttoncolor) 
-        button.grid(column=2, row=7, padx=20, pady=5, sticky=W)
+        button.grid(column=2, row=8, padx=20, pady=5, sticky=W)
 
         checkbox = Checkbutton(self.add_dia, text='Shift', variable=self.sel_shift,
                                highlightthickness=0, bg=bgcolor)
-        checkbox.grid(column=0, row=8, padx=20, pady=5, sticky=W)
+        checkbox.grid(column=0, row=9, padx=20, pady=5, sticky=W)
         self.shiftentry = Entry(self.add_dia, bg=bgcolor)
-        self.shiftentry.grid(column=1, row=8, padx=20, pady=5, sticky=W)
+        self.shiftentry.grid(column=1, row=9, padx=20, pady=5, sticky=W)
 
         button = Button(self.add_dia, text="Apply", command=self.addcol_action_ok_cb, bg=buttoncolor);
-        button.grid(column=0, row=9, padx=60, pady=20, sticky=W)
+        button.grid(column=0, row=10, padx=60, pady=20, sticky=W)
 
         button = Button(self.add_dia, text="Cancel", command=self.addcol_action_cancel_cb, bg=buttoncolor);
-        button.grid(column=1, row=9, padx=60, pady=20, sticky=W)
+        button.grid(column=1, row=10, padx=60, pady=20, sticky=W)
 
     # Add column callback
     def addcolumn_action_cb(self):
@@ -1309,6 +1403,8 @@ class WdWindow:
         self.sel_curve = IntVar()
         self.sel_constant = IntVar()
         self.sel_shift = IntVar()
+        self.sel_mshift = IntVar()
+        self.sel_scale = IntVar()
         checkbox = Checkbutton(self.add_dia, text='Copy', variable=self.sel_copy,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=0, padx=20, pady=5, sticky=W)
@@ -1317,71 +1413,83 @@ class WdWindow:
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=1, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Square', variable=self.sel_square,
+        checkbox = Checkbutton(self.add_dia, text='Scale', variable=self.sel_scale,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=2, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Squareroot', variable=self.sel_sqrt,
+        checkbox = Checkbutton(self.add_dia, text='Square', variable=self.sel_square,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=3, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Exp', variable=self.sel_exp,
+        checkbox = Checkbutton(self.add_dia, text='Squareroot', variable=self.sel_sqrt,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=4, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Log', variable=self.sel_log,
+        checkbox = Checkbutton(self.add_dia, text='Exp', variable=self.sel_exp,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=5, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Integral', variable=self.sel_integral,
+        checkbox = Checkbutton(self.add_dia, text='Log', variable=self.sel_log,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=6, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Derivate', variable=self.sel_derivate,
+        checkbox = Checkbutton(self.add_dia, text='Integral', variable=self.sel_integral,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=7, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Add', variable=self.sel_add,
+        checkbox = Checkbutton(self.add_dia, text='Derivate', variable=self.sel_derivate,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=8, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Sub', variable=self.sel_sub,
+        checkbox = Checkbutton(self.add_dia, text='Add', variable=self.sel_add,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=9, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Multiply', variable=self.sel_mul,
+        checkbox = Checkbutton(self.add_dia, text='Sub', variable=self.sel_sub,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=10, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Divide', variable=self.sel_div,
+        checkbox = Checkbutton(self.add_dia, text='Multiply', variable=self.sel_mul,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=11, padx=20, pady=5, sticky=W)
 
-        checkbox = Checkbutton(self.add_dia, text='Curve', variable=self.sel_curve,
+        checkbox = Checkbutton(self.add_dia, text='Divide', variable=self.sel_div,
                                highlightthickness=0, bg=bgcolor)
         checkbox.grid(column=0, row=12, padx=20, pady=5, sticky=W)
+
+        checkbox = Checkbutton(self.add_dia, text='Curve', variable=self.sel_curve,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=13, padx=20, pady=5, sticky=W)
         self.curveentry = Entry(self.add_dia, bg=bgcolor)
-        self.curveentry.grid(column=1, row=12, padx=20, pady=5, sticky=W)
+        self.curveentry.grid(column=1, row=13, padx=20, pady=5, sticky=W)
         button = Button(self.add_dia, text="Browse", command=self.addcol_action_curve_cb, bg=buttoncolor) 
-        button.grid(column=2, row=12, padx=20, pady=5, sticky=W)
+        button.grid(column=2, row=13, padx=20, pady=5, sticky=W)
 
         checkbox = Checkbutton(self.add_dia, text='Constant', variable=self.sel_constant,
                                highlightthickness=0, bg=bgcolor)
-        checkbox.grid(column=0, row=13, padx=20, pady=5, sticky=W)
+        checkbox.grid(column=0, row=14, padx=20, pady=5, sticky=W)
         self.constantentry = Entry(self.add_dia, bg=bgcolor)
-        self.constantentry.grid(column=1, row=13, padx=20, pady=5, sticky=W)
+        self.constantentry.grid(column=1, row=14, padx=20, pady=5, sticky=W)
 
         checkbox = Checkbutton(self.add_dia, text='Shift', variable=self.sel_shift,
                                highlightthickness=0, bg=bgcolor)
-        checkbox.grid(column=0, row=14, padx=20, pady=5, sticky=W)
+        checkbox.grid(column=0, row=15, padx=20, pady=5, sticky=W)
         self.shiftentry = Entry(self.add_dia, bg=bgcolor)
-        self.shiftentry.grid(column=1, row=14, padx=20, pady=5, sticky=W)
+        self.shiftentry.grid(column=1, row=15, padx=20, pady=5, sticky=W)
+        
+        checkbox = Checkbutton(self.add_dia, text='MShift', variable=self.sel_mshift,
+                               highlightthickness=0, bg=bgcolor)
+        checkbox.grid(column=0, row=16, padx=20, pady=5, sticky=W)
+        self.mshiftentry = Entry(self.add_dia, bg=bgcolor)
+        self.mshiftentry.grid(column=1, row=16, padx=20, pady=5, sticky=W)
+        self.mshiftnumentry = Entry(self.add_dia, bg=bgcolor)
+        self.mshiftnumentry.grid(column=2, row=16, padx=20, pady=5, sticky=W)
         
         button = Button(self.add_dia, text="Apply", command=self.addcol_action_ok_cb, bg=buttoncolor);
-        button.grid(column=0, row=15, padx=60, pady=20, sticky=W)
+        button.grid(column=0, row=17, padx=60, pady=20, sticky=W)
 
         button = Button(self.add_dia, text="Cancel", command=self.addcol_action_cancel_cb, bg=buttoncolor);
-        button.grid(column=1, row=15, padx=60, pady=20, sticky=W)
+        button.grid(column=1, row=17, padx=60, pady=20, sticky=W)
 
     def addcol_action_curve_cb(self):
         self.fcurvefile = tkFileDialog.askopenfilename(
@@ -1419,6 +1527,7 @@ class WdWindow:
         cix1 = -1
         cix2 = -1
         arg1 = None
+        arg2 = None
         if len(cix) > 0:
             cix1 = cix[0]
         if len(cix) > 1:
@@ -1457,12 +1566,22 @@ class WdWindow:
         elif self.sel_shift.get():
             op = self.wdata.OP_SHIFT
             arg1 = self.shiftentry.get()
+        elif self.sel_mshift.get():
+            op = self.wdata.OP_MSHIFT
+            arg1 = self.mshiftentry.get()
+            arg2 = self.mshiftnumentry.get()
+        elif self.sel_scale.get():
+            op = self.wdata.OP_SCALE
         else:
             tkMessageBox.showerror("Error", "No action is selected")
             return
 
+        keep = 0
         try:
-            self.wdata.op_exec(op, cix1, cix2, arg1)
+            self.wdata.op_exec(op, cix1, cix2, arg1, arg2)
+        except co.SyntaxError as e:
+            tkMessageBox.showerror("Error", str(e))
+            return
         except co.Error as e:
             tkMessageBox.showerror("Error", e.str)
 
@@ -2023,12 +2142,10 @@ class FetchSev:
             return
             
         origdata = pd.DataFrame(data=result)
-        #print  'Frame len', len(origdata), origdata.columns, origcol
         origdata.columns = origcol
 
         self.wdata.new_data(origdata, wdcol, wdname)
 
-        #self.itemframe.pack_forget()
         self.fswindow.destroy()
 
 

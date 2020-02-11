@@ -40,6 +40,7 @@
 #include <math.h>
 #include "co_dcli.h"
 #include "simul.h"
+#include "rt_plc_msg.h"
 
 typedef enum {
   mlp_eActivation_No = 0,
@@ -60,10 +61,12 @@ typedef struct {
   double aval[20];
 } mlp_sCtx, *mlp_tCtx;
 
+#define mlp_scale(value, idx) ((value) * co->ScaleCoeff1[(idx)] + co->ScaleCoeff0[(idx)])
+#define mlp_rescale(value, idx) (((value) - co->ScaleCoeff0[(idx)]) / co->ScaleCoeff1[(idx)])
 
-int mlp_import(const char *file, mlp_sCtx *mlp);
 void mlp_free(mlp_sCtx *mlp);
-void mlp_model(mlp_tCtx mlp, double *x, double *out);
+static int mlp_import(pwr_sClass_Sim_ModelMLP* co, const char *file, mlp_sCtx *mlp);
+static void mlp_model(mlp_tCtx mlp, double *x, double *out);
 
 void Sim_ModelMLP_Fo_init(pwr_sClass_Sim_ModelMLP_Fo* o)
 {
@@ -78,19 +81,33 @@ void Sim_ModelMLP_Fo_init(pwr_sClass_Sim_ModelMLP_Fo* o)
     o->PlcConnectP = 0;
 
   co = (pwr_sClass_Sim_ModelMLP *)o->PlcConnectP;
-  if (!co) {
-    co->Status = 2;
+  if (!co)
     return;
-  }
   
   o->ModelP = (mlp_tCtx)calloc(1, sizeof(mlp_sCtx));
-  co->Status = mlp_import(co->ModelFile, (mlp_tCtx)o->ModelP);
+  co->Status = mlp_import(co, co->ModelFile, (mlp_tCtx)o->ModelP);
   if (EVEN(co->Status))
     return;
 
   co->Layers = ((mlp_tCtx)o->ModelP)->layers;
   for (i = 0; i < MIN(co->Layers, sizeof(co->LayerSizes)/sizeof(co->LayerSizes[0])); i++)
     co->LayerSizes[i] = ((mlp_tCtx)o->ModelP)->layer_sizes[i];
+  switch (((mlp_tCtx)o->ModelP)->activation) {
+  case mlp_eActivation_Tanh:
+    strcpy(co->Activation, "tanh");
+    break;
+  case mlp_eActivation_Identity:
+    strcpy(co->Activation, "identity");
+    break;
+  case mlp_eActivation_Relu:
+    strcpy(co->Activation, "relu");
+    break;
+  case mlp_eActivation_Logistic:
+    strcpy(co->Activation, "logistic");
+    break;
+  default:
+    strcpy(co->Activation, "unknown");    
+  }
     
   ((mlp_tCtx)o->ModelP)->inputs = (double *)calloc(((mlp_tCtx)o->ModelP)->layer_sizes[0],
 						   sizeof(double));
@@ -106,20 +123,22 @@ void Sim_ModelMLP_Fo_exec(plc_sThread* tp, pwr_sClass_Sim_ModelMLP_Fo* o)
     return;
 
   for (i = 0; i < co->LayerSizes[0]; i++) {
-    ((mlp_tCtx)o->ModelP)->inputs[i] = (double)(**(pwr_tFloat32 **)((char *)&o->In1P + pwr_cInputOffset * i));
+    ((mlp_tCtx)o->ModelP)->inputs[i] = (double)mlp_scale((**(pwr_tFloat32 **)((char *)&o->In1P + pwr_cInputOffset * i)), i+1);
   }
 
   mlp_model((mlp_tCtx)o->ModelP, ((mlp_tCtx)o->ModelP)->inputs, &out);
-  o->Out = (pwr_tFloat32)out; 
+  o->Out = (pwr_tFloat32)mlp_rescale(out, 0); 
+  co->Value = o->Out;
 }
 
 
-int mlp_import(const char *file, mlp_sCtx *mlp)
+static int mlp_import(pwr_sClass_Sim_ModelMLP* co, const char *file, mlp_sCtx *mlp)
 {
   pwr_tFileName fname;
   FILE *fp;
   char line[2000];
   unsigned int i, j, k;
+  unsigned int size, num;
   char *s;
 
   dcli_translate_filename(fname, file);
@@ -128,26 +147,48 @@ int mlp_import(const char *file, mlp_sCtx *mlp)
     return 0;
 
   while (dcli_read_line(line, sizeof(line), fp)) {
-    if (strncmp(line, "Layers ", 7) == 0) {
-      if (sscanf(&line[7], "%d", &mlp->layers) != 1) {
-	printf("Syntax error\n");
-	return 0;
+    if (strncmp(line, "Scaler ", 7) == 0) {
+      char sarray[20][40];
+      if (sscanf(&line[7], "%d", &size) != 1)
+	return PLC__FILESYNTAX;
+      
+      dcli_read_line(line, sizeof(line), fp);
+      num = dcli_parse(line, " ", "", (char*)sarray,
+        sizeof(sarray) / sizeof(sarray[0]), sizeof(sarray[0]),
+        0);
+      if (num < size)
+	return PLC__FILESYNTAX;
+      for (i = 0; i < size; i++) {
+	if (sscanf(sarray[i], "%f", &co->ScaleCoeff0[i]) != 1)
+	  return PLC__FILESYNTAX;
       }
+      dcli_read_line(line, sizeof(line), fp);
+      num = dcli_parse(line, " ", "", (char*)sarray,
+        sizeof(sarray) / sizeof(sarray[0]), sizeof(sarray[0]),
+        0);
+      if (num < size)
+	return PLC__FILESYNTAX;
+      for (i = 0; i < size; i++) {
+	if (sscanf(sarray[i], "%f", &co->ScaleCoeff1[i]) != 1)
+	  return PLC__FILESYNTAX;
+      }
+	
+    }
+    if (strncmp(line, "Layers ", 7) == 0) {
+      if (sscanf(&line[7], "%d", &mlp->layers) != 1)
+	return PLC__FILESYNTAX;
     }
     else if (strncmp(line, "LayerSizes ", 11) == 0) {
       mlp->layer_sizes = (unsigned int *)calloc(mlp->layers, sizeof(int));
       s = line;
       for (i = 0; i < mlp->layers; i++) {
 	s = strchr(s, ' ');
-	if (!s) {
-	  printf("Syntax error\n");
-	  return 0;
-	}
+	if (!s)
+	  return PLC__FILESYNTAX;
+
 	s++;
-	if (sscanf(s, "%d", &mlp->layer_sizes[i]) != 1) {
-	  printf("Syntax error\n");
-	  return 0;
-	}
+	if (sscanf(s, "%d", &mlp->layer_sizes[i]) != 1)
+	  return PLC__FILESYNTAX;
       }
     }
     else if (strncmp(line, "Activation ", 11) == 0) {
@@ -174,10 +215,8 @@ int mlp_import(const char *file, mlp_sCtx *mlp)
 	    s = strchr(s, ' ');
 	    s++;
 	  }
-	  if (sscanf(s, "%lf", &mlp->intercepts[i][j]) != 1) {
-	    printf("Syntax error\n");
-	    return 0;
-	  }
+	  if (sscanf(s, "%lf", &mlp->intercepts[i][j]) != 1)
+	    return PLC__FILESYNTAX;
 	}
       }	
     }
@@ -197,7 +236,7 @@ int mlp_import(const char *file, mlp_sCtx *mlp)
 	    dcli_read_line(line, sizeof(line), fp);
 	    sscanf(line, "%d %d %d %lf", &i1, &j1, &k1, &mlp->coefs[i][j][k]);
 	    if (i1 != i || j1 != j || k1 != k)
-	      printf("Syntax error\n");
+	      return PLC__FILESYNTAX;
 	  }
 	}	    
       }	
@@ -211,7 +250,7 @@ int mlp_import(const char *file, mlp_sCtx *mlp)
   for (i = 0; i < mlp->layers - 1; i++) {
     mlp->h[i] = (double *)calloc(mlp->layer_sizes[i+1], sizeof(double));
   }
-  return 1;
+  return PLC__SUCCESS;
 }
 
 void mlp_free(mlp_sCtx *mlp)
@@ -235,7 +274,7 @@ void mlp_free(mlp_sCtx *mlp)
   free(mlp);
 }
 
-void mlp_model(mlp_tCtx mlp, double *x, double *out)
+static void mlp_model(mlp_tCtx mlp, double *x, double *out)
 {
   unsigned int i, j, k;
 

@@ -8,6 +8,13 @@ class Error(Exception):
     def __str__(self):
         return self.str
     
+class SyntaxError(Error):
+    def __init__(self, status, str):
+        self.str = str
+        super(Error, self).__init__(status, str)
+    def __str__(self):
+        return self.str
+    
 def translateFilename(name):
     if name[:1] == '$':
         idx = name.find('/')

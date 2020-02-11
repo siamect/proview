@@ -76,4 +76,5 @@ reduinit	<Redundancy init error>					/error
 reduconfig	<Redundancy not configured>				/error
 filesyntax	<Syntax error in file>					/error
 file		<No such file>						/error
+mpc_shiftval	<Number of shift values not matching model size>	/error
 .end
