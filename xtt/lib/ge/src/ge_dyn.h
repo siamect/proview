@@ -553,6 +553,7 @@ typedef enum {
   ge_eSave_XY_Curve_y_mark2_attr = 3422,
   ge_eSave_XY_Curve_mark1_color = 3423,
   ge_eSave_XY_Curve_mark2_color = 3424,
+  ge_eSave_XY_Curve_hold_attr = 3425,
   ge_eSave_DigCommand_attribute = 3500,
   ge_eSave_DigCommand_command = 3501,
   ge_eSave_DigCommand_instance = 3502,
@@ -2533,6 +2534,7 @@ public:
   pwr_tAName x_maxvalue_attr;
   pwr_tAName noofpoints_attr;
   pwr_tAName update_attr;
+  pwr_tAName hold_attr;
   pwr_tAName x_mark1_attr;
   pwr_tAName x_mark2_attr;
   pwr_tAName y_mark1_attr;
@@ -2551,6 +2553,9 @@ public:
   pwr_tBoolean* update_p;
   pwr_tSubid update_subid;
   pwr_tBoolean old_update;
+  pwr_tBoolean* hold_p;
+  pwr_tSubid hold_subid;
+  graph_eDatabase hold_db;
   pwr_tInt32* noofpoints_p;
   pwr_tSubid noofpoints_subid;
   pwr_tInt32 old_noofpoints;

@@ -95,6 +95,9 @@ static int get_dig(
   case pwr_eType_String:
     *val = *(char*)p == 0 ? 0 : 1;
     break;
+  case pwr_eType_Objid:
+    *val = cdh_ObjidIsNull(*(pwr_tObjid*)p) ? 0 : 1;
+    break;
   default:
     return 0;
   }
@@ -10536,6 +10539,7 @@ GeXY_Curve::GeXY_Curve(GeDyn* e_dyn, ge_mInstance e_instance)
   strcpy(x_maxvalue_attr, "");
   strcpy(noofpoints_attr, "");
   strcpy(update_attr, "");
+  strcpy(hold_attr, "");
   strcpy(x_mark1_attr, "");
   strcpy(x_mark2_attr, "");
   strcpy(y_mark1_attr, "");
@@ -10562,6 +10566,7 @@ GeXY_Curve::GeXY_Curve(const GeXY_Curve& x)
   strcpy(x_maxvalue_attr, x.x_maxvalue_attr);
   strcpy(noofpoints_attr, x.noofpoints_attr);
   strcpy(update_attr, x.update_attr);
+  strcpy(hold_attr, x.hold_attr);
   strcpy(x_mark1_attr, x.x_mark1_attr);
   strcpy(x_mark2_attr, x.x_mark2_attr);
   strcpy(y_mark1_attr, x.y_mark1_attr);
@@ -10592,6 +10597,11 @@ void GeXY_Curve::get_attributes(attr_sItem* attrinfo, int* item_count)
     attrinfo[i].value = update_attr;
     attrinfo[i].type = glow_eType_String;
     attrinfo[i++].size = sizeof(update_attr);
+
+    strcpy(attrinfo[i].name, "XY_Curve.HoldAttr");
+    attrinfo[i].value = hold_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof(hold_attr);
 
     strcpy(attrinfo[i].name, "XY_Curve.XMinValue");
     attrinfo[i].value = &x_min_value;
@@ -10717,6 +10727,11 @@ void GeXY_Curve::get_attributes(attr_sItem* attrinfo, int* item_count)
     attrinfo[i].type = glow_eType_String;
     attrinfo[i++].size = sizeof(update_attr);
 
+    sprintf(attrinfo[i].name, "XY_Curve%d.HoldAttr", inst);
+    attrinfo[i].value = hold_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof(hold_attr);
+
     sprintf(attrinfo[i].name, "XY_Curve%d.XMinValue", inst);
     attrinfo[i].value = &x_min_value;
     attrinfo[i].type = glow_eType_Double;
@@ -10809,6 +10824,8 @@ void GeXY_Curve::replace_attribute(char* from, char* to, int* cnt, int strict)
   GeDyn::replace_attribute(
       update_attr, sizeof(update_attr), from, to, cnt, strict);
   GeDyn::replace_attribute(
+      update_attr, sizeof(hold_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute(
       noofpoints_attr, sizeof(noofpoints_attr), from, to, cnt, strict);
   GeDyn::replace_attribute(
       y_minvalue_attr, sizeof(y_minvalue_attr), from, to, cnt, strict);
@@ -10844,6 +10861,7 @@ void GeXY_Curve::save(std::ofstream& fp)
   fp << int(ge_eSave_XY_Curve_noofpoints_attr) << FSPACE << noofpoints_attr
      << '\n';
   fp << int(ge_eSave_XY_Curve_update_attr) << FSPACE << update_attr << '\n';
+  fp << int(ge_eSave_XY_Curve_hold_attr) << FSPACE << hold_attr << '\n';
   fp << int(ge_eSave_XY_Curve_y_min_value) << FSPACE << y_min_value << '\n';
   fp << int(ge_eSave_XY_Curve_y_max_value) << FSPACE << y_max_value << '\n';
   fp << int(ge_eSave_XY_Curve_x_min_value) << FSPACE << x_min_value << '\n';
@@ -10918,6 +10936,10 @@ void GeXY_Curve::open(std::ifstream& fp)
     case ge_eSave_XY_Curve_update_attr:
       fp.get();
       fp.getline(update_attr, sizeof(update_attr));
+      break;
+    case ge_eSave_XY_Curve_hold_attr:
+      fp.get();
+      fp.getline(hold_attr, sizeof(hold_attr));
       break;
     case ge_eSave_XY_Curve_y_min_value:
       fp >> y_min_value;
@@ -11005,6 +11027,25 @@ int GeXY_Curve::connect(
         (void**)&update_p, &update_subid, attr_size, object, now);
     if (EVEN(sts))
       return sts;
+  }
+
+  hold_p = 0;
+  hold_db = dyn->parse_attr_name(
+      hold_attr, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "")) {
+    switch (hold_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+          (void**)&hold_p, &hold_subid, attr_size, object, now);
+      if (EVEN(sts))
+        return sts;
+      break;
+    case graph_eDatabase_Local:
+      hold_p = (pwr_tBoolean*)dyn->graph->localdb_ref_or_create(
+          parsed_name, attr_type);
+      break;
+    default:;
+    }
   }
 
   noofpoints_p = 0;
@@ -11117,6 +11158,10 @@ int GeXY_Curve::disconnect(grow_tObject object)
     gdh_UnrefObjectInfo(update_subid);
     update_p = 0;
   }
+  if (hold_p) {
+    gdh_UnrefObjectInfo(hold_subid);
+    hold_p = 0;
+  }
   if (noofpoints_p) {
     gdh_UnrefObjectInfo(noofpoints_subid);
     noofpoints_p = 0;
@@ -11159,6 +11204,9 @@ int GeXY_Curve::disconnect(grow_tObject object)
 int GeXY_Curve::scan(grow_tObject object)
 {
   bool redraw = false;
+
+  if (hold_p && !first_scan && *hold_p)
+    return 1;
 
   if (!update_p)
     // Update every scan...
@@ -22307,6 +22355,9 @@ int GeOptionMenu::action(grow_tObject object, glow_tEvent event)
 
       dyn->parse_attr_name(
           attribute, parsed_name, &inverted, &attr_type, &attr_size);
+      if (parsed_name[0] == '&')
+	// Attribute starting with '&' indicates reference
+	dyn->graph->get_reference_name(parsed_name, parsed_name);
 
       switch (db) {
       case graph_eDatabase_Gdh:
