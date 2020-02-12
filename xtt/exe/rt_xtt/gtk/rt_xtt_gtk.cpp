@@ -1028,8 +1028,8 @@ XttGtk::XttGtk(int argc, char* argv[], int* return_sts)
   GtkToolbar* tools = (GtkToolbar*)g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
   GtkWidget* tools_back = gtk_button_new();
-  gtk_container_add(GTK_CONTAINER(tools_back),
-      gtk_image_new_from_stock("gtk-go-back", GTK_ICON_SIZE_SMALL_TOOLBAR));
+  dcli_translate_filename(fname, "$pwr_exe/xtt_arrowleft.png");
+  gtk_container_add(GTK_CONTAINER(tools_back), gtk_image_new_from_file(fname));
   g_signal_connect(tools_back, "clicked", G_CALLBACK(activate_back), this);
   g_object_set(tools_back, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget(

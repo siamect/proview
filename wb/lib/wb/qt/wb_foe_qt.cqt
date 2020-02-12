@@ -771,7 +771,7 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   syntax
       = addMenuItem(toplevel, file, "Synta&x Check", SLOT(activate_syntax()));
   compile = addMenuItem(toplevel, file, "&Build", SLOT(activate_compile()),
-      "CTRL+SHIFT+B", "system-run");
+      "CTRL+SHIFT+B", "$pwr_exe/wb_build.png");
   plcattribute = addMenuItem(
       toplevel, file, "Plc &Attributes...", SLOT(activate_plcattribute()));
   winddelete = addMenuItem(
@@ -782,7 +782,7 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
       toplevel, file, "&Restore Trace", SLOT(activate_restoretrace()));
   addMenuItem(toplevel, file, "&History", SLOT(activate_history()));
   exit = addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Edit Entry
   edit = menu_bar->addMenu(translate_utf8("&Edit"));
@@ -928,11 +928,11 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   // Zoom submenu
   QMenu* view_zoom = menu_bar->addMenu(translate_utf8("&Zoom"));
   addMenuItem(toplevel, view_zoom, "Zoom &In", SLOT(activate_zoomin()),
-      "CTRL+I", "zoom-in");
+      "CTRL+I", "$pwr_exe/xtt_zoom_in.png");
   addMenuItem(toplevel, view_zoom, "Zoom &Out", SLOT(activate_zoomout()),
-      "CTRL+O", "zoom-out");
+      "CTRL+O", "$pwr_exe/xtt_zoom_out.png");
   addMenuItem(toplevel, view_zoom, "Zoom &Reset", SLOT(activate_unzoom()), "",
-      "zoom-original");
+      "$pwr_exe/xtt_zoom_reset.png");
 
   addCheckableMenuItem(
       toplevel, view, "S&how Execute Order", SLOT(activate_showexeord(bool)));
@@ -961,7 +961,7 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   // Menu Help
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(
-      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "$pwr_exe/xtt_help.png");
   addMenuItem(toplevel, help, "H&elp on PlcPgm", SLOT(activate_helpplc()));
   addMenuItem(
       toplevel, help, "He&lp PlcPgm Overview", SLOT(activate_helpplclist()));
@@ -969,15 +969,15 @@ pwr_tStatus WFoeQt::create_window(int x_top, int y_top, int width_adb,
   // Toolbar
   QToolBar* tools = new QToolBar();
   tools_save = addToolItem(
-      toplevel, tools, "Save", SLOT(activate_save()), "document-save");
+      toplevel, tools, "Save", SLOT(activate_save()), "$pwr_exe/wb_save.png");
   addToolItem(toplevel, tools, "Print documents", SLOT(activate_print()),
-      "document-print");
-  addCheckableToolItem(toplevel, tools, "Set edit mode",
-      SLOT(activate_edit_togg(bool)), "$pwr_exe/foe_edit.png");
-  addCheckableToolItem(toplevel, tools, "Set view mode",
-      SLOT(activate_view_togg(bool)), "$pwr_exe/foe_view.png");
+      "$pwr_exe/wb_print.png");
+  addToolItem(toplevel, tools, "Set edit mode", SLOT(activate_edit_togg()),
+      "$pwr_exe/foe_edit.png");
+  addToolItem(toplevel, tools, "Set view mode", SLOT(activate_view_togg()),
+      "$pwr_exe/foe_view.png");
   tools_build = addToolItem(
-      toplevel, tools, "Build Program", SLOT(activate_compile()), "system-run");
+      toplevel, tools, "Build Program", SLOT(activate_compile()), "$pwr_exe/wb_build.png");
   addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoomin()),
       "$pwr_exe/xtt_zoom_in.png");
   addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoomout()),

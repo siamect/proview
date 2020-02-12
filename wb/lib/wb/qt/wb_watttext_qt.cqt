@@ -213,7 +213,7 @@ WAttTextQt::WAttTextQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
       "document-save");
   addMenuItem(toplevel, file, "S&ave and close", SLOT(activate_ok()), "CTRL+T");
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Edit entry
   QMenu* edit = menu_bar->addMenu(translate_utf8("&Edit"));
@@ -227,7 +227,7 @@ WAttTextQt::WAttTextQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
   // Help entry
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(
-      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "$pwr_exe/xtt_help.png");
 
   if (((WUtility*)parent_ctx)->utype == wb_eUtility_WNav) {
     parent_ctx = ((WNav*)parent_ctx)->parent_ctx;

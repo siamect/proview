@@ -187,7 +187,7 @@ WPkgQt::WPkgQt(void* wa_parent_ctx) : WPkg(wa_parent_ctx)
   QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&History", SLOT(activate_history()));
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Functions Entry
   QMenu* functions = menu_bar->addMenu(translate_utf8("F&unctions"));
@@ -201,11 +201,11 @@ WPkgQt::WPkgQt(void* wa_parent_ctx) : WPkg(wa_parent_ctx)
   // View menu
   QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-      "zoom-in");
+      "$pwr_exe/xtt_zoom_in.png");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-      "zoom-out");
+      "$pwr_exe/xtt_zoom_out.png");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-      "zoom-original");
+      "$pwr_exe/xtt_zoom_reset.png");
   addCheckableMenuItem(toplevel, view, "&Display File Differences",
       SLOT(activate_dmode_filediff(bool)));
   addCheckableMenuItem(toplevel, view, "Display Files In &Time Order",

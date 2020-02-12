@@ -300,7 +300,7 @@ RtTraceQt::RtTraceQt(void* tr_parent_ctx, pwr_tObjid tr_objid,
   addMenuItem(toplevel, file, "&Restore Trace", SLOT(activate_restoretrace()));
   addMenuItem(toplevel, file, "C&lear Trace", SLOT(activate_cleartrace()));
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Functions Entry
   QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
@@ -320,11 +320,11 @@ RtTraceQt::RtTraceQt(void* tr_parent_ctx, pwr_tObjid tr_objid,
   // View Entry
   QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(
-      toplevel, view, "Zoom &In", SLOT(activate_zoomin()), "CTRL+I", "zoom-in");
+      toplevel, view, "Zoom &In", SLOT(activate_zoomin()), "CTRL+I", "$pwr_exe/xtt_zoom_in.png");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoomout()), "CTRL+O",
-      "zoom-out");
+      "$pwr_exe/xtt_zoom_out.png");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoomreset()),
-      "CTRL+B", "zoom-original");
+      "CTRL+B", "$pwr_exe/xtt_zoom_reset.png");
 
   // Submenu ScanTime
   QMenu* view_sc = view->addMenu(translate_utf8("&ScanTime"));
@@ -359,7 +359,7 @@ RtTraceQt::RtTraceQt(void* tr_parent_ctx, pwr_tObjid tr_objid,
   // Menu Help
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(toplevel, help, "On &Trace", SLOT(activate_help()), "CTRL+H",
-      "system-help");
+      "$pwr_exe/xtt_help.png");
   addMenuItem(toplevel, help, "On &PlcPgm", SLOT(activate_helpplc()));
   addMenuItem(toplevel, help, "P&lcPgm Overview", SLOT(activate_helpplclist()));
 

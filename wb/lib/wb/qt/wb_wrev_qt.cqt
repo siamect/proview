@@ -179,7 +179,7 @@ WRevQt::WRevQt(void* wa_parent_ctx, ldh_tSession wa_ldhses)
   QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&History", SLOT(activate_history()));
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Functions Entry
   QMenu* functions = menu_bar->addMenu(translate_utf8("F&unctions"));
@@ -192,16 +192,16 @@ WRevQt::WRevQt(void* wa_parent_ctx, ldh_tSession wa_ldhses)
   // View menu
   QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-      "zoom-in");
+      "$pwr_exe/xtt_zoom_in.png");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-      "zoom-out");
+      "$pwr_exe/xtt_zoom_out.png");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-      "zoom-original");
+      "$pwr_exe/xtt_zoom_reset.png");
 
   // Menu Help
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(
-      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "$pwr_exe/xtt_help.png");
 
   // Toolbar
   QToolBar* tools = new QToolBar();

@@ -137,7 +137,7 @@ SubGraphsQt::SubGraphsQt(void* xn_parent_ctx, const char* xn_name,
   addMenuItem(toplevel, file, "Set A&ll Extern",
       SLOT(subgraphs_activate_set_all_extern()), "CTRL+K");
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Help entry
   QMenu* help = menu_bar->addMenu(fl("&Help"));

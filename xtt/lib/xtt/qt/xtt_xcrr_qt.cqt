@@ -136,7 +136,7 @@ XCrrQt::XCrrQt(void* xa_parent_ctx, pwr_sAttrRef* xa_objar,
   QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Print", SLOT(activate_print()));
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Functions entry
   QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
@@ -146,7 +146,7 @@ XCrrQt::XCrrQt(void* xa_parent_ctx, pwr_sAttrRef* xa_objar,
   // Help entry
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(
-      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "$pwr_exe/xtt_help.png");
 
   QVBoxLayout* vbox = new QVBoxLayout();
   xcrrnav = new XAttNavQt(this, xattnav_eType_CrossRef, "Plant", &objar,

@@ -358,7 +358,7 @@ WPkgGtk::WPkgGtk(GtkWidget* wa_parent_wid, void* wa_parent_ctx)
   GtkToolbar* tools = (GtkToolbar*)g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
   GtkWidget* tools_distribute = gtk_button_new();
-  dcli_translate_filename(fname, "$pwr_exe/wpkg_distribute.png");
+  dcli_translate_filename(fname, "$pwr_exe/wb_send.png");
   gtk_container_add(
       GTK_CONTAINER(tools_distribute), gtk_image_new_from_file(fname));
   g_signal_connect(tools_distribute, "clicked",

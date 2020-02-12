@@ -138,7 +138,7 @@ EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
     addMenuItem(object, file, "&Export", SLOT(eve_activate_export()));
     addMenuItem(object, file, "&Analyse", SLOT(eve_activate_analyse()));
     addMenuItem(
-        object, file, "&Close", SLOT(eve_activate_exit()), "CTRL+W", "window-close");
+        object, file, "&Close", SLOT(eve_activate_exit()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
     // Functions entry
     QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
@@ -150,11 +150,11 @@ EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
     // View entry
     QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
     addMenuItem(object, view, "Zoom &In", SLOT(eve_activate_zoom_in()),
-        "CTRL+I", "zoom-in");
+        "CTRL+I", "$pwr_exe/xtt_zoom_in.png");
     addMenuItem(object, view, "Zoom &Out", SLOT(eve_activate_zoom_out()),
-        "CTRL+O", "zoom-out");
+        "CTRL+O", "$pwr_exe/xtt_zoom_out.png");
     addMenuItem(object, view, "Zoom &Reset", SLOT(eve_activate_zoom_reset()),
-        "CTRL+B", "zoom-original");
+        "CTRL+B", "$pwr_exe/xtt_zoom_reset.png");
     addCheckableMenuItem(object, view, "&Display hundredth",
         SLOT(eve_activate_disp_hundredth(bool)));
     addCheckableMenuItem(
@@ -165,7 +165,7 @@ EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
     // Help entry
     QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
     addMenuItem(object, help, "&Help", SLOT(eve_activate_help()), "CTRL+H",
-        "system-help");
+        "$pwr_exe/xtt_help.png");
     addMenuItem(
         object, help, "Help Selected Event", SLOT(eve_activate_helpevent()));
 
@@ -242,7 +242,7 @@ EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
     addMenuItem(object, file, "&Print", SLOT(ala_activate_print()), "",
         "document-print");
     addMenuItem(
-        object, file, "&Close", SLOT(ala_activate_exit()), "CTRL+W", "window-close");
+        object, file, "&Close", SLOT(ala_activate_exit()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
     // Functions entry
     QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
@@ -282,11 +282,11 @@ EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
     }
 
     addMenuItem(object, view, "Zoom &In", SLOT(ala_activate_zoom_in()),
-        "CTRL+I", "zoom-in");
+        "CTRL+I", "$pwr_exe/xtt_zoom_in.png");
     addMenuItem(object, view, "Zoom &Out", SLOT(ala_activate_zoom_out()),
-        "CTRL+O", "zoom-out");
+        "CTRL+O", "$pwr_exe/xtt_zoom_out.png");
     addMenuItem(object, view, "Zoom &Reset", SLOT(ala_activate_zoom_reset()),
-        "CTRL+B", "zoom-original");
+        "CTRL+B", "$pwr_exe/xtt_zoom_reset.png");
     addCheckableMenuItem(object, view, "&Display hundredth",
         SLOT(ala_activate_disp_hundredth(bool)));
     addCheckableMenuItem(
@@ -297,7 +297,7 @@ EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
     // Help entry
     QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
     addMenuItem(object, help, "&Help", SLOT(ala_activate_help()), "CTRL+H",
-        "system-help");
+        "$pwr_exe/xtt_help.png");
     addMenuItem(
         object, help, "Help Selected Event", SLOT(ala_activate_helpevent()));
 
@@ -379,7 +379,7 @@ EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
     addMenuItem(object, file, "&Print", SLOT(blk_activate_print()), "",
         "document-print");
     addMenuItem(
-        object, file, "&Close", SLOT(blk_activate_exit()), "CTRL+W", "window-close");
+        object, file, "&Close", SLOT(blk_activate_exit()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
     // Functions entry
     QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
@@ -393,16 +393,16 @@ EvQt::EvQt(void* ev_parent_ctx, char* eve_name, char* ala_name, char* blk_name,
     // View entry
     QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
     addMenuItem(object, view, "Zoom &In", SLOT(blk_activate_zoom_in()),
-        "CTRL+I", "zoom-in");
+        "CTRL+I", "$pwr_exe/xtt_zoom_in.png");
     addMenuItem(object, view, "Zoom &Out", SLOT(blk_activate_zoom_out()),
-        "CTRL+O", "zoom-out");
+        "CTRL+O", "$pwr_exe/xtt_zoom_out.png");
     addMenuItem(object, view, "Zoom &Reset", SLOT(blk_activate_zoom_reset()),
-        "CTRL+B", "zoom-original");
+        "CTRL+B", "$pwr_exe/xtt_zoom_reset.png");
 
     // Help entry
     QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
     addMenuItem(object, help, "&Help", SLOT(blk_activate_help()), "CTRL+H",
-        "system-help");
+        "$pwr_exe/xtt_help.png");
 
     // Create blk evlist
     blk = new EvListQt(this, ev_eType_BlockList, blk_size, eventname_seg,

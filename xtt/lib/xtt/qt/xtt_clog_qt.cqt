@@ -88,21 +88,21 @@ CLogQt::CLogQt(void* clog_parent_ctx, const char* clog_name,
   addMenuItem(toplevel, file, "&Update", SLOT(activate_update()), "CTRL+U");
   addMenuItem(toplevel, file, "&Print", SLOT(activate_print()));
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/wb_close.png");
 
   // View menu
   QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-      "zoom-in");
+      "$pwr_exe/xtt_zoom_in.png");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-      "zoom-out");
+      "$pwr_exe/xtt_zoom_out.png");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()),
-      "CTRL+B", "zoom-original");
+      "CTRL+B", "$pwr_exe/xtt_zoom_reset.png");
 
   // Menu Help
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(toplevel, help, "&Help on System Messages", SLOT(activate_help()),
-      "CTRL+H", "system-help");
+      "CTRL+H", "$pwr_exe/xtt_help.png");
   addMenuItem(
       toplevel, help, "Help on &Selected Message", SLOT(activate_helpmsg()));
 

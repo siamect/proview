@@ -63,7 +63,7 @@ WbExpWQt::WbExpWQt(void* expw_parent_ctx, ldh_tSession expw_ldhses,
   QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, btext, SLOT(activate_export()));
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Edit menu
   QMenu* edit = menu_bar->addMenu(translate_utf8("&Edit"));
@@ -77,16 +77,16 @@ WbExpWQt::WbExpWQt(void* expw_parent_ctx, ldh_tSession expw_ldhses,
   // View menu
   QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-      "zoom-in");
+      "$pwr_exe/xtt_zoom_in.png");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-      "zoom-out");
+      "$pwr_exe/xtt_zoom_out.png");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-      "zoom-original");
+      "$pwr_exe/xtt_zoom_reset.png");
 
   // Help Entry
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(
-      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "$pwr_exe/xtt_help.png");
 
   // Toolbar
   QToolBar* tools = new QToolBar();

@@ -203,12 +203,12 @@ CoXHelpQt::CoXHelpQt(void* xa_parent_ctx, xhelp_eUtility utility, int* xa_sts)
   addMenuItem(toplevel, file, "&Previous Topic", SLOT(activate_previoustopic()),
       "CTRL+P");
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Edit entry
   QMenu* edit = menu_bar->addMenu(translate_utf8("&Edit"));
   addMenuItem(toplevel, edit, "&Search", SLOT(activate_search()), "CTRL+F",
-      "system-search");
+      "$pwr_exe/wb_search.png");
   addMenuItem(
       toplevel, edit, "Search &Next", SLOT(activate_searchnext()), "CTRL+G");
   addMenuItem(toplevel, edit, "Search &Previous",
@@ -217,16 +217,16 @@ CoXHelpQt::CoXHelpQt(void* xa_parent_ctx, xhelp_eUtility utility, int* xa_sts)
   // Menu View
   QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-      "zoom-in");
+      "$pwr_exe/xtt_zoom_in.png");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-      "zoom-out");
+      "$pwr_exe/xtt_zoom_out.png");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-      "zoom-original");
+      "$pwr_exe/xtt_zoom_reset.png");
 
   // Menu Help
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(
-      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "$pwr_exe/xtt_help.png");
 
   // Toolbar
   QToolBar* tools = new QToolBar();

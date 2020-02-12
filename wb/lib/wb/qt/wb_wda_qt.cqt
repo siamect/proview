@@ -495,7 +495,7 @@ WdaQt::WdaQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
       toplevel, file, "Import from Textfile", SLOT(activate_import_text()));
   addMenuItem(toplevel, file, "&Print", SLOT(activate_print()));
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Functions entry
   QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
@@ -507,7 +507,7 @@ WdaQt::WdaQt(void* wa_parent_ctx, ldh_tSesContext wa_ldhses,
   // Help entry
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(
-      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "$pwr_exe/xtt_help.png");
 
   pane = new QSplitter(Qt::Vertical);
 

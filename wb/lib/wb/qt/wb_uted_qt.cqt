@@ -161,7 +161,7 @@ WUtedQt::WUtedQt(void* wu_parent_ctx, const char* wu_name,
   // File Entry
   QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // View Entry
   QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
@@ -224,7 +224,7 @@ WUtedQt::WUtedQt(void* wu_parent_ctx, const char* wu_name,
   // Menu Help
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(toplevel, help, "&On Window", SLOT(activate_helputils()),
-      "CTRL+H", "system-help");
+      "CTRL+H", "$pwr_exe/xtt_help.png");
   addMenuItem(toplevel, help, "On &Commands", SLOT(activate_helppwr_plc()));
 
   // Qualifier labels, entries and checkboxes

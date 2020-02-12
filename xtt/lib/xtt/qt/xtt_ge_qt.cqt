@@ -310,21 +310,21 @@ XttGeQt::XttGeQt(void* xg_parent_ctx, const char* xg_name,
     // File Entry
     QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
     addMenuItem(
-        toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+        toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
     // View menu
     QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
     addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-        "zoom-in");
+        "$pwr_exe/xtt_zoom_in.png");
     addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()),
-        "CTRL+O", "zoom-out");
+        "CTRL+O", "$pwr_exe/xtt_zoom_out.png");
     addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-        "zoom-original");
+        "$pwr_exe/xtt_zoom_reset.png");
 
     // Menu Help
     QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
     addMenuItem(toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H",
-        "system-help");
+        "$pwr_exe/xtt_help.png");
 
     graph_form->setMenuBar(menu_bar);
   }

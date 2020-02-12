@@ -249,11 +249,11 @@ XttTblQt::XttTblQt(void* a_parent_ctx, sevcli_tCtx a_sevcli,
   // File entry
   QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(
-      toplevel, file, "&Print", SLOT(activate_print()), "", "document-print");
+      toplevel, file, "&Print", SLOT(activate_print()), "", "$pwr_exe/wb_print.png");
   addMenuItem(toplevel, file, "&Login", SLOT(activate_login()));
   addMenuItem(toplevel, file, "Log&Out", SLOT(activate_logout()));
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Functions entry
   QMenu* functions = menu_bar->addMenu(translate_utf8("F&unctions"));
@@ -269,16 +269,16 @@ XttTblQt::XttTblQt(void* a_parent_ctx, sevcli_tCtx a_sevcli,
   addMenuItem(toplevel, view, "&Tree Layout", SLOT(activate_tree_layout()));
   addMenuItem(toplevel, view, "&List Layout", SLOT(activate_list_layout()));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-      "zoom-in");
+      "$pwr_exe/xtt_zoom_in.png");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-      "zoom-out");
+      "$pwr_exe/xtt_zoom_out.png");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-      "zoom-original");
+      "$pwr_exe/xtt_zoom_reset.png");
 
   // Help entry
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(toplevel, help, "&Overview", SLOT(activate_help()), "CTRL+H",
-      "system-help");
+      "$pwr_exe/xtt_help.png");
   addMenuItem(toplevel, help, "&Project", SLOT(activate_help_project()));
   addMenuItem(toplevel, help, "&About Proview", SLOT(activate_help_proview()));
 

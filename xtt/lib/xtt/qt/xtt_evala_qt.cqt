@@ -100,9 +100,9 @@ EvAlaQt::EvAlaQt(void* ev_parent_ctx, char* ala_name, pwr_tObjid ev_user,
   // File entry
   QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Print", SLOT(ala_activate_print()), "",
-      "document-print");
+      "$pwr_exe/wb_print.png");
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Functions entry
   QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
@@ -142,11 +142,11 @@ EvAlaQt::EvAlaQt(void* ev_parent_ctx, char* ala_name, pwr_tObjid ev_user,
   }
 
   addMenuItem(toplevel, view, "Zoom &In", SLOT(ala_activate_zoom_in()),
-      "CTRL+I", "zoom-in");
+      "CTRL+I", "$pwr_exe/xtt_zoom_in.png");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(ala_activate_zoom_out()),
-      "CTRL+O", "zoom-out");
+      "CTRL+O", "$pwr_exe/xtt_zoom_out.png");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(ala_activate_zoom_reset()),
-      "CTRL+B", "zoom-original");
+      "CTRL+B", "$pwr_exe/xtt_zoom_reset.png");
   addCheckableMenuItem(toplevel, view, "&Display hundredth",
       SLOT(ala_activate_disp_hundredth(bool)));
   addCheckableMenuItem(
@@ -157,7 +157,7 @@ EvAlaQt::EvAlaQt(void* ev_parent_ctx, char* ala_name, pwr_tObjid ev_user,
   // Help entry
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(toplevel, help, "&Help", SLOT(ala_activate_help()), "CTRL+H",
-      "system-help");
+      "$pwr_exe/xtt_help.png");
   addMenuItem(
       toplevel, help, "Help Selected Event", SLOT(ala_activate_helpevent()));
 

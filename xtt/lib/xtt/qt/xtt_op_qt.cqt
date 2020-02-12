@@ -314,7 +314,7 @@ OpQt::OpQt(void* op_parent_ctx, char* opplace, pwr_tStatus* status)
   // End Help submenu
 
   functions_close = addMenuItem(
-      toplevel, functions, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, functions, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Toolbar
   tools = new QToolBar();

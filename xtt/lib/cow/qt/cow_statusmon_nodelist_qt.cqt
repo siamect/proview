@@ -95,7 +95,7 @@ NodelistQt::NodelistQt(void* nodelist_parent_ctx, const char* nodelist_name,
   addMenuItem(toplevel, file, "Open Runtime &Monitor",
       SLOT(activate_open_rtmon()), "", fname);
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // View menu
   QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
@@ -133,16 +133,16 @@ NodelistQt::NodelistQt(void* nodelist_parent_ctx, const char* nodelist_name,
   a->setData(nodelist_eMode_Status5);
 
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-      "zoom-in");
+      "$pwr_exe/xtt_zoom_in.png");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-      "zoom-out");
+      "$pwr_exe/xtt_zoom_out.png");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-      "zoom-original");
+      "$pwr_exe/xtt_zoom_reset.png");
 
   // Menu Help
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(
-      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "$pwr_exe/xtt_help.png");
 
   msg_window = new MsgWindowQt(this, "Status Events", &sts);
   msg_window->find_wnav_cb = find_node_cb;
@@ -155,7 +155,7 @@ NodelistQt::NodelistQt(void* nodelist_parent_ctx, const char* nodelist_name,
   // Toolbar
   QToolBar* tools = new QToolBar();
   addToolItem(toplevel, tools, "Save configuration", SLOT(activate_save()),
-      "document-save");
+      "$pwr_exe/wb_save.png");
   addToolItem(
       toplevel, tools, "Add node", SLOT(activate_add_node()), "list-add");
   addToolItem(toplevel, tools, "Remove node", SLOT(activate_remove_node()),

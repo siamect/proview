@@ -1916,15 +1916,15 @@ WttQt::WttQt(void* wt_parent_ctx, const char* wt_name, const char* iconname,
   addMenuItem(
       toplevel, file, "Volume &Attributes...", SLOT(activate_openvolobject()));
   addMenuItem(
-      toplevel, file, "&Print", SLOT(activate_print()), "", "document-print");
+      toplevel, file, "&Print", SLOT(activate_print()), "", "$pwr_exe/wb_print.png");
   menu_save_w = addMenuItem(toplevel, file, "&Save", SLOT(activate_save()),
-      "CTRL+S", "document-save");
+      "CTRL+S", "$pwr_exe/wb_save.png");
   menu_revert_w = addMenuItem(toplevel, file, "&Revert",
-      SLOT(activate_revert()), "", "document-revert");
+      SLOT(activate_revert()), "", "$pwr_exe/wb_revert.png");
   addMenuItem(toplevel, file, "&History", SLOT(activate_history()));
   addMenuItem(toplevel, file, "R&evisions", SLOT(activate_revisions()));
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Edit Entry
   QMenu* edit = menu_bar->addMenu(translate_utf8("&Edit"));
@@ -2003,7 +2003,7 @@ WttQt::WttQt(void* wt_parent_ctx, const char* wt_name, const char* iconname,
   // Submenu Build
   QMenu* functions_build = functions->addMenu(translate_utf8("&Build"));
   menu_buildnode_w = addMenuItem(toplevel, functions_build, "&Build Node",
-      SLOT(activate_buildnode()), "CTRL+SHIFT+B", "system-run");
+      SLOT(activate_buildnode()), "CTRL+SHIFT+B", "$pwr_exe/wb_build.png");
   menu_buildvolume_w = addMenuItem(
       toplevel, functions_build, "B&uild Volume", SLOT(activate_buildvolume()));
   menu_buildobject_w = addMenuItem(
@@ -2049,11 +2049,11 @@ WttQt::WttQt(void* wt_parent_ctx, const char* wt_name, const char* iconname,
   // View menu
   QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-      "zoom-in");
+      "$pwr_exe/xtt_zoom_in.png");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-      "zoom-out");
+      "$pwr_exe/xtt_zoom_out.png");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-      "zoom-original");
+      "$pwr_exe/xtt_zoom_reset.png");
   addMenuItem(
       toplevel, view, "T&wo Windows", SLOT(activate_twowindows()), "CTRL+T");
   view_alltoplevel_w = addMenuItem(
@@ -2084,14 +2084,14 @@ WttQt::WttQt(void* wt_parent_ctx, const char* wt_name, const char* iconname,
   // Menu Help
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(toplevel, help, "&Overview", SLOT(activate_help()), "CTRL+H",
-      "system-help");
+      "$pwr_exe/xtt_help.png");
   addMenuItem(toplevel, help, "&Project", SLOT(activate_help_project()));
   addMenuItem(toplevel, help, "&About Proview", SLOT(activate_help_proview()));
 
   // Toolbar
   QToolBar* tools = new QToolBar();
   tools_save_w = addToolItem(
-      toplevel, tools, "Save", SLOT(activate_save()), "document-save");
+      toplevel, tools, "Save", SLOT(activate_save()), "$pwr_exe/wb_save.png");
   tools_edit_w = addToolItem(toplevel, tools, "Edit",
       SLOT(activate_configure()), "$pwr_exe/foe_edit.png");
 
@@ -2099,10 +2099,10 @@ WttQt::WttQt(void* wt_parent_ctx, const char* wt_name, const char* iconname,
       || (wbctx && volid && (volclass == pwr_eClass_SharedVolume
                                 || volclass == pwr_eClass_SubVolume))) {
     tools_buildnode_w = addToolItem(toplevel, tools, "Build Volume",
-        SLOT(activate_buildvolume()), "system-run");
+        SLOT(activate_buildvolume()), "$pwr_exe/wb_build.png");
   } else {
     tools_buildnode_w = addToolItem(toplevel, tools, "Build Node",
-        SLOT(activate_buildnode()), "system-run");
+        SLOT(activate_buildnode()), "$pwr_exe/wb_build.png");
   }
 
   addToolItem(toplevel, tools, "Distribute", SLOT(activate_distribute()),
@@ -2118,7 +2118,7 @@ WttQt::WttQt(void* wt_parent_ctx, const char* wt_name, const char* iconname,
   addToolItem(toplevel, tools, "Show Messages", SLOT(activate_messages()),
       "$pwr_exe/wtt_messages.png");
   addToolItem(
-      toplevel, tools, "Options", SLOT(activate_view()), "preferences-system");
+      toplevel, tools, "Options", SLOT(activate_view()), "$pwr_exe/wb_options.png");
   addToolItem(toplevel, tools, "Zoom in", SLOT(activate_zoom_in()),
       "$pwr_exe/xtt_zoom_in.png");
   addToolItem(toplevel, tools, "Zoom out", SLOT(activate_zoom_out()),

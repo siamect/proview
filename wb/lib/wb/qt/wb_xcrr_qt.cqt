@@ -143,9 +143,9 @@ WCrrQt::WCrrQt(void* xa_parent_ctx, ldh_tSesContext xa_ldhses,
   // File entry
   QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(
-      toplevel, file, "&Print", SLOT(activate_print()), "", "document-print");
+      toplevel, file, "&Print", SLOT(activate_print()), "", "$pwr_exe/wb_print.png");
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Functions entry
   QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));

@@ -255,7 +255,7 @@ WVselQt::WVselQt(pwr_tStatus* status, void* wv_parent_ctx,
   // File Entry
   QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(toplevel, file, "&Close", SLOT(activate_close()), "CTRL+W",
-      "window-close");
+      "$pwr_exe/xtt_close.png");
 
   // Functions Entry
   QMenu* functions = menu_bar->addMenu(translate_utf8("F&unctions"));

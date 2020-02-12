@@ -1340,7 +1340,7 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   addMenuItem(
       toplevel, file, "&Open...", SLOT(activate_open()), "", "document-open");
   addMenuItem(
-      toplevel, file, "Save", SLOT(activate_save()), "", "document-save");
+      toplevel, file, "Save", SLOT(activate_save()), "CTRL+S", "$pwr_exe/wb_save.png");
   addMenuItem(toplevel, file, "Save As", SLOT(activate_save_as()),
       "CTRL+SHIFT+S", "document-save-as");
   addMenuItem(toplevel, file, "&Build", SLOT(activate_build()));
@@ -1385,9 +1385,9 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
       SLOT(activate_creanextpage()), "CTRL+SHIFT+N");
   addMenuItem(toplevel, file, "&History", SLOT(activate_history()));
   addMenuItem(
-      toplevel, file, "&Print", SLOT(activate_print()), "", "document-print");
+      toplevel, file, "&Print", SLOT(activate_print()), "", "$pwr_exe/wb_print.png");
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Edit entry
   QMenu* edit = menu_bar->addMenu(translate_utf8("&Edit"));
@@ -1400,7 +1400,7 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   addMenuItem(toplevel, edit, "&Delete", SLOT(activate_delete()), "Delete",
       "edit-delete");
   addMenuItem(
-      toplevel, edit, "&Undo", SLOT(activate_undo()), "CTRL+Z", "edit-undo");
+      toplevel, edit, "&Undo", SLOT(activate_undo()), "CTRL+Z", "$pwr_exe/ge_undo.png");
   addMenuItem(toplevel, edit, "&Redo", SLOT(activate_redo()), "CTRL+ALT+Z",
       "edit-redo");
   addMenuItem(toplevel, edit, "&Rotate...", SLOT(activate_rotate()), "CTRL+R");
@@ -1576,11 +1576,11 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   addMenuItem(toplevel, view, "&Preview", SLOT(activate_preview_start()));
   addMenuItem(toplevel, view, "Preview &Stop", SLOT(activate_preview_stop()));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-      "zoom-in");
+      "$pwr_exe/xtt_zoom_in.png");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-      "zoom-out");
+      "$pwr_exe/xtt_zoom_out.png");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-      "zoom-original");
+      "$pwr_exe/xtt_zoom_reset.png");
   view_plant_w = addCheckableMenuItem(
       toplevel, view, "Vi&ew Plant", SLOT(activate_view_plant(bool)), "CTRL+P");
   view_graphlist_w = addCheckableMenuItem(
@@ -1591,7 +1591,7 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
   // Menu Help
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(
-      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
+      toplevel, help, "&Help", SLOT(activate_help()), "", "$pwr_exe/xtt_help.png");
   addMenuItem(
       toplevel, help, "H&elp on Subgraphs", SLOT(activate_help_subgraph()));
 
@@ -1684,8 +1684,8 @@ GeQt::GeQt(void* x_parent_ctx, ldh_tSesContext x_ldhses, int x_exit_when_close,
       SLOT(activate_flip_vert()), "$pwr_exe/ge_mirrorvertical.png");
 
   // Toolbar 3
-  addToolItem(toplevel, tools3, "Save", SLOT(activate_save()), "document-save");
-  addToolItem(toplevel, tools3, "Build", SLOT(activate_build()), "system-run");
+  addToolItem(toplevel, tools3, "Save", SLOT(activate_save()), "$pwr_exe/wb_save.png");
+  addToolItem(toplevel, tools3, "Build", SLOT(activate_build()), "$pwr_exe/wb_build.png");
   addToolItem(toplevel, tools3, "Zoom in", SLOT(activate_zoom_in()),
       "$pwr_exe/ge_zoom_in.png");
   addToolItem(toplevel, tools3, "Zoom out", SLOT(activate_zoom_out()),

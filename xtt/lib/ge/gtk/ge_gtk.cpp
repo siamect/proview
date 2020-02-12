@@ -2831,15 +2831,11 @@ GeGtk::GeGtk(void* x_parent_ctx, GtkWidget* x_parent_widget,
 
   // Tools row
 
-  GtkWidget* tools_save = gtk_button_new();
-  gtk_container_add(GTK_CONTAINER(tools_save),
-      gtk_image_new_from_stock("gtk-save", GTK_ICON_SIZE_SMALL_TOOLBAR));
+  GtkWidget* tools_save = image_button("$pwr_exe/wb_save.png");
   gtk_toolbar_append_widget(tools3, tools_save, "Save", "");
   g_signal_connect(tools_save, "clicked", G_CALLBACK(activate_save), this);
 
-  GtkWidget* tools_build = gtk_button_new();
-  gtk_container_add(GTK_CONTAINER(tools_build),
-      gtk_image_new_from_stock("gtk-execute", GTK_ICON_SIZE_SMALL_TOOLBAR));
+  GtkWidget* tools_build = image_button("$pwr_exe/wb_build.png");
   gtk_toolbar_append_widget(tools3, tools_build, "Build", "");
   g_signal_connect(tools_build, "clicked", G_CALLBACK(activate_build), this);
 

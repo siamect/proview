@@ -2839,8 +2839,8 @@ WttGtk::WttGtk(void* wt_parent_ctx, GtkWidget* wt_parent_wid,
   GtkToolbar* tools = (GtkToolbar*)g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
   tools_save_w = gtk_button_new();
-  gtk_container_add(GTK_CONTAINER(tools_save_w),
-      gtk_image_new_from_stock("gtk-save", GTK_ICON_SIZE_SMALL_TOOLBAR));
+  dcli_translate_filename(fname, "$pwr_exe/wb_save.png");
+  gtk_container_add(GTK_CONTAINER(tools_save_w), gtk_image_new_from_file(fname));
   g_signal_connect(
       tools_save_w, "clicked", G_CALLBACK(WttGtk::activate_save), this);
   g_object_set(tools_save_w, "can-focus", FALSE, NULL);
@@ -2856,8 +2856,8 @@ WttGtk::WttGtk(void* wt_parent_ctx, GtkWidget* wt_parent_wid,
   gtk_toolbar_append_widget(tools, tools_edit_w, "Edit", "");
 
   tools_buildnode_w = gtk_button_new();
-  gtk_container_add(GTK_CONTAINER(tools_buildnode_w),
-      gtk_image_new_from_stock("gtk-execute", GTK_ICON_SIZE_SMALL_TOOLBAR));
+  dcli_translate_filename(fname, "$pwr_exe/wb_build.png");
+  gtk_container_add(GTK_CONTAINER(tools_buildnode_w), gtk_image_new_from_file(fname));
   if (wb_type == wb_eType_ClassEditor
       || (wbctx && volid && (volclass == pwr_eClass_SharedVolume
                                 || volclass == pwr_eClass_SubVolume))) {
@@ -2927,8 +2927,8 @@ WttGtk::WttGtk(void* wt_parent_ctx, GtkWidget* wt_parent_wid,
   gtk_toolbar_append_widget(tools, tools_messages, "Show Messages", "");
 
   GtkWidget* tools_options = gtk_button_new();
-  gtk_container_add(GTK_CONTAINER(tools_options),
-      gtk_image_new_from_stock("gtk-preferences", GTK_ICON_SIZE_SMALL_TOOLBAR));
+  dcli_translate_filename(fname, "$pwr_exe/wb_options.png");
+  gtk_container_add(GTK_CONTAINER(tools_options), gtk_image_new_from_file(fname));
   g_signal_connect(
       tools_options, "clicked", G_CALLBACK(WttGtk::activate_view), this);
   g_object_set(tools_options, "can-focus", FALSE, NULL);

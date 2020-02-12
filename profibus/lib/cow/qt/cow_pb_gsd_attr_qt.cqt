@@ -230,9 +230,9 @@ GsdAttrQt::GsdAttrQt(void* a_parent_ctx, void* a_object, pb_gsd* a_gsd,
   // File entry
   QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(
-      toplevel, file, "&Print", SLOT(activate_print()), "", "document-print");
+      toplevel, file, "&Print", SLOT(activate_print()), "", "$pwr_exe/wb_print.png");
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Edit entry
   QMenu* edit = menu_bar->addMenu(translate_utf8("&Edit"));
@@ -251,16 +251,16 @@ GsdAttrQt::GsdAttrQt(void* a_parent_ctx, void* a_object, pb_gsd* a_gsd,
   // View Entry
   QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-      "zoom-in");
+      "$pwr_exe/xtt_zoom_in.png");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-      "zoom-out");
+      "$pwr_exe/xtt_zoom_out.png");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()), "",
-      "zoom-original");
+      "$pwr_exe/xtt_zoom_reset.png");
 
   // Help entry
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(
-      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "system-help");
+      toplevel, help, "&Help", SLOT(activate_help()), "CTRL+H", "$pwr_exe/xtt_help.png");
 
   // Navigator
   attrnav = new GsdAttrNavQt(this, "Plant", gsd, edit_mode, &brow_widget, &sts);

@@ -87,13 +87,13 @@ HistQt::HistQt(void* hist_parent_ctx, char* hist_name, pwr_tAttrRef* arp,
   // File entry
   QMenu* file = menu_bar->addMenu(translate_utf8("&File"));
   addMenuItem(
-      toplevel, file, "&Print", SLOT(activate_print()), "", "document-print");
+      toplevel, file, "&Print", SLOT(activate_print()), "", "$pwr_exe/wb_print.png");
   addMenuItem(
       toplevel, file, "&Export", SLOT(activate_export()));
   addMenuItem(
       toplevel, file, "&Analyse", SLOT(activate_analyse()));
   addMenuItem(
-      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "window-close");
+      toplevel, file, "&Close", SLOT(close()), "CTRL+W", "$pwr_exe/xtt_close.png");
 
   // Functions entry
   QMenu* functions = menu_bar->addMenu(translate_utf8("&Functions"));
@@ -107,11 +107,11 @@ HistQt::HistQt(void* hist_parent_ctx, char* hist_name, pwr_tAttrRef* arp,
   // View entry
   QMenu* view = menu_bar->addMenu(translate_utf8("&View"));
   addMenuItem(toplevel, view, "Zoom &In", SLOT(activate_zoom_in()), "CTRL+I",
-      "zoom-in");
+      "$pwr_exe/xtt_zoom_in.png");
   addMenuItem(toplevel, view, "Zoom &Out", SLOT(activate_zoom_out()), "CTRL+O",
-      "zoom-out");
+      "$pwr_exe/xtt_zoom_out.png");
   addMenuItem(toplevel, view, "Zoom &Reset", SLOT(activate_zoom_reset()),
-      "CTRL+B", "zoom-original");
+      "CTRL+B", "$pwr_exe/xtt_zoom_reset.png");
   addCheckableMenuItem(toplevel, view, "Hide &Search Dialog",
       SLOT(activate_hide_search(bool)), "CTRL+E");
   addCheckableMenuItem(toplevel, view, "&Display hundredth",
@@ -124,7 +124,7 @@ HistQt::HistQt(void* hist_parent_ctx, char* hist_name, pwr_tAttrRef* arp,
   // Help entry
   QMenu* help = menu_bar->addMenu(translate_utf8("&Help"));
   addMenuItem(toplevel, help, "&Help", SLOT(activate_help()),
-      "CTRL+H", "system-help");
+      "CTRL+H", "$pwr_exe/xtt_help.png");
   addMenuItem(toplevel, help, "Help Selected Event", SLOT(activate_helpevent()));
 
   // Search dialog
