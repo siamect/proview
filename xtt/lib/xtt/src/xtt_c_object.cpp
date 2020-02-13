@@ -1072,6 +1072,11 @@ static pwr_tStatus OpenObjectGraphFilter(xmenu_sMenuCall* ip)
       sprintf(fname, "$pwrp_exe/%s.pwg", classname);
       sts = dcli_search_file(fname, found_file, DCLI_DIR_SEARCH_INIT);
       dcli_search_file(fname, found_file, DCLI_DIR_SEARCH_END);
+      if (EVEN(sts)) {
+	sprintf(fname, "$pwrp_exe/pwr_c_%s.pwg", classname);
+	sts = dcli_search_file(fname, found_file, DCLI_DIR_SEARCH_INIT);
+	dcli_search_file(fname, found_file, DCLI_DIR_SEARCH_END);
+      }
     }
     if (ODD(sts))
       return XNAV__SUCCESS;
