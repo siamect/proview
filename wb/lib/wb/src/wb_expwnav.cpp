@@ -673,7 +673,7 @@ void WbExpWNav::show_builddir()
 {
   pwr_tFileName fname;
   char line[400];
-  char line_item[4][250];
+  char line_item[5][250];
   pwr_tFileName found_file;
   int num;
   int sts;
@@ -748,7 +748,70 @@ void WbExpWNav::show_builddir()
           continue;
         }
 
-        dir->copy_insert(source, target, update);
+        dir->copy_insert(source, target, pwr_eFileConvertEnum_No, update);
+        if (update)
+          dir->update = 1;
+      }
+
+      dcli_search_file(line_item[1], found_file, DCLI_DIR_SEARCH_END);
+
+      ItemExp* item = new ItemExp(
+          this, found_file, line_item[1], 0, 0, flow_eDest_IntoLast);
+      if (dir_update)
+        brow_SetRadiobutton(item->node, 0, 1);
+    }
+    else if (streq(cdh_Low(line_item[0]), "buildconvert")) {
+      int dir_update = 0;
+      pwr_tFileConvertEnum conversion;
+
+      if (num != 5) {
+        printf("File corrupt " pwr_cNameDistribute);
+        continue;
+      }
+
+      if (sscanf(line_item[2], "%d", &conversion) != 1) {
+	printf("File corrupt " pwr_cNameDistribute);
+	continue;
+      }
+
+      for (sts
+           = dcli_search_file(line_item[3], found_file, DCLI_DIR_SEARCH_INIT);
+           ODD(sts); sts
+           = dcli_search_file(line_item[3], found_file, DCLI_DIR_SEARCH_NEXT)) {
+        // Check if file should be updated
+        int update = 0;
+        pwr_tFileName source, target;
+        pwr_tTime source_time, target_time;
+
+        strncpy(source, found_file, sizeof(source));
+        strncpy(target, line_item[4], sizeof(target));
+
+        sts = dcli_file_time(source, &source_time);
+
+        if (target[strlen(target) - 1] == '/') {
+          // Target is a directory, add file name
+          char* s = strrchr(source, '/');
+          if (!s)
+            strncat(target, source, sizeof(target) - strlen(target) - 1);
+          else
+            strncat(target, s + 1, sizeof(target) - strlen(target) - 1);
+        }
+
+        dcli_translate_filename(target, target);
+        sts = dcli_file_time(target, &target_time);
+
+        if (ODD(sts) && time_Acomp(&source_time, &target_time) != 1)
+          update = 0;
+        else
+          update = 1;
+
+        ExpWDir* dir = dir_find(line_item[1]);
+        if (!dir) {
+          printf("File corrupt " pwr_cNameDistribute);
+          continue;
+        }
+
+        dir->copy_insert(source, target, conversion, update);
         if (update)
           dir->update = 1;
       }
@@ -893,11 +956,13 @@ ExpWDir* WbExpWNav::dir_insert(char* name, char* options_str, char* description)
   return dir;
 }
 
-ExpWCopy* ExpWDir::copy_insert(char* source, char* target, int update)
+ExpWCopy* ExpWDir::copy_insert(char* source, char* target, pwr_tFileConvertEnum conversion, 
+			       int update)
 {
   ExpWCopy* copy = new ExpWCopy();
   strncpy(copy->source, source, sizeof(copy->source));
   strncpy(copy->target, target, sizeof(copy->target));
+  copy->conversion = conversion;
   copy->update = update;
 
   if (!copylist)
@@ -994,8 +1059,16 @@ pwr_tStatus WbExpWNav::exp()
         if (!cp->update)
           continue;
 
-        sprintf(cmd, "cp %s %s", cp->source, cp->target);
-        printf("%s\n", cmd);
+	switch (cp->conversion) {
+	case pwr_eFileConvertEnum_No:
+	  sprintf(cmd, "cp %s %s", cp->source, cp->target);
+	  printf("%s\n", cmd);
+	  break;
+	case pwr_eFileConvertEnum_ISO88591_UTF8:
+	  sprintf(cmd, "iconv -f ISO-8859-1 -t UTF8 < %s > %s", cp->source, cp->target);
+	  printf("%s\n", cmd);
+	  break;
+	}
         sts = system(cmd);
         if (sts != 0) {
           // Check that directory exist, create if it doesn't

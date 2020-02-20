@@ -668,6 +668,7 @@ palette ProjectNavigatorPalette
     {
       class BuildConfig
       class BuildDirectory
+      class BuildConvert
       class BuildCopy
       class BuildMake
       class BuildExecute

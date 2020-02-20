@@ -2110,6 +2110,9 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
               nc.isfriend = 1;
 
+	      sts = ldh_ObjidToName(ldhses, fnodeo.oid(), ldh_eName_Object,
+				    nodeconfig_name, sizeof(nodeconfig_name), &size);
+
               // Get attribute NodeName
               a = sp->attribute(fnodeo.oid(), "RtBody", "NodeName");
               if (!a) {
@@ -3355,6 +3358,40 @@ pwr_tStatus lfu_SaveDirectoryVolume(
           fprintf(file, "buildcopy %s %s%s %s\n", cdh_Low(fullname), dir,
               source_ptr, target_array[i]);
         }
+        free(source_ptr);
+        free(target_ptr);
+        break;
+      }
+      case pwr_cClass_BuildConvert: {
+        char target_array[10][80];
+        int target_cnt;
+	pwr_tEnum *conversion_ptr;
+
+        sts = ldh_GetObjectPar(
+            ldhses, coid, "DevBody", "Conversion", (char**)&conversion_ptr, &size);
+        if (EVEN(sts))
+          return sts;
+
+        sts = ldh_GetObjectPar(
+            ldhses, coid, "DevBody", "Source", (char**)&source_ptr, &size);
+        if (EVEN(sts))
+          return sts;
+
+        sts = ldh_GetObjectPar(
+            ldhses, coid, "DevBody", "Target", (char**)&target_ptr, &size);
+        if (EVEN(sts))
+          return sts;
+
+        // Target can be a list
+        target_cnt = dcli_parse(target_ptr, ",", "", (char*)target_array,
+            sizeof(target_array) / sizeof(target_array[0]),
+            sizeof(target_array[0]), 0);
+        for (int i = 0; i < target_cnt; i++) {
+          str_trim(target_array[i], target_array[i]);
+          fprintf(file, "buildconvert %s %d %s%s %s\n", cdh_Low(fullname), *conversion_ptr, dir,
+		  source_ptr, target_array[i]);
+        }
+	free(conversion_ptr);
         free(source_ptr);
         free(target_ptr);
         break;

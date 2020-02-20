@@ -40,7 +40,7 @@
 /* wb_expwnav.h -- Backupfile display window */
 
 #include "flow_browapi.h"
-
+#include "pwr_baseclasses.h"
 #include "wb_bck.h"
 
 typedef enum {
@@ -80,6 +80,7 @@ public:
   ExpWCopy* prev;
   pwr_tFileName source;
   pwr_tFileName target;
+  pwr_tFileConvertEnum conversion;
 
   ExpWCopy() : next(0), prev(0)
   {
@@ -127,7 +128,8 @@ public:
         options(0)
   {
   }
-  ExpWCopy* copy_insert(char* source, char* target, int update);
+  ExpWCopy* copy_insert(char* source, char* target, pwr_tFileConvertEnum conversion, 
+			int update);
   ExpWMake* make_insert(char* dir, char* makefile, int update);
   ExpWExec* exec_insert(char* dir, char* command, int update);
 };

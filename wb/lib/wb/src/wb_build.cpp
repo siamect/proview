@@ -1884,7 +1884,7 @@ void wb_build::directories(char* dir, bld_ePass pass)
 {
   pwr_tFileName fname;
   char line[400];
-  char line_item[4][250];
+  char line_item[5][250];
   pwr_tFileName found_file;
   int num;
   int sts;
@@ -1998,6 +1998,95 @@ void wb_build::directories(char* dir, bld_ePass pass)
       }
 
       dcli_search_file(line_item[1], found_file, DCLI_DIR_SEARCH_END);
+    } else if (streq(cdh_Low(line_item[0]), "buildconvert")) {
+      pwr_tFileConvertEnum conversion;
+
+      if (num != 5) {
+        printf("File corrupt " pwr_cNameDistribute);
+        continue;
+      }
+
+      if (sscanf(line_item[2], "%d", &conversion) != 1) {
+        printf("File corrupt " pwr_cNameDistribute);
+        continue;
+      }
+
+      if ((pass == bld_ePass_BeforeNode
+              && !(current_options & pwr_mBuildDirectoryMask_BuildBeforeNode))
+          || (pass == bld_ePass_AfterNode
+                 && !(current_options
+                        & pwr_mBuildDirectoryMask_BuildAfterNode)))
+        continue;
+
+      
+
+      for (sts
+           = dcli_search_file(line_item[3], found_file, DCLI_DIR_SEARCH_INIT);
+           ODD(sts); sts
+           = dcli_search_file(line_item[3], found_file, DCLI_DIR_SEARCH_NEXT)) {
+        // Check if file should be updated
+        int update = 0;
+        pwr_tFileName source, target;
+        pwr_tFileName target_dir;
+        pwr_tTime source_time, target_time;
+        char* s;
+
+        strncpy(source, found_file, sizeof(source));
+        strncpy(target, line_item[4], sizeof(target));
+
+        sts = dcli_file_time(source, &source_time);
+
+        if (target[strlen(target) - 1] == '/') {
+          // Target is a directory, add file name
+          char* s = strrchr(source, '/');
+          if (!s)
+            strncat(target, source, sizeof(target) - strlen(target) - 1);
+          else
+            strncat(target, s + 1, sizeof(target) - strlen(target) - 1);
+        }
+
+        dcli_translate_filename(target, target);
+        sts = dcli_file_time(target, &target_time);
+
+        if (ODD(sts) && time_Acomp(&source_time, &target_time) != 1)
+          update = 0;
+        else
+          update = 1;
+
+        if (!opt.force && !update)
+          continue;
+
+        if (EVEN(sts)) {
+          // Check that directory exist, create if it doesn't
+          strcpy(target_dir, target);
+          if ((s = strrchr(target_dir, '/'))) {
+            *s = 0;
+            sts = dcli_file_time(target_dir, &target_time);
+            if (EVEN(sts)) {
+              sprintf(cmd, "mkdir -p %s", target_dir);
+              system(cmd);
+            }
+          }
+        }
+	switch (conversion) {
+	case pwr_eFileConvertEnum_No:
+	  sprintf(cmd, "cp %s %s", source, target);
+	  break;
+	case pwr_eFileConvertEnum_ISO88591_UTF8:
+	  sprintf(cmd, "iconv -f ISO-8859-1 -t UTF-8 < %s > %s", source, target);
+	  break;
+	}
+        system(cmd);
+        sprintf(
+            cmd, "Build:    convert %s %s -> %s", line_item[2], source, target);
+        MsgWindow::message('I', cmd, msgw_ePop_No);
+
+        // wb_log::log( wlog_eCategory_GeBuild, name, 0);
+        if (m_sts != PWRB__MAKEUPDATED)
+          m_sts = PWRB__SUCCESS;
+      }
+
+      dcli_search_file(line_item[2], found_file, DCLI_DIR_SEARCH_END);
     } else if (streq(cdh_Low(line_item[0]), "buildmake")) {
       if (num != 4) {
         printf("File corrupt " pwr_cNameDistribute);
