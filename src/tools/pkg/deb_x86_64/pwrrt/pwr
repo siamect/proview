@@ -1,207 +1,109 @@
-#!/bin/bash
+#!/bin/sh
+
 ### BEGIN INIT INFO
-# Provides:            pwr
-# Required-Start:      networking
-# Required-Stop:       networking
-# Default-Start:       2 3 4 5
-# Default-Stop:        0 1 6
-# Short-Description:   Start Proview Runtime Environment.
-# Description:         Start Proview Runtime Environment.
+# Provides:        pwr
+# Required-Start:  $network $syslog
+# Required-Stop:   $network $syslog
+# Default-Start:   2 3 4 5
+# Default-Stop:
+# Short-Description: Start ProviewR Runtime Environment
 ### END INIT INFO
 
-#
-# Start script for Proview runtime
-#
-
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-wrapper="/tmp/rt_ini_wrapper"
-killer="/tmp/pwr_killer"
-
 . /etc/pwrp_profile
-umask 002
+. /lib/lsb/init-functions
 
-create_wrapper()
-{
-  if [ ! -e $wrapper ] ; then
-    echo "#!/bin/bash" > $wrapper
-    echo "source /etc/pwrp_profile" >> $wrapper
-    echo "umask 002" >> $wrapper
-    echo "\$pwr_exe/rt_ini \$* &" >> $wrapper
-    chmod a+rx $wrapper
-    if [ ! -e $wrapper ] ;then
-      echo "$wrapper not writable, check permissions"
-      exit
-    fi
-  fi
-}
+DAEMON=$pwr_exe/rt_ini
+PIDFILE=/run/pwr/pwr.pid
 
-create_killer()
-{
-    echo "#!/bin/bash" > $killer
-    echo "source /etc/pwrp_profile" >> $killer
-    echo "umask 002" >> $killer
+test -x $DAEMON || exit 5
 
-    echo "`ps ax | grep "rt_" | awk '{ print "kill -9 "$1}'`" >> $killer
-    echo "`ps ax | grep "rs_" | awk '{ print "kill -9 "$1}'`" >> $killer
-    echo "`ps ax | grep "ra_" | awk '{ print "kill -9 "$1}'`" >> $killer
-    echo "`ps ax | grep "sev_" | awk '{ print "kill -9 "$1}'`" >> $killer
-    echo "`ps ax | grep "opc_" | awk '{ print "kill -9 "$1}'`" >> $killer
-    echo "`ps ax | grep "plc_" | awk '{ print "kill -9 "$1}'`" >> $killer
-    echo "`ps ax | grep "jpwr.rt" | awk '{ print "kill -9 "$1}'`" >> $killer
+LOCKFILE=/run/lock/pwrdate
 
-    echo "eval `ipcs -s|grep ^0x|grep "[ \t]pwrp[ \t]"|awk '{printf "ipcrm sem %s;", $2}'`" >> $killer
-    echo "eval `ipcs -q|grep ^0x|grep "[ \t]pwrp[ \t]"|awk '{printf "ipcrm msg %s;", $2}'`" >> $killer
-    echo "eval `ipcs -m|grep ^0x|grep "[ \t]pwrp[ \t]"|awk '{printf "ipcrm shm %s;", $2}'`" >> $killer
+RUNASUSER=pwrp
+UGID=$(getent passwd $RUNASUSER | cut -f 3,4 -d:) || true
 
-    node=`eval uname -n`
-    applfile=$pwrp_load"/ld_appl_"$node"_"$PWR_BUS_ID".txt"
+case $1 in
+	start)
+		echo ""
+		log_daemon_msg "Starting ProviewR Runtime" "rt_ini"
+		if [ -z "$UGID" ]; then
+			log_failure_msg "user \"$RUNASUSER\" does not exist"
+			exit 1
+		fi
+		(
+			flock -w 180 10
+			start-stop-daemon --start --oknodo --pidfile $PIDFILE --startas $DAEMON -- -D
+			sleep 5
+		) 10>$LOCKFILE
+		log_end_msg $?
+  		;;
+	stop)
+		echo ""
+		log_daemon_msg "Stopping ProviewR Runtime" "rt_ini"
 
-    if [ -e $applfile ]; then
-      stored_ifs=$IFS
-      IFS=' ,'
-      while read appid appname appload apprun appfile appprio appdebug apparg; do
-        if [ -n "$appid" ] && [ "${appid:0:1}" != "#" ]; then
-          if [ $appid != "pwr_neth" ] &&
-             [ $appid != "pwr_qmon" ] &&
-             [ $appid != "pwr_nacp" ] &&
-             [ $appid != "pwr_io" ] &&
-             [ $appid != "pwr_tmon" ] &&
-             [ $appid != "pwr_emon" ] &&
-             [ $appid != "pwr_alim" ] &&
-             [ $appid != "pwr_bck" ] &&
-             [ $appid != "pwr_linksup" ] &&
-             [ $appid != "pwr_trend" ] &&
-             [ $appid != "pwr_fast" ] &&
-             [ $appid != "pwr_remh" ] &&
-             [ $appid != "pwr_remlog" ] &&
-             [ $appid != "pwr_webmon" ] &&
-             [ $appid != "pwr_webmonmh" ] &&
-             [ $appid != "pwr_webmonelog" ] &&
-             [ $appid != "pwr_opc_server" ] &&
-             [ $appid != "pwr_post" ] &&
-             [ $appid != "pwr_report" ] &&
-             [ $appid != "pwr_sevhistmon" ] &&
-             [ $appid != "pwr_sev_server" ] &&
-             [ $appid != "pwr_powerlink" ] &&
-             [ $appid != "pwr_sim" ] &&
-             [ $appid != "pwr_plc" ] &&
-	     [ "$appfile" != "rt_io_comm" ] &&
-             [ ${appid:0:8} != "pwr_plc_" ]; then
-            echo "killall $appname" >> $killer
-          fi
-        fi
-      done < $applfile
-      IFS=$stored_ifs
-    fi
-    echo "if [ -e $pwrp_exe/pwrp_stop.sh ]; then" >> $killer
-    echo "  source $pwrp_exe/pwrp_stop.sh" >> $killer
-    echo "fi" >> $killer
-    echo "rm /tmp/pwr*\$PWR_BUS_ID" >> $killer
+		# Store PID of rt_ini before sending SIGTERM
+		PID=0
+		if [ -e $PIDFILE ]; then
+			read PID < $PIDFILE
+		else
+			echo ""
+			log_daemon_msg "No pidfile present. Did you start ProviewR as a system service?" "rt_ini"
+		fi
 
-    chmod a+rx $killer
-    if [ ! -e $killer ] ;then
-      echo "$killer not writable, check permissions"
-      exit
-    fi
-}
+		rt_ini -s &>/dev/null
+		# Sleep until process is gone
+		while kill -0 $PID &>/dev/null; do
+			sleep 1
+		done
 
-pwr_start()
-{
-  create_wrapper
-  if [ `whoami` == "pwrp" ];then
-    $wrapper
-  else
-    sudo -u pwrp $wrapper
-  fi
-}
+		# Did we manage to bring everything down correct? Check to see if there are IPCs still left for the process
+		if [ ! -z $PID ]; then
+			ipcs -p | grep $PID &>/dev/null
+			if [ $? -eq 0 ]; then
+				echo ""
+				log_daemon_msg "IPC objects still present (abnormal termination of ProviewR?) running kill script" "rt_ini"
+				. $pwr_exe/pwr_stop.sh &>/dev/null
+			fi
+		fi
 
-pwr_stop()
-{
-  create_wrapper
-  if [ `whoami` == "pwrp" ];then
-    $wrapper -s
-    if [ -e $pwrp_exe/pwrp_stop.sh ]; then
-      source $pwrp_exe/pwrp_stop.sh
-    fi
-  else
-    sudo -u pwrp $wrapper -s
-    if [ -e $pwrp_exe/pwrp_stop.sh ]; then
-      sudo -u pwrp source $pwrp_exe/pwrp_stop.sh
-    fi
-  fi
-  while [ "`ps aux | grep -v grep | grep rt_`" != "" ] ; do sleep 1; done
-}
+		# Check for the presence of pwr_* tmp files. If there are any something must have gone wrong in the closing of rt_ini
+		ls -1 /tmp/pwr_*_$PWR_BUS_ID &>/dev/null
+		if [ $? -eq 0 ]; then
+			echo "\n"
+			log_daemon_msg "Temporary files still present (abnormal termination of ProviewR?) running kill script" "rt_ini"
+			. $pwr_exe/pwr_stop.sh &>/dev/null
+		fi
 
-pwr_reload()
-{
-  if [ `whoami` == "pwrp" ];then
-    $pwr_exe/rt_ini_wrapper -r
-  else
-    sudo -u pwrp $pwr_exe/rt_ini_wrapper -r
-  fi
-}
+		log_end_msg $?
+		rm -f $LOCKFILE
+  		;;
+	restart)
+		$0 stop && sleep 2 && $0 start
+  		;;
+	try-restart)
+		if $0 status >/dev/null; then
+			$0 restart
+		else
+			exit 0
+		fi
+		;;
+	reload)
+		PID=0
+		if [ -e $PIDFILE ]; then
+			read PID < $PIDFILE
+		else
+			echo ""
+			log_daemon_msg "No pidfile present, ProviewR doesn't seem to be running or you are running ProviewR as a standard user with -P" "rt_ini"
+			exit 1
+		fi
 
-pwr_kill()
-{
-  create_killer
-  if [ `whoami` == "pwrp" ];then
-    $killer
-  else
-    sudo -u pwrp $killer
-  fi
-}
-
-case "$1"
-  in
-    start)
-	echo "Start Proview Runtime Environment."
-	pwr_start
-	echo "Done."
-      ;;
-    stop)
-	echo "Stop Proveiw Runtime Environment."
-	pwr_stop
-	echo "Done."
-      ;;
-    restart)
-	echo "Restart Proview Runtime Environment."
-	echo "Closing down..."
-	pwr_stop
-	sleep 1
-	echo "Starting..."
-	pwr_start
-	echo "Done."
-	;;
-    reload)
-	echo "Reload Proview Runtime Environment"
-        pwr_reload
-	echo "Done."
-	;;
-    kill)
-	echo "Remove all processes and resources for Proview Runtime Environment"
-        pwr_kill
-	echo "Done."
-	;;
-    reset)
-	echo "Remove all processes and resources for Proview Runtime Environment"
-        pwr_kill
-	echo "Done."
-	;;
-    *)
-	echo "  pwr  Start and stop Proview Runtime Environment" >&2
-	echo "" >&2
-	echo "  Usage:" >&2
-	echo "  pwr start|stop|restart|reload|reset" >&2
-	echo "" >&2
-	echo "    start    Start Runtime environment" >&2
-	echo "    stop     Stop Runtime environment" >&2
-	echo "    restart  First stop and then start Runtime environment" >&2
-	echo "    reload   Soft restart of Runtime environment" >&2
-	echo "    reset    Remove all processes and resources" >&2
-	echo "" >&2
-
-        exit 1
-	;;
-  esac
-
-exit 0
+		rt_ini -r &>/dev/null
+		;;
+	status)
+		status_of_proc $DAEMON "ProviewR Runtime"
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|try-restart|reload|status}"
+		exit 2
+		;;
+esac

@@ -1,0 +1,37 @@
+[Unit]
+Documentation=man:pwr(1)
+Description=ProviewR Runtime Environment
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+EnvironmentFile=-/pwrp/common/load/pwr_environment
+Type=forking
+Restart=no
+TimeoutSec=15
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BROADCAST
+# TODO Share private tmp with rt_xtt
+PrivateTmp=no
+KillMode=control-group
+GuessMainPID=no
+PIDFile=/run/pwr/pwr.pid
+RemainAfterExit=no
+RuntimeDirectory=pwr
+RemoveIPC=yes
+ExecStart=/etc/init.d/pwr start
+ExecStop=/etc/init.d/pwr stop
+# The reload function is not to be trusted, if for instance, you're running profibus/profinet.
+# There are probably more cases in which this is cheesy...
+ExecReload=/etc/init.d/pwr reload
+User=pwrp
+Group=pwrp
+StandardOutput=journal
+StandardError=inherit
+SyslogIdentifier=ProviewR
+LimitCORE=infinity
+LimitRTPRIO=infinity
+IOSchedulingClass=best-effort
+IOSchedulingPriority=3
+
+[Install]
+WantedBy=multi-user.target

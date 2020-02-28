@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -e
+
+# Remove proview.cnf if we are purging
+if [ "$1" = "purge" -a -e /etc/proview.cnf ]; then
+  rm /etc/proview.cnf
+  echo "-- Purged /etc/proview.cnf"
+fi
