@@ -1,4 +1,3 @@
-
 bus_id=""
 if [ -e /etc/proview.cnf ]; then
   bus_id=`eval cat /etc/proview.cnf | grep "\\bqcomBusId\\b" | awk '{print $2}'`
@@ -44,7 +43,7 @@ fi
 if [ -z "$jdk" ]; then
     if [ -e /usr/lib/jvm/default-java ]; then
       jdk=`eval realpath -qe /usr/lib/jvm/default-java`
-    else
+    elif [ -e /usr/lib/jvm ]; then
       jdk_name=`eval ls -1 /usr/lib/jvm | sort -r | grep ^java | head -1`
       jdk=`eval realpath -qe /usr/lib/jvm/$jdk_name`
       unset jdk_name
