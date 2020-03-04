@@ -19,7 +19,7 @@ export pwr_load=$pwrb_root/load
 export pwr_lis=$pwrb_root/lis
 export pwr_doc=$pwrb_root/doc
 
-# Fetch arch
+# Fetch arch (In the rare cases where we run 32-bit proview on 64-bit debian)
 if [ -e /pwrp ]; then
     for dir in `ls -1 /pwrp`; do
         [[ "${dir}" == "common" ]] && continue

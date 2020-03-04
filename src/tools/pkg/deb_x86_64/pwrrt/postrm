@@ -7,3 +7,5 @@ if [ "$1" = "purge" -a -e /etc/proview.cnf ]; then
   rm /etc/proview.cnf
   echo "-- Purged /etc/proview.cnf"
 fi
+
+if [ -e /etc/profile.d/pwrp_profile.sh ]; then rm /etc/profile.d/pwrp_profile.sh; fi

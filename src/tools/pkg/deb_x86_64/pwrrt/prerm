@@ -14,24 +14,26 @@ fi
 proot="/pwrp"
 aroot="/usr/pwrp"
 
-echo ""
-echo -n "Do you want to remove project and users (y/n) [n] "
-read remove_all
-if [ "$remove_all" = "y" ]; then
-  for user in pwrp skiftel b55 b66; do
-    getent passwd ${user} >/dev/null 2>&1 && userdel -rf ${user} 2>/dev/null
-    echo "-- Removed user ${user}"
-  done
-  for grp in pwrp skiftel b55 b66; do
-    getent group ${grp} >/dev/null 2>&1 && groupdel ${grp}
-    echo "-- Removed group ${grp}"
-  done
-  echo "-- Removing projects..."
-  if [ -e $proot ]; then
-    rm -r $proot && echo "-- Removed project $proot"
-  fi
-  if [ -e $aroot ]; then
-    rm -r $aroot && echo "-- Removed admin directory $proot"
+if [ ! "$1" = "upgrade" ]; then
+  echo ""
+  echo -n "Do you want to remove project and users (y/n) [n] "
+  read remove_all
+  if [ "$remove_all" = "y" ]; then
+    for user in pwrp skiftel b55 b66; do
+      getent passwd ${user} >/dev/null 2>&1 && userdel -rf ${user} 2>/dev/null
+      echo "-- Removed user ${user}"
+    done
+    for grp in pwrp skiftel b55 b66; do
+      getent group ${grp} >/dev/null 2>&1 && groupdel ${grp}
+      echo "-- Removed group ${grp}"
+    done
+    echo "-- Removing projects..."
+    if [ -e $proot ]; then
+      rm -r $proot && echo "-- Removed project $proot"
+    fi
+    if [ -e $aroot ]; then
+      rm -r $aroot && echo "-- Removed admin directory $aroot"
+    fi
   fi
 fi
 

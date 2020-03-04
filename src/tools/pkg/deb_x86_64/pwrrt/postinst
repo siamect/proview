@@ -92,6 +92,7 @@ else
   fi
 fi
 
+# Add the user b66
 if getent passwd b66 >/dev/null; then
    echo "-- User b66 already exist. OK!"
 else
@@ -143,14 +144,12 @@ if [ ! -e /etc/proview.cnf ]; then
   new_cnf=1
 fi
 
-# Source pwrp_profile from both profile and bash.bashrc
-for cnf_file in /etc/profile /etc/bash.bashrc; do
-  if ! grep -q "/etc/pwrp_profile\b" ${cnf_file}; then
-  	cat >> ${cnf_file} <<-EOF
-		[[ -e /etc/pwrp_profile ]] && . /etc/pwrp_profile
-		EOF
-  fi
-done
+# Source pwrp_profile in login shells
+if [ ! -e /etc/profile/pwrp_profile.sh ]; then
+  # profile.d should always exist on a modern debian system. BUT if it doesn't we create it :)
+  if [ ! -e /etc/profile.d ]; then mkdir /etc/profile.d; fi
+ 	echo "[[ -e /etc/pwrp_profile ]] && . /etc/pwrp_profile" > /etc/profile.d/pwrp_profile.sh
+fi
 
 # Create startup link
 # set +e
