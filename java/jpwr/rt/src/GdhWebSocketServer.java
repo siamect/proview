@@ -2251,7 +2251,10 @@ public class GdhWebSocketServer
 		      int oppDisableHelp = 0;
 		      int oppDisableProview = 0;
 		      int oppLanguage = 0;
+		      String[] oppURL_Symbols = new String[10];
+		      String webBrowser;
 		      CdhrObjid oret;
+		      CdhrString sret;
 
 		      Vector<WebButton> v = new Vector<WebButton>();
 		      if ( opPlace.isEmpty()) {
@@ -2300,6 +2303,22 @@ public class GdhWebSocketServer
 			  iret = gdh.getObjectInfoInt(opPlace + ".DisableProview");
 			  if (iret.oddSts())
 			      oppDisableProview = iret.value;
+
+			  oret = gdh.getClassList( Pwrb.cClass_WebBrowserConfig);
+			  if ( oret.oddSts()) {
+			      webBrowser = gdh.objidToName(oret.objid, Cdh.mName_pathStrict).str;
+			      for (int j = 0; j < 10; j++) {
+				  sret = gdh.getObjectInfoString(webBrowser + ".URL_Symbols[" + j +"]");
+				  if (sret.oddSts())
+				      oppURL_Symbols[j] = sret.str;
+				  else
+				      oppURL_Symbols[j] = "";
+			      }
+			  }
+			  else {
+			      for (int j = 0; j < 10; j++)
+				  oppURL_Symbols[j] = "";
+			  }
 
 			  CdhrObjid cdhrObjId = (CdhrObjid)gdh.getChild(objid);
 			  while(cdhrObjId.oddSts()) {
@@ -2359,6 +2378,10 @@ public class GdhWebSocketServer
 		      refsize += 4; // disable help
 		      refsize += 4; // disable proview
 		      refsize += 4; // language
+		      for ( i = 0; i < 10; i++) { 
+			  refsize += 2;  // URL symbol length
+			  refsize += oppURL_Symbols[i].length();
+		      }
 		      refsize += 2; // button vector length
 		      if ( (sts & 1) != 0) {
 			  for ( i = 0; i < v.size(); i++) {
@@ -2427,6 +2450,13 @@ public class GdhWebSocketServer
 			  bb.putInt( j, oppLanguage);
 			  j += 4;
 		  
+			  for ( i = 0; i < 10; i++) {
+			      bb.putShort( j, (short)oppURL_Symbols[i].length());
+			      j += 2;			  
+			      for ( int k = 0; k < oppURL_Symbols[i].length(); k++) {
+				  bb.put( j++, (byte)oppURL_Symbols[i].charAt(k));
+			      }
+			  }
 			  bb.putShort( j, (short)v.size());
 			  j += 2;			  
 			  for ( i = 0; i < v.size(); i++) {
@@ -2781,7 +2811,44 @@ public class GdhWebSocketServer
 	  }
       }				   
       catch ( java.io.IOException e) {
+	  errh.error("DataStream failed");
+	  try {
+	      out.close();
+	  }
+	  catch(IOException e2) {
+	      System.err.println("Close failed");
+	  }
+	  try {
+	      in.close();
+	  }
+	  catch(IOException e2) {
+	      System.err.println("Close failed");
+	  }
+	  try {
+	      clientSocket.close();
+	  }
+	  catch(IOException e2) {
+	      System.err.println("Close failed");
+	  }
+	  //check that all subscriptions has stopped
+	  for(int i = 0; i < thSub.size(); i++) {
+	      try {
+		  sub = thSub.elementAt(i);
+		  int index = thSub.elementAt(i).getIndex();
+		  PwrtStatus sts = this.unrefObjectInfo(sub.subId, threadNumber);
+	      }
+	      catch(ArrayIndexOutOfBoundsException exc) {
+	      }
+	  }
+	  // Reduce subscription size to save memory
+	  this.trimRefObjectList();
+
+	  connectionOccupied[threadNumber] = false;
+	  threadCount--;
+	  setCurrentConnections(threadCount);
 	  System.out.println("ServerSocket IOException " + e.toString());
+	  System.out.println("Terminating thread " + threadNumber);
+	  return;
       }
     }
     public synchronized Sub refObjectInfo(String attrName, int threadNumber, int refId, int elements)

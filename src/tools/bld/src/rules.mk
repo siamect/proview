@@ -274,8 +274,7 @@ $(web_dir)/%.css : %.css
 
 $(web_dir)/%.js : %.js
 	@ $(log_h_h)
-	@ $(cp) $(cpflags) $(source) $(target)
-
+	@ co_jsconcat -I $(pwre_croot)/java/jsw/cmn/src -o $(target) $(source)
 $(inc_dir)/%.meth : %.meth
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
