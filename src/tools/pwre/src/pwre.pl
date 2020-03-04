@@ -623,7 +623,7 @@ sub build_all_modules()
 {
   my $flavour;
   if ($_[0] eq "") {
-    $flavour = "qt";
+    $flavour = "gtk";
   } else {
     $flavour = $_[0];
   }
@@ -948,10 +948,10 @@ sub build_module()
     $lib = 1;
     $exe = 1;
   }
-  if ($_[0] eq "gtk" || $_[1] eq "gtk" || $_[2] eq "gtk" || $_[3] eq "gtk") {
-    $flavour = "gtk";
-  } else {
+  if ($_[0] eq "qt" || $_[1] eq "qt" || $_[2] eq "qt" || $_[3] eq "qt") {
     $flavour = "qt";
+  } else {
+    $flavour = "gtk";
   }
   set_flavour($flavour);
 
