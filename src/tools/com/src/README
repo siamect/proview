@@ -7,7 +7,7 @@ in documents and control-files.
 Change license text
 -------------------
 
-Edit license.awk, license_sh.awk and licence_wbl.awk and insert the new
+Edit license.awk, license_sh.awk and license_wbl.awk and insert the new
 Copyright text:
 
       printf( "# Copyright (C) 2005-2017 SSAB EMEA AB.\n");

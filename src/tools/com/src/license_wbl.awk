@@ -4,7 +4,7 @@ BEGIN {
 }
 
 {
-  if ( $2 == "Proview" && $3 == "Open" && $4 == "Source" && $5 == "Process" && $6 == "Control.") {
+  if ( $2 == "ProviewR" && $3 == "Open" && $4 == "Source" && $5 == "Process" && $6 == "Control.") {
     inlicense = 1;
     printf( "%s\n", $0);
   }
@@ -12,7 +12,7 @@ BEGIN {
     rowcnt++;
 
     if ( rowcnt == 1) {
-      printf( "!  Copyright (C) 2005-2017 SSAB EMEA AB.\n");
+      printf( "!  Copyright (C) 2005-2020 SSAB EMEA AB.\n");
       inlicense = 0;
     }
     else 
