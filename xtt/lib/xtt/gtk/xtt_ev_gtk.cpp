@@ -1236,7 +1236,7 @@ void EvGtk::eve_activate_analyse(GtkWidget* w, gpointer ev)
   ((Ev*)ev)->eve_activate_analyse();
 }
 
-void EvGtk::eve_activate_ack_last(GtkWidget* w, gpointer ev)
+void EvGtk::eve_activate_ack_last(GtkWidget* w, gpointer data)
 {
   Ev* ev = (Ev*)data;
 

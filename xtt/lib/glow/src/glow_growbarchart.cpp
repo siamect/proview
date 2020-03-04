@@ -483,10 +483,10 @@ void GrowBarChart::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 	      drawtype = GlowColor::shift_drawtype(fillcolor, chot, 0);
 	    else
 	      drawtype = fillcolor;
-	    ctx->gdraw->rect(bar_ll_x, bar_down_ll_y, bar_ur_x - bar_ll_x,
+	    ctx->gdraw->rect(w, bar_ll_x, bar_down_ll_y, bar_ur_x - bar_ll_x,
 	         bar_down_ur_y - bar_down_ll_y, drawtype, 1, 0);
 	    if (bar_up_ll_y > ll_y)
-	      ctx->gdraw->rect(bar_ll_x, ll_y, bar_ur_x - bar_ll_x,
+	      ctx->gdraw->rect(w, bar_ll_x, ll_y, bar_ur_x - bar_ll_x,
 			       bar_up_ll_y - ll_y, drawtype, 1, 0);
 	  } else {
 	    glow_eDrawType f1, f2;
