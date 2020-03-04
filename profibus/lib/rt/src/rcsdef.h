@@ -108,7 +108,7 @@ extern "C" {
 #define MODE_MODUL_MCL 13        /* Command: B_SYSFKT */
 #define MODE_DISTRIBUTOR_DRIVER                                                \
   14                          /* Command: B_SYSFKT ->function 1 = insert       \
-                                 */
+                               */
 #define MODE_PRINT_DRIVER 15  /* Command: B_SYSFKT */
 #define MODE_GET_RCS_ERROR 16 /* Command: B_SYSFKT */
 

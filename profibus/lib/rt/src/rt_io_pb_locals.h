@@ -102,6 +102,7 @@ typedef struct _agent_args
 {
   void* local;
   io_sAgent* ap;
+  io_tCtx ctx;
 } agent_args;
 
 typedef struct

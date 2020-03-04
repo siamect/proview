@@ -831,7 +831,7 @@ typedef struct T_SET_CONFIGURATION_REQ
       max_nr_of_sap_buffers; /* max # of SAP-Buffers                 (all CR) */
   USIGN16 max_nr_of_poll_list_entries; /* max # of Poll-List-Entries
                                           (all CR)   */
-  USIGN16 max_data_buffer_size;        /* max size of FMS-/FMA7-PDU-Buffer */
+  USIGN16 max_data_buffer_size; /* max size of FMS-/FMA7-PDU-Buffer */
 } T_SET_CONFIGURATION_REQ;
 #endif
 

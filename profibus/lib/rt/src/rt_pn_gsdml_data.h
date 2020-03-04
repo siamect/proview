@@ -175,7 +175,8 @@ public:
   GsdmlChannelDiag();
   unsigned short error_type;
   char name[200];
-  char help[4096]; // We need a large buffer for most of the help text in the diagnostics...
+  char help[4096]; // We need a large buffer for most of the help text in the
+                   // diagnostics...
 
   int print(std::ofstream& fp);
 };
@@ -213,7 +214,8 @@ public:
   static GsdmlSlotData* paste_slotdata;
   std::vector<GsdmlChannelDiag*> channel_diag;
 
-  ~GsdmlDeviceData() {
+  ~GsdmlDeviceData()
+  {
     device_reset();
     channel_diag_reset();
   }

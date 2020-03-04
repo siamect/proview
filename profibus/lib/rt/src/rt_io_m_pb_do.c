@@ -52,8 +52,8 @@
 /*----------------------------------------------------------------------------*\
    Init method for the Pb module Do
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardInit(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                              io_sCard* cp)
 {
   io_sCardLocal* local;
   pwr_sClass_Pb_Do* op;
@@ -61,8 +61,8 @@ static pwr_tStatus IoCardInit(
   op = (pwr_sClass_Pb_Do*)cp->op;
   local = (io_sCardLocal*)cp->Local;
 
-  if (op->NumberOfChannels != 8 && op->NumberOfChannels != 16
-      && op->NumberOfChannels != 32)
+  if (op->NumberOfChannels != 8 && op->NumberOfChannels != 16 &&
+      op->NumberOfChannels != 32)
     op->Status = PB_MODULE_STATE_NOTINIT;
 
   if (op->Orientation > op->NumberOfChannels)
@@ -77,8 +77,8 @@ static pwr_tStatus IoCardInit(
 /*----------------------------------------------------------------------------*\
    Write method for the Pb module Do
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardWrite(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardWrite(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                               io_sCard* cp)
 {
   io_sCardLocal* local;
   pwr_sClass_Pb_Do* op;
@@ -90,22 +90,25 @@ static pwr_tStatus IoCardWrite(
   pwr_tUInt32 mask = 0;
   pwr_tInt32 do_actval;
 
-  pwr_tUInt16 data[2] = { 0, 0 };
+  pwr_tUInt16 data[2] = {0, 0};
   pwr_tUInt32* data32;
 
   local = (io_sCardLocal*)cp->Local;
   op = (pwr_sClass_Pb_Do*)cp->op;
   slave = (pwr_sClass_Pb_DP_Slave*)rp->op;
 
-  if (op->Status >= PB_MODULE_STATE_OPERATE && slave->DisableSlave != 1) {
+  if (op->Status >= PB_MODULE_STATE_OPERATE && slave->DisableSlave != 1)
+  {
     data32 = (pwr_tUInt32*)&data;
 
     // Packa ner
-    for (i = 0; i < cp->ChanListSize; i++) {
+    for (i = 0; i < cp->ChanListSize; i++)
+    {
       chanp = &cp->chanlist[i];
       chan_do = (pwr_sClass_ChanDo*)chanp->cop;
       sig_do = (pwr_sClass_Do*)chanp->sop;
-      if (chan_do && sig_do) {
+      if (chan_do && sig_do)
+      {
         mask = 1 << chan_do->Number;
         do_actval = *(pwr_tInt32*)chanp->vbp;
         if (do_actval != 0)
@@ -118,11 +121,15 @@ static pwr_tStatus IoCardWrite(
         io_DoPackWord(cp, &data[0], 0);
         if (op->NumberOfChannels > 16) io_DoPackWord(cp, &data[1], 1);
     */
-    if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian) {
-      if (op->Orientation == PB_ORIENTATION_WORD) {
+    if (slave->ByteOrdering == pwr_eByteOrderingEnum_BigEndian)
+    {
+      if (op->Orientation == PB_ORIENTATION_WORD)
+      {
         data[0] = swap16(data[0]);
         data[1] = swap16(data[1]);
-      } else if (op->Orientation == PB_ORIENTATION_DWORD) {
+      }
+      else if (op->Orientation == PB_ORIENTATION_DWORD)
+      {
         *data32 = swap32(*data32);
       }
     }
@@ -135,8 +142,8 @@ static pwr_tStatus IoCardWrite(
 /*----------------------------------------------------------------------------*\
 
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus IoCardClose(
-    io_tCtx ctx, io_sAgent* ap, io_sRack* rp, io_sCard* cp)
+static pwr_tStatus IoCardClose(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
+                               io_sCard* cp)
 {
   io_sCardLocal* local;
   local = cp->Local;
@@ -150,6 +157,6 @@ static pwr_tStatus IoCardClose(
   Every method to be exported to the workbench should be registred here.
 \*----------------------------------------------------------------------------*/
 
-pwr_dExport pwr_BindIoMethods(Pb_Do)
-    = { pwr_BindIoMethod(IoCardInit), pwr_BindIoMethod(IoCardWrite),
-        pwr_BindIoMethod(IoCardClose), pwr_NullMethod };
+pwr_dExport pwr_BindIoMethods(Pb_Do) = {
+    pwr_BindIoMethod(IoCardInit), pwr_BindIoMethod(IoCardWrite),
+    pwr_BindIoMethod(IoCardClose), pwr_NullMethod};
