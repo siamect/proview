@@ -182,7 +182,7 @@ static void* mb_receive(void* data)
           break;
         }
 
-        addr -= mp->ReadAddress;
+        addr -= mp->ReadRegAddress;
 
         if (addr < 0 || addr + quant * 2 > local_card->output_size) {
           exception_code = 2;
@@ -251,6 +251,8 @@ static void* mb_receive(void* data)
           exception_code = 2;
           break;
         }
+
+        addr -= mp->ReadDigAddress;
 
         offs = addr / 8;
         bytes = (addr + quant) / 8 + (((addr + quant) % 8 == 0) ? 0 : 1) - offs;
@@ -332,7 +334,7 @@ static void* mb_receive(void* data)
           break;
         }
 
-        addr -= mp->WriteAddress;
+        addr -= mp->WriteRegAddress;
 
         if (addr < 0 || addr + 2 > local_card->input_size) {
           exception_code = 2;
@@ -397,7 +399,7 @@ static void* mb_receive(void* data)
           break;
         }
 
-        addr -= mp->WriteAddress;
+        addr -= mp->WriteRegAddress;
 
         if (addr < 0 || addr + quant * 2 > local_card->input_size) {
           exception_code = 2;
@@ -458,6 +460,8 @@ static void* mb_receive(void* data)
           exception_code = 2;
           break;
         }
+
+        addr -= mp->WriteDigAddress;
 
         offs = addr / 8;
 
@@ -535,6 +539,7 @@ static void* mb_receive(void* data)
           exception_code = 2;
           break;
         }
+        addr -= mp->WriteDigAddress;
 
         offs = addr / 8;
         bytes = (addr + quant) / 8 + (((addr + quant) % 8 == 0) ? 0 : 1) - offs;
