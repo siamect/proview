@@ -115,7 +115,7 @@ fi
 chown -R pwrp /usr/pwrrt
 chgrp -R pwrp /usr/pwrrt
 
-setcap cap_net_admin,cap_net_raw,cap_net_broadcast+eip /usr/pwrrt/exe/rt_ini
+setcap cap_setpcap,cap_net_admin,cap_net_raw,cap_net_broadcast+eip /usr/pwrrt/exe/rt_ini
 
 #chmod u+s /usr/pwrrt/exe/rt_ini
 #chmod u+s /usr/pwrrt/exe/rt_rtt

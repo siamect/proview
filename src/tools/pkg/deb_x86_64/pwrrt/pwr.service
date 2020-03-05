@@ -9,7 +9,6 @@ EnvironmentFile=-/pwrp/common/load/pwr_environment
 Type=forking
 Restart=no
 TimeoutSec=15
-AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BROADCAST
 # TODO Share private tmp with rt_xtt
 PrivateTmp=no
 KillMode=control-group

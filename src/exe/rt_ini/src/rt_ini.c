@@ -40,6 +40,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/prctl.h>
+#include <linux/capability.h>
 
 #include "co_dcli.h"
 #include "co_string.h"
@@ -1718,4 +1720,8 @@ static void daemonize()
   stdout = fopen("/dev/null", "w+");
   stderr = fopen("/dev/null", "w+");
 
+  // Set our ambient set so that our currently cap unaware processes may inherit and set the effective bit
+  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_ADMIN, 0, 0);
+  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_BROADCAST, 0, 0);
+  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_RAW, 0, 0);
 }

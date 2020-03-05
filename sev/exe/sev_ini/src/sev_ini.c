@@ -34,11 +34,13 @@
  * General Public License plus this exception.
  */
 
-// TODO: Den här filen är i princip identisk med rt_ini.
+// TODO: Den hï¿½r filen ï¿½r i princip identisk med rt_ini.
 
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/prctl.h>
+#include <linux/capability.h>
 
 #include "co_dcli.h"
 #include "co_string.h"
@@ -73,6 +75,10 @@ int main(int argc, char** argv)
   if (cp->flags.b.stop) {
     sts = stop(argc, argv, cp);
   } else {
+    // Set our ambient set so that our currently cap unaware processes may inherit and set the effective bit
+    prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_ADMIN, 0, 0);
+    prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_BROADCAST, 0, 0);
+    prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_RAW, 0, 0);
     sts = start(cp);
     sts = events(cp);
     errh_LogInfo(&cp->log, "Ich sterbe!!");
