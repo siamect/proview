@@ -104,6 +104,8 @@ FlowCtx::~FlowCtx()
   move_clear();
   paste_clear();
   delete_all();
+  if (scroll_data)
+    free(scroll_data);
 
   for (int i = 0; i < a_nc.a_size; i++) {
     element = a_nc.a[i];
@@ -1633,32 +1635,25 @@ FlowArrayElem* FlowCtx::get_conclass_from_name(char* name)
 void FlowCtx::remove_trace_objects()
 {
   int i;
+  FlowArrayElem *e;
 
   for (i = 0; i < a.a_size; i++) {
     if (a.a[i]->type() == flow_eObjectType_Node
         && ((FlowNode*)a.a[i])->nc->group == flow_eNodeGroup_Trace) {
-      remove(a.a[i]);
-      select_remove(a.a[i]);
-      move_remove(a.a[i]);
+      e = a.a[i];
+      remove(e);
+      select_remove(e);
+      move_remove(e);      
+      delete e;
       i--;
     }
     if (a.a[i]->type() == flow_eObjectType_Con
         && ((FlowCon*)a.a[i])->cc->group == flow_eConGroup_Trace) {
-      remove(a.a[i]);
-      select_remove(a.a[i]);
-      move_remove(a.a[i]);
-      i--;
-    }
-  }
-  for (i = 0; i < a_nc.a_size; i++) {
-    if (((FlowNodeClass*)a_nc.a[i])->group == flow_eNodeGroup_Trace) {
-      a_nc.remove(a_nc.a[i]);
-      i--;
-    }
-  }
-  for (i = 0; i < a_cc.a_size; i++) {
-    if (((FlowConClass*)a_cc.a[i])->group == flow_eConGroup_Trace) {
-      a_cc.remove(a_cc.a[i]);
+      e = a.a[i];
+      remove(e);
+      select_remove(e);
+      move_remove(e);
+      delete e;
       i--;
     }
   }

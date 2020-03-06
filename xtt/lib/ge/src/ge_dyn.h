@@ -2872,6 +2872,7 @@ public:
 
   GePulldownMenu(GeDyn* e_dyn);
   GePulldownMenu(const GePulldownMenu& x);
+  ~GePulldownMenu();
   void get_attributes(attr_sItem* attrinfo, int* item_count);
   void save(std::ofstream& fp);
   void open(std::ifstream& fp);

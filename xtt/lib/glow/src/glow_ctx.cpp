@@ -909,7 +909,7 @@ void GlowCtx::paste_execute()
 
 void GlowCtx::nav_zoom()
 {
-  if (nodraw)
+  if (nodraw || no_nav)
     return;
 
   if (ctx_type == glow_eCtxType_Curve) {

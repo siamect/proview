@@ -20640,6 +20640,14 @@ GePulldownMenu::GePulldownMenu(const GePulldownMenu& x)
   }
 }
 
+GePulldownMenu::~GePulldownMenu()
+{
+  for (int i = 0; i < 32; i++) {
+    if (items_dyn[i])
+      delete items_dyn[i];
+  }
+}
+
 void GePulldownMenu::get_attributes(attr_sItem* attrinfo, int* item_count)
 {
   int i = *item_count;
