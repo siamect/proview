@@ -115,7 +115,7 @@ fi
 chown -R pwrp /usr/pwrsev
 chgrp -R pwrp /usr/pwrsev
 
-setcap cap_net_admin,cap_net_raw,cap_net_broadcast,cap_setpcap+eip /usr/pwrsev/exe/sev_ini
+setcap cap_sys_nice,cap_sys_boot,cap_net_bind_service,cap_net_admin,cap_net_raw,cap_net_broadcast=eip /usr/pwrrt/exe/sev_ini
 
 # Source pwrp_profile in login shells
 if [ ! -e /etc/profile/pwrp_profile.sh ]; then

@@ -115,7 +115,15 @@ fi
 chown -R pwrp /usr/pwrrt
 chgrp -R pwrp /usr/pwrrt
 
-setcap cap_setpcap,cap_net_admin,cap_net_raw,cap_net_broadcast+eip /usr/pwrrt/exe/rt_ini
+setcap cap_sys_nice,cap_sys_boot,cap_net_bind_service,cap_net_admin,cap_net_raw,cap_net_broadcast=eip /usr/pwrrt/exe/rt_ini
+
+# We shouldn't need any of the below file modifications but they are kept for reference in the meantime...
+# ALCM should be fine with CAP_NET_RAW
+# ProviewR should run as the user pwrp so rt_X apps are fine...?
+# Realtime priorities and schedulers use CAP_SYS_NICE
+# We also need CAP_SYS_BOOT for when one has chosen to reboot the runtime system on emergency break
+# Processes that use serial ports should also be fine since pwrp is added to dialout during postinst...
+# MODBUS is fine with CAP_NET_BIND_SERVICE
 
 #chmod u+s /usr/pwrrt/exe/rt_ini
 #chmod u+s /usr/pwrrt/exe/rt_rtt

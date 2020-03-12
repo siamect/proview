@@ -41,7 +41,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/prctl.h>
-#include <linux/capability.h>
+#include <sys/capability.h>
 
 #include "co_dcli.h"
 #include "co_string.h"
@@ -105,6 +105,28 @@ int main(int argc, char** argv)
   cp = createContext(argc, argv);
 
   ver_WriteVersionInfo("ProviewR Runtime Environment");
+
+  // If we are running from an unprivileged shell we won't have an inheritable flag set which is needed to set ambient capabilites
+  // TODO Later we should pinpoint the exact needed privileges for each process we spawn.
+
+  // Get current caps
+  cap_t proc_caps = cap_get_proc();
+  cap_value_t pwr_caps[] = { CAP_SYS_NICE, CAP_SYS_BOOT, CAP_NET_BIND_SERVICE, CAP_NET_RAW, CAP_NET_ADMIN, CAP_NET_BROADCAST };
+  size_t num_caps = sizeof(pwr_caps) / sizeof(cap_value_t);
+  // Set inheritable flag on the caps we want
+  cap_set_flag(proc_caps, CAP_INHERITABLE, num_caps, pwr_caps, CAP_SET);
+  // Set the process caps with inheritable flag set
+  cap_set_proc(proc_caps);
+
+  // Set our ambient set so that our currently cap unaware processes may inherit and set the effective bit
+  // TODO Set this on a per process basis giving our processes only the capabilities they need. But for now, it'll do...
+  // Each process could also lower their permitted set and thus forever loose that capability...
+  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_ADMIN, 0, 0);
+  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_BROADCAST, 0, 0);
+  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_RAW, 0, 0);
+  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_SYS_BOOT, 0, 0);
+  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_BIND_SERVICE, 0, 0);
+  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_SYS_NICE, 0, 0);
 
   if (cp->flags.b.restart) {
     sts = interactive(argc, argv, cp);
@@ -1719,9 +1741,4 @@ static void daemonize()
   stdin = fopen("/dev/null", "r");
   stdout = fopen("/dev/null", "w+");
   stderr = fopen("/dev/null", "w+");
-
-  // Set our ambient set so that our currently cap unaware processes may inherit and set the effective bit
-  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_ADMIN, 0, 0);
-  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_BROADCAST, 0, 0);
-  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_RAW, 0, 0);
 }
