@@ -327,17 +327,38 @@ static pwr_tStatus IoAgentWrite(io_tCtx ctx, io_sAgent* ap)
 static pwr_tStatus IoAgentClose(io_tCtx ctx, io_sAgent* ap)
 {
   io_sAgentLocal* local;
+  int *exitcodep;
+  int error;
   pwr_tStatus sts = PB__NOTINIT;
 
   local = (io_sAgentLocal*)ap->Local;
 
+  if (ctx->Node->EmergBreakTrue == 1)
+    errh_Fatal("Emergency break detected shutting down PROFINET");
+
   /* Stop profistack */
 
-  pnak_init();
+  // Stop the supervision thread before shutting down PROFINET.
+  local = (io_sAgentLocal*)ap->Local;
+  if (!local) return IO__SUCCESS;
 
-  sts = pnak_stop_profistack(0);
+  if ((error = pthread_cancel(local->handle_events)))
+    errh_Warning("Unsuccessful cancelation of PROFINET supervision thread");
+  else
+    errh_Info("Canceled PROFINET supervision thread");
+
+  // Wait for the thread to exit
+  if ((error = pthread_join(local->handle_events, (void**)&exitcodep)))
+    errh_Warning("Unable to wait for PROFINET thread! Might cause undefined behaviour...");
+  else
+    errh_Info("PROFINET supervision thread has exited. Stopping PROFINET...");
+
+  sts = pnak_stop_stack(0);
 
   pnak_term();
+
+  free(local);
+  local = NULL;
 
   /* Clean data areas .... */
 
@@ -349,7 +370,6 @@ static pwr_tStatus IoAgentSwap(io_tCtx ctx, io_sAgent* ap, io_eEvent event)
   switch (event) {
   case io_eEvent_EmergencyBreak:
   case io_eEvent_IoCommEmergencyBreak:
-    errh_Fatal("Emergency break detected shutting down profinet");
     IoAgentClose(ctx, ap);
     break;
   default:
