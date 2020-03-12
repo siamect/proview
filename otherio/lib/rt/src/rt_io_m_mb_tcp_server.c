@@ -834,7 +834,7 @@ static pwr_tStatus IoRackInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
   /* Create socket, store in local struct */
   uid_t ruid;
   ruid = getuid();
-  printf("ruid: %d\n", ruid);
+  //printf("ruid: %d\n", ruid);
 
   local->s = socket(AF_INET, SOCK_STREAM, 0);
   if (local->s < 0) {
@@ -925,15 +925,15 @@ static pwr_tStatus mb_init_channels(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
 
     local_card->input_area = (char *)local->inputs + card_input_area_offset;
     local_card->output_area = (char *)local->outputs + card_output_area_offset;
-    
+
 
     io_bus_card_init( ctx, cardp, &input_area_offset, &input_area_chansize,
-		      &output_area_offset, &output_area_chansize, 
+		      &output_area_offset, &output_area_chansize,
 		      pwr_eByteOrderingEnum_BigEndian, io_eAlignment_Packed);
 
     for (i = 0; i < cardp->ChanListSize; i++) {
       chanp = &cardp->chanlist[i];
-      switch (chanp->ChanClass) {      
+      switch (chanp->ChanClass) {
       case pwr_cClass_ChanDi: {
 	pwr_sClass_ChanDi *chan_di = (pwr_sClass_ChanDi *) chanp->cop;
 
@@ -971,7 +971,7 @@ static pwr_tStatus mb_init_channels(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
 	break;
       }
       }
-    }	   
+    }
 
     local_card->input_size = input_area_offset + input_area_chansize;
     local_card->output_size = output_area_offset + output_area_chansize;
