@@ -741,7 +741,7 @@ static void scan(plc_sThread* tp)
           pp->Node->EmergBreakTrue = TRUE;
           errh_SetStatus(PLC__IOSTALLED);
           if (prev_rwflag)
-            errh_Fatal("CycleSup delayed with action Stop I/O");
+            errh_Fatal("Delay detected in a CycleSup with action Emergency Break!");
         }
       }
 

@@ -1357,7 +1357,7 @@ static void cSup_exec(sSupActive* sp)
           l.nodep->EmergBreakTrue = TRUE;
           errh_SetStatus(MH__IOSTALLED);
           if (prev_rwflag)
-            errh_Fatal("CycleSup delayed with action Stop I/O");
+            errh_Fatal("Delay detected in a CycleSup with action Emergency Break!");
         }
       }
     }
