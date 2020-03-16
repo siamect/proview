@@ -96,7 +96,7 @@ static pwr_tStatus IoRackInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
   local->dp = 1;
 
   sts = gdh_ObjidToName(rp->Objid, (char*)&name, sizeof(name), cdh_mNName);
-  errh_Info("Init of Profibus DP Slave and Modules %s", name);
+  errh_Info("PROFIBUS: Init of DP slave and modules %s", name);
 
   op = (pwr_sClass_Pb_DP_Slave*)rp->op;
 
@@ -203,7 +203,7 @@ static pwr_tStatus IoRackInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
                 GetChanSize(((pwr_sClass_ChanIi*)chanp->cop)->Representation);
             break;
           default:
-            errh_Error("Diagnostic channel class, card %s", cardp->Name);
+            errh_Error("PROFIBUS: Diagnostic channel class, card %s", cardp->Name);
           }
           continue;
         }
@@ -366,13 +366,13 @@ static pwr_tStatus IoRackRead(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
 
     if (sp->ErrorCount == sp->ErrorSoftLimit)
     {
-      errh_Error("IO Error soft limit reached on card '%s'", rp->Name);
+      errh_Error("PROFIBUS: IO Error soft limit reached on device '%s'", rp->Name);
       ctx->IOHandler->CardErrorSoftLimit = 1;
       ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref(rp->Objid);
     }
     if (sp->ErrorCount == sp->ErrorHardLimit)
     {
-      errh_Error("IO Error hard limit reached on card '%s', stall action %d",
+      errh_Error("PROFIBUS: IO Error hard limit reached on device '%s', stall action %d",
                  rp->Name, sp->StallAction);
       ctx->IOHandler->CardErrorHardLimit = 1;
       ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref(rp->Objid);

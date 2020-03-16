@@ -709,7 +709,7 @@ dp_get_slave_diag_con(T_DP_GET_SLAVE_DIAG_CON* get_slave_diag_con_ptr,
           get_slave_diag_con_ptr->diag_data_len - DP_MIN_SLAVE_DIAG_LEN,
           get_slave_diag_con_ptr->diag_entries);
 
-      errh_Info("Profibus DP slave diag - %s", s);
+      errh_Info("PROFIBUS: DP slave diag - %s", s);
     }
 
   } /* diag_data_len */
@@ -1228,18 +1228,18 @@ void* handle_events(void* ptr)
               if (op->Status == PB__NOTINIT)
               {
                 op->Status = PB__STOPPED;
-                errh_Info("Profibus DP Master %s to state STOPPED", ap->Name);
+                errh_Info("PROFIBUS: DP Master %s to state STOPPED", ap->Name);
                 dp_act_param_loc(DP_OP_MODE_CLEAR);
               }
               else if (op->Status == PB__STOPPED)
               {
                 op->Status = PB__CLEARED;
-                errh_Info("Profibus DP Master %s to state CLEARED", ap->Name);
+                errh_Info("PROFIBUS: DP Master %s to state CLEARED", ap->Name);
                 dp_act_param_loc(DP_OP_MODE_OPERATE);
               }
               else if (op->Status == PB__CLEARED)
               {
-                errh_Info("Profibus DP Master %s to state OPERATE", ap->Name);
+                errh_Info("PROFIBUS: DP Master %s to state OPERATE", ap->Name);
                 op->Status = PB__NORMAL;
 
                 if (!local->slave_diag_requested && local->parallel_service)
@@ -1270,7 +1270,7 @@ void* handle_events(void* ptr)
 
               if (get_slave_diag_con_ptr->diag_entries < 0)
               {
-                errh_Warning("Profibus - diagnostic circular buffer owerflow.");
+                errh_Warning("PROFIBUS: Diagnostic circular buffer owerflow");
               }
 
               if (get_slave_diag_con_ptr->diag_entries)
@@ -1292,7 +1292,7 @@ void* handle_events(void* ptr)
           else
           {
             op->Status = PB__NOTINIT;
-            errh_Error("Profibus DP Master %s - %x neg con rec", ap->Name,
+            errh_Error("PROFIBUS: DP Master %s - %x neg con rec", ap->Name,
                        *((unsigned short*)con_ind_buffer));
           } /* else POS */
         }   /* if CON */
@@ -1331,7 +1331,7 @@ void* handle_events(void* ptr)
               }
               }
 
-              errh_Info("Profibus DP Master %s - %s", ap->Name, s);
+              errh_Info("PROFIBUS: DP Master %s - %s", ap->Name, s);
 
               if (usif_state == DP_OP_MODE_STOP)
               {
@@ -1363,7 +1363,7 @@ void* handle_events(void* ptr)
 
               if (get_slave_diag_con_ptr->diag_entries < 0)
               {
-                errh_Warning("Profibus - diagnostic circular buffer owerflow.");
+                errh_Warning("PROFIBUS: Diagnostic circular buffer owerflow");
               }
 
               if ((get_slave_diag_con_ptr->diag_entries) &&
@@ -1377,7 +1377,7 @@ void* handle_events(void* ptr)
                   }
                   else
                   {
-                    errh_Warning("Profibus - Request for diag failed.");
+                    errh_Warning("PROFIBUS: Request for diag failed");
                   }
                 }
                 else
@@ -1400,7 +1400,7 @@ void* handle_events(void* ptr)
           else
           {
             op->Status = PB__NOTINIT;
-            errh_Error("Profibus DP Master %s - %x neg ind rec", ap->Name,
+            errh_Error("PROPFIBUS: DP Master %s - %x neg ind rec", ap->Name,
                        *((unsigned short*)con_ind_buffer));
           } /* else POS */
         }   /* if IND */
@@ -1447,7 +1447,7 @@ void* handle_events(void* ptr)
 
           } /* switch reason */
 
-          errh_Info("Profibus DP Master %s - %s", ap->Name, s);
+          errh_Info("PROFIBUS: DP Master %s - %s", ap->Name, s);
 
           break;
         } /* case FMB_FM2_EVENT */
@@ -1583,7 +1583,7 @@ static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap)
   ap->Local = calloc(1, sizeof(io_sAgentLocal));
   if (!ap->Local)
   {
-    errh_Error("ERROR config Profibus DP Master %s - %s", ap->Name, "calloc");
+    errh_Error("PROFIBUS: ERROR config DP Master %s - %s", ap->Name, "calloc");
     return IO__ERRINIDEVICE;
   }
 
@@ -1600,14 +1600,14 @@ static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap)
     nanosleep(&rqtp, NULL);
   }
 
-  errh_Info("Initializing interface for Profibus DP Master %s", ap->Name);
+  errh_Info("PROFIBUS: Initializing interface for DP Master %s", ap->Name);
   sts = profi_init((unsigned char)op->BusNumber - 1, 0, 0);
 
   if (sts != E_OK)
   {
     /* Can't open driver */
     op->Status = PB__INITFAIL;
-    errh_Error("ERROR config Profibus DP Master %s - %s", ap->Name,
+    errh_Error("PROFIBUS: ERROR config DP Master %s - %s", ap->Name,
                "open device");
     ctx->Node->EmergBreakTrue = 1;
     return IO__ERRDEVICE;
@@ -1619,20 +1619,20 @@ static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap)
       (ctx->Process != io_mProcess_Profibus))
   {
     op->Status = PB__NOTINIT;
-    errh_Info("Init template I/O agent for Profibus DP Master %s, %d", ap->Name,
-              ctx->Process);
+    errh_Info("PROFIBUS: Init template I/O agent for DP Master %s, %d",
+              ap->Name, ctx->Process);
     return IO__SUCCESS;
   }
 
   if (ctx->Node->Restarts > 0)
   {
-    errh_Info("Warm restart - Skipping config of Profibus DP Master %s",
+    errh_Info("PROFIBUS: Warm restart - Skipping config of DP Master %s",
               ap->Name);
     op->Status = PB__NORMAL;
     //    return IO__SUCCESS;
   }
 
-  errh_Info("Config of Profibus DP Master %s", ap->Name);
+  errh_Info("PROFIBUS: Config of DP Master %s", ap->Name);
 
   if (op->DisableBus != 1)
   {
@@ -1651,7 +1651,7 @@ static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap)
         if (!sts)
         {
           op->Status = PB__INITFAIL;
-          errh_Error("ERROR config Profibus DP  Master %s - %s", ap->Name,
+          errh_Error("PROFIBUS: ERROR config DP Master %s - %s", ap->Name,
                      "fmb set configuration");
           retry++;
           if (retry < 2)
@@ -1670,7 +1670,7 @@ static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap)
           if (!sts)
           {
             op->Status = PB__INITFAIL;
-            errh_Error("ERROR config Profibus DP Master %s - %s", ap->Name,
+            errh_Error("PROFIBUS: ERROR config DP Master %s - %s", ap->Name,
                        "dp init master");
             return IO__ERRINIDEVICE;
           }
@@ -1684,7 +1684,7 @@ static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap)
           if (!sts)
           {
             op->Status = PB__INITFAIL;
-            errh_Error("ERROR config Profibus DP Master %s - %s", ap->Name,
+            errh_Error("PROFIBUS: ERROR config DP Master %s - %s", ap->Name,
                        "dp download bus");
             return IO__ERRINIDEVICE;
           }
@@ -1695,7 +1695,7 @@ static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap)
           if (!sts)
           {
             op->Status = PB__INITFAIL;
-            errh_Error("ERROR config Profibus FDL Master %s - %s", ap->Name,
+            errh_Error("PROFIBUS: ERROR config FDL Master %s - %s", ap->Name,
                        "fmb set busparam");
             return IO__ERRINIDEVICE;
           }
@@ -1708,7 +1708,7 @@ static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap)
           if (!sts)
           {
             op->Status = PB__INITFAIL;
-            errh_Error("ERROR config Profibus Master %s - %s", ap->Name,
+            errh_Error("PROFIBUS: ERROR config Master %s - %s", ap->Name,
                        "fmb set busparam");
             return IO__ERRINIDEVICE;
           }
@@ -1716,7 +1716,7 @@ static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap)
           if (!sts)
           {
             op->Status = PB__INITFAIL;
-            errh_Error("ERROR config Profibus DP Master %s - %s", ap->Name,
+            errh_Error("PROFIBUS: ERROR config DP Master %s - %s", ap->Name,
                        "dp set busparam");
             return IO__ERRINIDEVICE;
           }
@@ -1743,13 +1743,13 @@ static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap)
 
           if (cid == pwr_cClass_Pb_DP_Slave)
           {
-            errh_Info("Download Profibus DP Slave config - %s", name);
+            errh_Info("PROFIBUS: Download DP Slave config - %s", name);
 
             status = dp_download_slave((pwr_sClass_Pb_DP_Slave*)sop);
 
             if (!status)
             {
-              errh_Error("ERROR Init Profibus DP slave %s", name);
+              errh_Error("PROFIBUS: ERROR Init DP slave %s", name);
             }
 
             op->NumberSlaves++;
@@ -1757,7 +1757,7 @@ static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap)
 
           if (cid == pwr_cClass_Pb_FDL_SAP)
           {
-            errh_Info("Download Profibus FDL SAP config - %s", name);
+            errh_Info("PROFIBUS: Download FDL SAP config - %s", name);
 
             if (!((pwr_sClass_Pb_FDL_SAP*)sop)->Responder)
               status = fdlif_sap_activate_req((pwr_sClass_Pb_FDL_SAP*)sop);
@@ -1767,7 +1767,7 @@ static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap)
             if (!status)
             {
               ((pwr_sClass_Pb_FDL_SAP*)sop)->Status = PB__INITFAIL;
-              errh_Error("ERROR Init Profibus FDL SAP %s", name);
+              errh_Error("PROFIBUS: ERROR Init FDL SAP %s", name);
             }
             else
               ((pwr_sClass_Pb_FDL_SAP*)sop)->Status = PB__NORMAL;
@@ -1805,7 +1805,7 @@ static pwr_tStatus IoAgentInit(io_tCtx ctx, io_sAgent* ap)
           if (sts != E_OK)
           {
             op->Status = PB__INITFAIL;
-            errh_Error("ERROR config Profibus DP Master %s - %s", ap->Name,
+            errh_Error("PROFIBUS: ERROR config DP Master %s - %s", ap->Name,
                        "act param loc to STOPPED");
             return IO__ERRINIDEVICE;
           }
@@ -1959,6 +1959,9 @@ static pwr_tStatus IoAgentClose(io_tCtx ctx, io_sAgent* ap)
   T_PROFI_SERVICE_DESCR con_ind_sdb;
   INT16 result; /* !!! local result variable !!! */
 
+  if (ctx->Node->EmergBreakTrue == 1)
+    errh_Fatal("PROFIBUS: Emergency break detected! Shutting down PROFIBUS!");
+
   local = (io_sAgentLocal*)ap->Local;
   if (!local)
     return IO__SUCCESS;
@@ -1988,11 +1991,27 @@ static pwr_tStatus IoAgentClose(io_tCtx ctx, io_sAgent* ap)
   profi_end();
 
   pthread_mutex_unlock(&local->mutex);
+  // Iterate through all devices and propagate stopped state to all children
+  if (ap)
+  {
+    ((pwr_sClass_Pb_Profiboard*)ap->op)->Status = PB__STOPPED;
+    io_sRack* device;
+    io_sCard* module;
+    pwr_sClass_Pb_DP_Slave* dev;
+    pwr_sClass_Pb_Module* mod;
+    for (device = ap->racklist; device != NULL; device = device->next)
+    {
+      dev = (pwr_sClass_Pb_DP_Slave*)device->op;
+      dev->Status = PB__STOPPED;
+      for (module = device->cardlist; module != NULL; module = module->next)
+      {
+        mod = (pwr_sClass_Pb_Module*)module->op;
+        mod->Status = PB__STOPPED;
+      }
+    }
+  }
 
   free((char*)local);
-
-  if (ctx->Node->EmergBreakTrue == 1)
-    errh_Fatal("Emergency break detected shutting down profibus");
 
   return sts;
 }
@@ -2001,9 +2020,9 @@ static pwr_tStatus IoAgentSwap(io_tCtx ctx, io_sAgent* ap, io_eEvent event)
 {
   switch (event) {
   case io_eEvent_EmergencyBreak:
-  case io_eEvent_IoCommEmergencyBreak:
     IoAgentClose(ctx, ap);
     break;
+  case io_eEvent_IoCommEmergencyBreak:
   default:
     break;
   }
