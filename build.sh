@@ -75,7 +75,7 @@ fi
 btype="dbg"
 ename=$ver$hw
 desc=$verl
-gui="qt"
+gui="gtk"
 
 if [ $gui == "qt" ]; then
   export pwre_conf_qt=1

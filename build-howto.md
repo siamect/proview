@@ -99,6 +99,9 @@ Initiate your new environment:
 
 > pwre init x561x86
 
+Check and find installed archives
+> pwre configure
+
 Now, create the build tree
 
 > pwre create_all_modules
