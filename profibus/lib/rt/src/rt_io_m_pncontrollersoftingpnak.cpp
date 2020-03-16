@@ -301,8 +301,8 @@ static pwr_tStatus IoAgentWrite(io_tCtx ctx, io_sAgent* ap)
                     pack_write_req(&local->service_req_res,
                         local->device_data[ii]->device_ref, &sp->WriteReq);
                     sts = pnak_send_service_req_res(0, &local->service_req_res);
-                    errh_Info("Profinet - Asynch write, dev: %d",
-                        local->device_data[ii]->device_ref);
+                    errh_Info("PROFINET: Async write, dev: %d",
+                              local->device_data[ii]->device_ref);
                     break;
                   }
                 }
@@ -329,48 +329,59 @@ static pwr_tStatus IoAgentClose(io_tCtx ctx, io_sAgent* ap)
   io_sAgentLocal* local;
   int *exitcodep;
   int error;
-  pwr_tStatus sts = PB__NOTINIT;
 
   local = (io_sAgentLocal*)ap->Local;
-
-  if (ctx->Node->EmergBreakTrue == 1)
-    errh_Fatal("Emergency break detected shutting down PROFINET");
-
-  /* Stop profistack */
 
   // Stop the supervision thread before shutting down PROFINET.
   local = (io_sAgentLocal*)ap->Local;
   if (!local) return IO__SUCCESS;
 
-  if ((error = pthread_cancel(local->handle_events)))
-    errh_Warning("Unsuccessful cancelation of PROFINET supervision thread");
-  else
-    errh_Info("Canceled PROFINET supervision thread");
+  // Start taking the stack down. A PNAK_WAIT_OBJECT_CHANNEL_CLOSED event will
+  // be emitted and the supervision thread will exit
+  pnak_stop_stack(0);
 
   // Wait for the thread to exit
   if ((error = pthread_join(local->handle_events, (void**)&exitcodep)))
-    errh_Warning("Unable to wait for PROFINET thread! Might cause undefined behaviour...");
+    errh_Warning("PROFINET: Unable to wait for supervision thread!");
   else
-    errh_Info("PROFINET supervision thread has exited. Stopping PROFINET...");
-
-  sts = pnak_stop_stack(0);
-
-  pnak_term();
+    errh_Info("PROFINET: Supervision thread has exited. PROFINET stopped...");
 
   free(local);
   local = NULL;
 
   /* Clean data areas .... */
 
-  return sts;
+  return IO__SUCCESS;
 }
 
 static pwr_tStatus IoAgentSwap(io_tCtx ctx, io_sAgent* ap, io_eEvent event)
 {
-  switch (event) {
+  switch (event)
+  {
+  // For now we just shut down regardless of what EmergBreakSelect says...safety
+  // first :)
   case io_eEvent_EmergencyBreak:
-  case io_eEvent_IoCommEmergencyBreak:
+    errh_Fatal("PROFINET: Emergency break detected! Shutting down PROFINET!");
     IoAgentClose(ctx, ap);
+    // TODO We need a complete overhaul of EmergencyBreakTrue / EmergBreakSelect
+    // / IOReadWriteFlag
+    // switch (ctx->Node->EmergBreakSelect)
+    // {
+    // case pwr_eEmergBreakSelectEnum_StopIO:
+    // case pwr_eEmergBreakSelectEnum_Reboot:
+    //   errh_Fatal("PROFINET: Emergency break action (StopIO/Reboot) shutting
+    //   down PROFINET"); IoAgentClose(ctx, ap); break;
+    // case pwr_eEmergBreakSelectEnum_NoAction:
+    //   errh_Warning("PROFINET: Emergency break action (NoAction).
+    //   Continuing..."); break;
+    // case pwr_eEmergBreakSelectEnum_FixedOutputValues:
+    //   errh_Warning("PROFINET: Behaviour of FixedOutputValues should be
+    //   configured on device level"); errh_Fatal("PROFINET: Emergency break
+    //   action (Fixed Output Values)."); break;
+    // }
+
+    break;
+  case io_eEvent_IoCommEmergencyBreak:
     break;
   default:
     break;
