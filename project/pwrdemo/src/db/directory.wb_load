@@ -39,6 +39,7 @@ Volume directory $DirectoryVolume 254.254.254.253
   EndObject
   Object Build BuildConfig 14 03-FEB-2017 15:14:34.90
     Body DevBody 03-FEB-2017 15:14:31.33
+       Attr VersionManager = 0
     EndBody
     Object pop BuildDirectory 16 03-FEB-2017 15:16:25.51
       Body DevBody 03-FEB-2017 15:16:47.60

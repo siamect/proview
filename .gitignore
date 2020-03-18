@@ -13,3 +13,6 @@ pwre_db
 .nfs*
 project/pwrdemo/bld
 *.db
+*.db.lock
+*.gjl
+*.wb_dmp.*

@@ -1,0 +1,29 @@
+project pwrdemo
+node aristotle 128 999 0 - -
+load aristotle
+appl aristotle W $pwrp_cnf/aristotle/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat
+appl aristotle W $pwrp_load/ld_appl_aristotle_999.txt $pwrp_load/
+appl aristotle W $pwrp_load/pwrp_alias.dat $pwrp_load/pwrp_alias.dat
+appl aristotle W $pwrp_inc/*.h
+appl aristotle W $pwrp_exe/*.pwg
+appl aristotle W $pwrp_load/aristotle/xtt_help.dat:$pwrp_load/xtt_help.dat $pwrp_load/xtt_help.dat
+appl aristotle W $pwrp_load/aristotle/b55/Rt_xtt:$pwrp_load/aristotle/Rt_xtt:$pwrp_load/Rt_xtt /home/b55/Rt_xtt
+appl aristotle S $pwrp_load/aristotle/pwrp/Rt_xtt /home/pwrp/Rt_xtt
+appl aristotle W $pwrp_load/aristotle/b55/xtt_setup.rtt_com:$pwrp_load/aristotle/xtt_setup.rtt_com:$pwrp_load/xtt_setup.rtt_com /home/b55/xtt_setup.rtt_com
+appl aristotle S $pwrp_load/aristotle/pwrp/xtt_setup.rtt_com /home/pwrp/xtt_setup.rtt_com
+appl aristotle W $pwrp_load/*.flw
+appl aristotle W $pwrp_cnf/aristotle/.rhosts:$pwra_db/.rhosts /home/pwrp/.rhosts
+appl aristotle W $pwrp_web/*.html
+appl aristotle S $pwrp_web/*.jar
+appl aristotle S $pwrp_web/*.gif
+appl aristotle S $pwrp_web/*.png
+appl aristotle S $pwrp_web/*.jpg
+appl aristotle S $pwrp_web/*.pdf
+appl aristotle S $pwrp_web/*.pwg
+builddir pop 2 ""
+buildcopy pop $pwrp_pop/*.pwg $pwrp_exe/
+buildcopy pop $pwrp_pop/*.pwg $pwrp_web/
+builddir appl 1 ""
+buildcopy appl $pwrp_appl/ra_plc_user.h $pwrp_inc/
+builddir pwr_exe 2 ""
+buildcopy pwr_exe $pwr_exe/pwr_logga.png $pwrp_web/
