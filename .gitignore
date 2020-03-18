@@ -11,4 +11,5 @@ adm/
 pwre_db
 .vscode/
 .nfs*
-
+project/pwrdemo/bld
+*.db

@@ -1,0 +1,737 @@
+#
+# Helpfile for PwrDemo
+#
+
+<topic> index
+
+<image> pwr_logga.png
+
+<h1>Welcome to the Proview Demo System
+
+Demonstration of HMI components
+<b>Ge<link>demo_ge
+
+Demonstration of objects for Plant components
+<b>Components<link>demo_components
+
+Application examples
+<b>Process<link>demo_process
+
+Open the demo frame from the 'PwrDemo' button in the operator window,
+or with the command 'open graph pwrdemo' in the Xtt navigator.
+
+
+
+</topic>
+
+<topic>demo_process
+Application examples
+
+<b>Level Control<link>Proc_LevelControl
+<b>Temperature Control<link>Proc_TemperatureControl
+</topic>
+<topic>demo_ge
+Ge demo
+
+<b>Dynamics and Action<link>demo_ge_dynamic
+<b>SubGraphs<link>demo_ge_subgraphs
+
+</topic>
+
+
+<topic>demo_ge_dynamic
+Ge Dynamics and Actions
+
+<h1>Dynamics
+<b>DigLowColor <link>Ge_DigLowColor
+<b>DigColor <link>Ge_DigColor
+<b>AnalogColor <link>Ge_AnalogColor
+<b>StatusColor <link>Ge_StatusColor
+<b>DigWarning <link>Ge_DigWarning
+<b>DigError <link>Ge_DigError
+<b>Tone <link>Ge_Tone
+<b>FillLevel <link>Ge_FillLevel
+<b>Invisible <link>Ge_Invisible
+<b>DigBorder <link>Ge_DigBorder
+<b>DigText <link>Ge_DigText
+<b>AnalogText <link>Ge_AnalogText
+<b>ScrollingText <link>Ge_ScrollingText
+<b>Value <link>Ge_Value
+<b>Rotate <link>Ge_Rotate
+<b>Move <link>Ge_Move
+<b>DigShift <link>Ge_DigShift
+<b>DigFourShift <link>Ge_DigFourShift
+<b>AnalogShift <link>Ge_AnalogShift
+<b>Animation <link>Ge_Animation
+<b>HostObject <link>Ge_HostObject
+<b>DigSound <link>Ge_DigSound
+<b>Slider <link>Ge_Slider
+
+<h1>Actions
+<b>PopupMenu <link>Ge_PopupMenu
+<b>SetDig <link>Ge_SetDig
+<b>ResetDig <link>Ge_ResetDig
+<b>ToggleDig <link>Ge_ToggleDig
+<b>StoDig <link>Ge_StoDig
+<b>Command <link>Ge_Command
+<b>CommandDoubleClick <link>Ge_CommandDoubleClick
+<b>Help <link>Ge_Help
+<b>OpenGraph <link>Ge_OpenGraph
+<b>CloseGraph <link>Ge_CloseGraph
+<b>OpenURL <link>Ge_OpenURL
+<b>Confirm <link>Ge_Confirm
+<b>IncrAnalog <link>Ge_IncrAnalog
+<b>RadioButton <link>Ge_RadioButton
+<b>ValueInput <link>Ge_ValueInput
+<b>ToolTip <link>Ge_ToolTip
+<b>InputFocus <link>Ge_InputFocus
+<b>PulldownMenu <link>Ge_PulldownMenu
+<b>OptionMenu <link>Ge_OptionMenu
+</topic>
+
+<topic>demo_ge_subgraphs
+Ge Subgraphs
+
+<b>Trend <link>Ge_Sub_Trend
+<b>Bar <link>Ge_Sub_Bar
+</topic>
+
+<topic>Ge_DigLowColor
+Demo DigLowColor
+
+The square to the left has the dynamic DigLowColor, and is connected to a digital
+attribute. You can toggle the value of the attribute with the Toggle pushbutton, and
+the round indicator shows the value, green for true and grey for false.
+
+The square is originally drawn with green color, and when the attribute is true, the
+square has this color.
+
+When the attribute is false, the square has the color specified in LowColor, which
+is darkgrey.
+</topic>
+
+<topic>Ge_DigColor
+Demo DigColor
+
+The square to the left has the dynamic DigColor, and is connected to a digital
+attribute. You can toggle the value of the attribute with the Toggle pushbutton, and
+the round indicator shows the value, green for true and grey for false.
+
+The square is originally drawn with darkgrey color, and when the attribute is false, the
+square has this color.
+
+When the attribute is true, the square has the color specified in DigColor, which
+is green.
+
+<h1>DigColor 32 Instances
+In this case, there are 32 instances DigColor applied to the square, each instance
+connected to an digital attribute, and specifying a color. You can change the value
+of the attributes with the togglebuttons. Note that instances with higher number has
+higher priority.
+
+You can also use a slider to set the attributes. The slider is displayed when the
+Slider button is pressed.
+
+</topic>
+
+<topic>Ge_AnalogColor
+Demo AnalogColor
+
+The square to the left has the dynamic AnalogColor, and is connected to an analog
+attribute. You can change the value of the attribute from the input field, or with the
+slider.
+
+9 instances of DigAnalogColor is applied to the square. For each instance a limit, a 
+limit type (GreaterThan), and a color is specified
+
+When the value exceeds the limit for an instance, the square is drawn with the color
+specified in this instance. Higher instance numbers have higher priority.
+
+If no limit is exceeded, the square is drawn with its original color, which is darkgrey.
+</topic>
+
+<topic>Ge_StatusColor
+Demo StatusColor
+
+The square to the left has the dynamic StatusColor, and is connected to an attribute
+of type pwr_tStatus. You can set four differents status values with severity Success,
+Warning, Error and Fatal with the pushbuttons. The status severity will affect the
+color of the square, green for success, yellow for warning, red for error and flashing
+red for fatal.
+
+Note that the status is the identifier of a message string, which can be displayed in a
+value field with format %m.
+</topic>
+
+<topic>Ge_DigWarning
+Demo DigWarning
+
+The square to the left has the dynamic DigWarning, and is connected to a digital
+attribute. You can toggle the value of the attribute with the Toggle pushbutton.
+
+When the value is true, the square is drawn with the warning color yellow, and
+when the value is false, it is drawn with the original color grey.
+</topic>
+
+<topic>Ge_DigError
+Demo DigError
+
+The square to the left has the dynamic DigError, and is connected to a digital
+attribute. You can toggle the value of the attribute with the Toggle pushbutton.
+
+When the value is true, the square is drawn with the error color red, and
+when the value is false, it is drawn with the original color grey.
+</topic>
+
+<topic>Ge_DigFlash
+Demo DigFlash
+
+The square to the left has the dynamic DigFlash, and is connected to a digital
+attribute. You can toggle the value of the attribute with the Toggle pushbutton.
+
+When the value is true, the square is flashing with the colors specified in Color
+and Color2 (orange and black). When the value is false, it is drawn with the original 
+color grey.
+</topic>
+
+<topic>Ge_Tone
+Demo Tone
+
+The picture to the left, a cube with a ball,  has 27 instances of the dynamic DigTone 
+(the combination of DigColor and Tone), and also one instance of DigColor. Each instance 
+is connected to a digital attribute, and the values of the attributes are toggled with the 
+pushbuttons. When an attributes is high, the corresponding pushbutton is yellow, otherwise 
+it is grey.
+
+To understand the difference between DigColor and DigTone, press the 'Red Fillcolor' button.
+This has the dynamic DigColor, which set the same fill color on every part of the picture.
+All the fine shadows disappears and the picture becomes totaly flat. 
+
+Reset the 'Red Fillcolor' attribute by pressing the button again, and press one of the other 
+buttons to activate the DigTone dynamic. See how a color is applied to the picure, but now, 
+the shadows are still there.
+
+The DigTone dynamic will color each part of the picture with a color, but keep the original
+lightness of the part, while the DigColor will color each part with the same color and lightness,
+indepented of its original lightness.
+</topic>
+
+<topic>Ge_FillLevel
+Demo FillLevel
+
+The component to the left has the dynamic FillColor, and is connected to an analog
+attribute. You can change the value of the attribute from the input field, or with the
+slider.
+
+The fillevel of the component reflects the value of the attribute. When the value is
+zero, the component is drawn with the specified BackgroundColor (grey). When the value
+increases, the component is filled its original color (blue).
+</topic>
+
+<topic>Ge_Invisible
+Demo Invisible
+
+The pushbutton to the left has two instances of the dynamic Invisible, Each instance is 
+connected to a digital attribute. You can toggle the values of the attributes with the Toggle 
+pushbuttons.
+
+The first instance has the Dimmed proprety set. When the value of the attribute is set, the
+pushbutton is dimmed and made insensitive.
+
+The second instance (without Dimmed), will make the pushbutton invisible when the attribute
+value is set.
+
+As usual, higher instance number has higher priority.
+</topic>
+
+<topic>Ge_DigBorder
+Demo DigBorder
+
+The square to the left has the dynamic DigBorder, and is connected to a digital
+attribute. You can toggle the value of the attribute with the Toggle pushbutton.
+
+When the value is true, the border of the square is drawn with the original border color blue.
+when the value is false, it is drawn with the color specified in LowColor, black.
+</topic>
+
+<topic>Ge_DigText
+Demo DigText
+
+The text field to the left has the dynamic DigText, and is connected to a digital
+attribute. You can toggle the value of the attribute with the Toggle pushbutton.
+
+When the value is true, the original text 'High' is displayed.
+when the value is false, the text specified in LowText, 'Low', is displayed..
+</topic>
+
+<topic>Ge_AnalogText
+Demo AnalogText
+
+The text field to the left has the dynamic AnalogText, and is connected to an analog
+attribute. You can change the value of the attribute from the input field or with
+the slider.
+
+Eight texts are specified, and for each text, also an enumeration value. When
+the value of the attribute equals an enumeration value, the corresponding text
+is displayed in the textfield.
+</topic>
+
+<topic>Ge_ScrollingText
+Demo ScrollingText
+
+The two text field have the dynamic ScrollingText, and is connected to a string
+attribute.
+
+You can change the value of the string attribute from the 'ScrollingText.Attribute'
+input field.
+</topic>
+
+<topic>Ge_Value
+Demo Value
+
+The value field to the left has the dynamic Value, and is connected to an analog
+attribute. You can change the value of the attribute from the input field or with
+the slider.
+
+The value of the attribute is displayed in the value field with the specified format
+'%7.2f', i.e. as a floating point value with seven characters and two decimals.
+</topic>
+
+<topic>Ge_Rotate
+Demo Rotate
+
+The needle to the left has the dynamic Rotate, and is connected to an analog
+attribute. You can change the value of the attribute from the input field or with
+the slider.
+
+When the value is changed, the needle is rotated this number of degrees counter
+clockwise.
+</topic>
+
+<topic>Ge_Move
+Demo Move
+
+The dice to the left has the dynamic Move, and is connected to four analog
+attributes, which scales and moves the dice in x and y direction. You can change 
+the values of the attributes from the input fields or with the sliders.
+
+Start to set a value to the x and y scale attributes to make the dice visible.
+Now you can see how the dice is moved by changing the position attributes, and
+scaled by changing the scale attributes.
+</topic>
+
+<topic>Ge_AnalogShift
+Demo AnalogShift
+
+The Smiley subgraph to the left has the dynamic AnalogShift, and is connected 
+an analog attribute.
+
+The AnalogShift dynamic can be applied to a subgraph containg several pages. Smiley
+contains 6 pages, indexed from 0 to 5, and when the value of the attribute equals
+the index of a page, the corresponding page is drawn.
+
+By changing the value between 0 and 5 you can see the different pages of the
+smiley subgraph.
+</topic>
+
+<topic>Ge_DigShift
+Demo DigShift
+
+The Smiley subgraph to the left has the dynamic DigShift, and is connected 
+a digital attribute. You can toggle the value of the attribute with the Toggle button.
+
+The DigShift dynamic can be applied to a subgraph containing two or more pages (Smiley
+contains 6 pages). When the value of the attribute is false, the first page is displayed.
+When the value is false, the last page is displayed.
+</topic>
+
+<topic>Ge_DigFourShift
+Demo DigFourShift
+
+The traffic light to the left has the dynamic DigFourShift. The traffic light is a
+subgraph with four pages, because besides changing the colors when the light switches,
+also the shape is changed. The traffic light is connected to tree digital attributes
+that shifts to different pages. You can toggle the value of the attributes with the 
+Toggle buttons.
+
+The DigFourShift dynamic can be applied to a subgraph containing four or more pages. When
+non of the signals are set, the first page is displayed, when the first signal is set,
+the second page is displayed, when the second signal is set the third page is displayed etc. 
+If serveral signal are set concurrently, higher page number has higher priority.
+</topic>
+
+<topic>Ge_Animation
+Demo Animation
+
+<h1>Cyclic sequence
+The subgraph to the left, a square with a ball, has the dynamic Animation, and is connected 
+a digital attribute. You can toggle the value of the attribute with the Toggle button.
+
+The dynamic Animation can be applied to a subgraph containing several pages, that, when 
+displayed in a sequence, gives the illusion of movement. When the value of the attribute
+is set, the animation is started, and continues until the value is reset.
+
+In Sequence Cyclic the animation is repeated from the second to the last page as long as 
+the attributes value is true. When the attribute value is false, the first page is displayed.
+
+<h1>Dig sequence
+The Dig sequence shifts between two resting position. The first position (first page) is 
+displayed when the attribute value is false, and the second position (last page) when
+the value is true. When the value shifts, the pages of the animation are run through forward
+(on positive edge) or backwards (on negative edge).
+
+<h1>ForwBack sequence
+ForwBack sequece is similar to the Cyclic sequence, but now the animation runs first forward 
+and then backwards then the attribute value is true.
+</topic>
+
+<topic>Ge_DigSound
+Demo DigSound
+
+The DigSound dynamic plays a sound specified by a Sound object. In this case, it 
+is actually the Toggle button that contains the DigSound dynamic. The Sound dynamic 
+is connected to a digital attribute. You can toggle  the value of the attribute with 
+the Toggle pushbutton.
+
+In the first example, the sound is played when the attribute value is set to true.
+
+In the second example, where the Level property is set, the sound is played as long
+as the value is true, with the specified interval.
+
+Note that DigSound requires that alsa is installed.
+</topic>
+
+<topic>Ge_Slider
+Demo Slider
+
+The slider component has the dynamic Slider, and is connected to an analog attribute. 
+You can change the value of the attribute from the input field, or with the sliders
+(both of them).
+</topic>
+
+<topic>Ge_PopupMenu
+Demo PopupMenu
+
+The motor component has the action PopupMenu, and is connected to a object in the 
+runtime database. When clicking with the right mousebutton on the motor, the methods of
+the motor are displayed in a popup menu. By activting the different methods, you probably
+can get all the information you need no know (and a little bit more) about this motor.
+
+This component is actually not connected to a motor object, but to a simple Dv object.
+</topic>
+
+<topic>Ge_SetDig
+Demo SetDig
+
+The pushbutton to the left has the action SetDig, and is connected to a digital attribute.
+The attribute value is displayed by the curve. 
+
+When clicking the Set pushbutton, the value of the attribute is set to true. 
+
+To set the value again, you first has to reset it with the Toggle button.
+</topic>
+
+<topic>Ge_ResetDig
+Demo ResetDig
+
+The pushbutton to the left has the action ResetDig, and is connected to a digital attribute.
+The attribute value is displayed by the curve. 
+
+When clicking the Reset pushbutton, the value of the attribute is set to false. 
+
+To reset the value, you first has to set it with the Toggle button.
+</topic>
+
+<topic>Ge_ToggleDig
+Demo ToggleDig
+
+The pushbutton to the left has the action ToggleDig, and is connected to a digital attribute.
+The attribute value is displayed by the curve. 
+
+When clicking the Toggle pushbutton, the value of the attribute is toggled.
+</topic>
+
+<topic>Ge_StoDig
+Demo StoDig
+
+The pushbutton to the left has the action StoDig, and is connected to a digital attribute.
+The attribute value is displayed by the curve. 
+
+When pressing the Sto pushbutton, the value of the attribute is set to true , as long as the 
+button is pressed. When the button is released, the value is set to false.
+</topic>
+
+<topic>Ge_Command
+Demo Command
+
+The pushbutton to the left has the action Command, and executes the specified command when
+the button is pressed.
+
+In this case, the command 'open graph' is used to open a the graph 'demo1'
+
+See other commands <link>help command, $pwr_exe/xtt_help.dat
+</topic>
+
+<topic>Ge_CommandDoubleClick
+Demo CommandDoubleClick
+
+The pushbutton to the left has the action CommandDoubleClick, and executes the specified 
+command when the button is double clicked.
+
+In this case, the command 'open graph' is used to open a the graph 'demo1'
+
+See other commands <link>help command, $pwr_exe/xtt_help.dat
+</topic>
+
+<topic>Ge_Help
+Demo Help
+
+The pushbutton to the left has the action Help. When the button is pressed the 
+help text for topic 'Ge_Help' is displayed.
+</topic>
+
+<topic>Ge_OpenGraph
+Demo OpenGraph
+
+The pushbutton to the left has the action OpenGraph. When the button is pressed the 
+the graph described by the XttGraph object 'Demo-Ge-Actions-OpenGraph-Demo' is opened.
+</topic>
+
+<topic>Ge_CloseGraph
+Demo CloseGraph
+
+The pushbutton to the left has the action CloseGraph. When the button is pressed the 
+current graph will be closed.
+</topic>
+
+<topic>Ge_OpenURL
+Demo OpenURL
+
+The pushbutton to the left has the action OpenURL. When the button is pressed the 
+URL www.proview.se is opened in the default webbrowser.
+</topic>
+
+<topic>Ge_Confirm
+Demo Confirm
+
+The pushbutton to the left has the action SetDig and Confirm. The SetDig action is 
+connected to a digital attribute. The attribute value is displayed by the curve. 
+
+When clicking the Set pushbutton, you first have to confirm the action before the 
+the value of the attribute is set.
+
+To set the value again, reset first with the Toggle button.
+</topic>
+
+<topic>Ge_IncrAnalog
+Demo IncrAnalog
+
+The pushbuttons to the left has the action IncrAnalog. They are both connected to the
+same analog attribute. The attribute value is displayed by value field.
+
+The upper pushbutton has the Increment 1, and when the button is pressed, the value
+of the attribute will increase by 1. 
+
+The lower pushbutton has the Increment -1, and when this button is pressed, the
+value will decrease by 1.
+
+The mininum and maximum limits for the buttons are set to 0 and 100.
+</topic>
+
+<topic>Ge_RadioButton
+Demo RadioButton
+
+The four radiobuttons to the left has the action RadioButton. Each radiobutton is
+connected to a digital attribute.
+
+The four radiobuttons are joined in a group, and when one is pressed, the value
+of this radiobutton will be set, and the value of the other radiobuttons in the
+group will be reset.
+
+Note that if a value is set from another function, as from the togglebuttons, this
+function also has to manage the reset.
+</topic>
+
+<topic>Ge_ValueInput
+Demo ValueInput
+
+The value field to the left has the dynamic Value and action ValueInput. the Value
+dynamic is connected to an analog attribute. You can change the value of the attribute 
+from the input field or with the slider.
+
+The value of the attribute is displayed in the value field with the specified format
+'%7.2f', i.e. as a floating point value with seven characters and two decimals.
+</topic>
+
+<topic>Ge_ToolTip
+Demo ToolTip
+
+The square the left has the action ToolTip, with the text 'This is a green square'.
+
+When the cursor is resting on the square, the tooltip text is displayed.
+</topic>
+
+<topic>Ge_InputFocus
+Demo InputFocus
+
+All the valueinputfields and pushbuttons has the action InputFocus.
+They are chained together in three different chains, one to move the inputfocus
+horizontal with arrow keys Left and Right, one to move inputfocus vertical with
+arrowkeys Up and Down, and one to move inputfocus with the TAB key.
+
+Set input focus on one of the component by clicking on it, and then see how input 
+focus  can be moved with the arrow keys and the TAB key.
+</topic>
+
+<topic>Ge_PulldownMenu
+Demo PulldownMenu
+
+This is an example of a pulldown menu. 
+
+Open the File entry and toggle a digital value, or open a graph from the menu.
+</topic>
+
+<topic>Ge_OptionMenu
+Demo OptionMenu
+
+This is an example of an optionmenu.The menu is connected to an analog attribute.
+The value of the attribute is displayed in the valueinput field, and kan be changed
+from the inputfield or with the slider.
+
+The optionmenu has 8 text, and each text is configured with an enumeration value.
+When a text is selected in the optionmenu, the corresponding enumeration value is
+set in the attribute value.
+
+If the attribute value is changed from the slider, the text corresponding to the 
+current value will be shown in the optionmenu.
+</topic>
+
+<topic>Ge_Sub_Trend
+Demo Subgraph Trend
+
+The trend curve is connected to two analog attributes. 
+The values of the attributes are displayed in the valueinput fields, and kan be changed
+from the inputfields or with the sliders.
+
+Change the values with the sliders, and see how the values are displayed in the trend.
+</topic>
+
+<topic>Ge_Sub_FastCurve
+Demo Subgraph FastCurve
+
+The FastCurve object is connected to a DsFastCurve object in the database. The DsFastCurve
+is configured to store the value of the Av object displayed at the bottom of the graph. When
+the fast curve is triggered, the value is stored under 2 seconds. 
+
+Press the Trigg button to start the storage. When the storage is completed, the curve is 
+viewed in the FastCurve diagram.
+</topic>
+
+<topic>Ge_Sub_XYCurve
+Demo Subgraph XYCurve
+
+The XYCurve object is configured for four curves, and each curve is connected to two arrays 
+containing the x and y coordinates for the curves. Actually all four curves has the same
+x-coordinates and shares the same x-coordinate array. The values here are fix and counting
+from 0 to 99. 
+
+The values for the y-coordinate arrays are calculated from the values of four
+Av objects. New values will be calculated when one of the sliders is moved. When the
+slider is released, a Dv is set to indicate that the curves should be updated. 
+
+Move the sliders to modify the shapes of the curves.
+</topic>
+
+<topic>Ge_Sub_Bar
+Demo Subgraph Bar
+
+The vertical bar is connected to an analog attribute. 
+The value of the attribute is displayed in the valueinput field, and kan be changed
+from the inputfield or with the slider.
+
+Change the value with the slider, and see how the value is displayed in the bar.
+</topic>
+
+<topic>Ge_Sub_BarChart
+Demo Subgraph BarChart
+
+The BarChart object is configured with 100 bars and 4 segments. Each segment is 
+connected to an array containing values for the length of the segment in the 
+different bars.
+
+The values for the segment sizes are calculated from the values of four
+Av objects. 
+
+Move the sliders to modify the size of bars and segments.
+</topic>
+
+<topic>Ge_Sub_Pie
+Demo Subgraph Pie
+
+The two Pie objects are configured with 5 sectors, and  and each sector is 
+connected to an analog determining the size of the sector.
+
+For the left pie, FixRange is set to 0. This means that the total range is
+calculated to the current sum of all the sectors. Thus the sectors will always
+fill the diagram.
+
+The right pie has FixRange set to 1, and the total range is 50. Only when
+all sectors has reached their max value 10, the whole diagram is filled.
+
+Move the sliders to modify the size of the sectors.
+</topic>
+
+<topic>Ge_Sub_DynamicAxis
+Demo Subgraph DynamicAxis
+
+The range for a dynamic axis can be changed dynamically. 
+
+Modify the range with the increment or decrement buttons, or enter new
+values for the min and max values.
+</topic>
+
+<topic>Ge_Sub_DynamicAxisArc
+Demo Subgraph DynamicAxisArc
+
+The range for a dynamic axis can be changed dynamically. 
+
+Modify the range with the increment or decrement buttons, or enter new
+values for the min and max values.
+</topic>
+
+<topic>Proc_LevelControl
+Level Control
+
+The level in the tank is controlled by a PID controller.
+
+Press the 'Start' button to fill the tank. Enter a setpoint between 0 and 1
+into the valueinputfield or with the slider.
+</topic>
+
+<topic>Proc_TemperatureControl
+Temperature Control
+
+Press the 'Start' button to start the burner sequence. Enter a setvalue into
+the valueinputfield or with the slider.
+
+The upper trend shows the measured temperature (orange) and the setvalue (green).
+The lower curve shows the output from the PID controller (yellow), and the
+number of burning burners (blue).
+</topic>
+
+<topic> Ge_ColorThemes
+Ge ColorThemes
+
+Select a color theme by pressing a push button.
+
+</topic>
+
+<topic> Misc_PingPong
+PingPong
+
+Open the settings dialog from File/Settings in the menu.
+
+Set Mode to 'One Player' and try to return the ball by moving the right racket
+with the right slider.
+
+</topic>

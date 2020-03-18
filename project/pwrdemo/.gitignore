@@ -1,0 +1,40 @@
+# Ignore editor journal files
+*~
+*#*
+# Ignore databases
+*.db
+*.db.lock
+*.db/*
+# Other temporary files
+*.gc
+*.gjl
+*.o
+plc_*_0999_*
+*.a
+pwrp_cnf_*.dat
+ld_appl_*.txt
+ld_boot_*.dat
+ld_node_*.dat
+*.dbs
+*.wb_load.*
+*.wb_dmp.*
+plc_*.opt_template
+plc_v*.dat
+*.log
+*.bck
+initdir.pwr_com
+initvol.pwr_com
+src/db/rt_eventlog_info.txt
+bld/common/web/*.png
+bld/common/web/*.pwg
+bld/common/web/*.flw
+bld/common/web/xtt_help_*.html
+bld/common/web/*.jar
+bld/x86_linux/exe/*.png
+bld/x86_linux/exe/*.pwg
+bld/x86_64_linux/exe/*.png
+bld/x86_64_linux/exe/*.pwg
+bld/arm_linux/exe/*.png
+bld/arm_linux/exe/*.pwg
+bld/x86_64_macos/exe/*.png
+bld/x86_64_macos/exe/*.pwg
