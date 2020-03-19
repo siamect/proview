@@ -8905,6 +8905,8 @@ static int xnav_attribute_func(char* name, int* return_decl,
   case pwr_eType_CastId:
   case pwr_eType_VolumeId:
   case pwr_eType_ObjectIx:
+  case pwr_eType_Status:
+  case pwr_eType_NetStatus:
   case pwr_eType_Mask: {
     int_val = *(pwr_tUInt32*)object_element;
     decl = CCM_DECL_INT;
