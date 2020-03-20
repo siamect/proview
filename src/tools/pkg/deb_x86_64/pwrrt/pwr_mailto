@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# To use this you need an MTA installed. This particular script uses sendmail "syntax".
+# If you want it up and running quickly a simple MTA that we (at SSAB) use, is msmtp.
+# It's still available in buster. It uses sendmail syntax aswell...
+# If another MTA is used you need to update this script accordingly or change the
+# sms/email command attribute of the PostConfig object in ProviewR.
+
+# Regarding msmtp:
+# By default, mails are sent in a 'fire and forget' manner. If you need msmtp to actually
+# wait for a delivery status notification (DSN) you need to set this up aswell in the
+# msmtp. The lines:
+# dsn_notify failure
+# dsn_return headers
+# Are in most cases sufficient for a simple propagation of the status code back to ProviewR.
+# These features will block while waiting for the DSN to arrive, therefore ProviewR call
+# sms/email command asynchronous, checking the status of the calls every now and then...
+
+# Arguments should be quoted
+
+# Simple argument count control...
+[[ ${#} -ne 4 ]] && exit 1
+
+MESSAGE="${4}"
+SENDMAIL=/usr/bin/msmtp
+
+${SENDMAIL} -t -- << EOF
+From: ${1}
+To: ${2}
+Subject: ${3}
+
+${MESSAGE}
+EOF
+
+# Do not add more commands here since we need the exit code from "sendmail". If you need
+# to do more things please exit the shell with an appropriate exit code to reflect the
+# actual status of the command that sent the mail :)

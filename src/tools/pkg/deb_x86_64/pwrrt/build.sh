@@ -148,19 +148,12 @@ gzip -fq --best $pkgroot/usr/share/man/man1/rt_rtt.1
 
 # Copy proview
 mkdir $pkgroot/usr/pwrrt
-#currentdir="`eval pwd`"
-#tarfile=$pwre_broot/$pwre_target/bld/pkg/pwrtmp.tar
-#cd $pwre_broot/$pwre_target/exp
 echo "-- Copy release to package tree"
 cp -r $pwre_broot/$pwre_target/exp/* $pkgroot/usr/pwrrt/
-##tar -cf $tarfile *
-#cd $pkgroot/usr/pwrrt
-#tar -xf $tarfile
-#rm $tarfile
 rm -r $pkgroot/usr/pwrrt/lib/*.a
 rm -r $pkgroot/usr/pwrrt/exe/wb*
 cp $pwr_eexe/wb_distr_keepboot.sh $pkgroot/usr/pwrrt/exe
-#cd $currentdir
+cp $pkgsrc/pwr_mailto $pkgroot/usr/pwrrt/exe/
 
 # Copy configuration files to cnf
 cp $pkgsrc/proview.cnf $pkgroot/usr/pwrrt/cnf
