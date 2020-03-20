@@ -1351,7 +1351,8 @@ static void cSup_exec(sSupActive* sp)
         o->Acked = FALSE;
         o->AlarmCheck = FALSE;
         o->DelayNoted = TRUE;
-        if (o->DelayAction == 2) {
+        if (o->DelayAction == pwr_eSupDelayActionEnum_EmergencyBreak)
+        {
           int prev_rwflag = l.iohp->IOReadWriteFlag;
           l.iohp->IOReadWriteFlag = FALSE;
           l.nodep->EmergBreakTrue = TRUE;
