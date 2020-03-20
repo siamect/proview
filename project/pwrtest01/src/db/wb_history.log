@@ -1,0 +1,71 @@
+1  20-MAR-2020 11:54:21.86 18931   WbLogin      claes       pwrp
+1  20-MAR-2020 11:56:16.33 18931   ConfigSave   claes       directory
+1  20-MAR-2020 11:58:49.74 18931   ConfigSave   claes       directory
+1  20-MAR-2020 11:59:08.07 19016   WbLogin      claes       pwrp
+1  20-MAR-2020 11:59:16.63 19016   ConfigSave   claes       directory
+1  20-MAR-2020 12:00:13.95 19016   ConfigSave   claes       directory
+1  20-MAR-2020 12:00:46.23 19116   WbLogin      claes       pwrp
+1  20-MAR-2020 12:00:57.99 19116   ConfigSave   claes       VolPwrTest01
+1  20-MAR-2020 12:00:58.19 19116   ConfigSave   claes       VolPwrTest01
+1  20-MAR-2020 12:11:42.27 19214   WbLogin      claes       pwrp
+1  20-MAR-2020 12:12:28.01 19214   ConfigSave   claes       VolPwrTest01
+1  20-MAR-2020 12:12:41.57 19228   WbLogin      claes       pwrp
+1  20-MAR-2020 12:16:10.80 19228   ConfigSave   claes       VolPwrTest01
+1  20-MAR-2020 12:16:57.94 19228   PlcSave      claes       VolPwrTest01:H1-Plc-W
+1  20-MAR-2020 12:27:44.79 19714   WbLogin      claes       pwrp
+1  20-MAR-2020 12:28:05.58 19714   ConfigSave   claes       directory
+ 2 20-MAR-2020 12:28:36.10 19869   DirectoryBuild  claes       appl
+ 3 20-MAR-2020 12:28:36.80 19869   PlcBuild     claes       VolPwrTest01:H1-Plc-W
+ 2 20-MAR-2020 12:28:36.97 19869   VolumeBuild  claes       VolPwrTest01
+ 2 20-MAR-2020 12:28:37.25 19869   NodeBuild    claes       PwrTest01
+ 2 20-MAR-2020 12:28:37.25 19869   DirectoryBuild  claes       pop
+ 2 20-MAR-2020 12:28:37.25 19869   DirectoryBuild  claes       pwr_exe
+1  20-MAR-2020 12:45:40.13 20065   CreatePackage  claes       aristotle "pwrp_pkg_aristotle_0001.tgz"
+ 2 20-MAR-2020 13:04:06.49 21258   DirectoryBuild  claes       appl
+ 3 20-MAR-2020 13:04:06.87 21258   PlcBuild     claes       VolPwrTest01:H1-Plc-W
+ 2 20-MAR-2020 13:04:07.02 21258   VolumeBuild  claes       VolPwrTest01
+ 2 20-MAR-2020 13:04:07.27 21258   NodeBuild    claes       PwrTest01
+ 2 20-MAR-2020 13:04:07.27 21258   DirectoryBuild  claes       pop
+ 2 20-MAR-2020 13:04:07.27 21258   DirectoryBuild  claes       pwr_exe
+ 2 20-MAR-2020 13:07:11.71 21493   DirectoryBuild  claes       appl
+ 3 20-MAR-2020 13:07:12.09 21493   PlcBuild     claes       VolPwrTest01:H1-Plc-W
+ 2 20-MAR-2020 13:07:12.24 21493   VolumeBuild  claes       VolPwrTest01
+ 2 20-MAR-2020 13:07:12.48 21493   NodeBuild    claes       PwrTest01
+ 2 20-MAR-2020 13:07:12.48 21493   DirectoryBuild  claes       pop
+ 2 20-MAR-2020 13:07:12.48 21493   DirectoryBuild  claes       pwr_exe
+ 2 20-MAR-2020 13:09:34.93 21721   DirectoryBuild  claes       appl
+ 3 20-MAR-2020 13:09:35.32 21721   PlcBuild     claes       VolPwrTest01:H1-Plc-W
+ 2 20-MAR-2020 13:09:35.47 21721   VolumeBuild  claes       VolPwrTest01
+ 2 20-MAR-2020 13:09:35.71 21721   NodeBuild    claes       PwrTest01
+ 2 20-MAR-2020 13:09:35.71 21721   DirectoryBuild  claes       pop
+ 2 20-MAR-2020 13:09:35.71 21721   DirectoryBuild  claes       pwr_exe
+ 2 20-MAR-2020 13:11:42.82 21947   DirectoryBuild  claes       appl
+ 3 20-MAR-2020 13:11:43.20 21947   PlcBuild     claes       VolPwrTest01:H1-Plc-W
+ 2 20-MAR-2020 13:11:43.35 21947   VolumeBuild  claes       VolPwrTest01
+ 2 20-MAR-2020 13:11:43.59 21947   NodeBuild    claes       PwrTest01
+ 2 20-MAR-2020 13:11:43.59 21947   DirectoryBuild  claes       pop
+ 2 20-MAR-2020 13:11:43.59 21947   DirectoryBuild  claes       pwr_exe
+1  20-MAR-2020 13:11:44.08 22036   CreatePackage  claes       aristotle "pwrp_pkg_aristotle_0002.tgz"
+ 2 20-MAR-2020 13:24:22.47 22289   DirectoryBuild  claes       appl
+ 3 20-MAR-2020 13:24:22.86 22289   PlcBuild     claes       VolPwrTest01:H1-Plc-W
+ 2 20-MAR-2020 13:24:23.01 22289   VolumeBuild  claes       VolPwrTest01
+ 2 20-MAR-2020 13:24:23.25 22289   NodeBuild    claes       PwrTest01
+ 2 20-MAR-2020 13:24:23.25 22289   DirectoryBuild  claes       pop
+ 2 20-MAR-2020 13:24:23.25 22289   DirectoryBuild  claes       pwr_exe
+1  20-MAR-2020 13:24:23.75 22375   CreatePackage  claes       aristotle "pwrp_pkg_aristotle_0003.tgz"
+ 2 20-MAR-2020 13:31:05.03 22633   DirectoryBuild  claes       appl
+ 3 20-MAR-2020 13:31:05.42 22633   PlcBuild     claes       VolPwrTest01:H1-Plc-W
+ 2 20-MAR-2020 13:31:05.57 22633   VolumeBuild  claes       VolPwrTest01
+ 2 20-MAR-2020 13:31:05.81 22633   NodeBuild    claes       PwrTest01
+ 2 20-MAR-2020 13:31:05.81 22633   DirectoryBuild  claes       pop
+ 2 20-MAR-2020 13:31:05.81 22633   DirectoryBuild  claes       pwr_exe
+1  20-MAR-2020 13:31:06.31 22719   CreatePackage  claes       aristotle "pwrp_pkg_aristotle_0001.tgz"
+1  20-MAR-2020 14:53:49.29 7866    WbLogin      claes       pwrp
+1  20-MAR-2020 14:54:32.42 7866    ConfigSave   claes       directory
+ 2 20-MAR-2020 14:55:03.16 10236   DirectoryBuild  claes       appl
+ 3 20-MAR-2020 14:55:04.44 10236   PlcBuild     claes       VolPwrTest01:H1-Plc-W
+ 2 20-MAR-2020 14:55:04.60 10236   VolumeBuild  claes       VolPwrTest01
+ 2 20-MAR-2020 14:55:05.04 10236   NodeBuild    claes       PwrTest01
+ 2 20-MAR-2020 14:55:05.04 10236   DirectoryBuild  claes       pop
+ 2 20-MAR-2020 14:55:05.04 10236   DirectoryBuild  claes       pwr_exe
+1  20-MAR-2020 14:55:05.65 10451   CreatePackage  claes       aristotle "pwrp_pkg_aristotle_0001.tgz"

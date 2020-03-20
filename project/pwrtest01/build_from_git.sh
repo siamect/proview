@@ -100,9 +100,9 @@ source $pwra_db/pwr_setup.sh
 source $pwra_db/pwra_env.sh set project pwrtest01
 
 
-echo "* Set nodename $nodename, opsys $opsys"
+echo "* Set nodename aristotle, opsys $opsys"
 cat > initdir.pwr_com <<EOF 
-  set attr/name=Bus999-PwrTest01/attr=NodeName/value="$nodename"/noconf
+  set attr/name=Bus999-PwrTest01/attr=NodeName/value="aristotle"/noconf
   set attr/name=Bus999-PwrTest01/attr=OperatingSystem/value="$opsys"/noconf
   save
   exit
