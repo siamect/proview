@@ -1,0 +1,32 @@
+# Ignore editor journal files
+*~
+*#*
+# Ignore databases
+t.*
+*.t
+*.out
+*.db
+*.db.*
+*.db.lock
+*.db/*
+# Other temporary files
+*.gc
+*.gjl
+*.o
+plc_*_[0-9][0-9]]0-9][0-9]_*
+*.a
+pwrp_cnf_*.dat
+ld_appl_*.txt
+ld_boot_*.dat
+ld_node_*.dat
+*.dbs
+*.wb_dmp
+*.wb_load.*
+*.wb_dmp.*
+plc_*.opt_template
+plc_v*.dat
+*.log
+*.bck
+initdir.pwr_com
+initvol.pwr_com
+db/rt_eventlog_info.txt

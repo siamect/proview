@@ -12,6 +12,11 @@ pwre_db
 .vscode/
 .nfs*
 project/pwrdemo/bld
+project/pwrdemo/src/login/initdir.pwr_com
+project/pwrdemo/src/login/initvol.pwr_com
+project/pwrtest01/bld
+project/pwrtest01/src/login/initdir.pwr_com
+project/pwrtest01/src/login/initvol.pwr_com
 *.db
 *.db.lock
 *.gjl
