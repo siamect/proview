@@ -66,7 +66,6 @@ cd ..
 echo "-- copy project to package tree"
 mv pwrdemo pwrdemo$ver
 tar -chf $tarfile pwrdemo$ver
-tar -tf $tarfile
 mv pwrdemo$ver pwrdemo
 cd $pkgroot/usr/pwrp
 tar -xf $tarfile

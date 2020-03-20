@@ -25,5 +25,6 @@ buildcopy pop $pwrp_pop/*.pwg $pwrp_exe/
 buildcopy pop $pwrp_pop/*.pwg $pwrp_web/
 builddir appl 1 ""
 buildcopy appl $pwrp_appl/ra_plc_user.h $pwrp_inc/
+buildmake appl $pwrp_appl/ "makefile"
 builddir pwr_exe 2 ""
 buildcopy pwr_exe $pwr_exe/pwr_logga.png $pwrp_web/
