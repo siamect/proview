@@ -106,18 +106,18 @@ public class XttTree extends JPanel
   String functions;
     
   String language_EN = "Language";
-  String language_SW = "Språk";
+  String language_SW = "Sprak";
   String language;
     
   String swedish = "Svenska";
   String english = "English";
 
   String openObject_EN = "open object";
-  String openObject_SW = "öppna objekt";
+  String openObject_SW = "Oppna objekt";
   String openObject;
     
   String changeValue_EN = "change value";
-  String changeValue_SW = "ändra värde";
+  String changeValue_SW = "Andra varde";
   String changeValue;
     
   String debug_EN = "debug";
@@ -129,7 +129,7 @@ public class XttTree extends JPanel
   String working;
 
   String openPlc_EN = "open PLC";
-  String openPlc_SW = "öppna PLC";
+  String openPlc_SW = "Oppna PLC";
   String openPlc;
 
   String showCross_EN = "show cross";
@@ -137,7 +137,7 @@ public class XttTree extends JPanel
   String showCross;
 
   String find_EN = "find...";
-  String find_SW = "sök...";
+  String find_SW = "sok...";
   String find;
     // Mats modifications: stings enterComm
   String enterComm_EN = "enter command";
@@ -245,7 +245,7 @@ public class XttTree extends JPanel
     {
       for(int i = 0; i < v.size(); i++)
       {
-        //String loggStr = new String("XttTree: Börjar bygga root " + rootRow++);
+        //String loggStr = new String("XttTree: Borjar bygga root " + rootRow++);
         //Logg.logg(loggStr, 0);
         
 	GdhrGetXttObj gdhr = (GdhrGetXttObj)v.get(i);
