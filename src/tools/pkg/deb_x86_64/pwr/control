@@ -3,8 +3,23 @@ Version: 5.7.2-1
 Section: base
 Priority: optional
 Architecture: amd64
-Depends: libc6 (>= 2.28-10), libgtk2.0-0 (>= 2.24.24-3), libasound2 (>= 1.1.8-1), libdb5.3 (>=5.3.28-12), libdb5.3++ (>= 5.3.28), libsqlite3-0 (>= 3.23.2-3), librsvg2-2 (>= 2.44.10-2.1), g++ (>= 4:8.3.0-1), xterm, libmariadb3 (>=1:10.3.17-0+deb10u1), librabbitmq4 (>= 0.9.0-0.2), libusb-1.0-0 (>=2:1.0.22-2), libhdf5-openmpi-103 (>=1.10.4), libgstreamer1.0-0 (>=1.14.4-1), libgstreamer-plugins-base1.0-0 (>=1.14.4-2)
+Depends: libc6 (>= 2.28-10),
+ libgtk2.0-0 (>= 2.24.24-3),
+ libasound2 (>= 1.1.8-1),
+ libdb5.3 (>=5.3.28-12),
+ libdb5.3++ (>= 5.3.28),
+ libsqlite3-0 (>= 3.23.2-3),
+ librsvg2-2 (>= 2.44.10-2.1),
+ g++ (>= 4:8.3.0-1),
+ libmariadb3 (>=1:10.3.17-0+deb10u1),
+ librabbitmq4 (>= 0.9.0-0.2),
+ libusb-1.0-0 (>=2:1.0.22-2),
+ libhdf5-openmpi-103 (>=1.10.4),
+ libgstreamer1.0-0 (>=1.14.4-1),
+ libgstreamer-plugins-base1.0-0 (>=1.14.4-2),
+ xterm,
+ xfonts-100dpi
 Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48,pwr50,pwr51,pwr52,pwr53,pwr54,pwr55,pwr56
-Maintainer: Proview <postmaster@proview.se>
-Description: Proview development and runtime environment package
+Maintainer: ProviewR <postmaster@proview.se>
+Description: ProviewR development and runtime environment package
  5.7.2-1 Base release

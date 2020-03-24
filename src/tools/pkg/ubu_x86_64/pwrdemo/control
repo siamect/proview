@@ -1,10 +1,10 @@
 Package: pwrdemo57
-Version: 5.7.1-1
+Version: 5.7.2-1
 Section: base
 Priority: optional
 Architecture: amd64
-Depends: pwr57 (>= 5.7.0-1)
+Depends: pwr57 (>= 5.7.2-1)
 Replaces:
-Maintainer: Proview <postmaster@proview.se>
-Description: Proview Demo Project package
- 5.7.1-1 Base release
+Maintainer: ProviewR <postmaster@proview.se>
+Description: ProviewR Demo Project package
+ 5.7.2-1 Base release
