@@ -92,7 +92,8 @@ if [ ! -e $pwra_db ]; then
 fi
 echo "pwra_db $pwra_db"
 cp $pwre_croot/src/tools/pkg/deb/adm/* $pwra_db/
-echo "VolPwrTest01	0.254.254.201	pwrtest01" >> $pwra_db/pwr_volumelist.dat
+echo "VolPwrTest01a	0.254.254.201	pwrtest01" >> $pwra_db/pwr_volumelist.dat
+echo "VolPwrTest01b	0.254.254.202	pwrtest01" >> $pwra_db/pwr_volumelist.dat
 echo "%base V0.0.0 $pwre_broot" > $pwra_db/pwr_projectlist.dat
 echo "pwrtest01	V0.0.0	$pwrp_root	Test-pwrtest01	\"\"" >> $pwra_db/pwr_projectlist.dat
 
@@ -100,41 +101,66 @@ source $pwra_db/pwr_setup.sh
 source $pwra_db/pwra_env.sh set project pwrtest01
 
 
-echo "* Set nodename aristotle, opsys $opsys"
+echo "* Set opsys $opsys"
 cat > initdir.pwr_com <<EOF 
-  set attr/name=Bus999-PwrTest01/attr=NodeName/value="aristotle"/noconf
-  set attr/name=Bus999-PwrTest01/attr=OperatingSystem/value="$opsys"/noconf
+  set attr/name=Bus999-PwrTest01a/attr=OperatingSystem/value="$opsys"/noconf
+  set attr/name=Bus999-PwrTest01b/attr=OperatingSystem/value="$opsys"/noconf
   save
   exit
 EOF
 
 wb_cmd @initdir
 
-echo "* Load volpwrtest01"
-wb_cmd wb load/nofocode/load=\"$pwrp_db/volpwrtest01.wb_dmp\"/out=\"$pwrp_db/volpwrtest01.lis\"
+echo "* Load volpwrtest01a"
+wb_cmd wb load/nofocode/load=\"$pwrp_db/volpwrtest01a.wb_dmp\"/out=\"$pwrp_db/volpwrtest01a.lis\"
 
 echo "* Set opsys $opsys"
 
 cat > initvol.pwr_com <<EOF 
-  set attr/name=VolPwrTest01:/attr=OperatingSystem/value="$opsys"/noconf
+  set attr/name=VolPwrTest01a:/attr=OperatingSystem/value="$opsys"/noconf
   save
   exit
 EOF
 
-wb_cmd -v volpwrtest01 @initvol
+wb_cmd -v volpwrtest01a @initvol
 
-wb_cmd -v volpwrtest01 build node PwrTest01 /force
+wb_cmd -v volpwrtest01a build node pwrtest01a /force
 
-echo "* Bulid package"
-wb_cmd distr/node=aristotle/package
+echo "* Build package"
+wb_cmd distr/node=pwrtest01a/package
+
+echo "* Compile"
+wb_cmd -v volpwrtest01a compile/all
+echo "* Build volume"
+wb_cmd -v volpwrtest01a create load
+echo "* Build node"
+wb_cmd create boot pwrtest01a
+
+echo "* Load volpwrtest01b"
+wb_cmd wb load/nofocode/load=\"$pwrp_db/volpwrtest01b.wb_dmp\"/out=\"$pwrp_db/volpwrtest01b.lis\"
+
+echo "* Set opsys $opsys"
+
+cat > initvol.pwr_com <<EOF 
+  set attr/name=VolPwrTest01b:/attr=OperatingSystem/value="$opsys"/noconf
+  save
+  exit
+EOF
+
+wb_cmd -v volpwrtest01b @initvol
+
+wb_cmd -v volpwrtest01b build node pwrtest01b /force
+
+echo "* Build package 01b"
+wb_cmd distr/node=pwrtest01b/package
 exit
 
 echo "* Compile"
-wb_cmd -v volpwrtest01 compile/all
+wb_cmd -v volpwrtest01b compile/all
 echo "* Build volume"
-wb_cmd -v volpwrtest01 create load
+wb_cmd -v volpwrtest01b create load
 echo "* Build node"
-wb_cmd create boot/all
+wb_cmd create boot pwrtest01b
 
 exit
 

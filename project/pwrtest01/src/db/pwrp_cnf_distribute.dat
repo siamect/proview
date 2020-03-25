@@ -1,26 +1,48 @@
 project pwrtest01
-node aristotle 128 999 0 - -
-load aristotle
-appl aristotle W $pwrp_cnf/aristotle/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat
-appl aristotle W $pwrp_load/ld_appl_aristotle_999.txt $pwrp_load/
-appl aristotle W $pwrp_load/pwrp_alias.dat $pwrp_load/pwrp_alias.dat
-appl aristotle W $pwrp_inc/*.h
-appl aristotle W $pwrp_exe/*.pwg
-appl aristotle W $pwrp_load/aristotle/xtt_help.dat:$pwrp_load/xtt_help.dat $pwrp_load/xtt_help.dat
-appl aristotle W $pwrp_load/aristotle/b55/Rt_xtt:$pwrp_load/aristotle/Rt_xtt:$pwrp_load/Rt_xtt /home/b55/Rt_xtt
-appl aristotle S $pwrp_load/aristotle/pwrp/Rt_xtt /home/pwrp/Rt_xtt
-appl aristotle W $pwrp_load/aristotle/b55/xtt_setup.rtt_com:$pwrp_load/aristotle/xtt_setup.rtt_com:$pwrp_load/xtt_setup.rtt_com /home/b55/xtt_setup.rtt_com
-appl aristotle S $pwrp_load/aristotle/pwrp/xtt_setup.rtt_com /home/pwrp/xtt_setup.rtt_com
-appl aristotle W $pwrp_load/*.flw
-appl aristotle W $pwrp_cnf/aristotle/.rhosts:$pwra_db/.rhosts /home/pwrp/.rhosts
-appl aristotle W $pwrp_web/*.html
-appl aristotle S $pwrp_web/*.jar
-appl aristotle S $pwrp_web/*.gif
-appl aristotle S $pwrp_web/*.png
-appl aristotle S $pwrp_web/*.jpg
-appl aristotle S $pwrp_web/*.pdf
-appl aristotle S $pwrp_web/*.pwg
-appl aristotle E $pwrp_exe/ra_status
+node pwrtest01a 128 999 0 - -
+load pwrtest01a
+appl pwrtest01a W $pwrp_cnf/pwrtest01a/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat
+appl pwrtest01a W $pwrp_load/ld_appl_pwrtest01a_999.txt $pwrp_load/
+appl pwrtest01a W $pwrp_load/pwrp_alias.dat $pwrp_load/pwrp_alias.dat
+appl pwrtest01a W $pwrp_inc/*.h
+appl pwrtest01a W $pwrp_exe/*.pwg
+appl pwrtest01a W $pwrp_load/pwrtest01a/xtt_help.dat:$pwrp_load/xtt_help.dat $pwrp_load/xtt_help.dat
+appl pwrtest01a W $pwrp_load/pwrtest01a/b55/Rt_xtt:$pwrp_load/pwrtest01a/Rt_xtt:$pwrp_load/Rt_xtt /home/b55/Rt_xtt
+appl pwrtest01a S $pwrp_load/pwrtest01a/pwrp/Rt_xtt /home/pwrp/Rt_xtt
+appl pwrtest01a W $pwrp_load/pwrtest01a/b55/xtt_setup.rtt_com:$pwrp_load/pwrtest01a/xtt_setup.rtt_com:$pwrp_load/xtt_setup.rtt_com /home/b55/xtt_setup.rtt_com
+appl pwrtest01a S $pwrp_load/pwrtest01a/pwrp/xtt_setup.rtt_com /home/pwrp/xtt_setup.rtt_com
+appl pwrtest01a W $pwrp_load/*.flw
+appl pwrtest01a W $pwrp_cnf/pwrtest01a/.rhosts:$pwra_db/.rhosts /home/pwrp/.rhosts
+appl pwrtest01a W $pwrp_web/*.html
+appl pwrtest01a S $pwrp_web/*.jar
+appl pwrtest01a S $pwrp_web/*.gif
+appl pwrtest01a S $pwrp_web/*.png
+appl pwrtest01a S $pwrp_web/*.jpg
+appl pwrtest01a S $pwrp_web/*.pdf
+appl pwrtest01a S $pwrp_web/*.pwg
+appl pwrtest01a E $pwrp_exe/ra_status
+node pwrtest01b 128 999 0 - -
+load pwrtest01b
+appl pwrtest01b W $pwrp_cnf/pwrtest01b/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat
+appl pwrtest01b W $pwrp_load/ld_appl_pwrtest01b_999.txt $pwrp_load/
+appl pwrtest01b W $pwrp_load/pwrp_alias.dat $pwrp_load/pwrp_alias.dat
+appl pwrtest01b W $pwrp_inc/*.h
+appl pwrtest01b W $pwrp_exe/*.pwg
+appl pwrtest01b W $pwrp_load/pwrtest01b/xtt_help.dat:$pwrp_load/xtt_help.dat $pwrp_load/xtt_help.dat
+appl pwrtest01b W $pwrp_load/pwrtest01b/b55/Rt_xtt:$pwrp_load/pwrtest01b/Rt_xtt:$pwrp_load/Rt_xtt /home/b55/Rt_xtt
+appl pwrtest01b S $pwrp_load/pwrtest01b/pwrp/Rt_xtt /home/pwrp/Rt_xtt
+appl pwrtest01b W $pwrp_load/pwrtest01b/b55/xtt_setup.rtt_com:$pwrp_load/pwrtest01b/xtt_setup.rtt_com:$pwrp_load/xtt_setup.rtt_com /home/b55/xtt_setup.rtt_com
+appl pwrtest01b S $pwrp_load/pwrtest01b/pwrp/xtt_setup.rtt_com /home/pwrp/xtt_setup.rtt_com
+appl pwrtest01b W $pwrp_load/*.flw
+appl pwrtest01b W $pwrp_cnf/pwrtest01b/.rhosts:$pwra_db/.rhosts /home/pwrp/.rhosts
+appl pwrtest01b W $pwrp_web/*.html
+appl pwrtest01b S $pwrp_web/*.jar
+appl pwrtest01b S $pwrp_web/*.gif
+appl pwrtest01b S $pwrp_web/*.png
+appl pwrtest01b S $pwrp_web/*.jpg
+appl pwrtest01b S $pwrp_web/*.pdf
+appl pwrtest01b S $pwrp_web/*.pwg
+appl pwrtest01b E $pwrp_exe/ra_status
 builddir pop 2 ""
 buildcopy pop $pwrp_pop/*.pwg $pwrp_exe/
 buildcopy pop $pwrp_pop/*.pwg $pwrp_web/

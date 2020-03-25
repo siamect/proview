@@ -69,3 +69,114 @@
  2 20-MAR-2020 14:55:05.04 10236   DirectoryBuild  claes       pop
  2 20-MAR-2020 14:55:05.04 10236   DirectoryBuild  claes       pwr_exe
 1  20-MAR-2020 14:55:05.65 10451   CreatePackage  claes       aristotle "pwrp_pkg_aristotle_0001.tgz"
+1  25-MAR-2020 08:59:34.07 26481   WbLogin      claes       pwrp
+1  25-MAR-2020 09:08:06.80 26481   ConfigSave   claes       directory
+1  25-MAR-2020 09:25:51.38 26791   WbLogin      claes       pwrp
+1  25-MAR-2020 09:26:38.04 26803   WbLogin      claes       pwrp
+1  25-MAR-2020 09:26:44.52 26803   ConfigSave   claes       directory
+ 2 25-MAR-2020 09:37:21.32 27044   DirectoryBuild  claes       appl
+ 3 25-MAR-2020 09:37:22.09 27044   PlcBuild     claes       VolPwrTest01a:H1-Plc-W
+ 2 25-MAR-2020 09:37:22.25 27044   VolumeBuild  claes       VolPwrTest01a
+ 2 25-MAR-2020 09:37:22.52 27044   NodeBuild    claes       PwrTest01a
+ 2 25-MAR-2020 09:37:22.52 27044   DirectoryBuild  claes       pop
+ 2 25-MAR-2020 09:37:22.52 27044   DirectoryBuild  claes       pwr_exe
+1  25-MAR-2020 09:37:23.11 27131   CreatePackage  claes       pwrtest01a "pwrp_pkg_pwrtest01a_0001.tgz"
+1  25-MAR-2020 09:39:51.91 27170   WbLogin      claes       pwrp
+1  25-MAR-2020 09:39:55.97 27170   ConfigSave   claes       directory
+ 2 25-MAR-2020 09:44:27.24 27373   DirectoryBuild  claes       appl
+ 3 25-MAR-2020 09:44:27.61 27373   PlcBuild     claes       VolPwrTest01a:H1-Plc-W
+ 2 25-MAR-2020 09:44:27.73 27373   VolumeBuild  claes       VolPwrTest01a
+ 2 25-MAR-2020 09:44:27.97 27373   NodeBuild    claes       PwrTest01a
+ 2 25-MAR-2020 09:44:27.97 27373   DirectoryBuild  claes       pop
+ 2 25-MAR-2020 09:44:27.97 27373   DirectoryBuild  claes       pwr_exe
+1  25-MAR-2020 09:44:28.56 27459   CreatePackage  claes       pwrtest01a "pwrp_pkg_pwrtest01a_0001.tgz"
+1  25-MAR-2020 09:44:29.88 27478   PlcBuild     claes       VolPwrTest01a:H1-Plc-W
+1  25-MAR-2020 09:44:31.24 27511   VolumeBuild  claes       VolPwrTest01a
+1  25-MAR-2020 09:44:31.56 27524   NodeBuild    claes       PWRTEST01A
+ 2 25-MAR-2020 09:44:34.95 27577   DirectoryBuild  claes       appl
+ 2 25-MAR-2020 09:44:35.36 27577   NodeBuild    claes       PwrTest01a
+ 2 25-MAR-2020 09:44:35.36 27577   DirectoryBuild  claes       pop
+ 2 25-MAR-2020 09:44:35.36 27577   DirectoryBuild  claes       pwr_exe
+1  25-MAR-2020 09:45:02.16 27636   WbLogin      claes       pwrp
+1  25-MAR-2020 09:45:32.06 27636   ConfigSave   claes       VolPwrTest01a
+1  25-MAR-2020 09:45:50.15 27682   WbLogin      claes       pwrp
+1  25-MAR-2020 09:45:57.40 27682   ConfigSave   claes       VolPwrTest01b
+1  25-MAR-2020 09:45:57.55 27682   ConfigSave   claes       VolPwrTest01b
+1  25-MAR-2020 09:47:19.82 27682   ConfigSave   claes       VolPwrTest01b
+1  25-MAR-2020 09:48:14.26 27701   WbLogin      claes       pwrp
+1  25-MAR-2020 09:48:22.30 27713   WbLogin      claes       pwrp
+1  25-MAR-2020 09:48:27.90 27713   ConfigSave   claes       VolPwrTest01b
+1  25-MAR-2020 09:50:11.53 27713   ConfigSave   claes       VolPwrTest01b
+1  25-MAR-2020 09:51:05.53 27713   PlcSave      claes       VolPwrTest01b:Test01b-H1-Plc-W
+1  25-MAR-2020 09:51:58.92 27745   WbLogin      claes       pwrp
+1  25-MAR-2020 09:53:41.08 27745   ConfigSave   claes       VolPwrTest01a
+1  25-MAR-2020 09:53:51.88 27761   WbLogin      claes       pwrp
+1  25-MAR-2020 09:54:16.19 27761   ConfigSave   claes       VolPwrTest01b
+ 2 25-MAR-2020 09:58:14.77 27945   DirectoryBuild  claes       appl
+ 3 25-MAR-2020 09:58:15.14 27945   PlcBuild     claes       VolPwrTest01a:Test01a-H1-Plc-W
+ 2 25-MAR-2020 09:58:15.30 27945   VolumeBuild  claes       VolPwrTest01a
+ 2 25-MAR-2020 09:58:15.53 27945   NodeBuild    claes       PwrTest01a
+ 2 25-MAR-2020 09:58:15.53 27945   DirectoryBuild  claes       pop
+ 2 25-MAR-2020 09:58:15.53 27945   DirectoryBuild  claes       pwr_exe
+1  25-MAR-2020 09:58:16.12 28031   CreatePackage  claes       pwrtest01a "pwrp_pkg_pwrtest01a_0001.tgz"
+1  25-MAR-2020 09:58:17.45 28050   PlcBuild     claes       VolPwrTest01a:Test01a-H1-Plc-W
+1  25-MAR-2020 09:58:18.80 28083   VolumeBuild  claes       VolPwrTest01a
+1  25-MAR-2020 09:58:19.11 28096   NodeBuild    claes       PWRTEST01A
+ 2 25-MAR-2020 09:58:22.52 28150   DirectoryBuild  claes       appl
+ 2 25-MAR-2020 09:58:22.93 28150   NodeBuild    claes       PwrTest01a
+ 2 25-MAR-2020 09:58:22.93 28150   DirectoryBuild  claes       pop
+ 2 25-MAR-2020 09:58:22.93 28150   DirectoryBuild  claes       pwr_exe
+1  25-MAR-2020 10:01:09.42 28229   WbLogin      claes       pwrp
+1  25-MAR-2020 10:02:37.82 28229   NodeBuild    claes       PWRTEST01B
+1  25-MAR-2020 10:04:49.01 28277   VolumeBuild  claes       VolPwrTest01b
+1  25-MAR-2020 10:05:31.07 28294   PlcBuild     claes       VolPwrTest01b:Test01b-H1-Plc-W
+1  25-MAR-2020 10:05:39.84 28327   VolumeBuild  claes       VolPwrTest01b
+1  25-MAR-2020 10:06:19.26 28344   NodeBuild    claes       PWRTEST01B
+ 2 25-MAR-2020 10:08:23.65 28382   DirectoryBuild  claes       appl
+ 2 25-MAR-2020 10:08:24.06 28382   NodeBuild    claes       PwrTest01a
+ 2 25-MAR-2020 10:08:24.06 28382   DirectoryBuild  claes       pop
+ 2 25-MAR-2020 10:08:24.06 28382   DirectoryBuild  claes       pwr_exe
+1  25-MAR-2020 10:14:45.65 28456   WbLogin      claes       pwrp
+ 2 25-MAR-2020 10:15:05.58 28456   DirectoryBuild  claes       appl
+ 2 25-MAR-2020 10:15:05.60 28456   DirectoryBuild  claes       pop
+ 2 25-MAR-2020 10:15:05.60 28456   DirectoryBuild  claes       pwr_exe
+ 2 25-MAR-2020 10:15:55.17 28456   DirectoryBuild  claes       appl
+ 2 25-MAR-2020 10:15:55.19 28456   DirectoryBuild  claes       pop
+ 2 25-MAR-2020 10:15:55.19 28456   DirectoryBuild  claes       pwr_exe
+ 2 25-MAR-2020 10:16:02.22 28456   DirectoryBuild  claes       appl
+ 2 25-MAR-2020 10:16:02.67 28456   NodeBuild    claes       PwrTest01a
+ 2 25-MAR-2020 10:16:02.67 28456   DirectoryBuild  claes       pop
+ 2 25-MAR-2020 10:16:02.67 28456   DirectoryBuild  claes       pwr_exe
+ 2 25-MAR-2020 10:16:45.01 28456   DirectoryBuild  claes       appl
+ 2 25-MAR-2020 10:16:45.47 28456   NodeBuild    claes       PwrTest01a
+ 2 25-MAR-2020 10:16:45.47 28456   DirectoryBuild  claes       pop
+ 2 25-MAR-2020 10:16:45.47 28456   DirectoryBuild  claes       pwr_exe
+1  25-MAR-2020 10:17:10.29 28616   WbLogin      claes       pwrp
+ 2 25-MAR-2020 10:17:31.12 28616   DirectoryBuild  claes       appl
+ 2 25-MAR-2020 10:17:31.57 28616   NodeBuild    claes       PwrTest01a
+ 2 25-MAR-2020 10:17:31.57 28616   DirectoryBuild  claes       pop
+ 2 25-MAR-2020 10:17:31.57 28616   DirectoryBuild  claes       pwr_exe
+1  25-MAR-2020 10:19:29.32 28681   WbLogin      claes       pwrp
+ 2 25-MAR-2020 10:34:52.59 29127   DirectoryBuild  claes       appl
+ 3 25-MAR-2020 10:34:52.96 29127   PlcBuild     claes       VolPwrTest01b:Test01b-H1-Plc-W
+ 2 25-MAR-2020 10:34:53.11 29127   VolumeBuild  claes       VolPwrTest01b
+ 2 25-MAR-2020 10:34:53.35 29127   NodeBuild    claes       PwrTest01b
+ 2 25-MAR-2020 10:34:53.35 29127   DirectoryBuild  claes       pop
+ 2 25-MAR-2020 10:34:53.35 29127   DirectoryBuild  claes       pwr_exe
+ 2 25-MAR-2020 10:35:18.77 29369   DirectoryBuild  claes       appl
+ 3 25-MAR-2020 10:35:19.15 29369   PlcBuild     claes       VolPwrTest01a:Test01a-H1-Plc-W
+ 2 25-MAR-2020 10:35:19.29 29369   VolumeBuild  claes       VolPwrTest01a
+ 2 25-MAR-2020 10:35:19.53 29369   NodeBuild    claes       PwrTest01a
+ 2 25-MAR-2020 10:35:19.53 29369   DirectoryBuild  claes       pop
+ 2 25-MAR-2020 10:35:19.53 29369   DirectoryBuild  claes       pwr_exe
+1  25-MAR-2020 10:35:20.14 29457   CreatePackage  claes       pwrtest01a "pwrp_pkg_pwrtest01a_0001.tgz"
+1  25-MAR-2020 10:35:21.45 29476   PlcBuild     claes       VolPwrTest01a:Test01a-H1-Plc-W
+1  25-MAR-2020 10:35:22.80 29509   VolumeBuild  claes       VolPwrTest01a
+1  25-MAR-2020 10:35:23.12 29522   NodeBuild    claes       PWRTEST01A
+ 2 25-MAR-2020 10:35:26.53 29575   DirectoryBuild  claes       appl
+ 3 25-MAR-2020 10:35:26.91 29575   PlcBuild     claes       VolPwrTest01b:Test01b-H1-Plc-W
+ 2 25-MAR-2020 10:35:27.06 29575   VolumeBuild  claes       VolPwrTest01b
+ 2 25-MAR-2020 10:35:27.30 29575   NodeBuild    claes       PwrTest01b
+ 2 25-MAR-2020 10:35:27.30 29575   DirectoryBuild  claes       pop
+ 2 25-MAR-2020 10:35:27.30 29575   DirectoryBuild  claes       pwr_exe
+1  25-MAR-2020 10:35:27.88 29661   CreatePackage  claes       pwrtest01b "pwrp_pkg_pwrtest01b_0001.tgz"
