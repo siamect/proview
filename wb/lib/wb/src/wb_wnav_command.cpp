@@ -4642,6 +4642,7 @@ static int wnav_build_func(void* client_data, void* client_flag)
       if (str_NoCaseStrcmp(vp[i].p1, namestr) == 0) {
         found = 1;
         node_type = atoi(vp[i].p6);
+	vp = &vp[i];
         break;
       }
     }
