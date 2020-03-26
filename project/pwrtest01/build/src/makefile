@@ -35,6 +35,6 @@ clean_project:
 	@ if [ -e $(pwre_croot)/project/pwrtest01/bld ]; then rm $(pwre_croot)/project/pwrtest01/bld; fi
 	@ if [ -e $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01a.db ]; then rm -r $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01a.db; fi
 	@ if [ -e $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01b.db ]; then rm -r $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01b.db; fi
-	echo $(release_root)
-	ls $(release_root)/bld/project/pwrtest01/bld
+	@ if [ -e $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01c.db ]; then rm -r $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01c.db; fi
+	@ if [ -e $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01d.db ]; then rm -r $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01d.db; fi
 	@ if [ -e $(release_root)/bld/project/pwrtest01/bld ]; then rm -r $(release_root)/bld/project/pwrtest01/bld; fi

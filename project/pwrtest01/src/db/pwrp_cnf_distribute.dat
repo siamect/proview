@@ -43,6 +43,32 @@ appl pwrtest01b S $pwrp_web/*.jpg
 appl pwrtest01b S $pwrp_web/*.pdf
 appl pwrtest01b S $pwrp_web/*.pwg
 appl pwrtest01b E $pwrp_exe/ra_status
+node pwrtest01c 128 999 0 - -
+load pwrtest01c
+appl pwrtest01c W $pwrp_cnf/pwrtest01c/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat
+appl pwrtest01c W $pwrp_load/ld_appl_pwrtest01c_999.txt $pwrp_load/
+appl pwrtest01c W $pwrp_load/pwrp_alias.dat $pwrp_load/pwrp_alias.dat
+appl pwrtest01c W $pwrp_inc/*.h
+appl pwrtest01c W $pwrp_exe/*.pwg
+appl pwrtest01c W $pwrp_load/pwrtest01c/xtt_help.dat:$pwrp_load/xtt_help.dat $pwrp_load/xtt_help.dat
+appl pwrtest01c W $pwrp_load/pwrtest01c/b55/Rt_xtt:$pwrp_load/pwrtest01c/Rt_xtt:$pwrp_load/Rt_xtt /home/b55/Rt_xtt
+appl pwrtest01c S $pwrp_load/pwrtest01c/pwrp/Rt_xtt /home/pwrp/Rt_xtt
+appl pwrtest01c W $pwrp_load/pwrtest01c/b55/xtt_setup.rtt_com:$pwrp_load/pwrtest01c/xtt_setup.rtt_com:$pwrp_load/xtt_setup.rtt_com /home/b55/xtt_setup.rtt_com
+appl pwrtest01c S $pwrp_load/pwrtest01c/pwrp/xtt_setup.rtt_com /home/pwrp/xtt_setup.rtt_com
+appl pwrtest01c W $pwrp_load/*.flw
+appl pwrtest01c W $pwrp_cnf/pwrtest01c/.rhosts:$pwra_db/.rhosts /home/pwrp/.rhosts
+appl pwrtest01c W $pwrp_web/*.html
+appl pwrtest01c S $pwrp_web/*.jar
+appl pwrtest01c S $pwrp_web/*.gif
+appl pwrtest01c S $pwrp_web/*.png
+appl pwrtest01c S $pwrp_web/*.jpg
+appl pwrtest01c S $pwrp_web/*.pdf
+appl pwrtest01c S $pwrp_web/*.pwg
+appl pwrtest01c E $pwrp_exe/ra_status
+node pwrtest01d 128 999 0 - -
+load pwrtest01d
+appl pwrtest01d W $pwrp_cnf/pwrtest01d/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat
+appl pwrtest01d W $pwrp_cnf/pwrtest01d/authorized_keys:$pwra_db/authorized_keys /home/pwrp/.ssh/authorized_keys
 builddir pop 2 ""
 buildcopy pop $pwrp_pop/*.pwg $pwrp_exe/
 buildcopy pop $pwrp_pop/*.pwg $pwrp_web/

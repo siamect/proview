@@ -1,0 +1,37 @@
+#
+# Startup processes for Proview.
+#
+#
+# User applications
+# id,   name,   load/noload run/norun,  file,   prio,   debug/nodebug,  "arg"
+#myappl, myappl, noload, run, myappl, 12, nodebug, ""
+#
+# System processes
+# System processes can be disabled by removing the #
+#pwr_neth,       , noload, norun, , 5, debug, ""
+#pwr_plc_plc,        , noload, norun, ,  , debug, ""
+#pwr_alim,       , noload, norun, , 5, debug, ""
+#pwr_emon,       , noload, norun, , 10, debug, ""
+#pwr_tmon,       , noload, norun, , 5, debug, ""
+#pwr_qmon,       , noload, norun, , 19, debug, ""
+#pwr_nacp,       , noload, norun, , 5, debug, ""
+#pwr_bck,        , noload, norun, , 5, debug, ""
+#pwr_io,         , noload, norun, , 5, debug, ""
+#pwr_linksup,    , noload, norun, , 5, debug, ""
+#pwr_trend,      , noload, norun, , 5, debug, ""
+#pwr_fast,       , noload, norun, , 5, debug, ""
+#pwr_remh,       , noload, norun, , 5, debug, ""
+#pwr_remlog,     , noload, norun, , 5, debug, ""
+#pwr_elog,       , noload, norun, , 5, debug, ""
+#pwr_sysmon,     , noload, norun, , 5, debug, ""
+#pwr_webmon,     , noload, norun, , 5, debug, ""
+#pwr_webmonmh,   , noload, norun, , 5, debug, ""
+#pwr_webmonelog, , noload, norun, , 5, debug, ""
+#pwr_opc_server, , noload, norun, , 5, debug, ""
+#pwr_statussrv,  , noload, norun, , 5, debug, ""
+#pwr_post,       , noload, norun, , 5, debug, ""
+#pwr_sevhistmon, , noload, norun, , 5, debug, ""
+#pwr_sev_server, , noload, norun, , 5, debug, ""
+#pwr_powerlink,  , noload, norun, , 5, debug, ""
+#pwr_videomgm,   , noload, norun, , 5, debug, ""
+#pwr_redcom,     , noload, norun, , 5, debug, ""
