@@ -732,10 +732,11 @@ static void scan(plc_sThread* tp)
       if (tp->csup_lh != NULL) {
         pwr_tTime now;
         time_GetTime(&now);
-        delay_action
-            = csup_Exec(&sts, tp->csup_lh, (pwr_tDeltaTime*)&tp->sync_time,
-                (pwr_tDeltaTime*)&tp->after_scan, &now);
-        if (delay_action == 2) {
+        delay_action =
+            csup_Exec(&sts, tp->csup_lh, (pwr_tDeltaTime*)&tp->sync_time,
+                      (pwr_tDeltaTime*)&tp->after_scan, &now);
+        if (delay_action == pwr_eSupDelayActionEnum_EmergencyBreak)
+        {
           int prev_rwflag = pp->IOHandler->IOReadWriteFlag;
           pp->IOHandler->IOReadWriteFlag = FALSE;
           pp->Node->EmergBreakTrue = TRUE;
