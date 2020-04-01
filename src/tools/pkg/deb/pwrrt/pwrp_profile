@@ -30,8 +30,6 @@ export pwrp_log=$pwrp_root/common/log
 export pwrp_db=$pwrp_root/common/db
 export pwrp_web=$web_dir
 
-export pwra_db=/usr/pwrp/adm/db
-
 # Check /usr/local first since it ought to have priority
 jdk=`eval ls -1 /usr/local | sort -r | grep ^jdk | head -1`
 # Check if any JRE is present in /usr/local

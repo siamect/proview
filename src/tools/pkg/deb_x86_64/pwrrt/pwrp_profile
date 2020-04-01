@@ -19,27 +19,16 @@ export pwr_load=$pwrb_root/load
 export pwr_lis=$pwrb_root/lis
 export pwr_doc=$pwrb_root/doc
 
-# Fetch arch (In the rare cases where we run 32-bit proview on 64-bit debian)
-if [ -e /pwrp ]; then
-    for dir in `ls -1 /pwrp`; do
-        [[ "${dir}" == "common" ]] && continue
-        arch=${dir}
-        break
-    done
-
-    # Set arch specific env variables
-    for env in exe obj lis lib; do
-        export pwrp_${env}=${pwrp_root}/${arch}/${env}
-    done
-fi
-
+export pwrp_exe=$pwrp_root/x86_64_linux/exe
+export pwrp_lib=$pwrp_root/x86_64_linux/lib
+export pwrp_obj=$pwrp_root/x86_64_linux/obj
+export pwrp_lis=$pwrp_root/x86_64_linux/lis
 export pwrp_inc=$pwrp_root/common/inc
 export pwrp_load=$pwrp_root/common/load
 export pwrp_log=$pwrp_root/common/log
 export pwrp_db=$pwrp_root/common/db
-export pwrp_web=$web_dir
 
-export pwra_db=/usr/pwrp/adm/db
+export pwrp_web=$web_dir
 
  # Check /usr/local first since it ought to have priority
 jdk=`eval ls -1 /usr/local | sort -r | grep ^jdk | head -1`
