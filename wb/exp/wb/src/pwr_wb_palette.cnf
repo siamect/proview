@@ -67,6 +67,13 @@ palette NavigatorPalette
         class BoFloatArray100
 	class BoString80
       }
+      menu Light
+      {	
+        class LightAv
+        class LightDv
+        class LightIv
+        class LightSv
+      }
     }
     menu DataStorage
     {
@@ -1076,6 +1083,7 @@ palette PlcEditorPalette
       class AtoStr
       class BCDDo
       class DiBCD
+      class DtoI
       class DtoMask
       class DtoEnum
       class DtoStr

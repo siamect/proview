@@ -411,6 +411,12 @@
     strncpy(obj->ActualValue, in, 80);
 
 /*_*
+  DtoI
+  @aref dtoi DtoI
+*/
+#define DtoI_exec(obj, in) obj->ActVal = in ? 1 : 0;
+
+/*_*
   AtoI
   @aref atoi AtoI
 */
