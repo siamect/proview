@@ -34,30 +34,72 @@
  * General Public License plus this exception.
  */
 
-#ifndef rt_dvol_h
-#define rt_dvol_h
+#ifndef xtt_log_h
+#define xtt_log_h
 
-/* rt_dvol.h -- Dynamic volumes  */
+#include "pwr_privilege.h"
 
-#include "rt_vol.h"
+#include "rt_sevcli.h"
 
-gdb_sObject* dvol_AdoptObject(
-    pwr_tStatus* sts, gdb_sObject* op, gdb_sObject* p_op, net_sNotify* nmp);
+#include "glow.h"
 
-gdb_sObject* dvol_CreateObject(pwr_tStatus* sts, cdh_sParseName* pn,
-    pwr_tClassId cid, pwr_tUInt32 size, pwr_tObjid oid /* Requested objid, */
-    );
+/* xtt_log.h -- Sev Table Viewer */
 
-pwr_tBoolean dvol_DeleteObject(pwr_tStatus* sts, pwr_tObjid oid);
+class LogNav;
+class LogNav_hier;
+class XttSevHist;
+class CoLogin;
+class CoWow;
 
-pwr_tBoolean dvol_DeleteObjectTree(pwr_tStatus* sts, pwr_tObjid oid);
+class XttLog {
+public:
+  XttLog(void* xn_parent_ctx, LogNav_hier *xn_tree);
+  void* parent_ctx;
+  char name[80];
+  LogNav* lognav;
+  LogNav_hier *tree;
+  CoLogin* cologin;
+  int command_open;
+  void (*close_cb)(void*);
+  char base_user[80];
+  char user[80];
+  unsigned int base_priv;
+  unsigned int priv;
+  int verify;
+  int ccm_func_registred;
+  CoWow* wow;
+  int quiet;
 
-gdb_sObject* dvol_MoveObject(pwr_tStatus* sts, pwr_tObjid oid, pwr_tObjid poid);
+  virtual void message(char severity, const char* message)
+  {
+  }
+  virtual void set_prompt(const char* prompt)
+  {
+  }
 
-gdb_sObject* dvol_RenameObject(
-    pwr_tStatus* sts, pwr_tObjid oid, cdh_sParseName* pn);
+  int is_authorized(unsigned int access = pwr_mAccess_AllSev, int msg = 1);
+  void open_login();
+  void logout();
+  void activate_print();
+  void activate_zoom_in();
+  void activate_zoom_out();
+  void activate_zoom_reset();
+  void activate_help();
+  void activate_help_project();
+  void activate_help_proview();
 
-gdb_sObject* dvol_UnadoptObject(
-    pwr_tStatus* sts, gdb_sObject* op, gdb_sObject* pop, net_sNotify* nmp);
+  static void message(void* attr, char severity, const char* message);
+  static int is_authorized(void* ctx, unsigned int access, int msg);
+  static int command_cb(void* ctx, char* cmd);
+  static void delete_item_yes(void* ctx, void* data);
+  static int sevhist_get_select_cb(
+      void* ctx, pwr_tOid* oid, char* aname, char* oname);
+  static void sevhist_help_cb(void* ctx, const char* key);
+  virtual ~XttLog();
+
+  int command(char* input_str);
+  int readcmdfile(char* incommand);
+  int read_bootfile(char* systemname, char* systemgroup);
+};
 
 #endif

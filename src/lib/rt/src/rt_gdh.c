@@ -333,7 +333,7 @@ pwr_tStatus gdh_ClassAttrToAttrref(
 
   if (name != NULL && *name != '\0') {
     pn = cdh_ParseName(&sts, &ParseName, pwr_cNObjid, name, 0);
-    if (pn == NULL) {
+    if (pn == NULL || pn->nAttribute == 0) {
       strcat(buff, name);
       pn = cdh_ParseName(&sts, &ParseName, pwr_cNObjid, buff, 0);
     }
@@ -449,7 +449,7 @@ pwr_tStatus gdh_ClassNameToId(const char* name, /**< Class name string. */
 */
 
 pwr_tStatus gdh_CreateObject(
-    char* name, /**< Object name string. Last segment only.*/
+    char* name, /**< Object name string with path.*/
     pwr_tClassId cid, /**< Class id for object. */
     unsigned int size, /**< Size of object body. Only needed for objects
                                with dynamic size, else 0. */
@@ -518,6 +518,41 @@ pwr_tStatus gdh_DeleteObject(
   gdh_ScopeLock
   {
     dvol_DeleteObject(&sts, oid);
+  }
+  gdh_ScopeUnlock;
+
+  return sts;
+}
+
+/**
+ * @brief Remove a local object tree.
+ *
+ * Object header and the associated body are removed.
+ * This call is possible only if the object is
+ * in a local volume, i.e a volume owned by the local node.
+ * The volume must be of class $DynamicVolume or $SystemVolume.
+ * The object must not be parent to any other object.
+ *
+ * All reachable nodes, who have mounted the volume in question,
+ * are notified about the removal of this object.
+ *
+ * The objects is not completly removed until all directlink and
+ * subscriptions to the object are removed.
+ * @return pwr_tStatus
+ */
+
+pwr_tStatus gdh_DeleteObjectTree(
+    pwr_tObjid oid /**< The identity of the root object of the tree. */
+    )
+{
+  pwr_tStatus sts = GDH__SUCCESS;
+
+  if (cdh_ObjidIsNull(oid))
+    return GDH__NOSUCHOBJ;
+
+  gdh_ScopeLock
+  {
+    dvol_DeleteObjectTree(&sts, oid);
   }
   gdh_ScopeUnlock;
 
@@ -1014,7 +1049,7 @@ pwr_tStatus gdh_GetObjectSize(pwr_tObjid oid, /**< The object identity. */
  */
 
 pwr_tStatus gdh_GetDynamicAttrSize(pwr_tObjid oid, /**< The object identity. */
-    char* name, /**< Attribute name. */
+    char* name, /**< Attribute name with leading point, eg ".Length". */
     pwr_tUInt32* size /**< Receives the size in bytes of the object. */
     )
 {
@@ -2122,7 +2157,7 @@ pwr_tStatus gdh_MDAttribute(
  */
 pwr_tStatus gdh_MoveObject(
     pwr_tObjid oid, /**< The object that should be moved. */
-    pwr_tObjid poid /**< The object that should become the newe parent. */
+    pwr_tObjid poid /**< The object that should become the new parent. */
     )
 {
   pwr_tStatus sts = GDH__SUCCESS;
@@ -2280,9 +2315,9 @@ pwr_tStatus gdh_NameToAttrref(
     const char*
         name, /**< The argument is added to the parent to form the
                    complete item name. If the parent argument is supplied as
-                   pwr_cNobjid, this argument is considered to decsribe the
+                   pwr_cNobjid, this argument is considered to describe the
                    full name. */
-    pwr_sAttrRef* arp /**< The resulting attribute reference decsriptor. */
+    pwr_sAttrRef* arp /**< The resulting attribute reference descriptor. */
     )
 {
   pwr_tStatus sts = GDH__SUCCESS;
@@ -4335,6 +4370,7 @@ pwr_tStatus gdh_FWriteObjectR(
           case pwr_eType_ClassId:
           case pwr_eType_TypeId:
           case pwr_eType_CastId:
+	  case pwr_eType_Time:
             fprintf(fp, "%s \"%s\"\n", &name[1], value_str);
             break;
           default:
@@ -4479,6 +4515,7 @@ pwr_tStatus gdh_FReadObject(char* filename, /**< File specification */
     case pwr_eType_ClassId:
     case pwr_eType_TypeId:
     case pwr_eType_CastId:
+    case pwr_eType_Time:
       if (line_elem[1][0] == '"'
           && line_elem[1][strlen(line_elem[1]) - 1] == '"') {
         line_elem[1][strlen(line_elem[1]) - 1] = 0;

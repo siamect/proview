@@ -805,6 +805,7 @@ user = pwrrt.getUser()\n");
 typedef struct {
   PyObject_HEAD
   pwr_tOid oid;
+  pwr_tStatus sts;
 } OidObject;
 
 static PyObject *Oid_new(PyTypeObject *type, PyObject *args, PyObject *kwds);
@@ -879,6 +880,7 @@ static PyTypeObject OidType = {
 typedef struct {
   PyObject_HEAD
   pwr_tAttrRef aref;
+  pwr_tStatus sts;
 } ArefObject;
 
 static PyObject *Aref_new(PyTypeObject *type, PyObject *args, PyObject *kwds);
@@ -1159,6 +1161,7 @@ typedef struct {
   unsigned int size;
   void *p;
   pwr_tRefId refid;
+  pwr_tStatus sts;
 } SubObject;
 
 static PyObject *Sub_new(PyTypeObject *type, PyObject *args, PyObject *kwds);
@@ -1310,6 +1313,7 @@ Oid_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
   self = (OidObject *)type->tp_alloc(type, 0);
   if (self != NULL) {
     self->oid = pwr_cNOid;
+    self->sts = GDH__SUCCESS;
   }
 
   return (PyObject *)self;
@@ -1324,9 +1328,18 @@ Oid_str(PyObject *self)
 
   oid = ((OidObject *)self)->oid;
 
-  sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_path | cdh_mName_object);
-  if ( EVEN(sts))
-    strcpy( name, "Unknown");
+  if (oid.oix != 0) {
+    sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_path | cdh_mName_object);
+    if ( EVEN(sts))
+      return set_error(sts);
+  }
+  else {
+    sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_volume);
+    if ( EVEN(sts))
+      return set_error(sts);
+    else
+      name[strlen(name)-1] = 0;
+  }
 
   return PyUnicode_FromFormat("%s", name);
 }
@@ -1337,7 +1350,16 @@ Oid_richcompare(PyObject *self, PyObject *other, int op)
   PyObject *result = NULL;
 
   if ( Py_TYPE(other) != &OidType) {
-    result = Py_NotImplemented;
+    if (Py_TYPE(other) == &PyBool_Type) {
+      long oval = PyInt_AsLong(other);
+      if ((ODD(((OidObject *)self)->sts) && oval) ||
+	  (EVEN(((OidObject *)self)->sts) && !oval))
+	result = Py_True;
+      else
+	result = Py_False;
+    }
+    else
+      result = Py_NotImplemented;
   }
   else {
     switch ( op) {
@@ -1380,15 +1402,19 @@ Oid_init(OidObject *self, PyObject *args, PyObject *kwds)
   if ( name) {
     sts = gdh_NameToObjid( name, &oid);
     if ( EVEN(sts)) {
+      self->sts = sts;
       set_error(sts);
       return -1;
     }
   }
   else {
     sts = gdh_GetRootList(&oid);
-    if ( EVEN(sts))
+    if ( EVEN(sts)) {
+      self->sts = sts;
       return -1;
+    }
   }
+  self->sts = sts;
   self->oid = oid;
 
   return 0;
@@ -1397,12 +1423,24 @@ Oid_init(OidObject *self, PyObject *args, PyObject *kwds)
 static PyObject *
 Oid_name(OidObject *self, PyObject *args)
 {
+  if (EVEN(self->sts))
+    return set_error(self->sts);
+
   pwr_tOName name;
   pwr_tStatus sts;
 
-  sts = gdh_ObjidToName( self->oid, name, sizeof(name), cdh_mName_object);
-  if ( EVEN(sts))
-    strcpy( name, "");
+  if (self->oid.oix != 0) {
+    sts = gdh_ObjidToName( self->oid, name, sizeof(name), cdh_mName_object);
+    if ( EVEN(sts))
+      return set_error(sts);
+  }
+  else {
+    sts = gdh_ObjidToName( self->oid, name, sizeof(name), cdh_mName_volume);
+    if ( EVEN(sts))
+      return set_error(sts);
+    else
+      name[strlen(name)-1] = 0;
+  }
 
   return Py_BuildValue("s", name);
 }
@@ -1413,9 +1451,12 @@ Oid_fullName(OidObject *self, PyObject *args)
   pwr_tOName name;
   pwr_tStatus sts;
 
+  if (EVEN(self->sts))
+    return set_error(self->sts);
+
   sts = gdh_ObjidToName( self->oid, name, sizeof(name), cdh_mName_volumeStrict);
   if ( EVEN(sts))
-    strcpy( name, "");
+    return set_error(sts);
 
   return Py_BuildValue("s", name);
 }
@@ -1423,6 +1464,9 @@ Oid_fullName(OidObject *self, PyObject *args)
 static PyObject *
 Oid_oidStr(PyObject *s, PyObject *args)
 {
+  if (EVEN(((OidObject *)s)->sts))
+    return set_error(((OidObject *)s)->sts);
+
   char str[30];
   const char *name = 0;
   pwr_tOid oid = ((OidObject *)s)->oid;
@@ -1460,6 +1504,9 @@ Oid_oidStr(PyObject *s, PyObject *args)
 static PyObject *
 Oid_next(OidObject *self, PyObject *args)
 {
+  if (EVEN(self->sts))
+    return set_error(self->sts);
+
   pwr_tOid soid;
   OidObject *sibling;
   pwr_tStatus sts;
@@ -1487,6 +1534,9 @@ Oid_next(OidObject *self, PyObject *args)
 static PyObject *
 Oid_parent(OidObject *self, PyObject *args)
 {
+  if (EVEN(self->sts))
+    return set_error(self->sts);
+
   pwr_tOid poid;
   OidObject *parent;
   pwr_tStatus sts;
@@ -1506,6 +1556,9 @@ Oid_parent(OidObject *self, PyObject *args)
 static PyObject *
 Oid_child(OidObject *self, PyObject *args)
 {
+  if (EVEN(self->sts))
+    return set_error(self->sts);
+
   pwr_tOid coid;
   OidObject *child;
   pwr_tStatus sts;
@@ -1525,6 +1578,9 @@ Oid_child(OidObject *self, PyObject *args)
 static PyObject *
 Oid_children(PyObject *s)
 {
+  if (EVEN(((OidObject *)s)->sts))
+    return set_error(((OidObject *)s)->sts);
+
   pwr_tOid coid;
   OidObject *child;
   pwr_tStatus sts;
@@ -1555,6 +1611,9 @@ Oid_children(PyObject *s)
 static PyObject *
 Oid_cid(OidObject *self, PyObject *args)
 {
+  if (EVEN(self->sts))
+    return set_error(self->sts);
+
   pwr_tCid cid;
   CidObject *cid_object;
   pwr_tStatus sts;
@@ -1573,6 +1632,9 @@ Oid_cid(OidObject *self, PyObject *args)
 static PyObject *
 Oid_attribute(OidObject *self, PyObject *args)
 {
+  if (EVEN(self->sts))
+    return set_error(self->sts);
+
   pwr_tAttrRef aref, oaref;
   ArefObject *aref_object;
   pwr_tStatus sts;
@@ -1602,9 +1664,10 @@ Aref_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
   ArefObject *self;
 
   self = (ArefObject *)type->tp_alloc(type, 0);
-  if (self != NULL)
+  if (self != NULL) {
     self->aref = pwr_cNAttrRef;
-
+    self->sts = GDH__SUCCESS;
+  }
   return (PyObject *)self;
 }
 
@@ -1686,6 +1749,7 @@ Aref_init(ArefObject *self, PyObject *args, PyObject *kwds)
     sts = gdh_NameToAttrref( pwr_cNOid, name, &self->aref);
     if ( EVEN(sts)) {
       set_error(sts);
+      self->sts = sts;
       return -1;
     }
   }
@@ -1696,6 +1760,9 @@ Aref_init(ArefObject *self, PyObject *args, PyObject *kwds)
 static PyObject *
 Aref_name(ArefObject *self, PyObject *args)
 {
+  if (EVEN(self->sts))
+    return set_error(self->sts);
+
   pwr_tOName name;
   pwr_tStatus sts;
 
@@ -1709,6 +1776,9 @@ Aref_name(ArefObject *self, PyObject *args)
 static PyObject *
 Aref_fullName(ArefObject *self, PyObject *args)
 {
+  if (EVEN(self->sts))
+    return set_error(self->sts);
+
   pwr_tOName name;
   pwr_tStatus sts;
 
@@ -1722,6 +1792,9 @@ Aref_fullName(ArefObject *self, PyObject *args)
 static PyObject *
 Aref_arefStr(ArefObject *self, PyObject *args)
 {
+  if (EVEN(self->sts))
+    return set_error(self->sts);
+
   pwr_tAName name;
 
   cdh_ArefToString( name, sizeof(name), &self->aref, 1);
@@ -1732,6 +1805,9 @@ Aref_arefStr(ArefObject *self, PyObject *args)
 static PyObject *
 Aref_tid(ArefObject *self, PyObject *args)
 {
+  if (EVEN(self->sts))
+    return set_error(self->sts);
+
   pwr_tTid tid;
   TidObject *tid_object;
   pwr_tStatus sts;
@@ -1750,6 +1826,9 @@ Aref_tid(ArefObject *self, PyObject *args)
 static PyObject *
 Aref_value(ArefObject *self, PyObject *args)
 {
+  if (EVEN(self->sts))
+    return set_error(self->sts);
+
   pwr_tStatus sts;
   char *buf;
   pwr_eType atype;
@@ -1827,14 +1906,16 @@ Aref_value(ArefObject *self, PyObject *args)
   case pwr_eType_Float32: {
     pwr_tFloat32 value = *(pwr_tFloat32 *)buf;
     free(buf);
-    return Py_BuildValue("d", value);
+    return Py_BuildValue("f", value);
   }
   case pwr_eType_Float64: {
     pwr_tFloat64 value = *(pwr_tFloat64 *)buf;
     free(buf);
-    return Py_BuildValue("D", value);
+    return Py_BuildValue("d", value);
   }
-  case pwr_eType_String: {
+  case pwr_eType_String:
+  case pwr_eType_Text:
+  case pwr_eType_ProString: {
     PyObject *ret = Py_BuildValue("s", buf);
     free(buf);
     return ret;
@@ -1881,6 +1962,9 @@ Aref_value(ArefObject *self, PyObject *args)
 static PyObject *
 Aref_setValue(ArefObject *self, PyObject *args)
 {
+  if (EVEN(self->sts))
+    return set_error(self->sts);
+
   pwr_tStatus sts;
   char *buf;
   pwr_eType atype;
@@ -1967,7 +2051,7 @@ Aref_setValue(ArefObject *self, PyObject *args)
     break;
   }
   case pwr_eType_Float64: {
-    if ( !PyArg_ParseTuple(args, "D|I", buf, &publicwrite))
+    if ( !PyArg_ParseTuple(args, "d|I", buf, &publicwrite))
       goto error_return;
     break;
   }
@@ -2602,11 +2686,15 @@ Sub_init(SubObject *self, PyObject *args, PyObject *kwds)
     return -1;
 
   sts = gdh_GetAttributeCharacteristics(name, &atype, &asize, 0, 0);
-  if (EVEN(sts)) 
+  if (EVEN(sts)) {
+    self->sts = sts;
+    self->p = 0;
     return -1;
-  
+  }
+
   sts = gdh_RefObjectInfo(name, &self->p, &self->refid, asize);
   if ( EVEN(sts)) {
+    self->sts = sts;
     self->p = 0;
     return -1;
   }
@@ -2620,7 +2708,7 @@ static PyObject *
 Sub_value(SubObject *self, PyObject *args)
 {
   if ( self->p == 0)
-    return NULL;
+    return set_error(self->sts);
 
   switch ( self->type) {
   case pwr_eType_Boolean: {
@@ -2673,11 +2761,11 @@ Sub_value(SubObject *self, PyObject *args)
   }
   case pwr_eType_Float32: {
     pwr_tFloat32 value = *(pwr_tFloat32 *)self->p;
-    return Py_BuildValue("d", value);
+    return Py_BuildValue("f", value);
   }
   case pwr_eType_Float64: {
     pwr_tFloat64 value = *(pwr_tFloat64 *)self->p;
-    return Py_BuildValue("D", value);
+    return Py_BuildValue("d", value);
   }
   case pwr_eType_String:
     return Py_BuildValue("s", self->p);
@@ -2712,7 +2800,7 @@ Sub_value(SubObject *self, PyObject *args)
     return (PyObject *)arefo;
   }
   default:
-    return NULL;
+    return set_error(GDH__BADOBJTYPE);
   }
   Py_RETURN_NONE;
 }
@@ -2801,7 +2889,7 @@ Sub_setValue(SubObject *self, PyObject *args)
     break;
   }
   case pwr_eType_Float64: {
-    if ( !PyArg_ParseTuple(args, "D", buf))
+    if ( !PyArg_ParseTuple(args, "d", buf))
       goto error_return;
     break;
   }
@@ -3227,9 +3315,8 @@ static PyObject *pwrrt_volume(PyObject *self, PyObject *args)
   }
 
   o = (OidObject *)Oid_new(&OidType, 0, 0);
-  if (o != NULL) {
+  if (o != NULL)
     o->oid = oid;
-  }
 
   return (PyObject *)o;
 }
@@ -3267,6 +3354,8 @@ static PyObject *pwrrt_object(PyObject *self, PyObject *args)
 {
   PyObject *o = Oid_new(&OidType, args, 0);
   Oid_init((OidObject *)o, args, 0);
+  if (EVEN(((OidObject *)o)->sts))
+    return NULL;
   return o;
 }
 
@@ -3274,6 +3363,8 @@ static PyObject *pwrrt_attribute(PyObject *self, PyObject *args)
 {
   PyObject *a = Aref_new(&ArefType, args, 0);
   Aref_init((ArefObject *)a, args, 0);
+  if (EVEN(((ArefObject *)a)->sts))
+    return NULL;
   return a;
 }
 

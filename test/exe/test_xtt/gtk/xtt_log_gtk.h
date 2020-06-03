@@ -34,30 +34,46 @@
  * General Public License plus this exception.
  */
 
-#ifndef rt_dvol_h
-#define rt_dvol_h
+#ifndef xtt_log_gtk_h
+#define xtt_log_gtk_h
 
-/* rt_dvol.h -- Dynamic volumes  */
+#include "../src/xtt_log.h"
+#include "xtt_lognav_gtk.h"
+#include "cow_wow_gtk.h"
 
-#include "rt_vol.h"
+/* ge_log.h -- Ge logibute editor */
 
-gdb_sObject* dvol_AdoptObject(
-    pwr_tStatus* sts, gdb_sObject* op, gdb_sObject* p_op, net_sNotify* nmp);
+class CoWowRecall;
+class CoWowEntryGtk;
 
-gdb_sObject* dvol_CreateObject(pwr_tStatus* sts, cdh_sParseName* pn,
-    pwr_tClassId cid, pwr_tUInt32 size, pwr_tObjid oid /* Requested objid, */
-    );
+class XttLogGtk : public XttLog {
+public:
+  XttLogGtk(GtkWidget* a_parent_wid, void* a_parent_ctx, LogNav_hier *a_tree);
+  GtkWidget* parent_wid;
+  GtkWidget* brow_widget;
+  GtkWidget* form_widget;
+  GtkWidget* toplevel;
+  GtkWidget* msg_label;
+  GtkWidget* cmd_prompt;
+  GtkWidget* cmd_input;
+  GtkWidget* pane;
+  CoWowRecall* cmd_recall;
+  CoWowEntryGtk* cmd_entry;
 
-pwr_tBoolean dvol_DeleteObject(pwr_tStatus* sts, pwr_tObjid oid);
+  void message(char severity, char* message);
+  void set_prompt(const char* prompt);
 
-pwr_tBoolean dvol_DeleteObjectTree(pwr_tStatus* sts, pwr_tObjid oid);
+  static void activate_command(GtkWidget* w, gpointer data);
+  static void valchanged_cmd_input(GtkWidget* w, gpointer data);
+  static void activate_print(GtkWidget* w, gpointer data);
+  static void activate_close(GtkWidget* w, gpointer data);
+  static void activate_zoom_in(GtkWidget* w, gpointer data);
+  static void activate_zoom_out(GtkWidget* w, gpointer data);
+  static void activate_zoom_reset(GtkWidget* w, gpointer data);
+  static void activate_help(GtkWidget* w, gpointer data);
+  static void activate_help_proview(GtkWidget* w, gpointer data);
 
-gdb_sObject* dvol_MoveObject(pwr_tStatus* sts, pwr_tObjid oid, pwr_tObjid poid);
-
-gdb_sObject* dvol_RenameObject(
-    pwr_tStatus* sts, pwr_tObjid oid, cdh_sParseName* pn);
-
-gdb_sObject* dvol_UnadoptObject(
-    pwr_tStatus* sts, gdb_sObject* op, gdb_sObject* pop, net_sNotify* nmp);
+  ~XttLogGtk();
+};
 
 #endif

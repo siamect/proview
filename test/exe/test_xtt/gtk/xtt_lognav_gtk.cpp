@@ -34,30 +34,49 @@
  * General Public License plus this exception.
  */
 
-#ifndef rt_dvol_h
-#define rt_dvol_h
+/* sev_lognav.cpp -- Log file viewer */
 
-/* rt_dvol.h -- Dynamic volumes  */
+#include "co_cdh.h"
+#include "co_time.h"
 
-#include "rt_vol.h"
+#include "flow_browwidget_gtk.h"
+#include "flow_msg.h"
 
-gdb_sObject* dvol_AdoptObject(
-    pwr_tStatus* sts, gdb_sObject* op, gdb_sObject* p_op, net_sNotify* nmp);
+#include "glow_growapi.h"
+#include "glow_growwidget_gtk.h"
 
-gdb_sObject* dvol_CreateObject(pwr_tStatus* sts, cdh_sParseName* pn,
-    pwr_tClassId cid, pwr_tUInt32 size, pwr_tObjid oid /* Requested objid, */
-    );
+#include "xtt_log_gtk.h"
 
-pwr_tBoolean dvol_DeleteObject(pwr_tStatus* sts, pwr_tObjid oid);
+//
+// Create the navigator widget
+//
+LogNavGtk::LogNavGtk(void* xn_parent_ctx, GtkWidget* xn_parent_wid,
+    LogNav_hier *xn_tree, GtkWidget** w,
+    pwr_tStatus* status)
+    : LogNav(xn_parent_ctx, xn_tree, status),
+      parent_wid(xn_parent_wid)
+{
+  form_widget
+      = scrolledbrowwidgetgtk_new(LogNav::init_brow_cb, this, &brow_widget);
 
-pwr_tBoolean dvol_DeleteObjectTree(pwr_tStatus* sts, pwr_tObjid oid);
+  gtk_widget_show_all(brow_widget);
 
-gdb_sObject* dvol_MoveObject(pwr_tStatus* sts, pwr_tObjid oid, pwr_tObjid poid);
+  // Create the root item
+  *w = form_widget;
 
-gdb_sObject* dvol_RenameObject(
-    pwr_tStatus* sts, pwr_tObjid oid, cdh_sParseName* pn);
+  *status = 1;
+}
+//
+//  Delete a nav context
+//
 
-gdb_sObject* dvol_UnadoptObject(
-    pwr_tStatus* sts, gdb_sObject* op, gdb_sObject* pop, net_sNotify* nmp);
+LogNavGtk::~LogNavGtk()
+{
+  delete brow;
+  gtk_widget_destroy(form_widget);
+}
 
-#endif
+void LogNavGtk::set_inputfocus()
+{
+  gtk_widget_grab_focus(brow_widget);
+}

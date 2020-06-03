@@ -73,6 +73,15 @@ int crr_object(void* parent_ctx, char* objectname,
     void (*insert_cb)(void*, void*, navc_eItemType, char*, char*, int),
     int (*name_to_objid_cb)(void*, char*, pwr_tObjid*),
     int (*get_volume_cb)(void*, pwr_tVid*, pwr_tVid));
+
+void *tst_log_open(pwr_tStatus *sts, char *category, char *file);
+void tst_log_close(void *log);
+void tst_log_log(void *log, const char severity, const char *text1, 
+		 const char *text2);
+void tst_log_slog(void *log, const char severity, const char *text1, 
+		 const char *text2, pwr_tStatus status);
+void tst_log_vlog(void *log, const char severity, const char *format, ...);
+
 #if defined __cplusplus
 }
 #endif

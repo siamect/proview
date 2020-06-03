@@ -907,6 +907,8 @@ sub create_all_modules()
   create_module();
   _module("opc");
   create_module();
+  _module("test");
+  create_module();
   _module("ssabox");
   create_module();
   _module("othermanu");

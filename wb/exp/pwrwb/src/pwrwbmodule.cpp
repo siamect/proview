@@ -1928,12 +1928,12 @@ Aref_value(PyObject *s, PyObject *args)
   case pwr_eType_Float32: {
     pwr_tFloat32 value = *(pwr_tFloat32 *)buf;
     free(buf);
-    return Py_BuildValue("d", value);
+    return Py_BuildValue("f", value);
   }
   case pwr_eType_Float64: {
     pwr_tFloat64 value = *(pwr_tFloat64 *)buf;
     free(buf);
-    return Py_BuildValue("D", value);
+    return Py_BuildValue("d", value);
   }
   case pwr_eType_String: {
     PyObject *ret = Py_BuildValue("s", buf);
@@ -2073,7 +2073,7 @@ Aref_setValue(PyObject *s, PyObject *args)
     break;
   }
   case pwr_eType_Float64: {
-    if ( !PyArg_ParseTuple(args, "D", buf))
+    if ( !PyArg_ParseTuple(args, "d", buf))
       goto error_return;
     break;
   }

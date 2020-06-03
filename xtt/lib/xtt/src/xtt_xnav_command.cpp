@@ -6172,6 +6172,41 @@ static int xnav_delete_func(void* client_data, void* client_flag)
 
     sts = xnav->delete_object(name_str);
     return sts;
+  } else if (str_NoCaseStrncmp(arg1_str, "TREE", strlen(arg1_str)) == 0) {
+    // Command is "DELETE TREE"
+
+    char name_str[80];
+    pwr_tObjid objid;
+
+    IF_NOGDH_RETURN;
+
+    // Check authorization
+    if (!((xnav->priv & pwr_mPrv_RtWrite) || (xnav->priv & pwr_mPrv_System))) {
+      xnav->message('E', "Not authorized for this operation");
+      return 0;
+    }
+
+    if (EVEN(dcli_get_qualifier("/NAME", name_str, sizeof(name_str)))) {
+      xnav->message('E', "Enter name");
+      return XNAV__HOLDCOMMAND;
+    }
+
+
+    /* Get objid for the object */
+    sts = gdh_NameToObjid(name_str, &objid);
+    if (EVEN(sts)) {
+      xnav->message('E', "Object does not exist");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    sts = gdh_DeleteObjectTree(objid);
+    if (EVEN(sts)) {
+      xnav->message('E', "Unable to delete object tree");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    xnav->message('I', "Object deleted");
+    return XNAV__SUCCESS;
   } else
     xnav->message('E', "Syntax error");
 
@@ -8783,6 +8818,11 @@ int xnav_cut_segments(char* outname, char* name, int segments)
   char* s[20];
   int i, j, last_i = 0;
 
+  if (segments == 0) {
+    strcpy(outname, "");
+    return 1;
+  }
+      
   for (i = 0; i < segments; i++) {
     s[i] = strrchr(name, '-');
     if (s[i] == 0) {
@@ -8938,7 +8978,7 @@ static int xnav_attribute_func(char* name, int* return_decl,
     if (EVEN(sts))
       strcpy(string_val, "Undefined Object");
     else
-      strncpy(string_val, object_element, sizeof(string_val));
+      strncpy(string_val, hier_name, sizeof(string_val));
     string_val[sizeof(string_val) - 1] = 0;
     decl = CCM_DECL_STRING;
     break;
@@ -8962,6 +9002,13 @@ static int xnav_attribute_func(char* name, int* return_decl,
     sts = time_AtoAscii((pwr_tTime*)object_element, time_eFormat_DateAndTime,
         string_val, sizeof(string_val));
     string_val[20] = 0;
+    decl = CCM_DECL_STRING;
+    break;
+  }
+  case pwr_eType_DeltaTime: {
+    /* Convert time to ascii */
+    sts = time_DtoAscii((pwr_tDeltaTime*)object_element, 1,
+        string_val, sizeof(string_val));
     decl = CCM_DECL_STRING;
     break;
   }

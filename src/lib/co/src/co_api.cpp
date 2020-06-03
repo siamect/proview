@@ -34,7 +34,9 @@
  * General Public License plus this exception.
  */
 
+#include <stdarg.h>
 #include "co_nav_crr.h"
+#include "co_tst_log.h"
 
 extern "C" {
 #include "co_api.h"
@@ -102,4 +104,38 @@ int crr_object(void* parent_ctx, char* objectname,
 
   delete navcrr;
   return sts;
+}
+
+void *tst_log_open(pwr_tStatus *sts, char *category, char *file)
+{
+  tst_log *log = new tst_log(sts, category, file);
+  return (void *)log;
+}
+
+void tst_log_close(void *log)
+{
+  delete (tst_log *)log;
+}
+
+void tst_log_log(void *log, const char severity, const char *text1, 
+		 const char *text2)
+{
+  ((tst_log *)log)->log(severity, text1, text2);
+}
+
+void tst_log_slog(void *log, const char severity, const char *text1, 
+		  const char *text2, pwr_tStatus status)
+{
+  ((tst_log *)log)->log(severity, text1, text2, status);
+}
+
+void tst_log_vlog(void *log, const char severity, const char *format, ...)
+{
+  va_list ap;
+  char msg[200];
+
+  va_start(ap, format);
+  vsnprintf(msg, sizeof(msg), format, ap);
+  va_end(ap);
+  ((tst_log *)log)->log(severity, msg);
 }

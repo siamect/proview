@@ -1,3 +1,4 @@
+
 /**
  * ProviewR   Open Source Process Control.
  * Copyright (C) 2005-2020 SSAB EMEA AB.
@@ -437,7 +438,7 @@ pwr_tStatus cdh_AttrValueToString(
     snprintf(String, MaxSize, "%s", (char*)Value);
     break;
   case pwr_eType_ProString: {
-    int len = MAX(strlen((char*)Value), MaxSize);
+    int len = MIN(strlen((char*)Value), MaxSize-1);
     int i;
     strcpy(String, "");
     for (i = 0; i < len; i++)
@@ -604,7 +605,7 @@ pwr_tStatus cdh_StringToAttrValue(
       }
     }
     ui16val = ui32val;
-    memcpy(Value, &ui16val, sizeof(ui32val));
+    memcpy(Value, &ui16val, sizeof(ui16val));
     break;
 
   case pwr_eType_UInt32:
@@ -812,11 +813,11 @@ pwr_tStatus cdh_StringToObjid(const char* s, pwr_tObjid* oid)
     s++;
 
   if (sscanf(s, "%d.%d.%d.%d:%u%*s", &vid_3, &vid_2, &vid_1, &vid_0, &oix) != 5)
-    return CDH__INVCID;
+    return CDH__INVOID;
 
   if (vid_3 > cdh_cMaxVidGroup || vid_2 > cdh_cMaxVidGroup
       || vid_1 > cdh_cMaxVidGroup || vid_0 > cdh_cMaxVidGroup) {
-    return CDH__INVCID;
+    return CDH__INVOID;
   }
 
   loid.o.vid_3 = vid_3;
@@ -832,9 +833,10 @@ pwr_tStatus cdh_StringToObjid(const char* s, pwr_tObjid* oid)
 
 //! Convert AttrRef string to id.
 /*!
-  Convert a string of format "_A1.2.3.4:34(_T44.33:0.5.1)[760,4]" ('_A' is
+  Convert a string of format "_A1.2.3.4:34(_T44.33:0.5.1)[760.4]" ('_A' is
   optional), where
-  1.2.3.4 is the volume id and 34 is the object index.
+  1.2.3.4 is the volume id and 34 is the object index, 
+  _T44.33:0.5.1 is the body typeid, 760 the offset and 4 the size.
 
   \param s	String.
   \param aref	Attribute reference.
@@ -1273,7 +1275,7 @@ char* cdh_AttrRefToString(pwr_sAttrRef* aref, int prefix)
     If 's' is non null the resultant string will be catenated
     to 's', otherwise the resultant string will be returned.
 
-    If 'prefix' is not zero, a '_V' prefix will be included in
+    If 'prefix' is not zero, a '_N' prefix will be included in
     the resultant string.
 
     If 'suffix' is not zero, a  ':' suffix will be included in
@@ -2733,6 +2735,11 @@ void cdh_CutNameSegments(char* outname, char* name, int segments)
 {
   char* s[20];
   int i, j, last_i = 0;
+
+  if (segments == 0) {
+    strcpy(outname, "");
+    return;
+  }
 
   for (i = 0; i < segments; i++) {
     s[i] = strrchr(name, '-');

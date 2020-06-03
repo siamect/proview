@@ -70,3 +70,4 @@ invtypename	<invalid type name>					/error
 invattrname	<invalid attribute name>				/error
 invbid		<invalid body identifier>				/error
 invattrindex	<invalid attribute index>				/error
+invoid		<invalid object identity format>				/error

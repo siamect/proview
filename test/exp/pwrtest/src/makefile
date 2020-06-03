@@ -8,8 +8,8 @@ ifndef rules_mk
  include $(pwre_croot)/src/tools/bld/src/rules.mk
 endif
 
-export_obj := $(pwr_exe)/pwrrt.so
-clean_obj := clean_pwrrt.so
+export_obj := $(pwr_exe)/pwrtest.so
+clean_obj := clean_pwrtest.so
 
 .PHONY : all init copy lib exe clean
 
@@ -34,19 +34,19 @@ silent :
 
 .SUFFIXES:
 
-$(exe_dir)/pwrrt.so : pwrrtmodule.c
+$(exe_dir)/pwrtest.so : pwrtestmodule.cpp
 	@ if [ "$(PWRE_CONF_PYDEV)" = "1" ]; then\
-	    echo "Bulding Python c extension pwrrt";\
-	    python setup_pwrrt.py -q build --build-base $(bld_dir);\
+	    echo "Bulding Python c extension pwrtest";\
+	    python setup_pwrtest.py -q build --build-base $(bld_dir);\
 	    if [ "$(pwre_hw)" = "hw_x86_64" ]; then \
-	      mv $(bld_dir)/lib.linux-x86_64-2.7/pwrrt.so $(pwr_exe); \
+	      mv $(bld_dir)/lib.linux-x86_64-2.7/pwrtest.so $(pwr_exe); \
 	    elif [ "$(pwre_hw)" = "hw_x86" ]; then \
-	      mv $(bld_dir)/lib.linux-i686-2.7/pwrrt.so $(pwr_exe); \
+	      mv $(bld_dir)/lib.linux-i686-2.7/pwrtest.so $(pwr_exe); \
 	    fi;\
-	    python setup_pwrrt.py -q install_egg_info --install-dir $(pwr_exe);\
+	    python setup_pwrtest.py -q install_egg_info --install-dir $(pwr_exe);\
 	  else\
-	    echo "Not building Python c extension pwrrt";\
+	    echo "Not building Python c extension pwrtest";\
 	  fi
 
-clean_pwrrt.so : pwrrtmodule.c
-	rm $(pwr_exe)/pwrrt.so
+clean_pwrtest.so : pwrtestmodule.cpp
+	rm $(pwr_exe)/pwrtest.so

@@ -161,7 +161,7 @@ void rt_sysmon::open()
     } catch (co_error& e) {
       delete o;
       objects.pop_back();
-      errh_Error("DiskSup configuration error: &s", (char*)e.what().c_str());
+      errh_Error("DiskSup configuration error: %s", (char*)e.what().c_str());
     }
   }
 }
