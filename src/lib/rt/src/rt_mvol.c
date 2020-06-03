@@ -801,7 +801,8 @@ gdb_sClass* mvol_NameToClass(pwr_tStatus* sts, const char* name)
 }
 
 static void insertCattObject(
-    pwr_tStatus* sts, pwr_tCid cid, gdb_sAttribute* ap, int offset)
+   pwr_tStatus* sts, pwr_tCid cid, gdb_sAttribute* ap, int offset,
+   gdb_sAttribute* pap)
 {
   gdb_sClassAttrKey key;
   gdb_sClassAttr* item;
@@ -827,6 +828,9 @@ static void insertCattObject(
       /* Insert in found item */
       item->offset[item->numOffset] = offset + ap->offs;
       item->flags[item->numOffset++] = ap->flags;
+      if (ap->flags.b.superclass && pap)
+	/* Inherit disable flag */
+	ap->flags.b.disableattr = pap->flags.b.disableattr;
     } else {
       /* Insert a new item */
       pool_tRef itemr;
@@ -843,7 +847,7 @@ static void insertCattObject(
     for (i = 0; i < cp->acount; i++) {
       if (cp->attr[i].flags.b.isclass && cdh_tidIsCid(cp->attr[i].tid)
           && !cp->attr[i].flags.b.pointer) {
-        insertCattObject(sts, cid, &cp->attr[i], offset + ap->offs);
+        insertCattObject(sts, cid, &cp->attr[i], offset + ap->offs, ap);
         if (EVEN(*sts))
           return;
       }
@@ -876,7 +880,7 @@ static void insertCattObject(
         if (cp->attr[i].flags.b.isclass && cdh_tidIsCid(cp->attr[i].tid)
             && !cp->attr[i].flags.b.pointer) {
           insertCattObject(sts, cid, &cp->attr[i],
-              offset + ap->offs + j * (ap->size / ap->elem));
+	    offset + ap->offs + j * (ap->size / ap->elem), 0);
           if (EVEN(*sts))
             return;
         }
@@ -904,7 +908,7 @@ void mvol_BuildCatt(pwr_tStatus* sts)
     for (i = 0; i < cp->acount; i++) {
       if (cp->attr[i].flags.b.isclass && cdh_tidIsCid(cp->attr[i].tid)
           && !cp->attr[i].flags.b.pointer) {
-        insertCattObject(sts, cid, &cp->attr[i], 0);
+        insertCattObject(sts, cid, &cp->attr[i], 0, 0);
         if (EVEN(*sts))
           return;
       }

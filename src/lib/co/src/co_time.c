@@ -111,7 +111,7 @@ static pwr_tStatus validateTm(struct tm* tms)
 
   /* Check generic ranges.  */
 
-  if (69 > tms->tm_year || tms->tm_year > 137) /* EPOCH is 1970 end feb 2038 */
+  if (69 > tms->tm_year /*|| tms->tm_year > 137*/) /* EPOCH is 1970 end feb 2038 */
     return TIME__RANGE;
   else if (0 > tms->tm_mon || tms->tm_mon > 11)
     return TIME__RANGE;
@@ -260,10 +260,10 @@ pwr_tTime* time_Aadd_NE(pwr_tTime* result, pwr_tTime* t, pwr_tDeltaTime* a)
 }
 
 //! Compare two timespecs.
-/*!   Returns
-    1 if t1  > t2
-    0 if t1 == t2
-   -1 if t1  < t2
+/*!   Returns \n
+    1 if t1  > t2 \n
+    0 if t1 == t2 \n
+   -1 if t1  < t2 \n
 
    If argument 't2' is NULL the comparison will
    be done as if t2 == 0.
@@ -291,10 +291,10 @@ int time_Acomp(pwr_tTime* t1, pwr_tTime* t2)
 }
 
 //! Compare two timespecs.
-/*!   Returns
-    1 if t1  > t2
-    0 if t1 == t2
-   -1 if t1  < t2
+/*!   Returns \n
+    1 if t1  > t2 \n
+    0 if t1 == t2 \n
+   -1 if t1  < t2 \n
 
    If argument 't2' is NULL the comparison will
    be done as if t2 == 0.
@@ -482,7 +482,11 @@ pwr_tDeltaTime* time_Dabs(pwr_tDeltaTime* result, pwr_tDeltaTime* t)
 
   if (r == NULL)
     r = t;
-
+  else {
+    r->tv_sec = t->tv_sec;
+    r->tv_nsec = t->tv_nsec;
+  }
+  
   if (r->tv_sec < 0)
     r->tv_sec = -r->tv_sec;
   if (r->tv_nsec < 0)
@@ -508,6 +512,10 @@ pwr_tDeltaTime* time_Dabs_NE(pwr_tDeltaTime* result, pwr_tDeltaTime* t)
 
   if (r == NULL)
     r = t;
+  else {
+    r->tv_sec = t->tv_sec;
+    r->tv_nsec = t->tv_nsec;
+  }
 
   if (notADeltaTime(t)) {
     *r = pwr_cNotADeltaTime;
@@ -599,10 +607,10 @@ pwr_tDeltaTime* time_Dadd_NE(
 }
 
 //! Compare two delta times.
-/*!   Returns
-    1 if t1  > t2
-    0 if t1 == t2
-   -1 if t1  < t2
+/*!   Returns \n
+    1 if t1  > t2 \n
+    0 if t1 == t2 \n
+   -1 if t1  < t2 \n
 
    If argument 't2' is NULL the comparison will
    be done as if t2 == 0.
@@ -630,10 +638,10 @@ int time_Dcomp(pwr_tDeltaTime* t1, pwr_tDeltaTime* t2)
 }
 
 //! Compare two delta times.
-/*!   Returns
-    1 if t1  > t2
-    0 if t1 == t2
-   -1 if t1  < t2
+/*!   Returns \n
+    1 if t1  > t2 \n
+    0 if t1 == t2 \n
+   -1 if t1  < t2 \n
 
    If argument 't2' is NULL the comparison will
    be done as if t2 == 0.
@@ -680,6 +688,10 @@ pwr_tDeltaTime* time_Dneg(pwr_tDeltaTime* result, pwr_tDeltaTime* t)
 
   if (r == NULL)
     r = t;
+  else {
+    r->tv_sec = t->tv_sec;
+    r->tv_nsec = t->tv_nsec;
+  }
 
   r->tv_sec = -r->tv_sec;
   r->tv_nsec = -r->tv_nsec;
@@ -705,6 +717,10 @@ pwr_tDeltaTime* time_Dneg_NE(pwr_tDeltaTime* result, pwr_tDeltaTime* t)
 
   if (r == NULL)
     r = t;
+  else {
+    r->tv_sec = t->tv_sec;
+    r->tv_nsec = t->tv_nsec;
+  }
 
   if (notADeltaTime(t)) {
     *r = pwr_cNotADeltaTime;
@@ -796,8 +812,10 @@ pwr_tDeltaTime* time_Dsub_NE(
 pwr_tStatus time_DtoAscii(
     pwr_tDeltaTime* dt, int hundreds, char* buf, int bufsize)
 {
-  char tmpStr[24];
+  char tmpStr[32];
   div_t day, hour, min;
+  pwr_tDeltaTime t;
+  int neg = 0;
 
   if (dt == NULL)
     return TIME__IVDTIME;
@@ -808,6 +826,13 @@ pwr_tStatus time_DtoAscii(
     return TIME__NADT;
   }
 
+  if (dt->tv_sec < 0 || dt->tv_nsec < 0) {    
+    neg = 1;
+    t.tv_sec = abs(dt->tv_sec);
+    t.tv_nsec = abs(dt->tv_nsec);
+    dt = &t;
+  }
+
   day = div(dt->tv_sec, 24 * 3600);
   hour = div(day.rem, 3600);
   min = div(hour.rem, 60);
@@ -815,17 +840,17 @@ pwr_tStatus time_DtoAscii(
   if (day.quot) {
     if (hundreds) {
       long int nsec = dt->tv_nsec / 10000000;
-      sprintf(tmpStr, "%d %d:%02d:%02d.%02ld", day.quot, hour.quot, min.quot,
+      sprintf(tmpStr, "%s%d %d:%02d:%02d.%02ld", neg?"-":"", day.quot, hour.quot, min.quot,
           min.rem, nsec);
     } else
       sprintf(
-          tmpStr, "%d %d:%02d:%02d", day.quot, hour.quot, min.quot, min.rem);
+          tmpStr, "%s%d %d:%02d:%02d", neg?"-":"", day.quot, hour.quot, min.quot, min.rem);
   } else {
     if (hundreds) {
       long int nsec = dt->tv_nsec / 10000000;
-      sprintf(tmpStr, "%d:%02d:%02d.%02ld", hour.quot, min.quot, min.rem, nsec);
+      sprintf(tmpStr, "%s%d:%02d:%02d.%02ld", neg?"-":"", hour.quot, min.quot, min.rem, nsec);
     } else
-      sprintf(tmpStr, "%d:%02d:%02d", hour.quot, min.quot, min.rem);
+      sprintf(tmpStr, "%s%d:%02d:%02d", neg?"-":"", hour.quot, min.quot, min.rem);
   }
 
   strncpy(buf, tmpStr, bufsize);
@@ -868,6 +893,7 @@ pwr_tStatus time_AtoAscii(
   switch (format) {
   case time_eFormat_FileDateAndTime:
   case time_eFormat_FileDate:
+  case time_eFormat_TimeAndDate:
     break;
   default:
     sprintf(tmpStr, ".%02d", (int)(tp->tv_nsec / 10000000));
@@ -893,12 +919,18 @@ pwr_tStatus time_AsciiToD(const char* tstr, pwr_tDeltaTime* ts)
   char buf[64];
   int day, hour = 0, min, sec, hun = 0;
   int useday = 1;
+  int neg = 0;
 
   if ( streq( tstr, "NotADeltaTime")) {
     *ts = pwr_cNotADeltaTime;
     return TIME__SUCCESS;
   }
-  strncpy(buf, tstr, sizeof(buf) - 1);
+  if (*tstr == '-') {
+    strncpy(buf, &tstr[1], sizeof(buf) - 1);
+    neg = 1;
+  }
+  else 
+    strncpy(buf, tstr, sizeof(buf) - 1);
   buf[sizeof(buf) - 1] = '\0';
   sp = buf;
 
@@ -942,6 +974,10 @@ pwr_tStatus time_AsciiToD(const char* tstr, pwr_tDeltaTime* ts)
 
   ts->tv_sec = day * 24 * 3600 + hour * 3600 + min * 60 + sec;
   ts->tv_nsec = hun * 10000000;
+  if (neg) {
+    ts->tv_sec = -ts->tv_sec;
+    ts->tv_nsec = -ts->tv_nsec;
+  }
 
   return TIME__SUCCESS;
 }
@@ -1309,6 +1345,7 @@ pwr_tFloat64 time_DToFloat64(pwr_tFloat64* f, pwr_tDeltaTime* dt)
   return *fp;
 }
 
+//! Convert delta time to clock time.
 time_tClock time_DtoClock(pwr_tStatus* status, pwr_tDeltaTime* tp)
 {
   pwr_dStatus(sts, status, TIME__SUCCESS);
@@ -1316,6 +1353,7 @@ time_tClock time_DtoClock(pwr_tStatus* status, pwr_tDeltaTime* tp)
   return tp->tv_sec * 100 + tp->tv_nsec / 10000000;
 }
 
+//! Convert clock time to delta time.
 pwr_tDeltaTime* time_ClockToD(
     pwr_tStatus* status, pwr_tDeltaTime* tp, time_tClock clock)
 {
@@ -1331,6 +1369,7 @@ pwr_tDeltaTime* time_ClockToD(
   return tp;
 }
 
+//! Zero a delta time.
 pwr_tDeltaTime* time_ZeroD(pwr_tDeltaTime* tp)
 {
   static pwr_tDeltaTime time;
@@ -1354,6 +1393,7 @@ void time_Sleep(float time)
   nanosleep(&ts, NULL);
 }
 
+//! Get current time.
 int time_GetTime(pwr_tTime* ts)
 {
   struct timespec t;
@@ -1366,6 +1406,7 @@ int time_GetTime(pwr_tTime* ts)
   return sts;
 }
 
+//! Get current monotonic time.
 int time_GetTimeMonotonic(pwr_tTime* ts)
 {
   struct timespec t;
@@ -1468,7 +1509,7 @@ int time_PeriodMonth(
   return 1;
 }
 
-//! Calculate start and end time for month.
+//! Calculate start and end time for year.
 static int time_PeriodYear(
     pwr_tTime* time, pwr_tTime* from, pwr_tTime* to, int previous)
 {
@@ -1578,6 +1619,7 @@ int time_PeriodPreviousWeek(pwr_tTime* time, pwr_tTime* from, pwr_tTime* to)
   return 1;
 }
 
+//! Calculate previous daybreak.
 void time_PreviousDayBreak(pwr_tTime* time, pwr_tTime* daybreak)
 {
   struct tm* tm;

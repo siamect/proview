@@ -195,6 +195,8 @@ pwr_tStatus gdh_CreateObject(char* objectName, pwr_tClassId classid,
 
 pwr_tStatus gdh_DeleteObject(pwr_tObjid objectId);
 
+pwr_tStatus gdh_DeleteObjectTree(pwr_tObjid objectId);
+
 pwr_tStatus gdh_DLRefObjectInfoAttrref(
     pwr_sAttrRef* addressOfAttributeReference, void** objectData,
     pwr_tDlid* directLinkId);
@@ -388,6 +390,20 @@ void* gdh_TranslateRtdbPointer(unsigned long rtdbReference);
 
 pwr_tStatus gdh_GetObjectBodyDef(
     pwr_tCid cid, gdh_sAttrDef** bodydef, int* rows, pwr_tOid oid);
+
+/* Thread safe functions for times and strings */
+void gdh_GetTimeDL(pwr_tTime* atp, pwr_tTime* time);
+void gdh_SetTimeDL(pwr_tTime* atp, pwr_tTime* time);
+void gdh_GetDeltaTimeDL(pwr_tDeltaTime* dtp, pwr_tDeltaTime* time);
+void gdh_SetDeltaTimeDL(pwr_tDeltaTime* dtp, pwr_tDeltaTime* time);
+void gdh_GetStrDL(char* sp, char* str, int size);
+void gdh_SetStrDL(char* sp, const char* str, int size);
+pwr_tStatus gdh_GetObjectInfoTime(const char* name, pwr_tTime* time);
+pwr_tStatus gdh_SetObjectInfoTime(const char* name, pwr_tTime* time);
+pwr_tStatus gdh_GetObjectInfoDeltaTime(const char* name, pwr_tDeltaTime* time);
+pwr_tStatus gdh_SetObjectInfoDeltaTime(const char* name, pwr_tDeltaTime* time);
+pwr_tStatus gdh_GetObjectInfoStr(const char* name, char* str, int size);
+pwr_tStatus gdh_SetObjectInfoStr(const char* name, const char* str, int size);
 /** @} */
 
 void gdh_InitialLoadDone(pwr_tObjid systemobject, pwr_tObjid nodeobject);
@@ -438,19 +454,6 @@ pwr_tStatus gdh_CheckLocalObject(pwr_tOid oid);
 pwr_tStatus gdh_TidToType(pwr_tTid tid, pwr_eType *type);
 pwr_tStatus gdh_MountDynClients(void);
 
-/* Thread safe functions for times and strings */
-void gdh_GetTimeDL(pwr_tTime* atp, pwr_tTime* time);
-void gdh_SetTimeDL(pwr_tTime* atp, pwr_tTime* time);
-void gdh_GetDeltaTimeDL(pwr_tDeltaTime* dtp, pwr_tDeltaTime* time);
-void gdh_SetDeltaTimeDL(pwr_tDeltaTime* dtp, pwr_tDeltaTime* time);
-void gdh_GetStrDL(char* sp, char* str, int size);
-void gdh_SetStrDL(char* sp, const char* str, int size);
-pwr_tStatus gdh_GetObjectInfoTime(const char* name, pwr_tTime* time);
-pwr_tStatus gdh_SetObjectInfoTime(const char* name, pwr_tTime* time);
-pwr_tStatus gdh_GetObjectInfoDeltaTime(const char* name, pwr_tDeltaTime* time);
-pwr_tStatus gdh_SetObjectInfoDeltaTime(const char* name, pwr_tDeltaTime* time);
-pwr_tStatus gdh_GetObjectInfoStr(const char* name, char* str, int size);
-pwr_tStatus gdh_SetObjectInfoStr(const char* name, const char* str, int size);
 
 /** @} */
 

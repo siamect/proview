@@ -322,6 +322,65 @@ pwr_tBoolean dvol_DeleteObject(pwr_tStatus* sts, pwr_tObjid oid)
   pwr_Return(TRUE, sts, GDH__SUCCESS);
 }
 
+/* Delete a local object tree.
+
+   Object header and the associated body are removed.
+
+   This call is possible only if the object is
+   in a local volume, i.e a volume owned by the local node.
+   The volume must be of class $DynamicVolume or $SystemVolume.
+   The object must not be parent to any other object.
+
+   All reachable nodes, who have mounted the volume in question,
+   are notified about the removal of this object.  */
+
+static pwr_tBoolean delete_children(pwr_tStatus *sts, gdb_sObject *op)
+{
+  while (op->g.flags.b.isParent) {
+    if (!dvol_DeleteObjectTree(sts, op->g.soid))
+      return FALSE;
+  }	
+  pwr_Return(TRUE, sts, GDH__SUCCESS);
+}
+
+pwr_tBoolean dvol_DeleteObjectTree(pwr_tStatus* sts, pwr_tObjid oid)
+{
+  static cvol_sNotify dm; /* Cannot be on the stack for VAXELN */
+
+  gdb_sObject* op;
+  gdb_sObject* p_op;
+  gdb_sVolume* vp;
+
+  gdb_AssumeLocked;
+
+  if (oid.oix == pwr_cNObjectIx)
+    pwr_Return(FALSE, sts, GDH__VOLDELETE);
+
+  op = vol_OidToObject(
+      sts, oid, gdb_mLo_dynamic, vol_mTrans_none, cvol_eHint_none);
+  if (op == NULL)
+    return FALSE;
+
+  if (op->g.flags.b.isParent && cdh_ObjidIsNotNull(op->g.soid)) {
+    if (!delete_children(sts, op))
+      return FALSE;
+
+  }
+
+  p_op = pool_Address(NULL, gdbroot->pool, op->l.por);
+  vp = pool_Address(NULL, gdbroot->pool, op->l.vr);
+
+  cvols_InitNotify(op, &dm, net_eMsg_deleteObject);
+
+  unadoptObject(sts, op, p_op, &dm);
+
+  vol_UnlinkObject(sts, vp, op, vol_mLink_delete);
+
+  cvols_Notify(&dm);
+
+  pwr_Return(TRUE, sts, GDH__SUCCESS);
+}
+
 /* Move a local object.
 
    This call is possible only if the object is
@@ -385,11 +444,12 @@ gdb_sObject* dvol_MoveObject(pwr_tStatus* sts, pwr_tObjid oid, pwr_tObjid poid)
   if (tmp_op != NULL)
     pwr_Return(NULL, sts, GDH__DUPLNAME);
 
-  cvols_InitNotify(op, &mm, net_eMsg_deleteObject);
+  cvols_InitNotify(op, &mm, net_eMsg_moveObject);
 
   unadoptObject(NULL, op, old_pop, &mm);
 
   op->g.f.poid = poid;
+  op->l.por = pool_ItemReference(NULL, gdbroot->pool, new_pop);
 
   adoptObject(NULL, op, new_pop, &mm);
 
