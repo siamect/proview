@@ -37,6 +37,7 @@
 #include <ctype.h>
 #include <math.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "co_api.h"
 #include "co_ccm.h"
@@ -47,6 +48,7 @@
 #include "co_string.h"
 #include "co_syi.h"
 #include "co_time.h"
+#include "co_msg.h"
 
 #define CCM_FLT_EPSILON 5.0e-6
 
@@ -258,6 +260,24 @@ static int ccm_func_odd(void* filectx, ccm_sArg* arg_list, int arg_count,
 static int ccm_func_even(void* filectx, ccm_sArg* arg_list, int arg_count,
     int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
     char* return_string);
+static int ccm_func_tstlog_open(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string);
+static int ccm_func_tstlog_close(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string);
+static int ccm_func_tstlog_log(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string);
+static int ccm_func_tstlog_vlog(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string);
+static int ccm_func_getmsg(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string);
+static int ccm_func_tzset(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string);
 
 #define CCM_SYSFUNC_MAX 200
 
@@ -282,6 +302,12 @@ static ccm_sSysFunc ccm_sysfunc[CCM_SYSFUNC_MAX] = { { "std", "printf",
   { "std", "get_node_name", &ccm_func_get_node_name },
   { "std", "get_language", &ccm_func_get_language },
   { "std", "ODD", &ccm_func_odd }, { "std", "EVEN", &ccm_func_even },
+  { "std", "tstlog_open", &ccm_func_tstlog_open },
+  { "std", "tstlog_close", &ccm_func_tstlog_close },
+  { "std", "tstlog_log", &ccm_func_tstlog_log },
+  { "std", "tstlog_vlog", &ccm_func_tstlog_vlog },
+  { "std", "getmsg", &ccm_func_getmsg },
+  { "std", "tzset", &ccm_func_tzset },
   { "", "", 0 } };
 
 /************* TEST *********************/
@@ -4284,7 +4310,7 @@ static int ccm_func_fopen(void* filectx, ccm_sArg* arg_list, int arg_count,
 {
   ccm_sArg *arg_p1, *arg_p2;
   FILE* file;
-  char filename[120];
+  pwr_tFileName filename;
 
   if (arg_count != 2)
     return CCM__ARGMISM;
@@ -4315,9 +4341,13 @@ static int ccm_func_fclose(void* filectx, ccm_sArg* arg_list, int arg_count,
   if (arg_p1->value_decl != K_DECL_INT)
     return CCM__VARTYPE;
   file = (FILE*)arg_p1->value_int;
-  sts = fclose(file);
+  if (file) {
+    sts = fclose(file);
+    *return_int = sts;
+  }
+  else 
+    *return_int = 0;
   *return_decl = K_DECL_INT;
-  *return_int = sts;
   return 1;
 }
 
@@ -4515,7 +4545,7 @@ static int ccm_func_translate_filename(void* filectx, ccm_sArg* arg_list,
     int arg_count, int* return_decl, ccm_tFloat* return_float,
     ccm_tInt* return_int, char* return_string)
 {
-  char fname[200];
+  pwr_tFileName fname;
 
   if (arg_count != 1)
     return CCM__ARGMISM;
@@ -4607,6 +4637,395 @@ static int ccm_func_even(void* filectx, ccm_sArg* arg_list, int arg_count,
 
   *return_int = !(arg_list->value_int & 1);
   *return_decl = K_DECL_INT;
+  return 1;
+}
+
+static int ccm_func_tstlog_open(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  ccm_sArg *arg_p1, *arg_p2;
+  pwr_tFileName filename;
+  pwr_tStatus sts;
+  void *log;
+
+  if (arg_count != 2)
+    return CCM__ARGMISM;
+  arg_p1 = arg_list;
+  arg_p2 = arg_list->next;
+  if (arg_p1->value_decl != K_DECL_STRING)
+    return CCM__VARTYPE;
+  if (arg_p2->value_decl != K_DECL_STRING)
+    return CCM__VARTYPE;
+  dcli_translate_filename(filename, arg_p2->value_string);
+  log = tst_log_open(&sts, arg_p1->value_string, filename);
+  if (ODD(sts))
+    *return_int = (long int)log;
+  else
+    *return_int = 0;
+  *return_decl = K_DECL_INT;
+  return 1;
+}
+
+static int ccm_func_getmsg(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  ccm_sArg *arg_p1;
+
+  if (arg_count != 1)
+    return CCM__ARGMISM;
+  arg_p1 = arg_list;
+  if (arg_p1->value_decl != K_DECL_INT)
+    return CCM__VARTYPE;
+
+  msg_GetMsg(arg_p1->value_int, return_string, K_STRING_SIZE);  
+  *return_decl = K_DECL_STRING;
+  return 1;
+}
+
+static int ccm_func_tzset(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  ccm_sArg *arg_p1;
+
+  if (arg_count != 1)
+    return CCM__ARGMISM;
+  arg_p1 = arg_list;
+  if (arg_p1->value_decl != K_DECL_STRING)
+    return CCM__VARTYPE;
+
+  setenv("TZ", arg_p1->value_string, 1);
+  tzset();
+
+  *return_decl = K_DECL_INT;
+  *return_int = 1;
+  return 1;
+}
+
+static int ccm_func_tstlog_close(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  ccm_sArg* arg_p1;
+  void* log;
+
+  if (arg_count != 1)
+    return CCM__ARGMISM;
+  arg_p1 = arg_list;
+  if (arg_p1->value_decl != K_DECL_INT)
+    return CCM__VARTYPE;
+  log = (void*)arg_p1->value_int;
+  tst_log_close(log);
+  *return_decl = K_DECL_INT;
+  *return_int = 1;
+  return 1;
+}
+
+static int ccm_func_tstlog_log(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  ccm_sArg *arg_p1, *arg_p2, *arg_p3, *arg_p4, *arg_p5;
+  void *log;
+
+  if (!(arg_count == 3 || arg_count == 4 || arg_count == 5))
+    return CCM__ARGMISM;
+  arg_p1 = arg_list;
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+  if (arg_p1->value_decl != K_DECL_INT)
+    return CCM__VARTYPE;
+  if (arg_p2->value_decl != K_DECL_STRING)
+    return CCM__VARTYPE;
+  if (arg_p3->value_decl != K_DECL_STRING)
+    return CCM__VARTYPE;
+  if (arg_count >= 4) {
+    arg_p4 = arg_p3->next;
+    if (arg_p3->value_decl != K_DECL_STRING)
+      return CCM__VARTYPE;
+  }
+  if (arg_count == 5) {
+    arg_p5 = arg_p4->next;
+    if (arg_p5->value_decl != K_DECL_INT)
+      return CCM__VARTYPE;
+  }
+
+  log = (void *)arg_p1->value_int;
+  if (arg_count == 3) 
+    tst_log_log(log, arg_p2->value_string[0], arg_p3->value_string, "");
+  else if (arg_count == 4) 
+    tst_log_log(log, arg_p2->value_string[0], arg_p3->value_string, arg_p4->value_string);
+  else {
+    tst_log_slog(log, arg_p2->value_string[0], arg_p3->value_string, arg_p4->value_string,
+	     arg_p5->value_int);
+  }
+  *return_int = 1;
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
+static int ccm_func_tstlog_vlog(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  ccm_sArg *arg_p1, *arg_p2, *arg_p3, *arg_p4, *arg_p5, *arg_p6;
+  void *log;
+
+  if (arg_count < 3  || arg_count > 6)
+    return CCM__ARGMISM;
+  arg_p1 = arg_list;
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+  if (arg_p1->value_decl != K_DECL_INT)
+    return CCM__VARTYPE;
+  if (arg_p2->value_decl != K_DECL_STRING)
+    return CCM__VARTYPE;
+  if (arg_p3->value_decl != K_DECL_STRING)
+    return CCM__VARTYPE;
+  if (arg_count >= 4)
+    arg_p4 = arg_p3->next;
+  if (arg_count >= 5)
+    arg_p5 = arg_p4->next;
+  if (arg_count == 6)
+    arg_p6 = arg_p5->next;
+
+  log = (void *)arg_p1->value_int;
+  if (arg_count == 3) 
+    tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string);
+  else if (arg_count == 4) {
+    switch (arg_p4->value_decl) {
+    case K_DECL_STRING:
+      tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		   arg_p4->value_string);
+      break;
+    case K_DECL_INT:
+      tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		   arg_p4->value_int);
+      break;
+    case K_DECL_FLOAT:
+      tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		   arg_p4->value_float);
+      break;
+    }
+  }
+  else if (arg_count == 5) {
+    switch (arg_p4->value_decl) {
+    case K_DECL_STRING:
+      switch (arg_p5->value_decl) {
+      case K_DECL_STRING:
+	tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		     arg_p4->value_string, arg_p5->value_string);
+	break;
+      case K_DECL_INT:
+	tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		     arg_p4->value_string, arg_p5->value_int);
+	break;
+      case K_DECL_FLOAT:
+	tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		     arg_p4->value_string, arg_p5->value_float);
+	break;
+      }
+      break;
+    case K_DECL_INT:
+      switch (arg_p5->value_decl) {
+      case K_DECL_STRING:
+	tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		     arg_p4->value_int, arg_p5->value_string);
+	break;
+      case K_DECL_INT:
+	tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		     arg_p4->value_int, arg_p5->value_int);
+	break;
+      case K_DECL_FLOAT:
+	tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		     arg_p4->value_int, arg_p5->value_float);
+	break;
+      }
+      break;
+    case K_DECL_FLOAT:
+      switch (arg_p5->value_decl) {
+      case K_DECL_STRING:
+	tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		     arg_p4->value_float, arg_p5->value_string);
+	break;
+      case K_DECL_INT:
+	tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		     arg_p4->value_float, arg_p5->value_int);
+	break;
+      case K_DECL_FLOAT:
+	tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		     arg_p4->value_float, arg_p5->value_float);
+	break;
+      }
+      break;
+    }
+  }
+
+  else if (arg_count == 6) {
+    switch (arg_p4->value_decl) {
+    case K_DECL_STRING:
+      switch (arg_p5->value_decl) {
+      case K_DECL_STRING:
+	switch (arg_p6->value_decl) {
+	case K_DECL_STRING:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_string, arg_p5->value_string, arg_p6->value_string);
+	  break;
+	case K_DECL_INT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_string, arg_p5->value_string, arg_p6->value_int);
+	  break;
+	case K_DECL_FLOAT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_string, arg_p5->value_string, arg_p6->value_float);
+	  break;
+	}
+	break;
+      case K_DECL_INT:
+	switch (arg_p6->value_decl) {
+	case K_DECL_STRING:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_string, arg_p5->value_int, arg_p6->value_string);
+	  break;
+	case K_DECL_INT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_string, arg_p5->value_int, arg_p6->value_int);
+	  break;
+	case K_DECL_FLOAT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_string, arg_p5->value_int, arg_p6->value_float);
+	  break;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch (arg_p6->value_decl) {
+	case K_DECL_STRING:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_string, arg_p5->value_float, arg_p6->value_string);
+	  break;
+	case K_DECL_INT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_string, arg_p5->value_float, arg_p6->value_int);
+	  break;
+	case K_DECL_FLOAT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_string, arg_p5->value_float, arg_p6->value_float);
+	  break;
+	}
+	break;
+      }
+      break;
+    case K_DECL_INT:
+      switch (arg_p5->value_decl) {
+      case K_DECL_STRING:
+	switch (arg_p6->value_decl) {
+	case K_DECL_STRING:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_int, arg_p5->value_string, arg_p6->value_string);
+	  break;
+	case K_DECL_INT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_int, arg_p5->value_string, arg_p6->value_int);
+	  break;
+	case K_DECL_FLOAT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_int, arg_p5->value_string, arg_p6->value_float);
+	  break;
+	}
+	break;
+      case K_DECL_INT:
+	switch (arg_p6->value_decl) {
+	case K_DECL_STRING:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_int, arg_p5->value_int, arg_p6->value_string);
+	  break;
+	case K_DECL_INT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_int, arg_p5->value_int, arg_p6->value_int);
+	  break;
+	case K_DECL_FLOAT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_int, arg_p5->value_int, arg_p6->value_float);
+	  break;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch (arg_p6->value_decl) {
+	case K_DECL_STRING:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_int, arg_p5->value_float, arg_p6->value_string);
+	  break;
+	case K_DECL_INT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_int, arg_p5->value_float, arg_p6->value_int);
+	  break;
+	case K_DECL_FLOAT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_int, arg_p5->value_float, arg_p6->value_float);
+	  break;
+	}
+	break;
+      }
+      break;
+    case K_DECL_FLOAT:
+      switch (arg_p5->value_decl) {
+      case K_DECL_STRING:
+	switch (arg_p6->value_decl) {
+	case K_DECL_STRING:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_float, arg_p5->value_string, arg_p6->value_string);
+	  break;
+	case K_DECL_INT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_float, arg_p5->value_string, arg_p6->value_int);
+	  break;
+	case K_DECL_FLOAT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_float, arg_p5->value_string, arg_p6->value_float);
+	  break;
+	}
+	break;
+      case K_DECL_INT:
+	switch (arg_p6->value_decl) {
+	case K_DECL_STRING:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_float, arg_p5->value_int, arg_p6->value_string);
+	  break;
+	case K_DECL_INT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_float, arg_p5->value_int, arg_p6->value_int);
+	  break;
+	case K_DECL_FLOAT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_float, arg_p5->value_int, arg_p6->value_float);
+	  break;
+	}
+	break;
+      case K_DECL_FLOAT:
+	switch (arg_p6->value_decl) {
+	case K_DECL_STRING:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_float, arg_p5->value_float, arg_p6->value_string);
+	  break;
+	case K_DECL_INT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_float, arg_p5->value_float, arg_p6->value_int);
+	  break;
+	case K_DECL_FLOAT:
+	  tst_log_vlog(log, arg_p2->value_string[0], arg_p3->value_string, 
+		       arg_p4->value_float, arg_p5->value_float, arg_p6->value_float);
+	  break;
+	}
+	break;
+      }
+    }
+  }
+  else {
+  }
+  *return_int = 1;
+  *return_decl = CCM_DECL_INT;
   return 1;
 }
 
