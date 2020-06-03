@@ -2838,6 +2838,7 @@ GetRootList()		<LINK> getrootlist()
 exit()			<LINK> exit()
 system()		<LINK> system()
 time()			<LINK> time()
+tzset()			<LINK> tzset()
 verify()		<LINK> verify()
 
 <h2>Miscellaneous functions
@@ -2849,6 +2850,7 @@ GetCurrentText()	<LINK> getcurrenttext()
 GetCurrentObject()	<LINK> getcurrentobject()
 get_pwr_config()	<LINK> get_pwr_config()
 get_node_name()		<LINK> get_node_name()
+getmsg()		<LINK> getmsg()
 EVEN()			<LINK> EVEN()
 ODD()			<LINK> ODD()
 get_language()		<LINK> get_language()
@@ -3638,7 +3640,7 @@ int				<t><t>Length of string.
 </TOPIC>
 
 <TOPIC> strstr() <style> function
-strchr()
+strstr()
 
 int strstr( string str, string substr)
 
@@ -3718,6 +3720,7 @@ System functions
 exit <t>Exit script. <link> exit()
 system <t>Execute shell command. <link> system()
 time <t>Get system time. <link> time()
+tzset <t>Set time zone. <link> tzset()
 verify <t>Print executed lines. <link> verify()
 </TOPIC>
 
@@ -3774,6 +3777,20 @@ Returns the current time in string format.
 
 <c>  string t;
 <c>  t = time();
+</TOPIC>
+
+<TOPIC> tzset() <style> function
+tzset()
+
+string tzset( string timezone)
+
+<b>Description
+
+Set time zone.
+
+<b>Example
+
+<c>  tzset("Europe/Stockholm");
 </TOPIC>
 
 <TOPIC> verify() <style> function
@@ -4074,6 +4091,7 @@ GetCurrentText() <t>Get selected text.	<LINK> getcurrenttext()
 GetCurrentObject() <t>Get selected object. <LINK> getcurrentobject()
 get_pwr_config() <t>Get configuration values <LINK> get_pwr_config()
 get_node_name() <t>Get node name <LINK> get_node_name()
+getmsg()	<t>Get status text. <LINK> getmsg()
 EVEN()		<t>Check if value is even. <LINK> EVEN()
 ODD()		<t>Check if value is odd. <LINK> ODD()
 get_language()	<t>Get the current language <LINK> get_language()
@@ -4226,6 +4244,21 @@ Returns the host name.
 <b>Example
 
 <c>  name = get_node_name();
+</TOPIC>
+
+<TOPIC> getmsg() <style> function
+getmsg()
+
+string getmsg(int status)
+
+<b>Description
+
+Get the corresponding text for a status variable.
+Returns the text.
+
+<b>Example
+
+<c>  msg = getmsg(sts);
 </TOPIC>
 
 <TOPIC> EVEN() <style> function
