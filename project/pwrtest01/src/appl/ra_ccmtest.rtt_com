@@ -1,0 +1,1015 @@
+
+
+
+function int ccm_declarations(int log)
+  int sts;
+  int i = 50;
+  float f = 50;
+  string str = "50";
+  int iarray[100];
+  float farray[100];
+  string strarray[100];
+  string tstr;
+  int j;
+
+  sts = 1;
+  if ( i != 50)
+    tstlog_vlog(log, "E", "declaration, int mismatch %d != %d", i, 50);      
+    return 0;
+  endif
+
+  if ( f != 50)
+    tstlog_vlog(log, "E", "declaration, float mismatch %f != %d", i, 50);      
+    return 0;
+  endif
+
+  if ( str != "50")
+    tstlog_vlog(log, "E", "declaration, string mismatch %s != %s", str, "50");      
+    return 0;
+  endif
+
+  for ( j = 0; j < 100; j++)
+    iarray[j] = j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    farray[j] = j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    strarray[j] = "Str" + j;
+  endfor
+
+  for ( j = 0; j < 10; j++)
+    if ( iarray[j] != j)
+      tstlog_vlog(log, "E", "declaration, iarray mismatch %d != %d", iarray[j], j);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 10; j++)
+    if ( farray[j] != j)
+      tstlog_vlog(log, "E", "declaration, farray mismatch %f != %i", farray[j], j);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 10; j++)
+    tstr = "Str" + j;
+    if ( strarray[j] != tstr)
+      tstlog_vlog(log, "E", "declaration, strarray mismatch %s != %s", strarray[j], tstr);      
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "declaration: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_operators(int log)
+  int a = 123;
+  int b = 456;
+  int c;
+  float fa = 123;
+  float fb = 456;
+  float fc;
+
+# Integer operators
+  c = a + b;
+  if ( c != 579)
+    tstlog_vlog(log, "E", "operators, int + error");
+    return 0;
+  endif
+
+  c = a - b;
+  if ( c != -333)
+    tstlog_vlog(log, "E", "operators, int - error");
+    return 0;
+  endif
+
+  c = a * b;
+  if ( c != 56088)
+    tstlog_vlog(log, "E", "operators, int * error");
+    return 0;
+  endif
+
+  c = b / a;
+  if ( c != 3)
+    tstlog_vlog(log, "E", "operators, int / error");
+    return 0;
+  endif
+
+  c = a;
+  c++;
+  if ( c != 124)
+    tstlog_vlog(log, "E", "operators, int ++ error");
+    return 0;
+  endif
+
+  c--;
+  if ( c != 123)
+    tstlog_vlog(log, "E", "operators, int -- error");
+    return 0;
+  endif
+
+  c = a << 2;
+  if ( c != 492)
+    tstlog_vlog(log, "E", "operators, int << error");
+    return 0;
+  endif
+
+  c = b >> 2;
+  if ( c != 114)
+    tstlog_vlog(log, "E", "operators, int >> error");
+    return 0;
+  endif
+
+  c = a & b;
+  if ( c != 72)
+    tstlog_vlog(log, "E", "operators, int & error");
+    return 0;
+  endif
+
+  c = a | b;
+  if ( c != 507)
+    tstlog_vlog(log, "E", "operators, int | error");
+    return 0;
+  endif
+
+  c = a;
+  c += b;
+  if ( c != 579)
+    tstlog_vlog(log, "E", "operators, int += error");
+    return 0;
+  endif
+
+  c = a;
+  c -= b;
+  if ( c != -333)
+    tstlog_vlog(log, "E", "operators, int -= error");
+    return 0;
+  endif
+
+#  Not yet implemented...
+#  c = a;
+#  c &= b;
+#  if ( c != 72)
+#    tstlog_vlog(log, "E", "operators, int &= error");
+#    return 0;
+#  endif
+#
+#  c = a;
+#  c |= b;
+#  if ( c != 507)
+#    tstlog_vlog(log, "E", "operators, int |= error");
+#    return 0;
+#  endif
+
+# Boolean operators
+  a = 1;
+  b = 0;	
+
+  c = a && b;
+  if ( c != 0)
+    tstlog_vlog(log, "E", "operators, boolean && error");
+    return 0;
+  endif
+
+  c = a || b;
+  if ( c != 1)
+    tstlog_vlog(log, "E", "operators, boolean || error");
+    return 0;
+  endif
+
+  c = !b;
+  if ( c != 1)
+    tstlog_vlog(log, "E", "operators, boolean ! error");
+    return 0;
+  endif
+
+# Float operators
+  fc = fa + fb;
+  if ( fc != 579)
+    tstlog_vlog(log, "E", "operators, float * error");
+    return 0;
+  endif
+
+  fc = fa - fb;
+  if ( fc != -333)
+    tstlog_vlog(log, "E", "operators, float - error");
+    return 0;
+  endif
+
+  fc = fa * fb;
+  if ( fc != 56088)
+    tstlog_vlog(log, "E", "operators, float * error");
+    return 0;
+  endif
+
+  fc = fb / fa;
+  if ( fc < 3.70 || fc > 3.71)
+    tstlog_vlog(log, "E", "operators, float / error");
+    return 0;
+  endif
+
+  fc = fa;
+  fc++;
+  if ( fc != 124)
+    tstlog_vlog(log, "E", "operators, float ++ error");
+    return 0;
+  endif
+
+  fc--;
+  if ( fc != 123)
+    tstlog_vlog(log, "E", "operators, float -- error");
+    return 0;
+  endif
+
+  fc = fa;
+  fc += fb;
+  if ( fc != 579)
+    tstlog_vlog(log, "E", "operators, float += error");
+    return 0;
+  endif
+
+  fc = fa;
+  fc -= fb;
+  if ( fc != -333)
+    tstlog_vlog(log, "E", "operators, float -= error");
+    return 0;
+  endif
+
+  tstlog_log(log, "S", "operators: Successfull completion");
+
+  return 1;
+endfunction
+
+
+function int ccm_loop(int log)
+  int c;
+  int i;
+  int a = 10;
+  
+  c = 0;
+  for ( i = 0; i < a; i++)
+    if ( c != i)
+      tstlog_vlog(log, "E", "loop, for mismatch %d != %d", c, i);      
+      return 0;
+    endif    
+    c++;
+  endfor
+  if ( c != 10)
+    sts = 0;
+  endif
+
+  c = 0;
+  for ( i = 0; i < 20; i += 2)
+    if ( c != i)
+      tstlog_vlog(log, "E", "loop, for mismatch %d != %d", c, i);      
+      return 0;
+    endif    
+    c++;
+    c++;
+    if ( c == 8)
+      break;
+    endif
+  endfor
+  if ( c != 8)
+    tstlog_vlog(log, "E", "loop, for mismatch %d != %d", c, 8);      
+    return 0;
+  endif
+
+  c = 0;
+  for ( i = 0; i < 10; i++)
+    if ( i < 4 && c != i)
+      sts = 0;
+    endif
+    if ( i >= 4 && c != 4)
+      tstlog_vlog(log, "E", "loop, for mismatch %d != %d", c, i);      
+      return 0;
+    endif
+    if ( c >= 4)
+      continue;
+    endif
+    c++;
+  endfor
+  if ( c != 4)
+    tstlog_vlog(log, "E", "loop, for mismatch %d != %d", c, 4);      
+    return 0;
+  endif
+
+  c = 0;
+  i = 0;
+  while ( i < a)
+    if ( c != i)
+      tstlog_vlog(log, "E", "loop, while mismatch %d != %d", c, i);
+      return 0;
+    endif    
+    i++;
+    c++;
+  endwhile
+  if ( c != 10)
+    tstlog_vlog(log, "E", "loop, while mismatch %d != %d", c, 10);
+    return 0;
+  endif
+
+  c = 0;
+  i = 0;
+  while ( i < 20)
+    if ( c != i)
+      tstlog_vlog(log, "E", "loop, while mismatch %d != %d", c, i);
+      return 0;
+    endif    
+    c++;
+    c++;
+    i += 2;
+    if ( c == 8)
+      break;
+    endif
+  endwhile
+  if ( c != 8)
+    tstlog_vlog(log, "E", "loop, for mismatch %d != %d", c, 8);
+    return 0;
+  endif
+
+  c = 0;
+  i = 0;
+  while ( i < 10)
+    if ( i < 4 && c != i)
+      tstlog_vlog(log, "E", "loop, while mismatch %d != %d", c, i);
+      return 0;
+    endif
+    if ( i >= 4 && c != 4)
+      tstlog_vlog(log, "E", "loop, while mismatch %d != %d", c, i);
+      return 0;
+    endif
+    i++;
+    if ( c >= 4)
+      continue;
+    endif
+    c++;
+  endwhile
+  if ( c != 4)
+    tstlog_vlog(log, "E", "loop, for mismatch %d != %d", c, 4);
+    return 0;
+  endif
+
+  tstlog_log(log, "S", "loop: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_edit(int log)
+  int i;
+  string edited;
+  string d[4]; 
+  string r[4];
+  d[0] = "  qwe rty	";
+  r[0] = "qwe rty";
+  d[1] = "qwe 	rty	";
+  r[1] = "qwe rty";
+  d[2] = "   qwe  rty";
+  r[2] = "qwe rty";
+  d[3] = "  	 This  is	a	   	string ";
+  r[3] = "This is a string";
+
+  for (i = 0; i < 3; i++)
+    edited = edit(d[i]);
+    if (edited != r[i])
+      tstlog_vlog(log, "E", "edit, mismatch %s != %s", r[i], edited);      
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "edit: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_element(int log)
+  int i;
+  string elem[4];
+  string r1[3];
+  string r2[3];
+  string r3[3];
+  string r4[3];
+  string d[3];
+
+  d[0] = "mary,lisa,anna,john";
+  r1[0] = "mary";
+  r2[0] = "lisa";
+  r3[0] = "anna";
+  r4[0] = "john";
+  d[2] = "mary,,anna,john";
+  r1[2] = "mary";
+  r2[2] = "";
+  r3[2] = "anna";
+  r4[2] = "john";
+  d[3] = "Adam,Hoss,Joe,Ben";
+  r1[3] = "Adam";
+  r2[3] = "Hoss";
+  r3[3] = "Joe";
+  r4[3] = "Ben";
+
+  for (i = 0; i < 3; i++)
+    elem[0] = element(1, ",", d[i]);
+    elem[1] = element(2, ",", d[i]);
+    elem[2] = element(3, ",", d[i]);
+    elem[3] = element(4, ",", d[i]);
+    if (elem[0] != r1[i] || elem[1] != r2[i] || elem[2] != r3[i] || elem[3] != r4[i])
+      tstlog_vlog(log, "E", "element, mismatch %d %s", i, d[i]);      
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "element: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_extract(int log)
+  int i;
+  int i2;
+  string extracted;
+  string str = "Time takes a cigarett";
+  string r[4];
+  int ix1[4];
+  int ix2[4];
+
+  ix1[0] = 1;
+  ix2[0] = 7;
+  r[0] = "Time ta";
+  ix1[1] = 1;
+  ix2[1] = 27;
+  r[1] = "Time takes a cigarett";
+  ix1[2] = 4;
+  ix2[2] = 14;
+  r[2] = "e takes a ciga";
+  ix1[3] = 21;
+  ix2[3] = 7;
+  r[3] = "t";
+
+  for (i = 0; i < 3; i++)
+    extracted = extract(ix1[i], ix2[i], str);
+    if (extracted != r[i])
+      tstlog_vlog(log, "E", "extract, mismatch %s != %s", r[i], extracted);
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "extract: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_sprintf(int log)
+  int i;
+  string result;
+  string format[9];
+  string r[9];
+  int iarg = 1234;
+  float farg = 5.678;
+  string sarg = "Chevy";
+
+  format[0] = "Teststring %s and %s";
+  r[0] = "Teststring Chevy and Chevy";	
+  format[1] = "Teststring %s and %d";
+  r[1] = "Teststring Chevy and 1234";	
+  format[2] = "Teststring %s and %4.2f";
+  r[2] = "Teststring Chevy and 5.68";	
+  format[3] = "Teststring %d and %s";
+  r[3] = "Teststring 1234 and Chevy";	
+  format[4] = "Teststring %d and %d";
+  r[4] = "Teststring 1234 and 1234";	
+  format[5] = "Teststring %d and %4.2f";
+  r[5] = "Teststring 1234 and 5.68";	
+  format[6] = "Teststring %4.2f and %s";
+  r[6] = "Teststring 5.68 and Chevy";	
+  format[7] = "Teststring %4.2f and %d";
+  r[7] = "Teststring 5.68 and 1234";	
+  format[8] = "Teststring %4.2f and %4.2f";
+  r[8] = "Teststring 5.68 and 5.68";	
+
+  for (i = 0; i < 9; i++)
+    if (i == 0)
+      sprintf(result, format[i], sarg, sarg);
+    endif
+    if (i == 1)
+      sprintf(result, format[i], sarg, iarg);
+    endif
+    if (i == 2)
+      sprintf(result, format[i], sarg, farg);
+    endif
+    if (i == 3)
+      sprintf(result, format[i], iarg, sarg);
+    endif
+    if (i == 4)
+      sprintf(result, format[i], iarg, iarg);
+    endif
+    if (i == 5)
+      sprintf(result, format[i], iarg, farg);
+    endif
+    if (i == 6)
+      sprintf(result, format[i], farg, sarg);
+    endif
+    if (i == 7)
+      sprintf(result, format[i], farg, iarg);
+    endif
+    if (i == 8)
+      sprintf(result, format[i], farg, farg);
+    endif
+
+    if (result != r[i])
+      tstlog_vlog(log, "E", "sprintf, mismatch %s != %s", r[i], result);
+      return 0;
+    endif
+  endfor
+  
+  tstlog_log(log, "S", "sprintf: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_strchr(int log)
+  int i;
+  int idx;
+  string str = "/usr/local/pwrrt/bld";
+  string c[5];
+  int r[5];
+
+  c[0] = "l";
+  r[0] = 6;
+  c[1] = "d";
+  r[1] = 20;
+  c[2] = "/";
+  r[2] = 1;
+  c[3] = "r";
+  r[3] = 4;
+  c[4] = "x";
+  r[4] = 0;
+
+  for (i = 0; i < 5; i++)
+    idx = strchr(str, c[i]);
+    if (idx != r[i])
+      tstlog_vlog(log, "E", "strchr, mismatch %d, %d != %d", i, r[i], idx);
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "strchr: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_strrchr(int log)
+  int i;
+  int idx;
+  string str = "/usr/local/pwrrt/bld";
+  string c[5];
+  int r[5];
+
+  c[0] = "l";
+  r[0] = 19;
+  c[1] = "d";
+  r[1] = 20;
+  c[2] = "/";
+  r[2] = 17;
+  c[3] = "r";
+  r[3] = 15;
+  c[4] = "x";
+  r[4] = 0;
+
+  for (i = 0; i < 5; i++)
+    idx = strrchr(str, c[i]);
+    if (idx != r[i])
+      tstlog_vlog(log, "E", "strchr, mismatch %d, %d != %d", i, r[i], idx);
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "strrchr: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_strlen(int log)
+  int i;
+  int len;
+  string str[4];
+  int r[4];
+
+  str[0] = "/usr/local/pwrrt/bld";
+  r[0] = 20;
+  str[1] = "/";
+  r[1] = 1;
+  str[2] = "";
+  r[2] = 0;
+  str[3] = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
+  r[3] = 100;
+
+  for (i = 0; i < 4; i++)
+    len = strlen(str[i]);
+    if (len != r[i])
+      tstlog_vlog(log, "E", "strlen, mismatch %d, %d != %d", i, r[i], len);
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "strlen: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_strstr(int log)
+  int i;
+  int idx;
+  string str = "/usr/local/pwrrt/Bld";
+  string c[7];
+  int r[7];
+
+  c[0] = "loc";
+  r[0] = 6;
+  c[1] = "d";
+  r[1] = 20;
+  c[2] = "/usr";
+  r[2] = 1;
+  c[3] = "rt";
+  r[3] = 15;
+  c[4] = "rtx";
+  r[4] = 0;
+  c[5] = "rt/B";
+  r[5] = 15;
+  c[6] = "rt/b";
+  r[6] = 0;
+
+  for (i = 0; i < 7; i++)
+    idx = strstr(str, c[i]);
+    if (idx != r[i])
+      tstlog_vlog(log, "E", "strstr, mismatch %d, %d != %d", i, r[i], idx);
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "strstr: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_toupper(int log)
+  int i;
+  string upstr;
+  string str[4];
+  string r[4];
+
+  str[0] = "loc";
+  r[0] = "LOC";
+  str[1] = "/Loc22s";
+  r[1] = "/LOC22S";
+  str[2] = "# Convert string to upper case.";
+  r[2] = "# CONVERT STRING TO UPPER CASE.";
+  str[3] = "";
+  r[3] = "";
+
+  for (i = 0; i < 4; i++)
+    upstr = toupper(str[i]);
+    if (upstr != r[i])
+      tstlog_vlog(log, "E", "toupper, mismatch %d, %s != %s", i, r[i], upstr);
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "toupper: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_tolower(int log)
+  int i;
+  string lowstr;
+  string str[4];
+  string r[4];
+
+  str[0] = "LOC";
+  r[0] = "loc";
+  str[1] = "/Loc22S";
+  r[1] = "/loc22s";
+  str[2] = "# CONVERT STRING TO LOWER CASE.";
+  r[2] = "# convert string to lower case.";
+  str[3] = "";
+  r[3] = "";
+
+  for (i = 0; i < 4; i++)
+    lowstr = tolower(str[i]);
+    if (lowstr != r[i])
+      tstlog_vlog(log, "E", "tolower, mismatch %d, %s != %s", i, r[i], lowstr);
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "tolower: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_fopen(int log)
+  int i;
+  string fname;
+  int fp;
+  string cmd;
+  int sts;
+
+  fname = translate_filename("/tmp/ra_ccmtest.txt");
+
+  cmd = "if [ -e " + fname + " ]; then rm -f " + fname + "; fi";
+  sts = system(cmd);
+
+  fp = fopen(fname, "w");
+  if (!fp)
+    tstlog_vlog(log, "E", "fopen, unable to open file %s", fname);
+    return 0;
+  endif
+  fclose(fp);
+
+  cmd = "ls " + fname + " 1>/dev/null 2>/dev/null";
+  sts = system(cmd);  
+  if (sts != 0)
+    tstlog_vlog(log, "E", "fopen, no file created %d, %s", sts, fname);
+    return 0;
+  endif
+
+  tstlog_log(log, "S", "fopen: Successfull completion");
+
+  cmd = "if [ -e " + fname + " ]; then rm -f " + fname + "; fi";
+  sts = system(cmd);
+
+  return 1;
+endfunction
+
+function int ccm_fprintf(int log)
+  int i;
+  int sts;
+  string fname;
+  int fp;
+  string cmd;
+  string result;
+  string format[9];
+  string r[9];
+  int iarg = 1234;
+  float farg = 5.678;
+  string sarg = "Chevy";
+
+  format[0] = "Teststring %s and %s\n";
+  r[0] = "Teststring Chevy and Chevy";	
+  format[1] = "Teststring %s and %d\n";
+  r[1] = "Teststring Chevy and 1234";	
+  format[2] = "Teststring %s and %4.2f\n";
+  r[2] = "Teststring Chevy and 5.68";	
+  format[3] = "Teststring %d and %s\n";
+  r[3] = "Teststring 1234 and Chevy";	
+  format[4] = "Teststring %d and %d\n";
+  r[4] = "Teststring 1234 and 1234";	
+  format[5] = "Teststring %d and %4.2f\n";
+  r[5] = "Teststring 1234 and 5.68";	
+  format[6] = "Teststring %4.2f and %s\n";
+  r[6] = "Teststring 5.68 and Chevy";	
+  format[7] = "Teststring %4.2f and %d\n";
+  r[7] = "Teststring 5.68 and 1234";	
+  format[8] = "Teststring %4.2f and %4.2f\n";
+  r[8] = "Teststring 5.68 and 5.68";	
+
+  fname = translate_filename("/tmp/ra_ccmtest.txt");
+
+  cmd = "if [ -e " + fname + " ]; then rm -f " + fname + "; fi";
+  sts = system(cmd);
+
+  fp = fopen(fname, "w");
+  if (!fp)
+    tstlog_vlog(log, "E", "fprintf, unable to open file %s", fname);
+    return 0;
+  endif
+
+  for (i = 0; i < 9; i++)
+    if (i == 0)
+      fprintf(fp, format[i], sarg, sarg);
+    endif
+    if (i == 1)
+      fprintf(fp, format[i], sarg, iarg);
+    endif
+    if (i == 2)
+      fprintf(fp, format[i], sarg, farg);
+    endif
+    if (i == 3)
+      fprintf(fp, format[i], iarg, sarg);
+    endif
+    if (i == 4)
+      fprintf(fp, format[i], iarg, iarg);
+    endif
+    if (i == 5)
+      fprintf(fp, format[i], iarg, farg);
+    endif
+    if (i == 6)
+      fprintf(fp, format[i], farg, sarg);
+    endif
+    if (i == 7)
+      fprintf(fp, format[i], farg, iarg);
+    endif
+    if (i == 8)
+      fprintf(fp, format[i], farg, farg);
+    endif
+  endfor
+
+  fclose(fp);
+
+  fp = fopen(fname, "r");
+  if (!fp)
+    tstlog_vlog(log, "E", "fprintf, unable to open file for reading %s", fname);
+    fclose(fp);
+    return 0;
+  endif
+
+  for (i = 0; i < 9; i++)
+    sts = fgets(result, fp);
+    if (sts == 0)
+      tstlog_vlog(log, "E", "fprintf, couldn't read line %d in file %s", i, fname);
+      return 0;
+    endif
+    if (result != r[i])
+      tstlog_vlog(log, "E", "fprintf, mismatch %d, %s != %s", i, r[i], result);
+      return 0;
+    endif
+  endfor
+  
+  fclose(fp);
+
+  tstlog_log(log, "S", "fprintf: Successfull completion");
+
+  cmd = "if [ -e " + fname + " ]; then rm -f " + fname + "; fi";
+  sts = system(cmd);
+
+  return 1;
+endfunction
+
+function int ccm_felement(int log)
+  int i;
+  int sts;
+  string fname;
+  int fp;
+  string cmd;
+  string line;
+  string elem[4];
+  string r1[3];
+  string r2[3];
+  string r3[3];
+  string r4[3];
+  string d[3];
+
+  d[0] = "mary,lisa,anna,john";
+  r1[0] = "mary";
+  r2[0] = "lisa";
+  r3[0] = "anna";
+  r4[0] = "john";
+  d[2] = "mary,,anna,john";
+  r1[2] = "mary";
+  r2[2] = "";
+  r3[2] = "anna";
+  r4[2] = "john";
+  d[3] = "Adam,Hoss,Joe,Ben";
+  r1[3] = "Adam";
+  r2[3] = "Hoss";
+  r3[3] = "Joe";
+  r4[3] = "Ben";
+
+  fname = translate_filename("/tmp/ra_ccmtest.txt");
+
+  cmd = "if [ -e " + fname + " ]; then rm -f " + fname + "; fi";
+  sts = system(cmd);
+
+  fp = fopen(fname, "w");
+  if (!fp)
+    tstlog_vlog(log, "E", "felement, unable to open file %s", fname);
+    return 0;
+  endif
+
+  for (i = 0; i < 3; i++)
+    fprintf(fp, "%s\n", d[i]);
+  endfor
+
+  fclose(fp);
+
+  fp = fopen(fname, "r");
+  if (!fp)
+    tstlog_vlog(log, "E", "felement, unable to open file for reading %s", fname);
+    fclose(fp);
+    return 0;
+  endif
+
+  for (i = 0; i < 3; i++)
+    sts = fgets(line, fp);
+    if (sts == 0)
+      tstlog_vlog(log, "E", "felement, couldn't read line %d in file %s", i, fname);
+      return 0;
+    endif
+    elem[0] = element(1, ",", line);
+    elem[1] = element(2, ",", line);
+    elem[2] = element(3, ",", line);
+    elem[3] = element(4, ",", line);
+    if (elem[0] != r1[i] || elem[1] != r2[i] || elem[2] != r3[i] || elem[3] != r4[i])
+      tstlog_vlog(log, "E", "felement, mismatch %d %s", i, d[i]);      
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "felement: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_getmsg(int log)
+  int i;
+  string status;
+  int d[3]; 
+  string r[3];
+  d[0] = 5;
+  r[0] = "%NONAME-?-NOMSG, Message number 00000005";
+  d[1] = 141459465;
+  r[1] = "%GDH-S-SUCCESS, successful completion";
+  d[2] = 141459522;
+  r[2] = "%GDH-E-NO_TYPE, no more objects of same type exists";
+
+  for (i = 0; i < 3; i++)
+    status = getmsg(d[i]);
+    if (status != r[i])
+      tstlog_vlog(log, "E", "getmsg, mismatch %d, %s != %s", i, r[i], status);      
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "getmsg: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_get_node_name(int log)
+  string node;
+  string fname = "/tmp/ccm_nodename.txt";
+  string cmd;
+  int fp;
+  string line;
+  int sts;
+
+  cmd = "uname -n > " + fname;
+  system(cmd);
+  
+  fp = fopen(fname, "r");
+  if (!fp)
+    tstlog_vlog(log, "E", "unable to open file %s", fname);
+    return 0;
+  endif
+
+  fgets(line, fp);
+
+  fclose(fp);
+  cmd = "if [ -e " + fname + " ]; then rm -f " + fname + "; fi";
+  sts = system(cmd);
+
+  node = get_node_name();
+
+  if (node != line)
+    tstlog_vlog(log, "E", "get_node_name, mismatch, %s != %s", node, line);
+    return 0;
+  endif
+
+  tstlog_log(log, "S", "get_node_name: Successfull completion");
+
+  return 1;
+endfunction
+
+
+main()
+  int log;
+
+  verify(0);
+  log = tstlog_open("co-Ccm", "$pwrp_log/ccm.log");
+
+  ccm_declarations(log);
+  ccm_operators(log);
+  ccm_loop(log);
+  ccm_edit(log);
+  ccm_element(log);
+  ccm_extract(log);
+  ccm_sprintf(log);
+  ccm_strchr(log);
+  ccm_strrchr(log);
+  ccm_strlen(log);
+  ccm_strstr(log);
+  ccm_toupper(log);
+  ccm_tolower(log);
+  ccm_fopen(log);
+  ccm_fprintf(log);
+  ccm_felement(log);
+  ccm_getmsg(log);
+  ccm_get_node_name(log);
+
+  tstlog_close(log);  
+endmain
