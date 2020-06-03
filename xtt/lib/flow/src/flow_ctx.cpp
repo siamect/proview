@@ -1,6 +1,6 @@
 /*
 * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+* Copyright (C) 2005-2020 SSAB EMEA AB.
 *
 * This file is part of ProviewR.
 *
@@ -104,8 +104,8 @@ FlowCtx::~FlowCtx()
   move_clear();
   paste_clear();
   delete_all();
-  if (scroll_data)
-    free(scroll_data);
+  //  if (scroll_data)
+  //    free(scroll_data);
 
   for (int i = 0; i < a_nc.a_size; i++) {
     element = a_nc.a[i];
@@ -1329,6 +1329,11 @@ int FlowCtx::event_handler(flow_eEvent event, int x, int y, int w, int h)
     break;
   case flow_eEvent_VisibilityObscured:
     unobscured = 0;
+    break;
+  case flow_eEvent_ScrollUp:
+  case flow_eEvent_ScrollDown:
+    if (con_create_active)
+      return 1;
     break;
   default:;
   }
