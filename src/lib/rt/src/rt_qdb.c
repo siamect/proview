@@ -1217,7 +1217,9 @@ pwr_tBoolean qdb_RemoveQue(pwr_tStatus* status, qdb_sQue* qp)
     pool_Free(sts, &qdb->pool, qbp);
   }
 
-  /* Left to do !!! Unlink all queues linked eve_lh.  */
+  for (/* unlink all event queues linked eve_lh */
+      qbl = pool_Qsucc(NULL, &qdb->pool, &qp->eve_lh); qbl->self != qbl->flink;)
+    pool_Qremove(sts, &qdb->pool, qbl);
 
   /* unlink que from own_ll */
   pool_Qremove(sts, &qdb->pool, &qp->que_ll);

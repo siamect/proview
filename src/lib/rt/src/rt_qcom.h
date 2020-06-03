@@ -113,9 +113,10 @@ typedef enum {
 } qcom_eNodeConnection;
 
 /**
- * @brief ZZZ Text that appers when the Data structure is listed.
+ * @brief Queue identity
  *
- * More detailed text
+ * Every queue within a Qcom bus is uniquely identified by a queue 
+ * identity, used for identifying the target for sending a message. 
  */
 typedef struct {
   qcom_tQix qix; /**< Queue index    */
@@ -243,6 +244,8 @@ pwr_tBoolean qcom_AidIsNull(const qcom_sAid* a);
 void* qcom_Alloc(pwr_tStatus* sts, unsigned int size);
 
 pwr_tBoolean qcom_AttachQ(pwr_tStatus* sts, const qcom_sQid* qid);
+
+pwr_tBoolean qcom_StealQ(pwr_tStatus *status, const qcom_sQid *qid);
 
 pwr_tBoolean qcom_Bind(
     pwr_tStatus* sts, const qcom_sQid* myQ, const qcom_sQid* toQ);
