@@ -92,6 +92,7 @@ if [ ! -e $pwra_db ]; then
 fi
 echo "pwra_db $pwra_db"
 cp $pwre_croot/src/tools/pkg/deb/adm/* $pwra_db/
+echo "CVolPwrtest01	0.0.254.254	pwrtest01" >> $pwra_db/pwr_volumelist.dat
 echo "VolPwrTest01a	0.254.254.201	pwrtest01" >> $pwra_db/pwr_volumelist.dat
 echo "VolPwrTest01b	0.254.254.202	pwrtest01" >> $pwra_db/pwr_volumelist.dat
 echo "VolPwrTest01c	0.254.254.203	pwrtest01" >> $pwra_db/pwr_volumelist.dat
@@ -114,6 +115,11 @@ cat > initdir.pwr_com <<EOF
 EOF
 
 wb_cmd @initdir
+
+echo "* Build class volume"
+co_convert -so -d $pwrp_inc $pwrp_db/cvolpwrtest01.wb_load
+co_convert -po -d $pwrp_inc $pwrp_db/cvolpwrtest01.wb_load
+wb_cmd -q create snapshot/file=\"$pwrp_db/cvolpwrtest01.wb_load\"/out=\"$pwrp_load/cvolpwrtest01.dbs\"
 
 echo "* Load volpwrtest01a"
 wb_cmd wb load/nofocode/load=\"$pwrp_db/volpwrtest01a.wb_dmp\"/out=\"$pwrp_db/volpwrtest01a.lis\"
