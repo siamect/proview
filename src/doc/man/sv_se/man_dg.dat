@@ -10023,6 +10023,7 @@ PlcConnect()		<LINK> plcconnect()
 exit()			<LINK> exit()
 system()		<LINK> system()
 time()			<LINK> time()
+tzset()			<LINK> tzset()
 verify()		<LINK> verify()
 
 <h2>Diverse funktioner
@@ -10049,6 +10050,7 @@ SetIoDeviceData()	<LINK> setiodevicedata()
 GetVersion() 		<LINK> getversion()
 get_pwr_config()	<LINK> get_pwr_config()
 get_node_name()		<LINK> get_node_name()
+getmsg()		<LINK> getmsg()
 EVEN()			<LINK> EVEN()
 ODD()			<LINK> ODD()
 
@@ -10824,7 +10826,7 @@ int				<t><t>Strängens längd.
 </TOPIC>
 
 <TOPIC> strstr() <style> function
-strchr()
+strstr()
 
 int strstr( string str, string substr)
 
@@ -10904,6 +10906,7 @@ System funktioner
 exit <t>Avsluta scriptet. <link> exit()
 system <t>Exekvera ett shell kommando. <link> system()
 time <t>Hämta systemtiden. <link> time()
+tzset <t>Sätt tidszon. <link> tzset()
 verify <t>Skriv ut exekverade rader. <link> verify()
 </TOPIC>
 
@@ -10960,6 +10963,20 @@ Returnerar nuvarande tid i strängformat.
 
 <c>  string t;
 <c>  t = time();
+</TOPIC>
+
+<TOPIC> tzset() <style> function
+tzset()
+
+string tzset( string timezone)
+
+<b>Beskrivning
+
+Sätt tidszon.
+
+<b>Exempel
+
+<c>  tzset("Europe/Stockholm");
 </TOPIC>
 
 <TOPIC> verify() <style> function
@@ -11710,6 +11727,7 @@ SetIoDeviceData()	<LINK> setiodevicedata()
 GetVersion()		<LINK> getversion()
 get_pwr_config()	<LINK> get_pwr_config()
 get_node_name()		<LINK> get_node_name()
+getmsg()		<LINK> getmsg()
 EVEN()			<LINK> EVEN()
 ODD()			<LINK> ODD()
 </TOPIC>
@@ -12192,6 +12210,21 @@ Returnerar nodnamnet.
 <b>Exempel
 
 <c>  name = get_node_name();
+</TOPIC>
+
+<TOPIC> getmsg() <style> function
+getmsg()
+
+string getmsg(int status)
+
+<b>Beskrivning
+
+Hämta texten för ett status värde.
+Returnerar texten.
+
+<b>Exempel
+
+<c>  msg = getmsg(sts);
 </TOPIC>
 
 <TOPIC> EVEN() <style> function

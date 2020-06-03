@@ -99,7 +99,7 @@ subscriptions etc.
         <td>Get the object identity of the next object in the list of
         objects of a certain class.</td></tr>
      <tr><td>gdh_GetPreviousObject()</td>
-        <td>Get the object identity of the previous obuect in the list
+        <td>Get the object identity of the previous object in the list
         of objects of a certain class.</td></tr>
      <tr><td>gdh_GetClassListAttrRef()</td>
         <td>Get the attribute reference of the first object in the list
@@ -260,7 +260,7 @@ subscriptions etc.
   <h3>Object alarm status</h3><h4> </h4>
     <table border="1" cellspacing="0">
      <tr><td>gdh_GetAlarmInfo()</td>
-        <td>Get the alarm status for a certaion object.</td></tr>
+        <td>Get the alarm status for a certain object.</td></tr>
      <tr><td>gdh_SetAlarmLevel()</td>
         <td>This routine sets the alarm level for a certain object.</td></tr>
      <tr><td>gdh_SetAlarmBlockLevel()</td>
@@ -278,6 +278,34 @@ subscriptions etc.
   object.</td></tr>
      <tr><td>gdh_SetObjectInfoAttrref()</td>
         <td>Change the data of an object or attribute.</td></tr>
+    </table>
+
+  <h3>Threadsafe functions for times and strings</h3><h4> </h4>
+    <table border="1" cellspacing="0">
+     <tr><td>gdh_GetTimeDL()</td>
+        <td>Fetch a direct linked absolute time value.</td></tr>
+     <tr><td>gdh_SetTimeDL()</td>
+        <td>Store a direct linked absolute time value.</td></tr>
+     <tr><td>gdh_GetDeltaTimeDL()</td>
+        <td>Fetch a direct linked delta time value.</td></tr>
+     <tr><td>gdh_SetDeltaTimeDL()</td>
+        <td>Store a direct linked delta time value.</td></tr>
+     <tr><td>gdh_GetStrDL()</td>
+        <td>Fetch a direct linked string value.</td></tr>
+     <tr><td>gdh_SetStrDL()</td>
+        <td>Store a direct linked string value.</td></tr>
+     <tr><td>gdh_GetObjectInfoTime()</td>
+        <td>Fetch an absolute time value from an attribute.</td></tr>
+     <tr><td>gdh_SetObjectInfoTime()</td>
+        <td>Store a absolute time value from an attribute.</td></tr>
+     <tr><td>gdh_GetObjectInfoDeltaTime()</td>
+        <td>Fetch a delta time value from an attribute.</td></tr>
+     <tr><td>gdh_SetObjectInfoDeltaTime()</td>
+        <td>Store a delta time value from an attribute.</td></tr>
+     <tr><td>gdh_GetObjectInfoStr()</td>
+        <td>Fetch a string value from an attribute.</td></tr>
+     <tr><td>gdh_SetObjectInfoStr()</td>
+        <td>Store a string value from an attribute.</td></tr>
     </table>
 
   <h3>Translating between different object representations</h3><h4> </h4>
