@@ -835,6 +835,7 @@ static void applLogState(sAppl* ap)
 static void applGetMsgInfo(mh_sHead* hp, sAppl* ap, mh_uApplReply* Reply)
 {
   pwr_tUInt32* TargetIdxP = (pwr_tUInt32*)(hp + 1);
+  sActive* cp;
   sApplActive* aap;
   struct LstHead * al;
 
@@ -853,12 +854,17 @@ static void applGetMsgInfo(mh_sHead* hp, sAppl* ap, mh_uApplReply* Reply)
     return;
   }
 
-  LstForEach(al, &l.active_l)
-    if (LstEntry(al, sApplActive, active_l)->link.idx >= *TargetIdxP)
-      break;
+  LstForEach(al, &l.active_l) {
+    cp = LstEntry(al, sActive, active_l);
+    if (cp->source == mh_eSource_Application || 
+	cp->source == mh_eSource_Handler) {
+      aap = (sApplActive*)cp;
+      if (aap->link.idx >= *TargetIdxP)
+	break;
+    }
+  }
 
   if (al != &ap->active_l) {
-    aap = LstEntry(al, sApplActive, active_l);
     Reply->Info.Sts = MH__SUCCESS;
     Reply->Info.Message = aap->message;
   } else
@@ -1661,7 +1667,7 @@ static void formatApplEvent(mh_eEvent event, char* text, sApplActive* aap,
         || aap->link.event == mh_eEvent_UserAlarm3
         || aap->link.event == mh_eEvent_UserAlarm4)
       ip->EventPrio = aap->message.EventPrio;
-    strncpy(rp->EventText, text, sizeof(rp->EventText));
+    strncpy(rp->EventText, aap->returnText, sizeof(rp->EventText));
     rp->TargetId.Nix = l.head.nix;
     rp->TargetId.BirthTime = l.head.birthTime;
     rp->TargetId.Idx = aap->link.idx;
