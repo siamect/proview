@@ -6,7 +6,7 @@
 #include "pwr.h"
 #include "co_cdh.h"
 #include "rt_gdh.h"
-#include "tst_log.h"
+#include "co_tst_log.h"
 
 static char item[][80] = {
   "Test01c-Plc-Logic-And",
