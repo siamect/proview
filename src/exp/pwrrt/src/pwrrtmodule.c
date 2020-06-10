@@ -802,6 +802,20 @@ Example\n\
 -------\n\
 user = pwrrt.getUser()\n");
 
+PyDoc_STRVAR(pwrrt_getMsg_doc, "\
+getMsg(sts)\n\
+Convert a status to a string.\n\
+Arguments\n\
+---------\n\
+sts Status\n\
+  A proview status value.\n\n\
+Returns\n\
+-------\n\
+Returns the corresponding string.\n\n\
+Example\n\
+-------\n\
+msg = pwrrt.getMsg(sts)\n");
+
 typedef struct {
   PyObject_HEAD
   pwr_tOid oid;
@@ -3427,6 +3441,19 @@ static PyObject *pwrrt_getUser(PyObject *self, PyObject *args)
   return Py_BuildValue("s", pwrrt_user);
 }
 
+static PyObject *pwrrt_getMsg(PyObject *self, PyObject *args)
+{
+  int sts;
+  char msg[120];
+
+  if ( !PyArg_ParseTuple(args, "i", &sts))
+    return NULL;
+
+  msg_GetMsg(sts, msg, sizeof(msg));
+
+  return Py_BuildValue("s", msg);
+}
+
 
 static PyObject *pwrrt_getSevItemList(PyObject *self, PyObject *args)
 {
@@ -4610,6 +4637,7 @@ static PyMethodDef PwrrtMethods[] = {
   {"logout", pwrrt_logout, METH_NOARGS, pwrrt_logout_doc},
   {"getPriv", pwrrt_getPriv, METH_NOARGS, pwrrt_getPriv_doc},
   {"getUser", pwrrt_getUser, METH_NOARGS, pwrrt_getUser_doc},
+  {"getMsg", pwrrt_getMsg, METH_VARARGS, pwrrt_getMsg_doc},
   {"getSevItemList", pwrrt_getSevItemList, METH_VARARGS, "Get history item list"},
   {"getSevEventsItemList", pwrrt_getSevEventsItemList, METH_VARARGS, "Get events history item list"},
   {"getSevItemData", pwrrt_getSevItemData, METH_VARARGS, "Get history data"},
