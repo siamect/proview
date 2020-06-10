@@ -139,6 +139,10 @@ public:
   {
     m_srep->recix_set_destination(d);
   }
+  void resetSts()
+  {
+    m_sts = LDH__SUCCESS;
+  }
   static void import_cb(wb_orep *o, wb_orep *os, void *data);
 };
 

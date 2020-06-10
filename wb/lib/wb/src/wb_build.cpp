@@ -799,6 +799,7 @@ void wb_build::rootvolume(pwr_tVid vid)
     m_sts = lfu_create_loadfile((ldh_tSession*)&m_session);
     if (evenSts())
       return;
+    m_session.resetSts();
     m_sts = ldh_CreateLoadFile((ldh_tSession*)&m_session);
     if (evenSts())
       return;
