@@ -3625,6 +3625,8 @@ static int wnav_create_func(void* client_data, void* client_flag)
         volrep = ldh_eVolRep_Db;
       else if (str_NoCaseStrcmp(databasestr, "MYSQL") == 0)
         volrep = ldh_eVolRep_Dbms;
+      else if (str_NoCaseStrcmp(databasestr, "WBLOAD") == 0)
+        volrep = ldh_eVolRep_Wbl;
       else {
         wnav->message('E', "Syntax error in database");
         return WNAV__QUAL;
