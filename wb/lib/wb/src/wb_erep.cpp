@@ -1153,6 +1153,39 @@ wb_vrep* wb_erep::createVolume(pwr_tStatus* sts, pwr_tVid vid, pwr_tCid cid,
     if (add)
       addDb(sts, vrepmem);
     return vrepmem;
+  } else if (type == ldh_eVolRep_Wbl) {
+    char vidstr[40];
+    pwr_tTime t;
+    char classstr[40];
+
+    cdh_VolumeIdToString(vidstr, sizeof(vidstr), vid, 0, 0);
+    sprintf(vname, "$pwrp_db/%s.wb_load", cdh_Low(name));
+    dcli_translate_filename(vname, vname);
+
+    switch (cid) {
+    case pwr_eClass_ClassVolume:
+      strcpy(classstr, "$ClassVolume"); 
+      break;
+    case pwr_eClass_RootVolume:
+      strcpy(classstr, "$RootVolume"); 
+      break;
+    default:
+      *sts = LDH__NYI;
+      return 0;
+    }
+    if (ODD(dcli_file_time(vname, &t))) {
+      *sts = LDH__VOLIDALREXI;
+      return 0;
+    }
+    
+    std::ofstream ofd(vname);
+    ofd << "Volume " << name << " " << classstr << " " << vidstr << "\n"
+        << "EndVolume\n";
+    ofd.close();
+
+    MsgWindow::message('I', "Database created", vname);
+
+
   } else if (type == ldh_eVolRep_Db) {
     sprintf(vname, "$pwrp_db/%s.db", cdh_Low(name));
     dcli_translate_filename(vname, vname);

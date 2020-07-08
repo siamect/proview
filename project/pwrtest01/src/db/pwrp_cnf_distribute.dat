@@ -65,10 +65,60 @@ appl pwrtest01c S $pwrp_web/*.jpg
 appl pwrtest01c S $pwrp_web/*.pdf
 appl pwrtest01c S $pwrp_web/*.pwg
 appl pwrtest01c E $pwrp_exe/ra_status
+appl pwrtest01c E $pwrp_exe/ra_aproctest
+appl pwrtest01c E $pwrp_exe/ra_cdhtest
+appl pwrtest01c E $pwrp_exe/ra_errhtest
+appl pwrtest01c E $pwrp_exe/ra_gdhtest
+appl pwrtest01c E $pwrp_exe/ra_mhappltest
+appl pwrtest01c E $pwrp_exe/ra_mhtest
+appl pwrtest01c E $pwrp_exe/ra_nettimetest
+appl pwrtest01c E $pwrp_exe/ra_plctest
+appl pwrtest01c E $pwrp_exe/ra_pwrrttest.py
+appl pwrtest01c E $pwrp_exe/ra_qcomtest
+appl pwrtest01c E $pwrp_exe/ra_qmontest
+appl pwrtest01c E $pwrp_exe/ra_timetest
+appl pwrtest01c E $pwrp_exe/ra_ccmtest.rtt_com
+appl pwrtest01c E $pwrp_exe/ra_xttscripttest.rtt_com
+appl pwrtest01c E $pwrp_exe/ra_testall_c.sh
 node pwrtest01d 128 999 0 - -
 load pwrtest01d
 appl pwrtest01d W $pwrp_cnf/pwrtest01d/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat
 appl pwrtest01d W $pwrp_cnf/pwrtest01d/authorized_keys:$pwra_db/authorized_keys /home/pwrp/.ssh/authorized_keys
+node copper-arrow 128 998 0 - -
+load copper-arrow
+appl copper-arrow W $pwrp_cnf/copper-arrow/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat
+appl copper-arrow W $pwrp_load/ld_appl_copper-arrow_998.txt $pwrp_load/
+appl copper-arrow W $pwrp_load/pwrp_alias.dat $pwrp_load/pwrp_alias.dat
+appl copper-arrow W $pwrp_inc/*.h
+appl copper-arrow W $pwrp_exe/*.pwg
+appl copper-arrow W $pwrp_load/copper-arrow/xtt_help.dat:$pwrp_load/xtt_help.dat $pwrp_load/xtt_help.dat
+appl copper-arrow W $pwrp_load/copper-arrow/b55/Rt_xtt:$pwrp_load/copper-arrow/Rt_xtt:$pwrp_load/Rt_xtt /home/b55/Rt_xtt
+appl copper-arrow S $pwrp_load/copper-arrow/pwrp/Rt_xtt /home/pwrp/Rt_xtt
+appl copper-arrow W $pwrp_load/copper-arrow/b55/xtt_setup.rtt_com:$pwrp_load/copper-arrow/xtt_setup.rtt_com:$pwrp_load/xtt_setup.rtt_com /home/b55/xtt_setup.rtt_com
+appl copper-arrow S $pwrp_load/copper-arrow/pwrp/xtt_setup.rtt_com /home/pwrp/xtt_setup.rtt_com
+appl copper-arrow W $pwrp_load/*.flw
+appl copper-arrow W $pwrp_cnf/copper-arrow/.rhosts:$pwra_db/.rhosts /home/pwrp/.rhosts
+appl copper-arrow W $pwrp_web/*.html
+appl copper-arrow S $pwrp_web/*.jar
+appl copper-arrow S $pwrp_web/*.gif
+appl copper-arrow S $pwrp_web/*.png
+appl copper-arrow S $pwrp_web/*.jpg
+appl copper-arrow S $pwrp_web/*.pdf
+appl copper-arrow S $pwrp_web/*.pwg
+appl copper-arrow E $pwrp_exe/ra_status
+appl copper-arrow E $pwrp_exe/ra_aproctest
+appl copper-arrow E $pwrp_exe/ra_cdhtest
+appl copper-arrow E $pwrp_exe/ra_errhtest
+appl copper-arrow E $pwrp_exe/ra_gdhtest
+appl copper-arrow E $pwrp_exe/ra_mhappltest
+appl copper-arrow E $pwrp_exe/ra_mhtest
+appl copper-arrow E $pwrp_exe/ra_nettimetest
+appl copper-arrow E $pwrp_exe/ra_plctest
+appl copper-arrow E $pwrp_exe/ra_pwrrttest.py
+appl copper-arrow E $pwrp_exe/ra_qcomtest
+appl copper-arrow E $pwrp_exe/ra_qmontest
+appl copper-arrow E $pwrp_exe/ra_timetest
+appl copper-arrow E $pwrp_exe/ra_testall_c.sh
 builddir pop 2 ""
 buildcopy pop $pwrp_pop/*.pwg $pwrp_exe/
 buildcopy pop $pwrp_pop/*.pwg $pwrp_web/

@@ -108,7 +108,7 @@ int dcli_get_defaultfilename(const char* inname, char* outname, const char* ext)
     }
 
     s = strrchr(s2, '.');
-    if (s == 0) {
+    if (s == 0 || s == s2) {
       /* No extention found, add extention */
       strcat(outname, ext);
     }
