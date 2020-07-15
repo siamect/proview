@@ -697,6 +697,14 @@ Example\n\
 pwrwb.saveSession()\n\
 ");
 
+PyDoc_STRVAR(pwrwb_revertSession_doc,"\
+revertSession()\n--\n\n\
+Revert the current session.\n\n\
+Example\n\
+-------\n\
+pwrwb.revertSession()\n\
+");
+
 PyDoc_STRVAR(pwrwb_getSessionVolume_doc,"\
 getSessionVolume()\n--\n\n\
 Get the volume of the current session.\n\n\
@@ -1573,18 +1581,27 @@ Oid_init(PyObject *s, PyObject *args, PyObject *kwds)
 static PyObject *
 Oid_name(PyObject *s, PyObject *args)
 {
+  if (!((OidObject *)s)->o)
+    return set_error(((OidObject *)s)->o.sts());
+
   return Py_BuildValue("s", ((OidObject *)s)->o.name());  
 }
 
 static PyObject *
 Oid_fullName(PyObject *s, PyObject *args)
 {
+  if (!((OidObject *)s)->o)
+    return set_error(((OidObject *)s)->o.sts());
+
   return Py_BuildValue("s", ((OidObject *)s)->o.longName().name(cdh_mName_volumeStrict));  
 }
 
 static PyObject *
 Oid_oidStr(PyObject *s, PyObject *args)
 {
+  if (!((OidObject *)s)->o)
+    return set_error(((OidObject *)s)->o.sts());
+
   char str[30];
   const char *name = 0;
   pwr_tOid oid = ((OidObject *)s)->o.oid();
@@ -1622,6 +1639,9 @@ Oid_oidStr(PyObject *s, PyObject *args)
 static PyObject *
 Oid_next(PyObject *s, PyObject *args)
 {
+  if (!((OidObject *)s)->o)
+    return set_error(((OidObject *)s)->o.sts());
+
   OidObject *next;
   wb_object next_o = ((OidObject *)s)->o.after();
   if ( !next_o)
@@ -1637,6 +1657,9 @@ Oid_next(PyObject *s, PyObject *args)
 static PyObject *
 Oid_parent(PyObject *s, PyObject *args)
 {
+  if (!((OidObject *)s)->o)
+    return set_error(((OidObject *)s)->o.sts());
+
   OidObject *parent;
   wb_object parent_o = ((OidObject *)s)->o.parent();
   if ( !parent_o)
@@ -1652,6 +1675,9 @@ Oid_parent(PyObject *s, PyObject *args)
 static PyObject *
 Oid_child(PyObject *s, PyObject *args)
 {
+  if (!((OidObject *)s)->o)
+    return set_error(((OidObject *)s)->o.sts());
+
   OidObject *child;
   wb_object child_o = ((OidObject *)s)->o.first();
   if ( !child_o)
@@ -1667,6 +1693,9 @@ Oid_child(PyObject *s, PyObject *args)
 static PyObject *
 Oid_children(PyObject *s, PyObject *args)
 {
+  if (!((OidObject *)s)->o)
+    return set_error(((OidObject *)s)->o.sts());
+
   OidObject *child;
   wb_object child_o;
   PyObject *result;
@@ -1695,6 +1724,9 @@ Oid_children(PyObject *s, PyObject *args)
 static PyObject *
 Oid_cid(PyObject *s, PyObject *args)
 {
+  if (!((OidObject *)s)->o)
+    return set_error(((OidObject *)s)->o.sts());
+
   pwr_tCid cid;
   CidObject *cid_object;
 
@@ -1709,6 +1741,9 @@ Oid_cid(PyObject *s, PyObject *args)
 static PyObject *
 Oid_attribute(PyObject *s, PyObject *args)
 {
+  if (!((OidObject *)s)->o)
+    return set_error(((OidObject *)s)->o.sts());
+
   OidObject *self = (OidObject *)s;
   char *name;
   ArefObject *aref_object;
@@ -1756,6 +1791,9 @@ Aref_dealloc(PyObject *self)
 static PyObject *
 Aref_str(PyObject *self)
 {
+  if (!((ArefObject *)self)->attr)
+    return set_error(((ArefObject *)self)->attr.sts());
+
   return PyUnicode_FromFormat(
 	   "%s", ((ArefObject *)self)->attr.longName().name(cdh_mName_volumeStrict));  
 }
@@ -1817,18 +1855,27 @@ Aref_init(PyObject *s, PyObject *args, PyObject *kwds)
 static PyObject *
 Aref_name(PyObject *s, PyObject *args)
 {
-  return Py_BuildValue("s", ((ArefObject *)s)->attr.name());  
+  if (!((ArefObject *)s)->attr)
+    return set_error(((ArefObject *)s)->attr.sts());
+
+  return Py_BuildValue("s", ((ArefObject *)s)->attr.longName().name(cdh_mName_object | cdh_mName_attribute));  
 }
 
 static PyObject *
 Aref_fullName(PyObject *s, PyObject *args)
 {
+  if (!((ArefObject *)s)->attr)
+    return set_error(((ArefObject *)s)->attr.sts());
+
   return Py_BuildValue("s", ((ArefObject *)s)->attr.longName().name(cdh_mName_volumeStrict));  
 }
 
 static PyObject *
 Aref_arefStr(PyObject *s, PyObject *args)
 {
+  if (!((ArefObject *)s)->attr)
+    return set_error(((ArefObject *)s)->attr.sts());
+
   pwr_tAName name;
   pwr_tAttrRef aref = ((ArefObject *)s)->attr.aref();
 
@@ -1840,6 +1887,9 @@ Aref_arefStr(PyObject *s, PyObject *args)
 static PyObject *
 Aref_tid(PyObject *s, PyObject *args)
 {
+  if (!((ArefObject *)s)->attr)
+    return set_error(((ArefObject *)s)->attr.sts());
+
   pwr_tTid tid;
   TidObject *tid_object;
 
@@ -1854,6 +1904,9 @@ Aref_tid(PyObject *s, PyObject *args)
 static PyObject *
 Aref_value(PyObject *s, PyObject *args)
 {
+  if (!((ArefObject *)s)->attr)
+    return set_error(((ArefObject *)s)->attr.sts());
+
   ArefObject *self = (ArefObject *)s;
   char *buf;
   pwr_eType atype;
@@ -1989,6 +2042,9 @@ Aref_value(PyObject *s, PyObject *args)
 static PyObject *
 Aref_setValue(PyObject *s, PyObject *args)
 {
+  if (!((ArefObject *)s)->attr)
+    return set_error(((ArefObject *)s)->attr.sts());
+
   ArefObject *self = (ArefObject *)s;
   char *buf;
   pwr_eType atype;
@@ -2332,6 +2388,9 @@ Cid_nextAttrObject(PyObject *s, PyObject *args)
 
   if ( !PyArg_ParseTuple(args, "O", &a))
     return NULL;
+
+  if (!a->attr)
+    return set_error(a->attr.sts());
 
   aref = a->attr.aref();
   pwrwb_ses->nextAref(self->cid, &aref, &oaref);
@@ -2780,6 +2839,18 @@ static PyObject *pwrwb_saveSession(PyObject *self, PyObject *args)
   Py_RETURN_NONE;
 }
 
+static PyObject *pwrwb_revertSession(PyObject *self, PyObject *args)
+{
+  if (!pwrwb_ses)
+    return set_error(LDH__NOSUCHSESS);
+
+  pwrwb_ses->abort();
+  if (pwrwb_ses->evenSts())
+    return set_error(pwrwb_ses->sts());
+
+  Py_RETURN_NONE;
+}
+
 static PyObject *pwrwb_closeWb(PyObject *self, PyObject *args)
 {
   if (!pwrwb_env)
@@ -2831,6 +2902,8 @@ static PyObject *pwrwb_volume(PyObject *self, PyObject *args)
 
   if ( name) {
     wb_volume v = pwrwb_env->volume(name);
+    if (!v)
+      return set_error(v.sts());
     vid = v.vid();
   }
   else {
@@ -3032,6 +3105,7 @@ static PyMethodDef PwrwbMethods[] = {
   {"closeWb", pwrwb_closeWb, METH_NOARGS, pwrwb_closeWb_doc},
   {"closeSession", pwrwb_closeSession, METH_NOARGS, pwrwb_closeSession_doc},
   {"saveSession", pwrwb_saveSession, METH_NOARGS, pwrwb_saveSession_doc},
+  {"revertSession", pwrwb_revertSession, METH_NOARGS, pwrwb_revertSession_doc},
   {"getSessionVolume", pwrwb_getSessionVolume, METH_NOARGS, pwrwb_getSessionVolume_doc},
   {"sessionIsEmpty", pwrwb_sessionIsEmpty, METH_NOARGS, pwrwb_sessionIsEmpty_doc},
   {"volume", pwrwb_volume, METH_VARARGS, pwrwb_volume_doc},
