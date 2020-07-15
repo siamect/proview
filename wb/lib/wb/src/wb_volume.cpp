@@ -1136,7 +1136,7 @@ void wb_volume::nextAref(pwr_tCid cid, pwr_sAttrRef* arp, pwr_sAttrRef* oarp)
   int bd_size;
 
   if (!catt_tt)
-    throw wb_error(LDH__CATT);
+    catt_tt = m_vrep->merep()->buildCatt(&m_sts);
 
   wb_orep* op = m_vrep->object(&m_sts, arp->Objid);
   if (evenSts())
