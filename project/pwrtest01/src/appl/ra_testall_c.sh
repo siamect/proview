@@ -14,6 +14,7 @@ dexec()
 
 exec "ra_plctest"
 exec "ra_timetest"
+exec "ra_nettimetest"
 exec "ra_cdhtest"
 exec "ra_gdhtest"
 exec "ra_errhtest"

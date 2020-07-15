@@ -488,9 +488,9 @@ ra_qmontest::ra_qmontest(eProc ptype) : m_ptype(ptype), m_qquota(500), m_errcnt(
   pwr_tVid vid;  
 
   if (isServer())
-    m_log = new tst_log(&m_sts, "rt-Qmon", "$pwrp_log/qmon.log");
+    m_log = new tst_log(&m_sts, "rt-Qmon", "$pwrp_log/qmon.tlog");
   else
-    m_log = new tst_log(&m_sts, "rt-QmonClient", "$pwrp_log/qmonc.log");
+    m_log = new tst_log(&m_sts, "rt-QmonClient", "$pwrp_log/qmonc.tlog");
   if (EVEN(m_sts))
     printf("** Unable to open log file");
 

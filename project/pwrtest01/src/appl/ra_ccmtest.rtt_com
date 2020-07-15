@@ -990,7 +990,7 @@ main()
   int log;
 
   verify(0);
-  log = tstlog_open("co-Ccm", "$pwrp_log/ccm.log");
+  log = tstlog_open("co-Ccm", "$pwrp_log/ccm.tlog");
 
   ccm_declarations(log);
   ccm_operators(log);

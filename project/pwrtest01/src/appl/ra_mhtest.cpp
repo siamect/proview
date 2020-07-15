@@ -525,7 +525,7 @@ ra_mhtest::ra_mhtest() : m_clean(0), m_checkstatus(0), m_errcnt(0)
 {
   m_mh = this;
   m_clean = 1;
-  m_log = new tst_log(&m_sts, "rt-Mh", "$pwrp_log/mh.log");
+  m_log = new tst_log(&m_sts, "rt-Mh", "$pwrp_log/mh.tlog");
   if (EVEN(m_sts))
     printf("** Unable to open log file");
   m_sts = gdh_Init("ra_mhtest");

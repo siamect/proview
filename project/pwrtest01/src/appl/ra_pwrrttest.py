@@ -1494,7 +1494,7 @@ class Ctx:
 
 
 ctx = Ctx()
-ctx.logger = pwrtest.logger('rt-pwrrt', '$pwrp_log/pwrrt.log')
+ctx.logger = pwrtest.logger('rt-pwrrt', '$pwrp_log/pwrrt.tlog')
 try:
     ctx.init()
 except:

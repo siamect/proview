@@ -7,7 +7,7 @@
 
 export PWR_BUS_ID=999
 
-if [ -e "/data0/pwrp/tellus/login/sysinfo.txt" ]; then
+if [ -e "$pwrp_root/src/login/sysinfo.txt" ]; then
   echo "-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_"
   echo "Welcome to"
   echo "`$pwr_exe/pwrp_env.sh show project`"

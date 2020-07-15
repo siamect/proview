@@ -1277,7 +1277,7 @@ void ra_cdhtest::AttrElemSize(void)
 // Constructor
 ra_cdhtest::ra_cdhtest()
 {
-  m_log = new tst_log(&m_sts, "co-Cdh", "$pwrp_log/cdh.log");
+  m_log = new tst_log(&m_sts, "co-Cdh", "$pwrp_log/cdh.tlog");
   if (EVEN(m_sts))
     printf("** Unable to open log file");
 }
