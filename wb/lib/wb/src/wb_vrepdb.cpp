@@ -1211,6 +1211,7 @@ wb_orep* wb_vrepdb::nextClass(pwr_tStatus* sts, const wb_orep* orp)
   }
 }
 
+// TODO, not working...
 wb_orep* wb_vrepdb::previous(pwr_tStatus* sts, const wb_orep* orp)
 {
   *sts = LDH__SUCCESS;
