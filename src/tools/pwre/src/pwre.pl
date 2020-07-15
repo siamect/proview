@@ -671,6 +671,9 @@ sub build_all_modules()
   _module("sev");
   build_module($flavour);
   merge();
+  _module("test");
+  build_module($flavour);
+  merge();
   _module("abb");
   build_module($flavour);
   merge();
