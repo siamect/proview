@@ -41,8 +41,8 @@ else
 fi
 platform=${hw:3}_${os:3}
 
-#srcdir=$pwre_croot/src/tools/docker/pwrtest02
-srcdir=/home/claes/wb
+srcdir=$pwre_croot/src/tools/docker/pwrtest02
+#srcdir=/home/claes/wb
 
 export pwrp_root=$pwre_croot/project/pwrtest02
 broot=$pwre_broot/$os/$hw/bld/project/pwrtest02/bld
