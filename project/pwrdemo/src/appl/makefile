@@ -8,6 +8,6 @@ demo_modules = $(pwrp_exe)/ra_status
 
 demo_all : $(demo_modules)
 
-$(pwrp_exe)/ra_status : $(pwrp_appl)/ra_status.c
+$(pwrp_exe)/ra_status : $(pwrp_appl)/ra_status.cpp
 	@ echo "Building ra_status"
 	@ g++ -g -o $(target) $(source) -I$(pwr_inc) -L$(pwr_lib) -lpwr_rt -lpwr_co -lpwr_msg_dummy -lrpcsvc -lpthread -lm -lrt
