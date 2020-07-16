@@ -3,7 +3,7 @@
 
 import sys
 import math
-import pwrrt
+import pwrwb
 import pwrtest
 
 class Ctx:
@@ -13,18 +13,18 @@ class Ctx:
     #
 
     #
-    # pwrrt.init()
+    # pwrwb.init()
     #
     def init(self):
         try:                
-            pwrrt.init('ra_pwrrttest')
+            pwrwb.open('VolPwrtest02')
         except RuntimeError as e:
             self.logger.vlog('E', 'init, Unexpected exception %s', str(e))
             raise e
         self.logger.log('S', 'init, successfull completion')
 
     #
-    # pwrrt.login()/logout()
+    # pwrwb.login()/logout()
     #
     def login(self):
         d = (
@@ -36,20 +36,20 @@ class Ctx:
         i = 0
         for i in range(len(d)):
             try:                
-                pwrrt.login(d[i][0], d[i][1])
-                user = pwrrt.getUser()
-                priv = pwrrt.getPriv()
+                pwrwb.login(d[i][0], d[i][1])
+                user = pwrwb.getUser()
+                priv = pwrwb.getPriv()
                 if user != d[i][0]:
                     self.logger.vlog('E', 'login, getUser, wrong user %s, %s',
                                      user, d[i][1])
-                    pwrrt.logout()
+                    pwrwb.logout()
                     return
                 if priv != d[i][2]:
                     self.logger.vlog('E', 'login, getPriv, wrong priv %s, %s',
                                      str(priv), str(d[i][2]))
-                    pwrrt.logout()
+                    pwrwb.logout()
                     return
-                pwrrt.logout()
+                pwrwb.logout()
             except RuntimeError as e:
                 if str(e) != d[i][3]:
                     self.logger.vlog('E', 'login, Unexpected exception %s, idx %s',
@@ -57,7 +57,7 @@ class Ctx:
                     return
 
         self.logger.log('S', 'login, successfull completion')
-            
+
     #
     # pwrrt.volume()
     #
@@ -65,16 +65,16 @@ class Ctx:
         d = (
             ('pwrs', ''),
             ('pwrb', ''),
-            ('VolPwrTest01c', ''),
-            ('CVolPwrtest01', ''),
-            ('1_254_254_203', ''),
+            ('VolPwrtest02', ''),
+            ('CVolPwrtest02', ''),
+            ('1_254_254_203', '%LDH-E-NOSUCHVOL, no such volume exists'),
             ('rt', ''),
-            ('VolNoVolume', '%GDH-E-NOSUCHVOL, no such volume exists'),
+            ('VolNoVolume', '%LDH-E-NOSUCHVOL, no such volume exists'),
             )
         i = 0
         for i in range(len(d)):
             try:                
-                vol = pwrrt.volume(d[i][0])
+                vol = pwrwb.volume(d[i][0])
                 if vol.name() != d[i][0]:
                     self.logger.vlog('E', "volume, Name doesn't match, %s != %s, idx %s",
                                     vol.name(), d[i][0], str(i))
@@ -87,20 +87,24 @@ class Ctx:
         self.logger.log('S', 'volume, successfull completion')
 
     #
-    # pwrrt.volumes()
+    # pwrwb.volumes()
     #
     def volumes(self):
-        d = ('VolPwrTest01c', 'rt', 'pwrs', 'pwrb', 'Simul', 'BaseComponent',
-             'NMps', 'Profibus', 'CVolPwrtest01', '1_254_254_203')
-        i = 0
-        try:                
-           vol = pwrrt.volumes()
-           for v in vol:
-               if v.name() != d[i]:
-                   self.logger.vlog('E', "volumes, Name doesn't match, %s != %s",
-                                    v.name(), d[i])
-                   return
-               i += 1
+        d = ('VolPwrtest02', 'pwrs', 'pwrb', 'Simul', 'BaseComponent',
+             'NMps', 'Profibus', 'CVolPwrtest02')
+        vol = pwrwb.volumes()
+        try:
+            i = 0
+            for dv in d:
+                found = False
+                for v in vol:
+                    if v.name() == dv:
+                        found = True
+                if not found:
+                    self.logger.vlog('E', "volumes, Volume not found, %s",
+                                    v.name())
+                    return
+                i += 1
         except RuntimeError as e:
             self.logger.vlog('E', 'volumes, Unexpected exception %s, idx %s',
                                      str(e), str(i))
@@ -108,24 +112,24 @@ class Ctx:
         self.logger.log('S', 'volumes, successfull completion')
 
     #
-    # pwrrt.object()
+    # pwrwb.object()
     #
     def object(self):
         d = (
-            ('Test01c-Pwrrt-Av1', 'VolPwrTest01c:Test01c-Pwrrt-Av1', ''),
-            ('VolPwrTest01c:Test01c-Pwrrt-Av1', 'VolPwrTest01c:Test01c-Pwrrt-Av1', ''),
-            ('Test01c-Pwrrt-Dv1', 'VolPwrTest01c:Test01c-Pwrrt-Dv1', ''),
-            ('Test01c-Pwrrt-Dv2', 'VolPwrTest01c:Test01c-Pwrrt-Dv2', ''),
-            ('Test01c-Pwrrt-L1', 'VolPwrTest01c:Test01c-Pwrrt-L1', ''),
-            ('Test01c-Pwrrt', 'VolPwrTest01c:Test01c-Pwrrt', ''),
-            ('Test01c', 'VolPwrTest01c:Test01c', ''),
-            ('Test01c-Pwrrt-NoObject', '', '%HASH-E-NOTFOUND, entry not found'),
-            ('VolPwrTest01c:', 'VolPwrTest01c:', '')
+            ('Test02-Pwrwb-Av1', 'VolPwrtest02:Test02-Pwrwb-Av1', ''),
+            ('VolPwrTest02:Test02-Pwrwb-Av1', 'VolPwrtest02:Test02-Pwrwb-Av1', ''),
+            ('Test02-Pwrwb-Dv1', 'VolPwrtest02:Test02-Pwrwb-Dv1', ''),
+            ('Test02-Pwrwb-Dv2', 'VolPwrtest02:Test02-Pwrwb-Dv2', ''),
+            ('Test02-Pwrwb-L1', 'VolPwrtest02:Test02-Pwrwb-L1', ''),
+            ('Test02-Pwrwb', 'VolPwrtest02:Test02-Pwrwb', ''),
+            ('Test02', 'VolPwrtest02:Test02', ''),
+            ('Test02-Pwrwb-NoObject', '', '%LDH-E-NOSUCHOBJ, no such object exists'),
+            ('VolPwrtest02:', 'VolPwrtest02:', '')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                o = pwrrt.object(d[i][0])
+                o = pwrwb.object(d[i][0])
                 name = o.fullName()
                 if name != d[i][1]:
                     self.logger.vlog('E', "object, Name doesn't match, %s != %s, idx %s",
@@ -142,22 +146,22 @@ class Ctx:
         self.logger.log('S', 'object, successfull completion')
 
     #
-    # pwrrt.attribute()
+    # pwrwb.attribute()
     #
     def attribute(self):
         d = (
-            ('Test01c-Pwrrt-Av1.ActualValue', 22.22, ''),
-            ('Test01c-Pwrrt-Av1.NoSuchAttr', 22.22, '%GDH-E-ATTRIBUTE, no such attribute'),
-            ('Test01c-Pwrrt-Dv1.ActualValue', 0, ''),
-            ('Test01c-Pwrrt-Dv2.ActualValue', 1, ''),
-            ('Test01c-Pwrrt-L1.Value.ActualValue', 33.33, ''),
-            ('Test01c-Pwrrt-L1.LimitHH.Limit', 95, ''),
-            ('Test01c-Pwrrt-L1.Description', 'BaseLevelSensor used for python tests', '')
+            ('Test02-Pwrwb-Av1.InitialValue', 22.22, ''),
+            ('Test02-Pwrwb-Av1.NoSuchAttr', 22.22, '%LDH-E-NOSUCHATTR, no such attribute exists'),
+            ('Test02-Pwrwb-Dv1.InitialValue', 0, ''),
+            ('Test02-Pwrwb-Dv2.InitialValue', 1, ''),
+            ('Test02-Pwrwb-L1.Value.InitialValue', 33.33, ''),
+            ('Test02-Pwrwb-L1.LimitHH.Limit', 94, ''),
+            ('Test02-Pwrwb-L1.Description', 'BaseLevelSensor used for python tests', '')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                a = pwrrt.attribute(d[i][0])
+                a = pwrwb.attribute(d[i][0])
                 value = a.value()
                 if type(value).__name__ == 'str':
                     if value != d[i][1]:
@@ -174,44 +178,104 @@ class Ctx:
                     self.logger.vlog('E', 'attribute, Unexpected exception %s, idx %s',
                                      str(e), str(i))
                     return
+
         self.logger.log('S', 'attribute, successfull completion')
 
     #
-    # pwrrt.subscribe()
+    # pwrwb.getSessionVolume()
     #
-    def subscribe(self):
+    def getSessionVolume(self):
+        try:                
+            v = pwrwb.getSessionVolume()
+            if v.name() != 'VolPwrtest02':
+                self.logger.vlog('E', "getSessionVolume, Volume doesn't match, %s",
+                                    v.name())
+        except RuntimeError as e:
+            self.logger.vlog('E', 'getSessionVolume, Unexpected exception %s', str(e))
+            return
+        self.logger.log('S', 'getSessionVolume, successfull completion')
+
+
+    #
+    # pwrwb.getUser()
+    #
+    def getUser(self):
+        try:                
+            user = pwrwb.getUser()
+            if user != 'pwrp':
+                self.logger.vlog('E', "getUser, user doesn't match, %s", user)
+        except RuntimeError as e:
+            self.logger.vlog('E', 'getUser, Unexpected exception %s', str(e))
+            return
+        self.logger.log('S', 'getUser, successfull completion')
+
+    #
+    # pwrwb.sessionIsEmpty()
+    #
+    def sessionIsEmpty(self):
+        try:                
+            empty = pwrwb.sessionIsEmpty()
+            if empty != 1:
+                self.logger.vlog('E', "sessionIsEmpty, wrong value %d", empty)
+        except RuntimeError as e:
+            self.logger.vlog('E', 'sessionIsEmpty, Unexpected exception %s', str(e))
+            return
+        self.logger.log('S', 'sessionIsEmpty, successfull completion')
+
+
+    #
+    # pwrwb.revertSession()
+    #
+    def revertSession(self):
         d = (
-            ('Test01c-Pwrrt-Av1.ActualValue', 22.22, ''),
-            ('Test01c-Pwrrt-Av1.NoSuchAttr', 22.22, '%GDH-E-ATTRIBUTE, no such attribute'),
-            ('Test01c-Pwrrt-Dv1.ActualValue', 0, ''),
-            ('Test01c-Pwrrt-Dv2.ActualValue', 1, ''),
-            ('Test01c-Pwrrt-L1.Value.ActualValue', 33.33, ''),
-            ('Test01c-Pwrrt-L1.LimitHH.Limit', 95, ''),
-            ('Test01c-Pwrrt-L1.Description', 'BaseLevelSensor used for python tests', '')
+            ('Test02-Pwrwb-Av1.InitialValue', 22.22, 44.44),
+            ('Test02-Pwrwb-Dv1.InitialValue', 0, 1),
+            ('Test02-Pwrwb-Dv2.InitialValue', 1, 0),
+            ('Test02-Pwrwb-L1.Value.InitialValue', 33.33, 66.66),
+            ('Test02-Pwrwb-L1.LimitHH.Limit', 94, 102),
+            ('Test02-Pwrwb-L1.Description', 'BaseLevelSensor used for python tests', 'Some level sensor...')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                sub = pwrrt.subscribe(d[i][0])
-                value = sub.value()
+                a = pwrwb.attribute(d[i][0])
+                a.setValue(d[i][2])
+            except RuntimeError as e:
+                self.logger.vlog('E', 'revertSession, Unexpected exception %s, idx %s',
+                                 str(e), str(i))
+                return
+
+
+        empty = pwrwb.sessionIsEmpty()
+        if empty != 0:
+            self.logger.vlog('E', "revertSession sessionIsEmpty, wrong value %d", empty)
+
+        pwrwb.revertSession()
+
+        empty = pwrwb.sessionIsEmpty()
+        if empty != 1:
+            self.logger.vlog('E', "revertSession sessionIsEmpty, wrong value %d", empty)
+
+        for i in range(len(d)):
+            try:                
+                a = pwrwb.attribute(d[i][0])
+                value = a.value()
                 if type(value).__name__ == 'str':
                     if value != d[i][1]:
-                        self.logger.vlog('E', "subscribe, Value doesn't match, %s != %s, idx %s",
+                        self.logger.vlog('E', "revertSession, Value doesn't match, %s != %s, idx %s",
                                     value, d[i][1], str(i))
                         return
                 else:
                     if not abs(value - d[i][1]) < 0.001:
-                	self.logger.vlog('E', "subscribe, Value doesn't match, %s != %s, idx %s",
+                	self.logger.vlog('E', "revertSession, Value doesn't match, %s != %s, idx %s",
                                     str(value), str(d[i][1]), str(i))
                         return
-                sub.close();
             except RuntimeError as e:
-                if str(e) != d[i][2]:
-                    self.logger.vlog('E', 'subscribe, Unexpected exception %s, idx %s',
+                self.logger.vlog('E', 'revertSession, Unexpected exception %s, idx %s',
                                      str(e), str(i))
-                    return
-        self.logger.log('S', 'subscribe, successfull completion')
+                return
 
+        self.logger.log('S', 'revertSession, successfull completion')
 
     #
     # Oid functions
@@ -222,20 +286,20 @@ class Ctx:
     #
     def Oid(self):
         d = (
-            ('Test01c-Pwrrt-Av1', 'VolPwrTest01c:Test01c-Pwrrt-Av1', ''),
-            ('VolPwrTest01c:Test01c-Pwrrt-Av1', 'VolPwrTest01c:Test01c-Pwrrt-Av1', ''),
-            ('Test01c-Pwrrt-Dv1', 'VolPwrTest01c:Test01c-Pwrrt-Dv1', ''),
-            ('Test01c-Pwrrt-Dv2', 'VolPwrTest01c:Test01c-Pwrrt-Dv2', ''),
-            ('Test01c-Pwrrt-L1', 'VolPwrTest01c:Test01c-Pwrrt-L1', ''),
-            ('Test01c-Pwrrt', 'VolPwrTest01c:Test01c-Pwrrt', ''),
-            ('Test01c', 'VolPwrTest01c:Test01c', ''),
-            ('Test01c-Pwrrt-NoObject', '', '%HASH-E-NOTFOUND, entry not found'),
-            ('VolPwrTest01c:', 'VolPwrTest01c:', '')
+            ('Test02-Pwrwb-Av1', 'VolPwrtest02:Test02-Pwrwb-Av1', ''),
+            ('VolPwrtest02:Test02-Pwrwb-Av1', 'VolPwrtest02:Test02-Pwrwb-Av1', ''),
+            ('Test02-Pwrwb-Dv1', 'VolPwrtest02:Test02-Pwrwb-Dv1', ''),
+            ('Test02-Pwrwb-Dv2', 'VolPwrtest02:Test02-Pwrwb-Dv2', ''),
+            ('Test02-Pwrwb-L1', 'VolPwrtest02:Test02-Pwrwb-L1', ''),
+            ('Test02-Pwrwb', 'VolPwrtest02:Test02-Pwrwb', ''),
+            ('Test02', 'VolPwrtest02:Test02', ''),
+            ('Test02-Pwrwb-NoObject', '', '%LDH-E-NOSUCHOBJ, no such object exists'),
+            ('VolPwrtest02:', 'VolPwrtest02:', '')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                o = pwrrt.Oid(d[i][0])
+                o = pwrwb.Oid(d[i][0])
                 name = o.fullName()
                 if name != d[i][1]:
                     self.logger.vlog('E', "Oid, Name doesn't match, %s != %s, idx %s",
@@ -264,7 +328,7 @@ class Ctx:
         i = 0
         for i in range(len(d)):
             try:                
-                o = pwrrt.object(d[i][0])
+                o = pwrwb.object(d[i][0])
                 child = o.child()
                 if child is None:
                     if d[i][1] != '':
@@ -282,7 +346,8 @@ class Ctx:
                                  str(e), str(i))
                 return
         self.logger.log('S', 'Oid.child, successfull completion')
-    
+
+
     #
     # Oid.next()
     #
@@ -297,7 +362,7 @@ class Ctx:
         i = 0
         for i in range(len(d)):
             try:                
-                o = pwrrt.object(d[i][0])
+                o = pwrwb.object(d[i][0])
                 next = o.next()
                 if next is None:
                     if d[i][1] != '':
@@ -316,6 +381,7 @@ class Ctx:
                 return
         self.logger.log('S', 'Oid.next, successfull completion')
     
+
     #
     # Oid.parent()
     #
@@ -324,12 +390,12 @@ class Ctx:
             ('RootObject-Child1-A1', 'Child1', ''),
             ('RootObject-Child1', 'RootObject', ''),
             ('RootObject', '', ''),
-            ('NoSuchObject', '', '%HASH-E-NOTFOUND, entry not found')
+            ('NoSuchObject', '', '%LDH-E-NOSUCHOBJ, no such object exists')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                o = pwrrt.object(d[i][0])
+                o = pwrwb.object(d[i][0])
                 parent = o.parent()
                 if parent is None:
                     if d[i][1] != '':
@@ -361,7 +427,7 @@ class Ctx:
         i = 0
         for i in range(len(d)):
             try:                
-                o = pwrrt.object(d[i][0])
+                o = pwrwb.object(d[i][0])
                 children = o.children()
 
                 j = 0
@@ -386,15 +452,15 @@ class Ctx:
         d = (
             ('RootObject', 'RootObject', ''),
             ('RootObject-Child1', 'Child1', ''),
-            ('Test01c-Gdh-LongName90123456789012345678901', 'LongName90123456789012345678901', ''),
-            ('Test01c-Gdh-ÄÅÖäåö', 'ÄÅÖäåö', ''),
-            ('Test01c-Gdh-sdf*sdf', '', '%CDH-E-INVCHAR, invalid character'),
-            ('VolPwrTest01c:', 'VolPwrTest01c', '')
+            ('Test02-Ldh-LongName90123456789012345678901', 'LongName90123456789012345678901', ''),
+            ('Test02-Ldh-ÄÅÖäåö', 'ÄÅÖäåö', ''),
+            ('Test02-Ldh-sdf*sdf', '', '%LDH-E-BADNAME, bad object name'),
+            ('VolPwrtest02:', 'VolPwrtest02', '')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                o = pwrrt.object(d[i][0])
+                o = pwrwb.object(d[i][0])
                 name = o.name()
                 if name != d[i][1]:
                     self.logger.vlog('E', "Oid.name, Name doesn't match, %s != %s",
@@ -409,22 +475,23 @@ class Ctx:
                     return
         self.logger.log('S', 'Oid.name, successfull completion')
     
+
     #
     # Oid.fullName()
     #
     def Oid_fullName(self):
         d = (
-            ('RootObject', 'VolPwrTest01c:RootObject', ''),
-            ('RootObject-Child1', 'VolPwrTest01c:RootObject-Child1', ''),
-            ('Test01c-Gdh-LongName90123456789012345678901', 'VolPwrTest01c:Test01c-Gdh-LongName90123456789012345678901', ''),
-            ('Test01c-Gdh-ÄÅÖäåö', 'VolPwrTest01c:Test01c-Gdh-ÄÅÖäåö', ''),
-            ('Test01c-Gdh-sdf*sdf', '', '%CDH-E-INVCHAR, invalid character'),
-            ('VolPwrTest01c:', 'VolPwrTest01c:', '')
+            ('RootObject', 'VolPwrtest02:RootObject', ''),
+            ('RootObject-Child1', 'VolPwrtest02:RootObject-Child1', ''),
+            ('Test02-Ldh-LongName90123456789012345678901', 'VolPwrtest02:Test02-Ldh-LongName90123456789012345678901', ''),
+            ('Test02-Ldh-ÄÅÖäåö', 'VolPwrtest02:Test02-Ldh-ÄÅÖäåö', ''),
+            ('Test02-Ldh-sdf*sdf', '', '%LDH-E-BADNAME, bad object name'),
+            ('VolPwrtest02:', 'VolPwrtest02:', '')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                o = pwrrt.object(d[i][0])
+                o = pwrwb.object(d[i][0])
                 name = o.fullName()
                 if name != d[i][1]:
                     self.logger.vlog('E', "Oid.fullName, Name doesn't match, %s != %s",
@@ -444,16 +511,16 @@ class Ctx:
     #
     def Oid_oidStr(self):
         d = (
-            ('RootObject', '_O0.254.254.203:12147', ''),
-            ('RootObject-Child1', '_O0.254.254.203:12149', ''),
-            ('VolPwrTest01c:', '_O0.254.254.203:0', ''),
+            ('RootObject', '_O0.254.254.210:1', ''),
+            ('RootObject-Child1', '_O0.254.254.210:2', ''),
+            ('VolPwrTest02:', '_O0.254.254.210:0', ''),
             ('pwrb:Class-And', '_O0.0.0.2:2149842944', ''),
             ('pwrs:', '_O0.0.0.1:0', '')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                o = pwrrt.object(d[i][0])
+                o = pwrwb.object(d[i][0])
                 name = o.oidStr()
                 if name != d[i][1]:
                     self.logger.vlog('E', "Oid.oidStr, Name doesn't match, %s != %s",
@@ -469,51 +536,20 @@ class Ctx:
         self.logger.log('S', 'Oid.oidStr, successfull completion')
     
     #
-    # Oid.cid()
-    #
-    def Oid_cid(self):
-        d = (
-            ('RootObject', '$PlantHier', ''),
-            ('RootObject-Child1', '$PlantHier', ''),
-            ('Test01c-Pwrrt-Dv1', 'Dv', ''),
-            ('Test01c-Pwrrt-L1', 'BaseLevelSensor', ''),
-            ('VolPwrTest01c:', '$RootVolume', ''),
-            ('pwrb:Class-And', '$ClassDef', ''),
-            ('pwrs:', '$ClassVolume', '')
-            )
-        i = 0
-        for i in range(len(d)):
-            try:                
-                o = pwrrt.object(d[i][0])
-                cid = o.cid()
-                if cid.name() != d[i][1]:
-                    self.logger.vlog('E', "Oid.cid, Name doesn't match, %s != %s",
-                                     cid.name(), d[i][1])
-                    return
-
-
-            except RuntimeError as e:
-                if str(e) != d[i][2]:
-                    self.logger.vlog('E', 'Oid.cid, Unexpected exception %s, idx %s',
-                                     str(e), str(i))
-                    return
-        self.logger.log('S', 'Oid.cid, successfull completion')
-    
-    #
     # Oid.attribute()
     #
     def Oid_attribute(self):
         d = (
             ('RootObject', 'Description', 'RootObject.Description'),
             ('RootObject-Child1', 'Description', 'Child1.Description'),
-            ('Test01c-Pwrrt-Dv1', 'ActualValue', 'Dv1.ActualValue'),
-            ('Test01c-Pwrrt-L1', 'LimitLL', 'L1.LimitLL'),
-            ('Test01c-Pwrrt-L1', 'Value.ActualValue', 'L1.Value.ActualValue')
+            ('Test02-Pwrwb-Dv1', 'ActualValue', 'Dv1.ActualValue'),
+            ('Test02-Pwrwb-L1', 'LimitLL', 'L1.LimitLL'),
+            ('Test02-Pwrwb-L1', 'Value.ActualValue', 'L1.Value.ActualValue')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                o = pwrrt.object(d[i][0])
+                o = pwrwb.object(d[i][0])
                 a = o.attribute(d[i][1])
                 if a.name() != d[i][2]:
                     self.logger.vlog('E', "Oid.attribute, "
@@ -530,6 +566,7 @@ class Ctx:
                     return
         self.logger.log('S', 'Oid.attribute, successfull completion')
     
+
     #
     # Aref functions
     #
@@ -539,18 +576,18 @@ class Ctx:
     #
     def Aref(self):
         d = (
-            ('Test01c-Pwrrt-Av1.ActualValue', 22.22, ''),
-            ('Test01c-Pwrrt-Av1.NoSuchAttr', 22.22, '%GDH-E-ATTRIBUTE, no such attribute'),
-            ('Test01c-Pwrrt-Dv1.ActualValue', 0, ''),
-            ('Test01c-Pwrrt-Dv2.ActualValue', 1, ''),
-            ('Test01c-Pwrrt-L1.Value.ActualValue', 33.33, ''),
-            ('Test01c-Pwrrt-L1.LimitHH.Limit', 95, ''),
-            ('Test01c-Pwrrt-L1.Description', 'BaseLevelSensor used for python tests', '')
+            ('Test02-Pwrwb-Av1.InitialValue', 22.22, ''),
+            ('Test02-Pwrwb-Av1.NoSuchAttr', 22.22, '%LDH-E-NOSUCHATTR, no such attribute exists'),
+            ('Test02-Pwrwb-Dv1.InitialValue', 0, ''),
+            ('Test02-Pwrwb-Dv2.InitialValue', 1, ''),
+            ('Test02-Pwrwb-L1.Value.InitialValue', 33.33, ''),
+            ('Test02-Pwrwb-L1.LimitHH.Limit', 94, ''),
+            ('Test02-Pwrwb-L1.Description', 'BaseLevelSensor used for python tests', '')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                a = pwrrt.Aref(d[i][0])
+                a = pwrwb.Aref(d[i][0])
                 value = a.value()
                 if type(value).__name__ == 'str':
                     if value != d[i][1]:
@@ -578,14 +615,14 @@ class Ctx:
         d = (
             ('RootObject.Description', 'RootObject.Description', ''),
             ('RootObject-Child1.DefGraph', 'Child1.DefGraph', ''),
-            ('Test01c-Gdh-LongName90123456789012345678901.InitialValue', 'LongName90123456789012345678901.InitialValue', ''),
-            ('Test01c-Gdh-ÄÅÖäåö.ValueIndex', 'ÄÅÖäåö.ValueIndex', ''),
-            ('Test01c-Gdh-sdf*sdf', '', '%CDH-E-INVCHAR, invalid character')
+            ('Test02-Ldh-LongName90123456789012345678901.InitialValue', 'LongName90123456789012345678901.InitialValue', ''),
+            ('Test02-Ldh-ÄÅÖäåö.ValueIndex', 'ÄÅÖäåö.ValueIndex', ''),
+            ('Test02-Ldh-sdf*sdf', '', '%LDH-E-NOSUCHATTR, no such attribute exists')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                a = pwrrt.attribute(d[i][0])
+                a = pwrwb.attribute(d[i][0])
                 name = a.name()
                 if name != d[i][1]:
                     self.logger.vlog('E', "Aref.name, Name doesn't match, %s != %s",
@@ -605,16 +642,16 @@ class Ctx:
     #
     def Aref_fullName(self):
         d = (
-            ('RootObject.Description', 'VolPwrTest01c:RootObject.Description', ''),
-            ('RootObject-Child1.DefGraph', 'VolPwrTest01c:RootObject-Child1.DefGraph', ''),
-            ('Test01c-Gdh-LongName90123456789012345678901.InitialValue', 'VolPwrTest01c:Test01c-Gdh-LongName90123456789012345678901.InitialValue', ''),
-            ('Test01c-Gdh-ÄÅÖäåö.ValueIndex', 'VolPwrTest01c:Test01c-Gdh-ÄÅÖäåö.ValueIndex', ''),
-            ('Test01c-Gdh-sdf*sdf', '', '%CDH-E-INVCHAR, invalid character')
+            ('RootObject.Description', 'VolPwrtest02:RootObject.Description', ''),
+            ('RootObject-Child1.DefGraph', 'VolPwrtest02:RootObject-Child1.DefGraph', ''),
+            ('Test02-Ldh-LongName90123456789012345678901.InitialValue', 'VolPwrtest02:Test02-Ldh-LongName90123456789012345678901.InitialValue', ''),
+            ('Test02-Ldh-ÄÅÖäåö.ValueIndex', 'VolPwrtest02:Test02-Ldh-ÄÅÖäåö.ValueIndex', ''),
+            ('Test02-Ldh-sdf*sdf', '', '%LDH-E-NOSUCHATTR, no such attribute exists')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                a = pwrrt.attribute(d[i][0])
+                a = pwrwb.attribute(d[i][0])
                 name = a.fullName()
                 if name != d[i][1]:
                     self.logger.vlog('E', "Aref.fullName, "
@@ -636,16 +673,16 @@ class Ctx:
     #
     def Aref_arefStr(self):
         d = (
-            ('RootObject', '_A0.254.254.203:12147(_T0.1:0.17.1)[0.656]', ''),
-            ('RootObject-Child1', '_A0.254.254.203:12149(_T0.1:0.17.1)[0.656]', ''),
-            ('VolPwrTest01c:', '_A0.254.254.203:0(_T0.1:0.47.1)[0.160]', ''),
+            ('RootObject', '_A0.254.254.210:1(_T0.1:0.17.1)[0.656]', ''),
+            ('RootObject-Child1', '_A0.254.254.210:2(_T0.1:0.17.1)[0.656]', ''),
+            ('VolPwrTest02:', '_A0.254.254.210:0(_T0.1:0.47.1)[0.160]', ''),
             ('pwrb:Class-And', '_A0.0.0.2:2149842944(_T0.1:0.1.1)[0.24]', ''),
             ('pwrs:', '_A0.0.0.1:0(_T0.1:0.52.1)[0.208]', '')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                a = pwrrt.attribute(d[i][0])
+                a = pwrwb.attribute(d[i][0])
                 name = a.arefStr()
                 if name != d[i][1]:
                     self.logger.vlog('E', "Aref.arefStr, "
@@ -669,30 +706,30 @@ class Ctx:
         d = (
             ('RootObject.Description', 'pwrs:Type-$String80', ''),
             ('RootObject-Child1.DefGraph', 'pwrs:Type-$AttrRef', ''),
-            ('Test01c-Pwrrt-Dv1.InitialValue', 'pwrs:Type-$Boolean', ''),
-            ('Test01c-Pwrrt-L1.Value', 'pwrb:Class-Ai', ''),
-            ('Test01c-Pwrrt-L1.Value.ActualValue', 'pwrs:Type-$Float32', ''),
-            ('Test01c-Pwrrt-Values.Boolean', 'pwrs:Type-$Boolean', ''),
-            ('Test01c-Pwrrt-Values.Int8', 'pwrs:Type-$Int8', ''),
-            ('Test01c-Pwrrt-Values.Int16', 'pwrs:Type-$Int16', ''),
-            ('Test01c-Pwrrt-Values.Int32', 'pwrs:Type-$Int32', ''),
-            ('Test01c-Pwrrt-Values.Int64', 'pwrs:Type-$Int64', ''),
-            ('Test01c-Pwrrt-Values.UInt8', 'pwrs:Type-$UInt8', ''),
-            ('Test01c-Pwrrt-Values.UInt16', 'pwrs:Type-$UInt16', ''),
-            ('Test01c-Pwrrt-Values.UInt32', 'pwrs:Type-$UInt32', ''),
-            ('Test01c-Pwrrt-Values.UInt64', 'pwrs:Type-$UInt64', ''),
-            ('Test01c-Pwrrt-Values.Float32', 'pwrs:Type-$Float32', ''),
-            ('Test01c-Pwrrt-Values.Float64', 'pwrs:Type-$Float64', ''),
-            ('Test01c-Pwrrt-Values.String80', 'pwrs:Type-$String80', ''),
-            ('Test01c-Pwrrt-Values.Time', 'pwrs:Type-$Time', ''),
-            ('Test01c-Pwrrt-Values.DeltaTime', 'pwrs:Type-$DeltaTime', ''),
-            ('Test01c-Pwrrt-Values.Objid', 'pwrs:Type-$Objid', ''),
-            ('Test01c-Pwrrt-Values.AttrRef', 'pwrs:Type-$AttrRef', '')
+            ('Test02-Pwrwb-Dv1.InitialValue', 'pwrs:Type-$Boolean', ''),
+            ('Test02-Pwrwb-L1.Value', 'pwrb:Class-Ai', ''),
+            ('Test02-Pwrwb-L1.Value.ActualValue', 'pwrs:Type-$Float32', ''),
+            ('Test02-Pwrwb-Values.Boolean', 'pwrs:Type-$Boolean', ''),
+            ('Test02-Pwrwb-Values.Int8', 'pwrs:Type-$Int8', ''),
+            ('Test02-Pwrwb-Values.Int16', 'pwrs:Type-$Int16', ''),
+            ('Test02-Pwrwb-Values.Int32', 'pwrs:Type-$Int32', ''),
+            ('Test02-Pwrwb-Values.Int64', 'pwrs:Type-$Int64', ''),
+            ('Test02-Pwrwb-Values.UInt8', 'pwrs:Type-$UInt8', ''),
+            ('Test02-Pwrwb-Values.UInt16', 'pwrs:Type-$UInt16', ''),
+            ('Test02-Pwrwb-Values.UInt32', 'pwrs:Type-$UInt32', ''),
+            ('Test02-Pwrwb-Values.UInt64', 'pwrs:Type-$UInt64', ''),
+            ('Test02-Pwrwb-Values.Float32', 'pwrs:Type-$Float32', ''),
+            ('Test02-Pwrwb-Values.Float64', 'pwrs:Type-$Float64', ''),
+            ('Test02-Pwrwb-Values.String80', 'pwrs:Type-$String80', ''),
+            ('Test02-Pwrwb-Values.Time', 'pwrs:Type-$Time', ''),
+            ('Test02-Pwrwb-Values.DeltaTime', 'pwrs:Type-$DeltaTime', ''),
+            ('Test02-Pwrwb-Values.Objid', 'pwrs:Type-$Objid', ''),
+            ('Test02-Pwrwb-Values.AttrRef', 'pwrs:Type-$AttrRef', '')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                a = pwrrt.attribute(d[i][0])
+                a = pwrwb.attribute(d[i][0])
                 tid = a.tid()
                 if tid.fullName() != d[i][1]:
                     self.logger.vlog('E', "Aref.tid, "
@@ -714,52 +751,56 @@ class Ctx:
     #
     def Aref_value(self):
         d = (
-            ('Test01c-Pwrrt-Av1.ActualValue', 22.22, ''),
-            ('Test01c-Pwrrt-Av1.NoSuchAttr', 22.22, '%GDH-E-ATTRIBUTE, no such attribute'),
-            ('Test01c-Pwrrt-Dv1.ActualValue', 0, ''),
-            ('Test01c-Pwrrt-Dv2.ActualValue', 1, ''),
-            ('Test01c-Pwrrt-L1.Value.ActualValue', 33.33, ''),
-            ('Test01c-Pwrrt-L1.LimitHH.Limit', 95, ''),
-            ('Test01c-Pwrrt-L1.Description', 'BaseLevelSensor used for python tests', ''),
-            ('Test01c-Pwrrt-Values.Boolean', 1, ''),
-            ('Test01c-Pwrrt-Values.Int8', 22, ''),
-            ('Test01c-Pwrrt-Values.Int16', 333, ''),
-            ('Test01c-Pwrrt-Values.Int32', 4444, ''),
-            ('Test01c-Pwrrt-Values.Int64', 55555, ''),
-            ('Test01c-Pwrrt-Values.UInt8', 66, ''),
-            ('Test01c-Pwrrt-Values.UInt16', 777, ''),
-            ('Test01c-Pwrrt-Values.UInt32', 8888, ''),
-            ('Test01c-Pwrrt-Values.UInt64', 99999, ''),
-            ('Test01c-Pwrrt-Values.Float32', 22.22, ''),
-            ('Test01c-Pwrrt-Values.Float64', 4444.4444, ''),
-            ('Test01c-Pwrrt-Values.String80', "Why don't you have wings to fly with?", ''),
-            ('Test01c-Pwrrt-Values.Time', '15-MAY-2020 08:27:50.50', ''),
-            ('Test01c-Pwrrt-Values.DeltaTime', '27 8:27:50.05', ''),
-            ('Test01c-Pwrrt-Values.Objid', 'VolPwrTest01c:Test01c-Pwrrt-Values', ''),
-            ('Test01c-Pwrrt-Values.AttrRef', 'VolPwrTest01c:Test01c-Pwrrt-Values.AttrRef', ''),
-            ('Test01c-Pwrrt-Values.BooleanArray[4]', 1, ''),
-            ('Test01c-Pwrrt-Values.Int8Array[4]', 22, ''),
-            ('Test01c-Pwrrt-Values.Int16Array[4]', 333, ''),
-            ('Test01c-Pwrrt-Values.Int32Array[4]', 4444, ''),
-            ('Test01c-Pwrrt-Values.Int64Array[4]', 55555, ''),
-            ('Test01c-Pwrrt-Values.UInt8Array[4]', 66, ''),
-            ('Test01c-Pwrrt-Values.UInt16Array[4]', 777, ''),
-            ('Test01c-Pwrrt-Values.UInt32Array[4]', 8888, ''),
-            ('Test01c-Pwrrt-Values.UInt64Array[4]', 99999, ''),
-            ('Test01c-Pwrrt-Values.Float32Array[4]', 22.22, ''),
-            ('Test01c-Pwrrt-Values.Float64Array[4]', 4444.4444, ''),
-            ('Test01c-Pwrrt-Values.String80Array[4]', "Why don't you have wings to fly with?", ''),
-            ('Test01c-Pwrrt-Values.TimeArray[4]', '15-MAY-2020 08:27:50.50', ''),
-            ('Test01c-Pwrrt-Values.DeltaTimeArray[4]', '27 8:27:50.05', ''),
-            ('Test01c-Pwrrt-Values.ObjidArray[4]', 'VolPwrTest01c:Test01c-Pwrrt-Values', ''),
-            ('Test01c-Pwrrt-Values.AttrRefArray[4]', 'VolPwrTest01c:Test01c-Pwrrt-Values.AttrRefArray[4]', '')
+            ('Test02-Pwrwb-Av1.InitialValue', 22.22, ''),
+            ('Test02-Pwrwb-Av1.NoSuchAttr', 22.22, '%LDH-E-NOSUCHATTR, no such attribute exists'),
+            ('Test02-Pwrwb-Dv1.InitialValue', 0, ''),
+            ('Test02-Pwrwb-Dv2.InitialValue', 1, ''),
+            ('Test02-Pwrwb-L1.Value.InitialValue', 33.33, ''),
+            ('Test02-Pwrwb-L1.LimitHH.Limit', 94, ''),
+            ('Test02-Pwrwb-L1.Description', 'BaseLevelSensor used for python tests', ''),
+            ('Test02-Pwrwb-Values.Boolean', 1, ''),
+            ('Test02-Pwrwb-Values.Int8', 22, ''),
+            ('Test02-Pwrwb-Values.Int16', 333, ''),
+            ('Test02-Pwrwb-Values.Int32', 4444, ''),
+            ('Test02-Pwrwb-Values.Int64', 55555, ''),
+            ('Test02-Pwrwb-Values.UInt8', 66, ''),
+            ('Test02-Pwrwb-Values.UInt16', 777, ''),
+            ('Test02-Pwrwb-Values.UInt32', 8888, ''),
+            ('Test02-Pwrwb-Values.UInt64', 99999, ''),
+            ('Test02-Pwrwb-Values.Float32', 22.22, ''),
+            ('Test02-Pwrwb-Values.Float64', 4444.4444, ''),
+            ('Test02-Pwrwb-Values.String80', "Why don't you have wings to fly with?", ''),
+            ('Test02-Pwrwb-Values.Time', '15-MAY-2020 08:27:50.50', ''),
+            ('Test02-Pwrwb-Values.DeltaTime', '27 8:27:50.05', ''),
+            ('Test02-Pwrwb-Values.Objid', 'VolPwrtest02:Test02-Pwrwb-Values', ''),
+            ('Test02-Pwrwb-Values.AttrRef', 'VolPwrtest02:Test02-Pwrwb-Values.AttrRef', ''),
+            ('Test02-Pwrwb-Values.BooleanArray[4]', 1, ''),
+            ('Test02-Pwrwb-Values.Int8Array[4]', 22, ''),
+            ('Test02-Pwrwb-Values.Int16Array[4]', 333, ''),
+            ('Test02-Pwrwb-Values.Int32Array[4]', 4444, ''),
+            ('Test02-Pwrwb-Values.Int64Array[4]', 55555, ''),
+            ('Test02-Pwrwb-Values.UInt8Array[4]', 66, ''),
+            ('Test02-Pwrwb-Values.UInt16Array[4]', 777, ''),
+            ('Test02-Pwrwb-Values.UInt32Array[4]', 8888, ''),
+            ('Test02-Pwrwb-Values.UInt64Array[4]', 99999, ''),
+            ('Test02-Pwrwb-Values.Float32Array[4]', 22.22, ''),
+            ('Test02-Pwrwb-Values.Float64Array[4]', 4444.4444, ''),
+            ('Test02-Pwrwb-Values.String80Array[4]', "Why don't you have wings to fly with?", ''),
+            ('Test02-Pwrwb-Values.TimeArray[4]', '15-MAY-2020 08:27:50.50', ''),
+            ('Test02-Pwrwb-Values.DeltaTimeArray[4]', '27 8:27:50.05', ''),
+            ('Test02-Pwrwb-Values.ObjidArray[4]', 'VolPwrtest02:Test02-Pwrwb-Values', ''),
+            ('Test02-Pwrwb-Values.AttrRefArray[4]', 'VolPwrtest02:Test02-Pwrwb-Values.AttrRefArray[4]', '')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                a = pwrrt.attribute(d[i][0])
+                a = pwrwb.attribute(d[i][0])
                 value = a.value()
-                if type(value).__name__ == 'str':
+                if type(value).__name__ == 'NoneType':
+                    self.logger.vlog('E', "Aref.value, None value returned, idx %s",
+                                     str(i))
+                    return
+                elif type(value).__name__ == 'str':
                     if value != d[i][1]:
                         self.logger.vlog('E', "Aref.value, "
                                          "Value doesn't match, %s != %s, idx %s",
@@ -784,49 +825,48 @@ class Ctx:
                     return
         self.logger.log('S', 'Aref.value, successfull completion')
 
-
     #
     # Aref.setValue()
     #
     def Aref_setValue(self):
         d = (
-            ('Test01c-Pwrrt-SetValues.Boolean', 1, ''),
-            ('Test01c-Pwrrt-SetValues.Int8', 22, ''),
-            ('Test01c-Pwrrt-SetValues.Int16', 333, ''),
-            ('Test01c-Pwrrt-SetValues.Int32', 4444, ''),
-            ('Test01c-Pwrrt-SetValues.Int64', 55555, ''),
-            ('Test01c-Pwrrt-SetValues.UInt8', 66, ''),
-            ('Test01c-Pwrrt-SetValues.UInt16', 777, ''),
-            ('Test01c-Pwrrt-SetValues.UInt32', 8888, ''),
-            ('Test01c-Pwrrt-SetValues.UInt64', 99999, ''),
-            ('Test01c-Pwrrt-SetValues.Float32', 22.22, ''),
-            ('Test01c-Pwrrt-SetValues.Float64', 4444.4444, ''),
-            ('Test01c-Pwrrt-SetValues.String80', "Why don't you have wings to fly with?", ''),
-            ('Test01c-Pwrrt-SetValues.Time', '15-MAY-2020 08:27:50.50', ''),
-            ('Test01c-Pwrrt-SetValues.DeltaTime', '27 8:27:50.05', ''),
-            ('Test01c-Pwrrt-SetValues.Objid', pwrrt.Oid('VolPwrTest01c:Test01c-Pwrrt-SetValues'), ''),
-            ('Test01c-Pwrrt-SetValues.AttrRef', pwrrt.Aref('VolPwrTest01c:Test01c-Pwrrt-SetValues.AttrRef'), ''),
-            ('Test01c-Pwrrt-SetValues.BooleanArray[4]', 1, ''),
-            ('Test01c-Pwrrt-SetValues.Int8Array[4]', 22, ''),
-            ('Test01c-Pwrrt-SetValues.Int16Array[4]', 333, ''),
-            ('Test01c-Pwrrt-SetValues.Int32Array[4]', 4444, ''),
-            ('Test01c-Pwrrt-SetValues.Int64Array[4]', 55555, ''),
-            ('Test01c-Pwrrt-SetValues.UInt8Array[4]', 66, ''),
-            ('Test01c-Pwrrt-SetValues.UInt16Array[4]', 777, ''),
-            ('Test01c-Pwrrt-SetValues.UInt32Array[4]', 8888, ''),
-            ('Test01c-Pwrrt-SetValues.UInt64Array[4]', 99999, ''),
-            ('Test01c-Pwrrt-SetValues.Float32Array[4]', 22.22, ''),
-            ('Test01c-Pwrrt-SetValues.Float64Array[4]', 4444.4444, ''),
-            ('Test01c-Pwrrt-SetValues.String80Array[4]', "Why don't you have wings to fly with?", ''),
-            ('Test01c-Pwrrt-SetValues.TimeArray[4]', '15-MAY-2020 08:27:50.50', ''),
-            ('Test01c-Pwrrt-SetValues.DeltaTimeArray[4]', '27 8:27:50.05', ''),
-            ('Test01c-Pwrrt-SetValues.ObjidArray[4]', pwrrt.Oid('VolPwrTest01c:Test01c-Pwrrt-SetValues'), ''),
-            ('Test01c-Pwrrt-SetValues.AttrRefArray[4]', pwrrt.Aref('VolPwrTest01c:Test01c-Pwrrt-SetValues.AttrRefArray[4]'), '')
+            ('Test02-Pwrwb-SetValues.Boolean', 1, ''),
+            ('Test02-Pwrwb-SetValues.Int8', 22, ''),
+            ('Test02-Pwrwb-SetValues.Int16', 333, ''),
+            ('Test02-Pwrwb-SetValues.Int32', 4444, ''),
+            ('Test02-Pwrwb-SetValues.Int64', 55555, ''),
+            ('Test02-Pwrwb-SetValues.UInt8', 66, ''),
+            ('Test02-Pwrwb-SetValues.UInt16', 777, ''),
+            ('Test02-Pwrwb-SetValues.UInt32', 8888, ''),
+            ('Test02-Pwrwb-SetValues.UInt64', 99999, ''),
+            ('Test02-Pwrwb-SetValues.Float32', 22.22, ''),
+            ('Test02-Pwrwb-SetValues.Float64', 4444.4444, ''),
+            ('Test02-Pwrwb-SetValues.String80', "Why don't you have wings to fly with?", ''),
+            ('Test02-Pwrwb-SetValues.Time', '15-MAY-2020 08:27:50.50', ''),
+            ('Test02-Pwrwb-SetValues.DeltaTime', '27 8:27:50.05', ''),
+            ('Test02-Pwrwb-SetValues.Objid', pwrwb.Oid('VolPwrTest02:Test02-Pwrwb-SetValues'), ''),
+            ('Test02-Pwrwb-SetValues.AttrRef', pwrwb.Aref('VolPwrTest02:Test02-Pwrwb-SetValues.AttrRef'), ''),
+            ('Test02-Pwrwb-SetValues.BooleanArray[4]', 1, ''),
+            ('Test02-Pwrwb-SetValues.Int8Array[4]', 22, ''),
+            ('Test02-Pwrwb-SetValues.Int16Array[4]', 333, ''),
+            ('Test02-Pwrwb-SetValues.Int32Array[4]', 4444, ''),
+            ('Test02-Pwrwb-SetValues.Int64Array[4]', 55555, ''),
+            ('Test02-Pwrwb-SetValues.UInt8Array[4]', 66, ''),
+            ('Test02-Pwrwb-SetValues.UInt16Array[4]', 777, ''),
+            ('Test02-Pwrwb-SetValues.UInt32Array[4]', 8888, ''),
+            ('Test02-Pwrwb-SetValues.UInt64Array[4]', 99999, ''),
+            ('Test02-Pwrwb-SetValues.Float32Array[4]', 22.22, ''),
+            ('Test02-Pwrwb-SetValues.Float64Array[4]', 4444.4444, ''),
+            ('Test02-Pwrwb-SetValues.String80Array[4]', "Why don't you have wings to fly with?", ''),
+            ('Test02-Pwrwb-SetValues.TimeArray[4]', '15-MAY-2020 08:27:50.50', ''),
+            ('Test02-Pwrwb-SetValues.DeltaTimeArray[4]', '27 8:27:50.05', ''),
+            ('Test02-Pwrwb-SetValues.ObjidArray[4]', pwrwb.Oid('VolPwrTest02:Test02-Pwrwb-SetValues'), ''),
+            ('Test02-Pwrwb-SetValues.AttrRefArray[4]', pwrwb.Aref('VolPwrTest02:Test02-Pwrwb-SetValues.AttrRefArray[4]'), '')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                a = pwrrt.attribute(d[i][0])
+                a = pwrwb.attribute(d[i][0])
                 a.setValue(d[i][1])
                 value = a.value()
                 if type(value).__name__ == 'str':
@@ -856,47 +896,6 @@ class Ctx:
         self.logger.log('S', 'Aref.setValue, successfull completion')
 
     #
-    # Aref.subscribe()
-    #
-    def Aref_subscribe(self):
-        d = (
-            ('Test01c-Pwrrt-Av1.ActualValue', 22.22, ''),
-            ('Test01c-Pwrrt-Av1.NoSuchAttr', 22.22, '%GDH-E-ATTRIBUTE, no such attribute'),
-            ('Test01c-Pwrrt-Dv1.ActualValue', 0, ''),
-            ('Test01c-Pwrrt-Dv2.ActualValue', 1, ''),
-            ('Test01c-Pwrrt-L1.Value.ActualValue', 33.33, ''),
-            ('Test01c-Pwrrt-L1.LimitHH.Limit', 95, ''),
-            ('Test01c-Pwrrt-L1.Description', 'BaseLevelSensor used for python tests', '')
-            )
-        i = 0
-        for i in range(len(d)):
-            try:                
-                a = pwrrt.attribute(d[i][0]);
-                sub = a.subscribe()
-                value = sub.value()
-                if type(value).__name__ == 'str':
-                    if value != d[i][1]:
-                        self.logger.vlog('E', "Aref.subscribe, "
-                                         "Value doesn't match, %s != %s, idx %s",
-                                    value, d[i][1], str(i))
-                        return
-                else:
-                    if not abs(value - d[i][1]) < 0.001:
-                	self.logger.vlog('E', "Aref.subscribe, "
-                                         "Value doesn't match, %s != %s, idx %s",
-                                    str(value), str(d[i][1]), str(i))
-                        return
-                sub.close();
-            except RuntimeError as e:
-                if str(e) != d[i][2]:
-                    self.logger.vlog('E', 'Aref.subscribe, '
-                                     'Unexpected exception %s, idx %s',
-                                     str(e), str(i))
-                    return
-        self.logger.log('S', 'Aref.subscribe, successfull completion')
-
-
-    #
     # Cid functions
     #
 
@@ -912,14 +911,14 @@ class Ctx:
             ('$ClassVolume', ''),
             ('Aggregate', ''),
             ('BaseLevelSensor', ''),
-            ('Pwrt01_Values', ''),
-            ('Pwrt01_Pump', ''),
-            ('No', '%GDH-E-BADOBJTYPE, bad object type number specified')
+            ('Pwrt02_Values', ''),
+            ('Pwrt02_Pump', '%LDH-E-NOCLASS, the class does not exist'),
+            ('No', '%LDH-E-NOCLASS, the class does not exist')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                c = pwrrt.Cid(d[i][0])
+                c = pwrwb.Cid(d[i][0])
                 name = c.name()
                 if name != d[i][0]:
                     self.logger.vlog('E', "Cid, Name doesn't match, %s != %s, idx %s",
@@ -928,12 +927,12 @@ class Ctx:
 
             except RuntimeError as e:
                 if str(e) != d[i][1]:
+                    print str(e), d[i][1]
                     self.logger.vlog('E', 'Cid, Unexpected exception %s, idx %s',
                                      str(e), str(i))
                     return
                 
         self.logger.log('S', 'Cid, successfull completion')
-
 
     #
     # Cid.fullName()
@@ -947,14 +946,14 @@ class Ctx:
             ('$ClassVolume', 'pwrs:Class-$ClassVolume', ''),
             ('Aggregate', 'BaseComponent:Class-Aggregate', ''),
             ('BaseLevelSensor', 'BaseComponent:Class-BaseLevelSensor', ''),
-            ('Pwrt01_Values', 'CVolPwrtest01:Class-Pwrt01_Values', ''),
-            ('Pwrt01_Pump', 'CVolPwrtest01:Class-Pwrt01_Pump', ''),
-            ('No', '', '%GDH-E-BADOBJTYPE, bad object type number specified')
+            ('Pwrt02_Values', 'CVolPwrtest02:Class-Pwrt02_Values', ''),
+            ('Pwrt02_Pump', 'CVolPwrtest02:Class-Pwrt02_Pump', '%LDH-E-NOCLASS, the class does not exist'),
+            ('No', '', '%LDH-E-NOCLASS, the class does not exist')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                c = pwrrt.Cid(d[i][0])
+                c = pwrwb.Cid(d[i][0])
                 name = c.fullName()
                 if name != d[i][1]:
                     self.logger.vlog('E', "Cid.fullName, Name doesn't match, %s != %s",
@@ -968,23 +967,23 @@ class Ctx:
                                      str(e), str(i))
                     return
         self.logger.log('S', 'Cid.fullName, successfull completion')
-    
+
     #
     # Cid.object()
     #
     def Cid_object(self):
         d = (
-            ('MessageHandler', 'VolPwrTest01c:Nodes-PwrTest01c-Servers-MessageHandler'),
-            ('IOHandler', 'VolPwrTest01c:Nodes-PwrTest01c-Servers-IOHandler'),
-            ('$PlantHier', 'VolPwrTest01c:RootObject'),
-            ('AArray100', 'VolPwrTest01c:RootObject-Child1-A1'),
-            ('BaseFcPPO3PumpAggr', 'VolPwrTest01c:RootObject-Child1-P1'),
+            ('MessageHandler', 'VolPwrtest02:Nodes-Pwrtest02-Servers-MessageHandler'),
+            ('IOHandler', 'VolPwrtest02:Nodes-Pwrtest02-Servers-IOHandler'),
+            ('$PlantHier', 'VolPwrtest02:RootObject'),
+            ('AArray100', 'VolPwrtest02:RootObject-Child1-A1'),
+            ('BaseFcPPO3PumpAggr', 'VolPwrtest02:RootObject-Child1-P1'),
             ('$WorkBenchVolume', 'None')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                c = pwrrt.Cid(d[i][0])
+                c = pwrwb.Cid(d[i][0])
                 o = c.object()
                 if o is None:
                     if d[i][1] != 'None':
@@ -1005,24 +1004,23 @@ class Ctx:
                 return
         self.logger.log('S', 'Cid.object, successfull completion')
     
-
     #
     # Cid.nextObject()
     #
     def Cid_nextObject(self):
         d = (
-            ('VolPwrTest01c:Nodes-PwrTest01c-Servers-MessageHandler', 'None'),
-            ('VolPwrTest01c:Nodes-PwrTest01c-Servers-IOHandler', 'None'),
-            ('VolPwrTest01c:RootObject', 'VolPwrTest01c:RootObject-Child1'),
-            ('VolPwrTest01c:RootObject-Child1', 'VolPwrTest01c:RootObject-Child2'),
-            ('VolPwrTest01c:RootObject-Child2', 'VolPwrTest01c:RootObject-Child3'),
-            ('VolPwrTest01c:RootObject-Child3', 'VolPwrTest01c:RootObject-Child4'),
-            ('VolPwrTest01c:RootObject-Child4', 'VolPwrTest01c:RootObject-ChildLess')
+            ('VolPwrtest02:Nodes-Pwrtest02-Servers-MessageHandler', 'None'),
+            ('VolPwrtest02:Nodes-Pwrtest02-Servers-IOHandler', 'None'),
+            ('VolPwrtest02:RootObject', 'VolPwrtest02:RootObject-Child1'),
+            ('VolPwrtest02:RootObject-Child1', 'VolPwrtest02:RootObject-Child2'),
+            ('VolPwrtest02:RootObject-Child2', 'VolPwrtest02:RootObject-Child3'),
+            ('VolPwrtest02:RootObject-Child3', 'VolPwrtest02:RootObject-Child4'),
+            ('VolPwrtest02:RootObject-Child4', 'VolPwrtest02:RootObject-ChildLess')
             )
         i = 0
         for i in range(len(d)):
             try:
-                o = pwrrt.Oid(d[i][0])
+                o = pwrwb.Oid(d[i][0])
                 c = o.cid()
                 n = c.nextObject(o)
                 if n is None:
@@ -1057,7 +1055,7 @@ class Ctx:
         for i in range(len(d)):
             j = 0
             try:                
-                c = pwrrt.Cid(d[i][0])
+                c = pwrwb.Cid(d[i][0])
                 objectlist = c.objects()
                 for o in objectlist:
                     if j >= len(d[i][1]):
@@ -1074,27 +1072,23 @@ class Ctx:
 
         self.logger.log('S', 'Cid.objects, successfull completion')
 
-
     #
     # Cid.attrObject()
     #
     def Cid_attrObject(self):
         d = (
-            ('$Node', 'VolPwrTest01c:Nodes-PwrTest01c'),
-            ('$Security', 'VolPwrTest01c:Nodes-PwrTest01c-Security'),
-            ('OpPlace', 'VolPwrTest01c:Nodes-PwrTest01c-OpPlaces-Op'),
-            ('PlcPgm', 'VolPwrTest01c:Test01c-First-Plc'),
-            ('And', 'VolPwrTest01c:Test01c-First-Plc-W-And0'),
-            ('Dv', 'VolPwrTest01c:Test01c-First-Dv1'),
-            ('Pwrt01_Roller', 'VolPwrTest01c:Test01c-First-R1'),
-            ('Pwrt01_Motor', 'VolPwrTest01c:Test01c-First-M1'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-Comp1'),
-            ('Pwrt01_Contactor', 'VolPwrTest01c:Test01c-First-C1')
+            ('$Node', 'VolPwrtest02:Nodes-Pwrtest02'),
+            ('$Security', 'VolPwrtest02:Nodes-Pwrtest02-Security'),
+            ('OpPlace', 'VolPwrtest02:Nodes-Pwrtest02-OpPlaces-Op'),
+            ('PlcPgm', 'VolPwrtest02:PlcTest-H1-Plc'),
+            ('And', 'VolPwrtest02:PlcTest-H1-Plc-W-And0'),
+            ('Dv', 'VolPwrtest02:Test02-First-Dv1'),
+            ('Pwrt02_Values', 'VolPwrtest02:H1-Values')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                c = pwrrt.Cid(d[i][0])
+                c = pwrwb.Cid(d[i][0])
                 o = c.attrObject()
                 if o is None:
                     if d[i][1] != 'None':
@@ -1115,54 +1109,49 @@ class Ctx:
                 return
         self.logger.log('S', 'Cid.attrObject, successfull completion')
     
-
-
     #
     # Cid.nextAttrObject()
     #
     def Cid_nextAttrObject(self):
         d = (
-            ('MessageHandler', 'VolPwrTest01c:Nodes-PwrTest01c-Servers-MessageHandler', 'None'),
-            ('IOHandler', 'VolPwrTest01c:Nodes-PwrTest01c-Servers-IOHandler', 'None'),
-            ('$PlantHier', 'VolPwrTest01c:RootObject', 'VolPwrTest01c:RootObject-Child1'),
-            ('$PlantHier', 'VolPwrTest01c:RootObject-Child1', 'VolPwrTest01c:RootObject-Child2'),
-            ('$PlantHier', 'VolPwrTest01c:RootObject-Child2', 'VolPwrTest01c:RootObject-Child3'),
-            ('$PlantHier', 'VolPwrTest01c:RootObject-Child3', 'VolPwrTest01c:RootObject-Child4'),
-            ('$PlantHier', 'VolPwrTest01c:RootObject-Child4', 'VolPwrTest01c:RootObject-ChildLess'),
-            ('Dv', 'VolPwrTest01c:Test01c-First-Dv1', 'VolPwrTest01c:Test01c-First-Dv2'),
-            ('Dv', 'VolPwrTest01c:Test01c-First-Dv2', 'VolPwrTest01c:Test01c-First-Dv3'),
-            ('Dv', 'VolPwrTest01c:Test01c-First-Dv3', 'VolPwrTest01c:Test01c-First-Dv4'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-Comp1', 'VolPwrTest01c:Test01c-First-C1.Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-C1.Super', 'VolPwrTest01c:Test01c-First-M1.Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-M1.Super', 'VolPwrTest01c:Test01c-First-M1.Contactor1.Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-M1.Contactor1.Super', 'VolPwrTest01c:Test01c-First-R1.Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Super', 'VolPwrTest01c:Test01c-First-R1.Motors[0].Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[0].Super', 'VolPwrTest01c:Test01c-First-R1.Motors[0].Contactor2.Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[0].Contactor2.Super', 'VolPwrTest01c:Test01c-First-R1.Motors[1].Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[1].Super', 'VolPwrTest01c:Test01c-First-R1.Motors[1].Contactor1.Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[1].Contactor1.Super', 'VolPwrTest01c:Test01c-First-R1.Motors[2].Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[2].Super', 'VolPwrTest01c:Test01c-First-R1.Motors[2].Contactor2.Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[2].Contactor2.Super', 'VolPwrTest01c:Test01c-First-R1.Motors[3].Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[3].Super', 'VolPwrTest01c:Test01c-First-R1.Motors[3].Contactor1.Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[3].Contactor1.Super', 'VolPwrTest01c:Test01c-First-R1.Motors[4].Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[4].Super', 'VolPwrTest01c:Test01c-First-R1.Motors[4].Contactor2.Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[4].Contactor2.Super', 'VolPwrTest01c:Test01c-First-R1.Motors[5].Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[5].Super', 'VolPwrTest01c:Test01c-First-R1.Motors[5].Contactor1.Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[5].Contactor1.Super', 'VolPwrTest01c:Test01c-First-R1.Motors[6].Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[6].Super', 'VolPwrTest01c:Test01c-First-R1.Motors[6].Contactor2.Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[6].Contactor2.Super', 'VolPwrTest01c:Test01c-First-R1.Motors[7].Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[7].Super', 'VolPwrTest01c:Test01c-First-R1.Motors[7].Contactor1.Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[7].Contactor1.Super', 'VolPwrTest01c:Test01c-First-R1.Motors[8].Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[8].Super', 'VolPwrTest01c:Test01c-First-R1.Motors[8].Contactor1.Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[8].Contactor1.Super', 'VolPwrTest01c:Test01c-First-R1.Motors[9].Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[9].Super', 'VolPwrTest01c:Test01c-First-R1.Motors[9].Contactor2.Super'),
-            ('Pwrt01_Component', 'VolPwrTest01c:Test01c-First-R1.Motors[9].Contactor2.Super', 'None')
+            ('MessageHandler', 'VolPwrtest02:Nodes-PwrTest02-Servers-MessageHandler', 'None'),
+            ('IOHandler', 'VolPwrtest02:Nodes-PwrTest02-Servers-IOHandler', 'None'),
+            ('$PlantHier', 'VolPwrtest02:RootObject', 'VolPwrtest02:RootObject-Child1'),
+            ('$PlantHier', 'VolPwrtest02:RootObject-Child1', 'VolPwrtest02:RootObject-Child2'),
+            ('$PlantHier', 'VolPwrtest02:RootObject-Child2', 'VolPwrtest02:RootObject-Child3'),
+            ('$PlantHier', 'VolPwrtest02:RootObject-Child3', 'VolPwrtest02:RootObject-Child4'),
+            ('$PlantHier', 'VolPwrtest02:RootObject-Child4', 'VolPwrtest02:RootObject-ChildLess'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-Comp1', 'VolPwrtest02:Test02-First-C1.Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-C1.Super', 'VolPwrtest02:Test02-First-M1.Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-M1.Super', 'VolPwrtest02:Test02-First-M1.Contactor1.Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-M1.Contactor1.Super', 'VolPwrtest02:Test02-First-R1.Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Super', 'VolPwrtest02:Test02-First-R1.Motors[0].Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[0].Super', 'VolPwrtest02:Test02-First-R1.Motors[0].Contactor2.Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[0].Contactor2.Super', 'VolPwrtest02:Test02-First-R1.Motors[1].Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[1].Super', 'VolPwrtest02:Test02-First-R1.Motors[1].Contactor1.Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[1].Contactor1.Super', 'VolPwrtest02:Test02-First-R1.Motors[2].Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[2].Super', 'VolPwrtest02:Test02-First-R1.Motors[2].Contactor2.Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[2].Contactor2.Super', 'VolPwrtest02:Test02-First-R1.Motors[3].Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[3].Super', 'VolPwrtest02:Test02-First-R1.Motors[3].Contactor1.Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[3].Contactor1.Super', 'VolPwrtest02:Test02-First-R1.Motors[4].Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[4].Super', 'VolPwrtest02:Test02-First-R1.Motors[4].Contactor2.Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[4].Contactor2.Super', 'VolPwrtest02:Test02-First-R1.Motors[5].Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[5].Super', 'VolPwrtest02:Test02-First-R1.Motors[5].Contactor1.Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[5].Contactor1.Super', 'VolPwrtest02:Test02-First-R1.Motors[6].Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[6].Super', 'VolPwrtest02:Test02-First-R1.Motors[6].Contactor2.Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[6].Contactor2.Super', 'VolPwrtest02:Test02-First-R1.Motors[7].Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[7].Super', 'VolPwrtest02:Test02-First-R1.Motors[7].Contactor1.Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[7].Contactor1.Super', 'VolPwrtest02:Test02-First-R1.Motors[8].Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[8].Super', 'VolPwrtest02:Test02-First-R1.Motors[8].Contactor1.Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[8].Contactor1.Super', 'VolPwrtest02:Test02-First-R1.Motors[9].Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[9].Super', 'VolPwrtest02:Test02-First-R1.Motors[9].Contactor2.Super'),
+            ('Pwrt02_Component', 'VolPwrtest02:Test02-First-R1.Motors[9].Contactor2.Super', 'None')
             )
         i = 0
         for i in range(len(d)):
             try:
-                a = pwrrt.Aref(d[i][1])
-                c = pwrrt.Cid(d[i][0])
+                a = pwrwb.Aref(d[i][1])
+                c = pwrwb.Cid(d[i][0])
                 n = c.nextAttrObject(a)
                 if n is None:
                     if d[i][2] != 'None':
@@ -1172,8 +1161,8 @@ class Ctx:
                 else:
                     name = n.fullName()
                     if name != d[i][2]:
-                        self.logger.vlog('E', "Cid.nextAttrObject, Name doesn't match, %s != %s",
-                                         name, d[i][2])
+                        self.logger.vlog('E', "Cid.nextAttrObject, Name doesn't match, %s != %s, idx %s",
+                                         name, d[i][2], str(i))
                         return
 
 
@@ -1183,7 +1172,6 @@ class Ctx:
                 return
         self.logger.log('S', 'Cid.nextAttrObject, successfull completion')
     
-
     #
     # Cid.attrObjects()
     #
@@ -1191,7 +1179,7 @@ class Ctx:
         d = (
             ('$PlantHier', ('RootObject', 'Child1', 'Child2', 'Child3', 'Child4', 'ChildLess')),
             ('AArray100', ('A1', 'A2')),
-            ('Pwrt01_Component',(
+            ('Pwrt02_Component',(
              'Comp1',
              'C1.Super',
              'M1.Super',
@@ -1223,14 +1211,14 @@ class Ctx:
         for i in range(len(d)):
             j = 0
             try:                
-                c = pwrrt.Cid(d[i][0])
+                c = pwrwb.Cid(d[i][0])
                 objectlist = c.attrObjects()
                 for a in objectlist:
                     if j >= len(d[i][1]):
                         break
                     if a.name() != d[i][1][j]:
-                        self.logger.vlog('E', "Cid.attrObjects, Name doesn't match, %s != %s",
-                                         a.fullName(), d[i][1][j])
+                        self.logger.vlog('E', "Cid.attrObjects, Name doesn't match, %s != %s, idx %s",
+                                         a.fullName(), d[i][1][j], str(i))
                         return
                     j += 1
             except RuntimeError as e:
@@ -1255,7 +1243,7 @@ class Ctx:
         for i in range(len(d)):
             j = 0
             try:                
-                c = pwrrt.Cid(d[i][0])
+                c = pwrwb.Cid(d[i][0])
                 alist = c.attributes()
                 for a in alist:
                     if j >= len(d[i][1]):
@@ -1279,30 +1267,30 @@ class Ctx:
         d = (
             ('RootObject.Description', '$String80', ''),
             ('RootObject-Child1.DefGraph', '$AttrRef', ''),
-            ('Test01c-Pwrrt-Dv1.InitialValue', '$Boolean', ''),
-            ('Test01c-Pwrrt-L1.Value', 'Ai', ''),
-            ('Test01c-Pwrrt-L1.Value.ActualValue', '$Float32', ''),
-            ('Test01c-Pwrrt-Values.Boolean', '$Boolean', ''),
-            ('Test01c-Pwrrt-Values.Int8', '$Int8', ''),
-            ('Test01c-Pwrrt-Values.Int16', '$Int16', ''),
-            ('Test01c-Pwrrt-Values.Int32', '$Int32', ''),
-            ('Test01c-Pwrrt-Values.Int64', '$Int64', ''),
-            ('Test01c-Pwrrt-Values.UInt8', '$UInt8', ''),
-            ('Test01c-Pwrrt-Values.UInt16', '$UInt16', ''),
-            ('Test01c-Pwrrt-Values.UInt32', '$UInt32', ''),
-            ('Test01c-Pwrrt-Values.UInt64', '$UInt64', ''),
-            ('Test01c-Pwrrt-Values.Float32', '$Float32', ''),
-            ('Test01c-Pwrrt-Values.Float64', '$Float64', ''),
-            ('Test01c-Pwrrt-Values.String80', '$String80', ''),
-            ('Test01c-Pwrrt-Values.Time', '$Time', ''),
-            ('Test01c-Pwrrt-Values.DeltaTime', '$DeltaTime', ''),
-            ('Test01c-Pwrrt-Values.Objid', '$Objid', ''),
-            ('Test01c-Pwrrt-Values.AttrRef', '$AttrRef', '')
+            ('Test02-Pwrwb-Dv1.InitialValue', '$Boolean', ''),
+            ('Test02-Pwrwb-L1.Value', 'Ai', ''),
+            ('Test02-Pwrwb-L1.Value.ActualValue', '$Float32', ''),
+            ('Test02-Pwrwb-Values.Boolean', '$Boolean', ''),
+            ('Test02-Pwrwb-Values.Int8', '$Int8', ''),
+            ('Test02-Pwrwb-Values.Int16', '$Int16', ''),
+            ('Test02-Pwrwb-Values.Int32', '$Int32', ''),
+            ('Test02-Pwrwb-Values.Int64', '$Int64', ''),
+            ('Test02-Pwrwb-Values.UInt8', '$UInt8', ''),
+            ('Test02-Pwrwb-Values.UInt16', '$UInt16', ''),
+            ('Test02-Pwrwb-Values.UInt32', '$UInt32', ''),
+            ('Test02-Pwrwb-Values.UInt64', '$UInt64', ''),
+            ('Test02-Pwrwb-Values.Float32', '$Float32', ''),
+            ('Test02-Pwrwb-Values.Float64', '$Float64', ''),
+            ('Test02-Pwrwb-Values.String80', '$String80', ''),
+            ('Test02-Pwrwb-Values.Time', '$Time', ''),
+            ('Test02-Pwrwb-Values.DeltaTime', '$DeltaTime', ''),
+            ('Test02-Pwrwb-Values.Objid', '$Objid', ''),
+            ('Test02-Pwrwb-Values.AttrRef', '$AttrRef', '')
             )
         i = 0
         for i in range(len(d)):
             try:                
-                a = pwrrt.attribute(d[i][0])
+                a = pwrwb.attribute(d[i][0])
                 tid = a.tid()
                 if tid.name() != d[i][1]:
                     self.logger.vlog('E', "Tid.name, "
@@ -1318,14 +1306,14 @@ class Ctx:
                                      str(e), str(i))
                     return
         self.logger.log('S', 'Tid.name, successfull completion')
-    
+
     #
     # ADef.name()
     #
     def ADef_name(self):
         d = (
             ('And',
-             (('In1', 8, 4, 1, 1104), # name, offset, size, elememts, flags
+             (('In1', 8, 4, 1, 1104), # name, offset, size, elements, flags
               ('In2', 24, 4, 1, 1104),
               ('In3', 40, 4, 1, 1104),
               ('In4', 56, 4, 1, 1104),
@@ -1334,7 +1322,7 @@ class Ctx:
               ('In7', 104, 4, 1, 1104),
               ('In8', 120, 4, 1, 1104),
               ('Status', 124, 4, 1, 1044))),
-            ('Pwrt01_Values',
+            ('Pwrt02_Values',
              (('Boolean', 0, 4, 1, 0),
               ('Int8', 4, 1, 1, 0),
               ('Int16', 8, 2, 1, 0),
@@ -1372,10 +1360,12 @@ class Ctx:
         i = 0
         for i in range(len(d)):
             try:                
-                cid = pwrrt.Cid(d[i][0])
+                cid = pwrwb.Cid(d[i][0])
                 adeflist = cid.attributes()
                 j = 0
                 for adef in adeflist:
+                    if adef.name() == 'PlcNode':
+                        continue
                     if adef.name() != d[i][1][j][0]:
                         self.logger.vlog('E', "ADef.name, "
                                      "name doesn't match, %s != %s",
@@ -1396,7 +1386,7 @@ class Ctx:
                                      "elements doesn't match, %s != %s",
                                          adef.name(), str(d[i][1][j][3]))
                         return
-                    if adef.flags() != d[i][1][j][4]:
+                    if (adef.flags() & ~(1<<24)) != d[i][1][j][4]:
                         self.logger.vlog('E', "ADef.name, "
                                      "flags doesn't match, %s != %s",
                                          adef.name(), str(d[i][1][j][4]))
@@ -1412,100 +1402,23 @@ class Ctx:
         self.logger.log('S', 'ADef.name, successfull completion')
     
 
-    #
-    # Sub.setValue()
-    #
-    #
-    # Sub.setValue()
-    #
-    def Sub_setValue(self):
-        d = (
-            ('Test01c-Pwrrt-SetValues.Boolean', 1, ''),
-            ('Test01c-Pwrrt-SetValues.Int8', 11, ''),
-            ('Test01c-Pwrrt-SetValues.Int16', 222, ''),
-            ('Test01c-Pwrrt-SetValues.Int32', 3333, ''),
-            ('Test01c-Pwrrt-SetValues.Int64', 44444, ''),
-            ('Test01c-Pwrrt-SetValues.UInt8', 55, ''),
-            ('Test01c-Pwrrt-SetValues.UInt16', 666, ''),
-            ('Test01c-Pwrrt-SetValues.UInt32', 7777, ''),
-            ('Test01c-Pwrrt-SetValues.UInt64', 88888, ''),
-            ('Test01c-Pwrrt-SetValues.Float32', 11.111, ''),
-            ('Test01c-Pwrrt-SetValues.Float64', 3333.3333, ''),
-            ('Test01c-Pwrrt-SetValues.String80', "Why don't you have wings to fly with?", ''),
-            ('Test01c-Pwrrt-SetValues.Time', '19-MAY-2020 07:53:34.50', ''),
-            ('Test01c-Pwrrt-SetValues.DeltaTime', '27 7:53:34.05', ''),
-            ('Test01c-Pwrrt-SetValues.Objid', pwrrt.Oid('VolPwrTest01c:Test01c-Pwrrt-SetValues'), ''),
-            ('Test01c-Pwrrt-SetValues.AttrRef', pwrrt.Aref('VolPwrTest01c:Test01c-Pwrrt-SetValues.AttrRef'), ''),
-            ('Test01c-Pwrrt-SetValues.BooleanArray[4]', 0, ''),
-            ('Test01c-Pwrrt-SetValues.Int8Array[4]', 33, ''),
-            ('Test01c-Pwrrt-SetValues.Int16Array[4]', 444, ''),
-            ('Test01c-Pwrrt-SetValues.Int32Array[4]', 5555, ''),
-            ('Test01c-Pwrrt-SetValues.Int64Array[4]', 66666, ''),
-            ('Test01c-Pwrrt-SetValues.UInt8Array[4]', 77, ''),
-            ('Test01c-Pwrrt-SetValues.UInt16Array[4]', 888, ''),
-            ('Test01c-Pwrrt-SetValues.UInt32Array[4]', 9999, ''),
-            ('Test01c-Pwrrt-SetValues.UInt64Array[4]', 111111, ''),
-            ('Test01c-Pwrrt-SetValues.Float32Array[4]', 33.33, ''),
-            ('Test01c-Pwrrt-SetValues.Float64Array[4]', 5555.5555, ''),
-            ('Test01c-Pwrrt-SetValues.String80Array[4]', "Why don't you have wings to fly with?", ''),
-            ('Test01c-Pwrrt-SetValues.TimeArray[4]', '19-MAY-2020 08:53:34.50', ''),
-            ('Test01c-Pwrrt-SetValues.DeltaTimeArray[4]', '27 8:53:34.05', ''),
-            ('Test01c-Pwrrt-SetValues.ObjidArray[4]', pwrrt.Oid('VolPwrTest01c:Test01c-Pwrrt-SetValues'), ''),
-            ('Test01c-Pwrrt-SetValues.AttrRefArray[4]', pwrrt.Aref('VolPwrTest01c:Test01c-Pwrrt-SetValues.AttrRefArray[4]'), '')
-            )
-        i = 0
-        for i in range(len(d)):
-            try:                
-                sub = pwrrt.subscribe(d[i][0])
-                sub.setValue(d[i][1])
-                value = sub.value()
-                if type(value).__name__ == 'str':
-                    if value != d[i][1]:
-                        self.logger.vlog('E', "Sub.setValue, "
-                                         "Value doesn't match, %s != %s, idx %s",
-                                    value, d[i][1], str(i))
-                        return
-                elif type(value).__name__ == 'Oid' or type(value).__name__ == 'Aref' :
-                    if value.fullName() != d[i][1].fullName():
-                        self.logger.vlog('E', "Sub.setValue, "
-                                         "Value doesn't match, %s != %s, idx %s",
-                                    value.fullName(), d[i][1], str(i))
-                        return
-                else:
-                    if not abs(value - d[i][1]) < 0.001:
-                	self.logger.vlog('E', "Sub.setValue, "
-                                         "Value doesn't match, %s != %s, idx %s",
-                                    str(value), str(d[i][1]), str(i))
-                        return
-                sub.close();
-            except RuntimeError as e:
-                if str(e) != d[i][2]:
-                    self.logger.vlog('E', 'Sub.setValue, '
-                                     'Unexpected exception %s, idx %s',
-                                     str(e), str(i))
-                    return
-            except SystemError as e:
-                self.logger.vlog('E', 'Sub.setValue, '
-                                 'System exception %s, idx %s',
-                                 str(e), str(i))
-                return
-        self.logger.log('S', 'Sub.setValue, successfull completion')
-
-
 
 ctx = Ctx()
-ctx.logger = pwrtest.logger('rt-pwrrt', '$pwrp_log/pwrrt.tlog')
+ctx.logger = pwrtest.logger('wb_test-pwrwb', '$pwrp_log/pwrwb.tlog')
 try:
     ctx.init()
 except:
     quit()
 ctx.login()
-pwrrt.login('pwrp', 'pwrp')
+pwrwb.login('pwrp', 'pwrp')
 ctx.volume()
 ctx.volumes()
 ctx.object()
 ctx.attribute()
-ctx.subscribe()
+ctx.getSessionVolume()
+ctx.getUser()
+ctx.sessionIsEmpty()
+ctx.revertSession()
 ctx.Oid()
 ctx.Oid_child()
 ctx.Oid_next()
@@ -1514,7 +1427,6 @@ ctx.Oid_children()
 ctx.Oid_name()
 ctx.Oid_fullName()
 ctx.Oid_oidStr()
-ctx.Oid_cid()
 ctx.Oid_attribute()
 ctx.Aref()
 ctx.Aref_name()
@@ -1523,7 +1435,6 @@ ctx.Aref_arefStr()
 ctx.Aref_tid()
 ctx.Aref_value()
 ctx.Aref_setValue()
-ctx.Aref_subscribe()
 ctx.Cid()
 ctx.Cid_fullName()
 ctx.Cid_object()
@@ -1535,4 +1446,3 @@ ctx.Cid_attrObjects()
 ctx.Cid_attributes()
 ctx.Tid_name()
 ctx.ADef_name()
-ctx.Sub_setValue()

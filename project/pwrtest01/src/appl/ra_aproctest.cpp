@@ -76,7 +76,7 @@ ra_aproctest::ra_aproctest()
   pwr_tOid oid;
 
   m_anix = errh_eAnix_appl3;
-  m_log = new tst_log(&m_sts, "rt-Aproc", "$pwrp_log/aproc.log");
+  m_log = new tst_log(&m_sts, "rt-Aproc", "$pwrp_log/aproc.tlog");
   if (EVEN(m_sts))
     printf("** Unable to open log file");
   m_sts = gdh_Init("ra_aproctest");

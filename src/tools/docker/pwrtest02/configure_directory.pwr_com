@@ -1,0 +1,29 @@
+
+main()
+  verify(0);
+  string nname;
+  string pname="pwrtest02";
+  string rvol = "VolPwrtest02";
+  string cvol = "CVolPwrtest02";
+
+  create volume/database=BerkeleyDB/name='rvol'/class=$RootVolume/identity="0.254.254.210"
+  create volume/database=WbLoad/name='cvol'/class=$ClassVolume/identity="0.0.240.210"
+
+  nname = get_node_name();
+
+  CreateObject(rvol, "RootVolumeConfig", "_O254.254.254.253:0", 1);
+  CreateObject(cvol, "ClassVolumeConfig", rvol, 3);
+  CreateObject("System", "$System", cvol, 3);
+  SetAttribute("System.SystemName", p1);
+  SetAttribute("System.SystemGroup", "Common");
+  CreateObject("Bus999", "BusConfig", "System", 3);
+  SetAttribute("Bus999.BusNumber", 999);
+  CreateObject("Pwrt02", "NodeConfig", "Bus999", 1);
+  SetAttribute("Bus999-Pwrt02.NodeName", nname);
+  SetAttribute("Bus999-Pwrt02.Address", "127.0.0.1");
+  SetAttribute("Bus999-Pwrt02.OperatingSystem", 128);
+  RenameObject("Bus999-Pwrt02-O1", rvol);
+  save
+
+
+endmain

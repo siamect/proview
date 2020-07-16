@@ -5,9 +5,9 @@ ARG INSTALL_PWR
 ARG PKG_PWR
 ARG PKG_PWRDEMO
 
-COPY ./test_pwrdemo.sh ./$PKG_PWR ./$PKG_PWRDEMO ./
+COPY ./pwrdemo/test_pwrdemo.sh ./$PKG_PWR ./$PKG_PWRDEMO ./
 RUN $INSTALL_UPDATE
 RUN $INSTALL_PWR
 RUN dpkg -i $PKG_PWR
 RUN dpkg -i $PKG_PWRDEMO
-CMD ./test_pwrdemo.sh
+RUN ./test_pwrdemo.sh

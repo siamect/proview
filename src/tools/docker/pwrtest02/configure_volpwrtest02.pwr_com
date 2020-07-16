@@ -1,0 +1,775 @@
+function int pwrt02_create(int log)
+  int i;
+  int j;
+  int sts;
+  string stsstr;
+  int errcnt;
+
+  string dname[46];
+  string dclass[46];
+  string ddest[46];
+  int dtype[46];
+
+  j = 0;
+  dname[j] = "RootObject";
+  dclass[j] = "$PlantHier";
+  ddest[j] = "_O0.254.254.210:0";
+  dtype[j] = 1;
+  j++;
+  dname[j] = "Child1";
+  dclass[j] = "$PlantHier";
+  ddest[j] = "RootObject";
+  dtype[j] = 1;
+  j++;
+  dname[j] = "A1";
+  dclass[j] = "AArray100";
+  ddest[j] = "RootObject-Child1";
+  dtype[j] = 1;
+  j++;
+  dname[j] = "A2";
+  dclass[j] = "AArray100";
+  ddest[j] = "RootObject-Child1";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "P1";
+  dclass[j] = "BaseFcPPO3PumpAggr";
+  ddest[j] = "RootObject-Child1";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Child2";
+  dclass[j] = "$PlantHier";
+  ddest[j] = "RootObject";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Child3";
+  dclass[j] = "$PlantHier";
+  ddest[j] = "RootObject";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Child4";
+  dclass[j] = "$PlantHier";
+  ddest[j] = "RootObject";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "ChildLess";
+  dclass[j] = "$PlantHier";
+  ddest[j] = "RootObject";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Nodes";
+  dclass[j] = "$NodeHier";
+  ddest[j] = "RootObject";
+  dtype[j] = 3;
+  j++;
+  dname[j] = "Pwrtest02";
+  dclass[j] = "$Node";
+  ddest[j] = "Nodes";
+  dtype[j] = 1;
+  j++;
+  dname[j] = "H1";
+  dclass[j] = "$PlantHier";
+  ddest[j] = "Nodes";
+  dtype[j] = 3;
+  j++;
+  dname[j] = "Values";
+  dclass[j] = "Pwrt02_Values";
+  ddest[j] = "H1";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "PlcTest";
+  dclass[j] = "$PlantHier";
+  ddest[j] = "H1";
+  dtype[j] = 3;
+  j++;
+  dname[j] = "Plc2";
+  dclass[j] = "PlcProcess";
+  ddest[j] = "Nodes-Pwrtest02-Plc";
+  dtype[j] = 3;
+  j++;
+  dname[j] = "50ms";
+  dclass[j] = "PlcThread";
+  ddest[j] = "Nodes-Pwrtest02-Plc";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "50ms";
+  dclass[j] = "PlcThread";
+  ddest[j] = "Nodes-Pwrtest02-Plc2";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Test02";
+  dclass[j] = "$PlantHier";
+  ddest[j] = "H1";
+  dtype[j] = 4;
+  j++;
+  dname[j] = "First";
+  dclass[j] = "$PlantHier";
+  ddest[j] = "Test02";
+  dtype[j] = 1;
+  j++;
+  dname[j] = "Dv1";
+  dclass[j] = "Dv";
+  ddest[j] = "Test02-First";
+  dtype[j] = 1;
+  j++;
+  dname[j] = "Dv2";
+  dclass[j] = "Dv";
+  ddest[j] = "Test02-First";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Dv3";
+  dclass[j] = "Dv";
+  ddest[j] = "Test02-First";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Dv4";
+  dclass[j] = "Dv";
+  ddest[j] = "Test02-First";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Aggr1";
+  dclass[j] = "Aggregate";
+  ddest[j] = "Test02-First";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Aggr2";
+  dclass[j] = "Aggregate";
+  ddest[j] = "Test02-First";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Aggr3";
+  dclass[j] = "Aggregate";
+  ddest[j] = "Test02-First";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Aggr4";
+  dclass[j] = "Aggregate";
+  ddest[j] = "Test02-First";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "R1";
+  dclass[j] = "Pwrt02_Roller";
+  ddest[j] = "Test02-First";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Comp1";
+  dclass[j] = "Pwrt02_Component";
+  ddest[j] = "Test02-First";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "C1";
+  dclass[j] = "Pwrt02_Contactor";
+  ddest[j] = "Test02-First";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "M1";
+  dclass[j] = "Pwrt02_Motor";
+  ddest[j] = "Test02-First";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Pwrwb";
+  dclass[j] = "$PlantHier";
+  ddest[j] = "Test02";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Av1";
+  dclass[j] = "Av";
+  ddest[j] = "Test02-Pwrwb";
+  dtype[j] = 1;
+  j++;
+  dname[j] = "Av2";
+  dclass[j] = "Av";
+  ddest[j] = "Test02-Pwrwb";
+  dtype[j] = 1;
+  j++;
+  dname[j] = "Dv1";
+  dclass[j] = "Dv";
+  ddest[j] = "Test02-Pwrwb";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Dv2";
+  dclass[j] = "Dv";
+  ddest[j] = "Test02-Pwrwb";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "L1";
+  dclass[j] = "BaseLevelSensor";
+  ddest[j] = "Test02-Pwrwb";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Values";
+  dclass[j] = "Pwrt02_Values";
+  ddest[j] = "Test02-Pwrwb";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "SetValues";
+  dclass[j] = "Pwrt02_Values";
+  ddest[j] = "Test02-Pwrwb";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Ldh";
+  dclass[j] = "$PlantHier";
+  ddest[j] = "Test02";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "P1";
+  dclass[j] = "BaseFcPPO3PumpAggr";
+  ddest[j] = "Test02-Ldh";
+  dtype[j] = 1;
+  j++;
+  dname[j] = "A1";
+  dclass[j] = "AArray100";
+  ddest[j] = "Test02-Ldh";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Av1";
+  dclass[j] = "Av";
+  ddest[j] = "Test02-Ldh";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "Dv1";
+  dclass[j] = "Dv";
+  ddest[j] = "Test02-Ldh";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "LongName90123456789012345678901";
+  dclass[j] = "Dv";
+  ddest[j] = "Test02-Ldh";
+  dtype[j] = 2;
+  j++;
+  dname[j] = "ƒ≈÷‰Âˆ";
+  dclass[j] = "Dv";
+  ddest[j] = "Test02-Ldh";
+  dtype[j] = 2;
+  j++;
+
+  for (i = 0; i < j; i++)
+    sts = CreateObject(dname[i], dclass[i], ddest[i], dtype[i]);
+    if (EVEN(sts))
+       stsstr = getmsg(sts);
+       tstlog_vlog(log, "E", "CreateObject %s, error status %d, %s", dname[i], i, stsstr);
+       return 0;
+    else 
+       tstlog_vlog(log, "D", "Object created. %s", dname[i]);
+    endif
+  endfor
+
+  tstlog_vlog(log, "S", "Objects created, successful completion");
+
+  string aname[52];
+  string sval[52];
+  float fval[52];
+  int ival[52];
+  int type[52];
+
+  j = 0;
+  aname[j] = "Nodes-Pwrtest02-OpPlaces.Description";
+  sval[j] = "Operator places";
+  type[j] = 3;
+  j++;
+  aname[j] = "Nodes-Pwrtest02-Plc-50ms.ScanTime";
+  fval[j] = 0.05;
+  type[j] = 2;
+  j++;
+  aname[j] = "Nodes-Pwrtest02-Plc2-50ms.ScanTime";
+  fval[j] = 0.05;
+  type[j] = 2;
+  j++;
+  aname[j] = "Test02-Pwrwb-Av1.InitialValue";
+  fval[j] = 22.22;
+  type[j] = 2;
+  j++;
+  aname[j] = "Test02-Pwrwb-Dv1.InitialValue";
+  ival[j] = 0;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Dv2.InitialValue";
+  ival[j] = 1;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-L1.Value.InitialValue";
+  fval[j] = 33.33;
+  type[j] = 2;
+  j++;
+  aname[j] = "Test02-Pwrwb-L1.LimitHH.Limit";
+  fval[j] = 94;
+  type[j] = 2;
+  j++;
+  aname[j] = "Test02-Pwrwb-L1.Description";
+  sval[j] = "BaseLevelSensor used for python tests";
+  type[j] = 3;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.Boolean";
+  ival[j] = 1;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.Int8";
+  ival[j] = 22;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.Int16";
+  ival[j] = 333;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.Int32";
+  ival[j] = 4444;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.Int64";
+  ival[j] = 55555;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.UInt8";
+  ival[j] = 66;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.UInt16";
+  ival[j] = 777;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.UInt32";
+  ival[j] = 8888;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.UInt64";
+  ival[j] = 99999;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.Float32";
+  fval[j] = 22.22;
+  type[j] = 2;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.Float64";
+  fval[j] = 4444.4444;
+  type[j] = 2;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.String80";
+  sval[j] = "Why don't you have wings to fly with?";
+  type[j] = 3;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.Time";
+  sval[j] = "15-MAY-2020 08:27:50.50";
+  type[j] = 3;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.DeltaTime";
+  sval[j] = "27 8:27:50.05";
+  type[j] = 3;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.Objid";
+  sval[j] = "VolPwrTest02:Test02-Pwrwb-Values";
+  type[j] = 3;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.AttrRef";
+  sval[j] = "VolPwrTest02:Test02-Pwrwb-Values.AttrRef";
+  type[j] = 3;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.BooleanArray[4]";
+  ival[j] = 1;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.Int8Array[4]";
+  ival[j] = 22;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.Int16Array[4]";
+  ival[j] = 333;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.Int32Array[4]";
+  ival[j] = 4444;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.Int64Array[4]";
+  ival[j] = 55555;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.UInt8Array[4]";
+  ival[j] = 66;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.UInt16Array[4]";
+  ival[j] = 777;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.UInt32Array[4]";
+  ival[j] = 8888;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.UInt64Array[4]";
+  ival[j] = 99999;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.Float32Array[4]";
+  fval[j] = 22.22;
+  type[j] = 2;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.Float64Array[4]";
+  fval[j] = 4444.4444;
+  type[j] = 2;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.String80Array[4]";
+  sval[j] = "Why don't you have wings to fly with?";
+  type[j] = 3;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.TimeArray[4]";
+  sval[j] = "15-MAY-2020 08:27:50.50";
+  type[j] = 3;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.DeltaTimeArray[4]";
+  sval[j] = "27 8:27:50.05";
+  type[j] = 3;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.ObjidArray[4]";
+  sval[j] = "VolPwrTest02:Test02-Pwrwb-Values";
+  type[j] = 3;
+  j++;
+  aname[j] = "Test02-Pwrwb-Values.AttrRefArray[4]";
+  sval[j] = "VolPwrTest02:Test02-Pwrwb-Values.AttrRefArray[4]";
+  type[j] = 3;
+  j++;
+  aname[j] = "Test02-First-R1.Motors[0].DisableContactor1";
+  ival[j] = 1;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-First-R1.Motors[1].DisableContactor2";
+  ival[j] = 1;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-First-R1.Motors[2].DisableContactor1";
+  ival[j] = 1;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-First-R1.Motors[3].DisableContactor2";
+  ival[j] = 1;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-First-R1.Motors[4].DisableContactor1";
+  ival[j] = 1;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-First-R1.Motors[5].DisableContactor2";
+  ival[j] = 1;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-First-R1.Motors[6].DisableContactor1";
+  ival[j] = 1;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-First-R1.Motors[7].DisableContactor2";
+  ival[j] = 1;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-First-R1.Motors[8].DisableContactor2";
+  ival[j] = 1;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-First-R1.Motors[9].DisableContactor1";
+  ival[j] = 1;
+  type[j] = 1;
+  j++;
+  aname[j] = "Test02-First-M1.DisableContactor2";
+  ival[j] = 1;
+  type[j] = 1;
+  j++;
+
+
+  for (i = 0; i < j; i++)
+    if (type[i] == 1)
+       sts = SetAttribute(aname[i], ival[i]);
+    endif
+    if (type[i] == 2)
+       sts = SetAttribute(aname[i], fval[i]);
+    endif
+    if (type[i] == 3)
+       sts = SetAttribute(aname[i], sval[i]);
+    endif
+
+    if (EVEN(sts))
+       stsstr = getmsg(sts);
+       tstlog_vlog(log, "E", "SetAttribute %s, error status %d, %s", aname[i], i, stsstr);
+       return 0;
+    else
+       tstlog_vlog(log, "D", "Attribute set %s", aname[i]);
+    endif
+  endfor
+
+  tstlog_vlog(log, "S", "Attributes set, successful completion");
+
+  return 1;  
+endfunction
+
+function int pwrt02_plc(int log, string root, string dest, int desttype, string thread)
+  int i;
+  int sts;
+  string stsstr;
+  int errcnt;
+  string pname;
+  
+  #
+  # Create objects
+  #
+  string dname[6];
+  string dclass[6];
+  string ddest[6];
+  int dtype[6];
+
+  dname[0] = CutObjectName(root, 1);
+  dclass[0] = "$PlantHier";
+  ddest[0] = dest;
+  dtype[0] = desttype;
+  dname[1] = "Plc";
+  dclass[1] = "PlcPgm";
+  ddest[1] = root;
+  dtype[1] = 1;
+  dname[2] = "Dv1";
+  dclass[2] = "Dv";
+  ddest[2] = root + "-Plc";
+  dtype[2] = 3;
+  dname[3] = "Dv2";
+  dclass[3] = "Dv";
+  ddest[3] = root + "-Dv1";
+  dtype[3] = 3;
+  dname[4] = "Dv3";
+  dclass[4] = "Dv";
+  ddest[4] = root + "-Dv2";
+  dtype[4] = 3;
+  dname[5] = "Dv4";
+  dclass[5] = "Dv";
+  ddest[5] = root + "-Dv3";
+  dtype[5] = 3;
+
+  for (i = 0; i < 6; i++)
+    sts = CreateObject(dname[i], dclass[i], ddest[i], dtype[i]);
+    if (EVEN(sts))
+       stsstr = getmsg(sts);
+       tstlog_vlog(log, "E", "Plc CreateObject %s, error status %d, %s", dname[i], i, stsstr);
+       return 0;
+    else
+       tstlog_vlog(log, "D", "Object created, %s, %s", root, dname[i]);
+    endif
+  endfor
+
+  #
+  # Set attributes
+  #
+  string aname[2];
+  int type[2];
+  int ival[2];
+  float fval[2];
+  string sval[2];
+
+  aname[0] = root + "-Plc.Description";
+  sval[0] = "Test program";
+  type[0] = 3;
+  aname[1] = root + "-Plc.ThreadObject";
+  sval[1] = thread;
+  type[1] = 3;
+
+
+  for (i = 0; i < 2; i++)
+    if (type[i] == 1)
+       sts = SetAttribute(aname[i], ival[i]);
+    endif
+    if (type[i] == 2)
+       sts = SetAttribute(aname[i], fval[i]);
+    endif
+    if (type[i] == 3)
+       sts = SetAttribute(aname[i], sval[i]);
+    endif
+
+    if (EVEN(sts))
+       stsstr = getmsg(sts);
+       tstlog_vlog(log, "E", "Plc SetAttribute %s, error status %d, %s", aname[i], i, stsstr);
+       return 0;
+    else
+       tstlog_vlog(log, "D", "Attribute set, %s", aname[i]);
+    endif
+  endfor
+
+  save
+
+  pname = root + "-Plc";
+  sts = OpenPlcPgm(pname);
+  if (EVEN(sts))
+    stsstr = getmsg(sts);
+    tstlog_vlog(log, "E", "OpenPlcPgm, error status %d, %s", i, stsstr);
+    return 0;
+  endif
+
+  #
+  # Create function objects
+  #
+  string fo_name[6];
+  string fo_class[6];
+  float fo_x[6];
+  float fo_y[6];
+  string fo_dest[6];
+  int fo_imask[6];
+  int fo_omask[6];
+  int fo_invmask[6];
+
+  fo_name[0] = "Document1";
+  fo_class[0] = "Document";
+  fo_x[0] = 0.0;
+  fo_y[0] = 0.0;
+  fo_dest[0] = "";
+  fo_imask[0] = 0;
+  fo_omask[0] = 0;
+  fo_invmask[0] = 0;
+  fo_name[1] = "GetDv1";
+  fo_class[1] = "GetDv";
+  fo_x[1] = 0.1;
+  fo_y[1] = 0.1;
+  fo_dest[1] = "Document1";
+  fo_imask[1] = 0;
+  fo_omask[1] = 1;
+  fo_invmask[1] = 0;
+  fo_name[2] = "GetDv2";
+  fo_class[2] = "GetDv";
+  fo_x[2] = 0.1;
+  fo_y[2] = 0.15;
+  fo_dest[2] = "Document1";
+  fo_imask[2] = 0;
+  fo_omask[2] = 1;
+  fo_invmask[2] = 0;
+  fo_name[3] = "GetDv3";
+  fo_class[3] = "GetDv";
+  fo_x[3] = 0.1;
+  fo_y[3] = 0.2;
+  fo_dest[3] = "Document1";
+  fo_imask[3] = 0;
+  fo_omask[3] = 1;
+  fo_invmask[3] = 0;
+  fo_name[4] = "And0";
+  fo_class[4] = "And";
+  fo_x[4] = 0.5;
+  fo_y[4] = 0.1;
+  fo_dest[4] = "Document1";
+  fo_imask[4] = 7;
+  fo_omask[4] = 1;
+  fo_invmask[4] = 4;
+  fo_name[5] = "StoDv4";
+  fo_class[5] = "StoDv";
+  fo_x[5] = 0.8;
+  fo_y[5] = 0.1;
+  fo_dest[5] = "Document1";
+  fo_imask[5] = 1;
+  fo_omask[5] = 0;
+  fo_invmask[5] = 0;
+
+  for (i = 0; i < 6; i++)
+    sts = CreatePlcObject(fo_name[i], fo_class[i], fo_x[i], fo_y[i], fo_dest[i], fo_imask[i], fo_omask[i], fo_invmask[i]);
+    if (EVEN(sts))
+       stsstr = getmsg(sts);
+       tstlog_vlog(log, "E", "Plc create fo %s %s, error status %d, %s", root, fo_name[i], stsstr);
+       return 0;
+    else
+       tstlog_vlog(log, "D", "Plc fo created, %s %s", root, fo_name[i]);
+    endif
+  endfor
+
+  #
+  # Set function object attributes
+  #
+  string foa_name[4];
+  int foa_ival[4];
+  float foa_fval[4];
+  string foa_sval[4];
+  int foa_type[4];
+
+  foa_name[0] = "GetDv1.DvObject";
+  foa_sval[0] = root + "-Dv1";
+  foa_type[0] = 1;
+  foa_name[1] = "GetDv2.DvObject";
+  foa_sval[1] = root + "-Dv2";
+  foa_type[1] = 1;
+  foa_name[2] = "GetDv3.DvObject";
+  foa_sval[2] = root + "-Dv3";
+  foa_type[2] = 1;
+  foa_name[3] = "StoDv4.DvObject";
+  foa_sval[3] = root + "-Dv4";
+  foa_type[3] = 1;
+
+  for (i = 0; i < 4; i++)
+    if (foa_type[i] == 1)
+       sts = SetPlcObjectAttr(foa_name[i], foa_sval[i]);
+    endif
+    if (foa_type[i] == 2)
+       sts = SetPlcObjectAttr(foa_name[i], foa_fval[i]);
+    endif
+    if (foa_type[i] == 3)
+       sts = SetPlcObjectAttr(foa_name[i], foa_ival[i]);
+    endif
+
+    if (EVEN(sts))
+       stsstr = getmsg(sts);
+       tstlog_vlog(log, "E", "Plc Fo attribute %s, error status %d, %s", foa_name[i], i, stsstr);
+       return 0;
+    else
+       tstlog_vlog(log, "D", "Plc Fo attribute set, %s %s", root, foa_name[i]);
+    endif
+  endfor
+
+  #
+  # Create connections
+  #
+  string c_sname[4];
+  string c_sattr[4];
+  string c_dname[4];
+  string c_dattr[4];
+
+  c_sname[0] = "GetDv1";
+  c_sattr[0] = "Status";
+  c_dname[0] = "And0";
+  c_dattr[0] = "In1";
+  c_sname[1] = "GetDv2";
+  c_sattr[1] = "Status";
+  c_dname[1] = "And0";
+  c_dattr[1] = "In2";
+  c_sname[2] = "GetDv3";
+  c_sattr[2] = "Status";
+  c_dname[2] = "And0";
+  c_dattr[2] = "In3";
+  c_sname[3] = "And0";
+  c_sattr[3] = "Status";
+  c_dname[3] = "StoDv4";
+  c_dattr[3] = "In";
+
+  for (i = 0; i < 4; i++)
+    sts = CreatePlcConnection(c_sname[i], c_sattr[i], c_dname[i], c_dattr[i]);
+    if (EVEN(sts))
+       stsstr = getmsg(sts);
+       tstlog_vlog(log, "E", "Plc CreatePlcConnection %s, error status %d, %s", c_sname[i], i, stsstr);
+       return 0;
+    else
+       tstlog_vlog(log, "D", "Connection created, %s, %s->%s", root, c_sname[i], c_dname[i]);
+    endif
+  endfor
+
+  tstlog_vlog(log, "S", "PlcPgm created %s", root);
+
+  ClosePlcPgm();
+  return 1;  
+endfunction
+
+
+
+main()
+  verify(0);
+  int log;
+
+  login pwrp pwrp
+  log = tstlog_open("wb_build-RootVolume", "$pwrp_log/pwrtest02_rootvolume.tlog");
+
+  set attr/name="VolPwrtest02:"/attr="OperatingSystem"/value=128/noconf/nolog
+  update classes
+
+  pwrt02_create(log);
+  pwrt02_plc(log, "PlcTest-H1", "PlcTest", 1, "Nodes-Pwrtest02-Plc-50ms");
+  pwrt02_plc(log, "PlcTest-H2", "PlcTest", 2, "Nodes-Pwrtest02-Plc-100ms");
+  pwrt02_plc(log, "PlcTest-H3", "PlcTest", 2, "Nodes-Pwrtest02-Plc2-50ms");
+  pwrt02_plc(log, "PlcTest-H4", "PlcTest", 2, "Nodes-Pwrtest02-Plc2-100ms");
+
+  tstlog_close(log);
+  save
+
+endmain

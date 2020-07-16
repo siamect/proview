@@ -163,7 +163,12 @@ bool wb_db_class::succClass(pwr_tCid cid)
 bool wb_db_class::pred(pwr_tOid oid)
 {
   m_k.oid = oid;
+  m_k.oid.oix -= 1;
 
+  if (m_dbc)
+    m_dbc->close();
+
+  m_db->m_t_class->cursor(m_db->m_txn, &m_dbc, 0);
   int ret = m_dbc->get(&m_key, &m_data, DB_SET_RANGE);
   if (ret != 0)
     return false;

@@ -55,7 +55,7 @@ void ra_status::test_status()
 // Constructor
 ra_status::ra_status()
 {
-  m_log = new tst_log(&m_sts, "rt-Status", "$pwrp_log/tst_status.tlog");
+  m_log = new tst_log(&m_sts, "pwrdemo-Status", "$pwrp_tmp/pwrdemo_status.tlog");
   if (EVEN(m_sts))
     printf("** Unable to open log file");
 

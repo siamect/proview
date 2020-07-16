@@ -1,0 +1,26 @@
+pwrtest02 is a test project for the development package.
+It contains scripts to create and configure a project, and a 
+number of test programs.
+
+The cpp test programs has to be built with a development tree, thus the
+project is generated here and the testprograms built. The test programs
+are gathered in $pwrp_load/pwrtest02.tar.gz.
+
+For manual build:
+
+pwre commands to build and clean the project
+> pwre module project
+> pwre build pwrtest02 build src
+> pwre build pwrtest02 build src clean
+
+
+build_from_git.sh will configure and build the project and build the
+test programs.
+
+For manual handling and running the project environment it set up by
+test02_setup.sh
+
+When the project is built, the test programs will generate log-files on
+$pwrp_log. They can be examined by test_xtt, eg 
+
+test_xtt -f $pwrp_log/\*.tlog

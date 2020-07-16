@@ -1414,7 +1414,7 @@ void ra_qcomtest::Request(void)
 // Constructor
 ra_qcomtest::ra_qcomtest()
 {
-  m_log = new tst_log(&m_sts, "rt-Qcom", "$pwrp_log/qcom.log");
+  m_log = new tst_log(&m_sts, "rt-Qcom", "$pwrp_log/qcom.tlog");
   if (EVEN(m_sts))
     printf("** Unable to open log file");
 }

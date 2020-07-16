@@ -89,16 +89,33 @@ echo "* Configure adm"
 export pwra_db=$pwre_broot/$os/$hw/bld/project/adm/db
 if [ ! -e $pwra_db ]; then
   mkdir -p $pwra_db
+  cp $pwre_croot/src/tools/pkg/deb/adm/* $pwra_db/
 fi
-echo "pwra_db $pwra_db"
-cp $pwre_croot/src/tools/pkg/deb/adm/* $pwra_db/
-echo "CVolPwrtest01	0.0.254.254	pwrtest01" >> $pwra_db/pwr_volumelist.dat
-echo "VolPwrTest01a	0.254.254.201	pwrtest01" >> $pwra_db/pwr_volumelist.dat
-echo "VolPwrTest01b	0.254.254.202	pwrtest01" >> $pwra_db/pwr_volumelist.dat
-echo "VolPwrTest01c	0.254.254.203	pwrtest01" >> $pwra_db/pwr_volumelist.dat
-echo "VolPwrTest01d	0.254.254.204	pwrtest01" >> $pwra_db/pwr_volumelist.dat
-echo "%base V0.0.0 $pwre_broot" > $pwra_db/pwr_projectlist.dat
-echo "pwrtest01	V0.0.0	$pwrp_root	Test-pwrtest01	\"\"" >> $pwra_db/pwr_projectlist.dat
+if [ ! -e $pwra_db ]; then
+  mkdir -p $pwra_db
+  cp $pwre_croot/src/tools/pkg/deb/adm/* $pwra_db/
+fi
+if [ "`eval grep CVolPwrtest01 $pwra_db/pwr_volumelist.dat`" == "" ]; then
+  echo "CVolPwrtest01	0.0.254.254	pwrtest01" >> $pwra_db/pwr_volumelist.dat
+fi
+if [ "`eval grep VolPwrTest01a $pwra_db/pwr_volumelist.dat`" == "" ]; then
+  echo "VolPwrTest01a	0.254.254.201	pwrtest01" >> $pwra_db/pwr_volumelist.dat
+fi
+if [ "`eval grep VolPwrTest01b $pwra_db/pwr_volumelist.dat`" == "" ]; then
+  echo "VolPwrTest01b	0.254.254.202	pwrtest01" >> $pwra_db/pwr_volumelist.dat
+fi
+if [ "`eval grep VolPwrTest01c $pwra_db/pwr_volumelist.dat`" == "" ]; then
+  echo "VolPwrTest01c	0.254.254.203	pwrtest01" >> $pwra_db/pwr_volumelist.dat
+fi
+if [ "`eval grep VolPwrTest01d $pwra_db/pwr_volumelist.dat`" == "" ]; then
+  echo "VolPwrTest01d	0.254.254.204	pwrtest01" >> $pwra_db/pwr_volumelist.dat
+fi
+if [ ! -e $pwra_db/pwr_projectlist.dat ] || [ "`eval grep base $pwra_db/pwr_projectlist.dat`" == "" ]; then
+  echo "%base V0.0.0 $pwre_broot" > $pwra_db/pwr_projectlist.dat
+fi
+if [ "`eval grep pwrtest01 $pwra_db/pwr_projectlist.dat`" == "" ]; then
+  echo "pwrtest01	V0.0.0	$pwrp_root	Test-pwrtest01	\"\"" >> $pwra_db/pwr_projectlist.dat
+fi
 
 source $pwra_db/pwr_setup.sh
 source $pwra_db/pwra_env.sh set project pwrtest01

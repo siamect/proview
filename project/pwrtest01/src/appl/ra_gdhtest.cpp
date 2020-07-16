@@ -928,55 +928,6 @@ void ra_gdhtest::GetPreviousSibling(void)
 }
 
 
-#if 0
-void ra_gdhtest::GetPreviousSibling(void)
-{
-  pwr_tOName name;
-  pwr_tOid oid;
-
-  // Get last sibling of first child
-  m_sts = gdh_GetNextSibling(m_child, &oid);
-  if (ODD(m_sts))
-    m_sts = gdh_GetNextSibling(oid, &oid);
-  if (ODD(m_sts))
-    m_sts = gdh_GetNextSibling(oid, &oid);
-  if (ODD(m_sts))
-    m_sts = gdh_GetNextSibling(oid, &oid);
-
-  m_sts = gdh_GetPreviousSibling(oid, &oid);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "GetPreviousSibling", m_sts);
-    return;
-  }
-  m_sts = gdh_ObjidToName(oid, name, sizeof(name), cdh_mNName);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "GetPreviousSibling", "ObjidToName failed", m_sts);
-    return;
-  }
-  if (strcmp(name, "RootObject-Child3") != 0) {
-    m_log->log('E', "GetPreviousSibling", "Wrong silbing");
-    return;
-  }
-
-  // Get nonexisting child
-  m_sts = gdh_GetPreviousSibling(oid, &oid);
-  if (ODD(m_sts))
-    m_sts = gdh_GetPreviousSibling(oid, &oid);
-  if (ODD(m_sts))
-    m_sts = gdh_GetPreviousSibling(oid, &oid);
-  if (ODD(m_sts)) {
-    m_log->log('E', "GetPreviousSibling returned noexisting object");
-    return;
-  }
-  else if (m_sts != GDH__NO_SIBLING) {
-    m_log->log('E', "GetPreviousSibling wrong sts", m_sts);
-    return;
-  }
-
-  m_log->log('S', "GetPreviousSibling", GDH__SUCCESS);
-}
-#endif
-
 void ra_gdhtest::GetNodeIndex(void)
 {
   pwr_tNid nid;
@@ -1325,409 +1276,111 @@ void ra_gdhtest::GetAttributeCharAttrref(void)
   m_log->log('S', "GetAttributeCharAttrref", GDH__SUCCESS);
 }
 
+
+typedef struct {
+  pwr_tOName aname;
+  pwr_tOName result;
+  pwr_tStatus sts;
+} sNameToAttrRef;
+
 void ra_gdhtest::NameToAttrref(void)
 {
+  sNameToAttrRef d[] = {
+    {"RootObject-Child1.Photo", "RootObject-Child1.Photo", GDH__SUCCESS},
+    {"RootObject-Child1-P1.CircuitBreaker.NotTripped", "RootObject-Child1-P1.CircuitBreaker.NotTripped", GDH__SUCCESS},
+    {"RootObject-Child1-A1.Value", "RootObject-Child1-A1.Value", GDH__SUCCESS},
+    {"RootObject-Child1-A1.Value[99]", "RootObject-Child1-A1.Value[99]", GDH__SUCCESS}
+  };
+
   pwr_tAttrRef aref;
-  pwr_tAName aname;
+  pwr_tAName aname2;
 
-  // Get ordinary attribute
-  sprintf(aname, "RootObject-Child1.Photo");
-  m_sts = gdh_NameToAttrref(pwr_cNOid, aname, &aref);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "NameToAttrref, can't get aref", m_sts);
-    return;
-  }
-
-  // Get object attribute
-  sprintf(aname, "RootObject-Child1-P1.CircuitBreaker.NotTripped");
-  m_sts = gdh_NameToAttrref(pwr_cNOid, aname, &aref);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "NameToAttrref", m_sts);
-    return;
-  }
-
-  // Get array attribute
-  sprintf(aname, "RootObject-Child1-A1.Value");
-  m_sts = gdh_NameToAttrref(pwr_cNOid, aname, &aref);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "NameToAttrref, can't get aref", m_sts);
-    return;
-  }
-
-  // Get array element attributes
-  for (int i = 0; i < 100; i++) {
-    sprintf(aname, "RootObject-Child1-A1.Value[%d]", i);
-    m_sts = gdh_NameToAttrref(pwr_cNOid, aname, &aref);
-    if (EVEN(m_sts)) {
-      m_log->log('E', "NameToAttrref, can't get aref", m_sts);
+  for (unsigned int i = 0; i < sizeof(d)/sizeof(d[0]); i++) {
+    m_sts = gdh_NameToAttrref(pwr_cNOid, d[i].aname, &aref);
+    if (m_sts != d[i].sts) {
+      m_log->log('E', "NameToAttrref, wrong sts", d[i].aname, m_sts);
       return;
     }
+    if (ODD(m_sts)) {
+      m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mNName);
+      if (EVEN(m_sts)) {
+	m_log->log('E', "NameToAttrref, gdh_AttrrefToName", d[i].aname, m_sts);
+	return;
+      }
+      if (strcmp(aname2, d[i].result) != 0) {
+	m_log->vlog('E', "NameToAttrref, %s != %s, idx %d", aname2, d[i].result, i);
+	return;
+      }
+    }
   }
+
   m_log->log('S', "NameToAttrref", GDH__SUCCESS);
 }
 
+typedef struct {
+  pwr_tOName aname;
+  int nametype;
+  pwr_tOName result;
+  pwr_tStatus sts;
+} sAttrRefToName;
+
 void ra_gdhtest::AttrrefToName(void)
 {
+  sAttrRefToName d[] = {
+    {"RootObject-Child1.Photo", cdh_mNName, "RootObject-Child1.Photo", GDH__SUCCESS},
+    {"RootObject-Child1.Photo", cdh_mName_object, "Child1", GDH__SUCCESS},
+    {"RootObject-Child1.Photo", cdh_mName_attribute, "Photo", GDH__SUCCESS},
+    {"RootObject-Child1.Photo", cdh_mName_object | cdh_mName_attribute, "Child1.Photo", GDH__SUCCESS},
+    {"RootObject-Child1.Photo", cdh_mName_volumeStrict, "VolPwrTest01c:RootObject-Child1.Photo", GDH__SUCCESS},
+    {"RootObject-Child1.Photo", cdh_mName_pathStrict, "RootObject-Child1.Photo", GDH__SUCCESS},
+    {"RootObject-Child1-P1.CircuitBreaker.NotTripped", cdh_mNName, "RootObject-Child1-P1.CircuitBreaker.NotTripped", GDH__SUCCESS},
+    {"RootObject-Child1-P1.CircuitBreaker.NotTripped", cdh_mName_object, "P1", GDH__SUCCESS},
+    {"RootObject-Child1-P1.CircuitBreaker.NotTripped", cdh_mName_attribute, "CircuitBreaker.NotTripped", GDH__SUCCESS},
+    {"RootObject-Child1-P1.CircuitBreaker.NotTripped", cdh_mName_object | cdh_mName_attribute, "P1.CircuitBreaker.NotTripped", GDH__SUCCESS},
+    {"RootObject-Child1-P1.CircuitBreaker.NotTripped", cdh_mName_volumeStrict, "VolPwrTest01c:RootObject-Child1-P1.CircuitBreaker.NotTripped", GDH__SUCCESS},
+    {"RootObject-Child1-P1.CircuitBreaker.NotTripped", cdh_mName_pathStrict, "RootObject-Child1-P1.CircuitBreaker.NotTripped", GDH__SUCCESS},
+    {"RootObject-Child1-P1.CircuitBreaker.NotTripped.Photo", cdh_mNName, "RootObject-Child1-P1.CircuitBreaker.NotTripped.Photo", GDH__SUCCESS},
+    {"RootObject-Child1-P1.CircuitBreaker.NotTripped.Photo", cdh_mName_object, "P1", GDH__SUCCESS},
+    {"RootObject-Child1-P1.CircuitBreaker.NotTripped.Photo", cdh_mName_attribute, "CircuitBreaker.NotTripped.Photo", GDH__SUCCESS},
+    {"RootObject-Child1-P1.CircuitBreaker.NotTripped.Photo", cdh_mName_volumeStrict, "VolPwrTest01c:RootObject-Child1-P1.CircuitBreaker.NotTripped.Photo", GDH__SUCCESS},
+    {"RootObject-Child1-P1.CircuitBreaker.NotTripped.Photo", cdh_mName_pathStrict, "RootObject-Child1-P1.CircuitBreaker.NotTripped.Photo", GDH__SUCCESS},
+    {"RootObject-Child1-A1.Value", cdh_mNName, "RootObject-Child1-A1.Value", GDH__SUCCESS},
+    {"RootObject-Child1-A1.Value", cdh_mName_object, "A1", GDH__SUCCESS},
+    {"RootObject-Child1-A1.Value", cdh_mName_attribute, "Value", GDH__SUCCESS},
+    {"RootObject-Child1-A1.Value", cdh_mName_volumeStrict, "VolPwrTest01c:RootObject-Child1-A1.Value", GDH__SUCCESS},
+    {"RootObject-Child1-A1.Value", cdh_mName_pathStrict, "RootObject-Child1-A1.Value", GDH__SUCCESS},
+    {"RootObject-Child1-A1.Value[99]", cdh_mNName, "RootObject-Child1-A1.Value[99]", GDH__SUCCESS},
+    {"RootObject-Child1-A1.Value[99]", cdh_mName_object, "A1", GDH__SUCCESS},
+    {"RootObject-Child1-A1.Value[99]", cdh_mName_attribute, "Value", GDH__SUCCESS},
+    {"RootObject-Child1-A1.Value[99]", cdh_mName_object | cdh_mName_attribute | cdh_mName_index, "A1.Value[99]", GDH__SUCCESS},
+    {"RootObject-Child1-A1.Value[99]", cdh_mName_volumeStrict, "VolPwrTest01c:RootObject-Child1-A1.Value[99]", GDH__SUCCESS},
+    {"RootObject-Child1-A1.Value[99]", cdh_mName_pathStrict, "RootObject-Child1-A1.Value[99]", GDH__SUCCESS}
+  };
+
   pwr_tAttrRef aref;
-  pwr_tAName aname, aname2;
+  pwr_tAName aname2;
 
-  // Get ordinary attribute
-  sprintf(aname, "RootObject-Child1.Photo");
-  m_sts = gdh_NameToAttrref(pwr_cNOid, aname, &aref);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName can't get aref", m_sts);
-    return;
-  }
+  for (unsigned int i = 0; i < sizeof(d)/sizeof(d[0]); i++) {
+    m_sts = gdh_NameToAttrref(pwr_cNOid, d[i].aname, &aref);
+    if (EVEN(m_sts)) {
+      m_log->log('E', "AttrrefToName, gdh_NameToAttrref", m_sts);
+      return;
+    }
 
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mNName);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "RootObject-Child1.Photo") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_object);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "Child1") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
+    m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), d[i].nametype);
+    if (m_sts != d[i].sts) {
+      m_log->log('E', "AttrrefToName, wrong sts", d[i].aname, m_sts);
+      return;
+    }
+    if (ODD(m_sts)) {
+      if (strcmp(aname2, d[i].result) != 0) {
+	m_log->vlog('E', "AttrrefToName, %s != %s, idx %d", aname2, d[i].result, i);
+	return;
+      }
+    }
   }
 
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_attribute);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "Photo") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_object |
-			    cdh_mName_attribute);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "Child1.Photo") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_volumeStrict);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "VolPwrTest01c:RootObject-Child1.Photo") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_pathStrict);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "RootObject-Child1.Photo") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  // Get object attribute
-  sprintf(aname, "RootObject-Child1-P1.CircuitBreaker.NotTripped");
-  m_sts = gdh_NameToAttrref(pwr_cNOid, aname, &aref);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName can't get aref", m_sts);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mNName);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "RootObject-Child1-P1.CircuitBreaker.NotTripped") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_object);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "P1") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_attribute);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "CircuitBreaker.NotTripped") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_object |
-			    cdh_mName_attribute);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "P1.CircuitBreaker.NotTripped") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_volumeStrict);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "VolPwrTest01c:RootObject-Child1-P1.CircuitBreaker.NotTripped") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_pathStrict);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "RootObject-Child1-P1.CircuitBreaker.NotTripped") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  // Get attrobject attribute
-  sprintf(aname, "RootObject-Child1-P1.CircuitBreaker.NotTripped.Photo");
-  m_sts = gdh_NameToAttrref(pwr_cNOid, aname, &aref);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName can't get aref", m_sts);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mNName);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "RootObject-Child1-P1.CircuitBreaker.NotTripped.Photo") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_object);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "P1") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_attribute);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "CircuitBreaker.NotTripped.Photo") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_object |
-			    cdh_mName_attribute);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "P1.CircuitBreaker.NotTripped.Photo") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_volumeStrict);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "VolPwrTest01c:RootObject-Child1-P1.CircuitBreaker.NotTripped.Photo") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_pathStrict);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "RootObject-Child1-P1.CircuitBreaker.NotTripped.Photo") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  // Get array attribute
-  sprintf(aname, "RootObject-Child1-A1.Value");
-  m_sts = gdh_NameToAttrref(pwr_cNOid, aname, &aref);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName can't get aref", m_sts);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mNName);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "RootObject-Child1-A1.Value") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_object);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "A1") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_attribute);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "Value") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_object |
-			    cdh_mName_attribute);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "A1.Value") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_volumeStrict);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "VolPwrTest01c:RootObject-Child1-A1.Value") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_pathStrict);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "RootObject-Child1-A1.Value") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  // Get array element attribute
-  sprintf(aname, "RootObject-Child1-A1.Value[99]");
-  m_sts = gdh_NameToAttrref(pwr_cNOid, aname, &aref);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName can't get aref", m_sts);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mNName);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "RootObject-Child1-A1.Value[99]") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_object);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "A1") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_attribute);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "Value") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_attribute |
-			    cdh_mName_index);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "Value[99]") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_object |
-			    cdh_mName_attribute | cdh_mName_index);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "A1.Value[99]") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_volumeStrict);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "VolPwrTest01c:RootObject-Child1-A1.Value[99]") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_sts = gdh_AttrrefToName(&aref, aname2, sizeof(aname2), cdh_mName_pathStrict);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrrefToName", m_sts);
-    return;
-  }
-  if (strcmp(aname2, "RootObject-Child1-A1.Value[99]") != 0) {
-    m_log->log('E', "AttrrefToName", aname2);
-    return;
-  }
-
-  m_log->log('S', "AttrrefToName", GDH__SUCCESS);
+  m_log->log('S', "AttrRefToName", GDH__SUCCESS);
 }
 
 void ra_gdhtest::ClassAttrToAttrref(void)
@@ -1779,78 +1432,47 @@ void ra_gdhtest::ClassAttrToAttrref(void)
   m_log->log('S', "ClassAttrToAttrref", GDH__SUCCESS);
 }
 
+typedef struct {
+  pwr_tOName aname;
+  pwr_tOName oname;
+  pwr_tStatus sts;
+} sAttrArefToObjectAref;
+
 void ra_gdhtest::AttrArefToObjectAref(void)
 {
+  sAttrArefToObjectAref d[] = {
+    {"RootObject-Child1.Photo", "RootObject-Child1", GDH__SUCCESS},
+    {"RootObject-Child1-A1.Value[99]", "RootObject-Child1-A1", GDH__SUCCESS},
+    {"RootObject-Child1-P1.CircuitBreaker.NotTripped", "RootObject-Child1-P1.CircuitBreaker", GDH__SUCCESS}
+  };
+
+
   pwr_tAttrRef aref, oaref;
   pwr_tAName aname;
 
-  // Test ordinary attribute
-  m_sts = gdh_NameToAttrref(pwr_cNOid, "RootObject-Child1.Photo", &aref);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrArefToObjectAref", "gdh_NameToAttrref", m_sts);
-    return;
-  }
+  for (unsigned int i = 0; i < sizeof(d)/sizeof(d[0]); i++) {
+    m_sts = gdh_NameToAttrref(pwr_cNOid, d[i].aname, &aref);
+    if (EVEN(m_sts)) {
+      m_log->log('E', "AttrArefToObjectAref", "gdh_NameToAttrref", m_sts);
+      return;
+    }
 
-  m_sts = gdh_AttrArefToObjectAref(&aref, &oaref);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrArefToObjectAref", m_sts);
-    return;
-  }
-  
-  m_sts = gdh_AttrrefToName(&oaref, aname, sizeof(aname), cdh_mName_pathStrict);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrArefToObjectAref", m_sts);
-    return;
-  }
-  if (strcmp(aname, "RootObject-Child1") != 0) {
-    m_log->log('E', "AttrArefToObjectAref wrong name", aname);
-    return;
-  }
-
-  // Test attrobject attribute
-  m_sts = gdh_NameToAttrref(pwr_cNOid, "RootObject-Child1-P1.CircuitBreaker.NotTripped", &aref);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrArefToObjectAref", "gdh_NameToAttrref", m_sts);
-    return;
-  }
-
-  m_sts = gdh_AttrArefToObjectAref(&aref, &oaref);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrArefToObjectAref", m_sts);
-    return;
-  }
-  
-  m_sts = gdh_AttrrefToName(&oaref, aname, sizeof(aname), cdh_mName_pathStrict);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrArefToObjectAref", m_sts);
-    return;
-  }
-  if (strcmp(aname, "RootObject-Child1-P1.CircuitBreaker") != 0) {
-    m_log->log('E', "AttrArefToObjectAref wrong name", aname);
-    return;
-  }
-
-  // Test array element
-  m_sts = gdh_NameToAttrref(pwr_cNOid, "RootObject-Child1-A1.Value[99]", &aref);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrArefToObjectAref", "gdh_NameToAttrref", m_sts);
-    return;
-  }
-
-  m_sts = gdh_AttrArefToObjectAref(&aref, &oaref);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrArefToObjectAref", m_sts);
-    return;
-  }
-  
-  m_sts = gdh_AttrrefToName(&oaref, aname, sizeof(aname), cdh_mName_pathStrict);
-  if (EVEN(m_sts)) {
-    m_log->log('E', "AttrArefToObjectAref", m_sts);
-    return;
-  }
-  if (strcmp(aname, "RootObject-Child1-A1") != 0) {
-    m_log->log('E', "AttrArefToObjectAref wrong name", aname);
-    return;
+    m_sts = gdh_AttrArefToObjectAref(&aref, &oaref);
+    if (m_sts != d[i].sts) {
+      m_log->log('E', "AttrArefToObjetAref, wrong sts", d[i].aname, m_sts);
+      return;
+    }
+    if (ODD(m_sts)) {
+      m_sts = gdh_AttrrefToName(&oaref, aname, sizeof(aname), cdh_mName_pathStrict);
+      if (EVEN(m_sts)) {
+	m_log->log('E', "AttrArefToObjectAref", m_sts);
+	return;
+      }
+      if (strcmp(aname, d[i].oname) != 0) {
+	m_log->vlog('E', "AttrArefToObjectAref wrong name, %s != %s", aname, d[i].oname);
+	return;
+      }
+    }
   }
 
   m_log->log('S', "AttrArefToObjectAref", GDH__SUCCESS);
@@ -3748,7 +3370,7 @@ void ra_gdhtest::SetObjectInfoStr(void)
 // Constructor
 ra_gdhtest::ra_gdhtest()
 {
-  m_log = new tst_log(&m_sts, "rt-Gdh", "$pwrp_log/gdh.log");
+  m_log = new tst_log(&m_sts, "rt-Gdh", "$pwrp_log/gdh.tlog");
   if (EVEN(m_sts))
     printf("** Unable to open log file");
 }

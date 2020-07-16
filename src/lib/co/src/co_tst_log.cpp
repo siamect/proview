@@ -103,7 +103,7 @@ void tst_log::vlog(const char severity, const char *format, ...)
   fprintf(m_fp, "%c %s %s, %s\n", severity, timstr, m_category, msg);
 }
 
-tst_log::tst_log(pwr_tStatus *sts, const char *category, const char *filename)
+tst_log::tst_log(pwr_tStatus *sts, const char *category, const char *filename) : m_fp(0)
 {
   *sts = TST__SUCCESS;
   strncpy(m_category, category, sizeof(m_category));

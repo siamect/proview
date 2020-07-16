@@ -115,7 +115,7 @@ int main()
   unsigned int i;
   pwr_tAName aname;
 
-  tst_log *log = new tst_log(&sts, "rt-Plc", "$pwrp_log/plc.log");
+  tst_log *log = new tst_log(&sts, "rt-Plc", "$pwrp_log/plc.tlog");
   if (EVEN(sts))
     printf("** Unable to open log file");
 

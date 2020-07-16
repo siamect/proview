@@ -561,7 +561,7 @@ ra_errhtest::ra_errhtest()
   pwr_tOid oid;
 
   m_anix = errh_eAnix_appl1;
-  m_log = new tst_log(&m_sts, "rt-Errh", "$pwrp_log/errh.log");
+  m_log = new tst_log(&m_sts, "rt-Errh", "$pwrp_log/errh.tlog");
   if (EVEN(m_sts))
     printf("** Unable to open log file");
   m_sts = gdh_Init("ra_errhtest");

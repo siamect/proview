@@ -362,6 +362,8 @@ pwr_tStatus ldh_CreateObject(ldh_tSession session, pwr_tOid* oid,
 
   try {
     wb_name n(name);
+    if (!n)
+      return n.sts();
 
     wb_cdef cdef = sp->cdef(cid);
 
@@ -389,6 +391,8 @@ pwr_tStatus ldh_CreateVolume(ldh_tWorkbench workbench, ldh_tSession* session,
   wb_env* ep = (wb_env*)workbench;
 
   wb_name n(name);
+  if (!n)
+    return n.sts();
 
   wb_volume v = ep->createVolume(vid, cid, name, volrep, server);
   if (!v)
@@ -1159,6 +1163,8 @@ pwr_tStatus ldh_GetVidInfo(
 {
   wb_env* wb = (wb_env*)workbench;
   wb_volume v = wb->volume(vid);
+  if (!v)
+    return v.sts();
   ip->Volume = v.vid();
   ip->Class = v.cid();
   ip->VolRep = v.type();

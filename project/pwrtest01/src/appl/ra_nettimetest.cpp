@@ -87,7 +87,7 @@ void ra_nettimetest::NetTimeToDeltaTime(void)
 // Constructor
 ra_nettimetest::ra_nettimetest()
 {
-  m_log = new tst_log(&m_sts, "rt-NetTime", "$pwrp_log/nettime.log");
+  m_log = new tst_log(&m_sts, "rt-NetTime", "$pwrp_log/nettime.tlog");
   if (EVEN(m_sts))
     printf("** Unable to open log file");
 }

@@ -1082,7 +1082,7 @@ void ra_timetest::GetTimeMonotonic(void)
 // Constructor
 ra_timetest::ra_timetest()
 {
-  m_log = new tst_log(&m_sts, "co-Time", "$pwrp_log/time.log");
+  m_log = new tst_log(&m_sts, "co-Time", "$pwrp_log/time.tlog");
   if (EVEN(m_sts))
     printf("** Unable to open log file");
 }
