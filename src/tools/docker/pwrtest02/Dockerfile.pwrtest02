@@ -7,7 +7,7 @@ ARG PKG_PWR
 ENV DISPLAY :1
 ENV DEBIAN_FRONTEND none_interactive
 
-COPY ./pwrtest02/create_project.sh ./pwrtest02/configure_cvolpwrtest02.pwr_com ./pwrtest02/configure_directory.pwr_com ./pwrtest02/configure_volpwrtest02.pwr_com ./pwrtest02/pwrtest02.tar.gz ./pwrtest02/wa_testall.sh ./dummy_display_xorg.conf ./$PKG_PWR ./
+COPY ./pwrtest02/create_project.sh ./pwrtest02/configure_cvolpwrtest02.pwr_com ./pwrtest02/configure_directory.pwr_com ./pwrtest02/configure_volpwrtest02.pwr_com ./pwrtest02.tar.gz ./pwrtest02/wa_testall.sh ./dummy_display_xorg.conf ./$PKG_PWR ./
 RUN $INSTALL_UPDATE
 RUN $INSTALL_PWR
 RUN apt-get install -y python

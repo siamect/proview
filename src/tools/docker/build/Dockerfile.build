@@ -1,0 +1,26 @@
+ARG RELEASE=debian:10
+FROM $RELEASE
+ARG BUILD_RPI
+ARG GITREPO
+ARG INSTALL_UPDATE
+ARG INSTALL_GIT
+ARG INSTALL_BUILD
+ARG INSTALL_RPI
+ARG JDK_DIR
+
+ENV DISPLAY :1
+ENV DEBIAN_FRONTEND none_interactive
+
+COPY ./build/build.sh ./build/build_pwrdemo.sh ./build/build_pkg.sh ./build/build_pwrtest01.sh ./build/build_rpi.sh  ./
+RUN $INSTALL_UPDATE
+RUN $INSTALL_GIT
+RUN apt-get install -y xserver-xorg-video-dummy
+RUN git clone $GITREPO
+#RUN mv proview pwr;
+RUN $INSTALL_BUILD
+RUN ./build.sh $JDK_DIR
+RUN ./build_pwrdemo.sh
+RUN ./build_pwrtest01.sh
+RUN $INSTALL_RPI
+RUN ./build_rpi.sh
+RUN ./build_pkg.sh
