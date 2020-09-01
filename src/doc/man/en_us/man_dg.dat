@@ -3087,6 +3087,7 @@ The supported protocols are:
 
 TCP/IP
 UDP/IP
+RabbitMQ
 MQ (BEA Message Queue)
 ALCM (an old Digital protocol, supported for historical reasons)
 Serial
@@ -3133,6 +3134,7 @@ to the Remnode-object.
 <option> printdisable
 UDP <link> udp_ip
 TCP <link> tcp_ip
+RabbitMQ <link> rabbit_mq
 BEA Message Queue <link> bea_mq
 Serial <link> serial
 3964-R <link> 3964r
@@ -3201,6 +3203,31 @@ a client or a server. Setting it to zero (default) means client and setting it t
 
 </topic>
 
+<topic> rabbit_mq
+RabbitMQ
+RemnodeRabbitMQ configures a transport on the open source broker RabbitMQ.
+Exchange, SendQueue and ReceiveQueue are configured in the remnode object. If the queues doesn't
+exist they will be created on the server. If Exchange is left empty, the default exchange is used.
+
+Username and password are specified to gain access to the RabbitMQ broker. The user has to 
+be define on the broker and given appropriate permissions. This can be done with rabbitmqctl on
+the server node, eg
+
+<c>> rabbitmqctl add_user myuser mypasswd
+<c>> rabbitmqctl set_permissions -p / myuser .* .* .*
+
+In the RemTrans object, Address[0] and Address[1] is used to address a sent message to the corresponding 
+RemTrans in the target node. Address[3] states the message delivery mode where 2 is persistent and other
+values not persistent.
+
+If a message should be recovered after a server failure, Durable should be set in the RemoteRabbitMQ
+object, and delivery mode in RemTrans.Address[3] should be set to 2 (persistent).
+
+If messages should be able to survive network failures, a suitable method is to send messages to a 
+local broker and receive messages from a broker on the sending node. In this case you need separate
+RemnodeRabbitMQ objects for sending and receiving, and you also need to start the broker in both nodes.
+</topic>
+
 <topic> bea_mq
 MQ
 RemnodeMQ is a transport for sending messages on BEA Message Queue (BMQ). It requires that you to have
@@ -3226,8 +3253,8 @@ TargetQueue.
 <h2>Sending messages
 Similarly to UDP and TCP-transports RemTrans. Address[0,1] are used to identify the message. Address[0]
 represents the message-class and Address[1] represents the message-type (according to the BMQ-nomenclature).
-Address[2,3] are used to define what type of delivery mode (Address[2]) that should be used and what action should be
-taken when a message cannot be delivered (Address[3]).
+Address[2,3] are used to define what type of delivery mode (Address[2]) that should be used and what action 
+should be taken when a message cannot be delivered (Address[3]).
 
 Possible delivery modes are:
 

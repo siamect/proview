@@ -3058,6 +3058,7 @@ Det supportade protokollen är:
 
 TCP/IP
 UDP/IP
+RabbitMQ
 MQ (BEA Message Queue)
 ALCM (ett Digital protokoll, modell äldre, supportas av historiska skäl)
 Serial
@@ -3105,6 +3106,7 @@ ligger som barn till RemNode-objektet.
 <option> printdisable
 UDP <link> udp_ip
 TCP <link> tcp_ip
+RabbitMQ <link> rabbit_mq
 BEA Message Queue <link> bea_mq
 Serial <link> serial
 3964-R <link> 3964r
@@ -3170,6 +3172,31 @@ agerar som server, kommer enbart en klient att accepteras. ConnectionMode attrib
 RemNode-objektet avgör om man är klient eller server. 0 (default värdet) anger klient och
 1 anger server.
 
+</topic>
+
+<topic> rabbit_mq
+RabbitMQ
+RemnodeRabbitMQ konfigurerar transporter med meddelandehanteraren RabbitMQ.
+Exchange, SendQueue och ReceiveQueue konfigureras i remnode-objektet. Köerna som inte exister
+skapas av servern. Om Exchange inte är angiven används default exchange.
+
+Username och password anges för att få tillgång till RabbitMQ servern. Användaren måste vara 
+definerad i servern med lämplig åtkomst. Detta kan göras med rabbitmqctl på servern, t ex
+
+<c>> rabbitmqctl add_user myuser mypasswd
+<c>> rabbitmqctl set_permissions -p / myuser .* .* .*
+
+I RemTrans-objektet används Address[0] och Address[1] för att addressera ett sänt meddelande
+till en viss RemTrans på mottagarnoden. Address[3] anger meddelandets 'delivery mode' där 2 
+är persistent och andra värden ej persistent.
+
+Om ett meddelande ska återskapas efter ett server haveri, ska Durable vara satt i 
+RemoteRabbitMQ-objektet, och 'delivery mode' i RemTrans.Address[3] ska sättas till 2 (persistent).
+
+Om meddelanden ska kunna överleva nätverksavbrott är en lämplig metod att skicka meddelanden till
+en lokal rabbitmq-server och ta emot meddelanden från en server på sändande node. I det här fallet
+behövs olika RemnodeRabbitMQ-objekt för sändning och mottagning, och rabbitmq severn måste startas 
+i båda noderna.
 </topic>
 
 <topic> bea_mq
