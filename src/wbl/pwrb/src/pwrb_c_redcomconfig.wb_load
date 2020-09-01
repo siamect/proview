@@ -39,8 +39,21 @@ SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Group Servers,NodeConfiguration
-!  @Summary Configuration of redundance communication.
-!  Configuration of redundancy communication.
+!  @Summary Configuration of the redundancy server.
+!  Configuration of the redundancy server.
+!
+!  The redundancy server, rt_redcom, handles the redundancy
+!  communication between active and passive node. It also handles
+!  the failover supervision.
+!
+!  Transfer of object data is handled by plc threads and
+!  configured with RedcomPacket objects.
+!
+!  @image orm_redcomconfig_1.png
+!  Fig Redundancy communication
+!
+!  @b Se also
+!  @classlink RedcomPacket pwrb_redcompacket.html
 !*/
   Object RedcomConfig $ClassDef 686 
     Body SysBody
@@ -61,6 +74,7 @@ SObject pwrb:Class
       EndObject
       !/**
       !  Cycle time.
+      !  The cycle time should equal or be faster than the fastest plc thread.
       !*/
       Object CycleTime $Attribute 2 
         Body SysBody
@@ -78,8 +92,10 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Startup timeout time.
-      !  Increased timeout time at startup.
+      !  Delay time for the start of failover supervision.
+      !  For plc threads handling large amounts of data, the startup 
+      !  sequence with creating an attribute list and a table packet 
+      !  will take some time and the failover supervision has to be delayed.
       !*/
       Object StartupTimeout $Attribute 4 
         Body SysBody
@@ -88,9 +104,9 @@ SObject pwrb:Class
       EndObject
       !/**
       !  Force state.
-      !  State can only be changed from Active/Passive buttons in 
-      !  object graph. It will not automatically be changed by system
-      !  events or errors.
+      !  At force state the state can only be changed from Active/Passive 
+      !  buttons in object graph. It will not automatically be changed by 
+      !  system events or errors.
       !*/
       Object Force $Attribute 5 
         Body SysBody
@@ -129,6 +145,21 @@ SObject pwrb:Class
       EndObject
       !/**
       !  Failover reason.
+      !  Reasons that are able to cause a failover.
+      !
+      !  - EmergencyBreak. The EmergencyBreak attribute in the node object is set. 
+      !    The cause for this can be that some IO module doesn't respond, or time 
+      !    out from a plc thread.
+      !
+      !  - SystemStatus. Error indication in system status is caused by timeout or 
+      !    error indication in any system process of application.
+      !
+      !  - Communication timeout. If the packets from the active node hasn't arrived 
+      !    within the timeout time. The timeout time is configured in the 
+      !    RedcomConfig object.
+      !
+      !  - Manuel transition. A transition can be initiated manually from for example 
+      !    the object graph for the RecomConfig object.
       !*/
       Object FailoverReason $Attribute 9
         Body SysBody
@@ -136,7 +167,8 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Link state.
+      !  Link state array.
+      !  The first element contains info about the link to the secondary node.
       !*/
       Object Link $Attribute 10 
         Body SysBody

@@ -41,6 +41,17 @@ SObject pwrb:Class
 !  @Group Servers,NodeConfiguration
 !  @Summary Configuration of redundancy packet.
 !  Configuration of redundancy packet.
+!  Redundancy packets are sent from plc threads in the active node 
+!  to the corresponding threads in the passive node. They contain
+!  values from objects in the database that are handled by the thread.
+!
+!  The RedcomPacket object is placed under the PlcThread object.
+!
+!  Also applications can send redundancy packets.
+!
+!  @b Se also
+!  @classlink RedcomConfig pwrb_redcomconfig.html
+!  @classlink PlcThread pwrb_plcthread.html
 !*/
   Object RedcomPacket $ClassDef 688 
     Body SysBody
@@ -60,7 +71,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Priority.
+      !  Packet priority in the interval 0 to 10 where 10 is the highest priority.
       !*/
       Object Prio $Attribute 2 
         Body SysBody
@@ -78,7 +89,8 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Transmit packet count.
+      !  Transmit count.
+      !  Number of transmitted packets.
       !*/
       Object TransmitCnt $Attribute 4 
         Body SysBody
@@ -88,7 +100,8 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Receive öacket count.
+      !  Receive count.
+      !  Number of received packets.
       !*/
       Object ReceiveCnt $Attribute 5 
         Body SysBody
@@ -118,7 +131,8 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Table status.
+      !  Table packet status.
+      !  Status for the last sending or receiving of table packet.
       !*/
       Object TableStatus $Attribute 12 
         Body SysBody
@@ -128,7 +142,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Table status.
+      !  Table version.
       !*/
       Object TableVersion $Attribute 13 
         Body SysBody
@@ -168,7 +182,8 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Coverage.
+      !  Relation between the time for creating and sending of the
+      !  packet and the scan time for the thread. Value in percentage.
       !*/
       Object Coverage $Attribute 11 
         Body SysBody
