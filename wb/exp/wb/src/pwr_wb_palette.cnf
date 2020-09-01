@@ -274,6 +274,7 @@ palette NavigatorPalette
       class PlcProcess
       class PlcThread
       class PostConfig
+      class RedcomConfig
       class RemoteConfig
       class ReportConfig
       class Report
@@ -477,15 +478,16 @@ palette NavigatorPalette
     {
       class LoggConfig
       class RemoteConfig
+      class Remnode3964R
       class RemnodeALCM
       class RemnodeModbus
       class RemnodeMQ
-      class RemnodeWMQ
+      class RemnodeRabbitMQ
+      class RemnodeRK512
       class RemnodeSerial
       class RemnodeTCP
       class RemnodeUDP
-      class Remnode3964R
-      class RemnodeRK512
+      class RemnodeWMQ
       class RemTrans
       menu Buffers
       {
