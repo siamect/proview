@@ -45,6 +45,7 @@
 #include <amqp_tcp_socket.h>
 #include <stdio.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include "pwr_baseclasses.h"
 #include "pwr_class.h"
@@ -151,11 +152,16 @@ int rmq_connect()
       return 0;
     }
 
-    sts = amqp_socket_open(ctx->socket, ctx->op->Server, ctx->op->Port);
-    if (sts) {
-      printf("Socket open error %d\n", sts);
-      ctx->socket = 0;
-      return 0;
+    while (1) {
+      sts = amqp_socket_open(ctx->socket, ctx->op->Server, ctx->op->Port);
+      if (sts) {
+        errh_Error("Socket open error %d", sts);
+	sleep(10);
+      }
+      else {
+	errh_Info("Socket opened");
+	break;
+      }
     }
   }
 
@@ -265,7 +271,7 @@ unsigned int rmq_receive()
   remtrans_item* remtrans;
   amqp_rpc_reply_t ret;
   amqp_envelope_t envelope;
-  struct timeval t = { 2, 0 };
+  struct timeval t = {0, 0};
   rabbit_header header;
   int msg_received = 0;
 
@@ -373,6 +379,7 @@ unsigned int rmq_receive()
     }
     if (search_remtrans) {
       rn_rmq->ErrCount++;
+      msg_received = 1;
       errh_Info("No remtrans for received message, queue %s, class %d, type %d",
           rn_rmq->ReceiveQueue, header.msg_id[0], header.msg_id[1]);
     }
@@ -591,10 +598,8 @@ int main(int argc, char* argv[])
     }
     aproc_TimeStamp(TIME_INCR, 5);
 
-    if (ctx->is_consumer)
-      sts = rmq_receive();
-    else
-      RemoteSleep(TIME_INCR);
+    sts = rmq_receive();
+    RemoteSleep(TIME_INCR);
 
     time_since_scan += TIME_INCR;
     if (time_since_scan >= rn_rmq->ScanTime) {
