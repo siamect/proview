@@ -686,11 +686,12 @@ ini_sContext* ini_CheckContext(pwr_tStatus* status, ini_sContext* cp)
 {
   pwr_dStatus(sts, status, INI__SUCCESS);
 
-  ini_LoadDirectory(sts, cp);
-
   if (!cp->flags.b.aliasfile)
     sprintf(cp->aliasfile.name, dbs_cNameAlias, cp->dir);
   // str_ToLower(cp->aliasfile.name, cp->aliasfile.name);
+
+  ini_LoadDirectory(sts, cp);
+
   cp->nodefile.errcount = NULL;
   cp->nodefile.logOpenFail = errh_LogInfo;
 
