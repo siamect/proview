@@ -128,10 +128,11 @@ public:
       GtkWidget* w, GdkEvent* event, gpointer data);
   static void valchanged_cmd_input(GtkWidget* w, gpointer data);
 
-  static void hotkey_Command(char* arg, void* userdata);
-  static void hotkey_ToggleDig(char* arg, void* userdata);
-  static void hotkey_SetDig(char* arg, void* userdata);
-  static void hotkey_ResetDig(char* arg, void* userdata);
+  static void hotkey_Command(char* arg1, char *arg2, void* userdata);
+  static void hotkey_ToggleDig(char* arg1, char *arg2, void* userdata);
+  static void hotkey_SetDig(char* arg1, char *arg2, void* userdata);
+  static void hotkey_ResetDig(char* arg1, char *arg2, void* userdata);
+  static void hotkey_SetValue(char* arg1, char *arg2, void* userdata);
 };
 
 #endif

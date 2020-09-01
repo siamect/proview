@@ -217,6 +217,35 @@ void Xtt::hotkey_activate_resetdig(char* namep)
     printf("rt_xtt hotkey: SetDig. Can't get %s\n", name);
 }
 
+void Xtt::hotkey_activate_setvalue(char* namep, char *valuep)
+{
+  pwr_tAName name;
+  pwr_tStatus sts;
+  pwr_tTypeId tid;
+  pwr_tUInt32 size;
+  char value[80];
+
+  str_trim(name, namep);
+  if (!strchr(name, '.'))
+    strcat(name, ".ActualValue");
+
+  sts = gdh_GetAttributeCharacteristics(name, &tid, &size, 0, 0);
+  if (EVEN(sts)) {
+    printf("rt_xtt hotkey: SetValue. Can't get %s\n", name);
+    return;
+  }
+
+  sts = gdh_AttrStringToValue(tid, valuep, value, sizeof(value), size); 
+  if (EVEN(sts)) {
+    printf("rt_xtt hotkey: SetValue. Can't convert value %s\n", name);
+    return;
+  }
+
+  sts = gdh_SetObjectInfo(name, value, size);
+  if (EVEN(sts))
+    printf("rt_xtt hotkey: SetValue. Can't get %s\n", name);
+}
+
 void Xtt::open_URL_cb(void* ctx, char* url)
 {
   xnav_open_URL(url);

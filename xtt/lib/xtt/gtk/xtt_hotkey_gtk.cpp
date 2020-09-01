@@ -76,7 +76,7 @@
 
 #include "xtt_hotkey_gtk.h"
 
-HotkeyAction::HotkeyAction(const char* name, void (*action)(char*, void*))
+HotkeyAction::HotkeyAction(const char* name, void (*action)(char*, char *, void*))
       : m_action(action)
 {
   strcpy(m_name, name);
@@ -87,16 +87,19 @@ HotkeyAction::HotkeyAction(const HotkeyAction& x) : m_action(x.m_action)
   strcpy(m_name, x.m_name);
 }
 
-HotkeyKey::HotkeyKey(int mod, int keysym, char* action_name, char* action_arg)
+HotkeyKey::HotkeyKey(int mod, int keysym, char* action_name, char* action_arg1,
+		     char *action_arg2)
       : m_mod(mod), m_keysym(keysym), m_action(0), m_userdata(0)
 {
   strcpy(m_action_name, action_name);
-  strcpy(m_action_arg, action_arg);
+  strcpy(m_action_arg1, action_arg1);
+  strcpy(m_action_arg2, action_arg2);
 }
 HotkeyKey::HotkeyKey(const HotkeyKey& x) : m_mod(x.m_mod), m_keysym(x.m_keysym), m_action(x.m_action), m_userdata(x.m_userdata)
 {
   strcpy(m_action_name, x.m_action_name);
-  strcpy(m_action_arg, x.m_action_arg);
+  strcpy(m_action_arg1, x.m_action_arg1);
+  strcpy(m_action_arg2, x.m_action_arg2);
 }
 
 void HotkeyKey::set_action(HotkeyAction* action, void* userdata)
@@ -108,7 +111,7 @@ void HotkeyKey::set_action(HotkeyAction* action, void* userdata)
 }
 
 void XttHotkey::register_action(
-    const char* name, void (*action)(char*, void*), void* userdata)
+    const char* name, void (*action)(char*, char *, void*), void* userdata)
 {
   HotkeyAction a(name, action);
   m_actions.push_back(a);
@@ -147,7 +150,8 @@ int XttHotkey::read_file()
     int mod = 0;
     int keysym;
     char keystr[20] = "";
-    char action_arg[200];
+    char action_arg1[200];
+    char action_arg2[200];
     char action_name[200];
 
     row++;
@@ -195,20 +199,26 @@ int XttHotkey::read_file()
     }
     strcpy(action_name, p2[0]);
     str_trim(action_name, action_name);
-    strcpy(action_arg, p2[1]);
-    if ((s = strrchr(action_arg, ')')))
+    strcpy(action_arg1, p2[1]);
+    if ((s = strrchr(action_arg1, ')')))
       *s = 0;
     else {
       printf("Syntax error, %s, row %d\n", m_filename, row);
       continue;
     }
+    if (s = strstr(action_arg1, ",")) {
+      strcpy(action_arg2, s+1);
+      *s = 0;
+    }
+    else
+      strcpy(action_arg2, "");
     keysym = XStringToKeysym(keystr);
     if (!keysym) {
       printf("Syntax error, %s, row %d\n", m_filename, row);
       continue;
     }
 
-    HotkeyKey key(mod, keysym, action_name, action_arg);
+    HotkeyKey key(mod, keysym, action_name, action_arg1, action_arg2);
     m_keys.push_back(key);
   }
 
@@ -237,7 +247,8 @@ int XttHotkey::event_handler(GdkXEvent* xevent, gpointer data)
                      & ~Mod5Mask)) {
         if (hotkey->m_keys[i].m_action)
           (hotkey->m_keys[i].m_action)(
-              hotkey->m_keys[i].m_action_arg, hotkey->m_keys[i].m_userdata);
+              hotkey->m_keys[i].m_action_arg1, hotkey->m_keys[i].m_action_arg2, 
+	      hotkey->m_keys[i].m_userdata);
       }
     }
   }

@@ -82,6 +82,7 @@ public:
   static void hotkey_activate_toggledig(char* namep);
   static void hotkey_activate_setdig(char* namep);
   static void hotkey_activate_resetdig(char* namep);
+  static void hotkey_activate_setvalue(char* namep, char *valuep);
 
   static void open_URL_cb(void* ctx, char* url);
   static void qcom_events(void* data);

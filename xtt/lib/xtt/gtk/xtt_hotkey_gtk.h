@@ -45,8 +45,8 @@
 class HotkeyAction {
 public:
   char m_name[80];
-  void (*m_action)(char*, void*);
-  HotkeyAction(const char* name, void (*action)(char*, void*));
+  void (*m_action)(char*, char *, void*);
+  HotkeyAction(const char* name, void (*action)(char*, char*, void*));
   HotkeyAction(const HotkeyAction& x);
 };
 
@@ -55,11 +55,12 @@ public:
   int m_mod;
   int m_keysym;
   char m_action_name[80];
-  char m_action_arg[200];
-  void (*m_action)(char*, void*);
+  char m_action_arg1[200];
+  char m_action_arg2[200];
+  void (*m_action)(char*, char*, void*);
   void* m_userdata;
 
-  HotkeyKey(int mod, int keysym, char* action_name, char* action_arg);
+  HotkeyKey(int mod, int keysym, char* action_name, char* action_arg1, char *action_arg2);
   HotkeyKey(const HotkeyKey& x);
   void set_action(HotkeyAction* action, void* userdata);
 };
@@ -72,7 +73,7 @@ public:
   XttHotkey(const char* filename);
   ~XttHotkey();
   void register_action(
-      const char* name, void (*action)(char*, void*), void* userdata);
+     const char* name, void (*action)(char*, char *, void*), void* userdata);
   int read_file();
   int grab_key(int keysym, int modifier);
   static int event_handler(GdkXEvent* xevent, gpointer data);

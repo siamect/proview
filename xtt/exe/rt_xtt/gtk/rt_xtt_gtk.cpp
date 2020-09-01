@@ -62,26 +62,38 @@
 
 #include "rt_xtt_gtk.h"
 
-void XttGtk::hotkey_Command(char* arg, void* userdata)
+void XttGtk::hotkey_Command(char* arg1, char *arg2, void* userdata)
 {
+  char arg[2000];
   Xtt* xtt = (Xtt*)userdata;
+
+  strcpy(arg, arg1);
+  if (strcmp(arg2, "") != 0) {
+    strcat(arg, ",");
+    strcat(arg, arg2);
+  }
 
   xtt->hotkey_activate_command(arg);
 }
 
-void XttGtk::hotkey_ToggleDig(char* arg, void* userdata)
+void XttGtk::hotkey_ToggleDig(char* arg1, char *arg2, void* userdata)
 {
-  hotkey_activate_toggledig(arg);
+  hotkey_activate_toggledig(arg1);
 }
 
-void XttGtk::hotkey_SetDig(char* arg, void* userdata)
+void XttGtk::hotkey_SetDig(char* arg1, char *arg2, void* userdata)
 {
-  hotkey_activate_setdig(arg);
+  hotkey_activate_setdig(arg1);
 }
 
-void XttGtk::hotkey_ResetDig(char* arg, void* userdata)
+void XttGtk::hotkey_ResetDig(char* arg1, char *arg2, void* userdata)
 {
-  hotkey_activate_resetdig(arg);
+  hotkey_activate_resetdig(arg1);
+}
+
+void XttGtk::hotkey_SetValue(char* arg1, char *arg2, void* userdata)
+{
+  hotkey_activate_setvalue(arg1, arg2);
 }
 
 static GdkFilterReturn xtt_hotkey_filter(
@@ -1173,6 +1185,7 @@ XttGtk::XttGtk(int argc, char* argv[], int* return_sts)
   hotkey->register_action("SetDig", hotkey_SetDig, this);
   hotkey->register_action("ResetDig", hotkey_ResetDig, this);
   hotkey->register_action("ToggleDig", hotkey_ToggleDig, this);
+  hotkey->register_action("SetValue", hotkey_SetValue, this);
   hotkey->register_action("Command", hotkey_Command, this);
 
   int n_screens = gdk_display_get_n_screens(gdk_display_get_default());
