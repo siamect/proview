@@ -524,6 +524,8 @@ static pwr_tStatus redu_node_init()
       if (l.port == 0)
         l.port = redu_cPort;
       redu_segment_size = atoi(s_seg_size);
+      if (redu_segment_size == 0)
+	redu_segment_size = 8192;
       // l.nodep->RedundancyState = atoi(s_state);
       l.default_redundancy_state = atoi(s_state);
       l.min_resend_time = atoi(s_min_resend_time);
