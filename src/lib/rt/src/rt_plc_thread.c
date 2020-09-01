@@ -625,6 +625,13 @@ static void scan(plc_sThread* tp)
     tp->ActualScanTime = tp->f_scan_time;
 
     tp->redu_state_old = tp->pp->Node->RedundancyState;
+
+    tp->one_before_scan = tp->before_scan;
+    tp->one_before_scan_abs = tp->before_scan_abs;
+
+    if (++tp->loops == 2)
+      tp->log = TRUE;
+
     return;
   }
 
