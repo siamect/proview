@@ -43,6 +43,7 @@
 #include "rt_errh.h"
 #include "rt_qini.h"
 #include "rt_net.h"
+#include "rt_ini_alias.h"
 
 static qdb_sNode* addNode(qini_sNode* nep)
 {
@@ -144,6 +145,8 @@ int qini_ParseFile(
   char s_is_secondary[20];
   char secondary_name[80];
   char s_secondary_naddr[80];
+  char alias[80];
+  char alias_naddr[80];
   pwr_tNodeId nid;
   struct in_addr naddr;
   qini_sNode* nep;
@@ -165,6 +168,12 @@ int qini_ParseFile(
           s);
       (*errors)++;
       continue;
+    }
+
+    sts = ini_GetAlias(name, alias, alias_naddr);
+    if (ODD(sts)) {
+      strcpy(name, alias);
+      strcpy(s_naddr, alias_naddr);
     }
 
     sts = cdh_StringToVolumeId(s_nid, (pwr_tVolumeId*)&nid);

@@ -686,31 +686,27 @@ ini_sContext* ini_CheckContext(pwr_tStatus* status, ini_sContext* cp)
 {
   pwr_dStatus(sts, status, INI__SUCCESS);
 
-  if (!cp->flags.b.aliasfile)
-    sprintf(cp->aliasfile.name, dbs_cNameAlias, cp->dir);
-  // str_ToLower(cp->aliasfile.name, cp->aliasfile.name);
-
   ini_LoadDirectory(sts, cp);
 
   cp->nodefile.errcount = NULL;
   cp->nodefile.logOpenFail = errh_LogInfo;
 
   if (!cp->flags.b.applfile)
-    sprintf(cp->applfile.name, dbs_cNameAppl, cp->dir, cdh_Low(cp->nodename),
+    sprintf(cp->applfile.name, dbs_cNameAppl, cp->dir, cdh_Low(cp->origname),
         cp->busid);
   // str_ToLower(cp->applfile.name, cp->applfile.name);
   cp->applfile.errcount = NULL;
   cp->applfile.logOpenFail = errh_LogInfo;
 
   if (!cp->flags.b.bootfile)
-    sprintf(cp->bootfile.name, dbs_cNameBoot, cp->dir, cdh_Low(cp->nodename),
+    sprintf(cp->bootfile.name, dbs_cNameBoot, cp->dir, cdh_Low(cp->origname),
         cp->busid);
   // str_ToLower(cp->bootfile.name, cp->bootfile.name);
   cp->bootfile.errcount = &cp->fatals;
   cp->bootfile.logOpenFail = errh_LogFatal;
 
   if (!cp->flags.b.nodefile)
-    sprintf(cp->nodefile.name, dbs_cNameNode, cp->dir, cdh_Low(cp->nodename),
+    sprintf(cp->nodefile.name, dbs_cNameNode, cp->dir, cdh_Low(cp->origname),
         cp->busid);
   // str_ToLower(cp->nodefile.name, cp->nodefile.name);
   cp->nodefile.errcount = &cp->fatals;
@@ -755,9 +751,7 @@ ini_sContext* ini_CreateContext(pwr_tStatus* status)
   return cp;
 }
 
-FILE* ini_OpenFile(pwr_tStatus* status, ini_sContext* cp, ini_sFile* fp
-
-    )
+FILE* ini_OpenFile(pwr_tStatus* status, ini_sContext* cp, ini_sFile* fp)
 {
   FILE* f;
 
@@ -787,6 +781,8 @@ char* ini_LoadDirectory(pwr_tStatus* status, ini_sContext* cp)
   if (!cp->flags.b.hostname)
     syi_HostName(sts, cp->hostname, sizeof(cp->hostname));
 
+  strcpy(cp->origname, cp->nodename);
+
   syi_NodeSpec(sts, cp->nodespec, sizeof(cp->nodespec));
   syi_HostSpec(sts, cp->hostspec, sizeof(cp->hostspec));
   syi_BootDisk(sts, cp->bootdisk, sizeof(cp->bootdisk));
@@ -813,8 +809,12 @@ char* ini_LoadDirectory(pwr_tStatus* status, ini_sContext* cp)
         cp->busid = atoi(s);
     }
   }
+  if (!cp->flags.b.aliasfile)
+    sprintf(cp->aliasfile.name, dbs_cNameAlias, cp->dir);
 
-  *sts = ini_GetAlias(cp->aliasfile.name, cp->nodename, cp->alias);
+  *sts = ini_LoadAlias(cp->aliasfile.name);
+  if (ODD(*sts))
+    *sts = ini_GetAlias(cp->nodename, cp->alias, 0);
   if (ODD(*sts)) {
     errh_LogInfo(&cp->log, "Alias defined to %s for this node %s", cp->alias,
         cp->nodename);
