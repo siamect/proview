@@ -49,13 +49,16 @@
 #include "rt_ini_msg.h"
 #include "rt_ini_alias.h"
 
-static FILE* ini_datafile;
+static FILE* ini_datafile = 0;
+static ini_sAlias *ini_aliaslist = 0;
 
 static int ini_datafile_init(char* filename);
 
 static int ini_datafile_close();
 
 static int ini_datafile_get_next(char* parameter, char** data, int* elements);
+
+static int ini_datafile_get_next_alias(char* node, char *alias, char* addr);
 
 static int ini_parse(char* instring, char* parse_char, char* inc_parse_char,
     char* outstr, int max_rows, int max_cols);
@@ -68,26 +71,50 @@ static int ini_set_nodeattribute(char* attribute_str, char* value_str);
 
 static int ini_set_plcscan(char* value_str);
 
-pwr_tStatus ini_GetAlias(char* filename, char* nodename, char* aliasname)
+pwr_tStatus ini_LoadAlias(char* filename)
 {
   pwr_tStatus sts;
-  char* aliasname_ptr;
-  int elements;
+  ini_sAlias a, *ap;
 
   sts = ini_datafile_init(filename);
   if (EVEN(sts))
     return sts;
 
-  sts = ini_datafile_get_next(nodename, &aliasname_ptr, &elements);
-  if (EVEN(sts))
-    return sts;
+  while (ODD(ini_datafile_get_next_alias(a.nodename, a.alias, a.addr))) {
+    ap = (ini_sAlias *)calloc(1, sizeof(*ap));
+    memcpy(ap, &a, sizeof(*ap));
 
-  strcpy(aliasname, (char*)aliasname_ptr);
-  free(aliasname_ptr);
-
+    ap->next = ini_aliaslist;
+    ini_aliaslist = ap;
+  }
   ini_datafile_close();
-
   return INI__SUCCESS;
+}
+
+void ini_FreeAlias(void) 
+{
+  ini_sAlias *ap, *nextap;
+
+  for (ap = ini_aliaslist; ap; ap = nextap) {
+    nextap = ap->next;
+    free(ap);
+  }
+  ini_aliaslist = 0;
+}
+
+pwr_tStatus ini_GetAlias(char* nodename, char* alias, char *addr)
+{
+  ini_sAlias *ap;
+
+  for (ap = ini_aliaslist; ap; ap = ap->next) {
+    if (strcmp(nodename, ap->nodename) == 0) {
+      strcpy(alias, ap->alias);
+      if (addr)
+	strcpy(addr, ap->addr);
+      return INI__SUCCESS;
+    }
+  }
+  return 0; /* INI__PARNOTFOUND; */
 }
 
 pwr_tStatus ini_SetAttributeAfterPlc(char* filename, char* nodename, int output)
@@ -332,6 +359,59 @@ static int ini_datafile_get_next(char* parameter, char** data, int* elements)
   *data = calloc(1, sizeof(data_array) - sizeof(data_array[0]));
   memcpy(*data, data_array[1], sizeof(data_array) - sizeof(data_array[0]));
   *elements = nr - 1;
+
+  return INI__SUCCESS;
+}
+
+/****************************************************************************
+* Name:		ini_datafile_get_next_alias()
+*
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+*
+* Description:
+*
+**************************************************************************/
+static int ini_datafile_get_next_alias(char* node, char *alias, char* addr)
+{
+  char line[256];
+  char data_array[4][80];
+  int found, nr = 0, sts;
+
+  if (ini_datafile == 0)
+    return 0;
+
+  found = 0;
+  while (1) {
+    /* Read one line */
+    sts = ini_read_line(line, sizeof(line), ini_datafile);
+    if (EVEN(sts))
+      break;
+    if (line[0] == '!')
+      continue;
+
+    /* Parse the line */
+
+    nr = ini_parse(line, "=, 	", "", (char*)data_array,
+        sizeof(data_array) / sizeof(data_array[0]), sizeof(data_array[0]));
+    if (nr == 0)
+      continue;
+
+    if (str_NoCaseStrcmp(data_array[0], "alias") == 0 && nr > 2) {
+      found = 1;
+      break;
+    }
+  }
+  if (!found)
+    return 0; /* INI__PARNOTFOUND; */
+
+  strcpy(node, data_array[1]);
+  strcpy(alias, data_array[2]);
+  if (nr > 3)
+    strcpy(addr, data_array[3]);
+  else
+    strcpy(addr, "");
 
   return INI__SUCCESS;
 }

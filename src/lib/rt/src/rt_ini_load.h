@@ -124,6 +124,7 @@ typedef struct {
   ini_mContext flags;
   char alias[80];
   char nodename[80];
+  char origname[80];
   char nodespec[80];
   char hostname[80];
   char hostspec[80];
