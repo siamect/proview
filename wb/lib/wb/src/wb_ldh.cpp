@@ -362,8 +362,8 @@ pwr_tStatus ldh_CreateObject(ldh_tSession session, pwr_tOid* oid,
 
   try {
     wb_name n(name);
-    if (!n)
-      return n.sts();
+    //if (!n)
+    //  return n.sts();
 
     wb_cdef cdef = sp->cdef(cid);
 
