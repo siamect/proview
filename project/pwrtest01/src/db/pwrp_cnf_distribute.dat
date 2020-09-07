@@ -21,6 +21,8 @@ appl pwrtest01a S $pwrp_web/*.jpg
 appl pwrtest01a S $pwrp_web/*.pdf
 appl pwrtest01a S $pwrp_web/*.pwg
 appl pwrtest01a E $pwrp_exe/ra_status
+appl pwrtest01a E $pwrp_exe/ra_nethtest
+appl pwrtest01a E $pwrp_exe/ra_testall_a.sh
 node pwrtest01b 128 999 0 - -
 load pwrtest01b
 appl pwrtest01b W $pwrp_cnf/pwrtest01b/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat

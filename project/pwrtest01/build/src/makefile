@@ -37,4 +37,8 @@ clean_project:
 	@ if [ -e $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01b.db ]; then rm -r $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01b.db; fi
 	@ if [ -e $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01c.db ]; then rm -r $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01c.db; fi
 	@ if [ -e $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01d.db ]; then rm -r $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01d.db; fi
+	@ if [ -e $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01a.db.lock ]; then rm -r $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01a.db.lock; fi
+	@ if [ -e $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01b.db.lock ]; then rm -r $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01b.db.lock; fi
+	@ if [ -e $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01c.db.lock ]; then rm -r $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01c.db.loci; fi
+	@ if [ -e $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01d.db.lock ]; then rm -r $(pwre_croot)/project/pwrtest01/src/db/volpwrtest01d.db.lock; fi
 	@ if [ -e $(release_root)/bld/project/pwrtest01/bld ]; then rm -r $(release_root)/bld/project/pwrtest01/bld; fi
