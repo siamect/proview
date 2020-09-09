@@ -1,17 +1,8 @@
 ARG RELEASE=debian:10
 FROM $RELEASE
-ARG INSTALL_UPDATE
-ARG INSTALL_PWR
-ARG PKG_PWR
 
 ENV DISPLAY :1
 ENV DEBIAN_FRONTEND none_interactive
 
-COPY ./pwrtest02/create_project.sh ./pwrtest02/configure_cvolpwrtest02.pwr_com ./pwrtest02/configure_directory.pwr_com ./pwrtest02/configure_volpwrtest02.pwr_com ./pwrtest02.tar.gz ./pwrtest02/wa_testall.sh ./dummy_display_xorg.conf ./$PKG_PWR ./
-RUN $INSTALL_UPDATE
-RUN $INSTALL_PWR
-RUN apt-get install -y python
-RUN apt-get install -y make pkg-config
-RUN apt-get install -y xserver-xorg-video-dummy
-RUN dpkg -i $PKG_PWR
+COPY ./pwrtest02/create_project.sh ./pwrtest02/configure_cvolpwrtest02.pwr_com ./pwrtest02/configure_directory.pwr_com ./pwrtest02/configure_volpwrtest02.pwr_com ./data/pwrtest02.tar.gz ./pwrtest02/wa_testall.sh ./dummy_display_xorg.conf ./
 RUN ./create_project.sh create
