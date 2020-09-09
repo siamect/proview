@@ -22,6 +22,7 @@ appl pwrtest01a S $pwrp_web/*.pdf
 appl pwrtest01a S $pwrp_web/*.pwg
 appl pwrtest01a E $pwrp_exe/ra_status
 appl pwrtest01a E $pwrp_exe/ra_nethtest
+appl pwrtest01a E $pwrp_exe/ra_qcom2test
 appl pwrtest01a E $pwrp_exe/ra_testall_a.sh
 node pwrtest01b 128 999 0 - -
 load pwrtest01b
@@ -45,6 +46,8 @@ appl pwrtest01b S $pwrp_web/*.jpg
 appl pwrtest01b S $pwrp_web/*.pdf
 appl pwrtest01b S $pwrp_web/*.pwg
 appl pwrtest01b E $pwrp_exe/ra_status
+appl pwrtest01b E $pwrp_exe/ra_qcom2test
+appl pwrtest01b E $pwrp_exe/ra_testall_b.sh
 node pwrtest01c 128 999 0 - -
 load pwrtest01c
 appl pwrtest01c W $pwrp_cnf/pwrtest01c/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat

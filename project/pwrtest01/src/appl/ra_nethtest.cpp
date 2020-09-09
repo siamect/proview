@@ -2,7 +2,6 @@
   Test neth functions.
 */
 
-
 #include <stdio.h>
 #include <unistd.h>
 #include "pwr.h"
@@ -27,22 +26,22 @@ typedef struct {
 void ra_nethtest::ObjidToName(void)
 {
   sObjidToName d[] = {
-    {"Test01b-Neth", HASH__SUCCESS, HASH__SUCCESS, pwr_cNOid},
-    {"Test01b-Neth-ƒ≈÷‰Âˆ", HASH__SUCCESS, HASH__SUCCESS, pwr_cNOid},
-    {"Test01b-Neth-LongName90123456789012345678901", HASH__SUCCESS, HASH__SUCCESS, pwr_cNOid},
+    {"Test01b-Neth", GDH__SUCCESS, HASH__SUCCESS, pwr_cNOid},
+    {"Test01b-Neth-ƒ≈÷‰Âˆ", GDH__SUCCESS, HASH__SUCCESS, pwr_cNOid},
+    {"Test01b-Neth-LongName90123456789012345678901", GDH__SUCCESS, HASH__SUCCESS, pwr_cNOid},
     {"Test01b-Neth-TooLongName234567890123456789012", CDH__SEGLEN, 0, pwr_cNOid}
   };
   pwr_tOName oname;
   
   for (unsigned int i = 0; i < sizeof(d)/sizeof(d[0]); i++) {
     m_sts = gdh_NameToObjid(d[i].name, &d[i].oid);
-    if (m_sts != d[i].sts1) {
+    if (!(m_sts == d[i].sts1 || m_sts == d[i].sts2)) {
       m_log->log('E', "ObjidToName, NameToObjid wrong sts", d[i].name, m_sts);
       return;
     }
     else if (ODD(m_sts)) {
       m_sts = gdh_ObjidToName(d[i].oid, oname, sizeof(oname), cdh_mNName);
-      if (m_sts != d[i].sts2) {
+    if (!(m_sts == d[i].sts1 || m_sts == d[i].sts2)) {
 	m_log->log('E', "ObjidToName, wrong sts", d[i].name, m_sts);
 	return;
       }

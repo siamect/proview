@@ -6,7 +6,6 @@ exec()
     $1
 }
 
-# Spawn process
 dexec()
 {
     echo "Executing $1"
@@ -17,7 +16,6 @@ dexec()
 
 let i=0
 
-dexec "ra_nethtest"
 exec "ra_qcom2test"
 
 # Wait for spawned processes
