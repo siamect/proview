@@ -1501,6 +1501,7 @@ pwr_tBoolean ini_BuildNode(pwr_tStatus* status, ini_sContext* cp)
 
   create_active_io();
 
+  strncpy(cp->np->OrigName, cp->origname, sizeof(cp->np->OrigName));
   return ODD(*sts);
 }
 

@@ -296,6 +296,16 @@ SObject pwrs:Class
 	  Attr Flags |= PWR_MASK_INVISIBLE
         EndBody
       EndObject
+      !/**
+      !   Original node name if alias name is used.
+      !*/
+      Object OrigName $Attribute 27
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
     EndObject
     Object Template $Node
       Body SysBody

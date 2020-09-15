@@ -166,6 +166,7 @@ public:
   float m_meanvalue_interval1;
   float m_meanvalue_interval2;
   sev_sDbConfig m_cnf;
+  static char m_orignode[80];
 
   sev_db();
   virtual ~sev_db();
@@ -174,6 +175,8 @@ public:
   pwr_tStatus tree_update_value(int item_idx, int attr_idx, pwr_tTime time, void* buf);
   void get_item_idx(pwr_tStatus* sts, unsigned int* item_idx, pwr_tOid oid,
       char* attributename);
+  static void set_orignode(char *node) {strncpy(m_orignode, node, sizeof(m_orignode));}
+  static void get_orignode(char *node) {strcpy(node, m_orignode);}
 
   virtual int check_item(pwr_tStatus* sts, pwr_tOid oid, char* oname,
       char* aname, pwr_tDeltaTime storatetime, pwr_eType type,
