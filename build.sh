@@ -6,6 +6,11 @@ exec 2>&1
 
 root=`eval pwd`
 
+declare -i buildversion_set=0
+if [ "$1" = "--version" ] && [ "$2" != "" ] && [ "$3" != "" ]; then
+    buildversion=$2" "$3
+fi
+
 if [ -e $root/src/exp/inc/src/pwr_version.h ]; then
   verl=`eval cat $root/src/exp/inc/src/pwr_version.h | grep "\bpwrv_cPwrVersionStr\b" | awk '{print $3}'`
   verl=${verl:1:6}
@@ -88,6 +93,9 @@ pwre init $ename
 
 # Build
 mkdir -p $pwre_broot
+if [ "$buildversion" != "" ]; then
+  pwre configure --version $buildversion
+fi
 pwre configure --parallel
 pwre create_all_modules
 pwre build_all_modules $gui

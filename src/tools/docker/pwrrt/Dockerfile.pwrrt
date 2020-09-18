@@ -7,10 +7,8 @@ ARG PKG_PWRRT
 ENV DISPLAY :1
 ENV DEBIAN_FRONTEND none_interactive
 
-COPY ./pwrtest01c/test_pwrtest01c.sh ./$PKG_PWRRT ./pwrp_pkg_pwrtest01c_0001.tgz ./dummy_display_xorg.conf ./
+COPY ./pkg/$PKG_PWRRT ./dummy_display_xorg.conf ./
 RUN $INSTALL_UPDATE
 RUN $INSTALL_PWRRT
 RUN apt-get install -y xserver-xorg-video-dummy
 RUN dpkg -i $PKG_PWRRT
-RUN mv ./pwrp_pkg_pwrtest01c_0001.tgz /home/pwrp/
-RUN ./test_pwrtest01c.sh

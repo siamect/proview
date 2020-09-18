@@ -51,7 +51,7 @@ SObject pwrb:Class
 ! @b See also
 !  @classlink SevHist pwrb_sevhist.html
 !  @classlink SevHistMonitor pwrb_sevhistmonitor.html
-!  @classlink SevHistServer pwrb_sevhistserver.html
+!  @classlink SevServer pwrb_sevserver.html
 !*/
   Object SevHistThread $ClassDef 107 
     Body SysBody
@@ -73,6 +73,7 @@ SObject pwrb:Class
       !/**
       !  The name of the node where the data is stored.
       !  The SevHistServer has to be started on this node.
+      !  'localnode' denotes the server on the local node.
       !*/
       Object ServerNode $Attribute 2 
         Body SysBody

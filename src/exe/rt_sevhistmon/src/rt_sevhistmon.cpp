@@ -44,6 +44,7 @@
 #include "co_error.h"
 #include "co_string.h"
 #include "co_time.h"
+#include "co_syi.h"
 
 #include "rt_gdh.h"
 #include "rt_qcom_msg.h"
@@ -55,6 +56,8 @@
 #include "rt_sevhistmon.h"
 #include "rt_sev_msg.h"
 #include "rt_pwr_msg.h"
+
+static int plog = 1;
 
 #define evbuf_next_idx(idx)                                  \
   idx++;                                                     \
@@ -146,6 +149,8 @@ int rt_sevhistmon::init()
 
   for (nid = qcom_cNNid; qcom_NextNode(&sts, &node, nid); nid = node.nid) {
     sev_node n;
+    if (node.nid == m_nodes[0].nid)
+      continue;
 
     n.nid = node.nid;
     strncpy(n.name, node.name, sizeof(n.name));
@@ -191,6 +196,9 @@ int rt_sevhistmon::init_objects()
     hs.oid = hs_oid;
     hs.scantime = hs.threadp->ScanTime;
     strncpy(hs.nodename, hs.threadp->ServerNode, sizeof(hs.nodename));
+    if (strcmp(hs.nodename, "localhost") == 0)
+      syi_NodeName(&m_sts, hs.nodename, sizeof(hs.nodename));
+    hs.threadp->NoOfItems = 0;
     hs.size = 0;
 
     bool found = false;
@@ -1052,6 +1060,9 @@ bool rt_sevhistmon::send_connect(pwr_tNid nid, pwr_tStatus* sts)
   qcom_sPut put;
   pwr_tStatus lsts;
 
+  if (plog)
+    printf("rt_sevhistmon: Send connect %d\n", nid);
+
   tgt.nid = nid;
   tgt.qix = sev_eProcSevServer;
 
@@ -1887,14 +1898,18 @@ int rt_sevhistmon::mainloop()
     case sev_cMsgClass:
       switch ((int)get.type.s) {
       case sev_eMsgType_NodeUp:
-        printf("rt_sevhistmon: Node up received\n");
+	if (plog)
+	  printf("rt_sevhistmon: Node up received\n");
         send_itemlist(get.sender.nid);
         break;
       case sev_eMsgType_ExportNodeUp:
-        printf("rt_sevhistmon: Export node up received\n");
+	if (plog)
+	  printf("rt_sevhistmon: Export node up received\n");
         send_exportitemlist(get.sender.nid);
         break;
       case sev_eMsgType_HistItemsRequest:
+	if (plog)
+	  printf("rt_sevhistmon: Export histitems request received\n");
         send_itemlist(get.sender.nid);
         break;
       case sev_eMsgType_ExportItemsRequest:

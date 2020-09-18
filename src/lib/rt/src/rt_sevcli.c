@@ -123,7 +123,7 @@ int sevcli_set_servernode(pwr_tStatus* sts, sevcli_tCtx ctx, char* nodename)
   if (EVEN(*sts))
     return 0;
 
-  if (str_NoCaseStrcmp(node.name, nodename) == 0) {
+  if (str_NoCaseStrcmp(node.name, nodename) == 0 || str_NoCaseStrcmp(nodename, "localhost") == 0) {
     ctx->server = node.nid;
     *sts = SEV__SUCCESS;
     return 1;
@@ -813,6 +813,8 @@ int sevcli_get_events(pwr_tStatus* sts, sevcli_tCtx ctx, pwr_tOid oid,
   for (;;) {
     rmsg = (sev_sMsgEventsGet*)qcom_Get(sts, &ctx->qid, &get, tmo);
     if (*sts == QCOM__TMO || !rmsg) {
+      if (!rmsg)
+	*sts = 0;
       return 0;
     }
 

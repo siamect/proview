@@ -47,6 +47,8 @@
 #include "sev_dbsqlite.h"
 #include "sev_dbhdf5.h"
 
+char sev_db::m_orignode[80] = "";
+
 sev_attr::sev_attr() : type(pwr_eType_), size(0), elem(0), ip(0), refid(pwr_cNRefId)
 {
   strcpy(aname, "");
@@ -105,6 +107,7 @@ sev_item::~sev_item()
 
 sev_db::sev_db() : m_meanvalue_interval1(0), m_meanvalue_interval2(0)
 {
+  strcpy(m_orignode, "");
 }
 
 sev_db::~sev_db()

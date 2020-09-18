@@ -2,4 +2,4 @@ VolPwrTest01a 0.254.254.201 PwrTest01a pwrtest01a 999 128 0.000000 0
 VolPwrTest01b 0.254.254.202 PwrTest01b pwrtest01b 999 128 0.000000 0
 VolPwrTest01c 0.254.254.203 PwrTest01c pwrtest01c 999 128 0.000000 0
 VolPwrTest01d 0.254.254.204 PwrTest01d pwrtest01d 999 128 0.000000 1
-VolPwrTest01c 0.254.254.203 PwrTest01c copper-arrow 998 128 0.000000 0
+VolPwrTest01c 0.254.254.203 copper_arrow copper-arrow 998 128 0.000000 0

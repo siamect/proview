@@ -1066,6 +1066,7 @@ struct pwr_s_Node {
   pwr_tBoolean EmergBreakTrue pwr_dAlignW;
   pwr_tUInt32 EmergBreakSelect pwr_dAlignW;
   pwr_tRedundancyStateEnum RedundancyState pwr_dAlignW;
+  pwr_tString80 OrigName pwr_dAlignW;
 };
 
 #define pwr_mAppl_PLC 1 /* This is the PLC program */

@@ -100,8 +100,10 @@ int sev_server::init(int noneth)
   if (!m_noneth) {
     // Check server config object
     pwr_tOid conf_oid;
+    pwr_sNode *np;
+    pwr_tOid node_oid;
 
-    sts = gdh_Init("sev_server");
+    m_sts = gdh_Init("sev_server");
     if (EVEN(m_sts))
       throw co_error(m_sts);
 
@@ -121,6 +123,19 @@ int sev_server::init(int noneth)
     memset(m_config->ServerThreads, 0, sizeof(m_config->ServerThreads));
     if (!m_config->GarbageInterval)
       m_config->GarbageInterval = sev_cGarbageInterval;
+
+    sts = gdh_GetNodeObject(0, &node_oid);
+    if (EVEN(sts)) {
+      errh_CErrLog(PWR__SRVNOTCONF, 0);
+      exit(0);
+    }
+    sts = gdh_ObjidToPointer(node_oid, (void **)&np);
+    if (EVEN(sts)) {
+      errh_CErrLog(PWR__SRVNOTCONF, 0);
+      exit(0);
+    }
+    sev_db::set_orignode(np->OrigName);
+
   } else {
     // Read config from proview.cnf
     static pwr_sClass_SevServer config;
@@ -1315,18 +1330,15 @@ void* sev_server::send_events_thread(void* arg)
   endtime = net_NetTimeToTime(&rmsg->EndTime);
 
   sev->m_db->get_item_idx(&sts, &item_idx, rmsg->Oid, (char *)"Events");
-  if (EVEN(sts)) {
-    qcom_Free(&lsts, rmsg);
-    return (void*)1;
+  if (ODD(sts)) {
+    if (sev->m_read_threads)
+      thread = sev->m_db->new_thread();
+
+    sev->m_db->get_events(&sts, thread, rmsg->Oid,
+			  sev->m_db->m_items[item_idx].options, rmsg->EventTypeMask, 
+			  rmsg->EventPrioMask, rmsg->EventText, rmsg->EventName,
+			  &starttime, &endtime, rmsg->MaxEvents, list);
   }
-
-  if (sev->m_read_threads)
-    thread = sev->m_db->new_thread();
-
-  sev->m_db->get_events(&sts, thread, rmsg->Oid,
-			sev->m_db->m_items[item_idx].options, rmsg->EventTypeMask, 
-			rmsg->EventPrioMask, rmsg->EventText, rmsg->EventName,
-			&starttime, &endtime, rmsg->MaxEvents, list);
   if (ODD(sts) && list.size() != 0)
     msize = sizeof(*msg) + (list.size() - 1) * sizeof(sev_sEvents);
   else

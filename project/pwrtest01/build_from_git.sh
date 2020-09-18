@@ -96,7 +96,7 @@ if [ ! -e $pwra_db ]; then
   cp $pwre_croot/src/tools/pkg/deb/adm/* $pwra_db/
 fi
 if [ "`eval grep CVolPwrtest01 $pwra_db/pwr_volumelist.dat`" == "" ]; then
-  echo "CVolPwrtest01	0.0.254.254	pwrtest01" >> $pwra_db/pwr_volumelist.dat
+  echo "CVolPwrtest01	0.0.240.254	pwrtest01" >> $pwra_db/pwr_volumelist.dat
 fi
 if [ "`eval grep VolPwrTest01a $pwra_db/pwr_volumelist.dat`" == "" ]; then
   echo "VolPwrTest01a	0.254.254.201	pwrtest01" >> $pwra_db/pwr_volumelist.dat

@@ -1,0 +1,14 @@
+ARG RELEASE=debian:10
+FROM $RELEASE
+ARG INSTALL_UPDATE
+ARG INSTALL_PWR
+ARG PKG_PWR
+
+ENV DISPLAY :1
+ENV DEBIAN_FRONTEND none_interactive
+
+COPY ./pkg/$PKG_PWR ./dummy_display_xorg.conf ./
+RUN $INSTALL_UPDATE
+RUN $INSTALL_PWR
+RUN apt-get install -y xserver-xorg-video-dummy
+RUN dpkg -i $PKG_PWR

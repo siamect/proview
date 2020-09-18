@@ -846,7 +846,7 @@ int sev_dbms_env::get_systemname()
 {
   FILE* file;
   pwr_tFileName fname;
-  char nodename[40];
+  char nodename[80];
   char* bus_str;
   int bus;
   char line[200];
@@ -855,10 +855,12 @@ int sev_dbms_env::get_systemname()
   if (!streq(m_systemName, ""))
     return 1;
 
-  syi_NodeName(&sts, nodename, sizeof(nodename));
-  if (EVEN(sts))
-    return 0;
-
+  sev_db::get_orignode(nodename);
+  if (streq(nodename, "")) {
+    syi_NodeName(&sts, nodename, sizeof(nodename));
+    if (EVEN(sts))
+      return 0;
+  }
   bus_str = getenv("PWR_BUS_ID");
   if (!bus_str)
     return 0;
@@ -2602,8 +2604,6 @@ int sev_dbms::store_event(
     con = (MYSQL*)thread;
   else
     con = m_env->con();
-
-  printf("Store event:eventstatus %u\n", ep->eventstatus);
 
   *sts = time_AtoAscii(
       &ep->time, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
@@ -5079,7 +5079,6 @@ int sev_dbms::get_events(pwr_tStatus *sts, void *thread, pwr_tOid oid,
   sprintf(query, "select %s from %s %s order by %s %s", column_part,
           item.tablename, where_part, orderby_part, limit_part);
 
-  printf("Query: %s\n", query);
   rc = mysql_query(con, query);
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);

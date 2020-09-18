@@ -37,9 +37,9 @@
 !
 	.facility	HASH,111/prefix=HASH__
 
-nyi		<function not yet implemeted>				/error
+nyi		<function not yet implemented>				/error
 bugcheck	<unrecoverable error>					/fatal
-success		<succesful completion>					/succ
+success		<successful completion>					/succ
 notfound	<entry not found>					/error
 duplicate	<duplicate entry>					/error
 full		<no free slot>						/error

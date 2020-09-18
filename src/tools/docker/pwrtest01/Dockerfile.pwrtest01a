@@ -1,0 +1,9 @@
+ARG RELEASE=debian:10
+FROM $RELEASE
+
+ENV DISPLAY :1
+ENV DEBIAN_FRONTEND none_interactive
+
+COPY ./pwrtest01/test_pwrtest01a.sh ./data/pwrp_pkg_pwrtest01a_0001.tgz ./
+RUN mv ./pwrp_pkg_pwrtest01a_0001.tgz /home/pwrp/
+CMD ./test_pwrtest01a.sh
