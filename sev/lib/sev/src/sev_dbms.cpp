@@ -2605,8 +2605,6 @@ int sev_dbms::store_event(
   else
     con = m_env->con();
 
-  printf("Store event:eventstatus %u\n", ep->eventstatus);
-
   *sts = time_AtoAscii(
       &ep->time, time_eFormat_NumDateAndTime, timstr, sizeof(timstr));
   if (EVEN(*sts))
@@ -5081,7 +5079,6 @@ int sev_dbms::get_events(pwr_tStatus *sts, void *thread, pwr_tOid oid,
   sprintf(query, "select %s from %s %s order by %s %s", column_part,
           item.tablename, where_part, orderby_part, limit_part);
 
-  printf("Query: %s\n", query);
   rc = mysql_query(con, query);
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);

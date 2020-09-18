@@ -48,6 +48,7 @@ pwr_tStatus sev_db::tree_update()
   int onum;
   pwr_tAName hname;
   pwr_tAName aname;
+  pwr_tAName attrname;
   pwr_tStatus sts;
   pwr_tOid oid;
   pwr_tCid cid = 0;
@@ -100,7 +101,17 @@ pwr_tStatus sev_db::tree_update()
 
       strcpy(aname, s);
       strcat(aname, ".");
-      strcat(aname, m_items[i].attr[j].aname);
+      strcpy(attrname, m_items[i].attr[j].aname); 
+      // Replace array index [x] with __x
+      if ((s = strrchr(attrname, '['))) {
+	int idx;
+	num = sscanf(s+1, "%d", &idx);
+	if ( num != 1)
+	  continue;
+	*s = 0;
+	sprintf(s, "__%d", idx);
+      }
+      strcat(aname, attrname);
       onum = dcli_parse(aname, "-", "", (char*)oname_array,
         sizeof(oname_array) / sizeof(oname_array[0]), sizeof(oname_array[0]),
         0);
