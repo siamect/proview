@@ -1330,18 +1330,15 @@ void* sev_server::send_events_thread(void* arg)
   endtime = net_NetTimeToTime(&rmsg->EndTime);
 
   sev->m_db->get_item_idx(&sts, &item_idx, rmsg->Oid, (char *)"Events");
-  if (EVEN(sts)) {
-    qcom_Free(&lsts, rmsg);
-    return (void*)1;
+  if (ODD(sts)) {
+    if (sev->m_read_threads)
+      thread = sev->m_db->new_thread();
+
+    sev->m_db->get_events(&sts, thread, rmsg->Oid,
+			  sev->m_db->m_items[item_idx].options, rmsg->EventTypeMask, 
+			  rmsg->EventPrioMask, rmsg->EventText, rmsg->EventName,
+			  &starttime, &endtime, rmsg->MaxEvents, list);
   }
-
-  if (sev->m_read_threads)
-    thread = sev->m_db->new_thread();
-
-  sev->m_db->get_events(&sts, thread, rmsg->Oid,
-			sev->m_db->m_items[item_idx].options, rmsg->EventTypeMask, 
-			rmsg->EventPrioMask, rmsg->EventText, rmsg->EventName,
-			&starttime, &endtime, rmsg->MaxEvents, list);
   if (ODD(sts) && list.size() != 0)
     msize = sizeof(*msg) + (list.size() - 1) * sizeof(sev_sEvents);
   else
