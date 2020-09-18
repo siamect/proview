@@ -523,12 +523,22 @@ gdb_sVolume* vol_MountVolume(pwr_tStatus* sts, pwr_tVolumeId vid)
   return vp;
 }
 
+typedef enum {
+  item_eAttr_,
+  item_eAttr_MeanValue,
+  item_eAttr_StandardDeviation,
+  item_eAttr_TableName
+} item_eAttr;
+
 mvol_sAttribute* vol_BlockNameToAttribute(pwr_tStatus* sts, mvol_sAttribute* ap,
 		 cdh_sParseName* pn, gdb_sObject *op, pwr_tBitMask lo_flags, pwr_tBitMask trans)
 {
   gdb_sObject* nop;
   pwr_tAName aname;
+  pwr_tObjName item_attr_name;
   int i;
+  int is_item_attr = 0;
+  int n_attr;
 
   gdb_AssumeLocked;
 
@@ -538,14 +548,28 @@ mvol_sAttribute* vol_BlockNameToAttribute(pwr_tStatus* sts, mvol_sAttribute* ap,
     if (pn->nAttribute != 0)
       strcat(aname, "-");
   }
-  for (i = 0; i < pn->nAttribute; i++) {
+
+  n_attr = pn->nAttribute;
+  if (strncmp(pn->attribute[pn->nAttribute-1].name.orig, "__", 2) == 0) {
+    is_item_attr = 1;
+    strcpy(item_attr_name, &pn->attribute[pn->nAttribute-1].name.orig[2]);
+    n_attr--;
+  }
+
+  for (i = 0; i < n_attr; i++) {
     strcat(aname, pn->attribute[i].name.orig);
-    if ( i != pn->nAttribute - 1)
+    if ( i != n_attr - 1)
       strcat(aname, "-");
   }
-  strcat(aname, ".Value");
   if (pn->nAttribute != 0 && pn->hasIndex[pn->nAttribute-1])
-    sprintf(&aname[strlen(aname)], "[%d]", pn->index[pn->nAttribute-1]);
+    sprintf(&aname[strlen(aname)], "__%d", pn->index[pn->nAttribute-1]);
+
+  if (is_item_attr) {
+    strcat(aname, ".");
+    strcat(aname, item_attr_name);
+  }
+  else 
+    strcat(aname, ".Value");
 
   cdh_ParseName(sts, pn, pn->poid, aname, pn->parseFlags.m);
 
