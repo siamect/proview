@@ -1831,8 +1831,8 @@ pwr_tStatus WFoeGtk::create_window(int x_top, int y_top, int width_adb,
   GtkToolbar* tools = (GtkToolbar*)g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
   widgets.tools_save = gtk_button_new();
-  gtk_container_add(GTK_CONTAINER(widgets.tools_save),
-      gtk_image_new_from_stock("gtk-save", GTK_ICON_SIZE_SMALL_TOOLBAR));
+  dcli_translate_filename(fname, "$pwr_exe/wb_save.png");
+  gtk_container_add(GTK_CONTAINER(widgets.tools_save), gtk_image_new_from_file(fname));
   g_signal_connect(
       widgets.tools_save, "clicked", G_CALLBACK(WFoeGtk::activate_save), this);
   g_object_set(widgets.tools_save, "can-focus", FALSE, NULL);
