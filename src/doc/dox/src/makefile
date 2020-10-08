@@ -33,5 +33,5 @@ $(clean_html) : clean_%.html : %.html
 	@ $(rm) $(rmflags) $(doc_dir)/dox/$*.html
 
 $(doc_dir)/dox/index.html : doxygen.dx
-	@ echo "doxygen documentation $(source) $(target)"
+	@ $(log_doxy)
 	@ doxygen 2> /dev/null

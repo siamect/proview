@@ -19,5 +19,5 @@ $(bld_dir)/stdsoap2.o : stdsoap2.cpp
 $(inc_dir)/stdsoap2.h : stdsoap2.h
 
 $(inc_dir)/Service.nsmap : Service.nsmap
-	@ echo "Export $(source)"
+	@ $(log_exp)
 	@ $(cp) $(cpflags) $(source) $(target)

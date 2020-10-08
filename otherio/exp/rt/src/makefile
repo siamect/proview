@@ -35,17 +35,17 @@ silent :
 #	@ $(cp) $(cpflags) $(source) $(target)
 
 $(inc_dir)/libusbio.h : libusbio.h
-	@ echo "Copying libusbio.h"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(inc_dir)/openSocket.h : openSocket.h
-	@ echo "Copying openSocket.h"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(inc_dir)/setport.h : setport.h
-	@ echo "Copying setport.h"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(inc_dir)/pwr_arduino_uno.ino : pwr_arduino_uno.ino
-	@ echo "Copying pwr_arduino_uno.ino"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)

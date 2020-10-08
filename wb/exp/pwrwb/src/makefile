@@ -36,7 +36,7 @@ silent :
 
 $(exe_dir)/pwrwb.so : pwrwbmodule.cpp
 	@ if [ "$(PWRE_CONF_PYDEV)" = "1" ]; then\
-	    echo "Bulding Python c extension pwrwb";\
+	    $(log_pyext);\
 	    python setup_pwrwb.py -q build --build-base $(bld_dir);\
 	    if [ "$(pwre_hw)" = "hw_x86_64" ]; then \
 	      mv $(bld_dir)/lib.linux-x86_64-2.7/pwrwb.so $(pwr_exe); \
@@ -45,7 +45,7 @@ $(exe_dir)/pwrwb.so : pwrwbmodule.cpp
 	    fi;\
 	    python setup_pwrwb.py -q install_egg_info --install-dir $(pwr_exe);\
 	  else\
-	    echo "Not building Python c extension pwrwb";\
+	    $(log_no);\
 	  fi
 
 clean_pwrwb.so : pwrwbmodule.cpp

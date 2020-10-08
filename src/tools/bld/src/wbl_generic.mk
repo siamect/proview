@@ -77,69 +77,78 @@ clean_html_en_us := $(patsubst %.wb_load,clean_%_en_us.html,$(wbl_sources))
 clean_ps_sv_se := $(patsubst %.wb_load,clean_%_sv_se.ps,$(wbl_sources))
 clean_ps_en_us := $(patsubst %.wb_load,clean_%_en_us.ps,$(wbl_sources))
 
+log_load 	= echo "I $(time)  build-$(pwre_bmodule), Generate loadfile $(notdir $@)" | tee -a $(logfile)
+log_struct 	= echo "I $(time)  build-$(pwre_bmodule), Generate struct files $(notdir $@)" | tee -a $(logfile)
+log_hpp    	= echo "I $(time)  build-$(pwre_bmodule), Generate hpp files $(notdir $@)" | tee -a $(logfile)
+log_html   	= echo "I $(time)  build-$(pwre_bmodule), Generate html files $(notdir $@)" | tee -a $(logfile)
+log_ps		= echo "I $(time)  build-$(pwre_bmodule), Generate postscript files $(notdir $@)" | tee -a $(logfile)
+log_pdf		= echo "I $(time)  build-$(pwre_bmodule), Generate pdf files $(notdir $@)" | tee -a $(logfile)
+log_xtthelp	= echo "I $(time)  build-$(pwre_bmodule), Generate xtthelp files $(notdir $@)" | tee -a $(logfile)
+
+
 .SUFFIXES:
 
 $(bld_dir)$(dir_ext) :
 	@ $(mkdir) $(mkdirflags) $(basename $@)
 
 $(load_dir)/%.dbs : %.wb_load
-	@ echo "Generating loadfile for  $(source)"
+	@ $(log_load)
 	@ export pwr_load=$(pwr_eload);\
 	  wb_cmd -q -i create snapshot $(wblflags) /file=\"$(source)\"/out=\"$(target)\"/depend=\"$(dbs_dependencies)\"
 	@ chmod a+w $(target)
 
 $(inc_dir)/pwr_%classes.h : %.wb_load
-	@ echo "Generating struct files for $(source) classes..."
+	@ $(log_struct)
 	@ $(co_convert) -so -d $(inc_dir) "$(source)"
 
 $(inc_dir)/pwr_%classes.hpp : %.wb_load
-	@ echo "Generating hpp files for $(source) classes..."
+	@ $(log_hpp)
 	@ $(co_convert) -po -d $(inc_dir) "$(source)"
 
 $(doc_dir)/en_us/orm/%.pdf : %.pdf
-	@ echo "Copy en_us $(source)"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(doc_dir)/sv_se/orm/%.pdf : %.pdf
-	@ echo "Copy sv_se $(source)"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(doc_dir)/en_us/orm/%_allclasses.html : %.wb_load
-	@ echo "Generating html files for $(source) classes en_us..."
+	@ $(log_html)
 	@ $(co_convert) -w -d $(doc_dir)/en_us/orm -g $(pwre_sroot)/wbl/mcomp/src/cnv_setup.dat "$(source)"
 	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_$(pwre_module)classes.h
 	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_$(pwre_module)classes.hpp
 	@ $(co_convert) -k -d $(doc_dir)/en_us/orm -l en_us
 
 $(doc_dir)/sv_se/orm/%_allclasses.html : %.wb_load
-	@ echo "Generating html files for $(source) classes sv_se..."
+	@ $(log_html)
 	@ $(co_convert) -w -l sv_se -d $(doc_dir)/sv_se/orm -g $(pwre_sroot)/wbl/mcomp/src/cnv_setup.dat "$(source)"
 	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_$(pwre_module)classes.h
 	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_$(pwre_module)classes.hpp
 	@ $(co_convert) -k -d $(doc_dir)/sv_se/orm -l sv_se
 
 $(doc_dir)/en_us/%.ps : %.wb_load
-	@ echo "Generating postscript file for $(source) classes en_us..."
+	@ $(log_ps)
 	@ $(co_convert) -q -l en_us -d $(doc_dir)/en_us "$(source)"
 
 $(doc_dir)/sv_se/%.ps : %.wb_load
-	@ echo "Generating postscript file for $(source) classes sv_se..."
+	@ $(log_ps)
 	@ $(co_convert) -q -l sv_se -d $(doc_dir)/sv_se "$(source)"
 
 $(doc_dir)/en_us/%.pdf : %.wb_load
-	@ echo "Generating pdf file for $(source) classes en_us..."
+	@ $(log_pdf)
 	@ $(co_convert) -Q -l en_us -d $(doc_dir)/en_us "$(source)"
 
 $(doc_dir)/sv_se/%.pdf : %.wb_load
-	@ echo "Generating pdf file for $(source) classes sv_se..."
+	@ $(log_pdf)
 	@ $(co_convert) -Q -l sv_se -d $(doc_dir)/sv_se "$(source)"
 
 $(exe_dir)/en_us/%_xtthelp.dat : %.wb_load
-	@ echo "Generating xtt help files for $(source) classes en_us"
+	@ $(log_xtthelp)
 	@ $(co_convert) -x -d $(exe_dir)/en_us "$(source)"
 
 $(exe_dir)/sv_se/%_xtthelp.dat : %.wb_load
-	@ echo "Generating xtt help files for $(source) classes sv_se"
+	@ $(log_xtthelp)
 	@ $(co_convert) -x -l sv_se -d $(exe_dir)/sv_se "$(source)"
 
 $(exe_dir)/%.pwg : %.pwg

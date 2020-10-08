@@ -53,8 +53,8 @@ exe :
 dirs : $(bld_dir)$(dir_ext) | silent
 
 $(bld_dir)$(dir_ext) :
-	@ echo "msg_gene $(basename $@)"
-	$(mkdir) $(mkdirflags) $(basename $@)
+	@ $(log_mkdir) $<
+	@ $(mkdir) $(mkdirflags) $(basename $@)
 
 clean :
 
@@ -64,7 +64,7 @@ silent :
 	@ :
 
 $(export_cmsg) : $(cmsgs)
-	@ echo Creating: obj_dir/$(notdir $@)
+	@ $(log_gen)
 	@ cat $(cmsgs) > $(export_cmsg)
 
 $(export_obj) : $(export_cmsg)

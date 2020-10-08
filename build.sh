@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-exec > >(tee compilation_log.txt)
+exec > >(tee build.log)
 exec 2>&1
 
 root=`eval pwd`
@@ -98,7 +98,7 @@ if [ "$buildversion" != "" ]; then
 fi
 pwre configure --parallel
 pwre create_all_modules
-pwre build_all_modules $gui
+pwre build_all_modules $gui 
 #pwre build_kernel $gui
 #pwre method_build $gui
 

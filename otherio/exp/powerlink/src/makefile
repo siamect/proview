@@ -31,5 +31,5 @@ silent :
 .SUFFIXES:
 
 $(inc_dir)/objdict.h : objdict.h
-	@ echo "Copying objdict.h"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)

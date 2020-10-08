@@ -54,72 +54,72 @@ silent :
 	@ :
 
 $(load_dir)/pwrs.dbs :
-	@ echo "Generating loadfile for pwrs"
+	@ $(log_load)
 	@ wb_cmd -q -i create snapshot $(wblflags) /file=\"$(pwre_sroot)/wbl/pwrs/src/\"/out=\"$(target)\"/depend=\"$(bld_dir)/pwrs.d_wbl\"
 	@ chmod a+w $(target)
 
 $(inc_dir)/pwr_systemclasses.h :
-	@ echo "Generating struct files for pwrs classes..."
+	@ $(log_struct)
 	@ $(co_convert) -so -d $(inc_dir) -y $(bld_dir)/pwrs.d_h_wbl  "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
 
 $(inc_dir)/pwr_systemclasses.hpp :
-	@ echo "Generating hpp files for pwrs classes..."
+	@ $(log_hpp)
 	@ $(co_convert) -po -d $(inc_dir) -y $(bld_dir)/pwrs.d_hpp_wbl "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
 
 $(doc_dir)/en_us/orm/pwrs_allclasses.html :
-	@ echo "Generating html files for pwrs classes en_us..."
+	@ $(log_html)
 	@ $(co_convert) -w -d $(doc_dir)/en_us/orm -y $(bld_dir)/pwrs.d_html_wbl -g $(pwre_sroot)/wbl/pwrs/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 
 $(doc_dir)/en_us/orm/pwr_systemclasses_h.html :
-	@ echo "Generating html files for pwrs structs en_us..."
+	@ $(log_html)
 	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_systemclasses.h
 
 $(doc_dir)/en_us/orm/pwr_h.html :
-	@ echo "Generating html files for pwrs structs en_us..."
+	@ $(log_html)
 	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr.h
 
 $(doc_dir)/en_us/orm/pwr_class_h.html :
-	@ echo "Generating html files for pwrs structs en_us..."
+	@ $(log_html)
 	@ $(co_convert) -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_class.h
 
 $(doc_dir)/sv_se/orm/pwrs_allclasses.html :
-	@ echo "Generating html files for pwrs classes sv_se..."
+	@ $(log_html)
 	@ $(co_convert) -w -l sv_se -d $(doc_dir)/sv_se/orm -g $(pwre_sroot)/wbl/pwrs/src/cnv_setup.dat "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 
 $(doc_dir)/sv_se/orm/pwr_systemclasses_h.html :
-	@ echo "Generating html files for pwrs structs sv_se..."
+	@ $(log_html)
 	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_systemclasses.h
 
 $(doc_dir)/sv_se/orm/pwr_h.html :
-	@ echo "Generating html files for pwrs structs sv_se..."
+	@ $(log_html)
 	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr.h
 
 $(doc_dir)/sv_se/orm/pwr_class_h.html :
-	@ echo "Generating html files for pwrs structs sv_se..."
+	@ $(log_html)
 	@ $(co_convert) -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_class.h
 
 $(doc_dir)/en_us/pwrs.ps :
-	@ echo "Generating postscript file for pwrs classes..."
+	@ $(log_ps)
 	@ $(co_convert) -q -d $(doc_dir)/en_us "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 
 $(doc_dir)/sv_se/pwrs.ps :
-	@ echo "Generating postscript file for pwrs classes..."
+	@ $(log_ps)
 	@ $(co_convert) -q -l sv_se -d $(doc_dir)/sv_se "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 
 $(doc_dir)/en_us/pwrs.pdf :
-	@ echo "Generating pdf file for pwrs classes..."
+	@ $(log_pdf)
 	@ $(co_convert) -Q -d $(doc_dir)/en_us "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 
 $(doc_dir)/sv_se/pwrs.pdf :
-	@ echo "Generating pdf file for pwrs classes..."
+	@ $(log_pdf)
 	@ $(co_convert) -Q -l sv_se -d $(doc_dir)/sv_se "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 
 $(exe_dir)/en_us/pwrs_xtthelp.dat :
-	@ echo "Generating xtt help files for pwrs classes en_us"
+	@ $(log_xtthelp)
 	@ $(co_convert) -x -d $(exe_dir)/en_us -y $(bld_dir)/pwrs.d_en_us_xtthelp_wbl "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 
 $(exe_dir)/sv_se/pwrs_xtthelp.dat :
-	@ echo "Generating xtt help files for pwrs classes sv_se"
+	@ echo $(log_xtthelp)
 	@ $(co_convert) -x -l sv_se -d $(exe_dir)/sv_se -y $(bld_dir)/pwrs.d_sv_se_xtthelp_wbl "$(pwre_sroot)/wbl/pwrs/src/pwrs_*.wb_load"
 
 
@@ -150,7 +150,7 @@ clean_systemclasses :
 	  fi
 
 $(bld_dir)$(dir_ext) :
-	@ echo "pwrs makefile $(basename $@)"
+	@ $(log_mkdir)
 	@ $(mkdir) $(mkdirflags) $(basename $@)
 
 -include $(bld_dir)/pwrs.d_h_wbl

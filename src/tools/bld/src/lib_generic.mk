@@ -166,7 +166,7 @@ echo:
 dirs : $(bld_dir)$(dir_ext)
 
 $(bld_dir)$(dir_ext) :
-	@ echo "lib_gene $(basename $@)"
+	@ $(log_mkdir) $<
 	@ $(mkdir) $(mkdirflags) $(basename $@)/
 
 clean : clean_bld clean_lib
@@ -207,7 +207,7 @@ $(clean_pwsg) : clean_%.pwsg : %.pwsg
 	@ $(rm) $(rmflags) $(exe_dir)/$*.pwsg
 
 $(export_lib) : $(objects)
-	@ echo "Building archive $(notdir $(export_lib))"
+	@ $(log_lib)
 	@ $(ar) -cUr $(export_lib) $(objects)
 
 #	@ if [ -e $(export_lib) ]; then \

@@ -114,5 +114,5 @@ $(clean_web) : clean_%.pwgc : %.pwgc
 	@ $(rm) $(rmflags) $(web_dir)/$*.pwgc
 
 $(exe_dir)/pwr_css.css : pwr_css.css
-	@ echo "copy $(source) $(target)"
+	@ $(log_cp)
 	@ cp $(source) $(target)

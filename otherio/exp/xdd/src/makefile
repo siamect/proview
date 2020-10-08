@@ -46,7 +46,7 @@ silent :
 	@ :
 
 $(export_xdd) : $(exe_dir)/%.xdd : %.xdd
-	@ echo "Exporting $< ..."
+	@ $(log_exp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(clean_xdd) : clean_%.xdd : %.xdd

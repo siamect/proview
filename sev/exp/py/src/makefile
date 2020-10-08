@@ -57,11 +57,11 @@ silent :
 	@ :
 
 $(export_py) : $(exe_dir)/%.py : %.py
-	@ echo "Exporting $< ..."
+	@ $(log_exp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(export_png) : $(exe_dir)/%.png : %.png
-	@ echo "Exporting $< ..."
+	@ $(log_exp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(clean_py) : clean_%.py : %.py

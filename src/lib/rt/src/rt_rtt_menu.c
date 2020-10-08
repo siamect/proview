@@ -6965,7 +6965,7 @@ int rtt_message(char severity, char* message)
     if (rtt_file_on && rtt_print_message)
       fprintf(rtt_outfile, "%%RTT-%c-MSG, %s\n", severity, message);
     if ((rtt_quiet & RTT_QUIET_MESSAGE) || (rtt_quiet && rtt_verify))
-      printf("\n%%RTT-%c-MSG, %s", severity, message);
+      printf("%%RTT-%c-MSG, %s\n", severity, message);
     else if (severity == 'E')
       rtt_printf("%c", '\7');
     r_print("%%RTT-%c-MSG, %s", severity, message);

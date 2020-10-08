@@ -34,7 +34,7 @@ $(clean_html) : clean_%.html : %.html
 	@ $(rm) $(rmflags) $(doc_dir)/prm/$*.html
 
 $(doc_dir)/prm/index.html : doxygen.c
-	@ echo "Generating Programmer documentation: doxygen $(source) $(target)"
+	@ $(log_doxy)
 	@ doxygen
 #	@ if [ "`eval which pdflatex`" != "" ]; then \
 #	    ./repl.sh latex/*.tex; \

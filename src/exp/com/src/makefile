@@ -70,16 +70,16 @@ silent :
 	@ :
 
 $(export_sh) : $(exe_dir)/%.sh : %.sh
-	@ echo "Exporting $< ..."
+	@ $(log_exp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 
 $(export_pwr_com) : $(exe_dir)/%.pwr_com : %.pwr_com
-	@ echo "Exporting $< ..."
+	@ $(log_exp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(export_awk) : $(exe_dir)/%.awk : %.awk
-	@ echo "Exporting $< ..."
+	@ $(log_exp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(clean_sh) : clean_%.sh : %.sh

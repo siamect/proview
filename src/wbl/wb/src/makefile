@@ -38,7 +38,7 @@ silent :
 	@ :
 
 $(load_dir)/wb.dbs :
-	@ echo "Generating snapshot for wb"
+	@ $(log_load)
 	@ wb_cmd -i -q create snapshot /file=\"$(pwre_sroot)/wbl/wb/src/wb.wb_load\"/out=\"$(target)\"/depend=\"$(bld_dir)/wb.d_wbl\"
 	@ if [ -e $(target) ]; then \
 	    chmod a+w $(target); \

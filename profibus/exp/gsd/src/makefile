@@ -70,21 +70,21 @@ silent :
 	@ :
 
 $(export_gsd) : $(exe_dir)/%.gsd : %.gsd
-	@ echo "Exporting $< ..."
+	@ $(log_exp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(clean_gsd) : clean_%.gsd : %.gsd
 	@ rm $(exe_dir)/$*.gsd
 
 $(export_gse) : $(exe_dir)/%.gse : %.gse
-	@ echo "Exporting $< ..."
+	@ $(log_exp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(clean_gse) : clean_%.gse : %.gse
 	@ rm $(exe_dir)/$*.gse
 
 $(export_xml) : $(exe_dir)/%.xml : %.xml
-	@ echo "Exporting $< ..."
+	@ $(log_exp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(clean_xml) : clean_%.xml : %.xml

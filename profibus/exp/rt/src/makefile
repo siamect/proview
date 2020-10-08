@@ -80,16 +80,16 @@ $(exe_dir)/%.wav : %.wav
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(exe_dir)/profibus_xtthelp.dat : profibus_xtthelp.dat
-	@ echo "Copying $(source)"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)
 	@ $(co_convert) -t -d $(pwr_doc)/help $(source)
 
 $(exe_dir)/%.gif : %.gif
-	@ echo "Copying $(source).gif exe"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(doc_dir)/help/%.gif : %.gif
-	@ echo "Copying $(source).gif doc/help"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 

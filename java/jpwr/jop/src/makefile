@@ -167,6 +167,6 @@ local_java_sources := \
 exe : $(doc_dir)/en_us/jprm/index.html
 
 $(doc_dir)/en_us/jprm/index.html :
-	@ echo "Generating javadoc for rt, jop and jopg"
+	@ $(log_gen)
 	@ if [ ! -e $(doc_dir)/en_us/jprm ]; then mkdir $(doc_dir)/en_us/jprm; fi
 	@ javadoc -Xdoclint:none -d $(doc_dir)/en_us/jprm $(pwre_sroot)/jpwr/rt/src/*.java $(pwre_sroot)/jpwr/jop/src/*.java $(pwre_sroot)/jpwr/jopg/src/*.java

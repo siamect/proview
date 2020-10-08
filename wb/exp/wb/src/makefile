@@ -82,7 +82,7 @@ silent :
 	@ :
 
 $(exe_dir)/pwr_wb_palette.cnf : pwr_wb_palette.cnf
-	@ echo "Copying pwr_wb_palette.cnf"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(clean_h) : clean_%.h : %.h

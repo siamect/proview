@@ -3,6 +3,8 @@
 # pwre.pl
 #
 
+use POSIX;
+
 %verbs = (
   "add", 	"add:usage_add",
   "configure", 	"configure:usage_configure",
@@ -153,7 +155,7 @@ sub configure()
 
 sub set_flavour # args: flavour
 {
-  printf("Set flavour %s\n", $_[0]);
+  # printf("Set flavour %s\n", $_[0]);
   if ($_[0] eq "qt") {
     $ENV{pwre_conf_qt} = "1";
   }
@@ -975,7 +977,7 @@ sub build_module()
   if ($ver == 1) {
     printf("\n");
   }
-  printf("-- Build module %s\n", $module);
+  _log('I', '', '', 'Building module');
   #show();
 
   if ($module eq "rt") {
@@ -1217,7 +1219,8 @@ sub create_module()
   $root .= "/" . $ENV{"pwre_hw"};
   create_dir($root);
 
-  printf("-- Creating build tree %s/%s\n", $root, $module);
+  $str = 'Creating build tree ' . $root . '/' . $module;
+  _log('I', '', '', $str);
 
   $newdir = $root . "/bld";
   create_dir($newdir);
@@ -1438,9 +1441,15 @@ sub _build() # args: branch, subbranch, flavour, phase
 
       if ($parallel eq "1" && (($branch eq "lib" && $subbranch ne "dtt") || $branch eq "wbl")) {
         # All libraries and wbl files can be compiled in parallel
-        system("make -f $makefile -j$cpu_count -l$cpu_count @_") && exit 1;
+        if (system("make -f $makefile -j$cpu_count -l$cpu_count @_")) {
+	  _log("F", $branch, $subbranch, "Fatal error, build terminated");
+	  exit 1;
+	}
       } else {
-        system("make -f $makefile @_") && exit 1;
+        if (system("make -f $makefile @_")) {
+	  _log("F", $branch, $subbranch, "Fatal error, build terminated");
+	  exit 1;
+	}
       }
     }
   }
@@ -1801,4 +1810,25 @@ sub usage_show()
 sub usage_tags()
 {
   printf("++ tags                          : Creates a CRiSP tag-file named ~/pwre/tags\n");
+}
+
+sub _log() # args: severity, branch, subbranch, text
+{
+  my($severity) = $_[0];
+  my($branch) = $_[1];
+  my($subbranch) = $_[2];
+  my($text) = $_[3];
+
+  my($module) = $ENV{"pwre_module"};
+  my($lisdir) = $ENV{"pwr_elis"};
+
+  my $tim = strftime("%Y-%m-%d %H:%M:%S", localtime(time));
+  my $str = $severity . ' ' . $tim . '.00  build-' . $module . ', ' . $text . "\n";
+
+  my($fname) = ">>" . $lisdir . "/build.tlog";
+  if (open(my $fd, $fname)) {
+    print $fd $str;
+    close($fd);
+  }
+  printf("%s", $str);
 }

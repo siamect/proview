@@ -107,7 +107,7 @@ $(clean_js) : clean_%.js : %.js
 	@ $(rm) $(rmflags) $(doc_dir)/dox/$*.js
 
 $(doc_dir)/pcss.css : pcss.css
-	@ echo "copy $(source) $(target)"
+	@ $(log_cp)
 	@ cp $(source) $(target)
 
 $(doc_dir)/%.html : $(pwre_sroot)/doc/web/src/%.html

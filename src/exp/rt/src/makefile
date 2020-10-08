@@ -80,7 +80,7 @@ $(exe_dir)/%.wav : %.wav
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(load_dir)/pwr_volumelist.dat : pwr_volumelist.dat
-	@ echo "Copying pwr_volumelist.dat"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(exe_dir)/sv_se/pwrb_xtthelp.dat : pwrb_xtthelp.dat_sv_se
@@ -89,15 +89,15 @@ $(exe_dir)/sv_se/pwrb_xtthelp.dat : pwrb_xtthelp.dat_sv_se
 	@ #co_convert -t -d $(pwr_doc)/sv_se $(source)
 
 $(exe_dir)/pwr_logga.gif : pwr_logga.gif
-	@ echo "Copying pwr_logga.gif"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(exe_dir)/%.gif : %.gif
-	@ echo "Copying $(source).gif exe"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(doc_dir)/help/%.gif : %.gif
-	@ echo "Copying $(source).gif doc/help"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(clean_obj) : clean_%.o : %.c

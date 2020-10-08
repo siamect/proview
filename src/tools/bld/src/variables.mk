@@ -29,9 +29,13 @@ elib_dir := $(release_root)/exp/lib
 einc_dir := $(release_root)/exp/inc
 eobj_dir := $(release_root)/exp/obj
 eexe_dir := $(release_root)/exp/exe
+elis_dir := $(release_root)/exp/lis
 
 bld_dir	:= $(release_root)/bld/$(type_name)/$(comp_name)
 tmp_dir	:= $(release_root)/tmp
+
+logfile := $(elis_dir)/build.tlog
+time = `date +'%Y-%m-%d %T.00'`
 
 c_ext	:= .c
 d_ext	:= .d
@@ -163,25 +167,33 @@ clis		= /lis=$(list)
 dolist	= /lis=$(list)
 domap		= -Xlinker -Map -Xlinker $(map)
 
-log_h_h		= echo "Exporting $<"
-log_x_h		= echo "Exporting $< to $(notdir $@)"
-#log_c_d		= echo "Updating dependencies $<"
-log_c_obj	= echo "Compiling $<"
-log_c_lib	= echo "Compiling $(notdir $(basename $@))($<)"
-log_x_lib	= echo "Compiling $(notdir $(basename $@))($<)"
-log_obj_lib	= echo "Archiving lasse $(notdir $(basename $@))($(notdir $<))"
-log_hlp_hlb	= echo "Exporting $(notdir $(basename $@))($<)"
-log_sc_lib	= echo "Compiling $(notdir $(basename $@))($<)"
-log_sc_obj	= echo "Compiling $<"
-log_uil_uid	= echo "Compiling $<"
-log_g_m1	= echo "Exporting $<"
-log_cld_lib	= echo "Compiling $(notdir $(basename $@))($<)"
-log_link_exe	= echo "Linking $@"
-log_wb_load_wb_vers	= echo "Exporting $<"
-log_xbm_xbm	= echo "Exporting $<"
-log_frm_frm	= echo "Exporting $<"
-log_graph_graph	= echo "Exporting $<"
-log_msg_h	= echo "Compiling $<"
-log_java_class	= echo "Compiling $<"
+log_mkdir	= echo "I $(time)  build-$(pwre_bmodule), Dir created $@" | tee -a $(logfile)
+log_cp		= echo "I $(time)  build-$(pwre_bmodule), Copy $<" | tee -a $(logfile)
+log_exp		= echo "I $(time)  build-$(pwre_bmodule), Exporting $<" | tee -a $(logfile)
+log_gen		= echo "I $(time)  build-$(pwre_bmodule), Generated $@" | tee -a $(logfile)
+log_lib		= echo "I $(time)  build-$(pwre_bmodule), Building archive $@" | tee -a $(logfile)
+log_pyext	= echo "I $(time)  build-$(pwre_bmodule), Building Python c extension $@" | tee -a $(logfile)
+log_doxy	= echo "I $(time)  build-$(pwre_bmodule), Doxygen documentation $@" | tee -a $(logfile)
+log_no		= echo "I $(time)  build-$(pwre_bmodule), Not building $@" | tee -a $(logfile)
+log_h_h		= echo "I $(time)  build-$(pwre_bmodule), Exporting $<" | tee -a $(logfile)
+log_x_h		= echo "I $(time)  build-$(pwre_bmodule), Exporting $< to $(notdir $@)" | tee -a $(logfile)
+#log_c_d		= echo "I $(time)  build-$(pwre_bmodule), Updating dependencies $<" | tee -a $(logfile)
+log_c_obj	= echo "I ${time}  build-$(pwre_bmodule), Compiling $<" | tee -a $(logfile)
+log_c_lib	= echo "I $(time)  build-$(pwre_bmodule), Compiling $(notdir $(basename $@))($<)" | tee -a $(logfile)
+log_x_lib	= echo "I $(time)  build-$(pwre_bmodule), Compiling $(notdir $(basename $@))($<)" | tee -a $(logfile)
+log_obj_lib	= echo "I $(time)  build-$(pwre_bmodule), Archiving lasse $(notdir $(basename $@))($(notdir $<))" | tee -a $(logfile)
+log_hlp_hlb	= echo "I $(time)  build-$(pwre_bmodule), Exporting $(notdir $(basename $@))($<)" | tee -a $(logfile)
+log_sc_lib	= echo "I $(time)  build-$(pwre_bmodule), Compiling $(notdir $(basename $@))($<)" | tee -a $(logfile)
+log_sc_obj	= echo "I $(time)  build-$(pwre_bmodule), Compiling $<" | tee -a $(logfile)
+log_uil_uid	= echo "I $(time)  build-$(pwre_bmodule), Compiling $<" | tee -a $(logfile)
+log_g_m1	= echo "I $(time)  build-$(pwre_bmodule), Exporting $<" | tee -a $(logfile)
+log_cld_lib	= echo "I $(time)  build-$(pwre_bmodule), Compiling $(notdir $(basename $@))($<)" | tee -a $(logfile)
+log_link_exe	= echo "I $(time)  build-$(pwre_bmodule), Linking $@" | tee -a $(logfile)
+log_wb_load_wb_vers	= echo "I $(time)  build-$(pwre_bmodule), Exporting $<" | tee -a $(logfile)
+log_xbm_xbm	= echo "I $(time)  build-$(pwre_bmodule), Exporting $<" | tee -a $(logfile)
+log_frm_frm	= echo "I $(time)  build-$(pwre_bmodule), Exporting $<" | tee -a $(logfile)
+log_graph_graph	= echo "I $(time)  build-$(pwre_bmodule), Exporting $<" | tee -a $(logfile)
+log_msg_h	= echo "I $(time)  build-$(pwre_bmodule), Compiling $<" | tee -a $(logfile)
+log_java_class	= echo "I $(time)  build-$(pwre_bmodule), Compiling $<" | tee -a $(logfile)
 
 endif

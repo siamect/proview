@@ -31,9 +31,9 @@ silent :
 .SUFFIXES:
 
 $(exe_dir)/pb_module_classes.dat : pb_module_classes.dat
-	@ echo "Copying $(source)"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(exe_dir)/pn_module_classes.dat : pn_module_classes.dat
-	@ echo "Copying $(source)"
+	@ $(log_cp)
 	@ $(cp) $(cpflags) $(source) $(target)

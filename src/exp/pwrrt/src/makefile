@@ -36,7 +36,7 @@ silent :
 
 $(exe_dir)/pwrrt.so : pwrrtmodule.c
 	@ if [ "$(PWRE_CONF_PYDEV)" = "1" ]; then\
-	    echo "Bulding Python c extension pwrrt";\
+	    $(log_pyext);\
 	    python setup_pwrrt.py -q build --build-base $(bld_dir);\
 	    if [ "$(pwre_hw)" = "hw_x86_64" ]; then \
 	      mv $(bld_dir)/lib.linux-x86_64-2.7/pwrrt.so $(pwr_exe); \
@@ -45,7 +45,7 @@ $(exe_dir)/pwrrt.so : pwrrtmodule.c
 	    fi;\
 	    python setup_pwrrt.py -q install_egg_info --install-dir $(pwr_exe);\
 	  else\
-	    echo "Not building Python c extension pwrrt";\
+	    $(log_no);\
 	  fi
 
 clean_pwrrt.so : pwrrtmodule.c

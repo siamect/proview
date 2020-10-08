@@ -98,6 +98,6 @@ $(clean_html) : clean_%.html : %.html
 	@ $(rm) $(rmflags) $(doc_dir)/orm/$*.html
 
 $(doc_dir)/en_us/orm/orm.css : orm.css
-	@ echo "copy $(source) $(target)"
+	@ $(log_cp)
 	@ cp $(source) $(target)
 	@ cp $(source) $(doc_dir)/sv_se/orm

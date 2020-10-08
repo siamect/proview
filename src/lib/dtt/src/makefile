@@ -114,15 +114,15 @@ exe :
 dirs : $(bld_dir)$(dir_ext)
 
 $(inc_dir)/dtt_appl_rttsys_m.rdecl : $(bld_dir)/dtt_appl_rttsys_m.rdecl
-	@ echo "copy $(source) $(target)"
+	@ $(log_cp)
 	@ cp $(source) $(target)
 
 $(inc_dir)/dtt_appl_rttsys_m.rhlp : dtt_appl_rttsys_m.rhlp
-	@ echo "copy $(source) $(target)"
+	@ $(log_cp)
 	@ cp $(source) $(target)
 
 $(inc_dir)/dtt_appl_rttsys_m.rh : $(bld_dir)/dtt_appl_rttsys_m.rh
-	@ echo "copy $(source) $(target)"
+	@ $(log_cp)
 	@ cp $(source) $(target)
 
 $(bld_dir)$(dir_ext) :
@@ -158,7 +158,7 @@ $(clean_hpp_includes) : clean_%.hpp : %.hpp
 	@ $(rm) $(rmflags) $(inc_dir)/$*.hpp
 
 $(export_lib) : $(objects)
-	@ echo "Building archive $(notdir $(export_lib))"
+	@ $(log_lib)
 	@ $(rm) $(export_lib)
 	$(ar) -cUr $(export_lib) $(objects)
 
@@ -176,11 +176,11 @@ endif
 #	 $(cc) $(cflags) $(depmms) -I$(bld_dir) $(cinc) $(csetos) $(cobj) $(clis) $(source) $(clib)
 
 $(export_lib)(%.o) : %.dtt
-	@ echo "Generate $(sname)"
+	@ $(log_gen)
 	@ $(wb_rtt) rttsys generate/id=$(sname) $(pwre_conf_dtt_platform)
 
 $(bld_dir)/%.c : %.dtt_m
-	@ echo "Generate menu"
+	@ $(log_gen)
 	@ $(wb_rtt) rttsys generate/menu $(pwre_conf_dtt_platform)
 
 -include $(source_dependencies)

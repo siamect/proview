@@ -298,27 +298,27 @@ $(exe_dir)/sv_se/man_dg.dat : $(pwre_sroot)/doc/man/sv_se/man_dg.dat
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(doc_dir)/sv_se/man_dg_index.html : $(pwre_sroot)/doc/man/sv_se/man_dg.dat
-	@ echo "Generating html for sv_se/man_dg"
+	@ $(log_html)
 	@ $(co_convert) -t -l sv_se -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_dg_index.html : $(pwre_sroot)/doc/man/en_us/man_dg.dat
-	@ echo "Generating html for en_us/man_dg"
+	@ $(log_html)
 	@ $(co_convert) -t -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/en_us/man_dg.pdf : $(pwre_sroot)/doc/man/en_us/man_dg.dat
-	@ echo "Generating pdf for en_us/man_dg"
+	@ $(log_pdf)
 	@ $(co_convert) -f -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/sv_se/man_dg.pdf : $(pwre_sroot)/doc/man/sv_se/man_dg.dat
-	@ echo "Generating pdf for sv_se/man_dg"
+	@ $(log_pdf)
 	@ $(co_convert) -f -l sv_se -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_dg.ps : $(pwre_sroot)/doc/man/en_us/man_dg.dat
-	@ echo "Generating postscript for en_us/man_dg"
+	@ $(log_ps)
 	@ $(co_convert) -n -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/sv_se/man_dg.ps : $(pwre_sroot)/doc/man/sv_se/man_dg.dat
-	@ echo "Generating postscript for sv_se/man_dg"
+	@ $(log_ps)
 	@ $(co_convert) -n -d $(doc_dir)/sv_se $(source)
 
 $(exe_dir)/en_us/man_opg.dat : $(pwre_sroot)/doc/man/en_us/man_opg.dat
@@ -330,27 +330,27 @@ $(exe_dir)/sv_se/man_opg.dat : $(pwre_sroot)/doc/man/sv_se/man_opg.dat
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(doc_dir)/en_us/man_opg_index.html : $(pwre_sroot)/doc/man/en_us/man_opg.dat
-	@ echo "Generating html for en_us/man_opg"
+	@ $(log_html)
 	@ $(co_convert) -t -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/sv_se/man_opg_index.html : $(pwre_sroot)/doc/man/sv_se/man_opg.dat
-	@ echo "Generating html for sv_se/man_opg"
+	@ $(log_html)
 	@ $(co_convert) -t -l sv_se -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_opg.pdf : $(pwre_sroot)/doc/man/en_us/man_opg.dat
-	@ echo "Generating pdf for en_us/man_opg"
+	@ $(log_html)
 	@ $(co_convert) -f -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/sv_se/man_opg.pdf : $(pwre_sroot)/doc/man/sv_se/man_opg.dat
-	@ echo "Generating pdf for sv_se/man_opg"
+	@ $(log_pdf)
 	@ $(co_convert) -f -l sv_se -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_opg.ps : $(pwre_sroot)/doc/man/en_us/man_opg.dat
-	@ echo "Generating postscript for en_us/man_opg"
+	@ $(log_ps)
 	@ $(co_convert) -n -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/sv_se/man_opg.ps : $(pwre_sroot)/doc/man/sv_se/man_opg.dat
-	@ echo "Generating postscript for sv_se/man_opg"
+	@ $(log_ps)
 	@ $(co_convert) -n -d $(doc_dir)/sv_se $(source)
 
 $(exe_dir)/man_subgraph.dat : $(pwre_sroot)/doc/man/en_us/man_subgraph.dat
@@ -366,27 +366,27 @@ $(exe_dir)/sv_se/man_geref.dat : $(pwre_sroot)/doc/man/sv_se/man_geref.dat
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(doc_dir)/en_us/man_geref_index.html : $(pwre_sroot)/doc/man/en_us/man_geref.dat
-	@ echo "Generating html for en_us/man_geref"
+	@ $(log_html)
 	@ $(co_convert) -t -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/sv_se/man_geref_index.html : $(pwre_sroot)/doc/man/sv_se/man_geref.dat
-	@ echo "Generating html for sv_se/man_geref"
+	@ $(log_html)
 	@ $(co_convert) -t -l sv_se -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_geref.pdf : $(pwre_sroot)/doc/man/en_us/man_geref.dat
-	@ echo "Generating pdf for en_us/man_geref"
+	@ $(log_pdf)
 	@ $(co_convert) -f -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/sv_se/man_geref.pdf : $(pwre_sroot)/doc/man/sv_se/man_geref.dat
-	@ echo "Generating pdf for sv_se/man_geref"
+	@ $(log_pdf)
 	@ $(co_convert) -f -l sv_se -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_geref.ps : $(pwre_sroot)/doc/man/en_us/man_geref.dat
-	@ echo "Generating postscript for en_us/man_geref"
+	@ $(log_ps)
 	@ $(co_convert) -n -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/sv_se/man_geref.ps : $(pwre_sroot)/doc/man/sv_se/man_geref.dat
-	@ echo "Generating postscript for sv_se/man_geref"
+	@ $(log_ps)
 	@ $(co_convert) -n -d $(doc_dir)/sv_se $(source)
 
 $(exe_dir)/en_us/man_pb.dat : $(pwre_sroot)/doc/man/en_us/man_pb.dat
@@ -406,19 +406,19 @@ $(exe_dir)/sv_se/man_orm.dat : $(pwre_sroot)/doc/man/sv_se/man_orm.dat
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(doc_dir)/en_us/man_orm_index.html : $(pwre_sroot)/doc/man/en_us/man_orm.dat
-	@ echo "Generating html for en_us/man_orm"
+	@ $(log_html)
 	@ $(co_convert) -t -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/sv_se/man_orm_index.html : $(pwre_sroot)/doc/man/sv_se/man_orm.dat
-	@ echo "Generating html for sv_se/man_orm"
+	@ $(log_html)
 	@ $(co_convert) -t -l sv_se -d $(doc_dir)/sv_se $(source)
 
 $(doc_dir)/en_us/man_subgraph_index.html : $(pwre_sroot)/doc/man/en_us/man_subgraph.dat
-	@ echo "Generating html for en_us/man_subgraph"
+	@ $(log_html)
 	@ $(co_convert) -t -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/en_us/man_subgraph.pdf : $(pwre_sroot)/doc/man/en_us/man_subgraph.dat
-	@ echo "Generating pdf for en_us/man_subgraph"
+	@ $(log_pdf)
 	@ $(co_convert) -f -d $(doc_dir)/en_us $(source)
 
 $(exe_dir)/en_us/man_exlib.dat : $(pwre_sroot)/doc/man/en_us/man_exlib.dat
@@ -426,15 +426,15 @@ $(exe_dir)/en_us/man_exlib.dat : $(pwre_sroot)/doc/man/en_us/man_exlib.dat
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(doc_dir)/en_us/man_exlib.ps : $(pwre_sroot)/doc/man/en_us/man_exlib.dat
-	@ echo "Generating postscript for en_us/man_exlib"
+	@ $(log_ps)
 	@ $(co_convert) -n -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/en_us/man_exlib_index.html : $(pwre_sroot)/doc/man/en_us/man_exlib.dat
-	@ echo "Generating html for en_us/man_exlib"
+	@ $(log_html)
 	@ $(co_convert) -t -d $(doc_dir)/en_us $(source)
 
 $(doc_dir)/en_us/man_exlib.pdf : $(pwre_sroot)/doc/man/en_us/man_exlib.dat
-	@ echo "Generating pdf for en_us/man_exlib"
+	@ $(log_pdf)
 	@ $(co_convert) -f -d $(doc_dir)/en_us $(source)
 
 $(exe_dir)/en_us/man_mva.dat : $(pwre_sroot)/doc/man/en_us/man_mva.dat
@@ -464,7 +464,7 @@ $(doc_dir)/en_us/changelog.html : $(pwre_croot)/src/changelog.txt \
                                   $(pwre_croot)/ssabox/changelog.txt \
                                   $(pwre_croot)/telemecanique/changelog.txt \
                                   $(pwre_croot)/klocknermoeller/changelog.txt
-	@ echo "Generating changelog html file"
+	@ $(log_gen)
 	@ $(co_convert) -e
 	@ mv $(pwre_croot)/src/doc/man/en_us/changelog.html $(target)
 
@@ -494,12 +494,12 @@ $(pwre_sroot)/doc/man/%.pdf : $(pwre_sroot)/doc/man/%.fo $(pwre_sroot)/doc/man/s
 #	$(xsltproc) $(xsltproc_args) $(chunk_args_sv_se) $(chunk_xsl) $(source)
 
 $(doc_dir)/sv_se/%.css $(doc_dir)/en_us/%.css :: $(pwre_sroot)/doc/man/src/%.css
-	@ echo "copy $(source)"
+	@ $(log_cp)
 	@ cp $(source) $(target)
 
 # all-purpose rule for graphics/media
 $(doc_dir)/% :: $(pwre_sroot)/doc/man/src/%
-	@ echo "copy $(source)"
+	@ $(log_cp)
 	@ cp $(source) $(target)
 
 
