@@ -1069,9 +1069,23 @@ pwr_tStatus time_AsciiToTm(const char* tstr, struct tm* tmptr)
   struct tm tt;
   int i;
   pwr_tStatus sts;
+  int monstr = 0;
 
-  sscanf(tstr, "%02d-%3c-%4d %02d:%02d:%02d", &tt.tm_mday, tmpMonStr,
-      &tt.tm_year, &tt.tm_hour, &tt.tm_min, &tt.tm_sec);
+  if (tstr[5] == '-') {
+    sscanf(tstr, "%02d-%02d-%4d %02d:%02d:%02d", &tt.tm_mday, &tt.tm_mon,
+	   &tt.tm_year, &tt.tm_hour, &tt.tm_min, &tt.tm_sec);
+    tt.tm_mon--;
+  }
+  else if (tstr[4] == '-') {
+    sscanf(tstr, "%4d-%02d-%02d %02d:%02d:%02d", &tt.tm_year, &tt.tm_mon,
+	   &tt.tm_mday, &tt.tm_hour, &tt.tm_min, &tt.tm_sec);
+    tt.tm_mon--;
+  }
+  else {
+    sscanf(tstr, "%02d-%3c-%4d %02d:%02d:%02d", &tt.tm_mday, tmpMonStr,
+	   &tt.tm_year, &tt.tm_hour, &tt.tm_min, &tt.tm_sec);
+    monstr = 1;
+  }
 
   tmpMonStr[3] = '\0';
   tt.tm_year -= 1900;
@@ -1083,14 +1097,16 @@ pwr_tStatus time_AsciiToTm(const char* tstr, struct tm* tmptr)
   tt.tm_isdst = -1;
 
   /* check month */
-  for (cp = tmpMonStr; *cp; cp++)
-    *cp = toupper(*cp);
+  if (monstr) {
+    for (cp = tmpMonStr; *cp; cp++)
+      *cp = toupper(*cp);
 
-  tt.tm_mon = -1;
-  for (i = 0; i < 12; i++) {
-    if (streq(tmpMonStr, monStr[i])) {
-      tt.tm_mon = i;
-      break;
+    tt.tm_mon = -1;
+    for (i = 0; i < 12; i++) {
+      if (streq(tmpMonStr, monStr[i])) {
+	tt.tm_mon = i;
+	break;
+      }
     }
   }
 
