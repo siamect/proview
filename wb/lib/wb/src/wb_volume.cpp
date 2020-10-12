@@ -1123,7 +1123,13 @@ void wb_volume::aref(pwr_tCid cid, pwr_sAttrRef* arp)
         arp->Offset = item->offset[0];
         arp->Size = bd_size;
         arp->Body = cdh_cidToBid(cid, pwr_eBix_rt);
+	
         o->unref();
+	if (item->flags[0] & PWR_MASK_DISABLEATTR) {
+	  wb_attribute a = attribute(arp);
+	  if (a.disabled())
+	    continue;
+	}
         return;
       }
     }

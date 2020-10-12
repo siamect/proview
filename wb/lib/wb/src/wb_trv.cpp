@@ -1069,6 +1069,7 @@ int trv_get_attrobjects(ldh_tSesContext ldhses, pwr_tOid oid, pwr_tCid* cid,
   int size;
   pwr_tObjid child;
   pwr_tCid child_cid;
+  pwr_tDisableAttr disabled;
 
   switch (depth) {
   case trv_eDepth_Deep:
@@ -1089,10 +1090,16 @@ int trv_get_attrobjects(ldh_tSesContext ldhses, pwr_tOid oid, pwr_tCid* cid,
                 ldhses, &aref, ldh_eName_Hierarchy, &aname, &size);
             if (EVEN(sts))
               return sts;
-
+	    
             if (trv_wildcard(name, aname) == 1)
               continue;
           }
+
+	  sts = ldh_AttributeDisabled(ldhses, &aref, &disabled);
+	  if (EVEN(sts))
+	    return sts;
+	  if (disabled)
+	    continue;
 
           sts = (backcall)(&aref, arg1, arg2, arg3, arg4, arg5);
           if (EVEN(sts))
@@ -1117,6 +1124,12 @@ int trv_get_attrobjects(ldh_tSesContext ldhses, pwr_tOid oid, pwr_tCid* cid,
           if (trv_wildcard(name, aname) == 1)
             continue;
         }
+
+	sts = ldh_AttributeDisabled(ldhses, &aref, &disabled);
+	if (EVEN(sts))
+	  return sts;
+	if (disabled)
+	  continue;
 
         sts = (backcall)(&aref, arg1, arg2, arg3, arg4, arg5);
         if (EVEN(sts))
@@ -1155,6 +1168,12 @@ int trv_get_attrobjects(ldh_tSesContext ldhses, pwr_tOid oid, pwr_tCid* cid,
                   continue;
               }
 
+	      sts = ldh_AttributeDisabled(ldhses, &aref, &disabled);
+	      if (EVEN(sts))
+		return sts;
+	      if (disabled)
+		continue;
+
               sts = (backcall)(&aref, arg1, arg2, arg3, arg4, arg5);
               if (EVEN(sts))
                 return sts;
@@ -1175,6 +1194,13 @@ int trv_get_attrobjects(ldh_tSesContext ldhses, pwr_tOid oid, pwr_tCid* cid,
           if (trv_wildcard(name, aname) == 1)
             continue;
         }
+
+	sts = ldh_AttributeDisabled(ldhses, &aref, &disabled);
+	if (EVEN(sts))
+	  return sts;
+	if (disabled)
+	  continue;
+
         sts = (backcall)(&aref, arg1, arg2, arg3, arg4, arg5);
         if (EVEN(sts))
           return sts;
