@@ -167,6 +167,10 @@ public:
   {
     return m_adrep;
   }
+  void addFlagsDisableAttr()
+  {
+    m_flags |= PWR_MASK_DISABLEATTR;
+  }
   void castId(pwr_tCastId* castid);
   pwr_tDisableAttr disabled();
   pwr_tCid adefCid();

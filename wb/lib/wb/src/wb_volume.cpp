@@ -424,6 +424,8 @@ wb_attribute wb_volume::attribute(const pwr_sAttrRef* arp) const
           wb_attribute a(LDH__SUCCESS, orep, adrep, idx);
           if (arp->Flags.b.Shadowed)
             a.setShadowed(true);
+	  if (arp->Flags.b.DisableAttr)
+	    a.addFlagsDisableAttr();
           delete bdrep;
           orep->unref();
           return a;
@@ -1240,12 +1242,14 @@ void wb_volume::nextAref(pwr_tCid cid, pwr_sAttrRef* arp, pwr_sAttrRef* oarp)
         *oarp = pwr_cNAttrRef;
         oarp->Objid = op->oid();
         oarp->Flags.b.ObjectAttr = 1;
+	if (item->flags[i] & PWR_MASK_DISABLEATTR)
+	  oarp->Flags.b.DisableAttr = 1;
         oarp->Offset = item->offset[i];
         oarp->Size = bd_size;
         oarp->Body = cdh_cidToBid(cid, pwr_eBix_rt);
         op->unref();
 
-        if (item->flags[0] & PWR_MASK_DISABLEATTR) {
+        if (item->flags[i] & PWR_MASK_DISABLEATTR) {
           wb_attribute a = attribute(oarp);
           if (a.disabled()) {
             pwr_sAttrRef aref = *oarp;
@@ -1297,6 +1301,8 @@ void wb_volume::nextAref(pwr_tCid cid, pwr_sAttrRef* arp, pwr_sAttrRef* oarp)
       *oarp = pwr_cNAttrRef;
       oarp->Objid = ol->oid();
       oarp->Flags.b.ObjectAttr = 1;
+      if (item->flags[0] & PWR_MASK_DISABLEATTR)
+	oarp->Flags.b.DisableAttr = 1;
       oarp->Offset = item->offset[0];
       oarp->Size = bd_size;
       oarp->Body = cdh_cidToBid(cid, pwr_eBix_rt);

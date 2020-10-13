@@ -109,7 +109,8 @@ public:
   void classVersion(pwr_tStatus* sts, pwr_tCid cid, pwr_tTime* time);
   tree_sTable* buildCatt(pwr_tStatus* sts);
   void insertCattObject(
-      pwr_tStatus* sts, pwr_tCid cid, wb_adrep* adp, int offset);
+      pwr_tStatus* sts, pwr_tCid cid, wb_adrep* adp, int offset, 
+      int disableattr);
   tree_sTable* catt_tt()
   {
     return m_catt_tt;

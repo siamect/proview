@@ -610,7 +610,7 @@ void wb_merep::classVersion(pwr_tStatus* sts, pwr_tCid cid, pwr_tTime* time)
 }
 
 void wb_merep::insertCattObject(
-    pwr_tStatus* sts, pwr_tCid cid, wb_adrep* adp, int offset)
+    pwr_tStatus* sts, pwr_tCid cid, wb_adrep* adp, int offset, int disableattr)
 {
   merep_sClassAttrKey key;
   merep_sClassAttr* item;
@@ -634,12 +634,12 @@ void wb_merep::insertCattObject(
     if (ODD(*sts)) {
       // Insert in found item
       item->offset[item->numOffset] = offset + adp->offset();
-      item->flags[item->numOffset++] = adp->flags();
+      item->flags[item->numOffset++] = adp->flags() | disableattr;
     } else {
       // Insert a new item
       item = (merep_sClassAttr*)tree_Insert(sts, m_catt_tt, &key);
       item->offset[item->numOffset] = offset + adp->offset();
-      item->flags[item->numOffset++] = adp->flags();
+      item->flags[item->numOffset++] = adp->flags() | disableattr;
     }
 
     // Look for class attributes in this class
@@ -654,7 +654,12 @@ void wb_merep::insertCattObject(
     for (ad = bd->adrep(sts); ODD(*sts);
          adnext = ad->next(sts), delete ad, ad = adnext) {
       if (ad->flags() & PWR_MASK_CLASS && cdh_tidIsCid(ad->tid())) {
-        insertCattObject(sts, cid, ad, offset + adp->offset());
+	if (ad->flags() & PWR_MASK_SUPERCLASS)
+	  insertCattObject(sts, cid, ad, offset + adp->offset(), 
+			   disableattr);
+	else
+	  insertCattObject(sts, cid, ad, offset + adp->offset(), 
+			   ad->flags() & PWR_MASK_DISABLEATTR);
         if (EVEN(*sts))
           return;
       }
@@ -692,7 +697,7 @@ void wb_merep::insertCattObject(
            adnext = ad->next(sts), delete ad, ad = adnext) {
         if (ad->flags() & PWR_MASK_CLASS && cdh_tidIsCid(ad->tid())) {
           insertCattObject(sts, cid, ad,
-              offset + adp->offset() + j * adp->size() / adp->nElement());
+	      offset + adp->offset() + j * adp->size() / adp->nElement(), ad->flags() & PWR_MASK_DISABLEATTR);
           if (EVEN(*sts))
             return;
         }
@@ -740,7 +745,8 @@ tree_sTable* wb_merep::buildCatt(pwr_tStatus* sts)
       for (ad = bd->adrep(sts); ODD(*sts);
            adnext = ad->next(sts), delete ad, ad = adnext) {
         if (ad->flags() & PWR_MASK_CLASS && cdh_tidIsCid(ad->tid())) {
-          insertCattObject(sts, cid, ad, 0);
+          insertCattObject(sts, cid, ad, 0, 
+			   ad->flags() & PWR_MASK_DISABLEATTR);
           if (EVEN(*sts))
             throw wb_error(*sts);
         }
@@ -776,7 +782,8 @@ tree_sTable* wb_merep::buildCatt(pwr_tStatus* sts)
       for (ad = bd->adrep(sts); ODD(*sts);
            adnext = ad->next(sts), delete ad, ad = adnext) {
         if (ad->flags() & PWR_MASK_CLASS && cdh_tidIsCid(ad->tid())) {
-          insertCattObject(sts, cid, ad, 0);
+          insertCattObject(sts, cid, ad, 0, 
+			   ad->flags() & PWR_MASK_DISABLEATTR);
           if (EVEN(*sts))
             throw wb_error(*sts);
         }
