@@ -47,6 +47,7 @@ appl pwrtest01b S $pwrp_web/*.pdf
 appl pwrtest01b S $pwrp_web/*.pwg
 appl pwrtest01b E $pwrp_exe/ra_status
 appl pwrtest01b E $pwrp_exe/ra_qcom2test
+appl pwrtest01b E $pwrp_exe/ra_modbustcptest
 appl pwrtest01b E $pwrp_exe/ra_testall_b.sh
 node pwrtest01c 128 999 0 - -
 load pwrtest01c
@@ -89,6 +90,8 @@ node pwrtest01d 128 999 0 - -
 load pwrtest01d
 appl pwrtest01d W $pwrp_cnf/pwrtest01d/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat
 appl pwrtest01d W $pwrp_cnf/pwrtest01d/authorized_keys:$pwra_db/authorized_keys /home/pwrp/.ssh/authorized_keys
+appl pwrtest01d E $pwrp_exe/ra_sevtest.py
+appl pwrtest01d E $pwrp_exe/ra_testall_d.sh
 node copper-arrow 128 998 0 - -
 load copper-arrow
 appl copper-arrow W $pwrp_cnf/copper-arrow/pwr_user2.dat:$pwra_db/pwr_user2.dat $pwra_db/pwr_user2.dat

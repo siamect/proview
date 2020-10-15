@@ -92,15 +92,20 @@ class Ctx:
     def volumes(self):
         d = ('VolPwrTest01c', 'rt', 'pwrs', 'pwrb', 'Simul', 'BaseComponent',
              'NMps', 'Profibus', 'CVolPwrtest01', '1_254_254_203')
-        i = 0
+        
         try:                
            vol = pwrrt.volumes()
            for v in vol:
-               if v.name() != d[i]:
-                   self.logger.vlog('E', "volumes, Name doesn't match, %s != %s",
-                                    v.name(), d[i])
+               found = False
+               for dv in d:
+                   if v.name() == dv:
+                       found = True
+                       break
+               if not found:
+                   self.logger.vlog('E', "volumes, volume not found %s",
+                                    v.name())
                    return
-               i += 1
+
         except RuntimeError as e:
             self.logger.vlog('E', 'volumes, Unexpected exception %s, idx %s',
                                      str(e), str(i))

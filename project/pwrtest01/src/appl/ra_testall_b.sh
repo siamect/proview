@@ -17,6 +17,7 @@ dexec()
 let i=0
 
 exec "ra_qcom2test"
+exec "ra_modbustcptest"
 
 # Wait for spawned processes
 for p in ${pid[*]}; do

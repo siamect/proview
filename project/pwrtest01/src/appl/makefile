@@ -2,7 +2,8 @@ my : demo_all
 
 include $(pwr_exe)/pwrp_rules.mk
 
-demo_modules = $(pwrp_exe)/ra_status \
+demo_modules = $(pwrp_inc)/ra_plc_user.h \
+	       $(pwrp_exe)/ra_status \
 	       $(pwrp_exe)/ra_nethtest \
 	       $(pwrp_exe)/ra_qcom2test \
 	       $(pwrp_exe)/ra_testall_a.sh \
@@ -18,15 +19,20 @@ demo_modules = $(pwrp_exe)/ra_status \
 	       $(pwrp_exe)/ra_mhappltest \
 	       $(pwrp_exe)/ra_qcomtest \
 	       $(pwrp_exe)/ra_qmontest \
+	       $(pwrp_exe)/ra_modbustcptest \
 	       $(pwrp_exe)/ra_pwrrttest.py \
 	       $(pwrp_exe)/ra_ccmtest.rtt_com \
 	       $(pwrp_exe)/ra_xttscripttest.rtt_com \
 	       $(pwrp_exe)/ra_testall_c.sh \
+	       $(pwrp_exe)/ra_sevtest.py \
+	       $(pwrp_exe)/ra_testall_d.sh \
 	       $(pwrp_obj)/ra_plc_user.o
 
 
 
 demo_all : $(demo_modules)
+
+$(pwrp_inc)/ra_plc_user.h : $(pwrp_appl)/ra_plc_user.h
 
 $(pwrp_exe)/ra_status : $(pwrp_appl)/ra_status.cpp
 	@ echo "Building ra_status"
@@ -92,6 +98,10 @@ $(pwrp_exe)/ra_qmontest : $(pwrp_appl)/ra_qmontest.cpp $(pwrp_appl)/ra_qmontest.
 	@ echo "Building ra_qmontest"
 	@ g++ -g -o $(target) $(source) $(pwr_obj)/pwr_msg_co.o $(pwr_obj)/pwr_msg_rt.o $(pwr_obj)/pwr_msg_rs.o -I$(pwrp_inc) -I$(pwr_inc) -L$(pwr_lib) -lpwr_rt -lpwr_co -lpwr_msg_dummy -lrpcsvc -lpthread -lm -lrt -Wall
 
+$(pwrp_exe)/ra_modbustcptest : $(pwrp_appl)/ra_modbustcptest.cpp
+	@ echo "Building ra_modbustcptest"
+	@ g++ -g -o $(target) $(source) $(pwr_obj)/pwr_msg_co.o $(pwr_obj)/pwr_msg_rt.o $(pwr_obj)/pwr_msg_rs.o -I$(pwrp_inc) -I$(pwr_inc) -L$(pwr_lib) -lpwr_rt -lpwr_co -lpwr_msg_dummy -lrpcsvc -lpthread -lm -lrt -Wall
+
 $(pwrp_exe)/ra_pwrrttest.py : $(pwrp_appl)/ra_pwrrttest.py
 	@ echo "Building ra_pwrrttest"
 	@ cp -p $(source) $(target)
@@ -106,6 +116,14 @@ $(pwrp_exe)/ra_xttscripttest.rtt_com : $(pwrp_appl)/ra_xttscripttest.rtt_com
 
 $(pwrp_exe)/ra_testall_c.sh : $(pwrp_appl)/ra_testall_c.sh
 	@ echo "Building ra_testall_c"
+	@ cp -p $(source) $(target)
+
+$(pwrp_exe)/ra_sevtest.py : $(pwrp_appl)/ra_sevtest.py
+	@ echo "Building ra_sevtest"
+	@ cp -p $(source) $(target)
+
+$(pwrp_exe)/ra_testall_d.sh : $(pwrp_appl)/ra_testall_d.sh
+	@ echo "Building ra_testall_d"
 	@ cp -p $(source) $(target)
 
 $(pwrp_obj)/ra_plc_user.o : $(pwrp_appl)/ra_plc_user.c
