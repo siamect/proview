@@ -1068,7 +1068,7 @@ void wa_ldhtest::GetNextAttrRef(void)
     {pwr_cClass_Pwrt02_Component, "Test02-First-R1.Motors[8].Super", "Test02-First-R1.Motors[8].Contactor1.Super", LDH__SUCCESS},
     {pwr_cClass_Pwrt02_Component, "Test02-First-R1.Motors[8].Contactor1.Super", "Test02-First-R1.Motors[9].Super", LDH__SUCCESS},
     {pwr_cClass_Pwrt02_Component, "Test02-First-R1.Motors[9].Super", "Test02-First-R1.Motors[9].Contactor2.Super", LDH__SUCCESS},
-    {pwr_cClass_Pwrt02_Component, "Test02-First-R1.Motors[9].Contactor2.Super", "", LDH__NO_TYPE}
+    {pwr_cClass_Pwrt02_Component, "Test02-First-R1.Motors[9].Contactor2.Super", "", LDH__NONEXT}
   };
   pwr_tAttrRef aref, nextaref;
   char *nextname;

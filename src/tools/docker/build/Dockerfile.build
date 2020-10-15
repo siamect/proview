@@ -8,9 +8,13 @@ ARG INSTALL_GIT
 ARG INSTALL_BUILD
 ARG INSTALL_RPI
 ARG JDK_DIR
+ARG TZ
 
 ENV DISPLAY :1
 ENV DEBIAN_FRONTEND none_interactive
+
+ENV TZ=$TZ
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 COPY ./build/build.sh ./build/build_pwrdemo.sh ./build/build_pkg.sh ./build/build_pwrtest01.sh ./build/build_rpi.sh  ./
 RUN $INSTALL_UPDATE

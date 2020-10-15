@@ -3,11 +3,15 @@ FROM $RELEASE
 ARG INSTALL_UPDATE
 ARG INSTALL_PWR
 ARG PKG_PWR
+ARG TZ
 
 ENV DISPLAY :1
 ENV DEBIAN_FRONTEND none_interactive
 
+ENV TZ=$TZ
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 COPY ./pkg/$PKG_PWR ./dummy_display_xorg.conf ./
+
 RUN $INSTALL_UPDATE
 RUN $INSTALL_PWR
 RUN apt-get install -y xserver-xorg-video-dummy

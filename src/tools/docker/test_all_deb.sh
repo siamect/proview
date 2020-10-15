@@ -3,12 +3,13 @@
 release="debian:10"
 release_name="deb"
 buildversion="08-SEP-2020 12:00:00"
+tz="Europe/Stockholm"
 build_rpi=1
 gitrepo="-b stable http://192.168.0.105/git/x5-7-2/pwr/.git"
 install_update="apt-get update"
 install_git="apt-get install -y git make"
 install_build="apt-get install -y libgtk2.0-dev doxygen gcc g++ make libasound2-dev \
-	libdb5.3-dev libdb5.3++-dev openjdk-11-jdk libmariadb-dev \
+	libdb5.3-dev libdb5.3++-dev openjdk-11-jdk default-libmysqlclient-dev \
 	libsqlite3-dev libhdf5-openmpi-dev librabbitmq-dev libusb-1.0.0-dev librsvg2-dev \
 	libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libpython-dev"
 install_rpi="apt-get install -y gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf"
@@ -21,7 +22,8 @@ install_pwrrt="apt-get install -y libgtk2.0-0 libasound2 \
 	libdb5.3 libdb5.3++ libsqlite3-0 librsvg2-2 g++ xterm libmariadb3 \
 	librabbitmq4 libusb-1.0-0 libhdf5-openmpi-103 \
 	libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 \
-	xterm xfonts-100dpi sudo procps python"
+	xterm xfonts-100dpi sudo procps python python-pandas python-seaborn \
+	python-statsmodels python-sklearn"
 jdk_dir=/usr/lib/jvm/java-11-openjdk-amd64
 ver="5.7.2-1"
 sver="57"
@@ -40,7 +42,7 @@ else
   start=$1
 fi
 if [ "$2" == "" ]; then
-  end=7
+  end=8
 else
   end=$2
 fi
@@ -69,8 +71,11 @@ if [ $start -le 1 ] && [ $end -ge 1 ]; then
     --build-arg INSTALL_BUILD="$install_build" \
     --build-arg INSTALL_RPI="$install_rpi" \
     --build-arg JDK_DIR=$jdk_dir \
+    --build-arg TZ=$tz \
     ./
   docker container create --name tmp pwr:v1
+  docker container cp tmp:/pwr/build.log ./log/
+  docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/exp/lis/build.tlog ./log/
   docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/pkg/$pkg_pwr ./pkg/
   docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/pkg/$pkg_pwrdemo ./pkg/
   docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/pkg/$pkg_pwrrt ./pkg/
@@ -91,6 +96,7 @@ if [ $start -le 2 ] && [ $end -ge 2 ]; then
     --build-arg INSTALL_UPDATE="$install_update" \
     --build-arg INSTALL_PWR="$install_pwr" \
     --build-arg PKG_PWR=$pkg_pwr \
+    --build-arg TZ=$tz \
     ./
 fi
 
@@ -101,6 +107,7 @@ if [ $start -le 3 ] && [ $end -ge 3 ]; then
     --build-arg INSTALL_UPDATE="$install_update" \
     --build-arg INSTALL_PWRRT="$install_pwrrt" \
     --build-arg PKG_PWRRT=$pkg_pwrrt \
+    --build-arg TZ=$tz \
     ./
 fi
 
@@ -180,7 +187,21 @@ if [ $start -le 7 ] && [ $end -ge 7 ]; then
   docker container cp pwrta:/pwrp/common/log/neth.tlog ./log/
   docker container cp pwrta:/pwrp/common/log/qcom2a.tlog ./log/
   docker container cp pwrtb:/pwrp/common/log/qcom2b.tlog ./log/
+  docker container cp pwrtb:/pwrp/common/log/qcom2b.tlog ./log/
+  docker container cp pwrtb:/pwrp/common/log/modbustcp.tlog ./log/
 
   docker container rm pwrta pwrtb
   docker image rm pwrtest01a:v1 pwrtest01b:v1
+fi
+
+# Runtime container pwrtest01d
+if [ $start -le 8 ] && [ $end -ge 8 ]; then
+  docker image build -t pwrtest01d:v1 -f pwrtest01/Dockerfile.pwrtest01d \
+    --build-arg RELEASE=$img_pwrrt \
+    ./
+  docker run --name pwrtd pwrtest01d:v1
+  docker container cp pwrtd:/pwrp/common/log/sev.tlog ./log/
+
+  docker container rm pwrtd
+#  docker image rm pwrtest01d:v1
 fi
