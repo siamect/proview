@@ -624,8 +624,8 @@ int main()
 {
   ra_nethtest neth;
 
-  setenv("TZ", "Europe/Stockholm", 1);
-  tzset();
+  // setenv("TZ", "Europe/Stockholm", 1);
+  // tzset();
 
   neth.ObjidToName();
   neth.GetChild();

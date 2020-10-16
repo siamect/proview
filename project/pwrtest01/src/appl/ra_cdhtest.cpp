@@ -1293,8 +1293,8 @@ int main()
   ra_cdhtest cdh;
   pwr_tStatus sts;
 
-  setenv("TZ", "Europe/Stockholm", 1);
-  tzset();
+  // setenv("TZ", "Europe/Stockholm", 1);
+  // tzset();
 
   sts = gdh_Init("ra_cdhtest");
   if (EVEN(sts)) {

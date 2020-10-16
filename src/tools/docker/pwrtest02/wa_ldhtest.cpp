@@ -2399,8 +2399,8 @@ int main(int argc, char *argv[])
   if (argc > 1)
     ldh.vname(argv[1]);
 
-  setenv("TZ", "Europe/Stockholm", 1);
-  tzset();
+  // setenv("TZ", "Europe/Stockholm", 1);
+  // tzset();
 
   ldh.OpenWB();
   ldh.AttachVolume();

@@ -595,7 +595,7 @@ main()
   int log;
 
   verify(0);
-  tzset("Europe/Stockholm");
+# tzset("Europe/Stockholm");
   log = tstlog_open("op-XttScript", "$pwrp_log/xttscript.tlog");
 
   ccm_CutObjectName(log);

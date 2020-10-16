@@ -3387,8 +3387,8 @@ int main()
 {
   ra_gdhtest gdh;
 
-  setenv("TZ", "Europe/Stockholm", 1);
-  tzset();
+  // setenv("TZ", "Europe/Stockholm", 1);
+  // tzset();
 
   gdh.Init();
   gdh.ObjidToName();

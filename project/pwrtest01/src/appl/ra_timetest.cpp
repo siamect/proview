@@ -1098,8 +1098,8 @@ int main()
   ra_timetest time;
   pwr_tStatus sts;
 
-  setenv("TZ", "Europe/Stockholm", 1);
-  tzset();
+  // setenv("TZ", "Europe/Stockholm", 1);
+  // tzset();
 
   sts = gdh_Init("ra_timetest");
   if (EVEN(sts)) {
