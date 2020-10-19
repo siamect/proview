@@ -84,6 +84,7 @@ if [ $start -le 1 ] && [ $end -ge 1 ]; then
   docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/project/pwrtest01/bld/common/load/pwrp_pkg_pwrtest01a_0001.tgz ./data/
   docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/project/pwrtest01/bld/common/load/pwrp_pkg_pwrtest01b_0001.tgz ./data/
   docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/project/pwrtest01/bld/common/load/pwrp_pkg_pwrtest01c_0001.tgz ./data/
+  docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/project/pwrtest01/bld/common/load/pwrp_pkg_pwrtest01d_0001.tgz ./data/
   docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/project/pwrtest02/bld/common/load/pwrtest02.tar.gz ./data/
   docker container rm tmp
   docker image rm pwr:v1
