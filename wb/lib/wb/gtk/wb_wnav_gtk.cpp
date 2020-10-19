@@ -508,6 +508,14 @@ static void wnav_message_dialog_read(GtkWidget* w, gpointer data)
   gtk_main_quit();
 }
 
+static void wnav_message_dialog_cancel(GtkWidget* w, gpointer data)
+{
+  WNav* wnav = (WNav*)data;
+
+  wnav->dialog_cancel = 1;
+  gtk_main_quit();
+}
+
 void WNavGtk::message_dialog(char* title, char* text)
 {
   GtkWidget* dialog
@@ -632,7 +640,7 @@ int WNavGtk::prompt_dialog(char* title, char* text, char** value)
   GtkWidget* india_cancel = gtk_button_new_with_label("Cancel");
   gtk_widget_set_size_request(india_cancel, 70, 25);
   g_signal_connect(
-      india_cancel, "clicked", G_CALLBACK(wnav_confirm_dialog_cancel), this);
+      india_cancel, "clicked", G_CALLBACK(wnav_message_dialog_cancel), this);
 
   GtkWidget* india_hboxtext = gtk_hbox_new(FALSE, 0);
   gtk_box_pack_start(GTK_BOX(india_hboxtext), india_image, FALSE, FALSE, 15);
@@ -650,8 +658,11 @@ int WNavGtk::prompt_dialog(char* title, char* text, char** value)
       GTK_BOX(india_vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
   gtk_box_pack_end(GTK_BOX(india_vbox), india_hboxbuttons, FALSE, FALSE, 15);
   gtk_container_add(GTK_CONTAINER(india_widget), india_vbox);
-  gtk_widget_show_all(india_widget);
 
+  dialog_ok = 0;
+  dialog_cancel = 0;
+
+  gtk_widget_show_all(india_widget);
   gtk_main();
 
   if (dialog_ok) {
