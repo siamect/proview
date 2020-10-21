@@ -1023,6 +1023,8 @@ pwr_tStatus time_AsciiToA(const char* tstr, pwr_tTime* ts)
     return sts;
 
   ts->tv_sec = mktime(&tmpTm);
+  if (ts->tv_sec == -1)
+    return TIME__RANGE;
   ts->tv_nsec = tmphs * 10000000;
   return TIME__SUCCESS;
 }
