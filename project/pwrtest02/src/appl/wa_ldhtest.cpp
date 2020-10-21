@@ -1617,6 +1617,8 @@ void wa_ldhtest::GetVolumeInfo(void)
 
 void wa_ldhtest::Close(void)
 {
+  ldh_DeleteObjectTree(m_ldhses, m_test, 0);
+
   m_sts = ldh_DetachVolume(m_ldhwb, m_volctx);
   if (EVEN(m_sts)) {
     m_log->log('F', "Close, ldh_DetachVolume", m_sts);
@@ -2387,8 +2389,6 @@ wa_ldhtest::wa_ldhtest()
 // Destructor
 wa_ldhtest::~wa_ldhtest()
 {
-  ldh_DeleteObjectTree(m_ldhses, m_test, 0);
-
   delete m_log;
 }
 
@@ -2399,8 +2399,8 @@ int main(int argc, char *argv[])
   if (argc > 1)
     ldh.vname(argv[1]);
 
-  setenv("TZ", "Europe/Stockholm", 1);
-  tzset();
+  // setenv("TZ", "Europe/Stockholm", 1);
+  // tzset();
 
   ldh.OpenWB();
   ldh.AttachVolume();

@@ -345,7 +345,10 @@ void ra_qcomtest::Alloc(void)
   for (unsigned int i = 0; i < sizeof(d)/sizeof(d[0]); i++) {
     p = qcom_Alloc(&m_sts, d[i].size);
     if (m_sts != d[i].asts) {
-      m_log->vlog('E', "Alloc", m_sts);
+      if ( d[i].size < 5000000)
+	m_log->vlog('E', "Alloc size %d, %d", d[i].size, m_sts);
+      else
+	m_log->vlog('S', "Alloc: size %d too large", d[i].size);
       return;
     }
     if (ODD(m_sts)) {

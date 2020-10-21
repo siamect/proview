@@ -380,6 +380,11 @@ void ra_gdhtest::CreateObject(void)
   };
   pwr_tOName oname;
   
+  // Clear if objects already are created
+  m_sts = gdh_NameToObjid(d[0].name, &d[0].oid);
+  if (ODD(m_sts))
+    m_sts = gdh_DeleteObjectTree(d[0].oid);
+
   for (unsigned int i = 0; i < sizeof(d)/sizeof(d[0]); i++) {
     m_sts = gdh_CreateObject(d[i].name, d[i].cid, 0, &d[i].oid,
 				pwr_cNOid, 0, pwr_cNOid);
@@ -2394,10 +2399,16 @@ void ra_gdhtest::GetDynamicAttrSize(void)
   for (unsigned int i = 0; i < sizeof(d)/sizeof(d[0]); i++) {
     m_sts = gdh_CreateObject(d[i].name, d[i].cid, d[i].size, &d[i].oid,
 			     pwr_cNOid, 0, pwr_cNOid);
+    if (m_sts == GDH__DUPLNAME)
+      m_sts = gdh_NameToObjid(d[i].name, &d[i].oid);
+    if (EVEN(m_sts)) {
+      m_log->log('E', "GetDynamicAttrSize, gdh_CreateObject", m_sts);
+      return;
+    }
 
     m_sts = gdh_GetObjectSize(d[i].oid, &size);
     if (m_sts != d[i].sts) {
-      m_log->log('E', "GetObjectSize", m_sts);
+      m_log->log('E', "GetDynamicAttrSize", m_sts);
       return;
     }
     if (ODD(m_sts)) {
@@ -2409,7 +2420,7 @@ void ra_gdhtest::GetDynamicAttrSize(void)
 
     m_sts = gdh_GetDynamicAttrSize(d[i].oid, d[i].aname, &asize); 
     if (EVEN(m_sts)) {
-      m_log->log('E', "GetDynamicAttrSizes", m_sts);
+      m_log->log('E', "GetDynamicAttrSize", m_sts);
       return;
     }
     if (asize != d[i].asize) {
@@ -2689,35 +2700,48 @@ void ra_gdhtest::GetNextVolume(void)
     {"_V0.254.254.203", "_V254.254.254.245", GDH__SUCCESS},
     {"_V254.254.254.245", "_V0.0.0.1", GDH__SUCCESS},
     {"_V0.0.0.1", "_V0.0.0.2", GDH__SUCCESS},
-    {"_V0.0.254.254", "_V1.254.254.203", GDH__SUCCESS},
+    {"_V0.0.240.254", "_V1.254.254.203", GDH__SUCCESS},
     {"_V1.254.254.203", "", GDH__NOSUCHVOL}
   };
-  pwr_tVid vid, nextvid, nvid;
+  char volumes[][80] = {"_V0.0.0.1", "_V0.0.0.2", "_V0.0.250.7", "_V0.254.254.203", 
+			"_V0.0.240.254", "_V254.254.254.245"};
+  pwr_tVid vids[] = {0, 0, 0, 0, 0, 0};
+  pwr_tVid vid, nvid;
+  int found;
   
+  for (unsigned int i = 0; i < sizeof(vids)/sizeof(vids[0]); i++) {
+    m_sts = cdh_StringToVolumeId(volumes[i], &vids[i]);
+    if (EVEN(m_sts)) {
+      m_log->log('E', "GetNextVolume, cdh_StringToVolumeId", volumes[i], m_sts);
+      return;
+    }
+  }
+
   for (unsigned int i = 0; i < sizeof(d)/sizeof(d[0]); i++) {
     m_sts = cdh_StringToVolumeId(d[i].vid, &vid);
     if (EVEN(m_sts)) {
       m_log->log('E', "GetNextVolume, cdh_StringToVolumeId", d[i].vid, m_sts);
       return;
     }
-    if (strcmp(d[i].nextvid, "") != 0) {
-      m_sts = cdh_StringToVolumeId(d[i].nextvid, &nextvid);
-      if (EVEN(m_sts)) {
-	m_log->log('E', "GetNextVolume, cdh_StringToVolumeId", d[i].nextvid, m_sts);
-	return;
-      }
-    }
 
     m_sts = gdh_GetNextVolume(vid, &nvid);
-    if (m_sts != d[i].sts) {
+    if (m_sts == GDH__NOSUCHVOL)
+      continue;
+    else if (m_sts != GDH__SUCCESS) {
       m_log->log('E', "GetNextVolume", d[i].vid, m_sts);
       return;
     }
-    if (ODD(m_sts)) {
-      if (nvid != nextvid) {
-	m_log->log('E', "GetNextVolume, wrong volume", d[i].vid);
-	return;
+    found = 0;
+    for ( unsigned int j = 0; j < sizeof(vids)/sizeof(vids[0]); j++) {
+      if (nvid == vids[j]) {
+	found = 1;
+	break;
       }
+    }
+    if (!found) {
+      m_log->vlog('E', "GetNextVolume, unknown volume %s", 
+		  cdh_VolumeIdToString(0, 0, nvid, 1, 0));
+      return;
     }
   }
 
@@ -2741,7 +2765,7 @@ void ra_gdhtest::VolumeIdToName(void)
     {"BaseComponent", "_V0.0.0.10", GDH__SUCCESS},
     {"NMps", "_V0.0.1.1", GDH__SUCCESS},
     {"Profibus", "_V0.0.250.7", GDH__SUCCESS},
-    {"CVolPwrtest01", "_V0.0.254.254", GDH__SUCCESS},
+    {"CVolPwrtest01", "_V0.0.240.254", GDH__SUCCESS},
     {"1_254_254_203", "_V1.254.254.203", GDH__SUCCESS}
   };
   pwr_tVid vid;
@@ -2788,7 +2812,7 @@ void ra_gdhtest::GetVolumeInfo(void)
     {"BaseComponent", "_V0.0.0.10", pwr_eClass_ClassVolume, GDH__SUCCESS},
     {"NMps", "_V0.0.1.1", pwr_eClass_ClassVolume, GDH__SUCCESS},
     {"Profibus", "_V0.0.250.7", pwr_eClass_ClassVolume, GDH__SUCCESS},
-    {"CVolPwrtest01", "_V0.0.254.254", pwr_eClass_ClassVolume, GDH__SUCCESS},
+    {"CVolPwrtest01", "_V0.0.240.254", pwr_eClass_ClassVolume, GDH__SUCCESS},
     {"1_254_254_203", "_V1.254.254.203", pwr_eClass_SystemVolume, GDH__SUCCESS}
   };
   pwr_tVid vid;

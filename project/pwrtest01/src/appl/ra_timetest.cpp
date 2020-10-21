@@ -784,6 +784,7 @@ void ra_timetest::AtoAscii(void)
     {{1587558870,220000000}, time_eFormat_FileDateAndTime, "20200422_143430", TIME__SUCCESS},
     {{1587558870,220000000}, time_eFormat_FileDate, "20200422", TIME__SUCCESS},
     {{1587558870,220000000}, time_eFormat_TimeAndDate, "14:34:30 22/04/20", TIME__SUCCESS},
+#ifdef __x86_64__
     {{2537701200,0}, time_eFormat_DateAndTime, "01-JUN-2050 15:00:00.00", TIME__SUCCESS},
     {{2537701200,0}, time_eFormat_Time, "15:00:00.00", TIME__SUCCESS},
     {{2537701200,0}, time_eFormat_ComprDateAndTime, "50-06-01 15:00:00.00", TIME__SUCCESS},
@@ -791,6 +792,15 @@ void ra_timetest::AtoAscii(void)
     {{2537701200,0}, time_eFormat_FileDateAndTime, "20500601_150000", TIME__SUCCESS},
     {{2537701200,0}, time_eFormat_FileDate, "20500601", TIME__SUCCESS},
     {{2537701200,0}, time_eFormat_TimeAndDate, "15:00:00 01/06/50", TIME__SUCCESS},
+#else
+    {{2537701200,0}, time_eFormat_DateAndTime, "01-JUN-2050 15:00:00.00", TIME__RANGE},
+    {{2537701200,0}, time_eFormat_Time, "15:00:00.00", TIME__RANGE},
+    {{2537701200,0}, time_eFormat_ComprDateAndTime, "50-06-01 15:00:00.00", TIME__RANGE},
+    {{2537701200,0}, time_eFormat_NumDateAndTime, "2050-06-01 15:00:00.00", TIME__RANGE},
+    {{2537701200,0}, time_eFormat_FileDateAndTime, "20500601_150000", TIME__RANGE},
+    {{2537701200,0}, time_eFormat_FileDate, "20500601", TIME__RANGE},
+    {{2537701200,0}, time_eFormat_TimeAndDate, "15:00:00 01/06/50", TIME__RANGE},
+#endif
     {{1587558870,-220000000}, time_eFormat_DateAndTime, "14:34:30 22/04/20", TIME__NAT},
     {{-1587558870,-220000000}, time_eFormat_DateAndTime, "14:34:30 22/04/20", TIME__NAT}
   };
@@ -826,7 +836,11 @@ void ra_timetest::AsciiToA(void)
     {"01-JAN-1970 01:00:00.00", pwr_cNTime, TIME__SUCCESS},
     {"22-APR-2020 14:34:30.22", {1587558870,220000000}, TIME__SUCCESS},
     {"22-apr-2020 14:34:30.22", {1587558870,220000000}, TIME__SUCCESS},
+#ifdef __x86_64__
     {"01-JUN-2050 15:00:00.00", {2537701200,0}, TIME__SUCCESS},
+#else
+    {"01-JUN-2050 15:00:00.00", {2537701200,0}, TIME__RANGE},
+#endif
     {"01-JAN-2020 00:00:00.00", {1577833200,0}, TIME__SUCCESS},
     {"01-FEB-2020 00:00:00.00", {1580511600,0}, TIME__SUCCESS},
     {"01-MAR-2020 00:00:00.00", {1583017200,0}, TIME__SUCCESS},

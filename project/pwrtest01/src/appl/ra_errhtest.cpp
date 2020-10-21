@@ -11,6 +11,7 @@
 #include "co_dcli.h"
 #include "co_time.h"
 #include "rt_gdh.h"
+#include "rt_aproc.h"
 #include "ra_errhtest.h"
 #include "rt_pwr_msg.h"
 #include "rt_errh_msg.h"
@@ -311,6 +312,9 @@ void ra_errhtest::SetStatus(void)
     {PWR__APPLINFO},
     {0}
   };
+
+  aproc_TimeStamp(10, 10);
+  m_nodep->ProcStatus[m_anix-1] = 0;
   
   for (unsigned int i = 0; i < sizeof(d)/sizeof(d[0]); i++) {
     errh_SetStatus(d[i].sts); 
