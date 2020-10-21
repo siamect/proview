@@ -1088,6 +1088,10 @@ static int operand_found(ccm_tRowCtx rowctx)
         operand_p->value_float = -operand_p->value_float;
     } else {
       nr = sscanf(operand_p->name, ccm_cIntFormat, &operand_p->value_int);
+#ifndef __x86_64__
+      if (operand_p->value_int == 2147483647)
+	nr = sscanf(operand_p->name, "%u", (unsigned int *)&operand_p->value_int);
+#endif
       operand_p->value_decl = K_DECL_INT;
       if (rowctx->num_neg)
         operand_p->value_int = -operand_p->value_int;
