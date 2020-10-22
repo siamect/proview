@@ -311,28 +311,30 @@ pwr_tStatus sev_db::tree_update_value(int item_idx, int attr_idx, pwr_tTime time
       prev_deviation = 0;
     }
 
-    m_items[item_idx].mean_value
+    if (!feqf(scantime, 0.0f)) {
+      m_items[item_idx].mean_value
         = (value * scantime
-              + m_items[item_idx].mean_value * m_items[item_idx].mean_acc_time)
-          / (scantime + m_items[item_idx].mean_acc_time);
-    m_items[item_idx].mean_acc_time += scantime;
-    m_items[item_idx].variance_acc
-        = prev_deviation * (value - m_items[item_idx].mean_value);
-    m_items[item_idx].variance_cnt++;
+	   + m_items[item_idx].mean_value * m_items[item_idx].mean_acc_time)
+	/ (scantime + m_items[item_idx].mean_acc_time);
+      m_items[item_idx].mean_acc_time += scantime;
+      m_items[item_idx].variance_acc
+        = fabs(prev_deviation * (value - m_items[item_idx].mean_value));
+      m_items[item_idx].variance_cnt++;
 
-    if (m_items[item_idx].mean_acc_time
-	>= (interval - m_items[item_idx].scantime / 2)) {
-      m_items[item_idx].attr[attr_idx].ip->MeanValue = m_items[item_idx].mean_value;
-      m_items[item_idx].attr[attr_idx].ip->MeanValueTime = time;
-      if (m_items[item_idx].variance_cnt > 1)
-	m_items[item_idx].attr[attr_idx].ip->StandardDeviation
+      if (m_items[item_idx].mean_acc_time
+	  >= (interval - m_items[item_idx].scantime / 2)) {
+	m_items[item_idx].attr[attr_idx].ip->MeanValue = m_items[item_idx].mean_value;
+	m_items[item_idx].attr[attr_idx].ip->MeanValueTime = time;
+	if (m_items[item_idx].variance_cnt > 1)
+	  m_items[item_idx].attr[attr_idx].ip->StandardDeviation
             = sqrt(m_items[item_idx].variance_acc
-                / (m_items[item_idx].variance_cnt - 1));
-      else
-	m_items[item_idx].attr[attr_idx].ip->StandardDeviation = 0;
-      m_items[item_idx].mean_acc_time = 0;
-      m_items[item_idx].variance_acc = 0;
-      m_items[item_idx].variance_cnt = 0;
+		   / (m_items[item_idx].variance_cnt - 1));
+	else
+	  m_items[item_idx].attr[attr_idx].ip->StandardDeviation = 0;
+	m_items[item_idx].mean_acc_time = 0;
+	m_items[item_idx].variance_acc = 0;
+	m_items[item_idx].variance_cnt = 0;
+      }
     }
   }
   return SEV__SUCCESS;
