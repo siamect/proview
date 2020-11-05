@@ -40,7 +40,8 @@
 /* ge_dyn.h -- Ge predefined dynamics and actions */
 
 #include "glow_keyboardapi.h"
-
+#include "rt_cbuf.h"
+#include "rt_sevcli.h"
 #include "ge_graph.h"
 
 /*! \file ge_dyn.h
@@ -152,6 +153,9 @@ typedef enum {
   ge_eDynPrio_Trend,
   ge_eDynPrio_FastCurve,
   ge_eDynPrio_XY_Curve,
+  ge_eDynPrio_DsTrend,
+  ge_eDynPrio_DsTrendCurve,
+  ge_eDynPrio_SevHist,
   ge_eDynPrio_AnalogText,
   ge_eDynPrio_Table,
   ge_eDynPrio_SliderBackground,
@@ -242,7 +246,10 @@ typedef enum {
   ge_mDynType2_DigBackgroundColor = 1 << 6,
   ge_mDynType2_DigSwap = 1 << 7,
   ge_mDynType2_DigScript = 1 << 8,
-  ge_mDynType2_RefUpdate = 1 << 9
+  ge_mDynType2_RefUpdate = 1 << 9,
+  ge_mDynType2_DsTrend = 1 << 10,
+  ge_mDynType2_DsTrendCurve = 1 << 11,
+  ge_mDynType2_SevHist = 1 << 12
 } ge_mDynType2;
 
 //! Action types.
@@ -361,6 +368,8 @@ typedef enum {
   ge_eSave_DigSwap = 45,
   ge_eSave_DigScript = 46,
   ge_eSave_RefUpdate = 47,
+  ge_eSave_DsTrend = 48,
+  ge_eSave_DsTrendCurve = 49,
   ge_eSave_PopupMenu = 50,
   ge_eSave_SetDig = 51,
   ge_eSave_ResetDig = 52,
@@ -387,6 +396,7 @@ typedef enum {
   ge_eSave_Script = 73,
   ge_eSave_CatchSignal = 74,
   ge_eSave_EmitSignal = 75,
+  ge_eSave_SevHist = 76,
   ge_eSave_End = 99,
   ge_eSave_Dyn_dyn_type1 = 100,
   ge_eSave_Dyn_action_type1 = 101,
@@ -611,6 +621,27 @@ typedef enum {
   ge_eSave_DigScript_level = 4603,
   ge_eSave_RefUpdate_attribute = 4700,
   ge_eSave_RefUpdate_whole_graph = 4701,
+  ge_eSave_DsTrend_dstrend_object1 = 4800,
+  ge_eSave_DsTrend_dstrend_object2 = 4801,
+  ge_eSave_DsTrend_mark1_attr = 4802,
+  ge_eSave_DsTrend_mark2_attr = 4803,
+  ge_eSave_DsTrend_mark1_color = 4804,
+  ge_eSave_DsTrend_mark2_color = 4805,
+  ge_eSave_DsTrend_hold_attr = 4806,
+  ge_eSave_DsTrend_minvalue_attr1 = 4807,
+  ge_eSave_DsTrend_maxvalue_attr1 = 4808,
+  ge_eSave_DsTrend_minvalue_attr2 = 4809,
+  ge_eSave_DsTrend_maxvalue_attr2 = 4810,
+  ge_eSave_DsTrendCurve_dstrend_object = 4900,
+  ge_eSave_DsTrendCurve_mark1_attr = 4902,
+  ge_eSave_DsTrendCurve_mark2_attr = 4903,
+  ge_eSave_DsTrendCurve_mark1_color = 4904,
+  ge_eSave_DsTrendCurve_mark2_color = 4905,
+  ge_eSave_DsTrendCurve_hold_attr = 4906,
+  ge_eSave_DsTrendCurve_minvalue_attr1 = 4907,
+  ge_eSave_DsTrendCurve_maxvalue_attr1 = 4908,
+  ge_eSave_DsTrendCurve_minvalue_attr2 = 4909,
+  ge_eSave_DsTrendCurve_maxvalue_attr2 = 4910,
   ge_eSave_PopupMenu_ref_object = 5000,
   ge_eSave_SetDig_attribute = 5100,
   ge_eSave_SetDig_instance = 5101,
@@ -799,7 +830,25 @@ typedef enum {
   ge_eSave_Script_script = 7301,
   ge_eSave_CatchSignal_signal_name = 7400,
   ge_eSave_EmitSignal_signal_name = 7500,
-  ge_eSave_EmitSignal_global = 7501
+  ge_eSave_EmitSignal_global = 7501,
+  ge_eSave_SevHist_sevhist_object1 = 7600,
+  ge_eSave_SevHist_sevhist_object2 = 7601,
+  ge_eSave_SevHist_attribute1 = 7602,
+  ge_eSave_SevHist_attribute2 = 7603,
+  ge_eSave_SevHist_server = 7604,
+  ge_eSave_SevHist_mark1_attr = 7605,
+  ge_eSave_SevHist_mark2_attr = 7606,
+  ge_eSave_SevHist_mark1_color = 7607,
+  ge_eSave_SevHist_mark2_color = 7608,
+  ge_eSave_SevHist_hold_attr = 7609,
+  ge_eSave_SevHist_minvalue_attr1 = 7610,
+  ge_eSave_SevHist_maxvalue_attr1 = 7611,
+  ge_eSave_SevHist_minvalue_attr2 = 7612,
+  ge_eSave_SevHist_maxvalue_attr2 = 7613,
+  ge_eSave_SevHist_timerange = 7614,
+  ge_eSave_SevHist_timerange_attr = 7615,
+  ge_eSave_SevHist_update_attr = 7616,
+  ge_eSave_SevHist_updatetime = 7617
 } ge_eSave;
 
 class GeDynElem;
@@ -2600,6 +2649,211 @@ public:
   void replace_attribute(char* from, char* to, int* cnt, int strict);
   int export_java(
       grow_tObject object, std::ofstream& fp, bool first, char* var_name);
+  int syntax_check(grow_tObject object, int* error_cnt, int* warning_cnt);
+};
+
+//! Dynamics for a DsTrend object.
+class GeDsTrend : public GeDynElem {
+public:
+  pwr_tOName dstrend_object1;
+  pwr_tOName dstrend_object2;
+  pwr_tAName minvalue_attr1;
+  pwr_tAName maxvalue_attr1;
+  pwr_tAName minvalue_attr2;
+  pwr_tAName maxvalue_attr2;
+  pwr_tAName hold_attr;
+  pwr_tAName mark1_attr;
+  pwr_tAName mark2_attr;
+
+  int max_points; //!< Max number of points in curves.
+  bool first_scan; //!< Indicates that this is the first scan.
+  int dstrend_cnt;
+  pwr_tAttrRef dstrend_aref[2];
+  int interval[2];
+  int last_buffer[2];
+  int last_next_index[2];
+  int max_time;
+  int min_interval;
+  int min_interval_idx;
+  pwr_tFloat32* min_value1_p;
+  pwr_tFloat32* max_value1_p;
+  pwr_tFloat32 old_min_value1;
+  pwr_tFloat32 old_max_value1;
+  pwr_tSubid min_value_subid1;
+  pwr_tSubid max_value_subid1;
+  pwr_tFloat32* min_value2_p;
+  pwr_tFloat32* max_value2_p;
+  graph_eDatabase min_value1_db;
+  graph_eDatabase max_value1_db;
+  pwr_tFloat32 old_min_value2;
+  pwr_tFloat32 old_max_value2;
+  pwr_tSubid min_value_subid2;
+  pwr_tSubid max_value_subid2;
+  int trend_hold;
+  pwr_tBoolean* hold_p;
+  pwr_tSubid hold_subid;
+  graph_eDatabase hold_db;
+  pwr_tFloat32* mark1_p;
+  pwr_tFloat32* mark2_p;
+  pwr_tFloat32 old_mark1;
+  pwr_tFloat32 old_mark2;
+  pwr_tSubid mark1_subid;
+  pwr_tSubid mark2_subid;
+  glow_eDrawType mark1_color;
+  glow_eDrawType mark2_color;
+
+  GeDsTrend(GeDyn* e_dyn);
+  GeDsTrend(const GeDsTrend& x);
+  void get_attributes(attr_sItem* attrinfo, int* item_count);
+  void save(std::ofstream& fp);
+  void open(std::ifstream& fp);
+  int connect(grow_tObject object, glow_sTraceData* trace_data, bool now);
+  int disconnect(grow_tObject object);
+  int scan(grow_tObject object);
+  void set_attribute(grow_tObject object, const char* attr_name, int* cnt);
+  void replace_attribute(char* from, char* to, int* cnt, int strict);
+  int syntax_check(grow_tObject object, int* error_cnt, int* warning_cnt);
+};
+
+//! Dynamics for a DsTrendCurve object.
+class GeDsTrendCurve : public GeDynElem {
+public:
+  pwr_tOName dstrend_object;
+  pwr_tAName minvalue_attr1;
+  pwr_tAName maxvalue_attr1;
+  pwr_tAName minvalue_attr2;
+  pwr_tAName maxvalue_attr2;
+  pwr_tAName hold_attr;
+  pwr_tAName mark1_attr;
+  pwr_tAName mark2_attr;
+
+  int max_points; //!< Max number of points in curves.
+  bool first_scan; //!< Indicates that this is the first scan.
+  int dstrend_cnt;
+  cbuf_sCircBuffInfo cb_info[2];
+  int element_size[2];
+  pwr_eType element_type[2];
+
+  pwr_tAttrRef dstrend_aref;
+  int interval[2];
+  int last_buffer[2];
+  int last_next_index[2];
+  int max_time;
+  int min_interval;
+  int min_interval_idx;
+  pwr_tFloat32* min_value1_p;
+  pwr_tFloat32* max_value1_p;
+  pwr_tFloat32 old_min_value1;
+  pwr_tFloat32 old_max_value1;
+  pwr_tSubid min_value_subid1;
+  pwr_tSubid max_value_subid1;
+  pwr_tFloat32* min_value2_p;
+  pwr_tFloat32* max_value2_p;
+  graph_eDatabase min_value1_db;
+  graph_eDatabase max_value1_db;
+  pwr_tFloat32 old_min_value2;
+  pwr_tFloat32 old_max_value2;
+  pwr_tSubid min_value_subid2;
+  pwr_tSubid max_value_subid2;
+  int trend_hold;
+  pwr_tBoolean* hold_p;
+  pwr_tSubid hold_subid;
+  graph_eDatabase hold_db;
+  pwr_tFloat32* mark1_p;
+  pwr_tFloat32* mark2_p;
+  pwr_tFloat32 old_mark1;
+  pwr_tFloat32 old_mark2;
+  pwr_tSubid mark1_subid;
+  pwr_tSubid mark2_subid;
+  glow_eDrawType mark1_color;
+  glow_eDrawType mark2_color;
+
+  GeDsTrendCurve(GeDyn* e_dyn);
+  GeDsTrendCurve(const GeDsTrendCurve& x);
+  void get_attributes(attr_sItem* attrinfo, int* item_count);
+  void save(std::ofstream& fp);
+  void open(std::ifstream& fp);
+  int connect(grow_tObject object, glow_sTraceData* trace_data, bool now);
+  int disconnect(grow_tObject object);
+  int scan(grow_tObject object);
+  void set_attribute(grow_tObject object, const char* attr_name, int* cnt);
+  void replace_attribute(char* from, char* to, int* cnt, int strict);
+  int syntax_check(grow_tObject object, int* error_cnt, int* warning_cnt);
+};
+
+//! Dynamics for a SevHist object.
+class GeSevHist : public GeDynElem {
+public:
+  pwr_tAName sevhist_object1;
+  pwr_tAName sevhist_object2;
+  pwr_tAName attribute1;
+  pwr_tAName attribute2;
+  char server[80];
+  pwr_tFloat32 timerange;
+  pwr_tAName timerange_attr;
+  pwr_tAName minvalue_attr1;
+  pwr_tAName maxvalue_attr1;
+  pwr_tAName minvalue_attr2;
+  pwr_tAName maxvalue_attr2;
+  pwr_tAName hold_attr;
+  pwr_tAName update_attr;
+  pwr_tFloat32 updatetime;
+  pwr_tAName mark1_attr;
+  pwr_tAName mark2_attr;
+
+  int max_points; //!< Max number of points in curves.
+  bool first_scan; //!< Indicates that this is the first scan.
+  int sevhist_cnt;
+  pwr_tFloat32* min_value1_p;
+  pwr_tFloat32* max_value1_p;
+  pwr_tFloat32 old_min_value1;
+  pwr_tFloat32 old_max_value1;
+  pwr_tSubid min_value_subid1;
+  pwr_tSubid max_value_subid1;
+  pwr_tFloat32* min_value2_p;
+  pwr_tFloat32* max_value2_p;
+  graph_eDatabase min_value1_db;
+  graph_eDatabase max_value1_db;
+  pwr_tFloat32 old_min_value2;
+  pwr_tFloat32 old_max_value2;
+  pwr_tSubid min_value_subid2;
+  pwr_tSubid max_value_subid2;
+  pwr_tFloat32* timerange_p;
+  pwr_tSubid timerange_subid;
+  graph_eDatabase timerange_db;
+  int trend_hold;
+  pwr_tBoolean* hold_p;
+  pwr_tSubid hold_subid;
+  graph_eDatabase hold_db;
+  pwr_tBoolean* update_p;
+  pwr_tSubid update_subid;
+  graph_eDatabase update_db;
+  pwr_tBoolean old_update;
+  pwr_tFloat32* mark1_p;
+  pwr_tFloat32* mark2_p;
+  pwr_tFloat32 old_mark1;
+  pwr_tFloat32 old_mark2;
+  pwr_tSubid mark1_subid;
+  pwr_tSubid mark2_subid;
+  glow_eDrawType mark1_color;
+  glow_eDrawType mark2_color;
+  sevcli_tCtx scctx;
+  pwr_tOid oidv[2];
+  pwr_tOName anamev[2];
+  pwr_tDeltaTime dt_timerange;
+  float acc_time;
+  glow_eHorizDirection direction;
+
+  GeSevHist(GeDyn* e_dyn);
+  GeSevHist(const GeSevHist& x);
+  void get_attributes(attr_sItem* attrinfo, int* item_count);
+  void save(std::ofstream& fp);
+  void open(std::ifstream& fp);
+  int connect(grow_tObject object, glow_sTraceData* trace_data, bool now);
+  int disconnect(grow_tObject object);
+  int scan(grow_tObject object);
+  void set_attribute(grow_tObject object, const char* attr_name, int* cnt);
+  void replace_attribute(char* from, char* to, int* cnt, int strict);
   int syntax_check(grow_tObject object, int* error_cnt, int* warning_cnt);
 };
 

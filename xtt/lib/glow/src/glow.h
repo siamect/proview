@@ -99,7 +99,8 @@ typedef enum {
   glow_eType_DynType2, //!< Type of dynamics mask 2
   glow_eType_ActionType2, //!< Type of action mask 2
   glow_eType_AppMotion, //!< Type is glow_eAppMotion
-  glow_eType_Float //!< Type is a float
+  glow_eType_Float, //!< Type is a float
+  glow_eType_HorizDirection //!< Type is glow_eHorizDirection
 } glow_eType;
 
 //! Type of Ctx class
@@ -241,6 +242,12 @@ typedef enum {
   glow_eDirection_Up, //!< Direction Up
   glow_eDirection_Down //!< Direction down
 } glow_eDirection;
+
+//! Horizontal direction.
+typedef enum {
+  glow_eHorizDirection_Left,
+  glow_eHorizDirection_Right
+} glow_eHorizDirection;
 
 //! Adjustment of annotations
 typedef enum {
@@ -440,6 +447,7 @@ typedef enum {
   glow_eCurveType_Square,
   glow_eCurveType_DigSquare
 } glow_eCurveType;
+
 
 //! Color index for a color
 /*! The drawtype is index in an array that contains the gc for colors in the
@@ -1788,6 +1796,7 @@ typedef enum {
   glow_eSave_GrowTrend_x_max_value_1 = 3233,
   glow_eSave_GrowTrend_x_min_value_1 = 3234,
   glow_eSave_GrowTrend_mode = 3235,
+  glow_eSave_GrowTrend_direction = 3236,
   glow_eSave_GrowSlider_grownode_part = 3300,
   glow_eSave_GrowSlider_direction = 3301,
   glow_eSave_GrowSlider_max_value = 3302,

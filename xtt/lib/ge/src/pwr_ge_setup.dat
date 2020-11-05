@@ -17,7 +17,10 @@ menu Images
 menu Analog
 {
   subgraph 	Trend	 	pwr_trend.component 		25
+  subgraph 	DsTrend 	pwr_dstrend.component 		25
+  subgraph 	DsTrendCurve 	pwr_dstrendcurve.component 	25
   subgraph 	FastCurve 	pwr_fastcurve.component 	25
+  subgraph 	SevHist 	pwr_sevhist.component 		25
   subgraph 	XYCurve 	pwr_xycurve.component 		25
   subgraph 	Bar		pwr_bar.component 		26
   subgraph 	BarArc		pwr_bararc.component 		253

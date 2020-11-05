@@ -1105,28 +1105,33 @@ void* sev_server::send_histdata_thread(void* arg)
   starttime = net_NetTimeToTime(&rmsg->StartTime);
   endtime = net_NetTimeToTime(&rmsg->EndTime);
 
-  sev->m_db->get_item_idx(&sts, &item_idx, rmsg->Oid, rmsg->AName);
-  if (EVEN(sts)) {
-    qcom_Free(&lsts, rmsg);
-    return (void*)1;
-  }
-
-  if (sev->m_read_threads)
-    thread = sev->m_db->new_thread();
-
-  sev->m_db->get_values(&sts, thread, rmsg->Oid,
-      sev->m_db->m_items[item_idx].options,
-      sev->m_db->m_items[item_idx].deadband, rmsg->AName,
-      sev->m_db->m_items[item_idx].attr[0].type,
-      sev->m_db->m_items[item_idx].attr[0].size,
-      sev->m_db->m_items[item_idx].scantime,
-      &sev->m_db->m_items[item_idx].creatime, &starttime, &endtime,
-      rmsg->NumPoints, &tbuf, &vbuf, &rows);
-  if (ODD(sts) && rows != 0)
-    msize
-        = rows * (sizeof(pwr_tTime) + sev->m_db->m_items[item_idx].attr[0].size)
-        + sizeof(*msg) - sizeof(msg->Data);
+  if (cdh_ObjidIsNull(rmsg->Oid))
+    sev->m_db->get_item_idx_by_name(&sts, &item_idx, rmsg->AName);
   else
+    sev->m_db->get_item_idx(&sts, &item_idx, rmsg->Oid, rmsg->AName);
+
+  if (ODD(sts)) {
+    if (sev->m_read_threads)
+      thread = sev->m_db->new_thread();
+
+    sev->m_db->get_values(&sts, thread,
+        sev->m_db->m_items[item_idx].oid,
+        sev->m_db->m_items[item_idx].options,
+        sev->m_db->m_items[item_idx].deadband,
+        sev->m_db->m_items[item_idx].attr[0].aname,
+        sev->m_db->m_items[item_idx].attr[0].type,
+        sev->m_db->m_items[item_idx].attr[0].size,
+        sev->m_db->m_items[item_idx].scantime,
+        &sev->m_db->m_items[item_idx].creatime, &starttime, &endtime,
+        rmsg->NumPoints, &tbuf, &vbuf, &rows);
+    if (ODD(sts) && rows != 0)
+      msize
+          = rows * (sizeof(pwr_tTime) + sev->m_db->m_items[item_idx].attr[0].size)
+          + sizeof(*msg) - sizeof(msg->Data);
+    else
+      msize = sizeof(*msg);
+  }
+  else 
     msize = sizeof(*msg);
 
   put.reply.nid = sev->m_nodes[0].nid;

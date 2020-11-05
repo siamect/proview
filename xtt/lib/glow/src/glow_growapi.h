@@ -2422,6 +2422,26 @@ void grow_SetXYCurveRangeY(
 void grow_SetXYCurveRangeX(
     grow_tObject object, int curve, double min, double max);
 
+//! Get the range of a xy curve object.
+/*!
+  \param object	Trend object.
+  \param curve	Curve number.
+  \param min		Minimum value of range.
+  \param max		Maximum value of range.
+*/
+void grow_GetXYCurveRangeY(
+    grow_tObject object, int curve, double *min, double *max);
+
+//! Get the range of a xy curve object.
+/*!
+  \param object	Trend object.
+  \param curve	Curve number.
+  \param min		Minimum value of range.
+  \param max		Maximum value of range.
+*/
+void grow_GetXYCurveRangeX(
+    grow_tObject object, int curve, double *min, double *max);
+
 //! Set vertical mark 1.
 /*!
   \param mark		Mark value.
@@ -2446,12 +2466,15 @@ void grow_SetXYCurveYMark1(grow_tObject object, double mark);
 */
 void grow_SetXYCurveYMark2(grow_tObject object, double mark);
 
-//! Set number of curves a xy curve object.
+//! Set number of curves of a xy curve object.
 /*!
   \param object	Trend object.
   \param noofcurves	Number of curves.
 */
 void grow_SetXYCurveNoOfCurves(grow_tObject object, int noofcurves);
+
+//! Get number of points of xy curve object.
+int grow_GetXYCurveNoOfPoints(grow_tObject object);
 
 //! Get the scantime of a trend object.
 /*!
@@ -2473,6 +2496,9 @@ void grow_SetTrendScanTime(grow_tObject object, double time);
   \param no_of_curves Number of curves.
 */
 void grow_SetTrendNoOfCurves(grow_tObject object, int no_of_curves);
+
+//! Get direction for trend object.
+glow_eHorizDirection grow_GetTrendDirection(grow_tObject object);
 
 //! Set number of vertical and horizontal lines in a trend object.
 /*!

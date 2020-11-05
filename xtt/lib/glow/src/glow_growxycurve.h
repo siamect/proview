@@ -89,7 +89,10 @@ public:
 
   void set_xy_range_x(int curve, double min, double max);
   void set_xy_range_y(int curve, double min, double max);
+  void get_xy_range_x(int curve, double *min, double *max);
+  void get_xy_range_y(int curve, double *min, double *max);
   void set_xy_noofcurves(int noofcurves);
+  int get_xy_noofpoints() {return no_of_points;}
   void set_xy_curve_color(
       int curve, glow_eDrawType curve_color, glow_eDrawType fill_color);
   void set_xy_data(

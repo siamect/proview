@@ -69,7 +69,8 @@ GrowTrend::GrowTrend(GrowCtx* glow_ctx, const char* name, double x, double y,
       curve_width(1), curve_cnt(0), scan_time(1), user_data(0),
       display_x_mark1(0), display_x_mark2(0), display_y_mark1(0),
       display_y_mark2(0), x_mark1(0), x_mark2(0), y_mark1(0), y_mark2(0),
-      mark1_color(glow_eDrawType_Inherit), mark2_color(glow_eDrawType_Inherit)
+      mark1_color(glow_eDrawType_Inherit), mark2_color(glow_eDrawType_Inherit),
+      direction(glow_eHorizDirection_Left)
 {
   for (int i = 0; i < TREND_MAX_CURVES; i++) {
     y_min_value[i] = 0;
@@ -123,15 +124,28 @@ void GrowTrend::configure_curves()
   for (i = 0; i < points; i++) {
     if (!fill_curve) {
       point_p->y = ur.y;
-      point_p->x = ur.x - i * (ur.x - ll.x) / (points - 1);
+      if (direction == glow_eHorizDirection_Right)
+	point_p->x = ll.x + i * (ur.x - ll.x) / (points - 1);
+      else
+	point_p->x = ur.x - i * (ur.x - ll.x) / (points - 1);
     } else {
       point_p->y = ur.y;
-      if (i == 0)
-        point_p->x = ur.x;
-      else if (i == points - 1)
-        point_p->x = ll.x;
-      else
-        point_p->x = ur.x - (i - 1) * (ur.x - ll.x) / (points - 3);
+      if (direction == glow_eHorizDirection_Right) {
+	if (i == 0)
+	  point_p->x = ll.x;
+	else if (i == points - 1)
+	  point_p->x = ur.x;
+	else
+	  point_p->x = ll.x + (i - 1) * (ur.x - ll.x) / (points - 3);
+      }
+      else {
+	if (i == 0)
+	  point_p->x = ur.x;
+	else if (i == points - 1)
+	  point_p->x = ll.x;
+	else
+	  point_p->x = ur.x - (i - 1) * (ur.x - ll.x) / (points - 3);
+      }
     }
     point_p++;
   }
@@ -200,6 +214,7 @@ void GrowTrend::save(std::ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowTrend_no_of_points) << FSPACE << no_of_points
      << '\n';
   fp << int(glow_eSave_GrowTrend_curve_width) << FSPACE << curve_width << '\n';
+  fp << int(glow_eSave_GrowTrend_direction) << FSPACE << int(direction) << '\n';
   fp << int(glow_eSave_GrowTrend_trace_data1) << FSPACE << trace.data[0]
      << '\n';
   fp << int(glow_eSave_GrowTrend_trace_data2) << FSPACE << trace.data[1]
@@ -316,6 +331,10 @@ void GrowTrend::open(std::ifstream& fp)
       break;
     case glow_eSave_GrowTrend_curve_width:
       fp >> curve_width;
+      break;
+    case glow_eSave_GrowTrend_direction:
+      fp >> tmp;
+      direction = (glow_eHorizDirection)tmp;
       break;
     case glow_eSave_GrowTrend_rect_part:
       GrowRect::open(fp);
@@ -1124,16 +1143,27 @@ void GrowTrend::set_data(double* data[3], int data_curves, int data_points)
                   / (y_max_value[j] - y_min_value[j]) * (ur.y - ll.y);
 
         point_p->y = MAX(ll.y, MIN(point_p->y, ur.y));
-        point_p->x = ll.x
+	if (direction == glow_eHorizDirection_Right)
+	  point_p->x = ll.x
             + (data[0][idx] - data[0][0]) / (data[0][points - 1] - data[0][0])
-                * (ur.x - ll.x);
+	    * (ur.x - ll.x);
+	else
+	  point_p->x = ur.x
+            - (data[0][idx] - data[0][0]) / (data[0][points - 1] - data[0][0])
+	    * (ur.x - ll.x);
       } else {
         if (i == 0) {
-          point_p->x = ll.x;
+	  if (direction == glow_eHorizDirection_Right)
+	    point_p->x = ll.x;
+	  else
+	    point_p->x = ur.x;
           point_p->y = ur.y;
           idx--;
         } else if (i == cpoints - 1) {
-          point_p->x = ur.x;
+	  if (direction == glow_eHorizDirection_Right)
+	    point_p->x = ur.x;
+	  else
+	    point_p->x = ll.x;
           point_p->y = ur.y;
         } else {
           if (!feq(y_max_value[j], y_min_value[j]))
@@ -1142,9 +1172,14 @@ void GrowTrend::set_data(double* data[3], int data_curves, int data_points)
                     / (y_max_value[j] - y_min_value[j]) * (ur.y - ll.y);
 
           point_p->y = MAX(ll.y, MIN(point_p->y, ur.y));
-          point_p->x = ll.x
+	  if (direction == glow_eHorizDirection_Right)
+	    point_p->x = ll.x
               + (data[0][idx] - data[0][0]) / (data[0][points - 1] - data[0][0])
-                  * (ur.x - ll.x);
+	      * (ur.x - ll.x);
+	  else
+	    point_p->x = ur.x
+              - (data[0][idx] - data[0][0]) / (data[0][points - 1] - data[0][0])
+	      * (ur.x - ll.x);
         }
       }
       point_p++;

@@ -1602,7 +1602,39 @@ int Graph::get_attr_items(grow_tObject object, attr_sItem** itemlist,
         "FastCurve.CurveFillColor1", "MaxValue2", "FastCurve.MaxValue2",
         "MinValue2", "FastCurve.MinValue2", "CurveColor2",
         "FastCurve.CurveColor2", "CurveFillColor2", "FastCurve.CurveFillColor2",
-        "Dynamic", "", "" };
+	"Direction", "", "Dynamic", "", "" };
+      grow_GetObjectAttrInfo(
+          object, (char*)transtab, &grow_info, &grow_info_cnt);
+
+      *item_cnt = 0;
+      dyn->get_attributes(object, items, item_cnt);
+    } else if (dyn->dyn_type2 & ge_mDynType2_DsTrend) {
+      char transtab[][32] = { "NoOfPoints", "DsTrend.NoOfPoints", "ScanTime",
+        "DsTrend.ScanTime", "CurveWidth", "DsTrend.CurveLineWidth", "FillCurve",
+        "DsTrend.FillCurve", "HorizontalLines", "DsTrend.HorizontalLines",
+        "VerticalLines", "DsTrend.VerticalLines", "MaxValue1",
+        "DsTrend.MaxValue1", "MinValue1", "DsTrend.MinValue1",
+        "CurveColor1", "DsTrend.CurveColor1", "CurveFillColor1",
+        "DsTrend.CurveFillColor1", "MaxValue2", "DsTrend.MaxValue2",
+        "MinValue2", "DsTrend.MinValue2", "CurveColor2",
+        "DsTrend.CurveColor2", "CurveFillColor2", "DsTrend.CurveFillColor2",
+	"Direction", "DsTrend.Direction", "Dynamic", "", "" };
+      grow_GetObjectAttrInfo(
+          object, (char*)transtab, &grow_info, &grow_info_cnt);
+
+      *item_cnt = 0;
+      dyn->get_attributes(object, items, item_cnt);
+    } else if (dyn->dyn_type2 & ge_mDynType2_DsTrendCurve) {
+      char transtab[][32] = { "NoOfPoints", "DsTrendCurve.NoOfPoints", "ScanTime",
+        "DsTrendCurve.ScanTime", "CurveWidth", "DsTrendCurve.CurveLineWidth", "FillCurve",
+        "DsTrendCurve.FillCurve", "HorizontalLines", "DsTrendCurve.HorizontalLines",
+        "VerticalLines", "DsTrendCurve.VerticalLines", "MaxValue1",
+        "DsTrendCurve.MaxValue1", "MinValue1", "DsTrendCurve.MinValue1",
+        "CurveColor1", "DsTrendCurve.CurveColor1", "CurveFillColor1",
+        "DsTrendCurve.CurveFillColor1", "MaxValue2", "DsTrendCurve.MaxValue2",
+        "MinValue2", "DsTrendCurve.MinValue2", "CurveColor2",
+        "DsTrendCurve.CurveColor2", "CurveFillColor2", "DsTrendCurve.CurveFillColor2",
+	"Direction", "DsTrendCurve.Direction", "Dynamic", "", "" };
       grow_GetObjectAttrInfo(
           object, (char*)transtab, &grow_info, &grow_info_cnt);
 
@@ -1614,7 +1646,24 @@ int Graph::get_attr_items(grow_tObject object, attr_sItem** itemlist,
         "XY_Curve.FillCurve", "HorizontalLines", "XY_Curve.HorizontalLines",
         "VerticalLines", "XY_Curve.VerticalLines", "MaxValue1", "", "MinValue1",
         "", "CurveColor1", "", "CurveFillColor1", "", "MaxValue2", "",
-        "MinValue2", "", "CurveColor2", "", "CurveFillColor2", "", "Dynamic",
+        "MinValue2", "", "CurveColor2", "", "CurveFillColor2", "",
+	"Direction", "",  "Dynamic",
+        "", "" };
+      grow_GetObjectAttrInfo(
+          object, (char*)transtab, &grow_info, &grow_info_cnt);
+
+      *item_cnt = 0;
+      dyn->get_attributes(object, items, item_cnt);
+    } else if (dyn->dyn_type2 & ge_mDynType2_SevHist) {
+      char transtab[][32] = { "NoOfPoints", "SevHist.MaxPoints", "ScanTime",
+        "", "CurveWidth", "SevHist.CurveLineWidth", "FillCurve",
+        "SevHist.FillCurve", "HorizontalLines", "SevHist.HorizontalLines",
+        "VerticalLines", "SevHist.VerticalLines", "MaxValue1", "SevHist.MaxValue1", 
+	"MinValue1", "SevHist.MinValue1", "CurveColor1", "SevHist.CurveColor1", 
+        "CurveFillColor1", "SevHist.CurveFillColor1", "MaxValue2", "SevHist.MaxValue2",
+        "MinValue2", "SevHist.MinValue2", "CurveColor2", "SevHist.CurveColor2", 
+	"CurveFillColor2", "SevHist.CurveFillColor2", "Direction", "SevHist.Direction",
+        "Dynamic",
         "", "" };
       grow_GetObjectAttrInfo(
           object, (char*)transtab, &grow_info, &grow_info_cnt);
@@ -1630,7 +1679,7 @@ int Graph::get_attr_items(grow_tObject object, attr_sItem** itemlist,
         "CurveFillColor1", "Trend.CurveFillColor1", "MaxValue2",
         "Trend.MaxValue2", "MinValue2", "Trend.MinValue2", "CurveColor2",
         "Trend.CurveColor2", "CurveFillColor2", "Trend.CurveFillColor2",
-        "Dynamic", "", "" };
+	"Direction", "Trend.Direction", "Dynamic", "", "" };
       grow_GetObjectAttrInfo(
           object, (char*)transtab, &grow_info, &grow_info_cnt);
 
@@ -2517,28 +2566,48 @@ static int graph_grow_cb(GlowCtx* ctx, glow_tEvent event)
       if (streq(sub_name, "pwr_trend")) {
         grow_tObject t1;
         graph->create_trend(&t1, event->create_grow_object.x,
-            event->create_grow_object.y, (unsigned int)ge_mDynType1_Trend, 0);
+			    event->create_grow_object.y, (unsigned int)ge_mDynType1_Trend, 0, 0);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
 
       } else if (streq(sub_name, "pwrct_trend")) {
         grow_tObject t1;
         graph->create_trend(&t1, event->create_grow_object.x,
-            event->create_grow_object.y, (unsigned int)ge_mDynType1_Trend, 1);
+	    event->create_grow_object.y, (unsigned int)ge_mDynType1_Trend, 0, 1);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
 
       } else if (streq(sub_name, "pwr_fastcurve")) {
         grow_tObject t1;
         graph->create_trend(&t1, event->create_grow_object.x,
-            event->create_grow_object.y, (unsigned int)ge_mDynType1_FastCurve,
+	    event->create_grow_object.y, (unsigned int)ge_mDynType1_FastCurve, 0,
             0);
+
+        graph->journal_store(journal_eAction_CreateObject, t1);
+      } else if (streq(sub_name, "pwr_dstrend")) {
+        grow_tObject t1;
+        graph->create_trend(&t1, event->create_grow_object.x,
+	    event->create_grow_object.y, 0, (unsigned int)ge_mDynType2_DsTrend,
+	    0);
+
+        graph->journal_store(journal_eAction_CreateObject, t1);
+      } else if (streq(sub_name, "pwr_dstrendcurve")) {
+        grow_tObject t1;
+        graph->create_trend(&t1, event->create_grow_object.x,
+	    event->create_grow_object.y, 0, (unsigned int)ge_mDynType2_DsTrendCurve,
+	    0);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
       } else if (streq(sub_name, "pwr_xycurve")) {
         grow_tObject t1;
         graph->create_xycurve(&t1, event->create_grow_object.x,
-            event->create_grow_object.y, (unsigned int)ge_mDynType1_XY_Curve);
+	    event->create_grow_object.y, (unsigned int)ge_mDynType1_XY_Curve, 0);
+
+        graph->journal_store(journal_eAction_CreateObject, t1);
+      } else if (streq(sub_name, "pwr_sevhist")) {
+        grow_tObject t1;
+        graph->create_xycurve(&t1, event->create_grow_object.x,
+	    event->create_grow_object.y, 0, (unsigned int)ge_mDynType2_SevHist);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
       } else if (streq(sub_name, "pwr_bar")) {
@@ -5414,7 +5483,7 @@ int Graph::ref_object_info_all()
 }
 
 void Graph::create_trend(grow_tObject* object, double x, double y,
-    unsigned int dyn_type1, int colortheme)
+			 unsigned int dyn_type1, unsigned int dyn_type2, int colortheme)
 {
   double width = 7;
   double height = 5;
@@ -5434,6 +5503,7 @@ void Graph::create_trend(grow_tObject* object, double x, double y,
       height, bcolor, 1, glow_mDisplayLevel_1, 1, 1, fcolor, NULL, object);
   dyn = new GeDyn(this);
   dyn->dyn_type1 = dyn->total_dyn_type1 = (ge_mDynType1)dyn_type1;
+  dyn->dyn_type2 = dyn->total_dyn_type2 = (ge_mDynType2)dyn_type2;
   dyn->update_elements();
   grow_SetUserData(*object, (void*)dyn);
 
@@ -5468,7 +5538,7 @@ void Graph::create_trend(grow_tObject* object, double x, double y,
 }
 
 void Graph::create_xycurve(
-    grow_tObject* object, double x, double y, unsigned int dyn_type1)
+    grow_tObject* object, double x, double y, unsigned int dyn_type1, unsigned int dyn_type2)
 {
   double width = 7;
   double height = 5;
@@ -5480,6 +5550,7 @@ void Graph::create_xycurve(
       glow_eDrawType_Color40, NULL, object);
   dyn = new GeDyn(this);
   dyn->dyn_type1 = dyn->total_dyn_type1 = (ge_mDynType1)dyn_type1;
+  dyn->dyn_type2 = dyn->total_dyn_type2 = (ge_mDynType2)dyn_type2;
   dyn->update_elements();
   grow_SetUserData(*object, (void*)dyn);
 

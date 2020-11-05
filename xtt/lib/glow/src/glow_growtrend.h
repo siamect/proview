@@ -135,6 +135,7 @@ public:
   double y_mark2; //!< Horizontal marker line 2 position.
   glow_eDrawType mark1_color; //!< Marker line 1 color.
   glow_eDrawType mark2_color; //!< Marker line 2 color.
+  glow_eHorizDirection direction; //!< Direction, right or left
 
   void draw(GlowWind* w, GlowTransform* t, int highlight, int hot, void* node,
       void* colornode);
@@ -218,6 +219,7 @@ public:
   void set_x_mark2(double mark);
   void set_y_mark1(double mark);
   void set_y_mark2(double mark);
+  glow_eHorizDirection get_direction() {return direction;}
 };
 
 /*@}*/

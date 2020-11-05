@@ -44,6 +44,8 @@
 #include "rt_sevcli.h"
 #include "rt_sev_net.h"
 
+static sevcli_tCtx stored_ctx = 0;
+
 /**
  * @brief Initialization of the client. Creates a context and opens a Qcom queue
  * for
@@ -83,6 +85,8 @@ int sevcli_close(pwr_tStatus* sts, sevcli_tCtx ctx)
   if (!qcom_DeleteQ(sts, &ctx->qid)) {
     return 0;
   }
+  if (ctx == stored_ctx)
+    stored_ctx = 0;
   free(ctx);
   *sts = SEV__SUCCESS;
   return 1;
@@ -863,5 +867,21 @@ int sevcli_get_events(pwr_tStatus* sts, sevcli_tCtx ctx, pwr_tOid oid,
 
   *sts = SEV__SUCCESS;
   return 1;
+}
+
+/**
+ * @brief Store context.
+ */
+void sevcli_store_ctx(sevcli_tCtx ctx)
+{
+  stored_ctx = ctx;
+}
+
+/**
+ * @brief Get stored context.
+ */
+sevcli_tCtx sevcli_get_stored_ctx()
+{
+  return stored_ctx;
 }
 

@@ -990,6 +990,10 @@ static attrnav_sEnumElement elem_direction[]
         { (unsigned int)glow_eDirection_Up, "Down" },
         { (unsigned int)glow_eDirection_Down, "Up" }, { 0, "" } };
 
+static attrnav_sEnumElement elem_horizdirection[]
+    = { { (unsigned int)glow_eHorizDirection_Left, "Left" },
+        { (unsigned int)glow_eHorizDirection_Right, "Right" }, { 0, "" } };
+
 static attrnav_sEnumElement elem_adjustment[]
     = { { (unsigned int)glow_eAdjustment_Center, "Center" },
         { (unsigned int)glow_eAdjustment_Right, "Right" },
@@ -1146,6 +1150,8 @@ static attrnav_sEnumElement elem_keyboard_type[] = {
 static attrnav_sEnum enum_types[] = {
   { (unsigned int)glow_eType_Direction,
       (attrnav_sEnumElement*)&elem_direction },
+  { (unsigned int)glow_eType_HorizDirection,
+      (attrnav_sEnumElement*)&elem_horizdirection },
   { (unsigned int)glow_eType_Color, (attrnav_sEnumElement*)&elem_color },
   { (unsigned int)glow_eType_Tone, (attrnav_sEnumElement*)&elem_tone },
   { (unsigned int)glow_eType_ToneOrColor,
@@ -1330,6 +1336,7 @@ int attrnav_attr_string_to_value(int type_id, char* value_str, void* buffer_ptr,
   }
   case glow_eType_Int:
   case glow_eType_Direction:
+  case glow_eType_HorizDirection:
   case glow_eType_Adjustment:
   case glow_eType_AnnotType:
   case glow_eType_Font:
@@ -1420,6 +1427,7 @@ void attrnav_attrvalue_to_string(
     break;
   }
   case glow_eType_Direction:
+  case glow_eType_HorizDirection:
   case glow_eType_Adjustment:
   case glow_eType_AnnotType:
   case glow_eType_Font:
@@ -3268,6 +3276,7 @@ AItemLocal::AItemLocal(AttrNav* attrnav, const char* item_name,
         &node);
   switch (type_id) {
   case glow_eType_Direction:
+  case glow_eType_HorizDirection:
   case glow_eType_Adjustment:
   case glow_eType_AnnotType:
   case glow_eType_Font:

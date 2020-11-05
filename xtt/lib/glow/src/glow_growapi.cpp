@@ -2111,6 +2111,13 @@ int grow_GetObjectAttrInfo(
       attrinfo[i++].size = sizeof(op->curve_fill_drawtype[1]);
     }
 
+    if ((name = growapi_translate(transtab, "Direction"))) {
+      strcpy(attrinfo[i].name, name);
+      attrinfo[i].value_p = &op->direction;
+      attrinfo[i].type = glow_eType_HorizDirection;
+      attrinfo[i++].size = sizeof(op->direction);
+    }
+
     if ((name = growapi_translate(transtab, "Dynamic"))) {
       strcpy(attrinfo[i].name, name);
       op->get_dynamic(&dynamic, &dynsize);
@@ -4805,6 +4812,11 @@ void grow_SetTrendNoOfCurves(grow_tObject object, int no_of_curves)
   ((GrowTrend*)object)->set_no_of_curves(no_of_curves);
 }
 
+glow_eHorizDirection grow_GetTrendDirection(grow_tObject object)
+{
+  return ((GrowTrend*)object)->get_direction();
+}
+
 void grow_SetSliderRange(grow_tObject object, double min, double max)
 {
   ((GrowSlider*)object)->set_range(min, max);
@@ -4855,6 +4867,7 @@ void grow_SetTrendYMark2(grow_tObject object, double mark)
 {
   ((GrowTrend*)object)->set_y_mark2(mark);
 }
+
 void grow_SetXYCurveRangeY(
     grow_tObject object, int curve, double min, double max)
 {
@@ -4865,6 +4878,18 @@ void grow_SetXYCurveRangeX(
     grow_tObject object, int curve, double min, double max)
 {
   ((GrowXYCurve*)object)->set_xy_range_x(curve, min, max);
+}
+
+void grow_GetXYCurveRangeY(
+    grow_tObject object, int curve, double *min, double *max)
+{
+  ((GrowXYCurve*)object)->get_xy_range_y(curve, min, max);
+}
+
+void grow_GetXYCurveRangeX(
+    grow_tObject object, int curve, double *min, double *max)
+{
+  ((GrowXYCurve*)object)->get_xy_range_x(curve, min, max);
 }
 
 void grow_SetXYCurveXMark1(grow_tObject object, double mark)
@@ -4890,6 +4915,11 @@ void grow_SetXYCurveYMark2(grow_tObject object, double mark)
 void grow_SetXYCurveNoOfCurves(grow_tObject object, int noofcurves)
 {
   ((GrowXYCurve*)object)->set_xy_noofcurves(noofcurves);
+}
+
+int grow_GetXYCurveNoOfPoints(grow_tObject object)
+{
+  return ((GrowXYCurve*)object)->get_xy_noofpoints();
 }
 
 void grow_SetTrendFillCurve(grow_tObject object, int fill)

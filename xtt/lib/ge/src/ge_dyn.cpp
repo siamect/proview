@@ -528,6 +528,15 @@ GeDyn::GeDyn(const GeDyn& x)
     case ge_mDynType2_RefUpdate:
       e = new GeRefUpdate((const GeRefUpdate&)*elem);
       break;
+    case ge_mDynType2_DsTrend:
+      e = new GeDsTrend((const GeDsTrend&)*elem);
+      break;
+    case ge_mDynType2_DsTrendCurve:
+      e = new GeDsTrendCurve((const GeDsTrendCurve&)*elem);
+      break;
+    case ge_mDynType2_SevHist:
+      e = new GeSevHist((const GeSevHist&)*elem);
+      break;
     default:;
     }
     switch (elem->action_type1) {
@@ -809,6 +818,15 @@ void GeDyn::open(std::ifstream& fp)
       break;
     case ge_eSave_XY_Curve:
       e = (GeDynElem*)new GeXY_Curve(this);
+      break;
+    case ge_eSave_DsTrend:
+      e = (GeDynElem*)new GeDsTrend(this);
+      break;
+    case ge_eSave_DsTrendCurve:
+      e = (GeDynElem*)new GeDsTrendCurve(this);
+      break;
+    case ge_eSave_SevHist:
+      e = (GeDynElem*)new GeSevHist(this);
       break;
     case ge_eSave_DigCommand:
       e = (GeDynElem*)new GeDigCommand(this);
@@ -1835,6 +1853,15 @@ GeDynElem* GeDyn::create_dyn2_element(int mask, int instance)
   case ge_mDynType2_RefUpdate:
     e = (GeDynElem*)new GeRefUpdate(this, (ge_mInstance)instance);
     break;
+  case ge_mDynType2_DsTrend:
+    e = (GeDynElem*)new GeDsTrend(this);
+    break;
+  case ge_mDynType2_DsTrendCurve:
+    e = (GeDynElem*)new GeDsTrendCurve(this);
+    break;
+  case ge_mDynType2_SevHist:
+    e = (GeDynElem*)new GeSevHist(this);
+    break;
   default:;
   }
   return e;
@@ -2052,6 +2079,15 @@ GeDynElem* GeDyn::copy_element(GeDynElem& x)
       break;
     case ge_mDynType2_RefUpdate:
       e = (GeDynElem*)new GeRefUpdate((GeRefUpdate&)x);
+      break;
+    case ge_mDynType2_DsTrend:
+      e = (GeDynElem*)new GeDsTrend((GeDsTrend&)x);
+      break;
+    case ge_mDynType2_DsTrendCurve:
+      e = (GeDynElem*)new GeDsTrendCurve((GeDsTrendCurve&)x);
+      break;
+    case ge_mDynType2_SevHist:
+      e = (GeDynElem*)new GeSevHist((GeSevHist&)x);
       break;
     default:;
     }
@@ -20609,6 +20645,2093 @@ int GeFastCurve::syntax_check(
             'E', object, "FastCurve.FastObject is of wrong class");
         (*error_cnt)++;
       }
+    }
+  }
+  return 1;
+}
+
+GeDsTrend::GeDsTrend(GeDyn* e_dyn)
+    : GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_DsTrend,
+		ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DsTrend),
+      min_value1_p(0), max_value1_p(0), old_min_value1(0), old_max_value1(0),
+      min_value2_p(0), max_value2_p(0), old_min_value2(0), old_max_value2(0),
+      hold_p(0),
+      mark1_color(glow_eDrawType_Inherit), mark2_color(glow_eDrawType_Inherit)
+{
+  strcpy(dstrend_object1, "");
+  strcpy(dstrend_object2, "");
+  strcpy(minvalue_attr1, "");
+  strcpy(maxvalue_attr1, "");
+  strcpy(minvalue_attr2, "");
+  strcpy(maxvalue_attr2, "");
+  strcpy(hold_attr, "");
+  strcpy(mark1_attr, "");
+  strcpy(mark2_attr, "");
+}
+
+GeDsTrend::GeDsTrend(const GeDsTrend& x)
+    : GeDynElem(x.dyn, x.dyn_type1, x.dyn_type2, x.action_type1, x.action_type2,
+		x.prio),
+      mark1_color(x.mark1_color), mark2_color(x.mark2_color)
+
+{
+  strcpy(dstrend_object1, x.dstrend_object1);
+  strcpy(dstrend_object2, x.dstrend_object2);
+  strcpy(minvalue_attr1, x.minvalue_attr1);
+  strcpy(maxvalue_attr1, x.maxvalue_attr1);
+  strcpy(minvalue_attr2, x.minvalue_attr2);
+  strcpy(maxvalue_attr2, x.maxvalue_attr2);
+  strcpy(hold_attr, x.hold_attr);
+  strcpy(mark1_attr, x.mark1_attr);
+  strcpy(mark2_attr, x.mark2_attr);
+}
+
+void GeDsTrend::get_attributes(attr_sItem* attrinfo, int* item_count)
+{
+  int i = *item_count;
+
+  strcpy(attrinfo[i].name, "DsTrend.Object1");
+  attrinfo[i].value = dstrend_object1;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(dstrend_object1);
+
+  strcpy(attrinfo[i].name, "DsTrend.Object2");
+  attrinfo[i].value = dstrend_object2;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(dstrend_object2);
+
+  strcpy(attrinfo[i].name, "DsTrend.MinValueAttr1");
+  attrinfo[i].value = minvalue_attr1;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(minvalue_attr1);
+
+  strcpy(attrinfo[i].name, "DsTrend.MaxValueAttr1");
+  attrinfo[i].value = maxvalue_attr1;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(maxvalue_attr1);
+
+  strcpy(attrinfo[i].name, "DsTrend.MinValueAttr2");
+  attrinfo[i].value = minvalue_attr2;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(minvalue_attr2);
+
+  strcpy(attrinfo[i].name, "DsTrend.MaxValueAttr2");
+  attrinfo[i].value = maxvalue_attr2;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(maxvalue_attr2);
+
+  strcpy(attrinfo[i].name, "DsTrend.HoldAttr");
+  attrinfo[i].value = hold_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(hold_attr);
+
+  strcpy(attrinfo[i].name, "DsTrend.Mark1Attr");
+  attrinfo[i].value = mark1_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(mark1_attr);
+
+  strcpy(attrinfo[i].name, "DsTrend.Mark2Attr");
+  attrinfo[i].value = mark2_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(mark2_attr);
+
+  strcpy(attrinfo[i].name, "DsTrend.Mark1Color");
+  attrinfo[i].value = &mark1_color;
+  attrinfo[i].type = glow_eType_Color;
+  attrinfo[i++].size = sizeof(mark1_color);
+
+  strcpy(attrinfo[i].name, "DsTrend.Mark2Color");
+  attrinfo[i].value = &mark2_color;
+  attrinfo[i].type = glow_eType_Color;
+  attrinfo[i++].size = sizeof(mark2_color);
+
+  *item_count = i;
+}
+
+void GeDsTrend::set_attribute(
+    grow_tObject object, const char* attr_name, int* cnt)
+{
+  (*cnt)--;
+  if (*cnt == 0) {
+    char* s;
+
+    strncpy(dstrend_object1, attr_name, sizeof(dstrend_object1));
+    if ((s = strchr(dstrend_object1, '.')))
+      *s = 0;
+
+    char msg[23 + sizeof(dstrend_object1) +1];
+    snprintf(msg, sizeof(msg), "DsTrend.Object1 = %s", dstrend_object1);
+    msg[sizeof(msg) - 1] = 0;
+    dyn->graph->message('I', msg);
+  }
+}
+
+void GeDsTrend::replace_attribute(char* from, char* to, int* cnt, int strict)
+{
+  GeDyn::replace_attribute(
+      dstrend_object1, sizeof(dstrend_object1), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      dstrend_object2, sizeof(dstrend_object2), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      minvalue_attr1, sizeof(minvalue_attr1), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      maxvalue_attr1, sizeof(maxvalue_attr1), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      minvalue_attr2, sizeof(minvalue_attr2), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      maxvalue_attr2, sizeof(maxvalue_attr2), from, to, cnt, strict);
+  GeDyn::replace_attribute(hold_attr, sizeof(hold_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      mark1_attr, sizeof(mark1_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      mark2_attr, sizeof(mark2_attr), from, to, cnt, strict);
+}
+
+void GeDsTrend::save(std::ofstream& fp)
+{
+  fp << int(ge_eSave_DsTrend) << '\n';
+  fp << int(ge_eSave_DsTrend_dstrend_object1) << FSPACE << dstrend_object1 << '\n';
+  fp << int(ge_eSave_DsTrend_dstrend_object2) << FSPACE << dstrend_object2 << '\n';
+  fp << int(ge_eSave_DsTrend_minvalue_attr1) << FSPACE << minvalue_attr1 << '\n';
+  fp << int(ge_eSave_DsTrend_maxvalue_attr1) << FSPACE << maxvalue_attr1 << '\n';
+  fp << int(ge_eSave_DsTrend_minvalue_attr2) << FSPACE << minvalue_attr2 << '\n';
+  fp << int(ge_eSave_DsTrend_maxvalue_attr2) << FSPACE << maxvalue_attr2 << '\n';
+  fp << int(ge_eSave_DsTrend_hold_attr) << FSPACE << hold_attr << '\n';
+  fp << int(ge_eSave_DsTrend_mark1_attr) << FSPACE << mark1_attr << '\n';
+  fp << int(ge_eSave_DsTrend_mark2_attr) << FSPACE << mark2_attr << '\n';
+  fp << int(ge_eSave_DsTrend_mark1_color) << FSPACE << (int)mark1_color << '\n';
+  fp << int(ge_eSave_DsTrend_mark2_color) << FSPACE << (int)mark2_color << '\n';
+  fp << int(ge_eSave_End) << '\n';
+}
+
+void GeDsTrend::open(std::ifstream& fp)
+{
+  int type = 0;
+  int end_found = 0;
+  char dummy[40];
+  int tmp;
+
+  for (;;) {
+    if (!fp.good()) {
+      fp.clear();
+      fp.getline(dummy, sizeof(dummy));
+      printf("** Read error GeDsTrend: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch (type) {
+    case ge_eSave_DsTrend:
+      break;
+    case ge_eSave_DsTrend_dstrend_object1:
+      fp.get();
+      fp.getline(dstrend_object1, sizeof(dstrend_object1));
+      break;
+    case ge_eSave_DsTrend_dstrend_object2:
+      fp.get();
+      fp.getline(dstrend_object2, sizeof(dstrend_object2));
+      break;
+    case ge_eSave_DsTrend_minvalue_attr1:
+      fp.get();
+      fp.getline(minvalue_attr1, sizeof(minvalue_attr1));
+      break;
+    case ge_eSave_DsTrend_maxvalue_attr1:
+      fp.get();
+      fp.getline(maxvalue_attr1, sizeof(maxvalue_attr1));
+      break;
+    case ge_eSave_DsTrend_minvalue_attr2:
+      fp.get();
+      fp.getline(minvalue_attr2, sizeof(minvalue_attr2));
+      break;
+    case ge_eSave_DsTrend_maxvalue_attr2:
+      fp.get();
+      fp.getline(maxvalue_attr2, sizeof(maxvalue_attr2));
+      break;
+    case ge_eSave_DsTrend_hold_attr:
+      fp.get();
+      fp.getline(hold_attr, sizeof(hold_attr));
+      break;
+    case ge_eSave_DsTrend_mark1_attr:
+      fp.get();
+      fp.getline(mark1_attr, sizeof(mark1_attr));
+      break;
+    case ge_eSave_DsTrend_mark2_attr:
+      fp.get();
+      fp.getline(mark2_attr, sizeof(mark2_attr));
+      break;
+    case ge_eSave_DsTrend_mark1_color:
+      fp >> tmp;
+      mark1_color = (glow_eDrawType)tmp;
+      break;
+    case ge_eSave_DsTrend_mark2_color:
+      fp >> tmp;
+      mark2_color = (glow_eDrawType)tmp;
+      break;
+    case ge_eSave_End:
+      end_found = 1;
+      break;
+    default:
+      std::cout << "GeDsTrend:open syntax error\n";
+      fp.getline(dummy, sizeof(dummy));
+    }
+    if (end_found)
+      break;
+  }
+}
+
+int GeDsTrend::connect(
+    grow_tObject object, glow_sTraceData* trace_data, bool now)
+{
+  pwr_tStatus sts;
+  pwr_sClass_DsTrend tp[2];
+  int time;
+  int attr_type, attr_size;
+  pwr_tAName parsed_name;
+  int inverted;
+
+  // Get current status of the trend objects
+  dstrend_cnt = 0;
+  for (int i = 0; i < 2; i++) {
+    pwr_tOName oname;
+
+    if (i == 0)
+      strcpy(oname, dstrend_object1);
+    else
+      strcpy(oname, dstrend_object2);
+    if (strcmp(oname, "") == 0)
+      continue;
+  
+    sts = gdh_NameToAttrref(pwr_cNOid, oname, &dstrend_aref[i]);
+    if (EVEN(sts))
+      return sts;
+      
+    sts = gdh_GetObjectInfoAttrref(&dstrend_aref[i], &tp[i], sizeof(tp[0]));
+    if (EVEN(sts))
+      return sts;
+    dstrend_cnt++;
+  }
+
+  if (dstrend_cnt == 0)
+    return 0;
+
+  min_value1_p = 0;
+  min_value1_db = dyn->parse_attr_name(
+      minvalue_attr1, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    switch (min_value1_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+          (void**)&min_value1_p, &min_value_subid1, attr_size, object, now);
+      break;
+    case graph_eDatabase_Local:
+      min_value1_p = (pwr_tFloat32*)dyn->graph->localdb_ref_or_create(
+          parsed_name, attr_type);
+      break;
+    default:;
+    }
+  }
+  max_value1_p = 0;
+  max_value1_db = dyn->parse_attr_name(
+      maxvalue_attr1, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    switch (max_value1_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+          (void**)&max_value1_p, &max_value_subid1, attr_size, object, now);
+      break;
+    case graph_eDatabase_Local:
+      max_value1_p = (pwr_tFloat32*)dyn->graph->localdb_ref_or_create(
+          parsed_name, attr_type);
+      break;
+    default:;
+    }
+  }
+  min_value2_p = 0;
+  dyn->parse_attr_name(
+      minvalue_attr2, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+        (void**)&min_value2_p, &min_value_subid2, attr_size, object, now);
+  }
+  max_value2_p = 0;
+  dyn->parse_attr_name(
+      maxvalue_attr2, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+        (void**)&max_value2_p, &max_value_subid2, attr_size, object, now);
+  }
+
+  trend_hold = 0;
+  hold_p = 0;
+  hold_db = dyn->parse_attr_name(
+      hold_attr, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Boolean) {
+    switch (hold_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+          (void**)&hold_p, &hold_subid, attr_size, object, now);
+      if (EVEN(sts))
+        return sts;
+      break;
+    case graph_eDatabase_Local:
+      hold_p = (pwr_tBoolean*)dyn->graph->localdb_ref_or_create(
+          parsed_name, attr_type);
+      break;
+    default:;
+    }
+  }
+
+  mark1_p = 0;
+  dyn->parse_attr_name(
+      mark1_attr, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name, (void**)&mark1_p,
+        &mark1_subid, attr_size, object, now);
+  }
+
+  mark2_p = 0;
+  dyn->parse_attr_name(
+      mark2_attr, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name, (void**)&mark2_p,
+        &mark2_subid, attr_size, object, now);
+  }
+
+  if (mark1_color != glow_eDrawType_Inherit
+      || mark2_color != glow_eDrawType_Inherit)
+    grow_SetTrendMarkColor(object, mark1_color, mark2_color);
+
+
+  // Calculate number of points
+  max_time = 0;
+  min_interval = 100000;
+  for (int i = 0; i < dstrend_cnt; i++) {
+    time = tp[i].Multiple * tp[i].ScanTime * tp[i].NoOfBuffers
+      * tp[i].NoOfSample;
+    if (time > max_time)
+      max_time = time;
+    
+    if ((int)(tp[i].Multiple * tp[i].ScanTime) < min_interval) {
+      min_interval = tp[i].Multiple * tp[i].ScanTime;
+      min_interval_idx = i;
+    }
+  }
+
+  if (min_interval == 0)
+    return 0;
+
+  max_points = max_time / min_interval;
+
+  for (int i = 0; i < dstrend_cnt; i++) {
+    interval[i] = tp[i].Multiple * tp[i].ScanTime / min_interval;
+  }
+
+  grow_SetTrendNoOfCurves(object, dstrend_cnt);
+
+  trace_data->p = &pdummy;
+  first_scan = true;
+  return 1;
+}
+
+int GeDsTrend::disconnect(grow_tObject object)
+{
+  if (min_value1_p && min_value1_db == graph_eDatabase_Gdh) {
+    gdh_UnrefObjectInfo(min_value_subid1);
+    min_value1_p = 0;
+  }
+  if (max_value1_p && max_value1_db == graph_eDatabase_Gdh) {
+    gdh_UnrefObjectInfo(max_value_subid1);
+    max_value1_p = 0;
+  }
+  if (min_value2_p) {
+    gdh_UnrefObjectInfo(min_value_subid2);
+    min_value2_p = 0;
+  }
+  if (max_value2_p) {
+    gdh_UnrefObjectInfo(max_value_subid2);
+    max_value2_p = 0;
+  }
+  if (hold_p && hold_db == graph_eDatabase_Gdh) {
+    gdh_UnrefObjectInfo(hold_subid);
+    hold_p = 0;
+  }
+  if (mark1_p) {
+    gdh_UnrefObjectInfo(mark1_subid);
+    mark1_p = 0;
+  }
+  if (mark2_p) {
+    gdh_UnrefObjectInfo(mark2_subid);
+    mark1_p = 0;
+  }
+  return 1;
+}
+
+int GeDsTrend::scan(grow_tObject object)
+{
+  if (!dstrend_cnt)
+    return 0;
+
+  pwr_tStatus sts;
+  int i, j, k;
+  int write_buffer;
+  int idx;
+  int values;
+  int trend_buff_size = 478;
+  pwr_sClass_DsTrend tp[2];
+  double *data[3];
+  int start_idx;
+  int new_curve = 0;
+
+  if (hold_p)
+    trend_hold = *hold_p;
+
+  if (max_value1_p || min_value1_p) {
+    bool update = false;
+
+    pwr_tFloat32 maxval;
+    pwr_tFloat32 minval;
+    if (max_value1_p) {
+      maxval = *max_value1_p;
+      if (!feqf(maxval, old_max_value1))
+	update = true;
+    }
+    if (min_value1_p) {
+      minval = *min_value1_p;
+      if (!feqf(minval, old_min_value1))
+	update = true;
+    }
+    if (update) {
+      double minvald, maxvald;
+      grow_GetTrendRangeY(object, 0, &minvald, &maxvald);
+
+      if (!min_value1_p)
+	minval = minvald;
+      if (!max_value1_p)
+	maxval = maxvald;
+
+      if (fabsf(maxval - minval) > FLT_EPSILON) {
+        grow_SetTrendRangeY(object, 0, minval, maxval);
+	new_curve = 1;
+      }
+      old_min_value1 = minval;
+      old_max_value1 = maxval;
+    }
+  }
+
+  if (max_value2_p || min_value2_p) {
+    bool update = false;
+
+    pwr_tFloat32 maxval;
+    pwr_tFloat32 minval;
+    if (max_value2_p) {
+      maxval = *max_value2_p;
+      if (!feqf(maxval, old_max_value2))
+	update = true;
+    }
+    if (min_value2_p) {
+      minval = *min_value2_p;
+      if (!feqf(minval, old_min_value2))
+	update = true;
+    }
+    if (update) {
+      double minvald, maxvald;
+      grow_GetTrendRangeY(object, 1, &minvald, &maxvald);
+
+      if (!min_value2_p)
+	minval = minvald;
+      if (!max_value2_p)
+	maxval = maxvald;
+
+      if (fabsf(maxval - minval) > FLT_EPSILON) {
+        grow_SetTrendRangeY(object, 1, minval, maxval);
+	new_curve = 1;
+      }
+      old_min_value2 = minval;
+      old_max_value2 = maxval;
+    }
+  }
+
+  if (mark1_p && (first_scan || fabsf(*mark1_p - old_mark1) > FLT_EPSILON)) {
+    grow_SetTrendYMark1(object, *mark1_p);
+    old_mark1 = *mark1_p;
+  }
+  if (mark2_p && (first_scan || fabsf(*mark2_p - old_mark2) > FLT_EPSILON)) {
+    grow_SetTrendYMark2(object, *mark2_p);
+    old_mark2 = *mark2_p;
+  }
+
+  if (first_scan) {
+    first_scan = false;
+    new_curve = 1;
+  }
+
+  if (trend_hold)
+    return 1;
+
+  for (i = 0; i < dstrend_cnt; i++) {
+    sts = gdh_GetObjectInfoAttrref(&dstrend_aref[i], &tp[i], sizeof(tp));
+    if (EVEN(sts))
+      return sts;
+  }
+
+  if (new_curve) {
+    // Draw whole curve
+    data[0] = (double*)calloc(1, 8 * max_points);
+    for (j = 0; j < max_points; j++)
+      data[0][max_points-j-1] = (double)j / max_points * 100;
+
+    for (i = 0; i < dstrend_cnt; i++) {
+      data[i+1] = (double*)calloc(1, 8 * max_points);
+
+      int write_buffer = (int)tp[i].WriteBuffer;
+      start_idx = write_buffer * trend_buff_size / 2
+	+ int(tp[i].NextWriteIndex[write_buffer]);
+      if (start_idx == 0) {
+	start_idx = tp[i].NoOfSample - 1 + trend_buff_size / 2;
+	write_buffer = 1;
+      } else if (start_idx == trend_buff_size / 2) {
+	start_idx = tp[i].NoOfSample - 1;
+	write_buffer = 0;
+      } else
+	start_idx--;
+      
+      int idx = 0;
+      for (j = start_idx; j >= write_buffer * trend_buff_size / 2; j--) {
+	for (k = 0; k < interval[i]; k++) {
+	  data[i+1][idx] = tp[i].DataBuffer[j];
+	  idx++;
+	}
+      }
+      for (j = tp[i].NoOfSample - 1 + (!write_buffer) * trend_buff_size / 2;
+	   j >= (!write_buffer) * trend_buff_size / 2; j--) {
+	for (k = 0; k < interval[i]; k++) {
+	  data[i+1][idx] = tp[i].DataBuffer[j];
+	  idx++;
+	}
+      }
+      if (start_idx
+	  != (int)tp[i].NoOfSample - 1 + write_buffer * trend_buff_size / 2) {
+	for (j = tp[i].NoOfSample - 1 + write_buffer * trend_buff_size / 2;
+	     j > start_idx; j--) {
+	  for (k = 0; k < interval[i]; k++) {
+	    data[i+1][idx] = tp[i].DataBuffer[j];
+	    idx++;
+	  }
+	}
+      }
+      last_buffer[i] = tp[i].WriteBuffer;
+      last_next_index[i] = tp[i].NextWriteIndex[last_buffer[i]];
+    }
+
+    grow_SetTrendData(object, data, dstrend_cnt + 1, max_points);
+
+    free(data[0]);
+    for (i = 0; i < dstrend_cnt; i++)
+      free(data[i+1]);
+  }
+  else {
+    // Check if any new value
+    i = min_interval_idx;
+    if (tp[i].NextWriteIndex[tp[i].WriteBuffer]
+	!= last_next_index[i]) {
+      values = tp[i].NextWriteIndex[tp[i].WriteBuffer]
+	- last_next_index[i];
+      if (values < 0)
+	values = values + tp[i].NoOfSample;
+      
+      last_next_index[i]
+	= tp[i].NextWriteIndex[tp[i].WriteBuffer];
+      
+      if (values > 2)
+	grow_SetNodraw(dyn->graph->grow->ctx);
+      for (k = 0; k < values; k++) {
+	// Add new points
+	for (i = 0; i < dstrend_cnt; i++) {
+	  // Insert new value
+	  write_buffer = tp[i].WriteBuffer;
+	  idx = write_buffer * trend_buff_size / 2
+	    + int(tp[i].NextWriteIndex[write_buffer])
+	    - (values - 1 - k);
+	  if (idx == 0 || idx == trend_buff_size / 2)
+	    idx = tp[i].NoOfSample - 1
+	      + (!write_buffer) * trend_buff_size / 2;
+	  else
+	    idx--;
+	  
+	  grow_AddTrendValue(object, double(tp[i].DataBuffer[idx]), i);
+	}
+      }
+      if (values > 2)
+	grow_ResetNodraw(dyn->graph->grow->ctx);
+    }
+  }
+  
+  return 1;
+}
+
+int GeDsTrend::syntax_check(
+    grow_tObject object, int* error_cnt, int* warning_cnt)
+{
+  int sts;
+  pwr_eType a_type;
+
+  if (streq(dstrend_object1, "")) {
+    dyn->graph->syntax_msg('W', object, "DsTrend.Object1 is missing");
+    (*warning_cnt)++;
+  } else {
+    sts = dyn->graph->check_ldh_object(dstrend_object1, &a_type);
+    if (EVEN(sts)) {
+      char msg[440];
+      sprintf(msg, "DsTrend.Object1 \"%s\" not found", dstrend_object1);
+      dyn->graph->syntax_msg('W', object, msg);
+      (*warning_cnt)++;
+    } else {
+      if (a_type != pwr_cClass_DsTrend) {
+        dyn->graph->syntax_msg(
+            'E', object, "DsTrend.Object1 is of wrong class");
+        (*error_cnt)++;
+      }
+    }
+  }
+  if (!streq(dstrend_object2, "")) {
+    sts = dyn->graph->check_ldh_object(dstrend_object2, &a_type);
+    if (EVEN(sts)) {
+      char msg[440];
+      sprintf(msg, "DsTrend.Object2 \"%s\" not found", dstrend_object2);
+      dyn->graph->syntax_msg('W', object, msg);
+      (*warning_cnt)++;
+    } else {
+      if (a_type != pwr_cClass_DsTrend) {
+        dyn->graph->syntax_msg(
+            'E', object, "DsTrend.Object2 is of wrong class");
+        (*error_cnt)++;
+      }
+    }
+  }
+  return 1;
+}
+
+GeDsTrendCurve::GeDsTrendCurve(GeDyn* e_dyn)
+    : GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_DsTrendCurve,
+		ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_DsTrendCurve),
+      min_value1_p(0), max_value1_p(0), old_min_value1(0), old_max_value1(0),
+      min_value2_p(0), max_value2_p(0), old_min_value2(0), old_max_value2(0),
+      hold_p(0),
+      mark1_color(glow_eDrawType_Inherit), mark2_color(glow_eDrawType_Inherit)
+{
+  strcpy(dstrend_object, "");
+  strcpy(minvalue_attr1, "");
+  strcpy(maxvalue_attr1, "");
+  strcpy(minvalue_attr2, "");
+  strcpy(maxvalue_attr2, "");
+  strcpy(hold_attr, "");
+  strcpy(mark1_attr, "");
+  strcpy(mark2_attr, "");
+}
+
+GeDsTrendCurve::GeDsTrendCurve(const GeDsTrendCurve& x)
+    : GeDynElem(x.dyn, x.dyn_type1, x.dyn_type2, x.action_type1, x.action_type2,
+		x.prio),
+      mark1_color(x.mark1_color), mark2_color(x.mark2_color)
+
+{
+  strcpy(dstrend_object, x.dstrend_object);
+  strcpy(minvalue_attr1, x.minvalue_attr1);
+  strcpy(maxvalue_attr1, x.maxvalue_attr1);
+  strcpy(minvalue_attr2, x.minvalue_attr2);
+  strcpy(maxvalue_attr2, x.maxvalue_attr2);
+  strcpy(hold_attr, x.hold_attr);
+  strcpy(mark1_attr, x.mark1_attr);
+  strcpy(mark2_attr, x.mark2_attr);
+}
+
+void GeDsTrendCurve::get_attributes(attr_sItem* attrinfo, int* item_count)
+{
+  int i = *item_count;
+
+  strcpy(attrinfo[i].name, "DsTrendCurve.Object");
+  attrinfo[i].value = dstrend_object;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(dstrend_object);
+
+  strcpy(attrinfo[i].name, "DsTrendCurve.MinValueAttr1");
+  attrinfo[i].value = minvalue_attr1;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(minvalue_attr1);
+
+  strcpy(attrinfo[i].name, "DsTrendCurve.MaxValueAttr1");
+  attrinfo[i].value = maxvalue_attr1;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(maxvalue_attr1);
+
+  strcpy(attrinfo[i].name, "DsTrendCurve.MinValueAttr2");
+  attrinfo[i].value = minvalue_attr2;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(minvalue_attr2);
+
+  strcpy(attrinfo[i].name, "DsTrendCurve.MaxValueAttr2");
+  attrinfo[i].value = maxvalue_attr2;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(maxvalue_attr2);
+
+  strcpy(attrinfo[i].name, "DsTrendCurve.HoldAttr");
+  attrinfo[i].value = hold_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(hold_attr);
+
+  strcpy(attrinfo[i].name, "DsTrendCurve.Mark1Attr");
+  attrinfo[i].value = mark1_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(mark1_attr);
+
+  strcpy(attrinfo[i].name, "DsTrendCurve.Mark2Attr");
+  attrinfo[i].value = mark2_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(mark2_attr);
+
+  strcpy(attrinfo[i].name, "DsTrendCurve.Mark1Color");
+  attrinfo[i].value = &mark1_color;
+  attrinfo[i].type = glow_eType_Color;
+  attrinfo[i++].size = sizeof(mark1_color);
+
+  strcpy(attrinfo[i].name, "DsTrendCurve.Mark2Color");
+  attrinfo[i].value = &mark2_color;
+  attrinfo[i].type = glow_eType_Color;
+  attrinfo[i++].size = sizeof(mark2_color);
+
+  *item_count = i;
+}
+
+void GeDsTrendCurve::set_attribute(
+    grow_tObject object, const char* attr_name, int* cnt)
+{
+  (*cnt)--;
+  if (*cnt == 0) {
+    char* s;
+
+    strncpy(dstrend_object, attr_name, sizeof(dstrend_object));
+    if ((s = strchr(dstrend_object, '.')))
+      *s = 0;
+
+    char msg[23 + sizeof(dstrend_object) +1];
+    snprintf(msg, sizeof(msg), "DsTrendCurve.Object = %s", dstrend_object);
+    msg[sizeof(msg) - 1] = 0;
+    dyn->graph->message('I', msg);
+  }
+}
+
+void GeDsTrendCurve::replace_attribute(char* from, char* to, int* cnt, int strict)
+{
+  GeDyn::replace_attribute(
+      dstrend_object, sizeof(dstrend_object), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      minvalue_attr1, sizeof(minvalue_attr1), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      maxvalue_attr1, sizeof(maxvalue_attr1), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      minvalue_attr2, sizeof(minvalue_attr2), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      maxvalue_attr2, sizeof(maxvalue_attr2), from, to, cnt, strict);
+  GeDyn::replace_attribute(hold_attr, sizeof(hold_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      mark1_attr, sizeof(mark1_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      mark2_attr, sizeof(mark2_attr), from, to, cnt, strict);
+}
+
+void GeDsTrendCurve::save(std::ofstream& fp)
+{
+  fp << int(ge_eSave_DsTrendCurve) << '\n';
+  fp << int(ge_eSave_DsTrendCurve_dstrend_object) << FSPACE << dstrend_object << '\n';
+  fp << int(ge_eSave_DsTrendCurve_minvalue_attr1) << FSPACE << minvalue_attr1 << '\n';
+  fp << int(ge_eSave_DsTrendCurve_maxvalue_attr1) << FSPACE << maxvalue_attr1 << '\n';
+  fp << int(ge_eSave_DsTrendCurve_minvalue_attr2) << FSPACE << minvalue_attr2 << '\n';
+  fp << int(ge_eSave_DsTrendCurve_maxvalue_attr2) << FSPACE << maxvalue_attr2 << '\n';
+  fp << int(ge_eSave_DsTrendCurve_hold_attr) << FSPACE << hold_attr << '\n';
+  fp << int(ge_eSave_DsTrendCurve_mark1_attr) << FSPACE << mark1_attr << '\n';
+  fp << int(ge_eSave_DsTrendCurve_mark2_attr) << FSPACE << mark2_attr << '\n';
+  fp << int(ge_eSave_DsTrendCurve_mark1_color) << FSPACE << (int)mark1_color << '\n';
+  fp << int(ge_eSave_DsTrendCurve_mark2_color) << FSPACE << (int)mark2_color << '\n';
+  fp << int(ge_eSave_End) << '\n';
+}
+
+void GeDsTrendCurve::open(std::ifstream& fp)
+{
+  int type = 0;
+  int end_found = 0;
+  char dummy[40];
+  int tmp;
+
+  for (;;) {
+    if (!fp.good()) {
+      fp.clear();
+      fp.getline(dummy, sizeof(dummy));
+      printf("** Read error GeDsTrendCurve: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch (type) {
+    case ge_eSave_DsTrendCurve:
+      break;
+    case ge_eSave_DsTrendCurve_dstrend_object:
+      fp.get();
+      fp.getline(dstrend_object, sizeof(dstrend_object));
+      break;
+    case ge_eSave_DsTrendCurve_minvalue_attr1:
+      fp.get();
+      fp.getline(minvalue_attr1, sizeof(minvalue_attr1));
+      break;
+    case ge_eSave_DsTrendCurve_maxvalue_attr1:
+      fp.get();
+      fp.getline(maxvalue_attr1, sizeof(maxvalue_attr1));
+      break;
+    case ge_eSave_DsTrendCurve_minvalue_attr2:
+      fp.get();
+      fp.getline(minvalue_attr2, sizeof(minvalue_attr2));
+      break;
+    case ge_eSave_DsTrendCurve_maxvalue_attr2:
+      fp.get();
+      fp.getline(maxvalue_attr2, sizeof(maxvalue_attr2));
+      break;
+    case ge_eSave_DsTrendCurve_hold_attr:
+      fp.get();
+      fp.getline(hold_attr, sizeof(hold_attr));
+      break;
+    case ge_eSave_DsTrendCurve_mark1_attr:
+      fp.get();
+      fp.getline(mark1_attr, sizeof(mark1_attr));
+      break;
+    case ge_eSave_DsTrendCurve_mark2_attr:
+      fp.get();
+      fp.getline(mark2_attr, sizeof(mark2_attr));
+      break;
+    case ge_eSave_DsTrendCurve_mark1_color:
+      fp >> tmp;
+      mark1_color = (glow_eDrawType)tmp;
+      break;
+    case ge_eSave_DsTrendCurve_mark2_color:
+      fp >> tmp;
+      mark2_color = (glow_eDrawType)tmp;
+      break;
+    case ge_eSave_End:
+      end_found = 1;
+      break;
+    default:
+      std::cout << "GeDsTrendCurve:open syntax error\n";
+      fp.getline(dummy, sizeof(dummy));
+    }
+    if (end_found)
+      break;
+  }
+}
+
+int GeDsTrendCurve::connect(
+    grow_tObject object, glow_sTraceData* trace_data, bool now)
+{
+  pwr_tStatus sts;
+  pwr_sClass_DsTrendCurve tcp;
+  pwr_tAName object_name[2];
+  int i;
+  int attr_type, attr_size;
+  pwr_tAName parsed_name;
+  int inverted;
+
+  // Get current status of the trend objects
+  dstrend_cnt = 0;
+  sts = gdh_NameToAttrref(pwr_cNOid, dstrend_object, &dstrend_aref);
+  if (EVEN(sts))
+    return sts;
+     
+  sts = gdh_GetObjectInfoAttrref(&dstrend_aref, &tcp, sizeof(tcp));
+  if (EVEN(sts))
+    return sts;
+
+  i = 0;
+  for (int j = 0; j < 10; j++) {
+    if (cdh_ObjidIsNotNull(tcp.Attribute[j].Objid)
+	&& cdh_ObjidIsNotNull(tcp.Buffers[j].Objid)) {
+      sts = gdh_AttrrefToName(&tcp.Buffers[j], object_name[i],
+			       sizeof(object_name[0]), cdh_mNName);
+      if (EVEN(sts))
+	return sts;
+
+      sts = gdh_AttrrefToName(&tcp.Attribute[j], object_name[i],
+			       sizeof(object_name[0]), cdh_mNName);
+      if (EVEN(sts))
+	return sts;
+
+      element_size[i]
+	= cdh_TypeToSize((pwr_eType)tcp.AttributeType[j]);
+      element_type[i] = (pwr_eType)tcp.AttributeType[j];
+      cb_info[i].resolution = tcp.DisplayResolution;
+      if (cb_info[i].resolution <= 0)
+	cb_info[i].resolution = 1;
+      cb_info[i].samples = tcp.DisplayTime / tcp.ScanTime
+	/ cb_info[i].resolution;
+      cb_info[i].bufsize = cb_info[i].samples * element_size[i];
+      cb_info[i].bufp = (char*)calloc(1, cb_info[i].bufsize);
+      cb_info[i].circ_aref = tcp.Buffers[j];
+      
+      i++;
+      dstrend_cnt++;
+    }
+    if (dstrend_cnt == 2)
+      break;
+  }
+
+  if (dstrend_cnt == 0)
+    return 0;
+
+  min_value1_p = 0;
+  min_value1_db = dyn->parse_attr_name(
+      minvalue_attr1, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    switch (min_value1_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+          (void**)&min_value1_p, &min_value_subid1, attr_size, object, now);
+      break;
+    case graph_eDatabase_Local:
+      min_value1_p = (pwr_tFloat32*)dyn->graph->localdb_ref_or_create(
+          parsed_name, attr_type);
+      break;
+    default:;
+    }
+  }
+  max_value1_p = 0;
+  max_value1_db = dyn->parse_attr_name(
+      maxvalue_attr1, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    switch (max_value1_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+          (void**)&max_value1_p, &max_value_subid1, attr_size, object, now);
+      break;
+    case graph_eDatabase_Local:
+      max_value1_p = (pwr_tFloat32*)dyn->graph->localdb_ref_or_create(
+          parsed_name, attr_type);
+      break;
+    default:;
+    }
+  }
+  min_value2_p = 0;
+  dyn->parse_attr_name(
+      minvalue_attr2, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+        (void**)&min_value2_p, &min_value_subid2, attr_size, object, now);
+  }
+  max_value2_p = 0;
+  dyn->parse_attr_name(
+      maxvalue_attr2, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+        (void**)&max_value2_p, &max_value_subid2, attr_size, object, now);
+  }
+
+  trend_hold = 0;
+  hold_p = 0;
+  hold_db = dyn->parse_attr_name(
+      hold_attr, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Boolean) {
+    switch (hold_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+          (void**)&hold_p, &hold_subid, attr_size, object, now);
+      if (EVEN(sts))
+        return sts;
+      break;
+    case graph_eDatabase_Local:
+      hold_p = (pwr_tBoolean*)dyn->graph->localdb_ref_or_create(
+          parsed_name, attr_type);
+      break;
+    default:;
+    }
+  }
+
+  mark1_p = 0;
+  dyn->parse_attr_name(
+      mark1_attr, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name, (void**)&mark1_p,
+        &mark1_subid, attr_size, object, now);
+  }
+
+  mark2_p = 0;
+  dyn->parse_attr_name(
+      mark2_attr, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name, (void**)&mark2_p,
+        &mark2_subid, attr_size, object, now);
+  }
+
+  if (mark1_color != glow_eDrawType_Inherit
+      || mark2_color != glow_eDrawType_Inherit)
+    grow_SetTrendMarkColor(object, mark1_color, mark2_color);
+
+  grow_SetTrendNoOfCurves(object, dstrend_cnt);
+
+  trace_data->p = &pdummy;
+  first_scan = true;
+  return 1;
+}
+
+int GeDsTrendCurve::disconnect(grow_tObject object)
+{
+  if (min_value1_p && min_value1_db == graph_eDatabase_Gdh) {
+    gdh_UnrefObjectInfo(min_value_subid1);
+    min_value1_p = 0;
+  }
+  if (max_value1_p && max_value1_db == graph_eDatabase_Gdh) {
+    gdh_UnrefObjectInfo(max_value_subid1);
+    max_value1_p = 0;
+  }
+  if (min_value2_p) {
+    gdh_UnrefObjectInfo(min_value_subid2);
+    min_value2_p = 0;
+  }
+  if (max_value2_p) {
+    gdh_UnrefObjectInfo(max_value_subid2);
+    max_value2_p = 0;
+  }
+  if (hold_p && hold_db == graph_eDatabase_Gdh) {
+    gdh_UnrefObjectInfo(hold_subid);
+    hold_p = 0;
+  }
+  if (mark1_p) {
+    gdh_UnrefObjectInfo(mark1_subid);
+    mark1_p = 0;
+  }
+  if (mark2_p) {
+    gdh_UnrefObjectInfo(mark2_subid);
+    mark1_p = 0;
+  }
+  return 1;
+}
+
+int GeDsTrendCurve::scan(grow_tObject object)
+{
+  if (!dstrend_cnt)
+    return 0;
+
+  pwr_tStatus sts;
+  int i, j;
+  double *data[3];
+  int new_curve = 0;
+  unsigned int size;
+  unsigned int actual_data_size[2];
+
+  if (hold_p)
+    trend_hold = *hold_p;
+
+  if (max_value1_p || min_value1_p) {
+    bool update = false;
+
+    pwr_tFloat32 maxval;
+    pwr_tFloat32 minval;
+    if (max_value1_p) {
+      maxval = *max_value1_p;
+      if (!feqf(maxval, old_max_value1))
+	update = true;
+    }
+    if (min_value1_p) {
+      minval = *min_value1_p;
+      if (!feqf(minval, old_min_value1))
+	update = true;
+    }
+    if (update) {
+      double minvald, maxvald;
+      grow_GetTrendRangeY(object, 0, &minvald, &maxvald);
+
+      if (!min_value1_p)
+	minval = minvald;
+      if (!max_value1_p)
+	maxval = maxvald;
+
+      if (fabsf(maxval - minval) > FLT_EPSILON) {
+        grow_SetTrendRangeY(object, 0, minval, maxval);
+	new_curve = 1;
+      }
+      old_min_value1 = minval;
+      old_max_value1 = maxval;
+    }
+  }
+
+  if (max_value2_p || min_value2_p) {
+    bool update = false;
+
+    pwr_tFloat32 maxval;
+    pwr_tFloat32 minval;
+    if (max_value2_p) {
+      maxval = *max_value2_p;
+      if (!feqf(maxval, old_max_value2))
+	update = true;
+    }
+    if (min_value2_p) {
+      minval = *min_value2_p;
+      if (!feqf(minval, old_min_value2))
+	update = true;
+    }
+    if (update) {
+      double minvald, maxvald;
+      grow_GetTrendRangeY(object, 1, &minvald, &maxvald);
+
+      if (!min_value2_p)
+	minval = minvald;
+      if (!max_value2_p)
+	maxval = maxvald;
+
+      if (fabsf(maxval - minval) > FLT_EPSILON) {
+        grow_SetTrendRangeY(object, 1, minval, maxval);
+	new_curve = 1;
+      }
+      old_min_value2 = minval;
+      old_max_value2 = maxval;
+    }
+  }
+
+  if (mark1_p && (first_scan || fabsf(*mark1_p - old_mark1) > FLT_EPSILON)) {
+    grow_SetTrendYMark1(object, *mark1_p);
+    old_mark1 = *mark1_p;
+  }
+  if (mark2_p && (first_scan || fabsf(*mark2_p - old_mark2) > FLT_EPSILON)) {
+    grow_SetTrendYMark2(object, *mark2_p);
+    old_mark2 = *mark2_p;
+  }
+
+  if (first_scan) {
+    first_scan = false;
+    new_curve = 1;
+  }
+
+  if (trend_hold)
+    return 1;
+
+  if (new_curve) {
+    // Draw whole curve
+    
+    max_points = 0;
+    for (i = 0; i < dstrend_cnt; i++) 
+      max_points = MAX(max_points, cb_info[i].samples);
+
+    for (i = 0; i < dstrend_cnt; i++) {
+      sts = cbuf_GetCircBuffInfo(&cb_info[i], 1);
+      if (EVEN(sts))
+	continue;
+
+      actual_data_size[i] = cb_info[i].size;
+      if (actual_data_size[i] > cb_info[i].bufsize)
+	printf("** Sample size error !!!\n");
+
+      data[0] = (double*)calloc(1, 8 * max_points);
+      for (j = 0; j < max_points; j++)
+	data[0][max_points-j-1] = (double)j / max_points * 100;
+
+      data[i+1] = (double*)calloc(1, 8 * max_points);
+      for (unsigned int j = 0; j < actual_data_size[i]; j++)
+	data[i+1][j] = *(pwr_tFloat32*)((char*)cb_info[i].bufp
+	     + (actual_data_size[i] - j - 1) * sizeof(pwr_tFloat32));
+    }
+
+    grow_SetTrendData(object, data, dstrend_cnt + 1, max_points);
+
+    free(data[0]);
+    for (i = 0; i < dstrend_cnt; i++)
+      free(data[i+1]);
+  }
+  else {
+    // Check if any new value
+    sts = cbuf_UpdateCircBuffInfo(cb_info, dstrend_cnt);
+    if (EVEN(sts))
+      return sts;
+
+    for (i = 0; i < dstrend_cnt; i++) {
+      size = cb_info[i].size;
+      if (size > 0) {
+        // Shift data
+	if (size > 2)
+	  grow_SetNodraw(dyn->graph->grow->ctx);
+
+        for (j = 0; j < (int)size; j++) {
+	  float value = *(pwr_tFloat32*)((char*)cb_info[i].bufp
+					 + j * sizeof(pwr_tFloat32));
+	  grow_AddTrendValue(object, double(value), i);
+        }
+
+	if (size > 2)
+	  grow_ResetNodraw(dyn->graph->grow->ctx);
+      }
+    }
+  }
+  
+  return 1;
+}
+
+int GeDsTrendCurve::syntax_check(
+    grow_tObject object, int* error_cnt, int* warning_cnt)
+{
+  int sts;
+  pwr_eType a_type;
+
+  if (streq(dstrend_object, "")) {
+    dyn->graph->syntax_msg('W', object, "DsTrendCurve.Object is missing");
+    (*warning_cnt)++;
+  } else {
+    sts = dyn->graph->check_ldh_object(dstrend_object, &a_type);
+    if (EVEN(sts)) {
+      char msg[440];
+      sprintf(msg, "DsTrendCurve.Object \"%s\" not found", dstrend_object);
+      dyn->graph->syntax_msg('W', object, msg);
+      (*warning_cnt)++;
+    } else {
+      if (a_type != pwr_cClass_DsTrendCurve) {
+        dyn->graph->syntax_msg(
+            'E', object, "DsTrendCurve.Object is of wrong class");
+        (*error_cnt)++;
+      }
+    }
+  }
+  return 1;
+}
+
+GeSevHist::GeSevHist(GeDyn* e_dyn)
+    : GeDynElem(e_dyn, ge_mDynType1_No, ge_mDynType2_SevHist,
+		ge_mActionType1_No, ge_mActionType2_No, ge_eDynPrio_SevHist),
+      timerange(0), updatetime(0), sevhist_cnt(0),
+      min_value1_p(0), max_value1_p(0), old_min_value1(0), old_max_value1(0),
+      min_value2_p(0), max_value2_p(0), old_min_value2(0), old_max_value2(0),
+      timerange_p(0), hold_p(0), update_p(0), old_update(0),
+      mark1_color(glow_eDrawType_Inherit), mark2_color(glow_eDrawType_Inherit),
+      acc_time(0)
+{
+  strcpy(sevhist_object1, "");
+  strcpy(sevhist_object2, "");
+  strcpy(attribute1, "");
+  strcpy(attribute2, "");
+  strcpy(server, "");
+  strcpy(minvalue_attr1, "");
+  strcpy(maxvalue_attr1, "");
+  strcpy(minvalue_attr2, "");
+  strcpy(maxvalue_attr2, "");
+  strcpy(hold_attr, "");
+  strcpy(mark1_attr, "");
+  strcpy(mark2_attr, "");
+}
+
+GeSevHist::GeSevHist(const GeSevHist& x)
+    : GeDynElem(x.dyn, x.dyn_type1, x.dyn_type2, x.action_type1, x.action_type2,
+		x.prio), timerange(x.timerange), updatetime(x.updatetime),
+      mark1_color(x.mark1_color), mark2_color(x.mark2_color)
+
+{
+  strcpy(sevhist_object1, x.sevhist_object1);
+  strcpy(sevhist_object2, x.sevhist_object2);
+  strcpy(attribute1, x.attribute1);
+  strcpy(attribute2, x.attribute2);
+  strcpy(server, x.server);
+  strcpy(timerange_attr, x.timerange_attr);
+  strcpy(minvalue_attr1, x.minvalue_attr1);
+  strcpy(maxvalue_attr1, x.maxvalue_attr1);
+  strcpy(minvalue_attr2, x.minvalue_attr2);
+  strcpy(maxvalue_attr2, x.maxvalue_attr2);
+  strcpy(hold_attr, x.hold_attr);
+  strcpy(update_attr, x.update_attr);
+  strcpy(update_attr, x.update_attr);
+  strcpy(mark1_attr, x.mark1_attr);
+  strcpy(mark2_attr, x.mark2_attr);
+}
+
+void GeSevHist::get_attributes(attr_sItem* attrinfo, int* item_count)
+{
+  int i = *item_count;
+
+  strcpy(attrinfo[i].name, "SevHist.Object1");
+  attrinfo[i].value = sevhist_object1;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(sevhist_object1);
+
+  strcpy(attrinfo[i].name, "SevHist.Object2");
+  attrinfo[i].value = sevhist_object2;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(sevhist_object2);
+
+  strcpy(attrinfo[i].name, "SevHist.Attribute1");
+  attrinfo[i].value = attribute1;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(attribute1);
+
+  strcpy(attrinfo[i].name, "SevHist.Attribute2");
+  attrinfo[i].value = attribute2;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(attribute2);
+
+  strcpy(attrinfo[i].name, "SevHist.Server");
+  attrinfo[i].value = server;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(server);
+
+  strcpy(attrinfo[i].name, "SevHist.TimeRange");
+  attrinfo[i].value = &timerange;
+  attrinfo[i].type = glow_eType_Float;
+  attrinfo[i++].size = sizeof(timerange);
+
+  strcpy(attrinfo[i].name, "SevHist.TimeRangeAttr");
+  attrinfo[i].value = timerange_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(timerange_attr);
+
+  strcpy(attrinfo[i].name, "SevHist.MinValueAttr1");
+  attrinfo[i].value = minvalue_attr1;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(minvalue_attr1);
+
+  strcpy(attrinfo[i].name, "SevHist.MaxValueAttr1");
+  attrinfo[i].value = maxvalue_attr1;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(maxvalue_attr1);
+
+  strcpy(attrinfo[i].name, "SevHist.MinValueAttr2");
+  attrinfo[i].value = minvalue_attr2;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(minvalue_attr2);
+
+  strcpy(attrinfo[i].name, "SevHist.MaxValueAttr2");
+  attrinfo[i].value = maxvalue_attr2;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(maxvalue_attr2);
+
+  strcpy(attrinfo[i].name, "SevHist.HoldAttr");
+  attrinfo[i].value = hold_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(hold_attr);
+
+  strcpy(attrinfo[i].name, "SevHist.UpdateAttr");
+  attrinfo[i].value = update_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(update_attr);
+
+  strcpy(attrinfo[i].name, "SevHist.UpdateTime");
+  attrinfo[i].value = &updatetime;
+  attrinfo[i].type = glow_eType_Float;
+  attrinfo[i++].size = sizeof(updatetime);
+
+  strcpy(attrinfo[i].name, "SevHist.Mark1Attr");
+  attrinfo[i].value = mark1_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(mark1_attr);
+
+  strcpy(attrinfo[i].name, "SevHist.Mark2Attr");
+  attrinfo[i].value = mark2_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof(mark2_attr);
+
+  strcpy(attrinfo[i].name, "SevHist.Mark1Color");
+  attrinfo[i].value = &mark1_color;
+  attrinfo[i].type = glow_eType_Color;
+  attrinfo[i++].size = sizeof(mark1_color);
+
+  strcpy(attrinfo[i].name, "SevHist.Mark2Color");
+  attrinfo[i].value = &mark2_color;
+  attrinfo[i].type = glow_eType_Color;
+  attrinfo[i++].size = sizeof(mark2_color);
+
+  *item_count = i;
+}
+
+void GeSevHist::set_attribute(
+    grow_tObject object, const char* attr_name, int* cnt)
+{
+  (*cnt)--;
+  if (*cnt == 0) {
+    strncpy(attribute1, attr_name, sizeof(attribute1));
+
+    char msg[23 + sizeof(attribute1) +1];
+    snprintf(msg, sizeof(msg), "SevHist.Attribute1 = %s", attribute1);
+    msg[sizeof(msg) - 1] = 0;
+    dyn->graph->message('I', msg);
+  }
+}
+
+void GeSevHist::replace_attribute(char* from, char* to, int* cnt, int strict)
+{
+  GeDyn::replace_attribute(
+      sevhist_object1, sizeof(sevhist_object1), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      sevhist_object2, sizeof(sevhist_object2), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      attribute1, sizeof(attribute1), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      attribute2, sizeof(attribute2), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      server, sizeof(server), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      timerange_attr, sizeof(timerange_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      minvalue_attr1, sizeof(minvalue_attr1), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      maxvalue_attr1, sizeof(maxvalue_attr1), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      minvalue_attr2, sizeof(minvalue_attr2), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      maxvalue_attr2, sizeof(maxvalue_attr2), from, to, cnt, strict);
+  GeDyn::replace_attribute(hold_attr, sizeof(hold_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute(update_attr, sizeof(update_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      mark1_attr, sizeof(mark1_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute(
+      mark2_attr, sizeof(mark2_attr), from, to, cnt, strict);
+}
+
+void GeSevHist::save(std::ofstream& fp)
+{
+  fp << int(ge_eSave_SevHist) << '\n';
+  fp << int(ge_eSave_SevHist_sevhist_object1) << FSPACE << sevhist_object1 << '\n';
+  fp << int(ge_eSave_SevHist_sevhist_object2) << FSPACE << sevhist_object2 << '\n';
+  fp << int(ge_eSave_SevHist_attribute1) << FSPACE << attribute1 << '\n';
+  fp << int(ge_eSave_SevHist_attribute2) << FSPACE << attribute2 << '\n';
+  fp << int(ge_eSave_SevHist_timerange) << FSPACE << timerange << '\n';
+  fp << int(ge_eSave_SevHist_timerange_attr) << FSPACE << timerange_attr << '\n';
+  fp << int(ge_eSave_SevHist_server) << FSPACE << server << '\n';
+  fp << int(ge_eSave_SevHist_minvalue_attr1) << FSPACE << minvalue_attr1 << '\n';
+  fp << int(ge_eSave_SevHist_maxvalue_attr1) << FSPACE << maxvalue_attr1 << '\n';
+  fp << int(ge_eSave_SevHist_minvalue_attr2) << FSPACE << minvalue_attr2 << '\n';
+  fp << int(ge_eSave_SevHist_maxvalue_attr2) << FSPACE << maxvalue_attr2 << '\n';
+  fp << int(ge_eSave_SevHist_hold_attr) << FSPACE << hold_attr << '\n';
+  fp << int(ge_eSave_SevHist_update_attr) << FSPACE << update_attr << '\n';
+  fp << int(ge_eSave_SevHist_updatetime) << FSPACE << updatetime << '\n';
+  fp << int(ge_eSave_SevHist_mark1_attr) << FSPACE << mark1_attr << '\n';
+  fp << int(ge_eSave_SevHist_mark2_attr) << FSPACE << mark2_attr << '\n';
+  fp << int(ge_eSave_SevHist_mark1_color) << FSPACE << (int)mark1_color << '\n';
+  fp << int(ge_eSave_SevHist_mark2_color) << FSPACE << (int)mark2_color << '\n';
+  fp << int(ge_eSave_End) << '\n';
+}
+
+void GeSevHist::open(std::ifstream& fp)
+{
+  int type = 0;
+  int end_found = 0;
+  char dummy[40];
+  int tmp;
+
+  for (;;) {
+    if (!fp.good()) {
+      fp.clear();
+      fp.getline(dummy, sizeof(dummy));
+      printf("** Read error GeSevHist: \"%d %s\"\n", type, dummy);
+    }
+
+    fp >> type;
+
+    switch (type) {
+    case ge_eSave_SevHist:
+      break;
+    case ge_eSave_SevHist_sevhist_object1:
+      fp.get();
+      fp.getline(sevhist_object1, sizeof(sevhist_object1));
+      break;
+    case ge_eSave_SevHist_sevhist_object2:
+      fp.get();
+      fp.getline(sevhist_object2, sizeof(sevhist_object2));
+      break;
+    case ge_eSave_SevHist_attribute1:
+      fp.get();
+      fp.getline(attribute1, sizeof(attribute1));
+      break;
+    case ge_eSave_SevHist_attribute2:
+      fp.get();
+      fp.getline(attribute2, sizeof(attribute2));
+      break;
+    case ge_eSave_SevHist_server:
+      fp.get();
+      fp.getline(server, sizeof(server));
+      break;
+    case ge_eSave_SevHist_timerange:
+      fp >> timerange;
+      break;
+    case ge_eSave_SevHist_timerange_attr:
+      fp.get();
+      fp.getline(timerange_attr, sizeof(timerange_attr));
+      break;
+    case ge_eSave_SevHist_minvalue_attr1:
+      fp.get();
+      fp.getline(minvalue_attr1, sizeof(minvalue_attr1));
+      break;
+    case ge_eSave_SevHist_maxvalue_attr1:
+      fp.get();
+      fp.getline(maxvalue_attr1, sizeof(maxvalue_attr1));
+      break;
+    case ge_eSave_SevHist_minvalue_attr2:
+      fp.get();
+      fp.getline(minvalue_attr2, sizeof(minvalue_attr2));
+      break;
+    case ge_eSave_SevHist_maxvalue_attr2:
+      fp.get();
+      fp.getline(maxvalue_attr2, sizeof(maxvalue_attr2));
+      break;
+    case ge_eSave_SevHist_hold_attr:
+      fp.get();
+      fp.getline(hold_attr, sizeof(hold_attr));
+      break;
+    case ge_eSave_SevHist_update_attr:
+      fp.get();
+      fp.getline(update_attr, sizeof(update_attr));
+      break;
+    case ge_eSave_SevHist_updatetime:
+      fp >> updatetime;
+      break;
+    case ge_eSave_SevHist_mark1_attr:
+      fp.get();
+      fp.getline(mark1_attr, sizeof(mark1_attr));
+      break;
+    case ge_eSave_SevHist_mark2_attr:
+      fp.get();
+      fp.getline(mark2_attr, sizeof(mark2_attr));
+      break;
+    case ge_eSave_SevHist_mark1_color:
+      fp >> tmp;
+      mark1_color = (glow_eDrawType)tmp;
+      break;
+    case ge_eSave_SevHist_mark2_color:
+      fp >> tmp;
+      mark2_color = (glow_eDrawType)tmp;
+      break;
+    case ge_eSave_End:
+      end_found = 1;
+      break;
+    default:
+      std::cout << "GeSevHist:open syntax error\n";
+      fp.getline(dummy, sizeof(dummy));
+    }
+    if (end_found)
+      break;
+  }
+}
+
+int GeSevHist::connect(
+    grow_tObject object, glow_sTraceData* trace_data, bool now)
+{
+  pwr_tStatus sts;
+  int attr_type, attr_size;
+  pwr_tAName parsed_name;
+  int inverted;
+  char *s;
+
+  scctx = sevcli_get_stored_ctx();
+  if (!scctx) {
+    sevcli_init(&sts, &scctx);
+    if (EVEN(sts))
+      return sts;
+    sevcli_store_ctx(scctx);
+  }
+
+  if (strcmp(sevhist_object1, "") != 0) {
+    pwr_tAttrRef sevhist_aref;
+    pwr_tAttrRef thread_aref;
+    pwr_tAttrRef aref;
+    pwr_tAttrRef attr_aref;
+    pwr_tAName aname;
+    pwr_tCid cid;
+    pwr_tOid thread_oid;
+    char *np;
+    char *s;
+    int server_found = 0;
+
+    for (int i = 0; i < 2; i++) {
+      if (i == 0)
+	np = sevhist_object1;
+      else
+	np = sevhist_object2;
+
+      if (strcmp(np, "") == 0)
+	continue;
+
+      sts = gdh_NameToAttrref(pwr_cNObjid, np, &sevhist_aref);
+      if (EVEN(sts))
+	return sts;
+
+      sts = gdh_GetAttrRefTid(&sevhist_aref, &cid);
+      if (EVEN(sts))
+        return sts;
+
+      if (cid != pwr_cClass_SevHist)
+	continue;
+
+      if (!server_found) {
+
+        sts = gdh_ArefANameToAref(&sevhist_aref, "ThreadObject", &aref);
+        if (EVEN(sts))
+          return sts;
+
+        sts = gdh_GetObjectInfoAttrref(&aref, &thread_oid, sizeof(thread_oid));
+        if (EVEN(sts))
+          return sts;
+
+	thread_aref = cdh_ObjidToAref(thread_oid);
+	sts = gdh_ArefANameToAref(&thread_aref, "ServerNode", &aref);
+	if (EVEN(sts)) 
+	  return sts;
+
+	sts = gdh_GetObjectInfoAttrref(&aref, server, sizeof(server));
+	if (EVEN(sts))
+	  return sts;    
+
+	server_found = 1;
+      }
+
+      sts = gdh_ArefANameToAref(&sevhist_aref, "Attribute", &aref);
+      if (EVEN(sts))
+	return sts;
+    
+      sts = gdh_GetObjectInfoAttrref(&aref, &attr_aref, sizeof(attr_aref));
+      if (EVEN(sts))
+	return sts;    
+
+      sts = gdh_AttrrefToName(&attr_aref, aname, sizeof(aname), cdh_mNName);
+      if (EVEN(sts))
+	return sts;
+
+      s = strchr(aname, '.');
+      if (!s)
+	return 0;
+
+      oidv[sevhist_cnt] = attr_aref.Objid;
+      strcpy(anamev[sevhist_cnt], s+1);
+      sevhist_cnt++;
+    }
+  }
+  else {
+    memset(oidv, 0, sizeof(oidv));
+    if (strcmp(server, "") == 0)
+      return 0;
+    if (strcmp(attribute1, "") != 0) {
+      strncpy(anamev[sevhist_cnt], attribute1, sizeof(anamev[0]));
+      if ((s = strchr(anamev[sevhist_cnt], '#')))
+	*s = 0;
+      sevhist_cnt++;
+    }
+    if (strcmp(attribute2, "") != 0) {
+      strncpy(anamev[sevhist_cnt], attribute2, sizeof(anamev[0]));
+      if ((s = strchr(anamev[sevhist_cnt], '#')))
+	*s = 0;
+      sevhist_cnt++;
+    }
+  }
+
+  if (sevhist_cnt == 0)
+    return 0;
+
+  min_value1_p = 0;
+  min_value1_db = dyn->parse_attr_name(
+      minvalue_attr1, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    switch (min_value1_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+          (void**)&min_value1_p, &min_value_subid1, attr_size, object, now);
+      break;
+    case graph_eDatabase_Local:
+      min_value1_p = (pwr_tFloat32*)dyn->graph->localdb_ref_or_create(
+          parsed_name, attr_type);
+      break;
+    default:;
+    }
+  }
+  max_value1_p = 0;
+  max_value1_db = dyn->parse_attr_name(
+      maxvalue_attr1, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    switch (max_value1_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+          (void**)&max_value1_p, &max_value_subid1, attr_size, object, now);
+      break;
+    case graph_eDatabase_Local:
+      max_value1_p = (pwr_tFloat32*)dyn->graph->localdb_ref_or_create(
+          parsed_name, attr_type);
+      break;
+    default:;
+    }
+  }
+  min_value2_p = 0;
+  dyn->parse_attr_name(
+      minvalue_attr2, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+        (void**)&min_value2_p, &min_value_subid2, attr_size, object, now);
+  }
+  max_value2_p = 0;
+  dyn->parse_attr_name(
+      maxvalue_attr2, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+        (void**)&max_value2_p, &max_value_subid2, attr_size, object, now);
+  }
+
+  timerange_p = 0;
+  timerange_db = dyn->parse_attr_name(
+      timerange_attr, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    switch (timerange_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+          (void**)&timerange_p, &timerange_subid, attr_size, object, now);
+      break;
+    case graph_eDatabase_Local:
+      timerange_p = (pwr_tFloat32*)dyn->graph->localdb_ref_or_create(
+          parsed_name, attr_type);
+      break;
+    default:;
+    }
+  }
+
+  trend_hold = 0;
+  hold_p = 0;
+  hold_db = dyn->parse_attr_name(
+      hold_attr, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Boolean) {
+    switch (hold_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+          (void**)&hold_p, &hold_subid, attr_size, object, now);
+      if (EVEN(sts))
+        return sts;
+      break;
+    case graph_eDatabase_Local:
+      hold_p = (pwr_tBoolean*)dyn->graph->localdb_ref_or_create(
+          parsed_name, attr_type);
+      break;
+    default:;
+    }
+  }
+
+  old_update = 0;
+  update_p = 0;
+  update_db = dyn->parse_attr_name(
+      update_attr, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Boolean) {
+    switch (update_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name,
+          (void**)&update_p, &update_subid, attr_size, object, now);
+      if (EVEN(sts))
+        return sts;
+      break;
+    case graph_eDatabase_Local:
+      update_p = (pwr_tBoolean*)dyn->graph->localdb_ref_or_create(
+          parsed_name, attr_type);
+      break;
+    default:;
+    }
+  }
+
+  mark1_p = 0;
+  dyn->parse_attr_name(
+      mark1_attr, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name, (void**)&mark1_p,
+        &mark1_subid, attr_size, object, now);
+  }
+
+  mark2_p = 0;
+  dyn->parse_attr_name(
+      mark2_attr, parsed_name, &inverted, &attr_type, &attr_size);
+  if (!streq(parsed_name, "") && attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info(dyn->cycle, parsed_name, (void**)&mark2_p,
+        &mark2_subid, attr_size, object, now);
+  }
+
+  if (mark1_color != glow_eDrawType_Inherit
+      || mark2_color != glow_eDrawType_Inherit)
+    grow_SetXYCurveMarkColor(object, mark1_color, mark2_color);
+
+  max_points = grow_GetXYCurveNoOfPoints(object);
+  grow_SetXYCurveNoOfCurves(object, sevhist_cnt);
+  direction = grow_GetTrendDirection(object);
+
+  time_Float64ToD(&dt_timerange, timerange);
+  for (int i = 0; i < sevhist_cnt; i++)
+    grow_SetXYCurveRangeX(object, i, timerange, 0);
+
+  trace_data->p = &pdummy;
+  first_scan = true;
+  return 1;
+}
+
+int GeSevHist::disconnect(grow_tObject object)
+{
+  if (min_value1_p && min_value1_db == graph_eDatabase_Gdh) {
+    gdh_UnrefObjectInfo(min_value_subid1);
+    min_value1_p = 0;
+  }
+  if (max_value1_p && max_value1_db == graph_eDatabase_Gdh) {
+    gdh_UnrefObjectInfo(max_value_subid1);
+    max_value1_p = 0;
+  }
+  if (min_value2_p) {
+    gdh_UnrefObjectInfo(min_value_subid2);
+    min_value2_p = 0;
+  }
+  if (max_value2_p) {
+    gdh_UnrefObjectInfo(max_value_subid2);
+    max_value2_p = 0;
+  }
+  if (hold_p && hold_db == graph_eDatabase_Gdh) {
+    gdh_UnrefObjectInfo(hold_subid);
+    hold_p = 0;
+  }
+  if (mark1_p) {
+    gdh_UnrefObjectInfo(mark1_subid);
+    mark1_p = 0;
+  }
+  if (mark2_p) {
+    gdh_UnrefObjectInfo(mark2_subid);
+    mark1_p = 0;
+  }
+  return 1;
+}
+
+int GeSevHist::scan(grow_tObject object)
+{
+  if (!sevhist_cnt)
+    return 0;
+
+  pwr_tStatus sts;
+  int i, k;
+  int new_curve = 0;
+
+  if (hold_p)
+    trend_hold = *hold_p;
+
+  if (max_value1_p || min_value1_p) {
+    bool update = false;
+
+    pwr_tFloat32 maxval;
+    pwr_tFloat32 minval;
+    if (max_value1_p) {
+      maxval = *max_value1_p;
+      if (!feqf(maxval, old_max_value1))
+	update = true;
+    }
+    if (min_value1_p) {
+      minval = *min_value1_p;
+      if (!feqf(minval, old_min_value1))
+	update = true;
+    }
+    if (update) {
+      double minvald, maxvald;
+      grow_GetXYCurveRangeY(object, 0, &minvald, &maxvald);
+
+      if (!min_value1_p)
+	minval = minvald;
+      if (!max_value1_p)
+	maxval = maxvald;
+
+      if (fabsf(maxval - minval) > FLT_EPSILON) {
+        grow_SetXYCurveRangeY(object, 0, minval, maxval);
+	new_curve = 1;
+      }
+      old_min_value1 = minval;
+      old_max_value1 = maxval;
+    }
+  }
+
+  if (max_value2_p || min_value2_p) {
+    bool update = false;
+
+    pwr_tFloat32 maxval;
+    pwr_tFloat32 minval;
+    if (max_value2_p) {
+      maxval = *max_value2_p;
+      if (!feqf(maxval, old_max_value2))
+	update = true;
+    }
+    if (min_value2_p) {
+      minval = *min_value2_p;
+      if (!feqf(minval, old_min_value2))
+	update = true;
+    }
+    if (update) {
+      double minvald, maxvald;
+      grow_GetXYCurveRangeY(object, 1, &minvald, &maxvald);
+
+      if (!min_value2_p)
+	minval = minvald;
+      if (!max_value2_p)
+	maxval = maxvald;
+
+      if (fabsf(maxval - minval) > FLT_EPSILON) {
+        grow_SetXYCurveRangeY(object, 1, minval, maxval);
+	new_curve = 1;
+      }
+      old_min_value2 = minval;
+      old_max_value2 = maxval;
+    }
+  }
+
+  if (mark1_p && (first_scan || fabsf(*mark1_p - old_mark1) > FLT_EPSILON)) {
+    grow_SetXYCurveYMark1(object, *mark1_p);
+    old_mark1 = *mark1_p;
+  }
+  if (mark2_p && (first_scan || fabsf(*mark2_p - old_mark2) > FLT_EPSILON)) {
+    grow_SetXYCurveYMark2(object, *mark2_p);
+    old_mark2 = *mark2_p;
+  }
+
+  if (timerange_p && (fabsf(*timerange_p - timerange) > FLT_EPSILON)) {
+    timerange = *timerange_p;
+    time_Float64ToD(&dt_timerange, timerange);
+    for (int i = 0; i < sevhist_cnt; i++)
+      grow_SetXYCurveRangeX(object, i, timerange, 0);
+    new_curve = 1;
+  }
+
+  if (first_scan) {
+    first_scan = false;
+    new_curve = 1;
+  }
+
+  if (trend_hold)
+    return 1;
+
+  if (update_p) {
+    if (*update_p && !old_update)
+      new_curve = 1;
+    old_update = *update_p;
+  }
+
+  if (updatetime != 0) {
+    if (dyn->cycle == glow_eCycle_Slow)
+      acc_time += dyn->graph->scan_time;
+    else
+      acc_time += dyn->graph->fast_scan_time;
+
+    if (acc_time + DBL_EPSILON >= updatetime) {
+      new_curve = 1;
+      acc_time = 0;
+    }
+  }
+
+  if (new_curve) {
+    pwr_tTime* tbuf;
+    void* vbuf;
+    int rows;
+    pwr_eType vtype;
+    unsigned int vsize;
+    pwr_tTime from, to;
+    pwr_tDeltaTime diff;
+    double *tdata, *vdata;
+
+    time_GetTime(&to);
+    time_Asub(&from, &to, &dt_timerange);
+
+    sevcli_set_servernode(&sts, scctx, server);
+    if (EVEN(sts))
+      return sts;
+
+    // Draw whole curve
+    for (i = 0; i < sevhist_cnt; i++) {
+      sevcli_get_itemdata(&sts, scctx, oidv[i], anamev[i], from, to, max_points, &tbuf,
+			  &vbuf, &rows, &vtype, &vsize);
+      if (EVEN(sts))
+	  continue;
+
+      tdata = (double*)calloc(1, 8 * rows);
+      vdata = (double*)calloc(1, 8 * rows);
+
+      for (k = 0; k < rows; k++) {
+	time_Adiff(&diff, &to, &tbuf[k]);
+	time_DToFloat64(&tdata[k], &diff);
+	if (direction == glow_eHorizDirection_Right)
+	  tdata[k] = timerange - tdata[k];
+
+	switch (vtype) {
+	case pwr_eType_Int64:
+	  vdata[k] = ((pwr_tInt32*)vbuf)[k];
+	  break;
+	case pwr_eType_Float32:
+	  vdata[k] = ((pwr_tFloat32*)vbuf)[k];	  
+	  break;
+	default:
+	  return 0;
+	}
+      }
+      grow_SetXYCurveData(object, vdata, tdata, i, rows);
+      free(tdata);
+      free(vdata);
+      free(tbuf);
+      free(vbuf);
+    }
+  }
+  
+  return 1;
+}
+
+int GeSevHist::syntax_check(
+    grow_tObject object, int* error_cnt, int* warning_cnt)
+{
+  int sts;
+  pwr_eType a_type;
+
+  if (streq(sevhist_object1, "") && streq(attribute1, "")) {
+    dyn->graph->syntax_msg('W', object, "SevHist.Object1 or SevHist.Attribute1 is missing");
+    (*warning_cnt)++;
+  }
+
+  if (streq(server, "") && !streq(attribute1, "")) {
+    dyn->graph->syntax_msg('W', object, "SevHist.Attribute1 set but SevHist.Server is missing");
+    (*warning_cnt)++;
+  }
+
+  if (!streq(sevhist_object1, "")) {
+    sts = dyn->graph->check_ldh_object(sevhist_object1, &a_type);
+    if (EVEN(sts)) {
+      char msg[440];
+      sprintf(msg, "SevHist.Object1 \"%s\" not found", sevhist_object1);
+      dyn->graph->syntax_msg('W', object, msg);
+      (*warning_cnt)++;
+    } else {
+      if (a_type != pwr_cClass_SevHist) {
+        dyn->graph->syntax_msg(
+            'E', object, "SevHist.Object1 is of wrong class");
+        (*error_cnt)++;
+      }
+    }
+  }
+
+  if (!streq(sevhist_object2, "")) {
+    sts = dyn->graph->check_ldh_object(sevhist_object2, &a_type);
+    if (EVEN(sts)) {
+      char msg[440];
+      sprintf(msg, "SevHist.Object2 \"%s\" not found", sevhist_object2);
+      dyn->graph->syntax_msg('W', object, msg);
+      (*warning_cnt)++;
+    } else {
+      if (a_type != pwr_cClass_SevHist) {
+        dyn->graph->syntax_msg(
+            'E', object, "SevHist.Object2 is of wrong class");
+        (*error_cnt)++;
+      }
+    }
+  }
+
+  if (!streq(attribute1, "")) {
+    sts = dyn->graph->check_ldh_object(attribute1, &a_type);
+    if (EVEN(sts)) {
+      char msg[440];
+      sprintf(msg, "SevHist.Attribute1 \"%s\" not found", attribute1);
+      dyn->graph->syntax_msg('W', object, msg);
+      (*warning_cnt)++;
+    }
+  }
+
+  if (!streq(attribute2, "")) {
+    sts = dyn->graph->check_ldh_object(attribute2, &a_type);
+    if (EVEN(sts)) {
+      char msg[440];
+      sprintf(msg, "SevHist.Attribute2 \"%s\" not found", attribute2);
+      dyn->graph->syntax_msg('W', object, msg);
+      (*warning_cnt)++;
     }
   }
   return 1;

@@ -1378,17 +1378,18 @@ public:
     \param colortheme	Use colortheme colors.
   */
   void create_trend(grow_tObject* object, double x, double y,
-      unsigned int dyn_type, int colortheme);
+      unsigned int dyn_type1, unsigned int dyn_type2, int colortheme);
 
   //! Create a xy curve object.
   /*!
     \param object	Created xy curve object.
     \param x		x coordinate for object.
     \param y		y coordinate for object.
-    \param dyn_type	Dyntype of the created object.
+    \param dyn_type1	Dyntype1 of the created object.
+    \param dyn_type2	Dyntype2 of the created object.
   */
   void create_xycurve(
-      grow_tObject* object, double x, double y, unsigned int dyn_type);
+      grow_tObject* object, double x, double y, unsigned int dyn_type1, unsigned int dyn_type2);
 
   //! Create a bar object.
   /*!

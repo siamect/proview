@@ -152,6 +152,18 @@ void GrowXYCurve::set_xy_range_y(int curve, double min, double max)
   y_min_value[curve] = min;
 }
 
+void GrowXYCurve::get_xy_range_x(int curve, double *min, double *max)
+{
+  *max = x_max_value[curve];
+  *min = x_min_value[curve];
+}
+
+void GrowXYCurve::get_xy_range_y(int curve, double *min, double *max)
+{
+  *max = y_max_value[curve];
+  *min = y_min_value[curve];
+}
+
 void GrowXYCurve::set_xy_noofcurves(int noofcurves)
 {
   curve_cnt = noofcurves;

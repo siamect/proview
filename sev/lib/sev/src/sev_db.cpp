@@ -383,3 +383,29 @@ void sev_db::get_item_idx(
   }
   *sts = SEV__NOSUCHITEM;
 }
+
+void sev_db::get_item_idx_by_name(
+    pwr_tStatus* sts, unsigned int* item_idx, char* name)
+{
+  pwr_tAName aname;
+  char *s;
+
+  strncpy(aname, name, sizeof(aname));
+  s = strchr(aname, '.');
+  if (s == 0) {
+    *sts = SEV__NOSUCHITEM;
+    return;
+  }
+  *s = 0;
+  s++;
+	  
+  for (unsigned int i = 0; i < m_items.size(); i++) {
+    if ((str_NoCaseStrcmp(aname, m_items[i].oname) == 0)
+        && (str_NoCaseStrcmp(s, m_items[i].attr[0].aname) == 0)) {
+      *item_idx = i;
+      *sts = SEV__SUCCESS;
+      return;
+    }
+  }
+  *sts = SEV__NOSUCHITEM;
+}

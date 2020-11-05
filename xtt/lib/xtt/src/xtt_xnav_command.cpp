@@ -4619,10 +4619,12 @@ static int xnav_open_func(void* client_data, void* client_flag)
           return sts;
       }
 
+      xnav->scctx = sevcli_get_stored_ctx();
       if (!xnav->scctx) {
         sevcli_init(&sts, &xnav->scctx);
         if (EVEN(sts))
           return sts;
+	sevcli_store_ctx(xnav->scctx);
       }
       sevcli_set_servernode(&sts, xnav->scctx, server_node);
       if (EVEN(sts))

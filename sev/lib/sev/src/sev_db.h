@@ -175,6 +175,7 @@ public:
   pwr_tStatus tree_update_value(int item_idx, int attr_idx, pwr_tTime time, void* buf);
   void get_item_idx(pwr_tStatus* sts, unsigned int* item_idx, pwr_tOid oid,
       char* attributename);
+  void get_item_idx_by_name(pwr_tStatus* sts, unsigned int* item_idx, char* name);
   static void set_orignode(char *node) {strncpy(m_orignode, node, sizeof(m_orignode));}
   static void get_orignode(char *node) {strcpy(node, m_orignode);}
 
