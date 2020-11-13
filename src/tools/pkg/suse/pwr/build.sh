@@ -1,6 +1,7 @@
 #!/bin/bash
 
 aroot="/usr/pwrp/adm"
+hw="suse"
 
 # Get version
 if [ -e $pwr_inc/pwr_version.h ]; then
@@ -196,5 +197,5 @@ echo "-- Building package"
                 --define "pwre_target $pwre_target" \
                 --buildroot $pkgroot $pkgsrc/pwr.spec > /dev/null 2>&1
 
-mv $pkgroot/rpm/RPMS/i386/*.rpm $pwre_broot/$pwre_target/bld/pkg/.
+mv $pkgroot/rpm/RPMS/x86_64/*.rpm $pwre_broot/$pwre_target/bld/pkg/.
 rm -r $pkgroot

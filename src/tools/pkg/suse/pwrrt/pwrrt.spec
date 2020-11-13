@@ -9,10 +9,10 @@
 
 Name: pwrrt
 Summary: Proview/R runtime environment
-Version: 4.6.1
+Version: 5.7.2
 Release: 1
 License: GPL
-BuildArch: i386
+BuildArch: x86_64
 Packager: claes.sjofors@proview.se
 Requires: xorg-x11-fonts
 Group: Applications/System
@@ -78,7 +78,7 @@ co_convert -t -d %{buildroot}/usr/pwrrt/doc %{buildroot}/usr/pwrrt/exe/xtt_versi
 # Print rt version file
 echo "Version: %{version}-%{release}" > %{buildroot}/usr/pwrrt/exe/rt_version.dat
 
-#%clean
+%clean
 
 %files
 %defattr(-,root,root)
@@ -488,5 +488,5 @@ fi
 #%postun
 
 %changelog
-* Thu May 28 2009 Claes Sjofors <claes.sjofors@proview.se> 4.6.1-1
+* Fri Nov 13 2020 Claes Sjofors <claes.sjofors@proview.se> 5.7.2-1
   - Base release.
