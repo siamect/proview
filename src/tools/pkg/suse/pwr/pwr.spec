@@ -7,16 +7,16 @@
 #   See www.rpm.org.
 #
 
-Name: pwr46
+Name: pwr57
 Summary: Proview/R development and runtime environment
-Version: 4.6.1
+Version: 5.7.2
 Release: 1
 License: GPL
-BuildArch: i386
+BuildArch: x86_64
 Packager: claes.sjofors@proview.se
 Requires: gcc, gcc-c++, xorg-x11-fonts, xterm
 Group: Development/Tools/Other
-Url: http://www.proview.se
+URL: http://www.proview.se
 
 %description
 For more information please see www.proview.se.
@@ -77,7 +77,7 @@ co_convert -t -d %{buildroot}/usr/pwr%{ver}/%{pwre_target}/exp/doc %{buildroot}/
   echo "</head></html>"
 } > %{buildroot}/usr/pwr%{ver}/%{pwre_target}/exp/doc/en_us/package_version.html
 
-#%clean
+%clean
 
 %files
 %defattr(-,root,root)
@@ -199,5 +199,5 @@ fi
 #%postun
 
 %changelog
-* Thu May 28 2009 Claes Sjofors <claes.sjofors@proview.se> 4.6.1-1
+* Fri Nov 13 2020 Claes Sjofors <claes.sjofors@proview.se> 5.7.2-1
   - Base release.

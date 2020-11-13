@@ -180,5 +180,5 @@ echo "-- Building package"
                --define "_topdir $pkgroot/rpm" \
                --buildroot $pkgroot $pkgsrc/pwrsev.spec > /dev/null 2>&1
 
-mv $pkgroot/rpm/RPMS/i386/*.rpm $pwre_broot/$pwre_target/bld/pkg/.
+mv $pkgroot/rpm/RPMS/x86_64/*.rpm $pwre_broot/$pwre_target/bld/pkg/.
 rm -r $pkgroot
