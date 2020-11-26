@@ -21169,7 +21169,7 @@ int GeDsTrend::scan(grow_tObject object)
     return 1;
 
   for (i = 0; i < dstrend_cnt; i++) {
-    sts = gdh_GetObjectInfoAttrref(&dstrend_aref[i], &tp[i], sizeof(tp));
+    sts = gdh_GetObjectInfoAttrref(&dstrend_aref[i], &tp[i], sizeof(tp[0]));
     if (EVEN(sts))
       return sts;
   }
@@ -21915,6 +21915,7 @@ GeSevHist::GeSevHist(GeDyn* e_dyn)
   strcpy(minvalue_attr2, "");
   strcpy(maxvalue_attr2, "");
   strcpy(hold_attr, "");
+  strcpy(update_attr, "");
   strcpy(mark1_attr, "");
   strcpy(mark2_attr, "");
 }
@@ -22620,7 +22621,9 @@ int GeSevHist::scan(grow_tObject object)
     unsigned int vsize;
     pwr_tTime from, to;
     pwr_tDeltaTime diff;
+    double time;
     double *tdata, *vdata;
+    int points;
 
     time_GetTime(&to);
     time_Asub(&from, &to, &dt_timerange);
@@ -22636,27 +22639,61 @@ int GeSevHist::scan(grow_tObject object)
       if (EVEN(sts))
 	  continue;
 
-      tdata = (double*)calloc(1, 8 * rows);
-      vdata = (double*)calloc(1, 8 * rows);
+      switch (vtype) {
+      case pwr_eType_Int32:
+      case pwr_eType_Float32:
+	tdata = (double*)calloc(1, 8 * rows);
+	vdata = (double*)calloc(1, 8 * rows);
+	break;
+      case pwr_eType_Boolean:
+	tdata = (double*)calloc(1, 8 * rows * 2);
+	vdata = (double*)calloc(1, 8 * rows * 2);
+	break;
+      default:
+	return 0;
+      }
 
+      points = 0;
       for (k = 0; k < rows; k++) {
 	time_Adiff(&diff, &to, &tbuf[k]);
-	time_DToFloat64(&tdata[k], &diff);
-	if (direction == glow_eHorizDirection_Right)
-	  tdata[k] = timerange - tdata[k];
+	time_DToFloat64(&time, &diff);
 
-	switch (vtype) {
-	case pwr_eType_Int64:
+  	switch (vtype) {
+	case pwr_eType_Int32:
 	  vdata[k] = ((pwr_tInt32*)vbuf)[k];
+	  tdata[k] = time;
+	  points++;
 	  break;
 	case pwr_eType_Float32:
 	  vdata[k] = ((pwr_tFloat32*)vbuf)[k];	  
+	  tdata[k] = time;
+	  points++;
+	  break;
+	case pwr_eType_Boolean:
+	  if (k == 0) {
+	    vdata[points] = ((pwr_tBoolean*)vbuf)[k];
+	    tdata[points++] = time;
+	  }
+	  else if (((pwr_tBoolean*)vbuf)[k] != ((pwr_tBoolean*)vbuf)[k-1]) {
+	    vdata[points] = ((pwr_tBoolean*)vbuf)[k-1];	  
+	    tdata[points++] = time;
+	    vdata[points] = ((pwr_tBoolean*)vbuf)[k];
+	    tdata[points++] = time;
+	  }
+	  else if (k == rows - 1) {
+	    vdata[points] = ((pwr_tBoolean*)vbuf)[k];
+	    tdata[points++] = time;
+	  }
 	  break;
 	default:
 	  return 0;
 	}
       }
-      grow_SetXYCurveData(object, vdata, tdata, i, rows);
+      if (direction == glow_eHorizDirection_Right) {
+	for (k = 0; k < points; k++)
+	  tdata[k] = timerange - tdata[k];
+      }
+      grow_SetXYCurveData(object, vdata, tdata, i, points);
       free(tdata);
       free(vdata);
       free(tbuf);
