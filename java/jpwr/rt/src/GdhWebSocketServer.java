@@ -128,6 +128,11 @@ public class GdhWebSocketServer
   public final static int MH_SYNC = 66;
   public final static int MH_ACK = 67;
   public final static int GET_OBJECT_FROM_AREF = 68;
+  public final static int GET_DSTREND = 69;
+  public final static int GET_DSTRENDCURVE_INFO = 70;
+  public final static int GET_DSTRENDCURVE_BUFFER = 71;
+  public final static int GET_SEVHIST_INFO = 72;
+  public final static int GET_SEVHIST_DATA = 73;
 
   public final static int GET_OP_SELF = 1;
   public final static int GET_OP_METHOD_PLC = 2;
@@ -142,7 +147,6 @@ public class GdhWebSocketServer
   public final static int __UNREFED = 0;
 
   static ArrayList<SubElement> subscriptions = new ArrayList<SubElement>();
-  //static ArrayList subscriptions = new ArrayList();
 
   static int subscriptionCount = 0;
 
@@ -164,6 +168,52 @@ public class GdhWebSocketServer
   static boolean debug = false;
 
   static int lastIndexReffed = 0;
+
+  static class CbInfoElem {
+      int id;
+      int threadNumber;
+      int buffCnt;
+      CircBuffInfo[] cbInfo;
+
+      public CbInfoElem(int id, int threadNumber, int buffCnt, CircBuffInfo[] cbInfo) {
+	  this.id = id;
+	  this.threadNumber = threadNumber;
+	  this.buffCnt = buffCnt;
+	  this.cbInfo = cbInfo;
+      }
+      public int getId() {
+	  return id;
+      }
+      public int getThreadNumber() {
+	  return threadNumber;
+      }
+      public CircBuffInfo[] getCbInfo() {
+	  return cbInfo;
+      }
+  };      
+
+  Vector<CbInfoElem> cbInfoList = new Vector<CbInfoElem>();
+  int cbInfoCnt = 0;
+  void cbInfoAdd(int id, int threadNumber, int buffCnt, CircBuffInfo[] cbInfo) {
+      cbInfoList.add(new CbInfoElem(id, threadNumber, buffCnt, cbInfo));
+  }
+  void cbInfoShow() {
+      for (int i = 0; i < cbInfoList.size(); i++)
+	  System.out.println(i + " id " + cbInfoList.get(i).getId() + " thread " + cbInfoList.get(i).getThreadNumber());
+  }
+  void cbInfoRemove(int threadNumber) {
+      for (int i = 0; i < cbInfoList.size(); i++) {
+	  if (cbInfoList.get(i).getThreadNumber() == threadNumber)
+	      cbInfoList.remove(i--);
+      }
+  }
+  CbInfoElem cbInfoGet(int id) {
+      for (int i = 0; i < cbInfoList.size(); i++) {
+	  if (cbInfoList.get(i).getId() == id)
+	      return cbInfoList.get(i);
+      }
+      return null;
+  }
 
   class WebButton {
       public static final int GRAPH = 0;
@@ -564,6 +614,9 @@ public class GdhWebSocketServer
       catch(IOException e) {
 	  errh.error("DataStream failed");
 	  connectionOccupied[threadNumber] = false;
+	  cbInfoRemove(threadNumber);
+	  if (debug)
+	      cbInfoShow();
 	  threadCount--;
 	  setCurrentConnections(threadCount);
 	  return;
@@ -616,6 +669,9 @@ public class GdhWebSocketServer
 		      timer.cancel();
 
 		  connectionOccupied[threadNumber] = false;
+		  cbInfoRemove(threadNumber);
+		  if (debug)
+		      cbInfoShow();
 		  threadCount--;
 		  setCurrentConnections(threadCount);
 		  return;
@@ -2805,6 +2861,619 @@ public class GdhWebSocketServer
 		  }
 		  break;
 	      }
+	      case GET_DSTREND: {
+		  int sts = 123;
+		  int refsize = 0;
+		  int j;
+		  int last_idx;
+		  int last_buffer;
+		  int max_size;
+		  int len;
+
+		  int i = 6;
+		  last_idx = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
+		  i += 2;
+		  last_buffer = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
+		  i += 2;
+		  max_size = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
+		  i += 2;
+		  len = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
+		  i += 2;
+		  String dstrend = new String( value, i, len); 
+
+		  GdhrGetDsTrend ret = gdh.getDsTrend(dstrend, last_idx, last_buffer,
+						      max_size);
+
+		  refsize += 4;
+		  refsize += 4;
+		  if (ret.oddSts()) {
+		      refsize += 2;
+		      refsize += 2;
+		      refsize += 2;
+		      refsize += 4 * ret.size;
+		  }
+
+		  byte[] msg;
+		  int jstart;
+		  if ( refsize + 13 < 125) {
+		      jstart = 15;
+		      msg = new byte[15 + refsize];
+		      msg[0] = (byte)130;
+		      msg[1] = (byte)(13 + refsize);
+		      j = 2;
+		  }
+		  else {
+		      jstart = 17;
+		      msg = new byte[17 + refsize];
+		      msg[0] = (byte)130;
+		      msg[1] = (byte)126;
+		      msg[2] = (byte)(((13 + refsize) >> 8) & 0xFF);
+		      msg[3] = (byte)((13 + refsize) & 0xFF);
+		      j = 4;
+		  }		      
+		  msg[j++] = GET_DSTREND;
+		  msg[j++] = (byte)(id >> 24);
+		  msg[j++] = (byte)((id >> 16) & 0xFF);
+		  msg[j++] = (byte)((id >> 8) & 0xFF);
+		  msg[j++] = (byte)(id & 0xFF);
+		  msg[j++] = (byte)(sts >> 24);
+		  msg[j++] = (byte)((sts >> 16) & 0xFF);
+		  msg[j++] = (byte)((sts >> 8) & 0xFF);
+		  msg[j++] = (byte)(sts & 0xFF);
+
+		  if (ret.oddSts()) {
+		      ByteBuffer bb = ByteBuffer.wrap( msg);
+		      
+		      bb.putShort( j, (short)ret.last_next_idx);
+		      j += 2;
+		      bb.putShort( j, (short)ret.last_buffer);
+		      j += 2;
+		      bb.putShort( j, (short)ret.size);
+		      j += 2;
+
+		      for ( i = 0; i < ret.size; i++) {
+			  bb.putFloat(j, ret.data[i]);
+			  j += 4;
+		      }
+		  }
+		  try {
+		      out.write( msg);
+		      out.flush();
+		  }
+		  catch(IOException e) {
+		      System.out.println("GetDsTrend failed" + e.toString());
+		  }
+		  break;
+	      }
+	      case GET_DSTRENDCURVE_INFO: {
+		  int sts = 123;
+		  int refsize = 0;
+		  int j;
+		  int len;
+		  float displayTime = 0;
+		  float displayUpdateTime = 0;
+		  float scanTime = 0;
+		  int noOfSample = 0;
+		  int displayResolution = 0;
+		  int timeResolution = 0;
+		  int elementType = 0;
+		  int cbid;
+		  PwrtAttrRef aref = null;
+		  CdhrFloat fret;
+		  CdhrInt iret;
+		  CdhrString sret;
+		  CdhrAttrRef aret;
+		  int buffCnt = 0;
+
+		  int i = 6;
+		  len = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
+		  i += 2;
+		  String name = new String( value, i, len);
+
+ 		  CircBuffInfo[] cb_info = new CircBuffInfo[2];
+
+
+		  if ((sts & 1) == 1) {
+		      fret = gdh.getObjectInfoFloat( name + ".DisplayTime");
+		      if ( fret.evenSts())
+			  sts = fret.getSts();
+		      else
+			  displayTime = fret.value;
+		  }
+
+		  if ((sts & 1) == 1) {
+		      fret = gdh.getObjectInfoFloat( name + ".DisplayUpdateTime");
+		      if ( fret.evenSts())
+			  sts = fret.getSts();
+		      else
+			  displayUpdateTime = fret.value;
+		  }
+
+		  if ((sts & 1) == 1) {
+		      fret = gdh.getObjectInfoFloat(name + ".ScanTime");
+		      if ( fret.evenSts())
+			  sts = fret.getSts();
+		      else
+			  scanTime = fret.value;
+		  }
+
+		  if ((sts & 1) == 1) {
+		      iret = gdh.getObjectInfoInt(name + ".NoOfSample");
+		      if ( iret.evenSts())
+			  sts = iret.getSts();
+		      else
+			  noOfSample = iret.value;
+		  }
+
+		  if ((sts & 1) == 1) {
+		      iret = gdh.getObjectInfoInt(name + ".DisplayResolution");
+		      if ( iret.evenSts())
+			  sts = iret.getSts();
+		      else
+			  displayResolution = iret.value;
+		  }
+
+		  if ((sts & 1) == 1) {
+		      iret = gdh.getObjectInfoInt(name + ".TimeResolution");
+		      if ( iret.evenSts())
+			  sts = iret.getSts();
+		      else
+			  timeResolution = iret.value;
+		  }
+
+		  if ((sts & 1) == 1) {
+		      for (int k = 0; k < 2; k++) {
+			  sret = gdh.getObjectInfoString( name + ".Buffers[" + k + "]");
+			  if ( sret.evenSts())
+			      sts = sret.getSts();
+			  else if (sret.str.equals(""))
+			      sts = 0;
+
+			  if ((sts & 1) == 1) {
+			      aret = gdh.nameToAttrRef(sret.str);
+			      if ( aret.evenSts())
+				  sts = sret.getSts();
+			      else
+				  aref = aret.aref;
+			  }
+			  
+			  if ((sts & 1) == 1) {
+			      iret = gdh.getObjectInfoInt(name + ".AttributeType[" + k + "]");
+			      if ( iret.evenSts())
+				  sts = iret.getSts();
+			      else
+				  elementType = iret.value;
+			  }
+			  if ((sts & 1) != 1) {
+			      if (buffCnt == 0)
+				  break;
+			      else {
+				  sts = 1;
+				  break;
+			      }
+			  }
+
+			  cb_info[buffCnt] = new CircBuffInfo();
+			  cb_info[buffCnt].circAref = aref;
+			  cb_info[buffCnt].resolution = displayResolution;
+			  cb_info[buffCnt].elementType = elementType;
+			  cb_info[buffCnt].samples = noOfSample;
+			  buffCnt++;			  
+		      }
+		  }
+
+		  cbid = cbInfoCnt++;
+		  cbInfoAdd(cbid, threadNumber, buffCnt, cb_info);
+		  if (debug)
+		      cbInfoShow();
+		  
+		  refsize += 4;
+		  refsize += 4;
+		  if ((sts & 1) == 1) {
+		      refsize += 4;
+		      refsize += 4;
+		      refsize += 4;
+		      refsize += 4;
+		      refsize += 4;
+		      refsize += 4;
+		      refsize += 4;
+		      for (int k = 0; k < buffCnt; k++)
+			  refsize += 4;
+		  }
+
+		  byte[] msg;
+		  int jstart;
+		  if ( refsize + 13 < 125) {
+		      jstart = 15;
+		      msg = new byte[15 + refsize];
+		      msg[0] = (byte)130;
+		      msg[1] = (byte)(13 + refsize);
+		      j = 2;
+		  }
+		  else {
+		      jstart = 17;
+		      msg = new byte[17 + refsize];
+		      msg[0] = (byte)130;
+		      msg[1] = (byte)126;
+		      msg[2] = (byte)(((13 + refsize) >> 8) & 0xFF);
+		      msg[3] = (byte)((13 + refsize) & 0xFF);
+		      j = 4;
+		  }		      
+		  msg[j++] = GET_DSTRENDCURVE_INFO;
+		  msg[j++] = (byte)(id >> 24);
+		  msg[j++] = (byte)((id >> 16) & 0xFF);
+		  msg[j++] = (byte)((id >> 8) & 0xFF);
+		  msg[j++] = (byte)(id & 0xFF);
+		  msg[j++] = (byte)(sts >> 24);
+		  msg[j++] = (byte)((sts >> 16) & 0xFF);
+		  msg[j++] = (byte)((sts >> 8) & 0xFF);
+		  msg[j++] = (byte)(sts & 0xFF);
+
+		  if ((sts & 1) == 1) {
+		      ByteBuffer bb = ByteBuffer.wrap( msg);
+		      bb.putInt( j, cbid);
+		      j += 4;
+		      bb.putInt( j, displayResolution);
+		      j += 4;
+		      bb.putInt( j, noOfSample);
+		      j += 4;
+		      bb.putFloat( j, displayUpdateTime);
+		      j += 4;
+		      bb.putFloat( j, displayTime);
+		      j += 4;
+		      bb.putFloat( j, scanTime);
+		      j += 4;
+		      bb.putInt( j, buffCnt);
+		      j += 4;
+		      for (int k = 0; k < buffCnt; k++) {
+			  bb.putInt( j, cb_info[k].elementType);
+			  j += 4;
+		      }
+		  }
+		  try {
+		      out.write( msg);
+		      out.flush();
+		  }
+		  catch(IOException e) {
+		      System.out.println("GetDsTrend failed" + e.toString());
+		  }
+		  break;
+	      }
+	      case GET_DSTRENDCURVE_BUFFER: {
+		  int sts = 123;
+		  int refsize = 0;
+		  int j, k;
+		  int elementtype = 0;
+		  int samples;
+		  int len;
+		  int cbid;
+		  int update;
+
+		  int i = 6;
+
+		  cbid = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
+		  i += 4;
+		  samples = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
+		  i += 4;
+		  update = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
+		  i += 4;
+
+		  CbInfoElem elem = cbInfoGet(cbid);
+		  if (elem == null)
+		      sts = 0;
+		  if ((sts & 1) == 1) {
+		      for (k = 0; k < elem.buffCnt; k++) {
+			  if (samples < elem.cbInfo[k].samples)
+			      elem.cbInfo[k].samples = samples;
+		      }
+		      if (update == 0) {
+			  for (k = 0; k < elem.buffCnt; k++) 
+			      gdh.getCircBuffInfo(elem.cbInfo[k]);
+		      }
+		      else {
+			  gdh.updateCircBuffInfo(elem.cbInfo, elem.buffCnt);
+		      }
+		      for (k = 0; k < elem.buffCnt; k++) {
+			  if  ((sts & 1) != 1)
+			      sts = elem.cbInfo[k].status;
+		      }
+		  }
+
+		  refsize += 4;
+		  refsize += 4;
+		  if ((sts & 1) == 1) {
+		      refsize += 4;
+		      for (k = 0; k < elem.buffCnt; k++) {
+			  refsize += 4;
+			  refsize += 4;
+			  refsize += 4 * elem.cbInfo[k].size;
+		      }
+		  }
+
+		  byte[] msg;
+		  int jstart;
+		  if ( refsize + 13 < 125) {
+		      jstart = 15;
+		      msg = new byte[15 + refsize];
+		      msg[0] = (byte)130;
+		      msg[1] = (byte)(13 + refsize);
+		      j = 2;
+		  }
+		  else {
+		      jstart = 17;
+		      msg = new byte[17 + refsize];
+		      msg[0] = (byte)130;
+		      msg[1] = (byte)126;
+		      msg[2] = (byte)(((13 + refsize) >> 8) & 0xFF);
+		      msg[3] = (byte)((13 + refsize) & 0xFF);
+		      j = 4;
+		  }		      
+		  msg[j++] = GET_DSTRENDCURVE_BUFFER;
+		  msg[j++] = (byte)(id >> 24);
+		  msg[j++] = (byte)((id >> 16) & 0xFF);
+		  msg[j++] = (byte)((id >> 8) & 0xFF);
+		  msg[j++] = (byte)(id & 0xFF);
+		  msg[j++] = (byte)(sts >> 24);
+		  msg[j++] = (byte)((sts >> 16) & 0xFF);
+		  msg[j++] = (byte)((sts >> 8) & 0xFF);
+		  msg[j++] = (byte)(sts & 0xFF);
+
+		  if ((sts & 1) == 1) {
+		      ByteBuffer bb = ByteBuffer.wrap( msg);
+		      
+		      bb.putInt(j, elem.buffCnt);
+		      j += 4;
+		      for (k = 0; k < elem.buffCnt; k++) {
+			  bb.putInt(j, elem.cbInfo[k].size);
+			  j += 4;
+			  bb.putInt(j, elem.cbInfo[k].elementType);
+			  j += 4;
+			  switch (elem.cbInfo[k].elementType) {
+			  case Pwr.eType_Float32:
+			      for ( i = 0; i < elem.cbInfo[k].size; i++) {
+				  bb.putFloat(j, ((float[])elem.cbInfo[k].bufp)[i]);
+				  j += 4;			  
+				  //System.out.println("Value " + i + " " + ((float[])elem.cbInfo[k].bufp)[i]);
+			      }
+			      break;
+			  case Pwr.eType_Int32:
+			  case Pwr.eType_UInt32:
+			  case Pwr.eType_Int16:
+			  case Pwr.eType_UInt16:
+			  case Pwr.eType_Int8:
+			  case Pwr.eType_UInt8:
+			  case Pwr.eType_Boolean:
+			      for ( i = 0; i < elem.cbInfo[k].size; i++) {
+				  bb.putInt(j, ((int[])elem.cbInfo[k].bufp)[i]);
+				  j += 4;			  
+			      }
+			      break;
+			  default:;
+			  }
+		      }
+		  }
+		  try {
+		      out.write( msg);
+		      out.flush();
+		  }
+		  catch(IOException e) {
+		      System.out.println("GetDsTrendCurveBuffer failed" + e.toString());
+		  }
+		  break;
+	      }
+	      case GET_SEVHIST_DATA: {
+		  int sts = 123;
+		  int refsize = 0;
+		  int j, k;
+		  int elementtype = 0;
+		  int len;
+		  float timerange;
+		  int max_size;
+		  PwrtObjid oid = new PwrtObjid(0,0);
+
+		  int i = 6;
+
+                  timerange = Float.intBitsToFloat(((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24));
+		  i += 4;
+		  max_size = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
+		  i += 4;
+		  oid.vid = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
+		  i += 4;
+		  oid.oix = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8) + ((value[i+2] & 0xFF) << 16) + ((value[i+3] & 0xFF) << 24);
+		  i += 4;
+		  len = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
+		  i += 2;
+		  String server = new String( value, i, len); 
+		  i += len;
+		  len = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
+		  i += 2;
+		  String attribute = new String( value, i, len); 
+		  i += len;
+
+		  GdhrSevItemData ret = gdh.getSevItemData(server, oid, attribute, timerange, max_size);
+		  sts = ret.getSts();
+
+		  //float[] tbuf = {0f, 10f, 20f, 30f, 40f, 50f, 60f, 70f, 80f, 90f, 100f};
+		  //float[] vbuf = {0f, 15.5f, 22.22f, 33.3f, 88f, 77f, 66f, 33f, 44f, 55f, 22f};
+
+		  refsize += 4;
+		  refsize += 4;
+		  if ((sts & 1) == 1) {
+		      refsize += 4;
+		      refsize += 4;
+		      refsize += ret.tbuf.length * 4;
+		      switch (ret.vtype) {
+		      case Pwr.eType_Float32:
+			  refsize += ((float[])ret.vbuf).length * 4;
+			  break;
+		      case Pwr.eType_Int32:
+		      case Pwr.eType_UInt32:
+		      case Pwr.eType_Int16:
+		      case Pwr.eType_UInt16:
+		      case Pwr.eType_Int8:
+		      case Pwr.eType_UInt8:
+		      case Pwr.eType_Boolean:
+			  refsize += ((int[])ret.vbuf).length * 4;
+			  break;
+		      }
+		      //refsize++; // To avoid disconnect
+		  }
+		  byte[] msg;
+		  int jstart;
+		  if ( refsize + 13 < 125) {
+		      jstart = 15;
+		      msg = new byte[15 + refsize];
+		      msg[0] = (byte)130;
+		      msg[1] = (byte)(13 + refsize);
+		      j = 2;
+		  }
+		  else {
+		      refsize++; // To avoid disconnect
+		      jstart = 17;
+		      msg = new byte[17 + refsize];
+		      msg[0] = (byte)130;
+		      msg[1] = (byte)126;
+		      msg[2] = (byte)(((13 + refsize) >> 8) & 0xFF);
+		      msg[3] = (byte)((13 + refsize) & 0xFF);
+		      j = 4;
+		  }		      
+		  msg[j++] = GET_SEVHIST_DATA;
+		  msg[j++] = (byte)(id >> 24);
+		  msg[j++] = (byte)((id >> 16) & 0xFF);
+		  msg[j++] = (byte)((id >> 8) & 0xFF);
+		  msg[j++] = (byte)(id & 0xFF);
+		  msg[j++] = (byte)(sts >> 24);
+		  msg[j++] = (byte)((sts >> 16) & 0xFF);
+		  msg[j++] = (byte)((sts >> 8) & 0xFF);
+		  msg[j++] = (byte)(sts & 0xFF);
+
+		  if ((sts & 1) == 1) {
+		      ByteBuffer bb = ByteBuffer.wrap( msg);
+		      
+		      bb.putInt(j, ret.vtype);
+		      j += 4;
+		      bb.putInt(j, ret.tbuf.length);
+		      j += 4;
+		      for (k = 0; k < ret.tbuf.length; k++) {
+			  bb.putFloat(j, ret.tbuf[k]);
+			  j += 4;			  
+			  //System.out.println("Time  " + k + " " + ret.tbuf[k]);
+		      }
+		      switch (ret.vtype) {
+		      case Pwr.eType_Float32:
+			  for (k = 0; k < ((float[])ret.vbuf).length; k++) {
+			      bb.putFloat(j, ((float[])ret.vbuf)[k]);
+			      j += 4;			  
+			  }
+			  //System.out.println("Send " + sts + " " + ((float[])ret.vbuf).length);
+			  break;
+		      case Pwr.eType_Int32:
+		      case Pwr.eType_UInt32:
+		      case Pwr.eType_Int16:
+		      case Pwr.eType_UInt16:
+		      case Pwr.eType_Int8:
+		      case Pwr.eType_UInt8:
+		      case Pwr.eType_Boolean:
+			  for (k = 0; k < ((int[])ret.vbuf).length; k++) {
+			      bb.putInt(j, ((int[])ret.vbuf)[k]);
+			      j += 4;			  
+			      //System.out.println("Value " + k + " " + ((int[])ret.vbuf)[k]);
+			  }
+			  System.out.println("Send " + sts + " " + ((int[])ret.vbuf).length);
+			  break;
+		      }
+		  }
+		  try {
+		      out.write( msg);
+		      out.flush();
+		  }
+		  catch(IOException e) {
+		      System.out.println("GetSevHistBuffer failed" + e.toString());
+		  }
+		  break;
+	      }
+	      case GET_SEVHIST_INFO: {
+		  int sts = 123;
+		  int refsize = 0;
+		  int j, k;
+		  int elementtype = 0;
+		  int len;
+		  float timerange;
+		  int max_size;
+
+		  int i = 6;
+
+		  len = ((value[i] & 0xFF) << 0) + ((value[i+1] & 0xFF) << 8);
+		  i += 2;
+		  String sevhist_object = new String( value, i, len); 
+		  i += len;
+
+		  GdhrSevItemInfo ret = gdh.getSevItemInfo(sevhist_object);
+		  sts = ret.getSts();
+
+		  refsize += 4;
+		  refsize += 4;
+		  if ((sts & 1) == 1) {
+		      refsize += 8;
+		      refsize += 2;
+		      refsize += ret.attr.length();
+		      refsize += 2;
+		      refsize += ret.server.length();
+		  }
+
+		  byte[] msg;
+		  int jstart;
+		  if ( refsize + 13 < 125) {
+		      jstart = 15;
+		      msg = new byte[15 + refsize];
+		      msg[0] = (byte)130;
+		      msg[1] = (byte)(13 + refsize);
+		      j = 2;
+		  }
+		  else {
+		      jstart = 17;
+		      msg = new byte[17 + refsize];
+		      msg[0] = (byte)130;
+		      msg[1] = (byte)126;
+		      msg[2] = (byte)(((13 + refsize) >> 8) & 0xFF);
+		      msg[3] = (byte)((13 + refsize) & 0xFF);
+		      j = 4;
+		  }		      
+		  msg[j++] = GET_SEVHIST_INFO;
+		  msg[j++] = (byte)(id >> 24);
+		  msg[j++] = (byte)((id >> 16) & 0xFF);
+		  msg[j++] = (byte)((id >> 8) & 0xFF);
+		  msg[j++] = (byte)(id & 0xFF);
+		  msg[j++] = (byte)(sts >> 24);
+		  msg[j++] = (byte)((sts >> 16) & 0xFF);
+		  msg[j++] = (byte)((sts >> 8) & 0xFF);
+		  msg[j++] = (byte)(sts & 0xFF);
+
+		  if ((sts & 1) == 1) {
+		      ByteBuffer bb = ByteBuffer.wrap( msg);
+
+		      bb.putInt(j, ret.oid.vid);
+		      j += 4;
+		      bb.putInt(j, ret.oid.oix);
+		      j += 4;
+		      bb.putShort(j, (short)ret.attr.length());
+		      j += 2;
+		      for (k = 0; k < ret.attr.length(); k++)
+			  bb.put( j++, (byte)ret.attr.charAt(k));
+		      bb.putShort(j, (short)ret.server.length());
+		      j += 2;
+		      for (k = 0; k < ret.server.length(); k++)
+			  bb.put( j++, (byte)ret.server.charAt(k));
+		  }
+		  try {
+		      out.write( msg);
+		      out.flush();
+		  }
+		  catch(IOException e) {
+		      System.out.println("GetSevHistInfo failed" + e.toString());
+		  }
+		  break;
+	      }
 	      default:
 		  System.out.println("Unknown function code received: " + value[0]);
 	      }
@@ -2844,7 +3513,10 @@ public class GdhWebSocketServer
 	  this.trimRefObjectList();
 
 	  connectionOccupied[threadNumber] = false;
-	  threadCount--;
+	  cbInfoRemove(threadNumber);
+	  if (debug)
+	      cbInfoShow();
+	  threadCount--;	  
 	  setCurrentConnections(threadCount);
 	  System.out.println("ServerSocket IOException " + e.toString());
 	  System.out.println("Terminating thread " + threadNumber);

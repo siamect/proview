@@ -440,7 +440,14 @@ pwr_tStatus cbuf_UpdateCircBuffInfo(cbuf_sCircBuffInfo* info, int infosize)
           first_index = info[j].last_idx;
           last_index = hp->LastIndex;
           start_idx = last_index - info[j].samples;
-          if (first_index < last_index) {
+	  if (first_index == last_index) {
+	    info[j].last_idx = last_index;
+	    info[j].first_idx = first_index;
+	    info[j].offset = 0;
+	    info[j].size = 0;
+	    break;
+	  }
+          else if (first_index < last_index) {
             if (first_index > start_idx)
               start_idx = first_index;
           } else {

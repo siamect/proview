@@ -407,6 +407,30 @@ JNIEXPORT jint JNICALL Java_jpwr_rt_Gdh_getCircBuffInfo
 JNIEXPORT jint JNICALL Java_jpwr_rt_Gdh_updateCircBuffInfo
   (JNIEnv *, jobject, jobject, jint);
 
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getDsTrend
+ * Signature: (Ljava/lang/String;III)Ljpwr/rt/GdhrGetDsTrend;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getDsTrend
+(JNIEnv *, jobject, jstring, jint, jint, jint);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getSevItemInfo
+ * Signature: (Ljava/lang/String;)Ljpwr/rt/GdhrSevItemInfo;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getSevItemInfo
+(JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getSevItemData
+ * Signature: (Ljava/lang/String;Ljpwr/rt/PwrtObjid;Ljava/lang/String;FI)Ljpwr/rt/GdhrSevItemData;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getSevItemData
+(JNIEnv *, jobject, jstring, jobject, jstring, jfloat, jint);
+
 #ifdef __cplusplus
 }
 #endif

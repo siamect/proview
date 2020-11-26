@@ -1417,7 +1417,6 @@ int sev_dbms::write_value(pwr_tStatus* sts, int item_idx, int attr_idx,
           }
           break;
         case pwr_eType_UInt32:
-        case pwr_eType_Boolean:
           if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt32)))
@@ -1428,6 +1427,14 @@ int sev_dbms::write_value(pwr_tStatus* sts, int item_idx, int attr_idx,
           } else {
             m_items[item_idx].deadband_active = 0;
             *(pwr_tUInt32*)m_items[item_idx].old_value = *(pwr_tUInt32*)buf;
+          }
+          break;
+        case pwr_eType_Boolean:
+	  if (*(pwr_tBoolean*)buf == *(pwr_tBoolean*)m_items[item_idx].old_value) {
+            return 1;
+          } else {
+            m_items[item_idx].deadband_active = 0;
+            *(pwr_tBoolean*)m_items[item_idx].old_value = *(pwr_tBoolean*)buf;
           }
           break;
         case pwr_eType_UInt16:
