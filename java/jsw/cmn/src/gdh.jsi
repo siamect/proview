@@ -160,7 +160,12 @@ function Gdh() {
     GET_OBJECT_FROM_NAME       	: 65,
     MH_SYNC			: 66,
     MH_ACK			: 67,
-    GET_OBJECT_FROM_AREF       	: 68
+    GET_OBJECT_FROM_AREF       	: 68,
+    GET_DSTREND		       	: 69,
+    GET_DSTRENDCURVE_INFO       : 70,
+    GET_DSTRENDCURVE_BUFFER     : 71,
+    GET_SEVHIST_INFO    	: 72,
+    GET_SEVHIST_DATA    	: 73
   };
 
   this.debug = false;
@@ -830,6 +835,226 @@ function Gdh() {
 	    delete this.gdh.pending[id];
 	    break;
 	  }
+	  case Msg.GET_DSTREND: {
+	    var j = 9;
+	    var last_idx = dv.getUint16(j);
+	    j += 2;
+	    var last_buffer = dv.getUint16(j);
+	    j += 2;
+	    var size = dv.getUint16(j);
+	    if ( this.gdh.debug) console.log("GetDsTrend received", id, size, last_idx);
+	    j += 2;
+	    value = new Array(size);
+	    for ( var k = 0; k < size; k++) {
+	      value[k] = dv.getFloat32(j);
+	      j += 4;
+            }
+	    var result = []
+	    result[0] = last_idx;
+	    result[1] = last_buffer;
+	    result[2] = size;
+            result[3] = value;
+	    var pending_data = this.gdh.pending[id];
+	    pending_data.func_cb( id, pending_data.data, sts, result);
+	    delete this.gdh.pending[id];
+	    break;
+	  }
+	  case Msg.GET_DSTRENDCURVE_INFO: {
+	    var j = 9;
+	    var cbid = dv.getUint32(j);	      
+	    j += 4;
+	    var resolution = dv.getUint32(j);
+	    j += 4;
+	    var samples = dv.getUint32(j);
+	    j += 4;
+	    var displayupdatetime = dv.getFloat32(j);
+	    j += 4;
+	    var displaytime = dv.getFloat32(j);
+	    j += 4;
+	    var scantime = dv.getFloat32(j);
+	    j += 4;
+	    var buffcnt = dv.getUint32(j);
+	    j += 4;
+	    var elementtype1 = dv.getUint32(j);
+	    j += 4;
+	    if (buffcnt > 1) {
+	      var elementtype1 = dv.getUint32(j);
+	      j += 4;
+            }
+
+	    if ( this.gdh.debug) console.log("GetDsTrendCurveInfo received", id, size);
+	    var result = []
+	    result[0] = cbid;
+	    result[1] = resolution;
+	    result[2] = samples;
+            result[3] = displayupdatetime;
+            result[4] = displaytime;
+            result[5] = scantime;
+	    result[6] = buffcnt;
+            result[7] = elementtype1;
+	    if (buffcnt > 1)
+	      result[8] = elementtype2;
+	    var pending_data = this.gdh.pending[id];
+	    pending_data.func_cb( id, pending_data.data, sts, result);
+	    delete this.gdh.pending[id];
+	    break;
+	  }
+	  case Msg.GET_DSTRENDCURVE_BUFFER: {
+	    var result = []
+	    if ( sts & 1) {
+	      var buffcnt;
+	      var size1;
+              var size2;
+              var elementtype1;
+	      var elementtype2
+	      var value1;
+	      var value2;
+	      var i;
+	      var j = 9;
+ 	      buffcnt = dv.getUint32(j);
+	      j += 4;
+	      size1 = dv.getUint32(j);
+	      j += 4;
+ 	      elementtype1 = dv.getUint32(j);
+	      j += 4;
+	      value1 = new Array(size1);
+	      switch (elementtype1) {
+              case Pwr.eType_Float32:
+	        for ( var k = 0; k < size1; k++) {
+	          value1[k] = dv.getFloat32(j);
+	          j += 4;
+                }
+		break;
+	      case Pwr.eType_Int8:
+	      case Pwr.eType_Int16:
+	      case Pwr.eType_Int32:
+	      case Pwr.eType_UInt8:
+	      case Pwr.eType_UInt16:
+	      case Pwr.eType_UInt32:
+	        for ( var k = 0; k < size1; k++) {
+	          value1[k] = dv.getInt32(j);
+	          j += 4;
+                }
+	        break;
+	      }
+	      if (buffcnt > 1) {
+	        size2 = dv.getUint32(j);
+	        j += 4;
+ 	        elementtype2 = dv.getUint32(j);
+	        j += 4;
+	        value2 = new Array(size2);
+	        switch (elementtype2) {
+                case Pwr.eType_Float32:
+	          for ( var k = 0; k < size2; k++) {
+	            value2[k] = dv.getFloat32(j);
+	            j += 4;
+                  }
+		  break;
+	        case Pwr.eType_Int8:
+	        case Pwr.eType_Int16:
+	        case Pwr.eType_Int32:
+	        case Pwr.eType_UInt8:
+	        case Pwr.eType_UInt16:
+	        case Pwr.eType_UInt32:
+	        case Pwr.eType_Boolean:
+	          for ( var k = 0; k < size2; k++) {
+	            value2[k] = dv.getInt32(j);
+	            j += 4;
+                  }
+	          break;
+	        }
+              }
+	    
+	      if ( this.gdh.debug) console.log("GetDsTrendCurveBuffer received", id, size);
+	      result[0] = size1;
+	      result[1] = size1;
+	      result[2] = elementtype1;
+	      result[3] = value1;
+	      if (buffcnt > 1) {
+	        result[4] = size2;
+	        result[5] = elementtype2;
+	        result[6] = value2;
+	      }
+            }
+	    var pending_data = this.gdh.pending[id];
+	    pending_data.func_cb( id, pending_data.data, sts, result);
+	    delete this.gdh.pending[id];
+	    break;
+	  }
+	  case Msg.GET_SEVHIST_DATA: {
+	    var j = 9;
+	    var vtype = dv.getUint32(j);
+	    j += 4;
+	    var size = dv.getUint32(j);
+	    j += 4;
+	    var tbuf = new Array(size);
+	    for ( var k = 0; k < size; k++) {
+	      tbuf[k] = dv.getFloat32(j);
+	      j += 4;
+            }
+	    var vbuf = new Array(size);
+
+	    switch (vtype) {
+	    case Pwr.eType_Float32:
+	      for ( var k = 0; k < size; k++) {
+	        vbuf[k] = dv.getFloat32(j);
+	        j += 4;
+              }
+	      break;
+	    case Pwr.eType_Int8:
+	    case Pwr.eType_Int16:
+	    case Pwr.eType_Int32:
+	    case Pwr.eType_UInt8:
+	    case Pwr.eType_UInt16:
+	    case Pwr.eType_UInt32:
+	    case Pwr.eType_Boolean:
+	      for ( var k = 0; k < size; k++) {
+	        vbuf[k] = dv.getInt32(j);
+	        j += 4;
+              }
+	      break;
+            }
+	    var result = []
+	    result[0] = vtype;
+	    result[1] = size;
+	    result[2] = tbuf;
+	    result[3] = vbuf;
+	    var pending_data = this.gdh.pending[id];
+	    pending_data.func_cb( id, pending_data.data, sts, result);
+	    delete this.gdh.pending[id];
+	    break;
+	  }
+	  case Msg.GET_SEVHIST_INFO: {
+	    var j = 9;
+	    var oid = new PwrtObjid(0,0);
+	    oid.vid = dv.getUint32(j);	      
+	    j += 4;
+	    oid.oix = dv.getUint32(j);	      
+	    j += 4;
+	    var len = dv.getUint16(j);
+	    j += 2;
+	    var iarr = new Uint8Array( len);
+	    for ( var k = 0; k < len; k++) {
+              iarr[k] = dv.getUint8(j++);
+	    }
+	    var attr = String.fromCharCode.apply( null, iarr);
+	    len = dv.getUint16(j);
+	    j += 2;
+	    iarr = new Uint8Array( len);
+	    for ( var k = 0; k < len; k++) {
+              iarr[k] = dv.getUint8(j++);
+	    }
+	    var server = String.fromCharCode.apply( null, iarr);
+
+	    var result = []
+	    result[0] = oid;
+	    result[1] = attr;
+	    result[2] = server;
+	    var pending_data = this.gdh.pending[id];
+	    pending_data.func_cb( id, pending_data.data, sts, result);
+	    delete this.gdh.pending[id];
+	    break;
+	  }
 	  default:
 	    console.log("Unknown message type"); 
 	  }
@@ -1443,6 +1668,138 @@ function Gdh() {
     this.pending[this.next_id] = new PendingData( return_cb, data);
     if ( this.debug) console.log( "Sending mhAcknowledge", this.next_id);
     console.log( "Sending mhAcknowledge", this.next_id);
+    this.ws.send(buf);
+    this.next_id++;
+  };
+
+  this.getDsTrend = function( name, last_idx, last_buffer, max_size, return_cb, data) {
+    var buf = new Uint8Array(14 + name.length);
+    buf[0] = Msg.GET_DSTREND;
+    buf[2] = this.next_id & 0xFF;
+    buf[3] = (this.next_id >> 8) & 0xFF;
+    buf[4] = (this.next_id >> 16) & 0xFF;
+    buf[5] = (this.next_id >> 24) & 0xFF;
+    buf[6] = last_idx & 0xFF;
+    buf[7] = (last_idx >> 8) & 0xFF;
+    buf[8] = last_buffer & 0xFF;
+    buf[9] = (last_buffer >> 8) & 0xFF;
+    buf[10] = max_size & 0xFF;
+    buf[11] = (max_size >> 8) & 0xFF;
+    buf[12] = name.length & 0xFF;
+    buf[13] = (name.length >> 8) & 0xFF;
+    var k = 14;
+    for ( var i = 0; i < name.length; i++) {
+      buf[k++] = name.charCodeAt(i);
+    }
+    this.pending[this.next_id] = new PendingData( return_cb, data);
+    if (this.debug) console.log( "Sending getDsTrend", this.next_id, name);
+    this.ws.send(buf);
+    this.next_id++;
+  };
+
+  this.getDsTrendCurveInfo = function( name, return_cb, data) {
+    var buf = new Uint8Array(8 + name.length);
+    buf[0] = Msg.GET_DSTRENDCURVE_INFO;
+    buf[2] = this.next_id & 0xFF;
+    buf[3] = (this.next_id >> 8) & 0xFF;
+    buf[4] = (this.next_id >> 16) & 0xFF;
+    buf[5] = (this.next_id >> 24) & 0xFF;
+    buf[6] = name.length & 0xFF;
+    buf[7] = (name.length >> 8) & 0xFF;
+    var k = 8;
+    for ( var i = 0; i < name.length; i++) {
+      buf[k++] = name.charCodeAt(i);
+    }
+    this.pending[this.next_id] = new PendingData( return_cb, data);
+    if (this.debug) console.log( "Sending getDsTrendCurveInfo", this.next_id, name);
+    this.ws.send(buf);
+    this.next_id++;
+  };
+
+  this.getDsTrendCurveBuffer = function( cbid, samples, update, return_cb, data) {
+    var buf = new Uint8Array(18);
+    buf[0] = Msg.GET_DSTRENDCURVE_BUFFER;
+    buf[2] = this.next_id & 0xFF;
+    buf[3] = (this.next_id >> 8) & 0xFF;
+    buf[4] = (this.next_id >> 16) & 0xFF;
+    buf[5] = (this.next_id >> 24) & 0xFF;
+    buf[6] = cbid & 0xFF;
+    buf[7] = (cbid >> 8) & 0xFF;
+    buf[8] = (cbid >> 16) & 0xFF;
+    buf[9] = (cbid >> 24) & 0xFF;
+    buf[10] = samples & 0xFF;
+    buf[11] = (samples >> 8) & 0xFF;
+    buf[12] = (samples >> 16) & 0xFF;
+    buf[13] = (samples >> 24) & 0xFF;
+    buf[14] = update & 0xFF;
+    buf[15] = (update >> 8) & 0xFF;
+    buf[16] = (update >> 16) & 0xFF;
+    buf[17] = (update >> 24) & 0xFF;
+    this.pending[this.next_id] = new PendingData( return_cb, data);
+    if (this.debug) console.log( "Sending getDsTrendCurveBuffer", this.next_id, samples, update);
+    this.ws.send(buf);
+    this.next_id++;
+  };
+
+  this.getSevHistData = function( timerange, max_size, server, oid, attribute, 
+	return_cb, data) {
+    var buf = new Uint8Array(26 + server.length + attribute.length);
+    buf[0] = Msg.GET_SEVHIST_DATA;
+    buf[2] = this.next_id & 0xFF;
+    buf[3] = (this.next_id >> 8) & 0xFF;
+    buf[4] = (this.next_id >> 16) & 0xFF;
+    buf[5] = (this.next_id >> 24) & 0xFF;
+    var fbuf = new ArrayBuffer(4);
+    var fa = new Float32Array(fbuf);
+    fa[0] = timerange;
+    var ba = new Uint8Array(fbuf);
+    buf[6] = ba[0];
+    buf[7] = ba[1];
+    buf[8] = ba[2];
+    buf[9] = ba[3];
+    buf[10] = max_size & 0xFF;
+    buf[11] = (max_size >> 8) & 0xFF;
+    buf[12] = (max_size >> 16) & 0xFF;
+    buf[13] = (max_size >> 24) & 0xFF;
+    buf[14] = oid.vid & 0xFF;
+    buf[15] = (oid.vid >> 8) & 0xFF;
+    buf[16] = (oid.vid >> 16) & 0xFF;
+    buf[17] = (oid.vid >> 24) & 0xFF;
+    buf[18] = oid.oix & 0xFF;
+    buf[19] = (oid.oix >> 8) & 0xFF;
+    buf[20] = (oid.oix >> 16) & 0xFF;
+    buf[21] = (oid.oix >> 24) & 0xFF;
+    buf[22] = server.length & 0xFF;
+    buf[23] = (server.length >> 8) & 0xFF;
+    var k = 24;
+    for ( var i = 0; i < server.length; i++)
+      buf[k++] = server.charCodeAt(i);
+    buf[k++] = attribute.length & 0xFF;
+    buf[k++] = (attribute.length >> 8) & 0xFF;
+    for ( var i = 0; i < attribute.length; i++)
+      buf[k++] = attribute.charCodeAt(i);
+    
+    this.pending[this.next_id] = new PendingData( return_cb, data);
+    if (this.debug) console.log( "Sending getSevHistData", this.next_id, attribute);
+    this.ws.send(buf);
+    this.next_id++;
+  };
+
+  this.getSevHistInfo = function(sevhist_object, return_cb, data) {
+    var buf = new Uint8Array(8 + sevhist_object.length);
+    buf[0] = Msg.GET_SEVHIST_INFO;
+    buf[2] = this.next_id & 0xFF;
+    buf[3] = (this.next_id >> 8) & 0xFF;
+    buf[4] = (this.next_id >> 16) & 0xFF;
+    buf[5] = (this.next_id >> 24) & 0xFF;
+    buf[6] = sevhist_object.length & 0xFF;
+    buf[7] = (sevhist_object.length >> 8) & 0xFF;
+    var k = 8;
+    for ( var i = 0; i < sevhist_object.length; i++)
+      buf[k++] = sevhist_object.charCodeAt(i);
+    
+    this.pending[this.next_id] = new PendingData( return_cb, data);
+    if (this.debug) console.log( "Sending getSevHistInfo", this.next_sevhist_object);
     this.ws.send(buf);
     this.next_id++;
   };

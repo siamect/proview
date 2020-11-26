@@ -105,6 +105,10 @@ var DynC = {
   mDynType2_DigBackgroundColor  : 1 << 6,
   mDynType2_DigSwap	        : 1 << 7,
   mDynType2_DigScript	        : 1 << 8,
+  mDynType2_RefUpdate	        : 1 << 9,
+  mDynType2_DsTrend	        : 1 << 10,
+  mDynType2_DsTrendCurve        : 1 << 11,
+  mDynType2_SevHist	        : 1 << 12,
 
   mActionType1_No		: 0,
   mActionType1_Inherit		: 1 << 0,
@@ -165,41 +169,44 @@ var DynC = {
   eDynPrio_Trend			: 24,
   eDynPrio_FastCurve			: 25,
   eDynPrio_XY_Curve			: 26,
-  eDynPrio_AnalogText			: 27,
-  eDynPrio_Table			: 28,
-  eDynPrio_SliderBackground	       	: 29,
-  eDynPrio_Video			: 30,
-  eDynPrio_StatusColor	       	: 31,
-  eDynPrio_PopupMenu			: 32,
-  eDynPrio_Confirm			: 33,
-  eDynPrio_SetDig			: 34,
-  eDynPrio_ResetDig			: 35,
-  eDynPrio_ToggleDig			: 36,
-  eDynPrio_StoDig			: 37,
-  eDynPrio_Help			: 38,
-  eDynPrio_OpenGraph			: 39,
-  eDynPrio_OpenURL			: 40,
-  eDynPrio_CommandDoubleClick	       	: 41,
-  eDynPrio_IncrAnalog			: 42,
-  eDynPrio_RadioButton	       	: 43,
-  eDynPrio_Slider			: 44,
-  eDynPrio_TipText			: 45,
-  eDynPrio_PulldownMenu	       	: 46,
-  eDynPrio_OptionMenu			: 47,
-  eDynPrio_InputFocus			: 48,
-  eDynPrio_DigCommand			: 49,
-  eDynPrio_SetValue			: 50,
-  eDynPrio_Pie			: 51,
-  eDynPrio_BarChart			: 52,
-  eDynPrio_Axis			: 53,
-  eDynPrio_MethodToolbar	       	: 54,
-  eDynPrio_MethodPulldownMenu	       	: 55,
-  eDynPrio_ScrollingText	       	: 56,
-  eDynPrio_ColorThemeLightness       	: 57,
-  eDynPrio_DigSwap		       	: 58,
-  eDynPrio_DigScript		       	: 59,
-  eDynPrio_CatchSignal           	: 60,
-  eDynPrio_EmitSignal     	       	: 61,
+  eDynPrio_DsTrend			: 27,
+  eDynPrio_DsTrendCurve			: 28,
+  eDynPrio_SevHist			: 29,
+  eDynPrio_AnalogText			: 30,
+  eDynPrio_Table			: 31,
+  eDynPrio_SliderBackground	       	: 32,
+  eDynPrio_Video			: 33,
+  eDynPrio_StatusColor	       		: 34,
+  eDynPrio_PopupMenu			: 35,
+  eDynPrio_Confirm			: 36,
+  eDynPrio_SetDig			: 37,
+  eDynPrio_ResetDig			: 38,
+  eDynPrio_ToggleDig			: 39,
+  eDynPrio_StoDig			: 40,
+  eDynPrio_Help				: 41,
+  eDynPrio_OpenGraph			: 42,
+  eDynPrio_OpenURL			: 43,
+  eDynPrio_CommandDoubleClick	       	: 44,
+  eDynPrio_IncrAnalog			: 45,
+  eDynPrio_RadioButton	       		: 46,
+  eDynPrio_Slider			: 47,
+  eDynPrio_TipText			: 48,
+  eDynPrio_PulldownMenu	       		: 49,
+  eDynPrio_OptionMenu			: 50,
+  eDynPrio_InputFocus			: 51,
+  eDynPrio_DigCommand			: 52,
+  eDynPrio_SetValue			: 53,
+  eDynPrio_Pie				: 54,
+  eDynPrio_BarChart			: 55,
+  eDynPrio_Axis				: 56,
+  eDynPrio_MethodToolbar	       	: 57,
+  eDynPrio_MethodPulldownMenu	       	: 58,
+  eDynPrio_ScrollingText	       	: 59,
+  eDynPrio_ColorThemeLightness       	: 60,
+  eDynPrio_DigSwap		       	: 61,
+  eDynPrio_DigScript		       	: 62,
+  eDynPrio_CatchSignal           	: 63,
+  eDynPrio_EmitSignal     	       	: 64,
   eDynPrio_Script  			: 9998,
   eDynPrio_Command  			: 9999,
   eDynPrio_CloseGraph 		: 10000,
@@ -244,6 +251,9 @@ var DynC = {
   eSave_DigBackgroundColor        	: 44,
   eSave_DigSwap	        	: 45,
   eSave_DigScript	        	: 46,
+  eSave_RefUpdate	        	: 47,
+  eSave_DsTrend	        		: 48,
+  eSave_DsTrendCurve	        	: 49,
   eSave_PopupMenu	       		: 50,
   eSave_SetDig	       		: 51,
   eSave_ResetDig	       		: 52,
@@ -270,6 +280,7 @@ var DynC = {
   eSave_Script		       	: 73,
   eSave_CatchSignal		       	: 74,
   eSave_EmitSignal		       	: 75,
+  eSave_SevHist			       	: 76,
   eSave_End		       		: 99,
   eSave_Dyn_dyn_type1	       		: 100,
   eSave_Dyn_action_type1      	: 101,
@@ -436,6 +447,7 @@ var DynC = {
   eSave_XY_Curve_y_mark2_attr    	: 3422,
   eSave_XY_Curve_mark1_color    	: 3423,
   eSave_XY_Curve_mark2_color    	: 3424,
+  eSave_XY_Curve_hold_attr	    	: 3425,
   eSave_DigCommand_attribute      	: 3500,
   eSave_DigCommand_command      	: 3501,
   eSave_DigCommand_instance        	: 3502,
@@ -491,6 +503,29 @@ var DynC = {
   eSave_DigScript_script  		: 4601,
   eSave_DigScript_script_len         	: 4602,
   eSave_DigScript_level  		: 4603,
+  eSave_RefUpdate_attribute 		: 4700,
+  eSave_RefUpdate_whole_graph 		: 4701,
+  eSave_DsTrend_dstrend_object1 	: 4800,
+  eSave_DsTrend_dstrend_object2 	: 4801,
+  eSave_DsTrend_mark1_attr 		: 4802,
+  eSave_DsTrend_mark2_attr 		: 4803,
+  eSave_DsTrend_mark1_color 		: 4804,
+  eSave_DsTrend_mark2_color 		: 4805,
+  eSave_DsTrend_hold_attr 		: 4806,
+  eSave_DsTrend_minvalue_attr1 		: 4807,
+  eSave_DsTrend_maxvalue_attr1 		: 4808,
+  eSave_DsTrend_minvalue_attr2 		: 4809,
+  eSave_DsTrend_maxvalue_attr2 		: 4810,
+  eSave_DsTrendCurve_dstrend_object 	: 4900,
+  eSave_DsTrendCurve_mark1_attr 	: 4902,
+  eSave_DsTrendCurve_mark2_attr 	: 4903,
+  eSave_DsTrendCurve_mark1_color 	: 4904,
+  eSave_DsTrendCurve_mark2_color 	: 4905,
+  eSave_DsTrendCurve_hold_attr 		: 4906,
+  eSave_DsTrendCurve_minvalue_attr1 	: 4907,
+  eSave_DsTrendCurve_maxvalue_attr1 	: 4908,
+  eSave_DsTrendCurve_minvalue_attr2 	: 4909,
+  eSave_DsTrendCurve_maxvalue_attr2 	: 4910,
   eSave_PopupMenu_ref_object      	: 5000,
   eSave_SetDig_attribute		: 5100,
   eSave_SetDig_instance		: 5101,
@@ -680,6 +715,24 @@ var DynC = {
   eSave_CatchSignal_signal_name   	: 7400,
   eSave_EmitSignal_signal_name   	: 7500,
   eSave_EmitSignal_global   		: 7501,
+  eSave_SevHist_sevhist_object1 	: 7600,
+  eSave_SevHist_sevhist_object2 	: 7601,
+  eSave_SevHist_attribute1 		: 7602,
+  eSave_SevHist_attribute2 		: 7603,
+  eSave_SevHist_server 			: 7604,
+  eSave_SevHist_mark1_attr 		: 7605,
+  eSave_SevHist_mark2_attr 		: 7606,
+  eSave_SevHist_mark1_color 		: 7607,
+  eSave_SevHist_mark2_color 		: 7608,
+  eSave_SevHist_hold_attr 		: 7609,
+  eSave_SevHist_minvalue_attr1 		: 7610,
+  eSave_SevHist_maxvalue_attr1 		: 7611,
+  eSave_SevHist_minvalue_attr2 		: 7612,
+  eSave_SevHist_maxvalue_attr2 		: 7613,
+  eSave_SevHist_timerange 		: 7614,
+  eSave_SevHist_timerange_attr 		: 7615,
+  eSave_SevHist_update_attr 		: 7616,
+  eSave_SevHist_updatetime 		: 7617,
 
   eAnimSequence_Inherit      	: 0,
   eAnimSequence_Cycle		: 1,
@@ -983,6 +1036,15 @@ function Dyn( graph) {
 	break;
       case DynC.eSave_Trend: 
 	elem = new DynTrend(this); 
+	break;
+      case DynC.eSave_DsTrend: 
+	elem = new DynDsTrend(this); 
+	break;
+      case DynC.eSave_DsTrendCurve: 
+	elem = new DynDsTrendCurve(this); 
+	break;
+      case DynC.eSave_SevHist: 
+	elem = new DynSevHist(this); 
 	break;
       case DynC.eSave_FillLevel: 
 	elem = new DynFillLevel(this); 
@@ -5218,7 +5280,7 @@ function DynTrend( dyn) {
   
     if ( this.hold_a !== null) {
       var holdval = this.hold_a.get_ref_value(this.dyn);
-      if ( this.holdval)
+      if ( holdval)
 	return;
     }
 
@@ -5467,6 +5529,719 @@ function DynTrend( dyn) {
   };
 }
 
+function DynDsTrend( dyn) {
+  this.dyn = dyn;
+  this.dyn_type1 = 0;
+  this.dyn_type2 = DynC.mDynType2_DsTrend;
+  this.action_type1 = 0;
+  this.action_type2 = 0;
+  this.prio = DynC.eDynPrio_DsTrend;
+  this.instance_mask = 0;
+  this.instance = 0;
+
+  this.minvalue_a1 = null;
+  this.maxvalue_a1 = null;
+  this.minvalue_a2 = null;
+  this.maxvalue_a2 = null;
+  this.hold_a = null;
+  this.timerange_a = null;
+  this.mark1_a = null;
+  this.mark2_a = null;
+  this.dstrend_object1 = null;
+  this.dstrend_object2 = null;
+  this.minvalue_attr1 = null;
+  this.maxvalue_attr1 = null;
+  this.minvalue_attr2 = null;
+  this.maxvalue_attr2 = null;
+  this.hold_attr = null;
+  this.mark1_attr = null;
+  this.mark2_attr = null;
+  this.mark1_color;
+  this.mark2_color;
+  this.firstScan = true;
+  this.scan_time;
+  this.acc_time;
+  this.no_of_points;
+  this.trend_hold;
+  this.orig_graph_scan_time;
+  this.orig_graph_fast_scan_time;
+  this.orig_graph_animation_scan_time;
+  this.last_idx = new Array(2);
+  this.last_buffer = new Array(2);
+  this.dstrend_cnt = 0;
+								    
+  this.connect = function( object) {
+
+    this.no_of_points = object.get_no_of_points();
+    this.scan_time = object.get_scan_time();
+    this.acc_time = this.scan_time;
+    this.trend_hold = 0;
+    this.last_idx[0] = -1;
+    this.last_idx[1] = -1;
+    this.last_buffer[0] = 0;
+    this.last_buffer[1] = 0;
+
+    if (this.dstrend_object1.trim() !== "") {
+      this.dstrend_cnt++;
+      if (this.dstrend_object2.trim() !== "")
+	this.dstrend_cnt++;
+    }
+
+    if ( this.minvalue_attr1.trim() !== "") {
+      this.minvalue_a1 = new DynReference( this.dyn, this.minvalue_attr1);
+      this.minvalue_a1.connect(this.dyn);
+      if ( !this.minvalue_a1.sts) {
+	this.minvalue_a1 = null;
+	console.log("Trend: " + this.minvalue_attr1);
+      }
+    }
+
+    if ( this.maxvalue_attr1.trim() !== "") {
+      this.maxvalue_a1 = new DynReference( this.dyn, this.maxvalue_attr1);
+      this.maxvalue_a1.connect(this.dyn);
+      if ( !this.maxvalue_a1.sts) {
+	this.maxvalue_a1 = null;
+	console.log("Trend: " + this.maxvalue_attr1);
+      }
+    }
+
+    if ( this.minvalue_attr2.trim() !== "") {
+      this.minvalue_a2 = new DynReference( this.dyn, this.minvalue_attr2);
+      this.minvalue_a2.connect(this.dyn);
+      if ( !this.minvalue_a2.sts) {
+	this.minvalue_a2 = null;
+	console.log("Trend: " + this.minvalue_attr2);
+      }
+    }
+
+    if ( this.maxvalue_attr2.trim() !== "") {
+      this.maxvalue_a2 = new DynReference( this.dyn, this.maxvalue_attr2);
+      this.maxvalue_a2.connect(this.dyn);
+      if ( !this.maxvalue_a2.sts) {
+	this.maxvalue_a2 = null;
+	console.log("Trend: " + this.maxvalue_attr2);
+      }
+    }
+
+    if ( this.hold_attr.trim() !== "") {
+      this.hold_a = new DynReference( this.dyn, this.hold_attr);
+      this.hold_a.connect(this.dyn);
+      if ( !this.hold_a.sts) {
+	this.hold_a = null;
+	console.log("Trend: " + this.hold_attr);
+      }
+    }
+
+    if ( this.mark1_attr !== null && this.mark1_attr.trim() !== "") {
+      this.mark1_a = new DynReference( this.dyn, this.mark1_attr);
+      this.mark1_a.connect(this.dyn);
+      if ( !this.mark1_a.sts) {
+	this.mark1_a = null;
+	console.log("Trend: " + this.mark1_attr);
+      }
+    }
+
+    if ( this.mark2_attr !== null && this.mark2_attr.trim() !== "") {
+      this.mark2_a = new DynReference( this.dyn, this.mark2_attr);
+      this.mark2_a.connect(this.dyn);
+      if ( !this.mark2_a.sts) {
+	this.mark2_a = null;
+	console.log("Trend: " + this.mark2_attr);
+      }
+    }
+
+    if ( this.mark1_color != Glow.eDrawType_Inherit || this.mark2_color != Glow.eDrawType_Inherit)
+      object.set_mark_color( this.mark1_color, this.mark2_color);
+    return 1;
+  };
+
+  this.disconnect = function() {
+    if ( this.minvalue_a1 != null)
+      this.minvalue_a1.disconnect(this.dyn);
+    if ( this.maxvalue_a1 != null)
+      this.maxvalue_a1.disconnect(this.dyn);
+    if ( this.minvalue_a2 != null)
+      this.minvalue_a2.disconnect(this.dyn);
+    if ( this.maxvalue_a2 != null)
+      this.maxvalue_a2.disconnect(this.dyn);
+    if ( this.hold_a != null)
+      this.hold_a.disconnect(this.dyn);
+    if ( this.mark1_a != null)
+      this.mark1_a.disconnect(this.dyn);
+    if ( this.mark2_a != null)
+      this.mark2_a.disconnect(this.dyn);
+  };
+
+  this.scan = function( object) {
+    var new_curve = 0;
+    var i;
+    if ( this.hold_a !== null && !this.firstScan) {
+      var holdval = this.hold_a.get_ref_value(this.dyn);
+      if ( holdval)
+	return;
+    }
+
+    var minval, maxval;
+    if ( this.maxvalue_a1 !== null && this.minvalue_a1 !== null) {
+      minval = this.minvalue_a1.get_ref_value(this.dyn);
+      maxval = this.maxvalue_a1.get_ref_value(this.dyn);
+      if ( minval != this.minvalue_a1.oldValue ||
+	   maxval != this.maxvalue_a1.oldValue) {
+	if ( Math.abs( maxval - minval) > Number.MIN_VALUE)
+	  object.set_range_y( 0, minval, maxval);
+	this.minvalue_a1.oldValue = minval;
+	this.maxvalue_a1.oldValue = maxval;
+	new_curve = 1;
+      }
+    }
+
+    if ( this.maxvalue_a2 !== null && this.minvalue_a2 !== null) {
+      minval = this.minvalue_a2.get_ref_value(this.dyn);
+      maxval = this.maxvalue_a2.get_ref_value(this.dyn);
+      if ( minval != this.minvalue_a2.oldValue ||
+	   maxval != this.maxvalue_a2.oldValue) {
+	if ( Math.abs( maxval - minval) > Number.MIN_VALUE)
+	  object.set_range_y( 1, minval, maxval);
+	this.minvalue_a2.oldValue = minval;
+	this.maxvalue_a2.oldValue = maxval;
+	new_curve = 1;
+      }
+    }
+
+    if ( this.mark1_a !== null) {
+      var mark1val = this.mark1_a.get_ref_value(this.dyn);
+      if ( this.firstScan || Math.abs( mark1val - this.mark1_a.oldValue) > Number.MIN_VALUE) {
+	object.set_y_mark1( mark1val);
+	this.mark1_a.oldValue = mark1val;
+      }
+    }
+    if ( this.mark2_a !== null) {
+      var mark2val = this.mark2_a.get_ref_value(this.dyn);
+      if ( this.firstScan || Math.abs( mark2val - this.mark2_a.oldValue) > Number.MIN_VALUE) {
+	object.set_y_mark2( mark2val);
+	this.mark2_a.oldValue = mark2val;
+      }
+    }
+
+    if ( this.firstScan) {
+      this.firstScan = false;
+      new_curve = 1;
+    }
+
+    if (new_curve) {
+      this.last_idx[0] = -1;
+      this.last_idx[1] = -1;
+    }
+
+    if ( this.cycle == Glow.eCycle_Slow)
+      this.acc_time += this.dyn.graph.getScanTime();
+    else
+      this.acc_time += this.dyn.graph.getFastScanTime();
+    if ( new_curve || this.acc_time + Number.MIN_VALUE >= this.scan_time) {
+      this.acc_time = 0;
+
+      var data = new Array(4);
+      data[0] = this;
+      data[1] = object;
+      data[2] = 0;
+      data[3] = new_curve;	
+      this.dyn.graph.getGdh().getDsTrend(this.dstrend_object1, 
+	 this.last_idx[0], this.last_buffer[0], this.no_of_points, this.scan2, data);
+    }
+  };
+
+  this.scan2 = function( id, data, sts, result) {
+    if ( sts & 1 != 0) {
+      var i, j;
+      var self = data[0];
+      var object = data[1];
+      var curve_idx = data[2]
+      var new_curve = data[3];
+      self.last_idx[0] = result[0];
+      self.last_buffer[0] = result[1];
+      var size = result[2];
+      var values = result[3];
+
+      if (new_curve) {
+	var vdata = new Array(self.no_of_points);
+	var tdata = new Array(self.no_of_points);
+	for (j = 0; j < self.no_of_points; j++) {
+	  // tdata[self.no_of_points-j-1] = j / self.no_of_points * 100;
+	  tdata[j] = j / self.no_of_points * 100;
+	  if (j < size)
+	    vdata[self.no_of_points-j-1] = values[j];
+	}
+        object.set_data(tdata, vdata, curve_idx, self.no_of_points);
+      }
+      else {
+        for (i = 0; i < size; i++)
+	  object.add_value( values[i], 0);
+      }
+      if (self.dstrend_cnt > 1) {
+	var data = new Array(4);
+	data[0] = self;
+	data[1] = object;
+	data[2] = 1;
+	data[3] = new_curve;	
+	self.dyn.graph.getGdh().getDsTrend(self.dstrend_object2, 
+	   self.last_idx[1], self.last_buffer[1], self.no_of_points, self.scan3, data);
+      }
+    }
+  };
+  this.scan3 = function( id, data, sts, result) {
+    if ( sts & 1 != 0) {
+      var i, j;
+      var self = data[0];
+      var object = data[1];
+      var curve_idx = data[2]
+      var new_curve = data[3];
+      self.last_idx[1] = result[0];
+      self.last_buffer[1] = result[1];
+      var size = result[2];
+      var values = result[3];
+
+      if (new_curve) {
+	var vdata = new Array(self.no_of_points);
+	var tdata = new Array(self.no_of_points);
+	for (j = 0; j < self.no_of_points; j++) {
+	  // tdata[self.no_of_points-j-1] = j / self.no_of_points * 100;
+	  tdata[j] = j / self.no_of_points * 100;
+	  if (j < size)
+	    vdata[self.no_of_points-j-1] = values[j];
+	}
+        object.set_data(tdata, vdata, curve_idx, self.no_of_points);
+      }
+      else {
+        for (i = 0; i < size; i++)
+	  object.add_value( values[i], 1);
+      }
+    }
+  };
+
+  this.action = function( object, e) {
+    return 1;
+  };
+
+  this.open = function( lines, row) {
+    var end = false;
+    var i;
+    var elem;
+
+    for ( i = row; i < lines.length; i++) {
+      var tokens = lines[i].split(' ');
+      var key = parseInt(tokens[0], 10);
+
+      if ( this.dyn.debug) console.log( "DynDsTrend : " + lines[i]);
+
+      elem = null;
+
+      switch ( key) {
+      case DynC.eSave_DsTrend: 
+	break;
+      case DynC.eSave_DsTrend_dstrend_object1: 
+	if ( tokens.length > 1)
+	  this.dstrend_object1 = tokens[1];
+	break;
+      case DynC.eSave_DsTrend_dstrend_object2: 
+	if ( tokens.length > 1)
+	  this.dstrend_object2 = tokens[1];
+	break;
+      case DynC.eSave_DsTrend_minvalue_attr1: 
+	if ( tokens.length > 1)
+	  this.minvalue_attr1 = tokens[1];
+	break;
+      case DynC.eSave_DsTrend_maxvalue_attr1: 
+	if ( tokens.length > 1)
+	  this.maxvalue_attr1 = tokens[1];
+	break;
+      case DynC.eSave_DsTrend_minvalue_attr2: 
+	if ( tokens.length > 1)
+	  this.minvalue_attr2 = tokens[1];
+	break;
+      case DynC.eSave_DsTrend_maxvalue_attr2: 
+	if ( tokens.length > 1)
+	  this.maxvalue_attr2 = tokens[1];
+	break;
+      case DynC.eSave_DsTrend_hold_attr: 
+	if ( tokens.length > 1)
+	  this.hold_attr = tokens[1];
+	break;
+      case DynC.eSave_DsTrend_mark1_attr: 
+	if ( tokens.length > 1)
+	  this.mark1_attr = tokens[1];
+	break;
+      case DynC.eSave_DsTrend_mark2_attr: 
+	if ( tokens.length > 1)
+	  this.mark2_attr = tokens[1];
+	break;
+      case DynC.eSave_DsTrend_mark1_color: 
+	this.mark1_color = parseInt(tokens[1], 10);
+	break;
+      case DynC.eSave_DsTrend_mark2_color: 
+	this.mark2_color = parseInt(tokens[1], 10);
+	break;
+      case DynC.eSave_End:
+	end = true;
+	break;
+      default:
+	console.log( "Syntax error in DynDsTrend", row, key);
+	break;
+      }
+
+      if ( end)
+	break;
+    }    
+    return i;
+  };
+}
+
+function DynDsTrendCurve( dyn) {
+  this.dyn = dyn;
+  this.dyn_type1 = 0;
+  this.dyn_type2 = DynC.mDynType2_DsTrendCurve;
+  this.action_type1 = 0;
+  this.action_type2 = 0;
+  this.prio = DynC.eDynPrio_DsTrendCurve;
+  this.instance_mask = 0;
+  this.instance = 0;
+
+  this.minvalue_a1 = null;
+  this.maxvalue_a1 = null;
+  this.minvalue_a2 = null;
+  this.maxvalue_a2 = null;
+  this.hold_a = null;
+  this.timerange_a = null;
+  this.mark1_a = null;
+  this.mark2_a = null;
+  this.dstrend_object = null;
+  this.minvalue_attr1 = null;
+  this.maxvalue_attr1 = null;
+  this.minvalue_attr2 = null;
+  this.maxvalue_attr2 = null;
+  this.hold_attr = null;
+  this.mark1_attr = null;
+  this.mark2_attr = null;
+  this.mark1_color;
+  this.mark2_color;
+  this.firstScan = true;
+  this.scan_time;
+  this.acc_time;
+  this.no_of_points;
+  this.trend_hold;
+  this.orig_graph_scan_time;
+  this.orig_graph_fast_scan_time;
+  this.orig_graph_animation_scan_time;
+  this.buff_cnt = 0;
+  this.initialized = 0;
+  this.no_of_points;
+
+  this.cbid;
+  this.displaytime;
+  this.displayupdatetime;
+  this.samples;
+  this.resolution;
+  this.elementtype1;
+  this.elementtype2;
+  this.scantime;
+								    
+  this.connect = function( object) {
+
+    this.no_of_points = object.get_no_of_points();
+    this.scan_time = object.get_scan_time();
+    this.acc_time = this.scan_time;
+    this.trend_hold = 0;
+
+    if ( this.minvalue_attr1.trim() !== "") {
+      this.minvalue_a1 = new DynReference( this.dyn, this.minvalue_attr1);
+      this.minvalue_a1.connect(this.dyn);
+      if ( !this.minvalue_a1.sts) {
+	this.minvalue_a1 = null;
+	console.log("Trend: " + this.minvalue_attr1);
+      }
+    }
+
+    if ( this.maxvalue_attr1.trim() !== "") {
+      this.maxvalue_a1 = new DynReference( this.dyn, this.maxvalue_attr1);
+      this.maxvalue_a1.connect(this.dyn);
+      if ( !this.maxvalue_a1.sts) {
+	this.maxvalue_a1 = null;
+	console.log("Trend: " + this.maxvalue_attr1);
+      }
+    }
+
+    if ( this.minvalue_attr2.trim() !== "") {
+      this.minvalue_a2 = new DynReference( this.dyn, this.minvalue_attr2);
+      this.minvalue_a2.connect(this.dyn);
+      if ( !this.minvalue_a2.sts) {
+	this.minvalue_a2 = null;
+	console.log("Trend: " + this.minvalue_attr2);
+      }
+    }
+
+    if ( this.maxvalue_attr2.trim() !== "") {
+      this.maxvalue_a2 = new DynReference( this.dyn, this.maxvalue_attr2);
+      this.maxvalue_a2.connect(this.dyn);
+      if ( !this.maxvalue_a2.sts) {
+	this.maxvalue_a2 = null;
+	console.log("Trend: " + this.maxvalue_attr2);
+      }
+    }
+
+    if ( this.hold_attr.trim() !== "") {
+      this.hold_a = new DynReference( this.dyn, this.hold_attr);
+      this.hold_a.connect(this.dyn);
+      if ( !this.hold_a.sts) {
+	this.hold_a = null;
+	console.log("Trend: " + this.hold_attr);
+      }
+    }
+
+    if ( this.mark1_attr !== null && this.mark1_attr.trim() !== "") {
+      this.mark1_a = new DynReference( this.dyn, this.mark1_attr);
+      this.mark1_a.connect(this.dyn);
+      if ( !this.mark1_a.sts) {
+	this.mark1_a = null;
+	console.log("Trend: " + this.mark1_attr);
+      }
+    }
+
+    if ( this.mark2_attr !== null && this.mark2_attr.trim() !== "") {
+      this.mark2_a = new DynReference( this.dyn, this.mark2_attr);
+      this.mark2_a.connect(this.dyn);
+      if ( !this.mark2_a.sts) {
+	this.mark2_a = null;
+	console.log("Trend: " + this.mark2_attr);
+      }
+    }
+
+    this.no_of_points = object.get_no_of_points();
+    if ( this.mark1_color != Glow.eDrawType_Inherit || this.mark2_color != Glow.eDrawType_Inherit)
+      object.set_mark_color( this.mark1_color, this.mark2_color);
+
+    this.dyn.graph.getGdh().getDsTrendCurveInfo(this.dstrend_object, 
+	this.connect2, this);
+  };
+
+  this.connect2 = function( id, data, sts, result) {
+    if ( sts & 1 != 0) {
+      var self = data;
+      self.cbid = result[0];
+      self.resolution = result[1];
+      self.samples = result[2];
+      if (self.samples > self.no_of_points)
+	self.samples = self.no_of_points;
+      self.displayupdatetime = result[3];
+      self.displaytime = result[4];      
+      self.scantime = result[5];
+      self.buff_cnt = result[6];
+      self.elementtype1 = result[7];
+      if (self.buff_cnt > 1)
+        self.elementtype2 = result[8];
+      self.initialized = 1;
+    }
+    return 1;
+  };
+
+  this.disconnect = function() {
+    if ( this.minvalue_a1 != null)
+      this.minvalue_a1.disconnect(this.dyn);
+    if ( this.maxvalue_a1 != null)
+      this.maxvalue_a1.disconnect(this.dyn);
+    if ( this.minvalue_a2 != null)
+      this.minvalue_a2.disconnect(this.dyn);
+    if ( this.maxvalue_a2 != null)
+      this.maxvalue_a2.disconnect(this.dyn);
+    if ( this.hold_a != null)
+      this.hold_a.disconnect(this.dyn);
+    if ( this.mark1_a != null)
+      this.mark1_a.disconnect(this.dyn);
+    if ( this.mark2_a != null)
+      this.mark2_a.disconnect(this.dyn);
+  };
+
+  this.scan = function( object) {
+    var new_curve = 0;
+    var i;
+    if ( !this.initialized)
+      return;
+    if ( this.hold_a !== null && !this.firstScan) {
+      var holdval = this.hold_a.get_ref_value(this.dyn);
+      if ( holdval)
+	return;
+    }
+
+    var minval, maxval;
+    if ( this.maxvalue_a1 !== null && this.minvalue_a1 !== null) {
+      minval = this.minvalue_a1.get_ref_value(this.dyn);
+      maxval = this.maxvalue_a1.get_ref_value(this.dyn);
+      if ( minval != this.minvalue_a1.oldValue ||
+	   maxval != this.maxvalue_a1.oldValue) {
+	if ( Math.abs( maxval - minval) > Number.MIN_VALUE)
+	  object.set_range_y( 0, minval, maxval);
+	this.minvalue_a1.oldValue = minval;
+	this.maxvalue_a1.oldValue = maxval;
+	new_curve = 1;
+      }
+    }
+
+    if ( this.maxvalue_a2 !== null && this.minvalue_a2 !== null) {
+      minval = this.minvalue_a2.get_ref_value(this.dyn);
+      maxval = this.maxvalue_a2.get_ref_value(this.dyn);
+      if ( minval != this.minvalue_a2.oldValue ||
+	   maxval != this.maxvalue_a2.oldValue) {
+	if ( Math.abs( maxval - minval) > Number.MIN_VALUE)
+	  object.set_range_y( 1, minval, maxval);
+	this.minvalue_a2.oldValue = minval;
+	this.maxvalue_a2.oldValue = maxval;
+	new_curve = 1;
+      }
+    }
+
+    if ( this.mark1_a !== null) {
+      var mark1val = this.mark1_a.get_ref_value(this.dyn);
+      if ( this.firstScan || Math.abs( mark1val - this.mark1_a.oldValue) > Number.MIN_VALUE) {
+	object.set_y_mark1( mark1val);
+	this.mark1_a.oldValue = mark1val;
+      }
+    }
+    if ( this.mark2_a !== null) {
+      var mark2val = this.mark2_a.get_ref_value(this.dyn);
+      if ( this.firstScan || Math.abs( mark2val - this.mark2_a.oldValue) > Number.MIN_VALUE) {
+	object.set_y_mark2( mark2val);
+	this.mark2_a.oldValue = mark2val;
+      }
+    }
+
+    if ( this.firstScan) {
+      this.firstScan = false;
+      new_curve = 1;
+    }
+
+    if ( this.cycle == Glow.eCycle_Slow)
+      this.acc_time += this.dyn.graph.getScanTime();
+    else
+      this.acc_time += this.dyn.graph.getFastScanTime();
+    if ( new_curve || this.acc_time + Number.MIN_VALUE >= this.scan_time) {
+      this.acc_time = 0;
+
+      var data = new Array(4);
+      data[0] = this;
+      data[1] = object;
+      data[2] = 0;
+      data[3] = new_curve;
+      this.dyn.graph.getGdh().getDsTrendCurveBuffer(this.cbid,
+	 this.samples, !new_curve, this.scan2, data);
+    }
+  };
+
+  this.scan2 = function( id, data, sts, result) {
+    if ( sts & 1 != 0) {
+      var i, j, k;
+      var size;
+      var value;
+      var values;
+      var elementtype;
+      var self = data[0];
+      var object = data[1];
+      var curve_idx = data[2];
+      var new_curve = data[3];
+      for (k = 0; k < self.buff_cnt; k++) {
+	size = result[k * 3 + 1];
+	elementtype = result[k * 3 + 2];
+	values = result[k * 3 + 3];
+
+	if (size > self.no_of_points)
+	  size = self.no_of_points;
+	if (new_curve) {
+	  var vdata = new Array(size);
+	  var tdata = new Array(size);
+	  for (j = 0; j < size; j++) {
+	    tdata[j] = j / size * 100;
+	    vdata[size-j-1] = values[j];
+	  }
+	  object.set_data(tdata, vdata, k, size);
+	}
+	else {
+	  for (i = 0; i < size; i++)
+	    object.add_value( values[i], k);
+	}
+      }
+    }
+  };
+
+  this.action = function( object, e) {
+    return 1;
+  };
+
+  this.open = function( lines, row) {
+    var end = false;
+    var i;
+    var elem;
+
+    for ( i = row; i < lines.length; i++) {
+      var tokens = lines[i].split(' ');
+      var key = parseInt(tokens[0], 10);
+
+      if ( this.dyn.debug) console.log( "DynDsTrendCurve : " + lines[i]);
+
+      elem = null;
+
+      switch ( key) {
+      case DynC.eSave_DsTrendCurve: 
+	break;
+      case DynC.eSave_DsTrendCurve_dstrend_object: 
+	if ( tokens.length > 1)
+	  this.dstrend_object = tokens[1];
+	break;
+      case DynC.eSave_DsTrendCurve_minvalue_attr1: 
+	if ( tokens.length > 1)
+	  this.minvalue_attr1 = tokens[1];
+	break;
+      case DynC.eSave_DsTrendCurve_maxvalue_attr1: 
+	if ( tokens.length > 1)
+	  this.maxvalue_attr1 = tokens[1];
+	break;
+      case DynC.eSave_DsTrendCurve_minvalue_attr2: 
+	if ( tokens.length > 1)
+	  this.minvalue_attr2 = tokens[1];
+	break;
+      case DynC.eSave_DsTrendCurve_maxvalue_attr2: 
+	if ( tokens.length > 1)
+	  this.maxvalue_attr2 = tokens[1];
+	break;
+      case DynC.eSave_DsTrendCurve_hold_attr: 
+	if ( tokens.length > 1)
+	  this.hold_attr = tokens[1];
+	break;
+      case DynC.eSave_DsTrendCurve_mark1_attr: 
+	if ( tokens.length > 1)
+	  this.mark1_attr = tokens[1];
+	break;
+      case DynC.eSave_DsTrendCurve_mark2_attr: 
+	if ( tokens.length > 1)
+	  this.mark2_attr = tokens[1];
+	break;
+      case DynC.eSave_DsTrendCurve_mark1_color: 
+	this.mark1_color = parseInt(tokens[1], 10);
+	break;
+      case DynC.eSave_DsTrendCurve_mark2_color: 
+	this.mark2_color = parseInt(tokens[1], 10);
+	break;
+      case DynC.eSave_End:
+	end = true;
+	break;
+      default:
+	console.log( "Syntax error in DynDsTrendCurve", row, key);
+	break;
+      }
+
+      if ( end)
+	break;
+    }    
+    return i;
+  };
+}
+
 function DynXY_Curve( dyn) {
   this.dyn = dyn;
   this.dyn_type1 = DynC.mDynType1_XY_Curve;
@@ -5490,28 +6265,29 @@ function DynXY_Curve( dyn) {
   this.x_mark2_a = null;
   this.y_mark1_a = null;
   this.y_mark2_a = null;
-  this.x_attr = null;
-  this.y_attr = null;
+  this.dstrend_object1 = null;
+  this.dstrend_object2 = null;
   this.y_minvalue_attr;
   this.y_maxvalue_attr;
   this.x_minvalue_attr;
   this.x_maxvalue_attr;
   this.noofpoints_attr;
   this.update_attr;
+  this.hold_attr;
   this.x_mark1_attr = null;
   this.x_mark2_attr = null;
   this.y_mark1_attr = null;
   this.y_mark2_attr = null;
-  this.mark1_color;
-  this.mark2_color;
+  this.mark1_color = Glow.eDrawType_Inherit;
+  this.mark2_color = Glow.eDrawType_Inherit;
   this.y_min_value;
   this.y_max_value;
   this.x_min_value;
   this.x_max_value;
   this.horizontal_padding;
   this.datatype;
-  this.curve_color;
-  this.fill_color;
+  this.curve_color = Glow.eDrawType_Inherit;
+  this.fill_color = Glow.eDrawType_Inherit;
   this.noofpoints;
   this.noOfPoints;
   this.xAttrType;
@@ -5569,6 +6345,10 @@ function DynXY_Curve( dyn) {
       case DynC.eSave_XY_Curve_update_attr: 
 	if ( tokens.length > 1)
 	  this.update_attr = tokens[1];
+	break;
+      case DynC.eSave_XY_Curve_hold_attr: 
+	if ( tokens.length > 1)
+	  this.hold_attr = tokens[1];
 	break;
       case DynC.eSave_XY_Curve_y_min_value: 
 	this.y_min_value = parseFloat( tokens[1]);;
@@ -5738,7 +6518,7 @@ function DynXY_Curve( dyn) {
       object.set_xy_range_y( this.curve_number - 1, this.y_min_value, this.y_max_value);
     if ( Math.abs(this.x_max_value - this.x_min_value) > Number.MIN_VALUE)
       object.set_xy_range_x( this.curve_number - 1, this.x_min_value, this.x_max_value);
-    object.set_xy_curve_color( this.curve_number - 1, this.curve_color, this.fill_color);
+    //object.set_xy_curve_color( this.curve_number - 1, this.curve_color, this.fill_color);
     if ( this.mark1_color != Glow.eDrawType_Inherit || this.mark2_color != Glow.eDrawType_Inherit)
       object.set_mark_color( this.mark1_color, this.mark2_color);
     return 1;
@@ -6053,6 +6833,523 @@ function DynXY_Curve( dyn) {
     self.object.set_xy_data( self.curveY, self.curveX, self.curve_number - 1, self.noOfPoints);
   };
 };
+
+
+function DynSevHist( dyn) {
+  this.dyn = dyn;
+  this.dyn_type1 = 0;
+  this.dyn_type2 = DynC.mDynType2_SevHist;
+  this.action_type1 = 0;
+  this.action_type2 = 0;
+  this.prio = DynC.eDynPrio_SevHist;
+  this.instance_mask = 0;
+  this.instance = 0;
+
+  this.direction;
+  this.timerange = 0;
+  this.updatetime = 1;
+  this.timerange_a = null;
+  this.minvalue_a1 = null;
+  this.maxvalue_a1 = null;
+  this.minvalue_a2 = null;
+  this.maxvalue_a2 = null;
+  this.hold_a = null;
+  this.update_a = null;
+  this.mark1_a = null;
+  this.mark2_a = null;
+  this.sevhist_object1 = null;
+  this.sevhist_object2 = null;
+  this.attribute1 = null;
+  this.attribute2 = null;
+  this.timerange_attr = null;
+  this.minvalue_attr1 = null;
+  this.maxvalue_attr1 = null;
+  this.minvalue_attr2 = null;
+  this.maxvalue_attr2 = null;
+  this.hold_attr = null;
+  this.update_attr = null;
+  this.mark1_attr = null;
+  this.mark2_attr = null;
+  this.mark1_color;
+  this.mark2_color;
+  this.firstScan = true;
+  this.scan_time;
+  this.acc_time;
+  this.no_of_points;
+  this.trend_hold;
+  this.orig_graph_scan_time;
+  this.orig_graph_fast_scan_time;
+  this.orig_graph_animation_scan_time;
+  this.buff_cnt = 0;
+  this.initialized = 0;
+  this.has_sevhist_object = 0;
+  this.no_of_points;
+  this.oid1 = new PwrtObjid(0,0);
+  this.oid2 = new PwrtObjid(0,0);
+  this.curve_cnt = 0;
+  this.vtype1;
+  this.vtype2;
+								    
+  this.connect = function( object) {
+
+    this.no_of_points = object.get_no_of_points();
+    this.direction = object.get_direction();
+    this.scan_time = object.get_scan_time();
+    this.acc_time = this.scan_time;
+    this.trend_hold = 0;
+    
+
+    if ( this.minvalue_attr1.trim() !== "") {
+      this.minvalue_a1 = new DynReference( this.dyn, this.minvalue_attr1);
+      this.minvalue_a1.connect(this.dyn);
+      if ( !this.minvalue_a1.sts) {
+	this.minvalue_a1 = null;
+	console.log("SevHist: " + this.minvalue_attr1);
+      }
+    }
+
+    if ( this.maxvalue_attr1.trim() !== "") {
+      this.maxvalue_a1 = new DynReference( this.dyn, this.maxvalue_attr1);
+      this.maxvalue_a1.connect(this.dyn);
+      if ( !this.maxvalue_a1.sts) {
+	this.maxvalue_a1 = null;
+	console.log("SevHist: " + this.maxvalue_attr1);
+      }
+    }
+
+    if ( this.minvalue_attr2.trim() !== "") {
+      this.minvalue_a2 = new DynReference( this.dyn, this.minvalue_attr2);
+      this.minvalue_a2.connect(this.dyn);
+      if ( !this.minvalue_a2.sts) {
+	this.minvalue_a2 = null;
+	console.log("SevHist: " + this.minvalue_attr2);
+      }
+    }
+
+    if ( this.maxvalue_attr2.trim() !== "") {
+      this.maxvalue_a2 = new DynReference( this.dyn, this.maxvalue_attr2);
+      this.maxvalue_a2.connect(this.dyn);
+      if ( !this.maxvalue_a2.sts) {
+	this.maxvalue_a2 = null;
+	console.log("SevHist: " + this.maxvalue_attr2);
+      }
+    }
+
+    if ( this.hold_attr.trim() !== "") {
+      this.hold_a = new DynReference( this.dyn, this.hold_attr);
+      this.hold_a.connect(this.dyn);
+      if ( !this.hold_a.sts) {
+	this.hold_a = null;
+	console.log("SevHist: " + this.hold_attr);
+      }
+    }
+
+    if ( this.update_attr.trim() !== "") {
+      this.update_a = new DynReference( this.dyn, this.update_attr);
+      this.update_a.connect(this.dyn);
+      if ( !this.update_a.sts) {
+	this.update_a = null;
+	console.log("SevHist: " + this.update_attr);
+      }
+    }
+
+    if ( this.mark1_attr !== null && this.mark1_attr.trim() !== "") {
+      this.mark1_a = new DynReference( this.dyn, this.mark1_attr);
+      this.mark1_a.connect(this.dyn);
+      if ( !this.mark1_a.sts) {
+	this.mark1_a = null;
+	console.log("SevHist: " + this.mark1_attr);
+      }
+    }
+
+    if ( this.mark2_attr !== null && this.mark2_attr.trim() !== "") {
+      this.mark2_a = new DynReference( this.dyn, this.mark2_attr);
+      this.mark2_a.connect(this.dyn);
+      if ( !this.mark2_a.sts) {
+	this.mark2_a = null;
+	console.log("SevHist: " + this.mark2_attr);
+      }
+    }
+
+    if ( this.timerange_attr !== null && this.timerange_attr.trim() !== "") {
+      this.timerange_a = new DynReference( this.dyn, this.timerange_attr);
+      this.timerange_a.connect(this.dyn);
+      if ( !this.timerange_a.sts) {
+	this.timerange_a = null;
+	console.log("SevHist: " + this.timerange_attr);
+      }
+    }
+
+    this.no_of_points = object.get_no_of_points();
+    if ( this.mark1_color != Glow.eDrawType_Inherit || this.mark2_color != Glow.eDrawType_Inherit)
+      object.set_mark_color( this.mark1_color, this.mark2_color);
+    if (this.timerange > Number.MIN_VALUE) {
+      object.set_xy_range_x(0, this.timerange, 0);
+      object.set_xy_range_x(1, this.timerange, 0);
+    }
+    if (this.sevhist_object1 !== "")
+      this.dyn.graph.getGdh().getSevHistInfo(this.sevhist_object1, 
+					     this.connect2, this);
+    else if (this.attribute1 !== "") {
+      this.curve_cnt++;
+      if (this.attribute2 !== "")
+	this.curve_cnt++;
+      this.initialized = 1;
+    }
+  };
+
+  this.connect2 = function( id, data, sts, result) {
+    console.log("connect2", sts);
+    if ( sts & 1 != 0) {
+      var self = data;
+      self.oid1 = result[0];
+      self.attribute1 = result[1];
+      self.server = result[2];
+      self.has_sevhist_object;
+      self.curve_cnt++;
+      if (self.sevhist_object2 !== "")
+	self.dyn.graph.getGdh().getSevHistInfo(self.sevhist_object2, 
+					       self.connect3, self);
+      else
+	self.initialized = 1;
+    }
+    return 1;
+  };
+
+  this.connect3 = function( id, data, sts, result) {
+    console.log("connect3", sts);
+    if ( sts & 1 != 0) {
+      var self = data;
+      self.oid2 = result[0];
+      self.attribute2 = result[1];
+      self.server = result[2];
+      self.curve_cnt++;
+      self.initialized = 1;
+    }
+    return 1;
+  };
+
+  this.disconnect = function() {
+    if ( this.timerange_a != null)
+      this.timerange_a.disconnect(this.dyn);
+    if ( this.minvalue_a1 != null)
+      this.minvalue_a1.disconnect(this.dyn);
+    if ( this.maxvalue_a1 != null)
+      this.maxvalue_a1.disconnect(this.dyn);
+    if ( this.minvalue_a2 != null)
+      this.minvalue_a2.disconnect(this.dyn);
+    if ( this.maxvalue_a2 != null)
+      this.maxvalue_a2.disconnect(this.dyn);
+    if ( this.hold_a != null)
+      this.hold_a.disconnect(this.dyn);
+    if ( this.update_a != null)
+      this.update_a.disconnect(this.dyn);
+    if ( this.mark1_a != null)
+      this.mark1_a.disconnect(this.dyn);
+    if ( this.mark2_a != null)
+      this.mark2_a.disconnect(this.dyn);
+  };
+
+  this.scan = function( object) {
+    var new_curve = 0;
+    var i;
+    if ( !this.initialized)
+      return;
+    if ( this.hold_a !== null && !this.firstScan) {
+      var holdval = this.hold_a.get_ref_value(this.dyn);
+      if ( holdval)
+	return;
+    }
+
+    if ( this.update_a !== null) {
+      var value = this.update_a.get_ref_value(this.dyn);
+      if ( value && !this.update_a.oldValue)
+	new_curve = 1;
+      this.update_a.oldValue = value;
+    }
+
+    if ( this.timerange_a !== null) {
+      this.timerange = this.timerange_a.get_ref_value(this.dyn);
+      if ( this.timerange != this.timerange_a.oldValue) {
+	object.set_xy_range_x(0, this.timerange, 0);
+	if (this.curve_cnt > 1)
+	  object.set_xy_range_x(1, this.timerange, 0);
+	this.timerange_a.oldValue = this.timerange;
+	new_curve = 1;
+      }
+    }
+
+    var minval, maxval;
+    if ( this.maxvalue_a1 !== null && this.minvalue_a1 !== null) {
+      minval = this.minvalue_a1.get_ref_value(this.dyn);
+      maxval = this.maxvalue_a1.get_ref_value(this.dyn);
+      if ( minval != this.minvalue_a1.oldValue ||
+	   maxval != this.maxvalue_a1.oldValue) {
+	if ( Math.abs( maxval - minval) > Number.MIN_VALUE)
+	  object.set_range_y( 0, minval, maxval);
+	this.minvalue_a1.oldValue = minval;
+	this.maxvalue_a1.oldValue = maxval;
+	new_curve = 1;
+      }
+    }
+
+    if ( this.maxvalue_a2 !== null && this.minvalue_a2 !== null) {
+      minval = this.minvalue_a2.get_ref_value(this.dyn);
+      maxval = this.maxvalue_a2.get_ref_value(this.dyn);
+      if ( minval != this.minvalue_a2.oldValue ||
+	   maxval != this.maxvalue_a2.oldValue) {
+	if ( Math.abs( maxval - minval) > Number.MIN_VALUE)
+	  object.set_range_y( 1, minval, maxval);
+	this.minvalue_a2.oldValue = minval;
+	this.maxvalue_a2.oldValue = maxval;
+	new_curve = 1;
+      }
+    }
+
+    if ( this.mark1_a !== null) {
+      var mark1val = this.mark1_a.get_ref_value(this.dyn);
+      if ( this.firstScan || Math.abs( mark1val - this.mark1_a.oldValue) > Number.MIN_VALUE) {
+	object.set_y_mark1( mark1val);
+	this.mark1_a.oldValue = mark1val;
+      }
+    }
+    if ( this.mark2_a !== null) {
+      var mark2val = this.mark2_a.get_ref_value(this.dyn);
+      if ( this.firstScan || Math.abs( mark2val - this.mark2_a.oldValue) > Number.MIN_VALUE) {
+	object.set_y_mark2( mark2val);
+	this.mark2_a.oldValue = mark2val;
+      }
+    }
+
+    if ( this.firstScan) {
+      this.firstScan = false;
+      new_curve = 1;
+    }
+
+    if ( this.cycle == Glow.eCycle_Slow)
+      this.acc_time += this.dyn.graph.getScanTime();
+    else
+      this.acc_time += this.dyn.graph.getFastScanTime();
+    if ( new_curve || this.acc_time + Number.MIN_VALUE >= this.updatetime) {
+      //if (new_curve) {
+      this.acc_time = 0;
+
+      var data = new Array(2);
+      data[0] = this;
+      data[1] = object;
+      this.dyn.graph.getGdh().getSevHistData(this.timerange, this.no_of_points,
+	 this.server, this.oid1, this.attribute1, this.scan2, data);
+    }
+  };
+
+  this.scan2 = function( id, data, sts, result) {
+    if ( sts & 1 != 0) {
+      var self = data[0];
+      var object = data[1];
+      self.vtype1 = result[0];
+      var size = result[1];
+      var tbuf = result[2];
+      var vbuf = result[3];
+
+      if (self.direction == Glow.eHorizDirection_Right) {
+	for (var k = 0; k < tbuf.length; k++)
+	  tbuf[k] = self.timerange - tbuf[k];
+      }
+
+      var tdata;
+      var vdata;
+      var points;
+      switch (self.vtype1) {
+      case Pwr.eType_Boolean:
+	points = 0;
+	size = 2*tbuf.length;
+	tdata = new Array(size);
+	vdata = new Array(size);
+	for (var k = 0; k < tbuf.length; k++) {
+	  if (k == 0) {
+	    vdata[points] = vbuf[k];
+	    tdata[points++] = tbuf[k];
+	  }
+	  else if (vbuf[k] != vbuf[k-1]) {
+	    vdata[points] = vbuf[k-1];	  
+	    tdata[points++] = tbuf[k];
+	    vdata[points] = vbuf[k];
+	    tdata[points++] = tbuf[k];
+	  }
+	  else if (k == tbuf.lenght - 1) {
+	    vdata[points] = vbuf[k];
+	    tdata[points++] = tbuf[k];
+	  }
+	}
+	break;
+      default:
+	points = size;
+	tdata = tbuf;
+	vdata = vbuf;
+      }
+      object.set_xy_data(vdata, tdata, 0, points);
+    }    
+    if (self.curve_cnt > 1) {
+      var data2 = new Array(2);
+      data2[0] = self;
+      data2[1] = object;
+      self.dyn.graph.getGdh().getSevHistData(self.timerange, self.no_of_points,
+	  self.server, self.oid2, self.attribute2, self.scan3, data2);
+    }
+  };
+
+  this.scan3 = function( id, data, sts, result) {
+    if ( sts & 1 != 0) {
+      var self = data[0];
+      var object = data[1];
+      self.vtype2 = result[0];
+      var size = result[1];
+      var tbuf = result[2];
+      var vbuf = result[3];
+      //console.log("scan3", self.curve_cnt, size, self.vtype2);
+
+      if (self.direction == Glow.eHorizDirection_Right) {
+	for (var k = 0; k < tbuf.length; k++)
+	  tbuf[k] = self.timerange - tbuf[k];
+      }
+      var tdata;
+      var vdata;
+      var points;
+      switch (self.vtype1) {
+      case Pwr.eType_Boolean:
+	points = 0;
+	size = 2*tbuf.length;
+	tdata = new Array(size);
+	vdata = new Array(size);
+	for (var k = 0; k < tbuf.length; k++) {
+	  if (k == 0) {
+	    vdata[points] = vbuf[k];
+	    tdata[points++] = tbuf[k];
+	  }
+	  else if (vbuf[k] != vbuf[k-1]) {
+	    vdata[points] = vbuf[k-1];	  
+	    tdata[points++] = tbuf[k];
+	    vdata[points] = vbuf[k];
+	    tdata[points++] = tbuf[k];
+	  }
+	  else if (k == tbuf.lenght - 1) {
+	    vdata[points] = vbuf[k];
+	    tdata[points++] = tbuf[k];
+	  }
+	}
+	break;
+      default:
+	points = size;
+	tdata = tbuf;
+	vdata = vbuf;
+      }
+      object.set_xy_data(vdata, tdata, 1, points);
+    }    
+  };
+
+  this.action = function( object, e) {
+    return 1;
+  };
+
+  this.open = function( lines, row) {
+    var end = false;
+    var i;
+    var elem;
+
+    for ( i = row; i < lines.length; i++) {
+      var tokens = lines[i].split(' ');
+      var key = parseInt(tokens[0], 10);
+
+      if ( this.dyn.debug) console.log( "DynSevHist : " + lines[i]);
+
+      elem = null;
+
+      switch ( key) {
+      case DynC.eSave_SevHist: 
+	break;
+      case DynC.eSave_SevHist_sevhist_object1: 
+	if ( tokens.length > 1)
+	  this.sevhist_object1 = tokens[1];
+	break;
+      case DynC.eSave_SevHist_sevhist_object2: 
+	if ( tokens.length > 1)
+	  this.sevhist_object2 = tokens[1];
+	break;
+      case DynC.eSave_SevHist_attribute1: 
+	if ( tokens.length > 1)
+	  this.attribute1 = tokens[1];
+	break;
+      case DynC.eSave_SevHist_attribute2: 
+	if ( tokens.length > 1)
+	  this.attribute2 = tokens[1];
+	break;
+      case DynC.eSave_SevHist_server: 
+	if ( tokens.length > 1)
+	  this.server = tokens[1];
+	break;
+      case DynC.eSave_SevHist_timerange: 
+	this.timerange = parseFloat( tokens[1]);
+	break;
+      case DynC.eSave_SevHist_updatetime: 
+	this.updatetime = parseFloat( tokens[1]);
+	break;
+      case DynC.eSave_SevHist_timerange_attr: 
+	if ( tokens.length > 1)
+	  this.timerange_attr = tokens[1];
+	break;
+      case DynC.eSave_SevHist_minvalue_attr1: 
+	if ( tokens.length > 1)
+	  this.minvalue_attr1 = tokens[1];
+	break;
+      case DynC.eSave_SevHist_maxvalue_attr1: 
+	if ( tokens.length > 1)
+	  this.maxvalue_attr1 = tokens[1];
+	break;
+      case DynC.eSave_SevHist_minvalue_attr2: 
+	if ( tokens.length > 1)
+	  this.minvalue_attr2 = tokens[1];
+	break;
+      case DynC.eSave_SevHist_maxvalue_attr2: 
+	if ( tokens.length > 1)
+	  this.maxvalue_attr2 = tokens[1];
+	break;
+      case DynC.eSave_SevHist_hold_attr: 
+	if ( tokens.length > 1)
+	  this.hold_attr = tokens[1];
+	break;
+      case DynC.eSave_SevHist_update_attr: 
+	if ( tokens.length > 1)
+	  this.update_attr = tokens[1];
+	break;
+      case DynC.eSave_SevHist_mark1_attr: 
+	if ( tokens.length > 1)
+	  this.mark1_attr = tokens[1];
+	break;
+      case DynC.eSave_SevHist_mark2_attr: 
+	if ( tokens.length > 1)
+	  this.mark2_attr = tokens[1];
+	break;
+      case DynC.eSave_SevHist_mark1_color: 
+	this.mark1_color = parseInt(tokens[1], 10);
+	break;
+      case DynC.eSave_SevHist_mark2_color: 
+	this.mark2_color = parseInt(tokens[1], 10);
+	break;
+      case DynC.eSave_End:
+	end = true;
+	break;
+      default:
+	console.log( "Syntax error in DynSevHist", row, key);
+	break;
+      }
+
+      if ( end)
+	break;
+    }    
+    return i;
+  };
+}
+
 
 function DynPie( dyn) {
   this.dyn = dyn;

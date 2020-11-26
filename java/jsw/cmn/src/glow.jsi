@@ -37,6 +37,8 @@ var Glow = {
   eType_DynType2		: 22, 
   eType_ActionType2		: 23,
   eType_AppMotion		: 24,
+  eType_Float			: 25,
+  eType_HorizDirection		: 26,
 
   eCtxType_Glow		: 0,
   eCtxType_Brow		: 1,
@@ -124,6 +126,9 @@ var Glow = {
   eDirection_Left		: 2,
   eDirection_Up			: 3,
   eDirection_Down		: 4,
+
+  eHorizDirection_Left		: 0,
+  eHorizDirection_Right		: 1,
 
   eAdjustment_Center		: 0,
   eAdjustment_Right		: 1,
@@ -1260,16 +1265,17 @@ var Glow = {
   eSave_GrowTrend_trace_data7		: 3223,
   eSave_GrowTrend_trace_data8		: 3224,
   eSave_GrowTrend_trace_data9		: 3225,
-  eSave_GrowTrend_trace_data10	: 3226,
+  eSave_GrowTrend_trace_data10		: 3226,
   eSave_GrowTrend_access		: 3227,
-  eSave_GrowTrend_cycle		: 3228,
+  eSave_GrowTrend_cycle			: 3228,
   eSave_GrowTrend_ref_object		: 3229,
   eSave_GrowTrend_userdata_cb		: 3230,
   eSave_GrowTrend_x_max_value_0 	: 3231,
   eSave_GrowTrend_x_min_value_0 	: 3232,
   eSave_GrowTrend_x_max_value_1 	: 3233,
   eSave_GrowTrend_x_min_value_1 	: 3234,
-  eSave_GrowTrend_mode 		: 3235,
+  eSave_GrowTrend_mode 			: 3235,
+  eSave_GrowTrend_direction 		: 3236,
   eSave_GrowSlider_grownode_part	: 3300,
   eSave_GrowSlider_direction		: 3301,
   eSave_GrowSlider_max_value		: 3302,
@@ -9994,8 +10000,9 @@ function GrowTrend( ctx) {
   this.x_mark2;
   this.y_mark1;
   this.y_mark2;
-  this.mark1_color;
-  this.mark2_color;
+  this.mark1_color = Glow.eDrawType_Inherit;
+  this.mark2_color = Glow.eDrawType_Inherit;
+  this.direction;
 
   for ( var i = 0; i < Glow.TREND_MAX_CURVES; i++)
     this.curve[i] = null;
@@ -10069,6 +10076,9 @@ function GrowTrend( ctx) {
       case Glow.eSave_GrowTrend_curve_width: 
 	this.curve_width = parseInt(tokens[1], 10); 
 	break;
+      case Glow.eSave_GrowTrend_direction: 
+	this.direction = parseInt(tokens[1], 10); 
+	break;
       case Glow.eSave_GrowTrend_scan_time: 
 	this.scan_time = parseFloat( tokens[1]); 
 	break;
@@ -10109,7 +10119,6 @@ function GrowTrend( ctx) {
       if ( end)
 	break;
     }
-
     this.configure_curves();
     return i;
   };    
@@ -10267,7 +10276,7 @@ function GrowTrend( ctx) {
       if ( xm2 >= ll_x && xm2 <= ur_x) {
 	drawtype = this.mark2_color;
 	if ( drawtype == Glow.eDrawType_Inherit)
-	  drawtype = Glow.eDrawType_ColorYellow;
+	  drawtype = Glow.eDrawType_ColorRed;
 	this.ctx.gdraw.line( xm2, ll_y, xm2, ur_y, drawtype, idx, 0);
       }
     }
@@ -10293,12 +10302,14 @@ function GrowTrend( ctx) {
       if ( ym2 >= ll_y && ym2 <= ur_y) {
 	drawtype = this.mark2_color;
 	if ( drawtype == Glow.eDrawType_Inherit)
-	  drawtype = Glow.eDrawType_ColorYellow;
+	  drawtype = Glow.eDrawType_ColorRed;
 	this.ctx.gdraw.line( ll_x, ym2, ur_x, ym2, drawtype, idx, 0);
       }
     }
 
     if ( this.border !== 0) {
+      drawtype = GlowColor.get_drawtype( this.draw_type, Glow.eDrawType_LineHighlight,
+					 highlight, colornode, 0, 0);
       this.ctx.gdraw.rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx, 0);
     }
   };
@@ -10381,7 +10392,7 @@ function GrowTrend( ctx) {
 	this.y_mark1 = this.ur.y - (mark - min) / (max - min) * (this.ur.y - this.ll.y);
       }
       if ( this.display_y_mark2 !== 0) {
-	mark = this.y_min_value[0] - (this.y_mark2 - ur.y) *(this.y_max_value[0] - this.y_min_value[0]) / (this.ur.y - this.ll.y);
+	mark = this.y_min_value[0] - (this.y_mark2 - this.ur.y) *(this.y_max_value[0] - this.y_min_value[0]) / (this.ur.y - this.ll.y);
 	this.y_mark2 = this.ur.y - (mark - min) / (max - min) * (this.ur.y - this.ll.y);
       }
     }
@@ -10462,6 +10473,100 @@ function GrowTrend( ctx) {
   };
   this.get_background_object_limits = function( t, type, x, y, bo) {
     return 0;
+  };
+  this.get_direction = function()  {
+    return this.direction;
+  };
+  this.set_data = function( tdata, vdata, curve_idx, data_points) {
+    var dt, dt_fill;
+    var points;
+    var cpoints;
+    var pointarray;
+    var point_p;
+    var i, j, idx;
+
+    this.no_of_points = Math.max( 2, this.no_of_points);
+    points = cpoints = Math.min( this.no_of_points, data_points);
+    if ( this.fill_curve !== 0)
+      cpoints += 2;
+	
+    this.curve_width = Math.min( Glow.DRAW_TYPE_SIZE, Math.max( 1, this.curve_width));
+	
+    pointarray = new Array(cpoints);
+    j = curve_idx;
+    for ( i = 0, idx = 0; i < cpoints; i++, idx++) {
+      point_p = pointarray[i] = new GlowPointX();
+      if ( this.fill_curve == 0) {
+	idx = i;
+	if ( this.y_max_value[j] != this.y_min_value[j])
+	  point_p.y = this.ur.y - (vdata[idx] - this.y_min_value[j]) / 
+	    (this.y_max_value[j] - this.y_min_value[j]) * (this.ur.y - this.ll.y);
+				
+        point_p.y = Math.max( this.ll.y, Math.min( point_p.y, this.ur.y));	
+		
+	if ( this.direction == Glow.eHorizDirection_Right)
+	  point_p.x = this.ll.x
+            + (tdata[idx] - tdata[0]) / (tdata[points - 1] - tdata[0])
+            * (this.ur.x - this.ll.x);
+        else
+	  point_p.x = this.ur.x
+            - (tdata[idx] - tdata[0]) / (tdata[points - 1] - tdata[0])
+            * (this.ur.x - this.ll.x);
+
+      }
+      else {
+        if ( i == 0) {
+	  if ( this.direction == Glow.eHorizDirection_Right)
+	    point_p.x = this.ll.x;
+          else
+	    point_p.x = this.ur.x;
+          point_p.y = this.ur.y;
+          idx--;
+        } else if (i == cpoints -1) {
+	  if ( this.direction == Glow.eHorizDirection_Right)
+	    point_p.x = this.ur.x;
+          else
+	    point_p.x = this.ll.x;
+          point_p.y = this.ur.y;
+        } else {
+	  if ( this.y_max_value[j] != this.y_min_value[j])
+            point_p.y = this.ur.y
+              - (vdata[idx] - this.y_min_value[j])
+                  / (this.y_max_value[j] - this.y_min_value[j]) * (this.ur.y - this.ll.y);
+
+          point_p.y = Math.max(this.ll.y, Math.min(point_p.y, this.ur.y));
+          if (this.direction == Glow.eHorizDirection_Right)
+	    point_p.x = this.ll.x
+              + (tdata[idx] - tdata[0]) / (tdata[points - 1] - tdata[0])
+	      * (this.ur.x - this.ll.x);
+	  else
+	    point_p.x = this.ur.x
+              - (tdata[idx] - tdata[0]) / (tdata[points - 1] - tdata[0])
+	      * (this.ur.x - this.ll.x);
+        }
+      }
+      point_p++;
+    }
+
+	
+    if ( this.curve_drawtype[j] != Glow.eDrawType_Inherit)
+      dt = this.curve_drawtype[j];
+    else
+      dt = this.draw_type;
+	
+    if ( this.curve_fill_drawtype[j] != Glow.eDrawType_Inherit)
+      dt_fill = this.curve_fill_drawtype[j];
+    else
+      dt_fill = this.draw_type;
+	
+    this.ctx.nodraw++;
+    this.curve[j] = new GrowPolyline( ctx);
+    this.curve[j].init( "", pointarray, cpoints, dt, 
+			this.curve_width,
+			0, this.fill_curve, 1, 0, dt_fill);
+    this.ctx.nodraw--;
+    this.draw();
+
   };
 }
 

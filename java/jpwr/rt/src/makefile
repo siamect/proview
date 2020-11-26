@@ -36,6 +36,9 @@ local_java_sources = \
 	GdhrsAttrDef.java \
 	CircBuffInfo.java \
 	GdhrCircBuffInfo.java \
+	GdhrGetDsTrend.java \
+	GdhrSevItemInfo.java \
+	GdhrSevItemData.java \
 	GdhApplIfc.java \
 	Gdh.java \
         Sub.java \

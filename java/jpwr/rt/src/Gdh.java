@@ -700,6 +700,21 @@ public class Gdh {
     */
     public native int updateCircBuffInfo(CircBuffInfo[] info, int info_size);
     //  public native GdhrGetXttObj[] getAllXttChildrenNative(PwrtObjid objid);
+    /**
+       Get data from a DsTrend.
+    */
+    public native GdhrGetDsTrend getDsTrend(String jstrend_object, int last_next_idx, 
+					    int last_buffer, int max_size);
+    /**
+       Get info of a sevhist object.
+    */
+    public native GdhrSevItemInfo getSevItemInfo(String jsevhist_object);
+    /**
+       Get data from a sevhist item.
+    */
+    public native GdhrSevItemData getSevItemData(String jserver, PwrtObjid oid, 
+						 String jattribute, float timerange, 
+						 int max_size);
 }
 
 

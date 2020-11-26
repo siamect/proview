@@ -51,6 +51,7 @@
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "rt_thread.h"
+#include "rt_sevcli.h"
 
 #include "jpwr_rt_gdh.h"
 
@@ -99,6 +100,7 @@ static void gdh_ConvertUTFstring( char *out, char *in);
 static int gdh_JidToPointer( int id, void **p);
 static int gdh_JidStore( void *p, pwr_tRefId r, int *id);
 static int gdh_JidRemove( pwr_tRefId r);
+static sevcli_tCtx gdh_scctx = 0;
 
 JNIEXPORT jint JNICALL Java_jpwr_rt_Gdh_init
   (JNIEnv *env, jclass obj)
@@ -3098,7 +3100,8 @@ JNIEXPORT jint JNICALL Java_jpwr_rt_Gdh_updateCircBuffInfo
       case pwr_eType_UInt16:
       case pwr_eType_Int16:
       case pwr_eType_UInt8:
-      case pwr_eType_Int8: {
+      case pwr_eType_Int8:
+      case pwr_eType_Boolean: {
 	jintArray jiarray = 0;
 	jiarray = (*env)->NewIntArray( env, info[i].size);
 	(*env)->SetIntArrayRegion( env, jiarray, 0, info[i].size, info[i].bufp);
@@ -3118,6 +3121,394 @@ JNIEXPORT jint JNICALL Java_jpwr_rt_Gdh_updateCircBuffInfo
     }
   }
   return 1;
+}
+
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getDsTrend
+(JNIEnv *env, jobject obj, jstring jdstrend_object, jint jlast_next_idx, jint jlast_buffer, jint jmax_size)
+{
+  int 		sts = GDH__SUCCESS;
+  jclass 	gdhrGetDsTrend_id;
+  static jmethodID gdhrGetDsTrend_cid = NULL;
+  jobject       gdhrGetDsTrend;
+  int last_next_idx = jlast_next_idx;
+  int last_buffer = jlast_buffer;
+  int max_size = jmax_size;
+
+  pwr_sClass_DsTrend tp;
+  int write_buffer;
+  int start_idx;
+  int trend_buff_size = 478;
+  int j, k;
+  int idx = 0;
+  float *data = 0;
+  int values = 0;
+  char *dstrend_object;
+
+  gdhrGetDsTrend_id = (*env)->FindClass( env, "jpwr/rt/GdhrGetDsTrend");
+  if(gdhrGetDsTrend_id == NULL) printf("gdhrGetDsTrend_id ks NULL");
+
+  if(gdhrGetDsTrend_cid == NULL) {
+    gdhrGetDsTrend_cid = (*env)->GetMethodID( env, gdhrGetDsTrend_id,
+    	  "<init>", "([FIIII)V");
+    if(gdhrGetDsTrend_cid == NULL) printf("gdhrGetDsTrend_cid is NULL");
+  }
+
+  dstrend_object = (char *)(*env)->GetStringUTFChars(env, jdstrend_object, 0);
+
+  gdh_ConvertUTFstring( dstrend_object, dstrend_object);
+
+
+  sts = gdh_GetObjectInfo(dstrend_object, &tp, sizeof(tp));
+  if (ODD(sts)) {
+    if (last_next_idx == -1 || last_next_idx == 65535) {
+      /* Get whole curve */
+      data = (float *)calloc(1, 4 * max_size);
+
+      int write_buffer = (int)tp.WriteBuffer;
+      start_idx = write_buffer * trend_buff_size / 2
+	+ (int)tp.NextWriteIndex[write_buffer];
+      if (start_idx == 0) {
+	start_idx = tp.NoOfSample - 1 + trend_buff_size / 2;
+	write_buffer = 1;
+      } else if (start_idx == trend_buff_size / 2) {
+	start_idx = tp.NoOfSample - 1;
+	write_buffer = 0;
+      } else
+	start_idx--;
+      
+      idx = 0;
+      for (j = start_idx; j >= write_buffer * trend_buff_size / 2; j--) {
+	if (idx >= max_size)
+	  break;
+	data[max_size-idx-1] = tp.DataBuffer[j];
+	idx++;
+      }
+      for (j = tp.NoOfSample - 1 + (!write_buffer) * trend_buff_size / 2;
+	   j >= (!write_buffer) * trend_buff_size / 2; j--) {
+	if (idx >= max_size)
+	  break;
+
+	data[max_size-idx-1] = tp.DataBuffer[j];
+	idx++;
+      }
+      if (start_idx
+	  != (int)tp.NoOfSample - 1 + write_buffer * trend_buff_size / 2) {
+	for (j = tp.NoOfSample - 1 + write_buffer * trend_buff_size / 2;
+	     j > start_idx; j--) {
+	  if (idx >= max_size)
+	    break;
+
+	  data[max_size-idx-1] = tp.DataBuffer[j];
+	  idx++;
+	}
+      }
+      last_buffer = tp.WriteBuffer;
+      last_next_idx = tp.NextWriteIndex[last_buffer];
+      values = idx;
+    }
+    else {
+      /* Get new value values since last_idx */
+      if (tp.NextWriteIndex[tp.WriteBuffer]
+	  != last_next_idx) {
+	values = tp.NextWriteIndex[tp.WriteBuffer]
+	  - last_next_idx;
+	if (values < 0)
+	  values = values + tp.NoOfSample;
+	
+	if (values > max_size)
+	  values = max_size;
+	
+	data = (float *)calloc(1, 4 * values);
+	
+	last_next_idx
+	  = tp.NextWriteIndex[tp.WriteBuffer];
+	
+	for (k = 0; k < values; k++) {
+	  // Add new points
+	  // Insert new value
+	  write_buffer = tp.WriteBuffer;
+	  idx = write_buffer * trend_buff_size / 2
+	    + (int)tp.NextWriteIndex[write_buffer]
+	    - (values - 1 - k);
+	  idx--;
+	  if (idx < 0)
+	    idx += trend_buff_size;
+	  /*
+	  if (idx == 0 || idx == trend_buff_size * write_buffer)
+	    idx = tp.NoOfSample - 1
+	      + (!write_buffer) * trend_buff_size / 2;
+	  else
+	    idx--;
+	  */
+	  data[k] = tp.DataBuffer[idx];
+	}
+      }
+    }
+  }
+
+  jfloatArray jfarray = 0;
+  if (values > 0) {
+    jfarray = (*env)->NewFloatArray( env, values);
+    (*env)->SetFloatArrayRegion( env, jfarray, 0, values, data);
+  }
+  (*env)->ReleaseStringUTFChars( env, jdstrend_object, dstrend_object);
+  if (data)
+    free(data);
+
+  gdhrGetDsTrend = (*env)->NewObject( env, gdhrGetDsTrend_id,
+				   gdhrGetDsTrend_cid,
+				   jfarray,
+				   (jint)values,
+				   (jint)last_next_idx,
+				   (jint)last_buffer,
+				   (jint)sts);
+  
+  return gdhrGetDsTrend;
+}
+
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getSevItemData
+(JNIEnv *env, jobject obj, jstring jserver, jobject joid, jstring jattribute, jfloat jtimerange, jint jmax_size)
+{
+  int 		sts = GDH__SUCCESS;
+  jclass 	gdhrSevItemData_id;
+  static jmethodID gdhrSevItemData_cid = NULL;
+  jobject       gdhrSevItemData;
+  jclass 	PwrtObjid_id;
+  static jmethodID 	PwrtObjid_getOix = NULL;
+  static jmethodID 	PwrtObjid_getVid = NULL;
+  float timerange = jtimerange;
+  int max_size = jmax_size;
+  char *server;
+  char *attribute;
+  pwr_tOid oid;
+  pwr_tOName aname;
+  pwr_tDeltaTime dt_timerange;
+  pwr_tTime* tbuf;
+  void* vbuf;
+  int rows;
+  pwr_eType vtype;
+  unsigned int vsize;
+  pwr_tTime from, to;
+  pwr_tDeltaTime diff;
+  int k;
+  char *s;
+  jfloatArray jtarray = 0;
+  jfloatArray f_varray = 0;
+  jintArray i_varray = 0;
+  float *tarray = 0;
+  void *jvarray = 0;
+
+  gdhrSevItemData_id = (*env)->FindClass( env, "jpwr/rt/GdhrSevItemData");
+  if(gdhrSevItemData_id == NULL) printf("gdhrSevItemData_id ks NULL");
+
+  if(gdhrSevItemData_cid == NULL) {
+    gdhrSevItemData_cid = (*env)->GetMethodID( env, gdhrSevItemData_id,
+					       "<init>", "(I[FLjava/lang/Object;II)V");
+    if(gdhrSevItemData_cid == NULL) printf("gdhrSevItemData_cid is NULL");
+  }
+
+  PwrtObjid_id = (*env)->FindClass( env, "jpwr/rt/PwrtObjid");
+  if(PwrtObjid_getOix == NULL || PwrtObjid_getVid == NULL) {
+    PwrtObjid_getOix = (*env)->GetMethodID( env, PwrtObjid_id, "getOix", "()I");
+    PwrtObjid_getVid = (*env)->GetMethodID( env, PwrtObjid_id, "getVid", "()I");
+  }
+
+  oid.oix = (*env)->CallIntMethod( env, joid, PwrtObjid_getOix);
+  oid.vid = (*env)->CallIntMethod( env, joid, PwrtObjid_getVid);
+
+  while(1) {
+    if (!gdh_scctx) {
+      sevcli_init(&sts, &gdh_scctx);
+      if (EVEN(sts))
+	break;
+    }
+
+    server = (char *)(*env)->GetStringUTFChars(env, jserver, 0);
+    gdh_ConvertUTFstring( server, server);
+
+    attribute = (char *)(*env)->GetStringUTFChars(env, jattribute, 0);
+    gdh_ConvertUTFstring( attribute, attribute);
+
+    sevcli_set_servernode(&sts, gdh_scctx, server);
+    if (EVEN(sts)) 
+      break;
+    
+    time_FloatToD(&dt_timerange, timerange);
+    time_GetTime(&to);
+    time_Asub(&from, &to, &dt_timerange);
+
+    //memset(&oid, 0, sizeof(oid));
+    strncpy(aname, attribute, sizeof(aname));
+    if ((s = strchr(aname, '#')))
+      *s = 0;
+
+    sevcli_get_itemdata(&sts, gdh_scctx, oid, aname, from, to, max_size, &tbuf, &vbuf,
+			&rows, &vtype, &vsize);
+    if (EVEN(sts))
+      break;
+    
+    tarray = (float *)calloc(1, 4 * rows);
+    for (k = 0; k < rows; k++) {
+      time_Adiff(&diff, &to, &tbuf[k]);
+      time_DToFloat(&tarray[k], &diff);      
+    }
+
+    if (rows > 0) {
+      jtarray = (*env)->NewFloatArray(env, rows);
+      (*env)->SetFloatArrayRegion(env, jtarray, 0, rows, tarray);
+    }
+    switch (vtype) {
+    case pwr_eType_Float32: {      
+      if (rows > 0) {
+	f_varray = (*env)->NewFloatArray(env, rows);
+	(*env)->SetFloatArrayRegion(env, f_varray, 0, rows, vbuf);
+	jvarray = f_varray;
+      }
+      break;
+    }
+    case pwr_eType_Int32:
+    case pwr_eType_UInt32:
+    case pwr_eType_Boolean: {
+      if (rows > 0) {
+	i_varray = (*env)->NewIntArray(env, rows);
+	(*env)->SetIntArrayRegion(env, i_varray, 0, rows, vbuf);
+	jvarray = i_varray;
+      }
+      break;
+    }
+    default:
+      sts = 0;
+      break;
+    }
+    free(tarray);
+    free(tbuf);
+    free(vbuf);
+
+    break;
+  }
+  (*env)->ReleaseStringUTFChars(env, jserver, server);
+  (*env)->ReleaseStringUTFChars(env, jattribute, attribute);
+
+  gdhrSevItemData = (*env)->NewObject( env, gdhrSevItemData_id,
+				       gdhrSevItemData_cid,
+				       (jint)rows,
+				       jtarray,
+				       jvarray,
+				       (jint)vtype,
+				       (jint)sts);
+  
+  return gdhrSevItemData;
+}
+
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getSevItemInfo
+(JNIEnv *env, jobject obj, jstring jsevhist_object)
+{
+  int 		sts = GDH__SUCCESS;
+  jclass 	gdhrSevItemInfo_id;
+  static jmethodID gdhrSevItemInfo_cid = NULL;
+  jobject       gdhrSevItemInfo;
+  jclass 	PwrtObjid_id;
+  jmethodID 	PwrtObjid_cid;
+  jobject 	objid_obj = NULL;
+  pwr_tOid	oid;
+  jint 		oix, vid;
+  jstring	jserver = NULL;
+  jstring	jattr = NULL;
+  pwr_tAttrRef sevhist_aref;
+  pwr_tAttrRef thread_aref;
+  pwr_tAttrRef aref;
+  pwr_tAttrRef attr_aref;
+  pwr_tAName aname;
+  pwr_tCid cid;
+  pwr_tOid thread_oid;
+  char server[80];
+  char *sevhist_object;
+  pwr_tOName attr;
+  char *s;
+
+  gdhrSevItemInfo_id = (*env)->FindClass( env, "jpwr/rt/GdhrSevItemInfo");
+  if(gdhrSevItemInfo_id == NULL) printf("gdhrSevItemInfo_id ks NULL");
+
+  if(gdhrSevItemInfo_cid == NULL) {
+    gdhrSevItemInfo_cid = (*env)->GetMethodID( env, gdhrSevItemInfo_id,
+       "<init>", "(Ljpwr/rt/PwrtObjid;Ljava/lang/String;Ljava/lang/String;I)V");
+    if(gdhrSevItemInfo_cid == NULL) printf("gdhrSevItemInfo_cid is NULL");
+  }
+
+  PwrtObjid_id = (*env)->FindClass( env, "jpwr/rt/PwrtObjid");
+  PwrtObjid_cid = (*env)->GetMethodID( env, PwrtObjid_id,
+    	"<init>", "(II)V");
+
+  sevhist_object = (char *)(*env)->GetStringUTFChars(env, jsevhist_object, 0);
+  gdh_ConvertUTFstring(sevhist_object, sevhist_object);
+
+  while (1) {
+    sts = gdh_NameToAttrref(pwr_cNObjid, sevhist_object, &sevhist_aref);
+    if (EVEN(sts))
+      break;
+
+    sts = gdh_GetAttrRefTid(&sevhist_aref, &cid);
+    if (EVEN(sts))
+      break;
+
+    if (cid != pwr_cClass_SevHist)
+      break;
+
+    sts = gdh_ArefANameToAref(&sevhist_aref, "ThreadObject", &aref);
+    if (EVEN(sts))
+      break;
+
+    sts = gdh_GetObjectInfoAttrref(&aref, &thread_oid, sizeof(thread_oid));
+    if (EVEN(sts))
+      break;
+
+    thread_aref = cdh_ObjidToAref(thread_oid);
+    sts = gdh_ArefANameToAref(&thread_aref, "ServerNode", &aref);
+    if (EVEN(sts)) 
+      break;
+
+    sts = gdh_GetObjectInfoAttrref(&aref, server, sizeof(server));
+    if (EVEN(sts))
+      break;    
+
+    sts = gdh_ArefANameToAref(&sevhist_aref, "Attribute", &aref);
+    if (EVEN(sts))
+      break;
+    
+    sts = gdh_GetObjectInfoAttrref(&aref, &attr_aref, sizeof(attr_aref));
+    if (EVEN(sts))
+      break;    
+
+    sts = gdh_AttrrefToName(&attr_aref, aname, sizeof(aname), cdh_mNName);
+    if (EVEN(sts))
+      break;
+
+    s = strchr(aname, '.');
+    if (!s) {
+      sts = 0;
+      break;
+    }
+
+    oid = attr_aref.Objid;
+    strcpy(attr, s+1);
+
+    oix = (jint) oid.oix;
+    vid = (jint) oid.vid;
+
+    jattr = (*env)->NewStringUTF(env, attr);
+    jserver = (*env)->NewStringUTF(env, server);
+    objid_obj = (*env)->NewObject(env, PwrtObjid_id, PwrtObjid_cid,
+				  oix, vid);
+    break;
+  }
+  gdhrSevItemInfo = (*env)->NewObject(env, gdhrSevItemInfo_id,
+				      gdhrSevItemInfo_cid,
+				      objid_obj,
+				      jattr,
+				      jserver,
+				      (jint)sts);
+  
+  return gdhrSevItemInfo;
 }
 
 static int gdh_JidToPointer( int id, void **p)
