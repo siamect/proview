@@ -166,6 +166,8 @@ pwre_config_check_lib()
                     conf_libqt=$conf_libqt" -l${lib%.*}"
 		elif test $4 == "wb"; then
                     conf_libwb=$conf_libwb" -l${lib%.*}"
+		elif test $4 == "db"; then
+                    conf_lib=$conf_lib" -l${lib%.*}"
 		elif test $4 == "mq"; then
                     conf_libmq=$conf_libmq" -l${lib%.*}"
                     elif test $4 == "wmq"; then
@@ -416,16 +418,16 @@ else
     #Gtk
     echo "Mandatory :"
 
-    pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 "/usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a:/usr/lib/$hwpl-linux-$gnu/librpcsvc.a"
-    pwre_config_check_lib libasound LIBASOUND lib lib 0 "/usr/lib/libasound.so:/usr/lib/libasound.a:/usr/lib/$hwpl-linux-$gnu/libasound.so"
-    pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 "/usr/lib/libpthread.so:/usr/lib/libpthread.a:/usr/lib/$hwpl-linux-$gnu/libpthread.so"
-    pwre_config_check_lib libm      LIBM     lib lib 0 "/usr/lib/libm.so:/usr/lib/libm.a:/usr/lib/$hwpl-linux-$gnu/libm.so"
-    pwre_config_check_lib libdb     LIBDB    lib lib 1 "/usr/lib/libdb.so:/usr/lib/$hwpl-linux-$gnu/libdb.so"
-    pwre_config_check_lib libdb_cxx LIBDB_CXX lib wb 1 "/usr/lib/libdb_cxx.so:/usr/lib/$hwpl-linux-$gnu/libdb_cxx.so"
-    pwre_config_check_lib libz      LIBZ     lib lib 0 "/usr/lib/libz.so:/usr/lib/libz.a:/usr/lib/$hwpl-linux-$gnu/libz.so"
-    pwre_config_check_lib libcrypt  LIBCRYPT lib lib 0 "/usr/lib/libcrypt.so:/usr/lib/libcrypt.a:/usr/lib/$hwpl-linux-$gnu/libcrypt.so"
-    pwre_config_check_lib librt     LIBRT    lib lib 0 "/usr/lib/librt.so:/usr/lib/librt.a:/usr/lib/$hwpl-linux-$gnu/librt.so"
-    pwre_config_check_lib libX11    LIBX11   lib lib 0 "/usr/lib/libX11.so:/usr/lib/$hwpl-linux-$gnu/libX11.so"
+    pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 "/usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a:/usr/lib/$hwpl-linux-$gnu/librpcsvc.a:/usr/lib64/librpcsvc.so:/usr/lib64/librpcsvc.a"
+    pwre_config_check_lib libasound LIBASOUND lib lib 0 "/usr/lib/libasound.so:/usr/lib/libasound.a:/usr/lib/$hwpl-linux-$gnu/libasound.so:/usr/lib64/libasound.so:/usr/lib64/libasound.a"
+    pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 "/usr/lib/libpthread.so:/usr/lib/libpthread.a:/usr/lib/$hwpl-linux-$gnu/libpthread.so:/usr/lib64/libpthread.so:/usr/lib64/libpthread.a"
+    pwre_config_check_lib libm      LIBM     lib lib 0 "/usr/lib/libm.so:/usr/lib/libm.a:/usr/lib/$hwpl-linux-$gnu/libm.so:/usr/lib64/libm.so:/usr/lib64/libm.a"
+    pwre_config_check_lib libdb     LIBDB    lib db 1 "/usr/lib/libdb.so:/usr/lib/$hwpl-linux-$gnu/libdb.so:/usr/lib64/libdb-4.8.so"
+    pwre_config_check_lib libdb_cxx LIBDB_CXX lib wb 1 "/usr/lib/libdb_cxx.so:/usr/lib/$hwpl-linux-$gnu/libdb_cxx.so:/usr/lib64/libdb_cxx-4.8.so"
+    pwre_config_check_lib libz      LIBZ     lib lib 0 "/usr/lib/libz.so:/usr/lib/libz.a:/usr/lib/$hwpl-linux-$gnu/libz.so:/usr/lib64/libz.so:/usr64/lib/libz.a"
+    pwre_config_check_lib libcrypt  LIBCRYPT lib lib 0 "/usr/lib/libcrypt.so:/usr/lib/libcrypt.a:/usr/lib/$hwpl-linux-$gnu/libcrypt.so:/usr/lib64/libcrypt.so:/usr/lib64/libcrypt.a"
+    pwre_config_check_lib librt     LIBRT    lib lib 0 "/usr/lib/librt.so:/usr/lib/librt.a:/usr/lib/$hwpl-linux-$gnu/librt.so:/usr/lib64/librt.so:/usr/lib64/librt.a"
+    pwre_config_check_lib libX11    LIBX11   lib lib 0 "/usr/lib/libX11.so:/usr/lib/$hwpl-linux-$gnu/libX11.so:/usr/lib64/libX11.so"
     pwre_config_check_include alsa  ALSA  1 "/usr/include/alsa/asoundlib.h"
 
     echo ""
@@ -437,7 +439,7 @@ else
         pwre_config_check_include qt    QT   0 "/usr/include/qt4/QtGui/QtGui"
         pwre_config_check_include qt    QT   0 "/usr/include/qt4/QtNetwork/QtNetwork"
 #   else
-        pwre_config_check_lib gtk       GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-$gnu/libgtk-x11-2.0.so"
+        pwre_config_check_lib gtk       GTK      gtk gtk 0 "/usr/lib/libgtk-x11-2.0.so:/usr/lib/$hwpl-linux-$gnu/libgtk-x11-2.0.so:/usr/lib64/libgtk-x11-2.0.so"
         pwre_config_check_include gtk   GTK   0 "/usr/local/include/gtk-2.0/gtk.h:/usr/local/include/gtk-2.0/gtk/gtk.h:/usr/include/gtk-2.0/gtk/gtk.h"
 #    fi
 

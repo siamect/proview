@@ -9,10 +9,10 @@
 
 Name: pwrsev
 Summary: Proview/R storage environment
-Version: 4.6.1
+Version: 5.7.2
 Release: 1
 License: GPL
-BuildArch: i386
+BuildArch: x86_64
 Packager: claes.sjofors@proview.se
 Requires: xorg-x11-fonts
 Group: Applications/System
@@ -75,7 +75,7 @@ co_convert -t -d %{buildroot}/usr/pwrsev/doc %{buildroot}/usr/pwrsev/exe/sev_xtt
   echo "</head></html>"
 } > %{buildroot}/usr/pwrsev/doc/en_us/package_version.html
 
-#%clean
+%clean
 
 %files
 %defattr(-,root,root)
@@ -414,5 +414,5 @@ fi
 #%postun
 
 %changelog
-* Thu May 28 2009 Claes Sjofors <claes.sjofors@proview.se> 4.6.1-1
+* Fri Nov 31 2020 Claes Sjofors <claes.sjofors@proview.se> 5.7.2-1
   - Beta release.

@@ -7,14 +7,14 @@
 #   See www.rpm.org.
 #
 
-Name:		pwrdemo46
+Name:		pwrdemo57
 Summary: 	Proview/R demo project
-Version:        4.6.1
+Version:        5.7.2
 Release: 	1
 License:        GPL
-BuildArch:      i386
+BuildArch:      x86_64
 Packager: 	claes.sjofors@proview.se
-Requires: 	pwr46
+Requires: 	pwr57
 Group: 		Development/Tools/Other
 Url:            http://www.proview.se
 
@@ -27,7 +27,7 @@ For more information please see www.proview.se.
 
 #%install
 
-#%clean
+%clean
 
 %files
 %defattr(-,root,root)
@@ -127,5 +127,5 @@ fi
 #%postun
 
 %changelog
-* Thu May 28 2009 Claes Sjofors <claes.sjofors@proview.se> 4.6.1-1
+* Fri Nov 13 2020 Claes Sjofors <claes.sjofors@proview.se> 5.7.2-1
 - Base release
