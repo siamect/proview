@@ -1352,8 +1352,7 @@ XNav::XNav(void* xn_parent_ctx, const char* xn_name, xnav_sStartMenu* root_menu,
 //
 XNav::~XNav()
 {
-  if (opplace_p)
-    free(opplace_p);
+  // Do nothing
 }
 
 //
