@@ -11,6 +11,7 @@ export PWR_BUS_ID=$bus_id
 
 export pwrb_root=/usr/pwrrt
 export pwrp_root=/pwrp
+export pwra_db=/usr/pwrp/adm/db
 
 export pwr_exe=$pwrb_root/exe
 export pwr_lib=$pwrb_root/lib
