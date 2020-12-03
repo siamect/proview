@@ -422,6 +422,7 @@ else
     pwre_config_check_lib libasound LIBASOUND lib lib 0 "/usr/lib/libasound.so:/usr/lib/libasound.a:/usr/lib/$hwpl-linux-$gnu/libasound.so:/usr/lib64/libasound.so:/usr/lib64/libasound.a"
     pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 "/usr/lib/libpthread.so:/usr/lib/libpthread.a:/usr/lib/$hwpl-linux-$gnu/libpthread.so:/usr/lib64/libpthread.so:/usr/lib64/libpthread.a"
     pwre_config_check_lib libm      LIBM     lib lib 0 "/usr/lib/libm.so:/usr/lib/libm.a:/usr/lib/$hwpl-linux-$gnu/libm.so:/usr/lib64/libm.so:/usr/lib64/libm.a"
+    pwre_config_check_lib libcap    LIBCAP   lib lib 0 "/usr/lib/$hwpl-linux-$gnu/libcap.so"
     pwre_config_check_lib libdb     LIBDB    lib db 1 "/usr/lib/libdb.so:/usr/lib/$hwpl-linux-$gnu/libdb.so:/usr/lib64/libdb-4.8.so"
     pwre_config_check_lib libdb_cxx LIBDB_CXX lib wb 1 "/usr/lib/libdb_cxx.so:/usr/lib/$hwpl-linux-$gnu/libdb_cxx.so:/usr/lib64/libdb_cxx-4.8.so"
     pwre_config_check_lib libz      LIBZ     lib lib 0 "/usr/lib/libz.so:/usr/lib/libz.a:/usr/lib/$hwpl-linux-$gnu/libz.so:/usr/lib64/libz.so:/usr64/lib/libz.a"

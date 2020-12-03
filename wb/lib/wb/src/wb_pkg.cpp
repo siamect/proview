@@ -821,45 +821,6 @@ void pkg_node::fetchFiles(bool distribute)
   ofu << "mv pwr_pkg.dat $pwrp_load\n"
       << "rm -r /tmp/pkg_build\n";
 
-  // Change owner to root of plc, to make modification of thread prio possible
-  ofu << "nname=`eval uname -n`\n"
-      << "if [ \"$USER\" == \"root\" ]; then\n"
-      << "  chown root $pwrp_exe/plc_$nname_*\n"
-      << "  chmod g+w $pwrp_exe/plc_$nname_*\n"
-      << "  chmod u+s $pwrp_exe/plc_$nname_*\n"
-      << "else\n"
-      << "  tst=`eval sudo -l | grep \" ALL\"`\n"
-      << "  if [ \"$tst\" != \"\" ]; then\n"
-      << "    sudo chown root $pwrp_exe/plc_$nname_*\n"
-      << "    sudo chmod g+w $pwrp_exe/plc_$nname_*\n"
-      << "    sudo chmod u+s $pwrp_exe/plc_$nname_*\n"
-      << "  fi\n"
-      << "fi\n";
-
-  // Group should not have write access to .rhosts file
-  ofu << "if [ -e $dir/.rhosts ]; then\n"
-      << "  if [ \"$USER\" == \"root\" ]; then\n"
-      << "    chown " << m_user << " $dir/.rhosts\n"
-      << "    chmod g-w $dir/.rhosts\n"
-      << "  else\n"
-      << "    if [ \"$tst\" != \"\" ]; then\n"
-      << "      sudo chown " << m_user << " $dir/.rhosts\n"
-      << "      sudo chmod g-w $dir/.rhosts\n"
-      << "    fi\n"
-      << "  fi\n"
-      << "fi\n"
-      << "if [ -e $dir/.ssh/authorized_keys ]; then\n"
-      << "  if [ \"$USER\" == \"root\" ]; then\n"
-      << "    chown " << m_user << " $dir/.ssh/authorized_keys\n"
-      << "    chmod g-w $dir/.ssh/authorized_keys\n"
-      << "  else\n"
-      << "    if [ \"$tst\" != \"\" ]; then\n"
-      << "      sudo chown " << m_user << " $dir/.ssh/authorized_keys\n"
-      << "      sudo chmod g-w $dir/.ssh/authorized_keys\n"
-      << "    fi\n"
-      << "  fi\n"
-      << "fi\n";
-
   ofu.close();
 
   // Create a data file with description and all installed files

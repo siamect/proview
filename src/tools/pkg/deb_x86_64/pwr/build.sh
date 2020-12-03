@@ -47,7 +47,7 @@ fi
         echo "<b>Proview V${version:0:3}"
 	echo "Version V$version"
         echo ""
-        echo "Copyright © 2005-${d:0:4} SSAB EMEA AB"
+        echo "Copyright ï¿½ 2005-${d:0:4} SSAB EMEA AB"
         echo ""
         echo "This program is free software; you can redistribute it and/or"
         echo "modify it under the terms of the GNU General Public License as"
@@ -103,7 +103,7 @@ echo "-- Building pwr$ver"
 mkdir -p $pkgroot/DEBIAN
 mkdir -p $pkgroot/usr/share/doc/pwr$ver
 mkdir -p $pkgroot/usr/share/applications
-mkdir -p $pkgroot/usr/pwrp
+mkdir -p $pkgroot/usr/pwrp/adm/db
 mkdir -p $pkgroot/etc
 
 find $pkgroot -type d | xargs chmod 755
@@ -115,8 +115,10 @@ echo "ver=\"$ver\"" >> $pkgroot/DEBIAN/postinst
 echo "pwre_target=\"$pwre_target\"" >> $pkgroot/DEBIAN/postinst
 cat $pkgsrc/postinst >> $pkgroot/DEBIAN/postinst
 cp $pkgsrc/prerm $pkgroot/DEBIAN
+cp $pkgsrc/postrm $pkgroot/DEBIAN
 chmod 755 $pkgroot/DEBIAN/postinst
 chmod 755 $pkgroot/DEBIAN/prerm
+chmod 755 $pkgroot/DEBIAN/postrm
 chmod 644 $pkgroot/DEBIAN/control
 
 # copyright
@@ -172,13 +174,8 @@ cp $pwre_sroot/tools/pkg/$hw/adm/proview_icon.png $pkgroot/usr/pwr$ver/$pwre_tar
 
 # Copy user to cnf
 mkdir $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
-cp $pwre_sroot/tools/pkg/$hw/user/.bashrc $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
-echo "source $aroot/db/pwr_setup.sh" >> $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user/.bashrc
-cp $pwre_sroot/tools/pkg/$hw/user/.bash_profile $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
-#cp $pwre_sroot/tools/pkg/$hw/user/.mwmrc $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
 cp $pwre_sroot/tools/pkg/$hw/user/.rtt_start $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
 cp $pwre_sroot/tools/pkg/$hw/user/.xtt_start $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
-#cp $pwre_sroot/tools/pkg/$hw/user/.xsession $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
 cp $pwre_sroot/tools/pkg/$hw/user/wtt_init.pwr_com $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
 cp $pwre_sroot/tools/pkg/$hw/user/wtt_init1.pwr_com $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
 
