@@ -59,9 +59,9 @@ source $pwre_bin/pwre_function
 # Add pwre environment
 unamestr=`eval uname`
 machine=`eval uname -m`
-if [ $machine == "armv7l" ]; then
+if [ ${machine:0:3} == "arm" ]; then
   machine="arm"
-elif [ $machine == "amd64" ]; then
+elif [ $machine == "amd64" ] || [ $machine == "x86_64" ]; then
   machine="x86_64"
 else
   machine="x86"
