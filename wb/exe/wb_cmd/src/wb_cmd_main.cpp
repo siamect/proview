@@ -347,7 +347,7 @@ int Cmd::utilities(char* str)
 
 Cmd::Cmd()
     : ctx_type(wb_eUtility_Cmd), ldhses(0), wbctx(0), volctx(0), volid(0),
-      wnav(0), wb_type(0)
+      wnav(0), wb_type(0), recall_buf(0)
 {
 }
 
