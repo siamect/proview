@@ -41,7 +41,7 @@
 
 #include <errno.h>
 #include <string>
-#include <mysql/mysql.h>
+#include <mysql.h>
 #include "wb_import.h"
 
 class wb_name;

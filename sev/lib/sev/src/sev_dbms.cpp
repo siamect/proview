@@ -42,8 +42,8 @@
 #include <string>
 #include <sys/stat.h>
 
-#include <mysql/mysqld_error.h>
-#include <mysql/errmsg.h>
+#include <mysqld_error.h>
+#include <errmsg.h>
 
 #include "pwr_names.h"
 
@@ -1282,8 +1282,10 @@ int sev_dbms::store_value(pwr_tStatus* sts, void* thread, int item_idx,
     default:
       return 0;
     }
-    m_items[item_idx].cache->add(value, &time, thread);
-    *sts = m_items[item_idx].cache->evaluate(m_cnf.LinearRegrMaxTime, thread);
+    if (m_items[item_idx].cache) {
+      m_items[item_idx].cache->add(value, &time, thread);
+      *sts = m_items[item_idx].cache->evaluate(m_cnf.LinearRegrMaxTime, thread);
+    }
     return 1;
   } else
     return write_value(sts, item_idx, attr_idx, time, buf, size, thread);

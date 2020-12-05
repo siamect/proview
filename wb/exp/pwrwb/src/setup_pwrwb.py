@@ -35,7 +35,11 @@ except:
     pwre_conf_mysql = ""
 
 if pwre_conf_mysql == "1":
-    mysqllibs = ['mysqlclient']
+    conflib = os.environ['pwre_conf_lib']
+    if conflib.find('mysqlclient') != -1:
+        mysqllibs = ['mysqlclient']
+    else:
+        mysqllibs = ['mariadbclient']
 else:
     mysqllibs = []
 pwrwbmodule = Extension( name='pwrwb',

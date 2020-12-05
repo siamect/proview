@@ -39,7 +39,7 @@
 #if defined PWRE_CONF_MYSQL
 
 #include "sev_db.h"
-#include <mysql/mysql.h>
+#include <mysql.h>
 
 class sev_dbms_env;
 
