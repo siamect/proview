@@ -37,15 +37,15 @@ silent :
 $(exe_dir)/pwrtest.so : pwrtestmodule.cpp
 	@ if [ "$(PWRE_CONF_PYDEV)" = "1" ]; then\
 	    echo "Bulding Python c extension pwrtest";\
-	    python setup_pwrtest.py -q build --build-base $(bld_dir);\
+	    python3 setup_pwrtest.py -q build --build-base $(bld_dir);\
 	    if [ "$(pwre_hw)" = "hw_x86_64" ]; then \
-	      mv $(bld_dir)/lib.linux-x86_64-2.7/pwrtest.so $(pwr_exe); \
+	      mv $(bld_dir)/lib.linux-x86_64-3.7/pwrtest.cpython-37m-x86_64-linux-gnu.so $(pwr_exe); \
 	    elif [ "$(pwre_hw)" = "hw_x86" ]; then \
-	      mv $(bld_dir)/lib.linux-i686-2.7/pwrtest.so $(pwr_exe); \
+	      mv $(bld_dir)/lib.linux-i686-3.7/pwrtest.so $(pwr_exe); \
 	    elif [ "$(pwre_hw)" = "hw_arm" ]; then \
-	      mv $(bld_dir)/lib.linux-armv7l-2.7/pwrtest.so $(pwr_exe); \
+	      mv $(bld_dir)/lib.linux-armv7l-3.7/pwrtest.so $(pwr_exe); \
 	    fi;\
-	    python setup_pwrtest.py -q install_egg_info --install-dir $(pwr_exe);\
+	    python3 setup_pwrtest.py -q install_egg_info --install-dir $(pwr_exe);\
 	  else\
 	    echo "Not building Python c extension pwrtest";\
 	  fi

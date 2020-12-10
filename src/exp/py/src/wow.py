@@ -1,5 +1,5 @@
-from Tkinter import *
-import ttk
+from tkinter import *
+import tkinter.ttk
 
 class Tooltip:
     def __init__(self, widget,
@@ -97,7 +97,7 @@ class Tooltip:
         win = Frame(self.tw,
                        background=bg,
                        borderwidth=0)
-        label = ttk.Label(win,
+        label = tkinter.ttk.Label(win,
                           text=self.text,
                           justify=LEFT,
                           background=bg,

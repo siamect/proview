@@ -3120,7 +3120,15 @@ static PyMethodDef PwrwbMethods[] = {
   {"command", pwrwb_command, METH_VARARGS, pwrwb_command_doc},
   {NULL, NULL, 0, NULL}};
 
-PyMODINIT_FUNC initpwrwb(void)
+static struct PyModuleDef moduledef = {
+    PyModuleDef_HEAD_INIT,
+    "pwrwb",
+    pwrwb_doc,
+    -1,
+    PwrwbMethods
+};
+
+PyMODINIT_FUNC PyInit_pwrwb(void)
 {
   PyObject *m;
 
@@ -3130,11 +3138,11 @@ PyMODINIT_FUNC initpwrwb(void)
       PyType_Ready(&CidType) < 0 ||
       PyType_Ready(&TidType) < 0 ||
       PyType_Ready(&ADefType) < 0)
-    return;
+    return NULL;
 
-  m = Py_InitModule3("pwrwb", PwrwbMethods, pwrwb_doc);
+  m = PyModule_Create(&moduledef);
   if (m == NULL)
-    return;
+    return m;
 
   Py_INCREF(&OidType);
   PyModule_AddObject(m, "Vid", (PyObject *)&VidType);
@@ -3148,4 +3156,6 @@ PyMODINIT_FUNC initpwrwb(void)
   PyModule_AddObject(m, "Tid", (PyObject *)&TidType);
   Py_INCREF(&ADefType);
   PyModule_AddObject(m, "ADef", (PyObject *)&ADefType);
+
+  return m;
 }

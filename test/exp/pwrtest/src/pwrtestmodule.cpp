@@ -242,16 +242,24 @@ static PyMethodDef PwrtestMethods[] = {
   {"logger", pwrtest_logger, METH_VARARGS, pwrtest_logger_doc},
   {NULL, NULL, 0, NULL}};
 
-PyMODINIT_FUNC initpwrtest(void)
+static struct PyModuleDef moduledef = {
+    PyModuleDef_HEAD_INIT,
+    "pwrtest",
+    pwrtest_doc,
+    -1,
+    PwrtestMethods
+};
+
+PyMODINIT_FUNC PyInit_pwrtest(void)
 {
   PyObject *m;
 
   if (PyType_Ready(&LogType) < 0)
-    return;
+    return NULL;
 
-  m = Py_InitModule3("pwrtest", PwrtestMethods, pwrtest_doc);
+  m = PyModule_Create(&moduledef);
   if (m == NULL)
-    return;
+    return m;
 
   Py_INCREF(&LogType);
   PyModule_AddObject(m, "Log", (PyObject *)&LogType);
@@ -259,4 +267,6 @@ PyMODINIT_FUNC initpwrtest(void)
   PyModule_AddIntConstant(m, "FRAME_OPTIONS_CONDITION", 1);
 
   PyDateTime_IMPORT;
+
+  return m;
 }

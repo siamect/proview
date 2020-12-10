@@ -66,9 +66,9 @@ def hinton(matrix, max_weight=None, ax=None):
 
     nticks = matrix.shape[0]
     ax.xaxis.tick_top()
-    ax.set_xticks(range(nticks))
+    ax.set_xticks(list(range(nticks)))
     ax.set_xticklabels(list(matrix.columns), rotation=90)
-    ax.set_yticks(range(nticks))
+    ax.set_yticks(list(range(nticks)))
     ax.set_yticklabels(matrix.columns)
     ax.grid(False)
 
@@ -683,10 +683,20 @@ class WData:
         i1 = 0
         i2 = 0
         for name in self.wdname:
-            if name == par1:
+            idxname = name.find(':')
+            idxpar1 = par1.find(':')
+            if idxpar1 != -1 and idxname == -1:
+                parname = par1[idxpar1+1:]
+            else:
+                parname = par1
+            if name == parname:
                 found1 = True
+                par1 = parname
                 break
             i1 += 1
+
+        #if not found1:
+        #    raise co.Error(2, 'Formula name not found')
 
         if op == self.OP_SHIFT:
             arg1 = par2
@@ -700,10 +710,19 @@ class WData:
             i1 = -1
         elif par2 != "":
             for name in self.wdname:
-                if name == par2:
+                idxname = name.find(':')
+                idxpar2 = par2.find(':')
+                if idxpar2 != -1 and idxname == -1:
+                    parname = par2[idxpar2+1:]
+                else:
+                    parname = par2
+                if name == parname:
                     found2 = True
+                    par2 = parname
                     break
                 i2 += 1
+            #if not found2:
+            #    raise co.Error(2, 'Formula name not found')
 
         self.op_exec(op, i1, i2, arg1, 0)
 
@@ -816,7 +835,7 @@ class WData:
             try:
                 value = float(arg1)
             except:
-                raise co.SyntaxError(0, 'Missing value or sytax error')
+                raise co.SyntaxError(0, 'Missing value or syntax error')
 
             const = [value] * len(self.wd)
             ser = pd.Series(const)
@@ -885,7 +904,7 @@ class WData:
         elif op == self.OP_SCALE:
             ser, coeff0, coeff1 = minmax_scale(ser)
             colname = "Scale(" + self.wdname[cix1] + ")"
-            print 'Scale Coeff0', coeff0, 'Coeff1', coeff1
+            print('Scale Coeff0', coeff0, 'Coeff1', coeff1)
         else:
             raise co.Error(0, 'No action is selected')
 

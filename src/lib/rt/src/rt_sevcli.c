@@ -880,7 +880,7 @@ void sevcli_store_ctx(sevcli_tCtx ctx)
 /**
  * @brief Get stored context.
  */
-sevcli_tCtx sevcli_get_stored_ctx()
+sevcli_tCtx sevcli_get_stored_ctx(void)
 {
   return stored_ctx;
 }

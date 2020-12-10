@@ -1,5 +1,5 @@
-#!/usr/bin/python
-# -*- coding: iso-8859-1 -*-
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 import sys
 import math
@@ -140,7 +140,7 @@ class Ctx:
                 if str(e) != d[i][2]:
                     self.logger.vlog('E', 'object, Unexpected exception %s, idx %s',
                                      str(e), str(i))
-                    print 'Not correct error code'
+                    print('Not correct error code')
                     return
                 
         self.logger.log('S', 'object, successfull completion')
@@ -310,7 +310,7 @@ class Ctx:
                 if str(e) != d[i][2]:
                     self.logger.vlog('E', 'Oid, Unexpected exception %s, idx %s',
                                      str(e), str(i))
-                    print 'Not correct error code'
+                    print('Not correct error code')
                     return
                 
         self.logger.log('S', 'Oid, successfull completion')
@@ -927,7 +927,7 @@ class Ctx:
 
             except RuntimeError as e:
                 if str(e) != d[i][1]:
-                    print str(e), d[i][1]
+                    print(str(e), d[i][1])
                     self.logger.vlog('E', 'Cid, Unexpected exception %s, idx %s',
                                      str(e), str(i))
                     return

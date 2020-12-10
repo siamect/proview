@@ -1,5 +1,5 @@
-#!/usr/bin/python
-# -*- coding: iso-8859-1 -*-
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 import sys
 import math
@@ -141,7 +141,7 @@ class Ctx:
                 if str(e) != d[i][2]:
                     self.logger.vlog('E', 'object, Unexpected exception %s, idx %s',
                                      str(e), str(i))
-                    print 'Not correct error code'
+                    print('Not correct error code')
                     return
                 
         self.logger.log('S', 'object, successfull completion')
@@ -171,8 +171,8 @@ class Ctx:
                         return
                 else:
                     if not abs(value - d[i][1]) < 0.001:
-                	self.logger.vlog('E', "attribute, Value doesn't match, %s != %s, idx %s",
-                                    str(value), str(d[i][1]), str(i))
+                        self.logger.vlog('E', "attribute, Value doesn't match, %s != %s, idx %s",
+                                         str(value), str(d[i][1]), str(i))
                         return
             except RuntimeError as e:
                 if str(e) != d[i][2]:
@@ -206,8 +206,8 @@ class Ctx:
                         return
                 else:
                     if not abs(value - d[i][1]) < 0.001:
-                	self.logger.vlog('E', "subscribe, Value doesn't match, %s != %s, idx %s",
-                                    str(value), str(d[i][1]), str(i))
+                        self.logger.vlog('E', "subscribe, Value doesn't match, %s != %s, idx %s",
+                                         str(value), str(d[i][1]), str(i))
                         return
                 sub.close();
             except RuntimeError as e:
@@ -251,7 +251,7 @@ class Ctx:
                 if str(e) != d[i][2]:
                     self.logger.vlog('E', 'Oid, Unexpected exception %s, idx %s',
                                      str(e), str(i))
-                    print 'Not correct error code'
+                    print('Not correct error code')
                     return
                 
         self.logger.log('S', 'Oid, successfull completion')
@@ -392,7 +392,7 @@ class Ctx:
             ('RootObject', 'RootObject', ''),
             ('RootObject-Child1', 'Child1', ''),
             ('Test01c-Gdh-LongName90123456789012345678901', 'LongName90123456789012345678901', ''),
-            ('Test01c-Gdh-ÄÅÖäåö', 'ÄÅÖäåö', ''),
+            ('Test01c-Gdh-Ã„Ã…Ã–Ã¤Ã¥Ã¶', 'Ã„Ã…Ã–Ã¤Ã¥Ã¶', ''),
             ('Test01c-Gdh-sdf*sdf', '', '%CDH-E-INVCHAR, invalid character'),
             ('VolPwrTest01c:', 'VolPwrTest01c', '')
             )
@@ -422,7 +422,7 @@ class Ctx:
             ('RootObject', 'VolPwrTest01c:RootObject', ''),
             ('RootObject-Child1', 'VolPwrTest01c:RootObject-Child1', ''),
             ('Test01c-Gdh-LongName90123456789012345678901', 'VolPwrTest01c:Test01c-Gdh-LongName90123456789012345678901', ''),
-            ('Test01c-Gdh-ÄÅÖäåö', 'VolPwrTest01c:Test01c-Gdh-ÄÅÖäåö', ''),
+            ('Test01c-Gdh-Ã„Ã…Ã–Ã¤Ã¥Ã¶', 'VolPwrTest01c:Test01c-Gdh-Ã„Ã…Ã–Ã¤Ã¥Ã¶', ''),
             ('Test01c-Gdh-sdf*sdf', '', '%CDH-E-INVCHAR, invalid character'),
             ('VolPwrTest01c:', 'VolPwrTest01c:', '')
             )
@@ -559,15 +559,13 @@ class Ctx:
                 value = a.value()
                 if type(value).__name__ == 'str':
                     if value != d[i][1]:
-                        self.logger.vlog('E', "Aref, "
-                                         "Value doesn't match, %s != %s, idx %s",
-                                    value, d[i][1], str(i))
+                        self.logger.vlog('E', "Aref, Value doesn't match, %s != %s, idx %s",
+                                         value, d[i][1], str(i))
                         return
                 else:
                     if not abs(value - d[i][1]) < 0.001:
-                	self.logger.vlog('E', "Aref, "
-                                         "Value doesn't match, %s != %s, idx %s",
-                                    str(value), str(d[i][1]), str(i))
+                        self.logger.vlog('E', "Aref, Value doesn't match, %s != %s, idx %s",
+                                         str(value), str(d[i][1]), str(i))
                         return
             except RuntimeError as e:
                 if str(e) != d[i][2]:
@@ -584,7 +582,7 @@ class Ctx:
             ('RootObject.Description', 'RootObject.Description', ''),
             ('RootObject-Child1.DefGraph', 'Child1.DefGraph', ''),
             ('Test01c-Gdh-LongName90123456789012345678901.InitialValue', 'LongName90123456789012345678901.InitialValue', ''),
-            ('Test01c-Gdh-ÄÅÖäåö.ValueIndex', 'ÄÅÖäåö.ValueIndex', ''),
+            ('Test01c-Gdh-Ã„Ã…Ã–Ã¤Ã¥Ã¶.ValueIndex', 'Ã„Ã…Ã–Ã¤Ã¥Ã¶.ValueIndex', ''),
             ('Test01c-Gdh-sdf*sdf', '', '%CDH-E-INVCHAR, invalid character')
             )
         i = 0
@@ -613,7 +611,7 @@ class Ctx:
             ('RootObject.Description', 'VolPwrTest01c:RootObject.Description', ''),
             ('RootObject-Child1.DefGraph', 'VolPwrTest01c:RootObject-Child1.DefGraph', ''),
             ('Test01c-Gdh-LongName90123456789012345678901.InitialValue', 'VolPwrTest01c:Test01c-Gdh-LongName90123456789012345678901.InitialValue', ''),
-            ('Test01c-Gdh-ÄÅÖäåö.ValueIndex', 'VolPwrTest01c:Test01c-Gdh-ÄÅÖäåö.ValueIndex', ''),
+            ('Test01c-Gdh-Ã„Ã…Ã–Ã¤Ã¥Ã¶.ValueIndex', 'VolPwrTest01c:Test01c-Gdh-Ã„Ã…Ã–Ã¤Ã¥Ã¶.ValueIndex', ''),
             ('Test01c-Gdh-sdf*sdf', '', '%CDH-E-INVCHAR, invalid character')
             )
         i = 0
@@ -778,9 +776,8 @@ class Ctx:
                         return
                 else:
                     if not abs(value - d[i][1]) < 0.001:
-                	self.logger.vlog('E', "Aref.value, "
-                                         "Value doesn't match, %s != %s, idx %s",
-                                    str(value), str(d[i][1]), str(i))
+                        self.logger.vlog('E', "Aref.value, Value doesn't match, %s != %s, idx %s",
+                                         str(value), str(d[i][1]), str(i))
                         return
             except RuntimeError as e:
                 if str(e) != d[i][2]:
@@ -848,7 +845,7 @@ class Ctx:
                         return
                 else:
                     if not abs(value - d[i][1]) < 0.001:
-                	self.logger.vlog('E', "Aref.setValue, "
+                        self.logger.vlog('E', "Aref.setValue, "
                                          "Value doesn't match, %s != %s, idx %s",
                                     str(value), str(d[i][1]), str(i))
                         return
@@ -887,9 +884,9 @@ class Ctx:
                         return
                 else:
                     if not abs(value - d[i][1]) < 0.001:
-                	self.logger.vlog('E', "Aref.subscribe, "
+                        self.logger.vlog('E', "Aref.subscribe, "
                                          "Value doesn't match, %s != %s, idx %s",
-                                    str(value), str(d[i][1]), str(i))
+                                         str(value), str(d[i][1]), str(i))
                         return
                 sub.close();
             except RuntimeError as e:
@@ -1478,9 +1475,9 @@ class Ctx:
                         return
                 else:
                     if not abs(value - d[i][1]) < 0.001:
-                	self.logger.vlog('E', "Sub.setValue, "
+                        self.logger.vlog('E', "Sub.setValue, "
                                          "Value doesn't match, %s != %s, idx %s",
-                                    str(value), str(d[i][1]), str(i))
+                                         str(value), str(d[i][1]), str(i))
                         return
                 sub.close();
             except RuntimeError as e:

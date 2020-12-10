@@ -131,7 +131,7 @@ int sevcli_get_events(pwr_tStatus* sts, sevcli_tCtx ctx, pwr_tOid oid,
 		      pwr_tUInt32 eventpriomask, pwr_tString80 eventtext, pwr_tOName eventname,
 		      unsigned int maxevents, sevcli_sEvents **list, unsigned int* cnt);
 void sevcli_store_ctx(sevcli_tCtx ctx);
-sevcli_tCtx sevcli_get_stored_ctx();
+sevcli_tCtx sevcli_get_stored_ctx(void);
 /** @} */
 
 #ifdef __cplusplus

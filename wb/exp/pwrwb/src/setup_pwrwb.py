@@ -1,6 +1,6 @@
 
 from distutils.core import setup, Extension
-import commands
+import subprocess
 import os
 
 pwr_lib = os.environ['pwr_elib']
@@ -60,7 +60,7 @@ pwrwbmodule = Extension( name='pwrwb',
                          ['db_cxx', 'rpcsvc', 'asound', 'pthread',
                           'm', 'db', 'z', 'crypt', 'rt', 'X11',
                           'sqlite3', 'rsvg-2'] + xlibs + mysqllibs,
-#                        extra_link_args=['-L/usr/lib/x86_64-linux-gnu', commands.getoutput('pkg-config --libs gtk+-2.0')],
+#                        extra_link_args=['-L/usr/lib/x86_64-linux-gnu', subprocess.getoutput('pkg-config --libs gtk+-2.0')],
                          language='c++'
                        )
                       

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #
 # ProviewR   Open Source Process Control.
 # Copyright (C) 2005-2019 SSAB EMEA AB.
@@ -38,9 +38,9 @@
 # Sev data analysis application
 
 
-from Tkinter import *
-import tkFileDialog
-import tkMessageBox
+from tkinter import *
+import tkinter.filedialog
+import tkinter.messagebox
 import sys
 import math
 import time
@@ -224,7 +224,7 @@ class LinRegModel:
     # Save menu callback
     def save_action_cb(self):
 
-        file = tkFileDialog.asksaveasfilename(initialdir='./', title='Select file',
+        file = tkinter.filedialog.asksaveasfilename(initialdir='./', title='Select file',
                                           filetypes=[('lrm files','*.lrm'),('all files','*.*')])
         if file != '':
             fp = open(file, 'w')
@@ -241,7 +241,7 @@ class LinRegModel:
 
     # Open menu callback
     def open_action_cb(self):
-        file = tkFileDialog.askopenfilename(initialdir='./', title='Open Coefficients',
+        file = tkinter.filedialog.askopenfilename(initialdir='./', title='Open Coefficients',
                                             filetypes=[('lrm files','*.lrm'),('all files','*.*')])
         if file != '':
             lrname = []
@@ -254,7 +254,7 @@ class LinRegModel:
             fp.close()
 
             if len(lrname) != len(self.wdata.wdname):
-                tkMessageBox.showerror("Error", "Not matching number of attributes")
+                tkinter.messagebox.showerror("Error", "Not matching number of attributes")
                 return
         
             coeff = [None]*len(self.wdata.wdname)
@@ -272,21 +272,21 @@ class LinRegModel:
                                 break
                         j += 1
                     if not found:
-                        tkMessageBox.showerror("Error", "Can't find " + name)
+                        tkinter.messagebox.showerror("Error", "Can't find " + name)
                         return
                 i += 1
 
             for c in coeff:
                 if c == None:
-                    tkMessageBox.showerror("Error", "Not matching index")
+                    tkinter.messagebox.showerror("Error", "Not matching index")
                     return
 
             i = 0
             for n in self.wdata.wdname:
                 if i == 0:
-                    print coeff[0], 'Intercept'
+                    print(coeff[0], 'Intercept')
                 else:
-                    print coeff[i], n
+                    print(coeff[i], n)
                     i += 1
 
             self.regrcoef_draw(coeff)
@@ -655,7 +655,7 @@ class MLPModel:
     # Save menu callback
     def save_action_cb(self):
 
-        file = tkFileDialog.asksaveasfilename(initialdir='./', title='Select file',
+        file = tkinter.filedialog.asksaveasfilename(initialdir='./', title='Select file',
                                           filetypes=[('mlpm files','*.mlpm'),('all files','*.*')])
         if file != '':
             params = self.mlp.get_params()
@@ -666,7 +666,7 @@ class MLPModel:
 
     # Open menu callback
     def open_action_cb(self):
-        file = tkFileDialog.askopenfilename(initialdir='./', title='Open Coefficients',
+        file = tkinter.filedialog.askopenfilename(initialdir='./', title='Open Coefficients',
                                             filetypes=[('mlpm files','*.mlpm'),('all files','*.*')])
         if file != '':
             all = pickle.load(open(file, 'rb'))
@@ -764,7 +764,7 @@ class MLPModel:
     # Export menu callback
     def export_action_cb(self):
 
-        file = tkFileDialog.asksaveasfilename(initialdir='./', title='Select file',
+        file = tkinter.filedialog.asksaveasfilename(initialdir='./', title='Select file',
                                           filetypes=[('txt files','*.txt'),('all files','*.*')])
         if file != '':
             params = self.mlp.get_params()
@@ -1066,7 +1066,7 @@ class WdWindow:
         try:
             self.wdata.regression_plot(self.get_select())
         except co.Error as e:
-            tkMessageBox.showerror("Error", e.str)
+            tkinter.messagebox.showerror("Error", e.str)
 
     # Histogram callback
     def histogram_action_cb(self): 
@@ -1145,7 +1145,7 @@ class WdWindow:
         try:
             self.wdata.moveup(self.get_select())
         except co.Error as e:
-            tkMessageBox.showerror("Error", e.str)
+            tkinter.messagebox.showerror("Error", e.str)
             return
 
         self.redraw()
@@ -1164,7 +1164,7 @@ class WdWindow:
         try:
             self.wdata.movedown(self.get_select())
         except co.Error as e:
-            tkMessageBox.showerror("Error", e.str)
+            tkinter.messagebox.showerror("Error", e.str)
             return
 
         self.redraw()
@@ -1257,7 +1257,7 @@ class WdWindow:
         try:
             self.wdata.multiply(value)
         except co.Error as e:
-            tkMessageBox.showerror("Error", e.str)
+            tkinter.messagebox.showerror("Error", e.str)
             return
 
         self.dataframe.pack_forget()
@@ -1269,7 +1269,7 @@ class WdWindow:
         if self.empty():
             return
 
-        answer = tkMessageBox.askquestion('Delete columns', 'Do you want to delete the selected columns')
+        answer = tkinter.messagebox.askquestion('Delete columns', 'Do you want to delete the selected columns')
         if answer == 'yes':
             mask = [None] * len(self.datasel)
             i = 0
@@ -1280,7 +1280,7 @@ class WdWindow:
             try:
                 self.wdata.delete_columns(mask)
             except co.Error as e:
-                tkMessageBox.showerror("Error", e.str)
+                tkinter.messagebox.showerror("Error", e.str)
                 
             self.redraw()
         
@@ -1297,7 +1297,7 @@ class WdWindow:
             i += 1
                      
         if len(cix) != 1:
-            tkMessageBox.showerror("Error", "Select one attribute")
+            tkinter.messagebox.showerror("Error", "Select one attribute")
             return
 
         self.wdata.set_add_replace(1)
@@ -1492,7 +1492,7 @@ class WdWindow:
         button.grid(column=1, row=17, padx=60, pady=20, sticky=W)
 
     def addcol_action_curve_cb(self):
-        self.fcurvefile = tkFileDialog.askopenfilename(
+        self.fcurvefile = tkinter.filedialog.askopenfilename(
             initialdir='./', title='Open curve file',
             filetypes=[('dat files','*.dat'),('all files','*.*')])
         self.fcurve = None
@@ -1516,12 +1516,12 @@ class WdWindow:
             pass
         elif self.sel_add.get() or self.sel_sub.get() or self.sel_mul.get() or self.sel_div.get():   
             if len(cix) != 2:
-                tkMessageBox.showerror("Error", "Select two attributes")
+                tkinter.messagebox.showerror("Error", "Select two attributes")
                 return
             ser = pd.Series(self.wdata.wd[self.wdata.wdcol[cix[0]]])
         else:
             if len(cix) != 1:
-                tkMessageBox.showerror("Error", "Select one attributes")
+                tkinter.messagebox.showerror("Error", "Select one attributes")
                 return
 
         cix1 = -1
@@ -1573,17 +1573,17 @@ class WdWindow:
         elif self.sel_scale.get():
             op = self.wdata.OP_SCALE
         else:
-            tkMessageBox.showerror("Error", "No action is selected")
+            tkinter.messagebox.showerror("Error", "No action is selected")
             return
 
         keep = 0
         try:
             self.wdata.op_exec(op, cix1, cix2, arg1, arg2)
         except co.SyntaxError as e:
-            tkMessageBox.showerror("Error", str(e))
+            tkinter.messagebox.showerror("Error", str(e))
             return
         except co.Error as e:
-            tkMessageBox.showerror("Error", e.str)
+            tkinter.messagebox.showerror("Error", e.str)
 
         self.redraw()
         if not self.add_dia is None:
@@ -1598,7 +1598,7 @@ class WdWindow:
         if self.empty():
             return
 
-        file = tkFileDialog.asksaveasfilename(initialdir='./', title='Select file',
+        file = tkinter.filedialog.asksaveasfilename(initialdir='./', title='Select file',
                                               filetypes=[('dat files','*.dat'),('all files','*.*')],
                                               initialfile=self.name)
         if len(file) != 0:
@@ -1610,7 +1610,7 @@ class WdWindow:
         if self.empty():
             return
 
-        file = tkFileDialog.asksaveasfilename(initialdir='./', title='Select file',
+        file = tkinter.filedialog.asksaveasfilename(initialdir='./', title='Select file',
                                               filetypes=[('dat files','*.dat'),('all files','*.*')],
                                               initialfile=self.name)
         if len(file) != 0:
@@ -1621,7 +1621,7 @@ class WdWindow:
         if self.empty():
             return
 
-        file = tkFileDialog.asksaveasfilename(initialdir='./', title='Select file',
+        file = tkinter.filedialog.asksaveasfilename(initialdir='./', title='Select file',
                                           filetypes=[('frm files','*.frm'),('all files','*.*')])
         if file != '':
             self.wdata.save_formula(file)
@@ -1634,13 +1634,13 @@ class WdWindow:
         self.add_dia = None
         self.wdata.set_add_replace(0)
 
-        file = tkFileDialog.askopenfilename(initialdir='./', title='Open file',
+        file = tkinter.filedialog.askopenfilename(initialdir='./', title='Open file',
                                           filetypes=[('frm files','*.frm'),('all files','*.*')])
         if file != '':
             try:
                 self.wdata.apply_formula(file)
             except co.Error as e:
-                tkMessageBox.showerror("Error", e.str)
+                tkinter.messagebox.showerror("Error", e.str)
                 return
 
             self.redraw()
@@ -1654,7 +1654,7 @@ class WdWindow:
 
     # Open from file
     def open_action_cb(self, arg=0): 
-        file = tkFileDialog.askopenfilename(initialdir='./', title='Open file',
+        file = tkinter.filedialog.askopenfilename(initialdir='./', title='Open file',
                                           filetypes=[('dat files','*.dat'),('all files','*.*')])
         if len(file) != 0:
             self.read_file(file)
@@ -1673,7 +1673,7 @@ class WdWindow:
             appnames.append(appl.name)
 
         if len(apps) == 0:
-            tkMessageBox.showerror("Error", "No other window")                
+            tkinter.messagebox.showerror("Error", "No other window")                
             return
 
         if len(apps) == 1:
@@ -1683,7 +1683,7 @@ class WdWindow:
             try:
                 self.wdata.concat(ccwd, ccname, ccwdtime)
             except co.Error as e:
-                tkMessageBox.showerror("Error", e.str)
+                tkinter.messagebox.showerror("Error", e.str)
                 return
                 
             self.dataframe.pack_forget()
@@ -1701,7 +1701,7 @@ class WdWindow:
                 try:
                     self.wdata.concat(ccwd, ccname, ccwdtime)
                 except co.Error as e:
-                    tkMessageBox.showerror("Error", e.str)
+                    tkinter.messagebox.showerror("Error", e.str)
                     return
 
                 self.dataframe.pack_forget()
@@ -1714,14 +1714,14 @@ class WdWindow:
         if self.empty():
             return
 
-        file = tkFileDialog.askopenfilename(initialdir='./', title='Open file',
+        file = tkinter.filedialog.askopenfilename(initialdir='./', title='Open file',
                                             filetypes=[('dat files','*.dat'),('all files','*.*')])
         if file != '':
 
             try:
                 self.wdata.concat_file(file)
             except co.Error as e:
-                tkMessageBox.showerror("Error", e.str)                
+                tkinter.messagebox.showerror("Error", e.str)                
                 return                
 
             self.dataframe.pack_forget()
@@ -1986,7 +1986,7 @@ class FetchSev:
         try:
             pwrrt.init('sev_analyse')
         except RuntimeError as e:
-            tkMessageBox.showerror("Error", str(e))
+            tkinter.messagebox.showerror("Error", str(e))
             return
 
         # Store server to file
@@ -2000,7 +2000,7 @@ class FetchSev:
         try:
             self.items = pwrrt.getSevItemList(self.server, filtervalue)
         except RuntimeError as e:
-            tkMessageBox.showerror("Error", str(e))
+            tkinter.messagebox.showerror("Error", str(e))
             return
 
         self.itemframe = Frame(self.fswindow, bg=bgcolor)
@@ -2076,8 +2076,12 @@ class FetchSev:
         row = 1
         self.sel = [None] * len(self.items)
         for item in self.items:
+            attrnum = len(item) - 6;
             self.sel[i] = IntVar()
-            text = item[0] + "." + item[6]
+            if attrnum == 1:
+                text = item[0] + "." + item[6]
+            else:
+                text = item[0]
             item_checkbox = Checkbutton(self.iteminnerframe, text=text, variable=self.sel[i], highlightthickness=0,
                                         bg=bgcolor)
             item_checkbox.grid(column=0, row=i+row, padx=20, pady=5, sticky=W)
@@ -2108,7 +2112,11 @@ class FetchSev:
                 wdname.append(colname)
                 dataattr.append(self.items[i][6])
                 dataoid.append(self.items[i][1])
-                isobject.append(0)
+                if len(self.items[i]) - 6 > 1:
+                    isobject.append(1)
+                else:
+                    isobject.append(0)
+                print((colname, isobject[j]))
                 origcol.append(colname)
                 colname = "A" + str(j+1)
                 wdcol.append(colname)
@@ -2116,7 +2124,7 @@ class FetchSev:
             i += 1
         
         if j == 0:
-            tkMessageBox.showerror("Error", "No item is selected")
+            tkinter.messagebox.showerror("Error", "No item is selected")
             return
 
         fromvalue = self.fromentry.get()
@@ -2127,18 +2135,18 @@ class FetchSev:
         try:
             pwrrt.init('sev_analyse')
         except RuntimeError as e:
-            tkMessageBox.showerror("Error", str(e))
+            tkinter.messagebox.showerror("Error", str(e))
             return
 
         try:
             result = pwrrt.getSevItemsDataFrame( self.server, dataoid, dataattr, isobject,
                                                  fromvalue, tovalue, intervalvalue, maxvalue)
         except RuntimeError as e:
-            tkMessageBox.showerror("Error", str(e))
+            tkinter.messagebox.showerror("Error", str(e))
             return
 
         if result == None:
-            tkMessageBox.showerror("Error", "None return")
+            tkinter.messagebox.showerror("Error", "None return")
             return
             
         origdata = pd.DataFrame(data=result)
@@ -2159,12 +2167,12 @@ formula = ''
 try:
     opts, args = getopt.getopt(sys.argv[1:], "f:r:", ["--file","--formula"])
 except getopt.GetoptError:
-    print 'sev_analyse.py [-f <file> -r <formula>]'
+    print('sev_analyse.py [-f <file> -r <formula>]')
     sys.exit(2)
 
 for opt, arg in opts:
     if opt == "-h":
-        print 'sev_analyse.py [-f <file> [-f <formula>]]'
+        print('sev_analyse.py [-f <file> [-f <formula>]]')
     if opt in ("-f", "--file"):
         file = arg
     if opt in ("-r", "--formula"):
@@ -2194,7 +2202,7 @@ class MvMain:
                 try:
                     wdwindow.wdata.apply_formula(formula)
                 except co.Error as e:
-                    tkMessageBox.showerror("Error", e.str)                    
+                    tkinter.messagebox.showerror("Error", e.str)                    
                     return
                 wdwindow.redraw()
 

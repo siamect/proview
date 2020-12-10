@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #
 # ProviewR   Open Source Process Control.
 # Copyright (C) 2005-2019 SSAB EMEA AB.
@@ -38,10 +38,10 @@
 # Sev data analysis application
 
 
-from Tkinter import *
-import tkFileDialog
-import tkMessageBox
-import ttk
+from tkinter import *
+import tkinter.filedialog
+import tkinter.messagebox
+import tkinter.ttk
 import sys
 import math
 import time
@@ -733,7 +733,7 @@ class TrendHistogram:
             try:
                 mintime = datetime.strptime(self.minentry.get(), '%Y-%m-%d %H:%M:%S')
             except ValueError:
-                tkMessageBox.showerror("Error", "Time syntax error")
+                tkinter.messagebox.showerror("Error", "Time syntax error")
                 return
         try:
             maxtime = datetime.strptime(self.maxentry.get(), '%Y-%m-%d %H:%M:%S.%f')
@@ -741,12 +741,12 @@ class TrendHistogram:
             try:
                 maxtime = datetime.strptime(self.maxentry.get(), '%Y-%m-%d %H:%M:%S')
             except ValueError:
-                tkMessageBox.showerror("Error", "Time syntax error")
+                tkinter.messagebox.showerror("Error", "Time syntax error")
                 return
         try:
             bins = int(self.binsentry.get())
         except ValueError:
-            tkMessageBox.showerror("Error", "Integer syntax error")
+            tkinter.messagebox.showerror("Error", "Integer syntax error")
             return
         all_events = self.all_events.get()
 
@@ -791,7 +791,7 @@ class FrequencyHistogram:
                 self.texts.append(res['Text'])                   
             else:
                 self.names.append('')
-                self.textss.append('')
+                self.texts.append('')
             i += 1
 
         self.xlim = None
@@ -810,13 +810,13 @@ class FrequencyHistogram:
         bprev.on_clicked(self.bprev_cb)
         bnext = matplotlib.widgets.Button(axnext, 'Next')
         bnext.on_clicked(self.bnext_cb)
-        bdisplay = matplotlib.widgets.Button(axdisplay, 'Display', color=bgcolor)
+        bdisplay = matplotlib.widgets.Button(axdisplay, 'Display', color=bgcolor, hovercolor=bgcolor)
         bname = matplotlib.widgets.Button(axname, 'Name')
         bname.on_clicked(self.bname_cb)
         btext = matplotlib.widgets.Button(axtext, 'Text')
         btext.on_clicked(self.btext_cb)
         axrows = plt.axes([0.25, 0.01, 0.1, 0.05])
-        self.brows = matplotlib.widgets.Button(axrows, '', color=bgcolor)
+        self.brows = matplotlib.widgets.Button(axrows, '', color=bgcolor, hovercolor=bgcolor)
         self.draw()
         plt.show()
 
@@ -833,6 +833,7 @@ class FrequencyHistogram:
             self.ax = plt.subplot()
         if self.xlim != None:
             self.ax.set_xlim(self.xlim)
+            self.ax.invert_yaxis()
         else:
             self.ax.invert_yaxis()
         plt.title('Event frequency')
@@ -846,8 +847,13 @@ class FrequencyHistogram:
         if self.xlim == None:
             self.xlim = self.ax.get_xlim()
 
+        texts = self.names[idx1:idx2]
+        names = self.texts[idx1:idx2]
 
     def bnext_cb(self, event):
+        if self.page >= math.floor((len(self.counts)-1)/self.rows):
+          tkinter.messagebox.showerror("Next", "No next page")
+          return
         self.page += 1
         if self.page > len(self.counts)/self.rows:
             self.page = len(self.counts)/self.rows
@@ -856,6 +862,9 @@ class FrequencyHistogram:
         plt.draw()
 
     def bprev_cb(self, event):
+        if self.page == 0:
+          tkinter.messagebox.showerror("Previous", "No previous page")
+          return          
         self.page -= 1
         if self.page < 0:
             self.page = 0
@@ -1105,7 +1114,7 @@ class WdWindow:
         dia.geometry("1145x700")
         main.set_icon(dia)
 
-        tree = ttk.Treeview(dia)
+        tree = tkinter.ttk.Treeview(dia)
         tree.pack(expand=1, anchor=W, side=LEFT, fill=BOTH)
 
         tree["columns"] = ("Frequency", "Type", "Prio", "Text", "Name", "SupObject")
@@ -1125,7 +1134,7 @@ class WdWindow:
         tree.heading("#4", text="Name", anchor=W)
         tree.heading("#5", text="SupObject", anchor=W)
 
-        scroll = ttk.Scrollbar(dia, orient="vertical", command=tree.yview)
+        scroll = tkinter.ttk.Scrollbar(dia, orient="vertical", command=tree.yview)
         scroll.pack(anchor=E, expand=1, side=RIGHT, fill=Y)
 
         i = 0
@@ -1181,7 +1190,7 @@ class WdWindow:
         else:
             next = self.tree.index(selected) + 1
         if self.search(next, 0, searchstr.lower()) == -1:
-            tkMessageBox.showerror("Search", "String not found")
+            tkinter.messagebox.showerror("Search", "String not found")
         
         
     # Search Previous callback
@@ -1192,7 +1201,7 @@ class WdWindow:
         else:
             next = self.tree.index(selected) - 1
         if self.search(next, 1, self.searchstr) == -1:
-            tkMessageBox.showerror("Search", "No previous found")
+            tkinter.messagebox.showerror("Search", "No previous found")
 
     # Search Next callback
     def searchnext_action_cb(self, arg=0):
@@ -1202,7 +1211,7 @@ class WdWindow:
         else:
             next = self.tree.index(selected) + 1
         if self.search(next, 0, self.searchstr) == -1:
-            tkMessageBox.showerror("Search", "No next found")
+            tkinter.messagebox.showerror("Search", "No next found")
 
     def search(self, fromidx, direction, searchstr):
         self.searchstr = searchstr
@@ -1276,7 +1285,7 @@ class WdWindow:
             try:
                 mintime = datetime.strptime(self.minentry.get(), '%Y-%m-%d %H:%M:%S')
             except ValueError:
-                tkMessageBox.showerror("Error", "Time syntax error")
+                tkinter.messagebox.showerror("Error", "Time syntax error")
                 return
         try:
             maxtime = datetime.strptime(self.maxentry.get(), '%Y-%m-%d %H:%M:%S.%f')
@@ -1284,7 +1293,7 @@ class WdWindow:
             try:
                 maxtime = datetime.strptime(self.maxentry.get(), '%Y-%m-%d %H:%M:%S')
             except ValueError:
-                tkMessageBox.showerror("Error", "Time syntax error")
+                tkinter.messagebox.showerror("Error", "Time syntax error")
                 return
         self.clipdia.destroy()
         clip = EventClip(mintime, maxtime)
@@ -1299,7 +1308,7 @@ class WdWindow:
 
         selected = self.tree.focus()
         if len(self.tree.selection()) == 0:
-            tkMessageBox.showerror("Error", "Selection empty")
+            tkinter.messagebox.showerror("Error", "Selection empty")
             return
 
         rows = []
@@ -1330,7 +1339,7 @@ class WdWindow:
             try:
                 value = datetime.strptime(valuestr, '%Y-%m-%d %H:%M:%S')
             except ValueError:
-                tkMessageBox.showerror("Error", "Time syntax error")
+                tkinter.messagebox.showerror("Error", "Time syntax error")
                 return
 
         wdwindow = WdWindow()
@@ -1375,8 +1384,9 @@ class WdWindow:
             return
 
         selected = self.tree.focus()
-        if selected == None:
-            tkMessageBox.showerror("Error", "Select an event")
+        print("Selected", selected)
+        if selected == None or selected == "":
+            tkinter.messagebox.showerror("Error", "Select an event")
             return
         
         filter = EventFilter(0,0,'','', self.tree.item(selected)['values'][4])
@@ -1432,7 +1442,7 @@ class WdWindow:
         if self.empty():
             return
 
-        answer = tkMessageBox.askquestion('Delete columns', 'Do you want to delete the selected columns')
+        answer = tkinter.messagebox.askquestion('Delete columns', 'Do you want to delete the selected columns')
         if answer == 'yes':
             mask = [None] * len(self.datasel)
             i = 0
@@ -1443,7 +1453,7 @@ class WdWindow:
             try:
                 self.wdata.delete_columns(mask)
             except co.Error as e:
-                tkMessageBox.showerror("Error", e.str)
+                tkinter.messagebox.showerror("Error", e.str)
                 
             self.redraw()
             
@@ -1456,7 +1466,7 @@ class WdWindow:
         if self.empty():
             return
 
-        file = tkFileDialog.asksaveasfilename(initialdir='./', title='Select file',
+        file = tkinter.filedialog.asksaveasfilename(initialdir='./', title='Select file',
                                               filetypes=[('dat files','*.dat'),('all files','*.*')],
                                               initialfile=self.name)
         if len(file) != 0:
@@ -1468,7 +1478,7 @@ class WdWindow:
         if self.empty():
             return
 
-        file = tkFileDialog.asksaveasfilename(initialdir='./', title='Select file',
+        file = tkinter.filedialog.asksaveasfilename(initialdir='./', title='Select file',
                                               filetypes=[('dat files','*.dat'),('all files','*.*')],
                                               initialfile=self.name)
         if len(file) != 0:
@@ -1483,7 +1493,7 @@ class WdWindow:
 
     # Open from file
     def open_action_cb(self, arg=0): 
-        file = tkFileDialog.askopenfilename(initialdir='./', title='Open file',
+        file = tkinter.filedialog.askopenfilename(initialdir='./', title='Open file',
                                           filetypes=[('dat files','*.dat'),('all files','*.*')])
         if len(file) != 0:
             self.read_file(file)
@@ -1649,7 +1659,7 @@ class WdWindow:
         self.img_evunblock = PhotoImage(file=pwr_exe+"/eva_evunblock.png")
         self.img_evnone = PhotoImage(file=pwr_exe+"/eva_evnone.png")
 
-        self.tree = ttk.Treeview(self.dataframe)
+        self.tree = tkinter.ttk.Treeview(self.dataframe)
         self.tree.pack(expand=1, anchor=W, side=LEFT, fill=BOTH)
 
         self.tree["columns"] = ("Type", "Prio", "Text", "Name", "SupObject", "Id", "Status")
@@ -1672,7 +1682,7 @@ class WdWindow:
         self.tree.heading("#6", text="Id", anchor=W)
         self.tree.heading("#7", text="Status", anchor=W)
 
-        scroll = ttk.Scrollbar(self.dataframe, orient="vertical", command=self.tree.yview)
+        scroll = tkinter.ttk.Scrollbar(self.dataframe, orient="vertical", command=self.tree.yview)
         scroll.pack(anchor=E, expand=1, side=RIGHT, fill=Y)
 
         j = 0
@@ -1729,7 +1739,7 @@ class WdWindow:
                              image=img,
                              values=(Ev.eventtype_to_str(self.wdata.wd.iat[j,1]),
                                      Ev.eventprio_to_str(self.wdata.wd.iat[j,2]),
-                                     '' if not isinstance(self.wdata.wd.iat[j,3],basestring) else self.wdata.wd.iat[j,3],
+                                     '' if not isinstance(self.wdata.wd.iat[j,3],str) else self.wdata.wd.iat[j,3],
                                      self.wdata.wd.iat[j,4],
                                      self.wdata.wd.iat[j,5],str(self.wdata.wd.iat[j,6]),
                                      Ev.eventsts_to_str(self.wdata.wd.iat[j,7],self.wdata.wd.iat[j,1])))
@@ -1830,13 +1840,13 @@ class FetchSev:
         try:
             pwrrt.init('sev_eva')
         except RuntimeError as e:
-            tkMessageBox.showerror("Error", str(e))
+            tkinter.messagebox.showerror("Error", str(e))
             return
 
         try:
-            self.items = pwrrt.getSevItemList(self.server, filtervalue)
+            self.items = pwrrt.getSevEventsItemList(self.server, filtervalue)
         except RuntimeError as e:
-            tkMessageBox.showerror("Error", str(e))
+            tkinter.messagebox.showerror("Error", str(e))
             return
 
         self.itemframe = Frame(self.fswindow, bg=bgcolor)
@@ -2037,7 +2047,7 @@ class FetchSev:
         self.sel = [None] * len(self.items)
         for item in self.items:
             self.sel[i] = IntVar()
-            text = item[0] + "." + item[6]
+            text = item[0]
             item_checkbox = Checkbutton(self.iteminnerframe, text=text, variable=self.sel[i], highlightthickness=0,
                                         bg=bgcolor)
             item_checkbox.grid(column=0, row=i+row, padx=20, pady=5, sticky=W)
@@ -2068,7 +2078,7 @@ class FetchSev:
             i += 1
         
         if j != 1:
-            tkMessageBox.showerror("Error", "Select one item")
+            tkinter.messagebox.showerror("Error", "Select one item")
             return
 
         fromvalue = self.fromentry.get()
@@ -2088,12 +2098,12 @@ class FetchSev:
                 eventpriovalue += m
             m = m << 1
         maxvalue = int(self.maxentry.get())
-        print fromvalue, tovalue
+        print(fromvalue, tovalue)
 
         try:
             pwrrt.init('sev_eva')
         except RuntimeError as e:
-            tkMessageBox.showerror("Error", str(e))
+            tkinter.messagebox.showerror("Error", str(e))
             return
 
         try:
@@ -2101,12 +2111,12 @@ class FetchSev:
                                                   fromvalue, tovalue, eventtypevalue,
                                                   eventpriovalue, '', '', maxvalue)
         except RuntimeError as e:
-            tkMessageBox.showerror("Error", str(e))
+            tkinter.messagebox.showerror("Error", str(e))
             return
             
         
         if result == None or len(result) == 0:
-            tkMessageBox.showerror("Error", "No events found")
+            tkinter.messagebox.showerror("Error", "No events found")
             return
             
         origdata = pd.DataFrame(data=result)
@@ -2124,12 +2134,12 @@ file = ''
 try:
     opts, args = getopt.getopt(sys.argv[1:], "f:r:", ["--file"])
 except getopt.GetoptError:
-    print 'sev_eva.py [-f <file>]'
+    print('sev_eva.py [-f <file>]')
     sys.exit(2)
 
 for opt, arg in opts:
     if opt == "-h":
-        print 'sev_eva.py [-f <file>]'
+        print('sev_eva.py [-f <file>]')
     if opt in ("-f", "--file"):
         file = arg
         
