@@ -479,7 +479,7 @@ else
     pwre_config_check_include powerlink EPL 1 "$epl/Include/Epl.h"
     pwre_config_check_include powerlinkuser EPLU 0 "$epl/Examples/X86/Generic/powerlink_user_lib/EplCfg.h"
     pwre_config_check_include rsvg  RSVG  1 "/usr/include/librsvg-2/librsvg/rsvg.h:/usr/include/librsvg-2.0/librsvg/rsvg.h"
-    pwre_config_check_include pydev   PYDEV   0 "/usr/include/python3.7m/pymath.h"
+    pwre_config_check_include pydev   PYDEV   0 "/usr/include/python3.7m/pymath.h:/usr/include/python3.8/pymath.h"
     pwre_config_check_tool android ANDROID "/usr/local/android-sdk-linux/tools/android"
 
 

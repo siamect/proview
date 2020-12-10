@@ -4,6 +4,7 @@
 #include "pwr_names.h"
 #include "pwr_version.h"
 #include "co_cdh.h"
+#include "co_cnv.h"
 #include "co_api_user.h"
 #include "co_msg.h"
 #include "co_time.h"
@@ -1370,15 +1371,18 @@ Vid_richcompare(PyObject *self, PyObject *other, int op)
 static int
 Vid_init(PyObject *s, PyObject *args, PyObject *kwds)
 {
-  char *name = 0;
+  char *name, *utf8name = 0;
   VidObject *self = (VidObject *)s;
 
-  if (! PyArg_ParseTuple(args, "|s", &name))
+  if (! PyArg_ParseTuple(args, "|s", &utf8name))
     return -1;
 
+
   wb_volume v;
-  if (name)
+  if (utf8name) {
+    name = cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1);
     v = pwrwb_env->volume(name);
+  }
   else
     v = pwrwb_env->volume();
   if (!v) {
@@ -1394,14 +1398,16 @@ static PyObject *
 Vid_name(PyObject *s, PyObject *args)
 {
   wb_volume v = pwrwb_env->volume(((VidObject *)s)->vid);
-  return Py_BuildValue("s", v.name());  
+  char *utf8name = cnv_iso8859_to_utf8(v.name(), strlen(v.name())+1);
+  return Py_BuildValue("s", utf8name);  
 }
 
 static PyObject *
 Vid_fullName(PyObject *s, PyObject *args)
 {
   wb_volume v = pwrwb_env->volume(((VidObject *)s)->vid);
-  return Py_BuildValue("s", v.name());  
+  char *utf8name = cnv_iso8859_to_utf8(v.name(), strlen(v.name())+1);
+  return Py_BuildValue("s", utf8name);  
 }
 
 static PyObject *
@@ -1512,7 +1518,11 @@ Oid_dealloc(PyObject *self)
 static PyObject *
 Oid_str(PyObject *self)
 {
-  return PyUnicode_FromFormat("%s", ((OidObject *)self)->o.longName().name(cdh_mName_path | cdh_mName_object));  
+  pwr_tOName name;
+
+  strcpy(name, ((OidObject *)self)->o.longName().name(cdh_mName_path | cdh_mName_object));
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return PyUnicode_FromFormat("%s", utf8name);  
 }
 
 static PyObject *
@@ -1555,7 +1565,7 @@ Oid_richcompare(PyObject *self, PyObject *other, int op)
 static int
 Oid_init(PyObject *s, PyObject *args, PyObject *kwds)
 {
-  char *name = 0;
+  char *name, *utf8name = 0;
   OidObject *self = (OidObject *)s;
 
   if (!pwrwb_ses) {
@@ -1563,11 +1573,13 @@ Oid_init(PyObject *s, PyObject *args, PyObject *kwds)
     return -1;
   }
 
-  if (! PyArg_ParseTuple(args, "|s", &name))
+  if (! PyArg_ParseTuple(args, "|s", &utf8name))
     return -1;
 
-  if (name)
+  if (utf8name) {
+    name = cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1);
     self->o = pwrwb_ses->object(name);
+  }
   else
     self->o = pwrwb_ses->object();
   if (!self->o) {
@@ -1584,16 +1596,21 @@ Oid_name(PyObject *s, PyObject *args)
   if (!((OidObject *)s)->o)
     return set_error(((OidObject *)s)->o.sts());
 
-  return Py_BuildValue("s", ((OidObject *)s)->o.name());  
+  char *utf8name = cnv_iso8859_to_utf8(((OidObject *)s)->o.name(), strlen(((OidObject *)s)->o.name())+1);
+  return Py_BuildValue("s", utf8name);  
 }
 
 static PyObject *
 Oid_fullName(PyObject *s, PyObject *args)
 {
+  pwr_tOName name;
+
   if (!((OidObject *)s)->o)
     return set_error(((OidObject *)s)->o.sts());
 
-  return Py_BuildValue("s", ((OidObject *)s)->o.longName().name(cdh_mName_volumeStrict));  
+  strcpy(name, ((OidObject *)s)->o.longName().name(cdh_mName_volumeStrict));
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return Py_BuildValue("s", utf8name);  
 }
 
 static PyObject *
@@ -1745,11 +1762,13 @@ Oid_attribute(PyObject *s, PyObject *args)
     return set_error(((OidObject *)s)->o.sts());
 
   OidObject *self = (OidObject *)s;
-  char *name;
+  char *name, *utf8name;
   ArefObject *aref_object;
 
-  if (! PyArg_ParseTuple(args, "s", &name))
+  if (! PyArg_ParseTuple(args, "s", &utf8name))
     return NULL;
+
+  name = cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1);
 
   wb_attrname aname = wb_attrname(name);
   wb_attribute a = pwrwb_ses->attribute(self->o, aname);
@@ -1791,11 +1810,14 @@ Aref_dealloc(PyObject *self)
 static PyObject *
 Aref_str(PyObject *self)
 {
+  pwr_tAName name;
+
   if (!((ArefObject *)self)->attr)
     return set_error(((ArefObject *)self)->attr.sts());
 
-  return PyUnicode_FromFormat(
-	   "%s", ((ArefObject *)self)->attr.longName().name(cdh_mName_volumeStrict));  
+  strcpy(name, ((ArefObject *)self)->attr.longName().name(cdh_mName_volumeStrict));
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return PyUnicode_FromFormat("%s", utf8name);  
 }
 
 static PyObject *
@@ -1835,17 +1857,18 @@ Aref_richcompare(PyObject *self, PyObject *other, int op)
 static int
 Aref_init(PyObject *s, PyObject *args, PyObject *kwds)
 {
-  char *name = 0;
+  char *name, *utf8name = 0;
 
   if (!pwrwb_ses) {
     set_error(LDH__NOSUCHSESS);
     return -1;
   }
 
-  if (! PyArg_ParseTuple(args, "|s", &name))
+  if (! PyArg_ParseTuple(args, "|s", &utf8name))
     return -1;
 
-  if ( name) {
+  if (utf8name) {
+    name = cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1);
     wb_name wname(name);
     ((ArefObject *)s)->attr = pwrwb_ses->attribute(wname);
   }
@@ -1855,19 +1878,27 @@ Aref_init(PyObject *s, PyObject *args, PyObject *kwds)
 static PyObject *
 Aref_name(PyObject *s, PyObject *args)
 {
+  pwr_tAName name;
+
   if (!((ArefObject *)s)->attr)
     return set_error(((ArefObject *)s)->attr.sts());
 
-  return Py_BuildValue("s", ((ArefObject *)s)->attr.longName().name(cdh_mName_object | cdh_mName_attribute));  
+  strcpy(name, ((ArefObject *)s)->attr.longName().name(cdh_mName_object | cdh_mName_attribute));
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return Py_BuildValue("s", utf8name);  
 }
 
 static PyObject *
 Aref_fullName(PyObject *s, PyObject *args)
 {
+  pwr_tAName name;
+
   if (!((ArefObject *)s)->attr)
     return set_error(((ArefObject *)s)->attr.sts());
 
-  return Py_BuildValue("s", ((ArefObject *)s)->attr.longName().name(cdh_mName_volumeStrict));  
+  strcpy(name, ((ArefObject *)s)->attr.longName().name(cdh_mName_volumeStrict));
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return Py_BuildValue("s", utf8name);  
 }
 
 static PyObject *
@@ -1989,7 +2020,8 @@ Aref_value(PyObject *s, PyObject *args)
     return Py_BuildValue("d", value);
   }
   case pwr_eType_String: {
-    PyObject *ret = Py_BuildValue("s", buf);
+    char *utf8buf = cnv_iso8859_to_utf8(buf, strlen(buf)+1);
+    PyObject *ret = Py_BuildValue("s", utf8buf);
     free(buf);
     return ret;
   }
@@ -2134,10 +2166,11 @@ Aref_setValue(PyObject *s, PyObject *args)
     break;
   }
   case pwr_eType_String: {
-    char *value = 0;
-    if ( !PyArg_ParseTuple(args, "s", &value))
+    char *value, *utf8value = 0;
+    if ( !PyArg_ParseTuple(args, "s", &utf8value))
       goto error_return;
 
+    value = cnv_utf8_to_iso8859(utf8value, strlen(utf8value)+1);
     strncpy( buf, value, self->attr.size());
     buf[self->attr.size()-1] = 0;
     break;
@@ -2215,6 +2248,8 @@ Cid_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 static PyObject *
 Cid_str(PyObject *self)
 {
+  pwr_tOName name;
+
   if (!pwrwb_ses)
     return set_error(LDH__NOSUCHSESS);
 
@@ -2222,7 +2257,9 @@ Cid_str(PyObject *self)
   if (!cdef)
     return set_error(cdef.sts());
 
-  return PyUnicode_FromFormat("%s", cdef.longName().name(cdh_mName_volumeStrict));
+  strcpy(name, cdef.longName().name(cdh_mName_volumeStrict));
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return PyUnicode_FromFormat("%s", utf8name);
 }
 
 static PyObject *
@@ -2263,18 +2300,23 @@ static int
 Cid_init(PyObject *s, PyObject *args, PyObject *kwds)
 {
   CidObject *self = (CidObject *)s;
-  char *name = 0;
+  char *name, *utf8name = 0;
 
-  if (! PyArg_ParseTuple(args, "|s", &name))
+  if (! PyArg_ParseTuple(args, "|s", &utf8name))
     return -1;
 
-  wb_name n = wb_name(name);
-  wb_cdef cdef = pwrwb_ses->cdef(n);
-  if (!cdef) {
-    set_error(cdef.sts());
-    return -1;
+  if (utf8name) {
+    name = cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1);
+    wb_name n = wb_name(name);
+    wb_cdef cdef = pwrwb_ses->cdef(n);
+    if (!cdef) {
+      set_error(cdef.sts());
+      return -1;
+    }
+    self->cid = cdef.cid();
   }
-  self->cid = cdef.cid();
+  else
+    self->cid = 0;
 
   return 0;
 }
@@ -2288,19 +2330,23 @@ Cid_name(PyObject *s, PyObject *args)
   if (!cdef)
     return set_error(cdef.sts());
 
-  return Py_BuildValue("s", cdef.name());
+  char *utf8name = cnv_iso8859_to_utf8(cdef.name(), strlen(cdef.name())+1);
+  return Py_BuildValue("s", utf8name);
 }
 
 static PyObject *
 Cid_fullName(PyObject *s, PyObject *args)
 {
   CidObject *self = (CidObject *)s;
+  pwr_tOName name;
 
   wb_cdef cdef = pwrwb_ses->cdef(self->cid);
   if (!cdef)
     return set_error(cdef.sts());
 
-  return Py_BuildValue("s", cdef.longName().name(cdh_mName_volumeStrict));
+  strcpy(name, cdef.longName().name(cdh_mName_volumeStrict));
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return Py_BuildValue("s", utf8name);
 }
 
 static PyObject *
@@ -2553,7 +2599,8 @@ Tid_str(PyObject *self)
     wb_object o = pwrwb_ses->object(cdh_TypeIdToObjid(tid));
     strncpy(name, o.longName().name(cdh_mName_volumeStrict), sizeof(name));
   }
-  return PyUnicode_FromFormat("%s", name);  
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return PyUnicode_FromFormat("%s", utf8name);  
 }
 
 static PyObject *
@@ -2612,7 +2659,8 @@ Tid_name(PyObject *s, PyObject *args)
     wb_object o = pwrwb_ses->object(cdh_TypeIdToObjid(tid));
     strncpy(name, o.longName().name(cdh_mName_object), sizeof(name));
   }
-  return Py_BuildValue("s", name);
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return Py_BuildValue("s", utf8name);
 }
 
 static PyObject *
@@ -2631,7 +2679,8 @@ Tid_fullName(PyObject *s, PyObject *args)
     wb_object o = pwrwb_ses->object(cdh_TypeIdToObjid(tid));
     strncpy(name, o.longName().name(cdh_mName_volumeStrict), sizeof(name));
   }
-  return Py_BuildValue("s", name);
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return Py_BuildValue("s", utf8name);
 }
 
 /* 
@@ -2660,7 +2709,8 @@ ADef_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 static PyObject *
 ADef_str(PyObject *self)
 {
-  return PyUnicode_FromFormat("%s", ((ADefObject *)self)->name);
+  char *utf8name = cnv_iso8859_to_utf8(((ADefObject *)self)->name, strlen(((ADefObject *)self)->name)+1);
+  return PyUnicode_FromFormat("%s", utf8name);
 }
 
 static int
@@ -2674,7 +2724,8 @@ ADef_name(PyObject *s, PyObject *args)
 {
   ADefObject *self = (ADefObject *)s;
 
-  return Py_BuildValue("s", self->name);
+  char *utf8name = cnv_iso8859_to_utf8(self->name, strlen(self->name)+1);
+  return Py_BuildValue("s", utf8name);
 }
 
 static PyObject *
@@ -2732,24 +2783,25 @@ static PyObject *pwrwb_version(PyObject *self, PyObject *args)
 static PyObject *pwrwb_open(PyObject *self, PyObject *args)
 {
   pwr_tStatus sts;
-  const char *name = 0;
+  char *name, *utf8name = 0;
   char dbname[80];
   unsigned int options = 0;
 
-  if ( !PyArg_ParseTuple(args, "|s", &name))
+  if ( !PyArg_ParseTuple(args, "|s", &utf8name))
     return NULL;
 
-  if ( name == 0)
+  if ( utf8name == 0)
     strcpy(dbname, "directory");
-  else
+  else {
+    name = cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1);
     strncpy(dbname, name, sizeof(dbname));
-
+  }
   sts = ldh_OpenWB((ldh_tWorkbench *)&pwrwb_env, dbname, options);
   if ( EVEN(sts))
     return set_error(sts);
 
   wb_volume v;
-  if ( !name)
+  if ( !utf8name)
     v = pwrwb_env->volume("Directory");
   else {
     int found = 0;
@@ -2782,17 +2834,19 @@ static PyObject *pwrwb_open(PyObject *self, PyObject *args)
 static PyObject *pwrwb_openWb(PyObject *self, PyObject *args)
 {
   pwr_tStatus sts;
-  const char *name = 0;
+  char *name, *utf8name = 0;
   char dbname[80];
   unsigned int options = 0;
 
-  if ( !PyArg_ParseTuple(args, "|s", &name))
+  if ( !PyArg_ParseTuple(args, "|s", &utf8name))
     return NULL;
 
-  if ( name == 0)
+  if ( utf8name == 0)
     strcpy(dbname, "directory");
-  else
+  else {
+    name = cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1);
     strncpy(dbname, name, sizeof(dbname));
+  }
 
   sts = ldh_OpenWB((ldh_tWorkbench *)&pwrwb_env, dbname, options);
   if ( EVEN(sts))
@@ -2891,16 +2945,17 @@ static PyObject *pwrwb_close(PyObject *self, PyObject *args)
 static PyObject *pwrwb_volume(PyObject *self, PyObject *args)
 {
   VidObject *o;
-  const char *name = 0;
+  char *name, *utf8name = 0;
   pwr_tVid vid;
 
   if ( !pwrwb_env)
     return set_error(LDH__NOSUCHWB);
 
-  if ( !PyArg_ParseTuple(args, "|s", &name))
+  if ( !PyArg_ParseTuple(args, "|s", &utf8name))
     return NULL;
 
-  if ( name) {
+  if ( utf8name) {
+    name = cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1);
     wb_volume v = pwrwb_env->volume(name);
     if (!v)
       return set_error(v.sts());
@@ -2947,6 +3002,8 @@ static PyObject *pwrwb_object(PyObject *self, PyObject *args)
 {
   PyObject *o = Oid_new(&OidType, args, 0);
   Oid_init(o, args, 0);
+  if (!((OidObject *)o)->o)
+    return NULL;
   return o;
 }
 
@@ -2962,8 +3019,10 @@ static PyObject *pwrwb_attribute(PyObject *self, PyObject *args)
 static PyObject *pwrwb_login(PyObject *self, PyObject *args)
 {
   pwr_tStatus sts;
-  const char *user;
-  const char *passwd;
+  const char *utf8user;
+  const char *utf8passwd;
+  char user[80];
+  char passwd[80];
   unsigned int priv;
   char systemgroup[80];
   char systemname[80];
@@ -2972,10 +3031,11 @@ static PyObject *pwrwb_login(PyObject *self, PyObject *args)
   if ( EVEN(sts))
     return set_error(sts);
 
-  if ( !PyArg_ParseTuple(args, "ss", &user, &passwd))
+  if ( !PyArg_ParseTuple(args, "ss", &utf8user, &utf8passwd))
     return NULL;
 
-
+  strncpy(user, cnv_utf8_to_iso8859(utf8user, strlen(utf8user)+1), sizeof(user));
+  strncpy(passwd, cnv_utf8_to_iso8859(utf8passwd, strlen(utf8passwd)+1), sizeof(passwd));
   sts = user_CheckUser( systemgroup, user, user_PwCrypt((char *)passwd), &priv);
   if ( EVEN(sts))
     return set_error(sts);
@@ -3001,7 +3061,8 @@ static PyObject *pwrwb_getPriv(PyObject *self, PyObject *args)
 
 static PyObject *pwrwb_getUser(PyObject *self, PyObject *args)
 {
-  return Py_BuildValue("s", pwrwb_user);
+  char *utf8user = cnv_iso8859_to_utf8(pwrwb_user, strlen(pwrwb_user)+1);
+  return Py_BuildValue("s", utf8user);
 }
 
 static PyObject *pwrwb_getSessionVolume(PyObject *self, PyObject *args)
@@ -3029,7 +3090,7 @@ static PyObject *pwrwb_sessionIsEmpty(PyObject *self, PyObject *args)
 
 static PyObject *pwrwb_build(PyObject *self, PyObject *args)
 {
-  char *nodename;
+  char *nodename, *utf8nodename;
   char *options = 0;
   void *volumelist;
   int	volumecount;
@@ -3041,8 +3102,10 @@ static PyObject *pwrwb_build(PyObject *self, PyObject *args)
   if ( !is_authorized(pwr_mAccess_RtWrite | pwr_mAccess_System))
     return set_error(USER__NOTAUTHORIZED);
 
-  if ( !PyArg_ParseTuple(args, "s|s", &nodename, &options))
+  if ( !PyArg_ParseTuple(args, "s|s", &utf8nodename, &options))
     return NULL;
+
+  nodename = cnv_utf8_to_iso8859(utf8nodename, strlen(utf8nodename)+1);
 
   sts = lfu_volumelist_load( pwr_cNameBootList, (lfu_t_volumelist **) &volumelist,
 			     &volumecount);
@@ -3075,13 +3138,15 @@ static PyObject *pwrwb_build(PyObject *self, PyObject *args)
 static PyObject *pwrwb_command(PyObject *self, PyObject *args)
 {
   pwr_tStatus sts;
-  char *cmd;
+  char *cmd, *utf8cmd;
 
   if ( !pwrwb_env)
     return set_error(LDH__NOSUCHWB);
 
-  if ( !PyArg_ParseTuple(args, "s", &cmd))
+  if ( !PyArg_ParseTuple(args, "s", &utf8cmd))
     return NULL;
+
+  cmd = cnv_utf8_to_iso8859(utf8cmd, strlen(utf8cmd)+1);
 
   WNav *wnav = new WNav(0, "", "", pwrwb_ses, 0, wnav_eWindowType_No, &sts);
   wnav->priv = pwrwb_priv;

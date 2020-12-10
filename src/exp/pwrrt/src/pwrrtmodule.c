@@ -3470,7 +3470,8 @@ static PyObject *pwrrt_getPriv(PyObject *self, PyObject *args)
 
 static PyObject *pwrrt_getUser(PyObject *self, PyObject *args)
 {
-  return Py_BuildValue("s", pwrrt_user);
+  char *utf8user = cnv_iso8859_to_utf8(pwrrt_user, strlen(pwrrt_user)+1);
+  return Py_BuildValue("s", utf8user);
 }
 
 static PyObject *pwrrt_getMsg(PyObject *self, PyObject *args)
@@ -3483,7 +3484,8 @@ static PyObject *pwrrt_getMsg(PyObject *self, PyObject *args)
 
   msg_GetMsg(sts, msg, sizeof(msg));
 
-  return Py_BuildValue("s", msg);
+  char *utf8msg = cnv_iso8859_to_utf8(msg, strlen(msg)+1);
+  return Py_BuildValue("s", utf8msg);
 }
 
 

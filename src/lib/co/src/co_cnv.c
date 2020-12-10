@@ -38,7 +38,7 @@
 #include <iconv.h>
 #include "co_cnv.h"
 
-char* cnv_iso8859_to_utf8(char* iso, size_t iso_size)
+char* cnv_iso8859_to_utf8(const char* iso, size_t iso_size)
 {
   static iconv_t cd = 0;
   static char utf8[2048];
@@ -48,13 +48,13 @@ char* cnv_iso8859_to_utf8(char* iso, size_t iso_size)
   if (!cd)
     cd = iconv_open("UTF-8", "ISO8859-1");
 
-  if (iconv(cd, &iso, &iso_size, &utf8p, &utf8_size) == (size_t)(-1))
+  if (iconv(cd, (char **)&iso, &iso_size, &utf8p, &utf8_size) == (size_t)(-1))
     strcpy(utf8, "");
 
   return utf8;
 }
 
-char* cnv_utf8_to_iso8859(char* utf8, size_t utf8_size)
+char* cnv_utf8_to_iso8859(const char* utf8, size_t utf8_size)
 {
   static iconv_t cd = 0;
   static char iso[2048];
@@ -64,7 +64,7 @@ char* cnv_utf8_to_iso8859(char* utf8, size_t utf8_size)
   if (!cd)
     cd = iconv_open("ISO8859-1", "UTF-8");
 
-  if (iconv(cd, &utf8, &utf8_size, &isop, &iso_size) == (size_t)(-1))
+  if (iconv(cd, (char **)&utf8, &utf8_size, &isop, &iso_size) == (size_t)(-1))
     strcpy(iso, "");
 
   return iso;
