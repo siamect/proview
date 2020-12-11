@@ -203,6 +203,10 @@ class Ctx:
                     break
                 i += 1
 
+            if found == 0:
+                self.logger.log('E', 'getSevEvents, Events table not found')
+                return
+
             result = pwrrt.getSevEvents( 'localhost', self.itemlist[i][1],
                                          '20:00:00', 'now',  8001, 15, '', '', 1000)
             type = [row[1] for row in result]
@@ -237,6 +241,10 @@ class Ctx:
                     found = 1
                     break
                 i += 1
+
+            if found == 0:
+                self.logger.log('E', 'getSevEventsDataFrame, Events table not found')
+                return
 
             result = pwrrt.getSevEventsDataFrame( 'localhost', self.itemlist[i][1],
                                             '20:00:00', 'now',  8001, 15, '', '', 1000)
