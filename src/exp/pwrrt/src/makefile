@@ -43,7 +43,7 @@ $(exe_dir)/pwrrt.so : pwrrtmodule.c
 	    elif [ "$(pwre_hw)" = "hw_x86" ]; then \
 	      mv $(bld_dir)/lib.linux-i686-3.*/pwrrt.cpython-3*-linux-gnu.so $(pwr_exe)/pwrrt.so; \
 	    elif [ "$(pwre_hw)" = "hw_arm" ]; then \
-	      mv $(bld_dir)/lib.linux-armv*-3.*/pwrrt.cpython-3*-linux-gnu.so $(pwr_exe)/pwrrt.so; \
+	      mv $(bld_dir)/lib.linux-armv*-3.*/pwrrt.cpython-3*-linux-gnueabihf.so $(pwr_exe)/pwrrt.so; \
 	    fi;\
 	    python3 setup_pwrrt.py -q install_egg_info --install-dir $(pwr_exe);\
 	  else\

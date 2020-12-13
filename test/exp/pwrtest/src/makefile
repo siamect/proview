@@ -43,7 +43,7 @@ $(exe_dir)/pwrtest.so : pwrtestmodule.cpp
 	    elif [ "$(pwre_hw)" = "hw_x86" ]; then \
 	      mv $(bld_dir)/lib.linux-i686-3.*/pwrtest.cpython-3*-linux-gnu.so $(pwr_exe)/pwrtest.so; \
 	    elif [ "$(pwre_hw)" = "hw_arm" ]; then \
-	      mv $(bld_dir)/lib.linux-armv*-3.*/pwrtest.cpython-3*-linux-gnu.so $(pwr_exe)/pwrtest.so; \
+	      mv $(bld_dir)/lib.linux-armv*-3.*/pwrtest.cpython-3*-linux-gnueabihf.so $(pwr_exe)/pwrtest.so; \
 	    fi;\
 	    python3 setup_pwrtest.py -q install_egg_info --install-dir $(pwr_exe);\
 	  else\
