@@ -301,9 +301,16 @@ MYSQL* sev_dbms_env::createDb(void)
   }
 
   char query[400];
+  int rc;
+
+  // Update auto_increment in stats immediately
+  sprintf(query, "set persist information_schema_stats_expiry = 0");
+  rc = mysql_query(m_con, query);
+  sprintf(query, "set session information_schema_stats_expiry = 0");
+  rc = mysql_query(m_con, query);
 
   sprintf(query, "create database %s", dbName());
-  int rc = mysql_query(m_con, query);
+  rc = mysql_query(m_con, query);
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
     printf("%s\n", mysql_error(m_con));
