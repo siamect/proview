@@ -149,7 +149,7 @@ mkdir		:= mkdir
 #   Set to /buildversion for frozen dbs versions
 wblflags	:=
 
-warnings := -Wall -Wextra -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-sign-compare -Wno-missing-field-initializers -Wno-cast-function-type -Wno-implicit-fallthrough
+warnings := -Wall -Wextra -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-sign-compare -Wno-missing-field-initializers -Wno-cast-function-type -Wno-implicit-fallthrough -Wno-narrowing
 
 ifeq ($(pwre_btype),rls)
   cflags	:= $(cross_compile) -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT -fPIC $(warnings)

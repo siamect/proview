@@ -418,7 +418,7 @@ else
     #Gtk
     echo "Mandatory :"
 
-    pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 "/usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a:/usr/lib/$hwpl-linux-$gnu/librpcsvc.a:/usr/lib64/librpcsvc.so:/usr/lib64/librpcsvc.a"
+    pwre_config_check_lib librpcsvc LIBRPCSVC lib lib 0 "/usr/lib/librpcsvc.so:/usr/lib/librpcsvc.a:/usr/lib/$hwpl-linux-$gnu/librpcsvc.a:/usr/lib64/librpcsvc.so:/usr/lib64/librpcsvc.a:/usr/lib64/libtirpc.so"
     pwre_config_check_lib libasound LIBASOUND lib lib 0 "/usr/lib/libasound.so:/usr/lib/libasound.a:/usr/lib/$hwpl-linux-$gnu/libasound.so:/usr/lib64/libasound.so:/usr/lib64/libasound.a"
     pwre_config_check_lib libpthread LIBPTHREAD lib lib 0 "/usr/lib/libpthread.so:/usr/lib/libpthread.a:/usr/lib/$hwpl-linux-$gnu/libpthread.so:/usr/lib64/libpthread.so:/usr/lib64/libpthread.a"
     pwre_config_check_lib libm      LIBM     lib lib 0 "/usr/lib/libm.so:/usr/lib/libm.a:/usr/lib/$hwpl-linux-$gnu/libm.so:/usr/lib64/libm.so:/usr/lib64/libm.a"
@@ -448,7 +448,7 @@ else
     pwre_config_check_include jni   JNI   1 "$jdk/include/jni.h"
     pwre_config_check_include jni   JNI   0 "$jdk/include/linux/jni_md.h"
     pwre_config_check_lib motif     MRM      motif motif 0 "/usr/lib/libMrm.so"
-    pwre_config_check_lib mysql     MYSQL    lib lib 1 "/usr/lib/libmysqlclient.so:/usr/lib/mysql/libmysqlclient.so:/usr/lib/$hwpl-linux-$gnu/libmysqlclient.so:/usr/lib/$hwpl-linux-$gnu/libmariadbclient.so"
+    pwre_config_check_lib mysql     MYSQL    lib lib 1 "/usr/lib/libmysqlclient.so:/usr/lib/mysql/libmysqlclient.so:/usr/lib/$hwpl-linux-$gnu/libmysqlclient.so:/usr/lib/$hwpl-linux-$gnu/libmariadbclient.so:/usr/lib64/libmariadb.so"
     pwre_config_check_include mysql MYSQL 1 "/usr/include/mysql/mysql.h:/usr/include/mariadb/mysql.h"
     pwre_config_check_include sqlite3 SQLITE3   1 "/usr/include/sqlite3.h"
     pwre_config_check_lib libsqlite3   LIBSQLITE3  lib lib 0 "/usr/lib/libsqlite3.so:/usr/lib/$hwpl-linux-$gnu/libsqlite3.so"
@@ -479,7 +479,7 @@ else
     pwre_config_check_include powerlink EPL 1 "$epl/Include/Epl.h"
     pwre_config_check_include powerlinkuser EPLU 0 "$epl/Examples/X86/Generic/powerlink_user_lib/EplCfg.h"
     pwre_config_check_include rsvg  RSVG  1 "/usr/include/librsvg-2/librsvg/rsvg.h:/usr/include/librsvg-2.0/librsvg/rsvg.h"
-    pwre_config_check_include pydev   PYDEV   0 "/usr/include/python3.7m/pymath.h:/usr/include/python3.8/pymath.h"
+    pwre_config_check_include pydev   PYDEV   0 "/usr/include/python3.6m/pymath.h:/usr/include/python3.7m/pymath.h:/usr/include/python3.8/pymath.h"
     pwre_config_check_tool android ANDROID "/usr/local/android-sdk-linux/tools/android"
 
 
