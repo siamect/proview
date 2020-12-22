@@ -763,7 +763,8 @@ int sev_server::check_histitems(sev_sMsgHistItems* msg, unsigned int size)
   for (int i = 0; i < item_cnt; i++) {
     if (msg->Items[i].attrnum > 0) {
       // Deadband requires id variable
-      if (msg->Items[i].options & pwr_mSevOptionsMask_UseDeadBand)
+      if (msg->Items[i].options & pwr_mSevOptionsMask_UseDeadBand &&
+	  !(msg->Items[i].options & pwr_mSevOptionsMask_DeadBandLinearRegr))
         msg->Items[i].options |= pwr_mSevOptionsMask_ReadOptimized;
 
       // printf( "Received: %s.%s\n", msg->Items[i].oname,
