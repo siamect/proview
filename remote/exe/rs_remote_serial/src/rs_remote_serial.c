@@ -361,6 +361,7 @@ int main(int argc, char* argv[])
   if (!ser_fd) {
     errh_Error("InitDev, %d", ser_fd);
     errh_SetStatus(PWR__SRVTERM);
+    sleep(2);
     exit(0);
   }
 
