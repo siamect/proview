@@ -3780,6 +3780,7 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
   pwr_tDeltaTime dt;
   pwr_tFloat32 **vvect;
   float *tbuf;  
+  pwr_tAName aname;
   
   if ( !pwrrt_scctx) {
     sevcli_init( &sts, &pwrrt_scctx);
@@ -3862,8 +3863,10 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
 
     tstr = PyUnicode_AsEncodedString(pystr, "UTF-8", "strict");
     if (tstr != NULL) {
-      strcpy(oidvect[i], PyBytes_AS_STRING(tstr));
+      pwr_tOName utf8name;
+      strcpy(utf8name, PyBytes_AS_STRING(tstr));
       Py_DECREF(tstr);
+      strcpy(oidvect[i], cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1));
     } else {
       strcpy(oidvect[i], "");
     }
@@ -3875,8 +3878,10 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
 
     tstr = PyUnicode_AsEncodedString(pystr, "UTF-8", "strict");
     if (tstr != NULL) {
-      strcpy(anamevect[i], PyBytes_AS_STRING(tstr));
+      pwr_tOName utf8name;
+      strcpy(utf8name, PyBytes_AS_STRING(tstr));
       Py_DECREF(tstr);
+      strcpy(anamevect[i], cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1));
     } else {
       strcpy(anamevect[i], "");
     }
@@ -3907,14 +3912,23 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
       return set_error(GDH__ARGCOUNT);
 
     /* Get condition data */
-    if ( strncmp("_O", cond_oid, 2) == 0) 
+    strcpy(aname, cond_aname);
+    if ( strncmp("_O", cond_oid, 2) == 0) {
       sts = cdh_StringToObjid(cond_oid, &oid);
-    else
+      if (EVEN(sts)) 
+	return set_error(sts);
+    }
+    else {
       sts = gdh_NameToObjid(cond_oid, &oid);
-    if ( EVEN(sts))
-      return set_error(sts);
+      if ( EVEN(sts)) {
+	oid = pwr_cNOid;
+	strcpy(aname, cond_oid);
+	strcat(aname, ".");
+	strcat(aname, cond_aname);
+      }
+    }
 
-    sevcli_get_itemdata( &sts, pwrrt_scctx, oid, cond_aname, from, to, maxrows, &ttbuf, 
+    sevcli_get_itemdata( &sts, pwrrt_scctx, oid, aname, from, to, maxrows, &ttbuf, 
 			 (void **)&vbuf, &rows, &vtcond, &vsize);
     if ( sts == SEV__NOPOINTS)
 	Py_RETURN_NONE;
@@ -3966,15 +3980,24 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
   vvect = calloc(oidcnt, sizeof(float *));
 
   for ( i = 0; i < oidcnt; i++) {
-    if ( strncmp("_O", oidvect[i], 2) == 0) 
+    strcpy(aname, anamevect[i]);
+    if ( strncmp("_O", oidvect[i], 2) == 0) {
       sts = cdh_StringToObjid( oidvect[i], &oid);
-    else
+      if ( EVEN(sts))
+	return set_error(sts);
+    }
+    else {
       sts = gdh_NameToObjid( oidvect[i], &oid);
-    if ( EVEN(sts))
-      return set_error(sts);
+      if ( EVEN(sts)) {
+	oid = pwr_cNOid;
+	strcpy(aname, oidvect[i]);
+	strcat(aname, ".");
+	strcat(aname, anamevect[i]);
+      }
+    }
 
     if (!isobjectvect[i]) {
-      sevcli_get_itemdata( &sts, pwrrt_scctx, oid, anamevect[i], from, to, maxrows, &ttbuf, 
+      sevcli_get_itemdata( &sts, pwrrt_scctx, oid, aname, from, to, maxrows, &ttbuf, 
 			   (void **)&vbuf, &rows, &vtype[i], &vsize);
       if ( sts == SEV__NOPOINTS)
 	Py_RETURN_NONE;
