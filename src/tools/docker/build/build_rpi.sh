@@ -18,10 +18,9 @@ source $pwre_bin/pwre_function
 # Add pwre environment
 unamestr=`eval uname`
 machine=`eval uname -m`
-if [ $machine == "amd64" ]; then
+if [ $machine == "amd64" ] || [ $machine == "x86_64" ]; then
   machine="x86_64"
-fi
-if [ $machine != "x86_64" ]; then
+else
   machine="x86"
 fi
 

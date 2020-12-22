@@ -1,41 +1,41 @@
 #!/bin/bash
 
-release="debian:10"
-release_name="deb"
+release="opensuse/leap"
+release_name="opensuse"
 buildversion="08-SEP-2020 12:00:00"
 tz="Europe/Stockholm"
-build_rpi=1
+build_rpi=0
 gitrepo="-b stable http://192.168.0.118/git/x5-7-2/pwr/.git"
-install_update="apt-get update"
-install_git="apt-get install -y git make"
-install_videodummy="apt-get install -y xserver-xorg-video-dummy"
-install_build="apt-get install -y libgtk2.0-dev doxygen gcc g++ make libasound2-dev \
-	libdb5.3-dev libdb5.3++-dev openjdk-11-jdk default-libmysqlclient-dev \
-	libsqlite3-dev libhdf5-openmpi-dev librabbitmq-dev libusb-1.0.0-dev librsvg2-dev \
-	libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libpython3-dev python3"
-install_rpi="apt-get install -y gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf"
-install_sev="apt-get install -y default-mysql-server"
-install_pwr="apt-get install -y libgtk2.0-0 libasound2 \
-	libdb5.3 libdb5.3++ libsqlite3-0 librsvg2-2 g++  xterm libmariadb3 \
-	librabbitmq4 libusb-1.0-0 libhdf5-openmpi-103 librabbitmq4 \
-	libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 openjdk-11-jdk \
-	xterm xfonts-100dpi sudo procps libpython3-dev python3"
-install_pwrrt="apt-get install -y libgtk2.0-0 libasound2 \
-	libdb5.3 libdb5.3++ libsqlite3-0 librsvg2-2 g++ xterm libmariadb3 \
-	librabbitmq4 libusb-1.0-0 libhdf5-openmpi-103 \
-	libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 \
-	xterm xfonts-100dpi sudo procps python3 python3-pandas python3-seaborn \
-	python3-statsmodels python3-sklearn"
-install_pkg="dpkg -i"
-jdk_dir=/usr/lib/jvm/java-11-openjdk-amd64
+install_update="zypper refresh"
+install_git="zypper -n install git make"
+install_videodummy="zypper -n install xf86-video-dummy"
+install_build="zypper -n install gcc gcc-c++ gtk2-devel alsa-devel libdb-4_8 \
+        libdb-4_8-devel rpcsvc-proto-devel libX11-devel doxygen tar gzip \
+        libmariadb-devel libsqlite3-0 libhdf5-103-openmpi2 rpcgen python3-devel \
+        libtirpc-devel libusb-1_0-devel \
+        java-11-openjdk-devel rpm-build"
+install_rpi="zypper -n gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf"
+install_sev="zypper -n install mariadb"
+install_pwr="zypper -n install gtk2 alsa gcc-c++\
+	libdb-4_8 libsqlite3-0 libtirpc3 xterm libmariadb3 \
+	libusb-1_0-0 libhdf5-103-openmpi2 \
+	java-11-openjdk \
+	xterm xorg-x11-fonts sudo procps python3-devel python3 tar gzip glibc-locale-base"
+install_pwrrt="zypper -n install -y gtk2 alsa \
+	libdb-4_8 libsqlite3-0 libtirpc3 gcc-c++ xterm xorg-x11-fonts libmariadb3 \
+	libusb-1_0-0 libhdf5-103-openmpi2 \
+	sudo procps python3 python3-pandas python3-seaborn \
+	python3-statsmodels python3-sklearn tar gzip glibc-locale-base"
+install_pkg="rpm -i"
+jdk_dir=/usr/lib64/jvm/java-11-openjdk-11
 ver="5.7.2-1"
 sver="57"
-arch="amd64"
-pkg_pwr="pwr"$sver"_"$ver"_"$arch".deb"
-pkg_pwrdemo="pwrdemo"$sver"_"$ver"_"$arch".deb"
-pkg_pwrrt="pwrrt_"$ver"_"$arch".deb"
-pkg_pwrsev="pwrsev_"$ver"_"$arch".deb"
-pkg_pwrrpi="pwrrpi"$sver"_"$ver"_"$arch".deb"
+arch="x86_64"
+pkg_pwr="pwr"$sver"-"$ver"."$arch".rpm"
+pkg_pwrdemo="pwrdemo"$sver"-"$ver"."$arch".rpm"
+pkg_pwrrt="pwrrt-"$ver"."$arch".rpm"
+pkg_pwrsev="pwrsev-"$ver"."$arch".rpm"
+pkg_pwrrpi="pwrrpi"$sver"-"$ver"."$arch".rpm"
 img_pwrbuild="pwrbuild_"$release_name":v1"
 img_pwrdev="pwrdev_"$release_name":v1"
 img_pwrrt="pwrrt_"$release_name":v1"
@@ -93,8 +93,8 @@ if [ $start -le 2 ] && [ $end -ge 2 ]; then
   docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/pkg/$pkg_pwr ./pkg/
   docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/pkg/$pkg_pwrdemo ./pkg/
   docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/pkg/$pkg_pwrrt ./pkg/
-  docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/pkg/$pkg_pwrsev ./pkg/
-  docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/pkg/$pkg_pwrrpi ./pkg/
+#  docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/pkg/$pkg_pwrsev ./pkg/
+#  docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/pkg/$pkg_pwrrpi ./pkg/
   docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/project/pwrtest01/bld/common/load/pwrp_pkg_pwrtest01a_0001.tgz ./data/
   docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/project/pwrtest01/bld/common/load/pwrp_pkg_pwrtest01b_0001.tgz ./data/
   docker container cp tmp:/pwr/rls/os_linux/hw_x86_64/bld/project/pwrtest01/bld/common/load/pwrp_pkg_pwrtest01c_0001.tgz ./data/

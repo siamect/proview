@@ -1,0 +1,17 @@
+ARG RELEASE=debian:10
+FROM $RELEASE
+ARG INSTALL_SEV
+ENV DISPLAY :1
+ENV DEBIAN_FRONTEND none_interactive
+ENV RUNLEVEL 1
+
+RUN printf '#!/bin/bash\nexit 0' > /usr/sbin/policy-rc.d
+RUN $INSTALL_SEV
+#RUN apt-get install -y python-pandas python-seaborn python-statsmodels python-sklearn
+RUN sleep 10
+#RUN mysql -e 'create user pwrp@localhost;'
+#RUN mysql -e 'grant all privileges on *.* to pwrp@localhost;'
+
+COPY ./pwrtest01/test_pwrtest01d.sh ./data/pwrp_pkg_pwrtest01d_0001.tgz ./
+RUN mv ./pwrp_pkg_pwrtest01d_0001.tgz /home/pwrp/
+CMD ./test_pwrtest01d.sh
