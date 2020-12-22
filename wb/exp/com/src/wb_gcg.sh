@@ -211,7 +211,7 @@ CompileLibrary()
 {
   echo "-- Building archive for volume: $VolumeId"
   cd $pwrp_obj
-  if ar -rc $pwrp_lib/$PlcLib `ls plc_m${VolumeId}*.o`
+  if ar -rcU $pwrp_lib/$PlcLib `ls plc_m${VolumeId}*.o`
   then
     echo "-- Archive built for volume: $VolumeId"
     gcg_status=$gcg__success
