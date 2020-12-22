@@ -456,6 +456,7 @@ pwr_tStatus gdh_MountDynClients(void);
 
 
 /** @} */
+/** @} */
 
 #if defined __cplusplus
 }
