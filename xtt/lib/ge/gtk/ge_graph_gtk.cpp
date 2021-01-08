@@ -94,8 +94,10 @@ GraphGtk::~GraphGtk()
   localdb_free();
 
   for (int i = 0; i < grow_cnt; i++) {
-    grow_SetCtxUserData(grow_stack[i]->ctx, 0);
-    delete grow_stack[i];
+    if (grow_stack[i] != grow) {
+      grow_SetCtxUserData(grow_stack[i]->ctx, 0);
+      delete grow_stack[i];
+    }
   }
   grow_SetCtxUserData(grow->ctx, 0);
   delete grow;
