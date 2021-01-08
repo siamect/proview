@@ -38,7 +38,7 @@ typedef void* Widget;
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"

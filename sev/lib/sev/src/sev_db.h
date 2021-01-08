@@ -128,6 +128,7 @@ class sev_item {
 public:
   sev_item();
   sev_item(const sev_item& x);
+  sev_item& operator=(const sev_item& x);
   ~sev_item();
   unsigned int id;
   char tablename[256];

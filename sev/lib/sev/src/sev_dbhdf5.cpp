@@ -390,7 +390,7 @@ int sev_dbhdf5::create_db(char* dbname)
 
 int sev_dbhdf5::open_db()
 {
-  pwr_tFileName dbname;
+  char dbname[350];
   char system_name[80];
   int sts;
   pwr_tTime time;

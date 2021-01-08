@@ -265,6 +265,7 @@ void subsm_Remove(qcom_sGet* get)
 pwr_tBoolean subsm_SendBuffer(sub_sBuffer* bp)
 {
   pwr_tStatus sts = 1;
+  pwr_tStatus lsts;
   net_sSubMessage* mp = NULL;
   net_sSubData* dp = NULL;
   sub_sServer* sp;
@@ -363,9 +364,11 @@ pwr_tBoolean subsm_SendBuffer(sub_sBuffer* bp)
         cid.pwr = sp->aref.Body;
         cid.c.bix = 0; /* To get the class id.  */
         classp = hash_Search(&sts, gdbroot->cid_ht, &cid.pwr);
-        if (classp != NULL)
-          ndc_ConvertData(&dp->sts, np, classp, &sp->aref, dp->data, data,
+        if (classp != NULL) {
+          ndc_ConvertData(&lsts, np, classp, &sp->aref, dp->data, data,
               (pwr_tUInt32*)&asize, ndc_eOp_encode, sp->aref.Offset, 0);
+	  dp->sts = lsts;
+	}
         sp->count++;
       }
       mp->count++;

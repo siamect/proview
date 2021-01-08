@@ -37,7 +37,7 @@
 #ifndef xtt_otree_gtk_h
 #define xtt_otree_gtk_h
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "xtt_otree.h"
 

@@ -39,8 +39,8 @@
 
 /* rt_qcom.h -- Queue communication */
 
-/** @addtogroup QCOM */
-/*@{*/
+/** \addtogroup QCOM */
+/** @{ */
 
 #include <pthread.h>
 #include <rpc/rpc.h>
@@ -70,7 +70,7 @@ extern "C" {
 #define qcom_cIini (1 << 31 | 107)
 #define qcom_cImonAction (1 << 31 | 108)
 
-/** @defgroup QCOM_DS Qcom Data Structures
+/** \defgroup QCOM_DS Qcom Data Structures
  *  @{
  */
 
@@ -225,7 +225,7 @@ typedef struct {
 
 /** @} */
 
-/** @defgroup QCOM_FC Qcom Functions
+/** \defgroup QCOM_FC Qcom Functions
  *  @{
  */
 
@@ -326,5 +326,5 @@ bool_t xdr_qcom_sQid(XDR* xdrs, qcom_sQid* objp);
 
 #endif
 
-/** @} */
-/** @} */
+/** @}*/
+/** @}*/

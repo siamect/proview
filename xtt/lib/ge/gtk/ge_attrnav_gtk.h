@@ -39,7 +39,7 @@
 
 /* xtt_attrnav_gtk.h -- Simple navigator */
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "ge_attrnav.h"
 

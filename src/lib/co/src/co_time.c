@@ -828,8 +828,13 @@ pwr_tStatus time_DtoAscii(
 
   if (dt->tv_sec < 0 || dt->tv_nsec < 0) {    
     neg = 1;
+#if defined(HW_X86_64)
+    t.tv_sec = labs(dt->tv_sec);
+    t.tv_nsec = labs(dt->tv_nsec);
+#else
     t.tv_sec = abs(dt->tv_sec);
     t.tv_nsec = abs(dt->tv_nsec);
+#endif
     dt = &t;
   }
 

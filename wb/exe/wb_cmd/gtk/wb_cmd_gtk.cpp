@@ -39,7 +39,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "co_dcli.h"
 #include "rt_load.h"

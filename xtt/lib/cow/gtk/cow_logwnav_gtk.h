@@ -39,7 +39,7 @@
 
 /* cow_logwnav_gtk.h -- History log window */
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "cow_logwnav.h"
 

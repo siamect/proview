@@ -3,10 +3,10 @@
    This file is an example file, containing to example applications.
 */
 
-/** @addtogroup rt */
-/*@{*/
+/** \addtogroup rt */
+/** @{*/
 
-/** @ingroup rt_ex
+/** \ingroup rt_ex
  *  @{
  */
 #include "pwr.h"

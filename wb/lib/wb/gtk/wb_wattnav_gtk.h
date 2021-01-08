@@ -37,7 +37,7 @@
 #ifndef wb_wattnav_gtk_h
 #define wb_wattnav_gtk_h
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "wb_wattnav.h"
 

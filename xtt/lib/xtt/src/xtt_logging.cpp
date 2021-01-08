@@ -468,7 +468,7 @@ int XttLogging::store(char* filename)
   int i;
   pwr_tFileName filename_str;
   FILE* outfile;
-  char msg[120];
+  char msg[pwr_cSizFileName+15];
   int found_parameter;
 
   found_parameter = 0;

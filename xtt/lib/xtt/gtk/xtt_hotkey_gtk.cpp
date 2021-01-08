@@ -69,6 +69,7 @@
 #include <gdk/gdkkeysyms.h>
 
 #include <X11/keysym.h>
+#include <X11/XKBlib.h>
 
 #include "co_cdh.h"
 #include "co_dcli.h"
@@ -206,7 +207,7 @@ int XttHotkey::read_file()
       printf("Syntax error, %s, row %d\n", m_filename, row);
       continue;
     }
-    if (s = strstr(action_arg1, ",")) {
+    if ((s = strstr(action_arg1, ","))) {
       strcpy(action_arg2, s+1);
       *s = 0;
     }
@@ -238,7 +239,7 @@ int XttHotkey::event_handler(GdkXEvent* xevent, gpointer data)
 
   if (e->type == KeyPress) {
     int key = e->keycode;
-    int keysym = XKeycodeToKeysym(GDK_DISPLAY(), key, 0);
+    int keysym = XkbKeycodeToKeysym(GDK_DISPLAY(), key, 0, 0);
 
     for (int i = 0; i < (int)hotkey->m_keys.size(); i++) {
       if (hotkey->m_keys[i].m_keysym == keysym

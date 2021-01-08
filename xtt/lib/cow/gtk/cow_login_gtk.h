@@ -37,7 +37,7 @@
 #ifndef cow_login_gtk_h
 #define cow_login_gtk_h
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "cow_login.h"
 

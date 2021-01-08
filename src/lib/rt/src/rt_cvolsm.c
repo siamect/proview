@@ -78,7 +78,6 @@ static void respondObject(
   qcom_sPut put;
   gdb_sObject* pop;
   net_sObjectR* rsp;
-  net_sGobject* gop;
   net_sGobject* go[net_cObjectMaxCount];
   pwr_tUInt32 count;
   pwr_tUInt32 pcount;
@@ -136,18 +135,19 @@ static void respondObject(
     respondError(get, op->g.oid, sts);
     return;
   }
-  gop = &rsp->g[0];
 
+  int k = 0;
   /* Copy parent objects.  */
-  for (i = pcount - 1; i >= 0; i--)
-    *gop++ = *(go[i]);
+  for (i = pcount - 1; i >= 0; i--)    
+    rsp->g[k++] = *(go[i]);
 
   /* Copy target object.  */
-  *gop++ = op->g;
+  rsp->g[k++] = op->g;
 
   /* Copy sibling objects.  */
   for (i = pcount; i < count; i++)
-    *gop++ = *(go[i]);
+    // *gop++ = *(go[i]);
+    rsp->g[k++] = *(go[i]);
 
   rsp->sts = sts;
   rsp->oid = op->g.oid;
@@ -341,6 +341,7 @@ void cvolsm_SetObjectInfo(qcom_sGet* get)
   int size;
   cdh_uTypeId cid;
   gdb_sClass* cp;
+  pwr_tAttrRef aref;
 
   gdb_AssumeUnlocked;
 
@@ -354,8 +355,9 @@ void cvolsm_SetObjectInfo(qcom_sGet* get)
     pwr_Assert(np != NULL);
 
     memset(&Attribute, 0, sizeof(Attribute));
+    aref = mp->aref;
     ap = vol_ArefToAttribute(
-        &sts, &Attribute, &mp->aref, gdb_mLo_owned, vol_mTrans_alias);
+        &sts, &Attribute, &aref, gdb_mLo_owned, vol_mTrans_alias);
     if (ap == NULL || ap->op == NULL)
       break;
 
@@ -368,9 +370,11 @@ void cvolsm_SetObjectInfo(qcom_sGet* get)
     cid.pwr = mp->aref.Body;
     cid.c.bix = 0; /* To get the class id.  */
     cp = hash_Search(&sts, gdbroot->cid_ht, &cid.pwr);
-    if (cp != NULL)
-      ndc_ConvertData(&sts, np, cp, &mp->aref, p, mp->info, (pwr_tUInt32*)&size,
+    if (cp != NULL) {
+      aref = mp->aref;
+      ndc_ConvertData(&sts, np, cp, &aref, p, mp->info, (pwr_tUInt32*)&size,
           ndc_eOp_decode, mp->aref.Offset, 0);
+    }
   }
 
   rmp->aref = mp->aref;

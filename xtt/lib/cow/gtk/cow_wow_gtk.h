@@ -41,7 +41,7 @@
 
 #include "cow_wow.h"
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 typedef struct {
   void* ctx;

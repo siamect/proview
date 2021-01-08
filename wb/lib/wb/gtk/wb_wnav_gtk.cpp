@@ -518,9 +518,12 @@ static void wnav_message_dialog_cancel(GtkWidget* w, gpointer data)
 
 void WNavGtk::message_dialog(char* title, char* text)
 {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-security"
   GtkWidget* dialog
       = gtk_message_dialog_new(GTK_WINDOW(gtk_widget_get_toplevel(toplevel)),
           GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, text);
+#pragma GCC diagnostic pop
   g_signal_connect(
       dialog, "response", G_CALLBACK(wnav_message_dialog_ok), this);
   gtk_window_set_title(GTK_WINDOW(dialog), title);

@@ -1653,7 +1653,7 @@ void XttStreamGtk::activate_get_position(GtkWidget* w, gpointer data)
 #else
 // gstreamer not installed
 #include <string.h>
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 #include "xtt_stream_gtk.h"
 
 XttStreamGtk::XttStreamGtk(GtkWidget* st_parent_wid, void* st_parent_ctx,

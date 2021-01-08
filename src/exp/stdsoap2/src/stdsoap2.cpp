@@ -487,7 +487,10 @@ fsend(struct soap *soap, const char *s, size_t n)
             r = select((SOAP_SOCKET)(soap->socket + 1), &fd, &fd, &fd, &timeout);
           else
 #endif
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wrestrict"
           r = select((SOAP_SOCKET)(soap->socket + 1), NULL, &fd, &fd, &timeout);
+#pragma GCC diagnostic pop
           if (r > 0)
             break;
           if (!r)
@@ -585,6 +588,8 @@ fsend(struct soap *soap, const char *s, size_t n)
 #endif
           FD_ZERO(&fd);
           FD_SET((SOAP_SOCKET)soap->socket, &fd);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wrestrict"
 #ifdef WITH_OPENSSL
           if (soap->ssl && r == SSL_ERROR_WANT_READ)
             r = select((SOAP_SOCKET)(soap->socket + 1), &fd, NULL, &fd, &timeout);
@@ -593,6 +598,7 @@ fsend(struct soap *soap, const char *s, size_t n)
 #else
           r = select((SOAP_SOCKET)(soap->socket + 1), NULL, &fd, &fd, &timeout);
 #endif
+#pragma GCC diagnostic pop
           if (r < 0 && (r = soap_socket_errno(soap->socket)) != SOAP_EINTR)
           { soap->errnum = r;
             return SOAP_EOF;
@@ -839,6 +845,8 @@ frecv(struct soap *soap, char *s, size_t n)
         FD_SET((SOAP_SOCKET)soap->socket, &fd);
         for (;;)
         { 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wrestrict"
 #ifdef WITH_OPENSSL
           if (soap->ssl)
             r = select((SOAP_SOCKET)(soap->socket + 1), &fd, &fd, &fd, &timeout);
@@ -847,6 +855,7 @@ frecv(struct soap *soap, char *s, size_t n)
 #else
           r = select((SOAP_SOCKET)(soap->socket + 1), &fd, NULL, &fd, &timeout);
 #endif
+#pragma GCC diagnostic pop
           if (r > 0)
             break;
           if (!r)
@@ -926,6 +935,8 @@ frecv(struct soap *soap, char *s, size_t n)
 #endif
         FD_ZERO(&fd);
         FD_SET((SOAP_SOCKET)soap->socket, &fd);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wrestrict"
 #ifdef WITH_OPENSSL
         if (soap->ssl && err == SSL_ERROR_WANT_WRITE)
           r = select((SOAP_SOCKET)(soap->socket + 1), NULL, &fd, &fd, &timeout);
@@ -934,6 +945,7 @@ frecv(struct soap *soap, char *s, size_t n)
 #else
         r = select((SOAP_SOCKET)(soap->socket + 1), &fd, NULL, &fd, &timeout);
 #endif
+#pragma GCC diagnostic pop
         if (r < 0 && (r = soap_socket_errno(soap->socket)) != SOAP_EINTR)
         { soap->errnum = r;
           return 0;
@@ -4316,7 +4328,11 @@ soap_accept(struct soap *soap)
         FD_ZERO(&fd);
         FD_SET((SOAP_SOCKET)soap->master, &fd);
         for (;;)
-        { register int r = select((SOAP_SOCKET)(soap->master + 1), &fd, &fd, &fd, &timeout);
+        { 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wrestrict"
+	  register int r = select((SOAP_SOCKET)(soap->master + 1), &fd, &fd, &fd, &timeout);
+#pragma GCC diagnostic pop
           if (r > 0)
             break;
           if (!r)
@@ -6218,7 +6234,10 @@ soap_copy_context(struct soap *copy, struct soap *soap)
     return NULL;
   if (copy)
   { register struct soap_plugin *p;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wclass-memaccess"
     memcpy(copy, soap, sizeof(struct soap));
+#pragma GCC diagnostic pop
     copy->state = SOAP_COPY;
     copy->error = SOAP_OK;
     copy->userid = NULL;

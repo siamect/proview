@@ -56,6 +56,10 @@
 %
 #endif
 
+#ifndef RPC_HDR
+%#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
+%#pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
 
 
 

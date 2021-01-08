@@ -656,4 +656,4 @@ int net_StringToAddr(char* str, struct in_addr* naddr)
   return 1;
 }
 
-/** @} */
+/*@}*/

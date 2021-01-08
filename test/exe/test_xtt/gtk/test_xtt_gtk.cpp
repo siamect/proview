@@ -35,9 +35,10 @@
  */
 
 #include <locale.h>
-#include <gtk/gtk.h>
 
 #include <fstream>
+
+#include "cow_gtk.h"
 
 #include "co_error.h"
 #include "co_string.h"

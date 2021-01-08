@@ -34,28 +34,8 @@
  * General Public License plus this exception.
  */
 
-#ifndef cow_xhelpnav_gtk_h
-#define cow_xhelpnav_gtk_h
-
-/* cow_xhelpnav_gtk.h -- Helptext navigator */
-
-#include "cow_gtk.h"
-
-#include "cow_xhelpnav.h"
-
-class CoXHelpNavGtk : public CoXHelpNav {
-public:
-  CoXHelpNavGtk(void* xn_parent_ctx, GtkWidget* xn_parent_wid, char* xn_name,
-      xhelp_eUtility xn_utility, GtkWidget** w, pwr_tStatus* status);
-  ~CoXHelpNavGtk();
-
-  GtkWidget* parent_wid;
-  GtkWidget* brow_widget;
-  GtkWidget* form_widget;
-  GtkWidget* toplevel;
-
-  void set_inputfocus();
-  void pop();
-};
-
-#endif
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#include <gtk/gtk.h>
+#include <gtk/gtkprivate.h>
+#pragma GCC diagnostic pop

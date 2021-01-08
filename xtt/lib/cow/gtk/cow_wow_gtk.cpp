@@ -334,8 +334,11 @@ void CoWowGtk::DisplayError(
   } else
     ctext = (char*)text;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-security"
   GtkWidget* dialog = gtk_message_dialog_new(
       parent, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, ctext);
+#pragma GCC diagnostic pop
   if (coding != lng_eCoding_UTF_8)
     g_free(ctext);
   g_signal_connect(dialog, "response", G_CALLBACK(displayerror_ok_cb), NULL);

@@ -3497,7 +3497,7 @@ static PyObject *pwrrt_getSevItemList(PyObject *self, PyObject *args)
   sevcli_sHistItem *itemlist;
   unsigned int itemcnt;
   int cnt;
-  int i, j;
+  unsigned int i, j;
   sevcli_sHistItem *lp;
   PyObject *ituple, *result;
 
@@ -3570,7 +3570,7 @@ static PyObject *pwrrt_getSevEventsItemList(PyObject *self, PyObject *args)
   sevcli_sEventsItem *itemlist;
   unsigned int itemcnt;
   int cnt;
-  int i;
+  unsigned int i;
   PyObject *ituple, *result;
 
   if ( !pwrrt_scctx) {
@@ -4522,7 +4522,7 @@ static PyObject *pwrrt_getSevEvents(PyObject *self, PyObject *args)
   unsigned int listcnt;
   PyObject *item_tuple, *eventid_tuple, *result;
   char timstr[30];
-  int i;
+  unsigned int i;
   PyObject *date;
   time_t sec;
   struct tm ts;
@@ -4647,7 +4647,7 @@ static PyObject *pwrrt_getSevEventsDataFrame(PyObject *self, PyObject *args)
   unsigned int listcnt;
   PyObject *item_tuple, *eventid_tuple, *result;
   char timstr[30];
-  int i;
+  unsigned int i;
   PyObject *date;
   time_t sec;
   struct tm ts;

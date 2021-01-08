@@ -42,7 +42,7 @@
 /*! \file rt_appl.h
     \brief Contains the rt_appl class. */
 /*! \addtogroup rt */
-/*@{*/
+/*! @{*/
 
 //! Baseclass for applications.
 /*! rt_appl is a baseclass for applications, where the subclasses should
@@ -100,4 +100,4 @@ private:
 
 #endif
 
-/** @} */
+/*! @}*/

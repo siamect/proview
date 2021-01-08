@@ -41,7 +41,7 @@
 
 // Status is defined as int i xlib...
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "cow_statusmon_nodelistnav.h"
 

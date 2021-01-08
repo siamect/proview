@@ -2593,11 +2593,11 @@ Tid_str(PyObject *self)
 
   if ( cdh_tidIsCid(tid)) {
     wb_object o = pwrwb_ses->object(cdh_ClassIdToObjid(tid));
-    strncpy(name, o.longName().name(cdh_mName_volumeStrict), sizeof(name));
+    strncpy(name, o.longName().name(cdh_mName_volumeStrict), sizeof(name)-1);
   }
   else {
     wb_object o = pwrwb_ses->object(cdh_TypeIdToObjid(tid));
-    strncpy(name, o.longName().name(cdh_mName_volumeStrict), sizeof(name));
+    strncpy(name, o.longName().name(cdh_mName_volumeStrict), sizeof(name)-1);
   }
   char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
   return PyUnicode_FromFormat("%s", utf8name);  
@@ -2653,11 +2653,11 @@ Tid_name(PyObject *s, PyObject *args)
 
   if ( cdh_tidIsCid(tid)) {
     wb_object o = pwrwb_ses->object(cdh_ClassIdToObjid(tid));
-    strncpy(name, o.longName().name(cdh_mName_object), sizeof(name));
+    strncpy(name, o.longName().name(cdh_mName_object), sizeof(name)-1);
   }
   else {
     wb_object o = pwrwb_ses->object(cdh_TypeIdToObjid(tid));
-    strncpy(name, o.longName().name(cdh_mName_object), sizeof(name));
+    strncpy(name, o.longName().name(cdh_mName_object), sizeof(name)-1);
   }
   char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
   return Py_BuildValue("s", utf8name);
@@ -2673,11 +2673,11 @@ Tid_fullName(PyObject *s, PyObject *args)
 
   if ( cdh_tidIsCid(tid)) {
     wb_object o = pwrwb_ses->object(cdh_ClassIdToObjid(tid));
-    strncpy(name, o.longName().name(cdh_mName_volumeStrict), sizeof(name));
+    strncpy(name, o.longName().name(cdh_mName_volumeStrict), sizeof(name)-1);
   }
   else {
     wb_object o = pwrwb_ses->object(cdh_TypeIdToObjid(tid));
-    strncpy(name, o.longName().name(cdh_mName_volumeStrict), sizeof(name));
+    strncpy(name, o.longName().name(cdh_mName_volumeStrict), sizeof(name)-1);
   }
   char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
   return Py_BuildValue("s", utf8name);
@@ -2784,7 +2784,7 @@ static PyObject *pwrwb_open(PyObject *self, PyObject *args)
 {
   pwr_tStatus sts;
   char *name, *utf8name = 0;
-  char dbname[80];
+  char dbname[100];
   unsigned int options = 0;
 
   if ( !PyArg_ParseTuple(args, "|s", &utf8name))
@@ -2794,7 +2794,7 @@ static PyObject *pwrwb_open(PyObject *self, PyObject *args)
     strcpy(dbname, "directory");
   else {
     name = cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1);
-    strncpy(dbname, name, sizeof(dbname));
+    strncpy(dbname, name, sizeof(dbname)-1);
   }
   sts = ldh_OpenWB((ldh_tWorkbench *)&pwrwb_env, dbname, options);
   if ( EVEN(sts))
@@ -2835,7 +2835,7 @@ static PyObject *pwrwb_openWb(PyObject *self, PyObject *args)
 {
   pwr_tStatus sts;
   char *name, *utf8name = 0;
-  char dbname[80];
+  char dbname[100];
   unsigned int options = 0;
 
   if ( !PyArg_ParseTuple(args, "|s", &utf8name))
@@ -2845,7 +2845,7 @@ static PyObject *pwrwb_openWb(PyObject *self, PyObject *args)
     strcpy(dbname, "directory");
   else {
     name = cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1);
-    strncpy(dbname, name, sizeof(dbname));
+    strncpy(dbname, name, sizeof(dbname)-1);
   }
 
   sts = ldh_OpenWB((ldh_tWorkbench *)&pwrwb_env, dbname, options);
@@ -3021,8 +3021,8 @@ static PyObject *pwrwb_login(PyObject *self, PyObject *args)
   pwr_tStatus sts;
   const char *utf8user;
   const char *utf8passwd;
-  char user[80];
-  char passwd[80];
+  char user[100];
+  char passwd[100];
   unsigned int priv;
   char systemgroup[80];
   char systemname[80];
@@ -3034,8 +3034,8 @@ static PyObject *pwrwb_login(PyObject *self, PyObject *args)
   if ( !PyArg_ParseTuple(args, "ss", &utf8user, &utf8passwd))
     return NULL;
 
-  strncpy(user, cnv_utf8_to_iso8859(utf8user, strlen(utf8user)+1), sizeof(user));
-  strncpy(passwd, cnv_utf8_to_iso8859(utf8passwd, strlen(utf8passwd)+1), sizeof(passwd));
+  strncpy(user, cnv_utf8_to_iso8859(utf8user, strlen(utf8user)+1), sizeof(user)-1);
+  strncpy(passwd, cnv_utf8_to_iso8859(utf8passwd, strlen(utf8passwd)+1), sizeof(passwd)-1);
   sts = user_CheckUser( systemgroup, user, user_PwCrypt((char *)passwd), &priv);
   if ( EVEN(sts))
     return set_error(sts);

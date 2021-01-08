@@ -358,6 +358,12 @@ public:
   GraphGrow(GrowCtx* grow_ctx, void* xn)
       : ctx(grow_ctx), graph(xn), stack_cnt(0){}
 
+    GraphGrow(const GraphGrow& x)
+      : ctx(x.ctx), graph(x.graph), stack_cnt(x.stack_cnt) {
+      for (int i = 0; i < stack_cnt; i++)
+	ctx_stack[i] = x.ctx_stack[i];
+    }
+
   //! Destructor.
   ~GraphGrow();
 

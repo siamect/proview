@@ -37,8 +37,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <gtk/gtk.h>
-
 #include "co_login_msg.h"
 #include "cow_login_gtk.h"
 #include "co_api.h"

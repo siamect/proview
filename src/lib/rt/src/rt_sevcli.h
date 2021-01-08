@@ -39,8 +39,8 @@
 
 /* rt_sevcli.h -- Storage client */
 
-/** @addtogroup SEVCLI */
-/*@{*/
+/** \addtogroup SEVCLI */
+/** @{*/
 
 #include "rt_qcom.h"
 #include "rt_mh_net.h"
@@ -132,7 +132,7 @@ int sevcli_get_events(pwr_tStatus* sts, sevcli_tCtx ctx, pwr_tOid oid,
 		      unsigned int maxevents, sevcli_sEvents **list, unsigned int* cnt);
 void sevcli_store_ctx(sevcli_tCtx ctx);
 sevcli_tCtx sevcli_get_stored_ctx(void);
-/** @} */
+/** @}*/
 
 #ifdef __cplusplus
 }

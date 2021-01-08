@@ -134,8 +134,11 @@ static USIGN32 OperationMode;
 #endif
 
 #ifdef _LINUX
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-const-variable="
 static const char copyright[] = "PROFIBUS Linux API (c) Copyright 1995-2005. "
                                 "SOFTING AG. All Rights Reserved.";
+#pragma GCC diagnostic pop
 #endif
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN16) || defined(_WIN16)

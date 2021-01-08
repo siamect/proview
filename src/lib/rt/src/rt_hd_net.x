@@ -38,6 +38,11 @@
 %#define hd_cVersion		5
 #endif
 
+#ifndef RPC_HDR
+%#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
+%#pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
+
 enum hd_eMsg {
   hd_eMsg__		= 0,
   hd_eMsg_hello		= 1,

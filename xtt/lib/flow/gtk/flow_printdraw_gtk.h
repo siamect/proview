@@ -37,7 +37,7 @@
 #ifndef flow_printdraw_gtk_h
 #define flow_printdraw_gtk_h
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "flow_printdraw.h"
 

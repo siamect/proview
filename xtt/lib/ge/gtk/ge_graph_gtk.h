@@ -39,7 +39,7 @@
 
 /* ge_graph_gtk.h -- Simple graphic editor */
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "ge_graph.h"
 

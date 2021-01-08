@@ -37,7 +37,7 @@
 /* wb_wattnav_gtk.cpp -- Display object info */
 
 #include <stdlib.h>
-#include <gtk/gtk.h>
+//#include "cow_gtk.h"
 
 extern "C" {
 #include "pwr_baseclasses.h"

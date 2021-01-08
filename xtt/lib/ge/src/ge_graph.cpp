@@ -3374,7 +3374,7 @@ int graph_init_grow_base_cb(GlowCtx* fctx, void* client_data)
 
   graph->grow->grow_setup();
 
-  memcpy(graph->grow_stack[0], graph->grow, sizeof(*graph->grow));
+  graph->grow_stack[0] = graph->grow;
 
   // grow_CreateSecondaryCtx( graph->grow_stack[0]->ctx, &secondary_ctx,
   //      graph_init_grow_cb, (void *)graph, glow_eCtxType_Grow);

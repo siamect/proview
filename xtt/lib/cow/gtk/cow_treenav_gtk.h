@@ -39,7 +39,7 @@
 
 /* cow_treenav_gtk.h -- Tree viewer */
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "cow_treenav.h"
 

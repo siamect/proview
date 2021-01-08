@@ -36,8 +36,7 @@
 
 #include <stdlib.h>
 
-#include <gtk/gtk.h>
-#include <gtk/gtkprivate.h>
+#include "cow_gtk.h"
 
 #include "glow_growctx.h"
 

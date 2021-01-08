@@ -3566,8 +3566,12 @@ static int gccm_func_printf(void* filectx, gccm_s_arg* arg_list, int arg_count,
   }
   *t = 0;
 
-  if (arg_count == 1)
+  if (arg_count == 1) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-security"
     sts = printf(format);
+#pragma GCC diagnostic pop
+  }
   else {
     pos = format;
     last_pos = format;
@@ -3731,8 +3735,12 @@ static int gccm_func_fprintf(void* filectx, gccm_s_arg* arg_list, int arg_count,
   }
   *t = 0;
 
-  if (arg_count == 2)
+  if (arg_count == 2) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-security"
     sts = fprintf(file, format);
+#pragma GCC diagnostic pop
+  }
   else {
     pos = format;
     last_pos = format;
@@ -3817,8 +3825,12 @@ static int gccm_func_sprintf(void* filectx, gccm_s_arg* arg_list, int arg_count,
   }
   *t = 0;
 
-  if (arg_count == 2)
+  if (arg_count == 2) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-security"
     sts = sprintf(arg_p1->value_string, format);
+#pragma GCC diagnostic pop
+  }
   else {
     pos = format;
     last_pos = format;

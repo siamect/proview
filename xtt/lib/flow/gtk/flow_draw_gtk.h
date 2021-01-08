@@ -39,7 +39,8 @@
 
 #include <stdlib.h>
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
+
 #include "flow_draw.h"
 
 class FlowDrawGtk : public FlowDraw {

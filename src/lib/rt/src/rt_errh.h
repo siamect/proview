@@ -44,8 +44,8 @@
 extern "C" {
 #endif
 
-/** @addtogroup Errh */
-/*@{*/
+/** \addtogroup Errh */
+/** @{ */
 
 #ifndef errh_Bugcheck
 #define errh_Bugcheck(sts, str)                                                \

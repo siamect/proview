@@ -41,7 +41,7 @@
 #include <string.h>
 #include <fstream>
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "glow_draw.h"
 

@@ -47,6 +47,11 @@
 %
 #endif
 
+#ifndef RPC_HDR
+%#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
+%#pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
+
 
 /* Buffer used to request supervisor data from the server */
 

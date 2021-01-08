@@ -882,6 +882,7 @@ static void pvd_SetObjectInfo(qcom_sGet* get)
   int size;
   cdh_uTypeId cid;
   gdb_sClass* cp;
+  pwr_tAttrRef aref;
   net_sSetObjectInfo* mp = (net_sSetObjectInfo*)get->data;
 
   gdb_ScopeLock
@@ -898,9 +899,11 @@ static void pvd_SetObjectInfo(qcom_sGet* get)
     cid.pwr = mp->aref.Body;
     cid.c.bix = 0; /* To get the class id.  */
     cp = (gdb_sClass*)hash_Search(&sts, gdbroot->cid_ht, &cid.pwr);
-    if (cp != NULL)
-      ndc_ConvertData(&sts, np, cp, &mp->aref, p, mp->info, (pwr_tUInt32*)&size,
+    if (cp != NULL) {
+      aref = mp->aref;
+      ndc_ConvertData(&sts, np, cp, &aref, p, mp->info, (pwr_tUInt32*)&size,
           ndc_eOp_decode, mp->aref.Offset, 0);
+    }
   }
   pvd_procom->m_getmsg = get;
   pvd_procom->m_provider->writeAttribute(
@@ -958,24 +961,24 @@ static void pvd_SubAdd(qcom_sGet* get)
 static void pvd_SubRemove(qcom_sGet* get)
 {
   net_sSubRemove* mp = (net_sSubRemove*)get->data;
-  pwr_tSubid* sp;
+  pwr_tSubid sid;
 
   pvd_procom->m_getmsg = get;
-  sp = &mp->sid[0];
   for (int i = 0; i < (int)mp->count; i++) {
-    subkey k(*sp);
+    sid = mp->sid[i];
+    subkey k(sid);
     sublist_iterator it = m_sublist.find(k);
     if (it != m_sublist.end())
       m_sublist.erase(it);
 
-    pvd_procom->m_provider->subDisassociateBuffer(pvd_procom, *sp);
-    sp++;
+    pvd_procom->m_provider->subDisassociateBuffer(pvd_procom, sid);
   }
 }
 
 static pwr_tBoolean pvd_SubSendBuffer()
 {
   pwr_tStatus sts = 1;
+  pwr_tStatus lsts;
   net_sSubMessage* mp;
   net_sSubData* dp;
   gdb_sNode* np;
@@ -1050,10 +1053,13 @@ static pwr_tBoolean pvd_SubSendBuffer()
           cid.pwr = it->second.aref.Body;
           cid.c.bix = 0; /* To get the class id.  */
           classp = (gdb_sClass*)hash_Search(&sts, gdbroot->cid_ht, &cid.pwr);
-          if (classp && it->second.p)
-            ndc_ConvertData(&dp->sts, np, classp, &it->second.aref, dp->data,
+          if (classp && it->second.p) {
+	    
+            ndc_ConvertData(&lsts, np, classp, &it->second.aref, dp->data,
                 it->second.p, (pwr_tUInt32*)&asize, ndc_eOp_encode,
                 it->second.aref.Offset, 0);
+	    dp->sts = lsts;
+	  }
           it->second.count++;
           mp->count++;
         }
@@ -1083,7 +1089,6 @@ void rt_procom::provideObjects(pwr_tStatus sts, std::vector<procom_obj>& ovect)
 {
   qcom_sPut put;
   net_sObjectR* rsp;
-  net_sGobject* gop;
   pwr_tUInt32 count = ovect.size();
   pwr_tUInt32 pcount;
   pwr_tUInt32 size;
@@ -1106,7 +1111,6 @@ void rt_procom::provideObjects(pwr_tStatus sts, std::vector<procom_obj>& ovect)
     respondError(m_getmsg, g.oid, sts);
     return;
   }
-  gop = &rsp->g[0];
 
   for (i = 0; i < (int)ovect.size(); i++) {
     /* Copy target object.  */
@@ -1129,7 +1133,7 @@ void rt_procom::provideObjects(pwr_tStatus sts, std::vector<procom_obj>& ovect)
     }
     g.size = ovect[i].body_size;
 
-    *gop++ = g;
+    rsp->g[0] = g;
   }
 
   if (m_getmsg->type.s == (qcom_eStype)net_eMsg_oidToObject) {

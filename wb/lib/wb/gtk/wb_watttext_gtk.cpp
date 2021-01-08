@@ -39,7 +39,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "co_time.h"
 #include "cow_xhelp.h"

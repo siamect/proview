@@ -37,7 +37,7 @@
 #ifndef ge_subgraphs_gtk_h
 #define ge_subgraphs_gtk_h
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "ge_subgraphs.h"
 

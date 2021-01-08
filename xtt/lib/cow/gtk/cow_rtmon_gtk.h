@@ -39,7 +39,7 @@
 
 /* cow_rtmon_gtk.h -- Status Monitor */
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "cow_rtmon.h"
 

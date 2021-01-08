@@ -39,7 +39,7 @@
 
 /* cow_msglist_gtk.h -- Message list */
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "cow_msglist.h"
 

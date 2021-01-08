@@ -37,9 +37,8 @@
 #ifndef rt_mh_appl_h
 #define rt_mh_appl_h
 
-/** @addtogroup MSGH */
-/*@{*/
-
+/** \addtogroup MSGH */
+/** @{ */
 #define RS_MH_APPL_VERSION "X2.3.1"
 
 #include "rt_mh.h"
@@ -49,7 +48,7 @@
 extern "C" {
 #endif
 
-/** @defgroup MSGH_DS MhAppl Data Structures
+/** \defgroup MSGH_DS MhAppl Data Structures
  *  @{
  */
 
@@ -151,9 +150,9 @@ struct mhs_ApplMessage {
                                    information about the event */
 };
 
-/**@}*/
+/** @}*/
 
-/** @defgroup MSGH_FC MhAppl Functions
+/** \defgroup MSGH_FC MhAppl Functions
  *  @{
  */
 
@@ -187,10 +186,11 @@ pwr_tStatus mh_ApplReturn(pwr_tUInt32 Id, pwr_tString80* ReturnText);
 */
 pwr_tStatus mh_ApplGetMsgInfo(pwr_tUInt32 Id, mh_sApplMessage* Message);
 
-/**@}*/
-/**@}*/
-
 #if defined __cplusplus
 }
 #endif
+
+/** @}*/
+/** @}*/
+
 #endif

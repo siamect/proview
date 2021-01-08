@@ -45,12 +45,13 @@
    This include file contains the Proview NMps type definitions.
 */
 
-/** @addtogroup NMpsAppl */
-/*@{*/
-
 #if defined __cplusplus
 extern "C" {
 #endif
+
+
+/** @addtogroup NMpsAppl */
+/** @{*/
 
 #define NMPSAPPL_CELLIST_MAX                                                   \
   32 /* Max number of cells in a                                               \
@@ -63,11 +64,11 @@ extern "C" {
 #define nmpsappl_mOption_NamePath (1 << 1)
 #define nmpsappl_mOption_ReverseOrder (1 << 2)
 
-/** @defgroup NMPS_DS NMpsAppl Data Structures
- *  @ingroup NMps
+/** \defgroup NMPS_DS NMpsAppl Data Structures
  *  @{
  */
 
+/** Cell list */
 typedef struct nmpsappl_s_cellist {
   pwr_tString80 name;
   pwr_tObjid objid;
@@ -80,6 +81,7 @@ typedef struct nmpsappl_s_cellist {
   struct nmpsappl_s_cellist* next;
 } nmpsappl_t_cellist;
 
+/** Data info */
 typedef struct {
   pwr_tObjid objid; /**< Dataobject objid */
   pwr_tString80 name; /**< Dataobject name (last segment) */
@@ -108,6 +110,7 @@ typedef struct {
                               etc. */
 } nmpsappl_t_datainfo;
 
+/** NMpsAppl context */
 typedef struct nmpsappl_s_ctx {
   nmpsappl_t_cellist* cellist[NMPSAPPL_CELLIST_MAX];
   unsigned long options;
@@ -122,8 +125,8 @@ typedef struct nmpsappl_s_ctx {
 
 /** @} */
 /**
- * @defgroup NMPS_FC NMpsAppl Functions
- * @ingroup NMps
+ * \defgroup NMPS_FC NMpsAppl Functions
+ * \ingroup NMps
  * @{
  */
 
