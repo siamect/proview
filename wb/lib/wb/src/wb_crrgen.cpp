@@ -685,10 +685,14 @@ void wb_crrgen::write(pwr_tStatus* rsts)
     }
     wb_cdef cdef = m_sp->cdef(o.cid());
 
-    if (!(crr->key.target.Objid.vid == prev_target.Objid.vid
-            && crr->key.target.Objid.oix == prev_target.Objid.oix
-            && crr->key.target.Offset == prev_target.Offset
-            && crr->key.target.Size == prev_target.Size))
+    if (!((crr->key.target.Flags.b.Object 
+	   && crr->key.target.Objid.vid == prev_target.Objid.vid
+	   && crr->key.target.Objid.oix == prev_target.Objid.oix)
+	  || (!crr->key.target.Flags.b.Object
+	      && crr->key.target.Objid.vid == prev_target.Objid.vid
+	      && crr->key.target.Objid.oix == prev_target.Objid.oix
+	      && crr->key.target.Offset == prev_target.Offset
+	      && crr->key.target.Size == prev_target.Size)))
       fps << a_target.longName().name(
                  cdh_mName_volume | cdh_mName_path | cdh_mName_attribute)
           << '\n';
@@ -788,10 +792,14 @@ void wb_crrgen::write(pwr_tStatus* rsts)
     }
     wb_cdef cdef = m_sp->cdef(o.cid());
 
-    if (!(crr->key.target.Objid.vid == prev_target.Objid.vid
-            && crr->key.target.Objid.oix == prev_target.Objid.oix
-            && crr->key.target.Offset == prev_target.Offset
-            && crr->key.target.Size == prev_target.Size))
+    if (!((crr->key.target.Flags.b.Object 
+	   && crr->key.target.Objid.vid == prev_target.Objid.vid
+	   && crr->key.target.Objid.oix == prev_target.Objid.oix)
+	  || (!crr->key.target.Flags.b.Object
+	      && crr->key.target.Objid.vid == prev_target.Objid.vid
+	      && crr->key.target.Objid.oix == prev_target.Objid.oix
+	      && crr->key.target.Offset == prev_target.Offset
+	      && crr->key.target.Size == prev_target.Size)))
       fpo << a_target.longName().name(
                  cdh_mName_volume | cdh_mName_path | cdh_mName_attribute)
           << '\n';
