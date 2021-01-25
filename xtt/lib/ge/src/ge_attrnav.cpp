@@ -1491,6 +1491,7 @@ void attrnav_attrvalue_to_string(
   case ge_eAttrType_DynType2:
   case ge_eAttrType_DynTypeTone:
   case ge_eAttrType_ActionType1:
+  case ge_eAttrType_ActionType2:
   case ge_eAttrType_InstanceMask:
   case ge_eAttrType_InputFocus: {
     strncpy(str, attrnav_mask_to_string(type_id, *(int*)value_ptr), size);

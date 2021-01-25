@@ -278,6 +278,12 @@ static int ccm_func_getmsg(void* filectx, ccm_sArg* arg_list, int arg_count,
 static int ccm_func_tzset(void* filectx, ccm_sArg* arg_list, int arg_count,
     int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
     char* return_string);
+static int ccm_func_sin(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string);
+static int ccm_func_cos(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string);
 
 #define CCM_SYSFUNC_MAX 200
 
@@ -308,6 +314,8 @@ static ccm_sSysFunc ccm_sysfunc[CCM_SYSFUNC_MAX] = { { "std", "printf",
   { "std", "tstlog_vlog", &ccm_func_tstlog_vlog },
   { "std", "getmsg", &ccm_func_getmsg },
   { "std", "tzset", &ccm_func_tzset },
+  { "std", "sin", &ccm_func_sin },
+  { "std", "cos", &ccm_func_cos },
   { "", "", 0 } };
 
 /************* TEST *********************/
@@ -4717,6 +4725,44 @@ static int ccm_func_tzset(void* filectx, ccm_sArg* arg_list, int arg_count,
 
   *return_decl = K_DECL_INT;
   *return_int = 1;
+  return 1;
+}
+
+static int ccm_func_sin(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  ccm_sArg *arg_p1;
+
+  if (arg_count != 1)
+    return CCM__ARGMISM;
+  arg_p1 = arg_list;
+  if (arg_p1->value_decl != K_DECL_FLOAT)
+    return CCM__VARTYPE;
+
+  tzset();
+
+  *return_decl = K_DECL_FLOAT;
+  *return_float = sin(arg_p1->value_float / 180 * M_PI);
+  return 1;
+}
+
+static int ccm_func_cos(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  ccm_sArg *arg_p1;
+
+  if (arg_count != 1)
+    return CCM__ARGMISM;
+  arg_p1 = arg_list;
+  if (arg_p1->value_decl != K_DECL_FLOAT)
+    return CCM__VARTYPE;
+
+  tzset();
+
+  *return_decl = K_DECL_FLOAT;
+  *return_float = cos(arg_p1->value_float / 180 * M_PI);
   return 1;
 }
 

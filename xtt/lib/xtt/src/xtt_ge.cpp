@@ -57,12 +57,20 @@ void XttGe::graph_init_cb(void* client_data)
   int default_width;
   int default_height;
   int sts;
+  int path_cnt = 2;
+  char path[10][80] = {"$pwrp_exe/", "$pwr_exe/",};
 
+  ge->graph->set_subgraph_path(path_cnt, (char *)path);
   strncpy(fname, ge->filename, sizeof(fname));
-  if (!strrchr(fname, '.'))
-    strcat(fname, ".pwg");
-  ge->graph->open(fname);
-
+  if (fname[0] == '@') {
+    ge->graph->read_scriptfile(&fname[1]);
+    ge->graph->set_modified(0);
+  }
+  else {
+    if (!strrchr(fname, '.'))
+      strcat(fname, ".pwg");
+    ge->graph->open(fname);
+  }
   if (ge->width == 0 || ge->height == 0) {
     sts = ge->graph->get_default_size(&default_width, &default_height);
     if (ODD(sts)) {

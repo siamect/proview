@@ -92,7 +92,7 @@ public:
   guint timer_id;
   int click_sensitivity;
   GdkColor custom_color_vect[120];
-  GdkColor color_vect[400];
+  GdkColor color_vect[800];
   int color_vect_cnt;
   int closing_down;
   GlowCustomColorsGtk* customcolors[CUSTOMCOLORS_STACK_SIZE];
@@ -256,6 +256,7 @@ public:
   GlowCustomColors* create_customcolors();
   GlowCustomColorsGtk* get_customcolors();
   void reset_customcolors(GlowCustomColors* cc);
+  void remove_customcolors(GlowCustomColors* cc);
 };
 
 class DrawPs {

@@ -70,5 +70,7 @@ needconv	<Unable to save, graph needs conversion>	/error
 javanamesyntax	<Java name syntax error>			/error
 notsaved	<Graph is not saved>				/error
 noref		<Attribute is not of reference type>		/error
+shell		<Error from shell>				/error
+arg		<Error in argument>				/error
 
 

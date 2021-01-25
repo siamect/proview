@@ -789,7 +789,6 @@ int GrowWindow::update_attributes()
     if (window_ctx) {
       if (window_ctx->trace_started)
         window_ctx->trace_close();
-      ctx->gdraw->pop_customcolors();
       delete window_ctx;
       fill_drawtype = original_fill_drawtype = glow_eDrawType_Inherit;
       fill = 0;
@@ -933,12 +932,23 @@ void GrowWindow::new_ctx(bool is_updating_attributes)
   int no_file = streq(file_name, "_no_") ? 1 : 0; // No initial graph
 
   if (strchr(file_name, '/') == 0) {
-    strcpy(fname, "$pwrp_exe/");
-    strcat(fname, file_name);
+    if (file_name[0] == '@') {
+      strcpy(fname, "@");
+      strcat(fname, "$pwrp_exe/");
+      strcat(fname, &file_name[1]);
+    }
+    else {
+      strcpy(fname, "$pwrp_exe/");
+      strcat(fname, file_name);
+    }
   } else
     strcpy(fname, file_name);
-  if (!strchr(fname, '.'))
-    strcat(fname, ".pwg");
+  if (!strchr(fname, '.')) {
+    if (fname[0] == '@')
+      strcat(fname, ".ge_com");
+    else
+      strcat(fname, ".pwg");
+  }
   dcli_translate_filename(fname, fname);
 
   window_ctx
@@ -953,6 +963,8 @@ void GrowWindow::new_ctx(bool is_updating_attributes)
   // window_ctx->double_buffer_on = ctx->double_buffer_on;
   window_ctx->user_data = ctx->user_data;
   window_ctx->hot_mode = ctx->hot_mode;
+  window_ctx->path_cnt = ctx->path_cnt;
+  memcpy(window_ctx->path, ctx->path, sizeof(window_ctx->path));
   window_ctx->default_hot_mode = ctx->default_hot_mode;
   window_ctx->is_component = 1;
   memcpy(window_ctx->event_callback, ctx->event_callback,
@@ -982,11 +994,17 @@ void GrowWindow::new_ctx(bool is_updating_attributes)
     ctx->gdraw->push_customcolors(window_ctx->customcolors);
 
   if (!no_file) {
-    window_ctx->set_nodraw();
-    sts = window_ctx->open(fname, glow_eSaveMode_Edit);
-    window_ctx->reset_nodraw();
-    if (EVEN(sts))
-      printf("** Unable to open graph %s\n", fname);
+    if (fname[0] == '@') {
+      if (ctx->scriptexec_callback)
+	(ctx->scriptexec_callback)(window_ctx, fname);
+    }
+    else {
+      window_ctx->set_nodraw();
+      sts = window_ctx->open(fname, glow_eSaveMode_Edit);
+      window_ctx->reset_nodraw();
+      if (EVEN(sts))
+	printf("** Unable to open graph %s\n", fname);
+    }
   }
 
   strcpy(input_file_name, file_name);
@@ -1017,6 +1035,9 @@ void GrowWindow::new_ctx(bool is_updating_attributes)
       = ctx->mw.zoom_factor_x * window_ctx->mw.subwindow_scale;
   window_ctx->move_restriction = glow_eMoveRestriction_Disable;
   window_ctx->a.zoom();
+
+  if (is_updating_attributes)
+    ctx->gdraw->pop_customcolors();
 
   if (ctx->trace_started) {
     trace_init();

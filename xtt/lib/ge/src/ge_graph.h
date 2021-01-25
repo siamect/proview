@@ -1393,9 +1393,10 @@ public:
     \param y		y coordinate for object.
     \param dyn_type1	Dyntype1 of the created object.
     \param dyn_type2	Dyntype2 of the created object.
+    \param colortheme	Use colortheme colors.
   */
   void create_xycurve(
-      grow_tObject* object, double x, double y, unsigned int dyn_type1, unsigned int dyn_type2);
+      grow_tObject* object, double x, double y, unsigned int dyn_type1, unsigned int dyn_type2, int colortheme);
 
   //! Create a bar object.
   /*!
@@ -1692,6 +1693,11 @@ public:
   {
     grow_EventExec(grow->ctx, event, size);
   }
+
+  int read_scriptfile(char* incommand);
+  int script_func_register(void);
+  void script_store_graph();
+
 
   //! Destructor
   /*! Stop trace (if started), delete open attribute editors, free local

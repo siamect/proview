@@ -3014,6 +3014,9 @@ void grow_RegisterUserDataCallbacks(grow_tCtx ctx,
 void grow_RegisterEventLogCallback(
     grow_tCtx ctx, void (*log_cb)(void*, void*, unsigned int));
 
+void grow_RegisterScriptExecCallback(
+    grow_tCtx ctx, void (*script_cb)(void*, char*));
+
 //! Get grow versions.
 /*!
   \param ctx			Grow context.

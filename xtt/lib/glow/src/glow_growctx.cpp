@@ -126,6 +126,7 @@ GrowCtx::~GrowCtx()
     free(dynamic);
   if (gdraw && ctx_type == glow_eCtxType_Grow && customcolors) {
     gdraw->reset_customcolors(customcolors);
+    gdraw->remove_customcolors(customcolors);
     delete customcolors;
   }
 }

@@ -21,15 +21,15 @@
 
 
 <hr>
-2018-03-29
-Version 5.7.1	
+2021-01-14
+Version 5.7.2	
 <hr>
 </topic>
 
 <topic> __DocumentInfoPage
 
 
-Copyright 2005-2020 SSAB EMEA AB
+Copyright 2005-2021 SSAB EMEA AB
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -6202,6 +6202,23 @@ functions. Here follows a list of build in functions that also can be used in Ge
 
 <h2>Ge functions
 <b>Function <t><t>Description
+BuildGraph <t><t>Build the current graph.<link>BuildGraph()
+ClearAll <t><t>Remove all objects.<link>ClearAll()
+CreateArc <t><t>Create an Arc object.<link>CreateArc()
+CreateBar <t><t>Create a Bar object.<link>CreateBar()
+CreateBarArc <t><t>Create a BarArc object.<link>CreateBarArc()
+CreateDsTrend <t><t>Create a DsTrend object.<link>CreateDsTrend()
+CreateDsTrendCurve <t><t>Create a DsTrendCurve object.<link>CreateDsTrendCurve()
+CreateFastCurve <t><t>Create a FastCurve object.<link>CreateFastCurve()
+CreateImage <t><t>Create an Image object.<link>CreateImage()
+CreateObject <t><t>Create a subgraph object.<link>CreateObject()
+CreatePolyLine <t><t>Create a PolyLine object.<link>CreatePolyLine()
+CreateRectangle <t><t>Create a Rectangle object.<link>CreateRectangle()
+CreateRecRounded <t><t>Create a rounded rectangle object.<link>CreateRectRounded()
+CreateSevHist <t><t>Create a SevHist object.<link>CreateSevHist()
+CreateText <t><t>Create a Text object.<link>CreateText()
+CreateTrend <t><t>Create a Trend object.<link>CreateTrend()
+CreateXYCurve <t><t>Create an XYCurve object.<link>CreateXYCurve()
 DeleteObject <t><t>Delete an object.<link>DeleteObject()
 GetCurrentObject <t><t>Returns the identity of the last created object.<link>GetCurrentObject()
 GetFirstObject <t><t>Get the first object. <link>GetFirstObject()
@@ -6227,15 +6244,21 @@ GroupGetNextObject <t><t>Get next object in a group. <link>GroupGetNextObject()
 MeasureObject <t><t>Get object extent. <link>MeasureObject()
 MoveAbsObject <t><t>Move an object to a position. <link>MoveAbsObject()
 MoveObject <t><t>Move an object a distance. <link>MoveObject()
+OpenGraph <t><t>Open a graph. <link>OpenGraph()
+PolyLineAdd <t><t>Add a segment to a PolyLine.<link>PolyLineAdd()
 Reload <t><t>Read current graph from file. <link>Reload()
+SaveGraph <t><t>Save the current graph. <link>SaveGraph()
 ScaleObject <t><t>Scale an object. <link>ScaleObject()
 SelectAdd <t><t>Add an object to select list. <link>SelectAdd()
+SetBackgroundColor <t><t>Set graph background color. <link>SetBackgroundColor()
+SetColorTheme <t><t>Set color theme. <link>SetColorTheme()
 SetCurrentObject <t><t>Set CurrentObject. <link>SetCurrentObject()
 SetDraw	  <t><t>Set drawing on or off. <link>SetDraw()
 SetExtern <t><t>Set subgraph extern. <link>SetExtern()
 SetExternAll <t><t>Set all subgraphs extern. <link>SetExternAll()
 SetIntern <t><t>Set subgraph intern. <link>SetIntern()
 SetInternAll <t><t>Set all subgraph intern. <link>SetInternAll()
+SetGraphName <t><t>Set name of current graph. <link>SetGraphName()
 SetObjectAttribute <t><t>Set an attribute value of an object. <link>SetObjectAttribute()
 SetObjectBackgroundColor <t><t>Set background color of an object. <link>SetObjectBackgroundColor()
 SetObjectBorder <t><t>Set object border. <link>SetObjectBorder()
@@ -6305,6 +6328,7 @@ There are a number of predefined varlables for
 Object types <link> gecmd_variables,objecttypes
 Dynamic and action types <link> gecmd_variables,dyntypes
 Colors <link> gecmd_variables,colors
+Access <link> gecmd_variables,access
 <option> printenable
 
 </topic>
@@ -6428,11 +6452,515 @@ eDrawType_CustomColor3 = 318
 ...
 eDrawType_CustomColor90 = 666
 
+<h2>Access <bookmark> access
+mAccess_RtRead
+mAccess_RtWrite
+mAccess_System
+mAccess_Maintenance
+mAccess_Process
+mAccess_Instrument
+mAccess_Operator1
+mAccess_Operator2
+mAccess_Operator3
+mAccess_Operator4
+mAccess_Operator5
+mAccess_Operator6
+mAccess_Operator7
+mAccess_Operator8
+mAccess_Operator9
+mAccess_Operator10
+mAccess_RtEventsAck
+mAccess_RtPlc
+mAccess_RtNavigator
+mAccess_DevRead
+mAccess_DevPlc
+mAccess_DevConfig
+mAccess_DevClass
+mAccess_RtEventsBlock
+mAccess_Administrator
+mAccess_SevRead
+mAccess_SevAdmin
+mAccess_AllRt
+mAccess_RtDefault
+mAccess_AllOperators
+mAccess_AllSev
+mAccess_AllPwr
+mAccess_Default
+
+</topic>
+
+<topic>BuildGraph() <style>function
+BuildGraph()
+void BuildGraph()
+
+<h2>Description
+Build the current graph.
+
+<b>Example
+ 
+<c> BuildGraph();
+</topic>
+
+<topic>ClearAll() <style>function
+ClearAll()
+void ClearAll()
+
+<h2>Description
+Remove all objects in the current graph.
+
+<b>Example
+ 
+<c> ClearAll();
+</topic>
+
+<topic>CreateArc() <style>function
+CreateArc()
+int CreateArc(float x1, float y1, float x2, float y2, int angle1, int angle2)
+
+<h2>Description
+Create an arc.
+Color, fill, border and other properties are fetch from
+the current editor settings.
+
+<h2>Argument
+
+float <t>x1     <t>X coordinate for upper left corner.
+float <t>y1     <t>Y coordinate for upper left corner.
+float <t>x2     <t>X coordinate for lower right corner.
+float <t>y2     <t>Y coordinate for lower right corner.
+int   <t>angle1 <t>Start angle in degrees. Zero is 3 o'clock.
+int   <t>angle2 <t>Arc extension in degrees clockwise from the start angle.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateArc(2.0, 2.0, 3.0, 3.0, 0, 180);
+</topic>
+
+<topic>CreateBar() <style>function
+CreateBar()
+int CreateBar(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Description
+Create a bar object.
+
+<h2>Argument
+
+float  <t>x1    <t>X coordinate of upper left corner.
+float  <t>y1    <t>Y coordinate of upper left corner.
+float  <t>x2    <t>X coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+float  <t>y2    <t>Y coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+int    <t>colortheme <t>1 if colortheme colors should be used, else 0. Optional.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateBar(2.0, 2.0, 2.5, 5.0, 1);
+<c> SetObjectAttribute(id, "Bar.Attribute", "H1-Av1.ActualValue##Float32");
+<c> SetObjectAttribute(id, "Bar.MaxValue", 100.0);
+<c> SetObjectAttribute(id, "Bar.MinValue", -100.0);
+</topic>
+
+<topic>CreateBarArc() <style>function
+CreateBarArc()
+int CreateBar(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Description
+Create an BarArc object.
+
+<h2>Argument
+
+float  <t>x1    <t>X coordinate of upper left corner.
+float  <t>y1    <t>Y coordinate of upper left corner.
+float  <t>x2    <t>X coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+float  <t>y2    <t>Y coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+int    <t>colortheme <t>1 if colortheme colors should be used, else 0. Optional.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateBarArc(2.0, 2.0, 2.5, 5.0, 1);
+<c> SetObjectAttribute(id, "Bar.Attribute", "H1-Av1.ActualValue##Float32");
+<c> SetObjectAttribute(id, "BarArc.MaxValue", 100.0);
+<c> SetObjectAttribute(id, "BarArc.MinValue", -100.0);
+</topic>
+
+<topic>CreateDsTrend() <style>function
+CreateDsTrend()
+int CreateDsTrend(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Description
+Create a DsTrend object.
+
+<h2>Argument
+
+float  <t>x1    <t>X coordinate of upper left corner.
+float  <t>y1    <t>Y coordinate of upper left corner.
+float  <t>x2    <t>X coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+float  <t>y2    <t>Y coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+int    <t>colortheme <t>1 if colortheme colors should be used, else 0. Optional.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateDsTrend(2.0, 2.0, 7.0, 5.0, 1);
+<c> SetObjectAttribute(id, "DsTrend.Object1", "H1-Trend1");
+<c> SetObjectAttribute(id, "DsTrend.MaxValue1", 100.0);
+<c> SetObjectAttribute(id, "DsTrend.MinValue1", -100.0);
+<c> SetObjectAttribute(id, "DsTrend.ScanTime", 0.5);
+</topic>
+
+<topic>CreateDsTrendCurve() <style>function
+CreateDsTrendCurve()
+int CreateDsTrendCurve(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Description
+Create a DsTrendCurve object.
+
+<h2>Argument
+
+float  <t>x1    <t>X coordinate of upper left corner.
+float  <t>y1    <t>Y coordinate of upper left corner.
+float  <t>x2    <t>X coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+float  <t>y2    <t>Y coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+int    <t>colortheme <t>1 if colortheme colors should be used, else 0. Optional.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateDsTrendCurve(2.0, 2.0, 7.0, 5.0, 1);
+<c> SetObjectAttribute(id, "DsTrendCurve.Object", "H1-TrendCurve");
+<c> SetObjectAttribute(id, "DsTrendCurve.MaxValue1", 100.0);
+<c> SetObjectAttribute(id, "DsTrendCurve.MinValue1", -100.0);
+<c> SetObjectAttribute(id, "DsTrendCurve.ScanTime", 0.5);
+</topic>
+
+<topic>CreateFastCurve() <style>function
+CreateFastCurve()
+int CreateFastCurve(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Description
+Create a FastCurve object.
+
+<h2>Argument
+
+float  <t>x1    <t>X coordinate of upper left corner.
+float  <t>y1    <t>Y coordinate of upper left corner.
+float  <t>x2    <t>X coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+float  <t>y2    <t>Y coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+int    <t>colortheme <t>1 if colortheme colors should be used, else 0. Optional.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateFastCurve(2.0, 2.0, 7.0, 5.0, 1);
+<c> SetObjectAttribute(id, "FastCurve.Object", "H1-FastCurve");
+<c> SetObjectAttribute(id, "FastCurve.MaxValue1", 100.0);
+<c> SetObjectAttribute(id, "FastCurve.MinValue1", -100.0);
+</topic>
+
+<topic>CreateImage() <style>function
+CreateImage()
+int CreateImage(string image, float x1, float y1 [,float x2, float y2])
+
+<h2>Description
+Create an image object.
+
+<h2>Argument
+
+string <t>image <t>Image file name. The file should be present 
+                <t>on $pwrp_exe or $pwr_exe.
+float  <t>x1    <t>X coordinate of upper left corner.
+float  <t>y1    <t>Y coordinate of upper left corner.
+float  <t>x2    <t>X coordinate of lower right corner if the image 
+                <t><t>should be scaled. Optional.
+float  <t>y2    <t>Y coordinate of lower right corner if the image 
+                <t><t>should be scaled. Optional.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateImage("pwr_logofully.png", 2.0, 2.0);
+</topic>
+
+<topic>CreateLine() <style>function
+CreateLine()
+int CreateLine(float x1, float y1, float x2, float y2)
+
+<h2>Description
+Create a straight line.
+Color, width and line type are fetch from the current editor settings.
+
+<h2>Argument
+
+float <t>x1     <t>X coordinate for start point.
+float <t>y1     <t>Y coordinate for start point.
+float <t>x2     <t>X coordinate for end point.
+float <t>y2     <t>Y coordinate for end point.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateLine(2.0, 2.0, 3.0, 3.0);
+</topic>
+
+<topic>CreateObject() <style>function
+CreateObject()
+int CreateObject(string subgraph, float x1, float y1 [,float x2, float y2])
+
+<h2>Description
+Create an subgraph object.
+
+<h2>Argument
+
+string <t>subgraph <t>Subgraph name.
+float  <t>x1    <t>X coordinate of upper left corner.
+float  <t>y1    <t>Y coordinate of upper left corner.
+float  <t>x2    <t>X coordinate of lower right corner if the subgraph 
+                <t><t>should be scaled. Optional.
+float  <t>y2    <t>Y coordinate of lower right corner if the subgraph 
+                <t><t>should be scaled. Optional.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateObject("pwr_valve", 2.0, 2.0);
+</topic>
+
+<topic>CreatePolyLine() <style>function
+CreatePolyLine()
+int CreatePolyLine(float x1, float y1, float x2, float y2)
+
+<h2>Description
+Create the first segment of a polyline. Other segments are added
+with PolyLineAdd().
+Color, width and line type are fetch from the current editor settings.
+
+
+<h2>Argument
+
+float <t>x1     <t>X coordinate for start point.
+float <t>y1     <t>Y coordinate for start point.
+float <t>x2     <t>X coordinate for end point.
+float <t>y2     <t>Y coordinate for end point.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreatePolyLine(2.0, 2.0, 3.0, 3.0);
+<c> PolyLineAdd(id, 4.0, 2.0);
+<c> PolyLineAdd(id, 5.0, 3.0);
+</topic>
+
+<topic>CreateRectangle() <style>function
+CreateRectangle()
+int CreateRectangle(float x, float y, float width, float height)
+
+<h2>Description
+Create a rectangle.
+Color, fill, border and other properties are fetch from
+the current editor settings.
+
+<h2>Argument
+
+float <t>x     <t>X coordinate for upper left corner.
+float <t>y     <t>Y coordinate for upper left corner.
+float <t>width <t>Rectangle width.
+float <t>height <t>Rectangle height.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateRectangle(2.0, 2.0, 5.0, 3.0);
+</topic>
+
+<topic>CreateRectRounded() <style>function
+CreateRectRounded()
+int CreateRectRounded(float x, float y, float width, float height)
+
+<h2>Description
+Create a rectangle with rounded corners.
+Color, fill, border and other properties are fetch from
+the current editor settings.
+
+<h2>Argument
+
+float <t>x     <t>X coordinate for upper left corner.
+float <t>y     <t>Y coordinate for upper left corner.
+float <t>width <t>Rectangle width.
+float <t>height <t>Rectangle height.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateRectRounded(2.0, 2.0, 5.0, 3.0);
+</topic>
+
+<topic>CreateSevHist() <style>function
+CreateSevHist()
+int CreateSevHist(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Description
+Create a SevHist object.
+
+<h2>Argument
+
+float  <t>x1    <t>X coordinate of upper left corner.
+float  <t>y1    <t>Y coordinate of upper left corner.
+float  <t>x2    <t>X coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+float  <t>y2    <t>Y coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+int    <t>colortheme <t>1 if colortheme colors should be used, else 0. Optional.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateSevHist(2.0, 2.0, 7.0, 5.0, 1);
+<c> SetObjectAttribute(id, "SevHist.Object1", "H1-Av1-Hist");
+<c> SetObjectAttribute(id, "SevHist.MaxValue1", 100.0);
+<c> SetObjectAttribute(id, "SevHist.MinValue2", -100.0);
+<c> SetObjectAttribute(id, "SevHist.TimeRange", 120.0);
+</topic>
+
+<topic>CreateText() <style>function
+CreateText()
+int CreateText(string text, float x, float y)
+
+<h2>Description
+Create a text object. Font, size, color and other properties are
+fetched from the current editor settings.
+
+<h2>Argument
+
+string <t>text <t>Text.
+float  <t>x     <t>X coordinate.
+float  <t>y     <t>Y coordinate.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateText("Start", 2.0, 2.0);
+</topic>
+
+<topic>CreateTrend() <style>function
+CreateTrend()
+int CreateTrend(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Description
+Create a Trend object.
+
+<h2>Argument
+
+float  <t>x1    <t>X coordinate of upper left corner.
+float  <t>y1    <t>Y coordinate of upper left corner.
+float  <t>x2    <t>X coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+float  <t>y2    <t>Y coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+int    <t>colortheme <t>1 if colortheme colors should be used, else 0. Optional.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateTrend(2.0, 2.0, 7.0, 5.0, 1);
+<c> SetObjectAttribute(id, "Trend.Attribute1", "H1-Av1.ActualValue##Float32");
+<c> SetObjectAttribute(id, "Trend.MaxValue1", 100.0);
+<c> SetObjectAttribute(id, "Trend.MinValue1", -100.0);
+<c> SetObjectAttribute(id, "Trend.ScanTime", 0.5);
+</topic>
+
+<topic>CreateXYCurve() <style>function
+CreateXYCurve()
+int CreateXYCurve(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Description
+Create a XYCurve object.
+
+<h2>Argument
+
+float  <t>x1    <t>X coordinate of upper left corner.
+float  <t>y1    <t>Y coordinate of upper left corner.
+float  <t>x2    <t>X coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+float  <t>y2    <t>Y coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+int    <t>colortheme <t>1 if colortheme colors should be used, else 0. Optional.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateXYCurve(2.0, 2.0, 7.0, 5.0, 1);
+<c> SetObjectAttribute(id, "XY_Curve.XAttr", "H1-X1.Value##Float32#100");
+<c> SetObjectAttribute(id, "XY_Curve.YAttr", "H1-Y1.Value##Float32#100");
+<c> SetObjectAttribute(id, "XY_Curve.XMaxValue", 100.0);
+<c> SetObjectAttribute(id, "XY_Curve.XMinValue", 0.0);
+<c> SetObjectAttribute(id, "XY_Curve.YMaxValue", 100.0);
+<c> SetObjectAttribute(id, "XY_Curve.YMinValue", -100.0);
+<c> SetObjectAttribute(id, "XY_Curve.UpdateAttr", "H1-Update.ActualValue##Boolean");
 </topic>
 
 <topic>DeleteObject() <style>function
 DeleteObject()
-void GetObjectAttribute( int oid)
+void DeleteObject( int oid)
 
 <h2>Description
 Delete an object.
@@ -6447,30 +6975,18 @@ int <t>oid     <t>Object identity.
 <c> DeleteObject( oid);
 </topic>
 
-<topic>MeasureObject() <style>function
-MeasureObject()
-void MeasureObject( int oid, float ll_x, float ll_y, float ur_x, float ur_y)
+<topic>GetCurrentObject() <style>function
+GetCurrentObject()
+int GetCurrentObject()
 
 <h2>Description
-Get the extention of an object.
-Returns the x and y coordinates for lower left and upper right limits.
 
-<h2>Argument
-
-int <t>oid     <t>Object identity.
-float <t>ll_x  <t>Returned x coordinate for lower left.
-float <t>ll_y  <t>Returned y coordinate for lower left.
-float <t>ur_x  <t>Returned x coordinate for upper right.
-float <t>ur_y  <t>Returned y coordinate for upper right.
+Returns the identity of the last created object.
 
 <b>Example
-<c> int oid;
-<c> float ll_x;
-<c> float ll_y;
-<c> float ur_x;
-<c> float ur_y;
+<c> int id;
  
-<c> MeasureObject( oid, ll_x, ll_y, ur_x, ur_y);
+<c> id = GetCurrentObject();
 </topic>
 
 <topic>GetFirstObject() <style>function
@@ -6544,7 +7060,7 @@ as in the object editor for the object.
 
 int <t>oid     <t>Object identity.
 string <t>attribut <t>Attribute name.
-(arbitrary type) <t>Fetched attribute value
+(arbitrary type) <t>value <t>Fetched attribute value
 
 Returns the status of the operation.
 
@@ -6863,8 +7379,6 @@ on every fourth index, ie 310, 314, 318, ... 666.
 
 <c>   printf( "%3d  %5.3f %5.3f %5.3f\n", i, r, g, b);
 <c> endfor
-
-<c> GetRgbColor( eDrawType_CustomColor1, red, green, blue);
 </topic>
 
 <topic>GetTextExtent() <style>function
@@ -6890,7 +7404,7 @@ float  <t>descent  <t>The descent is returned in this variable.
 <b>Example
 <c> float width;
  
-<c> GetTextExtent("Detta är en text", 12, 1, width);
+<c> GetTextExtent("This is a text", 12, 1, width);
 </topic>
 
 
@@ -6943,54 +7457,46 @@ Returns an integer with the object identity.
 
 </topic>
 
-<topic>Reload() <style>function
-Reload()
-void Reload()
+<topic>MeasureObject() <style>function
+MeasureObject()
+void MeasureObject( int oid, float ll_x, float ll_y, float ur_x, float ur_y)
 
 <h2>Description
-
-Reads the current graph from file.
-
-<b>Example
-<c> # Update subgraph pwr_roundind
-<c> SetExtern("pwr_roundind");
-<c> save
-<c> Reload();
-<c> SetIntern("pwr_roundind");
-<c> save
-</topic>
-
-<topic>SelectAdd() <style>function
-SelectAdd()
-int SelectAdd( int objectid)
-
-<h2>Description
-
-Insert an object in the list of selected objects.
+Get the extention of an object.
+Returns the x and y coordinates for lower left and upper right limits.
 
 <h2>Argument
 
-int          <t>objectid   <t>Object identity.
+int <t>oid     <t>Object identity.
+float <t>ll_x  <t>Returned x coordinate for lower left.
+float <t>ll_y  <t>Returned y coordinate for lower left.
+float <t>ur_x  <t>Returned x coordinate for upper right.
+float <t>ur_y  <t>Returned y coordinate for upper right.
 
 <b>Example
-<c> int id;
+<c> int oid;
+<c> float ll_x;
+<c> float ll_y;
+<c> float ur_x;
+<c> float ur_y;
  
-<c> id = GetCurrentObject();
-<c> SelectAdd( id);
+<c> MeasureObject( oid, ll_x, ll_y, ur_x, ur_y);
 </topic>
 
-<topic>GetCurrentObject() <style>function
-GetCurrentObject()
-int GetCurrentObject()
+<topic>OpenGraph() <style>function
+OpenGraph()
+void OpenGraph(string name)
 
 <h2>Description
+Open a graph.
 
-Returns the identity of the last created object.
+<h2>Argument
+
+string <t>name     <t>Name of graph.
 
 <b>Example
-<c> int id;
  
-<c> id = GetCurrentObject();
+<c> OpenGraph("overview");
 </topic>
 
 <topic>MoveAbsObject() <style>function
@@ -7031,6 +7537,60 @@ float <t>dy <t>Distance to move in y direction.
 <c> MoveObject( oid, 0.5, 0.5);
 </topic>
 
+<topic>PolyLineAdd() <style>function
+PolyLineAdd()
+int PolyLineAdd(int id, float x, float y)
+
+<h2>Description
+Add a segment to a polyline.
+
+<h2>Argument
+
+float <t>x     <t>X coordinate for end point.
+float <t>y     <t>Y coordinate for end point.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreatePolyLine(2.0, 2.0, 3.0, 3.0);
+<c> PolyLineAdd(id, 4.0, 2.0);
+<c> PolyLineAdd(id, 5.0, 3.0);
+</topic>
+
+<topic>Reload() <style>function
+Reload()
+void Reload()
+
+<h2>Description
+
+Reads the current graph from file.
+
+<b>Example
+<c> # Update subgraph pwr_roundind
+<c> SetExtern("pwr_roundind");
+<c> save
+<c> Reload();
+<c> SetIntern("pwr_roundind");
+<c> save
+</topic>
+
+<topic>SaveGraph() <style>function
+SaveGraph()
+void SaveGraph([string name])
+
+<h2>Description
+Save the current graph.
+
+<h2>Argument
+
+string <t>name     <t>Name of graph. Optional.
+
+<b>Example
+ 
+<c> SaveGraph();
+</topic>
+
 <topic>ScaleObject() <style>function
 ScaleObject()
 void ScaleObject( int oid, float scalex, float scaley)
@@ -7048,6 +7608,57 @@ float <t>scaley <t>Scale factor in y direction.
 <b>Example
 
 <c> ScaleObject( oid, 1.5, 1.5);
+</topic>
+
+<topic>SelectAdd() <style>function
+SelectAdd()
+int SelectAdd( int objectid)
+
+<h2>Description
+
+Insert an object in the list of selected objects.
+
+<h2>Argument
+
+int          <t>objectid   <t>Object identity.
+
+<b>Example
+<c> int id;
+ 
+<c> id = GetCurrentObject();
+<c> SelectAdd( id);
+</topic>
+
+<topic>SetBackgroundColor() <style>function
+SetBackgroundColor()
+void SetBackgroundColor(int color)
+
+<h2>Description
+Set the background color for the current graph.
+
+<h2>Argument
+
+int <t>color     <t>Background color.
+
+<b>Example
+ 
+<c> SetBackgroundColor(eDrawType_CustomColor1);
+</topic>
+
+<topic>SetColorTheme() <style>function
+SetColorTheme()
+void SetColorTheme(int colortheme)
+
+<h2>Description
+Set the colortheme for the current graph.
+
+<h2>Argument
+
+int <t>colortheme     <t>Color theme index.
+
+<b>Example
+ 
+<c> SetColorTheme(2);
 </topic>
 
 <topic>SetCurrentObject() <style>function
@@ -7146,7 +7757,7 @@ string    <t>name       <t>Name of the subgraph.
 
 <topic>SetInternAll() <style>function
 SetInternAll()
-void SetInternAll( string name)
+void SetInternAll()
 
 <h2>Description
 
@@ -7155,6 +7766,23 @@ Set all subgraphs intern.
 <b>Example
  
 <c> SetInternAll();
+</topic>
+
+<topic>SetGraphName() <style>function
+SetGraphName()
+string SetGraphName()
+
+<h2>Description
+Set the name for the current graph.
+
+<h2>Argument
+
+string    <t>name       <t>Name of the graph.
+
+<b>Example
+<c> string name = "overview";
+ 
+<c> SetGraphName(name);
 </topic>
 
 <topic>SetObjectAttribute() <style>function
@@ -7169,7 +7797,7 @@ same as in the object editor for the object.
 
 int <t>oid     <t>Object identity.
 string <t>attribut <t>Attribute name.
-(arbitrary type) <t>Attribute value.
+(arbitrary type) <t>value <t>Attribute value.
 
 Returns the status of the operation.
 

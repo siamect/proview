@@ -89,10 +89,17 @@ typedef enum {
   pwr_mAccess_Operator8 = pwr_mPrv_Operator8,
   pwr_mAccess_Operator9 = pwr_mPrv_Operator9,
   pwr_mAccess_Operator10 = pwr_mPrv_Operator10,
-  pwr_mAccess_RtEventsBlock = pwr_mPrv_RtEventsBlock,
   pwr_mAccess_RtEventsAck = pwr_mPrv_RtEventsAck,
   pwr_mAccess_RtPlc = pwr_mPrv_RtPlc,
   pwr_mAccess_RtNavigator = pwr_mPrv_RtNavigator,
+  pwr_mAccess_DevRead = pwr_mPrv_DevRead,
+  pwr_mAccess_DevPlc = pwr_mPrv_DevPlc,
+  pwr_mAccess_DevConfig = pwr_mPrv_DevConfig,
+  pwr_mAccess_DevClass = pwr_mPrv_DevClass,
+  pwr_mAccess_RtEventsBlock = pwr_mPrv_RtEventsBlock,
+  pwr_mAccess_Administrator = pwr_mPrv_Administrator,
+  pwr_mAccess_SevRead = pwr_mPrv_SevRead,
+  pwr_mAccess_SevAdmin = pwr_mPrv_SevAdmin,
   pwr_mAccess_AllRt = pwr_mPrv_System | pwr_mPrv_Maintenance | pwr_mPrv_Process
       | pwr_mPrv_Instrument
       | pwr_mPrv_RtRead

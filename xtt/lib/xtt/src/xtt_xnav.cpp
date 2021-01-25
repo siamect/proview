@@ -363,6 +363,8 @@ int XNav::attr_string_to_value(int type_id, char* value_str, void* buffer_ptr,
     strncpy((char*)buffer_ptr, value_str, MIN(attr_size, buff_size));
     break;
   }
+  case pwr_eType_ProString:
+    return XNAV__NOTAUTHORIZED;
   case pwr_eType_Objid: {
     pwr_tObjid objid;
 
@@ -813,6 +815,13 @@ void XNav::attrvalue_to_string(int type_id, pwr_tTid tid, void* value_ptr,
     strncpy(str, (char*)value_ptr, size);
     str[size - 1] = 0;
     *len = strlen(str);
+    break;
+  }
+  case pwr_eType_ProString: {
+    *len = strlen((char*)value_ptr);
+    for (int i = 0; i < *len; i++)
+      str[i] = '*';
+    str[*len] = 0;
     break;
   }
   case pwr_eType_Text: {

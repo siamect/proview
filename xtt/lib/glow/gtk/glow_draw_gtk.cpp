@@ -2364,6 +2364,8 @@ void GlowDrawGtk::reset_background(GlowWind* wind)
 
   background = original_background;
   gtk_widget_modify_bg(m_wind.toplevel, GTK_STATE_NORMAL, &background);
+  if (!ctx->no_nav)
+    gtk_widget_modify_bg(nav_wind.toplevel, GTK_STATE_NORMAL, &background);
 
   // Change erase gcs
   xgcv.foreground = background;
@@ -4177,6 +4179,18 @@ GlowCustomColorsGtk* GlowDrawGtk::get_customcolors()
 GlowCustomColors* GlowDrawGtk::create_customcolors()
 {
   return new GlowCustomColorsGtk();
+}
+
+void GlowDrawGtk::remove_customcolors(GlowCustomColors* cc)
+{
+  for (int i = 0; i < customcolors_cnt; i++) {
+    if (customcolors[i] == cc) {
+      for (int j = i; j < customcolors_cnt - 1; j++)
+	customcolors[j] = customcolors[j+1];
+      customcolors_cnt--;
+      break;
+    }
+  }
 }
 
 void GlowDrawGtk::reset_customcolors(GlowCustomColors* cc)

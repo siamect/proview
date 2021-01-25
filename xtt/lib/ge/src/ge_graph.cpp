@@ -2601,13 +2601,13 @@ static int graph_grow_cb(GlowCtx* ctx, glow_tEvent event)
       } else if (streq(sub_name, "pwr_xycurve")) {
         grow_tObject t1;
         graph->create_xycurve(&t1, event->create_grow_object.x,
-	    event->create_grow_object.y, (unsigned int)ge_mDynType1_XY_Curve, 0);
+	    event->create_grow_object.y, (unsigned int)ge_mDynType1_XY_Curve, 0, 0);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
       } else if (streq(sub_name, "pwr_sevhist")) {
         grow_tObject t1;
         graph->create_xycurve(&t1, event->create_grow_object.x,
-	    event->create_grow_object.y, 0, (unsigned int)ge_mDynType2_SevHist);
+	    event->create_grow_object.y, 0, (unsigned int)ge_mDynType2_SevHist, 0);
 
         graph->journal_store(journal_eAction_CreateObject, t1);
       } else if (streq(sub_name, "pwr_bar")) {
@@ -3047,7 +3047,26 @@ void graph_userdata_save_cb(void* f, void* object, glow_eUserdataCbType utype)
   }
 }
 
-void graph_userdata_open_cb(void* f, void* object, glow_eUserdataCbType utype)
+static void graph_scriptexec_cb(void *ctx, char *filename)
+{
+  Graph* graph;
+  int ctx_popped = 0;
+
+  grow_GetCtxUserData((GrowCtx*)ctx, (void**)&graph);
+
+  if (ctx != graph->grow->ctx) {
+    graph->grow->pop((GrowCtx*)ctx);
+    ctx_popped = 1;
+  }
+
+  graph->read_scriptfile(&filename[1]);
+  graph->set_modified(0);
+
+  if (ctx_popped)
+    graph->grow->push();    
+}
+
+static void graph_userdata_open_cb(void* f, void* object, glow_eUserdataCbType utype)
 {
   std::ifstream* fp = (std::ifstream*)f;
   Graph* graph;
@@ -3232,6 +3251,7 @@ void GraphGrow::grow_setup()
 
   grow_RegisterUserDataCallbacks(ctx, graph_userdata_save_cb,
       graph_userdata_open_cb, graph_userdata_copy_cb);
+  grow_RegisterScriptExecCallback(ctx, graph_scriptexec_cb);
 }
 
 void GraphGrow::grow_trace_setup()
@@ -5538,16 +5558,25 @@ void Graph::create_trend(grow_tObject* object, double x, double y,
 }
 
 void Graph::create_xycurve(
-    grow_tObject* object, double x, double y, unsigned int dyn_type1, unsigned int dyn_type2)
+    grow_tObject* object, double x, double y, unsigned int dyn_type1, unsigned int dyn_type2, int colortheme)
 {
   double width = 7;
   double height = 5;
   GeDyn* dyn;
   glow_sTrendInfo info;
+  glow_eDrawType fcolor, bcolor;
+
+  if (colortheme) {
+    fcolor = glow_eCtColor_DiagramFillcolor;
+    bcolor = glow_eCtColor_DiagramBordercolor;
+  } else {
+    fcolor = glow_eDrawType_Color40;
+    bcolor = glow_eDrawType_Color37;
+  }
 
   grow_CreateGrowXYCurve(grow->ctx, get_next_object_name("O", ""), x, y, width,
-      height, glow_eDrawType_Color37, 1, glow_mDisplayLevel_1, 1, 1,
-      glow_eDrawType_Color40, NULL, object);
+      height, bcolor, 1, glow_mDisplayLevel_1, 1, 1,
+      fcolor, NULL, object);
   dyn = new GeDyn(this);
   dyn->dyn_type1 = dyn->total_dyn_type1 = (ge_mDynType1)dyn_type1;
   dyn->dyn_type2 = dyn->total_dyn_type2 = (ge_mDynType2)dyn_type2;
@@ -5564,12 +5593,22 @@ void Graph::create_xycurve(
   info.y_min_value[1] = 0;
   info.y_max_value[0] = 100;
   info.y_max_value[1] = 100;
-  info.curve_drawtype[0] = glow_eDrawType_Color145;
-  info.curve_drawtype[1] = glow_eDrawType_Color295;
-  info.curve_fill_drawtype[0] = glow_eDrawType_Color139;
-  info.curve_fill_drawtype[1] = glow_eDrawType_Color289;
-  info.mark1_color = glow_eDrawType_ColorYellow;
-  info.mark2_color = glow_eDrawType_ColorRed;
+  if (colortheme) {
+    info.curve_drawtype[0] = glow_eCtColor_DiagramCurveColor;
+    info.curve_drawtype[1] = glow_eCtColor_OrangeCurve;
+    info.curve_fill_drawtype[0] = glow_eCtColor_BarBarColor;
+    info.curve_fill_drawtype[1] = glow_eCtColor_OrangeBar;
+    info.mark1_color = glow_eCtColor_YellowCurve;
+    info.mark2_color = glow_eCtColor_RedCurve;
+  }
+  else {
+    info.curve_drawtype[0] = glow_eDrawType_Color145;
+    info.curve_drawtype[1] = glow_eDrawType_Color295;
+    info.curve_fill_drawtype[0] = glow_eDrawType_Color139;
+    info.curve_fill_drawtype[1] = glow_eDrawType_Color289;
+    info.mark1_color = glow_eDrawType_ColorYellow;
+    info.mark2_color = glow_eDrawType_ColorRed;
+  }
   grow_SetTrendInfo(*object, &info);
 
   grow_Redraw(grow->ctx);

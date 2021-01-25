@@ -6416,7 +6416,7 @@ void GeAnalogColor::get_attributes(attr_sItem* attrinfo, int* item_count)
       }
 
       if (!e->common_attr) {
-        strcpy(attrinfo[i].name, "AnalogColor.Attribute");
+	sprintf(attrinfo[i].name, "AnalogColor%d.Attribute", inst);
         attrinfo[i].value = attribute;
         attrinfo[i].type = glow_eType_String;
         attrinfo[i++].size = sizeof(attribute);
@@ -21918,6 +21918,7 @@ GeSevHist::GeSevHist(GeDyn* e_dyn)
   strcpy(update_attr, "");
   strcpy(mark1_attr, "");
   strcpy(mark2_attr, "");
+  strcpy(timerange_attr, "");
 }
 
 GeSevHist::GeSevHist(const GeSevHist& x)

@@ -187,6 +187,7 @@ public:
   virtual void pop_customcolors();
   virtual GlowCustomColors* create_customcolors();
   virtual void reset_customcolors(GlowCustomColors* cc);
+  virtual void remove_customcolors(GlowCustomColors* cc) {}
 };
 
 class DrawWind {

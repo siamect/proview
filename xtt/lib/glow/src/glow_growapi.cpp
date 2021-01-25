@@ -5299,6 +5299,12 @@ void grow_RegisterEventLogCallback(
   ((GrowCtx*)ctx)->register_eventlog_callback((glow_tEventLogCb)log_cb);
 }
 
+void grow_RegisterScriptExecCallback(
+    grow_tCtx ctx, void (*script_cb)(void*, char*))
+{
+  ((GrowCtx*)ctx)->register_scriptexec_callback((glow_tScriptExecCb)script_cb);
+}
+
 void grow_GetVersion(grow_tCtx ctx, int* grow_version, int* graph_version)
 {
   *graph_version = ctx->version;
