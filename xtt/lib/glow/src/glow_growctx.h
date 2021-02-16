@@ -1014,6 +1014,7 @@ public:
   int read_customcolor_file(char* name);
   int write_customcolor_file(char* name);
   int check_object_name(char* name);
+  void set_color_theme();
   static void set_default_color_theme(char* theme);
 
   static int get_dimension(char* filename, int* width, int* heigth);

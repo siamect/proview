@@ -7647,18 +7647,22 @@ int <t>color     <t>Background color.
 
 <topic>SetColorTheme() <style>function
 SetColorTheme()
-void SetColorTheme(int colortheme)
+void SetColorTheme([int colortheme])
 
 <h2>Description
 Set the colortheme for the current graph.
+In runtime also ColorTheme in GraphAttributes has to be set
+to $default. In this case SetColorTheme() should be called 
+without argument.
 
 <h2>Argument
 
-int <t>colortheme     <t>Color theme index.
+int <t>colortheme     <t>Color theme index. Optional.
 
 <b>Example
  
-<c> SetColorTheme(2);
+<c> SetGraphAttribute("ColorTheme", "$default");
+<c> SetColorTheme();
 </topic>
 
 <topic>SetCurrentObject() <style>function
@@ -7793,6 +7797,9 @@ int SetObjectAttribute( int oid, string attribute, (arbitrary type) value)
 Set the value of an attribute in an object. The attribute name is the
 same as in the object editor for the object.
 
+Quotation marks inside a string can be set with \", and new line in
+attributes with several lines with \\n.
+
 <h2>Argument
 
 int <t>oid     <t>Object identity.
@@ -7801,11 +7808,24 @@ string <t>attribut <t>Attribute name.
 
 Returns the status of the operation.
 
-<b>Example
+<b>Example 1
 <c> int sts;
 <c> int oid;
  
 <c> sts = SetObjectAttribute( oid, "DigColor.Color", eDrawType_Color244);
+
+<b>Example 2
+Script attribute with several lines and strings with quotes.
+
+<c>  SetObjectAttribute(id, "Script.Script", "\
+<c>int a;\\n\
+<c>a = GetAttribute(\"H1-Dv1.ActualValue\");\\n\
+<c>if (a)\\n\
+<c>  SetSubwindow(\"$current\",\"W1\",\"@plant1\",\"\", 0);\\n\
+<c>else\\n\
+<c>  SetSubwindow(\"$current\",\"W1\",\"@plant2\",\"\", 0);\\n\
+<c>endif");
+
 </topic>
 
 <topic>SetObjectBackgroundColor() <style>function

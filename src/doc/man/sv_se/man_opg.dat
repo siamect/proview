@@ -2615,6 +2615,12 @@ time()			<LINK> time()
 tzset()			<LINK> tzset()
 verify()		<LINK> verify()
 
+<h2>Vektor funktioner
+arrayclear 		<link> arrayclear()
+arraypush 		<link> arraypush()
+arraysize 		<link> arraysize()
+sort			<link> sort()
+
 <h2>Diverse funktioner
 CutObjectName()		<LINK> cutobjectname()
 ConfirmDialog()		<LINK> confirmdialog()
@@ -2695,20 +2701,27 @@ En deklaration består av
 - tabellen (global eller extern, om local ska inte tabellen anges)
 - datatypen (int, float eller string)
 - variabelnamn (känsligt för stora och små bokstäver)
-- antal element, om variabeln är en vektor
+- antal element, om variabeln är en vektor inom hakparanteser, eller om 
+  en vektor med längd 0, bara hakparenteser.
 - likameds tecken följt av initierings värde, om det utelämnas är 
   intitialvärdet 0 eller en null-sträng
 - semikolon.
 
 En extern variabel bör tas bort (med delete) när den inte längre används.
+Även globala variabler kan tas bort med deletegbl.
 
 <b>Exempel
 
-int             i;
-float           flow = 33.4;
-string          str = "Hello";
-extern int      jakob;
-global float	ferdinand = 1234;
+<c>int             i;
+<c>float           flow = 33.4;
+<c>string          str = "Hello";
+<c>extern int      jakob[20];
+<c>string          simon[];
+<c>global float	   ferdinand = 1234;
+<c>...
+<c>delete jakob[];
+<c>detetegbl fredinand;
+
 </TOPIC>
 
 <TOPIC> operators
@@ -3577,6 +3590,119 @@ int		<t>mode		<t>verifikaion till (1) eller från (0). Valfri.
 <c>  verify(1);
 </TOPIC>
 </headerlevel>
+
+<TOPIC> array_functions <style> function
+Vektor funktioner
+
+<b>Funktion <t>Beskrivning
+arrayclear <t>Töm en dynamisk vektor. <link> arrayclear()
+arraypush <t>Addera till en dynamisk vektor. <link> arraypush()
+arraysize <t>Hämta storleken på en vektor. <link> arraysize()
+sort <t>Sortera en vektor. <link> sort()
+</TOPIC>
+
+<headerlevel>
+
+<TOPIC> arrayclear() <style> function
+arrayclear()
+
+int arrayclear((arbitrary array type) array)
+
+<b>Beskrivning
+
+Ta bort alla element i en vektor och sätt storleken till 0.
+Vektor-argumentet ska specificeras med hakparenteser.
+
+Returnerar operationens status.
+
+<b>Argument
+
+(arbitrary array type)	<t>array <t>Namn på vektorn. Ska anges med
+				 <t><t>hakparenteser.
+
+<b>Exempel
+
+<c>  float temp[];
+<c>  ...
+<c>  arrayclear(temp[]);
+</TOPIC>
+
+<TOPIC> arraypush() <style> function
+int arraypush((godtycklig vektortyp) array, (godtycklig typ)value)
+
+<b>Beskrivning
+
+Addera ett element sist i vektorn och lägg in angivet värde i elementet.
+Vektor-argumentet ska specificeras med hakparenteser.
+
+Returnerar operationens status.
+
+<b>Arguments
+
+(godtycklig vektortyp)	<t>array <t>Namn på vektorn. Ska anges med
+				 <t><t>hakparenteser.
+(godtycklig typ)	<t>value <t>Värde add addera till vektorn.
+
+<b>Exempel
+
+<c>  float x[];
+<c>  
+<c>  arraypush(x[], 29.2);
+</TOPIC>
+
+<TOPIC> arraysize() <style> function
+int arraysize((godtycklig vektortyp) array)
+
+<b>Beskrivning
+
+Hämta storleken på en vektor, dvs antalet element i vektorn.
+Vektor-argumentet ska specificeras med hakparenteser.
+
+Returnerar storleken på vektorn.
+
+<b>Argument
+
+(godtycklig vektortyp)	<t>array <t>Namn på vektorn. Ska anges med
+				 <t><t>hakparenteser.
+
+<b>Exempel
+
+<c>  float x[];
+<c>  int size;
+<c>  ...
+<c>  size = arraysize(x[]);
+</TOPIC>
+
+<TOPIC> sort() <style> function
+int sort((godtyclig vektortyp) array1 [,(godtycklig vektortyp) array2)...]
+
+<b>Beskrivning
+
+Sortera en sträng-vektor i alfabetisk ordning, eller en int- eller float-
+vektor in numerisk ordning.
+Upp till sju ytterligare vektorer kan anges som kommer att sorteras på 
+samma sätt som den första vektorn. Dessa vektorer ska ha samma storlek, eller
+vara större än det första vektorn.
+Vektor-argumenten ska specificeras med hakparenteser.
+
+Returnerar operationens status.
+
+<b>Arguments
+
+(godtycklig vektortyp)	<t>array1 <t>Namn på vektorn som ska sorteras. 
+				<t><t>Ska anges med hakparenteser.
+(godtycklig vektortyp)	<t>array2 - array8 <t>Ytterligare valfria vektorer som 
+				<t><t>kommer att sorteras på samma sätt som den
+				<t><t>första vektorn. Ska anges med hakparenteser.
+
+<b>Exempel
+
+<c>  string name[];
+<c>  string description[];
+<c>  int sts;
+<c>  ...
+<c>  sts = sort(name[], description[]);
+</TOPIC>
 
 <TOPIC> database_functions <style> function
 Databas funktioner

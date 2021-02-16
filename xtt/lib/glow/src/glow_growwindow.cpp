@@ -733,7 +733,7 @@ int GrowWindow::event_handler(
     if (sts == GLOW__TERMINATED)
       return sts;
     else if (sts == GLOW__SUBTERMINATED || sts == GLOW__SWAPTERMINATED) {
-      ctx->gdraw->pop_customcolors();
+      // ctx->gdraw->pop_customcolors();
       ctx->gdraw->reset_clip_rectangle(&ctx->mw);
       return 1;
     }

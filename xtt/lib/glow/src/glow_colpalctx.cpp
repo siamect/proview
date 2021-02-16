@@ -657,10 +657,13 @@ int ColPalCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       else {
         if (idx >= glow_eDrawType_CustomColor1
             && idx < glow_eDrawType_CustomColor__) {
-          if (customcolors && customcolors->is_default_colortheme)
-            ((GrowText*)color_description)
-                ->set_text(colortheme_idx_to_text(
-                    (idx - glow_eDrawType_CustomColor1) / 4));
+          if (customcolors && customcolors->is_default_colortheme) {
+	    char text[80];
+
+	    sprintf(text, "%d %s", (idx - glow_eDrawType_CustomColor1) / 4 + 1, 
+		    colortheme_idx_to_text((idx - glow_eDrawType_CustomColor1) / 4));
+            ((GrowText*)color_description)->set_text(text);
+	  }
           else
             ((GrowText*)color_description)
                 ->set_text(customcolor_idx_to_text(idx));

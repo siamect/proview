@@ -5791,6 +5791,11 @@ int grow_WriteCustomColorFile(grow_tCtx ctx, char* name)
   return ctx->write_customcolor_file(name);
 }
 
+void grow_SetColorTheme(grow_tCtx ctx)
+{
+  ctx->set_color_theme();
+}
+
 void grow_SetDefaultColorTheme(char* theme)
 {
   GrowCtx::set_default_color_theme(theme);

@@ -7533,6 +7533,9 @@ void SetColorTheme(int colortheme)
 
 <h2>Beskrivning
 Sätt färgtema för aktuell graph.
+I runtime måste även ColorTheme i GraphAttributes sättas till
+$default. 
+
 
 <h2>Argument
 
@@ -7540,6 +7543,7 @@ int <t>colortheme     <t>Index för färgtema.
 
 <b>Exempel
  
+<c> SetGraphAttribute("ColorTheme", "$default");
 <c> SetColorTheme(2);
 </topic>
 
@@ -7676,6 +7680,9 @@ int SetObjectAttribute( int oid, string attribute, (arbitrary type) value)
 Sätter värde på ett attribut i ett objekt. Attributet namnges på
 samma sätt som i attributeditorn för objektet.
 
+Citationstecken i strängar kan sättas med \", och ny rad i
+attribut med flera rade med \\n.
+
 <h2>Argument
 
 int <t>oid     <t>Objektets identitet.
@@ -7684,11 +7691,24 @@ string <t>attribut <t>Attributnamn.
 
 Returnerar status för operationen.
 
-<b>Exempel
+<b>Exempel 1
 <c> int sts;
 <c> int oid;
  
 <c> sts = SetObjectAttribute( oid, "DigColor.Color", eDrawType_Color244);
+
+<b>Exempel 2
+Script attribut med flera rader och strängar med citationstecket.
+
+<c>  SetObjectAttribute(id, "Script.Script", "\
+<c>int a;\\n\
+<c>a = GetAttribute(\"H1-Dv1.ActualValue\");\\n\
+<c>if (a)\\n\
+<c>  SetSubwindow(\"$current\",\"W1\",\"@plant1\",\"\", 0);\\n\
+<c>else\\n\
+<c>  SetSubwindow(\"$current\",\"W1\",\"@plant2\",\"\", 0);\\n\
+<c>endif");
+
 </topic>
 
 <topic>SetObjectBackgroundColor() <style>function

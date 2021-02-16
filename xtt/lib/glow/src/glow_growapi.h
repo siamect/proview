@@ -3346,6 +3346,7 @@ void* grow_GetCustomColors(grow_tCtx ctx);
 int grow_GetColorThemeColors(char* file, double** colors, int* size);
 int grow_ReadCustomColorFile(grow_tCtx ctx, char* name);
 int grow_WriteCustomColorFile(grow_tCtx ctx, char* name);
+void grow_SetColorTheme(grow_tCtx ctx);
 void grow_SetDefaultColorTheme(char* theme);
 void grow_SetColorThemeLightness(grow_tCtx ctx, int lighness);
 void grow_SetColorThemeIsDefault(grow_tCtx ctx, int isdefault);

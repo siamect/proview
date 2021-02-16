@@ -773,7 +773,7 @@ void GrowText::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       ctx->gdraw->text(w, x1, y1, text, strlen(text), ldraw_type, color, idx,
           highlight, 0, lfont, tsize, rot);
     }
-  } else if (idx >= 0) {
+  } else if (idx >= 0 && ctx->environment == glow_eEnv_Development) {
     ctx->gdraw->get_text_extent("A", 1, draw_type, MAX(0, idx), font, &z_width,
         &z_height, &z_descent, tsize, rot);
     ctx->gdraw->rect(w, x1, y1 - (z_height - z_descent), z_width, z_height,

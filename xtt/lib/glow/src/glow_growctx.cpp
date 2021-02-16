@@ -4619,6 +4619,17 @@ int GrowCtx::write_customcolor_file(char* name)
     return 0;
 }
 
+void GrowCtx::set_color_theme() 
+{
+  if (!streq(color_theme, "")) {
+    if (streq(color_theme, "$default")) {
+      if (!streq(default_color_theme, ""))
+        customcolors->read_colorfile(this, default_color_theme);
+    } else
+      customcolors->read_colorfile(this, color_theme);
+  }
+}
+
 void GrowCtx::set_default_color_theme(char* theme)
 {
   strncpy(default_color_theme, theme, sizeof(default_color_theme));

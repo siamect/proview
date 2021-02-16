@@ -5690,8 +5690,9 @@ static int xnav_ge_command_cb(
   ((XNav*)ctx)->current_cmd_ctx = caller;
   if (command)
     ((XNav*)ctx)->command(command);
-  else if (script)
+  else if (script) {
     ((XNav*)ctx)->script(script);
+  }
   ((XNav*)ctx)->current_cmd_ctx = 0;
   return ((XNav*)ctx)->get_command_sts();
 }
@@ -8654,11 +8655,142 @@ static int xnav_getgraphinstancenext_func(void* filectx, ccm_sArg* arg_list,
   return 1;
 }
 
+static int xnav_setsubwindow_func(void* filectx, ccm_sArg* arg_list,
+    int arg_count, int* return_decl, ccm_tFloat* return_float,
+    ccm_tInt* return_int, char* return_string)
+{
+  XNav* xnav;
+  XttGe* gectx;
+  int sts;
+  ccm_sArg *arg_p2, *arg_p3, *arg_p4, *arg_p5;
+  XttMultiView* mvctx;
+  pwr_tOName graph_str;
+  char name_str[80];
+  char object_str[800];
+  char *object_p = 0;
+  pwr_tOName source_str;
+  int self = 0;
+
+  if (arg_count < 3)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+
+  if (arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  if (arg_p2->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  if (arg_p3->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  if (arg_count > 3) {
+    arg_p4 = arg_p3->next;
+    if (arg_p4->value_decl != CCM_DECL_STRING)
+      return CCM__ARGMISM;
+    if (strcmp(arg_p4->value_string, "") != 0) {
+      strncpy(object_str, arg_p4->value_string, sizeof(object_str)-1);
+      object_p = object_str;
+    }
+  }
+  
+  if (arg_count > 4) {
+    arg_p5 = arg_p4->next;
+    if (arg_p5->value_decl != CCM_DECL_INT)
+      return CCM__ARGMISM;
+    self = arg_p5->value_int; 
+  }
+  
+  strncpy(graph_str, arg_list->value_string, sizeof(graph_str)-1);
+  strncpy(name_str, arg_p2->value_string, sizeof(name_str)-1);
+  strncpy(source_str, arg_p3->value_string, sizeof(source_str)-1);
+  if (strcmp(object_str, "") == 0)
+    object_p = 0;
+  else
+    object_p = object_str;
+
+  xnav_get_stored_xnav(&xnav);
+
+  if (str_NoCaseStrcmp(graph_str, "$current") == 0 && xnav->current_cmd_ctx) {
+    gectx = (XttGe*)xnav->current_cmd_ctx;
+    sts = gectx->set_subwindow_source(name_str, source_str, object_p);
+    if (self) {
+      *return_int = GLOW__SUBTERMINATED;      
+      *return_decl = CCM_DECL_INT;
+      return CCM__EXITFUNC;
+    }
+
+#if 0
+    if (focus_p) {
+      sprintf(focus, "%s.%s", name_str, focus_p);
+      gectx->set_object_focus(focus, inputempty);
+    }
+#endif
+  } else if (xnav->appl.find_graph(graph_str, 0, (void**)&gectx)) {
+    if (streq(source_str, "")) {
+      xnav->message('E', "Syntax error");
+      return XNAV__HOLDCOMMAND;
+    }
+    sts = gectx->set_subwindow_source(name_str, source_str, object_p);
+    if (self) {
+      *return_int = GLOW__SUBTERMINATED;      
+      *return_decl = CCM_DECL_INT;
+      return CCM__EXITFUNC;
+    }
+
+#if 0
+    if (focus_p) {
+      sprintf(focus, "%s.%s", name_str, focus_p);
+      gectx->set_object_focus(focus, inputempty);
+    }
+#endif
+  } else {
+    pwr_tStatus sts;
+    pwr_tAttrRef aref;
+    double borders[4] = { 0, 0, 0, 0 };
+    double* bordersp = borders;
+    int cont = 0;
+
+    xnav_replace_node_str(graph_str, graph_str);
+
+    bordersp = 0;
+
+    sts = gdh_NameToAttrref(pwr_cNObjid, graph_str, &aref);
+    if (ODD(sts)
+	&& xnav->appl.find(applist_eType_MultiView, &aref, (void**)&mvctx)) {
+      return mvctx->set_subwindow_source(
+	  name_str, source_str, object_p, bordersp, cont);
+    }
+  }
+  *return_int = sts;
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
 static int xnav_quit_func(void* filectx, ccm_sArg* arg_list, int arg_count,
     int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
     char* return_string)
 {
   exit(0);
+}
+
+static int xnav_sleep_func(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  XNav* xnav;
+
+  if (arg_count != 1)
+    return CCM__ARGMISM;
+
+  if (arg_list->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+
+  xnav_get_stored_xnav(&xnav);
+  xnav->wow->Wait(arg_list->value_float);
+  return 1;
 }
 
 static int xnav_ccm_deffilename_func(
@@ -8780,7 +8912,14 @@ int XNav::readcmdfile(char* incommand, char* buffer)
         "Xtt", "GetGraphInstanceNext", xnav_getgraphinstancenext_func);
     if (EVEN(sts))
       return sts;
+    sts = ccm_register_function(
+        "Xtt", "SetSubwindow", xnav_setsubwindow_func);
+    if (EVEN(sts))
+      return sts;
     sts = ccm_register_function("Xtt", "Quit", xnav_quit_func);
+    if (EVEN(sts))
+      return sts;
+    sts = ccm_register_function("Xtt", "Sleep", xnav_sleep_func);
     if (EVEN(sts))
       return sts;
 
@@ -9733,9 +9872,10 @@ int XNav::exec_xttgraph(pwr_tObjid xttgraph, char* instance, char* focus,
     bordersp = borders;
   }
 
-  if ((s = strstr(action, ".pwg"))) {
+  if ((s = strstr(action, ".pwg")) || action[0] == '@') {
     // Open graph
-    *s = 0;
+    if (s)
+      *s = 0;
     scrollbars
         = xttgraph_o.Options & pwr_mXttGraphOptionsMask_Scrollbars ? 1 : 0;
     menu = xttgraph_o.Options & pwr_mXttGraphOptionsMask_Menu ? 1 : 0;

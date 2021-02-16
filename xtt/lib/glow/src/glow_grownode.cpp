@@ -873,35 +873,34 @@ void GrowNode::set_scale(
   trf.scale_from_stored(scale_x, scale_y, x0, y0);
   get_node_borders();
 
-  /*
-    switch( type)
-    {
-      case glow_eScaleType_LowerLeft:
-        x_left = old_x_left;
-        y_low = old_y_low;
-        break;
-      case glow_eScaleType_LowerRight:
-        x_right = old_x_right;
-        y_low = old_y_low;
-        break;
-      case glow_eScaleType_UpperRight:
-        x_right = old_x_right;
-        y_high = old_y_high;
-        break;
-      case glow_eScaleType_UpperLeft:
-        x_left = old_x_left;
-        y_high = old_y_high;
-        break;
-      case glow_eScaleType_FixPoint:
-        break;
-      case glow_eScaleType_Center:
-        x0 = (x_left + x_right) / 2;
-        y0 = (y_low + y_high) /2;
-        break;
-      default:
-        ;
-    }
-  **/
+  // Avoid escalating position
+  switch( type) {
+  case glow_eScaleType_LowerLeft:
+    x_left = old_x_left;
+    y_low = old_y_low;
+    break;
+  case glow_eScaleType_LowerRight:
+    x_right = old_x_right;
+    y_low = old_y_low;
+    break;
+  case glow_eScaleType_UpperRight:
+    x_right = old_x_right;
+    y_high = old_y_high;
+    break;
+  case glow_eScaleType_UpperLeft:
+    x_left = old_x_left;
+    y_high = old_y_high;
+    break;
+  case glow_eScaleType_FixPoint:
+    break;
+  case glow_eScaleType_Center:
+    x_left = old_x_left + old_x_right - x_right;
+    y_low = old_y_low + old_y_high - y_high;
+    break;
+  default:
+    ;
+  }
+
   call_redraw_node_cons();
   ctx->draw(&ctx->mw,
       old_x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,

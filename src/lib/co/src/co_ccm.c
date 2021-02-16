@@ -99,6 +99,7 @@
 #define K_ACTION_RETURN 44
 #define K_ACTION_BACKSLASH 45
 #define K_ACTION_DELETE 46
+#define K_ACTION_DELETEGBL 47
 
 #define K_OPERAND_NO 0
 #define K_OPERAND_NAME 1
@@ -109,6 +110,7 @@
 #define K_OPERAND_FUNCTION 6
 #define K_OPERAND_RETURN 7
 #define K_OPERAND_DELETE 8
+#define K_OPERAND_DELETEGBL 9
 
 //#define K_LOCTYPE_NO 0
 //#define K_LOCTYPE_BEFORE 1
@@ -284,6 +286,21 @@ static int ccm_func_sin(void* filectx, ccm_sArg* arg_list, int arg_count,
 static int ccm_func_cos(void* filectx, ccm_sArg* arg_list, int arg_count,
     int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
     char* return_string);
+static int ccm_func_random(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string);
+static int ccm_func_arraysize(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string);
+static int ccm_func_arraypush(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string);
+static int ccm_func_arrayclear(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string);
+static int ccm_func_sort(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string);
 
 #define CCM_SYSFUNC_MAX 200
 
@@ -316,6 +333,11 @@ static ccm_sSysFunc ccm_sysfunc[CCM_SYSFUNC_MAX] = { { "std", "printf",
   { "std", "tzset", &ccm_func_tzset },
   { "std", "sin", &ccm_func_sin },
   { "std", "cos", &ccm_func_cos },
+  { "std", "random", &ccm_func_random },
+  { "std", "arraysize", &ccm_func_arraysize },
+  { "std", "arraypush", &ccm_func_arraypush },
+  { "std", "arrayclear", &ccm_func_arrayclear },
+  { "std", "sort", &ccm_func_sort },
   { "", "", 0 } };
 
 /************* TEST *********************/
@@ -555,26 +577,31 @@ int ccm_varname_parse(ccm_tFuncCtx funcctx, const char* name, char* varname,
     t = strchr(varname, ']');
     if (t == 0)
       return 0;
+    else if (t - s == 1) {
+      *s = 0;
+      *array = 1;
+      *element = CCM_NO_ELEM;
+    }
     else {
       len = t - s - 1;
       strncpy(elementstr, s + 1, len);
       elementstr[len] = 0;
       if (!isdigit(elementstr[0])) {
-        if (funcctx == NULL)
-          return 0;
-        ccm_remove_blank(vname, elementstr);
-        sts = ccm_getvar(funcctx, vname, &value_decl, &value_float, &value_int,
-            value_string);
-        if (EVEN(sts))
-          return sts;
-        if (value_decl != K_DECL_INT)
-          return 0;
-        *element = value_int;
+	if (funcctx == NULL)
+	  return 0;
+	ccm_remove_blank(vname, elementstr);
+	sts = ccm_getvar(funcctx, vname, &value_decl, &value_float, &value_int,
+			 value_string);
+	if (EVEN(sts))
+	  return sts;
+	if (value_decl != K_DECL_INT)
+	  return 0;
+	*element = value_int;
       }
       sscanf(elementstr, "%d", element);
       *s = '\0';
       if ((*element < 0) || (*element > 5000)) {
-        return 0;
+	return 0;
       }
       *array = 1;
     }
@@ -703,6 +730,9 @@ static void ccm_print_error(ccm_tFileCtx filectx, int sts)
     break;
   case CCM__NOACCESS:
     strcpy(text, "No access for operation");
+    break;
+  case CCM__NOELEMERROR:
+    strcpy(text, "Number of elements not specified");
     break;
   default:
     strcpy(text, "Unknown error code");
@@ -1078,6 +1108,10 @@ static int operand_found(ccm_tRowCtx rowctx)
       operand_p->type = K_OPERAND_DELETE;
       operand_p->o_operator = K_ACTION_DELETE;
       rowctx->last_type = K_TYPE_OPERATOR;
+    } else if (streq(upname, "DELETEGBL")) {
+      operand_p->type = K_OPERAND_DELETEGBL;
+      operand_p->o_operator = K_ACTION_DELETEGBL;
+      rowctx->last_type = K_TYPE_OPERATOR;
     } else if (streq(upname, "RETURN")) {
       operand_p->type = K_OPERAND_RETURN;
       operand_p->o_operator = K_ACTION_RETURN;
@@ -1115,9 +1149,11 @@ static int operand_found(ccm_tRowCtx rowctx)
       return CCM__SYNTAX;
     }
     strncpy(operand_p->name, &rowctx->line[rowctx->delim_pos],
-        rowctx->pos - rowctx->delim_pos);
+        MIN(rowctx->pos - rowctx->delim_pos, sizeof(operand_p->name)));
+    operand_p->name[MIN(rowctx->pos - rowctx->delim_pos, sizeof(operand_p->name)-1)] = 0;
     strncpy(operand_p->value_string, &rowctx->line[rowctx->delim_pos],
-        rowctx->pos - rowctx->delim_pos);
+	    MIN(rowctx->pos - rowctx->delim_pos, sizeof(operand_p->value_string)));
+    operand_p->value_string[MIN(rowctx->pos - rowctx->delim_pos, sizeof(operand_p->value_string)-1)] = 0;
     operand_p->value_decl = K_DECL_STRING;
     rowctx->last_type = K_TYPE_OPERAND;
   }
@@ -1800,10 +1836,10 @@ int ccm_operate_exec(ccm_tFuncCtx funcctx, ccm_sOperand* op, ccm_sOperand* next)
         if (op_arg->parlevel == op->parlevel - 1)
           break;
       }
-
       sts = ccm_function_exec(funcctx->filectx, op->name, &op->func, arg_list,
           arg_count, &op->result_decl, &op->result_float, &op->result_int,
           op->result_string, 0);
+      funcctx->filectx->funcctx = funcctx;
 
       /* Set returned argument values and free argumentlist */
       for (arg_p = arg_list; arg_p; arg_p = next_arg) {
@@ -2500,6 +2536,13 @@ int ccm_operate_exec(ccm_tFuncCtx funcctx, ccm_sOperand* op, ccm_sOperand* next)
       if (EVEN(sts))
         return sts;
       break;
+    case K_ACTION_DELETEGBL:
+      sts = ccm_deletevar(
+          next->name, &funcctx->filectx->gblint_list, 
+	  &funcctx->filectx->gblfloat_list, &funcctx->filectx->gblstring_list);
+      if (EVEN(sts))
+        return sts;
+      break;
     }
     next->result_done = 1;
     if (ccm_testmode)
@@ -2889,6 +2932,10 @@ static int ccm_getvar(ccm_tFuncCtx funcctx, const char* name, int* decl,
     if (found) {
       if (int_p->array != array)
         return CCM__VARNOTFOUND;
+      if (int_p->array && element == CCM_NO_ELEM) {
+	*decl = K_DECL_INT;
+	return CCM__NOELEM;
+      }
       if (int_p->array && (element < 0 || element >= int_p->elements))
         return CCM__ARRAYBOUNDS;
 
@@ -2905,6 +2952,10 @@ static int ccm_getvar(ccm_tFuncCtx funcctx, const char* name, int* decl,
       if (found) {
         if (float_p->array != array)
           return CCM__VARNOTFOUND;
+	if (float_p->array && element == CCM_NO_ELEM) {
+	  *decl = K_DECL_FLOAT;
+	  return CCM__NOELEM;
+	}
         if (float_p->array && (element < 0 || element >= float_p->elements))
           return CCM__ARRAYBOUNDS;
 
@@ -2921,6 +2972,10 @@ static int ccm_getvar(ccm_tFuncCtx funcctx, const char* name, int* decl,
         if (found) {
           if (string_p->array != array)
             return CCM__VARNOTFOUND;
+	  if (string_p->array && element == CCM_NO_ELEM) {
+	    *decl = K_DECL_STRING;
+	    return CCM__NOELEM;
+	  }
           if (string_p->array && (element < 0 || element >= string_p->elements))
             return CCM__ARRAYBOUNDS;
 
@@ -2936,6 +2991,360 @@ static int ccm_getvar(ccm_tFuncCtx funcctx, const char* name, int* decl,
   if (!found)
     return CCM__VARNOTFOUND;
 
+  return 1;
+}
+
+int ccm_ref_var(ccm_tFuncCtx funcctx, const char* name, void** valuep, 
+   int *decl, int *array, int *elements)
+{
+  ccm_sIntvar* int_p;
+  ccm_sFloatvar* float_p;
+  ccm_sStringvar* string_p;
+  ccm_sIntvar* int_list;
+  ccm_sFloatvar* float_list;
+  ccm_sStringvar* string_list;
+  int found;
+  int i;
+  int sts;
+  int parse_array;
+  int parse_element;
+  char varname[80];
+
+  sts = ccm_varname_parse(funcctx, name, varname, &parse_array, &parse_element);
+  if (EVEN(sts))
+    return sts;
+
+  /* Search int */
+  found = 0;
+  for (i = 0; i < 3; i++) {
+    if (i == 0) {
+      int_list = funcctx->locint_list;
+      float_list = funcctx->locfloat_list;
+      string_list = funcctx->locstring_list;
+    } else if (i == 1) {
+      int_list = funcctx->filectx->gblint_list;
+      float_list = funcctx->filectx->gblfloat_list;
+      string_list = funcctx->filectx->gblstring_list;
+    } else {
+      int_list = extint_list;
+      float_list = extfloat_list;
+      string_list = extstring_list;
+    }
+
+    for (int_p = int_list; int_p; int_p = int_p->next) {
+      if (streq(int_p->name, varname)) {
+        found = 1;
+        break;
+      }
+    }
+    if (found) {
+      if (int_p->array != parse_array)
+        parse_element = 0;
+      if (int_p->array && parse_element == CCM_NO_ELEM) {
+	*decl = K_DECL_INT;
+	*array = int_p->array;
+	*elements = int_p->elements;
+	*valuep = (void *)(int_p->value);
+	return CCM__NOELEM;
+      }
+      if (int_p->array && (parse_element < 0 || parse_element >= int_p->elements))
+        return CCM__ARRAYBOUNDS;
+
+      *valuep = (void *)(int_p->value + parse_element);
+      *decl = K_DECL_INT;
+      *array = int_p->array;
+      *elements = int_p->elements;
+    } else {
+      /* Search float */
+      for (float_p = float_list; float_p; float_p = float_p->next) {
+        if (streq(float_p->name, varname)) {
+          found = 1;
+          break;
+        }
+      }
+      if (found) {
+        if (float_p->array != parse_array)
+          return CCM__VARNOTFOUND;
+	if (float_p->array && parse_element == CCM_NO_ELEM) {
+	  *decl = K_DECL_FLOAT;
+	  *array = float_p->array;
+	  *elements = float_p->elements;
+	  *valuep = (void *)(float_p->value);
+	  return CCM__NOELEM;
+	}
+        if (float_p->array && (parse_element < 0 || parse_element >= float_p->elements))
+          return CCM__ARRAYBOUNDS;
+
+	*valuep = (void *)(float_p->value + parse_element);
+	*decl = K_DECL_FLOAT;
+	*array = float_p->array;
+	*elements = float_p->elements;
+      } else {
+        /* Search string */
+        for (string_p = string_list; string_p; string_p = string_p->next) {
+          if (streq(string_p->name, varname)) {
+            found = 1;
+            break;
+          }
+        }
+        if (found) {
+          if (string_p->array != parse_array)
+            return CCM__VARNOTFOUND;
+	  if (string_p->array && parse_element == CCM_NO_ELEM) {
+	    *decl = K_DECL_STRING;
+	    *array = string_p->array;
+	    *elements = string_p->elements;
+	    *valuep = (void *)(string_p->value);
+	    return CCM__NOELEM;
+	  }
+          if (string_p->array && (parse_element < 0 || parse_element >= string_p->elements))
+            return CCM__ARRAYBOUNDS;
+
+	  *valuep = (void *)(string_p->value + parse_element * K_STRING_SIZE);
+	  *decl = K_DECL_STRING;
+	  *array = string_p->array;
+	  *elements = string_p->elements;
+        }
+      }
+    }
+    if (found)
+      break;
+  }
+  if (!found)
+    return CCM__VARNOTFOUND;
+
+  return 1;
+}
+
+static int ccm_pushvar(ccm_tFuncCtx funcctx, const char* name, int decl,
+    ccm_tFloat value_float, ccm_tInt value_int, char* value_string)
+{
+  ccm_sIntvar* int_p;
+  ccm_sFloatvar* float_p;
+  ccm_sStringvar* string_p;
+  ccm_sIntvar* int_list;
+  ccm_sFloatvar* float_list;
+  ccm_sStringvar* string_list;
+  int found;
+  int nr;
+  float f_var;
+  int i;
+  int sts;
+  int array;
+  int element;
+  char varname[80];
+  void *tmp;
+
+  sts = ccm_varname_parse(funcctx, name, varname, &array, &element);
+  if (EVEN(sts))
+    return sts;
+  if (!array || element != CCM_NO_ELEM)
+    return CCM__VARTYPE;
+
+  found = 0;
+  for (i = 0; i < 3; i++) {
+    if (i == 0) {
+      int_list = funcctx->locint_list;
+      float_list = funcctx->locfloat_list;
+      string_list = funcctx->locstring_list;
+    } else if (i == 1) {
+      int_list = funcctx->filectx->gblint_list;
+      float_list = funcctx->filectx->gblfloat_list;
+      string_list = funcctx->filectx->gblstring_list;
+    } else {
+      int_list = extint_list;
+      float_list = extfloat_list;
+      string_list = extstring_list;
+    }
+
+    for (int_p = int_list; int_p; int_p = int_p->next) {
+      if (streq(int_p->name, varname)) {
+        found = 1;
+        break;
+      }
+    }
+    if (found) {
+      if (!int_p->array)
+        return CCM__VARTYPE;
+
+      int_p->elements++;
+      tmp = int_p->value;
+      int_p->value = calloc(int_p->elements, sizeof(ccm_tInt));
+      if (int_p->elements > 1)
+	memcpy(int_p->value, tmp, (int_p->elements - 1) * sizeof(ccm_tInt));
+      free(tmp);
+      if (decl == K_DECL_INT)
+        *(int_p->value + int_p->elements - 1) = value_int;
+      else if (decl == K_DECL_FLOAT)
+        *(int_p->value + int_p->elements - 1) = value_float;
+      else {
+        if (strchr(value_string, '.')) {
+          nr = sscanf(value_string, "%f", &f_var);
+          if (nr != 1)
+            return CCM__VARTYPE;
+          *(int_p->value + int_p->elements - 1) = f_var;
+        } else {
+          nr = sscanf(value_string, ccm_cIntFormat, int_p->value + int_p->elements - 1);
+          if (nr != 1)
+            return CCM__VARTYPE;
+        }
+      }
+    } else {
+      /* Search float */
+      for (float_p = float_list; float_p; float_p = float_p->next) {
+        if (streq(float_p->name, varname)) {
+          found = 1;
+          break;
+        }
+      }
+      if (found) {
+	if (!float_p->array)
+	  return CCM__VARTYPE;
+
+	float_p->elements++;
+	tmp = float_p->value;
+	float_p->value = calloc(float_p->elements, sizeof(ccm_tFloat));
+	if (float_p->elements > 1)
+	  memcpy(float_p->value, tmp, (float_p->elements - 1) * sizeof(ccm_tFloat));
+	free(tmp);
+        if (decl == K_DECL_INT)
+          *(float_p->value + float_p->elements - 1) = value_int;
+        else if (decl == K_DECL_FLOAT)
+          *(float_p->value + float_p->elements - 1) = value_float;
+        else {
+          nr = sscanf(value_string, "%f", float_p->value + float_p->elements - 1);
+          if (nr != 1)
+            return CCM__VARTYPE;
+        }
+      } else {
+        /* Search string */
+        for (string_p = string_list; string_p; string_p = string_p->next) {
+          if (streq(string_p->name, varname)) {
+            found = 1;
+            break;
+          }
+        }
+        if (found) {
+	  if (!string_p->array)
+	    return CCM__VARTYPE;
+
+	  string_p->elements++;
+	  tmp = string_p->value;
+	  string_p->value = calloc(string_p->elements, sizeof(ccm_tString));
+	  if (string_p->elements > 1)
+	    memcpy(string_p->value, tmp, (string_p->elements - 1) * sizeof(ccm_tString));
+	  free(tmp);
+
+          if (decl == K_DECL_INT)
+            sprintf(string_p->value + (string_p->elements - 1) * K_STRING_SIZE, ccm_cIntFormat,
+                value_int);
+          else if (decl == K_DECL_FLOAT)
+            ccm_float_to_string(
+	        string_p->value + (string_p->elements - 1) * K_STRING_SIZE, value_float);
+          else
+            strncpy(string_p->value + (string_p->elements - 1) * K_STRING_SIZE, value_string,
+                K_STRING_SIZE);
+        }
+      }
+    }
+    if (found)
+      break;
+  }
+  if (!found)
+    return CCM__VARNOTFOUND;
+  return 1;
+}
+
+static int ccm_clearvar(ccm_tFuncCtx funcctx, const char* name)
+{
+  ccm_sIntvar* int_p;
+  ccm_sFloatvar* float_p;
+  ccm_sStringvar* string_p;
+  ccm_sIntvar* int_list;
+  ccm_sFloatvar* float_list;
+  ccm_sStringvar* string_list;
+  int found;
+  int i;
+  int sts;
+  int array;
+  int element;
+  char varname[80];
+  void *tmp;
+
+  sts = ccm_varname_parse(funcctx, name, varname, &array, &element);
+  if (EVEN(sts))
+    return sts;
+  if (!array || element != CCM_NO_ELEM)
+    return CCM__VARTYPE;
+
+  found = 0;
+  for (i = 0; i < 3; i++) {
+    if (i == 0) {
+      int_list = funcctx->locint_list;
+      float_list = funcctx->locfloat_list;
+      string_list = funcctx->locstring_list;
+    } else if (i == 1) {
+      int_list = funcctx->filectx->gblint_list;
+      float_list = funcctx->filectx->gblfloat_list;
+      string_list = funcctx->filectx->gblstring_list;
+    } else {
+      int_list = extint_list;
+      float_list = extfloat_list;
+      string_list = extstring_list;
+    }
+
+    for (int_p = int_list; int_p; int_p = int_p->next) {
+      if (streq(int_p->name, varname)) {
+        found = 1;
+        break;
+      }
+    }
+    if (found) {
+      if (!int_p->array)
+        return CCM__VARTYPE;
+
+      int_p->elements = 0;
+      tmp = int_p->value;
+      free(int_p->value);
+      int_p->value = calloc(1, sizeof(ccm_tInt));
+    } else {
+      /* Search float */
+      for (float_p = float_list; float_p; float_p = float_p->next) {
+        if (streq(float_p->name, varname)) {
+          found = 1;
+          break;
+        }
+      }
+      if (found) {
+	if (!float_p->array)
+	  return CCM__VARTYPE;
+
+	float_p->elements = 0;
+	free(float_p->value);
+	float_p->value = calloc(1, sizeof(ccm_tFloat));
+      } else {
+        /* Search string */
+        for (string_p = string_list; string_p; string_p = string_p->next) {
+          if (streq(string_p->name, varname)) {
+            found = 1;
+            break;
+          }
+        }
+        if (found) {
+	  if (!string_p->array)
+	    return CCM__VARTYPE;
+
+	  string_p->elements = 0;
+	  free(string_p->value);
+	  string_p->value = calloc(1, sizeof(ccm_tString));
+        }
+      }
+    }
+    if (found)
+      break;
+  }
+  if (!found)
+    return CCM__VARNOTFOUND;
   return 1;
 }
 
@@ -2960,6 +3369,8 @@ static int ccm_setvar(ccm_tFuncCtx funcctx, const char* name, int decl,
   sts = ccm_varname_parse(funcctx, name, varname, &array, &element);
   if (EVEN(sts))
     return sts;
+  if (array && element == CCM_NO_ELEM)
+    return CCM__NOELEMERROR;
 
   found = 0;
   for (i = 0; i < 3; i++) {
@@ -3080,6 +3491,8 @@ int ccm_set_external_var(const char* name, int decl, ccm_tFloat value_float,
   sts = ccm_varname_parse(NULL, name, varname, &array, &element);
   if (EVEN(sts))
     return sts;
+  if (array && element == CCM_NO_ELEM)
+    return CCM__NOELEMERROR;
 
   found = 0;
 
@@ -3155,8 +3568,12 @@ int ccm_get_external_var(const char* name, int decl, ccm_tFloat* value_float,
         break;
       }
     }
-    if (found)
+    if (found) {
+      if (int_p->array && element == CCM_NO_ELEM) {
+	return CCM__NOELEM;
+      }
       *value_int = *(int_p->value + element);
+    }
   } else if (decl == K_DECL_FLOAT) {
     /* Search float */
     float_list = extfloat_list;
@@ -3167,8 +3584,12 @@ int ccm_get_external_var(const char* name, int decl, ccm_tFloat* value_float,
         break;
       }
     }
-    if (found)
+    if (found) {
+      if (float_p->array && element == CCM_NO_ELEM) {
+	return CCM__NOELEM;
+      }
       *value_float = *(float_p->value + element);
+    }
   } else if (decl == K_DECL_STRING) {
     /* Search string */
     string_list = extstring_list;
@@ -3179,9 +3600,13 @@ int ccm_get_external_var(const char* name, int decl, ccm_tFloat* value_float,
         break;
       }
     }
-    if (found)
+    if (found) {
+      if (string_p->array && element == CCM_NO_ELEM) {
+	return CCM__NOELEM;
+      }
       strncpy(value_string, string_p->value + element * K_STRING_SIZE,
           K_STRING_SIZE);
+    }
   }
   if (!found)
     return CCM__VARNOTFOUND;
@@ -3217,8 +3642,13 @@ int ccm_ref_external_var(const char* name, int decl, void** valuep)
         break;
       }
     }
-    if (found)
+    if (found) {
+      if (int_p->array && element == CCM_NO_ELEM) {
+	*valuep = (void*)int_p->value;
+	return CCM__NOELEM;
+      }
       *valuep = (void*)(int_p->value + element);
+    }
   } else if (decl == K_DECL_FLOAT) {
     /* Search float */
     float_list = extfloat_list;
@@ -3229,8 +3659,13 @@ int ccm_ref_external_var(const char* name, int decl, void** valuep)
         break;
       }
     }
-    if (found)
+    if (found) {
+      if (float_p->array && element == CCM_NO_ELEM) {
+	*valuep = (void*)float_p->value;
+	return CCM__NOELEM;
+      }
       *valuep = (void*)(float_p->value + element);
+    }
   } else if (decl == K_DECL_STRING) {
     /* Search string */
     string_list = extstring_list;
@@ -3241,8 +3676,13 @@ int ccm_ref_external_var(const char* name, int decl, void** valuep)
         break;
       }
     }
-    if (found)
+    if (found) {
+      if (string_p->array && element == CCM_NO_ELEM) {
+	*valuep = (void*)string_p->value;
+	return CCM__NOELEM;
+      }
       *valuep = (void*)(string_p->value + element * K_STRING_SIZE);
+    }
   }
   if (!found)
     return CCM__VARNOTFOUND;
@@ -3264,7 +3704,9 @@ static int ccm_createvar(const char* name, int decl, ccm_tFloat value_float,
   sts = ccm_varname_parse(NULL, name, varname, &array, &elements);
   if (EVEN(sts))
     return sts;
-  elements++;
+  if (elements == CCM_NO_ELEM)
+    elements = 0;
+  // elements++;
 
   if (decl == K_DECL_INT) {
     for (int_p = *int_list; int_p; int_p = int_p->next) {
@@ -3274,7 +3716,7 @@ static int ccm_createvar(const char* name, int decl, ccm_tFloat value_float,
 
     int_p = calloc(1, sizeof(ccm_sIntvar));
     strcpy(int_p->name, varname);
-    int_p->value = calloc(elements, sizeof(ccm_tInt));
+    int_p->value = calloc(MAX(1,elements), sizeof(ccm_tInt));
     if (!array)
       *(int_p->value) = value_int;
     int_p->elements = elements;
@@ -3289,7 +3731,7 @@ static int ccm_createvar(const char* name, int decl, ccm_tFloat value_float,
 
     float_p = calloc(1, sizeof(ccm_sFloatvar));
     strcpy(float_p->name, varname);
-    float_p->value = calloc(elements, sizeof(ccm_tFloat));
+    float_p->value = calloc(MAX(1,elements), sizeof(ccm_tFloat));
     if (!array)
       *(float_p->value) = value_float;
     float_p->elements = elements;
@@ -3304,7 +3746,7 @@ static int ccm_createvar(const char* name, int decl, ccm_tFloat value_float,
 
     string_p = calloc(1, sizeof(ccm_sStringvar));
     strcpy(string_p->name, varname);
-    string_p->value = calloc(elements, sizeof(ccm_tString));
+    string_p->value = calloc(MAX(1,elements), sizeof(ccm_tString));
     if (!array && value_string != NULL)
       strncpy(string_p->value, value_string, sizeof(ccm_tString));
     string_p->elements = elements;
@@ -3330,7 +3772,7 @@ static int ccm_deletevar(const char* name, ccm_sIntvar** int_list,
   sts = ccm_varname_parse(NULL, name, varname, &array, &elements);
   if (EVEN(sts))
     return sts;
-  elements++;
+  // elements++;
 
   int_prev = 0;
   found = 0;
@@ -3599,6 +4041,19 @@ static int ccm_read_buffer(
     }
     line_list_p = line_p;
     s++;
+  }
+  if (!line_list_p) {
+    /* Single line */
+    line_p = calloc(1, sizeof(ccm_sLine));
+    strcpy(line_p->line, buffer);
+    line_p->row = row;
+    if (line_list_p == NULL)
+      *line_list = line_p;
+    else {
+      line_p->prev = line_list_p;
+      line_list_p->next = line_p;
+    }
+    line_list_p = line_p;
   }
   return 1;
 }
@@ -4740,8 +5195,6 @@ static int ccm_func_sin(void* filectx, ccm_sArg* arg_list, int arg_count,
   if (arg_p1->value_decl != K_DECL_FLOAT)
     return CCM__VARTYPE;
 
-  tzset();
-
   *return_decl = K_DECL_FLOAT;
   *return_float = sin(arg_p1->value_float / 180 * M_PI);
   return 1;
@@ -4759,10 +5212,285 @@ static int ccm_func_cos(void* filectx, ccm_sArg* arg_list, int arg_count,
   if (arg_p1->value_decl != K_DECL_FLOAT)
     return CCM__VARTYPE;
 
-  tzset();
-
   *return_decl = K_DECL_FLOAT;
   *return_float = cos(arg_p1->value_float / 180 * M_PI);
+  return 1;
+}
+
+static int ccm_func_random(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  ccm_sArg *arg_p1, *arg_p2;
+
+  if (arg_count != 2)
+    return CCM__ARGMISM;
+  arg_p1 = arg_list;
+  arg_p2 = arg_p1->next;
+  if (arg_p1->value_decl != K_DECL_FLOAT)
+    return CCM__VARTYPE;
+  if (arg_p2->value_decl != K_DECL_FLOAT)
+    return CCM__VARTYPE;
+
+  *return_decl = K_DECL_FLOAT;
+  *return_float = arg_p1->value_float + ((float)rand()) / RAND_MAX * 
+    (arg_p2->value_float - arg_p1->value_float);
+  return 1;
+}
+
+static int ccm_func_arraysize(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  int decl, array, elements;
+  void *valp;
+  pwr_tStatus sts;
+
+  if (arg_count != 1)
+    return CCM__ARGMISM;
+
+  sts = ccm_ref_var(((ccm_tFileCtx)filectx)->funcctx, arg_list->value_name, 
+	  &valp, &decl, &array, &elements);
+  if (EVEN(sts) || !array)
+    elements = 0;
+    
+  *return_decl = K_DECL_INT;
+  *return_int = elements;
+  return 1;
+}
+
+static int ccm_func_arraypush(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  ccm_sArg *arg_p2;
+  pwr_tStatus sts;  
+
+  if (arg_count != 2)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+
+  sts = ccm_pushvar(((ccm_tFileCtx)filectx)->funcctx, arg_list->value_name, 
+      arg_p2->value_decl, arg_p2->value_float, arg_p2->value_int, arg_p2->value_string);
+
+  *return_decl = K_DECL_INT;
+  *return_int = sts;
+  return 1;
+}
+
+static int ccm_func_arrayclear(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  pwr_tStatus sts;  
+
+  if (arg_count != 1)
+    return CCM__ARGMISM;
+
+  sts = ccm_clearvar(((ccm_tFileCtx)filectx)->funcctx, arg_list->value_name);
+
+  *return_decl = K_DECL_INT;
+  *return_int = sts;
+  return 1;
+}
+
+static int ccm_func_sort(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  ccm_sArg *arg_p1, *arg_p;
+  char *arg_valp[8];
+  int arg1_decl, arg1_array, arg1_elements;
+  int arg_decl, arg_array, arg_elements;
+  int i, j, k;
+  pwr_tStatus sts;
+
+  arg_p1 = arg_list;
+
+  arg_p = arg_list;
+  for (k = 0; k < arg_count; k++) {
+    if (k == 0) {
+      sts = ccm_ref_var(((ccm_tFileCtx)filectx)->funcctx, arg_p->value_name, 
+	  (void **)&arg_valp[k], &arg1_decl, &arg1_array, &arg1_elements);
+      if (EVEN(sts))
+	return sts;
+      if (arg1_array == 0)
+	return CCM__VARTYPE;
+    }
+    else {
+      sts = ccm_ref_var(((ccm_tFileCtx)filectx)->funcctx, arg_p->value_name, 
+	  (void **)&arg_valp[k], &arg_decl, &arg_array, &arg_elements);
+      if (EVEN(sts))
+	return sts;
+      if (arg_array == 0)
+	return CCM__VARTYPE;
+      if (arg_elements < arg1_elements)
+	return CCM__VARTYPE;
+    }
+    arg_p = arg_p->next;
+  }
+
+
+  if (arg_p1->value_decl == K_DECL_STRING) {
+    char *s1, *s2;
+    char tmp[K_STRING_SIZE];
+
+    for (i = arg1_elements - 1; i > 0; i--) {
+      for (j = 0; j < i; j++) {
+	s1 = arg_valp[0] + K_STRING_SIZE * j;
+	s2 = arg_valp[0] + K_STRING_SIZE * (j + 1);
+	if (strcmp(s1, s2) > 0) {
+	  strcpy(tmp, s2);
+	  strcpy(s2, s1);
+	  strcpy(s1, tmp);
+	  
+	  arg_p = arg_p1->next;
+	  for (k = 1; k < arg_count; k++) {
+	    switch (arg_p->value_decl) {
+	    case K_DECL_STRING: {
+	      s1 = arg_valp[k] + K_STRING_SIZE * j;
+	      s2 = arg_valp[k] + K_STRING_SIZE * (j + 1);
+	      strcpy(tmp, s2);
+	      strcpy(s2, s1);
+	      strcpy(s1, tmp);
+	      break;
+	    }
+	    case K_DECL_INT: {
+	      ccm_tInt *i1, *i2;
+	      ccm_tInt tmp;
+
+	      i1 = (ccm_tInt *)arg_valp[k] + j;
+	      i2 = (ccm_tInt *)arg_valp[k] + j + 1;
+	      tmp = *i2;
+	      *i2 = *i1;
+	      *i1 = tmp;
+	      break;
+	    }
+	    case K_DECL_FLOAT: {
+	      ccm_tFloat *f1, *f2;
+	      ccm_tFloat tmp;
+
+	      f1 = (ccm_tFloat *)arg_valp[k] + j;
+	      f2 = (ccm_tFloat *)arg_valp[k] + j + 1;
+	      tmp = *f2;
+	      *f2 = *f1;
+	      *f1 = tmp;
+	      break;
+	    }
+	    }
+	    arg_p = arg_p->next;
+	  }
+	}
+      }
+    }
+  }
+  else if (arg_p1->value_decl == K_DECL_INT) {
+    ccm_tInt *i1, *i2;
+    ccm_tInt tmp;
+
+    for (i = arg1_elements - 1; i > 0; i--) {
+      for (j = 0; j < i; j++) {
+	i1 = (ccm_tInt *)arg_valp[0] + j;
+	i2 = (ccm_tInt *)arg_valp[0] + j + 1;
+	if (*i1 > *i2) {
+	  tmp = *i2;
+	  *i2 = *i1;
+	  *i1 = tmp;
+
+	  arg_p = arg_p1->next;
+	  for (k = 1; k < arg_count; k++) {
+	    switch (arg_p->value_decl) {
+	    case K_DECL_STRING: {
+	      char *s1, *s2;
+	      char tmp[K_STRING_SIZE];
+
+	      s1 = arg_valp[k] + K_STRING_SIZE * j;
+	      s2 = arg_valp[k] + K_STRING_SIZE * (j + 1);
+	      strcpy(tmp, s2);
+	      strcpy(s2, s1);
+	      strcpy(s1, tmp);
+	      break;
+	    }
+	    case K_DECL_INT: {
+	      i1 = (ccm_tInt *)arg_valp[k] + j;
+	      i2 = (ccm_tInt *)arg_valp[k] + j + 1;
+	      tmp = *i2;
+	      *i2 = *i1;
+	      *i1 = tmp;
+	      break;
+	    }
+	    case K_DECL_FLOAT: {
+	      ccm_tFloat *f1, *f2;
+	      ccm_tFloat tmp;
+
+	      f1 = (ccm_tFloat *)arg_valp[k] + j;
+	      f2 = (ccm_tFloat *)arg_valp[k] + j + 1;
+	      tmp = *f2;
+	      *f2 = *f1;
+	      *f1 = tmp;
+	      break;
+	    }
+	    }
+	    arg_p = arg_p->next;
+	  }
+	}
+      }
+    }
+  }
+  else if (arg_p1->value_decl == K_DECL_FLOAT) {
+    ccm_tFloat *f1, *f2;
+    ccm_tFloat tmp;
+
+    for (i = arg1_elements - 1; i > 0; i--) {
+      for (j = 0; j < i; j++) {
+	f1 = (ccm_tFloat *)arg_valp[0] + j;
+	f2 = (ccm_tFloat *)arg_valp[0] + j + 1;
+	if (*f1 > *f2) {
+	  tmp = *f2;
+	  *f2 = *f1;
+	  *f1 = tmp;
+	  arg_p = arg_p1->next;
+	  for (k = 1; k < arg_count; k++) {
+	    switch (arg_p->value_decl) {
+	    case K_DECL_STRING: {
+	      char *s1, *s2;
+	      char tmp[K_STRING_SIZE];
+
+	      s1 = arg_valp[k] + K_STRING_SIZE * j;
+	      s2 = arg_valp[k] + K_STRING_SIZE * (j + 1);
+	      strcpy(tmp, s2);
+	      strcpy(s2, s1);
+	      strcpy(s1, tmp);
+	      break;
+	    }
+	    case K_DECL_INT: {
+	      ccm_tInt *i1, *i2;
+	      ccm_tInt tmp;
+
+	      i1 = (ccm_tInt *)arg_valp[k] + j;
+	      i2 = (ccm_tInt *)arg_valp[k] + j + 1;
+	      tmp = *i2;
+	      *i2 = *i1;
+	      *i1 = tmp;
+	      break;
+	    }
+	    case K_DECL_FLOAT: {
+	      f1 = (ccm_tFloat *)arg_valp[k] + j;
+	      f2 = (ccm_tFloat *)arg_valp[k] + j + 1;
+	      tmp = *f2;
+	      *f2 = *f1;
+	      *f1 = tmp;
+	      break;
+	    }
+	    }
+	    arg_p = arg_p->next;
+	  }
+	}
+      }
+    }
+  }
+
   return 1;
 }
 
@@ -5211,6 +5939,7 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
     funcctx->filectx = filectx;
     funcctx->arg_list = arg_list;
     funcctx->arg_count = arg_count;
+    filectx->funcctx = funcctx;
 
     if (main_found) {
       funcctx->is_main = 1;
@@ -5709,6 +6438,8 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
   }
 
   /* Free variablelists and funcctx */
+  
+  filectx->funcctx = 0;
   ccm_free_varlists(
       funcctx->locint_list, funcctx->locfloat_list, funcctx->locstring_list);
   free((char*)funcctx);

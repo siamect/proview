@@ -17756,12 +17756,12 @@ void GeConfirm::get_attributes(attr_sItem* attrinfo, int* item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof(text);
 
-  strcpy(attrinfo[i].name, "OnSet");
+  strcpy(attrinfo[i].name, "Confirm.OnSet");
   attrinfo[i].value = &on_set;
   attrinfo[i].type = glow_eType_Boolean;
   attrinfo[i++].size = sizeof(on_set);
 
-  strcpy(attrinfo[i].name, "OnReset");
+  strcpy(attrinfo[i].name, "Confirm.OnReset");
   attrinfo[i].value = &on_reset;
   attrinfo[i].type = glow_eType_Boolean;
   attrinfo[i++].size = sizeof(on_reset);

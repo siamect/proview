@@ -2841,6 +2841,12 @@ time()			<LINK> time()
 tzset()			<LINK> tzset()
 verify()		<LINK> verify()
 
+<h2>Array functions
+arrayclear 		<link> arrayclear()
+arraypush 		<link> arraypush()
+arraysize 		<link> arraysize()
+sort			<link> sort()
+
 <h2>Miscellaneous functions
 CutObjectName()		<LINK> cutobjectname()
 ConfirmDialog()		<LINK> confirmdialog()
@@ -2923,12 +2929,14 @@ A declaration consists of
 - the table (global or extern, if local the table is suppressed)
 - the datatype (int, float or string)
 - the variable name (case sensitive)
-- if array, number of elements
+- if array, number of elements in square brackets, or if array with zero
+  lenght, only brackets
 - equal mark followed by an init value, if omitted the init value is zero or
   null-string
 - semicolon
 
 An extern variable should be deleted (by the delete statement).
+Global variables can also be deletet with the deletegbl statement.
 
 <b>Example
 
@@ -2936,9 +2944,11 @@ An extern variable should be deleted (by the delete statement).
 <c>float           flow = 33.4;
 <c>string          str = "Hello";
 <c>extern int      jakob[20];
+<c>string          simon[];
 <c>global float    ferdinand = 1234;
 <c>...
-<c>delete jakob[20];
+<c>delete jakob[];
+<c>deletegbl ferdinand;
 </TOPIC>
 
 <TOPIC> operators
@@ -3813,6 +3823,121 @@ int		<t>mode		<t>verification on (1) or off (0). Optional.
 <c>  verify(1);
 </TOPIC>
 </headerlevel>
+
+<TOPIC> array_functions <style> function
+Array functions
+
+<b>Function <t>Description
+arrayclear <t>Clear a dynamic array. <link> arrayclear()
+arraypush <t>Push a value to a dynamic array. <link> arraypush()
+arraysize <t>Get size of an array. <link> arraysize()
+sort <t>Sort an array. <link> sort()
+</TOPIC>
+
+<headerlevel>
+
+<TOPIC> arrayclear() <style> function
+arrayclear()
+
+int arrayclear((arbitrary array type) array)
+
+<b>Description
+
+Remove all elements of an array and set size to 0.
+The array argument should be specified with square brackets.
+
+Returns the status of the operation.
+
+<b>Arguments
+
+(arbitrary array type)	<t>array <t>Array name. Should be specified
+				 <t><t>with square brackets.
+
+<b>Example
+
+<c>  float temp[];
+<c>  ...
+<c>  arrayclear(temp[]);
+</TOPIC>
+
+<TOPIC> arraypush() <style> function
+int arraypush((arbitrary array type) array, (arbitrary type)value)
+
+<b>Description
+
+Add an element at the back of an array and insert the specified value in 
+the element.
+The array argument should be specified with square brackets.
+
+Returns the status of the operation.
+
+<b>Arguments
+
+(arbitrary array type)	<t>array <t>Array name. Should be specified
+				 <t><t>with square brackets.
+(arbitrary type)	<t>value <t>Value to push to the array.
+
+<b>Example
+
+<c>  float x[];
+<c>  
+<c>  arraypush(x[], 29.2);
+</TOPIC>
+
+<TOPIC> arraysize() <style> function
+int arraysize((arbitrary array type) array)
+
+<b>Description
+
+Get the size of an array, i e number of elements in the array.
+The array argument should be specified with square brackets.
+
+Returns the size of the array.
+
+<b>Arguments
+
+(arbitrary array type)	<t>array <t>Array name. Should be specified
+				 <t><t>with square brackets.
+
+<b>Example
+
+<c>  float x[];
+<c>  int size;
+<c>  ...
+<c>  size = arraysize(x[]);
+</TOPIC>
+
+<TOPIC> sort() <style> function
+int sort((arbitrary array type) array1 [,(arbitrary array type) array2)...]
+
+<b>Description
+
+Sort an string array in alpabetical order, or an int or float array in 
+numerical order.
+Up to seven additional arrays can be specified that will be sorted the same
+way as the first array. These arrays should have the same size, or larger size
+than the first array.
+The array arguments should be specified with square brackets.
+
+Returns the status of the operation.
+
+<b>Arguments
+
+(arbitrary array type)	<t>array1 <t>Name of array that will be sorted. 
+				<t><t>Should be specified with square brackets.
+(arbitrary array type)	<t>array2 - array8 <t>Additional optional arrays that 
+				<t><t>will be sorted the same way as the first array.
+				<t><t>Should be specified with square brackets.
+
+<b>Example
+
+<c>  string name[];
+<c>  string description[];
+<c>  int sts;
+<c>  ...
+<c>  sts = sort(name[], description[]);
+</TOPIC>
+
 
 <TOPIC> database_functions <style> function
 Database functions

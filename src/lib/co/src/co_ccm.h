@@ -51,6 +51,9 @@ extern "C" {
 #define K_STRING_SIZE 400
 #define K_LINE_SIZE 400
 
+#define CCM_NO_ELEM -1
+#define CCM_FUNCLEVEL_MAX 20
+
 typedef long int ccm_tInt;
 typedef float ccm_tFloat;
 typedef char ccm_tString[K_STRING_SIZE];
@@ -58,7 +61,7 @@ typedef char ccm_tString[K_STRING_SIZE];
 #define ccm_cIntFormat "%ld"
 
 typedef struct s_arg_ {
-  char value_name[80];
+  char value_name[100];
   int value_decl;
   ccm_tInt value_int;
   ccm_tFloat value_float;
@@ -154,6 +157,9 @@ typedef struct ccm_sFileCtx_ {
   ccm_sStringvar* gblstring_list;
   ccm_sLine* line_list;
   void* main_funcctx;
+  void* funcctx;
+  void* funcctx_stack[CCM_FUNCLEVEL_MAX];
+  int funcctx_cnt;
   int extfunc_return_mode;
   char extfunc_line[256];
   char last_fgets[1024];
@@ -163,7 +169,7 @@ typedef struct ccm_sFileCtx_ {
 } * ccm_tFileCtx;
 
 typedef struct {
-  char line[256];
+  char line[K_LINE_SIZE];
   ccm_tFileCtx filectx;
   int pos;
   int delim_pos;
@@ -230,6 +236,9 @@ int ccm_set_external_var(const char* name, int decl, ccm_tFloat value_float,
 
 int ccm_get_external_var(const char* name, int decl, ccm_tFloat* value_float,
     ccm_tInt* value_int, char* value_string);
+
+int ccm_ref_var(ccm_tFuncCtx funcctx, const char* name, void** valuep, 
+    int *decl, int *array, int *elements);
 
 int ccm_ref_external_var(const char* name, int decl, void** valuep);
 
