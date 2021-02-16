@@ -221,3 +221,22 @@
   o->P5ms = (tp->before_scan.tv_nsec / 2500000) & 1 ? 1 : 0;                   \
   o->P2ms = (tp->before_scan.tv_nsec / 1000000) & 1 ? 1 : 0;                   \
   o->P1ms = (tp->before_scan.tv_nsec / 500000) & 1 ? 1 : 0;
+
+/*_*
+  @aref pulsetrainm PulseTrainM
+*/
+#define PulseTrainM_exec(o)                                                    \
+  o->P128s = (tp->before_scan.tv_sec / 64) & 1 ? 1 : 0;                        \
+  o->P64s = (tp->before_scan.tv_sec / 32) & 1 ? 1 : 0;                         \
+  o->P32s = (tp->before_scan.tv_sec / 16) & 1 ? 1 : 0;                         \
+  o->P16s = (tp->before_scan.tv_sec / 8) & 1 ? 1 : 0;                          \
+  o->P8s = (tp->before_scan.tv_sec / 4) & 1 ? 1 : 0;                           \
+  o->P4s = (tp->before_scan.tv_sec / 2) & 1 ? 1 : 0;                           \
+  o->P2s = tp->before_scan.tv_sec & 1 ? 1 : 0;                                 \
+  o->P1s = (tp->before_scan.tv_nsec / 500000000) & 1 ? 1 : 0;                  \
+  o->P500ms = (tp->before_scan.tv_nsec / 250000000) & 1 ? 1 : 0;               \
+  o->P250ms = (tp->before_scan.tv_nsec / 125000000) & 1 ? 1 : 0;               \
+  o->P125ms = (tp->before_scan.tv_nsec / 62500000) & 1 ? 1 : 0;                \
+  o->P62ms = (tp->before_scan.tv_nsec / 31250000) & 1 ? 1 : 0;                 \
+  o->P31ms = (tp->before_scan.tv_nsec / 15625000) & 1 ? 1 : 0;                 \
+  o->P15ms = (tp->before_scan.tv_nsec / 7812500) & 1 ? 1 : 0;

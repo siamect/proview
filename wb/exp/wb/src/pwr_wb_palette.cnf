@@ -901,6 +901,7 @@ palette PlcEditorPalette
     class Or
     class Pulse
     class PulseTrain
+    class PulseTrainM
     class SR_R
     class SR_S
     class SuppressSup
