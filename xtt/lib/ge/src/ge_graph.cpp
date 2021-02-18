@@ -4191,6 +4191,31 @@ static int graph_trace_grow_cb(GlowCtx* ctx, glow_tEvent event)
         grow_GetObjectList(graph->grow->ctx, &objectlist, &new_object_cnt);
         if (new_object_cnt != object_cnt)
           break;
+
+	if (grow_GetObjectType(objectlist[i]) == glow_eObjectType_GrowGroup) {
+	  grow_tObject* gobjectlist;
+	  int gobject_cnt, gnew_object_cnt;
+	  int j;
+
+	  grow_GetGroupObjectList(objectlist[i], &gobjectlist, &gobject_cnt);
+
+	  for (j = 0; j < gobject_cnt; j++) {
+	    if (grow_GetObjectType(gobjectlist[j]) == glow_eObjectType_GrowNode
+		|| grow_GetObjectType(gobjectlist[j]) == glow_eObjectType_GrowGroup
+		|| grow_GetObjectType(gobjectlist[j])
+		== glow_eObjectType_GrowToolbar) {
+	      grow_GetUserData(gobjectlist[j], (void**)&dyn);
+	      sts = dyn->action(gobjectlist[j], event);
+	      if (sts == GLOW__TERMINATED)
+		return sts;
+
+	      // Check if anything is deleted
+	      grow_GetGroupObjectList(objectlist[i], &gobjectlist, &gnew_object_cnt);
+	      if (gnew_object_cnt != gobject_cnt)
+		break;
+	    }
+	  }
+	}
       }
     }
     break;
