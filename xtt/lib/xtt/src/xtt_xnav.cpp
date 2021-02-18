@@ -1469,6 +1469,12 @@ int XNav::set_attr_value(char* value_str)
     if (EVEN(sts))
       return sts;
 
+    if (item->type_id == pwr_eType_String) {
+      char b[400];
+      strcpy(b, buffer);
+      str_trim(buffer, b);
+    }
+      
     if (!(feq(item->max_limit, 0.0) && feq(item->min_limit, 0.0))) {
       switch (item->type_id) {
       case pwr_eType_UInt32:
