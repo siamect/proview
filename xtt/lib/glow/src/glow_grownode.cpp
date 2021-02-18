@@ -1027,15 +1027,7 @@ void GrowNode::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
       && x_left * w->zoom_factor_x - w->offset_x <= ur_x
       && y_high * w->zoom_factor_y - w->offset_y + 1 >= ll_y
       && y_low * w->zoom_factor_y - w->offset_y <= ur_y) {
-    if (annot_scrollingtext != -1)
-      ctx->gdraw->set_clip_rectangle(w, x_left * w->zoom_factor_x - w->offset_x,
-          y_low * w->zoom_factor_y - w->offset_y,
-          x_right * w->zoom_factor_x - w->offset_x + 1,
-          y_high * w->zoom_factor_y - w->offset_y + 2);
-
     draw(w, (GlowTransform*)NULL, highlight, hot, (void*)this, NULL);
-    if (annot_scrollingtext != -1)
-      ctx->gdraw->reset_clip_rectangle(w);
   }
 }
 

@@ -137,6 +137,12 @@ void GrowAnnot::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   if (node && ((GrowNode*)node)->annot_scrollingtext == number) {
     offset_x = ((GrowNode*)node)->annot_offset_x;
     offset_y = ((GrowNode*)node)->annot_offset_y;
+    if (((GrowNode*)node)->annot_scrollingtext != -1)
+      ctx->gdraw->set_clip_rectangle(w, 
+	  int(((GrowNode*)node)->x_left * w->zoom_factor_x + 0.5) - w->offset_x,
+	  int(((GrowNode*)node)->y_low * w->zoom_factor_y + 0.5) - w->offset_y,
+	  int(((GrowNode*)node)->x_right * w->zoom_factor_x + 0.5) - w->offset_x + 1,
+	  int(((GrowNode*)node)->y_high * w->zoom_factor_y + 0.5) - w->offset_y + 1);
   }
 
   if (node && ((GrowNode*)node)->text_font != glow_eFont_No) {
@@ -269,6 +275,10 @@ void GrowAnnot::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
           color, idx, highlight, 0, lfont, tsize, 0);
     break;
   }
+  }
+  if (node && ((GrowNode*)node)->annot_scrollingtext == number &&
+      ((GrowNode*)node)->annot_scrollingtext != -1) {
+    ctx->gdraw->reset_clip_rectangle(w);
   }
 }
 
