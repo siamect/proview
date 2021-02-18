@@ -297,11 +297,11 @@ void GrowBarArc::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
   if ( bar_direction == 0)
     ang = angle1 - (int)rotation;
   else
-    ang = angle1 + angle2 * (max_value - value) / (max_value - min_value) - (int)rotation;
+    ang = float(angle1) + ceil(float(angle2) * (max_value - value) / (max_value - min_value)) - rotation;
 
   if ( gradient == glow_eGradient_No)
     ctx->gdraw->fill_arc(w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			 ang, angle2 * (value - min_value) / (max_value - min_value), 
+			 ang, float(angle2) * (value - min_value) / (max_value - min_value), 
 			 bar_drawtype, 0);
   else {
     glow_eDrawType f1, f2;
@@ -318,7 +318,7 @@ void GrowBarArc::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
           bar_drawtype, gradient_contrast / 2, 0);
     }
     ctx->gdraw->gradient_fill_arc(w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-        ang, angle2 * (value - min_value) / (max_value - min_value), 
+	ang, float(angle2) * (value - min_value) / (max_value - min_value), 
         bar_drawtype, f1, f2, gradient);
   }
 
@@ -327,18 +327,16 @@ void GrowBarArc::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 		       ur_x - ll_x - 2 * width, 
 		       ur_y - ll_y - yscale * 2 * width,
 		       0, 360, bg_drawtype, 0);
-
   if ( bar_direction == 0)
-    ang = M_PI*(angle1 - rotation + angle2 * (value - min_value) / (max_value - min_value)) / 180;
+    ang = M_PI*floor((angle1 - rotation) + float(angle2) * (value - min_value) / (max_value - min_value)) / 180;
   else
-    ang = M_PI*(angle1 - rotation + angle2 * (max_value - value) / (max_value - min_value)) / 180;
+    ang = M_PI*ceil((angle1 - rotation) + float(angle2) * (max_value - value) / (max_value - min_value)) / 180;
 
   ctx->gdraw->line(w, (ur_x + ll_x)/2 + (ur_x - ll_x)/2 * cos(ang), 
 		   (ur_y + ll_y)/2 - (ur_y - ll_y)/2 * sin(ang), 
 		   (ur_x + ll_x)/2 + ((ur_x - ll_x)/2 - width) * cos(ang), 
 		   (ur_y + ll_y)/2 - yscale * ((ur_x - ll_x)/2 - width) * sin(ang), 
 		   bar_bordercolor, bar_borderwidth, 0);
-
   if (border) {
     glow_eDrawType bordercolor = ctx->get_drawtype(draw_type, glow_eDrawType_LineHighlight,
         highlight, (GrowNode*)colornode, 0);
@@ -352,14 +350,14 @@ void GrowBarArc::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
 		    angle1 - (int)rotation, angle2, 
 		    bordercolor, idx, 0);
 
-    ang = M_PI*(angle1 - rotation) / 180;
+    ang = M_PI*floor(angle1 - rotation) / 180;
     ctx->gdraw->line(w, (ur_x + ll_x)/2 + (ur_x - ll_x)/2 * cos(ang), 
 		     (ur_y + ll_y)/2 - (ur_y - ll_y)/2 * sin(ang), 
 		     (ur_x + ll_x)/2 + ((ur_x - ll_x)/2 - width) * cos(ang), 
 		     (ur_y + ll_y)/2 - yscale * ((ur_x - ll_x)/2 - width) * sin(ang), 
 		     bordercolor, idx, 0);
 
-    ang = M_PI*(angle1 + angle2 - rotation) / 180;
+    ang = M_PI*floor(angle1 + angle2 - rotation) / 180;
     ctx->gdraw->line(w, (ur_x + ll_x)/2 + (ur_x - ll_x)/2 * cos(ang), 
 		     (ur_y + ll_y)/2 - (ur_y - ll_y)/2 * sin(ang), 
 		     (ur_x + ll_x)/2 + ((ur_x - ll_x)/2 - width) * cos(ang), 
