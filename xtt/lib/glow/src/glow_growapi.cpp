@@ -1391,6 +1391,8 @@ int grow_GetObjectAttrInfo(
     strcpy(attrinfo[i].name, "round_amount");
     attrinfo[i].value_p = &op->round_amount;
     attrinfo[i].type = glow_eType_Double;
+    attrinfo[i].minlimit = 0;
+    attrinfo[i].maxlimit = 50;
     attrinfo[i++].size = sizeof(op->round_amount);
 
     strcpy(attrinfo[i].name, "shadow_width");
