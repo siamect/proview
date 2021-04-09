@@ -3091,7 +3091,9 @@ Appl_init(ApplObject *self, PyObject *args, PyObject *kwds)
   self->open = open;
   self->close = close;
   self->scan = scan;
-  if ( ctx) {
+  if (!ctx)
+    self->ctx = Py_None;
+  else {
     Py_XINCREF(ctx);
     self->ctx = ctx;
   }
@@ -3160,7 +3162,10 @@ Appl_mainloop(ApplObject *self, PyObject *args)
   int swap = 0;
   int first_scan = 1;
 
-  arglist = Py_BuildValue("()", self->ctx);
+  if (self->ctx == Py_None)
+    arglist = Py_BuildValue("()");
+  else
+    arglist = Py_BuildValue("(O)", self->ctx);
 
   PyEval_CallObject(self->open, arglist);
 
