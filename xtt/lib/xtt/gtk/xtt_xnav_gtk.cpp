@@ -325,7 +325,7 @@ XttGe* XNavGtk::xnav_ge_new(const char* name, const char* filename,
     int scrollbar, int menu, int navigator, int width, int height, int x, int y,
     double scan_time, const char* object_name, int use_default_access,
     unsigned int access, unsigned int options, void* basewidget,
-    double* borders, int color_theme,
+    double* borders, int color_theme, int dashboard,
     int (*command_cb)(void*, char*, char*, void*),
     int (*get_current_objects_cb)(void*, pwr_sAttrRef**, int**),
     int (*is_authorized_cb)(void*, unsigned int),
@@ -334,7 +334,7 @@ XttGe* XNavGtk::xnav_ge_new(const char* name, const char* filename,
   return new XttGeGtk(parent_wid, this, name, filename, scrollbar, menu,
       navigator, width, height, x, y, scan_time, object_name,
       use_default_access, access, options, basewidget, borders, color_theme,
-      command_cb, get_current_objects_cb, is_authorized_cb, keyboard_cb);
+      dashboard, command_cb, get_current_objects_cb, is_authorized_cb, keyboard_cb);
 }
 
 XttMultiView* XNavGtk::multiview_new(const char* name, pwr_tAttrRef* aref,

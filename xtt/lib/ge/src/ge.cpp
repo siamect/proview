@@ -175,7 +175,10 @@ void Ge::load_graph_cb(void* ge_ctx, char* name)
 
   gectx->graph->clear_all();
   gectx->graph->set_show_grid(0);
-  strcat(graphname, ".pwg");
+  if (gectx->graph->is_dashboard())
+    strcat(graphname, ".pwd");
+  else
+    strcat(graphname, ".pwg");
   gectx->graph->open(graphname);
   gectx->update();
 }
@@ -201,8 +204,12 @@ void Ge::save_graph(Ge* gectx, char* name)
     gectx->graph->set_name(graphname);
 
     str_ToLower(filename, name);
-    if (!strrchr(filename, '.'))
-      strcat(filename, ".pwg");
+    if (!strrchr(filename, '.')) {
+      if (gectx->graph->is_dashboard())
+	strcat(filename, ".pwd");
+      else
+	strcat(filename, ".pwg");
+    }
 
     sts = gectx->graph->save(filename);
     if (EVEN(sts)) {
@@ -301,8 +308,12 @@ void Ge::save_graph_and_close(Ge* gectx, char* name)
     gectx->graph->set_name(graphname);
 
     str_ToLower(filename, name);
-    if (!strrchr(filename, '.'))
-      strcat(filename, ".pwg");
+    if (!strrchr(filename, '.')) {
+      if (gectx->graph->is_dashboard())
+	strcat(filename, ".pwd");
+      else
+	strcat(filename, ".pwg");
+    }
 
     sts = gectx->graph->save(filename);
     if (EVEN(sts)) {
@@ -536,7 +547,7 @@ void Ge::export_gejava(Ge* gectx, char* name)
   }
 }
 
-void Ge::open_graph(const char* name)
+void Ge::open_graph(const char* name, int dashboard)
 {
   pwr_tFileName filename;
   char graphname[80];
@@ -555,8 +566,12 @@ void Ge::open_graph(const char* name)
   if ((s = strrchr(graphname, '.')))
     *s = 0;
   graph->set_name(graphname);
-  if (!strrchr(filename, '.'))
-    strcat(filename, ".pwg");
+  if (!strrchr(filename, '.')) {
+    if (dashboard)
+      strcat(filename, ".pwd");
+    else
+      strcat(filename, ".pwg");
+  }
   graph->open(filename);
 
   subpalette->get_path(&path_cnt, &path);
@@ -574,7 +589,7 @@ void Ge::open_graph(const char* name)
 
 void Ge::open(char* name)
 {
-  open_graph(name);
+  open_graph(name, 0);
 }
 
 void Ge::rotate(Ge* gectx, char* value_str)
@@ -1182,10 +1197,14 @@ void Ge::activate_build()
     return;
   }
 
-  sprintf(cmd, "cp -a $pwrp_pop/%s.pwg $pwrp_exe/", name);
+  if (graph->is_dashboard())
+    sprintf(fname, "$pwrp_pop/%s.pwd", name);
+  else
+    sprintf(fname, "$pwrp_pop/%s.pwg", name);
+
+  sprintf(cmd, "cp -a %s $pwrp_exe/", fname);
   system(cmd);
 
-  sprintf(fname, "$pwrp_pop/%s.pwg", name);
   wb_revision::check_add_file(fname);
 
   message('I', "Graph built");
@@ -1435,7 +1454,7 @@ void Ge::activate_nextpage()
 
   graph->set_nodraw();
   graph->store_geometry();
-  open_graph(next);
+  open_graph(next, 0);
   graph->restore_geometry();
   graph->reset_nodraw();
   graph->redraw();
@@ -1461,7 +1480,7 @@ void Ge::activate_prevpage()
 
   graph->set_nodraw();
   graph->store_geometry();
-  open_graph(prev);
+  open_graph(prev, 0);
   graph->restore_geometry();
   graph->reset_nodraw();
   graph->redraw();
@@ -1475,17 +1494,24 @@ void Ge::activate_graph_attr()
     graph->edit_subgraph_attributes();
 }
 
+typedef struct {
+  Ge *gectx;
+  int dashboard;
+} sOpenList;
+
 void Ge::open_list_cb(void* ctx, char* text, int ok_pressed)
 {
-  ((Ge*)ctx)->open_graph(text);
-  ((Ge*)ctx)->set_title();
+  ((sOpenList*)ctx)->gectx->open_graph(text, ((sOpenList *)ctx)->dashboard);
+  ((sOpenList*)ctx)->gectx->set_title();
   if (ok_pressed)
-    ((Ge*)ctx)->open_dialog = 0;
+    ((sOpenList*)ctx)->gectx->open_dialog = 0;
+  free(ctx);
 }
 
 void Ge::open_cancel_cb(void* ctx)
 {
-  ((Ge*)ctx)->open_dialog = 0;
+  ((sOpenList*)ctx)->gectx->open_dialog = 0;
+  free(ctx);
 }
 
 int Ge::sort_files(const void* file1, const void* file2)
@@ -1493,7 +1519,7 @@ int Ge::sort_files(const void* file1, const void* file2)
   return (strcmp((char*)file1, (char*)file2));
 }
 
-void Ge::activate_open()
+void Ge::activate_open(int dashboard)
 {
   prevtable_clear();
   int file_cnt;
@@ -1507,6 +1533,7 @@ void Ge::activate_open()
   char dir[80];
   char file[80];
   char type[80];
+  char title[40];
   int version;
 
   if (open_dialog) {
@@ -1515,8 +1542,14 @@ void Ge::activate_open()
   }
 
   // Get the pwg files and order them
-  dcli_translate_filename(fname, "$pwrp_pop/*.pwg");
-
+  if (dashboard) {
+    strcpy(title, "Open Dashboard");
+    dcli_translate_filename(fname, "$pwrp_pop/*.pwd");
+  }
+  else {
+    strcpy(title, "Open Graph");
+    dcli_translate_filename(fname, "$pwrp_pop/*.pwg");
+  }
   file_cnt = 0;
   allocated = 0;
   sts = dcli_search_file(fname, found_file, DCLI_DIR_SEARCH_INIT);
@@ -1556,8 +1589,11 @@ void Ge::activate_open()
 
   qsort(file_p, file_cnt, sizeof(*file_p), Ge::sort_files);
 
-  open_dialog = create_list("Open Graph", (char*)file_p, Ge::open_list_cb,
-      Ge::open_cancel_cb, (void*)this);
+  sOpenList *data = (sOpenList *)calloc(1, sizeof(sOpenList));
+  data->gectx = this;
+  data->dashboard = dashboard;
+  open_dialog = create_list(title, (char*)file_p, Ge::open_list_cb,
+      Ge::open_cancel_cb, (void*)data);
 
   free(file_p);
 

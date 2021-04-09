@@ -143,7 +143,7 @@ void CoWow::DisplayQuestion(void* ctx, const char* title, const char* text,
 }
 
 void CoWow::DisplayError(const char* title, const char* text,
-    lng_eCoding coding)
+    lng_eCoding coding, int modal)
 {
 }
 

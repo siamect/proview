@@ -3030,12 +3030,20 @@ int GeDigColor::connect(
 
   get_bit(parsed_name, attr_type, &bitmask);
 
-  sts = dyn->graph->ref_object_info(
-      dyn->cycle, parsed_name, (void**)&p, &subid, size, object, now);
+  switch (db) {
+  case graph_eDatabase_Local:
+    p = (pwr_tBoolean*)dyn->graph->localdb_ref_or_create(
+        parsed_name, attr_type);
+    break;
+  case graph_eDatabase_Gdh:
+    sts = dyn->graph->ref_object_info(
+	dyn->cycle, parsed_name, (void**)&p, &subid, size, object, now);
+    if (EVEN(sts))
+      return sts;
+    break;
+  default:;
+  }
   a_typeid = attr_type;
-
-  if (EVEN(sts))
-    return sts;
 
   trace_data->p = &pdummy;
   first_scan = true;
@@ -6864,7 +6872,7 @@ int GeAnalogColor::syntax_check(
 GeRotate::GeRotate(GeDyn* e_dyn)
     : GeDynElem(e_dyn, ge_mDynType1_Rotate, ge_mDynType2_No, ge_mActionType1_No,
           ge_mActionType2_No, ge_eDynPrio_Rotate),
-      x0(0), y0(0), factor(1)
+      x0(0), y0(0), factor(1), offset(0), min_angle(0), max_angle(0)
 {
   strcpy(attribute, "");
 }
@@ -6872,7 +6880,8 @@ GeRotate::GeRotate(GeDyn* e_dyn)
 GeRotate::GeRotate(const GeRotate& x)
     : GeDynElem(x.dyn, x.dyn_type1, x.dyn_type2, x.action_type1, x.action_type2,
           x.prio),
-      x0(x.x0), y0(x.y0), factor(x.factor)
+      x0(x.x0), y0(x.y0), factor(x.factor), offset(x.offset), min_angle(x.min_angle),
+      max_angle(x.max_angle)
 {
   strcpy(attribute, x.attribute);
 }
@@ -6900,6 +6909,21 @@ void GeRotate::get_attributes(attr_sItem* attrinfo, int* item_count)
   attrinfo[i].value = &factor;
   attrinfo[i].type = glow_eType_Double;
   attrinfo[i++].size = sizeof(factor);
+
+  strcpy(attrinfo[i].name, "Rotate.Offset");
+  attrinfo[i].value = &offset;
+  attrinfo[i].type = glow_eType_Double;
+  attrinfo[i++].size = sizeof(offset);
+
+  strcpy(attrinfo[i].name, "Rotate.MinAngle");
+  attrinfo[i].value = &min_angle;
+  attrinfo[i].type = glow_eType_Double;
+  attrinfo[i++].size = sizeof(min_angle);
+
+  strcpy(attrinfo[i].name, "Rotate.MaxAngle");
+  attrinfo[i].value = &max_angle;
+  attrinfo[i].type = glow_eType_Double;
+  attrinfo[i++].size = sizeof(max_angle);
 
   *item_count = i;
 }
@@ -6930,6 +6954,9 @@ void GeRotate::save(std::ofstream& fp)
   fp << int(ge_eSave_Rotate_x0) << FSPACE << x0 << '\n';
   fp << int(ge_eSave_Rotate_y0) << FSPACE << y0 << '\n';
   fp << int(ge_eSave_Rotate_factor) << FSPACE << factor << '\n';
+  fp << int(ge_eSave_Rotate_offset) << FSPACE << offset << '\n';
+  fp << int(ge_eSave_Rotate_min_angle) << FSPACE << min_angle << '\n';
+  fp << int(ge_eSave_Rotate_max_angle) << FSPACE << max_angle << '\n';
   fp << int(ge_eSave_End) << '\n';
 }
 
@@ -6963,6 +6990,15 @@ void GeRotate::open(std::ifstream& fp)
       break;
     case ge_eSave_Rotate_factor:
       fp >> factor;
+      break;
+    case ge_eSave_Rotate_offset:
+      fp >> offset;
+      break;
+    case ge_eSave_Rotate_min_angle:
+      fp >> min_angle;
+      break;
+    case ge_eSave_Rotate_max_angle:
+      fp >> max_angle;
       break;
     case ge_eSave_End:
       end_found = 1;
@@ -7000,6 +7036,7 @@ int GeRotate::connect(
   first_scan = true;
   if (!grow_TransformIsStored(object))
     grow_StoreTransform(object);
+
   if (!feq(x0, 0.0) || !feq(y0, 0.0))
     rotation_point = glow_eRotationPoint_FixPoint;
   else
@@ -7010,6 +7047,11 @@ int GeRotate::connect(
 
 int GeRotate::disconnect(grow_tObject object)
 {
+  if (p) {
+    grow_SetObjectRotation(object, 0, x0, y0, rotation_point);
+    grow_RevertTransform(object);
+  }
+    
   if (p && db == graph_eDatabase_Gdh)
     gdh_UnrefObjectInfo(subid);
   p = 0;
@@ -7020,7 +7062,6 @@ int GeRotate::scan(grow_tObject object)
 {
   if (!p)
     return 1;
-
   pwr_tFloat32 val = *p;
 
   if (!first_scan) {
@@ -7030,7 +7071,13 @@ int GeRotate::scan(grow_tObject object)
   } else
     first_scan = false;
 
-  double value = val * factor;
+  double value = val * factor + offset;
+  if (min_angle != 0 && max_angle != 0) {
+    if (value < min_angle)
+      value = min_angle;
+    else if (value > max_angle)
+      value = max_angle;
+  }
 
   grow_SetObjectRotation(object, value, x0, y0, rotation_point);
   old_value = val;
@@ -15683,11 +15730,19 @@ int GeDigScript::connect(
   get_bit(parsed_name, attr_type, &bitmask);
   a_typeid = attr_type;
 
-  sts = dyn->graph->ref_object_info(
-      dyn->cycle, parsed_name, (void**)&p, &subid, size, object, now);
-
-  if (EVEN(sts))
-    return sts;
+  switch (db) {
+  case graph_eDatabase_Local:
+    p = (pwr_tBoolean*)dyn->graph->localdb_ref_or_create(
+        parsed_name, attr_type);
+    break;
+  case graph_eDatabase_Gdh:
+    sts = dyn->graph->ref_object_info(
+        dyn->cycle, parsed_name, (void**)&p, &subid, size, object, now);
+    if (EVEN(sts))
+      return sts;
+    break;
+  default:;
+  }
 
   trace_data->p = &pdummy;
   first_scan = true;

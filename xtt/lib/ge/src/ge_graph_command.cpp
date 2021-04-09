@@ -47,6 +47,7 @@
 
 #include "ge.h"
 #include "ge_dyn.h"
+#include "ge_dashboard.h"
 #include "ge_msg.h"
 
 #if LDH
@@ -2641,6 +2642,13 @@ static int graph_replace_func(void* client_data, void* client_flag)
         dyn->replace_attribute(from_str, to_str, &replace_cnt, strict);
         break;
       }
+      case glow_eObjectType_GrowDashCell: {
+        GeDash* dash;
+
+        grow_GetUserData(sel_list[i], (void**)&dash);
+        dash->replace_attribute(from_str, to_str, &replace_cnt, strict);
+        break;
+      }
       default:;
       }
     }
@@ -2704,7 +2712,7 @@ int Graph::command(char* input_str)
     if (EVEN(sts))
       return sts;
 
-    sts = readcmdfile(&command[1]);
+    sts = readcmdfile(&command[1], 0);
     if (sts == DCLI__NOFILE) {
       char tmp[200];
       snprintf(tmp, 200, "Unable to open file \"%s\"", &command[1]);
@@ -2728,7 +2736,7 @@ int Graph::command(char* input_str)
     if (ODD(sym_sts)) {
       if (symbol_value[0] == '@') {
         /* Read command file */
-        sts = readcmdfile(&symbol_value[1]);
+        sts = readcmdfile(&symbol_value[1], 0);
         if (sts == DCLI__NOFILE) {
           char tmp[200];
           snprintf(tmp, 200, "Unable to open file \"%s\"", &symbol_value[1]);
@@ -2844,7 +2852,7 @@ static int graph_wccm_get_wbctx_cb(void* ctx, ldh_tWBContext* wbctx)
 *
 **************************************************************************/
 
-int Graph::readcmdfile(char* incommand)
+int Graph::readcmdfile(char* incommand, char *script)
 {
   char input_str[160];
   int sts;
@@ -2862,7 +2870,6 @@ int Graph::readcmdfile(char* incommand)
 
   }
 
-  str_trim(input_str, incommand);
   script_store_graph();
 #if LDH
   if (ldhses)
@@ -2871,11 +2878,18 @@ int Graph::readcmdfile(char* incommand)
     wccm_store_client(this);
 #endif
   // Read and execute the command file
-  sts = ccm_file_exec(input_str, graph_externcmd_func,
-      graph_ccm_deffilename_func, graph_ccm_errormessage_func, &appl_sts,
-      verify, 0, NULL, 0, 0, NULL, (void*)this);
+  if (incommand) {
+    str_trim(input_str, incommand);
+    sts = ccm_file_exec(input_str, graph_externcmd_func,
+        graph_ccm_deffilename_func, graph_ccm_errormessage_func, &appl_sts,
+	verify, 0, NULL, 0, 0, NULL, (void*)this);
+  }
+  else if (script) {
+    sts = ccm_buffer_exec(script, graph_externcmd_func,
+	graph_ccm_deffilename_func, graph_ccm_errormessage_func, &appl_sts, verify,
+	0, NULL, 0, NULL, (void *)this);
+  }
   if (EVEN(sts))
     return sts;
-
   return 1;
 }

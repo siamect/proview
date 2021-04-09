@@ -318,9 +318,11 @@ static gboolean displayerror_remove_cb(void* data)
 }
 
 void CoWowGtk::DisplayError(
-    const char* title, const char* text, lng_eCoding coding)
+    const char* title, const char* text, lng_eCoding coding, int modal)
 {
   GtkWindow* parent;
+  GtkWidget *dialog;
+
   if (m_parent)
     parent = GTK_WINDOW(gtk_widget_get_toplevel(m_parent));
   else
@@ -336,8 +338,12 @@ void CoWowGtk::DisplayError(
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wformat-security"
-  GtkWidget* dialog = gtk_message_dialog_new(
-      parent, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, ctext);
+  if (modal)
+    dialog = gtk_message_dialog_new(
+        parent, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, ctext);
+  else
+    dialog = gtk_message_dialog_new(
+        parent, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, ctext);
 #pragma GCC diagnostic pop
   if (coding != lng_eCoding_UTF_8)
     g_free(ctext);

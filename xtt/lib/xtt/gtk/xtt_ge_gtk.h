@@ -57,13 +57,22 @@ public:
   GtkWidget* confirm_label;
   GtkWidget* message_dia_widget;
   GtkWidget* message_dia_label;
+  GtkWidget* file_edit;
+  GtkWidget* edit_add;
+  GtkWidget* edit_delete;
+  GtkWidget* edit_copy;
+  GtkWidget* edit_paste;
+  GtkWidget* edit_connect;
+  GtkWidget* edit_merge;
+  GtkWidget* edit_cellattributes;
+  GtkWidget* edit_graphattributes;
   CoWowFocusTimerGtk focustimer;
 
   XttGeGtk(GtkWidget* parent_wid, void* parent_ctx, const char* name,
       const char* filename, int scrollbar, int menu, int navigator, int width,
       int height, int x, int y, double scan_time, const char* object_name,
       int use_default_access, unsigned int access, unsigned int options,
-      void* basewidget, double* borders, int color_theme,
+      void* basewidget, double* borders, int color_theme, int dashboard,
       int (*xg_command_cb)(void*, char*, char*, void*),
       int (*xg_get_current_objects_cb)(void*, pwr_sAttrRef**, int**),
       int (*xg_is_authorized_cb)(void*, unsigned int),
@@ -72,6 +81,7 @@ public:
 
   void pop();
   void iconify();
+  void set_title(char *t);
   void set_size(int width, int height);
   void create_confirm_dialog();
   void confirm_reply(int ok);
@@ -85,6 +95,7 @@ public:
   }
   void iconify(int val);
   void set_below(int val);
+  void menu_setup(int edit);
 
   static void ge_change_value_cb(void* ge_ctx, void* value_object, char* text);
   static void confirm_cb(void* ge_ctx, void* confirm_object, char* text);
@@ -96,6 +107,19 @@ public:
   static void activate_confirm_ok(GtkWidget* w, gpointer data);
   static void activate_confirm_cancel(GtkWidget* w, gpointer data);
   static void activate_exit(GtkWidget* w, gpointer data);
+  static void activate_edit(GtkWidget* w, gpointer data);
+  static void activate_open(GtkWidget* w, gpointer data);
+  static void activate_add(GtkWidget* w, gpointer data);
+  static void activate_delete(GtkWidget* w, gpointer data);
+  static void activate_copy(GtkWidget* w, gpointer data);
+  static void activate_paste(GtkWidget* w, gpointer data);
+  static void activate_connect(GtkWidget* w, gpointer data);
+  static void activate_merge(GtkWidget* w, gpointer data);
+  static void activate_cellattributes(GtkWidget* w, gpointer data);
+  static void activate_graphattributes(GtkWidget* w, gpointer data);
+  static void activate_save(GtkWidget* w, gpointer data);
+  static void activate_saveas(GtkWidget* w, gpointer data);
+  static void activate_setcolortheme(GtkWidget* w, gpointer data);
   static void activate_zoom_in(GtkWidget* w, gpointer data);
   static void activate_zoom_out(GtkWidget* w, gpointer data);
   static void activate_zoom_reset(GtkWidget* w, gpointer data);

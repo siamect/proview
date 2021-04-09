@@ -46,6 +46,7 @@
 #include "co_string.h"
 
 #include "ge_graph.h"
+#include "ge_script.h"
 #include "ge_dyn.h"
 #include "ge_msg.h"
 
@@ -66,25 +67,28 @@ static int graph_gettextextent_func(void* filectx, ccm_sArg* arg_list,
     ccm_tInt* return_int, char* return_string)
 {
   ccm_sArg* arg_p2; // Textsize
-  ccm_sArg* arg_p3; // Bold
-  ccm_sArg* arg_p4; // Width
-  ccm_sArg* arg_p5 = NULL; // Height
-  ccm_sArg* arg_p6 = NULL; // Descent
+  ccm_sArg* arg_p3; // Font
+  ccm_sArg* arg_p4; // Bold
+  ccm_sArg* arg_p5; // Width
+  ccm_sArg* arg_p6 = NULL; // Height
+  ccm_sArg* arg_p7 = NULL; // Descent
   Graph* graph;
   glow_eDrawType draw_type;
   double z_width, z_height, z_descent;
-  int text_idx;
+  int textsize;
+  glow_eFont font;
 
-  if (arg_count < 4 || arg_count > 6)
+  if (arg_count < 5 || arg_count > 7)
     return CCM__ARGMISM;
 
   arg_p2 = arg_list->next;
   arg_p3 = arg_p2->next;
   arg_p4 = arg_p3->next;
-  if (arg_count > 4)
-    arg_p5 = arg_p4->next;
+  arg_p5 = arg_p4->next;
   if (arg_count > 5)
     arg_p6 = arg_p5->next;
+  if (arg_count > 6)
+    arg_p7 = arg_p6->next;
 
   if (arg_list->value_decl != CCM_DECL_STRING)
     return CCM__ARGMISM;
@@ -92,57 +96,61 @@ static int graph_gettextextent_func(void* filectx, ccm_sArg* arg_list,
     return CCM__ARGMISM;
   if (arg_p3->value_decl != CCM_DECL_INT)
     return CCM__ARGMISM;
-  if (arg_p4->value_decl != CCM_DECL_FLOAT)
+  if (arg_p4->value_decl != CCM_DECL_INT)
     return CCM__ARGMISM;
-  if (arg_count > 4 && arg_p5->value_decl != CCM_DECL_FLOAT)
+  if (arg_p5->value_decl != CCM_DECL_FLOAT)
     return CCM__ARGMISM;
   if (arg_count > 5 && arg_p6->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+  if (arg_count > 6 && arg_p7->value_decl != CCM_DECL_FLOAT)
     return CCM__ARGMISM;
 
   graph_get_stored_graph(&graph);
 
-  if (arg_p3->value_int)
+  if (arg_p4->value_int)
     draw_type = glow_eDrawType_TextHelveticaBold;
   else
     draw_type = glow_eDrawType_TextHelvetica;
 
   switch (arg_p2->value_int) {
-  case 8:
-    text_idx = 0;
+  case 0:
+    textsize = 0;
     break;
-  case 10:
-    text_idx = 1;
+  case 1:
+    textsize = 1;
     break;
-  case 12:
-    text_idx = 2;
+  case 2:
+    textsize = 2;
     break;
-  case 14:
-    text_idx = 3;
+  case 3:
+    textsize = 4;
     break;
-  case 18:
-    text_idx = 4;
+  case 4:
+    textsize = 6;
     break;
-  case 24:
-    text_idx = 5;
+  case 5:
+    textsize = 8;
     break;
   default:
-    text_idx = 0;
+    textsize = 8;
   }
+  font = (glow_eFont)arg_p3->value_int;
+
   grow_GetTextExtent(graph->grow->ctx, arg_list->value_string,
-      strlen(arg_list->value_string), draw_type, text_idx, glow_eFont_Helvetica,
+      strlen(arg_list->value_string), draw_type, textsize, font,
       &z_width, &z_height, &z_descent);
 
-  arg_p4->value_float = float(z_width);
-  arg_p4->value_returned = 1;
-
-  if (arg_count > 4) {
-    arg_p5->value_float = float(z_height);
-    arg_p5->value_returned = 1;
-  }
+  arg_p5->value_float = float(z_width);
+  arg_p5->value_returned = 1;
 
   if (arg_count > 5) {
-    arg_p5->value_float = float(z_descent);
-    arg_p5->value_returned = 1;
+    arg_p6->value_float = float(z_height);
+    arg_p6->value_returned = 1;
+  }
+
+  if (arg_count > 6) {
+    arg_p7->value_float = float(z_descent);
+    arg_p7->value_returned = 1;
   }
   return 1;
 }
@@ -436,6 +444,34 @@ static int graph_groupgetnextobject_func(void* filectx, ccm_sArg* arg_list,
     *return_int = (long int)next;
   else
     *return_int = 0;
+  *return_decl = CCM_DECL_INT;
+
+  return 1;
+}
+
+static int graph_dashinsertobject_func(void* filectx, ccm_sArg* arg_list,
+    int arg_count, int* return_decl, ccm_tFloat* return_float,
+    ccm_tInt* return_int, char* return_string)
+{
+  Graph* graph;
+  int sts;
+  ccm_sArg* arg_p2;
+
+  if (arg_count != 2)
+    return CCM__ARGMISM;
+
+  if (arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  if (arg_p2->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+
+  graph_get_stored_graph(&graph);
+
+  sts = grow_DashInsertObject((grow_tObject)arg_list->value_int,
+      (grow_tObject)arg_p2->value_int);
+  *return_int = sts;
   *return_decl = CCM_DECL_INT;
 
   return 1;
@@ -1188,6 +1224,63 @@ static int graph_rotateselected_func(void* filectx, ccm_sArg* arg_list, int arg_
   return 1;
 }
 
+static int graph_setselecttextsize_func(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  Graph* graph;
+
+  if (arg_count != 1)
+    return CCM__ARGMISM;
+
+  if (arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  
+  graph_get_stored_graph(&graph);
+
+  grow_SetSelectTextSize(graph->grow->ctx, arg_list->value_int);
+
+  return 1;
+}
+
+static int graph_setselecttextfont_func(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  Graph* graph;
+
+  if (arg_count != 1)
+    return CCM__ARGMISM;
+
+  if (arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  
+  graph_get_stored_graph(&graph);
+
+  grow_SetSelectTextFont(graph->grow->ctx, (glow_eFont)arg_list->value_int);
+
+  return 1;
+}
+
+static int graph_setselecttextbold_func(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  Graph* graph;
+
+  if (arg_count != 1)
+    return CCM__ARGMISM;
+
+  if (arg_list->value_decl != CCM_DECL_INT)
+    return CCM__ARGMISM;
+  
+  graph_get_stored_graph(&graph);
+
+  grow_SetSelectTextBold(graph->grow->ctx, arg_list->value_int);
+
+  return 1;
+}
+
 static int graph_setgraphattribute_func(void* filectx, ccm_sArg* arg_list,
     int arg_count, int* return_decl, ccm_tFloat* return_float,
     ccm_tInt* return_int, char* return_string)
@@ -1912,7 +2005,8 @@ static int graph_getobjectattribute_func(void* filectx, ccm_sArg* arg_list,
       || type == glow_eObjectType_GrowLine
       || type == glow_eObjectType_GrowPolyLine
       || type == glow_eObjectType_GrowText
-      || type == glow_eObjectType_GrowImage) {
+      || type == glow_eObjectType_GrowImage
+      || type == glow_eObjectType_GrowDashCell) {
     attr_sItem* itemlist;
     attr_sItem* item_p;
     int item_cnt;
@@ -2926,12 +3020,12 @@ static int graph_createtext_func(void* filectx, ccm_sArg* arg_list,
     ccm_tInt* return_int, char* return_string)
 {
   Graph* graph;
-  ccm_sArg* arg_p2;
-  ccm_sArg* arg_p3;
-  ccm_sArg* arg_p4;
-  ccm_sArg* arg_p5;
-  ccm_sArg* arg_p6;
-  ccm_sArg* arg_p7;
+  ccm_sArg* arg_p2; // x
+  ccm_sArg* arg_p3; // y
+  ccm_sArg* arg_p4; // Size
+  ccm_sArg* arg_p5; // Font
+  ccm_sArg* arg_p6; // Bold
+  ccm_sArg* arg_p7; // Color
 
   double x, y;
   glow_eDrawType fill_color, border_color, text_color;
@@ -3024,6 +3118,8 @@ static int graph_createtext_func(void* filectx, ccm_sArg* arg_list,
   case 5:
     textsize = 8;
     break;
+  default:
+    textsize = 8;
   }
 
 
@@ -3232,6 +3328,7 @@ static int graph_createbar_func(void* filectx, ccm_sArg* arg_list,
   ccm_sArg* arg_p3;
   ccm_sArg* arg_p4;
   ccm_sArg* arg_p5;
+  ccm_sArg* arg_p6;
   
   double x1, y1, x2, y2;
   grow_tNode n1;
@@ -3239,12 +3336,12 @@ static int graph_createbar_func(void* filectx, ccm_sArg* arg_list,
   double sx, sy;
   double ll_x, ll_y, ur_x, ur_y;
   int colortheme;
+  glow_eDirection direction;
     
-  if (arg_count < 2 || arg_count > 5)
+  if (arg_count < 2 || arg_count > 6)
     return CCM__ARGMISM;
 
   arg_p2 = arg_list->next;
-  arg_p3 = arg_p2->next;
 
   if (arg_list->value_decl != CCM_DECL_FLOAT )
     return CCM__ARGMISM;
@@ -3274,7 +3371,7 @@ static int graph_createbar_func(void* filectx, ccm_sArg* arg_list,
   else
     scale_y = 0;
 
-  if (arg_count == 5) {
+  if (arg_count >= 5) {
     arg_p5 = arg_p4->next;
     if (arg_p5->value_decl != CCM_DECL_INT)
       return CCM__ARGMISM;
@@ -3283,10 +3380,50 @@ static int graph_createbar_func(void* filectx, ccm_sArg* arg_list,
   else
     colortheme = 0;
 
+  if (arg_count == 6) {
+    arg_p6 = arg_p5->next;
+    if (arg_p6->value_decl != CCM_DECL_INT)
+      return CCM__ARGMISM;
+    direction = (glow_eDirection)arg_p6->value_int;
+  }
+  else
+    direction = glow_eDirection_Up;
+
 
   graph_get_stored_graph(&graph);
 
-  graph->create_bar(&n1, x1, y1, colortheme);
+  switch (direction) {
+  case glow_eDirection_Up:
+    graph->create_bar(&n1, x1, y1, colortheme);
+    break;
+  case glow_eDirection_Down:
+    graph->create_bar(&n1, x1, y1, colortheme);
+    grow_SelectClear(graph->grow->ctx);
+    grow_SelectInsert(graph->grow->ctx, n1);
+    grow_RotateSelectedObjects(graph->grow->ctx, 180.0, glow_eRotationPoint_Center);
+    grow_SelectClear(graph->grow->ctx);
+    grow_StoreTransform(n1);
+    break;
+  case glow_eDirection_Left:
+    // Default bar has width 0.5 and height 5.0
+    graph->create_bar(&n1, x1, y1 + 0.5, colortheme);
+    grow_SelectClear(graph->grow->ctx);
+    grow_SelectInsert(graph->grow->ctx, n1);
+    grow_RotateSelectedObjects(graph->grow->ctx, -90.0, glow_eRotationPoint_LowerLeft);
+    grow_SelectClear(graph->grow->ctx);
+    grow_StoreTransform(n1);
+    break;
+  case glow_eDirection_Right:
+    graph->create_bar(&n1, x1, y1 - 5.0, colortheme);
+    grow_SelectClear(graph->grow->ctx);
+    grow_SelectInsert(graph->grow->ctx, n1);
+    grow_RotateSelectedObjects(graph->grow->ctx, 90.0, glow_eRotationPoint_UpperLeft);
+    grow_SelectClear(graph->grow->ctx);
+    grow_StoreTransform(n1);
+    break;
+  default:
+    break;
+  }
 
   if (scale_x || scale_y) {
     grow_MeasureNode(n1, &ll_x, &ll_y, &ur_x, &ur_y);
@@ -3331,7 +3468,6 @@ static int graph_createbararc_func(void* filectx, ccm_sArg* arg_list,
     return CCM__ARGMISM;
 
   arg_p2 = arg_list->next;
-  arg_p3 = arg_p2->next;
 
   if (arg_list->value_decl != CCM_DECL_FLOAT )
     return CCM__ARGMISM;
@@ -3361,7 +3497,7 @@ static int graph_createbararc_func(void* filectx, ccm_sArg* arg_list,
   else
     scale_y = 0;
 
-  if (arg_count == 5) {
+  if (arg_count >= 5) {
     arg_p5 = arg_p4->next;
     if (arg_p5->value_decl != CCM_DECL_INT)
       return CCM__ARGMISM;
@@ -3370,10 +3506,245 @@ static int graph_createbararc_func(void* filectx, ccm_sArg* arg_list,
   else
     colortheme = 0;
 
-
   graph_get_stored_graph(&graph);
 
   graph->create_bararc(&n1, x1, y1, colortheme);
+
+  if (scale_x || scale_y) {
+    grow_MeasureNode(n1, &ll_x, &ll_y, &ur_x, &ur_y);
+    if (scale_x)
+      sx = (x2 - x1) / (ur_x - ll_x);
+    else
+      sx = 1;
+    if (scale_y)
+      sy = (y2 - y1) / (ur_y - ll_y);
+    else
+      sy = 1;
+    grow_StoreTransform(n1);
+    grow_SetObjectScale(n1, sx, sy, x1, y1, glow_eScaleType_LowerLeft);
+  }
+  graph->current_cmd_object = n1;
+
+  grow_SetModified(graph->grow->ctx, 1);
+
+  *return_int = (long int)graph->current_cmd_object;
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
+static int graph_createaxis_func(void* filectx, ccm_sArg* arg_list,
+    int arg_count, int* return_decl, ccm_tFloat* return_float,
+    ccm_tInt* return_int, char* return_string)
+{
+  Graph* graph;
+  ccm_sArg* arg_p2;
+  ccm_sArg* arg_p3;
+  ccm_sArg* arg_p4;
+  ccm_sArg* arg_p5;
+  ccm_sArg* arg_p6;
+  ccm_sArg* arg_p7;
+  
+  double x1, y1, x2, y2;
+  grow_tNode n1;
+  int scale_x, scale_y;
+  double sx, sy;
+  double ll_x, ll_y, ur_x, ur_y;
+  int colortheme;
+  int dynamic;
+  glow_eDirection direction;
+    
+  if (arg_count < 2 || arg_count > 7)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+
+  if (arg_list->value_decl != CCM_DECL_FLOAT )
+    return CCM__ARGMISM;
+  if (arg_p2->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+
+  x1 = arg_list->value_float;
+  y1 = arg_p2->value_float;
+
+  if (arg_count >= 3) {
+    arg_p3 = arg_p2->next;
+    if (arg_p3->value_decl != CCM_DECL_FLOAT)
+      return CCM__ARGMISM;
+    scale_x = 1;
+    x2 = arg_p3->value_float;
+  }
+  else
+    scale_x = 0;
+
+  if (arg_count >= 4) {
+    arg_p4 = arg_p3->next;
+    if (arg_p4->value_decl != CCM_DECL_FLOAT)
+      return CCM__ARGMISM;
+    scale_y = 1;
+    y2 = arg_p4->value_float;    
+  }
+  else
+    scale_y = 0;
+
+  if (arg_count >= 5) {
+    arg_p5 = arg_p4->next;
+    if (arg_p5->value_decl != CCM_DECL_INT)
+      return CCM__ARGMISM;
+    colortheme = arg_p5->value_int;
+  }
+  else
+    colortheme = 0;
+
+  if (arg_count >= 6) {
+    arg_p6 = arg_p5->next;
+    if (arg_p6->value_decl != CCM_DECL_INT)
+      return CCM__ARGMISM;
+    dynamic = arg_p6->value_int;
+  }
+  else
+    dynamic = 0;
+
+  if (arg_count >= 7) {
+    arg_p7 = arg_p6->next;
+    if (arg_p7->value_decl != CCM_DECL_INT)
+      return CCM__ARGMISM;
+    direction = (glow_eDirection)arg_p7->value_int;
+  }
+  else
+    direction = glow_eDirection_Up;
+
+
+  graph_get_stored_graph(&graph);
+
+  switch (direction) {
+  case glow_eDirection_Left:
+    graph->create_axis(&n1, x1, y1, dynamic, colortheme);
+    break;
+  case glow_eDirection_Right:
+    graph->create_axis(&n1, x1, y1, dynamic, colortheme);
+    grow_SelectClear(graph->grow->ctx);
+    grow_SelectInsert(graph->grow->ctx, n1);
+    grow_RotateSelectedObjects(graph->grow->ctx, 180.0, glow_eRotationPoint_Center);
+    grow_SelectClear(graph->grow->ctx);
+    grow_StoreTransform(n1);
+    break;
+  case glow_eDirection_Down:
+    // Default bar has width 1.0 and height 5.0
+    graph->create_axis(&n1, x1, y1 + 1.0, dynamic, colortheme);
+    grow_SelectClear(graph->grow->ctx);
+    grow_SelectInsert(graph->grow->ctx, n1);
+    grow_RotateSelectedObjects(graph->grow->ctx, -90.0, glow_eRotationPoint_LowerLeft);
+    grow_SelectClear(graph->grow->ctx);
+    grow_StoreTransform(n1);
+    break;
+  case glow_eDirection_Up:
+    graph->create_axis(&n1, x1, y1 - 5.0, dynamic, colortheme);
+    grow_SelectClear(graph->grow->ctx);
+    grow_SelectInsert(graph->grow->ctx, n1);
+    grow_RotateSelectedObjects(graph->grow->ctx, 90.0, glow_eRotationPoint_UpperLeft);
+    grow_SelectClear(graph->grow->ctx);
+    grow_StoreTransform(n1);
+    break;
+  default:
+    break;
+  }
+
+  if (scale_x || scale_y) {
+    grow_MeasureNode(n1, &ll_x, &ll_y, &ur_x, &ur_y);
+    if (scale_x)
+      sx = (x2 - x1) / (ur_x - ll_x);
+    else
+      sx = 1;
+    if (scale_y)
+      sy = (y2 - y1) / (ur_y - ll_y);
+    else
+      sy = 1;
+    grow_StoreTransform(n1);
+    grow_SetObjectScale(n1, sx, sy, x1, y1, glow_eScaleType_LowerLeft);
+  }
+  graph->current_cmd_object = n1;
+
+  grow_SetModified(graph->grow->ctx, 1);
+
+  *return_int = (long int)graph->current_cmd_object;
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
+static int graph_createaxisarc_func(void* filectx, ccm_sArg* arg_list,
+    int arg_count, int* return_decl, ccm_tFloat* return_float,
+    ccm_tInt* return_int, char* return_string)
+{
+  Graph* graph;
+  ccm_sArg* arg_p2;
+  ccm_sArg* arg_p3;
+  ccm_sArg* arg_p4;
+  ccm_sArg* arg_p5;
+  ccm_sArg* arg_p6;
+  
+  double x1, y1, x2, y2;
+  grow_tNode n1;
+  int scale_x, scale_y;
+  double sx, sy;
+  double ll_x, ll_y, ur_x, ur_y;
+  int colortheme;
+  int dynamic;
+    
+  if (arg_count < 2 || arg_count > 6)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+
+  if (arg_list->value_decl != CCM_DECL_FLOAT )
+    return CCM__ARGMISM;
+  if (arg_p2->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+
+  x1 = arg_list->value_float;
+  y1 = arg_p2->value_float;
+
+  if (arg_count >= 3) {
+    arg_p3 = arg_p2->next;
+    if (arg_p3->value_decl != CCM_DECL_FLOAT)
+      return CCM__ARGMISM;
+    scale_x = 1;
+    x2 = arg_p3->value_float;
+  }
+  else
+    scale_x = 0;
+
+  if (arg_count >= 4) {
+    arg_p4 = arg_p3->next;
+    if (arg_p4->value_decl != CCM_DECL_FLOAT)
+      return CCM__ARGMISM;
+    scale_y = 1;
+    y2 = arg_p4->value_float;    
+  }
+  else
+    scale_y = 0;
+
+  if (arg_count >= 5) {
+    arg_p5 = arg_p4->next;
+    if (arg_p5->value_decl != CCM_DECL_INT)
+      return CCM__ARGMISM;
+    colortheme = arg_p5->value_int;
+  }
+  else
+    colortheme = 0;
+
+  if (arg_count >= 6) {
+    arg_p6 = arg_p5->next;
+    if (arg_p6->value_decl != CCM_DECL_INT)
+      return CCM__ARGMISM;
+    dynamic = arg_p6->value_int;
+  }
+  else
+    dynamic = 0;
+
+
+  graph_get_stored_graph(&graph);
+
+  graph->create_axisarc(&n1, x1, y1, dynamic, colortheme);
 
   if (scale_x || scale_y) {
     grow_MeasureNode(n1, &ll_x, &ll_y, &ur_x, &ur_y);
@@ -3831,6 +4202,10 @@ int Graph::script_func_register(void)
   if (EVEN(sts))
     return sts;
   sts = ccm_register_function(
+      "Ge", "DashInsertObject", graph_dashinsertobject_func);
+  if (EVEN(sts))
+    return sts;
+  sts = ccm_register_function(
       "Ge", "GroupSelected", graph_groupselected_func);
   if (EVEN(sts))
     return sts;
@@ -3944,6 +4319,15 @@ int Graph::script_func_register(void)
   sts = ccm_register_function("Ge", "RotateSelected", graph_rotateselected_func);
   if (EVEN(sts))
     return sts;
+  sts = ccm_register_function("Ge", "SetSelectTextSize", graph_setselecttextsize_func);
+  if (EVEN(sts))
+    return sts;
+  sts = ccm_register_function("Ge", "SetSelectTextFont", graph_setselecttextfont_func);
+  if (EVEN(sts))
+    return sts;
+  sts = ccm_register_function("Ge", "SetSelectTextBold", graph_setselecttextbold_func);
+  if (EVEN(sts))
+    return sts;
   sts = ccm_register_function(
       "Ge", "SetObjectAttribute", graph_setobjectattribute_func);
   if (EVEN(sts))
@@ -4042,6 +4426,12 @@ int Graph::script_func_register(void)
   if (EVEN(sts))
     return sts;
   sts = ccm_register_function("Ge", "CreateBarArc", graph_createbararc_func);
+  if (EVEN(sts))
+    return sts;
+  sts = ccm_register_function("Ge", "CreateAxis", graph_createaxis_func);
+  if (EVEN(sts))
+    return sts;
+  sts = ccm_register_function("Ge", "CreateAxisArc", graph_createaxisarc_func);
   if (EVEN(sts))
     return sts;
   sts = ccm_register_function("Ge", "CreateTrend", graph_createtrend_func);
@@ -4359,6 +4749,17 @@ int Graph::script_func_register(void)
   sts = ccm_create_external_var("eFont_LucidaSans", CCM_DECL_INT, 0,
       glow_eFont_LucidaSans, 0);
 
+  sts = ccm_create_external_var("eDirection_Center", CCM_DECL_INT, 0,
+      glow_eDirection_Center, 0);
+  sts = ccm_create_external_var("eDirection_Right", CCM_DECL_INT, 0,
+      glow_eDirection_Right, 0);
+  sts = ccm_create_external_var("eDirection_Left", CCM_DECL_INT, 0,
+      glow_eDirection_Left, 0);
+  sts = ccm_create_external_var("eDirection_Up", CCM_DECL_INT, 0,
+      glow_eDirection_Up, 0);
+  sts = ccm_create_external_var("eDirection_Down", CCM_DECL_INT, 0,
+      glow_eDirection_Down, 0);
+
   return 1;
 }
 
@@ -4409,3 +4810,1101 @@ int Graph::read_scriptfile(char* incommand)
 
   return 1;
 }
+
+int Graph::script_buffer_exec(char *script)
+{
+  int sts;
+  int appl_sts;
+
+  if (!ccm_func_registred) {
+    ccm_func_registred = 1;
+
+    script_func_register();
+
+    // Register xtt standard functions ??
+    // wccm_register(graph_wccm_get_wbctx_cb, graph_wccm_get_ldhsession_cb, 0);
+  }
+
+  script_store_graph();
+
+  // Read and execute the command file
+  sts = ccm_buffer_exec(script, ccm_externcmd_func,
+      ccm_deffilename_func, ccm_errormessage_func, &appl_sts, verify,
+      0, NULL, 0, NULL, (void *)this);
+  if (EVEN(sts))
+    return sts;
+  return 1;
+}
+
+
+//
+// Analogous c interface
+//
+
+void gsc_MeasureObject(Graph* graph, grow_tObject id, double* ll_x, double* ll_y, 
+    double* ur_x, double *ur_y)
+{
+  grow_MeasureNode(id, ll_x, ll_y, ur_x, ur_y);
+} 
+
+void gsc_GetTextExtent(Graph* graph, char* text, int size, glow_eFont font, int bold,
+    double *width, double *height, double *descent)
+{
+  glow_eDrawType draw_type;
+  int textsize;
+
+  if (bold)
+    draw_type = glow_eDrawType_TextHelveticaBold;
+  else
+    draw_type = glow_eDrawType_TextHelvetica;
+
+  switch (size) {
+  case 0:
+    textsize = 0;
+    break;
+  case 1:
+    textsize = 1;
+    break;
+  case 2:
+    textsize = 2;
+    break;
+  case 3:
+    textsize = 4;
+    break;
+  case 4:
+    textsize = 6;
+    break;
+  case 5:
+    textsize = 8;
+    break;
+  default:
+    textsize = 8;
+  }
+
+  grow_GetTextExtent(graph->grow->ctx, text, strlen(text), draw_type, 
+      textsize, font, width, height, descent);
+}
+
+grow_tObject gsc_CreateText(Graph* graph, char *text, double x, double y, int size, 
+    glow_eFont font, int bold, glow_eDrawType color)
+{
+  glow_eDrawType drawtype;
+  int textsize;
+
+  if (bold)
+    drawtype = glow_eDrawType_TextHelveticaBold;
+  else
+    drawtype = glow_eDrawType_TextHelvetica;
+
+  switch (size) {
+  case 0:
+    textsize = 0;
+    break;
+  case 1:
+    textsize = 1;
+    break;
+  case 2:
+    textsize = 2;
+    break;
+  case 3:
+    textsize = 4;
+    break;
+  case 4:
+    textsize = 6;
+    break;
+  case 5:
+    textsize = 8;
+    break;
+  default:
+    textsize = 8;
+  }
+
+  grow_CreateGrowText(graph->grow->ctx, "", text, x, y, drawtype,
+      color, textsize, font, glow_mDisplayLevel_1, NULL,
+      &graph->current_cmd_object);
+  grow_SetModified(graph->grow->ctx, 1);
+
+  return graph->current_cmd_object;
+}
+
+int gsc_DashInsertObject(Graph* graph, grow_tObject dash, grow_tObject id)
+{
+  return grow_DashInsertObject(dash, id);
+}
+
+grow_tObject gsc_CreateBar(Graph* graph, double x1, double y1, double x2, double y2, 
+    int colortheme, glow_eDirection direction)
+{
+  grow_tNode n1;
+  int scale_x, scale_y;
+  double sx, sy;
+  double ll_x, ll_y, ur_x, ur_y;
+
+  switch (direction) {
+  case glow_eDirection_Up:
+    graph->create_bar(&n1, x1, y1, colortheme);
+    break;
+  case glow_eDirection_Down:
+    graph->create_bar(&n1, x1, y1, colortheme);
+    grow_SelectClear(graph->grow->ctx);
+    grow_SelectInsert(graph->grow->ctx, n1);
+    grow_RotateSelectedObjects(graph->grow->ctx, 180.0, glow_eRotationPoint_Center);
+    grow_SelectClear(graph->grow->ctx);
+    grow_StoreTransform(n1);
+    break;
+  case glow_eDirection_Left:
+    // Default bar has width 0.5 and height 5.0
+    graph->create_bar(&n1, x1, y1 + 0.5, colortheme);
+    grow_SelectClear(graph->grow->ctx);
+    grow_SelectInsert(graph->grow->ctx, n1);
+    grow_RotateSelectedObjects(graph->grow->ctx, -90.0, glow_eRotationPoint_LowerLeft);
+    grow_SelectClear(graph->grow->ctx);
+    grow_StoreTransform(n1);
+    break;
+  case glow_eDirection_Right:
+    graph->create_bar(&n1, x1, y1 - 5.0, colortheme);
+    grow_SelectClear(graph->grow->ctx);
+    grow_SelectInsert(graph->grow->ctx, n1);
+    grow_RotateSelectedObjects(graph->grow->ctx, 90.0, glow_eRotationPoint_UpperLeft);
+    grow_SelectClear(graph->grow->ctx);
+    grow_StoreTransform(n1);
+    break;
+  default:
+    break;
+  }
+
+  if (x2 == 0 && y2 == 0)
+    scale_x = scale_y = 0;
+  else
+    scale_x = scale_y = 1;
+
+  if (scale_x || scale_y) {
+    grow_MeasureNode(n1, &ll_x, &ll_y, &ur_x, &ur_y);
+    if (scale_x)
+      sx = (x2 - x1) / (ur_x - ll_x);
+    else
+      sx = 1;
+    if (scale_y)
+      sy = (y2 - y1) / (ur_y - ll_y);
+    else
+      sy = 1;
+    grow_StoreTransform(n1);
+    grow_SetObjectScale(n1, sx, sy, x1, y1, glow_eScaleType_LowerLeft);
+  }
+  graph->current_cmd_object = n1;
+
+  grow_SetModified(graph->grow->ctx, 1);
+
+  return graph->current_cmd_object;
+}
+
+grow_tObject gsc_CreateBarArc(Graph* graph, double x1, double y1, double x2, double y2, 
+    int colortheme)
+{
+  grow_tNode n1;
+  int scale_x, scale_y;
+  double sx, sy;
+  double ll_x, ll_y, ur_x, ur_y;
+    
+  graph->create_bararc(&n1, x1, y1, colortheme);
+
+  if (x2 == 0 && y2 == 0)
+    scale_x = scale_y = 0;
+  else
+    scale_x = scale_y = 1;
+
+  if (scale_x || scale_y) {
+    grow_MeasureNode(n1, &ll_x, &ll_y, &ur_x, &ur_y);
+    if (scale_x)
+      sx = (x2 - x1) / (ur_x - ll_x);
+    else
+      sx = 1;
+    if (scale_y)
+      sy = (y2 - y1) / (ur_y - ll_y);
+    else
+      sy = 1;
+    grow_StoreTransform(n1);
+    grow_SetObjectScale(n1, sx, sy, x1, y1, glow_eScaleType_LowerLeft);
+  }
+  graph->current_cmd_object = n1;
+
+  grow_SetModified(graph->grow->ctx, 1);
+
+  return graph->current_cmd_object;
+}
+
+int gsc_SetObjectAttribute(Graph* graph, grow_tObject id, const char* aname, void* buff, 
+    int btype)
+{
+  int type;
+  
+  type = grow_GetObjectType(id);
+  if (type == glow_eObjectType_GrowNode 
+      || type == glow_eObjectType_GrowSlider
+      || type == glow_eObjectType_GrowGroup
+      || type == glow_eObjectType_GrowToolbar
+      || type == glow_eObjectType_GrowTable
+      || type == glow_eObjectType_GrowWindow
+      || type == glow_eObjectType_GrowFolder 
+      || type == glow_eObjectType_GrowBar
+      || type == glow_eObjectType_GrowBarArc
+      || type == glow_eObjectType_GrowXYCurve
+      || type == glow_eObjectType_GrowPie
+      || type == glow_eObjectType_GrowBarChart
+      || type == glow_eObjectType_GrowAxis
+      || type == glow_eObjectType_GrowAxisArc
+      || type == glow_eObjectType_GrowTrend 
+      || type == glow_eObjectType_GrowRect
+      || type == glow_eObjectType_GrowRectRounded
+      || type == glow_eObjectType_GrowArc
+      || type == glow_eObjectType_GrowLine
+      || type == glow_eObjectType_GrowPolyLine
+      || type == glow_eObjectType_GrowText
+      || type == glow_eObjectType_GrowImage) {
+    attr_sItem* itemlist;
+    attr_sItem* item_p;
+    int item_cnt;
+    void* client_data;
+    char attr_name[80];
+    int i_value;
+    float f_value;
+    double d_value;
+    int i;
+    int sts;
+    int found;
+    GeDyn* dyn;
+
+    graph->get_attr_items(id, &itemlist, &item_cnt, &client_data);
+
+    found = 0;
+    item_p = itemlist;
+    for (i = 0; i < item_cnt; i++) {
+      strcpy(attr_name, item_p->name);
+      if (item_p->type == ge_eAttrType_Dyn) {
+	if (str_NoCaseStrncmp(aname, attr_name, strlen(attr_name)) == 0 &&
+	    aname[strlen(attr_name)] == '.') {
+	  found = 1;
+	  break;
+	}
+      }
+      else {
+	if (str_NoCaseStrcmp(aname, attr_name) == 0) {
+	  found = 1;
+	  break;
+	}
+      }
+      item_p++;
+    }
+
+    if (!found)
+      return GE__NOATTR;
+
+    switch (item_p->type) {
+    case glow_eType_Int:
+    case glow_eType_TraceColor:
+    case glow_eType_Boolean:
+      i_value = *(int *)buff;
+      memcpy(item_p->value, (char*)&i_value, sizeof(i_value));
+      break;
+    case glow_eType_Float:
+      f_value = *(float *)buff;
+      memcpy(item_p->value, (char*)&f_value, sizeof(f_value));
+      break;
+    case glow_eType_Double:
+      d_value = *(double *)buff;
+      memcpy(item_p->value, (char*)&d_value, sizeof(d_value));
+      break;
+    case glow_eType_String: {
+      char str[K_STRING_SIZE];
+
+      trim_script(str, (char *)buff);
+      strncpy((char*)item_p->value, str, item_p->size);
+      break;
+    }
+    case glow_eType_Direction:
+    case glow_eType_HorizDirection:
+    case glow_eType_Adjustment:
+    case glow_eType_AnnotType:
+    case glow_eType_Font:
+    case glow_eType_Color:
+    case glow_eType_Tone:
+    case glow_eType_ToneOrColor:
+    case glow_eType_Cycle:
+    case glow_eType_MB3Action:
+    case glow_eType_InputFocusMark:
+    case glow_eType_Relief:
+    //case glow_eType_TextSize:
+    case glow_eType_Gradient:
+    case glow_eType_HotIndication:
+    case glow_eType_AppMotion:
+    case ge_eAttrType_AnimSequence:
+    case ge_eAttrType_LimitType:
+    case ge_eAttrType_ScaleType:
+    case ge_eAttrType_CurveDataType:
+    case ge_eAttrType_OptionMenuType:
+    case ge_eAttrType_MethodsMenuType:
+    case ge_eAttrType_MethodToolbarType:
+    case ge_eAttrType_KeyboardType: {
+      int value;
+
+      if (btype == CCM_DECL_INT) {
+        value = *(int *)buff;
+      } else {
+       sts = AttrNav::string_to_enum(item_p->type, (char *)buff, &value);
+       if (EVEN(sts))
+	 return GE__SYNTAX;
+      }
+      memcpy(item_p->value, (char*)&value, sizeof(value));
+      break;
+    }
+    case glow_eType_TextSize: {
+      int value;
+      char str[40];
+
+      if (btype == CCM_DECL_INT)
+        sprintf(str, "%d", *(int *)buff);
+      else
+	sprintf(str, "%d", *(int *)buff);
+
+      sts = AttrNav::string_to_enum(item_p->type, str, &value);
+      if (EVEN(sts))
+        return GE__SYNTAX;
+
+      memcpy(item_p->value, (char*)&value, sizeof(value));
+      break;
+    }
+    case glow_eType_Access:
+    case ge_eAttrType_DynType1:
+    case ge_eAttrType_DynType2:
+    case ge_eAttrType_ActionType1:
+    case ge_eAttrType_ActionType2:
+    case ge_eAttrType_InstanceMask:
+    case ge_eAttrType_InputFocus: {
+      unsigned int value;
+
+      if (btype == CCM_DECL_INT)
+	value = *(int *)buff;
+      else {
+        sts = AttrNav::string_to_mask(item_p->type, (char *)buff, &value);
+        if (EVEN(sts))
+          return GE__SYNTAX;
+      }
+      memcpy(item_p->value, (char*)&value, sizeof(value));
+      if (item_p->type == ge_eAttrType_DynType1
+          || item_p->type == ge_eAttrType_DynType2
+          || item_p->type == ge_eAttrType_ActionType1
+          || item_p->type == ge_eAttrType_ActionType2) {
+        grow_GetUserData(id, (void**)&dyn);
+	dyn->update_dyntype(id);
+        dyn->update_elements();
+      }
+      break;
+    }
+    case ge_eAttrType_Dyn: {
+      attr_sItem dyn_itemlist[100];
+      attr_sItem *dyn_item_p;
+      int dyn_itemlist_cnt = 0;
+      int j;
+      char *dyn_attr_name;
+      int dyn_found;
+
+      dyn = (GeDyn *)item_p->value;
+      if (!dyn) {
+	dyn = new GeDyn(graph);
+	item_p->value = &dyn;
+      }
+      dyn->get_attributes(0, dyn_itemlist, &dyn_itemlist_cnt);
+      dyn_found = 0;
+      dyn_attr_name = (char *)&aname[strlen(attr_name)+1];
+      dyn_item_p = dyn_itemlist;
+      for (j = 0; j < dyn_itemlist_cnt; j++) {
+	if (str_NoCaseStrcmp(dyn_attr_name, dyn_item_p->name) == 0) {
+	  dyn_found = 1;
+	  break;
+	}
+	dyn_item_p++;
+      }
+      if (dyn_found) {
+	if (btype == CCM_DECL_INT) {
+	  int value;
+	  value = *(int *)buff;
+	  memcpy(dyn_item_p->value, (char*)&value, sizeof(value));
+	  if (dyn_item_p->type == ge_eAttrType_DynType1
+	      || dyn_item_p->type == ge_eAttrType_DynType2
+	      || dyn_item_p->type == ge_eAttrType_ActionType1
+	      || dyn_item_p->type == ge_eAttrType_ActionType2)
+	    dyn->update_elements();
+	}
+	else if (btype == CCM_DECL_FLOAT) {
+	  float fvalue = *(float *)buff;
+	  memcpy(dyn_item_p->value, (char*)&fvalue, sizeof(fvalue));
+	}
+	else if (btype == CCM_DECL_STRING) {
+	  char str[K_STRING_SIZE];
+
+	  trim_script(str, (char *)buff);
+	  strncpy((char *)dyn_item_p->value, str, dyn_item_p->size);
+	}
+      }
+      else {
+	dyn_item_p = dyn_itemlist;
+	for (j = 0; j < dyn_itemlist_cnt; j++) {
+	  if (str_NoCaseStrncmp(dyn_attr_name, dyn_item_p->name, strlen(dyn_item_p->name)) == 0 &&
+	    dyn_attr_name[strlen(dyn_item_p->name)] == '.') {
+	    dyn_found = 1;
+	    break;
+	  }
+	  dyn_item_p++;
+	}
+
+	if (dyn_found) {
+	  if (dyn_item_p->type == ge_eAttrType_Dyn) {
+	    attr_sItem dyn2_itemlist[100];
+	    attr_sItem *dyn2_item_p;
+	    int dyn2_itemlist_cnt = 0;
+	    int j;
+	    char *dyn2_attr_name;
+	    int dyn2_found;
+	    
+	    dyn = (GeDyn *)dyn_item_p->value;
+	    if (!dyn) {
+	      dyn = new GeDyn(graph);
+	      dyn_item_p->value = &dyn;
+	    }
+	    dyn->get_attributes(0, dyn2_itemlist, &dyn2_itemlist_cnt);
+	    dyn2_found = 0;
+	    dyn2_attr_name = &dyn_attr_name[strlen(dyn_item_p->name)+1];
+	    dyn2_item_p = dyn2_itemlist;
+	    for (j = 0; j < dyn2_itemlist_cnt; j++) {
+	      if (str_NoCaseStrcmp(dyn2_attr_name, dyn2_item_p->name) == 0) {
+		dyn2_found = 1;
+		break;
+	      }
+	      dyn2_item_p++;
+	    }
+	    if (dyn2_found) {
+	      if (btype == CCM_DECL_INT) {
+		int value;
+		value = *(int *)buff;
+		memcpy(dyn2_item_p->value, (char*)&value, sizeof(value));
+		if (dyn2_item_p->type == ge_eAttrType_DynType1
+		    || dyn2_item_p->type == ge_eAttrType_DynType2
+		    || dyn2_item_p->type == ge_eAttrType_ActionType1
+		    || dyn2_item_p->type == ge_eAttrType_ActionType2)
+		  dyn->update_elements();
+	      }
+	      else if (btype == CCM_DECL_FLOAT) {
+		float fvalue = *(float *)buff;
+		memcpy(dyn2_item_p->value, (char*)&fvalue, sizeof(fvalue));
+	      }
+	      else if (btype == CCM_DECL_STRING) {
+		char str[K_STRING_SIZE];
+		
+		trim_script(str, (char *)buff);
+		strncpy((char *)dyn2_item_p->value, str, dyn2_item_p->size);
+	      }
+	    }
+	  }
+	}
+      }
+    }
+    default:;
+    }
+    grow_UpdateObject(graph->grow->ctx, id, (grow_sAttrInfo*)client_data);
+    grow_FreeObjectAttrInfo((grow_sAttrInfo*)client_data);
+  }
+  return 1;
+}
+
+int gsc_GetObjectAttribute(Graph* graph, grow_tObject id, const char* aname, void* buff, 
+    int bsize, int btype)
+{
+  int type;
+
+  type = grow_GetObjectType(id);
+  if (type == glow_eObjectType_GrowNode 
+      || type == glow_eObjectType_GrowSlider
+      || type == glow_eObjectType_GrowGroup
+      || type == glow_eObjectType_GrowToolbar
+      || type == glow_eObjectType_GrowTable
+      || type == glow_eObjectType_GrowWindow
+      || type == glow_eObjectType_GrowFolder 
+      || type == glow_eObjectType_GrowBar
+      || type == glow_eObjectType_GrowBarArc
+      || type == glow_eObjectType_GrowXYCurve
+      || type == glow_eObjectType_GrowPie
+      || type == glow_eObjectType_GrowBarChart
+      || type == glow_eObjectType_GrowAxis
+      || type == glow_eObjectType_GrowAxisArc
+      || type == glow_eObjectType_GrowTrend 
+      || type == glow_eObjectType_GrowRect
+      || type == glow_eObjectType_GrowRectRounded
+      || type == glow_eObjectType_GrowArc
+      || type == glow_eObjectType_GrowLine
+      || type == glow_eObjectType_GrowPolyLine
+      || type == glow_eObjectType_GrowText
+      || type == glow_eObjectType_GrowImage
+      || type == glow_eObjectType_GrowDashCell) {
+    attr_sItem* itemlist;
+    attr_sItem* item_p;
+    int item_cnt;
+    void* client_data;
+    char attr_name[80];
+    pwr_tInt32 i32_value;
+    pwr_tInt64 i64_value;
+    double d_value;
+    float f_value;
+    int i;
+    int sts;
+    int found;
+
+    graph->get_attr_items(id, &itemlist, &item_cnt, &client_data);
+
+    found = 0;
+    item_p = itemlist;
+    for (i = 0; i < item_cnt; i++) {
+      strcpy(attr_name, item_p->name);
+      if (item_p->type == ge_eAttrType_Dyn) {
+	if (str_NoCaseStrncmp(aname, attr_name, strlen(attr_name)) == 0) {
+	  found = 1;
+	  break;
+	}
+      }
+      else {
+	if (str_NoCaseStrcmp(aname, attr_name) == 0) {
+	  found = 1;
+	  break;
+	}
+      }
+      item_p++;
+    }
+
+    if (!found)
+      return GE__NOATTR;
+
+    switch (item_p->type) {
+    case glow_eType_Int:
+    case glow_eType_TraceColor:
+    case glow_eType_Boolean:
+      if (btype != CCM_DECL_INT)
+        return CCM__ARGMISM;
+
+      if (item_p->size == 4) {
+	if (bsize == 4)
+	  memcpy(buff, item_p->value, bsize);
+	else if (bsize == 8) {
+	  memcpy(&i32_value, item_p->value, sizeof(i32_value));
+	  i64_value = i32_value;
+	  memcpy(buff, &i64_value, bsize);
+	}
+      }
+      else {
+	if (bsize == 8)
+	  memcpy(buff, item_p->value, bsize);
+	else if (bsize == 4) {
+	  memcpy(&i64_value, item_p->value, sizeof(i64_value));
+	  i32_value = i64_value;
+	  memcpy(buff, &i32_value, bsize);
+	}
+      }
+      break;
+    case glow_eType_Float:
+      if (btype != CCM_DECL_FLOAT)
+        return CCM__ARGMISM;
+
+      if (bsize == 4)
+	memcpy(buff, item_p->value, bsize);
+      else if (bsize == 8) {
+	memcpy(&f_value, item_p->value, sizeof(f_value));
+	d_value = f_value;
+	memcpy(buff, &d_value, bsize);
+      }
+      break;
+    case glow_eType_Double:
+      if (btype != CCM_DECL_FLOAT)
+        return CCM__ARGMISM;
+
+      if (bsize == 8)
+	memcpy(buff, item_p->value, bsize);
+      else if (bsize == 4) {
+	memcpy(&d_value, item_p->value, sizeof(d_value));
+	f_value = d_value;
+	memcpy(buff, &f_value, bsize);
+      }
+      break;
+    case glow_eType_String:
+      if (btype != CCM_DECL_STRING)
+        return CCM__ARGMISM;
+      strncpy((char *)buff, (char*)item_p->value,
+          MIN(item_p->size, bsize));
+      break;
+    case glow_eType_Direction:
+    case glow_eType_HorizDirection:
+    case glow_eType_Adjustment:
+    case glow_eType_AnnotType:
+    case glow_eType_Font:
+    case glow_eType_Color:
+    case glow_eType_Tone:
+    case glow_eType_ToneOrColor:
+    case glow_eType_Cycle:
+    case glow_eType_MB3Action:
+    case glow_eType_InputFocusMark:
+    case glow_eType_Relief:
+    // case glow_eType_TextSize:
+    case glow_eType_Gradient:
+    case glow_eType_HotIndication:
+    case glow_eType_AppMotion:
+    case ge_eAttrType_AnimSequence:
+    case ge_eAttrType_LimitType:
+    case ge_eAttrType_ScaleType:
+    case ge_eAttrType_CurveDataType:
+    case ge_eAttrType_OptionMenuType:
+    case ge_eAttrType_MethodsMenuType:
+    case ge_eAttrType_MethodToolbarType:
+    case ge_eAttrType_KeyboardType: {
+      int value;
+
+      if (!(btype == CCM_DECL_INT
+              || btype == CCM_DECL_STRING))
+        return CCM__ARGMISM;
+
+      memcpy((char*)&value, item_p->value, sizeof(value));
+
+      if (btype == CCM_DECL_INT) {
+	memcpy(buff, &value, bsize);
+      } else {
+        sts = AttrNav::enum_to_string(item_p->type, value, (char *)buff, bsize);
+        if (EVEN(sts))
+          return GE__SYNTAX;
+      }
+      break;
+    }
+    case glow_eType_TextSize: {
+      int value;
+      char str[40];
+
+      if (!(btype == CCM_DECL_INT
+              || btype == CCM_DECL_STRING))
+        return CCM__ARGMISM;
+
+      memcpy((char*)&value, item_p->value, sizeof(value));
+      sts = AttrNav::enum_to_string(item_p->type, value, str, sizeof(str));
+      if (EVEN(sts))
+        return GE__SYNTAX;
+
+      if (btype == CCM_DECL_INT)
+        sscanf(str, "%d", (int*)buff);
+      else
+        strncpy((char *)buff, str, bsize);
+      break;
+    }
+    case glow_eType_Access:
+    case ge_eAttrType_DynType1:
+    case ge_eAttrType_DynType2:
+    case ge_eAttrType_ActionType1:
+    case ge_eAttrType_ActionType2:
+    case ge_eAttrType_InstanceMask:
+    case ge_eAttrType_InputFocus: {
+      if (btype != CCM_DECL_INT)
+        return CCM__ARGMISM;
+
+      memcpy((char*)buff, item_p->value, bsize);
+      break;
+    }
+    case ge_eAttrType_Dyn: {
+      attr_sItem dyn_itemlist[100];
+      attr_sItem *dyn_item_p;
+      int dyn_itemlist_cnt = 0;
+      int j;
+      char *dyn_attr_name;
+      int dyn_found;
+      GeDyn *dyn;
+
+      dyn = (GeDyn *)item_p->value;
+      if (!dyn) {
+	dyn = new GeDyn(graph);
+	item_p->value = &dyn;
+      }
+      dyn->get_attributes(0, dyn_itemlist, &dyn_itemlist_cnt);
+      dyn_found = 0;
+      dyn_attr_name = (char *)&aname[strlen(attr_name)+1];
+      dyn_item_p = dyn_itemlist;
+      for (j = 0; j < dyn_itemlist_cnt; j++) {
+	if (str_NoCaseStrcmp(dyn_attr_name, dyn_item_p->name) == 0) {
+	  dyn_found = 1;
+	  break;
+	}
+	dyn_item_p++;
+      }
+      if (dyn_found) {
+	switch (dyn_item_p->type) {
+	case glow_eType_Int:
+	case glow_eType_TraceColor:
+	case glow_eType_Boolean:
+	case glow_eType_DynType1:
+	case glow_eType_DynType2:
+	case glow_eType_ActionType1:
+	case glow_eType_ActionType2:
+	  if (btype != CCM_DECL_INT)
+	    return CCM__ARGMISM;
+
+	  if (dyn_item_p->size == 4) {
+	    if (bsize == 4)
+	      memcpy(buff, dyn_item_p->value, bsize);
+	    else if (bsize == 8) {
+	      memcpy(&i32_value, dyn_item_p->value, sizeof(i32_value));
+	      i64_value = i32_value;
+	      memcpy(buff, &i64_value, bsize);
+	    }
+	  }
+	  else {
+	    if (bsize == 8)
+	      memcpy(buff, dyn_item_p->value, bsize);
+	    else if (bsize == 4) {
+	      memcpy(&i64_value, dyn_item_p->value, sizeof(i64_value));
+	      i32_value = i64_value;
+	      memcpy(buff, &i32_value, bsize);
+	    }
+	  }
+	  break;
+	case glow_eType_Float:
+	  if (btype != CCM_DECL_FLOAT)
+	    return CCM__ARGMISM;
+	  
+	  if (bsize == 4)
+	    memcpy(buff, dyn_item_p->value, bsize);
+	  else if (bsize == 8) {
+	    memcpy(&f_value, dyn_item_p->value, sizeof(f_value));
+	    d_value = f_value;
+	    memcpy(buff, &d_value, bsize);
+	  }
+	  break;
+	case glow_eType_Double:
+	  if (btype != CCM_DECL_FLOAT)
+	    return CCM__ARGMISM;
+	  
+	  if (bsize == 8)
+	    memcpy(buff, dyn_item_p->value, bsize);
+	  else if (bsize == 4) {
+	    memcpy(&d_value, dyn_item_p->value, sizeof(d_value));
+	    f_value = d_value;
+	    memcpy(buff, &f_value, bsize);
+	  }
+	  break;
+	case glow_eType_String:
+	  if (btype != CCM_DECL_STRING)
+	    return CCM__ARGMISM;
+	  strncpy((char *)buff, (char*)dyn_item_p->value,
+		  MIN(dyn_item_p->size, bsize));
+	}
+      }
+    }
+    default:;
+    }
+    grow_FreeObjectAttrInfo((grow_sAttrInfo*)client_data);
+  }
+  return 1;
+}
+
+
+grow_tObject gsc_CreateObject(Graph* graph, const char *nodeclass, double x1, double y1, 
+    double x2, double y2)
+{
+  char name[80];
+  grow_tNodeClass nc;
+  grow_tNode n1;
+  int scale_x, scale_y;
+  double sx, sy;
+  double ll_x, ll_y, ur_x, ur_y;
+  int sts;
+
+  if (x2 == 0 && y2 == 0)
+    scale_x = scale_y = 0;
+  else
+    scale_x = scale_y = 1;
+
+  sts = grow_FindNodeClassByName(graph->grow->ctx, nodeclass, &nc);
+  if (EVEN(sts)) {
+    // Load the subgraph
+    grow_OpenSubGraphFromName(graph->grow->ctx, nodeclass);
+    sts = grow_FindNodeClassByName(graph->grow->ctx, nodeclass, &nc);
+  }
+  if (EVEN(sts))
+    return 0;
+
+  sprintf(name, "O%d", grow_GetNextObjectNameNumber(graph->grow->ctx));
+
+  if (!grow_IsSliderClass(nc))
+    grow_CreateGrowNode(graph->grow->ctx, name, nc, x1, y1, NULL, &n1);
+  else
+    grow_CreateGrowSlider(graph->grow->ctx, name, nc, x1, y1, NULL, &n1);
+
+  GeDyn* dyn = new GeDyn(graph);
+  grow_SetUserData(n1, (void*)dyn);
+
+  grow_MoveNode(n1, x1, y1);
+  grow_StoreTransform(n1);
+  if (scale_x || scale_y) {
+    grow_MeasureNode(n1, &ll_x, &ll_y, &ur_x, &ur_y);
+    if (scale_x)
+      sx = (x2 - x1) / (ur_x - ll_x);
+    else
+      sx = 1;
+    if (scale_y)
+      sy = (y2 - y1) / (ur_y - ll_y);
+    else
+      sy = 1;
+    grow_SetObjectScale(n1, sx, sy, x1, y1, glow_eScaleType_LowerLeft);
+  }
+  grow_StoreTransform(n1);
+  graph->current_cmd_object = n1;
+
+  grow_SetModified(graph->grow->ctx, 1);
+
+  return graph->current_cmd_object;
+}
+
+void gsc_SetObjectGradient(Graph* graph, grow_tObject id, glow_eGradient gradient)
+{
+  grow_SetObjectGradient(id, gradient);
+}
+
+void gsc_SetObjectShadow(Graph* graph, grow_tObject id, int shadow)
+{
+  grow_SetObjectShadow(id, shadow);
+}
+
+void gsc_SetObjectFillColor(Graph* graph, grow_tObject id, glow_eDrawType color)
+{
+  grow_SetObjectOriginalFillColor(id, color);
+}
+
+void gsc_SetObjectBorderColor(Graph* graph, grow_tObject id, glow_eDrawType color)
+{
+  grow_SetObjectOriginalBorderColor(id, color);
+}
+
+void gsc_SetObjectTextColor(Graph* graph, grow_tObject id, glow_eDrawType color)
+{
+  grow_SetObjectOriginalTextColor(id, color);
+}
+
+void gsc_SetObjectFill(Graph* graph, grow_tObject id, int fill)
+{
+  grow_SetObjectFill(id, fill);
+}
+
+void gsc_SetObjectBorder(Graph* graph, grow_tObject id, int border)
+{
+  grow_SetObjectBorder(id, border);
+}
+
+void gsc_SelectAdd(Graph* graph, grow_tObject id)
+{
+  grow_SelectInsert(graph->grow->ctx, id);
+}
+
+void gsc_SelectClear(Graph* graph)
+{
+  grow_SelectClear(graph->grow->ctx);
+}
+
+void gsc_SetSelectTextSize(Graph *graph, int size)
+{
+  grow_SetSelectTextSize(graph->grow->ctx, size);
+}
+
+void gsc_RotateSelected(Graph *graph, int angle, int rotation_point)
+{
+  grow_RotateSelectedObjects(graph->grow->ctx, angle, (glow_eRotationPoint)rotation_point);
+}
+
+grow_tObject gsc_CreateAxis(Graph *graph, double x1, double y1, double x2, double y2,
+    int colortheme, int dynamic, glow_eDirection direction)
+{
+  grow_tNode n1;
+  int scale_x, scale_y;
+  double sx, sy;
+  double ll_x, ll_y, ur_x, ur_y;
+    
+  if (x2 == 0 && y2 == 0)
+    scale_x = scale_y = 0;
+  else
+    scale_x = scale_y = 1;
+
+  switch (direction) {
+  case glow_eDirection_Left:
+    graph->create_axis(&n1, x1, y1, dynamic, colortheme);
+    break;
+  case glow_eDirection_Right:
+    graph->create_axis(&n1, x1, y1, dynamic, colortheme);
+    grow_SelectClear(graph->grow->ctx);
+    grow_SelectInsert(graph->grow->ctx, n1);
+    grow_RotateSelectedObjects(graph->grow->ctx, 180.0, glow_eRotationPoint_Center);
+    grow_SelectClear(graph->grow->ctx);
+    grow_StoreTransform(n1);
+    break;
+  case glow_eDirection_Down:
+    // Default bar has width 1.0 and height 5.0
+    graph->create_axis(&n1, x1, y1 + 1.0, dynamic, colortheme);
+    grow_SelectClear(graph->grow->ctx);
+    grow_SelectInsert(graph->grow->ctx, n1);
+    grow_RotateSelectedObjects(graph->grow->ctx, -90.0, glow_eRotationPoint_LowerLeft);
+    grow_SelectClear(graph->grow->ctx);
+    grow_StoreTransform(n1);
+    break;
+  case glow_eDirection_Up:
+    graph->create_axis(&n1, x1, y1 - 5.0, dynamic, colortheme);
+    grow_SelectClear(graph->grow->ctx);
+    grow_SelectInsert(graph->grow->ctx, n1);
+    grow_RotateSelectedObjects(graph->grow->ctx, 90.0, glow_eRotationPoint_UpperLeft);
+    grow_SelectClear(graph->grow->ctx);
+    grow_StoreTransform(n1);
+    break;
+  default:
+    break;
+  }
+
+  if (scale_x || scale_y) {
+    grow_MeasureNode(n1, &ll_x, &ll_y, &ur_x, &ur_y);
+    if (scale_x)
+      sx = (x2 - x1) / (ur_x - ll_x);
+    else
+      sx = 1;
+    if (scale_y)
+      sy = (y2 - y1) / (ur_y - ll_y);
+    else
+      sy = 1;
+    grow_StoreTransform(n1);
+    grow_SetObjectScale(n1, sx, sy, x1, y1, glow_eScaleType_LowerLeft);
+  }
+  graph->current_cmd_object = n1;
+
+  grow_SetModified(graph->grow->ctx, 1);
+
+  return graph->current_cmd_object;
+}
+
+grow_tObject gsc_CreateAxisArc(Graph *graph, double x1, double y1, double x2, double y2,
+    int colortheme, int dynamic)
+{
+  grow_tNode n1;
+  int scale_x, scale_y;
+  double sx, sy;
+  double ll_x, ll_y, ur_x, ur_y;
+    
+  if (x2 == 0 && y2 == 0)
+    scale_x = scale_y = 0;
+  else
+    scale_x = scale_y = 1;
+
+  graph->create_axisarc(&n1, x1, y1, dynamic, colortheme);
+
+  if (scale_x || scale_y) {
+    grow_MeasureNode(n1, &ll_x, &ll_y, &ur_x, &ur_y);
+    if (scale_x)
+      sx = (x2 - x1) / (ur_x - ll_x);
+    else
+      sx = 1;
+    if (scale_y)
+      sy = (y2 - y1) / (ur_y - ll_y);
+    else
+      sy = 1;
+    grow_StoreTransform(n1);
+    grow_SetObjectScale(n1, sx, sy, x1, y1, glow_eScaleType_LowerLeft);
+  }
+  graph->current_cmd_object = n1;
+
+  grow_SetModified(graph->grow->ctx, 1);
+
+  return graph->current_cmd_object;
+}
+
+grow_tObject gsc_CreateTrend(Graph *graph, double x1, double y1, double x2, double y2,
+    int colortheme)
+{
+  grow_tNode n1;
+  int scale_x, scale_y;
+  double sx, sy;
+  double ll_x, ll_y, ur_x, ur_y;
+    
+  graph->create_trend(&n1, x1, y1, ge_mDynType1_Trend, 0, colortheme);
+
+  if (x2 == 0 && y2 == 0)
+    scale_x = scale_y = 0;
+  else
+    scale_x = scale_y = 1;
+
+  if (scale_x || scale_y) {
+    grow_MeasureNode(n1, &ll_x, &ll_y, &ur_x, &ur_y);
+    if (scale_x)
+      sx = (x2 - x1) / (ur_x - ll_x);
+    else
+      sx = 1;
+    if (scale_y)
+      sy = (y2 - y1) / (ur_y - ll_y);
+    else
+      sy = 1;
+    grow_StoreTransform(n1);
+    grow_SetObjectScale(n1, sx, sy, x1, y1, glow_eScaleType_LowerLeft);
+  }
+  graph->current_cmd_object = n1;
+
+  grow_SetModified(graph->grow->ctx, 1);
+
+  return graph->current_cmd_object;
+}
+
+grow_tObject gsc_CreatePolyLine(Graph *graph, double x1, double y1, double x2, double y2)
+{
+  glow_sPoint points[2];
+  int point_cnt;
+
+  points[0].x = x1;
+  points[0].y = y1;
+  points[1].x = x2;
+  points[1].y = y2;
+  point_cnt = 2;
+  grow_CreateGrowPolyLine(graph->grow->ctx, "", (glow_sPoint*)&points,
+			  point_cnt, graph->get_border_drawtype(), graph->linewidth, 0,
+			  graph->fill, graph->border, graph->shadow, graph->get_fill_drawtype(),
+			  0, NULL, &graph->current_cmd_object);
+  grow_SetModified(graph->grow->ctx, 1);
+
+  return graph->current_cmd_object;
+}
+
+void gsc_PolyLineAdd(Graph *graph, grow_tObject oid, double x, double y)
+{
+  glow_sPoint points[2];
+  int point_cnt;
+
+  points[0].x = x;
+  points[0].y = y;
+  point_cnt = 1;
+  grow_AddPolyLinePoints(oid, (glow_sPoint*)&points, point_cnt);
+  grow_SetModified(graph->grow->ctx, 1);
+}
+
+grow_tObject gsc_CreateArc(Graph *graph, double x1, double y1, double x2, double y2,
+    int angle1, int angle2)
+{
+  grow_CreateGrowArc(graph->grow->ctx, "", x1, y1, x2, y2, angle1, angle2,
+		     graph->get_border_drawtype(), graph->linewidth, graph->fill,
+		     graph->border, graph->shadow, graph->get_fill_drawtype(), NULL,
+		     &graph->current_cmd_object);
+  grow_SetModified(graph->grow->ctx, 1);
+
+  return graph->current_cmd_object;
+}
+
+grow_tObject gsc_CreateLine(Graph *graph, double x1, double y1, double x2, double y2)
+{
+  grow_CreateGrowLine(graph->grow->ctx, "", x1, y1, x2, y2,
+		      graph->get_border_drawtype(), graph->linewidth, 0, NULL,
+		      &graph->current_cmd_object);
+  grow_SetModified(graph->grow->ctx, 1);
+
+  return graph->current_cmd_object;
+}
+

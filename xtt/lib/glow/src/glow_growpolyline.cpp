@@ -401,6 +401,13 @@ void GrowPolyLine::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       drawtype = ctx->get_drawtype(fill_drawtype, glow_eDrawType_FillHighlight,
           highlight, (GrowNode*)colornode, 1);
 
+    if (fill_eq_light && fixcolor)
+      drawtype = ctx->shift_drawtype(
+          drawtype, -shadow_contrast + chot, (GrowNode*)colornode);
+    else if (fill_eq_shadow && fixcolor)
+      drawtype = ctx->shift_drawtype(
+          drawtype, shadow_contrast + chot, (GrowNode*)colornode);
+
     if (fill_eq_light && node && ((GrowNode*)node)->shadow)
       drawtype = ctx->shift_drawtype(
           drawtype, -shadow_contrast + chot, (GrowNode*)colornode);

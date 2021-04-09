@@ -61,6 +61,7 @@ typedef enum {
 } grow_eMode;
 
 class GrowGroup;
+class GrowDashboard;
 
 //! Extended class for the drawing window.
 /*! GlowCtx adds functions to GlowCtx for creation of Grow objects, background
@@ -117,6 +118,8 @@ public:
     if this is active.
   */
   void draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
+
+  void erase(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Draw a specified area of the window.
   /*! Interface with double arguments */
@@ -1014,7 +1017,20 @@ public:
   int read_customcolor_file(char* name);
   int write_customcolor_file(char* name);
   int check_object_name(char* name);
+  void get_dashboard_info(double* cell_width, double* cell_height, int* columns, int* rows);
   void set_color_theme();
+  int is_dashboard() 
+  {
+    return dashboard;
+  }
+  void set_draw_buffer_only()
+  {
+    mw.set_draw_buffer_only();
+  }
+  void reset_draw_buffer_only()
+  {
+    mw.reset_draw_buffer_only();
+  }
   static void set_default_color_theme(char* theme);
 
   static int get_dimension(char* filename, int* width, int* heigth);
@@ -1128,6 +1144,10 @@ public:
   glow_eTextCoding text_coding; //!< Text coding
   int recursive_trace; //!< Subgraph recursive trace
   glow_eEditSetMode edit_set_mode; //!< Special edit mode
+  int dashboard;
+  GrowDashboard *dash;
+  double dash_cell_width; //!< Width of dashboard cell
+  double dash_cell_height; //!< Height of dashboard cell
 };
 
 void grow_auto_scrolling(GrowCtx* ctx);

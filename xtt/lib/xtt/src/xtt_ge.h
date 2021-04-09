@@ -44,6 +44,7 @@
 #include "xtt_utility.h"
 
 class Graph;
+class CoWow;
 
 class XttGe : XttUtility {
 public:
@@ -71,10 +72,13 @@ public:
   int (*sound_cb)(void*, pwr_tAttrRef*);
   void (*eventlog_cb)(void*, void*, int, void*, unsigned int);
   void (*keyboard_cb)(void*, void*, int, int);
+  void (*namechanged_cb)(void*, void*, char*);
+  int (*get_select_cb)(void*, char*, pwr_tTypeId*);
   int width;
   int height;
   unsigned int options;
   int color_theme;
+  CoWow* wow;
 
   XttGe(void* parent_ctx, const char* name, const char* filename, int scrollbar,
       int menu, int navigator, int width, int height, int x, int y,
@@ -90,6 +94,9 @@ public:
   {
   }
   virtual void iconify()
+  {
+  }
+  virtual void set_title(char *t)
   {
   }
   virtual void set_size(int width, int height)
@@ -126,7 +133,23 @@ public:
   int key_pressed(int key);
   void close_input_all();
   int get_object_name(unsigned int idx, int size, char* name);
+  int dash_insert(char *name, pwr_tTypeId type);
+  int in_edit_mode();
   void signal_send(char* signalname);
+  void activate_edit(int edit);
+  void activate_open();
+  void activate_add();
+  void activate_delete();
+  void activate_copy();
+  void activate_paste();
+  void activate_connect();
+  void activate_merge();
+  void activate_cellattributes();
+  void activate_graphattributes();
+  void activate_save();
+  void activate_saveas();
+  void activate_setcolortheme();
+  void activate_exit_modified();
 
   static void graph_init_cb(void* client_data);
   static int graph_close_cb(void* client_data);
@@ -141,10 +164,15 @@ public:
   static int ge_is_authorized_cb(void* ge_ctx, unsigned int access);
   static int ge_get_current_objects_cb(
       void* ge_ctx, pwr_sAttrRef** alist, int** is_alist);
+  static int ge_get_rtplant_select_cb(
+      void* ge_ctx, char* attr_name, int size, pwr_tTypeId *type);
   static void ge_eventlog_cb(void* ge_ctx, void* value, unsigned int size);
   static void ge_keyboard_cb(void* ge_ctx, int action, int type);
   static void message_cb(void* ctx, char severity, const char* msg);
+  static void ge_resize_cb(void* ge_ctx, int width, int height);
   static void eventlog_enable(int enable);
+  static void file_selected_cb(void* ctx, void* data, char* text);
+  static void ge_colortheme_selector_ok_cb(void* ctx, char* text, int ok_pressed);
 };
 
 #endif

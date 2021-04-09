@@ -573,6 +573,8 @@ public:
   {
     return color_drawtype;
   }
+
+  void dash_insert(GlowTransform *t);
 };
 
 /*@}*/

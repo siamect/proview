@@ -72,5 +72,7 @@ notsaved	<Graph is not saved>				/error
 noref		<Attribute is not of reference type>		/error
 shell		<Error from shell>				/error
 arg		<Error in argument>				/error
-
+elemsize   	<Max number of elements exceeded>		/error
+selecttwo   	<Select at least two objects>			/error
+invalidobject	<Invalid object for the operation>		/error
 

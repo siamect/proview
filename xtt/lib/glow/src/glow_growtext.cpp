@@ -1181,6 +1181,15 @@ void GrowText::align(double x, double y, glow_eAlignDirection direction)
   ctx->redraw_defered();
 }
 
+void GrowText::dash_insert(GlowTransform *t)
+{
+  set_transform(t);
+  x_left -= t->a13;
+  x_right -= t->a13;
+  y_low -= t->a23;
+  y_high -= t->a23;
+}
+
 void GrowText::convert(glow_eConvert version)
 {
   switch (version) {

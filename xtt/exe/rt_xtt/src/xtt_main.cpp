@@ -530,6 +530,17 @@ void Xtt::activate_collect_insert()
     xnav->collect_insert(&attrref);
 }
 
+void Xtt::activate_dashboard_insert()
+{
+  pwr_sAttrRef attrref;
+  int is_attr;
+  int sts;
+
+  sts = xnav->get_select(&attrref, &is_attr);
+  if (ODD(sts))
+    xnav->dashboard_insert(&attrref);
+}
+
 void Xtt::activate_advanceduser()
 {
   char cmd[80];

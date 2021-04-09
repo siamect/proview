@@ -63,7 +63,9 @@
 #include "glow_growbar.h"
 #include "glow_growbararc.h"
 #include "glow_growxycurve.h"
+#include "glow_growdashcell.h"
 #include "glow_exportflow.h"
+#include "glow_dashboard.h"
 
 #include "glow_msg.h"
 
@@ -99,7 +101,8 @@ GrowCtx::GrowCtx(const char* ctx_name, double zoom_fact)
       redraw_callback(0), redraw_data(0), has_subwindows(-1), is_subwindow(0),
       bitmap_fonts(0), environment(glow_eEnv_Runtime),
       text_coding(glow_eTextCoding_ISO8859_1), recursive_trace(0),
-      edit_set_mode(glow_eEditSetMode_None)
+      edit_set_mode(glow_eEditSetMode_None), dashboard(0), dash(0), 
+      dash_cell_width(8), dash_cell_height(6)
 {
   ctx_type = glow_eCtxType_Grow;
   strcpy(name, "");
@@ -111,6 +114,8 @@ GrowCtx::GrowCtx(const char* ctx_name, double zoom_fact)
   memset(argtype, 0, sizeof(argtype));
   memset(dyn_color, 0, sizeof(dyn_color));
   memset(dyn_attr, 0, sizeof(dyn_attr));
+  // Dashboard test
+  dash = new GrowDashboard(this);
 };
 
 GrowCtx::~GrowCtx()
@@ -122,6 +127,8 @@ GrowCtx::~GrowCtx()
     set_nodraw();
     clear_all(0);
   }
+  if (dash)
+    delete dash;
   if (dynamic)
     free(dynamic);
   if (gdraw && ctx_type == glow_eCtxType_Grow && customcolors) {
@@ -282,29 +289,23 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
     switch (edit_set_mode) {
     case glow_eEditSetMode_X0:
       x0 = fx;
-      printf("x0 set to %f\n", fx);
       break;
     case glow_eEditSetMode_Y0:
       y0 = fy;
-      printf("y0 set to %f\n", fy);
       break;
     case glow_eEditSetMode_X0Y0:
       x0 = fx;
       y0 = fy;
-      printf("x0,y0 set to %f,%f\n", fx, fy);
       break;
     case glow_eEditSetMode_X1:
       x1 = fx;
-      printf("x1 set to %f\n", fx);
       break;
     case glow_eEditSetMode_Y1:
       y1 = fy;
-      printf("y1 set to %f\n", fy);
       break;
     case glow_eEditSetMode_X1Y1:
       x1 = fx;
       y1 = fy;
-      printf("x1,y1 set to %f,%f\n", fx, fy);
       break;
     default:;
     }
@@ -607,7 +608,10 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
         a_move.move(x - node_move_last_x, 0, grid_on);
         break;
       default:
-        a_move.move(x - node_move_last_x, y - node_move_last_y, grid_on);
+	if (dashboard)
+	  a_move.move(x - node_move_last_x, y - node_move_last_y, 2);
+	else
+	  a_move.move(x - node_move_last_x, y - node_move_last_y, grid_on);
         break;
       }
       node_move_last_x = x;
@@ -1373,7 +1377,9 @@ int GrowCtx::event_handler(glow_eEvent event, int x, int y, int w, int h)
       case glow_eMoveRestriction_Vertical:
       case glow_eMoveRestriction_Horizontal:
         set_defered_redraw();
-        if (!grid_on || a_move.a_size == 1) {
+	if (dashboard) {
+	  dash->position(x, y);
+	} else if (!grid_on || a_move.a_size == 1) {
           if (move_restriction == glow_eMoveRestriction_No)
             a_move.move(x - node_move_last_x, y - node_move_last_y, grid_on);
           else if (move_restriction == glow_eMoveRestriction_Vertical)
@@ -1935,6 +1941,13 @@ void GrowCtx::save_grow(std::ofstream& fp, glow_eSaveMode mode)
   char* s;
   int double_buffered = mw.double_buffered();
 
+  if (dashboard) {
+    x0 = 0;
+    y0 = 0;
+    x1 = dash->dash_columns * dash_cell_width;
+    y1 = dash->dash_rows * dash_cell_height;
+  }
+
   fp << int(glow_eSave_GrowCtx) << '\n';
   fp << int(glow_eSave_GrowCtx_conpoint_num_cnt) << FSPACE << conpoint_num_cnt
      << '\n';
@@ -2023,6 +2036,9 @@ void GrowCtx::save_grow(std::ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowCtx_customcolors) << '\n';
   if (customcolors)
     customcolors->save(fp, mode);
+  fp << int(glow_eSave_GrowCtx_dashboard) << FSPACE << dashboard << '\n';
+  fp << int(glow_eSave_GrowCtx_dash) << '\n';
+  dash->save(fp, mode);
   if (user_data && userdata_save_callback) {
     fp << int(glow_eSave_GrowCtx_userdata_cb) << '\n';
     (userdata_save_callback)(&fp, this, glow_eUserdataCbType_Ctx);
@@ -2289,6 +2305,12 @@ void GrowCtx::open_grow(std::ifstream& fp)
       else
         gdraw->reset_customcolors(customcolors);
       customcolors->open(fp);
+      break;
+    case glow_eSave_GrowCtx_dashboard:
+      fp >> dashboard;
+      break;
+    case glow_eSave_GrowCtx_dash:
+      dash->open(fp);
       break;
     default:
       std::cout << "GrowCtx:open syntax error\n";
@@ -2673,6 +2695,12 @@ void GrowCtx::draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
   }
 }
 
+void GrowCtx::erase(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
+{
+  gdraw->fill_rect(w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 
+      glow_eDrawType_LineErase);  
+}
+
 void GrowCtx::nav_draw(GlowWind* w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   draw(w, ll_x, ll_y, ur_x, ur_y);
@@ -3008,6 +3036,8 @@ void grow_auto_scrolling(GrowCtx* ctx)
 {
   int delta_x = 0, delta_y = 0;
 
+  if (ctx->dashboard)
+    return;
   if (ctx->edit_mode == grow_eMode_Scale && !ctx->scale_active)
     return;
 
@@ -4534,6 +4564,10 @@ void GrowCtx::read_object(std::ifstream& fp, GlowArrayElem** o)
     n = new GrowXYCurve(this, "");
     break;
   }
+  case glow_eSave_GrowDashCell: {
+    n = new GrowDashCell(this, "");
+    break;
+  }
   case glow_eSave_End:
     break;
   default:
@@ -4802,4 +4836,13 @@ int GrowCtx::find_by_name(const char* name, GlowArrayElem** element)
     return ((GrowWindow*)wind)
         ->window_ctx->find_by_name(&name[len + 1], element);
   }
+}
+
+void GrowCtx::get_dashboard_info(double* cell_width, double* cell_height,
+    int* columns, int* rows)
+{
+  *cell_width = dash_cell_width;
+  *cell_height = dash_cell_height;
+  *columns = dash->dash_columns;
+  *rows = dash->dash_rows;
 }

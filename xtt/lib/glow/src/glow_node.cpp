@@ -218,7 +218,8 @@ void GlowNode::open(std::ifstream& fp)
       fp.get();
       fp.getline(nc_name, sizeof(nc_name));
       if (ctx->type() != glow_eCtxType_Grow
-          || ((GrowNode*)this)->type() != glow_eObjectType_GrowGroup) {
+          || (!(((GrowNode*)this)->type() == glow_eObjectType_GrowGroup ||
+		((GrowNode*)this)->type() == glow_eObjectType_GrowDashCell))) {
         nc = (GlowNodeClass*)ctx->get_nodeclass_from_name(nc_name);
         if (!nc && ctx->type() == glow_eCtxType_Grow) {
           // If grow, load subgraph

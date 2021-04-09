@@ -448,6 +448,9 @@ typedef enum {
   ge_eSave_Rotate_x0 = 1401,
   ge_eSave_Rotate_y0 = 1402,
   ge_eSave_Rotate_factor = 1403,
+  ge_eSave_Rotate_offset = 1404,
+  ge_eSave_Rotate_min_angle = 1405,
+  ge_eSave_Rotate_max_angle = 1406,
   ge_eSave_Move_move_x_attribute = 1500,
   ge_eSave_Move_move_y_attribute = 1501,
   ge_eSave_Move_x_offset = 1502,
@@ -1624,6 +1627,9 @@ public:
   double x0; //!< x coordinate for rotation point.
   double y0; //!< y coordinate for rotation point.
   double factor; //!< Conversion factor from value to rotation angle in degrees.
+  double offset; //!< Offset angle.
+  double min_angle; //!< Minimum angle.
+  double max_angle; //!< Maximum angle.
 
   pwr_tFloat32* p;
   pwr_tSubid subid;

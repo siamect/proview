@@ -63,6 +63,8 @@
 #include "glow_growconglue.h"
 #include "glow_growmenu.h"
 #include "glow_growtoolbar.h"
+#include "glow_growdashcell.h"
+#include "glow_dashboard.h"
 
 /*! \file glow_growapi.cpp
     \brief Contains c API for grow. */
@@ -641,6 +643,11 @@ void grow_TraceScan(grow_tCtx ctx)
   ctx->trace_scan();
 }
 
+int grow_TraceInitObject(grow_tCtx ctx, grow_tObject object)
+{  
+  return ((GlowCtx *)ctx)->trace_init_object((GlowArrayElem *)object);
+}
+
 void grow_RemoveTraceObjects(grow_tCtx ctx)
 {
   ctx->remove_trace_objects();
@@ -739,6 +746,8 @@ void grow_SetAttributes(
     ctx->tiptext_size = attr->tooltip_text_size;
   if (mask & grow_eAttr_color_theme)
     strncpy(ctx->color_theme, attr->color_theme, sizeof(ctx->color_theme));
+  if (mask & grow_eAttr_dashboard)
+    ctx->dashboard = attr->dashboard;
 }
 
 void grow_GetAttributes(
@@ -1209,6 +1218,17 @@ void grow_CreateGrowMenu(grow_tCtx ctx, const char* name, glow_sMenuInfo* info,
   *menu = (grow_tObject)r1;
 }
 
+void grow_CreateGrowDashCell(grow_tCtx ctx, const char* name, double x, double y,
+    double width, double height, glow_eDrawType draw_type, void* user_data, grow_tObject* cell)
+{
+  GrowDashCell* r1;
+  r1 = new GrowDashCell(ctx, name, x, y, width, height, draw_type);
+  r1->set_user_data(user_data);
+  ctx->insert(r1);
+  ctx->nav_zoom();
+  *cell = (grow_tObject)r1;
+}
+
 int grow_SaveSubGraph(grow_tCtx ctx, char* filename)
 {
   return ctx->save_subgraph(filename, glow_eSaveMode_SubGraph);
@@ -1663,6 +1683,16 @@ int grow_GetObjectAttrInfo(
     attrinfo[i].value_p = &op->fixposition;
     attrinfo[i].type = glow_eType_Boolean;
     attrinfo[i++].size = sizeof(op->fixposition);
+
+    strcpy(attrinfo[i].name, "fill_eq_light");
+    attrinfo[i].value_p = &op->fill_eq_light;
+    attrinfo[i].type = glow_eType_Boolean;
+    attrinfo[i++].size = sizeof(op->fill_eq_light);
+
+    strcpy(attrinfo[i].name, "fill_eq_shadow");
+    attrinfo[i].value_p = &op->fill_eq_shadow;
+    attrinfo[i].type = glow_eType_Boolean;
+    attrinfo[i++].size = sizeof(op->fill_eq_shadow);
 
     strcpy(attrinfo[i].name, "fill_eq_background");
     attrinfo[i].value_p = &op->fill_eq_background;
@@ -3254,6 +3284,34 @@ int grow_GetObjectAttrInfo(
     }
     break;
   }
+  case glow_eObjectType_GrowDashCell: {
+    GrowDashCell* op = (GrowDashCell*)object;
+    char* name;
+
+    strcpy(attrinfo[i].name, "Name");
+    attrinfo[i].value_p = &op->n_name;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i].no_edit = 0;
+    attrinfo[i].no_edit = 0;
+    attrinfo[i].input_validation_cb = grow_name_validation_cb;
+    attrinfo[i].validation_ctx = (void*)op;
+    attrinfo[i++].size = sizeof(op->n_name);
+
+    if ((name = growapi_translate(transtab, "CellRows"))) {
+      strcpy(attrinfo[i].name, name);
+      attrinfo[i].value_p = &op->cell_rows;
+      attrinfo[i].type = glow_eType_Int;
+      attrinfo[i++].size = sizeof(op->cell_rows);
+    }
+
+    if ((name = growapi_translate(transtab, "CellColumns"))) {
+      strcpy(attrinfo[i].name, name);
+      attrinfo[i].value_p = &op->cell_columns;
+      attrinfo[i].type = glow_eType_Int;
+      attrinfo[i++].size = sizeof(op->cell_columns);
+    }
+    break;
+  }
   default:;
   }
   attrinfo[i].info_type = grow_eInfoType_End;
@@ -3538,6 +3596,33 @@ int grow_GetGraphAttrInfo(grow_tCtx ctx, grow_sAttrInfo** info, int* attr_cnt)
   attrinfo[i].value_p = ctx->color_theme;
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof(ctx->color_theme);
+
+  strcpy(attrinfo[i].name, "Dashboard");
+  attrinfo[i].value_p = &ctx->dashboard;
+  attrinfo[i].type = glow_eType_Int;
+  attrinfo[i++].size = sizeof(ctx->dashboard);
+
+  if (ctx->dashboard) {
+    strcpy(attrinfo[i].name, "DashCellWidth");
+    attrinfo[i].value_p = &ctx->dash_cell_width;
+    attrinfo[i].type = glow_eType_Double;
+    attrinfo[i++].size = sizeof(ctx->dash_cell_width);
+
+    strcpy(attrinfo[i].name, "DashCellHeight");
+    attrinfo[i].value_p = &ctx->dash_cell_height;
+    attrinfo[i].type = glow_eType_Double;
+    attrinfo[i++].size = sizeof(ctx->dash_cell_height);
+
+    strcpy(attrinfo[i].name, "DashRows");
+    attrinfo[i].value_p = &ctx->dash->dash_rows;
+    attrinfo[i].type = glow_eType_Int;
+    attrinfo[i++].size = sizeof(ctx->dash->dash_rows);
+
+    strcpy(attrinfo[i].name, "DashColumns");
+    attrinfo[i].value_p = &ctx->dash->dash_columns;
+    attrinfo[i].type = glow_eType_Int;
+    attrinfo[i++].size = sizeof(ctx->dash->dash_columns);
+  }
 
   attrinfo[i].info_type = grow_eInfoType_End;
   *attr_cnt = i;
@@ -4083,6 +4168,9 @@ void grow_UpdateObject(grow_tCtx ctx, grow_tObject object, grow_sAttrInfo* info)
     ((GrowNode*)object)->nav_zoom();
     ((GrowNode*)object)->get_node_borders();
     ((GrowNode*)object)->draw(&ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
+    break;
+  case glow_eObjectType_GrowDashCell:
+    ((GrowDashCell*)object)->update_attributes();
     break;
   default:;
   }
@@ -5671,7 +5759,8 @@ int grow_GetFirstObject(grow_tCtx ctx, grow_tObject* first)
 int grow_GroupGetNextObject(
     grow_tObject group, grow_tObject object, grow_tObject* next)
 {
-  if (((GlowArrayElem*)group)->type() != glow_eObjectType_GrowGroup)
+  if (!(((GlowArrayElem*)group)->type() == glow_eObjectType_GrowGroup ||
+	((GlowArrayElem*)group)->type() == glow_eObjectType_GrowDashCell))
     return 0;
   return ((GrowGroup*)group)
       ->get_next_object((GlowArrayElem*)object, (GlowArrayElem**)next);
@@ -5679,9 +5768,25 @@ int grow_GroupGetNextObject(
 
 int grow_GroupGetFirstObject(grow_tObject group, grow_tObject* first)
 {
-  if (((GlowArrayElem*)group)->type() != glow_eObjectType_GrowGroup)
+  if (!(((GlowArrayElem*)group)->type() == glow_eObjectType_GrowGroup ||
+	((GlowArrayElem*)group)->type() == glow_eObjectType_GrowDashCell))
     return 0;
   return ((GrowGroup*)group)->get_first_object((GlowArrayElem**)first);
+}
+
+int grow_DashInsertObject(grow_tObject group, grow_tObject object)
+{
+  if (((GlowArrayElem*)group)->type() != glow_eObjectType_GrowDashCell)
+    return 0;
+  return ((GrowDashCell*)group)->insert((GlowArrayElem*)object);
+}
+
+int grow_GroupClear(grow_tObject group)
+{
+  if (!(((GlowArrayElem*)group)->type() == glow_eObjectType_GrowGroup ||
+	((GlowArrayElem*)group)->type() == glow_eObjectType_GrowDashCell))
+    return 0;
+  return ((GrowGroup*)group)->clear();
 }
 
 int grow_IsVisible(grow_tCtx ctx, grow_tObject object, glow_eVisible type)
@@ -5951,6 +6056,37 @@ void grow_NavRedraw(grow_tCtx ctx)
   ((GrowCtx*)ctx)->nav_zoom();
 }
 
+int grow_IsDashboard(grow_tCtx ctx)
+{
+  return ((GrowCtx*)ctx)->is_dashboard();
+}
+
+void grow_GetDashboardInfo(grow_tCtx ctx, double *cell_width, double *cell_height,
+			   int *columns, int *rows)
+{
+  ((GrowCtx*)ctx)->get_dashboard_info(cell_width, cell_height, columns, rows);
+}
+
+int grow_GetDashboardNextFree(grow_tCtx ctx, int start_row, int start_col,
+    int rows, int columns, double *x, double *y)
+{
+  return ((GrowCtx*)ctx)->dash->get_next_free(start_row, start_col, rows, columns, x, y);
+}
+
+void grow_GetDashCellInfo(grow_tObject o, int *rows, int *columns)
+{
+  if (((GlowArrayElem*)o)->type() != glow_eObjectType_GrowDashCell)
+    return;
+  ((GrowDashCell*)o)->get_info(rows, columns);
+}
+
+void grow_SetGraphBorders(grow_tCtx ctx, double x0, double y0, double x1, double y1)
+{
+  ((GrowCtx*)ctx)->x0 = x0;
+  ((GrowCtx*)ctx)->y0 = y0;
+  ((GrowCtx*)ctx)->x1 = x1;
+  ((GrowCtx*)ctx)->y1 = y1;
+}
 
 
 /*@}*/

@@ -433,7 +433,7 @@ void GeItemViewGtk::activate_tree_widget(GtkTreeView* tree_widget,
   }
 
   if (sel_text) {
-    ge->open_graph(sel_text);
+    ge->open_graph(sel_text, 0);
   }
 }
 

@@ -386,7 +386,7 @@ public:
       int scrollbar, int menu, int navigator, int width, int height, int x,
       int y, double scan_time, const char* object_name, int use_default_access,
       unsigned int access, unsigned int options, void* basewidget,
-      double* borders, int color_theme,
+      double* borders, int color_theme, int dashboard,
       int (*xg_command_cb)(void*, char*, char*, void*),
       int (*xg_get_current_objects_cb)(void*, pwr_sAttrRef**, int**),
       int (*xg_is_authorized_cb)(void*, unsigned int),
@@ -476,6 +476,9 @@ public:
   int collect_show();
   int collect_window(int copy, int type);
   void collect_clear();
+  int get_dashboard_name(pwr_sAttrRef* arp, char* dash_name, 
+      pwr_tTypeId* dash_type);
+  int dashboard_insert(pwr_sAttrRef* attrref);
   void clear();
   void message(char sev, const char* text);
   int brow_pop();
@@ -565,7 +568,7 @@ public:
       int menu, int navigator, int width, int height, int x, int y,
       const char* object_name, const char* focus, int inputempty,
       int use_default_access, unsigned int access, unsigned int options,
-      void* basewidget, double* borders);
+      void* basewidget, double* borders, int dashboard);
   void close_graph(char* filename, char* object_name, int iconify);
   int exec_xttgraph(pwr_tObjid xttgraph, char* instance, char* focus,
       int inputempty, int use_default_access, unsigned int access,

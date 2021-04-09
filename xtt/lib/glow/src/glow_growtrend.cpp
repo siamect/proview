@@ -875,13 +875,22 @@ void GrowTrend::add_value(double value, int idx)
             * (ur.y - ll.y);
 
   curve_value = MAX(ll.y, MIN(curve_value, ur.y));
-  if (!fill)
-    erase(&ctx->mw);
+  ctx->set_draw_buffer_only();
+  if (!parent) {
+    if (!fill)
+      erase(&ctx->mw);
+  }
+  else
+    parent->erase();
+  ctx->reset_draw_buffer_only();
   if (!fill_curve)
-    curve[idx]->add_and_shift_y_value(curve_value);
+      curve[idx]->add_and_shift_y_value(curve_value);
   else
     curve[idx]->add_and_shift_y_value_filled(curve_value);
-  draw();
+  if (!parent)
+    draw();
+  else
+    parent->draw();
   draw(&ctx->navw, (GlowTransform*)NULL, highlight, 0, NULL, NULL);
 }
 
@@ -1206,7 +1215,13 @@ void GrowTrend::set_data(double* data[3], int data_curves, int data_points)
     ctx->nodraw--;
   }
   free((char*)pointarray);
-  draw();
+  if (!parent)
+    draw();
+  else {
+    ctx->set_draw_buffer_only();
+    parent->draw();
+    ctx->reset_draw_buffer_only();
+  }
 }
 
 //! Set vertical mark 1.

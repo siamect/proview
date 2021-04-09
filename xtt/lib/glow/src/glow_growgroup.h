@@ -204,6 +204,8 @@ public:
   {
     return nc->a.find_by_name(name, element);
   }
+
+  virtual int clear();
 };
 
 /*@}*/

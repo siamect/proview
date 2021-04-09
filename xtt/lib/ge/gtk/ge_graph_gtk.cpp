@@ -50,10 +50,10 @@ GraphGtk::GraphGtk(void* xn_parent_ctx, GtkWidget* xn_parent_wid,
     const char* xn_default_path, graph_eMode graph_mode, int scrollbar,
     int xn_gdh_init_done, const char* xn_object_name, int xn_use_default_access,
     unsigned int xn_default_access, unsigned int xn_options, int xn_color_theme,
-    void (*xn_keyboard_cb)(void*, int, int))
+    int xn_dashboard, void (*xn_keyboard_cb)(void*, int, int))
     : Graph(xn_parent_ctx, xn_name, xn_default_path, graph_mode,
           xn_gdh_init_done, xn_object_name, xn_use_default_access,
-          xn_default_access, xn_options, xn_color_theme, xn_keyboard_cb),
+	  xn_default_access, xn_options, xn_color_theme, xn_dashboard, xn_keyboard_cb),
       parent_wid(xn_parent_wid)
 {
   default_access = xn_default_access;

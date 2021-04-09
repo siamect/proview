@@ -130,7 +130,7 @@ public:
       void (*questionbox_ok)(void*, void*),
       void (*questionbox_cancel)(void*, void*), void* data);
   void DisplayError(const char* title, const char* text,
-      lng_eCoding coding = lng_eCoding_ISO8859_1);
+      lng_eCoding coding = lng_eCoding_ISO8859_1, int modal = 1);
   void DisplayText(
       const char* title, const char* text, int width = 0, int height = 0);
   void CreateInputDialog(void* ctx, const char* title, const char* text,

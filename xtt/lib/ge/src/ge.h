@@ -180,7 +180,7 @@ public:
   void save_and_close();
 
   void clear_all();
-  void open_graph(const char* name);
+  void open_graph(const char* name, int dashboard);
   int set_focus(void* component);
   void close();
   int select_object(char* name);
@@ -248,7 +248,7 @@ public:
   void activate_nextpage();
   void activate_prevpage();
   void activate_graph_attr();
-  void activate_open();
+  void activate_open(int dashboard);
   void activate_colortheme_select();
   void activate_colortheme_next();
   void activate_customcolors_read();

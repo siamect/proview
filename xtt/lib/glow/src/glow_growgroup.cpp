@@ -302,3 +302,11 @@ int GrowGroup::get_path(char* name, int size)
   }
   return GLOW__SUCCESS;
 }
+
+int GrowGroup::clear()
+{
+  ctx->set_nodraw();
+  nc->a.delete_all();
+  ctx->reset_nodraw();
+  return 1;
+}

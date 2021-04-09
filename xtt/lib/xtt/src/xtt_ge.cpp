@@ -36,6 +36,7 @@
 
 #include "co_cdh.h"
 #include "co_string.h"
+#include "co_msg.h"
 
 #include "rt_gdh_msg.h"
 
@@ -67,9 +68,15 @@ void XttGe::graph_init_cb(void* client_data)
     ge->graph->set_modified(0);
   }
   else {
-    if (!strrchr(fname, '.'))
-      strcat(fname, ".pwg");
-    ge->graph->open(fname);
+    if (!strrchr(fname, '.')) {
+      if (ge->graph->is_dashboard())
+	strcat(fname, ".pwd");
+      else
+	strcat(fname, ".pwg");
+    }
+    sts = ge->graph->open(fname);
+    if (EVEN(sts) && ge->graph->is_dashboard())
+      ge->graph->set_name(ge->filename);
   }
   if (ge->width == 0 || ge->height == 0) {
     sts = ge->graph->get_default_size(&default_width, &default_height);
@@ -180,6 +187,24 @@ void XttGe::ge_keyboard_cb(void* ge_ctx, int action, int type)
     (ge->keyboard_cb)(ge->parent_ctx, ge, action, type);
 }
 
+void XttGe::ge_resize_cb(void* ge_ctx, int width, int height)
+{
+  XttGe* ge = (XttGe*)ge_ctx;
+
+  //ge->resize(width, height);
+  ge->set_size(width, height);
+}
+
+int XttGe::ge_get_rtplant_select_cb(
+      void* ge_ctx, char* attr_name, int size, pwr_tTypeId *type)
+{
+  XttGe* ge = (XttGe*)ge_ctx;
+
+  if (!ge->get_select_cb)
+    return 0;
+  return (ge->get_select_cb)(ge->parent_ctx, attr_name, type);
+}
+
 void XttGe::message_cb(void* ctx, char severity, const char* msg)
 {
   ((XttGe*)ctx)->message(severity, msg);
@@ -187,8 +212,10 @@ void XttGe::message_cb(void* ctx, char severity, const char* msg)
 
 void XttGe::message(char severity, const char* msg)
 {
-  if (!streq(msg, ""))
+  if (!streq(msg, "")) {
     printf("** XttGe: %s\n", msg);
+    wow->DisplayError("Ge Message", msg, lng_eCoding_ISO8859_1, 0);
+  }
 }
 
 int XttGe::set_object_focus(const char* name, int empty)
@@ -282,6 +309,225 @@ int XttGe::get_object_name(unsigned int idx, int size, char* name)
   return graph->get_object_name(idx, size, name);
 }
 
+int XttGe::in_edit_mode() 
+{
+  return (graph->mode == graph_eMode_Development);
+}
+
+void XttGe::activate_edit(int edit)
+{
+  if (edit) {
+    graph->close_trace(0);
+    graph->mode = graph_eMode_Development;
+    graph->grow->grow_setup();
+  }
+  else {
+    graph->select_clear();
+    graph->mode = graph_eMode_Runtime;
+    graph->init_trace();
+  }
+}
+
+void XttGe::activate_open()
+{
+  pwr_tCmd cmd = "open dash";
+  if (command_cb)
+    (command_cb)(parent_ctx, cmd, 0, this);
+}
+
+void XttGe::activate_add()
+{
+  grow_tObject o;
+  int sts;
+
+  if (graph->mode == graph_eMode_Runtime)
+    return;
+
+  sts = graph->create_dashcell_next(&o, 1, 1, 0, 0);
+  if (EVEN(sts)) {
+    char msg[100];
+    msg_GetText(sts, msg, sizeof(msg));
+    message('E', msg);
+  }
+}
+
+void XttGe::activate_delete()
+{
+  if (graph->mode == graph_eMode_Runtime)
+    return;
+
+  graph->delete_select();
+}
+
+void XttGe::activate_copy()
+{
+  if (graph->mode == graph_eMode_Runtime)
+    return;
+
+  graph->copy();
+}
+
+void XttGe::activate_paste()
+{
+  if (graph->mode == graph_eMode_Runtime)
+    return;
+
+  if (graph->is_dashboard() && graph->dashboard_is_full()) {
+    message('E', "Dashboard is full");
+    return;
+  }
+
+  graph->paste();
+}
+
+void XttGe::activate_connect()
+{
+  int sts;
+  pwr_tAName aname;
+  pwr_tTypeId type;
+  grow_tObject gobject;
+
+  if (graph->mode == graph_eMode_Runtime)
+    return;
+
+  sts = (get_select_cb)(parent_ctx, aname, &type);
+  if (EVEN(sts)) {
+    message('E', "Select an object in the navigator");
+    return;
+  }
+
+  sts = graph->get_selected_object(&gobject);
+  if (EVEN(sts)) {
+    message('E', "Select one object in the dashboard");
+    return;
+  }
+
+  sts = graph->dashboard_connect(gobject, 0, aname, type);
+  printf("aname: %s\n", aname);
+}
+
+void XttGe::activate_merge()
+{
+  int sts;
+
+  if (graph->mode == graph_eMode_Runtime)
+    return;
+
+  sts = graph->merge_dashcells();
+  if (EVEN(sts)) {
+    char msg[100];
+    msg_GetText(sts, msg, sizeof(msg));
+    message('E', msg);
+  }
+}
+
+int XttGe::dash_insert(char *name, pwr_tTypeId type)
+{
+  grow_tObject o;
+
+  return graph->create_dashcell_next(&o, 1, 1, name, type);
+}
+
+void XttGe::activate_cellattributes()
+{
+  grow_tObject gobject;
+  int sts;
+
+  sts = graph->get_selected_object(&gobject);
+  if (EVEN(sts)) {
+    message('E', "Select one object in the dashboard");
+    return;
+  }
+
+  graph->edit_attributes(gobject);
+}
+
+void XttGe::activate_graphattributes()
+{
+  graph->edit_graph_attributes();
+}
+
+void XttGe::activate_save()
+{
+  char name[40];
+
+  graph->get_name(name);
+  if (streq(name, ""))
+    return;
+
+  graph->close_trace(0);
+  graph->save(name);
+  graph->init_trace();
+}
+
+void XttGe::file_selected_cb(void* ctx, void* data, char* text)
+{
+  XttGe* ge = (XttGe*)ctx;
+  ge->graph->set_name(text);
+  ge->set_title(text);
+  ge->activate_save();
+  if (ge->namechanged_cb)
+    (ge->namechanged_cb)(ge->parent_ctx, ge, text);
+}
+
+void XttGe::activate_saveas()
+{
+  wow->CreateInputDialog(
+      this, "Save as", "Enter filename", file_selected_cb, 0, 40, 0, 0);
+}
+
+typedef struct {
+  pwr_tString32 name;
+  int idx;
+} tThemes;
+
+static tThemes themes[] = { { "Standard", 0 }, { "Sand", 1 }, { "Maroon", 2 },
+  { "Sienna", 3 }, { "DarkBlue", 4 }, { "Classic", 5 }, { "Midnight", 6 },
+  { "PlayRoom", 7 }, { "NordicLight", 8 }, { "Contrast", 9 },
+  { "AzureContrast", 10 }, { "OchreContrast", 11 }, { "Chesterfield", 12 },
+  { "TerraVerte", 13 }, { "Polar", 14 }, { "Custom", 100 } };
+
+void XttGe::ge_colortheme_selector_ok_cb(void* ctx, char* text, int ok_pressed)
+{
+  XttGe* gectx = (XttGe*)ctx;
+  int idx = -1;
+
+  for (unsigned int i = 0; i < sizeof(themes) / sizeof(themes[0]); i++) {
+    if (streq(text, themes[i].name)) {
+      idx = themes[i].idx;
+      break;
+    }
+  }
+
+  if (idx >= 0)
+    gectx->graph->update_color_theme(idx);
+}
+
+void XttGe::activate_setcolortheme()
+{
+  pwr_tString80 names[30];
+
+  memset(names, 0, sizeof(names));
+  for (unsigned int i = 0; i < sizeof(themes) / sizeof(themes[0]); i++) {
+    strcpy(names[i], themes[i].name);
+  }
+
+  wow->CreateList("ColorTheme Selector", (char*)names, sizeof(names[0]),
+      ge_colortheme_selector_ok_cb, 0, this);
+}
+
+static void exit_ok(void *ctx, void *data)
+{
+  XttGe *ge = (XttGe *)ctx;
+  delete ge;
+}
+
+void XttGe::activate_exit_modified()
+{
+  wow->DisplayQuestion(this, "Save", "Dashboard is not saved\nDo you want to close?",
+      exit_ok, 0, 0);
+}
+
 XttGe::XttGe(void* xg_parent_ctx, const char* xg_name, const char* xg_filename,
     int xg_scrollbar, int xg_menu, int xg_navigator, int xg_width,
     int xg_height, int x, int y, double scan_time, const char* object_name,
@@ -296,8 +542,9 @@ XttGe::XttGe(void* xg_parent_ctx, const char* xg_name, const char* xg_filename,
       command_cb(xg_command_cb), close_cb(0), help_cb(0), display_in_xnav_cb(0),
       is_authorized_cb(xg_is_authorized_cb), popup_menu_cb(0),
       call_method_cb(0), get_current_objects_cb(xg_get_current_objects_cb),
-      sound_cb(0), eventlog_cb(0), keyboard_cb(xg_keyboard_cb), width(xg_width),
-      height(xg_height), options(xg_options), color_theme(xg_color_theme)
+      sound_cb(0), eventlog_cb(0), keyboard_cb(xg_keyboard_cb), namechanged_cb(0),
+      width(xg_width), height(xg_height), options(xg_options), 
+      color_theme(xg_color_theme)
 {
   strcpy(filename, xg_filename);
   strcpy(name, xg_name);

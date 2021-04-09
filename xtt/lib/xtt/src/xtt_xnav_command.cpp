@@ -138,6 +138,8 @@ static void xnav_ge_eventlog_cb(
 static void xnav_ge_keyboard_cb(void* ctx, void* gectx, int action, int type);
 static void xnav_ge_display_in_xnav_cb(void* xnav, pwr_sAttrRef* arp);
 static int xnav_ge_is_authorized_cb(void* xnav, unsigned int access);
+static void xnav_ge_namechanged_cb(void* ctx, void* gectx, char* name);
+static int xnav_ge_get_select_cb(void* ctx, char* oname, pwr_tTypeId* type);
 static int xnav_attribute_func(char* name, int* return_decl,
     ccm_tFloat* return_float, ccm_tInt* return_int, char* return_string);
 static int xnav_multiview_command_cb(
@@ -193,6 +195,7 @@ static int xnav_create_func(void* client_data, void* client_flag);
 static int xnav_delete_func(void* client_data, void* client_flag);
 static int xnav_add_func(void* client_data, void* client_flag);
 static int xnav_collect_func(void* client_data, void* client_flag);
+static int xnav_dashboard_func(void* client_data, void* client_flag);
 static int xnav_store_func(void* client_data, void* client_flag);
 static int xnav_exit_func(void* client_data, void* client_flag);
 static int xnav_crossref_func(void* client_data, void* client_flag);
@@ -225,13 +228,13 @@ dcli_tCmdTable xnav_command_table[] = {
       { "dcli_arg1", "dcli_arg2", "/NAME", "/FILE", "/SCROLLBAR", "/WIDTH",
           "/HEIGHT", "/MENU", "/NAVIGATOR", "/CENTER", "/OBJECT", "/NEW",
           "/INSTANCE", "/COLLECT", "/FOCUS", "/INPUTEMPTY", "/MAIN", "/ENTRY",
-          "/TITLE", "/ACCESS", "/CLASSGRAPH", "/PARENT", "/PWINDOW",
+          "/TITLE", "/ACCESS", "/DASHBOARD", "/CLASSGRAPH", "/PARENT", "/PWINDOW",
           "/PINSTANCE", "/BYPASS", "/CLOSEBUTTON", "/TARGET", "/TRIGGER",
           "/TYPE", "/FTYPE", "/FULLSCREEN", "/MAXIMIZE", "/FULLMAXIMIZE",
           "/ICONIFY", "/HIDE", "/XPOSITION", "/YPOSITION", "/X0", "/Y0", "/X1",
           "/Y1", "/URL", "/CONTINOUS", "/CAMERAPOSITION", "/CAMERACONTROLPANEL",
           "/VIDEOCONTROLPANEL", "/VIDEOPROGRESSBAR", "/SCANTIME", "/KEYMAP",
-          "" } },
+	  "" } },
   { "CLOSE", &xnav_close_func,
       { "dcli_arg1", "dcli_arg2", "/NAME", "/OBJECT", "/INSTANCE",
           "/CLASSGRAPH", "/ALL", "/EXCEPT", "/MVEXCEPT", "/ICONIFY", "" } },
@@ -264,6 +267,8 @@ dcli_tCmdTable xnav_command_table[] = {
   { "COLLECT", &xnav_collect_func,
       { "dcli_arg1", "/NAME", "/NEWWINDOW", "/ADDWINDOW", "/LAST", "/TITLE",
           "/WIDTH", "/HEIGHT", "/SCANTIME", "/ZOOMFACTOR", "/FILE", "" } },
+  { "DASHBOARD", &xnav_dashboard_func,
+      { "dcli_arg1", "dcli_arg2", "/NAME", "" } },
   { "CROSSREFERENCE", &xnav_crossref_func,
       { "dcli_arg1", "/NAME", "/FILE", "/STRING", "/BRIEF", "/FUNCTION",
           "/CASE_SENSITIVE", "/WINDOW", "" } },
@@ -2916,6 +2921,17 @@ static int xnav_add_func(void* client_data, void* client_flag)
   return XNAV__SUCCESS;
 }
 
+
+static void xnav_dashboard_open_cb(void* ctx, char* text, int ok_pressed)
+{
+  XNav* xnav = (XNav*)ctx;
+  pwr_tCmd cmd;
+
+  sprintf(cmd, "open graph %s/dash/menu", text);
+
+  xnav->command(cmd);
+}
+
 static int xnav_open_func(void* client_data, void* client_flag)
 {
   XNav* xnav = (XNav*)client_data;
@@ -3123,9 +3139,11 @@ static int xnav_open_func(void* client_data, void* client_flag)
       pwr_tFileName fname;
       int use_default_access;
       unsigned int access = 0;
+      int dashboard;
 
       // Command is "OPEN GRAPH" without graph object
       scrollbar = ODD(dcli_get_qualifier("/SCROLLBAR", 0, 0));
+      dashboard = ODD(dcli_get_qualifier("/DASHBOARD", 0, 0));
 
       if (ODD(dcli_get_qualifier("/COLLECT", 0, 0))) {
         scrollbar = ODD(dcli_get_qualifier("/SCROLLBAR", 0, 0));
@@ -3133,7 +3151,7 @@ static int xnav_open_func(void* client_data, void* client_flag)
         navigator = ODD(dcli_get_qualifier("/NAVIGATOR", 0, 0));
 
         xnav->open_graph("Collect", "_none_", scrollbar, menu, navigator, 0, 0,
-            0, 0, "collect", NULL, 0, 0, 0, options, basewidget, 0);
+	     0, 0, "collect", NULL, 0, 0, 0, options, basewidget, 0, 0);
         return XNAV__SUCCESS;
       }
       if (ODD(dcli_get_qualifier("dcli_arg2", file_str, sizeof(file_str)))) {
@@ -3297,7 +3315,7 @@ static int xnav_open_func(void* client_data, void* client_flag)
 
       xnav->open_graph(name_str, file_str, scrollbar, menu, navigator, width,
           height, 0, 0, instance_p, focus_p, inputempty, use_default_access,
-          access, options, basewidget, bordersp);
+	  access, options, basewidget, bordersp, dashboard);
       return XNAV__SUCCESS;
     }
   } else if (str_NoCaseStrncmp(arg1_str, "MULTIVIEW", strlen(arg1_str)) == 0) {
@@ -3440,6 +3458,28 @@ static int xnav_open_func(void* client_data, void* client_flag)
       }
     }
     return XNAV__SUCCESS;
+  } else if (str_NoCaseStrncmp(arg1_str, "DASHBOARD", strlen(arg1_str)) == 0) {
+    char name_str[80];
+    int name_found = 0;
+
+    // Command is "OPEN DASHBOARD"
+
+    if (ODD(dcli_get_qualifier("dcli_arg2", name_str, sizeof(name_str))))
+      name_found = 1;
+    else if (ODD(dcli_get_qualifier("/NAME", name_str, sizeof(name_str))))
+      name_found = 1;
+    if (!name_found) {
+      xnav->wow->CreateFileList("Open Dashboard", "$pwrp_exe", "*", "pwd",
+	    xnav_dashboard_open_cb, 0, xnav, 1);
+
+      return XNAV__SUCCESS;
+    } else {
+      // Name found
+      pwr_tCmd cmd;
+      sprintf(cmd, "open graph %s/dash/menu", name_str);
+      
+      xnav->command(cmd);
+    }
   } else if (str_NoCaseStrncmp(arg1_str, "CAMERA", strlen(arg1_str)) == 0
       || str_NoCaseStrncmp(arg1_str, "VIDEO", strlen(arg1_str)) == 0) {
     char tmp_str[80];
@@ -6384,6 +6424,45 @@ static int xnav_collect_func(void* client_data, void* client_flag)
   }
 }
 
+static int xnav_dashboard_func(void* client_data, void* client_flag)
+{
+  XNav* xnav = (XNav*)client_data;
+  char arg1_str[80];
+
+  IF_NOGDH_RETURN;
+
+  if (ODD(dcli_get_qualifier("dcli_arg1", arg1_str, sizeof(arg1_str)))) {
+    if (str_NoCaseStrncmp(arg1_str, "OPEN", strlen(arg1_str)) == 0) {
+      char name_str[80];
+      int name_found = 0;
+
+      if (ODD(dcli_get_qualifier("dcli_arg2", name_str, sizeof(name_str))))
+	name_found = 1;
+      else if (ODD(dcli_get_qualifier("/NAME", name_str, sizeof(name_str))))
+	name_found = 1;
+      if (!name_found) {
+	xnav->wow->CreateFileList("Open Dashboard", "$pwrp_exe", "*", "pwd",
+	     xnav_dashboard_open_cb, 0, xnav, 1);
+
+	return XNAV__SUCCESS;
+      } else {
+	// Name found
+	pwr_tCmd cmd;
+	sprintf(cmd, "open graph %s/dash/menu", name_str);
+
+	xnav->command(cmd);
+      }
+    } else {
+      xnav->message('E', "Unknown qualifier");
+      return XNAV__HOLDCOMMAND;
+    }
+  } else {
+    xnav->message('E', "Missing qualifier");
+    return XNAV__HOLDCOMMAND;
+  }
+  return XNAV__SUCCESS;
+}
+
 static int xnav_store_func(void* client_data, void* client_flag)
 {
   XNav* xnav = (XNav*)client_data;
@@ -8943,8 +9022,8 @@ int XNav::readcmdfile(char* incommand, char* buffer)
   } else if (buffer) {
     /* Execute the buffer */
     sts = ccm_buffer_exec(buffer, xnav_externcmd_func,
-        xnav_ccm_errormessage_func, &appl_sts, verify, 0, NULL, 0, NULL,
-        (void*)this);
+        xnav_ccm_deffilename_func, xnav_ccm_errormessage_func, &appl_sts, 
+	verify, 0, NULL, 0, NULL, (void*)this);
     if (EVEN(sts))
       return sts;
   }
@@ -9592,6 +9671,29 @@ static int xnav_ge_sound_cb(void* xnav, pwr_sAttrRef* arp)
   return ((XNav*)xnav)->sound(arp);
 }
 
+static void xnav_ge_namechanged_cb(void* xnav, void *gectx, char *name)
+{
+  for (ApplListElem* elem = ((XNav *)xnav)->appl.root; elem; elem = elem->next) {
+    if (elem->ctx == gectx) {
+      strcpy(elem->name, name);
+      break;
+    }
+  }
+}
+
+static int xnav_ge_get_select_cb(void* xnav, char* oname, pwr_tTypeId *type)
+{
+  int sts;
+  pwr_tAttrRef aref;
+  int is_attrref;
+
+  sts = ((XNav *)xnav)->get_select(&aref, &is_attrref);
+  if (EVEN(sts))
+    return sts;
+
+  return ((XNav *)xnav)->get_dashboard_name(&aref, oname, type);
+}
+
 static void xnav_ge_eventlog_cb(
     void* xnav, void* gectx, int type, void* data, unsigned int size)
 {
@@ -9775,20 +9877,21 @@ void XNav::open_graph(const char* name, const char* filename, int scrollbar,
     int menu, int navigator, int width, int height, int x, int y,
     const char* object_name, const char* focus_name, int input_focus_empty,
     int use_default_access, unsigned int access, unsigned int options,
-    void* basewidget, double* borders)
+    void* basewidget, double* borders, int dashboard)
 {
   XttGe* gectx;
 
-  if (appl.find(applist_eType_Graph, filename, object_name, (void**)&gectx)) {
+  if (appl.find(dashboard ? applist_eType_Dashboard : applist_eType_Graph, 
+      filename, object_name, (void**)&gectx)) {
     gectx->pop();
     if (focus_name)
       gectx->set_object_focus(focus_name, input_focus_empty);
   } else {
     gectx = xnav_ge_new(name, filename, scrollbar, menu, navigator, width,
         height, x, y, gbl.scantime, object_name, use_default_access, access,
-        options, basewidget, borders, gbl.color_theme, &xnav_ge_command_cb,
-        &xnav_ge_get_current_objects_cb, &xnav_ge_is_authorized_cb,
-        &xnav_ge_keyboard_cb);
+	options, basewidget, borders, gbl.color_theme, dashboard, 
+        &xnav_ge_command_cb, &xnav_ge_get_current_objects_cb, 
+        &xnav_ge_is_authorized_cb, &xnav_ge_keyboard_cb);
     gectx->close_cb = xnav_ge_close_cb;
     gectx->help_cb = xnav_ge_help_cb;
     gectx->display_in_xnav_cb = xnav_ge_display_in_xnav_cb;
@@ -9796,9 +9899,12 @@ void XNav::open_graph(const char* name, const char* filename, int scrollbar,
     gectx->call_method_cb = xnav_call_method_cb;
     gectx->sound_cb = xnav_ge_sound_cb;
     gectx->eventlog_cb = xnav_ge_eventlog_cb;
+    gectx->namechanged_cb = xnav_ge_namechanged_cb;
+    gectx->get_select_cb = xnav_ge_get_select_cb;
 
     appl.insert(
-        applist_eType_Graph, (void*)gectx, pwr_cNObjid, filename, object_name);
+	dashboard ? applist_eType_Dashboard : applist_eType_Graph, 
+	(void*)gectx, pwr_cNObjid, filename, object_name);
     if (focus_name)
       gectx->set_object_focus(focus_name, input_focus_empty);
     if (options & ge_mOptions_IsMain) {
@@ -9896,7 +10002,7 @@ int XNav::exec_xttgraph(pwr_tObjid xttgraph, char* instance, char* focus,
     open_graph(xttgraph_o.Title, action, scrollbars, menu, navigator,
         xttgraph_o.Width, xttgraph_o.Height, xttgraph_o.X, xttgraph_o.Y,
         instance, focus, inputempty, use_default_access, access, options,
-        basewidget, bordersp);
+	basewidget, bordersp, 0);
   } else if ((strstr(action, ".class"))) {
     // Open jgraph
     char cmd[80];

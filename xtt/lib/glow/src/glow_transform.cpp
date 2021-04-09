@@ -261,3 +261,11 @@ void GlowTransform::open(std::ifstream& fp)
   store();
   stored = false;
 }
+
+void GlowTransform::pos_inverse(GlowTransform* t)
+{
+  t->a13 = -a13;
+  t->a23 = -a23;
+  t->s_a13 = -a13;
+  t->s_a23 = -a23;
+}

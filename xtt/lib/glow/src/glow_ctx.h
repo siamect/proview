@@ -866,6 +866,11 @@ public:
   /*! Calls the scan backcall function for all connected objects. */
   int trace_scan();
 
+  int trace_init_object(GlowArrayElem *e) {
+    return e->trace_init();
+  }
+
+
   void* user_data; //!< User data.
 
   //! Set user data.

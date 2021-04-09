@@ -105,6 +105,7 @@ public:
   {
     return stored;
   }
+  void pos_inverse(GlowTransform* t);
   double a11;
   double a12;
   double a13;

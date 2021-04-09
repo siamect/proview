@@ -487,6 +487,7 @@ menu Layout
 menu Other
 {
   subgraph	Needle		pwr_exe:pwr_needle.pwsg			40
+  subgraph	Needle2		pwr_exe:pwr_needle2.pwsg		40
   subgraph 	Pc		pwr_exe:pwr_pc.pwsg 			44
   subgraph 	Pulpet		pwr_exe:pwr_pulpet.pwsg 		45
   subgraph 	Rack		pwr_exe:pwr_rack.pwsg 			43
@@ -494,6 +495,7 @@ menu Other
   subgraph 	Camera		pwr_exe:pwr_camera.pwsg 		249
   subgraph 	VideoCamera	pwr_exe:pwr_videocamera.pwsg 		41
   subgraph 	ConGlue		pwr_conglue.component 			10
+  subgraph 	DashCell	pwr_dashcell.component 			8
   subgraph 	MenuBar		pwr_exe:pwr_menubar.pwsg 		32
   subgraph 	MenuBar2	pwr_exe:pwr_menubar2.pwsg 		32
   subgraph 	MethodToolbar	pwr_exe:pwr_methodtoolbar.component 	251

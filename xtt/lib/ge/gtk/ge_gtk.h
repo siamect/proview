@@ -205,6 +205,7 @@ public:
   static void activate_prevpage(GtkWidget* w, gpointer gectx);
   static void activate_graph_attr(GtkWidget* w, gpointer gectx);
   static void activate_open(GtkWidget* w, gpointer gectx);
+  static void activate_opendashboard(GtkWidget* w, gpointer gectx);
   static void activate_subgraphs(GtkWidget* w, gpointer gectx);
   static void activate_rect(GtkWidget* w, gpointer gectx);
   static void activate_rectrounded(GtkWidget* w, gpointer gectx);

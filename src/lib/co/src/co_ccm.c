@@ -262,6 +262,12 @@ static int ccm_func_odd(void* filectx, ccm_sArg* arg_list, int arg_count,
 static int ccm_func_even(void* filectx, ccm_sArg* arg_list, int arg_count,
     int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
     char* return_string);
+static int ccm_func_max(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string);
+static int ccm_func_min(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string);
 static int ccm_func_tstlog_open(void* filectx, ccm_sArg* arg_list, int arg_count,
     int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
     char* return_string);
@@ -324,7 +330,10 @@ static ccm_sSysFunc ccm_sysfunc[CCM_SYSFUNC_MAX] = { { "std", "printf",
   { "std", "get_pwr_config", &ccm_func_get_pwr_config },
   { "std", "get_node_name", &ccm_func_get_node_name },
   { "std", "get_language", &ccm_func_get_language },
-  { "std", "ODD", &ccm_func_odd }, { "std", "EVEN", &ccm_func_even },
+  { "std", "ODD", &ccm_func_odd }, 
+  { "std", "EVEN", &ccm_func_even },
+  { "std", "MAX", &ccm_func_max },
+  { "std", "MIN", &ccm_func_min },
   { "std", "tstlog_open", &ccm_func_tstlog_open },
   { "std", "tstlog_close", &ccm_func_tstlog_close },
   { "std", "tstlog_log", &ccm_func_tstlog_log },
@@ -2729,6 +2738,24 @@ int ccm_execute_list(ccm_tFuncCtx funcctx, ccm_sOperand* list, int* result_decl,
             return sts;
           if (sts == CCM__EXITFUNC)
             exit_func_found = 1;
+
+	  // Test
+	  if (op->next->prio > op->prio) {
+	    for (bp = op->prev; bp; bp = bp->prev) {
+	      if (bp->parlevel < op->parlevel)
+		break;
+	      if (bp->parlevel > op->parlevel)
+		continue;
+	      if (bp->prio <= op->next->prio && !bp->done) {
+		sts = ccm_operate_exec(funcctx, bp, op->next);
+		if (EVEN(sts))
+		  return sts;
+		if (sts == CCM__EXITFUNC)
+		  exit_func_found = 1;
+	      }
+	    }
+	  }
+
         }
       }
     }
@@ -4025,9 +4052,37 @@ static int ccm_read_buffer(
       return CCM__LONGLINE;
     }
     if (str_StartsWith(str, "#include")) {
-      filectx->error_row = row;
-      strcpy(filectx->error_line, str);
-      return CCM__OPENFILE;
+      pwr_tFileName fname;
+      char *s1, *se;
+      pwr_tStatus sts;
+
+      s1= strchr(str, '<');
+      if (s1 == 0) {
+        filectx->error_row = row;
+        strcpy(filectx->error_line, str);
+        return CCM__SYNTAX;
+      }
+      se = strrchr(str, '>');
+      if (se == 0) {
+        filectx->error_row = row;
+        strcpy(filectx->error_line, str);
+        return CCM__SYNTAX;
+      }
+      strncpy(fname, s1+1, se - s1 - 1);
+      fname[se - s1 - 1] = 0;
+      sts = ccm_read_file(filectx, fname, &line_list_p);
+      if (EVEN(sts))
+        return sts;
+      if (*line_list == NULL)
+        *line_list = line_list_p;
+      
+      for (; line_list_p->next; line_list_p = line_list_p->next)
+        ;
+      continue;
+      
+      //filectx->error_row = row;
+      //strcpy(filectx->error_line, str);
+      //return CCM__OPENFILE;
     }
 
     line_p = calloc(1, sizeof(ccm_sLine));
@@ -5119,6 +5174,48 @@ static int ccm_func_even(void* filectx, ccm_sArg* arg_list, int arg_count,
   return 1;
 }
 
+static int ccm_func_max(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  ccm_sArg *arg_p2;
+
+  if (arg_count != 2)
+    return CCM__ARGMISM;  
+
+  arg_p2 = arg_list->next;
+
+  if (arg_list->value_decl != K_DECL_FLOAT)
+    return CCM__VARTYPE;
+  if (arg_p2->value_decl != K_DECL_FLOAT)
+    return CCM__VARTYPE;
+
+  *return_float = MAX(arg_list->value_float, arg_p2->value_float);
+  *return_decl = K_DECL_FLOAT;
+  return 1;
+}
+
+static int ccm_func_min(void* filectx, ccm_sArg* arg_list, int arg_count,
+    int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
+    char* return_string)
+{
+  ccm_sArg *arg_p2;
+
+  if (arg_count != 2)
+    return CCM__ARGMISM;  
+
+  arg_p2 = arg_list->next;
+
+  if (arg_list->value_decl != K_DECL_FLOAT)
+    return CCM__VARTYPE;
+  if (arg_p2->value_decl != K_DECL_FLOAT)
+    return CCM__VARTYPE;
+
+  *return_float = MIN(arg_list->value_float, arg_p2->value_float);
+  *return_decl = K_DECL_FLOAT;
+  return 1;
+}
+
 static int ccm_func_tstlog_open(void* filectx, ccm_sArg* arg_list, int arg_count,
     int* return_decl, ccm_tFloat* return_float, ccm_tInt* return_int,
     char* return_string)
@@ -5855,7 +5952,7 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
   int main_found;
   int found;
   ccm_sFunc* func_p = NULL;
-  char arg_str[20][32];
+  char arg_str[30][32];
   char elm_str[4][K_LINE_SIZE];
   ccm_sArg* arg_p;
   int nr;
@@ -6375,7 +6472,8 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
         if (EVEN(sts)) {
           if (!funcctx->filectx->error_row) {
             funcctx->filectx->error_row = line_p->row;
-            strcpy(funcctx->filectx->error_line, line_p->line);
+            strncpy(funcctx->filectx->error_line, line_p->line, sizeof(funcctx->filectx->error_line));
+	    funcctx->filectx->error_line[sizeof(funcctx->filectx->error_line)-1] = 0;
           }
           return sts;
         }
@@ -6540,6 +6638,7 @@ file_exec_exit:
 }
 
 int ccm_buffer_exec(char* buffer, int (*externcmd_func)(char*, void*),
+    int (*deffilename_func)(char*, char*, void*),
     int (*errormessage_func)(char*, int, void*), int* appl_sts, int verify,
     int break_before, void** ctx, int extfunc_return_mode, char* extfunc_line,
     void* client_data)
@@ -6552,6 +6651,7 @@ int ccm_buffer_exec(char* buffer, int (*externcmd_func)(char*, void*),
   ccm_tFileCtx filectx;
 
   filectx = calloc(1, sizeof(*filectx));
+  filectx->deffilename_func = deffilename_func;
   filectx->externcmd_func = externcmd_func;
   filectx->errormessage_func = errormessage_func;
   filectx->verify = verify;

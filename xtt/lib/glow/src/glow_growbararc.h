@@ -202,9 +202,17 @@ public:
   void set_value(double value)
   {
     bar_value = value;
-    if (!fill)
-      erase(&ctx->mw);
-    draw();
+    if (!parent) {
+      if (!fill)
+	erase(&ctx->mw);
+      draw();
+    }
+    else {
+      ctx->set_draw_buffer_only();
+      parent->erase();
+      ctx->reset_draw_buffer_only();
+      parent->draw();
+    }
   }
 
   //! Set parameters for the bar.

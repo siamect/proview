@@ -57,3 +57,4 @@ name_invchar    <Invalid character for name>           		/error
 name_alrexist   <Name already exist>           			/error
 swapterminated  <Ctx is swapped>				/info
 buff_small	<Buffer is too small>				/error
+dash_full	<Dashboard is full>				/error

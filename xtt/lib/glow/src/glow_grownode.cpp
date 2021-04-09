@@ -44,6 +44,7 @@
 #include "glow_draw.h"
 #include "glow_conpoint.h"
 #include "glow_growgroup.h"
+#include "glow_dashboard.h"
 
 GrowNode::GrowNode(GrowCtx* glow_ctx, const char* name,
     GlowNodeClass* node_class, double x1, double y1, int nodraw,
@@ -119,6 +120,7 @@ GrowNode::~GrowNode()
 void GrowNode::copy_from(const GrowNode& n)
 {
   memcpy((void *)this, (void *)&n, sizeof(n));
+  root_node = 0;
   for (int i = 0; i < 10; i++) {
     if (annotsize[i]) {
       annotv[i] = (char*)calloc(1, annotsize[i]);
@@ -461,8 +463,12 @@ void GrowNode::move(double delta_x, double delta_y, int grid)
     /* Move to closest grid point */
     erase(&ctx->mw);
     erase(&ctx->navw);
-    ctx->find_grid(x_left + delta_x / ctx->mw.zoom_factor_x,
-        y_low + delta_y / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
+    if (grid == 2)
+      ctx->dash->find_grid(x_left + delta_x / ctx->mw.zoom_factor_x,
+	  y_low + delta_y / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
+    else
+      ctx->find_grid(x_left + delta_x / ctx->mw.zoom_factor_x,
+          y_low + delta_y / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
     trf.move(x_grid - x_left, y_grid - y_low);
     get_node_borders();
   } else {
@@ -589,6 +595,10 @@ int GrowNode::event_handler(
 
   sts = 0;
   if (event == ctx->event_move_node) {
+    if (object_type == glow_eObjectType_GrowDashCell && ctx->trace_started) {
+      sts = nc->event_handler(w, event, rx, ry);
+      return sts;
+    }
     sts = nc->event_handler(w, event, rx, ry);
     if (sts) {
       /* Register node for potential movement */
@@ -967,21 +977,26 @@ void GrowNode::set_rotation(
   trf.set_from_stored(&t);
   get_node_borders();
   call_redraw_node_cons();
-  ctx->draw(&ctx->mw,
-      old_x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      old_y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      old_x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      old_y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->mw,
-      x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-      y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-      x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-      y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw(&ctx->navw,
-      x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-      y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-      x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-      y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  if (!parent) {
+    ctx->draw(&ctx->mw,
+        old_x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+        old_y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+        old_x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+        old_y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+    ctx->draw(&ctx->mw,
+        x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+        y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+        x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+        y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+    ctx->draw(&ctx->navw,
+        x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+        y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+        x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+        y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+  }
+  else {
+    parent->draw();
+  }
 }
 
 void GrowNode::draw()
@@ -1290,6 +1305,22 @@ void GrowNode::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       break;
     default:;
     }
+  }
+}
+
+void GrowNode::erase()
+{
+  if (root_node)
+    root_node->erase();
+  else {
+    int draw_mp = DRAW_MP;
+    if (annot_scrollingtext != -1)
+      draw_mp = 1;
+    ctx->erase(&ctx->mw,
+        x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - draw_mp + 1,
+        y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - draw_mp,
+        x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + draw_mp,
+        y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + draw_mp);
   }
 }
 
@@ -2173,3 +2204,4 @@ void GrowNode::set_colortheme_lightness()
     draw();
   }
 }
+

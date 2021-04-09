@@ -752,6 +752,9 @@ public:
       void* colornode);
 
   //! Erase the object.
+  void erase();
+
+  //! Erase the object.
   /*!
     \param t		Transform of parent node.
     \param hot		Draw as hot, with larger line width.

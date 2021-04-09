@@ -103,6 +103,7 @@ public:
   void activate_openplc();
   void activate_opengraph();
   void activate_collect_insert();
+  void activate_dashboard_insert();
   void activate_advanceduser();
   void activate_zoom_in();
   void activate_zoom_out();

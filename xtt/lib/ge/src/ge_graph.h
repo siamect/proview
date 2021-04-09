@@ -78,6 +78,9 @@ typedef enum {
   ge_eAttrType_MethodsMenuType = 1011, //!< MethodsMenu type.
   ge_eAttrType_MethodToolbarType = 1012, //!< MethodToolbar type.
   ge_eAttrType_KeyboardType = 1013, //!< Virtual keyboard type.
+  ge_eAttrType_DashType = 1014, //!< Dash cell type.
+  ge_eAttrType_DashElements = 1015, //!< Dash elements type.
+  ge_eAttrType_IndicatorColor = 1016, //!< Indicator color type.
   ge_eAttrType_DynType2 = glow_eType_DynType2, //!< DynType mask 2.
   ge_eAttrType_ActionType2 = glow_eType_ActionType2, //!< ActionType mask 2.
 } ge_eAttrType;
@@ -428,7 +431,7 @@ public:
       graph_eMode graph_mode = graph_eMode_Development,
       int xn_gdh_init_done = 0, const char* xn_object_name = 0,
       int xn_use_default_access = 0, unsigned int xn_default_access = 0,
-      unsigned int xn_options = 0, int xn_color_theme = 0,
+      unsigned int xn_options = 0, int xn_color_theme = 0, int xn_dashboard = 0,
       void (*xn_keyboard_cb)(void*, int, int) = 0);
 
   virtual void trace_timer_remove()
@@ -496,6 +499,8 @@ public:
   void (*update_colorpalette_cb)(void*);
   void (*keyboard_cb)(void*, int, int);
   void (*refresh_objects_cb)(void*, unsigned int);
+  void (*resize_cb)(void*, int, int);
+  int (*get_rtplant_select_cb)(void*, char* attr_name, int size, pwr_tTypeId *type);
   int linewidth; //!< Selected linewidth.
   glow_eLineType linetype; //!< Selected linetype.
   int textsize; //!< Selected text size.
@@ -556,6 +561,8 @@ public:
   double* pending_borders; //!< Stored initial borders
   int color_theme; //!< Color theme
   char* syntax_instance; //!< Instance for syntax check of object graphs
+  bool connect_now; //!< Don't delay trace connect
+  int dashboard; //!< Graph is a dashboard.
 
   //! Print to postscript file.
   /*! \param filename	Name of postscript file. */
@@ -807,7 +814,7 @@ public:
 
   //! Open a graph from file.
   /*! \param filename	Name of file to open graph from. */
-  void open(char* filename);
+  int open(char* filename);
 
   //! Open a subgraph from file.
   /*! \param filename	Name of file to open subgraph from. */
@@ -819,6 +826,15 @@ public:
     \param path			Array of paths char[10][80].
   */
   void set_subgraph_path(int path_cnt, char* path);
+
+  //! Initialize a dashboard.
+  void dashboard_init();
+
+  //! Reconfigure a dashboard.
+  void dashboard_reconfigure();
+
+  //! Check if dashboard is full.
+  int dashboard_is_full();
 
   //! Find or create a conclass with the specified attributes.
   /*!
@@ -979,6 +995,9 @@ public:
   /*! \param gridsize	Distance between gridpoints. */
   void set_gridsize(double gridsize);
 
+  //! Clear selection.
+  void select_clear();
+  
   //! Select all connections.
   /*! Select all connection objects in the graph. */
   void select_all_cons();
@@ -1460,6 +1479,12 @@ public:
       grow_tObject* object, double x, double y, int dynamic, int colortheme);
   void create_pie(grow_tObject* object, double x, double y);
   void create_barchart(grow_tObject* object, double x, double y);
+  void create_dashcell(grow_tObject* object, double x, double y, int colortheme);
+  int create_dashcell_next(grow_tObject *object, int colortheme, int select, char *attr, 
+      pwr_tTypeId atype);
+  int merge_dashcells();
+  int dashboard_connect(grow_tObject o, int idx, char* attr, pwr_tTypeId atype);
+
 
   int create_node_floating(double x, double y);
 
@@ -1560,7 +1585,11 @@ public:
 
   //! Execute a script file.
   /*!  \param incommand		Scriptfile with arguments. */
-  int readcmdfile(char* incommand);
+  int readcmdfile(char* incommand, char* script);
+
+  //! Execute a script buffer.
+  /*!  \param script		Script buffer. */
+  int script_buffer_exec(char *script);
 
   //
   // Object graph module
@@ -1652,9 +1681,10 @@ public:
   int create_node(const char* node_name, const char* subgraph_str, double x1,
       double y1, double x2, double y2, grow_tNode* node);
 
-  static void get_filename(char* inname, const char* def_path, char* outname);
+  static void get_filename(char* inname, const char* def_path, int dashboard,
+      char* outname);
   static int get_dimension(
-      char* filename, const char* def_path, int* width, int* height);
+      char* filename, const char* def_path, int dashboard, int* width, int* height);
 
   //
   // Web module
@@ -1697,6 +1727,10 @@ public:
   int read_scriptfile(char* incommand);
   int script_func_register(void);
   void script_store_graph();
+  int is_dashboard() 
+  {
+    return grow_IsDashboard(grow->ctx);
+  }
 
 
   //! Destructor

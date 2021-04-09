@@ -1133,6 +1133,156 @@ void XNav::collect_clear()
   brow_DeleteAll(collect_brow->ctx);
 }
 
+int XNav::get_dashboard_name(pwr_sAttrRef* arp, char* dash_name, 
+    pwr_tTypeId* dash_type)
+{
+  int sts;
+  pwr_tAName attr;
+  char* s;
+  pwr_tAName obj_name;
+  pwr_sAttrRef ar;
+  pwr_tTypeId a_type_id;
+  unsigned int a_size;
+  unsigned int a_offset;
+  unsigned int a_dim;
+  pwr_tTid a_tid;
+  unsigned int a_flags = 0;
+  pwr_tAName name;
+
+  sts = gdh_AttrrefToName(arp, name, sizeof(name), cdh_mNName);
+  if (EVEN(sts))
+    return sts;
+
+  if (!arp->Flags.b.Object && !arp->Flags.b.ObjectAttr) {
+    if ((s = strchr(name, '.')) == 0)
+      return 0;
+    strcpy(obj_name, name);
+
+    sts = gdh_GetAttributeCharAttrref(
+        arp, &a_type_id, &a_size, &a_offset, &a_dim);
+    if (EVEN(sts))
+      return sts;
+
+    sts = gdh_GetAttributeFlags(arp, &a_flags);
+    if (EVEN(sts))
+      return sts;
+
+    sts = gdh_GetAttrRefTid(arp, &a_tid);
+    if (EVEN(sts))
+      return sts;
+  } else {
+    pwr_tCid cid;
+    pwr_tObjName cname;
+    pwr_tFileName fname;
+    pwr_tTime time;
+    pwr_tOid coid;
+    
+    // Search object script
+    sts = gdh_GetAttrRefTid(arp, &cid);
+    if (EVEN(sts))
+      return sts;
+
+    coid = cdh_ClassIdToObjid(cid);
+    sts = gdh_ObjidToName(coid, cname, sizeof(cname), cdh_mName_object);
+    if (EVEN(sts))
+      return sts;
+
+    sprintf(fname, "$pwrp_exe/dash_%s.ge_com", cdh_Low(cname));
+    dcli_translate_filename(fname, fname);
+    sts = dcli_file_time(fname, &time);
+    if (EVEN(sts)) {
+      sprintf(fname, "$pwr_exe/dash_c_%s.ge_com", cdh_Low(cname));
+      dcli_translate_filename(fname, fname);
+      sts = dcli_file_time(fname, &time);
+    }
+    if (ODD(sts)) {
+      sts = gdh_AttrrefToName(arp, obj_name, sizeof(obj_name), cdh_mNName);
+      strcpy(dash_name, obj_name);
+      *dash_type = 0;
+      return sts;
+    }	
+
+    // Try trace attribute
+    sts = get_trace_attr(arp, attr);
+    if (EVEN(sts))
+      return sts;
+    strcpy(obj_name, name);
+    strcat(obj_name, ".");
+    strcat(obj_name, attr);
+    sts = gdh_NameToAttrref(pwr_cNObjid, obj_name, &ar);
+    if (EVEN(sts))
+      return sts;
+
+    strcpy(attr, strchr(obj_name, '.') + 1);
+
+    sts = gdh_GetAttributeCharAttrref(
+        &ar, &a_type_id, &a_size, &a_offset, &a_dim);
+    if (EVEN(sts))
+      return sts;
+
+    sts = gdh_GetAttributeFlags(&ar, &a_flags);
+    if (EVEN(sts))
+      return sts;
+
+    sts = gdh_GetAttrRefTid(arp, &a_tid);
+    if (EVEN(sts))
+      return sts;
+  }
+  strcpy(dash_name, obj_name);
+  *dash_type = a_type_id;
+  return XNAV__SUCCESS;
+}
+
+int XNav::dashboard_insert(pwr_sAttrRef* arp)
+{
+  int sts;
+  pwr_tAName obj_name;
+  pwr_tTypeId a_type_id;
+  XttGe *gectx;
+  int found;
+
+  sts = get_dashboard_name(arp, obj_name, &a_type_id);
+  if (EVEN(sts))
+    return sts;
+
+  // Look for any open dashboard in edit mode
+  found = 0;
+  for (sts = appl.find_dashboard_first((void **)&gectx);
+       ODD(sts);
+       sts = appl.find_dashboard_next((void *)gectx, (void **)&gectx)) {
+    if (gectx->in_edit_mode()) {
+      found = 1;
+      break;
+    }
+  }
+
+  if (found) {
+    sts = gectx->dash_insert(obj_name, a_type_id);
+    if (EVEN(sts)) {
+      message(' ', get_message(sts));
+      return sts;
+    }
+    gectx->pop();
+    message('I', "Dashboard insert");
+  } else {
+    // Insert in default dashboard
+    open_graph("PwR Dashboard", "pwr_dashboard",0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1);
+    if (appl.find(applist_eType_Dashboard, "pwr_dashboard", 0, (void**)&gectx)) {
+      sts = gectx->dash_insert(obj_name, a_type_id);
+      if (EVEN(sts)) {
+	message(' ', get_message(sts));
+	return sts;
+      }
+      gectx->pop();
+      message('I', "Dashboard insert");
+    }
+    else 
+      message('E', "Dashboard not found");
+  }
+
+  return 1;
+}
+
 void XNav::clear()
 {
   brow_DeleteAll(brow->ctx);
@@ -4177,6 +4327,36 @@ int ApplList::find_graph_next(const char* name, char* instance, void** ctx)
           if (str_NoCaseStrcmp(instance, elem->instance) == 0)
             found = 1;
         }
+      }
+    }
+  }
+  return 0;
+}
+
+int ApplList::find_dashboard_first(void** ctx)
+{
+  ApplListElem* elem;
+
+  for (elem = root; elem; elem = elem->next) {
+    *ctx = elem->ctx;
+    return 1;
+  }
+  return 0;
+}
+
+int ApplList::find_dashboard_next(void *from_ctx, void** ctx)
+{
+  ApplListElem* elem;
+
+  int found = 0;
+  for (elem = root; elem; elem = elem->next) {
+    if (elem->type == applist_eType_Dashboard) {
+      if (!found) {
+	if (elem->ctx == from_ctx)
+	  found = 1;
+      } else {
+	*ctx = elem->ctx;
+	return 1;
       }
     }
   }
