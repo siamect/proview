@@ -1763,7 +1763,8 @@ supplying the object with the /object qualifier.
 
 <B>xtt> set subwindow 'graphname' /name= /source= [/object=]
 
-'graphname' <t>the graph where the window object resides.
+'graphname' <t>the graph where the window object resides. '$current'
+        <t> denotes the current graph.
 /name	<t>the name of the window object.
 /source	<t>name of the Ge graph to view in the window object.
 /object	<t>specifies the object when the graph is an object graph.
@@ -2864,6 +2865,7 @@ GetUser()		<LINK> getuser()
 GetPrivileges()		<LINK> getprivileges()
 GetGraphInstance()	<LINK> getgraphinstance()
 GetGraphInstanceNext()	<LINK> getgraphinstancenext()
+SetSubwindow()		<LINK> SetSubwindow()
 Quit()			<LINK> quit()
 
 <h2>xtt-commands
@@ -4224,6 +4226,7 @@ GetUser() 	<t>Get the current user. <LINK> getuser()
 GetPrivileges()	<t>Get the privileges for the current user. <LINK> getprivileges()
 GetGraphInstance() <t>Get the instance object for a graph. <LINK> getgraphinstance()
 GetGraphInstanceNext() <t>Get the instance object for next graph. <LINK> getgraphinstancenext()
+SetSubwindow() 	<t>Set graph for a Ge Window objekt. <LINK> SetSubwindow()
 Quit() 		<t>Quit the operator environment. <LINK> quit()
 </TOPIC>
 
@@ -4533,6 +4536,39 @@ string		<t>previous	<t>Previous instance.
 <c>    printf( "Instance %s\n", instance);
 <c>    instance = GetGraphInstanceNext( "$pwr_exe/pwr_c_dv.pwg", instance);
 <c>  endwile
+</TOPIC>
+
+<TOPIC> setsubwindow() <style> function
+SetSubwindow()
+
+string SetSubwindow(string graph, string window, string source, [string object, int self])
+
+<b>Description
+
+View a graph in a Ge window object. This command is used on command
+buttons to change the content of a window object. source contains the
+name of the graph to be viewed. Also object graphs can be viewed by
+supplying the object in the object argument.
+If the function is executed in the window that is replaced, the self argument
+should be 1.
+
+<b>Arguments
+
+string		<t>graph	<t>Graph name.
+string		<t>window	<t>Name of Ge window object.
+string		<t>source	<t>pwg-file or ge scrip that should be
+                                <t><t>inserted into the window.
+string		<t>object	<t>Instance object if source is an object graph.
+int		<t>self		<t>Should be 1 if the function is executed
+				<t><t>in the window that is replaced.
+<b>Example pwg file
+
+<c>  SetSubwindow("$current", "W1", "motor1.pwg", 0, 1);
+
+<b>Example script file
+
+<c>  SetSubwindow("$current", "W1", "@m1script", 0, 1);
+
 </TOPIC>
 
 <TOPIC> quit() <style> function

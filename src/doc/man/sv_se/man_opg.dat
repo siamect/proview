@@ -1779,7 +1779,7 @@ att aktuellt objekt med /object.
 <B>xtt> set subwindow 'graphname' /name= /source= [/object=]
 
 'graphname' <t>den graf där window objektet ligger.
-/name	<t>namn på window objektet.
+/name	<t>namn på window objektet. '$current' anger nuvarande graf.
 /source	<t>namn på den Ge graf som ska visas i window objektet.
 /object	<t>anger aktuellt objekt när grafen är en objekts-bild.
 /x0	<t>Övre vänstra x-koordinaten i Ge för grafens gräns. Om x0, y0, x1, y1
@@ -2638,6 +2638,7 @@ GetUser()		<LINK> getuser()
 GetPrivileges()		<LINK> getprivileges()
 GetGraphInstance()	<LINK> getgraphinstance()
 GetGraphInstanceNext()	<LINK> getgraphinstancenext()
+SetSubwindow()		<LINK> SetSubwindow()
 Quit()			<LINK> quit()
 
 <h2>xtt-commands
@@ -3989,6 +3990,7 @@ GetUser() 	<t>Hämta nuvarande användare. <LINK> getuser()
 GetPrivileges()	<t>Hämta privilegier för nuvarande användare. <LINK> getprivileges()
 GetGraphInstance() <t>Hämta instansobjekt för en objektgraf. <LINK> getgraphinstance()
 GetGraphInstanceNext() <t>Hämta instansobjekt för nästa graf. <LINK> getgraphinstancenext()
+SetSubwindow() 	<t>Set graf för ett Ge Window-objekt. <LINK> SetSubwindow()
 Quit() 		<t>Avsluta operatörsmiljön. <LINK> quit()
 </TOPIC>
 
@@ -4298,6 +4300,39 @@ string		<t>previous	<t>Föregående instans.
 <c>    printf( "Instance %s\n", instance);
 <c>    instance = GetGraphInstanceNext( "$pwr_exe/pwr_c_dv.pwg", instance);
 <c>  endwile
+</TOPIC>
+
+
+<TOPIC> setsubwindow() <style> function
+SetSubwindow()
+
+string SetSubwindow(string graph, string window, string source, [string object, int self])
+
+<b>Beskrivning
+
+Visar en graf in ett Ge window objekt. Kommandot används i kommando
+knappar för att byta innehållet i ett window objekt. source anger
+namnet på den graf som ska visas. Även objekt-bilder kan visas genom
+att aktuellt objekt med object argumentet. 
+
+Om funktionen exekveras i fönstret som byts ut, ska self argumentet vara 1.
+
+<b>Argument
+
+string		<t>graph	<t>Namn på graf.
+string		<t>window	<t>Namn på Ge windowobjekt.
+string		<t>source	<t>pwg-fil or ge scrip som ska visas i
+                                <t><t>window objektet.
+string		<t>object	<t>Instansobjekt om grafen är en objektsbild.
+int		<t>self		<t>Ska vara 1 om funktionen exekveras i det
+				<t><t>fönster vars innehåll byts ut.
+<b>Exempel pwg-fil
+
+<c>  SetSubwindow("$current", "W1", "motor1.pwg", 0, 1);
+
+<b>Exempel script-fil
+
+<c>  SetSubwindow("$current", "W1", "@m1script", 0, 1);
 </TOPIC>
 
 <TOPIC> quit() <style> function

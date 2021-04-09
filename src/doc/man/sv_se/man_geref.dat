@@ -6112,6 +6112,8 @@ funktioner. Här följer en lista på de inbyggda funktioner som även kan användas 
 BuildGraph <t><t>Bygg aktuell graph .<link>BuildGraph()
 ClearAll <t><t>Ta bort alla objekt i grafen.<link>ClearAll()
 CreateArc <t><t>Skapa ett Arc objekt.<link>CreateArc()
+CreateAxis <t><t>Skapa ett Axis objekt.<link>CreateAxis()
+CreateAxisArc <t><t>Skapa ett AxisArc objekt.<link>CreateAxisArc()
 CreateBar <t><t>Skapa ett Bar objekt.<link>CreateBar()
 CreateBarArc <t><t>Skapa ett BarArc objekt.<link>CreateBarArc()
 CreateDsTrend <t><t>Skapa ett DsTrend objekt.<link>CreateDsTrend()
@@ -6233,7 +6235,10 @@ Det finns ett antal fördefinierade variabler för
 
 Objekttyper <link> gecmd_variables,objecttypes
 Dynamik och aktionstyper <link> gecmd_variables,dyntypes
+Fonter <link> gecmd_variables,fonts
+Riktning <link> gecmd_variables,directions
 Färger <link> gecmd_variables,colors
+Access <link> gecmd_variables,access
 <option> printenable
 
 </topic>
@@ -6342,6 +6347,21 @@ mActionType1_MethodToolbar
 mActionType1_MethodPulldownMenu
 mActionType1_Script
 
+
+<h2>Fonter <bookmark> fonts
+eFont_Helvetica
+eFont_Times
+eFont_NewCenturySchoolbook
+eFont_Courier
+eFont_LucidaSans
+
+<h2>Riktning <bookmark> directions
+eDirection_Center
+eDirection_Right
+eDirection_Left
+eDirection_Up
+eDirection_Down
+
 <h2>Colors <bookmark> colors
 <b>Standardpalett
 eDrawType_Color1 = 0
@@ -6408,9 +6428,75 @@ Returnerar objektets identitet.
 <c> id = CreateArc(2.0, 2.0, 3.0, 3.0, 0, 180);
 </topic>
 
+<topic>CreateAxis() <style>function
+CreateAxis()
+int CreateAxis(float x1, float y1 [,float x2, float y2, int colortheme, int dynamic, int direction])
+
+<h2>Beskrivning
+Skapa ett axis objekt.
+
+<h2>Argument
+
+float  <t>x1    <t>X koordinat för övre vänstra hörnet.
+float  <t>y1    <t>Y koordinat för övre vänstra hörnet.
+float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+int    <t>colortheme <t>1 om färgtema färger ska användas, annars 0. Optional.
+int    <t>dynamic <t>Dynamisk axis (1) eller static (0). Optional.
+int    <t>direction <t>Riktning upp, ner, vänster eller höger. Anges med
+                 <t><t>symbolerna eDirection_Up, eDirection_Down,
+                 <t><t>eDirection_Left och eDirection_Right. Optional.
+
+Returnerar objektets identitet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateAxis(1.0, 1.0, 10.0, 2.0, 0, 0, eDirection_Down);
+<c> SetObjectAttribute(id, "MaxValue", 100.0);
+<c> SetObjectAttribute(id, "MinValue", -100.0);
+</topic>
+
+<topic>CreateAxisArc() <style>function
+CreateAxisArc()
+int CreateAxisArc(float x1, float y1 [,float x2, float y2, int colortheme, int dynamic, int direction])
+
+<h2>Beskrivning
+Skapa ett axis arc objekt.
+
+<h2>Argument
+
+float  <t>x1    <t>X koordinat för övre vänstra hörnet.
+float  <t>y1    <t>Y koordinat för övre vänstra hörnet.
+float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+int    <t>colortheme <t>1 om färgtema färger ska användas, annars 0. Optional.
+int    <t>dynamic <t>Dynamisk axis (1) eller static (0). Optional.
+int    <t>direction <t>Riktning upp, ner, vänster eller höger. Anges med
+                 <t><t>symbolerna eDirection_Up, eDirection_Down,
+                 <t><t>eDirection_Left och eDirection_Right. Optional.
+
+Returnerar objektets identitet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateAxisArc(1.0, 1.0, 5.0, 4.0, 0, 0);
+<c> SetObjectAttribute(id, "MaxValue", 100.0);
+<c> SetObjectAttribute(id, "MinValue", -100.0);
+<c> SetObjectAttribute(id, "Angle1", -45);
+<c> SetObjectAttribute(id, "Angle2", 270);
+</topic>
+
 <topic>CreateBar() <style>function
 CreateBar()
-int CreateBar(float x1, float y1 [,float x2, float y2, int colortheme])
+int CreateBar(float x1, float y1 [,float x2, float y2, int colortheme, int direction])
 
 <h2>Beskrivning
 Skapa ett bar objekt.
@@ -6424,6 +6510,9 @@ float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
 float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
                 <t><t>ska skalas. Optional.
 int    <t>colortheme <t>1 om färgtema färger ska användas, annars 0. Optional.
+int    <t>direction <t>Riktning upp, ner, vänster eller höger. Anges med
+                 <t><t>symbolerna eDirection_Up, eDirection_Down,
+                 <t><t>eDirection_Left och eDirection_Right. Optional.
 
 Returnerar id för det skapade objektet.
 
@@ -6431,7 +6520,7 @@ Returnerar id för det skapade objektet.
  
 <c> int id;
 <c>
-<c> id = CreateBar(2.0, 2.0, 2.5, 5.0, 1);
+<c> id = CreateBar(2.0, 2.0, 2.5, 5.0, 1, eDirection_Up);
 <c> SetObjectAttribute(id, "Bar.Attribute", "H1-Av1.ActualValue##Float32");
 <c> SetObjectAttribute(id, "Bar.MaxValue", 100.0);
 <c> SetObjectAttribute(id, "Bar.MinValue", -100.0);
@@ -6464,6 +6553,8 @@ Returnerar id för det skapade objektet.
 <c> SetObjectAttribute(id, "Bar.Attribute", "H1-Av1.ActualValue##Float32");
 <c> SetObjectAttribute(id, "BarArc.MaxValue", 100.0);
 <c> SetObjectAttribute(id, "BarArc.MinValue", -100.0);
+<c> SetObjectAttribute(id, "BarArc.Angle1", -45);
+<c> SetObjectAttribute(id, "BarArc.Angle2", 270);
 </topic>
 
 <topic>CreateDsTrend() <style>function
@@ -7235,7 +7326,7 @@ dvs 310, 314, 318, ... 666.
 
 <topic>GetTextExtent() <style>function
 GetTextExtent()
-int GetTextExtent( string text, int textsize, int bold, float widht [, float height, 
+int GetTextExtent( string text, int textsize, int font, int bold, float widht [, float height, 
 float descent])
 
 <h2>Beskrivning
@@ -7247,7 +7338,7 @@ Returnerar text-bredden i width argumentet, och om argumentet height och descent
 <h2>Argument
 
 string <t>text     <t>Text vars storlek ska beräknas.
-int    <t>textsize <t>Textstorlek (8, 10, 12, 14, 18 eller 24).
+int    <t>textsize <t>Textstorleksindex (0-5)).
 int    <t>bold     <t>Fet (1) eller normal (0) text.
 float  <t>width    <t>Textens bredd returneras i denna variabel.
 float  <t>height   <t>Höjden på texten returneras i denna variabel.
@@ -7256,7 +7347,7 @@ float  <t>descent  <t>Textens descent returneras i denna variabel.
 <b>Exempel
 <c> float width;
  
-<c> GetTextExtent("Detta är en text", 12, 1, width);
+<c> GetTextExtent("Detta är en text", 3, eFont_LucidaSans, 1, width);
 </topic>
 
 <topic>GroupGetFirstObject() <style>function

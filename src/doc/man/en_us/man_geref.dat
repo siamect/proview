@@ -6205,6 +6205,8 @@ functions. Here follows a list of build in functions that also can be used in Ge
 BuildGraph <t><t>Build the current graph.<link>BuildGraph()
 ClearAll <t><t>Remove all objects.<link>ClearAll()
 CreateArc <t><t>Create an Arc object.<link>CreateArc()
+CreateAxis <t><t>Create an Axis object.<link>CreateAxis()
+CreateAxisArc <t><t>Create an AxisArc object.<link>CreateAxisArc()
 CreateBar <t><t>Create a Bar object.<link>CreateBar()
 CreateBarArc <t><t>Create a BarArc object.<link>CreateBarArc()
 CreateDsTrend <t><t>Create a DsTrend object.<link>CreateDsTrend()
@@ -6327,6 +6329,8 @@ There are a number of predefined varlables for
 
 Object types <link> gecmd_variables,objecttypes
 Dynamic and action types <link> gecmd_variables,dyntypes
+Fonts <link> gecmd_variables,fonts
+Directions <link> gecmd_variables,directions
 Colors <link> gecmd_variables,colors
 Access <link> gecmd_variables,access
 <option> printenable
@@ -6437,6 +6441,20 @@ mActionType1_MethodToolbar
 mActionType1_MethodPulldownMenu
 mActionType1_Script
 
+<h2>Fonts <bookmark> fonts
+eFont_Helvetica
+eFont_Times
+eFont_NewCenturySchoolbook
+eFont_Courier
+eFont_LucidaSans
+
+<h2>Directions <bookmark> directions
+eDirection_Center
+eDirection_Right
+eDirection_Left
+eDirection_Up
+eDirection_Down
+
 <h2>Colors <bookmark> colors
 <b>Standard palette
 eDrawType_Color1 = 0
@@ -6540,9 +6558,75 @@ Returns the id of the created object.
 <c> id = CreateArc(2.0, 2.0, 3.0, 3.0, 0, 180);
 </topic>
 
+<topic>CreateAxis() <style>function
+CreateAxis()
+int CreateAxis(float x1, float y1 [,float x2, float y2, int colortheme, int dynamic, int direction])
+
+<h2>Description
+Create an axis object.
+
+<h2>Argument
+
+float  <t>x1    <t>X coordinate of upper left corner.
+float  <t>y1    <t>Y coordinate of upper left corner.
+float  <t>x2    <t>X coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+float  <t>y2    <t>Y coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+int    <t>colortheme <t>1 if colortheme colors should be used, else 0. Optional.
+int    <t>dynamic <t>Dynamic axis (1) or static (0). Optional.
+int    <t>direction <t>Direction up, down, left or right. Specified 
+                 <t><t>with symbols eDirection_Up, eDirection_Down,
+                 <t><t>eDirection_Left and eDirection_Right. Optional.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateAxis(1.0, 1.0, 10.0, 2.0, 0, 0, eDirection_Down);
+<c> SetObjectAttribute(id, "MaxValue", 100.0);
+<c> SetObjectAttribute(id, "MinValue", -100.0);
+</topic>
+
+<topic>CreateAxisArc() <style>function
+CreateAxisArc()
+int CreateAxisArc(float x1, float y1 [,float x2, float y2, int colortheme, int dynamic, int direction])
+
+<h2>Description
+Create an axis arc object.
+
+<h2>Argument
+
+float  <t>x1    <t>X coordinate of upper left corner.
+float  <t>y1    <t>Y coordinate of upper left corner.
+float  <t>x2    <t>X coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+float  <t>y2    <t>Y coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+int    <t>colortheme <t>1 if colortheme colors should be used, else 0. Optional.
+int    <t>dynamic <t>Dynamic axis (1) or static (0). Optional.
+int    <t>direction <t>Direction up, down, left or right. Specified 
+                 <t><t>with symbols eDirection_Up, eDirection_Down,
+                 <t><t>eDirection_Left and eDirection_Right. Optional.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreateAxisArc(1.0, 1.0, 5.0, 4.0, 0, 0);
+<c> SetObjectAttribute(id, "MaxValue", 100.0);
+<c> SetObjectAttribute(id, "MinValue", -100.0);
+<c> SetObjectAttribute(id, "Angle1", -45);
+<c> SetObjectAttribute(id, "Angle2", 270);
+</topic>
+
 <topic>CreateBar() <style>function
 CreateBar()
-int CreateBar(float x1, float y1 [,float x2, float y2, int colortheme])
+int CreateBar(float x1, float y1 [,float x2, float y2, int colortheme, int direction])
 
 <h2>Description
 Create a bar object.
@@ -6556,6 +6640,9 @@ float  <t>x2    <t>X coordinate of lower right corner if the object
 float  <t>y2    <t>Y coordinate of lower right corner if the object 
                 <t><t>should be scaled. Optional.
 int    <t>colortheme <t>1 if colortheme colors should be used, else 0. Optional.
+int    <t>direction <t>Direction up, down, left or right. Specified 
+                 <t><t>with symbols eDirection_Up, eDirection_Down,
+                 <t><t>eDirection_Left and eDirection_Right. Optional.
 
 Returns the id of the created object.
 
@@ -6563,7 +6650,7 @@ Returns the id of the created object.
  
 <c> int id;
 <c>
-<c> id = CreateBar(2.0, 2.0, 2.5, 5.0, 1);
+<c> id = CreateBar(2.0, 2.0, 2.5, 5.0, 1, eDirection_Down);
 <c> SetObjectAttribute(id, "Bar.Attribute", "H1-Av1.ActualValue##Float32");
 <c> SetObjectAttribute(id, "Bar.MaxValue", 100.0);
 <c> SetObjectAttribute(id, "Bar.MinValue", -100.0);
@@ -6592,10 +6679,12 @@ Returns the id of the created object.
  
 <c> int id;
 <c>
-<c> id = CreateBarArc(2.0, 2.0, 2.5, 5.0, 1);
+<c> id = CreateBarArc(2.0, 2.0, 5.0, 4.0, 1);
 <c> SetObjectAttribute(id, "Bar.Attribute", "H1-Av1.ActualValue##Float32");
 <c> SetObjectAttribute(id, "BarArc.MaxValue", 100.0);
 <c> SetObjectAttribute(id, "BarArc.MinValue", -100.0);
+<c> SetObjectAttribute(id, "BarArc.Angle1", -45);
+<c> SetObjectAttribute(id, "BarArc.Angle2", 270);
 </topic>
 
 <topic>CreateDsTrend() <style>function
@@ -7395,7 +7484,8 @@ are supplied, also height and descent in these arguments.
 <h2>Argument
 
 string <t>text     <t>Text which size is to be measured.
-int    <t>textsize <t>Text size (8, 10, 12, 14, 18 of 24).
+int    <t>textsize <t>Text size index (0-5).
+int    <t>font     <t>Text font.
 int    <t>bold     <t>Bold (1) or normal (0) text.
 float  <t>width    <t>The text width is returned in this variable.
 float  <t>height   <t>The height is returned in this variable.
@@ -7404,7 +7494,7 @@ float  <t>descent  <t>The descent is returned in this variable.
 <b>Example
 <c> float width;
  
-<c> GetTextExtent("This is a text", 12, 1, width);
+<c> GetTextExtent("This is a text", 3, eFont_LucidaSans, 1, width);
 </topic>
 
 
