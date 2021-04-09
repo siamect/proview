@@ -166,6 +166,7 @@ E 1.5.7 "_Remove Blocking"
 E 1.5.8 "Navigator for supervisory object"
 E 1.5.9 "Open Plc for supervisory object"
 E 1.5.10 "Acknowledge"
+E 1.5.11 "A_cknowledge All"
 #
 # Object editor
 E 1.6.1 "C_lose Change Value"
