@@ -179,6 +179,9 @@ function Gdh() {
   this.next_id = 1234;
   this.subscriptionCount = 1;
   this.listSend = false;
+  this.listContinue = false;
+  this.listCnt = 0;
+  this.listId = 0;
 
   this.init = function() {
     if ( window.location.hostname === "")
@@ -281,9 +284,14 @@ function Gdh() {
 	  }
 	  case Msg.REF_OBJECT_INFO_LIST: {
 	    if ( this.gdh.debug) console.log("RefObjectInfoList received", id, sts);
-	    var func_cb = this.gdh.pending[id].func_cb;
-	    func_cb( id, sts);
-	    delete this.gdh.pending[id];
+	    if ( this.gdh.listContinue) {
+	      this.gdh.refObjectInfoList(null);
+	    }
+            else {
+	      var func_cb = this.gdh.pending[this.gdh.listId].func_cb;
+	      func_cb( this.gdh.listId, sts);
+	      delete this.gdh.pending[this.gdh.listId];
+            }
 	    break;
 	  }
 	  case Msg.GET_OBJECT_REF_INFO_ALL: {
@@ -1219,11 +1227,19 @@ function Gdh() {
     var size = 0;
     var len = 0;
 
-    this.return_cb = return_cb;
+    if (!this.listContinue)
+      this.return_cb = return_cb;
+
+    this.listContinue = false;
 
     for( var i in this.sub) {
-      size += 12 + this.sub[i].name.length;
-      len++;
+      if (parseInt(i) > parseInt(this.listCnt)) {
+        size += 12 + this.sub[i].name.length;
+        len++;
+        if (i - this.listCnt > 800) {
+          break;
+        }
+      }
     }
     var buf = new Uint8Array(size+10);
     buf[0] = Msg.REF_OBJECT_INFO_LIST;
@@ -1239,25 +1255,37 @@ function Gdh() {
     for ( var i in this.sub) {
       if ( i === 0)
 	continue;
-      if ( this.debug) console.log("RefObjectInfoList: ", this.sub[i].refid);
-      buf[k++] = this.sub[i].refid & 0xFF;
-      buf[k++] = (this.sub[i].refid >> 8) & 0xFF;
-      buf[k++] = (this.sub[i].refid >> 16) & 0xFF;
-      buf[k++] = (this.sub[i].refid >> 24) & 0xFF;
-      buf[k++] = this.sub[i].elements & 0xFF;
-      buf[k++] = (this.sub[i].elements >> 8) & 0xFF;
-      buf[k++] = (this.sub[i].elements >> 16) & 0xFF;
-      buf[k++] = (this.sub[i].elements >> 24) & 0xFF;
-      buf[k++] = this.sub[i].name.length & 0xFF;
-      buf[k++] = (this.sub[i].name.length >> 8) & 0xFF;
-      buf[k++] = (this.sub[i].name.length >> 16) & 0xFF;
-      buf[k++] = (this.sub[i].name.length >> 24) & 0xFF;
+      if (parseInt(i) > parseInt(this.listCnt)) {
+        if ( this.debug) console.log("RefObjectInfoList: ", this.sub[i].refid);
+        buf[k++] = this.sub[i].refid & 0xFF;
+        buf[k++] = (this.sub[i].refid >> 8) & 0xFF;
+        buf[k++] = (this.sub[i].refid >> 16) & 0xFF;
+        buf[k++] = (this.sub[i].refid >> 24) & 0xFF;
+        buf[k++] = this.sub[i].elements & 0xFF;
+        buf[k++] = (this.sub[i].elements >> 8) & 0xFF;
+        buf[k++] = (this.sub[i].elements >> 16) & 0xFF;
+        buf[k++] = (this.sub[i].elements >> 24) & 0xFF;
+        buf[k++] = this.sub[i].name.length & 0xFF;
+        buf[k++] = (this.sub[i].name.length >> 8) & 0xFF;
+        buf[k++] = (this.sub[i].name.length >> 16) & 0xFF;
+        buf[k++] = (this.sub[i].name.length >> 24) & 0xFF;
 
-      for ( var j = 0; j < this.sub[i].name.length; j++) {
-	buf[k++] = this.sub[i].name.charCodeAt(j);
+        for ( var j = 0; j < this.sub[i].name.length; j++) {
+	  buf[k++] = this.sub[i].name.charCodeAt(j);
+        }
+        if (parseInt(i) - parseInt(this.listCnt) > 800) {
+          this.listContinue = true;
+          this.listCnt = i;
+          break;
+        }
       }
     }
-    this.pending[this.next_id] = new PendingData( return_cb, null);
+    if (!this.listContinue)
+      this.listCnt = 0;
+    if (return_cb != null) {
+      this.listId = this.next_id;
+      this.pending[this.next_id] = new PendingData( return_cb, null);
+    }
     if ( this.debug) console.log( "Sending RefObjectInfoList", this.next_id, size, k, this.next_id);
     this.ws.send(buf);
 
