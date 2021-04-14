@@ -151,13 +151,7 @@ public:
   */
   void measure_annotation(int num, char* text, double* width, double* height);
 
-  void measure(double* ll_x, double* ll_y, double* ur_x, double* ur_y)
-  {
-    *ll_x = x_left;
-    *ll_y = y_low;
-    *ur_x = x_right;
-    *ur_y = y_high;
-  }
+  void measure(double* ll_x, double* ll_y, double* ur_x, double* ur_y);
 
   double x_right; //!< Right border of object.
   double x_left; //!< Left border of object.

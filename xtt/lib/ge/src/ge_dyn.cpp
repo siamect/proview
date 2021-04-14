@@ -13263,7 +13263,7 @@ void GePie::get_attributes(attr_sItem* attrinfo, int* item_count)
   int i = *item_count;
 
   for (int j = 0; j < PIE_MAX_SECTORS; j++) {
-    sprintf(attrinfo[i].name, "Pie.Attribute%d", j);
+    sprintf(attrinfo[i].name, "Pie.Attribute%d", j+1);
     attrinfo[i].value = attribute[j];
     attrinfo[i].type = glow_eType_String;
     attrinfo[i++].size = sizeof(attribute[0]);
@@ -13445,8 +13445,11 @@ int GePie::scan(grow_tObject object)
   switch (attr_type) {
   case pwr_eType_Float32: {
     pwr_tFloat32 val[PIE_MAX_SECTORS];
-    for (i = 0; i < sectors; i++)
+    for (i = 0; i < sectors; i++) {
+      if (p[i] == 0)
+	return 1;
       val[i] = *p[i];
+    }
     if (!first_scan) {
       int update = 0;
       for (i = 0; i < sectors; i++) {
@@ -13505,7 +13508,7 @@ int GePie::syntax_check(grow_tObject object, int* error_cnt, int* warning_cnt)
   graph_eDatabase databases[] = { graph_eDatabase_Gdh, graph_eDatabase__ };
 
   for (int i = 0; i < PIE_MAX_SECTORS; i++) {
-    sprintf(atext, "Pie.Attribute%d", i);
+    sprintf(atext, "Pie.Attribute%d", i+1);
     dyn->syntax_check_attribute(object, atext, attribute[i], i == 0 ? 0 : 1,
         types, databases, error_cnt, warning_cnt);
   }

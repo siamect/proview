@@ -59,17 +59,28 @@ html_sources := $(sort \
              ) \
            )
 
+ge_com_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/dash_c_*.ge_com) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
 export_pwg := $(addprefix $(exe_dir)/,$(pwg_c_sources)) $(addprefix $(exe_dir)/,$(pwg_t_sources))
 export_pwsg := $(addprefix $(exe_dir)/,$(pwsg_sources))
 export_pwgc := $(addprefix $(exe_dir)/,$(pwgc_sources))
 export_web_pwgc := $(addprefix $(web_dir)/,$(pwgc_sources))
 export_html := $(addprefix $(exe_dir)/,$(html_sources))
+export_ge_com := $(addprefix $(exe_dir)/,$(ge_com_sources))
 clean_pwsg := $(patsubst %.pwg,clean_%.pwsg,$(sources))
 clean_pwg := $(patsubst %.pwg,clean_%.pwg,$(sources))
 clean_pwgc := $(patsubst %.pwgc,clean_%.pwgc,$(sources))
 clean_html := $(patsubst %.html,clean_%.html,$(sources))
-export_ge := $(export_pwg) $(export_pwsg) $(export_pwgc) $(export_html)
-clean_ge := $(clean_pwg) $(clean_pwsg) $(clean_pwgc) $(clean_html)
+clean_ge_com := $(patsubst %.ge_com,clean_%.ge_com,$(sources))
+export_ge := $(export_pwg) $(export_pwsg) $(export_pwgc) $(export_html) $(export_ge_com)
+clean_ge := $(clean_pwg) $(clean_pwsg) $(clean_pwgc) $(clean_html) $(clean_ge_com)
 export_web := $(export_web_pwgc)
 clean_web := $(patsubst %.pwgc,clean_%.pwgc,$(sources))
 .SUFFIXES:
@@ -109,6 +120,9 @@ $(clean_pwgc) : clean_%.pwgc : %.pwgc
 
 $(clean_html) : clean_%.html : %.html
 	@ $(rm) $(rmflags) $(exe_dir)/$*.html
+
+$(clean_ge_com) : clean_%.ge_com : %.ge_com
+	@ $(rm) $(rmflags) $(exe_dir)/$*.ge_com
 
 $(clean_web) : clean_%.pwgc : %.pwgc
 	@ $(rm) $(rmflags) $(web_dir)/$*.pwgc

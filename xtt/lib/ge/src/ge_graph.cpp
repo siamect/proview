@@ -2787,7 +2787,7 @@ static int graph_grow_cb(GlowCtx* ctx, glow_tEvent event)
       } else if (streq(sub_name, "pwr_pie")) {
         grow_tObject t1;
         graph->create_pie(
-            &t1, event->create_grow_object.x, event->create_grow_object.y);
+	    &t1, event->create_grow_object.x, event->create_grow_object.y, 0);
       } else if (streq(sub_name, "pwr_barchart")) {
         grow_tObject t1;
         graph->create_barchart(
@@ -6065,7 +6065,7 @@ void Graph::create_axisarc(
   }
 }
 
-void Graph::create_pie(grow_tObject* object, double x, double y)
+void Graph::create_pie(grow_tObject* object, double x, double y, int colortheme)
 {
   GeDyn* dyn;
   double width = 5;
@@ -6078,8 +6078,24 @@ void Graph::create_pie(grow_tObject* object, double x, double y)
   double values[12] = { 8.333, 8.333, 8.333, 8.333, 8.333, 8.333, 8.333, 8.333,
     8.333, 8.333, 8.333, 8.333 };
 
+  glow_eDrawType backgroundcolor, bordercolor;
+
+  if (colortheme) {
+    backgroundcolor = glow_eCtColor_BarBackgroundColor;
+    bordercolor = glow_eDrawType_Line;
+    color[0] = glow_eCtColor_BlueIndicator;
+    color[1] = glow_eCtColor_OrangeIndicator;
+    color[2] = glow_eCtColor_GreenIndicator;
+    color[3] = glow_eCtColor_MagentaIndicator;
+    color[4] = glow_eCtColor_YellowIndicator;
+    color[5] = glow_eCtColor_RedIndicator;
+  } else {
+    backgroundcolor = glow_eDrawType_Color38;
+    bordercolor = glow_eDrawType_Line;
+  }
+
   grow_CreateGrowPie(grow->ctx, get_next_object_name("O", ""), x, y, x + width,
-      y + height, 0, 360, glow_eDrawType_Line, 1, 1, 0, glow_eDrawType_Color38,
+      y + height, 0, 360, bordercolor, 1, 1, 0, backgroundcolor,
       NULL, object);
 
   grow_SetPieConf(*object, 12, 0, 100, color);
@@ -6277,10 +6293,16 @@ void Graph::create_dashcell(grow_tObject* object, double x, double y, int colort
   double height;
   int columns, rows;
   GeDyn* dyn;
+  glow_eDrawType bordercolor;
+
+  if (colortheme)
+    bordercolor = glow_eCtColor_LineDelimiter;
+  else
+    bordercolor = glow_eDrawType_Line;
 
   grow_GetDashboardInfo(grow->ctx, &width, &height, &columns, &rows);
   grow_CreateGrowDashCell(grow->ctx, get_next_object_name("O", ""), x, y, width,
-      height, glow_eDrawType_Line, NULL, object);
+      height, bordercolor, NULL, object);
   dyn = new GeDyn(this);
   dyn->dyn_type1 = dyn->total_dyn_type1 = ge_mDynType1_Bar;
   dyn->update_elements();

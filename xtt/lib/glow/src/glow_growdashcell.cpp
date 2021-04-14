@@ -162,7 +162,6 @@ void GrowDashCell::open(std::ifstream& fp)
 
 void GrowDashCell::update_attributes()
 {
-  printf("here in update attributes\n");
   if (cell_rows != cell_rows_old || cell_columns != cell_columns_old) {
     erase(&ctx->mw, (GlowTransform*)NULL, hot, NULL);
     erase(&ctx->navw, (GlowTransform*)NULL, hot, NULL);

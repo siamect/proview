@@ -57,6 +57,7 @@ typedef enum {
   ge_eDashType_Gauge,
   ge_eDashType_Gauge2,
   ge_eDashType_Slider,
+  ge_eDashType_Pie,
   ge_eDashType_Indicator,
   ge_eDashType_DigitalTrend
 } ge_eDashType;

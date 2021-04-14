@@ -3629,8 +3629,8 @@ static int graph_createaxis_func(void* filectx, ccm_sArg* arg_list,
     grow_StoreTransform(n1);
     break;
   case glow_eDirection_Down:
-    // Default bar has width 1.0 and height 5.0
-    graph->create_axis(&n1, x1, y1 + 1.0, dynamic, colortheme);
+    // Default bar has width 1.2 and height 5.0
+    graph->create_axis(&n1, x1, y1 + 1.2, dynamic, colortheme);
     grow_SelectClear(graph->grow->ctx);
     grow_SelectInsert(graph->grow->ctx, n1);
     grow_RotateSelectedObjects(graph->grow->ctx, -90.0, glow_eRotationPoint_LowerLeft);
@@ -3745,6 +3745,91 @@ static int graph_createaxisarc_func(void* filectx, ccm_sArg* arg_list,
   graph_get_stored_graph(&graph);
 
   graph->create_axisarc(&n1, x1, y1, dynamic, colortheme);
+
+  if (scale_x || scale_y) {
+    grow_MeasureNode(n1, &ll_x, &ll_y, &ur_x, &ur_y);
+    if (scale_x)
+      sx = (x2 - x1) / (ur_x - ll_x);
+    else
+      sx = 1;
+    if (scale_y)
+      sy = (y2 - y1) / (ur_y - ll_y);
+    else
+      sy = 1;
+    grow_StoreTransform(n1);
+    grow_SetObjectScale(n1, sx, sy, x1, y1, glow_eScaleType_LowerLeft);
+  }
+  graph->current_cmd_object = n1;
+
+  grow_SetModified(graph->grow->ctx, 1);
+
+  *return_int = (long int)graph->current_cmd_object;
+  *return_decl = CCM_DECL_INT;
+  return 1;
+}
+
+static int graph_createpie_func(void* filectx, ccm_sArg* arg_list,
+    int arg_count, int* return_decl, ccm_tFloat* return_float,
+    ccm_tInt* return_int, char* return_string)
+{
+  Graph* graph;
+  ccm_sArg* arg_p2;
+  ccm_sArg* arg_p3;
+  ccm_sArg* arg_p4;
+  ccm_sArg* arg_p5;
+  
+  double x1, y1, x2, y2;
+  grow_tNode n1;
+  int scale_x, scale_y;
+  double sx, sy;
+  double ll_x, ll_y, ur_x, ur_y;
+  int colortheme;
+    
+  if (arg_count < 2 || arg_count > 5)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+
+  if (arg_list->value_decl != CCM_DECL_FLOAT )
+    return CCM__ARGMISM;
+  if (arg_p2->value_decl != CCM_DECL_FLOAT)
+    return CCM__ARGMISM;
+
+  x1 = arg_list->value_float;
+  y1 = arg_p2->value_float;
+
+  if (arg_count >= 3) {
+    arg_p3 = arg_p2->next;
+    if (arg_p3->value_decl != CCM_DECL_FLOAT)
+      return CCM__ARGMISM;
+    scale_x = 1;
+    x2 = arg_p3->value_float;
+  }
+  else
+    scale_x = 0;
+
+  if (arg_count >= 4) {
+    arg_p4 = arg_p3->next;
+    if (arg_p4->value_decl != CCM_DECL_FLOAT)
+      return CCM__ARGMISM;
+    scale_y = 1;
+    y2 = arg_p4->value_float;    
+  }
+  else
+    scale_y = 0;
+
+  if (arg_count >= 5) {
+    arg_p5 = arg_p4->next;
+    if (arg_p5->value_decl != CCM_DECL_INT)
+      return CCM__ARGMISM;
+    colortheme = arg_p5->value_int;
+  }
+  else
+    colortheme = 0;
+
+  graph_get_stored_graph(&graph);
+
+  graph->create_pie(&n1, x1, y1, colortheme);
 
   if (scale_x || scale_y) {
     grow_MeasureNode(n1, &ll_x, &ll_y, &ur_x, &ur_y);
@@ -4434,6 +4519,9 @@ int Graph::script_func_register(void)
   sts = ccm_register_function("Ge", "CreateAxisArc", graph_createaxisarc_func);
   if (EVEN(sts))
     return sts;
+  sts = ccm_register_function("Ge", "CreatePie", graph_createpie_func);
+  if (EVEN(sts))
+    return sts;
   sts = ccm_register_function("Ge", "CreateTrend", graph_createtrend_func);
   if (EVEN(sts))
     return sts;
@@ -5007,6 +5095,41 @@ grow_tObject gsc_CreateBarArc(Graph* graph, double x1, double y1, double x2, dou
   double ll_x, ll_y, ur_x, ur_y;
     
   graph->create_bararc(&n1, x1, y1, colortheme);
+
+  if (x2 == 0 && y2 == 0)
+    scale_x = scale_y = 0;
+  else
+    scale_x = scale_y = 1;
+
+  if (scale_x || scale_y) {
+    grow_MeasureNode(n1, &ll_x, &ll_y, &ur_x, &ur_y);
+    if (scale_x)
+      sx = (x2 - x1) / (ur_x - ll_x);
+    else
+      sx = 1;
+    if (scale_y)
+      sy = (y2 - y1) / (ur_y - ll_y);
+    else
+      sy = 1;
+    grow_StoreTransform(n1);
+    grow_SetObjectScale(n1, sx, sy, x1, y1, glow_eScaleType_LowerLeft);
+  }
+  graph->current_cmd_object = n1;
+
+  grow_SetModified(graph->grow->ctx, 1);
+
+  return graph->current_cmd_object;
+}
+
+grow_tObject gsc_CreatePie(Graph* graph, double x1, double y1, double x2, double y2, 
+    int colortheme)
+{
+  grow_tNode n1;
+  int scale_x, scale_y;
+  double sx, sy;
+  double ll_x, ll_y, ur_x, ur_y;
+    
+  graph->create_pie(&n1, x1, y1, colortheme);
 
   if (x2 == 0 && y2 == 0)
     scale_x = scale_y = 0;
@@ -5893,6 +6016,18 @@ grow_tObject gsc_CreateArc(Graph *graph, double x1, double y1, double x2, double
 		     graph->get_border_drawtype(), graph->linewidth, graph->fill,
 		     graph->border, graph->shadow, graph->get_fill_drawtype(), NULL,
 		     &graph->current_cmd_object);
+  grow_SetModified(graph->grow->ctx, 1);
+
+  return graph->current_cmd_object;
+}
+
+grow_tObject gsc_CreateRectangle(Graph *graph, double x1, double y1, double w, double h)
+{
+  grow_CreateGrowRect(graph->grow->ctx, "", x1, y1, w, h,
+		      graph->get_border_drawtype(), graph->linewidth, 0, glow_mDisplayLevel_1,
+		      graph->fill,
+		      graph->border, graph->shadow, graph->get_fill_drawtype(), NULL,
+		      &graph->current_cmd_object);
   grow_SetModified(graph->grow->ctx, 1);
 
   return graph->current_cmd_object;

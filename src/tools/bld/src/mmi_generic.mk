@@ -78,12 +78,22 @@ pbm_sources := $(sort \
              ) \
            )
 
+ge_com_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/dash_c_*.ge_com) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
 export_uid := $(addprefix $(exe_dir)/, $(patsubst %.uil, %.uid, $(uil_sources)))
 export_c_pwg := $(addprefix $(exe_dir)/, $(pwg_c_sources))
 export_pwg := $(addprefix $(exe_dir)/, $(pwg_sources))
 export_pwsg := $(addprefix $(exe_dir)/, $(pwsg_sources))
 export_png := $(addprefix $(exe_dir)/, $(png_sources))
 export_pbm := $(addprefix $(exe_dir)/, $(pbm_sources))
+export_ge_com := $(addprefix $(exe_dir)/, $(ge_com_sources))
 
 $(exe_dir)/%.uid : %.uil
 	@ $(log_uil_uid)
@@ -95,6 +105,7 @@ clean_pwg := $(patsubst %.pwg,clean_%.pwg,$(pwg_sources))
 clean_pwsg := $(patsubst %.pwsg,clean_%.pwsg,$(pwsg_sources))
 clean_png := $(patsubst %.png,clean_%.png,$(png_sources))
 clean_pbm := $(patsubst %.pbm,clean_%.pbm,$(pbm_sources))
+clean_ge_com := $(patsubst %.ge_com,clean_%.ge_com,$(ge_com_sources))
 
 .PHONY : all init copy lib exe clean realclean\
          dirs clean_bld clean_dirs $(clean_uid)
@@ -103,13 +114,13 @@ all : init copy | silent
 
 init : dirs | silent
 
-copy : $(export_uid) $(export_c_pwg) $(export_pwg) $(export_pwsg) $(export_png) $(export_pbm) | silent
+copy : $(export_uid) $(export_c_pwg) $(export_pwg) $(export_pwsg) $(export_png) $(export_pbm) $(export_ge_com) | silent
 
 lib :
 
 exe :
 
-clean : $(clean_uid) $(clean_pwg) $(clean_pwsg) $(clean_png) $(clean_pbm)
+clean : $(clean_uid) $(clean_pwg) $(clean_pwsg) $(clean_png) $(clean_pbm) $(clean_ge_com)
 
 realclean : clean
 
@@ -141,5 +152,9 @@ $(clean_png) : clean_%.png : %.png
 $(clean_pbm) : clean_%.pbm : %.pbm
 	@ echo "Removing pbm"
 	@ $(rm) $(rmflags) $(exe_dir)/$*.pbm
+
+$(clean_ge_com) : clean_%.ge_com : %.ge_com
+	@ echo "Removing ge_com"
+	@ $(rm) $(rmflags) $(exe_dir)/$*.ge_com
 
 endif

@@ -2319,6 +2319,8 @@ void GrowCtx::open_grow(std::ifstream& fp)
     if (end_found)
       break;
   }
+  if (dashboard)
+    double_buffered = 1;
   if (!is_component) {
     if (double_buffered && mw.window && !mw.double_buffer_on()) {
       mw.set_double_buffer_on(1);

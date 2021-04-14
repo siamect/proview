@@ -52,6 +52,8 @@ grow_tObject gsc_CreateBar(Graph* graph, double x1, double y1, double x2, double
     int colortheme, glow_eDirection direction);
 grow_tObject gsc_CreateBarArc(Graph* graph, double x1, double y1, double x2, double y2, 
     int colortheme);
+grow_tObject gsc_CreatePie(Graph* graph, double x1, double y1, double x2, double y2, 
+    int colortheme);
 int gsc_SetObjectAttribute(Graph* graph, grow_tObject id, const char* aname, void* buff, 
     int btype);
 int gsc_GetObjectAttribute(Graph* graph, grow_tObject id, const char* aname, void* buff, 
@@ -80,6 +82,7 @@ void gsc_CreatePolyLine(Graph *graph, grow_tObject oid, double x, double y);
 void gsc_PolyLineAdd(Graph *graph, grow_tObject oid, double x, double y);
 grow_tObject gsc_CreateArc(Graph *graph, double x1, double y1, double x2, double y2,
     int angle1, int angle2);
+grow_tObject gsc_CreateRectangle(Graph *graph, double x1, double y1, double x2, double y2);
 grow_tObject gsc_CreateLine(Graph *graph, double x1, double y1, double x2, double y2);
 
 #endif

@@ -1032,12 +1032,11 @@ typedef enum {
 #define glow_eCtColor_TableTextcolor glow_eDrawType_CustomColor78
 #define glow_eCtColor_ScrollbarFillcolor glow_eDrawType_CustomColor79
 #define glow_eCtColor_ScrollbarBackground glow_eDrawType_CustomColor80
-#define glow_eCtColor_YellowgreenIndicator glow_eDrawType_CustomColor86
-#define glow_eCtColor_YellowgreenCurve glow_eDrawType_CustomColor87
-#define glow_eCtColor_YellowgreenBar glow_eDrawType_CustomColor88
-#define glow_eCtColor_YellowgreenBarLimit glow_eDrawType_CustomColor89
-#define glow_eCtColor_YellowgreenValuefieldBackground                          \
-  glow_eDrawType_CustomColor90
+#define glow_eCtColor_MagentaIndicator glow_eDrawType_CustomColor86
+#define glow_eCtColor_MagentaCurve glow_eDrawType_CustomColor87
+#define glow_eCtColor_MagentaBar glow_eDrawType_CustomColor88
+#define glow_eCtColor_MagentaBarLimit glow_eDrawType_CustomColor89
+#define glow_eCtColor_MagentaValuefieldBackground glow_eDrawType_CustomColor90
 
 //! Cursors used
 typedef enum {

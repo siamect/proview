@@ -1477,7 +1477,7 @@ public:
       grow_tObject* object, double x, double y, int dynamic, int colortheme);
   void create_axisarc(
       grow_tObject* object, double x, double y, int dynamic, int colortheme);
-  void create_pie(grow_tObject* object, double x, double y);
+  void create_pie(grow_tObject* object, double x, double y, int colortheme);
   void create_barchart(grow_tObject* object, double x, double y);
   void create_dashcell(grow_tObject* object, double x, double y, int colortheme);
   int create_dashcell_next(grow_tObject *object, int colortheme, int select, char *attr, 

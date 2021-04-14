@@ -1177,7 +1177,7 @@ void GrowTrend::set_data(double* data[3], int data_curves, int data_points)
         } else {
           if (!feq(y_max_value[j], y_min_value[j]))
             point_p->y = ur.y
-                - (data[j][idx] - y_min_value[j])
+                - (data[j + 1][idx] - y_min_value[j])
                     / (y_max_value[j] - y_min_value[j]) * (ur.y - ll.y);
 
           point_p->y = MAX(ll.y, MIN(point_p->y, ur.y));

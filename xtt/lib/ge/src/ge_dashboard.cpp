@@ -61,6 +61,7 @@ static void dabo_ind(GeDash *dash, grow_tObject g);
 static void dabo_digtrend(GeDash *dash, grow_tObject g);
 static void dabo_gauge(GeDash *dash, grow_tObject g);
 static void dabo_gauge2(GeDash *dash, grow_tObject g);
+static void dabo_pie(GeDash *dash, grow_tObject g);
 static void dabo_slider(GeDash *dash, grow_tObject g);
 
 typedef struct {
@@ -86,6 +87,7 @@ static sTypeInfo type_info[] = {
   {ge_eDashAttr_Analog, 13, 31, 3, "dabo_gauge", dabo_gauge, "Gauge"},
   {ge_eDashAttr_Analog, 13, 31, 3, "dabo_gauge2", dabo_gauge2, "Gauge2"},
   {ge_eDashAttr_Analog, 13, 31, 3, "dabo_slider", dabo_slider, "Slider"},
+  {ge_eDashAttr_Analog, 13, 31, 6, "dabo_pie", dabo_pie, "Pie"},
   {ge_eDashAttr_Digital, 9, 15, 5, "dabo_ind", dabo_ind, "Indicator"},
   {ge_eDashAttr_Digital, 15, 3, 5, "dabo_digtrend", dabo_digtrend, "DigitalTrend"}
 };
@@ -685,7 +687,7 @@ void GeDashAnalog::open(std::ifstream& fp)
       break;
     case dash_eSave_Analog_text:
       fp.get();
-      fp.getline(format, sizeof(text));
+      fp.getline(text, sizeof(text));
       break;
     case dash_eSave_Analog_format:
       fp.get();
@@ -2591,3 +2593,131 @@ static void dabo_slider(GeDash *dash, grow_tObject g)
   }
 }
 
+static void dabo_pie(GeDash *dash, grow_tObject g)
+{
+  double x1;
+  double y1;
+  double x2;
+  double y2;
+  double y0;
+  double twidth, theight, tdescent;
+  grow_tObject id;
+  double gx1;
+  double gx2;
+  double gy1;
+  double gy2;
+  double gw;
+  double gh;
+  double tx;
+  double ty;
+  int tsize;
+  glow_eDrawType tcolor;
+  double awidth;
+  int cols;
+  double min;
+  double max;
+  int i;
+  char name[80];
+  int ival;
+    
+  gsc_GetObjectAttribute(dash->graph, g, "Dash.CellColumns", &cols, sizeof(cols), CCM_DECL_INT);
+
+  gsc_MeasureObject(dash->graph, g, &gx1, &gy1, &gx2, &gy2);
+  gw = gx2 - gx1;
+  gh = gy2 - gy1;
+
+  if (strcmp(dash->title, "") != 0) {
+    gsc_GetTextExtent(dash->graph, dash->title, 3, glow_eFont_LucidaSans, 0, &twidth,
+	&theight, &tdescent);
+    x2 = (gx1 + gx2)/2 - twidth/2;
+    y2 = gy1 + 1;
+    id = gsc_CreateText(dash->graph, dash->title, x2, y2, 3, glow_eFont_LucidaSans, 0, 
+        glow_eDrawType_CustomColor5);
+    gsc_DashInsertObject(dash->graph, g, id);
+
+    gh -= 1.5;
+    y0 = gy1 + 1.3 + 0.05 * gh;
+
+    if (gw < gh)
+      awidth = gw * 0.8;
+    else
+      awidth = gh * 0.8;
+  } else {
+    y0 = gy1 + 0.05 *gh;
+    if (gw < gh)
+      awidth = gw * 0.7;
+    else
+      awidth = gh * 0.7;
+  }
+
+  // Texts
+  tsize = 2;
+
+  x1 = gx1 + 0.5;
+  y1 = gy1 + 1.5;
+  x2 = 0.5;
+  y2 = 0.5;
+  for (i = 0; i < dash->elements; i++) {
+    switch (i) {
+    case 0:
+      tcolor = glow_eDrawType_CustomColor56;
+      break;
+    case 1:
+      tcolor = glow_eDrawType_CustomColor71;
+      break;
+    case 2:
+      tcolor = glow_eDrawType_CustomColor26;
+      break;
+    case 3:
+      tcolor = glow_eDrawType_CustomColor86;
+      break;
+    case 4:
+      tcolor = glow_eDrawType_CustomColor41;
+      break;
+    case 5:
+      tcolor = glow_eDrawType_CustomColor11;
+      break;
+    }
+    id = gsc_CreateRectangle(dash->graph, x1, y1, x2, y2);
+    gsc_SetObjectFill(dash->graph, id, 1);
+    gsc_SetObjectBorder(dash->graph, id, 0);
+    gsc_SetObjectFillColor(dash->graph, id, tcolor);
+    gsc_DashInsertObject(dash->graph, g, id);
+
+    tx = x1 + 0.8;
+    ty = y1 + 0.45;
+    id = gsc_CreateText(dash->graph, ((GeDashAnalog *)dash->elem[i])->text, tx, ty, tsize, 
+        glow_eFont_LucidaSans, 0, glow_eDrawType_CustomColor5);
+    gsc_DashInsertObject(dash->graph, g, id);
+
+    y1 += 0.8;
+  }
+
+  // Pie
+  min = 0;
+  max = 0;
+
+  x1 = gx2 - gw * 0.2 - awidth;
+  if (x1 < (gx1 + gx2) / 2 - awidth / 2)
+    x1 = (gx1 + gx2) / 2 - awidth / 2;
+  y1 = gy2 - awidth * 1.1;
+  x2 = x1 + awidth;
+  y2 = y1 + awidth;
+  id = gsc_CreatePie(dash->graph, x1, y1, x2, y2, 1);
+  gsc_SetObjectAttribute(dash->graph, id, "Pie.Sectors", &dash->elements, CCM_DECL_INT);
+  ival = 1;
+  gsc_SetObjectAttribute(dash->graph, id, "Pie.FixRange", &ival, CCM_DECL_INT);
+  for (i = 0; i < dash->elements; i++) {
+    sprintf(name, "Pie.Attribute%d", i + 1);
+    gsc_SetObjectAttribute(dash->graph, id, name, ((GeDashAnalog *)dash->elem[i])->attribute,
+	CCM_DECL_STRING);
+    min += ((GeDashAnalog *)dash->elem[i])->min_value;
+    max += ((GeDashAnalog *)dash->elem[i])->max_value;
+  }
+  gsc_SetObjectAttribute(dash->graph, id, "Pie.MinValue", &min, CCM_DECL_FLOAT);
+  gsc_SetObjectAttribute(dash->graph, id, "Pie.MaxValue", &max, CCM_DECL_FLOAT);
+  gsc_SetObjectAttribute(dash->graph, id, "Cycle", (void*)"Fast", CCM_DECL_STRING);
+  gsc_SetObjectGradient(dash->graph, id, (glow_eGradient)2);
+  gsc_SetObjectShadow(dash->graph, id, 1);
+  gsc_DashInsertObject(dash->graph, g, id);
+}

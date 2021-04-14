@@ -213,8 +213,10 @@ void XttGe::message_cb(void* ctx, char severity, const char* msg)
 void XttGe::message(char severity, const char* msg)
 {
   if (!streq(msg, "")) {
-    printf("** XttGe: %s\n", msg);
-    wow->DisplayError("Ge Message", msg, lng_eCoding_ISO8859_1, 0);
+    if (wow)
+      wow->DisplayError("Ge Message", msg, lng_eCoding_ISO8859_1, 0);
+    else
+      printf("** XttGe: %s\n", msg);
   }
 }
 
@@ -455,9 +457,14 @@ void XttGe::activate_save()
   if (streq(name, ""))
     return;
 
-  graph->close_trace(0);
+
+  if (graph->mode == graph_eMode_Runtime)
+    graph->close_trace(0);
+
   graph->save(name);
-  graph->init_trace();
+
+  if (graph->mode == graph_eMode_Runtime)
+    graph->init_trace();
 }
 
 void XttGe::file_selected_cb(void* ctx, void* data, char* text)
@@ -544,7 +551,7 @@ XttGe::XttGe(void* xg_parent_ctx, const char* xg_name, const char* xg_filename,
       call_method_cb(0), get_current_objects_cb(xg_get_current_objects_cb),
       sound_cb(0), eventlog_cb(0), keyboard_cb(xg_keyboard_cb), namechanged_cb(0),
       width(xg_width), height(xg_height), options(xg_options), 
-      color_theme(xg_color_theme)
+      color_theme(xg_color_theme), wow(0)
 {
   strcpy(filename, xg_filename);
   strcpy(name, xg_name);

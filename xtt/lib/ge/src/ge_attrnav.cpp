@@ -1159,6 +1159,7 @@ static attrnav_sEnumElement elem_dash_type[] = {
   { (unsigned int)ge_eDashType_Gauge, "Gauge" },
   { (unsigned int)ge_eDashType_Gauge2, "Gauge2" },
   { (unsigned int)ge_eDashType_Slider, "Slider" },
+  { (unsigned int)ge_eDashType_Pie, "Pie" },
   { (unsigned int)ge_eDashType_Indicator, "Indicator" },
   { (unsigned int)ge_eDashType_DigitalTrend, "DigitalTrend" },
   { 0, "" }

@@ -128,6 +128,27 @@ int GlowNode::get_conpoint(int num, double* x, double* y, glow_eDirection* dir)
   return sts;
 }
 
+void GlowNode::measure(double* ll_x, double* ll_y, double* ur_x, double* ur_y)
+{
+  if (parent && 
+      (parent->type() == glow_eObjectType_GrowNode
+       || parent->type() == glow_eObjectType_GrowGroup
+       || parent->type() == glow_eObjectType_GrowDashCell)) {
+    //    ((GrowNode *)parent)->trf.reverse(x_left, y_low, ll_x, ll_y);
+    //    ((GrowNode *)parent)->trf.reverse(x_right, y_high, ur_x, ur_y);
+    *ll_x = ((GrowNode *)parent)->trf.x(x_left, y_low);
+    *ll_y = ((GrowNode *)parent)->trf.y(x_left, y_low);
+    *ur_x = ((GrowNode *)parent)->trf.x(x_right, y_high);
+    *ur_y = ((GrowNode *)parent)->trf.y(x_right, y_high);
+  }
+  else {
+    *ll_x = x_left;
+    *ll_y = y_low;
+    *ur_x = x_right;
+    *ur_y = y_high;
+  }
+}
+
 void GlowNode::save(std::ofstream& fp, glow_eSaveMode mode)
 {
   int i;

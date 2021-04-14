@@ -659,7 +659,14 @@ void GrowPie::set_values(double* values)
 {
   for (int i = 0; i < sectors; i++)
     sector_size[i] = values[i];
-  draw();
+  if (!parent)
+    draw();
+  else {
+    ctx->set_draw_buffer_only();
+    parent->erase();
+    ctx->reset_draw_buffer_only();
+    parent->draw();    
+  }
 }
 
 void GrowPie::convert(glow_eConvert version)
