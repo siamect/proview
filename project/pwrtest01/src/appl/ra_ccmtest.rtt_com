@@ -9,7 +9,17 @@ function int ccm_declarations(int log)
   int iarray[100];
   float farray[100];
   string strarray[100];
+  extern int ext_iarray[100];
+  extern float ext_farray[100];
+  extern string ext_strarray[100];
+  global int gbl_iarray[100];
+  global float gbl_farray[100];
+  global string gbl_strarray[100];
+  int dyn_iarray[];
+  float dyn_farray[];
+  string dyn_strarray[];
   string tstr;
+  int len;
   int j;
 
   sts = 1;
@@ -40,21 +50,21 @@ function int ccm_declarations(int log)
     strarray[j] = "Str" + j;
   endfor
 
-  for ( j = 0; j < 10; j++)
+  for ( j = 0; j < 100; j++)
     if ( iarray[j] != j)
       tstlog_vlog(log, "E", "declaration, iarray mismatch %d != %d", iarray[j], j);      
       return 0;
     endif
   endfor
 
-  for ( j = 0; j < 10; j++)
+  for ( j = 0; j < 100; j++)
     if ( farray[j] != j)
       tstlog_vlog(log, "E", "declaration, farray mismatch %f != %i", farray[j], j);      
       return 0;
     endif
   endfor
 
-  for ( j = 0; j < 10; j++)
+  for ( j = 0; j < 100; j++)
     tstr = "Str" + j;
     if ( strarray[j] != tstr)
       tstlog_vlog(log, "E", "declaration, strarray mismatch %s != %s", strarray[j], tstr);      
@@ -62,7 +72,289 @@ function int ccm_declarations(int log)
     endif
   endfor
 
+  for ( j = 0; j < 100; j++)
+    ext_iarray[j] = j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    ext_farray[j] = j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    ext_strarray[j] = "Str" + j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    if ( ext_iarray[j] != j)
+      tstlog_vlog(log, "E", "declaration, ext_iarray mismatch %d != %d", ext_iarray[j], j);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    if ( ext_farray[j] != j)
+      tstlog_vlog(log, "E", "declaration, ext_farray mismatch %f != %i", ext_farray[j], j);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    tstr = "Str" + j;
+    if ( ext_strarray[j] != tstr)
+      tstlog_vlog(log, "E", "declaration, ext_strarray mismatch %s != %s", ext_strarray[j], tstr);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    gbl_iarray[j] = j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    gbl_farray[j] = j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    gbl_strarray[j] = "Str" + j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    if ( gbl_iarray[j] != j)
+      tstlog_vlog(log, "E", "declaration, gbl_iarray mismatch %d != %d", gbl_iarray[j], j);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    if ( gbl_farray[j] != j)
+      tstlog_vlog(log, "E", "declaration, gbl_farray mismatch %f != %i", gbl_farray[j], j);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    tstr = "Str" + j;
+    if ( gbl_strarray[j] != tstr)
+      tstlog_vlog(log, "E", "declaration, gbl_strarray mismatch %s != %s", gbl_strarray[j], tstr);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    arraypush(dyn_iarray[], j);
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    arraypush(dyn_farray[], j);
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    str = "Str" + j;
+    arraypush(dyn_strarray[], str);
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    if ( dyn_iarray[j] != j)
+      tstlog_vlog(log, "E", "declaration, dyn_iarray mismatch %d != %d", dyn_iarray[j], j);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    if ( dyn_farray[j] != j)
+      tstlog_vlog(log, "E", "declaration, dyn_farray mismatch %f != %i", dyn_farray[j], j);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    tstr = "Str" + j;
+    if ( dyn_strarray[j] != tstr)
+      tstlog_vlog(log, "E", "declaration, dyn_strarray mismatch %s != %s", dyn_strarray[j], tstr);      
+      return 0;
+    endif
+  endfor
+
   tstlog_log(log, "S", "declaration: Successfull completion");
+
+  ccm_declarations2(log);
+
+  delete ext_iarray[];
+  delete ext_farray[];
+  delete ext_strarray[];
+
+  return 1;
+endfunction
+
+function int ccm_declarations2(int log)
+  int sts;
+  int i = 50;
+  float f = 50;
+  string str = "50";
+  int iarray_loc[100];
+  float farray_loc[100];
+  string strarray_loc[100];
+  int dyn_iarray_loc[];
+  float dyn_farray_loc[];
+  string dyn_strarray_loc[];
+  string tstr;
+  int len;
+  int j;
+
+  sts = 1;
+  if ( i != 50)
+    tstlog_vlog(log, "E", "declaration2, int mismatch %d != %d", i, 50);      
+    return 0;
+  endif
+
+  if ( f != 50)
+    tstlog_vlog(log, "E", "declaration2, float mismatch %f != %d", i, 50);      
+    return 0;
+  endif
+
+  if ( str != "50")
+    tstlog_vlog(log, "E", "declaration2, string mismatch %s != %s", str, "50");      
+    return 0;
+  endif
+
+  for ( j = 0; j < 100; j++)
+    iarray_loc[j] = j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    farray_loc[j] = j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    strarray_loc[j] = "Str" + j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    if ( iarray_loc[j] != j)
+      tstlog_vlog(log, "E", "declaration2, iarray_loc mismatch %d != %d", iarray_loc[j], j);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    if ( farray_loc[j] != j)
+      tstlog_vlog(log, "E", "declaration2, farray_loc mismatch %f != %i", farray_loc[j], j);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    tstr = "Str" + j;
+    if ( strarray_loc[j] != tstr)
+      tstlog_vlog(log, "E", "declaration2, strarray_loc mismatch %s != %s", strarray_loc[j], tstr);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    ext_iarray[j] = j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    ext_farray[j] = j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    ext_strarray[j] = "Str" + j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    if ( ext_iarray[j] != j)
+      tstlog_vlog(log, "E", "declaration2, ext_iarray mismatch %d != %d", ext_iarray[j], j);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    if ( ext_farray[j] != j)
+      tstlog_vlog(log, "E", "declaration2, ext_farray mismatch %f != %i", ext_farray[j], j);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    tstr = "Str" + j;
+    if ( ext_strarray[j] != tstr)
+      tstlog_vlog(log, "E", "declaration2, ext_strarray mismatch %s != %s", ext_strarray[j], tstr);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    gbl_iarray[j] = j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    gbl_farray[j] = j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    gbl_strarray[j] = "Str" + j;
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    if ( gbl_iarray[j] != j)
+      tstlog_vlog(log, "E", "declaration2, gbl_iarray mismatch %d != %d", gbl_iarray[j], j);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    if ( gbl_farray[j] != j)
+      tstlog_vlog(log, "E", "declaration2, gbl_farray mismatch %f != %i", gbl_farray[j], j);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    tstr = "Str" + j;
+    if ( gbl_strarray[j] != tstr)
+      tstlog_vlog(log, "E", "declaration2, gbl_strarray mismatch %s != %s", gbl_strarray[j], tstr);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    arraypush(dyn_iarray_loc[], j);
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    arraypush(dyn_farray_loc[], j);
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    str = "Str" + j;
+    arraypush(dyn_strarray_loc[], str);
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    if ( dyn_iarray_loc[j] != j)
+      tstlog_vlog(log, "E", "declaration2, dyn_iarray_loc mismatch %d != %d", dyn_iarray_loc[j], j);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    if ( dyn_farray_loc[j] != j)
+      tstlog_vlog(log, "E", "declaration2, dyn_farray_loc mismatch %f != %i", dyn_farray_loc[j], j);      
+      return 0;
+    endif
+  endfor
+
+  for ( j = 0; j < 100; j++)
+    tstr = "Str" + j;
+    if ( dyn_strarray_loc[j] != tstr)
+      tstlog_vlog(log, "E", "declaration2, dyn_strarray_loc mismatch %s != %s", dyn_strarray_loc[j], tstr);      
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "declaration2: Successfull completion");
 
   return 1;
 endfunction
@@ -401,16 +693,16 @@ function int ccm_element(int log)
   r2[0] = "lisa";
   r3[0] = "anna";
   r4[0] = "john";
-  d[2] = "mary,,anna,john";
-  r1[2] = "mary";
-  r2[2] = "";
-  r3[2] = "anna";
-  r4[2] = "john";
-  d[3] = "Adam,Hoss,Joe,Ben";
-  r1[3] = "Adam";
-  r2[3] = "Hoss";
-  r3[3] = "Joe";
-  r4[3] = "Ben";
+  d[1] = "mary,,anna,john";
+  r1[1] = "mary";
+  r2[1] = "";
+  r3[1] = "anna";
+  r4[1] = "john";
+  d[2] = "Adam,Hoss,Joe,Ben";
+  r1[2] = "Adam";
+  r2[2] = "Hoss";
+  r3[2] = "Joe";
+  r4[2] = "Ben";
 
   for (i = 0; i < 3; i++)
     elem[0] = element(1, ",", d[i]);
@@ -869,16 +1161,16 @@ function int ccm_felement(int log)
   r2[0] = "lisa";
   r3[0] = "anna";
   r4[0] = "john";
-  d[2] = "mary,,anna,john";
-  r1[2] = "mary";
-  r2[2] = "";
-  r3[2] = "anna";
-  r4[2] = "john";
-  d[3] = "Adam,Hoss,Joe,Ben";
-  r1[3] = "Adam";
-  r2[3] = "Hoss";
-  r3[3] = "Joe";
-  r4[3] = "Ben";
+  d[1] = "mary,,anna,john";
+  r1[1] = "mary";
+  r2[1] = "";
+  r3[1] = "anna";
+  r4[1] = "john";
+  d[2] = "Adam,Hoss,Joe,Ben";
+  r1[2] = "Adam";
+  r2[2] = "Hoss";
+  r3[2] = "Joe";
+  r4[2] = "Ben";
 
   fname = translate_filename("/tmp/ra_ccmtest.txt");
 
@@ -985,6 +1277,710 @@ function int ccm_get_node_name(int log)
   return 1;
 endfunction
 
+function int ccm_sin(int log)
+  int i;
+  float res;
+  float c[15];
+  float r[15];
+
+  c[0] = 0.0;
+  r[0] = 0.0;
+  c[1] = 30.0;
+  r[1] = 0.5;
+  c[2] = 60.0;
+  r[2] = 0.866025;
+  c[3] = 90.0;
+  r[3] = 1.0;
+  c[4] = 120.0;
+  r[4] = 0.866025;
+  c[5] = 150.0;
+  r[5] = 0.5;
+  c[6] = 180.0;
+  r[6] = 0.0;
+  c[7] = 210.0;
+  r[7] = -0.5;
+  c[8] = 240.0;
+  r[8] = -0.866025;
+  c[9] = 270.0;
+  r[9] = -1.0;
+  c[10] = 300.0;
+  r[10] = -0.866025;
+  c[11] = 330.0;
+  r[11] = -0.5;
+  c[12] = 360.0;
+  r[12] = 0.0;
+  c[13] = 390.0;
+  r[13] = 0.5;
+  c[14] = -30.0;
+  r[14] = -0.5;
+
+  for (i = 0; i < 15; i++)
+    res = sin(c[i]);
+    if (res != r[i])
+      tstlog_vlog(log, "E", "sin, mismatch %d, %f != %f", i, r[i], res);
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "sin: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_cos(int log)
+  int i;
+  float res;
+  float c[15];
+  float r[15];
+
+  c[0] = 0.0;
+  r[0] = 1.0;
+  c[1] = 30.0;
+  r[1] = 0.866025;
+  c[2] = 60.0;
+  r[2] = 0.5;
+  c[3] = 90.0;
+  r[3] = 0.0;
+  c[4] = 120.0;
+  r[4] = -0.5;
+  c[5] = 150.0;
+  r[5] = -0.866025;
+  c[6] = 180.0;
+  r[6] = -1.0;
+  c[7] = 210.0;
+  r[7] = -0.866025;
+  c[8] = 240.0;
+  r[8] = -0.5;
+  c[9] = 270.0;
+  r[9] = 0.0;
+  c[10] = 300.0;
+  r[10] = 0.5;
+  c[11] = 330.0;
+  r[11] = 0.866025;
+  c[12] = 360.0;
+  r[12] = 1.0;
+  c[13] = 390.0;
+  r[13] = 0.866025;
+  c[14] = -30.0;
+  r[14] = 0.866025;
+
+  for (i = 0; i < 15; i++)
+    res = cos(c[i]);
+    if (res != r[i])
+      tstlog_vlog(log, "E", "cos, mismatch %d, %f != %f", i, r[i], res);
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "cos: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_random(int log)
+  int i;
+  float res;
+  float min[6];
+  float max[6];
+
+  min[0] = 0.0;
+  max[0] = 1.0;
+  min[1] = 0.0;
+  max[1] = 100.0;
+  min[2] = -100.0;
+  max[2] = 100.0;
+  min[3] = 5.0;
+  max[3] = 6.0;
+  min[4] = -10.0;
+  max[4] = -5.0;
+  min[5] = -10000.0;
+  max[5] = 10000.0;
+
+  for (i = 0; i < 6; i++)
+    res = random(min[i], max[i]);
+    if (res < min[i] || res > max[i])
+      tstlog_vlog(log, "E", "random, out of range %d, %f", i, res);
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "random: Successfull completion");
+
+  return 1;
+endfunction
+
+function int ccm_arraysize(int log)
+  int size;
+  int i;
+  float res;
+  string sarr1[];
+  float farr1[];
+  int iarr1[];
+  global string sarr2[];
+  global float farr2[];
+  global int iarr2[];
+  extern string sarr3[];
+  extern float farr3[];
+  extern int iarr3[];
+  string sarr4[10];
+  float farr4[11];
+  int iarr4[12];
+  global string sarr5[13];
+  global float farr5[14];
+  global int iarr5[15];
+  extern string sarr6[16];
+  extern float farr6[17];
+  extern int iarr6[18];
+
+  for (i = 0; i < 6; i++) 
+    arraypush(sarr1[], i);
+    arraypush(farr1[], i);
+    arraypush(iarr1[], i);
+    arraypush(sarr2[], i);
+    arraypush(farr2[], i);
+    arraypush(iarr2[], i);
+    arraypush(sarr3[], i);
+    arraypush(farr3[], i);
+    arraypush(iarr3[], i);
+  endfor
+
+  size = arraysize(sarr1[]);
+  if (size != 6)
+    tstlog_vlog(log, "E", "arraysize error, sarr1 %d", size);
+    return 0;
+  endif
+
+  size = arraysize(farr1[]);
+  if (size != 6)
+    tstlog_vlog(log, "E", "arraysize error, farr1 %d", size);
+    return 0;
+  endif
+
+  size = arraysize(iarr1[]);
+  if (size != 6)
+    tstlog_vlog(log, "E", "arraysize error, iarr1 %d", size);
+    return 0;
+  endif
+
+  size = arraysize(sarr2[]);
+  if (size != 6)
+    tstlog_vlog(log, "E", "arraysize error, sarr2 %d", size);
+    return 0;
+  endif
+
+  size = arraysize(farr2[]);
+  if (size != 6)
+    tstlog_vlog(log, "E", "arraysize error, farr2 %d", size);
+    return 0;
+  endif
+
+  size = arraysize(iarr2[]);
+  if (size != 6)
+    tstlog_vlog(log, "E", "arraysize error, iarr2 %d", size);
+    return 0;
+  endif
+
+  size = arraysize(sarr3[]);
+  if (size != 6)
+    tstlog_vlog(log, "E", "arraysize error, sarr3 %d", size);
+    return 0;
+  endif
+
+  size = arraysize(farr3[]);
+  if (size != 6)
+    tstlog_vlog(log, "E", "arraysize error, farr3 %d", size);
+    return 0;
+  endif
+
+  size = arraysize(iarr3[]);
+  if (size != 6)
+    tstlog_vlog(log, "E", "arraysize error, iarr3 %d", size);
+    return 0;
+  endif
+
+  size = arraysize(sarr4[]);
+  if (size != 10)
+    tstlog_vlog(log, "E", "arraysize error, sarr4 %d", size);
+    return 0;
+  endif
+
+  size = arraysize(farr4[]);
+  if (size != 11)
+    tstlog_vlog(log, "E", "arraysize error, farr4 %d", size);
+    return 0;
+  endif
+
+  size = arraysize(iarr4[]);
+  if (size != 12)
+    tstlog_vlog(log, "E", "arraysize error, iarr4 %d", size);
+    return 0;
+  endif
+
+  size = arraysize(sarr5[]);
+  if (size != 13)
+    tstlog_vlog(log, "E", "arraysize error, sarr5 %d", size);
+    return 0;
+  endif
+
+  size = arraysize(farr5[]);
+  if (size != 14)
+    tstlog_vlog(log, "E", "arraysize error, farr5 %d", size);
+    return 0;
+  endif
+
+  size = arraysize(iarr5[]);
+  if (size != 15)
+    tstlog_vlog(log, "E", "arraysize error, iarr5 %d", size);
+   return 0;
+  endif
+
+  size = arraysize(sarr6[]);
+  if (size != 16)
+    tstlog_vlog(log, "E", "arraysize error, sarr6 %d", size);
+    return 0;
+  endif
+
+  size = arraysize(farr6[]);
+  if (size != 17)
+    tstlog_vlog(log, "E", "arraysize error, farr6 %d", size);
+    return 0;
+  endif
+
+  size = arraysize(iarr6[]);
+  if (size != 18)
+    tstlog_vlog(log, "E", "arraysize error, iarr6 %d", size);
+    return 0;
+  endif
+
+  tstlog_log(log, "S", "arraysize: Successfull completion");
+
+  delete sarr3[];
+  delete farr3[];
+  delete iarr3[];
+  delete sarr6[];
+  delete farr6[];
+  delete iarr6[];
+  deletegbl sarr2[];
+  deletegbl farr2[];
+  deletegbl iarr2[];
+  deletegbl sarr5[];
+  deletegbl farr5[];
+  deletegbl iarr5[];
+
+  return 1;
+endfunction
+
+function int ccm_arraypush(int log)
+  int i;
+  string str;
+  string sarr1[];
+  float farr1[];
+  int iarr1[];
+  global string sarr2[];
+  global float farr2[];
+  global int iarr2[];
+  extern string sarr3[];
+  extern float farr3[];
+  extern int iarr3[];
+
+  for (i = 0; i < 1000; i++) 
+    arraypush(sarr1[], i);
+    arraypush(farr1[], i);
+    arraypush(iarr1[], i);
+    arraypush(sarr2[], i);
+    arraypush(farr2[], i);
+    arraypush(iarr2[], i);
+    arraypush(sarr3[], i);
+    arraypush(farr3[], i);
+    arraypush(iarr3[], i);
+  endfor
+
+  for (i = 0; i < 1000; i++)
+    sprintf(str, "%d", i);
+    if (sarr1[i] != str)
+      tstlog_vlog(log, "E", "arraypush error, sarr1 %d", i);
+      return 0;
+    endif
+    if (iarr1[i] != i)
+      tstlog_vlog(log, "E", "arraypush error, iarr1 %d", i);
+      return 0;
+    endif
+    if (farr1[i] != i)
+      tstlog_vlog(log, "E", "arraypush error, farr1 %d", i);
+      return 0;
+    endif
+    if (sarr2[i] != str)
+      tstlog_vlog(log, "E", "arraypush error, sarr2 %d", i);
+      return 0;
+    endif
+    if (iarr2[i] != i)
+      tstlog_vlog(log, "E", "arraypush error, iarr2 %d", i);
+      return 0;
+    endif
+    if (farr2[i] != i)
+      tstlog_vlog(log, "E", "arraypush error, farr2 %d", i);
+      return 0;
+    endif
+    if (sarr3[i] != str)
+      tstlog_vlog(log, "E", "arraypush error, sarr3 %d", i);
+      return 0;
+    endif
+    if (iarr3[i] != i)
+      tstlog_vlog(log, "E", "arraypush error, iarr3 %d", i);
+      return 0;
+    endif
+    if (farr3[i] != i)
+      tstlog_vlog(log, "E", "arraypush error, farr3 %d", i);
+      return 0;
+    endif
+  endfor
+
+  tstlog_log(log, "S", "arraypush: Successfull completion");
+
+  delete sarr3[];
+  delete farr3[];
+  delete iarr3[];
+  deletegbl sarr2[];
+  deletegbl farr2[];
+  deletegbl iarr2[];
+
+  return 1;
+endfunction
+
+function int ccm_arrayclear(int log)
+  int i;
+  int size;
+  string sarr1[];
+  float farr1[];
+  int iarr1[];
+  global string sarr2[];
+  global float farr2[];
+  global int iarr2[];
+  extern string sarr3[];
+  extern float farr3[];
+  extern int iarr3[];
+
+  for (i = 0; i < 1000; i++) 
+    arraypush(sarr1[], i);
+    arraypush(farr1[], i);
+    arraypush(iarr1[], i);
+    arraypush(sarr2[], i);
+    arraypush(farr2[], i);
+    arraypush(iarr2[], i);
+    arraypush(sarr3[], i);
+    arraypush(farr3[], i);
+    arraypush(iarr3[], i);
+  endfor
+
+  size = arraysize(sarr1[]);
+  if (size != 1000)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, sarr1 %d", size);
+    return 0;
+  endif
+  size = arraysize(farr1[]);
+  if (size != 1000)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, farr1 %d", size);
+    return 0;
+  endif
+  size = arraysize(iarr1[]);
+  if (size != 1000)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, iarr1 %d", size);
+    return 0;
+  endif
+  size = arraysize(sarr2[]);
+  if (size != 1000)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, sarr2 %d", size);
+    return 0;
+  endif
+  size = arraysize(farr2[]);
+  if (size != 1000)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, farr2 %d", size);
+    return 0;
+  endif
+  size = arraysize(iarr2[]);
+  if (size != 1000)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, iarr2 %d", size);
+    return 0;
+  endif
+  size = arraysize(sarr3[]);
+  if (size != 1000)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, sarr3 %d", size);
+    return 0;
+  endif
+  size = arraysize(farr3[]);
+  if (size != 1000)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, farr3 %d", size);
+    return 0;
+  endif
+  size = arraysize(iarr3[]);
+  if (size != 1000)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, iarr3 %d", size);
+    return 0;
+  endif
+
+  arrayclear(sarr1[]);
+  arrayclear(farr1[]);
+  arrayclear(iarr1[]);
+  arrayclear(sarr2[]);
+  arrayclear(farr2[]);
+  arrayclear(iarr2[]);
+  arrayclear(sarr3[]);
+  arrayclear(farr3[]);
+  arrayclear(iarr3[]);
+
+  size = arraysize(sarr1[]);
+  if (size != 0)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, sarr1 %d", size);
+    return 0;
+  endif
+  size = arraysize(farr1[]);
+  if (size != 0)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, farr1 %d", size);
+    return 0;
+  endif
+  size = arraysize(iarr1[]);
+  if (size != 0)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, iarr1 %d", size);
+    return 0;
+  endif
+  size = arraysize(sarr2[]);
+  if (size != 0)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, sarr2 %d", size);
+    return 0;
+  endif
+  size = arraysize(farr2[]);
+  if (size != 0)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, farr2 %d", size);
+    return 0;
+  endif
+  size = arraysize(iarr2[]);
+  if (size != 0)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, iarr2 %d", size);
+    return 0;
+  endif
+  size = arraysize(sarr3[]);
+  if (size != 0)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, sarr3 %d", size);
+    return 0;
+  endif
+  size = arraysize(farr3[]);
+  if (size != 0)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, farr3 %d", size);
+    return 0;
+  endif
+  size = arraysize(iarr3[]);
+  if (size != 0)
+    tstlog_vlog(log, "E", "arrayclear, arraysize error, iarr3 %d", size);
+    return 0;
+  endif
+
+  tstlog_log(log, "S", "arrayclear: Successfull completion");
+
+  delete sarr3[];
+  delete farr3[];
+  delete iarr3[];
+  deletegbl sarr2[];
+  deletegbl farr2[];
+  deletegbl iarr2[];
+
+  return 1;
+endfunction
+
+function int ccm_sort(int log)
+  int i;
+  int j;
+  string str;
+  float rand;
+  int irand;
+  string str1;
+  string str2;
+  int i1;
+  int i2;
+  string sarr1[];
+  float farr1[];
+  int iarr1[];
+
+  for (i = 999; i >= 0; i--)
+    arraypush(farr1[], i);
+    arraypush(iarr1[], i);
+  endfor
+
+  sort(farr1[]);
+  sort(iarr1[]);
+
+  for (i = 0; i < 1000; i++)
+    if (iarr1[i] != i)
+      tstlog_vlog(log, "E", "sort error, iarr1 %d", i);
+      return 0;
+    endif
+    if (farr1[i] != i)
+      tstlog_vlog(log, "E", "sort error, farr1 %d", i);
+      return 0;
+    endif
+  endfor
+
+# Random test 1
+
+  arrayclear(farr1[]);
+  arrayclear(iarr1[]);
+
+  for (i = 0; i < 1000; i++)
+    rand = random(0.0, 10000.0);
+    irand = rand;
+    sprintf(str, "Str%05d", irand);
+    arraypush(farr1[], rand);
+    arraypush(iarr1[], rand);
+    arraypush(sarr1[], str);
+  endfor
+
+  sort(farr1[]);
+  sort(iarr1[]);
+  sort(sarr1[]);
+
+  for (i = 1; i < 1000; i++)
+    j = i - 1;
+    if (iarr1[i] < iarr1[j])
+      tstlog_vlog(log, "E", "sort random error 1, iarr1 %d", i);
+      return 0;
+    endif
+    if (farr1[i] < farr1[j])
+      tstlog_vlog(log, "E", "sort random error 1, farr1 %d", i);
+      return 0;
+    endif
+
+    str1 = extract(4, 5, sarr1[i]);
+    str2 = extract(4, 5, sarr1[j]);
+    i1 = str1;
+    i2 = str2;
+    if (i1 < i2)
+      tstlog_vlog(log, "E", "sort random error 1, sarr1 %d", i);
+      return 0;
+    endif
+    
+  endfor
+
+# Random test 2
+
+  arrayclear(sarr1[]);
+  arrayclear(farr1[]);
+  arrayclear(iarr1[]);
+
+  for (i = 0; i < 1000; i++)
+    rand = random(0.0, 10000.0);
+    irand = rand;
+    sprintf(str, "Str%05d", irand);
+    arraypush(farr1[], rand);
+    arraypush(iarr1[], rand);
+    arraypush(sarr1[], str);
+  endfor
+
+  sort(sarr1[], iarr1[], farr1[]);
+
+  for (i = 1; i < 1000; i++)
+    j = i - 1;
+    if (iarr1[i] < iarr1[j])
+      tstlog_vlog(log, "E", "sort random error 2, iarr1 %d", i);
+      return 0;
+    endif
+    i1 = farr1[i];
+    i2 = farr1[j];
+    if (i1 < i2)
+      tstlog_vlog(log, "E", "sort random error 2, farr1 %d", i);
+      return 0;
+    endif
+
+    str1 = extract(4, 5, sarr1[i]);
+    str2 = extract(4, 5, sarr1[j]);
+    i1 = str1;
+    i2 = str2;
+    if (i1 < i2)
+      tstlog_vlog(log, "E", "sort random error 2, sarr1 %d", i);
+      return 0;
+    endif    
+  endfor
+
+# Random test 3
+
+  arrayclear(sarr1[]);
+  arrayclear(farr1[]);
+  arrayclear(iarr1[]);
+
+  for (i = 0; i < 1000; i++)
+    rand = random(0.0, 10000.0);
+    irand = rand;
+    sprintf(str, "Str%05d", irand);
+    arraypush(farr1[], rand);
+    arraypush(iarr1[], rand);
+    arraypush(sarr1[], str);
+  endfor
+
+  sort(farr1[], sarr1[], iarr1[]);
+
+  for (i = 1; i < 1000; i++)
+    j = i - 1;
+    if (iarr1[i] < iarr1[j])
+      tstlog_vlog(log, "E", "sort random error 3, iarr1 %d", i);
+      return 0;
+    endif
+    if (farr1[i] < farr1[j])
+      tstlog_vlog(log, "E", "sort random error 3, farr1 %d", i);
+      return 0;
+    endif
+
+    str1 = extract(4, 5, sarr1[i]);
+    str2 = extract(4, 5, sarr1[j]);
+    i1 = str1;
+    i2 = str2;
+    if (i1 < i2)
+      tstlog_vlog(log, "E", "sort random error 3, sarr1 %d", i);
+      return 0;
+    endif    
+  endfor
+
+  arrayclear(sarr1[]);
+  arrayclear(farr1[]);
+  arrayclear(iarr1[]);
+
+  for (i = 0; i < 1000; i++)
+    rand = random(0.0, 10000.0);
+    irand = rand;
+    sprintf(str, "Str%05d", irand);
+    arraypush(farr1[], rand);
+    arraypush(iarr1[], rand);
+    arraypush(sarr1[], str);
+  endfor
+
+  sort(iarr1[], sarr1[], farr1[]);
+
+  for (i = 1; i < 1000; i++)
+    j = i - 1;
+    if (iarr1[i] < iarr1[j])
+      tstlog_vlog(log, "E", "sort random error 4, iarr1 %d", i);
+      return 0;
+    endif
+    i1 = farr1[i];
+    i2 = farr1[j];
+    if (i1 < i2)
+      tstlog_vlog(log, "E", "sort random error 4, farr1 %d", i);
+      return 0;
+    endif
+
+    str1 = extract(4, 5, sarr1[i]);
+    str2 = extract(4, 5, sarr1[j]);
+    i1 = str1;
+    i2 = str2;
+    if (i1 < i2)
+      tstlog_vlog(log, "E", "sort random error 4, sarr1 %d", i);
+      return 0;
+    endif    
+  endfor
+
+
+  tstlog_log(log, "S", "sort: Successfull completion");
+
+  return 1;
+endfunction
+
 
 main()
   int log;
@@ -1010,6 +2006,13 @@ main()
   ccm_felement(log);
   ccm_getmsg(log);
   ccm_get_node_name(log);
+  ccm_sin(log);
+  ccm_cos(log);
+  ccm_random(log);
+  ccm_arraysize(log);
+  ccm_arraypush(log);
+  ccm_arrayclear(log);
+  ccm_sort(log);
 
   tstlog_close(log);  
 endmain
