@@ -4854,8 +4854,33 @@ int Graph::script_func_register(void)
 static int ccm_deffilename_func(
     char* outfile, char* infile, void* client_data)
 {
-  dcli_get_defaultfilename(infile, outfile, ".ge_com");
-  dcli_translate_filename(outfile, outfile);
+  char path[2][40] = {"$pwrp_exe/", "$pwr_exe/"};
+  pwr_tFileName fname;
+  pwr_tTime t;
+  pwr_tStatus sts;
+  int found = 0;
+
+  //dcli_get_defaultfilename(infile, outfile, ".ge_com");
+  if (strchr(infile, '/') == 0) {
+    for (int i = 0; i < sizeof(path)/sizeof(path[0]); i++) {
+      strcpy(fname, path[i]);
+      strcat(fname, infile);
+      if (strchr(fname, '.') == 0)
+	strcat(fname, ".ge_com");
+      dcli_translate_filename(fname, fname);
+      sts = dcli_file_time(fname, &t);
+      if (ODD(sts)) {
+	found = 1;
+	break;
+      }	
+    }
+  }
+  if (!found) {
+    strcpy(fname, infile);
+    if (strchr(fname, '.') == 0)
+      strcat(fname, ".ge_com");
+  }
+  strcpy(outfile, fname);
   return 1;
 }
 
