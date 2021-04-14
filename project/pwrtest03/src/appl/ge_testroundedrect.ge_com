@@ -1,0 +1,228 @@
+function int set_object(int id, int fill, int border, int shadow, int gradient, int fillcolor)
+  SetObjectFill(id, fill);
+  SetObjectBorder(id, border);
+  SetObjectShadow(id, shadow);
+  SetObjectGradient(id, gradient);
+  SetObjectFillColor(id, fillcolor);
+endfunction
+
+main()
+  int id;
+  int sts;
+  int i;
+  float x0 = 0.2;
+  float y0 = 0.2;
+  float delta = 0.2;
+  float x;
+  float y;
+  float x2;
+  float y2;
+  float width = 3;
+  float height = 2;
+  float lwidth;
+  float lheight;
+  float lx;
+  float ly;
+  int color;
+  int bordercolor;
+  int linewidth;
+  float linewidth_delta = 0.018;
+  float shadow_width;
+  int shadow_contrast;
+  int gradient;
+  int gradient_contrast;
+  float round_amount;
+
+  ClearAll();
+  SetDraw(0);
+
+  x = 31.0;
+  y = 0.2;
+  x2 = x + 2.3;
+  y2 = y + 1; 
+  id = CreateObject("pwr_smallbuttoncenter", x, y, x2, y2);
+  SetObjectFillColor(id, eDrawType_Color31);
+  SetObjectAttribute(id, "Text", "Next");
+  SetObjectAttribute(id, "Action", "Script");
+  SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_testarc\", \"\", 1);");
+
+  x = x0 - 0.04;
+  y = y0 + height + 0.08;
+  id = CreateImage("ge_testroundedrect.png", x, y, 32.15, 48.55);
+
+  y = y0;
+  x = x0;
+  linewidth = 1;
+  for (i = 0; i < 8; i++)
+    lx = x + linewidth_delta * (linewidth - 1);
+    ly = y + linewidth_delta * (linewidth - 1);
+    lwidth = width - 2 * linewidth_delta * (linewidth - 1);
+    lheight = height - 2 * linewidth_delta * (linewidth - 1);
+    id = CreateRectRounded(lx, ly, lwidth, lheight);
+    set_object(id, 0, 1, 0, 0, 0);
+    SetObjectAttribute(id, "round_amount", 25.0);
+    SetObjectLineWidth(id, linewidth);
+    linewidth++;
+    x += width + delta;
+  endfor
+ 
+  y += 2 * height + 2 * delta;
+  x = x0;
+  linewidth = 4;
+  color = eDrawType_Color55;
+  for (i = 0; i < 9; i++)
+    lx = x + linewidth_delta * (linewidth - 1);
+    ly = y + linewidth_delta * (linewidth - 1);
+    lwidth = width - 2 * linewidth_delta * (linewidth - 1);
+    lheight = height - 2 * linewidth_delta * (linewidth - 1);
+    id = CreateRectRounded(lx, ly, lwidth, lheight);
+    SetObjectAttribute(id, "round_amount", 25.0);
+    set_object(id, 0, 1, 0, 0, 0);
+    SetObjectLineWidth(id, linewidth);
+    SetObjectBorderColor(id, color);
+    color += 30;
+    x += width + delta;
+  endfor
+ 
+  y += 2 * height + 2 * delta;
+  x = x0;
+  linewidth = 4;
+  color = eDrawType_Color55;
+  bordercolor = eDrawType_Color295;
+  for (i = 0; i < 9; i++)
+    lx = x + linewidth_delta * (linewidth - 1);
+    ly = y + linewidth_delta * (linewidth - 1);
+    lwidth = width - 2 * linewidth_delta * (linewidth - 1);
+    lheight = height - 2 * linewidth_delta * (linewidth - 1);
+    id = CreateRectRounded(lx, ly, lwidth, lheight);
+    set_object(id, 1, 1, 0, 0, 0);
+    SetObjectAttribute(id, "round_amount", 25.0);
+    SetObjectLineWidth(id, linewidth);
+    SetObjectFillColor(id, color);
+    SetObjectBorderColor(id, bordercolor);
+    color += 30;
+    bordercolor -= 30;
+    x += width + delta;
+  endfor
+ 
+  y += 2 * height + 2 * delta;
+  x = x0;
+  linewidth = 4;
+  color = eDrawType_Color55;
+  for (i = 0; i < 9; i++)
+    lx = x + linewidth_delta * (linewidth - 1);
+    ly = y + linewidth_delta * (linewidth - 1);
+    lwidth = width - 2 * linewidth_delta * (linewidth - 1);
+    lheight = height - 2 * linewidth_delta * (linewidth - 1);
+    id = CreateRectRounded(lx, ly, lwidth, lheight);
+    set_object(id, 1, 0, 0, 0, 0);
+    SetObjectAttribute(id, "round_amount", 25.0);
+    SetObjectFillColor(id, color);
+    color += 30;
+    x += width + delta;
+  endfor
+ 
+  y += 2 * height + 2 * delta;
+  x = x0;
+  shadow_width = 20.0;
+  color = eDrawType_Color65;
+  for (i = 0; i < 10; i++)
+    id = CreateRectRounded(x, y, width, height);
+    set_object(id, 1, 1, 1, 0, color);
+    SetObjectAttribute(id, "round_amount", 25.0);
+    SetObjectAttribute(id, "shadow_width", shadow_width);
+    color += 10;
+    x += width + delta;
+  endfor
+
+  y += 2 * height + 2 * delta;
+  x = x0;
+  round_amount = 0.0;
+  for (i = 0; i < 10; i++)
+    id = CreateRectRounded(x, y, width, height);
+    set_object(id, 1, 1, 1, 0, color);
+    SetObjectAttribute(id, "round_amount", round_amount);
+    SetObjectAttribute(id, "shadow_width", shadow_width);
+    round_amount += 5.0;
+    color += 10;
+    x += width + delta;
+  endfor
+
+  y += 2 * height + 2 * delta;
+  x = x0;
+  shadow_width = 2.0;
+  for (i = 0; i < 10; i++)
+    id = CreateRectRounded(x, y, width, height);
+    set_object(id, 1, 1, 1, 0, eDrawType_Color135);
+    SetObjectAttribute(id, "round_amount", 25.0);
+    SetObjectAttribute(id, "shadow_width", shadow_width);
+    shadow_width += 4.0;
+    x += width + delta;
+  endfor
+
+  y += 2 * height + 2 * delta;
+  x = x0;
+  shadow_width = 20.0;
+  shadow_contrast = 0;
+  for (i = 0; i < 7; i++)
+    id = CreateRectRounded(x, y, width, height);
+    set_object(id, 1, 1, 1, 0, eDrawType_Color185);
+    SetObjectAttribute(id, "round_amount", 25.0);
+    SetObjectAttribute(id, "shadow_width", shadow_width);
+    SetObjectAttribute(id, "shadow_contrast", shadow_contrast);
+    shadow_contrast++;
+    x += width + delta;
+  endfor
+
+  y += 2 * height + 2 * delta;
+  x = x0;
+  shadow_width = 10.0;
+  shadow_contrast = 2;
+  gradient = 1;
+  for (i = 0; i < 10; i++)
+    id = CreateRectRounded(x, y, width, height);
+    set_object(id, 1, 1, 1, 0, eDrawType_Color215);
+    SetObjectAttribute(id, "round_amount", 25.0);
+    SetObjectAttribute(id, "shadow_width", shadow_width);
+    SetObjectAttribute(id, "shadow_contrast", shadow_contrast);
+    SetObjectAttribute(id, "gradient", gradient);
+    gradient++;
+    x += width + delta;
+  endfor
+
+  y += 2 * height + 2 * delta;
+  x = x0;
+  for (i = 0; i < 10; i++)
+    id = CreateRectRounded(x, y, width, height);
+    set_object(id, 1, 1, 1, 0, eDrawType_Color245);
+    SetObjectAttribute(id, "round_amount", 25.0);
+    SetObjectAttribute(id, "shadow_width", shadow_width);
+    SetObjectAttribute(id, "shadow_contrast", shadow_contrast);
+    SetObjectAttribute(id, "gradient", gradient);
+    gradient++;
+    x += width + delta;
+  endfor
+
+  y += 2 * height + 2 * delta;
+  x = x0;
+  gradient_contrast = 1;
+  gradient = 6;
+  for (i = 0; i < 10; i++)
+    id = CreateRectRounded(x, y, width, height);
+    set_object(id, 1, 1, 1, 0, eDrawType_Color275);
+    SetObjectAttribute(id, "round_amount", 25.0);
+    SetObjectAttribute(id, "shadow_width", shadow_width);
+    SetObjectAttribute(id, "shadow_contrast", shadow_contrast);
+    SetObjectAttribute(id, "gradient", gradient);
+    SetObjectAttribute(id, "gradient_contrast", gradient_contrast);
+    gradient_contrast++;
+    x += width + delta;
+  endfor
+
+  x = 10 * (width + delta) + 0.4;
+  y += height + 0.5;
+  SetGraphAttribute("x1", x);
+  SetGraphAttribute("y1", y);
+
+  SetDraw(1);
+endmain

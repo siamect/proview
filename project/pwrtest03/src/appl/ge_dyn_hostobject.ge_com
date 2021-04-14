@@ -1,0 +1,213 @@
+
+main()
+  int id;
+  int id2;
+  int id3;
+  int id4;
+  int sts;
+  int i;
+  int j;
+  float x0 = 0.2;
+  float y0 = 0.2;
+  float delta = 3;
+  float xm;
+  float ym;
+  float x1;
+  float y1;
+  float x2;
+  float y2;
+  int textcolor;
+  string text;
+  int font;
+
+  ClearAll();
+  SetDraw(0);
+
+  SetGraphAttribute("Scantime", 0.6);
+  SetGraphAttribute("FastScantime", 0.2);
+  SetGraphAttribute("AnimationScantime", 0.2);
+  SetGraphAttribute("ColorTheme", "$default");
+  SetColorTheme(1);
+  SetBackgroundColor(eDrawType_CustomColor1);
+  id = CreateRectangle(0.0, 0.0, 34.0, 2.0);
+  SetObjectFill(id, 1);
+  SetObjectBorder(id, 0);
+  SetObjectFillColor(id, eDrawType_CustomColor3);
+
+  x1 = 31.0;
+  y1 = 0.2;
+  x2 = x1 + 2.3;
+  y2 = y1 + 1; 
+  id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Next");
+  SetObjectAttribute(id, "Action", "Script");
+  SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_digsound\", \"\", 1);");
+
+  xm = x0 + 1;
+  ym = y0 + 1;
+  id = CreateText("HostObject", xm, ym, 4, eFont_LucidaSans, 0, eDrawType_CustomColor34);
+
+# test03_host1
+  ym += 1;
+
+  ym += 1.1;
+  x1 = xm;
+  y1 = ym;
+  x2 = x1 + 2;
+  y2 = y1 + 2;
+  id = CreateObject("test03_host1", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DynType1", mDynType1_HostObject);
+  SetObjectAttribute(id, "HostObject.Object", "Test03a-Ge-Dyn-Host1");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = x1 + 4;
+  y1 = ym;
+  y2 = y1 + 0.3;
+  x2 = x1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_Color115);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Host1.D6##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.3;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_Color146);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Host1.D5##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.3;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_Color177);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Host1.D4##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.3;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_Color207);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Host1.D3##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.3;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_Color237);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Host1.D2##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.3;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_Color297);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Host1.D1##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.3;  
+  id = CreateRectangle(x1, y1, 1.5, 0.3);
+  SetObjectFill(id, 1);
+  SetObjectFillColor(id, eDrawType_CustomColor17);
+  SetObjectBorderColor(id, eDrawType_CustomColor16);
+
+# test03_host2, Recursive Dynamic
+
+  ym += 4;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Recursive Dynamic", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 1;
+  x1 = xm;
+  y1 = ym;
+  id = CreateObject("test03_host2", x1, y1);
+  SetObjectAttribute(id, "DynType1", mDynType1_HostObject);
+  SetObjectAttribute(id, "HostObject.Object", "Test03a-Ge-Dyn-Host1");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 10;
+  y1 = ym;
+  y2 = y1 + 0.3;
+  x2 = x1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_Color115);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Host1.D6##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.3;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_Color146);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Host1.D5##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.3;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_Color177);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Host1.D4##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.3;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_Color207);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Host1.D3##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.3;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_Color237);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Host1.D2##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.3;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_Color297);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Host1.D1##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 = xm + 10;
+  y1 = ym + 4;
+  x2 = x1 + 0.8;
+  y2 = y1 + 8.0;
+  id = CreateBar(x1, y1, x2, y2, 1);
+  SetObjectAttribute(id, "Bar.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Bar.MinValue", 0.0);
+  SetObjectAttribute(id, "Bar.MaxValue", 100.0);
+  SetObjectAttribute(id, "Bar.BarColor", eDrawType_CustomColor26);
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 0.8;
+  x2 = x1 + 0.8;
+  id2 = CreateBar(x1, y1, x2, y2, 1);
+  SetObjectAttribute(id2, "Bar.Attribute", "Test03a-Ge-Dyn-Sin16s.ActualValue##Float32");
+  SetObjectAttribute(id2, "Bar.MinValue", 0.0);
+  SetObjectAttribute(id2, "Bar.MaxValue", 100.0);
+  SetObjectAttribute(id2, "Bar.BarColor", eDrawType_CustomColor11);
+  SetObjectAttribute(id2, "Cycle", "Fast");
+  SelectClear();
+  SelectAdd(id);
+  SelectAdd(id2);
+  RotateSelected(-90.0, 0);
+  
+  SetGraphAttribute("x1", 30.0);
+  SetGraphAttribute("y1", 40.0);
+
+  SetDraw(1);
+endmain

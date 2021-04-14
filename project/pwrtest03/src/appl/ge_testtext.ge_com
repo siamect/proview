@@ -1,0 +1,76 @@
+
+main()
+  int id;
+  int sts;
+  int i;
+  int j;
+  float x0 = 0.2;
+  float y0 = 0.2;
+  float delta = 3;
+  float x;
+  float y;
+  float x2;
+  float y2;
+  int textcolor;
+  string text;
+  int font;
+
+  ClearAll();
+  SetDraw(0);
+
+  x = 31.0;
+  y = 0.2;
+  x2 = x + 2.3;
+  y2 = y + 1; 
+  id = CreateObject("pwr_smallbuttoncenter", x, y, x2, y2);
+  SetObjectFillColor(id, eDrawType_Color31);
+  SetObjectAttribute(id, "Text", "Next");
+  SetObjectAttribute(id, "Action", "Script");
+  SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_testtext2\", \"\", 1);");
+
+  x = x0 - 0.1;
+  y = y0 + 1;
+  id = CreateImage("ge_testtext.png", x, y, 29.1, 34.7);
+
+ 
+  x = x0;
+  y = y0;
+  for (i = 0; i < 5; i++)
+    y = y0 + 0.3;
+    for (j = 0; j < 6; j++)
+      if (i == 0)
+        sprintf(text, "Helvetica%d", j);
+        font = eFont_Helvetica;
+      endif
+      if (i == 1)
+        sprintf(text, "Times%d", j);
+        font = eFont_Times;
+      endif
+      if (i == 2)
+        sprintf(text, "Century%d", j);
+        font = eFont_NewCenturySchoolbook;
+      endif
+      if (i == 3)
+        sprintf(text, "Courier%d", j);
+        font = eFont_Courier;
+      endif
+      if (i == 4)
+        sprintf(text, "Lucida%d", j);
+        font = eFont_LucidaSans;
+      endif
+
+      id = CreateText(text, x, y, j, font, 0, eDrawType_Color1);
+      y += delta;
+      id = CreateText(text, x, y, j, font, 1, eDrawType_Color1);
+      y += delta;
+    endfor
+    x += 6;
+  endfor
+ 
+  x += 5;
+  y += delta;
+  SetGraphAttribute("x1", x);
+  SetGraphAttribute("y1", y);
+
+  SetDraw(1);
+endmain

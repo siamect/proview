@@ -1,0 +1,47 @@
+
+main()
+  int id;
+  float x0 = 0.2;
+  float y0 = 0.2;
+  float xm;
+  float ym;
+  float x1;
+  float y1;
+  float x2;
+  float y2;
+  int action;  
+  float width;
+
+  ClearAll();
+  SetDraw(0);
+
+  SetGraphAttribute("ColorTheme", "$default");
+  SetColorTheme(1);
+  SetBackgroundColor(eDrawType_CustomColor1);
+
+  GetTextExtent(p1, 6, eFont_LucidaSans, 0, width);  
+  xm = x0 + 3.0 - width;
+  ym = y0 + 1;
+  id = CreateText(p1, xm, ym, 6, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  xm = x0 + 2;
+  ym = y0 + 2;
+  id = CreateImage("pwr_logofully.png", xm, ym);
+
+  xm = x0 + 2;
+  ym += 6;
+  x1 = xm;
+  y1 = ym;
+  x2 = x1 + 3.5;
+  y2 = y1 + 1; 
+  id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Close");
+  action = mActionType1_CloseGraph | mActionType1_InputFocus;
+  SetObjectAttribute(id, "Action", action);
+  SetObjectAttribute(id, "InputFocus.InitialFocus", 1);
+  
+  SetGraphAttribute("x1", 8.0);
+  SetGraphAttribute("y1", 10.0);
+  SetDraw(1);
+
+endmain

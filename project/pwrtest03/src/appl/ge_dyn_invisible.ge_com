@@ -1,0 +1,437 @@
+
+main()
+  int id;
+  int sts;
+  int i;
+  int j;
+  float x0 = 0.2;
+  float y0 = 0.2;
+  float delta = 3;
+  float xm;
+  float ym;
+  float x1;
+  float y1;
+  float x2;
+  float y2;
+  int textcolor;
+  string text;
+  int font;
+
+  ClearAll();
+  SetDraw(0);
+
+  SetGraphAttribute("Scantime", 0.6);
+  SetGraphAttribute("FastScantime", 0.2);
+  SetGraphAttribute("AnimationScantime", 0.2);
+  SetGraphAttribute("ColorTheme", "$default");
+  SetColorTheme(1);
+  SetBackgroundColor(eDrawType_CustomColor1);
+  id = CreateRectangle(0.0, 0.0, 34.0, 2.0);
+  SetObjectFill(id, 1);
+  SetObjectBorder(id, 0);
+  SetObjectShadow(id, 0);
+  SetObjectFillColor(id, eDrawType_CustomColor3);
+
+  x1 = 31.0;
+  y1 = 0.2;
+  x2 = x1 + 2.3;
+  y2 = y1 + 1; 
+  id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Next");
+  SetObjectAttribute(id, "Action", "Script");
+  SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_digborder\", \"\", 1);");
+
+  xm = x0 + 1;
+  ym = y0 + 1;
+  id = CreateText("Invisible", xm, ym, 4, eFont_LucidaSans, 0, eDrawType_CustomColor34);
+
+# One instance
+
+  ym += 1.4;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("One instance", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  y1 = ym + 0.5;
+  x1 = xm;
+  y2 = y1 + 2;  
+  x2 = x1 + 2;
+  id = CreateObject("pwrct_indsquaregreenbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DynType1", mDynType1_Invisible);
+  SetObjectFillColor(id, eDrawType_CustomColor26);
+  SetObjectAttribute(id, "Invisible.Dimmed", 0);
+  SetObjectAttribute(id, "Invisible.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+
+  x1 = x1 + 3;
+  y1 = ym + 0.7;
+  y2 = y1 + 1.5;  
+  x2 = x1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+# Two instances
+
+  ym += 3.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Two instances", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  y1 = ym + 0.5;
+  x1 = xm;
+  y2 = y1 + 2;  
+  x2 = x1 + 2;
+  id = CreateObject("pwrct_indsquaregreenbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DynType1", mDynType1_Invisible);
+  SetObjectFillColor(id, eDrawType_CustomColor26);
+  SetObjectAttribute(id, "Invisible.Instances", 3);
+  SetObjectAttribute(id, "Invisible.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible.Dimmed", 0);
+  SetObjectAttribute(id, "Invisible2.Attribute", "Test03a-Ge-Dyn-Pulse4s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible2.Dimmed", 0);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = x1 + 3;
+  y1 = ym + 0.7;
+  y2 = y1 + 0.75;  
+  x2 = x1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_CustomColor11);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse4s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.75;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+
+# Three instances
+
+  ym += 3.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Three instances", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  y1 = ym + 0.5;
+  x1 = xm;
+  y2 = y1 + 2;  
+  x2 = x1 + 2;
+  id = CreateObject("pwrct_indsquaregreenbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DynType1", mDynType1_Invisible);
+  SetObjectFillColor(id, eDrawType_CustomColor26);
+  SetObjectAttribute(id, "Invisible.Instances", 7);
+  SetObjectAttribute(id, "Invisible.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible.Dimmed", 0);
+  SetObjectAttribute(id, "Invisible2.Attribute", "Test03a-Ge-Dyn-Pulse4s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible2.Dimmed", 0);
+  SetObjectAttribute(id, "Invisible3.Attribute", "Test03a-Ge-Dyn-Pulse2s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible3.Dimmed", 0);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = x1 + 3;
+  y1 = ym + 0.7;
+  y2 = y1 + 0.5;
+  x2 = x1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_CustomColor41);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse2s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.5;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_CustomColor11);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse4s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.5;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# Four instances
+
+  ym += 3.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Four instances", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  y1 = ym + 0.5;
+  x1 = xm;
+  y2 = y1 + 2;  
+  x2 = x1 + 2;
+  id = CreateObject("pwrct_indsquaregreenbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DynType1", mDynType1_Invisible);
+  SetObjectFillColor(id, eDrawType_CustomColor26);
+  SetObjectAttribute(id, "Invisible.Instances", 15);
+  SetObjectAttribute(id, "Invisible.Attribute", "Test03a-Ge-Dyn-Pulse16s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible.Dimmed", 0);
+  SetObjectAttribute(id, "Invisible2.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible2.Dimmed", 0);
+  SetObjectAttribute(id, "Invisible3.Attribute", "Test03a-Ge-Dyn-Pulse4s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible3.Dimmed", 0);
+  SetObjectAttribute(id, "Invisible4.Attribute", "Test03a-Ge-Dyn-Pulse2s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible4.Dimmed", 0);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = x1 + 3;
+  y1 = ym + 0.7;
+  y2 = y1 + 0.375;
+  x2 = x1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_CustomColor56);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse2s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.375;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_CustomColor41);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse4s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.375;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_CustomColor11);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.3;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse16s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# One instance, dimmed
+
+  ym += 3.2;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("One instance, dimmed", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  y1 = ym + 0.5;
+  x1 = xm;
+  y2 = y1 + 2;  
+  x2 = x1 + 2;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "A");
+  SetObjectAttribute(id, "DynType1", mDynType1_Invisible);
+  SetObjectAttribute(id, "Invisible.Dimmed", 1);
+  SetObjectAttribute(id, "Invisible.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+
+  x1 = x1 + 3;
+  y1 = ym + 0.7;
+  y2 = y1 + 1.5;  
+  x2 = x1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+# Two instances, dimmed
+
+  ym += 3.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Two instances, dimmed", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  y1 = ym + 0.5;
+  x1 = xm;
+  y2 = y1 + 2;  
+  x2 = x1 + 2;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "A");
+  SetObjectAttribute(id, "DynType1", mDynType1_Invisible);
+  SetObjectAttribute(id, "Invisible.Instances", 3);
+  SetObjectAttribute(id, "Invisible.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible.Dimmed", 1);
+  SetObjectAttribute(id, "Invisible2.Attribute", "Test03a-Ge-Dyn-Pulse4s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible2.Dimmed", 1);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = x1 + 3;
+  y1 = ym + 0.7;
+  y2 = y1 + 0.75;  
+  x2 = x1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_CustomColor11);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse4s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.75;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+
+# Three instances, dimmed
+
+  ym += 3.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Three instances, dimmed", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  y1 = ym + 0.5;
+  x1 = xm;
+  y2 = y1 + 2;  
+  x2 = x1 + 2;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "A");
+  SetObjectAttribute(id, "DynType1", mDynType1_Invisible);
+  SetObjectAttribute(id, "Invisible.Instances", 7);
+  SetObjectAttribute(id, "Invisible.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible.Dimmed", 1);
+  SetObjectAttribute(id, "Invisible2.Attribute", "Test03a-Ge-Dyn-Pulse4s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible2.Dimmed", 1);
+  SetObjectAttribute(id, "Invisible3.Attribute", "Test03a-Ge-Dyn-Pulse2s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible3.Dimmed", 1);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = x1 + 3;
+  y1 = ym + 0.7;
+  y2 = y1 + 0.5;
+  x2 = x1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_CustomColor41);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse2s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.5;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_CustomColor11);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse4s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.5;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# Four instances, dimmed
+
+  ym += 3.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Four instances, dimmed", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  y1 = ym + 0.5;
+  x1 = xm;
+  y2 = y1 + 2;  
+  x2 = x1 + 2;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "A");
+  SetObjectAttribute(id, "DynType1", mDynType1_Invisible);
+  SetObjectAttribute(id, "Invisible.Instances", 15);
+  SetObjectAttribute(id, "Invisible.Attribute", "Test03a-Ge-Dyn-Pulse16s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible.Dimmed", 1);
+  SetObjectAttribute(id, "Invisible2.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible2.Dimmed", 1);
+  SetObjectAttribute(id, "Invisible3.Attribute", "Test03a-Ge-Dyn-Pulse4s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible3.Dimmed", 1);
+  SetObjectAttribute(id, "Invisible4.Attribute", "Test03a-Ge-Dyn-Pulse2s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible4.Dimmed", 1);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = x1 + 3;
+  y1 = ym + 0.7;
+  y2 = y1 + 0.375;
+  x2 = x1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_CustomColor56);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse2s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.375;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_CustomColor41);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse4s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.375;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_CustomColor11);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.3;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse16s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# Two instances, dimmed/invisible
+
+  ym += 3.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Two instances, dimmed/invisible", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  y1 = ym + 0.5;
+  x1 = xm;
+  y2 = y1 + 2;  
+  x2 = x1 + 2;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "A");
+  SetObjectAttribute(id, "DynType1", mDynType1_Invisible);
+  SetObjectAttribute(id, "Invisible.Instances", 3);
+  SetObjectAttribute(id, "Invisible.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible.Dimmed", 1);
+  SetObjectAttribute(id, "Invisible2.Attribute", "Test03a-Ge-Dyn-Pulse4s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Invisible2.Dimmed", 0);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = x1 + 3;
+  y1 = ym + 0.7;
+  y2 = y1 + 0.75;  
+  x2 = x1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_CustomColor11);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse4s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  y1 = y2;
+  y2 = y1 + 0.75;  
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigLowColor);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-Pulse8s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+
+  SetGraphAttribute("x1", 30.0);
+  SetGraphAttribute("y1", 40.0);
+
+  SetDraw(1);
+endmain

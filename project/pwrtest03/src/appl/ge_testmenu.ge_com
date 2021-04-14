@@ -1,0 +1,400 @@
+
+int id;
+float x1;
+float y1;
+float x2;
+float y2;
+
+SetGraphAttribute("ColorTheme", "$default");
+SetColorTheme(1);
+SetBackgroundColor(eDrawType_CustomColor1);
+
+x1 = 0.0;
+x2 = 7.0;
+y1 = 0.0;
+y2 = 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Rectangle");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_testrectangle\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "RoundedRect");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_testroundedrect\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Arc");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_testarc\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Polyline");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_testpolyline\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Polyline2");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_testpolyline2\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Line");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_testline\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Line2");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_testline2\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Text");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_testtext\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Text2");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_testtext2\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "DigLowColor");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_diglowcolor\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "DigColor");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_digcolor\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "AnalogColor");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_analogcolor\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "StatusColor");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_statuscolor\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "DigWarning");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_digwarning\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "DigError");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_digerror\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "DigFlash");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_digflash\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "FillLevel");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_filllevel\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Invisible");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_invisible\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "DigBorder");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_digborder\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "DigText");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_digtext\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Value");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_value\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Rotate");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_rotate\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Move");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_move\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "AnalogShift");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_analogshift\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "DigShift");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_digshift\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Animation");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_animation\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Video");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_video\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "HostObject");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_hostobject\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "DigSound");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_digsound\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "DigCommand");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_digcommand\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "DigTextColor");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_digtextcolor\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "TimeoutColor");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_timeoutcolor\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "DigFourShift");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_digfourshift\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "ScrollingText");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_scrollingtext\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "DigBackgroundColor");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_digbackgroundcolor\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "DigScript");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_digscript\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "PopupMenu");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_popupmenu\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "SetDig");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_setdig\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "ToggleDig");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_toggledig\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "StoDig");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_stodig\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "SetValue");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_setvalue\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Command");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_command\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Script");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_script\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Help");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_help\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "OpenGraph");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_opengraph\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "OpenURL");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_openurl\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "Confirm");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_confirm\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "IncrAnalog");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_incranalog\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "RadioButton");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_radiobutton\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "ValueInput");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_valueinput\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "ToolTip");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_tooltip\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "InputFocus");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_inputfocus\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "PulldownMenu");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_pulldownmenu\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "OptionMenu");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_optionmenu\");");
+
+y1 += 1.0;
+y2 += 1.0;
+id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+SetObjectAttribute(id, "Text", "CatchSignal");
+SetObjectAttribute(id, "Action", "Script");
+SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_catchsignal\");");
+
+SetGraphAttribute("x1", 12.0);
+SetGraphAttribute("y1", y2);

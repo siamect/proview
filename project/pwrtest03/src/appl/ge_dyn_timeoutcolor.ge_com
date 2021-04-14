@@ -1,0 +1,118 @@
+
+main()
+  int id;
+  int sts;
+  int i;
+  int j;
+  float x0 = 0.2;
+  float y0 = 0.2;
+  float delta = 3;
+  float xm;
+  float ym;
+  float x1;
+  float y1;
+  float x2;
+  float y2;
+  int textcolor;
+  string text;
+  int font;
+
+  ClearAll();
+  SetDraw(0);
+
+  SetGraphAttribute("Scantime", 0.6);
+  SetGraphAttribute("FastScantime", 0.2);
+  SetGraphAttribute("AnimationScantime", 0.2);
+  SetGraphAttribute("ColorTheme", "$default");
+  SetColorTheme(1);
+  SetBackgroundColor(eDrawType_CustomColor1);
+  id = CreateRectangle(0.0, 0.0, 34.0, 2.0);
+  SetObjectFill(id, 1);
+  SetObjectBorder(id, 0);
+  SetObjectFillColor(id, eDrawType_CustomColor3);
+
+  x1 = 31.0;
+  y1 = 0.2;
+  x2 = x1 + 2.3;
+  y2 = y1 + 1; 
+  id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Next");
+  SetObjectAttribute(id, "Action", "Script");
+  SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_digfourshift\", \"\", 1);");
+
+  xm = x0 + 1;
+  ym = y0 + 1;
+  id = CreateText("TimeoutColor", xm, ym, 4, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# Red
+  ym += 1.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Red timeout color, 2, 3, 4, 5 s", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s_no.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "DynType2", mDynType2_TimeoutColor);
+  SetObjectAttribute(id, "TimeoutColor.attribute","Test03a-Ge-Dyn-Pulse2s.ActualValue##Boolean");
+  SetObjectAttribute(id, "TimeoutColor.Time", 2.0);
+  SetObjectAttribute(id, "TimeoutColor.Color", eDrawType_CustomColor11);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s_no.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "DynType2", mDynType2_TimeoutColor);
+  SetObjectAttribute(id, "TimeoutColor.attribute","Test03a-Ge-Dyn-Pulse2s.ActualValue##Boolean");
+  SetObjectAttribute(id, "TimeoutColor.Time", 3.0);
+  SetObjectAttribute(id, "TimeoutColor.Color", eDrawType_CustomColor11);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s_no.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "DynType2", mDynType2_TimeoutColor);
+  SetObjectAttribute(id, "TimeoutColor.attribute","Test03a-Ge-Dyn-Pulse2s.ActualValue##Boolean");
+  SetObjectAttribute(id, "TimeoutColor.Time", 4.0);
+  SetObjectAttribute(id, "TimeoutColor.Color", eDrawType_CustomColor11);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s_no.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "DynType2", mDynType2_TimeoutColor);
+  SetObjectAttribute(id, "TimeoutColor.attribute","Test03a-Ge-Dyn-Pulse2s.ActualValue##Boolean");
+  SetObjectAttribute(id, "TimeoutColor.Time", 5.0);
+  SetObjectAttribute(id, "TimeoutColor.Color", eDrawType_CustomColor11);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+
+  SetGraphAttribute("x1", 30.0);
+  SetGraphAttribute("y1", 40.0);
+
+  SetDraw(1);
+endmain

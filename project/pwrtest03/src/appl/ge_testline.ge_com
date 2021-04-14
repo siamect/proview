@@ -1,0 +1,115 @@
+function int set_object(int id, int fill, int border, int shadow, int gradient, int fillcolor)
+  SetObjectFill(id, fill);
+  SetObjectBorder(id, border);
+  SetObjectShadow(id, shadow);
+  SetObjectGradient(id, gradient);
+  SetObjectFillColor(id, fillcolor);
+endfunction
+
+main()
+  int id;
+  int sts;
+  int i;
+  int j;
+  float x0 = 0.2;
+  float y0 = 0.2;
+  float delta = 0.2;
+  float x;
+  float y;
+  float x2;
+  float y2;
+  float width = 3;
+  float height = 0.5;
+  float lwidth;
+  float lheight;
+  float lx;
+  float ly;
+  float lx2;
+  float ly2;
+  int bordercolor;
+  int linewidth;
+  float linewidth_delta = 0.018;
+
+  ClearAll();
+  SetDraw(0);
+
+  x = 31.0;
+  y = 0.2;
+  x2 = x + 2.3;
+  y2 = y + 1; 
+  id = CreateObject("pwr_smallbuttoncenter", x, y, x2, y2);
+  SetObjectFillColor(id, eDrawType_Color31);
+  SetObjectAttribute(id, "Text", "Next");
+  SetObjectAttribute(id, "Action", "Script");
+  SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_testline2\", \"\", 1);");
+
+  x = x0 - 0.05;
+  y = y0 + 0.3;
+  id = CreateImage("ge_testline.png", x, y, 30.5, 46.98);
+
+  y = y0;
+  x = x0;
+  linewidth = 1;
+  for (i = 0; i < 8; i++)
+    lx = x + linewidth_delta * (linewidth - 1);
+    ly = y + linewidth_delta * (linewidth - 1);
+    lwidth = width - 2 * linewidth_delta * (linewidth - 1);
+    lheight = height - 2 * linewidth_delta * (linewidth - 1);
+    lx2 = lx + lwidth;
+    ly2 = ly;
+    id = CreateLine(lx, ly, lx2, ly2);
+    set_object(id, 0, 1, 0, 0, 0);
+    SetObjectLineWidth(id, linewidth);
+    linewidth++;
+    x += width + delta;
+  endfor
+ 
+  y += 2 * height + 2 * delta;
+  x = x0;
+  bordercolor = eDrawType_Color55;
+  linewidth = 4;
+  for (i = 0; i < 9; i++)
+    lx = x + linewidth_delta * (linewidth - 1);
+    ly = y + linewidth_delta * (linewidth - 1);
+    lwidth = width - 2 * linewidth_delta * (linewidth - 1);
+    lheight = height - 2 * linewidth_delta * (linewidth - 1);
+    lx2 = lx + lwidth;
+    ly2 = ly;
+    id = CreateLine(lx, ly, lx2, ly2);
+    set_object(id, 0, 1, 0, 0, 0);
+    SetObjectLineWidth(id, linewidth);
+    SetObjectBorderColor(id, bordercolor);
+    bordercolor += 30;
+    x += width + delta;
+  endfor
+ 
+  y += 2 * height + 2 * delta;
+  ly2 = y;
+  x = x0;
+  width = 5 * width;
+  linewidth = 1;
+  bordercolor = eDrawType_Color299;
+  for (j = 0; j < 8; j++)
+    if (j == 4)
+      y = ly2;
+      x = x0 + width + delta;;
+    endif      
+    for (i = 0; i < 7; i++)
+      lx2 = x + width;
+      id = CreateLine(x, y, lx2, y);
+      SetObjectLineWidth(id, linewidth);
+      SetObjectBorderColor(id, bordercolor);
+      SetObjectLineType(id, i);
+
+      y += height * 3.20;
+    endfor
+    linewidth += 1;
+  endfor
+ 
+  x = width + 0.4;
+  y += height + 0.5;
+  SetGraphAttribute("x1", x);
+  SetGraphAttribute("y1", y);
+
+  SetDraw(1);
+endmain

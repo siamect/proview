@@ -1,0 +1,178 @@
+
+main()
+  int id;
+  int sts;
+  int i;
+  int j;
+  float x0 = 0.2;
+  float y0 = 0.2;
+  float delta = 3;
+  float xm;
+  float ym;
+  float x1;
+  float y1;
+  float x2;
+  float y2;
+  int textcolor;
+  string text;
+  int font;
+
+  ClearAll();
+  SetDraw(0);
+
+  SetGraphAttribute("Scantime", 0.6);
+  SetGraphAttribute("FastScantime", 0.2);
+  SetGraphAttribute("AnimationScantime", 0.2);
+  SetGraphAttribute("ColorTheme", "$default");
+  SetColorTheme(1);
+  SetBackgroundColor(eDrawType_CustomColor1);
+  id = CreateRectangle(0.0, 0.0, 34.0, 2.0);
+  SetObjectFill(id, 1);
+  SetObjectBorder(id, 0);
+  SetObjectFillColor(id, eDrawType_CustomColor3);
+
+  x1 = 31.0;
+  y1 = 0.2;
+  x2 = x1 + 2.3;
+  y2 = y1 + 1; 
+  id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Next");
+  SetObjectAttribute(id, "Action", "Script");
+  SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_radiobutton\", \"\", 1);");
+
+  xm = x0 + 1;
+  ym = y0 + 1;
+  id = CreateText("IncrAnalog", xm, ym, 4, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# Increase by 1, 0-5
+  ym += 1.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Increase and decrease by 1 (0 - 5)", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm;
+  y1 = ym + 1.2;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Incr");
+  SetObjectAttribute(id, "Action", mActionType1_IncrAnalog);
+  SetObjectAttribute(id, "IncrAnalog.Attribute", "Test03a-Ge-Dyn-IncrAnalog1.ActualValue##Float32");
+  SetObjectAttribute(id, "IncrAnalog.Increment", 1.0);
+  SetObjectAttribute(id, "IncrAnalog.MinValue", 0.0);
+  SetObjectAttribute(id, "IncrAnalog.MaxValue", 5.0);
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 = xm;
+  y1 = ym + 2.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Decr");
+  SetObjectAttribute(id, "Action", mActionType1_IncrAnalog);
+  SetObjectAttribute(id, "IncrAnalog.Attribute", "Test03a-Ge-Dyn-IncrAnalog1.ActualValue##Float32");
+  SetObjectAttribute(id, "IncrAnalog.Increment", -1.0);
+  SetObjectAttribute(id, "IncrAnalog.MinValue", 0.0);
+  SetObjectAttribute(id, "IncrAnalog.MaxValue", 5.0);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 6.5;
+  y1 = ym + 2;
+  x2 = x1 + 3.5;
+  y2 = y1 + 1.0;
+  id = CreateObject("pwrct_valuemediumcenter", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-IncrAnalog1.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%3.1f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+# Increase by 5, -25-25
+  ym += 5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Increase and decrease by 5 (-25 - 25)", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm;
+  y1 = ym + 1.2;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Incr");
+  SetObjectAttribute(id, "Action", mActionType1_IncrAnalog);
+  SetObjectAttribute(id, "IncrAnalog.Attribute", "Test03a-Ge-Dyn-IncrAnalog2.ActualValue##Float32");
+  SetObjectAttribute(id, "IncrAnalog.Increment", 5.0);
+  SetObjectAttribute(id, "IncrAnalog.MinValue", -25.0);
+  SetObjectAttribute(id, "IncrAnalog.MaxValue", 25.0);
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 = xm;
+  y1 = ym + 2.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Decr");
+  SetObjectAttribute(id, "Action", mActionType1_IncrAnalog);
+  SetObjectAttribute(id, "IncrAnalog.Attribute", "Test03a-Ge-Dyn-IncrAnalog2.ActualValue##Float32");
+  SetObjectAttribute(id, "IncrAnalog.Increment", -5.0);
+  SetObjectAttribute(id, "IncrAnalog.MinValue", -25.0);
+  SetObjectAttribute(id, "IncrAnalog.MaxValue", 25.0);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 6.5;
+  y1 = ym + 2;
+  x2 = x1 + 3.5;
+  y2 = y1 + 1.0;
+  id = CreateObject("pwrct_valuemediumcenter", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-IncrAnalog2.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%3.1f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+# Increase integer by 2, -10-10
+  ym += 5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Increase and decrease integer by 2 (-10 - 10)", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm;
+  y1 = ym + 1.2;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Incr");
+  SetObjectAttribute(id, "Action", mActionType1_IncrAnalog);
+  SetObjectAttribute(id, "IncrAnalog.Attribute", "Test03a-Ge-Dyn-IncrAnalogInt.ActualValue##Int32");
+  SetObjectAttribute(id, "IncrAnalog.Increment", 2.0);
+  SetObjectAttribute(id, "IncrAnalog.MinValue", -10.0);
+  SetObjectAttribute(id, "IncrAnalog.MaxValue", 10.0);
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 = xm;
+  y1 = ym + 2.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Decr");
+  SetObjectAttribute(id, "Action", mActionType1_IncrAnalog);
+  SetObjectAttribute(id, "IncrAnalog.Attribute", "Test03a-Ge-Dyn-IncrAnalogInt.ActualValue##Int32");
+  SetObjectAttribute(id, "IncrAnalog.Increment", -2.0);
+  SetObjectAttribute(id, "IncrAnalog.MinValue", -10.0);
+  SetObjectAttribute(id, "IncrAnalog.MaxValue", 10.0);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 6.5;
+  y1 = ym + 2;
+  x2 = x1 + 3.5;
+  y2 = y1 + 1.0;
+  id = CreateObject("pwrct_valuemediumcenter", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-IncrAnalogInt.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.Format", "%d");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+
+  SetGraphAttribute("x1", 30.0);
+  SetGraphAttribute("y1", 40.0);
+
+  SetDraw(1);
+endmain
