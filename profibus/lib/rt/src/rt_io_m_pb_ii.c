@@ -62,12 +62,12 @@ static pwr_tStatus IoCardInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
 
   if (rp->Class != pwr_cClass_Pb_DP_Slave)
   {
-    errh_Info("Illegal object type %s", cp->Name);
+    errh_Info("PROFIBUS: Illegal object type %s", cp->Name);
     return IO__SUCCESS;
   }
 
   if (op->Status < PB_MODULE_STATE_OPERATE)
-    errh_Info("Error initializing Pb module Ii %s", cp->Name);
+    errh_Info("PROFIBUS: Error initializing Pb module Ii %s", cp->Name);
 
   return IO__SUCCESS;
 }

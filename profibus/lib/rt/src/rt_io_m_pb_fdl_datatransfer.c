@@ -225,7 +225,7 @@ static pwr_tStatus IoCardInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp,
   if (local->output_area_size > 0)
     local->output_area = calloc(1, local->output_area_size);
 
-  errh_Info("Init of Profibus FDL Data transfer '%s'", cp->Name);
+  errh_Info("PROFIBUS: Init of FDL Data transfer '%s'", cp->Name);
 
   op->Status = PB__NORMAL;
 

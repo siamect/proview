@@ -63,7 +63,7 @@ static pwr_tStatus IoRackInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
   pwr_tStatus sts;
 
   sts = gdh_ObjidToName(rp->Objid, (char*)&name, sizeof(name), cdh_mNName);
-  errh_Info("Init of Profibus FDL SAP %s", name);
+  errh_Info("PROFIBUS: Init of FDL SAP %s", name);
 
   local = calloc(1, sizeof(*local));
   rp->Local = local;

@@ -56,11 +56,11 @@
 *			000330	C Jurstrand	3.0b and LIMAB and UDP/IP
 *			000517	C Jurstrand	Lynx OS
 *			001222  C Jurstrand	Varmomstart, QCOM
-*			010405  C Jurstrand	3.3a, QCOM på ELN
-*			040303  J Nylund	Ändrat till omgivningsvariabel
-*                                               i sökvägarna till exe-filerna
+*			010405  C Jurstrand	3.3a, QCOM pï¿½ ELN
+*			040303  J Nylund	ï¿½ndrat till omgivningsvariabel
+*                                               i sï¿½kvï¿½garna till exe-filerna
 *			040422	C Jurstrand	4.0.0
-*			101209	R Karlsson	Adderat stöd för Websphere MQ
+*			101209	R Karlsson	Adderat stï¿½d fï¿½r Websphere MQ
 *			111102	cs		RK512 ported from ELN version.
 *
 * Description:
@@ -468,7 +468,6 @@ int main()
   pwr_tStatus sts;
 
   pid_t cpid;
-  int stat_loc;
 
   pwr_tStatus status;
   qcom_sQattr qattr;
@@ -574,7 +573,7 @@ int main()
       qcom_Get(&status, &qid, &get, 100); // TMO == 100 ms
       if (status == QCOM__TMO || status == QCOM__QEMPTY) {
         if (!hotswap) {
-          cpid = waitpid(-1, &stat_loc, WNOHANG);
+          cpid = waitpid(-1, NULL, WNOHANG);
           for (i = 0; i < tpcount; i++) {
             if (tp[i].cpid == -1 || cpid == tp[i].cpid) {
               sts = StartTransport(i);
@@ -589,17 +588,24 @@ int main()
 
         new_event.m = ep->mask;
 
+        // Reload event?
         if (new_event.b.swapInit && !hotswap) {
           hotswap = 1;
           errh_SetStatus(PWR__SRVRESTART);
           for (i = 0; i < tpcount; i++) {
             if (tp[i].cpid > 0) {
+              // Kill the process
               kill(tp[i].cpid, 9);
-              cpid = waitpid(tp[i].cpid, &stat_loc, 0);
-              if (cpid != tp[i].cpid) {
-                errh_Error("Error in waitpid, exiting");
-                errh_SetStatus(PWR__SRVTERM);
-                exit(1);
+              // On most architecture there's no guarantee that we can wait for this pid.
+              // Assume it's already dead...
+              cpid = waitpid(tp[i].cpid, NULL, 0);
+              if (cpid <= -1) {
+                // If the process does not exists its pretty much expected, so we ignore ECHILD
+                if (errno != ECHILD)
+                {
+                  errh_Error(strerror(errno));
+                  exit(EXIT_FAILURE);
+                }
               }
               tp[i].cpid = -1;
             }
@@ -611,15 +617,23 @@ int main()
           new_plc = 1;
         }
 
+        // Terminate event over qCom. ie rt_ini -r
         if (new_event.b.terminate) {
+          errh_Info("Termination initiated, killing child processes");
           for (i = 0; i < tpcount; i++) {
             if (tp[i].cpid > 0) {
+              // Kill the process
               kill(tp[i].cpid, 9);
-              cpid = waitpid(tp[i].cpid, &stat_loc, 0);
-              if (cpid != tp[i].cpid) {
-                errh_Error("Error in waitpid, exiting");
-                errh_SetStatus(PWR__SRVTERM);
-                exit(1);
+              // On most architecture there's no guarantee that we can wait for this pid.
+              // Assume it's already dead...
+              cpid = waitpid(tp[i].cpid, NULL, 0);
+              if (cpid <= -1) {
+                // If the process does not exists its pretty much expected, so we ignore ECHILD
+                if (errno != ECHILD)
+                {
+                  errh_Error(strerror(errno));
+                  exit(EXIT_FAILURE);
+                }
               }
               tp[i].cpid = -1;
             }

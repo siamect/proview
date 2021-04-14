@@ -46,7 +46,7 @@ fi
         echo "<b>Proview Storage Environment V${version:0:3}"
 	echo "Version V$version"
         echo ""
-        echo "Copyright © 2005-${d:0:4} SSAB EMEA AB"
+        echo "Copyright ï¿½ 2005-${d:0:4} SSAB EMEA AB"
         echo ""
         echo "This program is free software; you can redistribute it and/or"
         echo "modify it under the terms of the GNU General Public License as"
@@ -108,8 +108,10 @@ find $pkgroot -type d | xargs chmod 755
 cp $pkgsrc/control $pkgroot/DEBIAN
 cp $pkgsrc/postinst $pkgroot/DEBIAN
 cp $pkgsrc/prerm $pkgroot/DEBIAN
+cp $pkgsrc/postrm $pkgroot/DEBIAN
 chmod 755 $pkgroot/DEBIAN/postinst
 chmod 755 $pkgroot/DEBIAN/prerm
+chmod 755 $pkgroot/DEBIAN/postrm
 chmod 644 $pkgroot/DEBIAN/control
 
 # copyright
@@ -151,8 +153,6 @@ cd $pkgroot/usr/pwrsev
 mkdir cnf
 tar -xf $tarfile
 rm $tarfile
-#rm -r $pkgroot/usr/pwrsev/lib/*.a
-#rm -r $pkgroot/usr/pwrsev/exe/wb*
 cp $pwr_eexe/wb_distr_keepboot.sh $pkgroot/usr/pwrsev/exe
 cd $currentdir
 
@@ -161,21 +161,13 @@ cp $pkgsrc/proview.cnf $pkgroot/usr/pwrsev/cnf
 
 # Copy op to cnf
 mkdir $pkgroot/usr/pwrsev/cnf/op
-cp $pwre_sroot/tools/pkg/$hw/op/.bashrc $pkgroot/usr/pwrsev/cnf/op
-cp $pwre_sroot/tools/pkg/$hw/op/.bash_profile $pkgroot/usr/pwrsev/cnf/op
-#cp $pwre_sroot/tools/pkg/$hw/op/.mwmrc $pkgroot/usr/pwrsev/cnf/op
 cp $pwre_sroot/tools/pkg/$hw/op/.rtt_start $pkgroot/usr/pwrsev/cnf/op
 cp $pwre_sroot/tools/pkg/$hw/op/.xtt_start $pkgroot/usr/pwrsev/cnf/op
-#cp $pwre_sroot/tools/pkg/$hw/op/.xsession $pkgroot/usr/pwrsev/cnf/op
 
 # Copy user to cnf
 mkdir $pkgroot/usr/pwrsev/cnf/user
-cp $pwre_sroot/tools/pkg/$hw/user/.bashrc $pkgroot/usr/pwrsev/cnf/user
-cp $pwre_sroot/tools/pkg/$hw/user/.bash_profile $pkgroot/usr/pwrsev/cnf/user
-#cp $pwre_sroot/tools/pkg/$hw/user/.mwmrc $pkgroot/usr/pwrsev/cnf/user
 cp $pwre_sroot/tools/pkg/$hw/user/.rtt_start $pkgroot/usr/pwrsev/cnf/user
 cp $pwre_sroot/tools/pkg/$hw/user/.xtt_start $pkgroot/usr/pwrsev/cnf/user
-#cp $pwre_sroot/tools/pkg/$hw/user/.xsession $pkgroot/usr/pwrsev/cnf/user
 
 # Create package
 echo "-- Building package"

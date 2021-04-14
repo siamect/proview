@@ -35,6 +35,10 @@
  */
 
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <map>
 
 #include "co_cdh.h"
 #include "co_dcli.h"
@@ -52,6 +56,7 @@
 #include "rt_qcom_msg.h"
 
 static rt_post* post = 0;
+std::map<pid_t, pwr_ePostType> rt_post::dispatchProcesses;
 
 typedef union alau_Event ala_uEvent;
 union alau_Event {
@@ -123,14 +128,86 @@ void rt_post::open()
   conf->Status = PWR__SRUN;
 }
 
+int rt_post::check_dispatch()
+{
+  int wstatus;
+  pid_t wpid;
+
+  for (auto proc_it = dispatchProcesses.begin(); proc_it != dispatchProcesses.end();)
+  {
+    wpid = waitpid(proc_it->first, &wstatus, WNOHANG);
+
+    if (wpid > 0)
+    {
+      if (WEXITSTATUS(wstatus))
+      {
+        errh_Error(
+            "Unable to send mail/sms to recipient. Check configuration!");
+      }
+      else
+      {
+        try
+        {
+          switch (proc_it->second)
+          {
+          case pwr_ePostType_Mail:
+            post->conf->SentEmail++;
+            break;
+          case pwr_ePostType_SMS:
+            post->conf->SentSMS++;
+            break;
+          default:
+            errh_Warning("Unknown rt_post dispatch process!");
+          }
+          proc_it = dispatchProcesses.erase(proc_it);
+          continue;
+        }
+        catch (std::exception& e)
+        {
+          errh_Warning("Error checking rt_post dispatch process");
+        }
+      }
+    }
+    else if (wpid == -1)
+    {
+      // Pretty much implies ECHILD since WNOHANG is used and options are correct...
+      // If all is good, this would never happen though...
+
+      // Clear dispatch list since we don't have any children to tend to anyways...
+      dispatchProcesses.clear();
+      return -1;
+    }
+    proc_it++;
+  }
+
+  return 0;
+}
+
 void rt_post::close()
 {
+  short unsigned int retries_left = 10;
+  // Wait for any children still trying to send mail/sms...
+  while (!dispatchProcesses.empty() && retries_left--)
+  {
+    // Break in the odd event of an error upon waiting for children. -1 indicate an error...
+    // Otherwise check again after a while. If the mail/sms service is having problems this can take a while.
+    // Abort after 10 retries
+    if (check_dispatch() < 0)
+      break;
+    sleep(1);
+  }
+
   mh_OutunitDisconnect();
 }
 
 void rt_post::scan()
 {
   pwr_tStatus sts = 1;
+
+  // Check if any sending processes have finished.
+  // Don't care about the return value...
+  if (!dispatchProcesses.empty())
+    check_dispatch();
 
   while (ODD(sts))
     sts = mh_OutunitReceive();
@@ -185,6 +262,8 @@ pwr_tStatus rt_post::mh_return_bc(mh_sReturn* MsgP)
 }
 pwr_tStatus rt_post::mh_alarm_bc(mh_sMessage* MsgP)
 {
+
+  pid_t cpid;
   ala_uEvent* event = (ala_uEvent*)MsgP;
   int sts;
   char str[256];
@@ -200,8 +279,8 @@ pwr_tStatus rt_post::mh_alarm_bc(mh_sMessage* MsgP)
   if (!post || post->conf->Disable)
     return 1;
 
-  if (!(event->Info.EventFlags & pwr_mEventFlagsMask_Email)
-      || !(event->Info.EventFlags & pwr_mEventFlagsMask_SMS))
+  if (!((event->Info.EventFlags & pwr_mEventFlagsMask_Email) ||
+        (event->Info.EventFlags & pwr_mEventFlagsMask_SMS)))
     return 1;
 
   // Skip events older than 10 minutes
@@ -219,8 +298,8 @@ pwr_tStatus rt_post::mh_alarm_bc(mh_sMessage* MsgP)
     else
       post->email_register(&event->Info.Id);
   }
-
-  if (event->Info.EventFlags & pwr_mEventFlagsMask_SMS) {
+  if (event->Info.EventFlags & pwr_mEventFlagsMask_SMS)
+  {
     if (post->sms_check(&event->Info.Id))
       return 1;
     else
@@ -281,8 +360,20 @@ pwr_tStatus rt_post::mh_alarm_bc(mh_sMessage* MsgP)
       if (post->conf->Options & pwr_mPostOptionsMask_Log)
         errh_Info("Email: %s", cmd);
 
-      system(cmd);
-      post->conf->SentEmail++;
+      // Fork and execute command
+      if ((cpid = fork()) == -1)
+      {
+        errh_Warning("Unable to fork a process for sending Email!");
+      }
+      else if (cpid == 0)
+      {
+        execl("/bin/sh", "sh", "-c", cmd, (char*)0);
+        _exit(EXIT_FAILURE);
+      }
+      else
+      {
+        dispatchProcesses.insert(std::make_pair(cpid, pwr_ePostType_Mail));
+      }
     }
     if (event->Info.EventFlags & pwr_mEventFlagsMask_SMS
         && !streq(post->conf->SMS_Cmd, "")) {
@@ -297,8 +388,20 @@ pwr_tStatus rt_post::mh_alarm_bc(mh_sMessage* MsgP)
       if (post->conf->Options & pwr_mPostOptionsMask_Log)
         errh_Info("SMS: %s", cmd);
 
-      system(cmd);
-      post->conf->SentSMS++;
+      // Fork and execute command
+      if ((cpid = fork()) == -1)
+      {
+        errh_Warning("Unable to fork a process for sending SMS!");
+      }
+      else if (cpid == 0)
+      {
+        execl("/bin/sh", "sh", "-c", cmd, (char*)0);
+        _exit(EXIT_FAILURE);
+      }
+      else
+      {
+        dispatchProcesses.insert(std::make_pair(cpid, pwr_ePostType_SMS));
+      }
     }
   }
   return 1;

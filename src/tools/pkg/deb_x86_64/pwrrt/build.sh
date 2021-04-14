@@ -43,10 +43,10 @@ fi
 	echo ""
 	echo ""
 	echo ""
-        echo "<b>Proview V${version:0:3}"
+        echo "<b>ProviewR V${version:0:3}"
 	echo "Version V$version"
         echo ""
-        echo "Copyright © 2005-${d:0:4} SSAB EMEA AB"
+        echo "Copyright ï¿½ 2005-${d:0:4} SSAB EMEA AB"
         echo ""
         echo "This program is free software; you can redistribute it and/or"
         echo "modify it under the terms of the GNU General Public License as"
@@ -104,6 +104,7 @@ echo "-- Create package tree"
 mkdir -p $pkgroot/DEBIAN
 mkdir -p $pkgroot/usr/share/doc/pwrrt
 mkdir -p $pkgroot/etc/init.d
+mkdir -p $pkgroot/etc/systemd/system
 
 find $pkgroot -type d | xargs chmod 755
 
@@ -111,8 +112,10 @@ find $pkgroot -type d | xargs chmod 755
 cp $pkgsrc/control $pkgroot/DEBIAN
 cp $pkgsrc/postinst $pkgroot/DEBIAN
 cp $pkgsrc/prerm $pkgroot/DEBIAN
+cp $pkgsrc/postrm $pkgroot/DEBIAN
 chmod 755 $pkgroot/DEBIAN/postinst
 chmod 755 $pkgroot/DEBIAN/prerm
+chmod 755 $pkgroot/DEBIAN/postrm
 chmod 644 $pkgroot/DEBIAN/control
 
 # copyright
@@ -128,11 +131,9 @@ gzip -fq --best $pkgroot/usr/share/doc/pwrrt/changelog.Debian
 
 # Startup files
 cp $pkgsrc/pwrp_profile $pkgroot/etc
-chmod a+x $pkgroot/etc/pwrp_profile
 cp $pkgsrc/pwr $pkgroot/etc/init.d
 chmod a+x $pkgroot/etc/init.d/pwr
-#cp $pkgsrc/gdhserver $pkgroot/etc/init.d
-#chmod a+x $pkgroot/etc/init.d/gdhserver
+cp $pkgsrc/pwr.service $pkgroot/etc/systemd/system/
 
 # Man pages
 mkdir -p $pkgroot/usr/share/man/man1
@@ -147,39 +148,25 @@ gzip -fq --best $pkgroot/usr/share/man/man1/rt_rtt.1
 
 # Copy proview
 mkdir $pkgroot/usr/pwrrt
-currentdir="`eval pwd`"
-tarfile=$pwre_broot/$pwre_target/bld/pkg/pwrtmp.tar
-cd $pwre_broot/$pwre_target/exp
 echo "-- Copy release to package tree"
-tar -cf $tarfile *
-cd $pkgroot/usr/pwrrt
-tar -xf $tarfile
-rm $tarfile
+cp -r $pwre_broot/$pwre_target/exp/* $pkgroot/usr/pwrrt/
 rm -r $pkgroot/usr/pwrrt/lib/*.a
 rm -r $pkgroot/usr/pwrrt/exe/wb*
 cp $pwr_eexe/wb_distr_keepboot.sh $pkgroot/usr/pwrrt/exe
-cd $currentdir
+cp $pkgsrc/pwr_mailto $pkgroot/usr/pwrrt/exe/
 
 # Copy configuration files to cnf
 cp $pkgsrc/proview.cnf $pkgroot/usr/pwrrt/cnf
 
 # Copy op to cnf
 mkdir $pkgroot/usr/pwrrt/cnf/op
-cp $pwre_sroot/tools/pkg/$hw/op/.bashrc $pkgroot/usr/pwrrt/cnf/op
-cp $pwre_sroot/tools/pkg/$hw/op/.bash_profile $pkgroot/usr/pwrrt/cnf/op
-#cp $pwre_sroot/tools/pkg/$hw/op/.mwmrc $pkgroot/usr/pwrrt/cnf/op
 cp $pwre_sroot/tools/pkg/$hw/op/.rtt_start $pkgroot/usr/pwrrt/cnf/op
 cp $pwre_sroot/tools/pkg/$hw/op/.xtt_start $pkgroot/usr/pwrrt/cnf/op
-#cp $pwre_sroot/tools/pkg/$hw/op/.xsession $pkgroot/usr/pwrrt/cnf/op
 
 # Copy user to cnf
 mkdir $pkgroot/usr/pwrrt/cnf/user
-cp $pwre_sroot/tools/pkg/$hw/user/.bashrc $pkgroot/usr/pwrrt/cnf/user
-cp $pwre_sroot/tools/pkg/$hw/user/.bash_profile $pkgroot/usr/pwrrt/cnf/user
-#cp $pwre_sroot/tools/pkg/$hw/user/.mwmrc $pkgroot/usr/pwrrt/cnf/user
 cp $pwre_sroot/tools/pkg/$hw/user/.rtt_start $pkgroot/usr/pwrrt/cnf/user
 cp $pwre_sroot/tools/pkg/$hw/user/.xtt_start $pkgroot/usr/pwrrt/cnf/user
-#cp $pwre_sroot/tools/pkg/$hw/user/.xsession $pkgroot/usr/pwrrt/cnf/user
 
 # Create package
 echo "-- Building package"

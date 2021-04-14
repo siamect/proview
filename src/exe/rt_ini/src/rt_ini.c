@@ -40,6 +40,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/prctl.h>
+#include <sys/capability.h>
 
 #include "co_dcli.h"
 #include "co_string.h"
@@ -86,8 +88,6 @@ static void usage(char*);
 static void ini_errl_cb(void* userdata, char* str, char severity,
     pwr_tStatus sts, int anix, int message_type);
 
-void handle_signal(int sig, siginfo_t* si, void* ctx);
-
 static int pid_fd = -1;
 static char* pid_filename = NULL;
 
@@ -105,6 +105,28 @@ int main(int argc, char** argv)
   cp = createContext(argc, argv);
 
   ver_WriteVersionInfo("ProviewR Runtime Environment");
+
+  // If we are running from an unprivileged shell we won't have an inheritable flag set which is needed to set ambient capabilites
+  // TODO Later we should pinpoint the exact needed privileges for each process we spawn.
+
+  // Get current caps
+  cap_t proc_caps = cap_get_proc();
+  cap_value_t pwr_caps[] = { CAP_SYS_NICE, CAP_SYS_BOOT, CAP_NET_BIND_SERVICE, CAP_NET_RAW, CAP_NET_ADMIN, CAP_NET_BROADCAST };
+  size_t num_caps = sizeof(pwr_caps) / sizeof(cap_value_t);
+  // Set inheritable flag on the caps we want
+  cap_set_flag(proc_caps, CAP_INHERITABLE, num_caps, pwr_caps, CAP_SET);
+  // Set the process caps with inheritable flag set
+  cap_set_proc(proc_caps);
+
+  // Set our ambient set so that our currently cap unaware processes may inherit and set the effective bit
+  // TODO Set this on a per process basis giving our processes only the capabilities they need. But for now, it'll do...
+  // Each process could also lower their permitted set and thus forever loose that capability...
+  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_ADMIN, 0, 0);
+  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_BROADCAST, 0, 0);
+  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_RAW, 0, 0);
+  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_SYS_BOOT, 0, 0);
+  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_BIND_SERVICE, 0, 0);
+  prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_SYS_NICE, 0, 0);
 
   if (cp->flags.b.restart) {
     sts = interactive(argc, argv, cp);
@@ -531,6 +553,17 @@ static pwr_tStatus terminate()
   /* Unlink errlog message queue */
   errl_Unlink();
 
+  // if (cp->flags.b.daemonize) {
+  //   if (pid_fd != -1) {
+  //      lockf(pid_fd, F_ULOCK, 0);
+  //      close(pid_fd);
+  //    }
+
+  //   if (pid_filename != NULL) {
+  //     unlink(pid_filename);
+  //   }
+  // }
+
   exit(EXIT_SUCCESS);
 }
 
@@ -885,7 +918,7 @@ static pwr_tStatus events(ini_sContext* cp)
 
     /* Request for termination ?? */
     if (sts != QCOM__TMO && sts != QCOM__QEMPTY && get.type.b == 11) {
-      sts = terminate();
+      sts = terminate(cp);
       return sts;
     }
 
@@ -1675,7 +1708,6 @@ static void create_pidfile()
 static void daemonize()
 {
   pid_t pid = 0;
-  struct sigaction act;
   int fd;
 
   // First fork
@@ -1689,9 +1721,6 @@ static void daemonize()
   // Set the process to be session leader
   if (setsid() < 0)
     exit(EXIT_FAILURE);
-
-  // Ignore any signals from children
-  signal(SIGCHLD, SIG_IGN);
 
   // Second fork
   pid = fork();
@@ -1712,50 +1741,4 @@ static void daemonize()
   stdin = fopen("/dev/null", "r");
   stdout = fopen("/dev/null", "w+");
   stderr = fopen("/dev/null", "w+");
-
-  // Register signal handler
-  act.sa_handler = NULL;
-  act.sa_sigaction = handle_signal;
-  act.sa_flags |= SA_SIGINFO;
-
-  if ((sigemptyset(&act.sa_mask) == -1)
-      || (sigaction(SIGTERM, &act, NULL) == -1)
-      || (sigaction(SIGHUP, &act, NULL) == -1)) {
-    perror("Could not set up signal handlers for rt_ini");
-  }
-}
-
-/**
- * @brief handle_signal
- */
-void handle_signal(int sig, siginfo_t* si, void* ctx)
-{
-  ini_sContext* cp = (ini_sContext*)ctx;
-
-  switch (sig) {
-  case SIGTERM:
-    errh_LogInfo(
-        &cp->log, "SIGNAL CAUGHT (%d). Exiting!\n", sig, cp->node.bodySize);
-    stop(cp);
-
-    if (cp->flags.b.daemonize) {
-      if (pid_fd != -1) {
-        lockf(pid_fd, F_ULOCK, 0);
-        close(pid_fd);
-      }
-
-      if (pid_filename != NULL) {
-        unlink(pid_filename);
-      }
-    }
-    break;
-  case SIGHUP:
-    errh_LogInfo(
-        &cp->log, "SIGNAL CAUGHT (%d). Restarting!\n", sig, cp->node.bodySize);
-    // TODO restart :)
-    break;
-  default:
-    // Noop
-    break;
-  }
 }

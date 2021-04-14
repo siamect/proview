@@ -1858,7 +1858,7 @@ void handle_device_state_changed(io_sAgentLocal* local, io_sAgent* ap)
             else
               dev->Status = PB__NOCONN;
 
-            errh_Info("Profinet - New device state, dev: %s, state: %d",
+            errh_Info("PROFINET: New device state, dev: %s, state: %d",
                       slave_list->Name, dev->State);
           }
         }
@@ -1975,7 +1975,7 @@ void* handle_events(void* ptr)
 
   /* Initialize interface */
 
-  errh_Info("Initializing interface for Profinet IO Master %s", ap->Name);
+  errh_Info("PROFINET: Initializing interface for controller %s", ap->Name);
 
   /* Add master as a device */
 
@@ -2098,7 +2098,7 @@ void* handle_events(void* ptr)
   if (sts != PNAK_OK)
   {
     op->Status = PB__INITFAIL;
-    errh_Error("Starting profistack returned with error code: %d", sts);
+    errh_Error("PROFINET: Start of stack returned with error code: %d", sts);
     //    return IO__ERRINIDEVICE;
   }
 
@@ -2162,7 +2162,7 @@ void* handle_events(void* ptr)
       }
       else
       {
-        errh_Error("Download of Profinet Device configuration failed for: %s",
+        errh_Error("PROFINET: Download of device configuration failed for: %s",
                    device_vect[ii]->device_name);
         /* Setup a dummy i/o area. Depending on exisiting channels this area
          * needs to exist */
@@ -2227,7 +2227,7 @@ void* handle_events(void* ptr)
   if (sts != PNAK_OK)
   {
     op->Status = PB__INITFAIL;
-    errh_Error("Profistack unable to go online, errcode: %d", sts);
+    errh_Error("PROFINET: Unable to go online, error code: %d", sts);
     //    return IO__ERRINIDEVICE;
   }
 
@@ -2248,7 +2248,7 @@ void* handle_events(void* ptr)
       if (sts != PNAK_OK)
       {
         op->Status = PB__INITFAIL;
-        errh_Error("Profistack unable to set state online, errcode: %d", sts);
+        errh_Error("PROFINET: Unable to set state online, error code: %d", sts);
         //	return IO__ERRINIDEVICE;
       }
     }
@@ -2273,7 +2273,7 @@ void* handle_events(void* ptr)
   if (sts != PNAK_OK)
   {
     op->Status = PB__INITFAIL;
-    errh_Error("Profistack unable to activate devices, errcode: %d", sts);
+    errh_Error("PROFINET: Unable to activate devices, error code: %d", sts);
     //    return IO__ERRINIDEVICE;
   }
 
@@ -2296,83 +2296,83 @@ void* handle_events(void* ptr)
   pthread_cond_signal(&local->cond);
   pthread_mutex_unlock(&local->mutex);
 
-  /* Do forever ... */
-
+  /* Do until we close the channel and break out */
   while (1)
   {
-    // wait_object = PNAK_WAIT_OBJECTS_EVENT_IND | PNAK_WAIT_OBJECTS_OTHER
-    //     | PNAK_WAIT_OBJECT_SERVICE_CON;
-    wait_object = PNAK_WAIT_OBJECTS_ALL &
-                  ~(PNAK_WAIT_OBJECT_PROVIDER_DATA_UPDATED |
-                    PNAK_WAIT_OBJECT_CONSUMER_DATA_CHANGED);
+    /* Other states available:
+      PNAK_WAIT_OBJECT_ETHERNET_STATE_CHANGED
+      PNAK_WAIT_OBJECT_INTERRUPTED
+      PNAK_WAIT_OBJECTS_EVENT_IND
+      PNAK_WAIT_OBJECTS_OTHER
+      PNAK_WAIT_OBJECT_SERVICE_CON
+    */
 
-    //    pthread_mutex_lock(&local->mutex);
+    wait_object =
+        PNAK_WAIT_OBJECTS_ALL & ~(PNAK_WAIT_OBJECT_PROVIDER_DATA_UPDATED |
+                                  PNAK_WAIT_OBJECT_CONSUMER_DATA_CHANGED);
 
     sts =
         pnak_wait_for_multiple_objects(0, &wait_object, PNAK_INFINITE_TIMEOUT);
 
     if (sts == PNAK_OK)
     {
-      if (wait_object & PNAK_WAIT_OBJECT_EXCEPTION)
+      if (wait_object & PNAK_WAIT_OBJECT_CHANNEL_CLOSED)
       {
-        // printf("Exception !!\n");
+        errh_Info("PROFINET: Stack received channel closed event!");
+
+        // Iterate through all devices and propagate stopped state to all children
+        if (ap)
+        {
+          ((pwr_sClass_PnControllerSoftingPNAK*)ap->op)->Status = PB__STOPPED;
+          io_sRack* device;
+          io_sCard* module;
+          pwr_sClass_PnDevice *dev;
+          pwr_sClass_PnModule *mod;
+          for (device = ap->racklist; device != NULL; device = device->next)
+          {
+            dev = (pwr_sClass_PnDevice*)device->op;
+            dev->Status = PB__STOPPED;
+            for (module = device->cardlist; module != NULL; module = module->next)
+            {
+              mod = (pwr_sClass_PnModule*)module->op;
+              mod->Status = PB__STOPPED;
+            }
+          }
+        }
+        break;
+      }
+
+      else if (wait_object & PNAK_WAIT_OBJECT_EXCEPTION)
+      {
         handle_exception(local);
       }
 
       else if (wait_object & PNAK_WAIT_OBJECT_STATE_CHANGED)
       {
-        // printf("State changed !!\n");
         handle_state_changed(local);
       }
 
       else if (wait_object & PNAK_WAIT_OBJECT_DEVICE_STATE_CHANGED)
       {
-        // printf("Device state changed !!\n");
         handle_device_state_changed(local, ap);
       }
 
       else if (wait_object & PNAK_WAIT_OBJECT_ALARM)
       {
-        // printf("Alarm !!\n");
         handle_alarm_indication(local, ap);
       }
 
-      // else if (wait_object & PNAK_WAIT_OBJECT_CHANNEL_CLOSED) {
-      //   //	printf("Channel closed !!");
-      //   //     What to do if channel closes ???;
-      // }
-
-      // else if (wait_object & PNAK_WAIT_OBJECT_ETHERNET_STATE_CHANGED) {
-      //   //	printf("Ethernet state changed !!");
-      //   //     What to do if ethernet state changes ???;
-      // }
-
-      // else if (wait_object & PNAK_WAIT_OBJECT_INTERRUPTED) {
-      //   //	printf("Interrupted !!");
-      //   //     What to do if interrupted ???;
-      // }
-
       else if (wait_object & PNAK_WAIT_OBJECT_SERVICE_CON)
       {
-        // printf("Service con !!\n");
         sts = handle_service_con(local, ap);
       }
-      // else
-      // {
-      //   printf("Unhandled status!! 0x%02X\n", wait_object);
-      // }
-    }
-    else if ((sts == PNAK_ERR_FATAL_ERROR) || (sts == PNAK_EXCEPTION_THROWN))
-    {
-      printf("Err Fatal / Exception !!\n");
-      //    user_handle_exception (ChannelId);
     }
     else
     {
-      printf("Running == NOT !!\n");
-      //    pThisSmObject->Running = PN_FALSE;
+      errh_Fatal("PROFINET: Fatal exception occured. Stopping PROFINET!");
+      pnak_stop_stack(0);
     }
-
-    //    pthread_mutex_unlock(&local->mutex);
   }
+  pnak_term();
+  return 0;
 }

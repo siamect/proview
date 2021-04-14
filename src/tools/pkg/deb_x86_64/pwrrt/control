@@ -1,5 +1,5 @@
 Package: pwrrt
-Version: 5.7.2-1
+Version: 5.7.0-1
 Section: base
 Priority: optional
 Architecture: amd64
@@ -14,9 +14,9 @@ Depends: libc6 (>= 2.28-10),
  libhdf5-openmpi-103 (>=1.10.4),
  libgstreamer1.0-0 (>=1.14.4-1),
  libgstreamer-plugins-base1.0-0 (>=1.14.4-2),
- xterm,
- xfonts-100dpi
+ xfonts-100dpi,
+ libmariadb3 (>=1:10.3.22-0)
 Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48,pwr50,pwr51,pwr52,pwr53,pwr54,pwr55,pwr56
-Maintainer: ProviewR <postmaster@proview.se>
-Description: ProviewR runtime package
- 5.7.2-1 Base release
+Maintainer: Proview <postmaster@proview.se>
+Description:
+ 5.7.0-1 Base release

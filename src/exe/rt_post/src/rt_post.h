@@ -37,10 +37,17 @@
 #ifndef rt_post_h
 #define rt_post_h
 
+#include <map>
 #include "rt_mh.h"
 #include "rt_mh_outunit.h"
 #include "co_user.h"
 #include "pwr_baseclasses.h"
+
+typedef enum _pwr_ePostType
+{
+  pwr_ePostType_Mail,
+  pwr_ePostType_SMS
+} pwr_ePostType;
 
 /*! \file rt_post.h
     \brief Contains the rt_post class. */
@@ -64,6 +71,7 @@ class rt_post {
   void sms_register(mh_sEventId* id);
   int email_check(mh_sEventId* id);
   int sms_check(mh_sEventId* id);
+  int check_dispatch();
   void format_sms_text(mh_sMessage* MsgP, char* text, unsigned int size);
   void format_email_text(mh_sMessage* MsgP, char* text, unsigned int size);
 
@@ -75,6 +83,7 @@ class rt_post {
   static pwr_tStatus mh_info_bc(mh_sMessage* MsgP);
   static pwr_tStatus mh_clear_alarmlist_bc(pwr_tNodeIndex nix);
   static pwr_tStatus mh_clear_blocklist_bc(pwr_tNodeIndex nix);
+  static std::map<pid_t, pwr_ePostType> dispatchProcesses;
 
   double scan_time;
   pwr_sClass_PostConfig* conf;

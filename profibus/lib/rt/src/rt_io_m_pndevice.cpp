@@ -64,7 +64,7 @@ static pwr_tStatus IoRackInit(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
   pwr_sClass_ChanIo* chan_io;
 
   sts = gdh_ObjidToName(rp->Objid, (char*)&name, sizeof(name), cdh_mNName);
-  errh_Info("Init of Profinet Device and Modules %s", name);
+  errh_Info("PROFINET: Init of device and modules %s", name);
 
   op = (pwr_sClass_PnDevice*)rp->op;
   local = (io_sPnRackLocal*)rp->Local;
@@ -255,14 +255,17 @@ static pwr_tStatus IoRackRead(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
       sp->ErrorCount++;
   }
 
-  if (sp->ErrorCount == sp->ErrorHardLimit) {
-    errh_Error("IO Error hard limit reached on card '%s', stall action %d",
-        rp->Name, sp->StallAction);
+  if (sp->ErrorCount == sp->ErrorHardLimit)
+  {
+    errh_Error("PROFINET: IO Error hard limit reached on device '%s', stall action %d",
+               rp->Name, sp->StallAction);
     ctx->IOHandler->CardErrorHardLimit = 1;
     ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref(rp->Objid);
     sp->ErrorCount++;
-  } else if (sp->ErrorCount == sp->ErrorSoftLimit) {
-    errh_Error("IO Error soft limit reached on card '%s'", rp->Name);
+  }
+  else if (sp->ErrorCount == sp->ErrorSoftLimit)
+  {
+    errh_Error("PROFINET: IO Error soft limit reached on device '%s'", rp->Name);
     ctx->IOHandler->CardErrorSoftLimit = 1;
     ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref(rp->Objid);
     sp->ErrorCount++;
@@ -297,14 +300,17 @@ static pwr_tStatus IoRackWrite(io_tCtx ctx, io_sAgent* ap, io_sRack* rp)
       sp->ErrorCount++;
   }
 
-  if (sp->ErrorCount == sp->ErrorHardLimit) {
-    errh_Error("IO Error hard limit reached on card '%s', stall action %d",
-        rp->Name, sp->StallAction);
+  if (sp->ErrorCount == sp->ErrorHardLimit)
+  {
+    errh_Error("PROFINET: IO Error hard limit reached on device '%s', stall action %d",
+               rp->Name, sp->StallAction);
     ctx->IOHandler->CardErrorHardLimit = 1;
     ctx->IOHandler->ErrorHardLimitObject = cdh_ObjidToAref(rp->Objid);
     sp->ErrorCount++;
-  } else if (sp->ErrorCount == sp->ErrorSoftLimit) {
-    errh_Error("IO Error soft limit reached on card '%s'", rp->Name);
+  }
+  else if (sp->ErrorCount == sp->ErrorSoftLimit)
+  {
+    errh_Error("PROFINET: IO Error soft limit reached on device '%s'", rp->Name);
     ctx->IOHandler->CardErrorSoftLimit = 1;
     ctx->IOHandler->ErrorSoftLimitObject = cdh_ObjidToAref(rp->Objid);
     sp->ErrorCount++;

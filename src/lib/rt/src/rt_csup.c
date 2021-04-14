@@ -149,7 +149,8 @@ int csup_Exec(pwr_tStatus* status, lst_sEntry* lh, pwr_tDeltaTime* next_start,
       o->CycleCount++;
     } else {
       /* Not owner, check stall delay */
-      if (o->DelayAction == 2) {
+      if (o->DelayAction == pwr_eSupDelayActionEnum_EmergencyBreak)
+      {
         nextLimit.tv_nsec = o->NextLimit.tv_nsec;
         nextLimit.tv_sec = o->NextLimit.tv_sec;
         if (time_Dcomp(&nextLimit, NULL) > 0
