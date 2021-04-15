@@ -12,7 +12,7 @@ install_videodummy="zypper -n install xf86-video-dummy"
 install_build="zypper -n install gcc gcc-c++ gtk2-devel alsa-devel libdb-4_8 \
         libdb-4_8-devel rpcsvc-proto-devel libX11-devel doxygen tar gzip \
         libmariadb-devel libsqlite3-0 libhdf5-103-openmpi2 rpcgen python3-devel \
-        libtirpc-devel libusb-1_0-devel \
+        libtirpc-devel libusb-1_0-devel libcap-devel\
         java-11-openjdk-devel rpm-build"
 install_rpi="zypper -n gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf"
 install_sev="zypper -n install mariadb"

@@ -12,7 +12,7 @@ install_videodummy="apt-get install -y xserver-xorg-video-dummy"
 install_build="apt-get install -y libgtk2.0-dev doxygen gcc g++ make libasound2-dev \
 	libdb5.3-dev libdb5.3++-dev openjdk-11-jdk libmariadb-dev \
 	libsqlite3-dev libhdf5-openmpi-dev librabbitmq-dev libusb-1.0.0-dev librsvg2-dev \
-	libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libpython3-dev python3"
+	libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libpython3-dev python3 libcap-dev"
 install_rpi="apt-get install -y gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf"
 install_sev="apt-get install -y default-mysql-server"
 install_pwr="apt-get install -y libgtk2.0-0 libasound2 \
