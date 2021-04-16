@@ -105,7 +105,7 @@ int main(int argc, char** argv)
   cp = createContext(argc, argv);
 
   ver_WriteVersionInfo("ProviewR Runtime Environment");
-
+#if 0
   // If we are running from an unprivileged shell we won't have an inheritable flag set which is needed to set ambient capabilites
   // TODO Later we should pinpoint the exact needed privileges for each process we spawn.
 
@@ -127,6 +127,7 @@ int main(int argc, char** argv)
   prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_SYS_BOOT, 0, 0);
   prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_BIND_SERVICE, 0, 0);
   prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_SYS_NICE, 0, 0);
+#endif
 
   if (cp->flags.b.restart) {
     sts = interactive(argc, argv, cp);
