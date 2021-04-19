@@ -6214,6 +6214,7 @@ CreateDsTrendCurve <t><t>Create a DsTrendCurve object.<link>CreateDsTrendCurve()
 CreateFastCurve <t><t>Create a FastCurve object.<link>CreateFastCurve()
 CreateImage <t><t>Create an Image object.<link>CreateImage()
 CreateObject <t><t>Create a subgraph object.<link>CreateObject()
+CreatePie <t><t>Create a Pie object.<link>CreatePie()
 CreatePolyLine <t><t>Create a PolyLine object.<link>CreatePolyLine()
 CreateRectangle <t><t>Create a Rectangle object.<link>CreateRectangle()
 CreateRecRounded <t><t>Create a rounded rectangle object.<link>CreateRectRounded()
@@ -6221,6 +6222,7 @@ CreateSevHist <t><t>Create a SevHist object.<link>CreateSevHist()
 CreateText <t><t>Create a Text object.<link>CreateText()
 CreateTrend <t><t>Create a Trend object.<link>CreateTrend()
 CreateXYCurve <t><t>Create an XYCurve object.<link>CreateXYCurve()
+DashInsertObject <t><t>Insert an object into a DashCell.<link>DashInsertObject()
 DeleteObject <t><t>Delete an object.<link>DeleteObject()
 GetCurrentObject <t><t>Returns the identity of the last created object.<link>GetCurrentObject()
 GetFirstObject <t><t>Get the first object. <link>GetFirstObject()
@@ -6272,6 +6274,8 @@ SetObjectGradient <t><t>Set gradient of an object. <link>SetObjectGradient()
 SetObjectShadow <t><t>Set object shadow. <link>SetObjectShadow()
 SetObjectTextColor <t><t>Set text color of an object. <link>SetObjectTextColor()
 SetRgbColor <t><t>Set rgb values of a color. <link>SetRgbColor()
+SetSelectTextBold <t><t>Set text bold on selected objects. <link>SetSelectTextBold()
+SetSelectTextFont <t><t>Set text font on selected objects. <link>SetSelectTextFont()
 
 <h2>Input and output
 <b>Function <t>Description
@@ -6853,6 +6857,39 @@ Returns the id of the created object.
 <c> id = CreateObject("pwr_valve", 2.0, 2.0);
 </topic>
 
+<topic>CreatePie() <style>function
+CreatePie()
+int CreatePie(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Description
+Create a pie object.
+
+<h2>Argument
+
+float  <t>x1    <t>X coordinate of upper left corner.
+float  <t>y1    <t>Y coordinate of upper left corner.
+float  <t>x2    <t>X coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+float  <t>y2    <t>Y coordinate of lower right corner if the object 
+                <t><t>should be scaled. Optional.
+int    <t>colortheme <t>1 if colortheme colors should be used, else 0. Optional.
+
+Returns the id of the created object.
+
+<b>Example
+ 
+<c> int id;
+<c>
+<c> id = CreatePie(2.0, 2.0, 2.5, 5.0, 1);
+<c> SetObjectAttribute(id, "Pie.Sectors", 3);
+<c> SetObjectAttribute(id, "Pie.FixRange", 1);
+<c> SetObjectAttribute(id, "Pie.Attribute1", "H1-Av1.ActualValue##Float32");
+<c> SetObjectAttribute(id, "Pie.Attribute2", "H1-Av2.ActualValue##Float32");
+<c> SetObjectAttribute(id, "Pie.Attribute3", "H1-Av3.ActualValue##Float32");
+<c> SetObjectAttribute(id, "Pie.MinValue", 0.0);
+<c> SetObjectAttribute(id, "Pie.MaxValue", 300.0);
+</topic>
+
 <topic>CreatePolyLine() <style>function
 CreatePolyLine()
 int CreatePolyLine(float x1, float y1, float x2, float y2)
@@ -7045,6 +7082,25 @@ Returns the id of the created object.
 <c> SetObjectAttribute(id, "XY_Curve.YMaxValue", 100.0);
 <c> SetObjectAttribute(id, "XY_Curve.YMinValue", -100.0);
 <c> SetObjectAttribute(id, "XY_Curve.UpdateAttr", "H1-Update.ActualValue##Boolean");
+</topic>
+
+<topic>DashInsertObject() <style>function
+DashInsertObject()
+void DashInsertObject(int dashoid, int oid)
+
+<h2>Description
+Insert an object into a dashcell.
+
+<h2>Argument
+
+int <t>dashoid <t>DashCell object identity.
+int <t>oid     <t>Object identity.
+
+<b>Example
+<c> int doid;
+<c> int oid;
+ 
+<c> DashInsertObject(doid, oid);
 </topic>
 
 <topic>DeleteObject() <style>function
@@ -7472,8 +7528,8 @@ on every fourth index, ie 310, 314, 318, ... 666.
 
 <topic>GetTextExtent() <style>function
 GetTextExtent()
-int GetTextExtent( string text, int textsize, int bold, float width [, float height, 
-float descent])
+int GetTextExtent( string text, int textsize, int font, int bold, float width [, 
+float height, float descent])
 
 <h2>Description
 
@@ -8106,6 +8162,50 @@ on every fourth index, ie 310, 314, 318, ... 666.
 <c> float blue = 0.328;
 
 <c> SetRgbColor( eDrawType_CustomColor1, red, green, blue);
+</topic>
+
+<c> SetObjectTextColor( oid, eDrawType_CustomColor5);
+</topic>
+
+
+<topic>SetSelectTextBold() <style>function
+void SetSelectTextBold()
+void SetSelectTextBold(int font)
+
+<h2>Description
+Set bold to selected objects.
+
+<h2>Argument
+
+int <t>bold     <t>1 for bold and 0 for normal text.
+
+<b>Example
+
+<c> int id;
+
+<c> SelectAdd(id);
+<c> SetSelectTextBold(1);
+
+</topic>
+
+<topic>SetSelectTextFont() <style>function
+void SetSelectTextFont()
+void SetSelectTextFont(int font)
+
+<h2>Description
+Set font to selected objects.
+
+<h2>Argument
+
+int <t>font     <t>Text font.
+
+<b>Example
+
+<c> int id;
+
+<c> SelectAdd(id);
+<c> SetSelectTextFont(eFont_LucidaSans);
+
 </topic>
 
 <topic>gecmd_examples <style>function

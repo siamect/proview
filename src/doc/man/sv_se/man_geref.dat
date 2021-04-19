@@ -6121,6 +6121,7 @@ CreateDsTrendCurve <t><t>Skapa ett DsTrendCurve objekt.<link>CreateDsTrendCurve(
 CreateFastCurve <t><t>Skapa ett FastCurve objekt.<link>CreateFastCurve()
 CreateImage <t><t>Skapa ett Image objekt.<link>CreateImage()
 CreateObject <t><t>Skapa ett subgraph objekt.<link>CreateObject()
+CreatePie <t><t>Skapa ett Pie objekt.<link>CreatePie()
 CreatePolyLine <t><t>Skapa ett PolyLine objekt.<link>CreatePolyLine()
 CreateRectangle <t><t>Skapa ett Rectangle objekt.<link>CreateRectangle()
 CreateRecRounded <t><t>Skapa ett rounded recangle objekt.<link>CreateRectRounded()
@@ -6128,6 +6129,7 @@ CreateSevHist <t><t>Skapa ett SevHist objekt.<link>CreateSevHist()
 CreateText <t><t>Skapa ett Text objekt.<link>CreateText()
 CreateTrend <t><t>Skapa ett Trend objekt.<link>CreateTrend()
 CreateXYCurve <t><t>Skapa ett XYCurve objekt.<link>CreateXYCurve()
+DashInsertObject <t><t>Addera ett object till en DashCell.<link>DashInsertObject()
 DeleteObject <t><t>Ta bort ett objekt.<link>DeleteObject()
 GetCurrentObject <t><t>Returnerar identiteten för senast skapade objekt.<link>GetCurrentObject()
 GetFirstObject <t><t>Hämta första objekt. <link>GetFirstObject()
@@ -6178,6 +6180,8 @@ SetObjectGradient <t><t>Sätt gradient på ett objekt. <link>SetObjectGradient()
 SetObjectShadow <t><t>Sätt skuggning på ett objekt. <link>SetObjectShadow()
 SetObjectTextColor <t><t>Sätt textfärg på ett objekt. <link>SetObjectTextColor()
 SetRgbColor <t><t>Sätt rgb-värden för en färg. <link>SetRgbColor()
+SetSelectTextBold <t><t>Sätt fet text på utvalda objekt. <link>SetSelectTextBold()
+SetSelectTextFont <t><t>Sätt typsnitt på utvalda objekt. <link>SetSelectTextFont()
 
 <h2>In och utmatning
 <b>Funktion <t>Beskrivning
@@ -6725,6 +6729,39 @@ Returnerar id för det skapade objektet.
 <c> id = CreateObject("pwr_valve", 2.0, 2.0);
 </topic>
 
+<topic>CreatePie() <style>function
+CreatePie()
+int CreatePie(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Description
+Skapa ett Pie objekt.
+
+<h2>Argument
+
+float  <t>x1    <t>X koordinat för övre vänstra hörnet.
+float  <t>y1    <t>Y koordinat för övre vänstra hörnet.
+float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+int    <t>colortheme <t>1 om färgtema färger ska användas, annars 0. Optional.
+
+Returnerar identiteten på det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreatePie(2.0, 2.0, 2.5, 5.0, 1);
+<c> SetObjectAttribute(id, "Pie.Sectors", 3);
+<c> SetObjectAttribute(id, "Pie.FixRange", 1);
+<c> SetObjectAttribute(id, "Pie.Attribute1", "H1-Av1.ActualValue##Float32");
+<c> SetObjectAttribute(id, "Pie.Attribute2", "H1-Av2.ActualValue##Float32");
+<c> SetObjectAttribute(id, "Pie.Attribute3", "H1-Av3.ActualValue##Float32");
+<c> SetObjectAttribute(id, "Pie.MinValue", 0.0);
+<c> SetObjectAttribute(id, "Pie.MaxValue", 300.0);
+</topic>
+
 <topic>CreatePolyLine() <style>function
 CreatePolyLine()
 int CreatePolyLine(float x1, float y1, float x2, float y2)
@@ -6917,6 +6954,25 @@ Returnerar id för det skapade objektet.
 <c> SetObjectAttribute(id, "XY_Curve.YMaxValue", 100.0);
 <c> SetObjectAttribute(id, "XY_Curve.YMinValue", -100.0);
 <c> SetObjectAttribute(id, "XY_Curve.UpdateAttr", "H1-Update.ActualValue##Boolean");
+</topic>
+
+<topic>DashInsertObject() <style>function
+DashInsertObject()
+void DashInsertObject(int dashoid, int oid)
+
+<h2>Description
+Addera ett objekt till en dashcell.
+
+<h2>Argument
+
+int <t>dashoid <t>Objektidentitet för DashCell-objektet.
+int <t>oid     <t>Objektidentitet för objektet.
+
+<b>Exempel
+<c> int doid;
+<c> int oid;
+ 
+<c> DashInsertObject(doid, oid);
 </topic>
 
 <topic>DeleteObject() <style>function
@@ -7966,6 +8022,46 @@ b>Exempel
 <c> float blue = 0.328;
 
 <c> SetRgbColor( eDrawType_CustomColor1, red, green, blue);
+</topic>
+
+<topic>SetSelectTextBold() <style>function
+void SetSelectTextBold()
+void SetSelectTextBold(int font)
+
+<h2>Description
+Sätt fet text på utvalda objekt.
+
+<h2>Argument
+
+int <t>bold     <t>1 för fet text 0 för normal text.
+
+<b>Exempel
+
+<c> int id;
+
+<c> SelectAdd(id);
+<c> SetSelectTextBold(1);
+
+</topic>
+
+<topic>SetSelectTextFont() <style>function
+void SetSelectTextFont()
+void SetSelectTextFont(int font)
+
+<h2>Description
+Sätt typsnitt på utvalda objekt.
+
+<h2>Argument
+
+int <t>font     <t>Typsnitt.
+
+<b>Exempel
+
+<c> int id;
+
+<c> SelectAdd(id);
+<c> SetSelectTextFont(eFont_LucidaSans);
+
 </topic>
 
 <topic>gecmd_examples <style>function
