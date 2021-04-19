@@ -16,7 +16,7 @@ ifndef rules_mk
 endif
 
 code_sources := $(wildcard $(pwre_sroot)/lib/rt/src/rt_plc_macro_*.h) \
-                $(wildcard $(pwre_sroot)/lib/rt/src/rt_plc_c_*.c) \
+                $(wildcard $(pwre_sroot)/lib/rt/src/rt_plc_*.c) \
                 $(wildcard $(pwre_sroot)/lib/rt/src/rt_c_*.c) \
 		$(pwre_sroot)/lib/rt/src/rt_csup.c
 code_sources := $(notdir $(code_sources))

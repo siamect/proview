@@ -40,6 +40,12 @@
 #include <math.h>
 #include "simul.h"
 
+/*_*
+  Sim_SignalGeneratorFo
+
+  @aref sim_signalgeneratorfo
+  @aref sim_signalgeneratorfo Sim_SignalGeneratorFo
+*/
 void Sim_SignalGeneratorFo_init(pwr_sClass_Sim_SignalGeneratorFo* o)
 {
   pwr_tDlid dlid;
@@ -170,6 +176,12 @@ void Sim_SignalGeneratorFo_exec(plc_sThread* tp, pwr_sClass_Sim_SignalGeneratorF
   co->ActualValue = o->ActualValue;
 }
 
+/*_*
+  Sim_CylinderTankFo
+
+  @aref sim_cylindertankfo
+  @aref sim_cylindertankfo Sim_CylinderTankFo
+*/
 void Sim_CylinderTankFo_init(pwr_sClass_Sim_CylinderTankFo* o)
 {
   pwr_tDlid dlid;
@@ -203,6 +215,12 @@ void Sim_CylinderTankFo_exec(plc_sThread* tp, pwr_sClass_Sim_CylinderTankFo* o)
   co->OutFlow = o->OutFlow;
 }
 
+/*_*
+  Sim_FurnaceFo
+
+  @aref sim_furnacefo
+  @aref sim_furnacefo Sim_FurnaceFo
+*/
 void Sim_FurnaceFo_init(pwr_sClass_Sim_FurnaceFo* o)
 {
   pwr_tDlid dlid;

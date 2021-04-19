@@ -1770,6 +1770,21 @@ Volume Simul $ClassVolume 0.0.0.8
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Author cs
+    !  @Code simul_sim.c
+    !  @Summary Function object to Sim_SignalGenerator.
+    !  Function object to Sim_SignalGenerator.
+    ! 
+    !  @image orm_sim_signalgeneratorfo_fo.png
+    ! 
+    !  Connect the function object to an object of class or subclass of
+    !  Sim_SignalGenerator.
+    ! 
+    !  @b See also
+    !  @classlink Sim_SignalGenerator simul_signalgenerator.html
+    !*/
     Object Sim_SignalGeneratorFo $ClassDef 19 06-FEB-2019 15:12:12.66
       Body SysBody 06-FEB-2019 15:11:38.90
         Attr Editor = 0
@@ -1958,6 +1973,21 @@ Volume Simul $ClassVolume 0.0.0.8
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Author cs
+    !  @Code simul_sim.c
+    !  @Summary Function object to Sim_CylinderTank.
+    !  Function object to Sim_CylinderTank.
+    ! 
+    !  @image orm_sim_cylindertankfo_fo.png
+    ! 
+    !  Connect the function object to an object of class or subclass of
+    !  Sim_CylinderTank.
+    ! 
+    !  @b See also
+    !  @classlink Sim_CylinderTank simul_cylindertank.html
+    !*/
     Object Sim_CylinderTankFo $ClassDef 21 06-FEB-2019 15:12:28.98
       Body SysBody 06-FEB-2019 15:11:38.90
         Attr Editor = 0
@@ -2145,6 +2175,21 @@ Volume Simul $ClassVolume 0.0.0.8
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Author cs
+    !  @Code simul_sim.c
+    !  @Summary Function object to Sim_Furnace.
+    !  Function object to Sim_Furnace.
+    ! 
+    !  @image orm_sim_furnacefo_fo.png
+    ! 
+    !  Connect the function object to an object of class or subclass of
+    !  Sim_Furnace.
+    ! 
+    !  @b See also
+    !  @classlink Sim_Furnace simul_furnace.html
+    !*/
     Object Sim_FurnaceFo $ClassDef 23 06-FEB-2019 15:12:45.89
       Body SysBody 06-FEB-2019 15:11:38.90
         Attr Editor = 0
@@ -2412,7 +2457,7 @@ Volume Simul $ClassVolume 0.0.0.8
     !/**
     !  @Version 1.0
     !  @Author cs
-    !  @Code simul_mpl.c
+    !  @Code simul_mlp.c
     !  @Summary Function object to Sim_ModelMLP.
     !  Function object to Sim_ModelMLP.
     ! 
