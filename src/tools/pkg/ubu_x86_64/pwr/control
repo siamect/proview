@@ -3,7 +3,7 @@ Section: devel
 Package: pwr57
 Priority: optional
 Maintainer: ProviewR <postmaster@proview.se>
-Version: 5.7.2-1
+Version: 5.8.0-1
 Architecture: amd64
 Depends: libc6 (>= 2.27-3ubuntu1),
  libgtk2.0-0 (>= 2.24.32-1ubuntu1),
@@ -25,4 +25,4 @@ Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr4
 Homepage: http://www.proview.se
 Installed-Size: 1114020
 Description: ProviewR development and runtime environment package
- 5.7.2-1 Base release
+ 5.8.0-1 Base release

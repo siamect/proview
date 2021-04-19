@@ -76,13 +76,13 @@
   ((pwr_tVersion)((a << 24) + (b << 16) + (c << 8) + d))
 #endif
 
-#define pwrv_cBuildTimeStr "04-MAR-2020 12:00:00"
+#define pwrv_cBuildTimeStr "19-APR-2021 12:00:00"
 
-#define pwrv_cPwrVersionStr "V5.7.1"
-#define pwrv_cPwrVersion SET_VERSION('V', 5, 7, 1)
+#define pwrv_cPwrVersionStr "V5.8.0"
+#define pwrv_cPwrVersion SET_VERSION('V', 5, 8, 0)
 
-#define pwrv_cWbdbVersionShortStr "V57"
-#define pwrv_cPwrCopyright "Copyright (C) 2005-2020 SSAB EMEA AB"
+#define pwrv_cWbdbVersionShortStr "V58"
+#define pwrv_cPwrCopyright "Copyright (C) 2005-2021 SSAB EMEA AB"
 
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
 #define PWRV_VERSION_MAJOR (0xFF & (pwrv_cPwrVersion >> 8))

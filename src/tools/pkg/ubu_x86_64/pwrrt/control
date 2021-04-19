@@ -1,5 +1,5 @@
 Package: pwrrt
-Version: 5.7.2-1
+Version: 5.8.0-1
 Section: base
 Priority: optional
 Architecture: amd64
@@ -21,4 +21,4 @@ Maintainer: ProviewR <postmaster@proview.se>
 Homepage: http://www.proview.se
 Installed-Size: 955344
 Description:
- 5.7.2-1 Base release
+ 5.8.0-1 Base release

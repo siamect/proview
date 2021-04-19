@@ -8,8 +8,8 @@
 #
 
 Name: pwrrt
-Summary: Proview/R runtime environment
-Version: 5.7.2
+Summary: ProviewR runtime environment
+Version: 5.8.0
 Release: 1
 License: GPL
 BuildArch: x86_64
@@ -40,7 +40,7 @@ For more information please see www.proview.se.
   echo "<b>Proview V%{version}"
   echo "Version V%{version}-%{release}"
   echo ""
-  echo "Copyright © 2004-${d:0:4} SSAB Oxelösund AB"
+  echo "Copyright © 2005-${d:0:4} SSAB EMEA AB"
   echo ""
   echo "This program is free software; you can redistribute it and/or"
   echo "modify it under the terms of the GNU General Public License as"
@@ -488,5 +488,5 @@ fi
 #%postun
 
 %changelog
-* Fri Nov 13 2020 Claes Sjofors <claes.sjofors@proview.se> 5.7.2-1
+* Mon Apr 19 2021 Claes Sjofors <claes.sjofors@proview.se> 5.8.0-1
   - Base release.
