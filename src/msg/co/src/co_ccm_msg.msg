@@ -70,6 +70,7 @@ alreadyreg      <function is already registred>                         /info
 noaccess	<no access for operation>				/error
 noelem		<number of elements not specified>			/info
 noelemerror	<number of elements not specified>			/error
+misplaced	<misplaced statement>					/error
 
 
 

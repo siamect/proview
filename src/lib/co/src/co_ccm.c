@@ -743,6 +743,9 @@ static void ccm_print_error(ccm_tFileCtx filectx, int sts)
   case CCM__NOELEMERROR:
     strcpy(text, "Number of elements not specified");
     break;
+  case CCM__MISPLACED:
+    strcpy(text, "Misplaced statement");
+    break;
   default:
     strcpy(text, "Unknown error code");
   }
@@ -751,7 +754,7 @@ static void ccm_print_error(ccm_tFileCtx filectx, int sts)
     strncat(text, filectx->error_line, sizeof(text) - strlen(text) - 1);
     text[sizeof(text) - 1] = 0;
   }
-  (filectx->errormessage_func)(text, 0, filectx->client_data);
+  (filectx->errormessage_func)(text, sts & 0x7, filectx->client_data);
 }
 
 static int ccm_replace_symbol(
@@ -6490,6 +6493,8 @@ static int ccm_function_exec(ccm_tFileCtx filectx, char* name, ccm_tFunc* func,
         } else if (str_StartsWith(line_p->line, "return")
             && (line_p->line[6] == ' ' || line_p->line[6] == '	')) {
           /* Return statement, set return value and exit function */
+	  if (!func_p)
+	    return CCM__MISPLACED;
           if (func_p->decl == K_DECL_INT && decl == K_DECL_INT)
             *return_int = int_val;
           else if (func_p->decl == K_DECL_INT && decl == K_DECL_FLOAT)
