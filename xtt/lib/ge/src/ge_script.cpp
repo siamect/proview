@@ -39,6 +39,7 @@
 
 #include <stdlib.h>
 
+#include "pwr_msg.h"
 #include "co_ccm.h"
 #include "co_ccm_msg.h"
 #include "co_dcli.h"
@@ -4879,6 +4880,7 @@ static int ccm_deffilename_func(
     strcpy(fname, infile);
     if (strchr(fname, '.') == 0)
       strcat(fname, ".ge_com");
+    dcli_translate_filename(fname, fname);
   }
   strcpy(outfile, fname);
   return 1;
@@ -4887,10 +4889,19 @@ static int ccm_deffilename_func(
 static int ccm_errormessage_func(
     char* msg, int severity, void* client_data)
 {
-  if (EVEN(severity))
+  switch(severity) {
+  case msg_eSeverity_Info:
+  case msg_eSeverity_Success:
     printf("I %s\n", msg);
-  else
+    break;
+  case msg_eSeverity_Warning:
+    printf("W %s\n", msg);
+    break;
+  case msg_eSeverity_Error:
+  case msg_eSeverity_Fatal:
     printf("E %s\n", msg);
+    break;
+  }
   return 1;
 }
 

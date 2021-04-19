@@ -38,6 +38,7 @@
    This module contains routines for handling of command line in wnav. */
 
 #include "pwr_version.h"
+#include "pwr_msg.h"
 
 #include "co_api_user.h"
 #include "co_ccm.h"
@@ -6314,10 +6315,19 @@ static int wnav_ccm_errormessage_func(
 {
   WNav* wnav = (WNav*)client_data;
 
-  if (EVEN(severity))
+  switch(severity) {
+  case msg_eSeverity_Info:
+  case msg_eSeverity_Success:
     wnav->message('I', msg);
-  else
+    break;
+  case msg_eSeverity_Warning:
+    wnav->message('W', msg);
+    break;
+  case msg_eSeverity_Error:
+  case msg_eSeverity_Fatal:
     wnav->message('E', msg);
+    break;
+  }
   return 1;
 }
 

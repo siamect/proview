@@ -40,6 +40,7 @@
 #include "pwr_nmpsclasses.h"
 #include "pwr_sevclasses.h"
 
+#include "pwr_msg.h"
 #include "co_api_user.h"
 #include "co_ccm_msg.h"
 #include "co_cdh.h"
@@ -8887,10 +8888,19 @@ static int xnav_ccm_errormessage_func(
 {
   XNav* xnav = (XNav*)client_data;
 
-  if (EVEN(severity))
+  switch(severity) {
+  case msg_eSeverity_Info:
+  case msg_eSeverity_Success:
     xnav->message('I', msg);
-  else
+    break;
+  case msg_eSeverity_Warning:
+    xnav->message('W', msg);
+    break;
+  case msg_eSeverity_Error:
+  case msg_eSeverity_Fatal:
     xnav->message('E', msg);
+    break;
+  }
   return 1;
 }
 
