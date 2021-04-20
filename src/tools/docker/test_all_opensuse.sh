@@ -2,10 +2,10 @@
 
 release="opensuse/leap"
 release_name="opensuse"
-buildversion="08-SEP-2020 12:00:00"
+buildversion="19-APR-2021 12:00:00"
 tz="Europe/Stockholm"
 build_rpi=0
-gitrepo="-b stable http://192.168.0.118/git/x5-7-2/pwr/.git"
+gitrepo="-b stable http://192.168.0.141/git/x5-7-2/pwr/.git"
 install_update="zypper refresh"
 install_git="zypper -n install git make"
 install_videodummy="zypper -n install xf86-video-dummy"
@@ -28,8 +28,8 @@ install_pwrrt="zypper -n install -y gtk2 alsa \
 	python3-statsmodels python3-sklearn tar gzip glibc-locale-base"
 install_pkg="rpm -i"
 jdk_dir=/usr/lib64/jvm/java-11-openjdk-11
-ver="5.7.2-1"
-sver="57"
+ver="5.8.0-1"
+sver="58"
 arch="x86_64"
 pkg_pwr="pwr"$sver"-"$ver"."$arch".rpm"
 pkg_pwrdemo="pwrdemo"$sver"-"$ver"."$arch".rpm"
@@ -39,6 +39,13 @@ pkg_pwrrpi="pwrrpi"$sver"-"$ver"."$arch".rpm"
 img_pwrbuild="pwrbuild_"$release_name":v1"
 img_pwrdev="pwrdev_"$release_name":v1"
 img_pwrrt="pwrrt_"$release_name":v1"
+caps="--security-opt seccomp=unconfined \
+      --cap-add NET_ADMIN \
+      --cap-add NET_BROADCAST \
+      --cap-add NET_RAW \
+      --cap-add SYS_BOOT \
+      --cap-add NET_BIND_SERVICE \
+      --cap-add SYS_NICE"
 
 if [ "$1" == "" ]; then
   start=1
@@ -138,7 +145,7 @@ if [ $start -le 5 ] && [ $end -ge 5 ]; then
     --build-arg INSTALL_PKG="$install_pkg" \
     --build-arg PKG_PWRDEMO=$pkg_pwrdemo \
     ./
-  docker run --name pwrdm pwrdemo:v1
+  docker run $caps --name pwrdm pwrdemo:v1
   docker container cp pwrdm:/usr/pwrp/pwrdemo$sver/bld/common/tmp/pwrdemo_status.tlog ./log/
   docker container rm pwrdm
   docker image rm pwrdemo:v1
@@ -149,7 +156,7 @@ if [ $start -le 6 ] && [ $end -ge 6 ]; then
   docker image build -t pwrtest01c:v1 -f pwrtest01/Dockerfile.pwrtest01c \
     --build-arg RELEASE=$img_pwrrt \
     ./
-  docker run --name pwrtc pwrtest01c:v1
+  docker run $caps --name pwrtc pwrtest01c:v1
   docker container cp pwrtc:/pwrp/common/log/plc.tlog ./log/
   docker container cp pwrtc:/pwrp/common/log/aproc.tlog ./log/
   docker container cp pwrtc:/pwrp/common/log/cdh.tlog ./log/
@@ -199,10 +206,10 @@ if [ $start -le 8 ] && [ $end -ge 8 ]; then
     docker network create --subnet=172.18.0.0/16 pwrnet
   fi
 
-  docker run --name pwrtb --net pwrnet --ip 172.18.0.23 pwrtest01b:v1 &
+  docker run $caps --name pwrtb --net pwrnet --ip 172.18.0.23 pwrtest01b:v1 &
   pidb=$!
   sleep 10
-  docker run --name pwrta --net pwrnet --ip 172.18.0.22 pwrtest01a:v1
+  docker run $caps --name pwrta --net pwrnet --ip 172.18.0.22 pwrtest01a:v1
   wait $pidb
   docker container cp pwrta:/pwrp/common/log/neth.tlog ./log/
   docker container cp pwrta:/pwrp/common/log/qcom2a.tlog ./log/
@@ -220,7 +227,7 @@ if [ $start -le 9 ] && [ $end -ge 9 ]; then
     --build-arg RELEASE=$img_pwrrt \
     --build-arg INSTALL_SEV="$install_sev" \
     ./
-  docker run --name pwrtd pwrtest01d:v1
+  docker run $caps --name pwrtd pwrtest01d:v1
   docker container cp pwrtd:/pwrp/common/log/sev.tlog ./log/
 
   docker container rm pwrtd

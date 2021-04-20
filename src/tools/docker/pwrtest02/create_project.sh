@@ -1,5 +1,5 @@
 #!/bin/bash
-ver="V5.7"
+ver="V5.8"
 pname="pwrtest02"
 proot="/usr/pwrp/$pname"
 

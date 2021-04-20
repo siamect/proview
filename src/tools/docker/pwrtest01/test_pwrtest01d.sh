@@ -22,7 +22,7 @@ mysql -e 'ALTER USER pwrp@localhost IDENTIFIED BY "'""'", pwrp@localhost PASSWOR
 set +o xtrace
 su - pwrp
 cd /home/pwrp
-source .bashrc
+source /etc/pwrp_profile
 export DISPLAY=:99
 export PWR_BUS_ID=999
 export PYTHONPATH=$pwr_exe

@@ -4,8 +4,9 @@ echo "Here in test_pwrdemo.sh"
 
 su - pwrp
 cd /home/pwrp
-source .bashrc
-source $pwra_db/pwra_env.sh set project pwrdemo57
+#source .bashrc
+source /etc/pwrp_profile
+source $pwra_db/pwra_env.sh set project pwrdemo58
 export PWR_BUS_ID=999
 
 # Rename boot, node and plcfiles

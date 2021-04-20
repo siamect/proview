@@ -7,7 +7,7 @@ Xorg -noreset +extension GLX +extension RANDR +extension RENDER -config ./dummy_
 sleep 20
 su - pwrp
 cd /home/pwrp
-source .bashrc
+source /etc/pwrp_profile
 export DISPLAY=:99
 export PWR_BUS_ID=999
 export PYTHONPATH=$pwr_exe

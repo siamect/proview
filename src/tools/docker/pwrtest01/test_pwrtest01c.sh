@@ -1,16 +1,21 @@
 #!/bin/bash
 
 echo "Starting test_pwrtest01c.sh"
+echo "Version 1.0"
 
 Xorg -noreset +extension GLX +extension RANDR +extension RENDER -config ./dummy_display_xorg.conf :99 &
 
 sleep 20
 su - pwrp
 cd /home/pwrp
-source .bashrc
+source /etc/pwrp_profile
+echo "exe: $pwrp_exe"
+echo "path: $PATH"
+#source .bashrc
 export DISPLAY=:99
 export PWR_BUS_ID=999
 export PYTHONPATH=$pwr_exe
+which pwr_pkg.sh
 pwr_pkg.sh -i /home/pwrp/pwrp_pkg_pwrtest01c_0001.tgz
 
 # Rename boot, node and plcfiles
