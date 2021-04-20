@@ -1586,6 +1586,74 @@ Volume Simul $ClassVolume 0.0.0.8
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Code simul_sim.c
+    !  @Summary Signal generator.
+    !  Signal generator.
+    ! 
+    ! @b Object graph
+    !  @image orm_sim_signalgenerator_og.png
+    !  
+    !  Select the signal form with the Type attribute.
+    !  
+    ! @b Sine
+    !  The amplitude and period is set with the Amplitude and
+    !  Period attributes.
+    !  @image orm_sim_signalgenerator2.png
+    !  
+    ! @b HalfSine
+    !  The amplitude and period is set with the Amplitude and
+    !  Period attributes.
+    !  @image orm_sim_signalgenerator1.png
+    !  
+    ! @b Square
+    !  The amplitude and period is set with the Amplitude and
+    !  Period attributes, and the relation between the length of
+    !  high and low time is modified with the PulseWidth attribute.
+    !  @image orm_sim_signalgenerator3.png
+    !  
+    ! @b SawTooth
+    !  The amplitude and period is set with the Amplitude and
+    !  Period attributes.
+    !  @image orm_sim_signalgenerator4.png
+    !  
+    ! @b Triangular
+    !  The amplitude and period is set with the Amplitude and
+    !  Period attributes, and the relation between the lengt of
+    !  up and down ramp time is modified with the PulseWidth attribute.
+    !  
+    !  @image orm_sim_signalgenerator5.png
+    !  
+    ! @b StepPyramid
+    !  The amplitude and period is set with the Amplitude and
+    !  Period attributes. The length of a step is set with the
+    !  PulseWidth attribute. A pulse width of 10% will give a pyramid
+    !  with 5 levels.
+    !  
+    !  @image orm_sim_signalgenerator6.png
+    !  
+    ! @b Noise
+    !  A noise signal is added to the curve shape for a more realistic
+    !  sampling simulation. The amplitude of the noice signal is set with
+    !  the Noise attribute.
+    !  @image orm_sim_signalgenerator7.png
+    !  
+    ! @b Filter
+    !  An exponential filter is applied to the curve signal. Below a filtered
+    !  square signal is dispayed. The filter time for the exponential filter is
+    !  set in the FilterTime attribute.
+    !  @image orm_sim_signalgenerator8.png
+    !  
+    ! @b Ramp
+    !  Ramping can be applied to the signal with different values for up and down
+    !  ramping. The size of the ramp is set in the RampUp and RampDown attributes.
+    !  @image orm_sim_signalgenerator9.png
+    !  
+    !  
+    ! @b See also
+    !  @classlink Sim_SignalGeneratorFo simul_sim_signalgeneratorfo.html
+    !*/
     Object Sim_SignalGenerator $ClassDef 18 06-FEB-2019 15:12:05.50
       Body SysBody 06-FEB-2019 15:11:38.90
         Attr Editor = 0
@@ -1597,6 +1665,9 @@ Volume Simul $ClassVolume 0.0.0.8
           Attr StructName = "Sim_SignalGenerator"
           Attr NextAix = "_X43"
         EndBody
+        !/**
+        !  Optional description.
+        !*/
         Object Description $Attribute 21 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "Description"
@@ -1604,6 +1675,9 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Generated signal value.
+        !*/
         Object ActualValue $Attribute 22 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "ActualValue"
@@ -1612,6 +1686,9 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Type of signal shape.
+        !*/
         Object Type $Attribute 23 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:14:39.36
             Attr PgmName = "Type"
@@ -1619,6 +1696,9 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "Simul:Type-Sim_SignalGeneratorType"
           EndBody
         EndObject
+        !/**
+        !  Amplitude of signal.
+        !*/
         Object Amplitude $Attribute 24 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "Amplitude"
@@ -1627,6 +1707,9 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Period of signal.
+        !*/
         Object Period $Attribute 25 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "Period"
@@ -1635,6 +1718,14 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Bias. Value added to the signal shape, or if type Straight, the
+        !  actual signal value.
+        !
+        !  If bias is connected in the function object, the connected
+        !  value is displayed. 
+        !  Otherwise the bias value can be set in this attribute.
+        !*/
         Object Bias $Attribute 26 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "Bias"
@@ -1643,6 +1734,9 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Noise amplitude.
+        !*/
         Object Noise $Attribute 27 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "Noise"
@@ -1650,6 +1744,10 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Pulse width in percentage of the period. Used for square, triangular
+        !  and step pyramid.
+        !*/
         Object PulseWidth $Attribute 28 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "PulseWidth"
@@ -1658,6 +1756,9 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Filter time for exponetial filter.
+        !*/
         Object FilterTime $Attribute 29 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "FilterTime"
@@ -1665,6 +1766,9 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Ramp up value. Maximum change per second.
+        !*/
         Object RampUp $Attribute 41 28-JAN-2020 17:17:09.14
           Body SysBody 28-JAN-2020 17:17:10.50
             Attr PgmName = "RampUp"
@@ -1672,6 +1776,9 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Ramp down value. Maximum change per second.
+        !*/
         Object RampDown $Attribute 42 28-JAN-2020 17:17:19.26
           Body SysBody 28-JAN-2020 17:17:21.07
             Attr PgmName = "RampDown"
@@ -1679,6 +1786,9 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Min and max value for display of signal value in object graph.
+        !*/
         Object ActualValueMin $Attribute 30 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "ActualValueMin"
@@ -1693,6 +1803,9 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Min and max value for amplitude slider in object graph.
+        !*/
         Object AmplitudeMin $Attribute 32 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "AmplitudeMin"
@@ -1707,6 +1820,9 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Min and max value for period slider in object graph.
+        !*/
         Object PeriodMin $Attribute 34 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "PeriodMin"
@@ -1721,6 +1837,9 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Min and max value for bias slider in object graph.
+        !*/
         Object BiasMin $Attribute 36 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "BiasMin"
@@ -1751,6 +1870,12 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the function object is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 40 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "PlcConnect"
@@ -1796,6 +1921,13 @@ Volume Simul $ClassVolume 0.0.0.8
           Attr StructName = "Sim_SignalGeneratorFo"
           Attr NextAix = "_X11"
         EndBody
+        !/**
+        !  Bias. Value added to the signal shape or if type is Straight,
+        !  the actual signal value.
+        !
+        !  If bias is not connected in the function object it can be set
+        !  in the main object.
+        !*/
         Object Bias $Input 6 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "Bias"
@@ -1803,6 +1935,9 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr GraphName = "Bias"
           EndBody
         EndObject
+        !/**
+        !  Pointer to program cycle.
+        !*/
         Object ScanTime $Intern 7 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "ScanTime"
@@ -1810,12 +1945,21 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  @Summary The main object connected to this object.
+        !  The main object of class Sim_SignalGenerator(or a subclass of this class).
+        !  This attribute is set when the object is connected to the main object
+        !  with the connect function in the plc editor.
+        !*/
         Object PlcConnect $Intern 8 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+        !  Contains a pointer to the connected main object.
+        !*/
         Object PlcConnectP $Intern 9 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "PlcConnectP"
@@ -1823,6 +1967,9 @@ Volume Simul $ClassVolume 0.0.0.8
             Attr TypeRef = "pwrs:Type-$Void"
           EndBody
         EndObject
+        !/**
+        !  Output containing the generated signal value.
+        !*/
         Object ActualValue $Output 10 06-FEB-2019 15:11:38.90
           Body SysBody 06-FEB-2019 15:11:38.90
             Attr PgmName = "ActualValue"
