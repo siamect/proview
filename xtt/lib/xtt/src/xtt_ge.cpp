@@ -45,6 +45,7 @@
 #include "xtt_ge.h"
 #include "xtt_log.h"
 #include "xtt_xnav.h"
+#include "cow_xhelp.h"
 
 void XttGe::eventlog_enable(int enable)
 {
@@ -423,6 +424,17 @@ void XttGe::activate_merge()
   }
 }
 
+void XttGe::activate_clear()
+{
+  if (graph->mode == graph_eMode_Runtime)
+    graph->close_trace(0);
+
+  graph->delete_all();
+
+  if (graph->mode == graph_eMode_Runtime)
+    graph->init_trace();
+}
+
 int XttGe::dash_insert(char *name, pwr_tTypeId type)
 {
   grow_tObject o;
@@ -447,6 +459,22 @@ void XttGe::activate_cellattributes()
 void XttGe::activate_graphattributes()
 {
   graph->edit_graph_attributes();
+}
+
+void XttGe::activate_help()
+{
+  char key[80];
+
+  if (help_cb) {
+    if (graph->is_dashboard()) {
+      strcpy(key, "opg_dashboard");
+      CoXHelp::dhelp("opg_dashboard", "", navh_eHelpFile_Base, 0, 0);
+    }
+    else {
+      str_ToLower(key, name);
+      (help_cb)(parent_ctx, key);
+    }
+  }
 }
 
 void XttGe::activate_save()

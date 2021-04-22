@@ -292,6 +292,11 @@ void XttGeGtk::activate_merge(GtkWidget* w, gpointer data)
   ((XttGe *)data)->activate_merge();
 }
 
+void XttGeGtk::activate_clear(GtkWidget* w, gpointer data)
+{
+  ((XttGe *)data)->activate_clear();
+}
+
 void XttGeGtk::activate_cellattributes(GtkWidget* w, gpointer data)
 {
   ((XttGe *)data)->activate_cellattributes();
@@ -342,12 +347,7 @@ void XttGeGtk::activate_help(GtkWidget* w, gpointer data)
 {
   XttGe* ge = (XttGe*)data;
 
-  char key[80];
-
-  if (ge->help_cb) {
-    str_ToLower(key, ge->name);
-    (ge->help_cb)(ge->parent_ctx, key);
-  }
+  ge->activate_help();
 }
 
 void XttGeGtk::action_resize(
@@ -531,6 +531,14 @@ XttGeGtk::XttGeGtk(GtkWidget* xg_parent_wid, void* xg_parent_ctx,
       g_signal_connect(
           file_saveas, "activate", G_CALLBACK(activate_saveas), this);
       gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_saveas);
+
+      if (strcmp(title, "PwR Dashboard") == 0) {
+	GtkWidget *file_clear = gtk_image_menu_item_new_with_mnemonic(
+	    CoWowGtk::translate_utf8("C_lear"));
+	g_signal_connect(
+            file_clear, "activate", G_CALLBACK(activate_clear), this);
+	gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_clear);
+      }
 
       GtkWidget* file_setcolortheme = gtk_image_menu_item_new_with_mnemonic(
           CoWowGtk::translate_utf8("S_et Colortheme"));

@@ -940,6 +940,10 @@ public:
   /*! Remove all objects and reset the graph. */
   void clear_all();
 
+  //! Clear.
+  /*! Remove all objects. */
+  void delete_all();
+
   //! Rotate selected objects.
   /*! \param angle	Rotation angle in degrees. */
   void rotate(double angle);

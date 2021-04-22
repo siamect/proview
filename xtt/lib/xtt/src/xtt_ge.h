@@ -144,8 +144,10 @@ public:
   void activate_paste();
   void activate_connect();
   void activate_merge();
+  void activate_clear();
   void activate_cellattributes();
   void activate_graphattributes();
+  void activate_help();
   void activate_save();
   void activate_saveas();
   void activate_setcolortheme();

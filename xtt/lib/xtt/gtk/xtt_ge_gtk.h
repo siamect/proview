@@ -115,6 +115,7 @@ public:
   static void activate_paste(GtkWidget* w, gpointer data);
   static void activate_connect(GtkWidget* w, gpointer data);
   static void activate_merge(GtkWidget* w, gpointer data);
+  static void activate_clear(GtkWidget* w, gpointer data);
   static void activate_cellattributes(GtkWidget* w, gpointer data);
   static void activate_graphattributes(GtkWidget* w, gpointer data);
   static void activate_save(GtkWidget* w, gpointer data);

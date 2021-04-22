@@ -446,7 +446,7 @@ int Graph::is_javaapplet()
 }
 
 //
-//  Set name
+//  Clear all and reset
 //
 void Graph::clear_all()
 {
@@ -460,6 +460,15 @@ void Graph::clear_all()
     sts = attr_list.get_first((void**)&attrctx);
   }
   grow_New(grow->ctx);
+}
+
+//
+//  Remove all objects
+//
+void Graph::delete_all()
+{
+  grow_DeleteAll(grow->ctx);
+  grow_Redraw(grow->ctx);
 }
 
 //
