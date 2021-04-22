@@ -56,6 +56,7 @@ Larm och händelser <link> opg_events
 Kurvor <link> opg_curves
 Hjälp <link> opg_help
 Navigatör <link> opg_navigator
+Dashboard <link> opg_dashboard
 Plc trace <link> opg_trace
 Setup-skript <link> opg_setupfile
 Användare och privilegier <link> opg_security
@@ -1292,6 +1293,88 @@ loaded, C för cached och M för mounted.
 <b>Fig Laddade volymer
 </topic>
 </headerlevel>
+</chapter>
+
+<chapter>
+<topic> opg_dashboard
+Dashboard
+
+Ett dashboard (instrumentbräda) är en förenklad graf med ett mycket begränsat antal
+byggstenar. Byggstenarna kallas för celler och kan visa värden i form av indikatorer,
+staplar, trendkurvor, givare etc.
+
+<image> opg_fig43.png
+
+Ett dashboard kan skapas in Ge editorn eller i operatörsmiljön.
+
+Dashboardet är indelat i rader och kolumner där cellerna placeras. En cell har initialt
+höjden av en rad och bredden av en kolumn, men storleken kan utökas till flera rader och
+kolumner.
+
+En cell kan innehålla fler element. En stapel cell till exemple, kan innehållar tre
+element. Varje element kopplas till ett analog attribut som visas med en stapel. En 
+trendcell kan innehålla två element och visa två kurvor.
+
+Det finns tree huvudtyper av celler, analoga, digital och objekt.
+
+<h1>Analoga celler
+<h2>Bar
+En stapelcell visar ett analog värde med en stapel och ett värdefält. Det kan innehålla
+tre element.
+
+<image> opg_fig44.png
+<b>Fig Stapelceller med ett, två och tre element
+<h2>BarArc
+<image> opg_fig45.png
+
+<h2>Trend
+<image> opg_fig46.png
+
+<h2>Gauge
+<image> opg_fig47.png
+
+<h2>Gauge2
+<image> opg_fig48.png
+
+<h2>Slider
+<image> opg_fig49.png
+
+<h2>Pie
+<image> opg_fig50.png
+
+<h1>Digitala celler
+<h2>Indicator
+<image> opg_fig51.png
+
+<h2>DigitalTrend
+<image> opg_fig52.png
+
+<h1>Objektceller
+Objektceller finns får några objekt, t ex DsTrendCurve.
+<image> opg_fig53.png
+<b>Fig Objektcell för DsTrendCurve
+
+<h1>Skapa ett dashboard i rt_xtt
+Genom att välja ut ett attribut in navigatorn, och aktivera Funktioner/Dashboard/Lägg till
+(Ctrl+D) i meny, adderas attributet till ett dashboard. Om något dashboard befinner sig
+i editiering-mod lägg det in där, annar läggs det in i "PwR Dashboard". Man kan addera
+celler tills alla rader och kolumner är fyllda.
+
+För ett analog attribute skapas en stapelcell. Cell-typen kan ändras genom att gå över i
+editiering-mod från File/Edit (Ctrl+E) in menyn. Öppna cellens attribute (dubbelklick)
+och välj en annan typ i Dash.Type. Lämna editerings-mod med Ctrl+E.
+
+I editerings-mod, öppnas Ge editorn in begränsad mod. Några funktioner i editerings-mod är
+
+ - Addera. Skapa en tom cell.
+ - Ta bort. Ta bort en cell.
+ - Kopiera. Kopiera celler.
+ - Klistra in. Klistra in kopierade celler.
+ - Koppla. Koppla utvalt attribut i navigatorn.
+ - Slå ihop. Slå ihop celler. Utvalda celler slås ihop i den cell som var först utvalt.
+ - Från GraphAttribut kan cykeltiden och dashboardets storlek ändras.
+
+</topic>
 </chapter>
 
 <chapter>

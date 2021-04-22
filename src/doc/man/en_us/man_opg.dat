@@ -1379,7 +1379,7 @@ edit mode is
  - Delete. Delete cell.
  - Copy. Copy a cell.
  - Paste. Paste previously copied cells.
- - Connect. Connect select attribute in the navigator to cell.
+ - Connect. Connect selected attribute in the navigator to cell.
  - Merge. Merge cells. The selected cells will be merged into the one that was first selected.
  - From GraphAttributes, the scan time and dashboard size can be modified.
 
