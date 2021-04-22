@@ -59,11 +59,11 @@ $(load_dir)/pwrs.dbs :
 	@ chmod a+w $(target)
 
 $(inc_dir)/pwr_systemclasses.h :
-	@ $(log_struct)
+	@ $(log_gen)
 	@ $(co_convert) -so -d $(inc_dir) -y $(bld_dir)/pwrs.d_h_wbl  "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
 
 $(inc_dir)/pwr_systemclasses.hpp :
-	@ $(log_hpp)
+	@ $(log_gen)
 	@ $(co_convert) -po -d $(inc_dir) -y $(bld_dir)/pwrs.d_hpp_wbl "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
 
 $(doc_dir)/en_us/orm/pwrs_allclasses.html :

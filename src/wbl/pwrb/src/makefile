@@ -88,11 +88,11 @@ $(load_dir)/pwrb.dbs :
 	@ chmod a+w $(target)
 
 $(inc_dir)/pwr_baseclasses.h :
-	@ $(log_struct)
+	@ $(log_gen)
 	@ $(co_convert) -so -d $(inc_dir) -y $(bld_dir)/pwrb.d_h_wbl "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 
 $(inc_dir)/pwr_baseclasses.hpp :
-	@ $(log_hpp)
+	@ $(log_gen)
 	@ $(co_convert) -po -d $(inc_dir) -y $(bld_dir)/pwrb.d_hpp_wbl "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 
 $(doc_dir)/en_us/orm/pwrb_allclasses.html :
