@@ -1,9 +1,8 @@
 #!/bin/bash
 
-pf="ubu_x86_64"
 aroot="/usr/pwrp/adm"
-pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwr$ver
-pkgsrc=$pwre_sroot/tools/pkg/$pf/pwr
+hw=ubu_x86_64
+admdir=$pwre_sroot/tools/pkg/deb_x86_64/adm
 
 # Get version
 if [ -e $pwr_inc/pwr_version.h ]; then
@@ -18,11 +17,11 @@ fi
 
 # Generate version help file
 {
-  if [ ! -e $pkgsrc/control ]; then
+  if [ ! -e $pwre_sroot/tools/pkg/$hw/pwr/control ]; then
     echo "Controlfile not found"
     exit 1
   fi
-  datfile=$pkgsrc/control
+  datfile=$pwre_sroot/tools/pkg/$hw/pwr/control
 
   echo "<topic> version"
   d=`eval date +\"%F %X\"`
@@ -30,7 +29,7 @@ fi
   {
     let printout=0
     while read line; do
-      if [ "${line:0:9}" = "Package: " ]; then 
+      if [ "${line:0:9}" = "Package: " ]; then
         package=${line#Package: }
       fi
       if [ "${line:0:9}" = "Version: " ]; then
@@ -49,15 +48,15 @@ fi
         echo "<b>Proview V${version:0:3}"
 	echo "Version V$version"
         echo ""
-        echo "Copyright © 2005-${d:0:4} SSAB EMEA AB"
+        echo "Copyright ï¿½ 2005-${d:0:4} SSAB EMEA AB"
         echo ""
         echo "This program is free software; you can redistribute it and/or"
-        echo "modify it under the terms of the GNU General Public License as" 
+        echo "modify it under the terms of the GNU General Public License as"
         echo "published by the Free Software Foundation, either version 2 of"
         echo "the License, or (at your option) any later version."
         echo ""
-        echo "This program is distributed in the hope that it will be useful" 
-        echo "but WITHOUT ANY WARRANTY; without even the implied warranty of" 
+        echo "This program is distributed in the hope that it will be useful"
+        echo "but WITHOUT ANY WARRANTY; without even the implied warranty of"
         echo "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
         echo "For more details, see the"
         echo "GNU General Public License. <weblink> http://www.proview.se/gpllicense.html"
@@ -96,13 +95,16 @@ if [ "$1" == "-v" ]; then
   exit
 fi
 
+pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwr$ver
+pkgsrc=$pwre_sroot/tools/pkg/$hw/pwr
+
 echo "-- Building pwr$ver"
 
 # Create directories
 mkdir -p $pkgroot/DEBIAN
 mkdir -p $pkgroot/usr/share/doc/pwr$ver
 mkdir -p $pkgroot/usr/share/applications
-mkdir -p $pkgroot/usr/pwrp
+mkdir -p $pkgroot/usr/pwrp/adm/db
 mkdir -p $pkgroot/etc
 
 find $pkgroot -type d | xargs chmod 755
@@ -114,8 +116,10 @@ echo "ver=\"$ver\"" >> $pkgroot/DEBIAN/postinst
 echo "pwre_target=\"$pwre_target\"" >> $pkgroot/DEBIAN/postinst
 cat $pkgsrc/postinst >> $pkgroot/DEBIAN/postinst
 cp $pkgsrc/prerm $pkgroot/DEBIAN
+cp $pkgsrc/postrm $pkgroot/DEBIAN
 chmod 755 $pkgroot/DEBIAN/postinst
 chmod 755 $pkgroot/DEBIAN/prerm
+chmod 755 $pkgroot/DEBIAN/postrm
 chmod 644 $pkgroot/DEBIAN/control
 
 # copyright
@@ -160,26 +164,21 @@ cp $pkgsrc/pwrp_profile $pkgroot/etc
 chmod a+x $pkgroot/etc/pwrp_profile
 
 # Copy adm files to cnf
-cp $pwre_sroot/tools/pkg/deb/adm/pwr_setup.sh $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
+cp $admdir/pwr_setup.sh $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
 echo "pwrp set base V${ver:0:1}.${ver:1:1}" >> $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/pwr_setup.sh
 chmod a+x $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/pwr_setup.sh
-cp $pwre_sroot/tools/pkg/deb/adm/pwra_env.sh $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
+cp $admdir/pwra_env.sh $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
 chmod a+x $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/pwra_env.sh
-cp $pwre_sroot/tools/pkg/deb/adm/pwr_volumelist.dat $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
-cp $pwre_sroot/tools/pkg/deb/adm/pwr_user2.dat $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
-cp $pwre_sroot/tools/pkg/deb/adm/proview_icon.png $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
+cp $admdir/pwr_volumelist.dat $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
+cp $admdir/pwr_user2.dat $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
+cp $admdir/proview_icon.png $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
 
 # Copy user to cnf
 mkdir $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.bashrc $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
-echo "source $aroot/db/pwr_setup.sh" >> $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user/.bashrc
-cp $pwre_sroot/tools/pkg/deb/user/.bash_profile $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
-#cp $pwre_sroot/tools/pkg/deb/user/.mwmrc $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.rtt_start $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.xtt_start $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
-#cp $pwre_sroot/tools/pkg/deb/user/.xsession $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/wtt_init.pwr_com $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/wtt_init1.pwr_com $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
+cp $pwre_sroot/tools/pkg/$hw/user/.rtt_start $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
+cp $pwre_sroot/tools/pkg/$hw/user/.xtt_start $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
+cp $pwre_sroot/tools/pkg/$hw/user/wtt_init.pwr_com $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
+cp $pwre_sroot/tools/pkg/$hw/user/wtt_init1.pwr_com $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
 
 # Generate desktop file
 {
@@ -205,15 +204,3 @@ else
 fi
 
 rm -r $pkgroot
-
-
-
-
-
-
-
-
-
-
-
-

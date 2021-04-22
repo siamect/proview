@@ -2,6 +2,7 @@
 
 aroot="/usr/pwrp/adm"
 hw=deb_x86_64
+admdir=$pwre_sroot/tools/pkg/deb_x86_64/adm
 
 # Get version
 if [ -e $pwr_inc/pwr_version.h ]; then
@@ -163,14 +164,14 @@ cp $pkgsrc/pwrp_profile $pkgroot/etc
 chmod a+x $pkgroot/etc/pwrp_profile
 
 # Copy adm files to cnf
-cp $pwre_sroot/tools/pkg/$hw/adm/pwr_setup.sh $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
+cp $admdir/pwr_setup.sh $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
 echo "pwrp set base V${ver:0:1}.${ver:1:1}" >> $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/pwr_setup.sh
 chmod a+x $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/pwr_setup.sh
-cp $pwre_sroot/tools/pkg/$hw/adm/pwra_env.sh $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
+cp $admdir/pwra_env.sh $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
 chmod a+x $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/pwra_env.sh
-cp $pwre_sroot/tools/pkg/$hw/adm/pwr_volumelist.dat $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
-cp $pwre_sroot/tools/pkg/$hw/adm/pwr_user2.dat $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
-cp $pwre_sroot/tools/pkg/$hw/adm/proview_icon.png $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
+cp $admdir/pwr_volumelist.dat $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
+cp $admdir/pwr_user2.dat $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
+cp $admdir/proview_icon.png $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
 
 # Copy user to cnf
 mkdir $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
