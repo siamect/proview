@@ -7488,13 +7488,10 @@ int gcg_comp_m12(gcg_ctx gcgctx, vldh_t_node node)
 
   ldhses = (node->hn.wind)->hw.ldhses;
 
-  if (!(node->ln.cid == pwr_cClass_StoAtoIp
-          || node->ln.cid == pwr_cClass_CStoAtoIp
-          || node->ln.cid == pwr_cClass_StoIp
-          || node->ln.cid == pwr_cClass_CStoIp
-          || node->ln.cid == pwr_cClass_stoap
-          || node->ln.cid == pwr_cClass_cstoap)) {
-    if (!gcgctx->order_comp) {
+  if (!gcgctx->order_comp) {
+    if ((node->ln.cid == pwr_cClass_resdp
+	 || node->ln.cid == pwr_cClass_stodp
+	 || node->ln.cid == pwr_cClass_setdp)) {
       /* Check first if the object is connected to an order object,
         if it is, it will be compiled when by the ordermethod, when
         gcgctx->order_comp is true */
