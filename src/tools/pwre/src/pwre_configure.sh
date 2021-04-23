@@ -393,7 +393,12 @@ if [ $pwre_hw == "hw_arm" ] && [ $ebuild -eq 1 ]; then
     echo "export pwre_conf_libpwrnmps=\"-lpwr_nmps\"" >> $cfile
     echo "export pwre_conf_libpwrtlog=\"-lpwr_tlog\"" >> $cfile
     echo "export pwre_conf_libpwrsev=\"-lpwr_sev\"" >> $cfile
-    echo "export pwre_conf_lib=\"-lpthread -lm -lrt -lcrypt\"" >> $cfile
+    dver=`eval grep 10 /etc/debian_version`
+    if [ "$dver" != "" ]; then
+      echo "export pwre_conf_lib=\"-lpthread -lm -lrt -lcrypt\"" >> $cfile
+    else
+      echo "export pwre_conf_lib=\"-lpthread -lm -lrt\"" >> $cfile
+    fi
     echo "export pwre_conf_libwb=\"$conf_libwb\"" >> $cfile
     echo "export pwre_conf_libmq=\"$conf_libmq\"" >> $cfile
     echo "export pwre_conf_libwmq=\"$conf_libwmq\"" >> $cfile
