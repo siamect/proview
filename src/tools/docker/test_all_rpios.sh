@@ -5,7 +5,7 @@ release_name="rpi"
 buildversion="19-APR-2021 12:00:00"
 tz="Europe/Stockholm"
 build_rpi=0
-gitrepo="-b stable http://192.168.0.141/git/x5-7-2/pwr/.git"
+gitrepo="-b develp http://192.168.0.141/git/x5-7-2/pwr/.git"
 install_update="apt-get update"
 install_git="apt-get install -y git make"
 install_videodummy="apt-get install -y xserver-xorg-video-dummy"
@@ -100,7 +100,6 @@ if [ $start -le 2 ] && [ $end -ge 2 ]; then
   docker container cp tmp:/pwr/rls/os_linux/hw_arm/bld/pkg/$pkg_pwr ./pkg/
   docker container cp tmp:/pwr/rls/os_linux/hw_arm/bld/pkg/$pkg_pwrdemo ./pkg/
   docker container cp tmp:/pwr/rls/os_linux/hw_arm/bld/pkg/$pkg_pwrrt ./pkg/
-  docker container cp tmp:/pwr/rls/os_linux/hw_arm/bld/pkg/$pkg_pwrrpi ./pkg/
   docker container cp tmp:/pwr/rls/os_linux/hw_arm/bld/project/pwrtest01/bld/common/load/pwrp_pkg_pwrtest01a_0001.tgz ./data/
   docker container cp tmp:/pwr/rls/os_linux/hw_arm/bld/project/pwrtest01/bld/common/load/pwrp_pkg_pwrtest01b_0001.tgz ./data/
   docker container cp tmp:/pwr/rls/os_linux/hw_arm/bld/project/pwrtest01/bld/common/load/pwrp_pkg_pwrtest01c_0001.tgz ./data/
