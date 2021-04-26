@@ -12792,6 +12792,8 @@ int gcg_comp_m58(gcg_ctx gcgctx, vldh_t_node node)
   pwr_sAttrRef caref, ccaref;
   pwr_tObjName cname;
   char cast[40] = "";
+  pwr_tClassId bodyclass;
+  pwr_sGraphPlcNode* graphbody;
 
   ldhses = (node->hn.wind)->hw.ldhses;
 
@@ -12828,7 +12830,10 @@ int gcg_comp_m58(gcg_ctx gcgctx, vldh_t_node node)
     if (EVEN(sts))
       return sts;
 
-    if (strlen(cname) > 3 && streq(&cname[strlen(cname) - 3], "Sim"))
+    // If connectmethod is 26 connect to SimConnect else PlcConnect
+    sts = ldh_GetClassBody(ldhses, node->ln.cid, "GraphPlcNode",
+        &bodyclass, (char**)&graphbody, &size);
+    if (ODD(sts) && graphbody->connectmethod == 26)
       sts = ldh_ArefANameToAref(ldhses, &aref, "SimConnect", &caref);
     else
       sts = ldh_ArefANameToAref(ldhses, &aref, "PlcConnect", &caref);
