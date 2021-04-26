@@ -3035,7 +3035,7 @@ Column1.SelectAttribute <t><t>Array attribute of type Boolean, When a cell in th
                   <t><t>column is selected, the corresponding element in the 
                   <t><t>array is set. The attribute should be stated with data type 
                   <t><t>and size, see above.
-Column1Width      <t><t>Width of the column.
+Column1.Width      <t><t>Width of the column.
 Column1.HeaderText <t><t>Column title. The title is written in the header row.
 </topic>
 
@@ -3801,6 +3801,9 @@ Rotate.x0        <t><t>x coordinate for the rotation point.
 Rotate.y0        <t><t>y coordinate for the rotation point.
 Rotate.Factor    <t><t>Factor that, multiplied by the value of the signal, gives 
                  <t><t>the value in degrees. 
+Rotate.Offset    <t><t>Angel offset value.
+Rotate.MinAngle  <t><t>Min value for angle.
+Rotate.MaxAngle  <t><t>Max value for angle.
 </topic>
 
 <topic>GeDynMove <style>function
@@ -6212,6 +6215,7 @@ CreateBarArc <t><t>Create a BarArc object.<link>CreateBarArc()
 CreateDsTrend <t><t>Create a DsTrend object.<link>CreateDsTrend()
 CreateDsTrendCurve <t><t>Create a DsTrendCurve object.<link>CreateDsTrendCurve()
 CreateFastCurve <t><t>Create a FastCurve object.<link>CreateFastCurve()
+CreateLine <t><t>Create a Line object.<link>CreateLine()
 CreateImage <t><t>Create an Image object.<link>CreateImage()
 CreateObject <t><t>Create a subgraph object.<link>CreateObject()
 CreatePie <t><t>Create a Pie object.<link>CreatePie()
@@ -6245,11 +6249,13 @@ GetRgbColor <t><t>Get rgb values of a color. <link>GetRgbColor()
 GetTextExtent <t><t>Calculate the extent of a text. <link>GetTextExtent()
 GroupGetFirstObject <t><t>Get first object in a group. <link>GroupGetFirstObject()
 GroupGetNextObject <t><t>Get next object in a group. <link>GroupGetNextObject()
+GroupSelected <t><t>Group the selected objects. <link>GroupSelected()
 MeasureObject <t><t>Get object extent. <link>MeasureObject()
 MoveAbsObject <t><t>Move an object to a position. <link>MoveAbsObject()
 MoveObject <t><t>Move an object a distance. <link>MoveObject()
 OpenGraph <t><t>Open a graph. <link>OpenGraph()
 PolyLineAdd <t><t>Add a segment to a PolyLine.<link>PolyLineAdd()
+RotateSelected <t><t>Rotate selected objects. <link>RotateSelected()
 Reload <t><t>Read current graph from file. <link>Reload()
 SaveGraph <t><t>Save the current graph. <link>SaveGraph()
 ScaleObject <t><t>Scale an object. <link>ScaleObject()
@@ -6276,6 +6282,7 @@ SetObjectTextColor <t><t>Set text color of an object. <link>SetObjectTextColor()
 SetRgbColor <t><t>Set rgb values of a color. <link>SetRgbColor()
 SetSelectTextBold <t><t>Set text bold on selected objects. <link>SetSelectTextBold()
 SetSelectTextFont <t><t>Set text font on selected objects. <link>SetSelectTextFont()
+SetSelectTextSize <t><t>Set text size on selected objects. <link>SetSelectTextSize()
 
 <h2>Input and output
 <b>Function <t>Description
@@ -6596,7 +6603,7 @@ Returns the id of the created object.
 
 <topic>CreateAxisArc() <style>function
 CreateAxisArc()
-int CreateAxisArc(float x1, float y1 [,float x2, float y2, int colortheme, int dynamic, int direction])
+int CreateAxisArc(float x1, float y1 [,float x2, float y2, int colortheme, int dynamic])
 
 <h2>Description
 Create an axis arc object.
@@ -6611,9 +6618,6 @@ float  <t>y2    <t>Y coordinate of lower right corner if the object
                 <t><t>should be scaled. Optional.
 int    <t>colortheme <t>1 if colortheme colors should be used, else 0. Optional.
 int    <t>dynamic <t>Dynamic axis (1) or static (0). Optional.
-int    <t>direction <t>Direction up, down, left or right. Specified 
-                 <t><t>with symbols eDirection_Up, eDirection_Down,
-                 <t><t>eDirection_Left and eDirection_Right. Optional.
 
 Returns the id of the created object.
 
@@ -7603,6 +7607,27 @@ Returns an integer with the object identity.
 
 </topic>
 
+<topic>GroupSelected() <style>function
+GroupSelected()
+int GroupSelected()
+
+<h2>Description
+
+Create a group of the selected objects.
+
+Returns an integer with the group identity.
+
+<b>Example
+
+<c> int id1;
+<c> int id2;
+<c> int gid;
+ 
+<c> SelectAdd(id1);
+<c> SelectAdd(id2);
+<c> gid = GroupSelected();
+</topic>
+
 <topic>MeasureObject() <style>function
 MeasureObject()
 void MeasureObject( int oid, float ll_x, float ll_y, float ur_x, float ur_y)
@@ -7702,6 +7727,33 @@ float <t>y     <t>Y coordinate for end point.
 <c> id = CreatePolyLine(2.0, 2.0, 3.0, 3.0);
 <c> PolyLineAdd(id, 4.0, 2.0);
 <c> PolyLineAdd(id, 5.0, 3.0);
+</topic>
+
+<topic>RotateSelected() <style>function
+RotateSelected()
+void RotateSelected(float angle, int rotationpoint)
+
+<h2>Description
+Rotate selected object around the rotation point.
+The rotation point can be
+
+ 0 lower left corner
+ 1 lower right corner
+ 2 upper right corner
+ 3 uppder left corner
+ 4 center (default)
+
+<h2>Arguments
+
+float <t>angle     <t>Angle in degrees for the rotation.
+int <t>rotationpoint     <t>Rotation point. Default center.
+
+<b>Example
+ 
+<c> int id;
+
+<c> SelectAdd(id);
+<c> RotateSelected(90.0);
 </topic>
 
 <topic>Reload() <style>function
@@ -8206,6 +8258,25 @@ int <t>font     <t>Text font.
 <c> SelectAdd(id);
 <c> SetSelectTextFont(eFont_LucidaSans);
 
+</topic>
+
+<topic>SetSelectTextSize() <style>function
+void SetSelectTextSize()
+void SetSelectTextSize(int size)
+
+<h2>Description
+Set text size to selected objects.
+
+<h2>Argument
+
+int <t>size     <t>Size index value in the range 0-5.
+
+<b>Example
+
+<c> int id;
+
+<c> SelectAdd(id);
+<c> SetSelectTextSize(2);
 </topic>
 
 <topic>gecmd_examples <style>function

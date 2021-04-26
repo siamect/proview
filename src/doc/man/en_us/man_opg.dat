@@ -2927,10 +2927,19 @@ tzset()			<LINK> tzset()
 verify()		<LINK> verify()
 
 <h2>Array functions
-arrayclear 		<link> arrayclear()
-arraypush 		<link> arraypush()
-arraysize 		<link> arraysize()
-sort			<link> sort()
+arrayclear() 		<link> arrayclear()
+arraypush() 		<link> arraypush()
+arraysize() 		<link> arraysize()
+sort()			<link> sort()
+
+<h2>Math functions
+cos()	 		<link> cos()
+EVEN()	 		<link> EVEN()
+MAX()			<link> MAX()
+MIN() 			<link> MIN()
+ODD()	 		<link> ODD()
+random() 		<link> random()
+sin()	 		<link> sin()
 
 <h2>Miscellaneous functions
 CutObjectName()		<LINK> cutobjectname()
@@ -4023,7 +4032,164 @@ Returns the status of the operation.
 <c>  ...
 <c>  sts = sort(name[], description[]);
 </TOPIC>
+</headerlevel>
 
+<TOPIC> math_functions <style> function
+Math functions
+
+<b>Function <t>Description
+cos <t>Cosine function. <link> cos()
+EVEN <t>Check if value is even. <link> EVEN()
+MAX <t>Get larges value. <link> MAX()
+MIN <t>Get smallest value. <link> MIN()
+ODD <t>Check of value is odd. <link> ODD()
+random <t>Get a random value. <link> random()
+sin <t>Sine function. <link> sin()
+</TOPIC>
+
+<headerlevel>
+
+<TOPIC> cos() <style> function
+cos()
+
+float cos(float angle)
+
+<b>Description
+
+Returns the cosine value for an angle in degrees.
+
+<b>Arguments
+
+float	<t>angle <t>Angle in degrees.
+
+<b>Example
+
+<c> float x;
+<c> float angle = 45;
+
+<c> x = cos(angle);
+</TOPIC>
+
+<TOPIC> EVEN() <style> function
+EVEN()
+
+int EVEN(int val)
+
+<b>Description
+
+Test if a value is even.
+
+Returns 1 if the value is even, else 0.
+
+<b>Arguments
+
+int	<t>val <t>Value.
+</TOPIC>
+
+<TOPIC> MAX() <style> function
+MAX()
+
+float MAX(float v1, float v2)
+
+<b>Description
+
+Returns the largest of two values.
+
+<b>Arguments
+
+float	<t>v1 <t>Value.
+float	<t>v2 <t>Value.
+
+<b>Example
+
+<c> float f1;
+<c> float f2;
+<c> float max;
+
+<c> max = MAX(f1, f2);
+</TOPIC>
+
+<TOPIC> MIN() <style> function
+MIN()
+
+float MIN(float v1, float v2)
+
+<b>Description
+
+Returns the smallest of two values.
+
+<b>Arguments
+
+float	<t>v1 <t>Value.
+float	<t>v2 <t>Value.
+
+<b>Example
+
+<c> float f1;
+<c> float f2;
+<c> float min;
+
+<c> min = MIN(f1, f2);
+</TOPIC>
+
+<TOPIC> ODD() <style> function
+ODD()
+
+int ODD(int val)
+
+<b>Description
+
+Test if a value is odd.
+
+Returns 1 if the value is odd, else 0.
+
+<b>Arguments
+
+int	<t>val <t>Value.
+</TOPIC>
+
+<TOPIC> random() <style> function
+random()
+
+float random(float min_value, float max_value)
+
+<b>Description
+
+Returns a random value in the specified range.
+
+<b>Arguments
+
+float	<t>min_value <t>Min value for random value.
+float	<t>max_value <t>Max value for random value.
+
+<b>Example
+
+<c> float val;
+
+<c> val = random(0.0, 100.0);
+</TOPIC>
+
+<TOPIC> sin() <style> function
+sin()
+
+float sin(float angle)
+
+<b>Description
+
+Returns the sine value for an angle in degrees.
+
+<b>Arguments
+
+float	<t>angle <t>Angle in degrees.
+
+<b>Example
+
+<c> float x;
+<c> float angle = 45;
+
+<c> x = sin(angle);
+</TOPIC>
+</headerlevel>
 
 <TOPIC> database_functions <style> function
 Database functions

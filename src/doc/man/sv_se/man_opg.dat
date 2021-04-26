@@ -2699,10 +2699,19 @@ tzset()			<LINK> tzset()
 verify()		<LINK> verify()
 
 <h2>Vektor funktioner
-arrayclear 		<link> arrayclear()
-arraypush 		<link> arraypush()
-arraysize 		<link> arraysize()
-sort			<link> sort()
+arrayclear() 		<link> arrayclear()
+arraypush()		<link> arraypush()
+arraysize()		<link> arraysize()
+sort()			<link> sort()
+
+<h2>Matematiska funktioner
+cos()	 		<link> cos()
+EVEN()	 		<link> EVEN()
+MAX()			<link> MAX()
+MIN() 			<link> MIN()
+ODD()	 		<link> ODD()
+random() 		<link> random()
+sin()	 		<link> sin()
 
 <h2>Diverse funktioner
 CutObjectName()		<LINK> cutobjectname()
@@ -3327,7 +3336,7 @@ strrchr <t>Returnera sista förekomsten av ett tecken i en sträng. <link> strrchr
 strlen <t>Beräkna längden på en sträng.	<link> strlen()
 strstr <t>Returnera första förekomsten av en delsträng i en sträng. <link> strstr()
 tolower <t>Konvertera till små bokstäver. <link> tolower()
-toupper <t>Konveretra till stora bokstäver. <link> toupper()
+toupper <t>Konvertera till stora bokstäver. <link> toupper()
 </TOPIC>
 
 <headerlevel>
@@ -3787,6 +3796,163 @@ Returnerar operationens status.
 <c>  ...
 <c>  sts = sort(name[], description[]);
 </TOPIC>
+
+<TOPIC> math_functions <style> function
+Matematiska funktioner
+
+<b>Funktion <t>Beskrivning
+cos <t>Cosinus funktion. <link> cos()
+EVEN <t>Testa om värdet är jämnt. <link> EVEN()
+MAX <t>Returnera största värdet. <link> MAX()
+MIN <t>Returnera minsta värdet. <link> MIN()
+ODD <t>Test om värdet är udda. <link> ODD()
+random <t>Returnera ett slumptal. <link> random()
+sin <t>Sinus funktion. <link> sin()
+</TOPIC>
+
+<headerlevel>
+
+<TOPIC> cos() <style> function
+cos()
+
+float cos(float angle)
+
+<b>Beskrivning
+
+Returnerar cosinus-värdet för en vinkel i grader.
+
+<b>Argument
+
+float	<t>angle <t>Vinkel i grader.
+
+<b>Exempel
+
+<c> float x;
+<c> float angle = 45;
+
+<c> x = cos(angle);
+</TOPIC>
+
+<TOPIC> EVEN() <style> function
+EVEN()
+
+int EVEN(int val)
+
+<b>Beskrivning
+
+Testa om ett värde är jämnt.
+
+Returnerar 1 om värdet är jämnt, annars 0.
+
+<b>Argument
+
+int	<t>val <t>Värde.
+</TOPIC>
+
+<TOPIC> MAX() <style> function
+MAX()
+
+float MAX(float v1, float v2)
+
+<b>Beskrivning
+
+Returnerar det största av två värden.
+
+<b>Argument
+
+float	<t>v1 <t>Värde.
+float	<t>v2 <t>Värde.
+
+<b>Exempel
+
+<c> float f1;
+<c> float f2;
+<c> float max;
+
+<c> max = MAX(f1, f2);
+</TOPIC>
+
+<TOPIC> MIN() <style> function
+MIN()
+
+float MIN(float v1, float v2)
+
+<b>Beskrivning
+
+Returnerar det minsta av två värden.
+
+<b>Argument
+
+float	<t>v1 <t>Värde.
+float	<t>v2 <t>Värde.
+
+<b>Exempel
+
+<c> float f1;
+<c> float f2;
+<c> float min;
+
+<c> min = MIN(f1, f2);
+</TOPIC>
+
+<TOPIC> ODD() <style> function
+ODD()
+
+int ODD(int val)
+
+<b>Beskrivning
+
+Testa om ett värde är udda.
+
+Returnerar 1 om värdet är udda, annar 0.
+
+<b>Argument
+
+int	<t>val <t>Värde.
+</TOPIC>
+
+<TOPIC> random() <style> function
+random()
+
+float random(float min_value, float max_value)
+
+<b>Beskrivning
+
+Returnerar ett slumpmässigt värde i det angivna intervallet.
+
+<b>Argument
+
+float	<t>min_value <t>Undre gräns för slumptalet.
+float	<t>max_value <t>Övre gräns för slumptalet.
+
+<b>Exempel
+
+<c> float val;
+
+<c> val = random(0.0, 100.0);
+</TOPIC>
+
+<TOPIC> sin() <style> function
+sin()
+
+float sin(float angle)
+
+<b>Beskrivning
+
+Returnerar sinus-värdet för en vinkel i grader.
+
+<b>Argument
+
+float	<t>angle <t>Vinkel i grader.
+
+<b>Exempel
+
+<c> float x;
+<c> float angle = 45;
+
+<c> x = sin(angle);
+</TOPIC>
+</headerlevel>
 
 <TOPIC> database_functions <style> function
 Databas funktioner
