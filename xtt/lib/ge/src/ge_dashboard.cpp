@@ -203,8 +203,10 @@ void GeDash::get_attributes(grow_tObject o, attr_sItem* attrinfo, int* item_coun
 
 void GeDash::set_attribute(grow_tObject object, const char* attr_name, int second)
 {
-  for (int j = 0; j < elements; j++)
-    elem[j]->set_attribute(object, attr_name, second);
+  if (!second && elements > 0)
+    elem[0]->set_attribute(object, attr_name, second);
+  else if (elements > 1)
+    elem[1]->set_attribute(object, attr_name, second);
 }
 
 void GeDash::replace_attribute(char* from, char* to, int* cnt, int strict)
@@ -636,14 +638,12 @@ void GeDashAnalog::get_attributes(attr_sItem* attrinfo, int* item_count,
 void GeDashAnalog::set_attribute(
     grow_tObject object, const char* attr_name, int second)
 {
-  if (!second) {
-    char msg[200];
+  char msg[200];
 
-    strncpy(attribute, attr_name, sizeof(attribute));
-    snprintf(msg, sizeof(msg), "Analog.Attribute = %s", attr_name);
-    msg[sizeof(msg) - 1] = 0;
-    dash->graph->message('I', msg);
-  }
+  strncpy(attribute, attr_name, sizeof(attribute));
+  snprintf(msg, sizeof(msg), "Analog.Attribute = %s", attr_name);
+  msg[sizeof(msg) - 1] = 0;
+  dash->graph->message('I', msg);
 }
 
 void GeDashAnalog::replace_attribute(
@@ -864,14 +864,12 @@ void GeDashDigital::get_attributes(attr_sItem* attrinfo, int* item_count,
 void GeDashDigital::set_attribute(
     grow_tObject object, const char* attr_name, int second)
 {
-  if (!second) {
-    char msg[200];
+  char msg[200];
 
-    strncpy(attribute, attr_name, sizeof(attribute));
-    snprintf(msg, sizeof(msg), "Digital.Attribute = %s", attr_name);
-    msg[sizeof(msg) - 1] = 0;
-    dash->graph->message('I', msg);
-  }
+  strncpy(attribute, attr_name, sizeof(attribute));
+  snprintf(msg, sizeof(msg), "Digital.Attribute = %s", attr_name);
+  msg[sizeof(msg) - 1] = 0;
+  dash->graph->message('I', msg);
 }
 
 void GeDashDigital::replace_attribute(
