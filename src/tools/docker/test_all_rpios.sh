@@ -5,14 +5,15 @@ release_name="rpi"
 buildversion="19-APR-2021 12:00:00"
 tz="Europe/Stockholm"
 build_rpi=0
-gitrepo="-b develp http://192.168.0.141/git/x5-7-2/pwr/.git"
+gitrepo="-b develp http://192.168.0.144/git/x5-7-2/pwr/.git"
 install_update="apt-get update"
 install_git="apt-get install -y git make"
 install_videodummy="apt-get install -y xserver-xorg-video-dummy"
 install_build="apt-get install -y libgtk2.0-dev doxygen gcc g++ make libasound2-dev \
 	libdb5.3-dev libdb5.3++-dev openjdk-11-jdk default-libmysqlclient-dev \
 	libsqlite3-dev libhdf5-openmpi-dev librabbitmq-dev libusb-1.0.0-dev librsvg2-dev \
-	libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libpython3-dev python3 libcap-dev"
+	libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libpython3-dev python3 libcap-dev \
+	xfonts-100dpi"
 install_rpi=""
 install_sev="apt-get install -y default-mysql-server"
 install_pwr="apt-get install -y libgtk2.0-0 libasound2 \

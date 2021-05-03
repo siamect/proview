@@ -14,10 +14,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 COPY ./build/build.sh ./build/build_pwrdemo.sh ./build/build_pkg.sh ./build/build_pwrtest01.sh ./build/build_rpi.sh  ./
 RUN git clone $GITREPO
-#RUN mv proview pwr;
 RUN ./build.sh $BUILDVERSION $JDK_DIR
-RUN ./build_pwrdemo.sh
-RUN ./build_pwrtest01.sh
 RUN if [ $BUILD_RPI -eq 1 ]; then \
       ./build_rpi.sh; \
     fi
