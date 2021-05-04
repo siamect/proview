@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -50,10 +50,10 @@ GraphGtk::GraphGtk(void* xn_parent_ctx, GtkWidget* xn_parent_wid,
     const char* xn_default_path, graph_eMode graph_mode, int scrollbar,
     int xn_gdh_init_done, const char* xn_object_name, int xn_use_default_access,
     unsigned int xn_default_access, unsigned int xn_options, int xn_color_theme,
-    void (*xn_keyboard_cb)(void*, int, int))
+    int xn_dashboard, void (*xn_keyboard_cb)(void*, int, int))
     : Graph(xn_parent_ctx, xn_name, xn_default_path, graph_mode,
           xn_gdh_init_done, xn_object_name, xn_use_default_access,
-          xn_default_access, xn_options, xn_color_theme, xn_keyboard_cb),
+	  xn_default_access, xn_options, xn_color_theme, xn_dashboard, xn_keyboard_cb),
       parent_wid(xn_parent_wid)
 {
   default_access = xn_default_access;
@@ -94,8 +94,10 @@ GraphGtk::~GraphGtk()
   localdb_free();
 
   for (int i = 0; i < grow_cnt; i++) {
-    grow_SetCtxUserData(grow_stack[i]->ctx, 0);
-    delete grow_stack[i];
+    if (grow_stack[i] != grow) {
+      grow_SetCtxUserData(grow_stack[i]->ctx, 0);
+      delete grow_stack[i];
+    }
   }
   grow_SetCtxUserData(grow->ctx, 0);
   delete grow;

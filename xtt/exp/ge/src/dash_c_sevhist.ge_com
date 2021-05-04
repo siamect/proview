@@ -1,0 +1,120 @@
+function int dash_objectgraph(int g, int elements, string title,float time_range, int direction,\
+string object, string text, float min_value, float max_value)
+  float x1;
+  float y1;
+  float x2;
+  float y2;
+  float twidth;
+  int id;
+  float gx1;
+  float gx2;
+  float gy1;
+  float gy2;
+  float gw;
+  float gh;
+  float updatetime;
+  float axisrange;
+  string frm;
+    
+  MeasureObject(g, gx1, gy1, gx2, gy2); 
+  gw = gx2 - gx1;
+  gh = gy2 - gy1;
+
+  GetTextExtent(title, 3, eFont_LucidaSans, 0, twidth);
+  x2 = (gx1 + gx2)/2 - twidth/2;
+  y2 = gy1 + 1;
+  id = CreateText(title, x2, y2, 3, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+  DashInsertObject(g, id);
+
+  if (time_range == 0)
+    time_range = 100.0;
+  endif
+
+  updatetime = time_range / 100;
+  if (updatetime < 2.0)
+    updatetime = 2.0;
+  endif
+
+  x1 = gx2 - 2.2;
+  y1 = gy1 + 0.5;
+  x2 = x1 + 1.6;
+  y2 = y1 + 0.8;
+  id = CreateObject("pwrct_buttonsmalltoggle", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Hold");
+  SetObjectAttribute(id, "DynType1", mDynType1_DigColor);
+  SetObjectAttribute(id, "ToggleDig.Attribute", "$local.SevHistHold##Boolean");
+  SetObjectAttribute(id, "DigColor.Attribute", "$local.SevHistHold##Boolean");
+  SetObjectAttribute(id, "DigColor.Color", eDrawType_CustomColor35);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  DashInsertObject(g, id);
+
+  x1 = gx1 + 1.3;
+  y1 = gy1 + 1.5;
+  x2 = gx2 - 0.6;
+  y2 = gy2 - 0.9;
+  id = CreateSevHist(x1, y1, x2, y2, 1);
+  if (direction == eDirection_Right)
+    SetObjectAttribute(id, "SevHist.Direction", eDirection_Right);
+  endif
+  SetObjectAttribute(id, "SevHist.Object1", object);
+  SetObjectAttribute(id, "SevHist.MaxValue1", max_value);
+  SetObjectAttribute(id, "SevHist.MinValue1", min_value);
+  SetObjectAttribute(id, "SevHist.TimeRange", time_range);
+  SetObjectAttribute(id, "SevHist.HoldAttr", "$local.SevHistHold##Boolean");
+  SetObjectAttribute(id, "SevHist.UpdateTime", updatetime);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  DashInsertObject(g, id);
+
+  x1 = gx1 + 0.1;
+  y1 = gy1 + 1.5;
+  x2 = x1 + 1.2;
+  y2 = gy2 - 0.9;
+  id = CreateAxis(x1, y1, x2, y2, 1, 0, eDirection_Left);
+  SetObjectAttribute(id, "MaxValue", max_value);
+  SetObjectAttribute(id, "MinValue", min_value);
+  SetObjectAttribute(id, "Lines", 11);
+  SetObjectAttribute(id, "LongQuotient", 2);
+  SetObjectAttribute(id, "ValueQuotient", 2);
+  DashInsertObject(g, id);
+
+  if (time_range < 3600)
+    axisrange = time_range;
+  else
+    if (time_range < 86400)
+      axisrange = time_range / 3600;
+    else
+      axisrange = time_range / 86400;
+    endif
+  endif
+
+  if (axisrange <= 1)
+    frm = "%4.2f";
+  else
+    if (axisrange < 10)
+      frm = "%4.1f";
+    else
+      frm = "%3.0f";
+    endif
+  endif
+
+printf("y2 %6.2f\n", y2);
+  x1 = gx1 + 1.3;
+  y1 = gy2 - 0.9;
+  x2 = gx2 - 0.6;
+  y2 = gy2 - 0.1;
+printf("y1 %6.2f\n", y1);
+  id = CreateAxis(x1, y1, x2, y2, 1, 0, eDirection_Down);
+  if (direction == eDirection_Right)
+    SetObjectAttribute(id, "MaxValue", 0.0);
+    SetObjectAttribute(id, "MinValue", axisrange);
+  else
+    SetObjectAttribute(id, "MaxValue", axisrange);
+    SetObjectAttribute(id, "MinValue", 0.0);
+  endif
+  SetObjectAttribute(id, "Lines", 11);
+  SetObjectAttribute(id, "Format", frm);
+  SetObjectAttribute(id, "LongQuotient", 2);
+  SetObjectAttribute(id, "ValueQuotient", 2);
+  DashInsertObject(g, id);
+
+endfunction

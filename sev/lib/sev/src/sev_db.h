@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -128,6 +128,7 @@ class sev_item {
 public:
   sev_item();
   sev_item(const sev_item& x);
+  sev_item& operator=(const sev_item& x);
   ~sev_item();
   unsigned int id;
   char tablename[256];

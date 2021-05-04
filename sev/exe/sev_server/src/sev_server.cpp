@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -148,15 +148,15 @@ int sev_server::init(int noneth)
 
     if (cnf_get_value("sevDatabaseType", str, sizeof(str))) {
       if (str_NoCaseStrcmp(str, "sqlite") == 0)
-        m_config->Database = sev_eDbType_Sqlite;
+        m_config->Database = pwr_eSevDatabaseEnum_SQLite;
       else if (str_NoCaseStrcmp(str, "mysql") == 0)
-        m_config->Database = sev_eDbType_Mysql;
+        m_config->Database = pwr_eSevDatabaseEnum_MySQL;
       else if (str_NoCaseStrcmp(str, "hdf5") == 0)
-        m_config->Database = sev_eDbType_HDF5;
+        m_config->Database = pwr_eSevDatabaseEnum_HDF5;
       else
-        m_config->Database = sev_eDbType_Mysql;
+        m_config->Database = pwr_eSevDatabaseEnum_MySQL;
     } else
-      m_config->Database = sev_eDbType_Mysql;
+      m_config->Database = pwr_eSevDatabaseEnum_MySQL;
 
     if (cnf_get_value("sevUseServerThreads", str, sizeof(str))) {
       if (str_NoCaseStrcmp(str, "1") == 0)
@@ -763,7 +763,8 @@ int sev_server::check_histitems(sev_sMsgHistItems* msg, unsigned int size)
   for (int i = 0; i < item_cnt; i++) {
     if (msg->Items[i].attrnum > 0) {
       // Deadband requires id variable
-      if (msg->Items[i].options & pwr_mSevOptionsMask_UseDeadBand)
+      if (msg->Items[i].options & pwr_mSevOptionsMask_UseDeadBand &&
+	  !(msg->Items[i].options & pwr_mSevOptionsMask_DeadBandLinearRegr))
         msg->Items[i].options |= pwr_mSevOptionsMask_ReadOptimized;
 
       // printf( "Received: %s.%s\n", msg->Items[i].oname,

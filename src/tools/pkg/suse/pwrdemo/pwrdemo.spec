@@ -7,14 +7,14 @@
 #   See www.rpm.org.
 #
 
-Name:		pwrdemo57
-Summary: 	Proview/R demo project
-Version:        5.7.2
+Name:		pwrdemo58
+Summary: 	ProviewR demo project
+Version:        5.8.0
 Release: 	1
 License:        GPL
 BuildArch:      x86_64
 Packager: 	claes.sjofors@proview.se
-Requires: 	pwr57
+Requires: 	pwr58
 Group: 		Development/Tools/Other
 Url:            http://www.proview.se
 
@@ -127,5 +127,5 @@ fi
 #%postun
 
 %changelog
-* Fri Nov 13 2020 Claes Sjofors <claes.sjofors@proview.se> 5.7.2-1
+* Mon Apr 19 2021 Claes Sjofors <claes.sjofors@proview.se> 5.8.0-1
 - Base release

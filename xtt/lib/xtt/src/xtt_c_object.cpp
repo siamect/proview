@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -1359,7 +1359,7 @@ static pwr_tStatus Collect(xmenu_sMenuCall* ip)
   sts = ((XNav*)ip->EditorContext)->collect_insert(&aref);
   if (EVEN(sts)) {
     ((XNav*)ip->EditorContext)
-        ->wow->DisplayError("Collect error", XNav::get_message(sts));
+        ->wow->DisplayError("Collect error", XNav::get_message(sts), lng_eCoding_ISO8859_1, 0);
   }
 
   return XNAV__SUCCESS;
@@ -1382,6 +1382,81 @@ static pwr_tStatus CollectFilter(xmenu_sMenuCall* ip)
   if (ip->ItemType == xmenu_eItemType_Object
       || ip->ItemType == xmenu_eItemType_AttrObject) {
     aref = *objar;
+    // Note, get_trace_attr replaces the value in aref for channels
+    sts = XNav::get_trace_attr(&aref, attr);
+    if (EVEN(sts))
+      return XNAV__INVISIBLE;
+  }
+  return XNAV__SUCCESS;
+}
+
+// Collect
+static pwr_tStatus Dashboard(xmenu_sMenuCall* ip)
+{
+  int sts;
+  pwr_sAttrRef aref;
+  pwr_sAttrRef* objar;
+
+  if (!ip->ItemList
+      || cdh_ObjidIsNull(ip->ItemList[ip->ChosenItem].CurrentObject.Objid))
+    objar = &ip->Pointed;
+  else
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  aref = *objar;
+
+  sts = ((XNav*)ip->EditorContext)->dashboard_insert(&aref);
+  if (EVEN(sts)) {
+    ((XNav*)ip->EditorContext)
+        ->wow->DisplayError("Dashboard error", XNav::get_message(sts), lng_eCoding_ISO8859_1, 0);
+  }
+
+  return XNAV__SUCCESS;
+}
+
+// Dashboard filter
+static pwr_tStatus DashboardFilter(xmenu_sMenuCall* ip)
+{
+  char attr[80];
+  int sts;
+  pwr_sAttrRef aref;
+  pwr_sAttrRef* objar;
+
+  if (!ip->ItemList
+      || cdh_ObjidIsNull(ip->ItemList[ip->ChosenItem].CurrentObject.Objid))
+    objar = &ip->Pointed;
+  else
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  if (ip->ItemType == xmenu_eItemType_Object
+      || ip->ItemType == xmenu_eItemType_AttrObject) {
+    pwr_tCid cid;
+    pwr_tObjName cname;
+    pwr_tFileName fname;
+    pwr_tTime time;
+    pwr_tOid coid;
+    aref = *objar;
+
+    sts = gdh_GetAttrRefTid(&aref, &cid);
+    if (EVEN(sts))
+      return sts;
+
+    coid = cdh_ClassIdToObjid(cid);
+    sts = gdh_ObjidToName(coid, cname, sizeof(cname), cdh_mName_object);
+    if (EVEN(sts))
+      return sts;
+
+    sprintf(fname, "$pwrp_exe/dash_%s.ge_com", cdh_Low(cname));
+    dcli_translate_filename(fname, fname);
+    sts = dcli_file_time(fname, &time);
+    if (EVEN(sts)) {
+      sprintf(fname, "$pwr_exe/dash_c_%s.ge_com", cdh_Low(cname));
+      dcli_translate_filename(fname, fname);
+      sts = dcli_file_time(fname, &time);
+    }
+    if (ODD(sts))
+       return XNAV__SUCCESS;
+	
     // Note, get_trace_attr replaces the value in aref for channels
     sts = XNav::get_trace_attr(&aref, attr);
     if (EVEN(sts))
@@ -2452,7 +2527,8 @@ pwr_dExport pwr_BindXttMethods($Object) = { pwr_BindXttMethod(OpenObject),
   pwr_BindXttMethod(OpenParentObjectGraph),
   pwr_BindXttMethod(OpenParentObjectGraphFilter), pwr_BindXttMethod(OpenGraph),
   pwr_BindXttMethod(OpenGraphFilter), pwr_BindXttMethod(Collect),
-  pwr_BindXttMethod(CollectFilter), pwr_BindXttMethod(Help),
+  pwr_BindXttMethod(CollectFilter), pwr_BindXttMethod(Dashboard),
+  pwr_BindXttMethod(DashboardFilter), pwr_BindXttMethod(Help),
   pwr_BindXttMethod(HelpFilter), pwr_BindXttMethod(DataSheet),
   pwr_BindXttMethod(DataSheetFilter), pwr_BindXttMethod(Photo),
   pwr_BindXttMethod(PhotoFilter), pwr_BindXttMethod(CircuitDiagram),

@@ -1,6 +1,6 @@
 /**
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -869,6 +869,8 @@ static int find_struct(t_ctx ctx, char* filename, char* struct_name,
           int space_found = 0;
           t = name;
           for (s = begin_addr; *s; s++) {
+	    if (strncmp(s, "__attribute__((__packed__))", 27) == 0)
+	      s += 27;
             if (*s == ' ' || *s == 9) {
               if (!name_found)
                 continue;

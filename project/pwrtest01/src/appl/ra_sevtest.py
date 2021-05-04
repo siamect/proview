@@ -1,5 +1,5 @@
-#!/usr/bin/python
-# -*- coding: iso-8859-1 -*-
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 import sys
 import math
@@ -162,21 +162,21 @@ class Ctx:
             for i in range(2):
                 mean.append(data[columns[i+1]].mean())
                 std.append(data[columns[i+1]].std())
-            print data[columns[1]].mean()
+            print(data[columns[1]].mean())
             if len(result) < 40 or len(result) > 60:
                 self.logger.vlog('E', "getSevItemsDataFrameD, number of rows error, %s",
                                  str(len(result)))
             if mean[0] < 47 or mean[0] > 53:
                 self.logger.vlog('E', "getSevItemsDataFrameD, mean error, %s, idx %s",
                                  str(mean[0]), str(0))
-                print data[columns[1]]
+                print(data[columns[1]])
                 return
 #            if std[0] < 34 or std[0] > 36:
 #                self.logger.vlog('E', "getSevItemsDataFrameD, std error, %s, idx %s",
 #                                 str(std[0]), str(0))
 #                return
             if mean[1] < 47 or mean[1] > 53:
-                print data[columns[2]]
+                print(data[columns[2]])
                 self.logger.vlog('E', "getSevItemsDataFrameD, mean error, %s, idx %s",
                                  str(mean[1]), str(1))
                 return
@@ -203,10 +203,14 @@ class Ctx:
                     break
                 i += 1
 
+            if found == 0:
+                self.logger.log('E', 'getSevEvents, Events table not found')
+                return
+
             result = pwrrt.getSevEvents( 'localhost', self.itemlist[i][1],
                                          '20:00:00', 'now',  8001, 15, '', '', 1000)
             type = [row[1] for row in result]
-            print type
+            print(type)
             count = type.count(64)  # Number of A alarms
             if  count != 10:
                 self.logger.vlog('E', "getSevEvents, no of A alarms, %s",
@@ -237,6 +241,10 @@ class Ctx:
                     found = 1
                     break
                 i += 1
+
+            if found == 0:
+                self.logger.log('E', 'getSevEventsDataFrame, Events table not found')
+                return
 
             result = pwrrt.getSevEventsDataFrame( 'localhost', self.itemlist[i][1],
                                             '20:00:00', 'now',  8001, 15, '', '', 1000)
@@ -283,7 +291,7 @@ class Ctx:
                 if str(e) != d[i][2]:
                     self.logger.vlog('E', 'Oid, Unexpected exception %s, idx %s',
                                      str(e), str(i))
-                    print 'Not correct error code'
+                    print('Not correct error code')
                     return
                 
         self.logger.log('S', 'Oid, successfull completion')
@@ -346,7 +354,7 @@ class Ctx:
                         return
                 else:
                     if not abs(value - d[i][1]) < 0.001:
-                	self.logger.vlog('E', "Aref, "
+                        self.logger.vlog('E', "Aref, "
                                          "Value doesn't match, %s != %s, idx %s",
                                     str(value), str(d[i][1]), str(i))
                         return

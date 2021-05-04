@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -59,7 +59,8 @@ GrowArc::GrowArc(GrowCtx* glow_ctx, const char* name, double x1, double y1,
       dynamic(0), dynamicsize(0), shadow(display_shadow), shadow_width(5),
       relief(glow_eRelief_Up), shadow_contrast(2), disable_shadow(0),
       fixcolor(0), gradient(glow_eGradient_No), gradient_contrast(4),
-      disable_gradient(0), fixposition(0), fill_eq_background(0)
+      disable_gradient(0), fixposition(0), fill_eq_light(0), fill_eq_shadow(0),
+      fill_eq_background(0)
 {
   strcpy(n_name, name);
   pzero.nav_zoom();
@@ -300,6 +301,10 @@ void GrowArc::save(std::ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowArc_disable_gradient) << FSPACE << disable_gradient
      << '\n';
   fp << int(glow_eSave_GrowArc_fixposition) << FSPACE << fixposition << '\n';
+  fp << int(glow_eSave_GrowArc_fill_eq_light) << FSPACE << fill_eq_light
+     << '\n';
+  fp << int(glow_eSave_GrowArc_fill_eq_shadow) << FSPACE << fill_eq_shadow
+     << '\n';
   fp << int(glow_eSave_GrowArc_fill_eq_background) << FSPACE
      << fill_eq_background << '\n';
   fp << int(glow_eSave_GrowArc_dynamicsize) << FSPACE << dynamicsize << '\n';
@@ -406,6 +411,12 @@ void GrowArc::open(std::ifstream& fp)
       break;
     case glow_eSave_GrowArc_fixposition:
       fp >> fixposition;
+      break;
+    case glow_eSave_GrowArc_fill_eq_light:
+      fp >> fill_eq_light;
+      break;
+    case glow_eSave_GrowArc_fill_eq_shadow:
+      fp >> fill_eq_shadow;
       break;
     case glow_eSave_GrowArc_fill_eq_background:
       fp >> fill_eq_background;
@@ -819,6 +830,14 @@ void GrowArc::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
     else
       fillcolor = ctx->get_drawtype(fill_drawtype, glow_eDrawType_FillHighlight,
           highlight, (GrowNode*)colornode, 1);
+    if (fill_eq_light && fixcolor)
+      fillcolor = ctx->shift_drawtype(
+          fillcolor, -shadow_contrast + chot, (GrowNode*)colornode);
+    else if (fill_eq_shadow && fixcolor)
+      fillcolor = ctx->shift_drawtype(
+          fillcolor, shadow_contrast + chot, (GrowNode*)colornode);
+
+
     glow_eGradient grad = gradient;
     if (gradient == glow_eGradient_No
         && (node && ((GrowNode*)node)->gradient != glow_eGradient_No)

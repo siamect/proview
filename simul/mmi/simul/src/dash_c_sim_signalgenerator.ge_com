@@ -1,0 +1,177 @@
+function int dash_objectgraph(int g, int elements, string title,float time_range, int direction,\
+string object, string text, float min_value, float max_value)
+  float x1;
+  float y1;
+  float x2;
+  float y2;
+  float tx;
+  float ty;
+  float twidth;
+  float theight;
+  int tsize;
+  int id;
+  float gx1;
+  float gx2;
+  float gy1;
+  float gy2;
+  float gw;
+  float gh;
+  float scantime;
+  string attr;
+  int cols;
+  int rows;
+
+  GetObjectAttribute(g, "Dash.CellColumns", cols);
+  GetObjectAttribute(g, "Dash.CellRows", rows);
+
+  MeasureObject(g, gx1, gy1, gx2, gy2); 
+  gw = gx2 - gx1;
+  gh = gy2 - gy1;
+
+  if (gh < 7)
+    tsize = 0;
+    GetTextExtent("ABCD", tsize, eFont_LucidaSans, 0, twidth, theight);
+    theight = theight * 0.9;
+  else
+    tsize = 2;
+    GetTextExtent("ABCD", tsize, eFont_LucidaSans, 0, twidth, theight);
+    theight = theight * 1.1;
+  endif
+
+  GetTextExtent(title, 3, eFont_LucidaSans, 0, twidth);
+  x2 = (gx1 + gx2)/2 - twidth/2;
+  y2 = gy1 + 1;
+  id = CreateText(title, x2, y2, 3, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+  DashInsertObject(g, id);
+
+  gh -= 1.5;
+
+  tx = gx1 + 0.3;
+  ty = gy1 + 2.1;
+  id = CreateText("Type", tx, ty, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+  DashInsertObject(g, id);
+
+  x1 = gx1 + 2.5;
+  y1 = gy1 + 1.4;
+  x2 = x1 + 4.6;
+  y2 = y1 + 1.0;
+  id = CreateObject("pwr_optionmenu", x1, y1, x2, y2);
+  SetObjectAttribute(id, "OptionMenu.ItemMask", 127);
+  SetObjectAttribute(id, "OptionMenu.ItemText1", "Straight");
+  SetObjectAttribute(id, "OptionMenu.ItemText2", "Sine");
+  SetObjectAttribute(id, "OptionMenu.ItemText3", "HalfSine");
+  SetObjectAttribute(id, "OptionMenu.ItemText4", "Square");
+  SetObjectAttribute(id, "OptionMenu.ItemText5", "SawTooth");
+  SetObjectAttribute(id, "OptionMenu.ItemText6", "Triangular");
+  SetObjectAttribute(id, "OptionMenu.ItemText7", "StepPyramid");
+  attr = object + ".Type##Int32";
+  SetObjectAttribute(id, "OptionMenu.Attribute", attr);
+  SetObjectFillColor(id, eDrawType_CustomColor36);
+  SetObjectBorderColor(id, eDrawType_CustomColor37);
+  SetObjectTextColor(id, eDrawType_CustomColor38);
+  DashInsertObject(g, id);
+  
+  ty += 1.2;
+  id = CreateText("Amplitude", tx, ty, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+  DashInsertObject(g, id);
+
+  y1 += 1.2;
+  x1 += 1.2;
+  x2 = x1 + 3.5;
+  y2 = y1 + 1.1;
+  id = CreateObject("pwrct_valueinputmediumcenterbgs", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Value.Format", "%5.1f");
+  attr = object + ".Amplitude##Float32";
+  SetObjectAttribute(id, "Value.Attribute", attr);
+  DashInsertObject(g, id);
+
+  ty += 1.0;
+  id = CreateText("Period", tx, ty, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+  DashInsertObject(g, id);
+
+  y1 += 1.0;
+  x2 = x1 + 3.5;
+  y2 = y1 + 1.1;
+  id = CreateObject("pwrct_valueinputmediumcenterbgs", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Value.Format", "%5.1f");
+  attr = object + ".Period##Float32";
+  SetObjectAttribute(id, "Value.Attribute", attr);
+  DashInsertObject(g, id);
+
+  ty += 1.0;
+  id = CreateText("Bias", tx, ty, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+  DashInsertObject(g, id);
+
+  y1 += 1.0;
+  x2 = x1 + 3.5;
+  y2 = y1 + 1.1;
+  id = CreateObject("pwrct_valueinputmediumcenterbgs", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Value.Format", "%5.1f");
+  attr = object + ".Bias##Float32";
+  SetObjectAttribute(id, "Value.Attribute", attr);
+  DashInsertObject(g, id);
+
+  if (rows > 1)
+    ty += 1.0;
+    id = CreateText("PulseWidth", tx, ty, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+    DashInsertObject(g, id);
+
+    y1 += 1.0;
+    x2 = x1 + 3.5;
+    y2 = y1 + 1.1;
+    id = CreateObject("pwrct_valueinputmediumcenterbgs", x1, y1, x2, y2);
+    SetObjectAttribute(id, "Value.Format", "%5.1f");
+    attr = object + ".PulseWidth##Float32";
+    SetObjectAttribute(id, "Value.Attribute", attr);
+    DashInsertObject(g, id);
+
+    ty += 1.5;
+    id = CreateText("ActualValue", tx, ty, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+    DashInsertObject(g, id);
+
+    x1 += 0.15;
+    y1 += 1.5;
+    x2 = x1 + 3.15;
+    y2 = y1 + 1.0;
+    id = CreateObject("pwrct_valuemediumcenter", x1, y1, x2, y2);
+    SetObjectAttribute(id, "Value.Format", "%5.1f");
+    attr = object + ".ActualValue##Float32";
+    SetObjectAttribute(id, "Value.Attribute", attr);
+    DashInsertObject(g, id);
+  endif
+
+  if (cols > 1)
+    x1 = gx1 + 8;
+    y1 = gy1 + 1.5;
+    x2 = gx2 - 1.4;
+    y2 = gy2 - 0.3;
+    id = CreateTrend(x1, y1, x2, y2, 1);
+    if (direction == eDirection_Right)
+      SetObjectAttribute(id, "Trend.Direction", eDirection_Right);
+    endif
+    attr = object + ".ActualValue##Float32";
+    SetObjectAttribute(id, "Trend.Attribute1", attr);
+    SetObjectAttribute(id, "Trend.MaxValue1", max_value);
+    SetObjectAttribute(id, "Trend.MinValue1", min_value);
+    if (time_range != 0)
+      scantime = time_range / 100.0;
+    else
+      scantime = 0.5;
+    endif
+    SetObjectAttribute(id, "Trend.ScanTime", scantime);
+    SetObjectAttribute(id, "Cycle", "Fast");
+    DashInsertObject(g, id);
+
+    x1 = x2;
+    x2 = gx2 - 0.2;
+    id = CreateAxis(x1, y1, x2, y2, 1, 0, eDirection_Right);
+    SetObjectAttribute(id, "MaxValue", min_value);
+    SetObjectAttribute(id, "MinValue", max_value);
+    SetObjectAttribute(id, "Lines", 11);
+    SetObjectAttribute(id, "LongQuotient", 2);
+    SetObjectAttribute(id, "ValueQuotient", 2);
+    DashInsertObject(g, id);
+
+  endif
+
+endfunction

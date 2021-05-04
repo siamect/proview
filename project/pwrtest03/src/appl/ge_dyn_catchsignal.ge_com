@@ -1,0 +1,274 @@
+
+main()
+  int id;
+  int sts;
+  int i;
+  float x0 = 0.2;
+  float y0 = 0.2;
+  float delta = 3;
+  float xm;
+  float ym;
+  float x1;
+  float y1;
+  float x2;
+  float y2;
+  int action;
+
+  ClearAll();
+  SetDraw(0);
+
+  SetGraphAttribute("Scantime", 0.6);
+  SetGraphAttribute("FastScantime", 0.2);
+  SetGraphAttribute("AnimationScantime", 0.2);
+  SetGraphAttribute("ColorTheme", "$default");
+  SetColorTheme(1);
+  SetBackgroundColor(eDrawType_CustomColor1);
+  id = CreateRectangle(0.0, 0.0, 34.0, 2.0);
+  SetObjectFill(id, 1);
+  SetObjectBorder(id, 0);
+  SetObjectFillColor(id, eDrawType_CustomColor3);
+
+  x1 = 31.0;
+  y1 = 0.2;
+  x2 = x1 + 2.3;
+  y2 = y1 + 1; 
+  id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Next");
+  SetObjectAttribute(id, "Action", "Script");
+  SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_diglowcolor\", \"\", 1);");
+
+  xm = x0 + 1;
+  ym = y0 + 1;
+  id = CreateText("EmitSignal / CatchSignal", xm, ym, 4, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# Signal S1
+  ym += 1.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Signal S1", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  x1 = xm;
+  y1 = ym + 0.7;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Emit S1");
+  SetObjectAttribute(id, "Action", mActionType1_EmitSignal);
+  SetObjectAttribute(id, "EmitSignal.SignalName", "S1");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x2 = xm + 7;
+  y2 = ym;
+  id = CreateText("Catch S1", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  x1 = xm + 7;
+  y1 = ym + 0.6;
+  x2 = x1 + 1.5;
+  y2 = y1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-CatchSignalS1a.ActualValue##Boolean");
+  action = mActionType1_CatchSignal | mActionType1_SetDig;
+  SetObjectAttribute(id, "Action", action);
+  SetObjectAttribute(id, "CatchSignal.SignalName", "S1");
+  SetObjectAttribute(id, "SetDig.Attribute", "Test03a-Ge-Dyn-CatchSignalS1a.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 10;
+  y1 = ym + 0.6;
+  x2 = x1 + 1.5;
+  y2 = y1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-CatchSignalS1b.ActualValue##Boolean");
+  action = mActionType1_CatchSignal | mActionType1_SetDig;
+  SetObjectAttribute(id, "Action", action);
+  SetObjectAttribute(id, "CatchSignal.SignalName", "S1");
+  SetObjectAttribute(id, "SetDig.Attribute", "Test03a-Ge-Dyn-CatchSignalS1b.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 13;
+  y1 = ym + 0.6;
+  x2 = x1 + 1.5;
+  y2 = y1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-CatchSignalS1c.ActualValue##Boolean");
+  action = mActionType1_CatchSignal | mActionType1_SetDig;
+  SetObjectAttribute(id, "Action", action);
+  SetObjectAttribute(id, "CatchSignal.SignalName", "S1");
+  SetObjectAttribute(id, "SetDig.Attribute", "Test03a-Ge-Dyn-CatchSignalS1c.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+# Signal S2
+  ym += 3;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Signal S2", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  x1 = xm;
+  y1 = ym + 0.7;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Emit S2");
+  SetObjectAttribute(id, "Action", mActionType1_EmitSignal);
+  SetObjectAttribute(id, "EmitSignal.SignalName", "S2");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x2 = xm + 7;
+  y2 = ym;
+  id = CreateText("Catch S2", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  x1 = xm + 7;
+  y1 = ym + 0.6;
+  x2 = x1 + 1.5;
+  y2 = y1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-CatchSignalS2a.ActualValue##Boolean");
+  action = mActionType1_CatchSignal | mActionType1_SetDig;
+  SetObjectAttribute(id, "Action", action);
+  SetObjectAttribute(id, "CatchSignal.SignalName", "S2");
+  SetObjectAttribute(id, "SetDig.Attribute", "Test03a-Ge-Dyn-CatchSignalS2a.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 10;
+  y1 = ym + 0.6;
+  x2 = x1 + 1.5;
+  y2 = y1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-CatchSignalS2b.ActualValue##Boolean");
+  action = mActionType1_CatchSignal | mActionType1_SetDig;
+  SetObjectAttribute(id, "Action", action);
+  SetObjectAttribute(id, "CatchSignal.SignalName", "S2");
+  SetObjectAttribute(id, "SetDig.Attribute", "Test03a-Ge-Dyn-CatchSignalS2b.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 13;
+  y1 = ym + 0.6;
+  x2 = x1 + 1.5;
+  y2 = y1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-CatchSignalS2c.ActualValue##Boolean");
+  action = mActionType1_CatchSignal | mActionType1_SetDig;
+  SetObjectAttribute(id, "Action", action);
+  SetObjectAttribute(id, "CatchSignal.SignalName", "S2");
+  SetObjectAttribute(id, "SetDig.Attribute", "Test03a-Ge-Dyn-CatchSignalS2c.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+# Signal S3
+  ym += 3.;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Signal S3, Global", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  x1 = xm;
+  y1 = ym + 0.7;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Emit S3");
+  SetObjectAttribute(id, "Action", mActionType1_EmitSignal);
+  SetObjectAttribute(id, "EmitSignal.SignalName", "S3");
+  SetObjectAttribute(id, "EmitSignal.Global", 1);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x2 = xm + 7;
+  y2 = ym;
+  id = CreateText("Catch S3", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  x1 = xm + 7;
+  y1 = ym + 0.6;
+  x2 = x1 + 1.5;
+  y2 = y1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-CatchSignalS3a.ActualValue##Boolean");
+  action = mActionType1_CatchSignal | mActionType1_SetDig;
+  SetObjectAttribute(id, "Action", action);
+  SetObjectAttribute(id, "CatchSignal.SignalName", "S3");
+  SetObjectAttribute(id, "SetDig.Attribute", "Test03a-Ge-Dyn-CatchSignalS3a.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 10;
+  y1 = ym + 0.6;
+  x2 = x1 + 1.5;
+  y2 = y1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-CatchSignalS3b.ActualValue##Boolean");
+  action = mActionType1_CatchSignal | mActionType1_SetDig;
+  SetObjectAttribute(id, "Action", action);
+  SetObjectAttribute(id, "CatchSignal.SignalName", "S3");
+  SetObjectAttribute(id, "SetDig.Attribute", "Test03a-Ge-Dyn-CatchSignalS3b.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 13;
+  y1 = ym + 0.6;
+  x2 = x1 + 1.5;
+  y2 = y1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-CatchSignalS3c.ActualValue##Boolean");
+  action = mActionType1_CatchSignal | mActionType1_SetDig;
+  SetObjectAttribute(id, "Action", action);
+  SetObjectAttribute(id, "CatchSignal.SignalName", "S3");
+  SetObjectAttribute(id, "SetDig.Attribute", "Test03a-Ge-Dyn-CatchSignalS3c.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+# Signal S4
+  ym += 3;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Signal S4, Global", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  x1 = xm;
+  y1 = ym + 0.7;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Emit S4");
+  SetObjectAttribute(id, "Action", mActionType1_EmitSignal);
+  SetObjectAttribute(id, "EmitSignal.SignalName", "S4");
+  SetObjectAttribute(id, "EmitSignal.Global", 1);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x2 = xm + 7;
+  y2 = ym;
+  id = CreateText("Catch S4", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  x1 = xm + 7;
+  y1 = ym + 0.6;
+  x2 = x1 + 1.5;
+  y2 = y1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-CatchSignalS4a.ActualValue##Boolean");
+  action = mActionType1_CatchSignal | mActionType1_SetDig;
+  SetObjectAttribute(id, "Action", action);
+  SetObjectAttribute(id, "CatchSignal.SignalName", "S4");
+  SetObjectAttribute(id, "SetDig.Attribute", "Test03a-Ge-Dyn-CatchSignalS4a.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 10;
+  y1 = ym + 0.6;
+  x2 = x1 + 1.5;
+  y2 = y1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-CatchSignalS4b.ActualValue##Boolean");
+  action = mActionType1_CatchSignal | mActionType1_SetDig;
+  SetObjectAttribute(id, "Action", action);
+  SetObjectAttribute(id, "CatchSignal.SignalName", "S4");
+  SetObjectAttribute(id, "SetDig.Attribute", "Test03a-Ge-Dyn-CatchSignalS4b.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 13;
+  y1 = ym + 0.6;
+  x2 = x1 + 1.5;
+  y2 = y1 + 1.5;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectAttribute(id, "DigLowColor.Attribute", "Test03a-Ge-Dyn-CatchSignalS4c.ActualValue##Boolean");
+  action = mActionType1_CatchSignal | mActionType1_SetDig;
+  SetObjectAttribute(id, "Action", action);
+  SetObjectAttribute(id, "CatchSignal.SignalName", "S4");
+  SetObjectAttribute(id, "SetDig.Attribute", "Test03a-Ge-Dyn-CatchSignalS4c.ActualValue##Boolean");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  SetGraphAttribute("x1", 30.0);
+  SetGraphAttribute("y1", 40.0);
+
+  SetDraw(1);
+endmain

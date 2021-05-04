@@ -133,7 +133,17 @@ cat > initvol.pwr_com <<EOF
 EOF
 
 wb_cmd -v volpwrdemo @initvol
-
+echo "*"
+echo "* Create flow files"
+echo "*"
+wb_cmd -v volpwrdemo create flow/all
+echo "*"
+echo "* Create crossreference files"
+echo "*"
+wb_cmd -v volpwrdemo create cross
+echo "*"
+echo "* Build node"
+echo "*"
 wb_cmd -v volpwrdemo build node DemoNode /force
 exit
 
@@ -141,6 +151,10 @@ echo "*"
 echo "* Compile"
 echo "*"
 wb_cmd -v volpwrdemo compile/all
+echo "*"
+echo "* Create flow files"
+echo "*"
+wb_cmd -v volpwrdemo create flow/all
 echo "*"
 echo "* Build volume"
 echo "*"

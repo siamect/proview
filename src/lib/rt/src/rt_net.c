@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -656,4 +656,4 @@ int net_StringToAddr(char* str, struct in_addr* naddr)
   return 1;
 }
 
-/** @} */
+/*@}*/

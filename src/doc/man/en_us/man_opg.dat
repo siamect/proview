@@ -22,14 +22,14 @@
 
 <hr>
 2018-03-29
-Version 5.7.1	
+Version 5.8.0	
 <hr>
 </topic>
 
 <topic> __DocumentInfoPage
 
 
-Copyright 2005-2020 SSAB EMEA AB
+Copyright 2005-2021 SSAB EMEA AB
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -56,6 +56,7 @@ Alarm and Events <link> opg_events
 Curves <link> opg_curves
 Help <link> opg_help
 Navigator <link> opg_navigator
+Dashboard <link> opg_dashboard
 Plc Trace <link> opg_trace
 Setup script <link> opg_setupfile
 Users and Privileges <link> opg_security
@@ -1303,6 +1304,89 @@ means loaded, C cached and M mounted.
 </chapter>
 
 <chapter>
+<topic> opg_dashboard
+Dashboard
+
+The dashboard is a simplified graph with a very limited number of building blocks. The 
+building blocks are called dashcells that can display values in the shape of indicators, 
+value fields, bars, trends, gauges etc.
+
+<image> opg_fig43.png
+
+The dashboard can be created in the Ge editor, or in the operator environment. 
+
+The dashboard is divided in rows and columns where the cells are positioned. A cell 
+initially has the height of one row and the width of one column, but can be expanded over 
+several rows and columns.
+
+The cell can contain several elements. A bar cell for example, can contain three elements. 
+Each element is connected to an analog attribute that are displayed with a  bar. A trend cell
+can contain two elements and show two curves.
+
+There are three major cell types, analog, digital and object. 
+
+<h1>Analog dashboard cells
+<h2>Bar
+A bar cell displays an analog value with a bar and a value. I can contain three elements.
+
+<image> opg_fig44.png
+<b>Fig Bar cells with one, two and three elements
+<h2>BarArc
+<image> opg_fig45.png
+
+<h2>Trend
+<image> opg_fig46.png
+
+<h2>Gauge
+<image> opg_fig47.png
+
+<h2>Gauge2
+<image> opg_fig48.png
+
+<h2>Slider
+<image> opg_fig49.png
+
+<h2>Pie
+<image> opg_fig50.png
+
+<h1>Digital dashboard cells
+<h2>Indicator
+<image> opg_fig51.png
+
+<h2>DigitalTrend
+<image> opg_fig52.png
+
+<h1>Object dash cells
+Object cells exist for some object, eg DsTrendCurve.
+<image> opg_fig53.png
+<b>Fig Object cell for DsTrendCurve
+
+<h1>Create a dashboard in rt_xtt
+By selecting and attribute in the navigator, and activating Functions/Dashboard/Insert 
+(Ctrl+D) in the menu, the attribute is added to a dashboard. By default it's added to the
+'PwR Dashboard', but if there is a dashboard that is in edit mode, it will be inserted in 
+this dashboard instead. It's possible to add new attributes to the dashboard until all rows
+and columns are filled.
+
+For an analog attribute a bar cell is created. This can be changed by entering edit mode in 
+the dashboard from File/Edit (Ctrl+E) in the dashboard menu. Open the cell attributes 
+(double click) and select another type in Dash.Type. Leave the edit mode with Ctrl+E.
+
+When entering edit mode, the Ge editor is opened in restricted mode. Some functionality in 
+edit mode is
+
+ - Add. Create an empty cell.
+ - Delete. Delete cell.
+ - Copy. Copy a cell.
+ - Paste. Paste previously copied cells.
+ - Connect. Connect selected attribute in the navigator to cell.
+ - Merge. Merge cells. The selected cells will be merged into the one that was first selected.
+ - From GraphAttributes, the scan time and dashboard size can be modified.
+
+</topic>
+</chapter>
+
+<chapter>
 <topic> opg_trace
 Plc trace
 
@@ -1763,7 +1847,8 @@ supplying the object with the /object qualifier.
 
 <B>xtt> set subwindow 'graphname' /name= /source= [/object=]
 
-'graphname' <t>the graph where the window object resides.
+'graphname' <t>the graph where the window object resides. '$current'
+        <t> denotes the current graph.
 /name	<t>the name of the window object.
 /source	<t>name of the Ge graph to view in the window object.
 /object	<t>specifies the object when the graph is an object graph.
@@ -2841,6 +2926,21 @@ time()			<LINK> time()
 tzset()			<LINK> tzset()
 verify()		<LINK> verify()
 
+<h2>Array functions
+arrayclear() 		<link> arrayclear()
+arraypush() 		<link> arraypush()
+arraysize() 		<link> arraysize()
+sort()			<link> sort()
+
+<h2>Math functions
+cos()	 		<link> cos()
+EVEN()	 		<link> EVEN()
+MAX()			<link> MAX()
+MIN() 			<link> MIN()
+ODD()	 		<link> ODD()
+random() 		<link> random()
+sin()	 		<link> sin()
+
 <h2>Miscellaneous functions
 CutObjectName()		<LINK> cutobjectname()
 ConfirmDialog()		<LINK> confirmdialog()
@@ -2858,6 +2958,7 @@ GetUser()		<LINK> getuser()
 GetPrivileges()		<LINK> getprivileges()
 GetGraphInstance()	<LINK> getgraphinstance()
 GetGraphInstanceNext()	<LINK> getgraphinstancenext()
+SetSubwindow()		<LINK> SetSubwindow()
 Quit()			<LINK> quit()
 
 <h2>xtt-commands
@@ -2923,12 +3024,14 @@ A declaration consists of
 - the table (global or extern, if local the table is suppressed)
 - the datatype (int, float or string)
 - the variable name (case sensitive)
-- if array, number of elements
+- if array, number of elements in square brackets, or if array with zero
+  lenght, only brackets
 - equal mark followed by an init value, if omitted the init value is zero or
   null-string
 - semicolon
 
 An extern variable should be deleted (by the delete statement).
+Global variables can also be deletet with the deletegbl statement.
 
 <b>Example
 
@@ -2936,9 +3039,11 @@ An extern variable should be deleted (by the delete statement).
 <c>float           flow = 33.4;
 <c>string          str = "Hello";
 <c>extern int      jakob[20];
+<c>string          simon[];
 <c>global float    ferdinand = 1234;
 <c>...
-<c>delete jakob[20];
+<c>delete jakob[];
+<c>deletegbl ferdinand;
 </TOPIC>
 
 <TOPIC> operators
@@ -3814,6 +3919,278 @@ int		<t>mode		<t>verification on (1) or off (0). Optional.
 </TOPIC>
 </headerlevel>
 
+<TOPIC> array_functions <style> function
+Array functions
+
+<b>Function <t>Description
+arrayclear <t>Clear a dynamic array. <link> arrayclear()
+arraypush <t>Push a value to a dynamic array. <link> arraypush()
+arraysize <t>Get size of an array. <link> arraysize()
+sort <t>Sort an array. <link> sort()
+</TOPIC>
+
+<headerlevel>
+
+<TOPIC> arrayclear() <style> function
+arrayclear()
+
+int arrayclear((arbitrary array type) array)
+
+<b>Description
+
+Remove all elements of an array and set size to 0.
+The array argument should be specified with square brackets.
+
+Returns the status of the operation.
+
+<b>Arguments
+
+(arbitrary array type)	<t>array <t>Array name. Should be specified
+				 <t><t>with square brackets.
+
+<b>Example
+
+<c>  float temp[];
+<c>  ...
+<c>  arrayclear(temp[]);
+</TOPIC>
+
+<TOPIC> arraypush() <style> function
+int arraypush((arbitrary array type) array, (arbitrary type)value)
+
+<b>Description
+
+Add an element at the back of an array and insert the specified value in 
+the element.
+The array argument should be specified with square brackets.
+
+Returns the status of the operation.
+
+<b>Arguments
+
+(arbitrary array type)	<t>array <t>Array name. Should be specified
+				 <t><t>with square brackets.
+(arbitrary type)	<t>value <t>Value to push to the array.
+
+<b>Example
+
+<c>  float x[];
+<c>  
+<c>  arraypush(x[], 29.2);
+</TOPIC>
+
+<TOPIC> arraysize() <style> function
+int arraysize((arbitrary array type) array)
+
+<b>Description
+
+Get the size of an array, i e number of elements in the array.
+The array argument should be specified with square brackets.
+
+Returns the size of the array.
+
+<b>Arguments
+
+(arbitrary array type)	<t>array <t>Array name. Should be specified
+				 <t><t>with square brackets.
+
+<b>Example
+
+<c>  float x[];
+<c>  int size;
+<c>  ...
+<c>  size = arraysize(x[]);
+</TOPIC>
+
+<TOPIC> sort() <style> function
+int sort((arbitrary array type) array1 [,(arbitrary array type) array2)...]
+
+<b>Description
+
+Sort an string array in alpabetical order, or an int or float array in 
+numerical order.
+Up to seven additional arrays can be specified that will be sorted the same
+way as the first array. These arrays should have the same size, or larger size
+than the first array.
+The array arguments should be specified with square brackets.
+
+Returns the status of the operation.
+
+<b>Arguments
+
+(arbitrary array type)	<t>array1 <t>Name of array that will be sorted. 
+				<t><t>Should be specified with square brackets.
+(arbitrary array type)	<t>array2 - array8 <t>Additional optional arrays that 
+				<t><t>will be sorted the same way as the first array.
+				<t><t>Should be specified with square brackets.
+
+<b>Example
+
+<c>  string name[];
+<c>  string description[];
+<c>  int sts;
+<c>  ...
+<c>  sts = sort(name[], description[]);
+</TOPIC>
+</headerlevel>
+
+<TOPIC> math_functions <style> function
+Math functions
+
+<b>Function <t>Description
+cos <t>Cosine function. <link> cos()
+EVEN <t>Check if value is even. <link> EVEN()
+MAX <t>Get larges value. <link> MAX()
+MIN <t>Get smallest value. <link> MIN()
+ODD <t>Check of value is odd. <link> ODD()
+random <t>Get a random value. <link> random()
+sin <t>Sine function. <link> sin()
+</TOPIC>
+
+<headerlevel>
+
+<TOPIC> cos() <style> function
+cos()
+
+float cos(float angle)
+
+<b>Description
+
+Returns the cosine value for an angle in degrees.
+
+<b>Arguments
+
+float	<t>angle <t>Angle in degrees.
+
+<b>Example
+
+<c> float x;
+<c> float angle = 45;
+
+<c> x = cos(angle);
+</TOPIC>
+
+<TOPIC> EVEN() <style> function
+EVEN()
+
+int EVEN(int val)
+
+<b>Description
+
+Test if a value is even.
+
+Returns 1 if the value is even, else 0.
+
+<b>Arguments
+
+int	<t>val <t>Value.
+</TOPIC>
+
+<TOPIC> MAX() <style> function
+MAX()
+
+float MAX(float v1, float v2)
+
+<b>Description
+
+Returns the largest of two values.
+
+<b>Arguments
+
+float	<t>v1 <t>Value.
+float	<t>v2 <t>Value.
+
+<b>Example
+
+<c> float f1;
+<c> float f2;
+<c> float max;
+
+<c> max = MAX(f1, f2);
+</TOPIC>
+
+<TOPIC> MIN() <style> function
+MIN()
+
+float MIN(float v1, float v2)
+
+<b>Description
+
+Returns the smallest of two values.
+
+<b>Arguments
+
+float	<t>v1 <t>Value.
+float	<t>v2 <t>Value.
+
+<b>Example
+
+<c> float f1;
+<c> float f2;
+<c> float min;
+
+<c> min = MIN(f1, f2);
+</TOPIC>
+
+<TOPIC> ODD() <style> function
+ODD()
+
+int ODD(int val)
+
+<b>Description
+
+Test if a value is odd.
+
+Returns 1 if the value is odd, else 0.
+
+<b>Arguments
+
+int	<t>val <t>Value.
+</TOPIC>
+
+<TOPIC> random() <style> function
+random()
+
+float random(float min_value, float max_value)
+
+<b>Description
+
+Returns a random value in the specified range.
+
+<b>Arguments
+
+float	<t>min_value <t>Min value for random value.
+float	<t>max_value <t>Max value for random value.
+
+<b>Example
+
+<c> float val;
+
+<c> val = random(0.0, 100.0);
+</TOPIC>
+
+<TOPIC> sin() <style> function
+sin()
+
+float sin(float angle)
+
+<b>Description
+
+Returns the sine value for an angle in degrees.
+
+<b>Arguments
+
+float	<t>angle <t>Angle in degrees.
+
+<b>Example
+
+<c> float x;
+<c> float angle = 45;
+
+<c> x = sin(angle);
+</TOPIC>
+</headerlevel>
+
 <TOPIC> database_functions <style> function
 Database functions
 
@@ -4099,6 +4476,7 @@ GetUser() 	<t>Get the current user. <LINK> getuser()
 GetPrivileges()	<t>Get the privileges for the current user. <LINK> getprivileges()
 GetGraphInstance() <t>Get the instance object for a graph. <LINK> getgraphinstance()
 GetGraphInstanceNext() <t>Get the instance object for next graph. <LINK> getgraphinstancenext()
+SetSubwindow() 	<t>Set graph for a Ge Window objekt. <LINK> SetSubwindow()
 Quit() 		<t>Quit the operator environment. <LINK> quit()
 </TOPIC>
 
@@ -4408,6 +4786,39 @@ string		<t>previous	<t>Previous instance.
 <c>    printf( "Instance %s\n", instance);
 <c>    instance = GetGraphInstanceNext( "$pwr_exe/pwr_c_dv.pwg", instance);
 <c>  endwile
+</TOPIC>
+
+<TOPIC> setsubwindow() <style> function
+SetSubwindow()
+
+string SetSubwindow(string graph, string window, string source, [string object, int self])
+
+<b>Description
+
+View a graph in a Ge window object. This command is used on command
+buttons to change the content of a window object. source contains the
+name of the graph to be viewed. Also object graphs can be viewed by
+supplying the object in the object argument.
+If the function is executed in the window that is replaced, the self argument
+should be 1.
+
+<b>Arguments
+
+string		<t>graph	<t>Graph name.
+string		<t>window	<t>Name of Ge window object.
+string		<t>source	<t>pwg-file or ge scrip that should be
+                                <t><t>inserted into the window.
+string		<t>object	<t>Instance object if source is an object graph.
+int		<t>self		<t>Should be 1 if the function is executed
+				<t><t>in the window that is replaced.
+<b>Example pwg file
+
+<c>  SetSubwindow("$current", "W1", "motor1.pwg", 0, 1);
+
+<b>Example script file
+
+<c>  SetSubwindow("$current", "W1", "@m1script", 0, 1);
+
 </TOPIC>
 
 <TOPIC> quit() <style> function

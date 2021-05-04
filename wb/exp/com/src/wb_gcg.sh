@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ProviewR   Open Source Process Control.
-# Copyright (C) 2005-2020 SSAB EMEA AB.
+# Copyright (C) 2005-2021 SSAB EMEA AB.
 #
 # This file is part of ProviewR.
 #
@@ -211,7 +211,7 @@ CompileLibrary()
 {
   echo "-- Building archive for volume: $VolumeId"
   cd $pwrp_obj
-  if ar -rc $pwrp_lib/$PlcLib `ls plc_m${VolumeId}*.o`
+  if ar -rcU $pwrp_lib/$PlcLib `ls plc_m${VolumeId}*.o`
   then
     echo "-- Archive built for volume: $VolumeId"
     gcg_status=$gcg__success

@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -39,8 +39,8 @@
 
 /* rt_sevcli.h -- Storage client */
 
-/** @addtogroup SEVCLI */
-/*@{*/
+/** \addtogroup SEVCLI */
+/** @{*/
 
 #include "rt_qcom.h"
 #include "rt_mh_net.h"
@@ -131,8 +131,8 @@ int sevcli_get_events(pwr_tStatus* sts, sevcli_tCtx ctx, pwr_tOid oid,
 		      pwr_tUInt32 eventpriomask, pwr_tString80 eventtext, pwr_tOName eventname,
 		      unsigned int maxevents, sevcli_sEvents **list, unsigned int* cnt);
 void sevcli_store_ctx(sevcli_tCtx ctx);
-sevcli_tCtx sevcli_get_stored_ctx();
-/** @} */
+sevcli_tCtx sevcli_get_stored_ctx(void);
+/** @}*/
 
 #ifdef __cplusplus
 }

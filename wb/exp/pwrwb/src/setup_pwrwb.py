@@ -1,6 +1,6 @@
 
 from distutils.core import setup, Extension
-import commands
+import subprocess
 import os
 
 pwr_lib = os.environ['pwr_elib']
@@ -10,6 +10,16 @@ try:
     pwre_conf_qt = os.environ['PWRE_CONF_QT']
 except:
     pwre_conf_qt = ""
+
+pwre_conf_libos = os.environ['pwre_conf_lib'][1:].split(' ')
+pwre_conf_lib = []
+for lib in pwre_conf_libos:
+    pwre_conf_lib.append(lib[2:])    
+
+pwre_conf_libwb = []
+pwre_conf_libwbos = os.environ['pwre_conf_libwb'][1:].split(' ')
+for lib in pwre_conf_libwbos:
+    pwre_conf_libwb.append(lib[2:])    
 
 if pwre_conf_qt == "1":
     libs = ['pwr_wb_qt', 'pwr_xtt_qt', 'pwr_ge_qt', 'pwr_cow_qt',
@@ -29,15 +39,6 @@ else:
             'pwr_flow', 'pwr_glow', 
             'pwr_rt', 'pwr_statussrv', 'pwr_co', 'pwr_msg_dummy']
     xlibs = ['gtk-x11-2.0']
-try:
-    pwre_conf_mysql = os.environ['PWRE_CONF_MYSQL']
-except:
-    pwre_conf_mysql = ""
-
-if pwre_conf_mysql == "1":
-    mysqllibs = ['mysqlclient']
-else:
-    mysqllibs = []
 pwrwbmodule = Extension( name='pwrwb',
                          sources=['pwrwbmodule.cpp'],
                          define_macros=[('OS_POSIX', '1'),
@@ -53,10 +54,8 @@ pwrwbmodule = Extension( name='pwrwb',
                          include_dirs=[pwr_inc],
                          library_dirs=[pwr_lib],
                          libraries=libs +
-                         ['db_cxx', 'rpcsvc', 'asound', 'pthread',
-                          'm', 'db', 'z', 'crypt', 'rt', 'X11',
-                          'sqlite3', 'rsvg-2'] + xlibs + mysqllibs,
-#                        extra_link_args=['-L/usr/lib/x86_64-linux-gnu', commands.getoutput('pkg-config --libs gtk+-2.0')],
+                         pwre_conf_lib + pwre_conf_libwb + xlibs,
+#                        extra_link_args=['-L/usr/lib/x86_64-linux-gnu', subprocess.getoutput('pkg-config --libs gtk+-2.0')],
                          language='c++'
                        )
                       

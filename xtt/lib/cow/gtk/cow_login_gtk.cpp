@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -36,8 +36,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-
-#include <gtk/gtk.h>
 
 #include "co_login_msg.h"
 #include "cow_login_gtk.h"

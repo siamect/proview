@@ -1,6 +1,6 @@
 ! 
 !  ProviewR   Open Source Process Control.
-!  Copyright (C) 2005-2020 SSAB EMEA AB.
+!  Copyright (C) 2005-2021 SSAB EMEA AB.
 ! 
 !  This file is part of ProviewR.
 !
@@ -70,5 +70,9 @@ needconv	<Unable to save, graph needs conversion>	/error
 javanamesyntax	<Java name syntax error>			/error
 notsaved	<Graph is not saved>				/error
 noref		<Attribute is not of reference type>		/error
-
+shell		<Error from shell>				/error
+arg		<Error in argument>				/error
+elemsize   	<Max number of elements exceeded>		/error
+selecttwo   	<Select at least two objects>			/error
+invalidobject	<Invalid object for the operation>		/error
 

@@ -1,10 +1,15 @@
 Package: pwrsev
-Version: 5.7.1-1
+Version: 5.8.0-1
 Section: base
 Priority: optional
 Architecture: armhf
-Depends: libc6 (>= 2.24-11), libgtk2.0-0 (>= 2.24.31-2), libasound2 (>= 1.1.3-5+rpi3), libdb5.3 (>=5.3.28-12), libsqlite3-0 (>= 3.16.2-5), libmariadbclient18 (>= 10.1.23-9)
+Depends: libc6 (>= 2.28-10+rpi1),
+ libgtk2.0-0 (>= 2.24.32-3+rpt1),
+ libasound2 (>= 1.1.8-1+rpt1),
+ libdb5.3 (>= 5.3.28+dfsg1-0.5),
+ libsqlite3-0 (>= 3.27.2-3),
+ libmariadb3 (>= 10.3.25-0+deb10u1)
 Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48,pwr50,pwr51,pwr52,pwr53,pwr54,pwr55,pwr56
 Maintainer: Proview <postmaster@proview.se>
 Description:
- 5.7.1-1 Base release
+ 5.8.0-1 Base release

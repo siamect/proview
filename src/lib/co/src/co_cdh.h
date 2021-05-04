@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -535,15 +535,15 @@ Avol:Bobj-Cobj-Dobj-Eobj.FilterAttribute[2]
 -   1 0 0 0 0 0 0 0 1  *   Std   Strict          Avol:
 
 -   1 1 1 0 0 1 1 1 0  *   Std   Strict
-Avol\:Bobj\-Cobj\-Dobj\-Eobj\.FilterAttribute[2]
+Avol:Bobj\-Cobj\-Dobj\-Eobj\.FilterAttribute[2]
 -   0 1 1 0 0 1 1 1 0  *   Std   Strict
 Bobj\-Cobj\-Dobj\-Eobj\.FilterAttribute[2]
 -   0 0 1 0 0 1 1 1 0  *   Std   Strict Eobj\.FilterAttribute[2]
 -   0 0 0 0 0 1 1 1 0  *   Std   Strict FilterAttribute[2]
 -   1 1 1 0 0 1 0 1 0  *   Std   Strict
-Avol\:Bobj\-Cobj\-Dobj\-Eobj\.FilterAttribute
--   1 1 1 0 0 0 0 1 0  *   Std   Strict          Avol\:Bobj\-Cobj\-Dobj\-Eobj
--   1 1 0 0 0 0 0 1 0  *   Std   Strict          Avol\:Bobj\-Cobj\-Dobj
+Avol:Bobj\-Cobj\-Dobj\-Eobj\.FilterAttribute
+-   1 1 1 0 0 0 0 1 0  *   Std   Strict          Avol:Bobj\-Cobj\-Dobj\-Eobj
+-   1 1 0 0 0 0 0 1 0  *   Std   Strict          Avol:Bobj\-Cobj\-Dobj
 -   1 0 0 0 0 0 0 1 0  *   Std   Strict          Avol
 
 -   1 1 1 0 0 1 1 0 *  *   Root  Strict

@@ -1,10 +1,7 @@
-#!/bin/bash
+
+# Exec string (Shell) is inserted by build-script...
 set -e
 
-# ver=""
-# pwre_target=""
-
-echo "Executing postinst"
 # Automatically added by dh_installdocs
 if [ "$1" = "configure" ]; then
         if [ -d /usr/doc -a ! -e /usr/doc/pwrtest -a -d /usr/share/doc/pwrtest ]; then
@@ -14,37 +11,33 @@ fi
 # End automatically added section
 
 aroot="/usr/pwrp/adm"
-vermajor=${ver:0:1}
-verminor=${ver:1:1}
-verstr="V$vermajor.$verminor"
 
-# Create group pwrp
-if ! grep -q "\bpwrp:" /etc/group; then
-  echo "-- Add group pwrp"
-  groupadd pwrp
+if getent group pwrp > /dev/null; then
+  echo "-- Group pwrp already exist. OK!"
+else
+  if groupadd pwrp; then
+    echo "-- Group pwrp added"
+  fi
 fi
 
-if ! grep -q "\bpwrp:" /etc/passwd; then
-  echo "-- Add user pwrp"
+if getent passwd pwrp > /dev/null; then
+  echo "-- User pwrp already exist. OK!"
+else
   new_user=1
-  useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -d /home/pwrp pwrp
-  if [ ! -e /home/pwrp ]; then
-    mkdir /home/pwrp
+
+  if useradd --create-home --shell /bin/bash --password aaupl/kQs1p3U --gid pwrp --home-dir /home/pwrp pwrp; then
+    echo "-- User pwrp added"
   fi
-  cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.bashrc /home/pwrp
-  cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.bash_profile /home/pwrp
-#  cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.mwmrc /home/pwrp
-  cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.rtt_start /home/pwrp
-  chmod a+x /home/pwrp/.rtt_start
-  cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.xtt_start /home/pwrp
-  chmod a+x /home/pwrp/.xtt_start
-#  cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.xsession /home/pwrp
+
+  cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.rtt_start /home/pwrp && chmod a+x /home/pwrp/.rtt_start
+  cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.xtt_start /home/pwrp && chmod a+x /home/pwrp/.xtt_start
   cp /usr/pwr$ver/$pwre_target/exp/cnf/user/wtt_init.pwr_com /home/pwrp
   cp /usr/pwr$ver/$pwre_target/exp/cnf/user/wtt_init1.pwr_com /home/pwrp
 
-  chown -R pwrp /home/pwrp
-  chgrp -R pwrp /home/pwrp
+  chown -R pwrp:pwrp /home/pwrp
 fi
+
+# A bit intrusive for those who have chosen not to use these folders...
 if [ ! -e /home/pwrp/Desktop ]; then
   mkdir /home/pwrp/Desktop
 fi
@@ -52,8 +45,7 @@ cp /usr/pwr$ver/$pwre_target/exp/cnf/user/proview$ver.desktop /home/pwrp/Desktop
 chown pwrp:pwrp /home/pwrp/Desktop/proview$ver.desktop
 chmod a+x /home/pwrp/Desktop/proview$ver.desktop
 
-
-echo "Change owner of files to pwrp"
+echo "-- Change owner of files to pwrp"
 chown -R pwrp /usr/pwr$ver
 chgrp -R pwrp /usr/pwr$ver
 
@@ -71,11 +63,12 @@ fi
 
 # Add pwrp_profile to profile
 if ! grep -q "/etc/pwrp_profile\b" /etc/profile; then
-  cat >> /etc/profile <<-EOF
-	if [ -e /etc/pwrp_profile ]; then
-	  source /etc/pwrp_profile
-	fi
-EOF
+	cat >> /etc/profile <<-EOF
+		if [ -e /etc/pwrp_profile ]; then
+ 	  	source /etc/pwrp_profile
+  	fi
+	EOF
+	:
 fi
 
 # Create and copy adm
@@ -93,15 +86,20 @@ if [ ! -e $aroot/db/pwr_user2.dat ]; then
   cp /usr/pwr$ver/$pwre_target/exp/cnf/pwr_user2.dat $aroot/db
 fi
 
+# Source pwr_setup.sh in pwrp's .bashrc
+if ! grep ". ${aroot}/db/pwr_setup.sh" /home/pwrp/.bashrc >/dev/null 2>&1; then
+  echo ". ${aroot}/db/pwr_setup.sh" >> /home/pwrp/.bashrc
+fi
+
 # Insert base in projectlist
 if [ ! -e $aroot/db/pwr_projectlist.dat ]; then
-  echo "%base $verstr /usr/pwr$ver" > $aroot/db/pwr_projectlist.dat
+  echo "%base V${ver:0:1}.${ver:1:1} /usr/pwr$ver" > $aroot/db/pwr_projectlist.dat
 else
   set +e
-  ptst=`eval grep "^%base" $aroot/db/pwr_projectlist.dat | grep "\b$verstr\b"`
+  ptst=`eval grep "^%base" $aroot/db/pwr_projectlist.dat | grep "\bV${ver:0:1}.${ver:1:1}\b"`
   set -e
   if [ "$ptst" = "" ]; then
-    echo "%base $verstr /usr/pwr$ver" >> $aroot/db/pwr_projectlist.dat
+    echo "%base V${ver:0:1}.${ver:1:1} /usr/pwr$ver" >> $aroot/db/pwr_projectlist.dat
   fi
 fi
 
@@ -118,9 +116,3 @@ if [ ! -e /usr/local/pwrp ]; then
   chgrp pwrp /usr/local/pwrp
   chmod g+w /usr/local/pwrp
 fi
-
-
-
-
-
-

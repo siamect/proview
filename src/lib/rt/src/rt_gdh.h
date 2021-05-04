@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -49,8 +49,8 @@ extern "C" {
  *@example gdh_examples.c
  */
 
-/** @addtogroup GDH */
-/*@{*/
+/** \addtogroup GDH */
+/** @{*/
 
 #include "rt_errh.h"
 
@@ -59,7 +59,7 @@ typedef pwr_tSubid SUBID;
 typedef pwr_tDlid gdh_tDlid;
 typedef pwr_tDlid DLID;
 
-/** @defgroup DS Gdh Data Structures
+/** \defgroup DS Gdh Data Structures
  *  @{
  */
 
@@ -153,11 +153,12 @@ typedef struct {
 
 } gdh_sBitDef;
 
+/** @} */
+
 /* GDH entrypoints (as function prototypes).  */
 
-/** @} */
 /**
- * @defgroup GDHFC Gdh Functions
+ * \defgroup GDHFC Gdh Functions
  * @{
  */
 
@@ -455,7 +456,7 @@ pwr_tStatus gdh_TidToType(pwr_tTid tid, pwr_eType *type);
 pwr_tStatus gdh_MountDynClients(void);
 
 
-/** @} */
+/** @}*/
 
 #if defined __cplusplus
 }

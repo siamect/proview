@@ -8097,9 +8097,9 @@ function DynTable( dyn) {
 
       switch ( pname.database) {
       case GraphIfc.eDatabase_Gdh:
-	sel_p[i] = this.dyn.graph.getGdh().refObjectInfo( pname.tname, pname.type, pname.elements);
-	if ( sel_p[i] !== 0) {
-	  if ( ret.getElements() == 0)
+	this.sel_p[i] = this.dyn.graph.getGdh().refObjectInfo( pname.tname, pname.type, pname.elements);
+	if ( this.sel_p[i] !== 0) {
+	  if ( this.sel_elements[i] == 0)
 	    break;
 	  this.sel_elements[i] = pname.elements;
 	  if ( this.sel_elements[i] > this.elements[i])
@@ -8214,7 +8214,7 @@ function DynTable( dyn) {
 	    break;
 	  for ( var j = 0; j < Math.min(this.elements[i], val.length); j++) {
 	    if ( this.oldValueI[i][j] != val[j] || this.firstScan) {
-	      var sb = cFormat[i].format( val[j]);
+	      var sb = this.cFormat[i].format( val[j]);
 	      object.setValue( sb, i, j);
 	      this.oldValueI[i][j] = val[j];
 	    }

@@ -13,7 +13,7 @@ if [ -e $pwr_inc/pwr_version.h ]; then
   ver=${ver:2:2}
 fi
 
-proot=/data0/pwrp/pwrdemo$ver
+proot=$pwre_croot/project/pwrdemo
 pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwrdemo$ver
 pkgsrc=$pwre_sroot/tools/pkg/suse/pwrdemo
 
@@ -48,10 +48,15 @@ tarfile=$pwre_broot/$pwre_target/bld/pkg/pwrtmp.tar
 cd $proot
 cd ..
 echo "-- copy project to package tree"
-tar -cf $tarfile pwrdemo$ver
+mv pwrdemo pwrdemo$ver
+tar -chf $tarfile pwrdemo$ver
+mv pwrdemo$ver pwrdemo
+mkdir -p $pwre_brootcd $pkgroot/usr/pwrp
+mkdir -p $pwre_broot
 cd $pkgroot/usr/pwrp
 tar -xf $tarfile
 rm $tarfile
+rm -r pwrdemo$ver/.git
 cd $currentdir
 
 # Generate desktop file
@@ -75,5 +80,5 @@ echo "-- Building package"
                --define "ver $ver" \
                --buildroot $pkgroot $pkgsrc/pwrdemo.spec > /dev/null 2>&1
                                                                                 
-mv $pkgroot/rpm/RPMS/i386/*.rpm $pwre_broot/$pwre_target/bld/pkg/.
+mv $pkgroot/rpm/RPMS/x86_64/*.rpm $pwre_broot/$pwre_target/bld/pkg/.
 rm -r $pkgroot

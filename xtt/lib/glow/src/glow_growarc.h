@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -319,6 +319,8 @@ public:
   int gradient_contrast; //!< Gradient contrast.
   int disable_gradient; //!< Disable gradient, even if parent node has gradient.
   int fixposition; //!< Can't be moved.
+  int fill_eq_light; //!< Fill is drawn with light shadow color.
+  int fill_eq_shadow; //!< Fill is drawn with dark shadow color.
   int fill_eq_background; //!< Background color is fill color.
 
   //! Set user data.
@@ -664,6 +666,7 @@ public:
   {
     return shadow;
   }
+
 
   //! Destructor
   ~GrowArc();

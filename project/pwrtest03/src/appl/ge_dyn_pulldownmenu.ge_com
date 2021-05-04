@@ -1,0 +1,165 @@
+
+main()
+  int id;
+  int sts;
+  int i;
+  int j;
+  int k;
+  float x0 = 0.2;
+  float y0 = 0.2;
+  float xm;
+  float ym;
+  float x1;
+  float y1;
+  float x2;
+  float y2;
+  int action;  
+  string name;
+  string cmd;
+  string text;
+  string mtext;
+  string itext;
+  string attr;
+
+  ClearAll();
+  SetDraw(0);
+
+  SetGraphAttribute("Scantime", 0.6);
+  SetGraphAttribute("FastScantime", 0.2);
+  SetGraphAttribute("AnimationScantime", 0.2);
+  SetGraphAttribute("ColorTheme", "$default");
+  SetColorTheme(1);
+  SetBackgroundColor(eDrawType_CustomColor1);
+  id = CreateRectangle(0.0, 0.0, 34.0, 2.0);
+  SetObjectFill(id, 1);
+  SetObjectBorder(id, 0);
+  SetObjectFillColor(id, eDrawType_CustomColor3);
+
+  x1 = 31.0;
+  y1 = 0.2;
+  x2 = x1 + 2.3;
+  y2 = y1 + 1; 
+  id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Next");
+  SetObjectAttribute(id, "Action", "Script");
+  SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_optionmenu\", \"\", 1);");
+
+  xm = x0 + 1;
+  ym = y0 + 1;
+  id = CreateText("PulldownMenu", xm, ym, 4, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  xm = x0 - 0.2;
+  ym = y0 + 1.8;
+  x1 = xm;
+  y1 = ym;
+  x2 = x1 + 34;
+  y2 = y1 + 1.25;
+  id = CreateObject("pwrct_menubar2", x1, y1, x2, y2);
+
+  xm += 2;
+  x1 = xm;
+  y1 = ym;
+  x2 = x1 + 3;
+  y2 = y1 + 1.25;
+  id = CreateObject("pwrct_pulldownmenu2", x1, y1, x2, y2);
+  i = 0;
+  mtext = "Menu" + (i+1);
+  SetObjectAttribute(id, "Text", mtext);
+  SetObjectAttribute(id, "PulldownMenu.ItemMask", 1023);
+  for (j = 0; j < 10; j++)
+    text = mtext + "Item" + (j + 1);
+    attr = "PulldownMenu.ItemText" + (j+1);
+    SetObjectAttribute(id, attr, text);
+    attr = "PulldownMenu.ItemDyn" + (j+1) + ".Action";
+    SetObjectAttribute(id, attr, mActionType1_Command);
+    cmd = "open graph @\"pwr_logowithclose " + text + "\"";
+    attr = "PulldownMenu.ItemDyn" + (j+1) + ".Command.Command";
+    SetObjectAttribute(id, attr, cmd);
+  endfor
+
+  xm += 4;
+  x1 = xm;
+  y1 = ym;
+  x2 = x1 + 3;
+  y2 = y1 + 1.25;
+  id = CreateObject("pwrct_pulldownmenu2", x1, y1, x2, y2);
+  i = 1;
+  mtext = "Menu" + (i+1);
+  SetObjectAttribute(id, "Text", mtext);
+  SetObjectAttribute(id, "PulldownMenu.ItemMask", 1048575);
+  for (j = 0; j < 20; j++)
+    text = mtext + "Item" + (j + 1);
+    attr = "PulldownMenu.ItemText" + (j+1);
+    SetObjectAttribute(id, attr, text);
+    attr = "PulldownMenu.ItemDyn" + (j+1) + ".Action";
+    SetObjectAttribute(id, attr, mActionType1_Command);
+    cmd = "open graph @\"pwr_logowithclose " + text + "\"";
+    attr = "PulldownMenu.ItemDyn" + (j+1) + ".Command.Command";
+    SetObjectAttribute(id, attr, cmd);
+  endfor
+
+  xm += 4;
+  x1 = xm;
+  y1 = ym;
+  x2 = x1 + 3;
+  y2 = y1 + 1.25;
+  id = CreateObject("pwrct_pulldownmenu2", x1, y1, x2, y2);
+  i = 2;
+  mtext = "Menu" + (i+1);
+  SetObjectAttribute(id, "Text", mtext);
+  SetObjectAttribute(id, "PulldownMenu.ItemMask", 1048575);
+  for (j = 0; j < 20; j++)
+    text = mtext + "Item" + (j + 1);
+    attr = "PulldownMenu.ItemText" + (j+1);
+    SetObjectAttribute(id, attr, text);
+    attr = "PulldownMenu.ItemDyn" + (j+1) + ".Action";
+    SetObjectAttribute(id, attr, mActionType1_PulldownMenu);
+    attr = "PulldownMenu.ItemDyn" + (j+1) + ".PulldownMenu.ItemMask";
+    SetObjectAttribute(id, attr, 7);
+    for (k = 0; k < 3; k++)
+      itext = text + "C" + (k+1);
+      cmd = "open graph @\"pwr_logowithclose " + itext + "\"";
+      attr = "PulldownMenu.ItemDyn" + (j+1) + ".PulldownMenu.ItemText" + (k+1);
+      SetObjectAttribute(id, attr, itext);
+      attr = "PulldownMenu.ItemDyn" + (j+1) + ".PulldownMenu.ItemDyn" + (k+1) + ".Action";
+      SetObjectAttribute(id, attr, mActionType1_Command);
+      attr = "PulldownMenu.ItemDyn" + (j+1) + ".PulldownMenu.ItemDyn" + (k+1) + ".Command.Command";
+      SetObjectAttribute(id, attr, cmd);
+    endfor
+  endfor
+
+  xm += 4;
+  x1 = xm;
+  y1 = ym;
+  x2 = x1 + 3;
+  y2 = y1 + 1.25;
+  id = CreateObject("pwrct_pulldownmenu2", x1, y1, x2, y2);
+  i = 3;
+  mtext = "Menu" + (i+1);
+  SetObjectAttribute(id, "Text", mtext);
+  SetObjectAttribute(id, "PulldownMenu.ItemMask", 1048575);
+  for (j = 0; j < 20; j++)
+    text = mtext + "Item" + (j + 1);
+    attr = "PulldownMenu.ItemText" + (j+1);
+    SetObjectAttribute(id, attr, text);
+    attr = "PulldownMenu.ItemDyn" + (j+1) + ".Action";
+    SetObjectAttribute(id, attr, mActionType1_PulldownMenu);
+    attr = "PulldownMenu.ItemDyn" + (j+1) + ".PulldownMenu.ItemMask";
+    SetObjectAttribute(id, attr, 1048575);
+    for (k = 0; k < 20; k++)
+      itext = text + "C" + (k+1);
+      cmd = "open graph @\"pwr_logowithclose " + itext + "\"";
+      attr = "PulldownMenu.ItemDyn" + (j+1) + ".PulldownMenu.ItemText" + (k+1);
+      SetObjectAttribute(id, attr, itext);
+      attr = "PulldownMenu.ItemDyn" + (j+1) + ".PulldownMenu.ItemDyn" + (k+1) + ".Action";
+      SetObjectAttribute(id, attr, mActionType1_Command);
+      attr = "PulldownMenu.ItemDyn" + (j+1) + ".PulldownMenu.ItemDyn" + (k+1) + ".Command.Command";
+      SetObjectAttribute(id, attr, cmd);
+    endfor
+  endfor
+
+  SetGraphAttribute("x1", 30.0);
+  SetGraphAttribute("y1", 40.0);
+
+  SetDraw(1);
+endmain

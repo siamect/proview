@@ -1,0 +1,470 @@
+
+main()
+  int id;
+  int sts;
+  int i;
+  int j;
+  float x0 = 0.2;
+  float y0 = 0.2;
+  float delta = 3;
+  float xm;
+  float ym;
+  float x1;
+  float y1;
+  float x2;
+  float y2;
+  int textcolor;
+  string text;
+  int font;
+
+  ClearAll();
+  SetDraw(0);
+
+  SetGraphAttribute("Scantime", 0.6);
+  SetGraphAttribute("FastScantime", 0.2);
+  SetGraphAttribute("AnimationScantime", 0.2);
+  SetGraphAttribute("ColorTheme", "$default");
+  SetColorTheme(1);
+  SetBackgroundColor(eDrawType_CustomColor1);
+  id = CreateRectangle(0.0, 0.0, 34.0, 2.0);
+  SetObjectFill(id, 1);
+  SetObjectBorder(id, 0);
+  SetObjectFillColor(id, eDrawType_CustomColor3);
+
+  x1 = 31.0;
+  y1 = 0.2;
+  x2 = x1 + 2.3;
+  y2 = y1 + 1; 
+  id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Next");
+  SetObjectAttribute(id, "Action", "Script");
+  SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_tooltip\", \"\", 1);");
+
+  xm = x0 + 1;
+  ym = y0 + 1;
+  id = CreateText("ValueInput", xm, ym, 4, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# Float
+  ym += 1.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Float Min 0, Max 100", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", mActionType1_ValueInput);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInput1.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "ValueInput.MaxValue", 100.0);
+  SetObjectAttribute(id, "ValueInput.MinValue", 0.0);
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 7;
+  y1 += 0.15;
+  x2 = x1 + 4.1;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valueinputmedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInput1.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+# Float Min/MaxValueAttr
+  ym += 2.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Float Min/MaxValueAttr -100 - 100", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", mActionType1_ValueInput);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInput2.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "ValueInput.MaxValueAttr", "Test03a-Ge-Dyn-ValueInputMax.ActualValue##Float32");
+  SetObjectAttribute(id, "ValueInput.MinValueAttr", "Test03a-Ge-Dyn-ValueInputMin.ActualValue##Float32");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 7;
+  y1 += 0.15;
+  x2 = x1 + 4.1;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valueinputmedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInput2.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# Integer
+  ym += 2.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Integer Min 0, Max 100", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", mActionType1_ValueInput);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInputInt1.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.Format", "%d");
+  SetObjectAttribute(id, "ValueInput.MaxValue", 100.0);
+  SetObjectAttribute(id, "ValueInput.MinValue", 0.0);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 7;
+  y1 += 0.15;
+  x2 = x1 + 4.1;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valueinputmedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInputInt1.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.Format", "%d");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# Integer Min/MaxValueAttr
+  ym += 2.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Integer Min/MaxValueAttr -100 - 100", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", mActionType1_ValueInput);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInputInt2.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.Format", "%d");
+  SetObjectAttribute(id, "ValueInput.MaxValueAttr", "Test03a-Ge-Dyn-ValueInputMax.ActualValue##Float32");
+  SetObjectAttribute(id, "ValueInput.MinValueAttr", "Test03a-Ge-Dyn-ValueInputMin.ActualValue##Float32");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 7;
+  y1 += 0.15;
+  x2 = x1 + 4.1;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valueinputmedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInputInt2.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.Format", "%d");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# String
+  ym += 2.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("String", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 7.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", mActionType1_ValueInput);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInputStr.ActualValue##String80");
+  SetObjectAttribute(id, "Value.Format", "%s");
+  SetObjectAttribute(id, "ValueInput.MaxValue", 100.0);
+  SetObjectAttribute(id, "ValueInput.MinValue", 0.0);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 10;
+  y1 += 0.15;
+  x2 = x1 + 7.1;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valueinputmedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInputStr.ActualValue##String80");
+  SetObjectAttribute(id, "Value.Format", "%s");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# Clear
+  ym += 2.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Clear, value cleared when opened for input", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", mActionType1_ValueInput);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInput2.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "ValueInput.Clear", 1);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 7;
+  y1 += 0.15;
+  x2 = x1 + 4.1;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valueinputmedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInput2.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# Popup
+  ym += 2.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Popup, value input in dialog", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", mActionType1_ValueInput);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInput2.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "ValueInput.Popup", 1);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 7;
+  y1 += 0.15;
+  x2 = x1 + 4.1;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valueinputmedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInput2.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# Unselect
+  ym += 2.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Unselect, value not selected when opened for input", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", mActionType1_ValueInput);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInput2.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "ValueInput.Unselect", 1);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 7;
+  y1 += 0.15;
+  x2 = x1 + 4.1;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valueinputmedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInput2.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# EscapeStore
+  ym += 2.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("EscapeStore, value is stored when input focus is lost, eg when Esc is pressed", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", mActionType1_ValueInput);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInput2.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "ValueInput.EscapeStore", 1);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 7;
+  y1 += 0.15;
+  x2 = x1 + 4.1;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valueinputmedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInput2.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# Virtual Keyboard
+  ym += 2.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Virtual Keyboard, Enable/Disable for OpPlace op", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  x1 = xm;
+  y1 = ym + 0.3;
+  x2 = x1 + 10;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Enable Virtual Keyboard");
+  SetObjectAttribute(id, "Action", mActionType1_SetValue);
+  SetObjectAttribute(id, "SetValue.Attribute", "Nodes-Pwrtest03a-Opplaces-Op.Options##Int32");
+  SetObjectAttribute(id, "SetValue.Value", "16");
+
+  x1 += 11;
+  y1 = ym + 0.3;
+  x2 = x1 + 10;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Disable Virtual Keyboard");
+  SetObjectAttribute(id, "Action", mActionType1_SetValue);
+  SetObjectAttribute(id, "SetValue.Attribute", "Nodes-Pwrtest03a-Opplaces-Op.Options##Int32");
+  SetObjectAttribute(id, "SetValue.Value", "0");
+
+# KeyBoardType Standard
+  ym += 2.8;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("KeyBoardType Standard", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  x1 = xm + 0.4;
+  y1 = ym + 0.3;
+  x2 = x1 + 7.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", mActionType1_ValueInput);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInputStr2.ActualValue##String80");
+  SetObjectAttribute(id, "Value.Format", "%s");
+  SetObjectAttribute(id, "ValueInput.KeyBoardType", "Standard");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 10;
+  y1 += 0.05;
+  x2 = x1 + 7.1;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valueinputmedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInputStr2.ActualValue##String80");
+  SetObjectAttribute(id, "Value.Format", "%s");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# KeyBoardType Standard
+  ym += 2.4;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("KeyBoardType StandardShifted", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  x1 = xm + 0.4;
+  y1 = ym + 0.3;
+  x2 = x1 + 7.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", mActionType1_ValueInput);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInputStr2.ActualValue##String80");
+  SetObjectAttribute(id, "Value.Format", "%s");
+  SetObjectAttribute(id, "ValueInput.KeyBoardType", "StandardShifted");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 10;
+  y1 += 0.05;
+  x2 = x1 + 7.1;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valueinputmedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInputStr2.ActualValue##String80");
+  SetObjectAttribute(id, "Value.Format", "%s");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# KeyBoardType Numeric
+  ym += 2.4;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("KeyBoardType Numeric", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  x1 = xm + 0.4;
+  y1 = ym + 0.3;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", mActionType1_ValueInput);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInput2.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "ValueInput.KeyBoardType", "Numeric");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 7;
+  y1 += 0.05;
+  x2 = x1 + 4.1;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valueinputmedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInput2.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# KeyBoardType Alphabetic
+  ym += 2.4;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("KeyBoardType Alphabetic", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  x1 = xm + 0.4;
+  y1 = ym + 0.3;
+  x2 = x1 + 7.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", mActionType1_ValueInput);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInputStr2.ActualValue##String80");
+  SetObjectAttribute(id, "Value.Format", "%s");
+  SetObjectAttribute(id, "ValueInput.KeyBoardType", "Alphabetic");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 10;
+  y1 += 0.05;
+  x2 = x1 + 7.1;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valueinputmedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInputStr2.ActualValue##String80");
+  SetObjectAttribute(id, "Value.Format", "%s");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# KeyBoardType Alphabetic Shifted
+  ym += 2.4;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("KeyBoardType AlphabeticShifted", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  x1 = xm + 0.4;
+  y1 = ym + 0.3;
+  x2 = x1 + 7.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", mActionType1_ValueInput);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInputStr2.ActualValue##String80");
+  SetObjectAttribute(id, "Value.Format", "%s");
+  SetObjectAttribute(id, "ValueInput.KeyBoardType", "AlphabeticShifted");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 10;
+  y1 += 0.05;
+  x2 = x1 + 7.1;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valueinputmedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInputStr2.ActualValue##String80");
+  SetObjectAttribute(id, "Value.Format", "%s");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+
+  SetGraphAttribute("x1", 30.0);
+  SetGraphAttribute("y1", 40.0);
+
+  SetDraw(1);
+endmain

@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -107,6 +107,8 @@ public:
   static void activate_collect_signals(GtkWidget* w, gpointer data);
   static void activate_collect_iosignals(GtkWidget* w, gpointer data);
   static void activate_collect_open(GtkWidget* w, gpointer data);
+  static void activate_dashboard_insert(GtkWidget* w, gpointer data);
+  static void activate_dashboard_open(GtkWidget* w, gpointer data);
   static void activate_advanceduser(GtkWidget* w, gpointer data);
   static void activate_zoom_in(GtkWidget* w, gpointer data);
   static void activate_zoom_out(GtkWidget* w, gpointer data);

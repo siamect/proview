@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -122,6 +122,7 @@ typedef void (*glow_tUserDataOpenCb)(
 typedef void (*glow_tUserDataCopyCb)(
     void*, void*, void**, glow_eUserdataCbType);
 typedef void (*glow_tEventLogCb)(void*, void*, unsigned int);
+typedef void (*glow_tScriptExecCb)(void*, char*);
 
 //! Class for a drawing window populated with drawing objects and components.
 /*! GlowCtx is the base class for the drawing area in Glow. It contains array
@@ -865,6 +866,11 @@ public:
   /*! Calls the scan backcall function for all connected objects. */
   int trace_scan();
 
+  int trace_init_object(GlowArrayElem *e) {
+    return e->trace_init();
+  }
+
+
   void* user_data; //!< User data.
 
   //! Set user data.
@@ -1033,6 +1039,7 @@ public:
   glow_eAppMotion app_motion; //!< Action for app motion event.
   glow_tEventLogCb eventlog_callback; //!< Callback function to log events.
   static int eventlog_enabled; //!< Event logging enabled.
+  glow_tScriptExecCb scriptexec_callback; //!< Callback function to execute script.
   GlowCustomColors* customcolors; //!< Custom colors storage
   char color_theme[40]; //!< Custom color file.
   static char default_color_theme[40]; //!< Default custom color file.
@@ -1118,6 +1125,15 @@ public:
   void register_eventlog_callback(glow_tEventLogCb log_callback)
   {
     eventlog_callback = log_callback;
+  }
+
+  //! Register callback functions for script execution.
+  /*!
+    \param script_callback	Callback function that will be called to execute script.
+  */
+  void register_scriptexec_callback(glow_tScriptExecCb script_callback)
+  {
+    scriptexec_callback = script_callback;
   }
 
   //! Set custom colors.

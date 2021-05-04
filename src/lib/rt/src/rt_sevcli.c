@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -880,7 +880,7 @@ void sevcli_store_ctx(sevcli_tCtx ctx)
 /**
  * @brief Get stored context.
  */
-sevcli_tCtx sevcli_get_stored_ctx()
+sevcli_tCtx sevcli_get_stored_ctx(void)
 {
   return stored_ctx;
 }

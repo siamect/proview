@@ -1,6 +1,6 @@
 ! 
 !  ProviewR   Open Source Process Control.
-!  Copyright (C) 2005-2020 SSAB EMEA AB.
+!  Copyright (C) 2005-2021 SSAB EMEA AB.
 ! 
 !  This file is part of ProviewR.
 !
@@ -68,7 +68,9 @@ argexceed	<max number of arguments exceeded>			/error
 arraybounds	<array index out of bounds>				/error
 alreadyreg      <function is already registred>                         /info
 noaccess	<no access for operation>				/error
-
+noelem		<number of elements not specified>			/info
+noelemerror	<number of elements not specified>			/error
+misplaced	<misplaced statement>					/error
 
 
 

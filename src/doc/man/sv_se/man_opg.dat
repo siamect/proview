@@ -22,14 +22,14 @@
 
 <hr>
 2018-03-29
-Version 5.7.1	
+Version 5.8.0	
 <hr>
 </topic>
 
 <topic> __DocumentInfoPage
 
 
-Copyright (C) 2005-2020 SSAB EMEA AB
+Copyright (C) 2005-2021 SSAB EMEA AB
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -56,6 +56,7 @@ Larm och händelser <link> opg_events
 Kurvor <link> opg_curves
 Hjälp <link> opg_help
 Navigatör <link> opg_navigator
+Dashboard <link> opg_dashboard
 Plc trace <link> opg_trace
 Setup-skript <link> opg_setupfile
 Användare och privilegier <link> opg_security
@@ -1295,6 +1296,88 @@ loaded, C för cached och M för mounted.
 </chapter>
 
 <chapter>
+<topic> opg_dashboard
+Dashboard
+
+Ett dashboard (instrumentbräda) är en förenklad graf med ett mycket begränsat antal
+byggstenar. Byggstenarna kallas för celler och kan visa värden i form av indikatorer,
+staplar, trendkurvor, givare etc.
+
+<image> opg_fig43.png
+
+Ett dashboard kan skapas in Ge editorn eller i operatörsmiljön.
+
+Dashboardet är indelat i rader och kolumner där cellerna placeras. En cell har initialt
+höjden av en rad och bredden av en kolumn, men storleken kan utökas till flera rader och
+kolumner.
+
+En cell kan innehålla fler element. En stapel cell till exemple, kan innehållar tre
+element. Varje element kopplas till ett analog attribut som visas med en stapel. En 
+trendcell kan innehålla två element och visa två kurvor.
+
+Det finns tree huvudtyper av celler, analoga, digital och objekt.
+
+<h1>Analoga celler
+<h2>Bar
+En stapelcell visar ett analog värde med en stapel och ett värdefält. Det kan innehålla
+tre element.
+
+<image> opg_fig44.png
+<b>Fig Stapelceller med ett, två och tre element
+<h2>BarArc
+<image> opg_fig45.png
+
+<h2>Trend
+<image> opg_fig46.png
+
+<h2>Gauge
+<image> opg_fig47.png
+
+<h2>Gauge2
+<image> opg_fig48.png
+
+<h2>Slider
+<image> opg_fig49.png
+
+<h2>Pie
+<image> opg_fig50.png
+
+<h1>Digitala celler
+<h2>Indicator
+<image> opg_fig51.png
+
+<h2>DigitalTrend
+<image> opg_fig52.png
+
+<h1>Objektceller
+Objektceller finns får några objekt, t ex DsTrendCurve.
+<image> opg_fig53.png
+<b>Fig Objektcell för DsTrendCurve
+
+<h1>Skapa ett dashboard i rt_xtt
+Genom att välja ut ett attribut in navigatorn, och aktivera Funktioner/Dashboard/Lägg till
+(Ctrl+D) i meny, adderas attributet till ett dashboard. Om något dashboard befinner sig
+i editiering-mod lägg det in där, annar läggs det in i "PwR Dashboard". Man kan addera
+celler tills alla rader och kolumner är fyllda.
+
+För ett analog attribute skapas en stapelcell. Cell-typen kan ändras genom att gå över i
+editiering-mod från File/Edit (Ctrl+E) in menyn. Öppna cellens attribute (dubbelklick)
+och välj en annan typ i Dash.Type. Lämna editerings-mod med Ctrl+E.
+
+I editerings-mod, öppnas Ge editorn in begränsad mod. Några funktioner i editerings-mod är
+
+ - Addera. Skapa en tom cell.
+ - Ta bort. Ta bort en cell.
+ - Kopiera. Kopiera celler.
+ - Klistra in. Klistra in kopierade celler.
+ - Koppla. Koppla utvalt attribut i navigatorn.
+ - Slå ihop. Slå ihop celler. Utvalda celler slås ihop i den cell som var först utvalt.
+ - Från GraphAttribut kan cykeltiden och dashboardets storlek ändras.
+
+</topic>
+</chapter>
+
+<chapter>
 <topic> opg_trace
 Plc trace
 
@@ -1779,7 +1862,7 @@ att aktuellt objekt med /object.
 <B>xtt> set subwindow 'graphname' /name= /source= [/object=]
 
 'graphname' <t>den graf där window objektet ligger.
-/name	<t>namn på window objektet.
+/name	<t>namn på window objektet. '$current' anger nuvarande graf.
 /source	<t>namn på den Ge graf som ska visas i window objektet.
 /object	<t>anger aktuellt objekt när grafen är en objekts-bild.
 /x0	<t>Övre vänstra x-koordinaten i Ge för grafens gräns. Om x0, y0, x1, y1
@@ -2615,6 +2698,21 @@ time()			<LINK> time()
 tzset()			<LINK> tzset()
 verify()		<LINK> verify()
 
+<h2>Vektor funktioner
+arrayclear() 		<link> arrayclear()
+arraypush()		<link> arraypush()
+arraysize()		<link> arraysize()
+sort()			<link> sort()
+
+<h2>Matematiska funktioner
+cos()	 		<link> cos()
+EVEN()	 		<link> EVEN()
+MAX()			<link> MAX()
+MIN() 			<link> MIN()
+ODD()	 		<link> ODD()
+random() 		<link> random()
+sin()	 		<link> sin()
+
 <h2>Diverse funktioner
 CutObjectName()		<LINK> cutobjectname()
 ConfirmDialog()		<LINK> confirmdialog()
@@ -2632,6 +2730,7 @@ GetUser()		<LINK> getuser()
 GetPrivileges()		<LINK> getprivileges()
 GetGraphInstance()	<LINK> getgraphinstance()
 GetGraphInstanceNext()	<LINK> getgraphinstancenext()
+SetSubwindow()		<LINK> SetSubwindow()
 Quit()			<LINK> quit()
 
 <h2>xtt-commands
@@ -2695,20 +2794,27 @@ En deklaration består av
 - tabellen (global eller extern, om local ska inte tabellen anges)
 - datatypen (int, float eller string)
 - variabelnamn (känsligt för stora och små bokstäver)
-- antal element, om variabeln är en vektor
+- antal element, om variabeln är en vektor inom hakparanteser, eller om 
+  en vektor med längd 0, bara hakparenteser.
 - likameds tecken följt av initierings värde, om det utelämnas är 
   intitialvärdet 0 eller en null-sträng
 - semikolon.
 
 En extern variabel bör tas bort (med delete) när den inte längre används.
+Även globala variabler kan tas bort med deletegbl.
 
 <b>Exempel
 
-int             i;
-float           flow = 33.4;
-string          str = "Hello";
-extern int      jakob;
-global float	ferdinand = 1234;
+<c>int             i;
+<c>float           flow = 33.4;
+<c>string          str = "Hello";
+<c>extern int      jakob[20];
+<c>string          simon[];
+<c>global float	   ferdinand = 1234;
+<c>...
+<c>delete jakob[];
+<c>detetegbl fredinand;
+
 </TOPIC>
 
 <TOPIC> operators
@@ -3230,7 +3336,7 @@ strrchr <t>Returnera sista förekomsten av ett tecken i en sträng. <link> strrchr
 strlen <t>Beräkna längden på en sträng.	<link> strlen()
 strstr <t>Returnera första förekomsten av en delsträng i en sträng. <link> strstr()
 tolower <t>Konvertera till små bokstäver. <link> tolower()
-toupper <t>Konveretra till stora bokstäver. <link> toupper()
+toupper <t>Konvertera till stora bokstäver. <link> toupper()
 </TOPIC>
 
 <headerlevel>
@@ -3578,6 +3684,276 @@ int		<t>mode		<t>verifikaion till (1) eller från (0). Valfri.
 </TOPIC>
 </headerlevel>
 
+<TOPIC> array_functions <style> function
+Vektor funktioner
+
+<b>Funktion <t>Beskrivning
+arrayclear <t>Töm en dynamisk vektor. <link> arrayclear()
+arraypush <t>Addera till en dynamisk vektor. <link> arraypush()
+arraysize <t>Hämta storleken på en vektor. <link> arraysize()
+sort <t>Sortera en vektor. <link> sort()
+</TOPIC>
+
+<headerlevel>
+
+<TOPIC> arrayclear() <style> function
+arrayclear()
+
+int arrayclear((arbitrary array type) array)
+
+<b>Beskrivning
+
+Ta bort alla element i en vektor och sätt storleken till 0.
+Vektor-argumentet ska specificeras med hakparenteser.
+
+Returnerar operationens status.
+
+<b>Argument
+
+(arbitrary array type)	<t>array <t>Namn på vektorn. Ska anges med
+				 <t><t>hakparenteser.
+
+<b>Exempel
+
+<c>  float temp[];
+<c>  ...
+<c>  arrayclear(temp[]);
+</TOPIC>
+
+<TOPIC> arraypush() <style> function
+int arraypush((godtycklig vektortyp) array, (godtycklig typ)value)
+
+<b>Beskrivning
+
+Addera ett element sist i vektorn och lägg in angivet värde i elementet.
+Vektor-argumentet ska specificeras med hakparenteser.
+
+Returnerar operationens status.
+
+<b>Arguments
+
+(godtycklig vektortyp)	<t>array <t>Namn på vektorn. Ska anges med
+				 <t><t>hakparenteser.
+(godtycklig typ)	<t>value <t>Värde add addera till vektorn.
+
+<b>Exempel
+
+<c>  float x[];
+<c>  
+<c>  arraypush(x[], 29.2);
+</TOPIC>
+
+<TOPIC> arraysize() <style> function
+int arraysize((godtycklig vektortyp) array)
+
+<b>Beskrivning
+
+Hämta storleken på en vektor, dvs antalet element i vektorn.
+Vektor-argumentet ska specificeras med hakparenteser.
+
+Returnerar storleken på vektorn.
+
+<b>Argument
+
+(godtycklig vektortyp)	<t>array <t>Namn på vektorn. Ska anges med
+				 <t><t>hakparenteser.
+
+<b>Exempel
+
+<c>  float x[];
+<c>  int size;
+<c>  ...
+<c>  size = arraysize(x[]);
+</TOPIC>
+
+<TOPIC> sort() <style> function
+int sort((godtyclig vektortyp) array1 [,(godtycklig vektortyp) array2)...]
+
+<b>Beskrivning
+
+Sortera en sträng-vektor i alfabetisk ordning, eller en int- eller float-
+vektor in numerisk ordning.
+Upp till sju ytterligare vektorer kan anges som kommer att sorteras på 
+samma sätt som den första vektorn. Dessa vektorer ska ha samma storlek, eller
+vara större än det första vektorn.
+Vektor-argumenten ska specificeras med hakparenteser.
+
+Returnerar operationens status.
+
+<b>Arguments
+
+(godtycklig vektortyp)	<t>array1 <t>Namn på vektorn som ska sorteras. 
+				<t><t>Ska anges med hakparenteser.
+(godtycklig vektortyp)	<t>array2 - array8 <t>Ytterligare valfria vektorer som 
+				<t><t>kommer att sorteras på samma sätt som den
+				<t><t>första vektorn. Ska anges med hakparenteser.
+
+<b>Exempel
+
+<c>  string name[];
+<c>  string description[];
+<c>  int sts;
+<c>  ...
+<c>  sts = sort(name[], description[]);
+</TOPIC>
+
+<TOPIC> math_functions <style> function
+Matematiska funktioner
+
+<b>Funktion <t>Beskrivning
+cos <t>Cosinus funktion. <link> cos()
+EVEN <t>Testa om värdet är jämnt. <link> EVEN()
+MAX <t>Returnera största värdet. <link> MAX()
+MIN <t>Returnera minsta värdet. <link> MIN()
+ODD <t>Test om värdet är udda. <link> ODD()
+random <t>Returnera ett slumptal. <link> random()
+sin <t>Sinus funktion. <link> sin()
+</TOPIC>
+
+<headerlevel>
+
+<TOPIC> cos() <style> function
+cos()
+
+float cos(float angle)
+
+<b>Beskrivning
+
+Returnerar cosinus-värdet för en vinkel i grader.
+
+<b>Argument
+
+float	<t>angle <t>Vinkel i grader.
+
+<b>Exempel
+
+<c> float x;
+<c> float angle = 45;
+
+<c> x = cos(angle);
+</TOPIC>
+
+<TOPIC> EVEN() <style> function
+EVEN()
+
+int EVEN(int val)
+
+<b>Beskrivning
+
+Testa om ett värde är jämnt.
+
+Returnerar 1 om värdet är jämnt, annars 0.
+
+<b>Argument
+
+int	<t>val <t>Värde.
+</TOPIC>
+
+<TOPIC> MAX() <style> function
+MAX()
+
+float MAX(float v1, float v2)
+
+<b>Beskrivning
+
+Returnerar det största av två värden.
+
+<b>Argument
+
+float	<t>v1 <t>Värde.
+float	<t>v2 <t>Värde.
+
+<b>Exempel
+
+<c> float f1;
+<c> float f2;
+<c> float max;
+
+<c> max = MAX(f1, f2);
+</TOPIC>
+
+<TOPIC> MIN() <style> function
+MIN()
+
+float MIN(float v1, float v2)
+
+<b>Beskrivning
+
+Returnerar det minsta av två värden.
+
+<b>Argument
+
+float	<t>v1 <t>Värde.
+float	<t>v2 <t>Värde.
+
+<b>Exempel
+
+<c> float f1;
+<c> float f2;
+<c> float min;
+
+<c> min = MIN(f1, f2);
+</TOPIC>
+
+<TOPIC> ODD() <style> function
+ODD()
+
+int ODD(int val)
+
+<b>Beskrivning
+
+Testa om ett värde är udda.
+
+Returnerar 1 om värdet är udda, annar 0.
+
+<b>Argument
+
+int	<t>val <t>Värde.
+</TOPIC>
+
+<TOPIC> random() <style> function
+random()
+
+float random(float min_value, float max_value)
+
+<b>Beskrivning
+
+Returnerar ett slumpmässigt värde i det angivna intervallet.
+
+<b>Argument
+
+float	<t>min_value <t>Undre gräns för slumptalet.
+float	<t>max_value <t>Övre gräns för slumptalet.
+
+<b>Exempel
+
+<c> float val;
+
+<c> val = random(0.0, 100.0);
+</TOPIC>
+
+<TOPIC> sin() <style> function
+sin()
+
+float sin(float angle)
+
+<b>Beskrivning
+
+Returnerar sinus-värdet för en vinkel i grader.
+
+<b>Argument
+
+float	<t>angle <t>Vinkel i grader.
+
+<b>Exempel
+
+<c> float x;
+<c> float angle = 45;
+
+<c> x = sin(angle);
+</TOPIC>
+</headerlevel>
+
 <TOPIC> database_functions <style> function
 Databas funktioner
 
@@ -3863,6 +4239,7 @@ GetUser() 	<t>Hämta nuvarande användare. <LINK> getuser()
 GetPrivileges()	<t>Hämta privilegier för nuvarande användare. <LINK> getprivileges()
 GetGraphInstance() <t>Hämta instansobjekt för en objektgraf. <LINK> getgraphinstance()
 GetGraphInstanceNext() <t>Hämta instansobjekt för nästa graf. <LINK> getgraphinstancenext()
+SetSubwindow() 	<t>Set graf för ett Ge Window-objekt. <LINK> SetSubwindow()
 Quit() 		<t>Avsluta operatörsmiljön. <LINK> quit()
 </TOPIC>
 
@@ -4172,6 +4549,39 @@ string		<t>previous	<t>Föregående instans.
 <c>    printf( "Instance %s\n", instance);
 <c>    instance = GetGraphInstanceNext( "$pwr_exe/pwr_c_dv.pwg", instance);
 <c>  endwile
+</TOPIC>
+
+
+<TOPIC> setsubwindow() <style> function
+SetSubwindow()
+
+string SetSubwindow(string graph, string window, string source, [string object, int self])
+
+<b>Beskrivning
+
+Visar en graf in ett Ge window objekt. Kommandot används i kommando
+knappar för att byta innehållet i ett window objekt. source anger
+namnet på den graf som ska visas. Även objekt-bilder kan visas genom
+att aktuellt objekt med object argumentet. 
+
+Om funktionen exekveras i fönstret som byts ut, ska self argumentet vara 1.
+
+<b>Argument
+
+string		<t>graph	<t>Namn på graf.
+string		<t>window	<t>Namn på Ge windowobjekt.
+string		<t>source	<t>pwg-fil or ge scrip som ska visas i
+                                <t><t>window objektet.
+string		<t>object	<t>Instansobjekt om grafen är en objektsbild.
+int		<t>self		<t>Ska vara 1 om funktionen exekveras i det
+				<t><t>fönster vars innehåll byts ut.
+<b>Exempel pwg-fil
+
+<c>  SetSubwindow("$current", "W1", "motor1.pwg", 0, 1);
+
+<b>Exempel script-fil
+
+<c>  SetSubwindow("$current", "W1", "@m1script", 0, 1);
 </TOPIC>
 
 <TOPIC> quit() <style> function

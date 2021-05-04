@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -39,7 +39,7 @@
 #if defined PWRE_CONF_MYSQL
 
 #include "sev_db.h"
-#include <mysql/mysql.h>
+#include <mysql.h>
 
 class sev_dbms_env;
 

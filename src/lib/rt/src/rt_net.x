@@ -61,6 +61,11 @@
 % 
 #endif
 
+#ifndef RPC_HDR
+%#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
+%#pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
+
 enum net_eMsg {
   net_eMsg__ = -1,
   net_eMsg_error = 0,		/* A network error was detected */

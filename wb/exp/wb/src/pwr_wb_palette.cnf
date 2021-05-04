@@ -69,7 +69,9 @@ palette NavigatorPalette
       }
       menu Light
       {	
+        class LightATv
         class LightAv
+        class LightDTv
         class LightDv
         class LightIv
         class LightSv
@@ -901,6 +903,7 @@ palette PlcEditorPalette
     class Or
     class Pulse
     class PulseTrain
+    class PulseTrainM
     class SR_R
     class SR_S
     class SuppressSup

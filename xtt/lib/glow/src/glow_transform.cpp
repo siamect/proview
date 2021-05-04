@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -260,4 +260,12 @@ void GlowTransform::open(std::ifstream& fp)
   }
   store();
   stored = false;
+}
+
+void GlowTransform::pos_inverse(GlowTransform* t)
+{
+  t->a13 = -a13;
+  t->a23 = -a23;
+  t->s_a13 = -a13;
+  t->s_a23 = -a23;
 }

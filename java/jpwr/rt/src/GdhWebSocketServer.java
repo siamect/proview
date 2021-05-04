@@ -1384,9 +1384,10 @@ public class GdhWebSocketServer
 			      bb.putInt( j, 4 * asub.elements);
 			      j += 4;
 			      int[] ivalue = gdh.getObjectRefInfoIntArray(asub.id, asub.elements);
+			      if ( true)
 			      for ( int k = 0; k < asub.elements; k++) {
 				  if ( k < ivalue.length)
-				      bb.putInt( j, ivalue[i]);
+				      bb.putInt( j, ivalue[k]);
 				  else
 				      bb.putInt( j, 0);
 				  j += 4;

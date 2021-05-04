@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -204,6 +204,8 @@ public:
   {
     return nc->a.find_by_name(name, element);
   }
+
+  virtual int clear();
 };
 
 /*@}*/

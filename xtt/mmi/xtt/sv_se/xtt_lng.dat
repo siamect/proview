@@ -166,6 +166,7 @@ E 1.5.7 "_Ta bort blockering"
 E 1.5.8 "Navigator för övervakningsobjekt"
 E 1.5.9 "Open Plc för övervakningsobjekt"
 E 1.5.10 "Kvittera"
+E 1.5.11 "Kvittera _alla"
 #
 # Object editor
 E 1.6.1 "_Stäng ändra värde"
@@ -522,6 +523,18 @@ E 1.22.6 "Skapa panel"
 E 1.22.7 "Ta bort panel"
 E 1.22.8 "Vill du skapa en panel"
 E 1.22.9 "Vill du ta bort den angivna panelen"
+#
+# Dashboard
+E 1.23.1 "_Spara"
+E 1.23.2 "Spa_ra som"
+E 1.23.3 "Sätt _Färgtema"
+E 1.23.4 "_Ta bort"
+E 1.23.5 "_Kopiera"
+E 1.23.6 "K_listra in"
+E 1.23.7 "K_oppla"
+E 1.23.8 "Slå _ihop"
+E 1.23.9 "Cell_Attribut"
+E 1.23.10 "_GrafAttribut"
 #
 # Postscript printing
 E 2.1.1 "Innehåll"

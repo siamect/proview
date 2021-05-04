@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #
 # ProviewR   Open Source Process Control.
 # Copyright (C) 2005-2019 SSAB EMEA AB.
@@ -112,7 +112,7 @@ def open_cb():
 # Close function, backcall from application
 #
 def close_cb():
-    print 'Closing down'
+    print('Closing down')
         
 #
 # Scan function, backcall from application
@@ -190,7 +190,7 @@ def process(o):
         result = pwrrt.getSevItemsDataFrame( server, dataoid, dataattr, isobject,
              measuringtime, 'now', pointinterval, maxnoofpoints, '-', options)
     except RuntimeError as e:
-        print str(e), e
+        print(str(e), e)
         if str(e) == '%QCOM-E-TMO, time out':
             o.setSts(MVA__SERVERTIMEOUT)
         else:
@@ -220,6 +220,7 @@ def process(o):
             return
                 
     try:
+        print('Apply formula')
         wf.apply_formula(formulafile)
     except co.Error as e:
         o.setSts(e.status)
@@ -228,8 +229,8 @@ def process(o):
     # Fit linear regression model
     slr = LinearRegression()
     reg = slr.fit(wf.wd.iloc[:,1:], wf.wd.iloc[:,0:1])
-    #print "coef ", slr.coef_
-    #print "intercept ", slr.intercept_
+    #print('coef', slr.coef_)
+    #print('intercept', slr.intercept_)
 
     # Check score
     if scoremin > 0:

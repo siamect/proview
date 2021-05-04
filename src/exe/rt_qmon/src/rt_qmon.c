@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -977,6 +977,7 @@ static void iseg_import(sLink* lp, sIseg* sp)
   int diff;
   qdb_sInfo* ip;
   qdb_sQue* qp;
+  qcom_sQid receiver;
 
   if (!lp->np->link[lp->lix].flags.b.connected) {
     return;
@@ -1023,7 +1024,8 @@ static void iseg_import(sLink* lp, sIseg* sp)
 
     qdb_ScopeLock
     {
-      qp = qdb_Que(&sts, &lp->bp->b.info.receiver, NULL);
+      receiver = lp->bp->b.info.receiver;
+      qp = qdb_Que(&sts, &receiver, NULL);
       if (qp == NULL) {
         /* To do !!!  Send notification reply if requested. */
         qdb_Free(NULL, lp->bp);

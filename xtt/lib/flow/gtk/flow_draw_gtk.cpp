@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -165,7 +165,7 @@ static int flow_create_gc(FlowDrawGtk* draw_ctx, GdkWindow* window)
       window, &xgcv, (GdkGCValuesMask)(GDK_GC_FOREGROUND | GDK_GC_BACKGROUND));
 
   /* Green gc */
-  xgcv.foreground = flow_allocate_color(draw_ctx, "green");
+  xgcv.foreground = flow_allocate_color(draw_ctx, "lightgreen");
   xgcv.background = draw_ctx->background;
   draw_ctx->gc_green = gdk_gc_new_with_values(
       window, &xgcv, (GdkGCValuesMask)(GDK_GC_FOREGROUND | GDK_GC_BACKGROUND));

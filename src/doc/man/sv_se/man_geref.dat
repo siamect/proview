@@ -21,15 +21,15 @@
 
 
 <hr>
-2018-03-29
-Version 5.7.1	
+2021-01-14
+Version 5.8.0	
 <hr>
 </topic>
 
 <topic> __DocumentInfoPage
 
 
-Copyright (C) 2005-2020 SSAB EMEA AB
+Copyright (C) 2005-2021 SSAB EMEA AB
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -3014,7 +3014,7 @@ Column1.Format    <t><t>Format i c syntax.
 Column1.SelectAttribute <t><t>Vektor-attribut av typen Boolean. När en cell i 
                   <t><t>kolumnen väljs ut, sätt motsvarande element i vektorn. 
                   <t><t>Attributet ska anges med datatyp och storlek, se ovan.
-Column1Width      <t><t>Bredd på kolumnen.
+Column1.Width      <t><t>Bredd på kolumnen.
 Column1.HeaderText <t><t>Rubrik på kolumnen. Rubriken skrivs i 
                   <t><t>header-raden.
 </topic>
@@ -3766,6 +3766,9 @@ Rotate.x0        <t><t>x-koordinat för rotationspunkten.
 Rotate.y0        <t><t>y-koordinat för rotationspunkten.
 Rotate.Factor    <t><t>Factor multiplicerat med signalens värde ger 
                  <t><t>rotationen i grader.
+Rotate.Offset    <t><t>Offset för vinkeln.
+Rotate.MinAngle  <t><t>Min-värde för vinkeln.
+Rotate.MaxAngle  <t><t>Max-värde för vinkeln.
 </topic>
 
 <topic>GeDynMove <style>function
@@ -6109,6 +6112,28 @@ funktioner. Här följer en lista på de inbyggda funktioner som även kan användas 
 
 <h2>Ge funktioner
 <b>Funktion <t><t>Beskrivning
+BuildGraph <t><t>Bygg aktuell graph .<link>BuildGraph()
+ClearAll <t><t>Ta bort alla objekt i grafen.<link>ClearAll()
+CreateArc <t><t>Skapa ett Arc objekt.<link>CreateArc()
+CreateAxis <t><t>Skapa ett Axis objekt.<link>CreateAxis()
+CreateAxisArc <t><t>Skapa ett AxisArc objekt.<link>CreateAxisArc()
+CreateBar <t><t>Skapa ett Bar objekt.<link>CreateBar()
+CreateBarArc <t><t>Skapa ett BarArc objekt.<link>CreateBarArc()
+CreateDsTrend <t><t>Skapa ett DsTrend objekt.<link>CreateDsTrend()
+CreateDsTrendCurve <t><t>Skapa ett DsTrendCurve objekt.<link>CreateDsTrendCurve()
+CreateFastCurve <t><t>Skapa ett FastCurve objekt.<link>CreateFastCurve()
+CreateImage <t><t>Skapa ett Image objekt.<link>CreateImage()
+CreateLine <t><t>Skapa ett Line objekt.<link>CreateLine()
+CreateObject <t><t>Skapa ett subgraph objekt.<link>CreateObject()
+CreatePie <t><t>Skapa ett Pie objekt.<link>CreatePie()
+CreatePolyLine <t><t>Skapa ett PolyLine objekt.<link>CreatePolyLine()
+CreateRectangle <t><t>Skapa ett Rectangle objekt.<link>CreateRectangle()
+CreateRecRounded <t><t>Skapa ett rounded recangle objekt.<link>CreateRectRounded()
+CreateSevHist <t><t>Skapa ett SevHist objekt.<link>CreateSevHist()
+CreateText <t><t>Skapa ett Text objekt.<link>CreateText()
+CreateTrend <t><t>Skapa ett Trend objekt.<link>CreateTrend()
+CreateXYCurve <t><t>Skapa ett XYCurve objekt.<link>CreateXYCurve()
+DashInsertObject <t><t>Addera ett object till en DashCell.<link>DashInsertObject()
 DeleteObject <t><t>Ta bort ett objekt.<link>DeleteObject()
 GetCurrentObject <t><t>Returnerar identiteten för senast skapade objekt.<link>GetCurrentObject()
 GetFirstObject <t><t>Hämta första objekt. <link>GetFirstObject()
@@ -6131,18 +6156,26 @@ GetRgbColor <t><t>Hämta rgb-värden för en färg. <link>GetRgbColor()
 GetTextExtent <t><t>Beräkna storleken på en text. <link>GetTextExtent()
 GroupGetFirstObject <t><t>Hämta första objektet i en grupp. <link>GroupGetFirstObject()
 GroupGetNextObject <t><t>Hämta nästa objekt i en grupp. <link>GroupGetNextObject()
+GroupSelected <t><t>Gruppera utvalda objekt. <link>GroupSelected()
 MeasureObject <t><t>Hämta ett objekts utbredning. <link>MeasureObject()
 MoveAbsObject <t><t>Flytta ett objekt till en position. <link>MoveAbsObject()
 MoveObject <t><t>Flytta ett objekt ett visst avstånd. <link>MoveObject()
-Reload <t><t>Läs in nuvarande graph från fil. <link>Reload()
-ScaleObject <t><t>Scale an object. <link>ScaleObject()
+OpenGraph <t><t>Öppna en graph. <link>OpenGraph()
+PolyLineAdd <t><t>Addera ett segment till en PolyLine.<link>PolyLineAdd()
+Reload <t><t>Läs in innevarande graph från fil. <link>Reload()
+RotateSelected <t><t>Roterar utvalda objekt. <link>RotateSelected()
+SaveGraph <t><t>Spara innevarande graph. <link>SaveGraph()
+ScaleObject <t><t>Skala ett objekt. <link>ScaleObject()
 SelectAdd <t><t>Addera objekt till utvalslistan. <link>SelectAdd()
+SetBackgroundColor <t><t>Sätt bakgrundsfärg i aktuell graph. <link>SetBackgroundColor()
+SetColorTheme <t><t>Sätt färgtema. <link>SetColorTheme()
 SetCurrentObject <t><t>Sätt CurrentObject. <link>SetCurrentObject()
 SetDraw <t><t>Sätt ritning till eller från. <link>SetDraw()
 SetExtern <t><t>Sätt en subgraf extern. <link>SetExtern()
 SetExternAll <t><t>Sätt alla subgrafer extern. <link>SetExternAll()
 SetIntern <t><t>Sätt en subgraf intern. <link>SetIntern()
 SetInternAll <t><t>Sätt alla subgrafer intern. <link>SetInternAll()
+SetGraphName <t><t>Sätt namn på aktuell graph. <link>SetGraphName()
 SetObjectAttribute <t><t>Sätt värde på ett attribut för ett objekt. <link>SetObjectAttribute()
 SetObjectBackgroundColor <t><t>Sätt bakgrundsfärg på ett objekt. <link>SetObjectBackgroundColor()
 SetObjectBorder <t><t>Sätt kant på ett objekt. <link>SetObjectBorder()
@@ -6153,6 +6186,9 @@ SetObjectGradient <t><t>Sätt gradient på ett objekt. <link>SetObjectGradient()
 SetObjectShadow <t><t>Sätt skuggning på ett objekt. <link>SetObjectShadow()
 SetObjectTextColor <t><t>Sätt textfärg på ett objekt. <link>SetObjectTextColor()
 SetRgbColor <t><t>Sätt rgb-värden för en färg. <link>SetRgbColor()
+SetSelectTextBold <t><t>Sätt fet text på utvalda objekt. <link>SetSelectTextBold()
+SetSelectTextFont <t><t>Sätt typsnitt på utvalda objekt. <link>SetSelectTextFont()
+SetSelectTextSize <t><t>Sätt textstorlek på utvalda objekt. <link>SetSelectTextSize()
 
 <h2>In och utmatning
 <b>Funktion <t>Beskrivning
@@ -6210,7 +6246,10 @@ Det finns ett antal fördefinierade variabler för
 
 Objekttyper <link> gecmd_variables,objecttypes
 Dynamik och aktionstyper <link> gecmd_variables,dyntypes
+Fonter <link> gecmd_variables,fonts
+Riktning <link> gecmd_variables,directions
 Färger <link> gecmd_variables,colors
+Access <link> gecmd_variables,access
 <option> printenable
 
 </topic>
@@ -6319,6 +6358,21 @@ mActionType1_MethodToolbar
 mActionType1_MethodPulldownMenu
 mActionType1_Script
 
+
+<h2>Fonter <bookmark> fonts
+eFont_Helvetica
+eFont_Times
+eFont_NewCenturySchoolbook
+eFont_Courier
+eFont_LucidaSans
+
+<h2>Riktning <bookmark> directions
+eDirection_Center
+eDirection_Right
+eDirection_Left
+eDirection_Up
+eDirection_Down
+
 <h2>Colors <bookmark> colors
 <b>Standardpalett
 eDrawType_Color1 = 0
@@ -6336,9 +6390,598 @@ eDrawType_CustomColor90 = 666
 
 </topic>
 
+<topic>BuildGraph() <style>function
+BuildGraph()
+void BuildGraph()
+
+<h2>Beskrivning
+Bygg aktuell graph.
+
+<b>Exempel
+ 
+<c> BuildGraph();
+</topic>
+
+<topic>ClearAll() <style>function
+ClearAll()
+void ClearAll()
+
+<h2>Beskrivning
+Ta bort alla object i innevarande graph.
+
+<b>Exempel
+ 
+<c> ClearAll();
+</topic>
+
+<topic>CreateArc() <style>function
+CreateArc()
+int CreateArc(float x1, float y1, float x2, float y2, int angle1, int angle2)
+
+<h2>Beskrivning
+Skapa ett Arc objekt.
+
+<h2>Argument
+
+float <t>x1     <t>X koordinat för övre vänstra hörnet.
+float <t>y1     <t>Y koordinat för övre vänstra hörnet.
+float <t>x2     <t>X koordinat för nedre högra hörnet.
+float <t>y2     <t>Y koordinat för nedre högra hörnet.
+int   <t>angle1 <t>Startvinkel i grader. 0 är kl 3.
+int   <t>angle2 <t>Segmentets utbredning i grader medsols från startvinkeln.
+
+Returnerar objektets identitet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateArc(2.0, 2.0, 3.0, 3.0, 0, 180);
+</topic>
+
+<topic>CreateAxis() <style>function
+CreateAxis()
+int CreateAxis(float x1, float y1 [,float x2, float y2, int colortheme, int dynamic, int direction])
+
+<h2>Beskrivning
+Skapa ett axis objekt.
+
+<h2>Argument
+
+float  <t>x1    <t>X koordinat för övre vänstra hörnet.
+float  <t>y1    <t>Y koordinat för övre vänstra hörnet.
+float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+int    <t>colortheme <t>1 om färgtema färger ska användas, annars 0. Optional.
+int    <t>dynamic <t>Dynamisk axis (1) eller static (0). Optional.
+int    <t>direction <t>Riktning upp, ner, vänster eller höger. Anges med
+                 <t><t>symbolerna eDirection_Up, eDirection_Down,
+                 <t><t>eDirection_Left och eDirection_Right. Optional.
+
+Returnerar objektets identitet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateAxis(1.0, 1.0, 10.0, 2.0, 0, 0, eDirection_Down);
+<c> SetObjectAttribute(id, "MaxValue", 100.0);
+<c> SetObjectAttribute(id, "MinValue", -100.0);
+</topic>
+
+<topic>CreateAxisArc() <style>function
+CreateAxisArc()
+int CreateAxisArc(float x1, float y1 [,float x2, float y2, int colortheme, int dynamic])
+
+<h2>Beskrivning
+Skapa ett axis arc objekt.
+
+<h2>Argument
+
+float  <t>x1    <t>X koordinat för övre vänstra hörnet.
+float  <t>y1    <t>Y koordinat för övre vänstra hörnet.
+float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+int    <t>colortheme <t>1 om färgtema färger ska användas, annars 0. Optional.
+int    <t>dynamic <t>Dynamisk axis (1) eller static (0). Optional.
+
+Returnerar objektets identitet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateAxisArc(1.0, 1.0, 5.0, 4.0, 0, 0);
+<c> SetObjectAttribute(id, "MaxValue", 100.0);
+<c> SetObjectAttribute(id, "MinValue", -100.0);
+<c> SetObjectAttribute(id, "Angle1", -45);
+<c> SetObjectAttribute(id, "Angle2", 270);
+</topic>
+
+<topic>CreateBar() <style>function
+CreateBar()
+int CreateBar(float x1, float y1 [,float x2, float y2, int colortheme, int direction])
+
+<h2>Beskrivning
+Skapa ett bar objekt.
+
+<h2>Argument
+
+float  <t>x1    <t>X koordinat för övre vänstra hörnet.
+float  <t>y1    <t>Y koordinat för övre vänstra hörnet.
+float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+int    <t>colortheme <t>1 om färgtema färger ska användas, annars 0. Optional.
+int    <t>direction <t>Riktning upp, ner, vänster eller höger. Anges med
+                 <t><t>symbolerna eDirection_Up, eDirection_Down,
+                 <t><t>eDirection_Left och eDirection_Right. Optional.
+
+Returnerar id för det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateBar(2.0, 2.0, 2.5, 5.0, 1, eDirection_Up);
+<c> SetObjectAttribute(id, "Bar.Attribute", "H1-Av1.ActualValue##Float32");
+<c> SetObjectAttribute(id, "Bar.MaxValue", 100.0);
+<c> SetObjectAttribute(id, "Bar.MinValue", -100.0);
+</topic>
+
+<topic>CreateBarArc() <style>function
+CreateBarArc()
+int CreateBar(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Beskrivning
+Skapa ett BarArc objekt.
+
+<h2>Argument
+
+float  <t>x1    <t>X koordinat för övre vänstra hörnet.
+float  <t>y1    <t>Y koordinat för övre vänstra hörnet.
+float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+int    <t>colortheme <t>1 om färgtema färger ska användas, annars 0. Optional.
+
+Returnerar id för det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateBarArc(2.0, 2.0, 2.5, 5.0, 1);
+<c> SetObjectAttribute(id, "Bar.Attribute", "H1-Av1.ActualValue##Float32");
+<c> SetObjectAttribute(id, "BarArc.MaxValue", 100.0);
+<c> SetObjectAttribute(id, "BarArc.MinValue", -100.0);
+<c> SetObjectAttribute(id, "BarArc.Angle1", -45);
+<c> SetObjectAttribute(id, "BarArc.Angle2", 270);
+</topic>
+
+<topic>CreateDsTrend() <style>function
+CreateDsTrend()
+int CreateDsTrend(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Beskrivning
+Skapa ett DsTrend objekt.
+
+<h2>Argument
+
+float  <t>x1    <t>X koordinat för övre vänstra hörnet.
+float  <t>y1    <t>Y koordinat för övre vänstra hörnet.
+float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+int    <t>colortheme <t>1 om färgtema färger ska användas, annars 0. Optional.
+
+Returnerar id för det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateDsTrend(2.0, 2.0, 7.0, 5.0, 1);
+<c> SetObjectAttribute(id, "DsTrend.Object1", "H1-Trend1");
+<c> SetObjectAttribute(id, "DsTrend.MaxValue1", 100.0);
+<c> SetObjectAttribute(id, "DsTrend.MinValue1", -100.0);
+<c> SetObjectAttribute(id, "DsTrend.ScanTime", 0.5);
+</topic>
+
+<topic>CreateDsTrendCurve() <style>function
+CreateDsTrendCurve()
+int CreateDsTrendCurve(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Beskrivning
+Skapa ett DsTrendCurve objekt.
+
+<h2>Argument
+
+float  <t>x1    <t>X koordinat för övre vänstra hörnet.
+float  <t>y1    <t>Y koordinat för övre vänstra hörnet.
+float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+int    <t>colortheme <t>1 om färgtema färger ska användas, annars 0. Optional.
+
+Returnerar id för det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateDsTrendCurve(2.0, 2.0, 7.0, 5.0, 1);
+<c> SetObjectAttribute(id, "DsTrendCurve.Object", "H1-TrendCurve");
+<c> SetObjectAttribute(id, "DsTrendCurve.MaxValue1", 100.0);
+<c> SetObjectAttribute(id, "DsTrendCurve.MinValue1", -100.0);
+<c> SetObjectAttribute(id, "DsTrendCurve.ScanTime", 0.5);
+</topic>
+
+<topic>CreateFastCurve() <style>function
+CreateFastCurve()
+int CreateFastCurve(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Beskrivning
+Skapa ett FastCurve objekt.
+
+<h2>Argument
+
+float  <t>x1    <t>X koordinat för övre vänstra hörnet.
+float  <t>y1    <t>Y koordinat för övre vänstra hörnet.
+float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+int    <t>colortheme <t>1 om färgtema färger ska användas, annars 0. Optional.
+
+Returnerar id för det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateFastCurve(2.0, 2.0, 7.0, 5.0, 1);
+<c> SetObjectAttribute(id, "FastCurve.Object", "H1-FastCurve");
+<c> SetObjectAttribute(id, "FastCurve.MaxValue1", 100.0);
+<c> SetObjectAttribute(id, "FastCurve.MinValue1", -100.0);
+</topic>
+
+<topic>CreateImage() <style>function
+CreateImage()
+int CreateImage(string image, float x1, float y1 [,float x2, float y2])
+
+<h2>Beskrivning
+Skapa ett image objekt.
+
+<h2>Argument
+
+string <t>image <t>Image filnamn. Filen ska ligga på
+                <t>$pwrp_exe eller $pwr_exe.
+float  <t>x1    <t>X koordinat för övre vänstra hörnet.
+float  <t>y1    <t>Y koordinat för övre vänstra hörnet.
+float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+int    <t>colortheme <t>1 om färgtema färger ska användas, annars 0. Optional.
+
+Returnerar id för det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateImage("pwr_logofully.png", 2.0, 2.0);
+</topic>
+
+<topic>CreateLine() <style>function
+CreateLine()
+int CreateLine(float x1, float y1, float x2, float y2)
+
+<h2>Beskrivning
+Skapa en rät linje.
+Färg, bredd och linjetyp hämtas från de aktuella inställningarna
+i editorn.
+
+<h2>Argument
+
+float <t>x1     <t>X koordinat för startpunkten.
+float <t>y1     <t>Y koordinat för startpunkten.
+float <t>x2     <t>X koordinat för slutpunkten.
+float <t>y2     <t>Y koordinat för slutpunkten.
+
+Returnerar id för det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateLine(2.0, 2.0, 3.0, 3.0);
+</topic>
+
+<topic>CreateObject() <style>function
+CreateObject()
+int CreateObject(string subgraph, float x1, float y1 [,float x2, float y2])
+
+<h2>Beskrivning
+Skapa ett subgraph objekt.
+
+<h2>Argument
+
+string <t>subgraph <t>Subgraph name.
+float  <t>x1    <t>X koordinat för övre vänstra hörnet.
+float  <t>y1    <t>Y koordinat för övre vänstra hörnet.
+float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+
+Returnerar id för det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateObject("pwr_valve", 2.0, 2.0);
+</topic>
+
+<topic>CreatePie() <style>function
+CreatePie()
+int CreatePie(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Description
+Skapa ett Pie objekt.
+
+<h2>Argument
+
+float  <t>x1    <t>X koordinat för övre vänstra hörnet.
+float  <t>y1    <t>Y koordinat för övre vänstra hörnet.
+float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+int    <t>colortheme <t>1 om färgtema färger ska användas, annars 0. Optional.
+
+Returnerar identiteten på det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreatePie(2.0, 2.0, 2.5, 5.0, 1);
+<c> SetObjectAttribute(id, "Pie.Sectors", 3);
+<c> SetObjectAttribute(id, "Pie.FixRange", 1);
+<c> SetObjectAttribute(id, "Pie.Attribute1", "H1-Av1.ActualValue##Float32");
+<c> SetObjectAttribute(id, "Pie.Attribute2", "H1-Av2.ActualValue##Float32");
+<c> SetObjectAttribute(id, "Pie.Attribute3", "H1-Av3.ActualValue##Float32");
+<c> SetObjectAttribute(id, "Pie.MinValue", 0.0);
+<c> SetObjectAttribute(id, "Pie.MaxValue", 300.0);
+</topic>
+
+<topic>CreatePolyLine() <style>function
+CreatePolyLine()
+int CreatePolyLine(float x1, float y1, float x2, float y2)
+
+<h2>Beskrivning
+Skapa första segmentet av en polyline. Efterföljande segment adderas
+med PolyLineAdd().
+Färg, bredd och linjetyp hämtas från de aktuella inställningarna i
+editorn.
+
+<h2>Argument
+
+float <t>x1     <t>X koordinat för startpunkten.
+float <t>y1     <t>Y koordinat för startpunkten.
+float <t>x2     <t>X koordinat för slutpunkten.
+float <t>y2     <t>Y koordinat för slutpunkten.
+
+Returnerar id för det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreatePolyLine(2.0, 2.0, 3.0, 3.0);
+<c> PolyLineAdd(id, 4.0, 2.0);
+<c> PolyLineAdd(id, 5.0, 3.0);
+</topic>
+
+<topic>CreateRectangle() <style>function
+CreateRectangle()
+int CreateRectangle(float x, float y, float width, float height)
+
+<h2>Beskrivning
+Skapa en rektangel.
+Färg, fyllnad, kant och andra egenskapter hämtas från
+de aktuella inställningarna i editorn.
+
+<h2>Argument
+
+float <t>x     <t>X koordinat för övre vänstra hörnet.
+float <t>y     <t>Y koordinat för övre vänstra hörnet.
+float <t>width <t>Rektangelns bredd.
+float <t>height <t>Rektangelns höjd.
+
+Returnerar id för det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateRectangle(2.0, 2.0, 5.0, 3.0);
+</topic>
+
+<topic>CreateRectRounded() <style>function
+CreateRectRounded()
+int CreateRectRounded(float x, float y, float width, float height)
+
+<h2>Beskrivning
+Skapa en rektangel med rundade hörn.
+Färg, fyllnad, kant och andra egenskapter hämtas från
+de aktuella inställningarna i editorn.
+
+<h2>Argument
+
+float <t>x     <t>X koordinat för övre vänstra hörnet.
+float <t>y     <t>Y koordinat för övre vänstra hörnet.
+float <t>width <t>Rektangelns bredd.
+float <t>height <t>Rektangelns höjd.
+
+Returnerar id för det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateRectRounded(2.0, 2.0, 5.0, 3.0);
+</topic>
+
+<topic>CreateSevHist() <style>function
+CreateSevHist()
+int CreateSevHist(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Beskrivning
+Skapa ett SevHist objekt.
+
+<h2>Argument
+
+float  <t>x1    <t>X koordinat för övre vänstra hörnet.
+float  <t>y1    <t>Y koordinat för övre vänstra hörnet.
+float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+int    <t>colortheme <t>1 om färgtema färger ska användas, annars 0. Optional.
+
+Returnerar id för det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateSevHist(2.0, 2.0, 7.0, 5.0, 1);
+<c> SetObjectAttribute(id, "SevHist.Object1", "H1-Av1-Hist");
+<c> SetObjectAttribute(id, "SevHist.MaxValue1", 100.0);
+<c> SetObjectAttribute(id, "SevHist.MinValue2", -100.0);
+<c> SetObjectAttribute(id, "SevHist.TimeRange", 120.0);
+</topic>
+
+<topic>CreateText() <style>function
+CreateText()
+int CreateText(string text, float x, float y)
+
+<h2>Beskrivning
+Skapa ett text objekt. Font, storlek, färg och andra egenskaper
+hämtas från de aktuella inställningarna i editorn.
+
+<h2>Argument
+
+string <t>text <t>Text.
+float  <t>x     <t>X koordinat.
+float  <t>y     <t>Y koordinat.
+
+Returnerar id för det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateText("Start", 2.0, 2.0);
+</topic>
+
+<topic>CreateTrend() <style>function
+CreateTrend()
+int CreateTrend(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Beskrivning
+Skapa ett Trend objekt.
+
+<h2>Argument
+
+float  <t>x1    <t>X koordinat för övre vänstra hörnet.
+float  <t>y1    <t>Y koordinat för övre vänstra hörnet.
+float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+int    <t>colortheme <t>1 om färgtema färger ska användas, annars 0. Optional.
+
+Returnerar id för det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateTrend(2.0, 2.0, 7.0, 5.0, 1);
+<c> SetObjectAttribute(id, "Trend.Attribute1", "H1-Av1.ActualValue##Float32");
+<c> SetObjectAttribute(id, "Trend.MaxValue1", 100.0);
+<c> SetObjectAttribute(id, "Trend.MinValue1", -100.0);
+<c> SetObjectAttribute(id, "Trend.ScanTime", 0.5);
+</topic>
+
+<topic>CreateXYCurve() <style>function
+CreateXYCurve()
+int CreateXYCurve(float x1, float y1 [,float x2, float y2, int colortheme])
+
+<h2>Beskrivning
+Skapa ett XYCurve objekt.
+
+<h2>Argument
+
+float  <t>x1    <t>X koordinat för övre vänstra hörnet.
+float  <t>y1    <t>Y koordinat för övre vänstra hörnet.
+float  <t>x2    <t>X koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+float  <t>y2    <t>Y koordinat för nedre högra hörnet om objektet
+                <t><t>ska skalas. Optional.
+int    <t>colortheme <t>1 om färgtema färger ska användas, annars 0. Optional.
+
+Returnerar id för det skapade objektet.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreateXYCurve(2.0, 2.0, 7.0, 5.0, 1);
+<c> SetObjectAttribute(id, "XY_Curve.XAttr", "H1-X1.Value##Float32#100");
+<c> SetObjectAttribute(id, "XY_Curve.YAttr", "H1-Y1.Value##Float32#100");
+<c> SetObjectAttribute(id, "XY_Curve.XMaxValue", 100.0);
+<c> SetObjectAttribute(id, "XY_Curve.XMinValue", 0.0);
+<c> SetObjectAttribute(id, "XY_Curve.YMaxValue", 100.0);
+<c> SetObjectAttribute(id, "XY_Curve.YMinValue", -100.0);
+<c> SetObjectAttribute(id, "XY_Curve.UpdateAttr", "H1-Update.ActualValue##Boolean");
+</topic>
+
+<topic>DashInsertObject() <style>function
+DashInsertObject()
+void DashInsertObject(int dashoid, int oid)
+
+<h2>Description
+Addera ett objekt till en dashcell.
+
+<h2>Argument
+
+int <t>dashoid <t>Objektidentitet för DashCell-objektet.
+int <t>oid     <t>Objektidentitet för objektet.
+
+<b>Exempel
+<c> int doid;
+<c> int oid;
+ 
+<c> DashInsertObject(doid, oid);
+</topic>
+
 <topic>DeleteObject() <style>function
 DeleteObject()
-void GetObjectAttribute( int oid)
+void DeleteObject( int oid)
 
 <h2>Beskrivning
 Ta bort ett objekt.
@@ -6375,7 +7018,7 @@ Returnerar en integer med objektsidentiteten.
 
 string GetGraphName()
 
-<h2>Description
+<h2>Beskrivning
 Hämta namn på nuvarande graf.
 
 Returnerar en sträng med namnet.
@@ -6422,7 +7065,7 @@ samma sätt som i attributeditorn för objektet.
 
 int <t>oid     <t>Objektets identitet.
 string <t>attribut <t>Attributnamn.
-(arbitrary type) <t>Hämtat värde på attributet.
+(arbitrary type) <t>value <t>Hämtat värde på attributet.
 
 Returnerar status för operationen.
 
@@ -6693,7 +7336,7 @@ Hämtar ett objects typ.
 
 int <t>oid     <t>Objektets identitet.
 
-Returnerar objectstypen.
+Returnerar objektstypen.
 Se Fördefinierade variabler för värden på objekttyper <link> gecmd_variables,objecttypes
 
 <b>Exempel
@@ -6739,13 +7382,11 @@ dvs 310, 314, 318, ... 666.
 
 <c>   printf( "%3d  %5.3f %5.3f %5.3f\n", i, r, g, b);
 <c> endfor
-
-<c> GetRgbColor( eDrawType_CustomColor1, red, green, blue);
 </topic>
 
 <topic>GetTextExtent() <style>function
 GetTextExtent()
-int GetTextExtent( string text, int textsize, int bold, float widht [, float height, 
+int GetTextExtent( string text, int textsize, int font, int bold, float widht [, float height, 
 float descent])
 
 <h2>Beskrivning
@@ -6757,7 +7398,7 @@ Returnerar text-bredden i width argumentet, och om argumentet height och descent
 <h2>Argument
 
 string <t>text     <t>Text vars storlek ska beräknas.
-int    <t>textsize <t>Textstorlek (8, 10, 12, 14, 18 eller 24).
+int    <t>textsize <t>Textstorleksindex (0-5)).
 int    <t>bold     <t>Fet (1) eller normal (0) text.
 float  <t>width    <t>Textens bredd returneras i denna variabel.
 float  <t>height   <t>Höjden på texten returneras i denna variabel.
@@ -6766,7 +7407,7 @@ float  <t>descent  <t>Textens descent returneras i denna variabel.
 <b>Exempel
 <c> float width;
  
-<c> GetTextExtent("Detta är en text", 12, 1, width);
+<c> GetTextExtent("Detta är en text", 3, eFont_LucidaSans, 1, width);
 </topic>
 
 <topic>GroupGetFirstObject() <style>function
@@ -6817,6 +7458,27 @@ Returnerar en integer med objektsidentiteten.
 
 </topic>
 
+<topic>GroupSelected() <style>function
+GroupSelected()
+int GroupSelected()
+
+<h2>Beskrivning
+
+Skapa en grupp med de utvalda objekten.
+
+Returnar en integer med gruppens identiteten.
+
+<b>Exempel
+
+<c> int id1;
+<c> int id2;
+<c> int gid;
+ 
+<c> SelectAdd(id1);
+<c> SelectAdd(id2);
+<c> gid = GroupSelected();
+</topic>
+
 <topic>MeasureObject() <style>function
 MeasureObject()
 void MeasureObject( int oid, float ll_x, float ll_y, float ur_x, float ur_y)
@@ -6843,6 +7505,108 @@ float <t>ur_y  <t>Returnerad y koordinat för övre högra.
 <c> MeasureObject( oid, ll_x, ll_y, ur_x, ur_y);
 </topic>
 
+<topic>OpenGraph() <style>function
+OpenGraph()
+void OpenGraph(string name)
+
+<h2>Description
+Öppna en graph.
+
+<h2>Argument
+
+string <t>name     <t>Namn på grafen.
+
+<b>Exempel
+ 
+<c> OpenGraph("overview");
+</topic>
+
+<topic>MoveAbsObject() <style>function
+MoveAbsObject()
+void MoveAbsObject( int oid, float x, float y)
+
+<h2>Beskrivning
+
+Flytta ett objekt till koordinaterna x och y.
+
+<h2>Argument
+
+int <t>oid <t>Objektsidentitet.
+float <t>x <t>x koordinat.
+float <t>y <t>y koordinat.
+
+<b>Exempel
+
+<c> MoveAbsObject( oid, 0.5, o.5);
+</topic>
+
+<topic>MoveObject() <style>function
+MoveObject()
+void MoveObject( int oid, float dx, float dy)
+
+<h2>Beskrivning
+
+Flytta ett objekt ett visst avstånd.
+
+<h2>Argument
+
+int <t>oid <t>Objektsidentitet.
+float <t>dx <t>Avstånd att flytta i x-led.
+float <t>dy <t>Avstånd att flytta i y-led.
+
+<b>Exempel
+
+<c> MoveObject( oid, 0.5, 0.5);
+</topic>
+
+<topic>PolyLineAdd() <style>function
+PolyLineAdd()
+int PolyLineAdd(int id, float x, float y)
+
+<h2>Description
+Addera ett segment till ett PolyLine objekt.
+
+<h2>Argument
+
+float <t>x     <t>X koordinat för slutpunkten.
+float <t>y     <t>Y koordinat för slutpunkten.
+
+<b>Exempel
+ 
+<c> int id;
+<c>
+<c> id = CreatePolyLine(2.0, 2.0, 3.0, 3.0);
+<c> PolyLineAdd(id, 4.0, 2.0);
+<c> PolyLineAdd(id, 5.0, 3.0);
+</topic>
+
+<topic>RotateSelected() <style>function
+RotateSelected()
+void RotateSelected(float angle, int rotationpoint)
+
+<h2>Beskrivning
+Rotera utvalda objekt runt rotationspunkten.
+Rotationspunkten kan vara
+
+ 0 nedre vänstra hörnet
+ 1 nedre högra hörnet
+ 2 övre högra hörnet
+ 3 övre vänstra hörnet
+ 4 mittpunkten (default-värde)
+
+<h2>Argument
+
+float <t>angle     <t>Vinkel i grader för rotationen.
+int <t>rotationpoint     <t>Rotationspunkt. Default-värde center.
+
+<b>Exempel
+ 
+<c> int id;
+
+<c> SelectAdd(id);
+<c> RotateSelected(90.0);
+</topic>
+
 <topic>Reload() <style>function
 Reload()
 void Reload()
@@ -6858,6 +7622,22 @@ Läser nuvarande graf från fil.
 <c> Reload();
 <c> SetIntern("pwr_roundind");
 <c> save
+</topic>
+
+<topic>SaveGraph() <style>function
+SaveGraph()
+void SaveGraph([string name])
+
+<h2>Beskrivning
+Spara aktuell graph.
+
+<h2>Argument
+
+string <t>name     <t>Namn på grafen. Optional.
+
+<b>Exempel
+ 
+<c> SaveGraph();
 </topic>
 
 <topic>SelectAdd() <style>function
@@ -6911,44 +7691,6 @@ Läser nuvarande graf från fil.
 <c> save
 </topic>
 
-<topic>MoveAbsObject() <style>function
-MoveAbsObject()
-void MoveAbsObject( int oid, float x, float y)
-
-<h2>Beskrivning
-
-Flytta ett objekt till koordinaterna x och y.
-
-<h2>Argument
-
-int <t>oid <t>Objektsidentitet.
-float <t>x <t>x koordinat.
-float <t>y <t>y koordinat.
-
-<b>Exempel
-
-<c> MoveAbsObject( oid, 0.5, o.5);
-</topic>
-
-<topic>MoveObject() <style>function
-MoveObject()
-void MoveObject( int oid, float dx, float dy)
-
-<h2>Beskrivning
-
-Flytta ett objekt ett visst avstånd.
-
-<h2>Argument
-
-int <t>oid <t>Objektsidentitet.
-float <t>dx <t>Avstånd att flytta i x-led.
-float <t>dy <t>Avstånd att flytta i y-led.
-
-<b>Exempel
-
-<c> MoveObject( oid, 0.5, 0.5);
-</topic>
-
 <topic>ScaleObject() <style>function
 ScaleObject()
 void ScaleObject( int oid, float scalex, float scaley)
@@ -6966,6 +7708,42 @@ float <t>scaley <t>Skalfaktor i y-led.
 <b>Exempel
 
 <c> ScaleObject( oid, 1.5, 1.5);
+</topic>
+
+<topic>SetBackgroundColor() <style>function
+SetBackgroundColor()
+void SetBackgroundColor(int color)
+
+<h2>Beskrivning
+Sätt bakgrundsfärg för aktuell graph.
+
+<h2>Argument
+
+int <t>color     <t>Bakgrundsfärg.
+
+<b>Exempel
+ 
+<c> SetBackgroundColor(eDrawType_CustomColor1);
+</topic>
+
+<topic>SetColorTheme() <style>function
+SetColorTheme()
+void SetColorTheme(int colortheme)
+
+<h2>Beskrivning
+Sätt färgtema för aktuell graph.
+I runtime måste även ColorTheme i GraphAttributes sättas till
+$default. 
+
+
+<h2>Argument
+
+int <t>colortheme     <t>Index för färgtema.
+
+<b>Exempel
+ 
+<c> SetGraphAttribute("ColorTheme", "$default");
+<c> SetColorTheme(2);
 </topic>
 
 <topic>SetCurrentObject() <style>function
@@ -7076,6 +7854,23 @@ Sätter alla subgrafer intern.
 <c> SetInternAll();
 </topic>
 
+<topic>SetGraphName() <style>function
+SetGraphName()
+string SetGraphName()
+
+<h2>Beskrivning
+Sätt namn på innevarande graph.
+
+<h2>Argument
+
+string    <t>name       <t>Namn på grafen.
+
+<b>Exempel
+<c> string name = "overview";
+ 
+<c> SetGraphName(name);
+</topic>
+
 <topic>SetObjectAttribute() <style>function
 SetObjectAttribute()
 int SetObjectAttribute( int oid, string attribute, (arbitrary type) value)
@@ -7083,6 +7878,9 @@ int SetObjectAttribute( int oid, string attribute, (arbitrary type) value)
 <h2>Beskrivning
 Sätter värde på ett attribut i ett objekt. Attributet namnges på
 samma sätt som i attributeditorn för objektet.
+
+Citationstecken i strängar kan sättas med \", och ny rad i
+attribut med flera rade med \\n.
 
 <h2>Argument
 
@@ -7092,11 +7890,24 @@ string <t>attribut <t>Attributnamn.
 
 Returnerar status för operationen.
 
-<b>Exempel
+<b>Exempel 1
 <c> int sts;
 <c> int oid;
  
 <c> sts = SetObjectAttribute( oid, "DigColor.Color", eDrawType_Color244);
+
+<b>Exempel 2
+Script attribut med flera rader och strängar med citationstecket.
+
+<c>  SetObjectAttribute(id, "Script.Script", "\
+<c>int a;\\n\
+<c>a = GetAttribute(\"H1-Dv1.ActualValue\");\\n\
+<c>if (a)\\n\
+<c>  SetSubwindow(\"$current\",\"W1\",\"@plant1\",\"\", 0);\\n\
+<c>else\\n\
+<c>  SetSubwindow(\"$current\",\"W1\",\"@plant2\",\"\", 0);\\n\
+<c>endif");
+
 </topic>
 
 <topic>SetObjectBackgroundColor() <style>function
@@ -7263,6 +8074,65 @@ b>Exempel
 <c> float blue = 0.328;
 
 <c> SetRgbColor( eDrawType_CustomColor1, red, green, blue);
+</topic>
+
+<topic>SetSelectTextBold() <style>function
+void SetSelectTextBold()
+void SetSelectTextBold(int font)
+
+<h2>Description
+Sätt fet text på utvalda objekt.
+
+<h2>Argument
+
+int <t>bold     <t>1 för fet text 0 för normal text.
+
+<b>Exempel
+
+<c> int id;
+
+<c> SelectAdd(id);
+<c> SetSelectTextBold(1);
+
+</topic>
+
+<topic>SetSelectTextFont() <style>function
+void SetSelectTextFont()
+void SetSelectTextFont(int font)
+
+<h2>Description
+Sätt typsnitt på utvalda objekt.
+
+<h2>Argument
+
+int <t>font     <t>Typsnitt.
+
+<b>Exempel
+
+<c> int id;
+
+<c> SelectAdd(id);
+<c> SetSelectTextFont(eFont_LucidaSans);
+
+</topic>
+
+<topic>SetSelectTextSize() <style>function
+void SetSelectTextSize()
+void SetSelectTextSize(int size)
+
+<h2>Beskrivning
+Sätt text-storleken på utvalda objekt.
+
+<h2>Argument
+
+int <t>size     <t>Storlek, värde i området 0-5.
+
+<b>Exempel
+
+<c> int id;
+
+<c> SelectAdd(id);
+<c> SetSelectTextSize(2);
 </topic>
 
 <topic>gecmd_examples <style>function

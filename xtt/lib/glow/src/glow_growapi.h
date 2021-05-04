@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -120,6 +120,7 @@ typedef struct {
   glow_eEnv environment;
   int tooltip_text_size;
   char color_theme[40];
+  int dashboard;
 } grow_sAttributes;
 
 typedef enum {
@@ -146,7 +147,8 @@ typedef enum {
   grow_eAttr_initial_position = 1 << 20,
   grow_eAttr_environment = 1 << 21,
   grow_eAttr_tooltip_text_size = 1 << 22,
-  grow_eAttr_color_theme = 1 << 23
+  grow_eAttr_color_theme = 1 << 23,
+  grow_eAttr_dashboard = 1 << 24
 } grow_eAttribute;
 
 typedef GrowCtx* grow_tCtx;
@@ -683,6 +685,8 @@ void grow_TraceClose(grow_tCtx ctx);
 //! Scan trace.
 /*! \param ctx	Grow context. */
 void grow_TraceScan(grow_tCtx ctx);
+
+int grow_TraceInitObject(grow_tCtx ctx, grow_tObject object);
 
 void grow_RemoveTraceObjects(grow_tCtx ctx);
 
@@ -1334,6 +1338,11 @@ void grow_CreateGrowMenu(grow_tCtx ctx, const char* name, glow_sMenuInfo* info,
     int text_size, glow_eDrawType text_drawtype, glow_eDrawType text_color,
     glow_eDrawType disabled_text_color, glow_eFont text_font,
     grow_tObject parent, grow_tObject* menu);
+
+//! Create a dash cell
+void grow_CreateGrowDashCell(grow_tCtx ctx, const char* name, double x, double y,
+    double width, double height, glow_eDrawType draw_type, void* user_data, 
+    grow_tObject* cell);
 
 //! Save subgraph to file.
 /*!
@@ -2852,7 +2861,7 @@ void grow_MoveNode(grow_tNode node, double x, double y);
   \param font		Text font.
   \param width	Returned width of text.
   \param height	Returned height of text.
-  \param descent	Returnd descent of text.
+  \param descent	Returned descent of text.
 */
 void grow_GetTextExtent(grow_tCtx ctx, char* text, int len,
     glow_eDrawType draw_type, int text_size, glow_eFont font, double* width,
@@ -3013,6 +3022,9 @@ void grow_RegisterUserDataCallbacks(grow_tCtx ctx,
 
 void grow_RegisterEventLogCallback(
     grow_tCtx ctx, void (*log_cb)(void*, void*, unsigned int));
+
+void grow_RegisterScriptExecCallback(
+    grow_tCtx ctx, void (*script_cb)(void*, char*));
 
 //! Get grow versions.
 /*!
@@ -3319,6 +3331,8 @@ int grow_GetFirstObject(grow_tCtx ctx, grow_tObject* first);
 int grow_GroupGetNextObject(
     grow_tObject group, grow_tObject object, grow_tObject* next);
 int grow_GroupGetFirstObject(grow_tObject group, grow_tObject* first);
+int grow_DashInsertObject(grow_tObject group, grow_tObject object);
+int grow_GroupClear(grow_tObject group);
 int grow_IsVisible(grow_tCtx ctx, grow_tObject object, glow_eVisible type);
 int grow_ExportFlow(grow_tCtx ctx, char* filename);
 void grow_ObjectSave(
@@ -3343,6 +3357,7 @@ void* grow_GetCustomColors(grow_tCtx ctx);
 int grow_GetColorThemeColors(char* file, double** colors, int* size);
 int grow_ReadCustomColorFile(grow_tCtx ctx, char* name);
 int grow_WriteCustomColorFile(grow_tCtx ctx, char* name);
+void grow_SetColorTheme(grow_tCtx ctx);
 void grow_SetDefaultColorTheme(char* theme);
 void grow_SetColorThemeLightness(grow_tCtx ctx, int lighness);
 void grow_SetColorThemeIsDefault(grow_tCtx ctx, int isdefault);
@@ -3373,6 +3388,13 @@ int grow_KeyPressed(grow_tCtx ctx, int key);
 void grow_SignalSend(grow_tCtx ctx, char* signalname);
 void grow_DrawObject(grow_tObject object);
 void grow_NavRedraw(grow_tCtx ctx);
+int grow_IsDashboard(grow_tCtx ctx);
+void grow_GetDashboardInfo(grow_tCtx ctx, double *cell_width, double *cell_height,
+    int* columns, int *rows );
+int grow_GetDashboardNextFree(grow_tCtx ctx, int start_row, int start_col,
+    int rows, int columns, double *x, double *y);
+void grow_GetDashCellInfo(grow_tObject o, int *rows, int *columns);
+void grow_SetGraphBorders(grow_tCtx ctx, double x0, double y0, double x1, double y1);
 
 /*@}*/
 #if defined __cplusplus

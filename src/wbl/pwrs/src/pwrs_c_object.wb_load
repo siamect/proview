@@ -1,6 +1,6 @@
 ! 
 !  ProviewR   Open Source Process Control.
-!  Copyright (C) 2005-2020 SSAB EMEA AB.
+!  Copyright (C) 2005-2021 SSAB EMEA AB.
 ! 
 !  This file is part of ProviewR.
 !
@@ -1134,6 +1134,13 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-CollectFilter"
 	EndBody
       EndObject
+      Object Dashboard $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Dashboard"
+	  Attr MethodName = "$Object-Dashboard"
+	  Attr FilterName = "$Object-DashboardFilter"
+	EndBody
+      EndObject
       Object Simulate $MenuButton
 	Body SysBody
 	  Attr ButtonName = "Simulate"
@@ -1271,6 +1278,13 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-CollectFilter"
 	EndBody
       EndObject
+      Object Dashboard $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Dashboard"
+	  Attr MethodName = "$Object-Dashboard"
+	  Attr FilterName = "$Object-DashboardFilter"
+	EndBody
+      EndObject
       Object Simulate $MenuButton
 	Body SysBody
 	  Attr ButtonName = "Simulate"
@@ -1327,6 +1341,13 @@ SObject pwrs:Class
 	  Attr ButtonName = "Collect"
 	  Attr MethodName = "$Object-Collect"
 	  Attr FilterName = "$Object-CollectFilter"
+	EndBody
+      EndObject
+      Object Dashboard $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Dashboard"
+	  Attr MethodName = "$Object-Dashboard"
+	  Attr FilterName = "$Object-DashboardFilter"
 	EndBody
       EndObject
       Object Object $MenuRef

@@ -82,9 +82,11 @@ cobj	= -c -o $(target)
 clibobj	= -c -o $(libobj)
 rt_msg_objs 	:= $(obj_dir)/pwr_msg_co.o $(obj_dir)/pwr_msg_rt.o
 rs_msg_objs 	:= $(obj_dir)/pwr_msg_rs.o
+xtt_msg_objs	:= $(obj_dir)/pwr_msg_ge.o $(obj_dir)/pwr_msg_flow.o $(obj_dir)/pwr_msg_glow.o
 wb_msg_objs 	:= $(obj_dir)/pwr_msg_wb.o $(obj_dir)/pwr_msg_ge.o $(obj_dir)/pwr_msg_flow.o
 rt_msg_eobjs 	:= $(eobj_dir)/pwr_msg_co.o $(eobj_dir)/pwr_msg_rt.o
 rs_msg_eobjs 	:= $(eobj_dir)/pwr_msg_rs.o
+xtt_msg_eobjs	:= $(eobj_dir)/pwr_msg_ge.o $(eobj_dir)/pwr_msg_flow.o $(eobj_dir)/pwr_msg_glow.o
 wb_msg_eobjs 	:= $(eobj_dir)/pwr_msg_wb.o $(eobj_dir)/pwr_msg_ge.o $(eobj_dir)/pwr_msg_flow.o
 
 linkcp = :
@@ -149,7 +151,7 @@ mkdir		:= mkdir
 #   Set to /buildversion for frozen dbs versions
 wblflags	:=
 
-warnings := -Wall -Wextra -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-sign-compare -Wno-missing-field-initializers -Wno-cast-function-type -Wno-implicit-fallthrough
+warnings := -Wall -Wextra -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-sign-compare -Wno-missing-field-initializers -Wno-cast-function-type -Wno-implicit-fallthrough -Wno-narrowing
 
 ifeq ($(pwre_btype),rls)
   cflags	:= $(cross_compile) -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT -fPIC $(warnings)

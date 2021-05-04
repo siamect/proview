@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -41,7 +41,7 @@
 #include <string.h>
 #include <fstream>
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "glow_draw.h"
 
@@ -92,7 +92,7 @@ public:
   guint timer_id;
   int click_sensitivity;
   GdkColor custom_color_vect[120];
-  GdkColor color_vect[400];
+  GdkColor color_vect[800];
   int color_vect_cnt;
   int closing_down;
   GlowCustomColorsGtk* customcolors[CUSTOMCOLORS_STACK_SIZE];
@@ -256,6 +256,7 @@ public:
   GlowCustomColors* create_customcolors();
   GlowCustomColorsGtk* get_customcolors();
   void reset_customcolors(GlowCustomColors* cc);
+  void remove_customcolors(GlowCustomColors* cc);
 };
 
 class DrawPs {

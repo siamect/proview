@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -411,7 +411,7 @@ XttMultiViewGtk::XttMultiViewGtk(GtkWidget* mv_parent_wid, void* mv_parent_ctx,
           gectx[i * rows + j]
               = new XttGeGtk(toplevel, this, "No title", graph_name, scrollbar,
                   menu, 0, w, h, mv_x, mv_y, 1.0, objectname_p, 0, 0,
-                  ge_mOptions_Embedded, 0, bordersp, color_theme,
+		  ge_mOptions_Embedded, 0, bordersp, color_theme, 0,
                   multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
                   multiview_ge_is_authorized_cb, multiview_keyboard_cb);
 
@@ -1026,7 +1026,7 @@ int XttMultiViewGtk::set_subwindow_source(const char* name, char* source,
           case pwr_eMultiViewContentEnum_ObjectGraph: {
             XttGeGtk* ctx = new XttGeGtk(toplevel, this, "No title", source,
                 scrollbar, menu, 0, w, h, x, y, 1.0, object, 0, 0,
-                ge_mOptions_Embedded, 0, borders, color_theme,
+		ge_mOptions_Embedded, 0, borders, color_theme, 0,
                 multiview_ge_command_cb, multiview_ge_get_current_objects_cb,
                 multiview_ge_is_authorized_cb, multiview_keyboard_cb);
 

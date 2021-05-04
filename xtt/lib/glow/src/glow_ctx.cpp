@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -78,7 +78,7 @@ GlowCtx::GlowCtx(const char* ctx_name, double zoom_fact, int offs_x, int offs_y)
       event_move_node(glow_eEvent_Null), callback_object(0),
       callback_object_type(glow_eObjectType_NoObject), cursor_present(0),
       cursor_x(0), cursor_y(0), user_highlight(0), application_paste(0),
-      grid_size_x(2), grid_size_y(1), grid_on(1), show_grid(0), draw_delta(0.3),
+      grid_size_x(2), grid_size_y(1), grid_on(0), show_grid(0), draw_delta(0.3),
       grafcet_con_delta(2), refcon_cnt(0), refcon_width(1.5),
       refcon_height(0.8), refcon_textsize(3), refcon_linewidth(2),
       trace_connect_func(0), trace_scan_func(0), trace_started(0),
@@ -91,7 +91,8 @@ GlowCtx::GlowCtx(const char* ctx_name, double zoom_fact, int offs_x, int offs_y)
       userdata_copy_callback(0), version(GLOW_VERSION), inputfocus_object(0),
       is_component(0), comment(0),
       hot_indication(glow_eHotIndication_LightColor), tiptext_size(2),
-      app_motion(glow_eAppMotion_Both), eventlog_callback(0), customcolors(0)
+      app_motion(glow_eAppMotion_Both), eventlog_callback(0), scriptexec_callback(0),
+      customcolors(0)
 {
   strcpy(name, ctx_name);
   memset((void*)event_callback, 0, sizeof(event_callback));

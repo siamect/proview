@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -227,7 +227,8 @@ typedef enum {
   glow_eObjectType_GrowPie,
   glow_eObjectType_GrowBarChart,
   glow_eObjectType_GrowToolbar,
-  glow_eObjectType_GrowBarArc
+  glow_eObjectType_GrowBarArc,
+  glow_eObjectType_GrowDashCell
 } glow_eObjectType;
 
 //! Direction of a connection points, sliders etc
@@ -1031,12 +1032,11 @@ typedef enum {
 #define glow_eCtColor_TableTextcolor glow_eDrawType_CustomColor78
 #define glow_eCtColor_ScrollbarFillcolor glow_eDrawType_CustomColor79
 #define glow_eCtColor_ScrollbarBackground glow_eDrawType_CustomColor80
-#define glow_eCtColor_YellowgreenIndicator glow_eDrawType_CustomColor86
-#define glow_eCtColor_YellowgreenCurve glow_eDrawType_CustomColor87
-#define glow_eCtColor_YellowgreenBar glow_eDrawType_CustomColor88
-#define glow_eCtColor_YellowgreenBarLimit glow_eDrawType_CustomColor89
-#define glow_eCtColor_YellowgreenValuefieldBackground                          \
-  glow_eDrawType_CustomColor90
+#define glow_eCtColor_MagentaIndicator glow_eDrawType_CustomColor86
+#define glow_eCtColor_MagentaCurve glow_eDrawType_CustomColor87
+#define glow_eCtColor_MagentaBar glow_eDrawType_CustomColor88
+#define glow_eCtColor_MagentaBarLimit glow_eDrawType_CustomColor89
+#define glow_eCtColor_MagentaValuefieldBackground glow_eDrawType_CustomColor90
 
 //! Cursors used
 typedef enum {
@@ -1322,6 +1322,8 @@ typedef enum {
   glow_eSave_GrowToolbar = 47,
   glow_eSave_CustomColors = 48,
   glow_eSave_GrowBarArc = 49,
+  glow_eSave_GrowDashCell = 50,
+  glow_eSave_GrowDashboard = 51,
   glow_eSave_End = 99,
   glow_eSave_Ctx_zoom_factor_x = 100,
   glow_eSave_Ctx_base_zoom_factor = 101,
@@ -1611,6 +1613,8 @@ typedef enum {
   glow_eSave_GrowCtx_dyn_action_type2 = 2247,
   glow_eSave_GrowCtx_recursive_trace = 2248,
   glow_eSave_GrowCtx_customcolors = 2249,
+  glow_eSave_GrowCtx_dashboard = 2250,
+  glow_eSave_GrowCtx_dash = 2251,
   glow_eSave_GrowSubAnnot_x_right = 2300,
   glow_eSave_GrowSubAnnot_x_left = 2301,
   glow_eSave_GrowSubAnnot_y_high = 2302,
@@ -1646,6 +1650,8 @@ typedef enum {
   glow_eSave_GrowArc_fixposition = 2422,
   glow_eSave_GrowArc_background_drawtype = 2423,
   glow_eSave_GrowArc_fill_eq_background = 2424,
+  glow_eSave_GrowArc_fill_eq_light = 2425,
+  glow_eSave_GrowArc_fill_eq_shadow = 2426,
   glow_eSave_PolyLine_draw_type = 2500,
   glow_eSave_PolyLine_line_width = 2501,
   glow_eSave_PolyLine_a_points = 2502,
@@ -2092,7 +2098,13 @@ typedef enum {
   glow_eSave_GrowBarArc_bar_bordercolor = 4907,
   glow_eSave_GrowBarArc_bar_borderwidth = 4908,
   glow_eSave_GrowBarArc_userdata_cb = 4909,
-  glow_eSave_GrowBarArc_bar_direction = 4910
+  glow_eSave_GrowBarArc_bar_direction = 4910,
+  glow_eSave_GrowDashCell_group_part = 5000,
+  glow_eSave_GrowDashCell_frame = 5001,
+  glow_eSave_GrowDashCell_cell_rows = 5002,
+  glow_eSave_GrowDashCell_cell_columns = 5003,
+  glow_eSave_GrowDashboard_dash_columns = 5100,
+  glow_eSave_GrowDashboard_dash_rows = 5101
 } glow_eSave;
 
 //! Relative or absolute position for an annotation

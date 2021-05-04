@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -205,6 +205,7 @@ public:
   static void activate_prevpage(GtkWidget* w, gpointer gectx);
   static void activate_graph_attr(GtkWidget* w, gpointer gectx);
   static void activate_open(GtkWidget* w, gpointer gectx);
+  static void activate_opendashboard(GtkWidget* w, gpointer gectx);
   static void activate_subgraphs(GtkWidget* w, gpointer gectx);
   static void activate_rect(GtkWidget* w, gpointer gectx);
   static void activate_rectrounded(GtkWidget* w, gpointer gectx);

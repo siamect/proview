@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -42,8 +42,8 @@
 #include <string>
 #include <sys/stat.h>
 
-#include <mysql/mysqld_error.h>
-#include <mysql/errmsg.h>
+#include <mysqld_error.h>
+#include <errmsg.h>
 
 #include "pwr_names.h"
 
@@ -301,9 +301,16 @@ MYSQL* sev_dbms_env::createDb(void)
   }
 
   char query[400];
+  int rc;
+
+  // Update auto_increment in stats immediately
+  sprintf(query, "set persist information_schema_stats_expiry = 0");
+  rc = mysql_query(m_con, query);
+  sprintf(query, "set session information_schema_stats_expiry = 0");
+  rc = mysql_query(m_con, query);
 
   sprintf(query, "create database %s", dbName());
-  int rc = mysql_query(m_con, query);
+  rc = mysql_query(m_con, query);
   if (rc) {
     printf("In %s row %d:\n", __FILE__, __LINE__);
     printf("%s\n", mysql_error(m_con));
@@ -1282,8 +1289,10 @@ int sev_dbms::store_value(pwr_tStatus* sts, void* thread, int item_idx,
     default:
       return 0;
     }
-    m_items[item_idx].cache->add(value, &time, thread);
-    *sts = m_items[item_idx].cache->evaluate(m_cnf.LinearRegrMaxTime, thread);
+    if (m_items[item_idx].cache) {
+      m_items[item_idx].cache->add(value, &time, thread);
+      *sts = m_items[item_idx].cache->evaluate(m_cnf.LinearRegrMaxTime, thread);
+    }
     return 1;
   } else
     return write_value(sts, item_idx, attr_idx, time, buf, size, thread);
@@ -1563,8 +1572,17 @@ int sev_dbms::write_value(pwr_tStatus* sts, int item_idx, int attr_idx,
           }
           *(pwr_tUInt64*)m_items[item_idx].old_value = *(pwr_tUInt64*)buf;
           break;
-        case pwr_eType_UInt32:
         case pwr_eType_Boolean:
+          if (*(pwr_tBoolean*)buf != *(pwr_tBoolean*)m_items[item_idx].old_value) {
+            m_items[item_idx].deadband_active = 1;
+	    *(pwr_tBoolean*)m_items[item_idx].old_value = *(pwr_tBoolean*)buf;
+            set_jump = 1;
+          }
+	  else {
+	    return 1;
+	  }
+          break;
+        case pwr_eType_UInt32:
           if ((feqf(m_items[item_idx].deadband, 0.0f)
                   && !memcmp(
                          buf, m_items[item_idx].old_value, sizeof(pwr_tUInt32)))

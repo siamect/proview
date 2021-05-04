@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -361,6 +361,7 @@ int main(int argc, char* argv[])
   if (!ser_fd) {
     errh_Error("InitDev, %d", ser_fd);
     errh_SetStatus(PWR__SRVTERM);
+    sleep(2);
     exit(0);
   }
 

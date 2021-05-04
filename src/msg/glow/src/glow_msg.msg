@@ -1,6 +1,6 @@
 ! 
 !  ProviewR   Open Source Process Control.
-!  Copyright (C) 2005-2020 SSAB EMEA AB.
+!  Copyright (C) 2005-2021 SSAB EMEA AB.
 ! 
 !  This file is part of ProviewR.
 !
@@ -57,3 +57,4 @@ name_invchar    <Invalid character for name>           		/error
 name_alrexist   <Name already exist>           			/error
 swapterminated  <Ctx is swapped>				/info
 buff_small	<Buffer is too small>				/error
+dash_full	<Dashboard is full>				/error

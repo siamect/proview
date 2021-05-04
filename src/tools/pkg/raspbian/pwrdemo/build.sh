@@ -13,7 +13,7 @@ if [ -e $pwr_inc/pwr_version.h ]; then
   ver=${ver:2:2}
 fi
 
-proot=/data0/pwrp/pwrdemo$ver
+proot=$pwre_croot/project/pwrdemo
 pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwrdemo$ver
 pkgsrc=$pwre_sroot/tools/pkg/raspbian/pwrdemo
 
@@ -63,10 +63,13 @@ tarfile=$pwre_broot/$pwre_target/bld/pkg/pwrtmp.tar
 cd $proot
 cd ..
 echo "-- copy project to package tree"
-tar -cf $tarfile pwrdemo$ver
+mv pwrdemo pwrdemo$ver
+tar -chf $tarfile pwrdemo$ver
+mv pwrdemo$ver pwrdemo
 cd $pkgroot/usr/pwrp
 tar -xf $tarfile
 rm $tarfile
+rm -r pwrdemo$ver/.git
 cd $currentdir
 
 # Generate desktop file

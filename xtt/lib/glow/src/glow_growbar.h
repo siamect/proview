@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -204,9 +204,17 @@ public:
   void set_value(double value)
   {
     bar_value = value;
-    if (!fill)
-      erase(&ctx->mw);
-    draw();
+    if (!parent) {
+      if (!fill)
+	erase(&ctx->mw);
+      draw();
+    }
+    else {
+      ctx->set_draw_buffer_only();
+      parent->erase();
+      ctx->reset_draw_buffer_only();
+      parent->draw();
+    }
   }
 
   //! Moves object to alignment line or point.

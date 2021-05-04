@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -39,7 +39,7 @@
 
 /* ge_graph_gtk.h -- Simple graphic editor */
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "ge_graph.h"
 
@@ -68,7 +68,7 @@ public:
       graph_eMode graph_mode = graph_eMode_Development, int scrollbar = 1,
       int xn_gdh_init_done = 0, const char* xn_object_name = 0,
       int xn_use_default_access = 0, unsigned int xn_default_access = 0,
-      unsigned int xn_options = 0, int xn_color_theme = 0,
+      unsigned int xn_options = 0, int xn_color_theme = 0, int xn_dashboard = 0,
       void (*xn_keyboard_cb)(void*, int, int) = 0);
 
   void trace_timer_remove();

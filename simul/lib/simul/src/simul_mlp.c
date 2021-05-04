@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -68,6 +68,12 @@ void mlp_free(mlp_sCtx *mlp);
 static int mlp_import(pwr_sClass_Sim_ModelMLP* co, const char *file, mlp_sCtx *mlp);
 static void mlp_model(mlp_tCtx mlp, double *x, double *out);
 
+/*_*
+  Sim_ModelMLP_Fo
+
+  @aref sim_modelmlp_fo
+  @aref sim_modelmlp_fo Sim_ModelMLP_Fo
+*/
 void Sim_ModelMLP_Fo_init(pwr_sClass_Sim_ModelMLP_Fo* o)
 {
   pwr_sClass_Sim_ModelMLP *co;

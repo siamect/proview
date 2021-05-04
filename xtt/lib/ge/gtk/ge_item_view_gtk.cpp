@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -433,7 +433,7 @@ void GeItemViewGtk::activate_tree_widget(GtkTreeView* tree_widget,
   }
 
   if (sel_text) {
-    ge->open_graph(sel_text);
+    ge->open_graph(sel_text, 0);
   }
 }
 

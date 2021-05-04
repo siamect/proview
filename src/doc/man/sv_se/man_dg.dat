@@ -22,14 +22,14 @@
 
 <hr>
 2018-03-29
-Version 5.7.1	
+Version 5.8.0	
 <hr>
 </topic>
 
 <topic> __DocumentInfoPage
 
 
-Copyright (C) 2005-2020 SSAB EMEA AB
+Copyright (C) 2005-2021 SSAB EMEA AB
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -3744,7 +3744,7 @@ läsa statitiktabellen i en mysql databas, där pojektnamnet är opg7.
 
 <c>>mysql -u pwrp
 <c>mysql> use pwrp__opg7;
-<c>mysql> select * from set_stat;
+<c>mysql> select * from sev_stat;
 <c>| 7.24149 | 7.90368 | 907.713 | 908.8 | 32321 | 0 | 1 | 0 | 
 <c>1 row in set (0.00 sec)
 

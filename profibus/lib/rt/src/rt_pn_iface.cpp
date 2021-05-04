@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -599,11 +599,17 @@ void pack_download_req(T_PNAK_SERVICE_REQ_RES* ServiceReqRes,
     pSDR->SubnetMaskLowWordLowByte = low_low_byte;
   }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-security"
   sprintf(pSDR->DeviceName, dev_data->device_name);
+#pragma GCC diagnostic pop
 
   if (device_ref == PN_DEVICE_REFERENCE_THIS_STATION)
   {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-security"
     sprintf(pSDR->InterfaceName, dev_data->device_text);
+#pragma GCC diagnostic pop
     // pSDR->Flag = PN_SERVICE_DOWNLOAD_FLAG_ACTIVATE;
     // PN_SERVICE_DOWNLOAD_FLAG_FULL_APPLICATION_IDENT_SUPPORT
     // PN_SERVICE_DOWNLOAD_FLAG_DISABLE_DCP_HELLO

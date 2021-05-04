@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -43,8 +43,8 @@ extern "C" {
 
 #include "rt_errh.h"
 
-/** @addtogroup AProc */
-/*@{*/
+/** \addtogroup AProc */
+/** @{ */
 
 pwr_tStatus aproc_RegisterObject(pwr_tOid);
 pwr_tStatus aproc_TimeStamp(float scantime, float maxdelay);

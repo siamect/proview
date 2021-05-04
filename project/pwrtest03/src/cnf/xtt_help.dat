@@ -1,0 +1,43 @@
+#
+#  File $pwrp_cnf/xtt_help.dat
+#
+#  Description
+#
+#  This file contains help topics that can be displayed in the Proview help browser.
+#  For more information see Designers Guide, chapter Helpfile.
+#
+#
+#  Revision history
+#  2021-01-31	claes	File created
+#
+<topic> index
+
+<image> pwr_logga.png
+
+<h1>Welcome to pwrtest03
+<h2>Description
+Edit file $pwrp_cnf/xtt_help.dat to write this description.
+</topic>
+
+<topic> ge_dyn_help
+Ge action help text
+
+<image> pwr_logofully.png
+
+This is the help text for the help test.
+
+Test bookmark <bookmark> test_bookmark
+This is where the view should be positioned in the bookmark test.
+
+</topic>
+
+<include> $pwr_lang/profibus_xtthelp.dat
+<include> $pwr_lang/opc_xtthelp.dat
+<include> $pwr_lang/basecomponent_xtthelp.dat
+<include> $pwr_lang/othermanufacturer_xtthelp.dat
+<include> $pwr_lang/abb_xtthelp.dat
+<include> $pwr_lang/siemens_xtthelp.dat
+<include> $pwr_lang/remote_xtthelp.dat
+<include> $pwr_lang/nmps_xtthelp.dat
+<include> $pwr_lang/ssabox_xtthelp.dat
+

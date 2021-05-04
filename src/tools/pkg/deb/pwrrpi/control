@@ -1,10 +1,10 @@
-Package: pwrrpi57
-Version: 5.7.2-1
+Package: pwrrpi58
+Version: 5.8.0-1
 Section: base
 Priority: optional
 Architecture: i386
-Depends: pwr57 (>= 5.7.2-1)
-Replaces: pwr57
+Depends: pwr58 (>= 5.8.0-1)
+Replaces: pwr58
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview RPI development package
- 5.7.2-1 Base release
+ 5.8.0-1 Base release

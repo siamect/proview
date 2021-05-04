@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -54,7 +54,7 @@ static gdb_sObject* fetch(pwr_tStatus* sts, gdb_sVolume* vp, qcom_sPut* put)
   qcom_sQid tgt;
   qcom_sGet get;
   net_sObjectR* rsp;
-  net_sGobject* gop;
+  net_sGobject go;
   int i;
   gdb_sNode* np;
   gdb_sObject* op;
@@ -83,14 +83,15 @@ static gdb_sObject* fetch(pwr_tStatus* sts, gdb_sVolume* vp, qcom_sPut* put)
   if (!vp->l.flags.b.isConnected)
     pwr_Return(NULL, sts, GDH__CONNLOST);
 
-  for (i = 0, gop = &rsp->g[0]; i < rsp->count; i++, gop++) {
-    if (vp->g.vid != gop->oid.vid) {
+  for (i = 0; i < rsp->count; i++) {
+    go = rsp->g[i];
+    if (vp->g.vid != go.oid.vid) {
       net_Free(NULL, rsp);
       pwr_Return(NULL, sts, GDH__REMOTEMOUNT);
     }
 
-    op = cvol_LoadObject(&lsts, np, vp, gop);
-    if (cdh_ObjidIsEqual(gop->oid, rsp->oid)) {
+    op = cvol_LoadObject(&lsts, np, vp, &go);
+    if (cdh_ObjidIsEqual(go.oid, rsp->oid)) {
       /* This is the referenced object.  */
       rop = op;
       if (sts != NULL)

@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -39,7 +39,7 @@
 
 /* cow_xhelpnav_gtk.h -- Helptext navigator */
 
-#include <gtk/gtk.h>
+#include "cow_gtk.h"
 
 #include "cow_xhelpnav.h"
 

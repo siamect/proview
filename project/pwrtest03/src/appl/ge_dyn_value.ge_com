@@ -1,0 +1,800 @@
+
+main()
+  int id;
+  int sts;
+  int i;
+  int j;
+  float x0 = 0.2;
+  float y0 = 0.2;
+  float delta = 3;
+  float xm;
+  float ym;
+  float x1;
+  float y1;
+  float x2;
+  float y2;
+  int textcolor;
+  string text;
+  int font;
+
+  ClearAll();
+  SetDraw(0);
+
+  SetGraphAttribute("Scantime", 0.6);
+  SetGraphAttribute("FastScantime", 0.2);
+  SetGraphAttribute("AnimationScantime", 0.2);
+  SetGraphAttribute("ColorTheme", "$default");
+  SetColorTheme(1);
+  SetBackgroundColor(eDrawType_CustomColor1);
+  id = CreateRectangle(0.0, 0.0, 34.0, 2.0);
+  SetObjectFill(id, 1);
+  SetObjectBorder(id, 0);
+  SetObjectFillColor(id, eDrawType_CustomColor3);
+
+  x1 = 31.0;
+  y1 = 0.2;
+  x2 = x1 + 2.3;
+  y2 = y1 + 1; 
+  id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Next");
+  SetObjectAttribute(id, "Action", "Script");
+  SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_rotate\", \"\", 1);");
+
+  xm = x0 + 1;
+  ym = y0 + 1;
+  id = CreateText("Value", xm, ym, 4, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# Integer
+  ym += 1.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Integer", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ISin32s.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.Format", "%d");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 4.7;
+  y1 += 1.1;
+  x2 = x1 + 0.8;
+  y2 = y1 + 8.0;
+  id = CreateBar(x1, y1, x2, y2, 1);
+  SetObjectAttribute(id, "Bar.Attribute", "Test03a-Ge-Dyn-ISin32s.ActualValue##Int32");
+  SetObjectAttribute(id, "Bar.MinValue", 0.0);
+  SetObjectAttribute(id, "Bar.MaxValue", 100.0);
+  SetObjectAttribute(id, "Bar.BarColor", eDrawType_CustomColor26);
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  SelectClear();
+  SelectAdd(id);
+  RotateSelected(-90.0, 0);
+
+# Float
+  ym += 2.6;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Float %6.2f", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 4.7;
+  y1 += 1.1;
+  x2 = x1 + 0.8;
+  y2 = y1 + 8.0;
+  id = CreateBar(x1, y1, x2, y2, 1);
+  SetObjectAttribute(id, "Bar.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Bar.MinValue", 0.0);
+  SetObjectAttribute(id, "Bar.MaxValue", 100.0);
+  SetObjectAttribute(id, "Bar.BarColor", eDrawType_CustomColor26);
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  SelectClear();
+  SelectAdd(id);
+  RotateSelected(-90.0, 0);
+
+# Boolean
+  ym += 2.6;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Boolean", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Pulse2s.ActualValue##Boolean");
+  SetObjectAttribute(id, "Value.Format", "%d");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 5.7;
+  y1 += 0.2;
+  x2 = x1 + 0.8;
+  y2 = y1 + 0.8;
+  id = CreateObject("pwrct_indsquaregreen", x1, y1, x2, y2);
+  SetObjectFillColor(id, eDrawType_CustomColor17);
+  SetObjectAttribute(id, "DynType1", mDynType1_DigColor);
+  SetObjectAttribute(id, "DigColor.Attribute", "Test03a-Ge-Dyn-Pulse2s.ActualValue##Boolean");
+  SetObjectAttribute(id, "DigColor.Color", eDrawType_CustomColor26);
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# String
+  ym += 2.6;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("String", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 7.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Str.ActualValue##String80");
+  SetObjectAttribute(id, "Value.Format", "%s");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+# Float DecimalsAttr
+  ym += 2.6;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Float DecimalsAttr and DecimalsDecrease", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.DecimalsAttr", "Test03a-Ge-Dyn-Decimals0.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.Format", "%9.0f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 = xm + 5.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.DecimalsAttr", "Test03a-Ge-Dyn-Decimals6.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.DecimalsDecrease", 6);
+  SetObjectAttribute(id, "Value.Format", "%9.6f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.DecimalsAttr", "Test03a-Ge-Dyn-Decimals1.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.Format", "%9.0f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 5.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.DecimalsAttr", "Test03a-Ge-Dyn-Decimals6.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.DecimalsDecrease", 5);
+  SetObjectAttribute(id, "Value.Format", "%9.6f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.DecimalsAttr", "Test03a-Ge-Dyn-Decimals2.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.Format", "%9.0f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 5.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.DecimalsAttr", "Test03a-Ge-Dyn-Decimals6.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.DecimalsDecrease", 4);
+  SetObjectAttribute(id, "Value.Format", "%9.6f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.DecimalsAttr", "Test03a-Ge-Dyn-Decimals3.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.Format", "%9.0f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 = xm + 5.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.DecimalsAttr", "Test03a-Ge-Dyn-Decimals6.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.DecimalsDecrease", 3);
+  SetObjectAttribute(id, "Value.Format", "%9.6f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.DecimalsAttr", "Test03a-Ge-Dyn-Decimals4.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.Format", "%9.0f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 5.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.DecimalsAttr", "Test03a-Ge-Dyn-Decimals6.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.DecimalsDecrease", 2);
+  SetObjectAttribute(id, "Value.Format", "%9.6f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.DecimalsAttr", "Test03a-Ge-Dyn-Decimals5.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.Format", "%9.0f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 5.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.DecimalsAttr", "Test03a-Ge-Dyn-Decimals6.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.DecimalsDecrease", 1);
+  SetObjectAttribute(id, "Value.Format", "%9.6f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.DecimalsAttr", "Test03a-Ge-Dyn-Decimals6.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.Format", "%9.0f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 = xm + 5.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Sin32s.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.DecimalsAttr", "Test03a-Ge-Dyn-Decimals6.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.DecimalsDecrease", 0);
+  SetObjectAttribute(id, "Value.Format", "%9.6f");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+# Integer, ZeroBlank
+  ym += 2.6;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Integer ZeroBlank", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-IStep16s.ActualValue##Int32");
+  SetObjectAttribute(id, "Value.Format", "%d");
+  SetObjectAttribute(id, "Value.ZeroBlank", 1);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 4.7;
+  y1 += 1.1;
+  x2 = x1 + 0.8;
+  y2 = y1 + 8.0;
+  id = CreateBar(x1, y1, x2, y2, 1);
+  SetObjectAttribute(id, "Bar.Attribute", "Test03a-Ge-Dyn-IStep16s.ActualValue##Int32");
+  SetObjectAttribute(id, "Bar.MinValue", 0.0);
+  SetObjectAttribute(id, "Bar.MaxValue", 100.0);
+  SetObjectAttribute(id, "Bar.BarColor", eDrawType_CustomColor26);
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  SelectClear();
+  SelectAdd(id);
+  RotateSelected(-90.0, 0);
+
+# Float, ZeroBlank
+  ym += 2.6;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Float ZeroBlank", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.4;
+  x2 = x1 + 4.5;
+  y2 = y1 + 1.3;
+  id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Step16s.ActualValue##Float32");
+  SetObjectAttribute(id, "Value.Format", "%6.2f");
+  SetObjectAttribute(id, "Value.ZeroBlank", 1);
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  x1 += 4.7;
+  y1 += 1.1;
+  x2 = x1 + 0.8;
+  y2 = y1 + 8.0;
+  id = CreateBar(x1, y1, x2, y2, 1);
+  SetObjectAttribute(id, "Bar.Attribute", "Test03a-Ge-Dyn-Step16s.ActualValue##Float32");
+  SetObjectAttribute(id, "Bar.MinValue", 0.0);
+  SetObjectAttribute(id, "Bar.MaxValue", 100.0);
+  SetObjectAttribute(id, "Bar.BarColor", eDrawType_CustomColor26);
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  SelectClear();
+  SelectAdd(id);
+  RotateSelected(-90.0, 0);
+
+# Time formats
+  ym = y0 + 2.5;
+  xm = 15;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Time formats", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %t
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 10;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Nodes-Pwrtest03a.SystemTime##Time");
+  SetObjectAttribute(id, "Value.Format", "%t");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 10.5;
+  y1 += 0.6;
+  id = CreateText("DD-MMM-YYYY hh:mm:ss.hh", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %1t
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 10;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Nodes-Pwrtest03a.SystemTime##Time");
+  SetObjectAttribute(id, "Value.Format", "%1t");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 10.5;
+  y1 += 0.6;
+  id = CreateText("hh:mm:ss", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %2t
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 10;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Nodes-Pwrtest03a.SystemTime##Time");
+  SetObjectAttribute(id, "Value.Format", "%2t");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 10.5;
+  y1 += 0.6;
+  id = CreateText("hh:mm:ss.hh", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %3t
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 10;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Nodes-Pwrtest03a.SystemTime##Time");
+  SetObjectAttribute(id, "Value.Format", "%3t");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 10.5;
+  y1 += 0.6;
+  id = CreateText("YY-MM-DD hh:mm:ss", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %4t
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 10;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Nodes-Pwrtest03a.SystemTime##Time");
+  SetObjectAttribute(id, "Value.Format", "%4t");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 10.5;
+  y1 += 0.6;
+  id = CreateText("DD-MMM-YYYY", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %5t
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 10;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Nodes-Pwrtest03a.SystemTime##Time");
+  SetObjectAttribute(id, "Value.Format", "%5t");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 10.5;
+  y1 += 0.6;
+  id = CreateText("YY-MM-DD", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# DeltaTime formats
+  ym += 2.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("DeltaTime formats", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %t
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 10;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Nodes-Pwrtest03a.SystemTime##DeltaTime");
+  SetObjectAttribute(id, "Value.Format", "%t");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 10.5;
+  y1 += 0.6;
+  id = CreateText("DD hh:mm:ss.hh", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %1t
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 10;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Nodes-Pwrtest03a.SystemTime##DeltaTime");
+  SetObjectAttribute(id, "Value.Format", "%1t");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 10.5;
+  y1 += 0.6;
+  id = CreateText("DD hh:mm:ss", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# Objid formats
+  ym += 2.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Objid formats", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %o
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 10;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Objid.Value[0]##Objid");
+  SetObjectAttribute(id, "Value.Format", "%o");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 10.5;
+  y1 += 0.6;
+  id = CreateText("object", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %1o
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 10;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Objid.Value[0]##Objid");
+  SetObjectAttribute(id, "Value.Format", "%1o");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 10.5;
+  y1 += 0.6;
+  id = CreateText("path-object", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %2o
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 12;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Objid.Value[0]##Objid");
+  SetObjectAttribute(id, "Value.Format", "%2o");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 12.5;
+  y1 += 0.6;
+  id = CreateText("volume:path-object", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# AttrRef formats
+  ym += 2.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("AttrRef formats", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %o
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 10;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-AttrRef.DefGraph##AttrRef");
+  SetObjectAttribute(id, "Value.Format", "%o");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 10.5;
+  y1 += 0.6;
+  id = CreateText("object.attr", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %1o
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 12;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-AttrRef.DefGraph##AttrRef");
+  SetObjectAttribute(id, "Value.Format", "%1o");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 12.5;
+  y1 += 0.6;
+  id = CreateText("path-object.attr", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %2o
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 16;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-AttrRef.DefGraph##AttrRef");
+  SetObjectAttribute(id, "Value.Format", "%2o");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 16.5;
+  y1 += 0.6;
+  id = CreateText("volume:path-object.attr", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# Status formats
+  ym += 2.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Status formats", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %m
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 20;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Status.ActualValue##Status");
+  SetObjectAttribute(id, "Value.Format", "%m");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 20.5;
+  y1 += 0.6;
+  id = CreateText("info, text", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %1m
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 12;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Status.ActualValue##Status");
+  SetObjectAttribute(id, "Value.Format", "%1m");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 12.5;
+  y1 += 0.6;
+  id = CreateText("text", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# Enum formats
+  ym += 2.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Enum formats", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %d
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 6;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Enum.ColorTheme##Enum");
+  SetObjectAttribute(id, "Value.Format", "%d");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 6.5;
+  y1 += 0.6;
+  id = CreateText("integer", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %s
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 6;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Enum.ColorTheme##Enum");
+  SetObjectAttribute(id, "Value.Format", "%s");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 6.5;
+  y1 += 0.6;
+  id = CreateText("0-14 text, 15-16 integer", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# Mask formats
+  ym += 2.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Mask formats", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %d
+
+  ym += 0.0;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 6;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Mask.ActualValue##Mask");
+  SetObjectAttribute(id, "Value.Format", "%d");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 6.5;
+  y1 += 0.6;
+  id = CreateText("integer", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %b
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 16;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Mask.ActualValue##Mask");
+  SetObjectAttribute(id, "Value.Format", "%b");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 16.5;
+  y1 += 0.6;
+  id = CreateText("32 bits", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# %16b
+
+  ym += 1.5;
+  x1 = xm + 0.2;
+  y1 = ym + 0.5;
+  x2 = x1 + 8;
+  y2 = y1 + 1;
+  id = CreateObject("pwrct_valuemedium", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Action", 0);
+  SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-Mask.ActualValue##Mask");
+  SetObjectAttribute(id, "Value.Format", "%16b");
+  SetObjectAttribute(id, "Cycle", "Fast");
+
+  x1 += 8.5;
+  y1 += 0.6;
+  id = CreateText("16 bits", x1, y1, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  SetGraphAttribute("x1", 30.0);
+  SetGraphAttribute("y1", 40.0);
+
+  SetDraw(1);
+endmain

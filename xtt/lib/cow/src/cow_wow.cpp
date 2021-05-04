@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -143,7 +143,7 @@ void CoWow::DisplayQuestion(void* ctx, const char* title, const char* text,
 }
 
 void CoWow::DisplayError(const char* title, const char* text,
-    lng_eCoding coding)
+    lng_eCoding coding, int modal)
 {
 }
 

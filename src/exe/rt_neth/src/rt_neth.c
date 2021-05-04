@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -978,6 +978,7 @@ static void volumes(qcom_sGet* get)
   net_sMessage* mp = (net_sMessage*)get->data;
   net_sVolumes* vmp = (net_sVolumes*)mp;
   gdb_sVolume* vp;
+  net_sGvolume g;
   int i;
   int nConnect = 0;
   gdb_sNode* np;
@@ -1001,7 +1002,8 @@ static void volumes(qcom_sGet* get)
 
       if (vmp->g[i].cid == pwr_eClass_ClassVolume
           || vmp->g[i].cid == pwr_eClass_DetachedClassVolume) {
-        cvolcm_AddClassVolume(&sts, np, &vmp->g[i]);
+	g = vmp->g[i];
+        cvolcm_AddClassVolume(&sts, np, &g);
 
       } else {
         vp = gdb_AddVolume(&sts, vmp->g[i].vid, gdb_mAdd__);
@@ -1016,7 +1018,8 @@ static void volumes(qcom_sGet* get)
         }
 
         if (vp->l.flags.b.isMounted) {
-          cvolcm_ConnectVolume(&sts, vp, &vmp->g[i], np);
+	  g = vmp->g[i];
+          cvolcm_ConnectVolume(&sts, vp, &g, np);
           nConnect++;
         } else {
           vmp->g[i].vid = pwr_cNVolumeId;

@@ -18,10 +18,11 @@ source $pwre_bin/pwre_function
 # Add pwre environment
 unamestr=`eval uname`
 machine=`eval uname -m`
-if [ $machine == "amd64" ]; then
+if [ ${machine:0:3} == "arm" ]; then
+  machine="arm"
+elif [ $machine == "amd64" ] || [ $machine == "x86_64" ]; then
   machine="x86_64"
-fi
-if [ $machine != "x86_64" ]; then
+else
   machine="x86"
 fi
 
@@ -54,11 +55,15 @@ elif [ "$release" == "Ubuntu" ]; then
   else
     pkgname="ubu_"$machine
   fi
-elif [ "$release" == "Raspia" ]; then
+elif [ "$release" == "Raspbi" ]; then
   pkgname="raspbian"
+elif [ "$release" == "openSU" ]; then
+  pkgname="suse"
 fi
 
 
 pwre init $ename
 pwre build tools/pkg $pkgname
-pwre build tools/pkg $pkgname src rpi
+if [ $release == "Debian" ] || [ $release == "Ubuntu" ]; then
+  pwre build tools/pkg $pkgname src rpi
+fi

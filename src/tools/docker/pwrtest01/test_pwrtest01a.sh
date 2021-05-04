@@ -5,7 +5,7 @@ echo "Here in test_pwrtest01a.sh"
 Xorg -noreset +extension GLX +extension RANDR +extension RENDER -config ./dummy_display_xorg.conf :99 &
 
 sleep 20
-source /home/pwrp/.bashrc
+source /etc/pwrp_profile
 pwr_pkg.sh -i /home/pwrp/pwrp_pkg_pwrtest01a_0001.tgz
 chown root $pwrp_exe/plc_pwrtest01a_0999_plc
 chmod u+s $pwrp_exe/plc_pwrtest01a_0999_plc
@@ -13,7 +13,7 @@ ls -l $pwrp_exe/plc_pwrtest01a_0999_plc
 
 su - pwrp
 cd /home/pwrp
-source .bashrc
+source /etc/pwrp_profile
 export DISPLAY=:99
 export PWR_BUS_ID=999
 export PYTHONPATH=$pwr_exe

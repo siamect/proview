@@ -3,6 +3,7 @@
 #include "pwr.h"
 #include "pwr_privilege.h"
 #include "co_cdh.h"
+#include "co_cnv.h"
 #include "co_string.h"
 #include "co_api_user.h"
 #include "co_msg.h"
@@ -1355,7 +1356,8 @@ Oid_str(PyObject *self)
       name[strlen(name)-1] = 0;
   }
 
-  return PyUnicode_FromFormat("%s", name);
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return PyUnicode_FromFormat("%s", utf8name);
 }
 
 static PyObject *
@@ -1365,7 +1367,7 @@ Oid_richcompare(PyObject *self, PyObject *other, int op)
 
   if ( Py_TYPE(other) != &OidType) {
     if (Py_TYPE(other) == &PyBool_Type) {
-      long oval = PyInt_AsLong(other);
+      long oval = PyLong_AsLong(other);
       if ((ODD(((OidObject *)self)->sts) && oval) ||
 	  (EVEN(((OidObject *)self)->sts) && !oval))
 	result = Py_True;
@@ -1406,15 +1408,16 @@ Oid_richcompare(PyObject *self, PyObject *other, int op)
 static int
 Oid_init(OidObject *self, PyObject *args, PyObject *kwds)
 {
-  char *name = 0;
+  char *name, *utf8name = 0;
   pwr_tOid oid;
   pwr_tStatus sts;
 
-  if (! PyArg_ParseTuple(args, "|s", &name))
+  if (! PyArg_ParseTuple(args, "|s", &utf8name))
     return -1;
 
-  if ( name) {
-    sts = gdh_NameToObjid( name, &oid);
+  if ( utf8name) {
+    name = cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1);
+    sts = gdh_NameToObjid(name, &oid);
     if ( EVEN(sts)) {
       self->sts = sts;
       set_error(sts);
@@ -1456,7 +1459,8 @@ Oid_name(OidObject *self, PyObject *args)
       name[strlen(name)-1] = 0;
   }
 
-  return Py_BuildValue("s", name);
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return Py_BuildValue("s", utf8name);
 }
 
 static PyObject *
@@ -1472,7 +1476,8 @@ Oid_fullName(OidObject *self, PyObject *args)
   if ( EVEN(sts))
     return set_error(sts);
 
-  return Py_BuildValue("s", name);
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return Py_BuildValue("s", utf8name);
 }
 
 static PyObject *
@@ -1652,10 +1657,12 @@ Oid_attribute(OidObject *self, PyObject *args)
   pwr_tAttrRef aref, oaref;
   ArefObject *aref_object;
   pwr_tStatus sts;
-  char *name;
+  char *name, *utf8name;
 
-  if (! PyArg_ParseTuple(args, "s", &name))
+  if (! PyArg_ParseTuple(args, "s", &utf8name))
     return NULL;
+
+  name = cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1);
 
   aref = cdh_ObjidToAref(self->oid);
   sts = gdh_ArefANameToAref(&aref, name, &oaref);
@@ -1707,7 +1714,8 @@ Aref_str(PyObject *self)
 			      0xFF & aref->Objid.vid,
 			      aref->Objid.oix, aref->Offset, aref->Size, name);
   */
-  return PyUnicode_FromFormat("%s", name);
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return PyUnicode_FromFormat("%s", utf8name);
 }
 
 static PyObject *
@@ -1753,13 +1761,14 @@ Aref_richcompare(PyObject *self, PyObject *other, int op)
 static int
 Aref_init(ArefObject *self, PyObject *args, PyObject *kwds)
 {
-  char *name = 0;
+  char *name, *utf8name = 0;
   pwr_tStatus sts;
 
-  if (! PyArg_ParseTuple(args, "|s", &name))
+  if (! PyArg_ParseTuple(args, "|s", &utf8name))
     return -1;
 
-  if ( name) {
+  if ( utf8name) {
+    name = cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1);
     sts = gdh_NameToAttrref( pwr_cNOid, name, &self->aref);
     if ( EVEN(sts)) {
       set_error(sts);
@@ -1784,7 +1793,8 @@ Aref_name(ArefObject *self, PyObject *args)
   if ( EVEN(sts))
     return set_error(sts);
 
-  return Py_BuildValue("s", name);
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return Py_BuildValue("s", utf8name);
 }
 
 static PyObject *
@@ -1800,7 +1810,8 @@ Aref_fullName(ArefObject *self, PyObject *args)
   if ( EVEN(sts))
     return set_error(sts);
 
-  return Py_BuildValue("s", name);
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return Py_BuildValue("s", utf8name);
 }
 
 static PyObject *
@@ -1930,7 +1941,8 @@ Aref_value(ArefObject *self, PyObject *args)
   case pwr_eType_String:
   case pwr_eType_Text:
   case pwr_eType_ProString: {
-    PyObject *ret = Py_BuildValue("s", buf);
+    char *utf8buf = cnv_iso8859_to_utf8(buf, strlen(buf)+1);
+    PyObject *ret = Py_BuildValue("s", utf8buf);
     free(buf);
     return ret;
   }
@@ -2070,10 +2082,11 @@ Aref_setValue(ArefObject *self, PyObject *args)
     break;
   }
   case pwr_eType_String: {
-    char *value = 0;
-    if ( !PyArg_ParseTuple(args, "s|I", &value, &publicwrite))
+    char *utf8value = 0, *value;
+    if ( !PyArg_ParseTuple(args, "s|I", &utf8value, &publicwrite))
       goto error_return;
 
+    value = cnv_utf8_to_iso8859(utf8value, strlen(utf8value)+1);
     strncpy( buf, value, self->aref.Size);
     buf[self->aref.Size-1] = 0;
     break;
@@ -2205,7 +2218,8 @@ Cid_str(PyObject *self)
   if ( EVEN(sts))
     strcpy( name, "Unknown");
 
-  return PyUnicode_FromFormat("%u %s", cid, name);
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return PyUnicode_FromFormat("%u %s", cid, utf8name);
 }
 
 static PyObject *
@@ -2245,15 +2259,16 @@ Cid_richcompare(PyObject *self, PyObject *other, int op)
 static int
 Cid_init(CidObject *self, PyObject *args, PyObject *kwds)
 {
-  char *name = 0;
+  char *name, *utf8name = 0;
   pwr_tCid cid;
   pwr_tStatus sts;
 
-  if (! PyArg_ParseTuple(args, "|s", &name))
+  if (! PyArg_ParseTuple(args, "|s", &utf8name))
     return -1;
 
-  if ( name) {
-    sts = gdh_ClassNameToId( name, &cid);
+  if ( utf8name) {
+    name = cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1);
+    sts = gdh_ClassNameToId(name, &cid);
     if ( EVEN(sts)) {
       set_error(sts);
       return -1;
@@ -2277,7 +2292,8 @@ Cid_name(CidObject *self, PyObject *args)
   if ( EVEN(sts))
     strcpy( name, "");
 
-  return Py_BuildValue("s", name);
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return Py_BuildValue("s", utf8name);
 }
 
 static PyObject *
@@ -2290,7 +2306,8 @@ Cid_fullName(CidObject *self, PyObject *args)
   if ( EVEN(sts))
     strcpy( name, "");
 
-  return Py_BuildValue("s", name);
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return Py_BuildValue("s", utf8name);
 }
 
 static PyObject *
@@ -2505,7 +2522,8 @@ Tid_str(PyObject *self)
   if ( EVEN(sts))
     strcpy( name, "Unknown");
 
-  return PyUnicode_FromFormat("%u %s", tid, name);
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return PyUnicode_FromFormat("%u %s", tid, utf8name);
 }
 
 static PyObject *
@@ -2561,7 +2579,8 @@ Tid_name(TidObject *self, PyObject *args)
   if ( EVEN(sts))
     strcpy( name, "");
 
-  return Py_BuildValue("s", name);
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return Py_BuildValue("s", utf8name);
 }
 
 static PyObject *
@@ -2577,7 +2596,8 @@ Tid_fullName(TidObject *self, PyObject *args)
   if ( EVEN(sts))
     strcpy( name, "");
 
-  return Py_BuildValue("s", name);
+  char *utf8name = cnv_iso8859_to_utf8(name, strlen(name)+1);
+  return Py_BuildValue("s", utf8name);
 }
 
 /* 
@@ -2606,7 +2626,9 @@ ADef_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 static PyObject *
 ADef_str(PyObject *self)
 {
-  return PyUnicode_FromFormat("%s", ((ADefObject *)self)->name);
+  char *utf8name = cnv_iso8859_to_utf8(((ADefObject *)self)->name, 
+				       strlen(((ADefObject *)self)->name)+1);
+  return PyUnicode_FromFormat("%s", utf8name);
 }
 
 static int
@@ -2618,7 +2640,8 @@ ADef_init(ADefObject *self, PyObject *args, PyObject *kwds)
 static PyObject *
 ADef_name(ADefObject *self, PyObject *args)
 {
-  return Py_BuildValue("s", self->name);
+  char *utf8name = cnv_iso8859_to_utf8(self->name, strlen(self->name)+1);
+  return Py_BuildValue("s", utf8name);
 }
 
 static PyObject *
@@ -2692,13 +2715,14 @@ static int
 Sub_init(SubObject *self, PyObject *args, PyObject *kwds)
 {
   pwr_tStatus sts;
-  char *name;
+  char *name, *utf8name;
   pwr_eType atype;
   unsigned int asize;
 
-  if (! PyArg_ParseTuple(args, "s", &name))
+  if (! PyArg_ParseTuple(args, "s", &utf8name))
     return -1;
 
+  name = cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1);
   sts = gdh_GetAttributeCharacteristics(name, &atype, &asize, 0, 0);
   if (EVEN(sts)) {
     self->sts = sts;
@@ -2908,10 +2932,11 @@ Sub_setValue(SubObject *self, PyObject *args)
     break;
   }
   case pwr_eType_String: {
-    char *value = 0;
-    if ( !PyArg_ParseTuple(args, "s", &value))
+    char *value, *utf8value = 0;
+    if ( !PyArg_ParseTuple(args, "s", &utf8value))
       goto error_return;
 
+    value = cnv_utf8_to_iso8859(utf8value, strlen(utf8value)+1);
     strncpy( buf, value, self->size);
     buf[self->size-1] = 0;
     break;
@@ -3013,8 +3038,8 @@ static int
 Appl_init(ApplObject *self, PyObject *args, PyObject *kwds)
 {
   pwr_tStatus sts;
-  char *name;
-  char *applobj;
+  char name[80], *utf8name;
+  char *applobj, *utf8applobj;
   int anix;
   float scantime;
   float maxdelay = 0;
@@ -3024,10 +3049,12 @@ Appl_init(ApplObject *self, PyObject *args, PyObject *kwds)
   qcom_sQid qini;
   qcom_sQattr qAttr;
 
-  if (! PyArg_ParseTuple(args, "ssIfOOO|Of", &name, &applobj, &anix, &scantime, &open, &scan, &close,
+  if (! PyArg_ParseTuple(args, "ssIfOOO|Of", &utf8name, &utf8applobj, &anix, &scantime, &open, &scan, &close,
 			 &ctx, &maxdelay))
     return -1;
 
+  strncpy(name, cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1), sizeof(name));
+  applobj = cnv_utf8_to_iso8859(utf8applobj, strlen(utf8applobj)+1);
   if ( !PyCallable_Check(open)) {
     set_error(GDH__BADARG);
     return -1;
@@ -3049,7 +3076,7 @@ Appl_init(ApplObject *self, PyObject *args, PyObject *kwds)
     }
   }
 
-  sts = gdh_NameToObjid( applobj, &self->apploid);
+  sts = gdh_NameToObjid(applobj, &self->apploid);
   if ( EVEN(sts)) {
     set_error(sts);
     return -1;
@@ -3064,7 +3091,9 @@ Appl_init(ApplObject *self, PyObject *args, PyObject *kwds)
   self->open = open;
   self->close = close;
   self->scan = scan;
-  if ( ctx) {
+  if (!ctx)
+    self->ctx = Py_None;
+  else {
     Py_XINCREF(ctx);
     self->ctx = ctx;
   }
@@ -3133,7 +3162,10 @@ Appl_mainloop(ApplObject *self, PyObject *args)
   int swap = 0;
   int first_scan = 1;
 
-  arglist = Py_BuildValue("()", self->ctx);
+  if (self->ctx == Py_None)
+    arglist = Py_BuildValue("()");
+  else
+    arglist = Py_BuildValue("(O)", self->ctx);
 
   PyEval_CallObject(self->open, arglist);
 
@@ -3290,15 +3322,17 @@ static PyObject *pwrrt_volume(PyObject *self, PyObject *args)
   pwr_tOid oid;
   OidObject *o;
   pwr_tStatus sts;
-  const char *name = 0;
+  char *name, *utf8name = 0;
   pwr_tVid vid;
 
-  if ( !PyArg_ParseTuple(args, "|s", &name))
+  if ( !PyArg_ParseTuple(args, "|s", &utf8name))
     return NULL;
 
-  if ( name) {
+  if ( utf8name) {
     pwr_tObjName vname;
     int found;
+
+    name = cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1);
 
     found = 0;
     for ( sts = gdh_GetVolumeList(&vid);
@@ -3399,8 +3433,9 @@ static PyObject *pwrrt_application(PyObject *self, PyObject *args)
 static PyObject *pwrrt_login(PyObject *self, PyObject *args)
 {
   pwr_tStatus sts;
-  const char *user;
-  const char *passwd;
+  char *utf8user;
+  char *utf8passwd;
+  char user[80], passwd[80];
   unsigned int priv;
   const char systemgroup[80];
 
@@ -3409,9 +3444,11 @@ static PyObject *pwrrt_login(PyObject *self, PyObject *args)
   if ( EVEN(sts))
     return set_error(sts);
 
-  if ( !PyArg_ParseTuple(args, "ss", &user, &passwd))
+  if ( !PyArg_ParseTuple(args, "ss", &utf8user, &utf8passwd))
     return NULL;
 
+  strncpy(user, cnv_utf8_to_iso8859(utf8user, strlen(utf8user)+1), sizeof(user));
+  strncpy(passwd, cnv_utf8_to_iso8859(utf8passwd, strlen(utf8passwd)+1), sizeof(passwd));
 
   sts = user_CheckUser( systemgroup, user, user_PwCrypt((char *)passwd), &priv);
   if ( EVEN(sts))
@@ -3438,7 +3475,8 @@ static PyObject *pwrrt_getPriv(PyObject *self, PyObject *args)
 
 static PyObject *pwrrt_getUser(PyObject *self, PyObject *args)
 {
-  return Py_BuildValue("s", pwrrt_user);
+  char *utf8user = cnv_iso8859_to_utf8(pwrrt_user, strlen(pwrrt_user)+1);
+  return Py_BuildValue("s", utf8user);
 }
 
 static PyObject *pwrrt_getMsg(PyObject *self, PyObject *args)
@@ -3451,19 +3489,20 @@ static PyObject *pwrrt_getMsg(PyObject *self, PyObject *args)
 
   msg_GetMsg(sts, msg, sizeof(msg));
 
-  return Py_BuildValue("s", msg);
+  char *utf8msg = cnv_iso8859_to_utf8(msg, strlen(msg)+1);
+  return Py_BuildValue("s", utf8msg);
 }
 
 
 static PyObject *pwrrt_getSevItemList(PyObject *self, PyObject *args)
 {
   char *server;
-  char *filter = 0;
+  char *filter = 0, *utf8filter = 0;
   pwr_tStatus sts;
   sevcli_sHistItem *itemlist;
   unsigned int itemcnt;
   int cnt;
-  int i, j;
+  unsigned int i, j;
   sevcli_sHistItem *lp;
   PyObject *ituple, *result;
 
@@ -3473,7 +3512,7 @@ static PyObject *pwrrt_getSevItemList(PyObject *self, PyObject *args)
       return set_error(sts);
   }
 
-  if ( !PyArg_ParseTuple(args, "s|si", &server, &filter))
+  if ( !PyArg_ParseTuple(args, "s|si", &server, &utf8filter))
     return NULL;
 
   sevcli_set_servernode( &sts, pwrrt_scctx, server);
@@ -3484,11 +3523,13 @@ static PyObject *pwrrt_getSevItemList(PyObject *self, PyObject *args)
   if (EVEN(sts))
     return set_error(sts);
 
-  if ( filter && strcmp(filter,"") == 0)
-    filter = 0;
+  if ( utf8filter && strcmp(utf8filter,"") == 0)
+    utf8filter = 0;
 
   cnt = 0;
-  if ( filter) {
+  if ( utf8filter) {
+    filter = cnv_utf8_to_iso8859(utf8filter, strlen(utf8filter)+1);
+
     lp = itemlist;
     for ( i = 0; i < itemcnt; i++) {
       if ( str_NoCaseStrncmp(filter, lp->oname, strlen(filter)) == 0)
@@ -3507,14 +3548,14 @@ static PyObject *pwrrt_getSevItemList(PyObject *self, PyObject *args)
     if ( !filter || str_NoCaseStrncmp(filter, lp->oname, strlen(filter)) == 0) {
 
       ituple = PyTuple_New(6+lp->attrnum);
-      PyTuple_SetItem(ituple, 0, PyString_FromString(lp->oname));
-      PyTuple_SetItem(ituple, 1, PyString_FromString(cdh_ObjidToString(lp->oid, 1)));
-      PyTuple_SetItem(ituple, 2, PyString_FromString(lp->description));
+      PyTuple_SetItem(ituple, 0, PyUnicode_FromString(cnv_iso8859_to_utf8(lp->oname, strlen(lp->oname)+1)));
+      PyTuple_SetItem(ituple, 1, PyUnicode_FromString(cdh_ObjidToString(lp->oid, 1)));
+      PyTuple_SetItem(ituple, 2, PyUnicode_FromString(cnv_iso8859_to_utf8(lp->description, sizeof(lp->description)+1)));
       PyTuple_SetItem(ituple, 3, PyLong_FromUnsignedLong(lp->deadband));
       PyTuple_SetItem(ituple, 4, PyLong_FromUnsignedLong(lp->options));
       PyTuple_SetItem(ituple, 5, PyFloat_FromDouble(lp->scantime));
       for ( j = 0; j < lp->attrnum; j++)
-	PyTuple_SetItem(ituple, j+6, PyString_FromString(lp->attr[j].aname));
+	PyTuple_SetItem(ituple, j+6, PyUnicode_FromString(cnv_iso8859_to_utf8(lp->attr[j].aname, sizeof(lp->attr[j])+1)));
       
       PyTuple_SetItem(result, cnt, ituple);
       cnt++;
@@ -3534,7 +3575,7 @@ static PyObject *pwrrt_getSevEventsItemList(PyObject *self, PyObject *args)
   sevcli_sEventsItem *itemlist;
   unsigned int itemcnt;
   int cnt;
-  int i;
+  unsigned int i;
   PyObject *ituple, *result;
 
   if ( !pwrrt_scctx) {
@@ -3574,9 +3615,9 @@ static PyObject *pwrrt_getSevEventsItemList(PyObject *self, PyObject *args)
     if ( !filter || str_NoCaseStrncmp(filter, itemlist[i].oname, strlen(filter)) == 0) {
 
       ituple = PyTuple_New(4);
-      PyTuple_SetItem(ituple, 0, PyString_FromString(itemlist[i].oname));
-      PyTuple_SetItem(ituple, 1, PyString_FromString(cdh_ObjidToString(itemlist[i].oid, 1)));
-      PyTuple_SetItem(ituple, 2, PyString_FromString(itemlist[i].description));
+      PyTuple_SetItem(ituple, 0, PyUnicode_FromString(cnv_iso8859_to_utf8(itemlist[i].oname, strlen(itemlist[i].oname)+1)));
+      PyTuple_SetItem(ituple, 1, PyUnicode_FromString(cdh_ObjidToString(itemlist[i].oid, 1)));
+      PyTuple_SetItem(ituple, 2, PyUnicode_FromString(cnv_iso8859_to_utf8(itemlist[i].description, strlen(itemlist[i].description)+1)));
       PyTuple_SetItem(ituple, 3, PyLong_FromUnsignedLong(itemlist[i].options));
       
       PyTuple_SetItem(result, cnt, ituple);
@@ -3673,29 +3714,37 @@ static PyObject *pwrrt_getSevItemData(PyObject *self, PyObject *args)
     switch (vtype) {
     case pwr_eType_Float32:
       PyTuple_SetItem(vtuple, i, PyFloat_FromDouble((double)((pwr_tFloat32 *)vbuf)[i]));
-      if ( time_string) {
-	/* Time string */
-	time_AtoAscii( &tbuf[i], time_eFormat_DateAndTime, timstr, sizeof(timstr));
-	PyTuple_SetItem(ttuple, i, PyString_FromString(timstr));
-      }
-      else {
-	/* Time datetime object */
-	sec = (time_t)tbuf[i].tv_sec;
-	localtime_r(&sec, &ts);
-	date = PyDateTime_FromDateAndTime(ts.tm_year+1900, ts.tm_mon+1, ts.tm_mday,
-					  ts.tm_hour, ts.tm_min, ts.tm_sec, 
-					  (int)tbuf[i].tv_nsec/1000);
-	PyTuple_SetItem(ttuple, i, date);
-      }      
+      break;
+    case pwr_eType_Int32:
+      PyTuple_SetItem(vtuple, i, PyLong_FromLong((long)((pwr_tInt32 *)vbuf)[i]));
+      break;
+    case pwr_eType_Boolean:
+    case pwr_eType_UInt32:
+      PyTuple_SetItem(vtuple, i, PyLong_FromUnsignedLong((unsigned long)((pwr_tUInt32 *)vbuf)[i]));
       break;
     default:;
     }
+
+    if ( time_string) {
+      /* Time string */
+      time_AtoAscii( &tbuf[i], time_eFormat_DateAndTime, timstr, sizeof(timstr));
+      PyTuple_SetItem(ttuple, i, PyBytes_FromString(timstr));
+    }
+    else {
+      /* Time datetime object */
+      sec = (time_t)tbuf[i].tv_sec;
+      localtime_r(&sec, &ts);
+      date = PyDateTime_FromDateAndTime(ts.tm_year+1900, ts.tm_mon+1, ts.tm_mday,
+					ts.tm_hour, ts.tm_min, ts.tm_sec, 
+					(int)tbuf[i].tv_nsec/1000);
+      PyTuple_SetItem(ttuple, i, date);
+    }      
   }
 
   free(tbuf);
   free(vbuf);
 
-  PyTuple_SetItem(result, 0, PyInt_FromLong((long)rows));
+  PyTuple_SetItem(result, 0, PyLong_FromLong((long)rows));
   PyTuple_SetItem(result, 1, vtuple);
   PyTuple_SetItem(result, 2, ttuple);
 
@@ -3723,7 +3772,8 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
   int maxrows = 0;
   int options = 0;
   int rows;
-  pwr_eType vtype;
+  pwr_eType *vtype;
+  pwr_eType vtcond;
   unsigned int vsize;
   PyObject *vtuple, *result;
   int i, j, k;
@@ -3735,6 +3785,7 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
   pwr_tDeltaTime dt;
   pwr_tFloat32 **vvect;
   float *tbuf;  
+  pwr_tAName aname;
   
   if ( !pwrrt_scctx) {
     sevcli_init( &sts, &pwrrt_scctx);
@@ -3802,32 +3853,50 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
     return set_error(GDH__ARGCOUNT);
 
   oidvect = (pwr_tOName *)malloc(oidcnt * sizeof(pwr_tOName));
+  vtype = (pwr_eType *)malloc(oidcnt * sizeof(pwr_eType));
   anamevect = (pwr_tOName *)malloc(anamecnt * sizeof(pwr_tOName));
   isobjectvect = (int *)malloc(isobjectcnt * sizeof(int));
 
   for ( i = 0; i < oidcnt; i++) {
     
-    PyObject *pystr;
+    PyObject *pystr, *tstr;
+
     if ( PyTuple_Check(oidobj))
       pystr = PyTuple_GetItem(oidobj, i);
     else
       pystr = PyList_GetItem(oidobj, i);
 
-    strcpy( oidvect[i], PyString_AsString(pystr));
+    tstr = PyUnicode_AsEncodedString(pystr, "UTF-8", "strict");
+    if (tstr != NULL) {
+      pwr_tOName utf8name;
+      strcpy(utf8name, PyBytes_AS_STRING(tstr));
+      Py_DECREF(tstr);
+      strcpy(oidvect[i], cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1));
+    } else {
+      strcpy(oidvect[i], "");
+    }
 
     if ( PyTuple_Check(anameobj))
       pystr = PyTuple_GetItem(anameobj, i);
     else
       pystr = PyList_GetItem(anameobj, i);
 
-    strcpy( anamevect[i], PyString_AsString(pystr));
+    tstr = PyUnicode_AsEncodedString(pystr, "UTF-8", "strict");
+    if (tstr != NULL) {
+      pwr_tOName utf8name;
+      strcpy(utf8name, PyBytes_AS_STRING(tstr));
+      Py_DECREF(tstr);
+      strcpy(anamevect[i], cnv_utf8_to_iso8859(utf8name, strlen(utf8name)+1));
+    } else {
+      strcpy(anamevect[i], "");
+    }
 
     if ( PyTuple_Check(isobjectobj))
       pystr = PyTuple_GetItem(isobjectobj, i);
     else
       pystr = PyList_GetItem(isobjectobj, i);
     
-    isobjectvect[i] = PyInt_AsLong(pystr);
+    isobjectvect[i] = PyLong_AsLong(pystr);
   }
 
   if (options & 1) {
@@ -3848,15 +3917,24 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
       return set_error(GDH__ARGCOUNT);
 
     /* Get condition data */
-    if ( strncmp("_O", cond_oid, 2) == 0) 
+    strcpy(aname, cond_aname);
+    if ( strncmp("_O", cond_oid, 2) == 0) {
       sts = cdh_StringToObjid(cond_oid, &oid);
-    else
+      if (EVEN(sts)) 
+	return set_error(sts);
+    }
+    else {
       sts = gdh_NameToObjid(cond_oid, &oid);
-    if ( EVEN(sts))
-      return set_error(sts);
+      if ( EVEN(sts)) {
+	oid = pwr_cNOid;
+	strcpy(aname, cond_oid);
+	strcat(aname, ".");
+	strcat(aname, cond_aname);
+      }
+    }
 
-    sevcli_get_itemdata( &sts, pwrrt_scctx, oid, cond_aname, from, to, maxrows, &ttbuf, 
-			 (void **)&vbuf, &rows, &vtype, &vsize);
+    sevcli_get_itemdata( &sts, pwrrt_scctx, oid, aname, from, to, maxrows, &ttbuf, 
+			 (void **)&vbuf, &rows, &vtcond, &vsize);
     if ( sts == SEV__NOPOINTS)
 	Py_RETURN_NONE;
       else if (EVEN(sts))
@@ -3907,16 +3985,25 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
   vvect = calloc(oidcnt, sizeof(float *));
 
   for ( i = 0; i < oidcnt; i++) {
-    if ( strncmp("_O", oidvect[i], 2) == 0) 
+    strcpy(aname, anamevect[i]);
+    if ( strncmp("_O", oidvect[i], 2) == 0) {
       sts = cdh_StringToObjid( oidvect[i], &oid);
-    else
+      if ( EVEN(sts))
+	return set_error(sts);
+    }
+    else {
       sts = gdh_NameToObjid( oidvect[i], &oid);
-    if ( EVEN(sts))
-      return set_error(sts);
+      if ( EVEN(sts)) {
+	oid = pwr_cNOid;
+	strcpy(aname, oidvect[i]);
+	strcat(aname, ".");
+	strcat(aname, anamevect[i]);
+      }
+    }
 
     if (!isobjectvect[i]) {
-      sevcli_get_itemdata( &sts, pwrrt_scctx, oid, anamevect[i], from, to, maxrows, &ttbuf, 
-			   (void **)&vbuf, &rows, &vtype, &vsize);
+      sevcli_get_itemdata( &sts, pwrrt_scctx, oid, aname, from, to, maxrows, &ttbuf, 
+			   (void **)&vbuf, &rows, &vtype[i], &vsize);
       if ( sts == SEV__NOPOINTS)
 	Py_RETURN_NONE;
       else if (EVEN(sts))
@@ -3932,16 +4019,40 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
 
       vvect[i] = malloc(valcnt * sizeof(float));
       k = 0;
-      for ( j = 0; j < valcnt; j++) {
-	if ( j*tdiff < tbuf[0])
-	  vvect[i][j] = vbuf[0];
-	else if ( j*tdiff >= tbuf[rows - 1])
-	  vvect[i][j] = vbuf[rows-1]; 
-	else {
-	  while( tbuf[k] <= j*tdiff && k < rows - 1)
-	    k++;
-	  vvect[i][j] = vbuf[k-1] + (vbuf[k] - vbuf[k-1])/(tbuf[k] - tbuf[k-1]) * (j*tdiff - tbuf[k-1]);
+      switch (vtype[i]) {
+      case pwr_eType_Float32:
+	for ( j = 0; j < valcnt; j++) {
+	  if ( j*tdiff < tbuf[0])
+	    vvect[i][j] = ((pwr_tFloat32 *)vbuf)[0];
+	  else if ( j*tdiff >= tbuf[rows - 1])
+	    vvect[i][j] = ((pwr_tFloat32 *)vbuf)[rows-1]; 
+	  else {
+	    while( tbuf[k] <= j*tdiff && k < rows - 1)
+	      k++;
+	    vvect[i][j] = ((pwr_tFloat32 *)vbuf)[k-1] + 
+	      (((pwr_tFloat32 *)vbuf)[k] - ((pwr_tFloat32 *)vbuf)[k-1])/(tbuf[k] - tbuf[k-1]) * (j*tdiff - tbuf[k-1]);
+	  }
 	}
+	break;
+      case pwr_eType_Int32:
+      case pwr_eType_UInt32:
+      case pwr_eType_Boolean:
+	for ( j = 0; j < valcnt; j++) {
+	  if ( j*tdiff < tbuf[0])
+	    vvect[i][j] = (float)((pwr_tInt32 *)vbuf)[0];
+	  else if ( j*tdiff >= tbuf[rows - 1])
+	    vvect[i][j] = (float)((pwr_tInt32 *)vbuf)[rows-1]; 
+	  else {
+	    while( tbuf[k] <= j*tdiff && k < rows - 1)
+	      k++;
+	    vvect[i][j] = (float)((pwr_tInt32 *)vbuf)[k-1] + 
+	      (((pwr_tInt32 *)vbuf)[k] - ((pwr_tInt32 *)vbuf)[k-1])/(tbuf[k] - tbuf[k-1]) * (j*tdiff - tbuf[k-1]);
+	  }
+	}
+	break;
+      default: ;
+	for ( j = 0; j < valcnt; j++)
+	  vvect[i][j] = 0;
       }
       free(ttbuf);
       free(tbuf);
@@ -3988,18 +4099,60 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
 	    for ( j = 0; j < valcnt; j++) {
 	      if ( j*tdiff < tbuf[0]) {
 		vp1 = (float *)(((char*)vbuf) + lineoffs);
-		vvect[l][j] = *vp1;
+		switch (attrbuf[m].type) {
+		case pwr_eType_Float32:
+		  vvect[l][j] = (float)*(pwr_tFloat32 *)vp1;
+		  break;
+		case pwr_eType_Int32:
+		  vvect[l][j] = (float)*(pwr_tInt32 *)vp1;
+		  break;
+		case pwr_eType_UInt32:
+		case pwr_eType_Boolean:
+		  vvect[l][j] = (float)*(pwr_tUInt32 *)vp1;
+		  break;
+		default:
+		  vvect[l][j] = 0;
+		}
 	      }
 	      else if ( j*tdiff >=tbuf[rows - 1]) {
 		vp1 = (float *)(((char*)vbuf) + (rows - 1)*linesize + lineoffs);
-		vvect[l][j] = *vp1;
+		switch (attrbuf[m].type) {
+		case pwr_eType_Float32:
+		  vvect[l][j] = (float)*(pwr_tFloat32 *)vp1;
+		  break;
+		case pwr_eType_Int32:
+		  vvect[l][j] = (float)*(pwr_tInt32 *)vp1;
+		  break;
+		case pwr_eType_UInt32:
+		case pwr_eType_Boolean:
+		  vvect[l][j] = (float)*(pwr_tUInt32 *)vp1;
+		  break;
+		default:
+		  vvect[l][j] = 0;
+		}
 	      }
 	      else {
 		while( tbuf[k] <= j*tdiff && k < rows)
 		  k++;
 		vp1 = (float *)(((char *)vbuf) + (k - 1)*linesize + lineoffs);
 		vp2 = (float *)(((char *)vp1) + linesize);
-		vvect[l][j] = *vp1 + (*vp2 - *vp1)/(tbuf[k] - tbuf[k-1]) * (j*tdiff - tbuf[k-1]);
+		switch (attrbuf[m].type) {
+		case pwr_eType_Float32:
+		  vvect[l][j] = (float)(*(pwr_tFloat32 *)vp1 + (*(pwr_tFloat32 *)vp2 - 
+		      *(pwr_tFloat32 *)vp1)/(tbuf[k] - tbuf[k-1]) * (j*tdiff - tbuf[k-1]));
+		  break;
+		case pwr_eType_Int32:
+		  vvect[l][j] = (float)(*(pwr_tInt32 *)vp1 + (*(pwr_tInt32 *)vp2 - 
+		      *(pwr_tInt32 *)vp1)/(tbuf[k] - tbuf[k-1]) * (j*tdiff - tbuf[k-1]));
+		  break;
+		case pwr_eType_UInt32:
+		case pwr_eType_Boolean:
+		  vvect[l][j] = (float)(*(pwr_tUInt32 *)vp1 + (*(pwr_tUInt32 *)vp2 - 
+		      *(pwr_tUInt32 *)vp1)/(tbuf[k] - tbuf[k-1]) * (j*tdiff - tbuf[k-1]));
+		  break;
+		default:
+		  vvect[l][j] = 0;
+		}
 	      }
 	    }
 	    break;
@@ -4015,6 +4168,7 @@ static PyObject *pwrrt_getSevItemsDataFrame(PyObject *self, PyObject *args)
   }
 
   free(oidvect);
+  free(vtype);
   free(anamevect);
 
   result = PyList_New(valcnt);
@@ -4144,29 +4298,41 @@ static PyObject *pwrrt_getSevItemsDataFrameD(PyObject *self, PyObject *args)
   anamevect = (pwr_tOName *)malloc(anamecnt * sizeof(pwr_tOName));
   isobjectvect = (int *)malloc(isobjectcnt * sizeof(int));
 
-  for ( i = 0; i < oidcnt; i++) {
-    
-    PyObject *pystr;
+  for ( i = 0; i < oidcnt; i++) {    
+    PyObject *pystr, *tstr;
+
     if ( PyTuple_Check(oidobj))
       pystr = PyTuple_GetItem(oidobj, i);
     else
       pystr = PyList_GetItem(oidobj, i);
 
-    strcpy( oidvect[i], PyString_AsString(pystr));
+    tstr = PyUnicode_AsEncodedString(pystr, "UTF-8", "strict");
+    if (tstr != NULL) {
+      strcpy(oidvect[i], PyBytes_AS_STRING(tstr));
+      Py_DECREF(tstr);
+    } else {
+      strcpy(oidvect[i], "");
+    }
 
     if ( PyTuple_Check(anameobj))
       pystr = PyTuple_GetItem(anameobj, i);
     else
       pystr = PyList_GetItem(anameobj, i);
 
-    strcpy( anamevect[i], PyString_AsString(pystr));
+    tstr = PyUnicode_AsEncodedString(pystr, "UTF-8", "strict");
+    if (tstr != NULL) {
+      strcpy(anamevect[i], PyBytes_AS_STRING(tstr));
+      Py_DECREF(tstr);
+    } else {
+      strcpy(anamevect[i], "");
+    }
 
     if ( PyTuple_Check(isobjectobj))
       pystr = PyTuple_GetItem(isobjectobj, i);
     else
       pystr = PyList_GetItem(isobjectobj, i);
     
-    isobjectvect[i] = PyInt_AsLong(pystr);
+    isobjectvect[i] = PyLong_AsLong(pystr);
   }
 
   for ( i = 0; i < oidcnt; i++)
@@ -4351,7 +4517,7 @@ static PyObject *pwrrt_getSevItemsDataFrameD(PyObject *self, PyObject *args)
 static PyObject *pwrrt_getSevEvents(PyObject *self, PyObject *args)
 {
   pwr_tStatus sts;
-  char *server, *oidstr, *fromstr, *tostr, *eventtext, *eventname;
+  char *server, *oidstr, *fromstr, *tostr;
   unsigned int eventtypemask, eventpriomask;
   pwr_tTime from, to;
   pwr_tDeltaTime fromdelta;
@@ -4361,13 +4527,16 @@ static PyObject *pwrrt_getSevEvents(PyObject *self, PyObject *args)
   unsigned int listcnt;
   PyObject *item_tuple, *eventid_tuple, *result;
   char timstr[30];
-  int i;
+  unsigned int i;
   PyObject *date;
   time_t sec;
   struct tm ts;
   char *time_format = 0;
   int time_string = 0;
   char supobject[80];
+  char eventtext[80];
+  char eventname[200];
+  char *utf8eventtext, *utf8eventname;
 
   if ( !pwrrt_scctx) {
     sevcli_init( &sts, &pwrrt_scctx);
@@ -4376,9 +4545,15 @@ static PyObject *pwrrt_getSevEvents(PyObject *self, PyObject *args)
   }
 
   if ( !PyArg_ParseTuple(args, "ssssIIss|Is", &server, &oidstr, &fromstr, &tostr, &eventtypemask,
-			 &eventpriomask, &eventtext, &eventname, &maxrows,
+			 &eventpriomask, &utf8eventtext, &utf8eventname, &maxrows,
 			 &time_format))
     return NULL;
+
+  strncpy(eventtext, cnv_utf8_to_iso8859(utf8eventtext, 
+     strlen(utf8eventtext)+1), sizeof(eventtext));
+  strncpy(eventname, cnv_utf8_to_iso8859(utf8eventname,
+     strlen(utf8eventname)+1), sizeof(eventname));
+
 
   if ( time_format) {
     if ( strcmp(time_format, "string") == 0)
@@ -4432,7 +4607,7 @@ static PyObject *pwrrt_getSevEvents(PyObject *self, PyObject *args)
     if ( time_string) {
       /* Time string */
       time_AtoAscii( &list[i].Time, time_eFormat_DateAndTime, timstr, sizeof(timstr));
-      PyTuple_SetItem(item_tuple, 0, PyString_FromString(timstr));
+      PyTuple_SetItem(item_tuple, 0, PyBytes_FromString(timstr));
     }
     else {
       /* Time datetime object */
@@ -4443,18 +4618,18 @@ static PyObject *pwrrt_getSevEvents(PyObject *self, PyObject *args)
 					(int)list[i].Time.tv_nsec/1000);
       PyTuple_SetItem(item_tuple, 0, date);
     }      
-    PyTuple_SetItem(item_tuple, 1, PyInt_FromLong((long)list[i].EventType));
-    PyTuple_SetItem(item_tuple, 2, PyInt_FromLong((long)list[i].EventPrio));
-    PyTuple_SetItem(item_tuple, 3, PyString_FromString(list[i].EventText));
-    PyTuple_SetItem(item_tuple, 4, PyString_FromString(list[i].EventName));
+    PyTuple_SetItem(item_tuple, 1, PyLong_FromLong((long)list[i].EventType));
+    PyTuple_SetItem(item_tuple, 2, PyLong_FromLong((long)list[i].EventPrio));
+    PyTuple_SetItem(item_tuple, 3, PyUnicode_FromString(cnv_iso8859_to_utf8(list[i].EventText, strlen(list[i].EventText)+1)));
+    PyTuple_SetItem(item_tuple, 4, PyUnicode_FromString(cnv_iso8859_to_utf8(list[i].EventName, strlen(list[i].EventName)+1)));
     strcpy(supobject, cdh_ObjidToString(list[i].SupObjectOid, 1));
     if (list[i].SupObjectOffset > 0)
       sprintf(&supobject[strlen(supobject)], "/%d:%d", list[i].SupObjectOffset, list[i].SupObjectSize);
-    PyTuple_SetItem(item_tuple, 5, PyString_FromString(supobject));
-    PyTuple_SetItem(eventid_tuple, 0, PyInt_FromLong((long)list[i].EventId.Nix));
-    PyTuple_SetItem(eventid_tuple, 1, PyInt_FromLong((long)list[i].EventId.Idx));
+    PyTuple_SetItem(item_tuple, 5, PyUnicode_FromString(supobject));
+    PyTuple_SetItem(eventid_tuple, 0, PyLong_FromLong((long)list[i].EventId.Nix));
+    PyTuple_SetItem(eventid_tuple, 1, PyLong_FromLong((long)list[i].EventId.Idx));
     PyTuple_SetItem(item_tuple, 6, eventid_tuple);
-    PyTuple_SetItem(item_tuple, 7, PyInt_FromLong((long)list[i].EventStatus));
+    PyTuple_SetItem(item_tuple, 7, PyLong_FromLong((long)list[i].EventStatus));
     
     PyTuple_SetItem(result, i, item_tuple);
   }
@@ -4477,7 +4652,7 @@ static PyObject *pwrrt_getSevEventsDataFrame(PyObject *self, PyObject *args)
   unsigned int listcnt;
   PyObject *item_tuple, *eventid_tuple, *result;
   char timstr[30];
-  int i;
+  unsigned int i;
   PyObject *date;
   time_t sec;
   struct tm ts;
@@ -4548,7 +4723,7 @@ static PyObject *pwrrt_getSevEventsDataFrame(PyObject *self, PyObject *args)
     if ( time_string) {
       /* Time string */
       time_AtoAscii( &list[i].Time, time_eFormat_DateAndTime, timstr, sizeof(timstr));
-      PyTuple_SetItem(item_tuple, 0, PyString_FromString(timstr));
+      PyTuple_SetItem(item_tuple, 0, PyBytes_FromString(timstr));
     }
     else {
       /* Time datetime object */
@@ -4559,18 +4734,18 @@ static PyObject *pwrrt_getSevEventsDataFrame(PyObject *self, PyObject *args)
 					(int)list[i].Time.tv_nsec/1000);
       PyTuple_SetItem(item_tuple, 0, date);
     }      
-    PyTuple_SetItem(item_tuple, 1, PyInt_FromLong((long)list[i].EventType));
-    PyTuple_SetItem(item_tuple, 2, PyInt_FromLong((long)list[i].EventPrio));
-    PyTuple_SetItem(item_tuple, 3, PyString_FromString(list[i].EventText));
-    PyTuple_SetItem(item_tuple, 4, PyString_FromString(list[i].EventName));
+    PyTuple_SetItem(item_tuple, 1, PyLong_FromLong((long)list[i].EventType));
+    PyTuple_SetItem(item_tuple, 2, PyLong_FromLong((long)list[i].EventPrio));
+    PyTuple_SetItem(item_tuple, 3, PyUnicode_FromString(cnv_iso8859_to_utf8(list[i].EventText, strlen(list[i].EventText)+1)));
+    PyTuple_SetItem(item_tuple, 4, PyUnicode_FromString(cnv_iso8859_to_utf8(list[i].EventName, strlen(list[i].EventName)+1)));
     strcpy(supobject, cdh_ObjidToString(list[i].SupObjectOid, 1));
     if (list[i].SupObjectOffset > 0)
       sprintf(&supobject[strlen(supobject)], "#%d:%d", list[i].SupObjectOffset, list[i].SupObjectSize);
-    PyTuple_SetItem(item_tuple, 5, PyString_FromString(supobject));
-    PyTuple_SetItem(eventid_tuple, 0, PyInt_FromLong((long)list[i].EventId.Nix));
-    PyTuple_SetItem(eventid_tuple, 1, PyInt_FromLong((long)list[i].EventId.Idx));
+    PyTuple_SetItem(item_tuple, 5, PyUnicode_FromString(supobject));
+    PyTuple_SetItem(eventid_tuple, 0, PyLong_FromLong((long)list[i].EventId.Nix));
+    PyTuple_SetItem(eventid_tuple, 1, PyLong_FromLong((long)list[i].EventId.Idx));
     PyTuple_SetItem(item_tuple, 6, eventid_tuple);
-    PyTuple_SetItem(item_tuple, 7, PyInt_FromLong((long)list[i].EventStatus));
+    PyTuple_SetItem(item_tuple, 7, PyLong_FromLong((long)list[i].EventStatus));
     
     PyList_SetItem(result, i, item_tuple);
   }
@@ -4589,7 +4764,7 @@ static PyObject *pwrrt_getSevEventsDataFrame(PyObject *self, PyObject *args)
     if ( time_string) {
       /* Time string */
       time_AtoAscii( &list[i].Time, time_eFormat_DateAndTime, timstr, sizeof(timstr));
-      PyTuple_SetItem(time_tuple, i, PyString_FromString(timstr));
+      PyTuple_SetItem(time_tuple, i, PyBytes_FromString(timstr));
     }
     else {
       /* Time datetime object */
@@ -4600,15 +4775,15 @@ static PyObject *pwrrt_getSevEventsDataFrame(PyObject *self, PyObject *args)
 					(int)list[i].Time.tv_nsec/1000);
       PyTuple_SetItem(time_tuple, i, date);
     }      
-    PyTuple_SetItem(eventtype_tuple, i, PyInt_FromLong((long)list[i].EventType));
-    PyTuple_SetItem(eventprio_tuple, i, PyInt_FromLong((long)list[i].EventPrio));
-    PyTuple_SetItem(eventtext_tuple, i, PyString_FromString(list[i].EventText));
-    PyTuple_SetItem(eventname_tuple, i, PyString_FromString(list[i].EventName));
+    PyTuple_SetItem(eventtype_tuple, i, PyLong_FromLong((long)list[i].EventType));
+    PyTuple_SetItem(eventprio_tuple, i, PyLong_FromLong((long)list[i].EventPrio));
+    PyTuple_SetItem(eventtext_tuple, i, PyBytes_FromString(list[i].EventText));
+    PyTuple_SetItem(eventname_tuple, i, PyBytes_FromString(list[i].EventName));
     strcpy(supobject, cdh_ObjidToString(list[i].SupObjectOid, 1));
     if (list[i].SupObjectOffset > 0)
       sprintf(&supobject[strlen(supobject)], "#%d:%d", list[i].SupObjectOffset, list[i].SupObjectSize);
-    PyTuple_SetItem(supobject_tuple, i, PyString_FromString(supobject));
-    PyTuple_SetItem(eventid_tuple, i, PyInt_FromLong((long)list[i].EventId.Idx));
+    PyTuple_SetItem(supobject_tuple, i, PyBytes_FromString(supobject));
+    PyTuple_SetItem(eventid_tuple, i, PyLong_FromLong((long)list[i].EventId.Idx));
     
   }
   PyList_SetItem(result, 0, time_tuple);
@@ -4647,7 +4822,15 @@ static PyMethodDef PwrrtMethods[] = {
   {"getSevEventsDataFrame", pwrrt_getSevEventsDataFrame, METH_VARARGS, "Get history events data frame"},
   {NULL, NULL, 0, NULL}};
 
-PyMODINIT_FUNC initpwrrt(void)
+static struct PyModuleDef moduledef = {
+    PyModuleDef_HEAD_INIT,
+    "pwrrt",
+    pwrrt_doc,
+    -1,
+    PwrrtMethods
+};
+
+PyMODINIT_FUNC PyInit_pwrrt(void)
 {
   PyObject *m;
 
@@ -4658,11 +4841,11 @@ PyMODINIT_FUNC initpwrrt(void)
       PyType_Ready(&ADefType) < 0 ||
       PyType_Ready(&SubType) < 0 ||
       PyType_Ready(&ApplType) < 0)
-    return;
+    return NULL;
 
-  m = Py_InitModule3("pwrrt", PwrrtMethods, pwrrt_doc);
+  m = PyModule_Create(&moduledef);
   if (m == NULL)
-    return;
+    return m;
 
   Py_INCREF(&OidType);
   PyModule_AddObject(m, "Oid", (PyObject *)&OidType);
@@ -4682,4 +4865,6 @@ PyMODINIT_FUNC initpwrrt(void)
   PyModule_AddIntConstant(m, "FRAME_OPTIONS_CONDITION", 1);
 
   PyDateTime_IMPORT;
+
+  return m;
 }

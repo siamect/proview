@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -125,7 +125,7 @@ public:
       void (*questionbox_ok)(void*, void*),
       void (*questionbox_cancel)(void*, void*), void* data);
   virtual void DisplayError(const char* title, const char* text,
-      lng_eCoding coding = lng_eCoding_ISO8859_1);
+      lng_eCoding coding = lng_eCoding_ISO8859_1, int modal = 1);
   virtual void DisplayText(
       const char* title, const char* text, int width = 0, int height = 0);
   virtual void CreateInputDialog(void* ctx, const char* title, const char* text,

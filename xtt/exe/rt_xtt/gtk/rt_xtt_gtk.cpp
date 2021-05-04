@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -500,6 +500,27 @@ void XttGtk::activate_collect_open(GtkWidget* w, gpointer data)
   xtt->xnav->command(cmd);
 }
 
+void XttGtk::activate_dashboard_insert(GtkWidget* w, gpointer data)
+{
+  Xtt* xtt = (Xtt*)data;
+
+  if (!xtt->xnav->is_authorized())
+    return;
+
+  xtt->activate_dashboard_insert();
+}
+
+void XttGtk::activate_dashboard_open(GtkWidget* w, gpointer data)
+{
+  Xtt* xtt = (Xtt*)data;
+  pwr_tCmd cmd = "open dashboard";
+
+  if (!xtt->xnav->is_authorized())
+    return;
+
+  xtt->xnav->command(cmd);
+}
+
 void XttGtk::activate_advanceduser(GtkWidget* w, gpointer data)
 {
   Xtt* xtt = (Xtt*)data;
@@ -853,7 +874,7 @@ XttGtk::XttGtk(int argc, char* argv[], int* return_sts)
   gtk_widget_add_accelerator(functions_command, "activate", accel_g, 'b',
       GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
 
-  // Submenu Search
+  // Submenu Collect
   GtkWidget* functions_collect_insert
       = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Insert"));
   g_signal_connect(functions_collect_insert, "activate",
@@ -941,6 +962,31 @@ XttGtk::XttGtk(int argc, char* argv[], int* return_sts)
       GTK_MENU_ITEM(functions_collect), GTK_WIDGET(functions_collect_menu));
   // End submenu
 
+  // Submenu Dashboard
+  GtkWidget* functions_dashboard_insert
+      = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Insert"));
+  g_signal_connect(functions_dashboard_insert, "activate",
+      G_CALLBACK(XttGtk::activate_dashboard_insert), this);
+  gtk_widget_add_accelerator(functions_dashboard_insert, "activate", accel_g, 'd',
+      GdkModifierType(GDK_CONTROL_MASK), GTK_ACCEL_VISIBLE);
+
+  GtkWidget* functions_dashboard_open
+      = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Open"));
+  g_signal_connect(functions_dashboard_open, "activate",
+      G_CALLBACK(XttGtk::activate_dashboard_open), this);
+
+  GtkWidget* functions_dashboard
+      = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Dashboard"));
+  GtkMenu* functions_dashboard_menu = (GtkMenu*)g_object_new(GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(
+      GTK_MENU_SHELL(functions_dashboard_menu), functions_dashboard_insert);
+  gtk_menu_shell_append(
+      GTK_MENU_SHELL(functions_dashboard_menu), functions_dashboard_open);
+
+  gtk_menu_item_set_submenu(
+      GTK_MENU_ITEM(functions_dashboard), GTK_WIDGET(functions_dashboard_menu));
+  // End submenu
+
   GtkWidget* functions_advuser = gtk_menu_item_new_with_mnemonic(
       CoWowGtk::translate_utf8("_Advanced user"));
   g_signal_connect(functions_advuser, "activate",
@@ -956,6 +1002,7 @@ XttGtk::XttGtk(int argc, char* argv[], int* return_sts)
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_change_value);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_command);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_collect);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_dashboard);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_advuser);
 
   GtkWidget* functions

@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -103,6 +103,7 @@ public:
   void activate_openplc();
   void activate_opengraph();
   void activate_collect_insert();
+  void activate_dashboard_insert();
   void activate_advanceduser();
   void activate_zoom_in();
   void activate_zoom_out();

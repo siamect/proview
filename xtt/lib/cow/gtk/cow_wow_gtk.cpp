@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -318,9 +318,11 @@ static gboolean displayerror_remove_cb(void* data)
 }
 
 void CoWowGtk::DisplayError(
-    const char* title, const char* text, lng_eCoding coding)
+    const char* title, const char* text, lng_eCoding coding, int modal)
 {
   GtkWindow* parent;
+  GtkWidget *dialog;
+
   if (m_parent)
     parent = GTK_WINDOW(gtk_widget_get_toplevel(m_parent));
   else
@@ -334,8 +336,15 @@ void CoWowGtk::DisplayError(
   } else
     ctext = (char*)text;
 
-  GtkWidget* dialog = gtk_message_dialog_new(
-      parent, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, ctext);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-security"
+  if (modal)
+    dialog = gtk_message_dialog_new(
+        parent, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, ctext);
+  else
+    dialog = gtk_message_dialog_new(
+        parent, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, ctext);
+#pragma GCC diagnostic pop
   if (coding != lng_eCoding_UTF_8)
     g_free(ctext);
   g_signal_connect(dialog, "response", G_CALLBACK(displayerror_ok_cb), NULL);

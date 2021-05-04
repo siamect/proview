@@ -7,3 +7,6 @@ export jdk=$JDK_DIR
 touch /etc/proview.cnf
 cd pwr
 ./build.sh --version $BUILDVERSION
+cd ..
+./build_pwrdemo.sh
+./build_pwrtest01.sh

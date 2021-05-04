@@ -2279,7 +2279,10 @@ void ra_gdhtest::GetSecurityInfo(void)
     return;
   }
 
-  if (memcmp(&security, &dsec, sizeof(pwr_sSecurity)) != 0) {
+  if (security.DefaultWebPriv != dsec.DefaultWebPriv ||
+      security.DefaultXttPriv != dsec.DefaultXttPriv ||
+      security.XttUseOpsysUser != dsec.XttUseOpsysUser ||
+      strcmp(security.WebSystemGroup, dsec.WebSystemGroup) != 0) {
     m_log->log('E', "GetSecurityInfo", "content mismatch");
     return;
   }

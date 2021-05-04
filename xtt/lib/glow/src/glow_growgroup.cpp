@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -301,4 +301,12 @@ int GrowGroup::get_path(char* name, int size)
     strncpy(name, n_name, size);
   }
   return GLOW__SUCCESS;
+}
+
+int GrowGroup::clear()
+{
+  ctx->set_nodraw();
+  nc->a.delete_all();
+  ctx->reset_nodraw();
+  return 1;
 }

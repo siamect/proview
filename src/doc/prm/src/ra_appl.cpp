@@ -3,10 +3,10 @@
    This file is an example file, containing to example applications.
 */
 
-/** @addtogroup rt */
-/*@{*/
+/** \addtogroup rt */
+/** @{*/
 
-/** @defgroup rt_ex Application examples
+/** \defgroup rt_ex Application examples
  *  @ingroup applex
  *  @{
  */

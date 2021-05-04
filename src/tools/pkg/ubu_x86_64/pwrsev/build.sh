@@ -1,7 +1,6 @@
 #!/bin/bash
 
 hw=ubu_x86_64
-op=deb
 
 # Get version
 if [ -e $pwr_inc/pwr_version.h ]; then
@@ -28,7 +27,7 @@ fi
   {
     let printout=0
     while read line; do
-      if [ "${line:0:9}" = "Package: " ]; then 
+      if [ "${line:0:9}" = "Package: " ]; then
         package=${line#Package: }
       fi
       if [ "${line:0:9}" = "Version: " ]; then
@@ -47,15 +46,15 @@ fi
         echo "<b>Proview Storage Environment V${version:0:3}"
 	echo "Version V$version"
         echo ""
-        echo "Copyright © 2005-${d:0:4} SSAB EMEA AB"
+        echo "Copyright ï¿½ 2005-${d:0:4} SSAB EMEA AB"
         echo ""
         echo "This program is free software; you can redistribute it and/or"
-        echo "modify it under the terms of the GNU General Public License as" 
+        echo "modify it under the terms of the GNU General Public License as"
         echo "published by the Free Software Foundation, either version 2 of"
         echo "the License, or (at your option) any later version."
         echo ""
-        echo "This program is distributed in the hope that it will be useful" 
-        echo "but WITHOUT ANY WARRANTY; without even the implied warranty of" 
+        echo "This program is distributed in the hope that it will be useful"
+        echo "but WITHOUT ANY WARRANTY; without even the implied warranty of"
         echo "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
         echo "For more details, see the"
         echo "GNU General Public License. <weblink> http://www.proview.se/gpllicense.html"
@@ -97,7 +96,6 @@ fi
 pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwrsev
 pkgsrc=$pwre_sroot/tools/pkg/$hw/pwrsev
 
-
 # Create directories
 echo "-- Create package tree"
 mkdir -p $pkgroot/DEBIAN
@@ -110,8 +108,10 @@ find $pkgroot -type d | xargs chmod 755
 cp $pkgsrc/control $pkgroot/DEBIAN
 cp $pkgsrc/postinst $pkgroot/DEBIAN
 cp $pkgsrc/prerm $pkgroot/DEBIAN
+cp $pkgsrc/postrm $pkgroot/DEBIAN
 chmod 755 $pkgroot/DEBIAN/postinst
 chmod 755 $pkgroot/DEBIAN/prerm
+chmod 755 $pkgroot/DEBIAN/postrm
 chmod 644 $pkgroot/DEBIAN/control
 
 # copyright
@@ -153,8 +153,6 @@ cd $pkgroot/usr/pwrsev
 mkdir cnf
 tar -xf $tarfile
 rm $tarfile
-#rm -r $pkgroot/usr/pwrsev/lib/*.a
-#rm -r $pkgroot/usr/pwrsev/exe/wb*
 cp $pwr_eexe/wb_distr_keepboot.sh $pkgroot/usr/pwrsev/exe
 cd $currentdir
 
@@ -163,21 +161,13 @@ cp $pkgsrc/proview.cnf $pkgroot/usr/pwrsev/cnf
 
 # Copy op to cnf
 mkdir $pkgroot/usr/pwrsev/cnf/op
-cp $pwre_sroot/tools/pkg/$op/op/.bashrc $pkgroot/usr/pwrsev/cnf/op
-cp $pwre_sroot/tools/pkg/$op/op/.bash_profile $pkgroot/usr/pwrsev/cnf/op
-#cp $pwre_sroot/tools/pkg/$op/op/.mwmrc $pkgroot/usr/pwrsev/cnf/op
-cp $pwre_sroot/tools/pkg/$op/op/.rtt_start $pkgroot/usr/pwrsev/cnf/op
-cp $pwre_sroot/tools/pkg/$op/op/.xtt_start $pkgroot/usr/pwrsev/cnf/op
-#cp $pwre_sroot/tools/pkg/$op/op/.xsession $pkgroot/usr/pwrsev/cnf/op
+cp $pwre_sroot/tools/pkg/$hw/op/.rtt_start $pkgroot/usr/pwrsev/cnf/op
+cp $pwre_sroot/tools/pkg/$hw/op/.xtt_start $pkgroot/usr/pwrsev/cnf/op
 
 # Copy user to cnf
 mkdir $pkgroot/usr/pwrsev/cnf/user
-cp $pwre_sroot/tools/pkg/$op/user/.bashrc $pkgroot/usr/pwrsev/cnf/user
-cp $pwre_sroot/tools/pkg/$op/user/.bash_profile $pkgroot/usr/pwrsev/cnf/user
-#cp $pwre_sroot/tools/pkg/$op/user/.mwmrc $pkgroot/usr/pwrsev/cnf/user
-cp $pwre_sroot/tools/pkg/$op/user/.rtt_start $pkgroot/usr/pwrsev/cnf/user
-cp $pwre_sroot/tools/pkg/$op/user/.xtt_start $pkgroot/usr/pwrsev/cnf/user
-#cp $pwre_sroot/tools/pkg/$op/user/.xsession $pkgroot/usr/pwrsev/cnf/user
+cp $pwre_sroot/tools/pkg/$hw/user/.rtt_start $pkgroot/usr/pwrsev/cnf/user
+cp $pwre_sroot/tools/pkg/$hw/user/.xtt_start $pkgroot/usr/pwrsev/cnf/user
 
 # Create package
 echo "-- Building package"
@@ -188,4 +178,3 @@ else
 fi
 
 rm -r $pkgroot
-

@@ -1,7 +1,6 @@
-
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -49,7 +48,8 @@ typedef enum {
   applist_eType_Fast,
   applist_eType_MultiView,
   applist_eType_Stream,
-  applist_eType_SevHist
+  applist_eType_SevHist,
+  applist_eType_Dashboard
 } applist_eType;
 
 class ApplListElem {
@@ -98,6 +98,8 @@ public:
   int find_graph(const char* name, const char* instance, void** ctx);
   int find_graph_first(const char* name, void** ctx);
   int find_graph_next(const char* name, char* instance, void** ctx);
+  int find_dashboard_first(void** ctx);
+  int find_dashboard_next(void *from_ctx, void** ctx);
   void swap(int mode);
 };
 

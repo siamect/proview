@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -875,13 +875,22 @@ void GrowTrend::add_value(double value, int idx)
             * (ur.y - ll.y);
 
   curve_value = MAX(ll.y, MIN(curve_value, ur.y));
-  if (!fill)
-    erase(&ctx->mw);
+  ctx->set_draw_buffer_only();
+  if (!parent) {
+    if (!fill)
+      erase(&ctx->mw);
+  }
+  else
+    parent->erase();
+  ctx->reset_draw_buffer_only();
   if (!fill_curve)
-    curve[idx]->add_and_shift_y_value(curve_value);
+      curve[idx]->add_and_shift_y_value(curve_value);
   else
     curve[idx]->add_and_shift_y_value_filled(curve_value);
-  draw();
+  if (!parent)
+    draw();
+  else
+    parent->draw();
   draw(&ctx->navw, (GlowTransform*)NULL, highlight, 0, NULL, NULL);
 }
 
@@ -1168,7 +1177,7 @@ void GrowTrend::set_data(double* data[3], int data_curves, int data_points)
         } else {
           if (!feq(y_max_value[j], y_min_value[j]))
             point_p->y = ur.y
-                - (data[j][idx] - y_min_value[j])
+                - (data[j + 1][idx] - y_min_value[j])
                     / (y_max_value[j] - y_min_value[j]) * (ur.y - ll.y);
 
           point_p->y = MAX(ll.y, MIN(point_p->y, ur.y));
@@ -1206,7 +1215,13 @@ void GrowTrend::set_data(double* data[3], int data_curves, int data_points)
     ctx->nodraw--;
   }
   free((char*)pointarray);
-  draw();
+  if (!parent)
+    draw();
+  else {
+    ctx->set_draw_buffer_only();
+    parent->draw();
+    ctx->reset_draw_buffer_only();
+  }
 }
 
 //! Set vertical mark 1.

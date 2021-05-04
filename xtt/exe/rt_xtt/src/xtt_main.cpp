@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -528,6 +528,17 @@ void Xtt::activate_collect_insert()
   sts = xnav->get_select(&attrref, &is_attr);
   if (ODD(sts))
     xnav->collect_insert(&attrref);
+}
+
+void Xtt::activate_dashboard_insert()
+{
+  pwr_sAttrRef attrref;
+  int is_attr;
+  int sts;
+
+  sts = xnav->get_select(&attrref, &is_attr);
+  if (ODD(sts))
+    xnav->dashboard_insert(&attrref);
 }
 
 void Xtt::activate_advanceduser()

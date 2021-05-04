@@ -37,15 +37,15 @@ silent :
 $(exe_dir)/pwrrt.so : pwrrtmodule.c
 	@ if [ "$(PWRE_CONF_PYDEV)" = "1" ]; then\
 	    $(log_pyext);\
-	    python setup_pwrrt.py -q build --build-base $(bld_dir);\
+	    python3 setup_pwrrt.py -q build --build-base $(bld_dir);\
 	    if [ "$(pwre_hw)" = "hw_x86_64" ]; then \
-	      mv $(bld_dir)/lib.linux-x86_64-2.7/pwrrt.so $(pwr_exe); \
+	      mv $(bld_dir)/lib.linux-x86_64-3.*/pwrrt.cpython-3*-linux-gnu.so $(pwr_exe)/pwrrt.so; \
 	    elif [ "$(pwre_hw)" = "hw_x86" ]; then \
-	      mv $(bld_dir)/lib.linux-i686-2.7/pwrrt.so $(pwr_exe); \
+	      mv $(bld_dir)/lib.linux-i686-3.*/pwrrt.cpython-3*-linux-gnu.so $(pwr_exe)/pwrrt.so; \
 	    elif [ "$(pwre_hw)" = "hw_arm" ]; then \
-	      mv $(bld_dir)/lib.linux-armv7l-2.7/pwrrt.so $(pwr_exe); \
+	      mv $(bld_dir)/lib.linux-armv*-3.*/pwrrt.cpython-3*-linux-gnueabihf.so $(pwr_exe)/pwrrt.so; \
 	    fi;\
-	    python setup_pwrrt.py -q install_egg_info --install-dir $(pwr_exe);\
+	    python3 setup_pwrrt.py -q install_egg_info --install-dir $(pwr_exe);\
 	  else\
 	    $(log_no);\
 	  fi

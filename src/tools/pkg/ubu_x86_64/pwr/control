@@ -1,9 +1,9 @@
 Source: pwrsrc
 Section: devel
-Package: pwr57
+Package: pwr58
 Priority: optional
 Maintainer: ProviewR <postmaster@proview.se>
-Version: 5.7.2-1
+Version: 5.8.0-1
 Architecture: amd64
 Depends: libc6 (>= 2.27-3ubuntu1),
  libgtk2.0-0 (>= 2.24.32-1ubuntu1),
@@ -15,14 +15,14 @@ Depends: libc6 (>= 2.27-3ubuntu1),
  librabbitmq4 (>= 0.8.0-1ubuntu0.18.04.2),
  libusb-1.0-0 (>=2:1.0.21-2),
  libsqlite3-0 (>= 3.22.0-1ubuntu0.3),
- libhdf5-openmpi-100 (>=1.10.0),
+ libhdf5-openmpi-103 (>=1.10.0),
  librsvg2-2 (>= 2.40.20-2),
  libgstreamer1.0-0 (>=1.14.4-4-0ubuntu1),
  libgstreamer-plugins-base1.0-0 (>=1.14.4-0ubuntu1),
  xterm,
  xfonts-100dpi
-Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48,pwr50,pwr51,pwr52,pwr54,pwr55,pwr56
+Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44,pwr45,pwr46,pwr47,pwr48,pwr50,pwr51,pwr52,pwr54,pwr55,pwr56,pwr57
 Homepage: http://www.proview.se
 Installed-Size: 1114020
 Description: ProviewR development and runtime environment package
- 5.7.2-1 Base release
+ 5.8.0-1 Base release

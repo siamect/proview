@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -77,6 +77,15 @@ public:
     strcpy(name, x.name);
     strcpy(cname, x.cname);
     strcpy(description, x.description);
+  }
+  TreeNav_object& operator=(const TreeNav_object& x)
+  {
+    aref = x.aref;
+    strcpy(name, x.name);
+    strcpy(cname, x.cname);
+    strcpy(description, x.description);
+
+    return *this;
   }
 };
 

@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -143,6 +143,7 @@ void sansm_Add(qcom_sGet* get)
   san_sServer* sp;
   int i;
   net_sSanAdd* ap = get->data;
+  net_sSanEntry sane;
 
   gdb_AssumeUnlocked;
 
@@ -157,7 +158,8 @@ void sansm_Add(qcom_sGet* get)
       if (op == NULL || !op->l.flags.b.isOwned)
         continue;
 
-      sp = addServer(NULL, np, op, &ap->sane[i]);
+      sane = ap->sane[i];
+      sp = addServer(NULL, np, op, &sane);
       if (sp == NULL)
         continue;
     }

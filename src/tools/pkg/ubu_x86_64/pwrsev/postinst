@@ -16,174 +16,128 @@ proot="/pwrp"
 aroot="/usr/pwrp/adm"
 
 # Create users...
-new_user=0
-if getent group pwrp > /dev/null; then
-  echo "-- group pwrp already exist"
-else
-  if groupadd pwrp; then
-    echo "-- group pwrp added"
+echo "-- Creating users/groups..."
+for grp in pwrp b55 b66 skiftel; do
+  if getent group ${grp} >/dev/null; then
+    echo "-- Group ${grp} already exist. OK!"
+  else
+    if groupadd ${grp}; then
+      echo "-- Group ${grp} added..."
+    fi
   fi
-fi
+done
 
-if getent group b55 > /dev/null; then
-  echo "-- group b55 already exist"
+# Do we have a pwrp user already?
+if getent passwd pwrp >/dev/null; then
+  echo "-- User pwrp already exist. OK!"
 else
-  if groupadd b55; then
-    echo "-- group b55 added"
+  if useradd --create-home --shell /bin/bash --password aaupl/kQs1p3U --gid pwrp --groups b55,b66,skiftel --home-dir /home/pwrp pwrp; then
+    echo "-- User pwrp added..."
   fi
-fi
 
-if getent group b66 > /dev/null; then
-  echo "-- group b66 already exist"
-else
-  if groupadd b66; then
-    echo "-- group b66 added"
-  fi
-fi
-
-if getent group skiftel > /dev/null; then
-  echo "-- group skiftel already exist"
-else
-  if groupadd skiftel; then
-    echo "-- group skiftel added"
-  fi
-fi
-
-
-
-if getent passwd pwrp > /dev/null; then
-  echo "-- user pwrp already exist"
-else
-  new_user=1
-
-  if useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -G b55,b66,skiftel -d /home/pwrp pwrp; then
-    echo "-- user pwrp added"
-  fi
-  if [ ! -e /home/pwrp ]; then
-    mkdir /home/pwrp
-    cp /usr/pwrsev/cnf/user/.bashrc /home/pwrp
-    cp /usr/pwrsev/cnf/user/.bash_profile /home/pwrp
-#    cp /usr/pwrsev/cnf/user/.mwmrc /home/pwrp
+  # If all went well we copy proview specific startup scripts to the home folder
+  if [ -e /home/pwrp ]; then
     cp /usr/pwrsev/cnf/user/.rtt_start /home/pwrp
     chmod a+x /home/pwrp/.rtt_start
     cp /usr/pwrsev/cnf/user/.xtt_start /home/pwrp
     chmod a+x /home/pwrp/.xtt_start
-#    cp /usr/pwrsev/cnf/user/.xsession /home/pwrp
-
-    chown -R pwrp /home/pwrp
-    chgrp -R pwrp /home/pwrp
   fi
 
-  # Add to group dialout
-  if getent group dialout > /dev/null; then
-    usermod -a -G dialout pwrp
+  # Add pwrp to group dialout
+  if getent group dialout >/dev/null; then
+    usermod -a -G dialout pwrp && echo "-- User 'pwrp' added to group 'dialout'..." || echo "-- Unable to add user 'pwrp' to group 'dialout'!"
   fi
 fi
 
-if getent passwd skiftel > /dev/null; then
-  echo "-- user skiftel already exist"
+if getent passwd skiftel >/dev/null; then
+  echo "-- User skiftel already exist. OK!"
 else
-  new_user=1
-
-  if useradd -s /bin/bash -p aa6NzxS/aBgP6 -g skiftel -G pwrp -d /home/skiftel skiftel; then
-    echo "-- user skiftel added"
+  if useradd --create-home --shell /bin/bash --password aa6NzxS/aBgP6 --gid skiftel --groups pwrp --home-dir /home/skiftel skiftel; then
+    echo "-- User skiftel added..."
   fi
 
-  if [ ! -e /home/skiftel ]; then
-    mkdir /home/skiftel
-    cp /usr/pwrsev/cnf/user/.bashrc /home/skiftel
-    cp /usr/pwrsev/cnf/user/.bash_profile /home/skiftel
-#    cp /usr/pwrsev/cnf/user/.mwmrc /home/skiftel
+  # If all went well we copy proview specific startup scripts to the home folder
+  if [ -e /home/skiftel ]; then
     cp /usr/pwrsev/cnf/user/.rtt_start /home/skiftel
     chmod a+x /home/skiftel/.rtt_start
     cp /usr/pwrsev/cnf/user/.xtt_start /home/skiftel
     chmod a+x /home/skiftel/.xtt_start
-#    cp /usr/pwrsev/cnf/user/.xsession /home/skiftel
 
-    chown -R pwrp /home/skiftel
+    # And change group ownership of skiftel's home folder to pwrp
     chgrp -R pwrp /home/skiftel
   fi
 fi
 
-if getent passwd b55 > /dev/null; then
-  new_user=1
+# Setup the operator group memberships
+groups="pwrp"
+getent group audio >/dev/null && groups+=",audio"
 
-  # Check if group audio exist
-  if getent group audio > /dev/null; then
-    groups="pwrp,audio"
-  else
-    groups="pwrp"
+# Add the user b55
+if getent passwd b55 >/dev/null; then
+   echo "-- User b55 already exist. OK!"
+else
+  if useradd --create-home --shell /bin/bash --password aaQPClsglxJP6 --gid b55 --groups $groups --home-dir /home/b55 b55; then
+    echo "-- User b55 added..."
   fi
 
-  if useradd -s /bin/bash -p aaQPClsglxJP6 -g b55 -G $groups -d /home/b55 b55; then
-    echo "-- user b55 added"
-  fi
-  if [ ! -e /home/b55 ]; then
-    mkdir /home/b55
-    cp /usr/pwrsev/cnf/op/.bashrc /home/b55
-    cp /usr/pwrsev/cnf/op/.bash_profile /home/b55
-#    cp /usr/pwrsev/cnf/op/.mwmrc /home/b55
+  if [ -e /home/b55 ]; then
     cp /usr/pwrsev/cnf/op/.rtt_start /home/b55
     chmod a+x /home/b55/.rtt_start
     cp /usr/pwrsev/cnf/op/.xtt_start /home/b55
     chmod a+x /home/b55/.xtt_start
-#    cp /usr/pwrsev/cnf/op/.xsession /home/b55
 
     chown -R b55 /home/b55
     chgrp -R pwrp /home/b55
-    chmod g+rwx /home/b55
+    chmod g+rws /home/b55
   fi
 fi
 
-if getent passwd b66 > /dev/null; then
-  new_user=1
-
-  # Check if group audio exist
-  if getent group audio > /dev/null; then
-    groups="pwrp,audio"
-  else
-    groups="pwrp"
+# Add the user b66
+if getent passwd b66 >/dev/null; then
+   echo "-- User b66 already exist. OK!"
+else
+  if useradd --create-home --shell /bin/bash --password 1P4JdWA5HqSMQ --gid b66 --groups $groups --home-dir /home/b66 b66; then
+    echo "-- User b66 added..."
   fi
 
-  if useradd -s /bin/bash -p aae.nHgHbfUpw -g b66 -G $groups -d /home/b66 b66; then
-    echo "-- user b66 added"
-  fi
-  if [ ! -e /home/b66 ]; then
-    mkdir /home/b66
-    cp /usr/pwrsev/cnf/op/.bashrc /home/b66
-    cp /usr/pwrsev/cnf/op/.bash_profile /home/b66
-#    cp /usr/pwrsev/cnf/op/.mwmrc /home/b66
+  if [ -e /home/b66 ]; then
     cp /usr/pwrsev/cnf/op/.rtt_start /home/b66
-    chmod a+x /home/b66/.rtt_start
+    chmod a+x /home/b55/.rtt_start
     cp /usr/pwrsev/cnf/op/.xtt_start /home/b66
-    chmod a+x /home/b66/.xtt_start
-#    cp /usr/pwrsev/cnf/op/.xsession /home/b66
+    chmod a+x /home/b55/.xtt_start
 
     chown -R b66 /home/b66
     chgrp -R pwrp /home/b66
-    chmod g+rwx /home/b66
+    chmod g+rws /home/b66
   fi
 fi
 
 chown -R pwrp /usr/pwrsev
 chgrp -R pwrp /usr/pwrsev
 
-chmod u+s /usr/pwrsev/exe/sev_ini
+setcap cap_sys_nice,cap_sys_boot,cap_net_bind_service,cap_net_admin,cap_net_raw,cap_net_broadcast=eip /usr/pwrrt/exe/sev_ini
+
+# Source pwrp_profile in login shells
+if [ ! -e /etc/profile/pwrp_profile.sh ]; then
+  # profile.d should always exist on a modern debian system. BUT if it doesn't we create it :)
+  if [ ! -e /etc/profile.d ]; then mkdir /etc/profile.d; fi
+ 	echo "[[ -e /etc/pwrp_profile ]] && . /etc/pwrp_profile" > /etc/profile.d/pwrp_profile.sh
+fi
+
+# Source pwrp_profile from both profile and bash.bashrc
+# for cnf_file in /etc/profile /etc/bash.bashrc; do
+#   if ! grep -q "/etc/pwrp_profile\b" ${cnf_file}; then
+#   	cat >> ${cnf_file} <<-EOF
+# 		[[ -e /etc/pwrp_profile ]] && . /etc/pwrp_profile
+# 		EOF
+#   fi
+# done
 
 # Copy configuration files
 new_cnf=0
 if [ ! -e /etc/proview.cnf ]; then
   cp /usr/pwrsev/cnf/proview.cnf /etc
   new_cnf=1
-fi
-
-# Add pwrp_profile to profile
-if ! grep -q "/etc/pwrp_profile\b" /etc/profile; then
-  cat >> /etc/profile <<-EOF
-	if [ -e /etc/pwrp_profile ]; then
-	  source /etc/pwrp_profile
-	fi
-EOF
 fi
 
 # Create startup link
@@ -208,15 +162,15 @@ if [ ! -e $proot ]; then
   mkdir $proot/common/loghist
   mkdir $proot/common/db
   mkdir $proot/common/web
-  mkdir $proot/x86_linux
-  mkdir $proot/x86_linux/exe
-  mkdir $proot/x86_linux/lib
-  mkdir $proot/x86_linux/obj
-  mkdir $proot/x86_linux/lis
+  mkdir $proot/x86_64_linux
+  mkdir $proot/x86_64_linux/exe
+  mkdir $proot/x86_64_linux/lib
+  mkdir $proot/x86_64_linux/obj
+  mkdir $proot/x86_64_linux/lis
 
   chown -R pwrp $proot
   chgrp -R pwrp $proot
-  
+
 fi
 
 if [ ! -e $aroot/db ]; then
@@ -227,16 +181,13 @@ fi
 #
 
 changes=0
-if [ $new_user -eq 1 ]; then
-  changes=1
-elif [ $new_cnf -eq 1 ]; then
+if [ $new_cnf -eq 1 ]; then
   changes=1
 elif [ $new_project -eq 1 ]; then
   changes=1
 fi
 
 if [ $changes -ne 0 ]; then
-  echo ""
   echo ""
   echo "***********************************************************"
   echo "  Don't forget to do this :"
@@ -246,10 +197,6 @@ fi
 if [ $new_cnf -eq 1 ]; then
   echo "-- Enter QcomBusId in /etc/proview.cnf"
 fi
-
-#if [ $new_user -eq 1 ]; then
-#  echo "-- Enter OpPlace object as argument to rt_xtt in /home/b55/.xtt_start"
-#fi
 
 if [ $new_project -eq 1 ]; then
   nodename=`eval uname -n`
@@ -261,14 +208,3 @@ if [ $changes -ne 0 ]; then
   echo "***********************************************************"
   echo ""
 fi
-
-
-
-
-
-
-
-
-
-
-

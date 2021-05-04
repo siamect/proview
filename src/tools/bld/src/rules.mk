@@ -279,6 +279,10 @@ $(inc_dir)/%.meth : %.meth
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
+$(exe_dir)/%.ge_com : %.ge_com
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
 # Rules for android apps
 $(app_package_dir)/$(comp_name)/%.java : $(fco_source)/%.java
 	@ $(log_h_h)

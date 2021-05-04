@@ -1,5 +1,5 @@
-#!/usr/bin/python
-# -*- coding: iso-8859-1 -*-
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 import sys
 import math
@@ -140,7 +140,7 @@ class Ctx:
                 if str(e) != d[i][2]:
                     self.logger.vlog('E', 'object, Unexpected exception %s, idx %s',
                                      str(e), str(i))
-                    print 'Not correct error code'
+                    print('Not correct error code')
                     return
                 
         self.logger.log('S', 'object, successfull completion')
@@ -170,7 +170,7 @@ class Ctx:
                         return
                 else:
                     if not abs(value - d[i][1]) < 0.001:
-                	self.logger.vlog('E', "attribute, Value doesn't match, %s != %s, idx %s",
+                        self.logger.vlog('E', "attribute, Value doesn't match, %s != %s, idx %s",
                                     str(value), str(d[i][1]), str(i))
                         return
             except RuntimeError as e:
@@ -267,7 +267,7 @@ class Ctx:
                         return
                 else:
                     if not abs(value - d[i][1]) < 0.001:
-                	self.logger.vlog('E', "revertSession, Value doesn't match, %s != %s, idx %s",
+                        self.logger.vlog('E', "revertSession, Value doesn't match, %s != %s, idx %s",
                                     str(value), str(d[i][1]), str(i))
                         return
             except RuntimeError as e:
@@ -310,7 +310,7 @@ class Ctx:
                 if str(e) != d[i][2]:
                     self.logger.vlog('E', 'Oid, Unexpected exception %s, idx %s',
                                      str(e), str(i))
-                    print 'Not correct error code'
+                    print('Not correct error code')
                     return
                 
         self.logger.log('S', 'Oid, successfull completion')
@@ -453,7 +453,7 @@ class Ctx:
             ('RootObject', 'RootObject', ''),
             ('RootObject-Child1', 'Child1', ''),
             ('Test02-Ldh-LongName90123456789012345678901', 'LongName90123456789012345678901', ''),
-            ('Test02-Ldh-ÄÅÖäåö', 'ÄÅÖäåö', ''),
+            ('Test02-Ldh-Ã„Ã…Ã–Ã¤Ã¥Ã¶', 'Ã„Ã…Ã–Ã¤Ã¥Ã¶', ''),
             ('Test02-Ldh-sdf*sdf', '', '%LDH-E-BADNAME, bad object name'),
             ('VolPwrtest02:', 'VolPwrtest02', '')
             )
@@ -484,7 +484,7 @@ class Ctx:
             ('RootObject', 'VolPwrtest02:RootObject', ''),
             ('RootObject-Child1', 'VolPwrtest02:RootObject-Child1', ''),
             ('Test02-Ldh-LongName90123456789012345678901', 'VolPwrtest02:Test02-Ldh-LongName90123456789012345678901', ''),
-            ('Test02-Ldh-ÄÅÖäåö', 'VolPwrtest02:Test02-Ldh-ÄÅÖäåö', ''),
+            ('Test02-Ldh-Ã„Ã…Ã–Ã¤Ã¥Ã¶', 'VolPwrtest02:Test02-Ldh-Ã„Ã…Ã–Ã¤Ã¥Ã¶', ''),
             ('Test02-Ldh-sdf*sdf', '', '%LDH-E-BADNAME, bad object name'),
             ('VolPwrtest02:', 'VolPwrtest02:', '')
             )
@@ -597,7 +597,7 @@ class Ctx:
                         return
                 else:
                     if not abs(value - d[i][1]) < 0.001:
-                	self.logger.vlog('E', "Aref, "
+                        self.logger.vlog('E', "Aref, "
                                          "Value doesn't match, %s != %s, idx %s",
                                     str(value), str(d[i][1]), str(i))
                         return
@@ -616,7 +616,7 @@ class Ctx:
             ('RootObject.Description', 'RootObject.Description', ''),
             ('RootObject-Child1.DefGraph', 'Child1.DefGraph', ''),
             ('Test02-Ldh-LongName90123456789012345678901.InitialValue', 'LongName90123456789012345678901.InitialValue', ''),
-            ('Test02-Ldh-ÄÅÖäåö.ValueIndex', 'ÄÅÖäåö.ValueIndex', ''),
+            ('Test02-Ldh-Ã„Ã…Ã–Ã¤Ã¥Ã¶.ValueIndex', 'Ã„Ã…Ã–Ã¤Ã¥Ã¶.ValueIndex', ''),
             ('Test02-Ldh-sdf*sdf', '', '%LDH-E-NOSUCHATTR, no such attribute exists')
             )
         i = 0
@@ -645,7 +645,7 @@ class Ctx:
             ('RootObject.Description', 'VolPwrtest02:RootObject.Description', ''),
             ('RootObject-Child1.DefGraph', 'VolPwrtest02:RootObject-Child1.DefGraph', ''),
             ('Test02-Ldh-LongName90123456789012345678901.InitialValue', 'VolPwrtest02:Test02-Ldh-LongName90123456789012345678901.InitialValue', ''),
-            ('Test02-Ldh-ÄÅÖäåö.ValueIndex', 'VolPwrtest02:Test02-Ldh-ÄÅÖäåö.ValueIndex', ''),
+            ('Test02-Ldh-Ã„Ã…Ã–Ã¤Ã¥Ã¶.ValueIndex', 'VolPwrtest02:Test02-Ldh-Ã„Ã…Ã–Ã¤Ã¥Ã¶.ValueIndex', ''),
             ('Test02-Ldh-sdf*sdf', '', '%LDH-E-NOSUCHATTR, no such attribute exists')
             )
         i = 0
@@ -814,7 +814,7 @@ class Ctx:
                         return
                 else:
                     if not abs(value - d[i][1]) < 0.001:
-                	self.logger.vlog('E', "Aref.value, "
+                        self.logger.vlog('E', "Aref.value, "
                                          "Value doesn't match, %s != %s, idx %s",
                                     str(value), str(d[i][1]), str(i))
                         return
@@ -883,7 +883,7 @@ class Ctx:
                         return
                 else:
                     if not abs(value - d[i][1]) < 0.001:
-                	self.logger.vlog('E', "Aref.setValue, "
+                        self.logger.vlog('E', "Aref.setValue, "
                                          "Value doesn't match, %s != %s, idx %s",
                                     str(value), str(d[i][1]), str(i))
                         return
@@ -927,7 +927,7 @@ class Ctx:
 
             except RuntimeError as e:
                 if str(e) != d[i][1]:
-                    print str(e), d[i][1]
+                    print(str(e), d[i][1])
                     self.logger.vlog('E', 'Cid, Unexpected exception %s, idx %s',
                                      str(e), str(i))
                     return

@@ -1,0 +1,261 @@
+
+main()
+  int id;
+  int sts;
+  int i;
+  int j;
+  float x0 = 0.2;
+  float y0 = 0.2;
+  float xm;
+  float ym;
+  float x1;
+  float y1;
+  float x2;
+  float y2;
+  int action;  
+  string name;
+  string hnext;
+  string vnext;
+  string tnext;
+  int inext;
+  int jnext;
+  int vsize;
+  int hsize;
+  string cmd;
+
+  ClearAll();
+  SetDraw(0);
+
+  SetGraphAttribute("Scantime", 0.6);
+  SetGraphAttribute("FastScantime", 0.2);
+  SetGraphAttribute("AnimationScantime", 0.2);
+  SetGraphAttribute("ColorTheme", "$default");
+  SetColorTheme(1);
+  SetBackgroundColor(eDrawType_CustomColor1);
+  id = CreateRectangle(0.0, 0.0, 34.0, 2.0);
+  SetObjectFill(id, 1);
+  SetObjectBorder(id, 0);
+  SetObjectFillColor(id, eDrawType_CustomColor3);
+
+  x1 = 31.0;
+  y1 = 0.2;
+  x2 = x1 + 2.3;
+  y2 = y1 + 1; 
+  id = CreateObject("pwrct_buttonsmallcommand", x1, y1, x2, y2);
+  SetObjectAttribute(id, "Text", "Next");
+  SetObjectAttribute(id, "Action", "Script");
+  SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_pulldownmenu\", \"\", 1);");
+
+  xm = x0 + 1;
+  ym = y0 + 1;
+  id = CreateText("InputFocus", xm, ym, 4, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+# First Tab group
+  ym += 1.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("First Tab group", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  x1 = xm;
+  y1 = ym + 0.4;
+  x2 = x1 + 2.0;
+  y2 = y1 + 0.8;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  SetObjectName(id, "T1B1");
+  name = "T1B1";
+  SetObjectAttribute(id, "Text", name);
+  action = mActionType1_Command | mActionType1_InputFocus;
+  SetObjectAttribute(id, "Action", action);
+  cmd = "open graph @\"pwr_logowithclose " + name + "\"";
+  SetObjectAttribute(id, "Command.Command", cmd);
+  SetObjectAttribute(id, "InputFocus.InitialFocus", 9);
+  SetObjectAttribute(id, "InputFocus.NextTab", "T2B11");
+  SetObjectAttribute(id, "InputFocus.NextVertical", "T1B2");
+  SetObjectAttribute(id, "InputFocus.NextHorizontal", "T1B2");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+  xm += 3;
+  x1 = xm;
+  y1 = ym + 0.4;
+  x2 = x1 + 2.0;
+  y2 = y1 + 0.8;
+  id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+  name = "T1B2";
+  SetObjectName(id, name);
+  SetObjectAttribute(id, "Text", name);
+  action = mActionType1_Command | mActionType1_InputFocus;
+  SetObjectAttribute(id, "Action", action);
+  cmd = "open graph @\"pwr_logowithclose " + name + "\"";
+  SetObjectAttribute(id, "Command.Command", cmd);
+  SetObjectAttribute(id, "InputFocus.NextTab", "T2B11");
+  SetObjectAttribute(id, "Cycle", "Fast");
+  
+# Tab 2 Button 1
+  tnext = "T3B11";
+  vsize = 7;
+  hsize = 10;
+  xm = x0 + 1;
+  ym += 2.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Second Tab group", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  for (i = 0; i < vsize; i++)
+    for (j = 0; j < hsize; j++)
+      x1 = xm + i * 2.4;
+      y1 = ym + 0.4 + j * 1.4;
+      x2 = x1 + 2.0;
+      y2 = y1 + 0.8;
+      id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+      name = "T2B" + (i+1) + (j+1);
+
+      inext = i + 1;
+      jnext = j;
+      if (inext >= vsize)
+        inext = 0;
+        jnext = j + 1;
+        if (jnext >= hsize)
+          jnext = 0;
+        endif
+      endif
+      hnext = "T2B" + (inext+1) + (jnext+1);
+
+      inext = i;
+      jnext = j + 1;
+      if (jnext >= hsize)
+        jnext = 0;
+        inext = i + 1;
+        if (inext >= vsize)
+          inext = 0;
+        endif
+      endif
+      vnext = "T2B" + (inext+1) + (jnext+1);
+
+      if ((i == (vsize - 1)) && (j == (hsize - 1)))
+	vnext = "T3B11";
+	hnext = "T3B11";
+      endif        
+
+            
+      SetObjectName(id, name);
+      SetObjectAttribute(id, "Text", name);
+      action = mActionType1_Command | mActionType1_InputFocus;
+      SetObjectAttribute(id, "Action", action);
+      cmd = "open graph @\"pwr_logowithclose " + name + "\"";
+      SetObjectAttribute(id, "Command.Command", cmd);
+      SetObjectAttribute(id, "InputFocus.NextTab", tnext);
+      SetObjectAttribute(id, "InputFocus.NextVertical", vnext);
+      SetObjectAttribute(id, "InputFocus.NextHorizontal", hnext);
+      SetObjectAttribute(id, "Cycle", "Fast");
+    endfor
+  endfor
+
+# Tab group 3
+  tnext = "T4V1";
+  vsize = 7;
+  hsize = 4;
+  xm = x0 + 1;
+  ym += 15.5;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Third Tab group", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+  for (i = 0; i < vsize; i++)
+    for (j = 0; j < hsize; j++)
+      x1 = xm + i * 2.4;
+      y1 = ym + 0.4 + j * 1.4;
+      x2 = x1 + 2.0;
+      y2 = y1 + 0.8;
+      id = CreateObject("pwrct_buttonsmallset", x1, y1, x2, y2);
+      name = "T3B" + (i+1) + (j+1);
+
+      inext = i + 1;
+      jnext = j;
+      if (inext >= vsize)
+        inext = 0;
+        jnext = j + 1;
+        if (jnext >= hsize)
+          jnext = 0;
+        endif
+      endif
+      hnext = "T3B" + (inext+1) + (jnext+1);
+
+      inext = i;
+      jnext = j + 1;
+      if (jnext >= hsize)
+        jnext = 0;
+        inext = i + 1;
+        if (inext >= vsize)
+          inext = 0;
+        endif
+      endif
+      vnext = "T3B" + (inext+1) + (jnext+1);
+            
+      if ((i == (vsize - 1)) && (j == (hsize - 1)))
+	vnext = "T4V1";
+	hnext = "T4V1";
+      endif        
+
+      SetObjectName(id, name);
+      SetObjectAttribute(id, "Text", name);
+      action = mActionType1_Command | mActionType1_InputFocus;
+      SetObjectAttribute(id, "Action", action);
+      cmd = "open graph @\"pwr_logowithclose " + name + "\"";
+      SetObjectAttribute(id, "Command.Command", cmd);
+      SetObjectAttribute(id, "InputFocus.NextTab", tnext);
+      SetObjectAttribute(id, "InputFocus.NextVertical", vnext);
+      SetObjectAttribute(id, "InputFocus.NextHorizontal", hnext);
+      SetObjectAttribute(id, "Cycle", "Fast");
+    endfor
+  endfor
+
+# Value field
+  ym += 7;
+  x2 = xm;
+  y2 = ym;
+  id = CreateText("Each value field is a Tab group", x2, y2, 2, eFont_LucidaSans, 0, eDrawType_CustomColor5);
+
+
+  vsize = 4;
+  hsize = 3;
+  for (i = 0; i < vsize; i++)
+    for (j = 0; j < hsize; j++)
+      x1 = xm + i * 5.4;
+      y1 = ym + 0.4 + j * 1.8;
+      x2 = x1 + 4.5;
+      y2 = y1 + 1.3;
+      id = CreateObject("pwrct_valueinputmediumbg", x1, y1, x2, y2);
+      name = "T" + (i+4) + "V" + (j+1);
+
+      inext = i + 1;
+      jnext = j;
+      if (inext >= vsize)
+        inext = 0;
+        jnext = j + 1;
+        if (jnext >= hsize)
+          jnext = 0;
+        endif
+      endif
+      tnext = "T" + (inext+4) + "V" + (jnext+1);
+
+      if ((i == (vsize - 1)) && (j == (hsize - 1)))
+	tnext = "T1B1";
+      endif        
+            
+      action = mActionType1_ValueInput | mActionType1_InputFocus;
+      SetObjectName(id, name);
+      SetObjectAttribute(id, "Action", action);
+      SetObjectAttribute(id, "Value.Attribute", "Test03a-Ge-Dyn-ValueInput1.ActualValue##Float32");
+      SetObjectAttribute(id, "Value.Format", "%6.2f");
+      SetObjectAttribute(id, "ValueInput.MaxValue", 100.0);
+      SetObjectAttribute(id, "ValueInput.MinValue", 0.0);
+      SetObjectAttribute(id, "InputFocus.NextTab", tnext);
+      SetObjectAttribute(id, "Cycle", "Fast");
+    endfor
+  endfor
+
+  SetGraphAttribute("x1", 30.0);
+  SetGraphAttribute("y1", 40.0);
+
+  SetDraw(1);
+endmain

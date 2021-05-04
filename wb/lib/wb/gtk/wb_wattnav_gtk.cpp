@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -37,7 +37,7 @@
 /* wb_wattnav_gtk.cpp -- Display object info */
 
 #include <stdlib.h>
-#include <gtk/gtk.h>
+//#include "cow_gtk.h"
 
 extern "C" {
 #include "pwr_baseclasses.h"

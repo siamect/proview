@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -48,6 +48,7 @@
 #include "flow_msg.h"
 
 #include "ge_dyn.h"
+#include "ge_dashboard.h"
 #include "ge_msg.h"
 
 #define ATTRNAV__INPUT_SYNTAX 2
@@ -987,7 +988,8 @@ static attrnav_sEnumElement elem_inputfocus_mask[]
 static attrnav_sEnumElement elem_direction[]
     = { { (unsigned int)glow_eDirection_Right, "Right" },
         { (unsigned int)glow_eDirection_Left, "Left" },
-        { (unsigned int)glow_eDirection_Up, "Down" },
+	// Note !! Up and down are shifted !!
+        { (unsigned int)glow_eDirection_Up, "Down" }, 
         { (unsigned int)glow_eDirection_Down, "Up" }, { 0, "" } };
 
 static attrnav_sEnumElement elem_horizdirection[]
@@ -1147,6 +1149,41 @@ static attrnav_sEnumElement elem_keyboard_type[] = {
   { 0, "" }
 };
 
+static attrnav_sEnumElement elem_dash_type[] = {
+  { (unsigned int)ge_eDashType_, "No" },
+  { (unsigned int)ge_eDashType_UserDefined, "UserDefined" },
+  { (unsigned int)ge_eDashType_ObjectGraph, "ObjectGraph" },
+  { (unsigned int)ge_eDashType_Bar, "Bar" },
+  { (unsigned int)ge_eDashType_BarArc, "BarArc" },
+  { (unsigned int)ge_eDashType_Trend, "Trend" },
+  { (unsigned int)ge_eDashType_Gauge, "Gauge" },
+  { (unsigned int)ge_eDashType_Gauge2, "Gauge2" },
+  { (unsigned int)ge_eDashType_Slider, "Slider" },
+  { (unsigned int)ge_eDashType_Pie, "Pie" },
+  { (unsigned int)ge_eDashType_Indicator, "Indicator" },
+  { (unsigned int)ge_eDashType_DigitalTrend, "DigitalTrend" },
+  { 0, "" }
+};
+
+static attrnav_sEnumElement elem_dash_elements[]
+    = { { 0, "0" },
+	{ 1, "1" },
+	{ 2, "2" },
+	{ 3, "3" },
+	{ 4, "4" },
+	{ 5, "5" },
+	{ 6, "6" },
+	{ 0, "" } };
+
+static attrnav_sEnumElement elem_indicator_color[]
+    = { { glow_eDrawType_CustomColor26, "Green" },
+	{ glow_eDrawType_CustomColor41, "Yellow" },
+	{ glow_eDrawType_CustomColor11, "Red" },
+	{ glow_eDrawType_CustomColor71, "Orange" },
+	{ glow_eDrawType_CustomColor56, "Blue" },
+	{ glow_eDrawType_CustomColor86, "Magenta" },
+	{ 0, "" } };
+
 static attrnav_sEnum enum_types[] = {
   { (unsigned int)glow_eType_Direction,
       (attrnav_sEnumElement*)&elem_direction },
@@ -1189,6 +1226,12 @@ static attrnav_sEnum enum_types[] = {
       (attrnav_sEnumElement*)&elem_methodtoolbar_type },
   { (unsigned int)ge_eAttrType_KeyboardType,
       (attrnav_sEnumElement*)&elem_keyboard_type },
+  { (unsigned int)ge_eAttrType_DashType,
+      (attrnav_sEnumElement*)&elem_dash_type },
+  { (unsigned int)ge_eAttrType_DashElements,
+      (attrnav_sEnumElement*)&elem_dash_elements },
+  { (unsigned int)ge_eAttrType_IndicatorColor,
+      (attrnav_sEnumElement*)&elem_indicator_color },
   { 0, NULL }
 };
 
@@ -1365,7 +1408,10 @@ int attrnav_attr_string_to_value(int type_id, char* value_str, void* buffer_ptr,
   case ge_eAttrType_OptionMenuType:
   case ge_eAttrType_MethodsMenuType:
   case ge_eAttrType_MethodToolbarType:
-  case ge_eAttrType_KeyboardType: {
+  case ge_eAttrType_KeyboardType:
+  case ge_eAttrType_DashType:
+  case ge_eAttrType_DashElements:
+  case ge_eAttrType_IndicatorColor: {
     if (sscanf(value_str, "%u", (int*)buffer_ptr) != 1)
       return ATTRNAV__INPUT_SYNTAX;
     break;
@@ -1449,7 +1495,10 @@ void attrnav_attrvalue_to_string(
   case ge_eAttrType_OptionMenuType:
   case ge_eAttrType_MethodsMenuType:
   case ge_eAttrType_MethodToolbarType:
-  case ge_eAttrType_KeyboardType: {
+  case ge_eAttrType_KeyboardType:
+  case ge_eAttrType_DashType:
+  case ge_eAttrType_DashElements:
+  case ge_eAttrType_IndicatorColor: {
     attrnav_sEnumElement* elem_p = NULL;
     attrnav_sEnum* enum_p;
     int found;
@@ -1491,6 +1540,7 @@ void attrnav_attrvalue_to_string(
   case ge_eAttrType_DynType2:
   case ge_eAttrType_DynTypeTone:
   case ge_eAttrType_ActionType1:
+  case ge_eAttrType_ActionType2:
   case ge_eAttrType_InstanceMask:
   case ge_eAttrType_InputFocus: {
     strncpy(str, attrnav_mask_to_string(type_id, *(int*)value_ptr), size);
@@ -2240,6 +2290,16 @@ static int attrnav_brow_cb(FlowCtx* ctx, flow_tEvent event)
           attrnav->refresh_objects(attr_mRefresh_Objects);
         return FLOW__DESTROYED;
       }
+      else if ((((AItemEnum*)item)->type_id == ge_eAttrType_DashType)
+          && attrnav->reconfigure_attr_cb) {
+	(attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
+        return FLOW__DESTROYED;
+      }
+      else if ((((AItemEnum*)item)->type_id == ge_eAttrType_DashElements)
+          && attrnav->reconfigure_attr_cb) {
+	(attrnav->reconfigure_attr_cb)(attrnav->parent_ctx);
+        return FLOW__DESTROYED;
+      }
       break;
     }
     case attrnav_eItemType_Mask: {
@@ -2339,7 +2399,7 @@ static int attrnav_brow_cb(FlowCtx* ctx, flow_tEvent event)
           if (!attrnav->get_plant_select_cb)
             break;
           sts = (attrnav->get_plant_select_cb)(
-              attrnav->parent_ctx, attr_name, sizeof(attr_name));
+	      attrnav->parent_ctx, attr_name, sizeof(attr_name));
           if (EVEN(sts))
             break;
 
@@ -3306,6 +3366,9 @@ AItemLocal::AItemLocal(AttrNav* attrnav, const char* item_name,
   case ge_eAttrType_MethodsMenuType:
   case ge_eAttrType_MethodToolbarType:
   case ge_eAttrType_KeyboardType:
+  case ge_eAttrType_DashType:
+  case ge_eAttrType_DashElements:
+  case ge_eAttrType_IndicatorColor:
     if (!noedit) {
       brow_SetAnnotPixmap(node, 0, attrnav->brow->pixmap_attrarray);
       parent = 1;

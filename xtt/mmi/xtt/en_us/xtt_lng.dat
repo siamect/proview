@@ -166,6 +166,7 @@ E 1.5.7 "_Remove Blocking"
 E 1.5.8 "Navigator for supervisory object"
 E 1.5.9 "Open Plc for supervisory object"
 E 1.5.10 "Acknowledge"
+E 1.5.11 "A_cknowledge All"
 #
 # Object editor
 E 1.6.1 "C_lose Change Value"
@@ -525,6 +526,18 @@ E 1.22.6 "Create Panel"
 E 1.22.7 "Delete Panel"
 E 1.22.8 "Do you want to create a panel"
 E 1.22.9 "Do you want to delete the specified panel"
+#
+# Dashboard
+E 1.23.1 "_Save"
+E 1.23.2 "S_ave as"
+E 1.23.3 "S_et Colortheme"
+E 1.23.4 "_Delete"
+E 1.23.5 "_Copy"
+E 1.23.6 "_Paste"
+E 1.23.7 "C_onnect"
+E 1.23.8 "_Merge"
+E 1.23.9 "Cell_Attributes"
+E 1.23.10 "_GraphAttributes"
 #
 # Postscript printing
 E 2.1.1 "Contents"

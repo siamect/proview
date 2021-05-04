@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -41,7 +41,7 @@
 
 #include <errno.h>
 #include <string>
-#include <mysql/mysql.h>
+#include <mysql.h>
 #include "wb_import.h"
 
 class wb_name;

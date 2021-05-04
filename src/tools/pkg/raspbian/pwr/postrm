@@ -1,0 +1,35 @@
+#!/bin/sh
+
+set -e
+
+# Remove proview.cnf if we are purging
+if [ "$1" = "purge" -a -e /etc/proview.cnf ]; then
+  rm /etc/proview.cnf
+  echo "-- Purged /etc/proview.cnf"
+fi
+
+# Do not source pwr_setup.sh anymore if we have removed/purged pwr
+if [ \( "$1" = "remove" -o "$1" = "purge" \) -a -e /home/pwrp/.bashrc ]; then
+  sed -i '/\. \/usr\/pwrp\/adm\/db\/pwr_setup.sh/d' /home/pwrp/.bashrc
+  echo "-- Restored .bashrc for user pwrp"
+fi
+
+# Remove everything if we are purging...
+if [ "$1" = "purge" ]; then
+  echo "-- Removing projects, users, and configuration..."
+  echo -n "Do you want to remove all projects (in /usr/local/pwrp)? (y/n) [n] "
+  read remove_projects
+  if [ "$remove_projects" = "y" ]; then
+    rm -rf /usr/local/pwrp
+    rm -rf /usr/pwrp
+    echo "-- Removed projects and their metadata"
+  fi
+  echo -n "Do you want to remove the user and group pwrp? (y/n) [n] "
+  read remove_user
+  if [ "$remove_user" = "y" ]; then
+    getent passwd pwrp >/dev/null 2>&1 && userdel -rf pwrp 2>/dev/null
+    echo "-- Removed user pwrp"
+    getent group pwrp >/dev/null 2>&1 && groupdel pwrp
+    echo "-- Removed group pwrp"
+  fi
+fi

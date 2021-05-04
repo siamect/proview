@@ -1,0 +1,117 @@
+
+main()
+  int id;
+  int sts;
+  int i;
+  int j;
+  float x0 = 0.2;
+  float y0 = 0.2;
+  float delta = 3;
+  float x;
+  float y;
+  float x2;
+  float y2;
+  int color;
+  int textcolor;
+  string text;
+  string adjustment;
+  int font;
+
+  ClearAll();
+  SetDraw(0);
+
+  x = 31.0;
+  y = 0.2;
+  x2 = x + 2.3;
+  y2 = y + 1; 
+  id = CreateObject("pwr_smallbuttoncenter", x, y, x2, y2);
+  SetObjectFillColor(id, eDrawType_Color31);
+  SetObjectAttribute(id, "Text", "Next");
+  SetObjectAttribute(id, "Action", "Script");
+  SetObjectAttribute(id, "Script.Script", "SetSubwindow(\"$current\",\"W1\",\"@ge_dyn_diglowcolor\", \"\", 1);");
+
+  x = x0 - 0.1;
+  y = y0 + 1;
+  id = CreateImage("ge_testtext2.png", x, y, 30.25, 35.2);
+
+ 
+  x = x0;
+  y = y0;
+  color = eDrawType_Color89;
+  for (i = 0; i < 5; i++)
+    y = y0 + 0.3;
+    for (j = 0; j < 6; j++)
+      if (i == 0)
+        sprintf(text, "Helvetica%d", j);
+        adjustment = "Left";
+        font = eFont_Helvetica;
+      endif
+      if (i == 1)
+        sprintf(text, "Times%d", j);
+        adjustment = "Left";
+        font = eFont_Times;
+      endif
+      if (i == 2)
+        sprintf(text, "Century%d", j);
+        adjustment = "Center";
+        font = eFont_NewCenturySchoolbook;
+      endif
+      if (i == 3)
+        sprintf(text, "Courier%d", j);
+        adjustment = "Right";
+        font = eFont_Courier;
+      endif
+      if (i == 4)
+        sprintf(text, "Lucida%d", j);
+        adjustment ="Right";
+        font = eFont_LucidaSans;
+      endif
+
+      color += 30;
+      if (color > 300)
+        color = eDrawType_Color89;
+      endif
+      if (j > 3)
+        textcolor = color - 1;
+      else
+        textcolor = color;
+      endif
+      id = CreateText(text, x, y, j, font, 0, textcolor);
+      SetObjectAttribute(id, "Adjustment", adjustment);
+      y += delta;
+      color += 30;
+      if (color > 300)
+        color = eDrawType_Color89;
+      endif
+      if (j > 3)
+        textcolor = color - 1;
+      else
+        textcolor = color;
+      endif
+      id = CreateText(text, x, y, j, font, 1, textcolor);
+      SetObjectAttribute(id, "Adjustment", adjustment);
+      y += delta;
+    endfor
+    if (i == 0)
+      x += 6;
+    endif
+    if (i == 1)
+      x += 9;
+    endif
+    if (i == 2)
+      x += 9;
+    endif
+    if (i == 3)
+      x += 6;
+    endif
+    if (i == 4)
+      x += 6;
+    endif
+  endfor
+ 
+  y += delta;
+  SetGraphAttribute("x1", x);
+  SetGraphAttribute("y1", y);
+
+  SetDraw(1);
+endmain

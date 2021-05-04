@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -773,7 +773,7 @@ void GrowText::draw(GlowWind* w, GlowTransform* t, int highlight, int hot,
       ctx->gdraw->text(w, x1, y1, text, strlen(text), ldraw_type, color, idx,
           highlight, 0, lfont, tsize, rot);
     }
-  } else if (idx >= 0) {
+  } else if (idx >= 0 && ctx->environment == glow_eEnv_Development) {
     ctx->gdraw->get_text_extent("A", 1, draw_type, MAX(0, idx), font, &z_width,
         &z_height, &z_descent, tsize, rot);
     ctx->gdraw->rect(w, x1, y1 - (z_height - z_descent), z_width, z_height,
@@ -1179,6 +1179,15 @@ void GrowText::align(double x, double y, glow_eAlignDirection direction)
 
   draw();
   ctx->redraw_defered();
+}
+
+void GrowText::dash_insert(GlowTransform *t)
+{
+  set_transform(t);
+  x_left -= t->a13;
+  x_right -= t->a13;
+  y_low -= t->a23;
+  y_high -= t->a23;
 }
 
 void GrowText::convert(glow_eConvert version)

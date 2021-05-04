@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -254,6 +254,7 @@ public:
   GlowCustomColors* create_customcolors();
   GlowCustomColorsQt* get_customcolors();
   void reset_customcolors(GlowCustomColors* cc);
+  void remove_customcolors(GlowCustomColors* cc);
 
 private:
   int rect_helper(GlowWind* wind, int painter_type, int size, int x, int y,

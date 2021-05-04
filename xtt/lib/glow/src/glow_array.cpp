@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -61,6 +61,7 @@
 #include "glow_growfolder.h"
 #include "glow_growtable.h"
 #include "glow_growxycurve.h"
+#include "glow_growdashcell.h"
 #include "glow_exportflow.h"
 #include "glow_msg.h"
 #include "co_cdh.h"
@@ -402,6 +403,20 @@ void GlowArray::copy_from(const GlowArray& array)
         (n->ctx->userdata_copy_callback)(n,
             ((GrowXYCurve*)(array.a[i]))->user_data, &n->user_data,
             glow_eUserdataCbType_Node);
+      insert(n);
+      break;
+    }
+    case glow_eObjectType_GrowDashCell: {
+      GrowDashCell* n = new GrowDashCell();
+      n->copy_from(*(GrowDashCell*)array.a[i]);
+      n->highlight = 0;
+      n->hot = 0;
+#if 0
+      // Fix, This should be done in the copy constructor !!!
+      if (n->ctx->userdata_copy_callback)
+        (n->ctx->userdata_copy_callback)(n, ((GrowDashCell*)array.a[i])->user_data,
+            &n->user_data, glow_eUserdataCbType_Node);
+#endif
       insert(n);
       break;
     }
@@ -1104,6 +1119,12 @@ void GlowArray::open(GrowCtx* ctx, std::ifstream& fp)
     }
     case glow_eSave_GrowXYCurve: {
       GrowXYCurve* n = new GrowXYCurve(ctx, "");
+      n->open(fp);
+      insert(n);
+      break;
+    }
+    case glow_eSave_GrowDashCell: {
+      GrowDashCell* n = new GrowDashCell(ctx, "");
       n->open(fp);
       insert(n);
       break;

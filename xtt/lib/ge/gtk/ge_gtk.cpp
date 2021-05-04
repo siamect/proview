@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -803,7 +803,7 @@ void GeGtk::graph_file_selected_cb(
     void* ctx, char* filename, wow_eFileSelType file_type)
 {
   Ge* ge = (Ge*)ctx;
-  ge->open_graph(filename);
+  ge->open_graph(filename, 0);
 }
 
 void GeGtk::image_file_selected_cb(
@@ -889,7 +889,12 @@ void GeGtk::activate_graph_attr(GtkWidget* w, gpointer gectx)
 
 void GeGtk::activate_open(GtkWidget* w, gpointer gectx)
 {
-  ((Ge*)gectx)->activate_open();
+  ((Ge*)gectx)->activate_open(0);
+}
+
+void GeGtk::activate_opendashboard(GtkWidget* w, gpointer gectx)
+{
+  ((Ge*)gectx)->activate_open(1);
 }
 
 void GeGtk::activate_subgraphs(GtkWidget* w, gpointer gectx)
@@ -1741,8 +1746,11 @@ GeGtk::GeGtk(void* x_parent_ctx, GtkWidget* x_parent_widget,
   GtkWidget* file_new = gtk_image_menu_item_new_from_stock(GTK_STOCK_NEW, NULL);
   g_signal_connect(file_new, "activate", G_CALLBACK(activate_new), this);
 
-  GtkWidget* file_open = gtk_menu_item_new_with_mnemonic("_Open...");
+  GtkWidget* file_open = gtk_menu_item_new_with_mnemonic("_Open Graph...");
   g_signal_connect(file_open, "activate", G_CALLBACK(activate_open), this);
+
+  GtkWidget* file_opendashboard = gtk_menu_item_new_with_mnemonic("Open _Dashboard...");
+  g_signal_connect(file_opendashboard, "activate", G_CALLBACK(activate_opendashboard), this);
 
   GtkWidget* file_save
       = gtk_image_menu_item_new_from_stock(GTK_STOCK_SAVE, accel_g);
@@ -1894,6 +1902,7 @@ GeGtk::GeGtk(void* x_parent_ctx, GtkWidget* x_parent_widget,
   GtkMenu* file_menu = (GtkMenu*)g_object_new(GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_new);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_open);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_opendashboard);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_save);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_save_as);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_build);
@@ -3763,8 +3772,12 @@ GeGtk::GeGtk(void* x_parent_ctx, GtkWidget* x_parent_widget,
       GTK_WINDOW(gtk_widget_get_toplevel(yesnodia_widget)),
       GTK_WINDOW(gtk_widget_get_toplevel(toplevel)));
 
-  if (graph_name)
-    open_graph(graph_name);
+  if (graph_name) {
+    if (strstr(graph_name, ".pwd") == 0)
+      open_graph(graph_name, 0);
+    else
+      open_graph(graph_name, 1);
+  }
   else
     graph->set_default_background_color();
 

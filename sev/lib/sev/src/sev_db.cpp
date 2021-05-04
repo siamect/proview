@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -97,6 +97,50 @@ sev_item::sev_item(const sev_item& x)
       break;
     default:;
     }
+}
+
+sev_item& sev_item::operator=(const sev_item& x)
+{
+  id = x.id;
+  oid = x.oid;
+  creatime = x.creatime;
+  modtime = x.modtime;
+  storagetime = x.storagetime;
+  sevid = x.sevid;
+  scantime = x.scantime;  
+  deadband = x.deadband;
+  options = x.options;
+  deadband_active = x.deadband_active;
+  last_id = x.last_id;
+  value_size = x.value_size;
+  old_value = x.old_value;
+  first_storage = x.first_storage;
+  attrnum = x.attrnum;
+  attr = x.attr;
+  status = x.status;
+  logged_status = x.logged_status;
+  cache = 0;
+  idx = x.idx;
+  deleted = x.deleted;
+  mean_value = x.mean_value;
+  mean_acc_time = x.mean_acc_time;
+  variance_cnt = x.variance_cnt;
+  strncpy(tablename, x.tablename, sizeof(tablename));
+  strncpy(oname, x.oname, sizeof(oname));
+  strncpy(description, x.description, sizeof(description));
+  if (x.cache)
+    switch (attr[0].type) {
+    case pwr_eType_Float32:
+    case pwr_eType_Float64:
+    case pwr_eType_Int32:
+      cache = new sev_valuecache_double(*(sev_valuecache_double*)x.cache);
+      break;
+    case pwr_eType_Boolean:
+      cache = new sev_valuecache_bool(*(sev_valuecache_bool*)x.cache);
+      break;
+    default:;
+    }
+  return *this;
 }
 
 sev_item::~sev_item()

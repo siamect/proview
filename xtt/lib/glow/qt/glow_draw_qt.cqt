@@ -3197,6 +3197,18 @@ GlowCustomColors* GlowDrawQt::create_customcolors()
   return new GlowCustomColorsQt();
 }
 
+void GlowDrawQt::remove_customcolors(GlowCustomColors* cc)
+{
+  for (int i = 0; i < customcolors_cnt; i++) {
+    if (customcolors[i] == cc) {
+      for (int j = i; j < customcolors_cnt - 1; j++)
+	customcolors[j] = customcolors[j+1];
+      customcolors_cnt--;
+      break;
+    }
+  }
+}
+
 void GlowDrawQt::reset_customcolors(GlowCustomColors* cc)
 {
   memset(((GlowCustomColorsQt*)cc)->color_vect, 0,

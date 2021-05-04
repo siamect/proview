@@ -3,29 +3,19 @@ FROM $RELEASE
 ARG BUILDVERSION
 ARG BUILD_RPI
 ARG GITREPO
-ARG INSTALL_UPDATE
-ARG INSTALL_GIT
-ARG INSTALL_BUILD
-ARG INSTALL_RPI
 ARG JDK_DIR
 ARG TZ
 
-ENV DISPLAY :1
+ENV DISPLAY :99
 ENV DEBIAN_FRONTEND none_interactive
 
 ENV TZ=$TZ
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 COPY ./build/build.sh ./build/build_pwrdemo.sh ./build/build_pkg.sh ./build/build_pwrtest01.sh ./build/build_rpi.sh  ./
-RUN $INSTALL_UPDATE
-RUN $INSTALL_GIT
-RUN apt-get install -y xserver-xorg-video-dummy
 RUN git clone $GITREPO
-#RUN mv proview pwr;
-RUN $INSTALL_BUILD
 RUN ./build.sh $BUILDVERSION $JDK_DIR
-RUN ./build_pwrdemo.sh
-RUN ./build_pwrtest01.sh
-RUN $INSTALL_RPI
-RUN ./build_rpi.sh
+RUN if [ $BUILD_RPI -eq 1 ]; then \
+      ./build_rpi.sh; \
+    fi
 RUN ./build_pkg.sh

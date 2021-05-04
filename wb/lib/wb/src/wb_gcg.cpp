@@ -1,6 +1,6 @@
 /*
  * ProviewR   Open Source Process Control.
- * Copyright (C) 2005-2020 SSAB EMEA AB.
+ * Copyright (C) 2005-2021 SSAB EMEA AB.
  *
  * This file is part of ProviewR.
  *
@@ -7488,13 +7488,10 @@ int gcg_comp_m12(gcg_ctx gcgctx, vldh_t_node node)
 
   ldhses = (node->hn.wind)->hw.ldhses;
 
-  if (!(node->ln.cid == pwr_cClass_StoAtoIp
-          || node->ln.cid == pwr_cClass_CStoAtoIp
-          || node->ln.cid == pwr_cClass_StoIp
-          || node->ln.cid == pwr_cClass_CStoIp
-          || node->ln.cid == pwr_cClass_stoap
-          || node->ln.cid == pwr_cClass_cstoap)) {
-    if (!gcgctx->order_comp) {
+  if (!gcgctx->order_comp) {
+    if ((node->ln.cid == pwr_cClass_resdp
+	 || node->ln.cid == pwr_cClass_stodp
+	 || node->ln.cid == pwr_cClass_setdp)) {
       /* Check first if the object is connected to an order object,
         if it is, it will be compiled when by the ordermethod, when
         gcgctx->order_comp is true */
@@ -12795,6 +12792,8 @@ int gcg_comp_m58(gcg_ctx gcgctx, vldh_t_node node)
   pwr_sAttrRef caref, ccaref;
   pwr_tObjName cname;
   char cast[40] = "";
+  pwr_tClassId bodyclass;
+  pwr_sGraphPlcNode* graphbody;
 
   ldhses = (node->hn.wind)->hw.ldhses;
 
@@ -12831,7 +12830,10 @@ int gcg_comp_m58(gcg_ctx gcgctx, vldh_t_node node)
     if (EVEN(sts))
       return sts;
 
-    if (strlen(cname) > 3 && streq(&cname[strlen(cname) - 3], "Sim"))
+    // If connectmethod is 26 connect to SimConnect else PlcConnect
+    sts = ldh_GetClassBody(ldhses, node->ln.cid, "GraphPlcNode",
+        &bodyclass, (char**)&graphbody, &size);
+    if (ODD(sts) && graphbody->connectmethod == 26)
       sts = ldh_ArefANameToAref(ldhses, &aref, "SimConnect", &caref);
     else
       sts = ldh_ArefANameToAref(ldhses, &aref, "PlcConnect", &caref);
